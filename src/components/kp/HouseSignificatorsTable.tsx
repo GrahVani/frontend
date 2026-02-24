@@ -23,50 +23,51 @@ export default function HouseSignificatorsTable({ data, className }: HouseSignif
     };
 
     return (
-        <div className={cn("w-full overflow-hidden bg-white/50 dark:bg-neutral-900/50 rounded-xl border border-stone-200 dark:border-stone-800 shadow-sm", className)}>
-            <div className="p-4 bg-amber-50/50 dark:bg-amber-900/10 border-b border-stone-200 dark:border-stone-800">
-                <h3 className="text-lg font-serif font-bold text-center text-red-800 dark:text-red-400">
+        <div className={cn("w-full overflow-hidden bg-white rounded-2xl border border-antique shadow-sm", className)}>
+            <div className="p-4 bg-parchment/30 border-b border-antique">
+                <h3 className="text-lg font-serif font-bold text-center text-primary">
                     Significations of the Houses
                 </h3>
             </div>
 
             <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left">
-                    <thead className="text-xs uppercase bg-amber-100/50 dark:bg-amber-900/20 text-stone-900 dark:text-stone-300">
+                    <thead className="text-xs uppercase bg-parchment/60 text-primary font-sans tracking-wide">
                         <tr>
-                            <th scope="col" className="px-6 py-3 font-bold border-b border-stone-200 dark:border-stone-700 w-32">
+                            <th scope="col" className="px-6 py-3 font-semibold border-b border-antique shadow-sm w-32">
                                 House
                             </th>
-                            <th scope="col" className="px-6 py-3 font-bold border-b border-stone-200 dark:border-stone-700">
+                            <th scope="col" className="px-6 py-3 font-semibold border-b border-antique shadow-sm">
                                 Planets in nak. of occupants
                             </th>
-                            <th scope="col" className="px-6 py-3 font-bold border-b border-stone-200 dark:border-stone-700">
+                            <th scope="col" className="px-6 py-3 font-semibold border-b border-antique shadow-sm">
                                 Occupants
                             </th>
-                            <th scope="col" className="px-6 py-3 font-bold border-b border-stone-200 dark:border-stone-700">
+                            <th scope="col" className="px-6 py-3 font-semibold border-b border-antique shadow-sm">
                                 Planets in nak. of cusp sign lord
                             </th>
-                            <th scope="col" className="px-6 py-3 font-bold border-b border-stone-200 dark:border-stone-700">
+                            <th scope="col" className="px-6 py-3 font-semibold border-b border-antique shadow-sm">
                                 Cusp sign lord
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-stone-200 dark:divide-stone-700">
+                    <tbody className="divide-y divide-antique/50 font-sans">
                         {data.map((row) => (
-                            <tr key={row.house} className="hover:bg-amber-50/30 dark:hover:bg-amber-900/10 transition-colors">
-                                <th scope="row" className="px-6 py-4 font-medium text-stone-900 dark:text-stone-100 whitespace-nowrap">
-                                    {row.house}. {houseNames[row.house - 1]}
+                            <tr key={row.house} className="hover:bg-gold-primary/5 transition-colors bg-white">
+                                <th scope="row" className="px-6 py-4 font-semibold text-primary whitespace-nowrap">
+                                    <span className="inline-flex items-center justify-center w-6 h-6 rounded border border-antique bg-white text-primary text-xs font-semibold shadow-sm mr-2">{row.house}</span>
+                                    {houseNames[row.house - 1]}
                                 </th>
-                                <td className="px-6 py-4 text-stone-700 dark:text-stone-300">
+                                <td className="px-6 py-4 text-secondary">
                                     {formatPlanets(row.levelB)}
                                 </td>
-                                <td className="px-6 py-4 text-stone-700 dark:text-stone-300">
+                                <td className="px-6 py-4 text-primary font-medium">
                                     {formatPlanets(row.levelA)}
                                 </td>
-                                <td className="px-6 py-4 text-stone-700 dark:text-stone-300">
+                                <td className="px-6 py-4 text-secondary">
                                     {formatPlanets(row.levelD)}
                                 </td>
-                                <td className="px-6 py-4 text-stone-700 dark:text-stone-300">
+                                <td className="px-6 py-4 text-muted-refined italic">
                                     {formatPlanets(row.levelC)}
                                 </td>
                             </tr>

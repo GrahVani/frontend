@@ -57,7 +57,7 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
             <div className="space-y-6">
                 <div className="flex items-center gap-3 px-2">
                     <BadgeCheck className="w-6 h-6 text-emerald-600" />
-                    <h3 className="text-xl font-serif font-black text-ink">Recommended Prescriptions</h3>
+                    <h3 className="text-xl font-serif font-black text-ink">Recommended Gemstones</h3>
                     <div className="h-px flex-1 bg-gradient-to-r from-emerald-100 to-transparent ml-4" />
                 </div>
 

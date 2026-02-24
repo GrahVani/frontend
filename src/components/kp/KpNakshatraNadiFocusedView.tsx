@@ -86,6 +86,9 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
     const [selectedItem, setSelectedItem] = useState<string | null>(null);
     const { nadiData } = data;
 
+    // Helper to normalize lookups
+    const normalize = (val: string) => val?.trim() || '';
+
     // Get planets and cusps arrays
     const planets = useMemo(() => {
         if (!nadiData?.planets) return [];
@@ -101,23 +104,23 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
     const selectedDetails = useMemo((): NadiItem | null => {
         if (!selectedItem) return null;
         if (activeTab === 'planets') {
-            return (planets.find((p: any) => p.name === selectedItem) as NadiItem) || null;
+            return (planets.find((p: any) => normalize(p.name) === normalize(selectedItem)) as NadiItem) || null;
         }
-        return (cusps.find((c: any) => c.label === selectedItem) as NadiItem) || null;
+        return (cusps.find((c: any) => normalize(c.label) === normalize(selectedItem)) as NadiItem) || null;
     }, [selectedItem, activeTab, planets, cusps]);
 
     if (!nadiData) {
-        return <div className="p-8 text-center bg-white rounded-xl text-muted">Loading Nadi Data...</div>;
+        return <div className="p-8 text-center bg-white rounded-xl text-muted-refined">Loading Nadi Data...</div>;
     }
 
     const TabButton = ({ id, label, icon: Icon }: { id: 'planets' | 'cusps', label: string, icon: any }) => (
         <button
             onClick={() => { setActiveTab(id); setSelectedItem(null); }}
             className={cn(
-                "flex items-center gap-2 px-6 py-3 text-sm font-bold uppercase tracking-wider transition-all border-b-2 font-serif",
+                "flex items-center gap-2 px-6 py-3 text-sm font-semibold tracking-wide transition-all border-b-2 font-sans",
                 activeTab === id
-                    ? "border-gold-primary text-gold-dark bg-gold-primary/5"
-                    : "border-transparent text-muted hover:text-ink hover:bg-black/5"
+                    ? "border-gold-primary text-accent-gold bg-gold-soft/10"
+                    : "border-transparent text-muted-refined hover:text-primary hover:bg-gold-primary/5"
             )}
         >
             <Icon className="w-4 h-4" />
@@ -128,7 +131,7 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
     return (
         <div className={cn("space-y-0 animate-in fade-in duration-500", className)}>
             {/* Header Tabs */}
-            <div className="flex items-center border-b border-antique/20 bg-parchment/30 rounded-t-xl overflow-hidden">
+            <div className="flex items-center border-b border-antique bg-parchment/60 rounded-t-xl overflow-hidden">
                 <TabButton id="planets" label="Planetary Nadi" icon={Sparkles} />
                 <TabButton id="cusps" label="Cuspal Nadi (Bhavas)" icon={Compass} />
             </div>
@@ -140,7 +143,8 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                     {activeTab === 'planets' ? (
                         <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
                             {planets.map((planet: any) => {
-                                const pData = PLANET_DATA[planet.name] || { symbol: '☉', color: 'from-gray-400 to-gray-500', element: 'Unknown' };
+                                const name = normalize(planet.name);
+                                const pData = PLANET_DATA[name] || { symbol: '☉', color: 'from-gray-400 to-gray-500', element: 'Unknown' };
                                 const isSelected = selectedItem === planet.name;
                                 return (
                                     <button
@@ -162,8 +166,8 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                                         )}>
                                             {pData.symbol}
                                         </div>
-                                        <span className="font-bold text-ink font-serif text-sm">{planet.name}</span>
-                                        <span className="block text-[10px] text-muted mt-1">{planet.sign}</span>
+                                        <span className="font-bold text-primary font-serif text-sm">{planet.name}</span>
+                                        <span className="block text-[10px] text-muted-refined mt-1">{planet.sign || 'Unknown'}</span>
                                     </button>
                                 );
                             })}
@@ -171,9 +175,10 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                     ) : (
                         <div className="grid grid-cols-4 md:grid-cols-6 gap-3">
                             {cusps.map((cusp: any) => {
-                                const signData = ZODIAC_DATA[cusp.sign] || { symbol: '♈', element: 'Fire', quality: 'Cardinal' };
+                                const signName = normalize(cusp.sign);
+                                const signData = ZODIAC_DATA[signName] || { symbol: '♈', element: 'Fire', quality: 'Cardinal' };
                                 const isSelected = selectedItem === cusp.label;
-                                const cuspNum = cusp.label.replace('Cusp ', '').replace('C', '');
+                                const cuspNum = (cusp.label || '').replace('Cusp ', '').replace('C', '');
                                 return (
                                     <button
                                         key={cusp.label}
@@ -185,10 +190,10 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                                                 : "border-antique/30 bg-parchment/30 hover:border-antique hover:shadow-md"
                                         )}
                                     >
-                                        <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-ink flex items-center justify-center text-white font-bold font-serif">
+                                        <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-gradient-to-br from-parchment to-softwhite shadow-sm border border-antique flex items-center justify-center text-primary font-bold font-serif">
                                             {cuspNum}
                                         </div>
-                                        <span className="font-medium text-ink font-serif text-xs">{signData.symbol} {cusp.sign}</span>
+                                        <span className="font-semibold text-primary font-serif text-xs">{signData.symbol} {cusp.sign}</span>
                                     </button>
                                 );
                             })}
@@ -196,135 +201,135 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                     )}
 
                     {/* Quick Stats */}
-                    <div className="mt-6 grid grid-cols-3 gap-4">
-                        <div className="bg-parchment/50 rounded-xl p-4 text-center border border-antique/30">
-                            <Sun className="w-5 h-5 mx-auto text-amber-500 mb-2" />
-                            <span className="text-2xl font-bold text-ink">{planets.length}</span>
-                            <span className="block text-[10px] text-muted uppercase tracking-wider">Grahas</span>
+                    <div className="mt-8 grid grid-cols-3 gap-6">
+                        <div className="bg-parchment/40 rounded-xl p-4 text-center border border-antique border-b-4 shadow-sm flex flex-col items-center justify-center">
+                            <Sun className="w-6 h-6 text-accent-gold mb-2" />
+                            <span className="text-3xl font-bold text-primary font-serif leading-none mb-1">{planets.length}</span>
+                            <span className="text-[10px] text-muted-refined uppercase tracking-widest font-sans font-semibold">Grahas</span>
                         </div>
-                        <div className="bg-parchment/50 rounded-xl p-4 text-center border border-antique/30">
-                            <CircleDot className="w-5 h-5 mx-auto text-indigo-500 mb-2" />
-                            <span className="text-2xl font-bold text-ink">{cusps.length}</span>
-                            <span className="block text-[10px] text-muted uppercase tracking-wider">Bhavas</span>
+                        <div className="bg-parchment/40 rounded-xl p-4 text-center border border-antique border-b-4 shadow-sm flex flex-col items-center justify-center">
+                            <CircleDot className="w-6 h-6 text-indigo-500/80 mb-2" />
+                            <span className="text-3xl font-bold text-primary font-serif leading-none mb-1">{cusps.length}</span>
+                            <span className="text-[10px] text-muted-refined uppercase tracking-widest font-sans font-semibold">Bhavas</span>
                         </div>
-                        <div className="bg-parchment/50 rounded-xl p-4 text-center border border-antique/30">
-                            <Star className="w-5 h-5 mx-auto text-gold-dark mb-2" />
-                            <span className="text-2xl font-bold text-ink">27</span>
-                            <span className="block text-[10px] text-muted uppercase tracking-wider">Nakshatras</span>
+                        <div className="bg-parchment/40 rounded-xl p-4 text-center border border-antique border-b-4 shadow-sm flex flex-col items-center justify-center">
+                            <Star className="w-6 h-6 text-gold-dark/80 mb-2" />
+                            <span className="text-3xl font-bold text-primary font-serif leading-none mb-1">27</span>
+                            <span className="text-[10px] text-muted-refined uppercase tracking-widest font-sans font-semibold">Nakshatras</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Right - Detail Panel */}
-                <div className="bg-parchment/20 p-6 min-h-[400px]">
+                <div className="bg-softwhite p-6 min-h-[400px] border-l border-antique/30">
                     {selectedDetails ? (
-                        <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                        <div key={selectedItem} className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                             {/* Header */}
                             <div className="text-center">
                                 {activeTab === 'planets' ? (
                                     <>
                                         <div className={cn(
                                             "w-20 h-20 mx-auto mb-3 rounded-full flex items-center justify-center text-4xl text-white shadow-xl bg-gradient-to-br",
-                                            PLANET_DATA[selectedDetails.name || '']?.color || 'from-gray-400 to-gray-500'
+                                            PLANET_DATA[normalize(selectedDetails.name || '')]?.color || 'from-gray-400 to-gray-500'
                                         )}>
-                                            {PLANET_DATA[selectedDetails.name || '']?.symbol || '☉'}
+                                            {PLANET_DATA[normalize(selectedDetails.name || '')]?.symbol || '☉'}
                                         </div>
-                                        <h2 className="text-2xl font-bold text-ink font-serif">{selectedDetails.name}</h2>
+                                        <h2 className="text-2xl font-bold text-primary font-serif">{selectedDetails.name}</h2>
                                         {selectedDetails.isRetro && (
                                             <span className="inline-block mt-1 text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">Retrograde</span>
                                         )}
                                     </>
                                 ) : (
                                     <>
-                                        <div className="w-20 h-20 mx-auto mb-3 rounded-full bg-ink flex items-center justify-center text-3xl text-white shadow-xl font-serif font-bold">
+                                        <div className="w-20 h-20 mx-auto mb-3 rounded-full bg-gradient-to-br from-gold-primary to-gold-dark shadow-xl border border-gold-dark/30 flex items-center justify-center text-3xl text-white font-serif font-bold">
                                             {(selectedDetails.label || '').replace('Cusp ', '').replace('C', '')}
                                         </div>
-                                        <h2 className="text-2xl font-bold text-ink font-serif">{selectedDetails.label}</h2>
+                                        <h2 className="text-2xl font-bold text-primary font-serif">{selectedDetails.label}</h2>
                                     </>
                                 )}
                             </div>
 
                             {/* Position Card */}
                             <div className="bg-white rounded-xl p-4 border border-antique shadow-sm">
-                                <h4 className="text-[10px] text-muted uppercase tracking-wider mb-3 font-serif">Position</h4>
+                                <h4 className="text-[10px] text-muted-refined uppercase tracking-wider mb-3 font-serif">Position</h4>
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <span className="text-3xl mr-2">{ZODIAC_DATA[selectedDetails.sign]?.symbol || '♈'}</span>
-                                        <span className="text-xl font-serif text-ink">{selectedDetails.sign}</span>
+                                        <span className="text-3xl mr-2">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.symbol || '♈'}</span>
+                                        <span className="text-xl font-serif text-primary">{selectedDetails.sign}</span>
                                     </div>
                                     <div className="text-right">
-                                        <span className="font-mono text-lg text-ink">{selectedDetails.longitude}</span>
-                                        <span className="block text-[10px] text-muted">{ZODIAC_DATA[selectedDetails.sign]?.element} • {ZODIAC_DATA[selectedDetails.sign]?.quality}</span>
+                                        <span className="font-mono text-lg text-primary">{selectedDetails.longitude}</span>
+                                        <span className="block text-[10px] text-muted-refined">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.element || 'Unknown'} • {ZODIAC_DATA[normalize(selectedDetails.sign)]?.quality || 'Unknown'}</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Nakshatra Details */}
                             <div className="bg-white rounded-xl p-4 border border-antique shadow-sm">
-                                <h4 className="text-[10px] text-muted uppercase tracking-wider mb-3 font-serif">Nakshatra (Star)</h4>
+                                <h4 className="text-[10px] text-muted-refined uppercase tracking-wider mb-3 font-serif">Nakshatra (Star)</h4>
                                 <div className="flex items-center gap-3">
                                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center">
                                         <Star className="w-6 h-6 text-white" />
                                     </div>
                                     <div>
-                                        <span className="font-bold text-ink font-serif text-lg">{selectedDetails.nakshatraName}</span>
-                                        <span className="block text-sm text-muted">Lord: <span className="text-ink font-medium">{selectedDetails.nakshatraLord}</span></span>
+                                        <span className="font-bold text-primary font-serif text-lg">{selectedDetails.nakshatraName}</span>
+                                        <span className="block text-sm text-muted-refined">Lord: <span className="text-primary font-medium">{selectedDetails.nakshatraLord}</span></span>
                                     </div>
                                 </div>
-                                {NAKSHATRA_MEANINGS[selectedDetails.nakshatraName] && (
-                                    <p className="mt-3 text-xs text-muted bg-parchment/50 p-2 rounded-lg italic">
-                                        "{NAKSHATRA_MEANINGS[selectedDetails.nakshatraName]}"
+                                {NAKSHATRA_MEANINGS[normalize(selectedDetails.nakshatraName)] && (
+                                    <p className="mt-3 text-xs text-muted-refined bg-parchment/50 p-2 rounded-lg italic">
+                                        "{NAKSHATRA_MEANINGS[normalize(selectedDetails.nakshatraName)]}"
                                     </p>
                                 )}
                             </div>
 
                             {/* Sub Lord - Highlighted */}
-                            <div className="bg-gradient-to-r from-gold-primary to-gold-dark rounded-xl p-4 text-white shadow-lg">
-                                <h4 className="text-[10px] text-white/70 uppercase tracking-wider mb-2 font-serif">Sub Lord (Key Signifier)</h4>
+                            <div className="bg-gradient-to-br from-gold-primary to-gold-dark rounded-xl p-4 text-white shadow-md border border-gold-dark/30">
+                                <h4 className="text-[10px] text-white/90 uppercase tracking-widest mb-2 font-sans font-semibold">Sub Lord (Key Signifier)</h4>
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl">
-                                        {PLANET_DATA[selectedDetails.subLord]?.symbol || '☉'}
+                                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl shadow-inner">
+                                        {PLANET_DATA[normalize(selectedDetails.subLord)]?.symbol || '☉'}
                                     </div>
                                     <div>
-                                        <span className="font-bold text-white font-serif text-2xl">{selectedDetails.subLord}</span>
-                                        <span className="block text-xs text-white/70">Determines fine timing & results</span>
+                                        <span className="font-bold text-white font-serif text-2xl tracking-wide">{selectedDetails.subLord}</span>
+                                        <span className="block text-xs text-white/80 font-sans mt-0.5">Determines fine timing & results</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Lord Chain Summary */}
                             <div className="bg-white rounded-xl p-4 border border-antique shadow-sm">
-                                <h4 className="text-[10px] text-muted uppercase tracking-wider mb-3 font-serif">Stellar Chain</h4>
+                                <h4 className="text-[10px] text-muted-refined uppercase tracking-wider mb-3 font-serif">Stellar Chain</h4>
                                 <div className="flex items-center justify-between text-center">
                                     <div className="flex-1">
-                                        <span className="text-lg">{ZODIAC_DATA[selectedDetails.sign]?.symbol}</span>
-                                        <span className="block text-[10px] text-muted">Sign</span>
+                                        <span className="text-lg">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.symbol || '♈'}</span>
+                                        <span className="block text-[10px] text-muted-refined">Sign</span>
                                     </div>
                                     <span className="text-antique">→</span>
                                     <div className="flex-1">
-                                        <span className="text-lg">{PLANET_DATA[selectedDetails.nakshatraLord]?.symbol || '☉'}</span>
-                                        <span className="block text-[10px] text-muted">Star Lord</span>
+                                        <span className="text-lg">{PLANET_DATA[normalize(selectedDetails.nakshatraLord)]?.symbol || '☉'}</span>
+                                        <span className="block text-[10px] text-muted-refined">Star Lord</span>
                                     </div>
                                     <span className="text-antique">→</span>
                                     <div className="flex-1 bg-gold-primary/10 rounded-lg py-1">
-                                        <span className="text-lg">{PLANET_DATA[selectedDetails.subLord]?.symbol || '☉'}</span>
+                                        <span className="text-lg">{PLANET_DATA[normalize(selectedDetails.subLord)]?.symbol || '☉'}</span>
                                         <span className="block text-[10px] text-gold-dark font-bold">Sub Lord</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     ) : (
-                        <div className="h-full flex flex-col items-center justify-center text-center text-muted">
-                            <Moon className="w-16 h-16 mb-4 opacity-20" />
-                            <p className="font-serif text-lg">Select a {activeTab === 'planets' ? 'planet' : 'cusp'}</p>
-                            <p className="text-sm">to view detailed Nadi information</p>
+                        <div className="h-full flex flex-col items-center justify-center text-center text-muted-refined opacity-60 mix-blend-multiply">
+                            <Moon className="w-16 h-16 mb-4" />
+                            <p className="font-serif text-lg text-primary">Select a {activeTab === 'planets' ? 'planet' : 'cusp'}</p>
+                            <p className="text-sm font-sans mt-1">to view detailed Nadi information</p>
                         </div>
                     )}
                 </div>
             </div>
 
             {/* Footer */}
-            <div className="bg-parchment/30 p-3 text-center border-t border-antique/10 text-xs text-muted rounded-b-xl">
+            <div className="bg-parchment/30 p-3 text-center border-t border-antique/10 text-xs text-muted-refined rounded-b-xl">
                 <Star className="w-3 h-3 inline-block mr-1 text-gold-dark" />
                 <strong className="font-serif">Nakshatra Nadi System</strong>: Star lords reveal the source, Sub lords determine the result.
             </div>
