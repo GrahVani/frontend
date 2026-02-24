@@ -432,11 +432,25 @@ export const clientApi = {
     /**
      * Trigger chart generation for a client
      */
-    generateChart: (clientId: string, chartType: string = 'D1', ayanamsa: string = 'lahiri', options: Record<string, any> = {}): Promise<any> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
+    generateChart: (clientId: string, chartType: string = 'D1', ayanamsa: string = 'lahiri', options: Record<string, any> = {}): Promise<any> => {
+        // Optimize KP system: D-Charts and Lagna charts in KP reuse Lahiri calculations.
+        // Intercept explicit generation requests for KP charts and route to Lahiri.
+        const LAGNA_CHARTS = ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart', 'mandi', 'gulika'];
+        let targetAyanamsa = ayanamsa;
+
+        if (ayanamsa.toLowerCase() === 'kp' && (
+            chartType.match(/^D\d+$/i) ||
+            chartType.toLowerCase() === 'natal' ||
+            LAGNA_CHARTS.includes(chartType.toLowerCase())
+        )) {
+            targetAyanamsa = 'lahiri';
+        }
+
+        return apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
             method: 'POST',
-            body: JSON.stringify({ chartType, ayanamsa, ...options }),
-        }),
+            body: JSON.stringify({ chartType, ayanamsa: targetAyanamsa, ...options }),
+        });
+    },
 
     /**
      * Fetch Daily Transit data (Lahiri-only, live/dynamic, not stored)
@@ -654,10 +668,11 @@ export const clientApi = {
             },
             kp: {
                 charts: {
-                    // KP: Only D1, no other divisional charts
-                    divisional: ['D1'],
+                    // KP: Uses Lahiri D-charts via frontend aliasing
+                    divisional: ['D1', 'D2', 'D3', 'D4', 'D7', 'D9', 'D10', 'D12', 'D16', 'D20', 'D24', 'D27', 'D30', 'D40', 'D45', 'D60'],
                     special: ['planets_cusps', 'shodasha_varga'],
-                    lagna: []
+                    // KP: Uses Lahiri Lagna charts via frontend aliasing
+                    lagna: ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart', 'mandi', 'gulika']
                 },
                 features: {
                     dasha: ['mahadasha', 'antardasha', 'pratyantardasha', 'sookshma', 'prana'],
@@ -666,7 +681,7 @@ export const clientApi = {
                     compatibility: [],
                     numerology: []
                 },
-                hasDivisional: false,
+                hasDivisional: true,
                 hasAshtakavarga: false,
                 hasNumerology: false,
                 hasCompatibility: false,
