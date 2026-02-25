@@ -110,7 +110,7 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
     }, [selectedItem, activeTab, planets, cusps]);
 
     if (!nadiData) {
-        return <div className="p-8 text-center bg-white rounded-xl text-muted-refined">Loading Nadi Data...</div>;
+        return <div className="p-8 text-center bg-white rounded-xl text-primary">Loading Nadi Data...</div>;
     }
 
     const TabButton = ({ id, label, icon: Icon }: { id: 'planets' | 'cusps', label: string, icon: any }) => (
@@ -120,7 +120,7 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                 "flex items-center gap-2 px-6 py-3 text-sm font-semibold tracking-wide transition-all border-b-2 font-sans",
                 activeTab === id
                     ? "border-gold-primary text-accent-gold bg-gold-soft/10"
-                    : "border-transparent text-muted-refined hover:text-primary hover:bg-gold-primary/5"
+                    : "border-transparent text-primary hover:text-primary hover:bg-gold-primary/5"
             )}
         >
             <Icon className="w-4 h-4" />
@@ -167,7 +167,7 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                                             {pData.symbol}
                                         </div>
                                         <span className="font-bold text-primary font-serif text-sm">{planet.name}</span>
-                                        <span className="block text-[10px] text-muted-refined mt-1">{planet.sign || 'Unknown'}</span>
+                                        <span className="block text-[10px] text-primary mt-1">{planet.sign || 'Unknown'}</span>
                                     </button>
                                 );
                             })}
@@ -205,17 +205,17 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                         <div className="bg-parchment/40 rounded-xl p-4 text-center border border-antique border-b-4 shadow-sm flex flex-col items-center justify-center">
                             <Sun className="w-6 h-6 text-accent-gold mb-2" />
                             <span className="text-3xl font-bold text-primary font-serif leading-none mb-1">{planets.length}</span>
-                            <span className="text-[10px] text-muted-refined uppercase tracking-widest font-sans font-semibold">Grahas</span>
+                            <span className="text-[10px] text-primary uppercase tracking-widest font-sans font-semibold">Grahas</span>
                         </div>
                         <div className="bg-parchment/40 rounded-xl p-4 text-center border border-antique border-b-4 shadow-sm flex flex-col items-center justify-center">
                             <CircleDot className="w-6 h-6 text-indigo-500/80 mb-2" />
                             <span className="text-3xl font-bold text-primary font-serif leading-none mb-1">{cusps.length}</span>
-                            <span className="text-[10px] text-muted-refined uppercase tracking-widest font-sans font-semibold">Bhavas</span>
+                            <span className="text-[10px] text-primary uppercase tracking-widest font-sans font-semibold">Bhavas</span>
                         </div>
                         <div className="bg-parchment/40 rounded-xl p-4 text-center border border-antique border-b-4 shadow-sm flex flex-col items-center justify-center">
                             <Star className="w-6 h-6 text-gold-dark/80 mb-2" />
                             <span className="text-3xl font-bold text-primary font-serif leading-none mb-1">27</span>
-                            <span className="text-[10px] text-muted-refined uppercase tracking-widest font-sans font-semibold">Nakshatras</span>
+                            <span className="text-[10px] text-primary uppercase tracking-widest font-sans font-semibold">Nakshatras</span>
                         </div>
                     </div>
                 </div>
@@ -251,7 +251,7 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
 
                             {/* Position Card */}
                             <div className="bg-white rounded-xl p-4 border border-antique shadow-sm">
-                                <h4 className="text-[10px] text-muted-refined uppercase tracking-wider mb-3 font-serif">Position</h4>
+                                <h4 className="text-[10px] text-primary uppercase tracking-wider mb-3 font-serif">Position</h4>
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <span className="text-3xl mr-2">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.symbol || '♈'}</span>
@@ -259,25 +259,25 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                                     </div>
                                     <div className="text-right">
                                         <span className="font-mono text-lg text-primary">{selectedDetails.longitude}</span>
-                                        <span className="block text-[10px] text-muted-refined">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.element || 'Unknown'} • {ZODIAC_DATA[normalize(selectedDetails.sign)]?.quality || 'Unknown'}</span>
+                                        <span className="block text-[10px] text-primary">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.element || 'Unknown'} • {ZODIAC_DATA[normalize(selectedDetails.sign)]?.quality || 'Unknown'}</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Nakshatra Details */}
                             <div className="bg-white rounded-xl p-4 border border-antique shadow-sm">
-                                <h4 className="text-[10px] text-muted-refined uppercase tracking-wider mb-3 font-serif">Nakshatra (Star)</h4>
+                                <h4 className="text-[10px] text-primary uppercase tracking-wider mb-3 font-serif">Nakshatra (Star)</h4>
                                 <div className="flex items-center gap-3">
                                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center">
                                         <Star className="w-6 h-6 text-white" />
                                     </div>
                                     <div>
                                         <span className="font-bold text-primary font-serif text-lg">{selectedDetails.nakshatraName}</span>
-                                        <span className="block text-sm text-muted-refined">Lord: <span className="text-primary font-medium">{selectedDetails.nakshatraLord}</span></span>
+                                        <span className="block text-sm text-primary">Lord: <span className="text-primary font-medium">{selectedDetails.nakshatraLord}</span></span>
                                     </div>
                                 </div>
                                 {NAKSHATRA_MEANINGS[normalize(selectedDetails.nakshatraName)] && (
-                                    <p className="mt-3 text-xs text-muted-refined bg-parchment/50 p-2 rounded-lg italic">
+                                    <p className="mt-3 text-xs text-primary bg-parchment/50 p-2 rounded-lg">
                                         "{NAKSHATRA_MEANINGS[normalize(selectedDetails.nakshatraName)]}"
                                     </p>
                                 )}
@@ -299,16 +299,16 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
 
                             {/* Lord Chain Summary */}
                             <div className="bg-white rounded-xl p-4 border border-antique shadow-sm">
-                                <h4 className="text-[10px] text-muted-refined uppercase tracking-wider mb-3 font-serif">Stellar Chain</h4>
+                                <h4 className="text-[10px] text-primary uppercase tracking-wider mb-3 font-serif">Stellar Chain</h4>
                                 <div className="flex items-center justify-between text-center">
                                     <div className="flex-1">
                                         <span className="text-lg">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.symbol || '♈'}</span>
-                                        <span className="block text-[10px] text-muted-refined">Sign</span>
+                                        <span className="block text-[10px] text-primary">Sign</span>
                                     </div>
                                     <span className="text-antique">→</span>
                                     <div className="flex-1">
                                         <span className="text-lg">{PLANET_DATA[normalize(selectedDetails.nakshatraLord)]?.symbol || '☉'}</span>
-                                        <span className="block text-[10px] text-muted-refined">Star Lord</span>
+                                        <span className="block text-[10px] text-primary">Star Lord</span>
                                     </div>
                                     <span className="text-antique">→</span>
                                     <div className="flex-1 bg-gold-primary/10 rounded-lg py-1">
@@ -319,8 +319,8 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                             </div>
                         </div>
                     ) : (
-                        <div className="h-full flex flex-col items-center justify-center text-center text-muted-refined opacity-60 mix-blend-multiply">
-                            <Moon className="w-16 h-16 mb-4" />
+                        <div className="h-full flex flex-col items-center justify-center text-center text-primary">
+                            <Moon className="w-16 h-16 mb-4 opacity-40" />
                             <p className="font-serif text-lg text-primary">Select a {activeTab === 'planets' ? 'planet' : 'cusp'}</p>
                             <p className="text-sm font-sans mt-1">to view detailed Nadi information</p>
                         </div>
@@ -329,7 +329,7 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
             </div>
 
             {/* Footer */}
-            <div className="bg-parchment/30 p-3 text-center border-t border-antique/10 text-xs text-muted-refined rounded-b-xl">
+            <div className="bg-parchment/30 p-3 text-center border-t border-antique/10 text-xs text-primary rounded-b-xl">
                 <Star className="w-3 h-3 inline-block mr-1 text-gold-dark" />
                 <strong className="font-serif">Nakshatra Nadi System</strong>: Star lords reveal the source, Sub lords determine the result.
             </div>

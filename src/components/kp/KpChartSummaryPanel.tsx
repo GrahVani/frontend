@@ -85,7 +85,7 @@ export default function KpChartSummaryPanel({
             {/* Planet Snapshot */}
             {planets.length > 0 && (
                 <div className="mt-4 pt-3 border-t border-antique/50">
-                    <p className="text-[9px] uppercase tracking-widest text-muted-refined font-bold mb-2">Planet Snapshot</p>
+                    <p className="text-[9px] uppercase tracking-widest text-primary font-bold mb-2">Planet Snapshot</p>
                     <div className="flex flex-wrap gap-1.5">
                         {planets.map((p) => (
                             <div
@@ -94,7 +94,7 @@ export default function KpChartSummaryPanel({
                                 title={`${p.name} in ${p.sign}${p.isRetrograde ? ' (R)' : ''}`}
                             >
                                 <span className="text-sm">{planetEmojis[p.name] || '●'}</span>
-                                <span className="font-sans text-secondary font-medium">
+                                <span className="font-sans text-primary font-medium">
                                     {signAbbreviations[p.sign] || p.sign?.slice(0, 3)}
                                 </span>
                                 {p.isRetrograde && (
@@ -112,7 +112,7 @@ export default function KpChartSummaryPanel({
 function DetailRow({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
     return (
         <div className="flex items-center justify-between gap-2">
-            <span className="text-[10px] uppercase tracking-widest text-muted-refined font-bold shrink-0">{label}</span>
+            <span className="text-[10px] uppercase tracking-widest text-primary font-bold shrink-0">{label}</span>
             <span className={cn(
                 "text-sm font-serif font-medium text-right",
                 highlight ? "text-gold-dark font-bold" : "text-primary"

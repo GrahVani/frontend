@@ -26,7 +26,6 @@ export interface KpPlanet {
     nakshatra: string;
     nakshatraLord: string;
     subLord: string;
-    subSubLord?: string;
     isRetrograde?: boolean;
 }
 
@@ -42,7 +41,6 @@ export interface KpCusp {
     nakshatra: string;
     nakshatraLord: string;
     subLord: string;
-    subSubLord?: string;
 }
 
 /**
@@ -58,7 +56,6 @@ export interface KpPlanetRaw {
     sign: string;
     star_lord: string;
     sub_lord: string;
-    sub_sub_lord?: string; // Optional
     is_retro?: boolean;
 }
 
@@ -87,7 +84,6 @@ export interface KpCuspRaw {
     sign: string;
     star_lord: string;
     sub_lord: string;
-    sub_sub_lord?: string; // Optional
 }
 
 /**

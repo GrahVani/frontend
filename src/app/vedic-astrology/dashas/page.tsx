@@ -92,6 +92,7 @@ const DASHA_SYSTEMS = [
     { id: 'dwisaptati', name: 'Dwisaptati Sama', years: 72, category: 'conditional', applicable: true, desc: 'Lagna lord in 7th' },
     { id: 'shastihayani', name: 'Shastihayani', years: 60, category: 'conditional', applicable: false, desc: 'Sun in Lagna' },
     { id: 'shattrimshatsama', name: 'Shattrimshatsama', years: 36, category: 'conditional', applicable: false, desc: 'Daytime + Moon in Lagna' },
+    { id: 'chara', name: 'Chara (Jaimini)', years: 0, category: 'jaimini', applicable: true, desc: 'Sign-based system' },
 ];
 
 // =============================================================================
@@ -165,9 +166,14 @@ export default function VedicDashasPage() {
 
     const allowMathematicalDrillDown = isVimshottari && !isTribhagi && !isShodashottari && !isDwadashottari && !isPanchottari && !isChaturshitisama && !isSatabdika && !isDwisaptati && !isShasthihayani && !isShattrimshatsama && !isAshtottari;
 
-    // Effect: Reset to Vimshottari if Raman/KP is selected
+    // Effect: Reset to Vimshottari if Raman/KP is selected, unless KP is using Chara
     useEffect(() => {
-        if ((settings.ayanamsa === 'Raman' || settings.ayanamsa === 'KP') && selectedDashaType !== 'vimshottari') {
+        if (settings.ayanamsa === 'Raman' && selectedDashaType !== 'vimshottari') {
+            setSelectedDashaType('vimshottari');
+            setCurrentLevel(0);
+            setSelectedPath([]);
+            setDashaTree([]);
+        } else if (settings.ayanamsa === 'KP' && selectedDashaType !== 'vimshottari' && selectedDashaType !== 'chara') {
             setSelectedDashaType('vimshottari');
             setCurrentLevel(0);
             setSelectedPath([]);
@@ -376,8 +382,11 @@ export default function VedicDashasPage() {
                                         className="appearance-none bg-[#FAF7F2] border border-[#D08C60]/30 rounded-xl px-4 py-2 pr-10 text-[#3E2A1F] font-medium focus:outline-none focus:ring-2 focus:ring-[#D08C60]/40 cursor-pointer min-w-[200px]"
                                     >
                                         {DASHA_SYSTEMS.filter(sys => {
-                                            if (settings.ayanamsa === 'Raman' || settings.ayanamsa === 'KP') {
+                                            if (settings.ayanamsa === 'Raman') {
                                                 return sys.id === 'vimshottari';
+                                            }
+                                            if (settings.ayanamsa === 'KP') {
+                                                return sys.id === 'vimshottari' || sys.id === 'chara';
                                             }
                                             return true;
                                         }).map((sys, idx) => (

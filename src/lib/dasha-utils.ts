@@ -29,6 +29,33 @@ export interface ActiveDashaPath {
 }
 
 /**
+ * Get the lord of a zodiac sign (0-indexed or name).
+ * Essential for systems like Chara where sub-nodes may only provide sign indices.
+ */
+export function getSignLord(sign: number | string): string {
+    const mapping: Record<number, string> = {
+        0: 'Mars', 1: 'Venus', 2: 'Mercury', 3: 'Moon', 4: 'Sun', 5: 'Mercury',
+        6: 'Venus', 7: 'Mars', 8: 'Jupiter', 9: 'Saturn', 10: 'Saturn', 11: 'Jupiter'
+    };
+
+    const nameMapping: Record<string, string> = {
+        'Aries': 'Mars', 'Taurus': 'Venus', 'Gemini': 'Mercury', 'Cancer': 'Moon',
+        'Leo': 'Sun', 'Virgo': 'Mercury', 'Libra': 'Venus', 'Scorpio': 'Mars',
+        'Sagittarius': 'Jupiter', 'Capricorn': 'Saturn', 'Aquarius': 'Saturn', 'Pisces': 'Jupiter'
+    };
+
+    if (typeof sign === 'number') return mapping[sign % 12] || 'Unknown';
+    if (typeof sign === 'string') {
+        const clean = sign.trim();
+        if (nameMapping[clean]) return nameMapping[clean];
+        // If it's a numeric string
+        const num = parseInt(clean);
+        if (!isNaN(num)) return mapping[num % 12] || 'Unknown';
+    }
+    return 'Unknown';
+}
+
+/**
  * Robustly find sublevels in a dasha node regardless of naming convention.
  */
 export function getSublevels(node: any): any[] | null {
@@ -126,6 +153,7 @@ export function extractPeriodsArray(data: any): any[] {
         const dashaContainer = data.mahadashas?.data || data.mahadashas || data;
         const targetList = dashaContainer.timeline || dashaContainer.dasha_system || dashaContainer.dasha_table || dashaContainer.dasha_list;
 
+
         if (Array.isArray(targetList)) {
             return targetList.map((m: any) => {
                 const startDate = m.startDate || m.start_date || m.start || m.mahadasha_beginning || m.beginning;
@@ -133,7 +161,7 @@ export function extractPeriodsArray(data: any): any[] {
                 const isCurrent = isDateRangeCurrent(startDate, endDate);
 
                 return {
-                    planet: m.planet || m.mahadasha || m.mahadasha_lord || m.lord || m.lord_name || m.sign,
+                    planet: m.planet || m.lord || m.mahadasha || m.mahadasha_lord || m.lord_name || (m.sign !== undefined ? getSignLord(m.sign) : (m.sign_name ? getSignLord(m.sign_name) : 'Unknown')),
                     startDate,
                     endDate,
                     isCurrent,
@@ -141,11 +169,11 @@ export function extractPeriodsArray(data: any): any[] {
                     isBalance: m.type === "Balance" || m.is_balance === true || m.balance_at_birth === true,
                     duration: m.duration ? (typeof m.duration === 'number' ? `${m.duration}y` : m.duration) : undefined,
                     raw: m,
-                    sublevel: (m.antardashas || m.sublevels || m.sublevel || []).map((a: any) => {
+                    sublevel: (m.antardashas || m.sublevels || m.sublevel || m.antar_dashas || []).map((a: any) => {
                         const aStart = a.startDate || a.start_date || a.start || a.beginning;
                         const aEnd = a.endDate || a.end_date || a.end || a.ending;
                         return {
-                            planet: a.planet || a.antardasha_lord || a.antar_lord || a.lord || a.lord_name,
+                            planet: a.planet || a.antardasha_lord || a.antar_lord || a.lord || a.lord_name || (a.sign !== undefined ? getSignLord(a.sign) : (a.sign_name ? getSignLord(a.sign_name) : 'Unknown')),
                             startDate: aStart,
                             endDate: aEnd,
                             isCurrent: isDateRangeCurrent(aStart, aEnd),
@@ -165,6 +193,7 @@ export function extractPeriodsArray(data: any): any[] {
             'ashtottari_dasha',
             'ashtottari_antar',
             'ashtottari_pratyantardasha',
+            'chara_dasha', // NEW
             'pratyantardashas',
             'pratyantara_dashas',
             'sookshma_dashas',
@@ -174,8 +203,14 @@ export function extractPeriodsArray(data: any): any[] {
 
         for (const key of keysToTry) {
             if (data[key]) {
-                const result = extractPeriodsArray(data[key]);
-                if (result.length > 0) return result;
+                // Special handling for chara_dasha object which contains mahadashas array
+                if (key === 'chara_dasha' && !Array.isArray(data[key]) && data[key].mahadashas) {
+                    const result = extractPeriodsArray(data[key].mahadashas);
+                    if (result.length > 0) return result;
+                } else {
+                    const result = extractPeriodsArray(data[key]);
+                    if (result.length > 0) return result;
+                }
             }
         }
 
@@ -238,7 +273,7 @@ export function findActiveDashaPath(rawResponse: any): ActiveDashaPath {
         const eDate = activeNode.end_date || activeNode.endDate || activeNode.end;
 
         const standardizedNode: DashaNode = {
-            planet: activeNode.planet || activeNode.lord || activeNode.sign,
+            planet: activeNode.planet || activeNode.lord || (activeNode.sign !== undefined ? getSignLord(activeNode.sign) : (activeNode.sign_name ? getSignLord(activeNode.sign_name) : 'Unknown')),
             startDate: sDate,
             endDate: eDate,
             isCurrent: true,
@@ -419,8 +454,8 @@ function mapDashaLevelRecursive(node: any, level: number, inheritedStartDate?: s
     const hasChildren = mappedChildren.length > 0;
 
     return {
-        // Robust planet name fallbacks for specialized systems
-        planet: node.planet || node.lord || node.mahadasha || node.mahadasha_lord || node.antardasha_lord || node.antar_lord || node.lord_name || node.sign || 'Unknown',
+        // Robust planet name fallbacks - prioritize Lords but map signs if lords are missing
+        planet: node.planet || node.lord || node.mahadasha || node.mahadasha_lord || node.antardasha_lord || node.antar_lord || node.lord_name || (node.sign !== undefined ? getSignLord(node.sign) : (node.sign_name ? getSignLord(node.sign_name) : 'Unknown')),
         startDate: sDate,
         endDate: eDate,
         isCurrent,
@@ -507,7 +542,7 @@ export function standardizeDashaLevels(periods: any[], parentStartDate?: string)
         const displayDuration = ''; // Placeholder, as duration calculation is complex and often done in UI or a dedicated helper
 
         return {
-            planet: p.planet || p.lord || p.sign || 'Unknown',
+            planet: p.planet || p.lord || (p.sign !== undefined ? getSignLord(p.sign) : (p.sign_name ? getSignLord(p.sign_name) : 'Unknown')),
             startDate: sDate,
             endDate: eDate,
             duration: displayDuration,

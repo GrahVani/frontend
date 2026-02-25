@@ -13,6 +13,14 @@ interface RulingPlanetsWidgetProps {
     className?: string;
 }
 
+// Planet symbols
+const PLANET_SYMBOLS: Record<string, string> = {
+    'Sun': '☉', 'Moon': '☽', 'Mars': '♂', 'Mercury': '☿', 'Jupiter': '♃',
+    'Venus': '♀', 'Saturn': '♄', 'Rahu': '☊', 'Ketu': '☋',
+    'Su': '☉', 'Mo': '☽', 'Ma': '♂', 'Me': '☿', 'Ju': '♃',
+    'Ve': '♀', 'Sa': '♄', 'Ra': '☊', 'Ke': '☋'
+};
+
 export default function RulingPlanetsWidget({
     data,
     isLoading,
@@ -68,84 +76,167 @@ export default function RulingPlanetsWidget({
         return null;
     }
 
+    const uniquePlanets = data?.ruling_planets?.unique_planets_by_strength || [];
+    const components = data?.ruling_planets?.components;
+    const strengthOrder = data?.ruling_planets?.strength_order_explanation || {};
+
     return (
-        <div className={cn("w-full bg-white rounded-2xl border border-antique shadow-sm p-6", className)}>
+        <div className={cn("border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6] w-full", className)}>
             {/* Header / Toolbar */}
-            <div className="flex justify-between items-start mb-6">
-                <h3 className="text-xl font-serif font-bold text-primary border-b border-antique pb-1 mb-2 inline-block">
-                    Ruling Planets
-                </h3>
+            <div className="bg-[#EAD8B1] px-4 py-2.5 border-b border-antique flex justify-between items-center">
                 <div className="flex items-center gap-2">
+                    <h3 className="font-serif text-lg font-bold text-primary leading-tight tracking-wide">
+                        Ruling Planets (RP)
+                    </h3>
+                </div>
+                <div className="flex items-center gap-3">
                     {onRefresh && (
                         <button
                             onClick={onRefresh}
                             disabled={isLoading}
-                            className={cn("p-1.5 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-500", isLoading && "animate-spin")}
+                            className={cn("p-1.5 rounded-full hover:bg-black/5 text-primary transition-colors border border-antique/20", isLoading && "animate-spin")}
+                            title="Refresh RP"
                         >
-                            <RefreshCw className="w-4 h-4" />
+                            <RefreshCw className="w-3.5 h-3.5" />
                         </button>
                     )}
                 </div>
             </div>
 
-            {isLoading ? (
-                <div className="py-8 flex justify-center text-gold-primary animate-pulse">Loading...</div>
-            ) : data && data.ruling_planets ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 font-sans text-[15px] text-primary">
-                    {/* Left Column: Lords */}
-                    <div className="space-y-2">
-                        <div className="grid grid-cols-[140px_1fr] items-center">
-                            <span className="text-muted-refined font-semibold uppercase tracking-wide text-xs">Day lord</span>
-                            <span className="font-semibold text-primary">: {data.ruling_planets.components["1_day_lord"]}</span>
-                        </div>
-                        <div className="grid grid-cols-[140px_1fr] items-center">
-                            <span className="text-muted-refined font-semibold uppercase tracking-wide text-xs">Lagna lord</span>
-                            <span className="font-semibold text-primary">: {data.ruling_planets.components["2_lagna_sign_lord"]}</span>
-                        </div>
-                        <div className="grid grid-cols-[140px_1fr] items-center">
-                            <span className="text-muted-refined font-semibold uppercase tracking-wide text-xs">Lagna Nak Lord</span>
-                            <span className="font-semibold text-primary">: {data.ruling_planets.components["3_lagna_star_lord"]}</span>
-                        </div>
-                        <div className="grid grid-cols-[140px_1fr] items-center">
-                            <span className="text-muted-refined font-semibold uppercase tracking-wide text-xs">Lagna Sub Lord</span>
-                            <span className="font-semibold text-primary">: {data.ruling_planets.components["4_lagna_sub_lord"]}</span>
-                        </div>
-                        <div className="grid grid-cols-[140px_1fr] items-center mt-3 pt-3 border-t border-antique/50">
-                            <span className="text-muted-refined font-semibold uppercase tracking-wide text-xs">Moon Rashi lord</span>
-                            <span className="font-semibold text-primary">: {data.ruling_planets.components["5_moon_sign_lord"]}</span>
-                        </div>
-                        <div className="grid grid-cols-[140px_1fr] items-center">
-                            <span className="text-muted-refined font-semibold uppercase tracking-wide text-xs">Moon Nak. lord</span>
-                            <span className="font-semibold text-primary">: {data.ruling_planets.components["6_moon_star_lord"]}</span>
-                        </div>
-                        <div className="grid grid-cols-[140px_1fr] items-center">
-                            <span className="text-muted-refined font-semibold uppercase tracking-wide text-xs">Moon Sub lord</span>
-                            <span className="font-semibold text-primary">: {data.ruling_planets.components["7_moon_sub_lord"]}</span>
-                        </div>
+            <div className="p-6 space-y-8">
+                {isLoading ? (
+                    <div className="py-20 flex flex-col items-center justify-center space-y-4">
+                        <RefreshCw className="w-8 h-8 text-gold-primary animate-spin" />
+                        <span className="text-sm font-sans text-primary animate-pulse">Calculating Ruling Planets...</span>
                     </div>
+                ) : (
+                    <>
+                        {/* 1. Unique Planets Hero Section */}
+                        <div className="relative p-6 bg-gradient-to-br from-parchment to-white rounded-2xl border border-antique shadow-inner text-center overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold-primary to-transparent opacity-50" />
+                            <h4 className="text-[10px] font-bold text-accent-gold uppercase tracking-[0.2em] mb-4">Unique Ruling Planets by Strength</h4>
+                            <div className="flex flex-wrap justify-center gap-4">
+                                {uniquePlanets.map((planet, idx) => (
+                                    <div key={planet} className="group flex flex-col items-center">
+                                        <div className="w-14 h-14 rounded-xl bg-white border border-antique shadow-sm flex items-center justify-center text-primary group-hover:border-gold-primary group-hover:scale-105 transition-all duration-300">
+                                            <span className="text-2xl font-serif">{PLANET_SYMBOLS[planet] || '☉'}</span>
+                                        </div>
+                                        <span className="mt-2 text-xs font-bold text-primary">{planet}</span>
+                                        <span className="text-[9px] text-primary/50 uppercase tracking-tighter">Rank {idx + 1}</span>
+                                    </div>
+                                ))}
+                                {uniquePlanets.length === 0 && <span className="text-primary italic opacity-50">No data available</span>}
+                            </div>
+                        </div>
 
-                    {/* Right Column: Calculations */}
-                    <div className="space-y-2 border-t md:border-t-0 md:border-l border-antique/50 pt-4 md:pt-0 md:pl-8">
-                        {fortunaStr && (
-                            <div className="grid grid-cols-[120px_1fr] items-center">
-                                <span className="text-muted-refined font-semibold uppercase tracking-wide text-xs">Fortuna</span>
-                                <span className="font-semibold text-primary">: {fortunaStr}</span>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            {/* 2. Component Lords Breakdown */}
+                            <div className="space-y-6">
+                                <h4 className="flex items-center gap-2 text-xs font-bold text-primary uppercase tracking-widest border-b border-antique pb-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-gold-primary" />
+                                    Thematic Components
+                                </h4>
+
+                                {/* Lagna Group */}
+                                <div className="space-y-3 bg-white/40 p-4 rounded-xl border border-antique/40">
+                                    <h5 className="text-[10px] font-bold text-accent-gold uppercase tracking-wider">Lagna (Ascendant)</h5>
+                                    <div className="flex flex-col space-y-2">
+                                        <ComponentRow label="Sign Lord" value={components?.["2_lagna_sign_lord"]} />
+                                        <ComponentRow label="Star Lord" value={components?.["3_lagna_star_lord"]} />
+                                        <ComponentRow label="Sub Lord" value={components?.["4_lagna_sub_lord"]} highlight />
+                                    </div>
+                                </div>
+
+                                {/* Moon Group */}
+                                <div className="space-y-3 bg-white/40 p-4 rounded-xl border border-antique/40">
+                                    <h5 className="text-[10px] font-bold text-accent-gold uppercase tracking-wider">Moon (Mind)</h5>
+                                    <div className="flex flex-col space-y-2">
+                                        <ComponentRow label="Sign Lord" value={components?.["5_moon_sign_lord"]} />
+                                        <ComponentRow label="Star Lord" value={components?.["6_moon_star_lord"]} />
+                                        <ComponentRow label="Sub Lord" value={components?.["7_moon_sub_lord"]} />
+                                    </div>
+                                </div>
+
+                                {/* Day Group */}
+                                <div className="space-y-3 bg-white/40 p-4 rounded-xl border border-antique/40">
+                                    <h5 className="text-[10px] font-bold text-accent-gold uppercase tracking-wider">Time (Day)</h5>
+                                    <div className="flex flex-col space-y-2">
+                                        <ComponentRow label="Day Lord" value={components?.["1_day_lord"]} />
+                                    </div>
+                                </div>
                             </div>
-                        )}
-                        <div className="grid grid-cols-[120px_1fr] items-center">
-                            <span className="text-muted-refined font-semibold uppercase tracking-wide text-xs">Bal. of dasha</span>
-                            {/* Placeholder or TODO if data unavailable */}
-                            <span className="font-semibold text-primary">: <span className="opacity-50 font-normal">-</span></span>
+
+                            {/* 3. Strength Hierarchy Visual Map */}
+                            <div className="space-y-6">
+                                <h4 className="flex items-center gap-2 text-xs font-bold text-primary uppercase tracking-widest border-b border-antique pb-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
+                                    Strength Hierarchy
+                                </h4>
+                                <div className="relative pl-6 space-y-4">
+                                    <div className="absolute left-[11px] top-2 bottom-2 w-px bg-gradient-to-b from-gold-primary via-antique to-antique/10" />
+                                    {Object.entries(strengthOrder).map(([rank, title]) => (
+                                        <div key={rank} className="relative flex items-center gap-4 group">
+                                            <div className={cn(
+                                                "w-6 h-6 rounded-full border-2 border-antique bg-white z-10 flex items-center justify-center text-[10px] font-bold",
+                                                rank.includes('1') || rank.includes('strongest') ? "border-gold-primary text-gold-dark shadow-sm scale-110" : "text-primary/60"
+                                            )}>
+                                                {rank.charAt(0)}
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className={cn(
+                                                    "text-sm font-medium",
+                                                    rank.includes('1') || rank.includes('strongest') ? "text-primary font-bold" : "text-primary/80"
+                                                )}>
+                                                    {title}
+                                                </span>
+                                                <span className="text-[10px] text-primary/40 uppercase tracking-tighter">
+                                                    {rank.includes('strongest') ? 'Primary Factor' : rank.includes('weakest') ? 'Secondary Influence' : `Strength Level ${rank.charAt(0)}`}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Calculation Stats Footer */}
+                                <div className="mt-8 pt-6 border-t border-antique/50 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    {fortunaStr && <CalcBadge icon={<span className="text-xs">⊗</span>} label="Pars Fortuna" value={fortunaStr} />}
+                                    {data?.ayanamsa && <CalcBadge icon={<Clock className="w-3 h-3" />} label="KP Ayanamsa" value={toAngleDMS(data.ayanamsa.value)} mono />}
+                                </div>
+                            </div>
                         </div>
-                        {data.ayanamsa && (
-                            <div className="grid grid-cols-[120px_1fr] items-center">
-                                <span className="text-muted-refined font-semibold uppercase tracking-wide text-xs">KP Ayanamsa</span>
-                                <span className="font-semibold text-primary">: <span className="font-mono text-xs">{toAngleDMS(data.ayanamsa.value)}</span></span>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            ) : null}
+                    </>
+                )}
+            </div>
+        </div>
+    );
+}
+
+// Sub-components for cleaner code
+function ComponentRow({ label, value, highlight = false }: { label: string, value: string | undefined, highlight?: boolean }) {
+    return (
+        <div className={cn(
+            "grid grid-cols-[100px_1fr] items-center py-1.5 px-3 rounded-lg transition-colors",
+            highlight ? "bg-gold-primary/10 border border-gold-primary/20" : "hover:bg-white/60"
+        )}>
+            <span className="text-[10px] font-semibold text-primary/60 uppercase tracking-wider">{label}</span>
+            <div className="flex items-center gap-2">
+                <span className="text-sm font-bold text-primary">{value || '-'}</span>
+                {highlight && <span className="text-[8px] bg-gold-primary text-white px-1.5 py-0.5 rounded-full uppercase font-bold tracking-tighter shadow-sm">Strong</span>}
+            </div>
+        </div>
+    );
+}
+
+function CalcBadge({ icon, label, value, mono = false }: { icon: React.ReactNode, label: string, value: string, mono?: boolean }) {
+    return (
+        <div className="flex items-center gap-3 p-2 bg-white rounded-lg border border-antique/50 shadow-sm">
+            <div className="w-8 h-8 rounded bg-parchment flex items-center justify-center text-accent-gold border border-antique/30">
+                {icon}
+            </div>
+            <div className="flex flex-col">
+                <span className="text-[9px] font-bold text-primary/50 uppercase tracking-widest">{label}</span>
+                <span className={cn("text-xs font-semibold text-primary", mono ? "font-mono" : "font-sans")}>{value}</span>
+            </div>
         </div>
     );
 }

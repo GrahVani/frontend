@@ -2,6 +2,13 @@
 // Handles communication with microservices
 
 import { CreateClientPayload, FamilyLinkPayload, Client, ClientListResponse, FamilyLink, LocationSuggestion } from '@/types/client';
+import type {
+    KpPlanetsCuspsResponse,
+    KpRulingPlanetsResponse,
+    KpBhavaDetailsResponse,
+    KpSignificationsResponse,
+    KpHoraryResponse,
+} from '@/types/kp.types';
 
 // ============ TYPE DEFINITIONS ============
 
@@ -174,13 +181,11 @@ const CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_SERVICE_URL || 'http://localho
 import { useAuthTokenStore } from '@/store/useAuthTokenStore';
 
 function getAccessToken(): string | null {
-    // Prefer in-memory store, fall back to localStorage for initial page load
     const storeToken = useAuthTokenStore.getState().accessToken;
     if (storeToken) return storeToken;
     if (typeof window !== 'undefined') {
         const lsToken = localStorage.getItem('accessToken');
         if (lsToken) {
-            // Migrate to in-memory store
             useAuthTokenStore.getState().setAccessToken(lsToken);
             return lsToken;
         }
@@ -203,7 +208,6 @@ function isTokenExpiringSoon(token: string, thresholdSeconds: number = 60): bool
     return (exp * 1000 - Date.now()) < thresholdSeconds * 1000;
 }
 
-// Refresh mutex — prevents concurrent refresh requests
 let refreshPromise: Promise<string | null> | null = null;
 
 async function refreshAccessToken(): Promise<string | null> {
@@ -250,7 +254,6 @@ async function refreshAccessToken(): Promise<string | null> {
 async function apiFetch<T = any>(url: string, options: RequestInit = {}): Promise<T> {
     let token = getAccessToken();
 
-    // Proactive refresh: if token expires within 60 seconds, refresh first
     if (token && isTokenExpiringSoon(token)) {
         const newToken = await refreshAccessToken();
         if (newToken) token = newToken;
@@ -262,7 +265,6 @@ async function apiFetch<T = any>(url: string, options: RequestInit = {}): Promis
         ...((options.headers as any) || {}),
     };
 
-    // Retry logic with exponential backoff
     const maxRetries = 3;
     let attempt = 0;
 
@@ -271,7 +273,6 @@ async function apiFetch<T = any>(url: string, options: RequestInit = {}): Promis
             const response = await fetch(url, { ...options, headers });
 
             if (!response.ok) {
-                // Retry on 5xx server errors or 429
                 if (response.status >= 500 || response.status === 429) {
                     if (attempt < maxRetries - 1) {
                         const delay = Math.pow(2, attempt) * 1000;
@@ -283,11 +284,9 @@ async function apiFetch<T = any>(url: string, options: RequestInit = {}): Promis
 
                 const errorData = await response.json().catch(() => ({}));
 
-                // Handle 401: attempt token refresh before giving up
                 if (response.status === 401 && typeof window !== 'undefined') {
                     const newToken = await refreshAccessToken();
                     if (newToken) {
-                        // Retry the original request with the new token
                         const retryHeaders = {
                             ...headers,
                             'Authorization': `Bearer ${newToken}`,
@@ -298,7 +297,6 @@ async function apiFetch<T = any>(url: string, options: RequestInit = {}): Promis
                             return retryResponse.json();
                         }
                     }
-                    // Refresh failed — clear tokens and redirect
                     useAuthTokenStore.getState().clearTokens();
                     if (!window.location.pathname.includes('/login')) {
                         window.location.href = '/login?expired=true';
@@ -310,14 +308,12 @@ async function apiFetch<T = any>(url: string, options: RequestInit = {}): Promis
                 throw new Error(`${errorMessage}${errorDetails}`);
             }
 
-            // Handle 204 No Content
             if (response.status === 204) {
                 return {} as T;
             }
 
             return response.json();
         } catch (error: any) {
-            // Network errors should be retried
             const isNetworkError = error.message === 'Failed to fetch' || error.message.includes('Network request failed');
             if (isNetworkError && attempt < maxRetries - 1) {
                 const delay = Math.pow(2, attempt) * 1000;
@@ -360,11 +356,7 @@ export const userApi = {
 };
 
 // ============ CLIENT API ============
-// Core client management for astrology practice
 export const clientApi = {
-    /**
-     * Get all clients with pagination and search
-     */
     getClients: (params?: {
         page?: number;
         limit?: number;
@@ -385,56 +377,33 @@ export const clientApi = {
         return apiFetch(`${CLIENT_URL}/clients${query ? `?${query}` : ''}`);
     },
 
-    /**
-     * Get single client by ID
-     */
     getClient: (id: string): Promise<Client> =>
         apiFetch(`${CLIENT_URL}/clients/${id}`),
 
-    /**
-     * Create new client (registration)
-     */
     createClient: (data: CreateClientPayload): Promise<Client> =>
         apiFetch(`${CLIENT_URL}/clients`, {
             method: 'POST',
             body: JSON.stringify(data),
         }),
 
-    /**
-     * Update client profile
-     */
     updateClient: (id: string, data: Partial<CreateClientPayload>): Promise<Client> =>
         apiFetch(`${CLIENT_URL}/clients/${id}`, {
             method: 'PATCH',
             body: JSON.stringify(data),
         }),
 
-    /**
-     * Delete client (soft delete)
-     */
     deleteClient: (id: string): Promise<void> =>
         apiFetch(`${CLIENT_URL}/clients/${id}`, {
             method: 'DELETE',
         }),
 
-    /**
-     * Get location suggestions
-     */
     getSuggestions: (query: string, limit: number = 5): Promise<{ suggestions: LocationSuggestion[] }> =>
         apiFetch(`${CLIENT_URL}/geocode/suggest?q=${encodeURIComponent(query)}&limit=${limit}`),
 
-    /**
-     * Get saved charts for a client
-     */
     getCharts: (clientId: string): Promise<any[]> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/charts`),
 
-    /**
-     * Trigger chart generation for a client
-     */
     generateChart: (clientId: string, chartType: string = 'D1', ayanamsa: string = 'lahiri', options: Record<string, any> = {}): Promise<any> => {
-        // Optimize KP system: D-Charts and Lagna charts in KP reuse Lahiri calculations.
-        // Intercept explicit generation requests for KP charts and route to Lahiri.
         const LAGNA_CHARTS = ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart', 'mandi', 'gulika'];
         let targetAyanamsa = ayanamsa;
 
@@ -452,11 +421,6 @@ export const clientApi = {
         });
     },
 
-    /**
-     * Fetch Daily Transit data (Lahiri-only, live/dynamic, not stored)
-     * @param startDate - YYYY-MM-DD format
-     * @param endDate - YYYY-MM-DD format
-     */
     generateDailyTransit: (clientId: string, startDate: string, endDate: string): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
             method: 'POST',
@@ -468,57 +432,49 @@ export const clientApi = {
             }),
         }),
 
-    /**
-     * Trigger bulk core chart generation (D1, D9 for all systems)
-     */
     generateCoreCharts: (clientId: string): Promise<{ success: boolean; count: number }> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate-core`, {
             method: 'POST',
         }),
 
-    /**
-     * Trigger exhaustive chart generation (All vargas, dashas, diagrams)
-     */
     generateFullVedicProfile: (clientId: string): Promise<{ success: boolean; count: number }> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate-full`, {
             method: 'POST',
         }),
 
-    /**
-     * Generate Vimshottari Dasha periods for a client
-     * @param level - 'mahadasha' | 'antardasha' | 'pratyantardasha' | 'sookshma' | 'prana'
-     * @param ayanamsa - 'lahiri' | 'raman' | 'kp'
-     * @param save - if true, saves dasha to database
-     */
     generateDasha: (
         clientId: string,
         level: string = 'mahadasha',
         ayanamsa: string = 'lahiri',
         save: boolean = false,
         context: { mahaLord?: string; antarLord?: string; pratyantarLord?: string; drillDownPath?: string[] } = {}
-    ): Promise<DashaResponse> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/dasha`, {
+    ): Promise<DashaResponse> => {
+        console.log(`[API] generateDasha - Client: ${clientId}, Level: ${level}, Ayanamsa: ${ayanamsa}, Context:`, context);
+        return apiFetch(`${CLIENT_URL}/clients/${clientId}/dasha`, {
             method: 'POST',
             body: JSON.stringify({ level, ayanamsa, save, ...context }),
-        }),
+        }).then(res => {
+            console.log(`[API] generateDasha SUCCESS - Received ${res.data?.mahadashas?.length || 0} mahadashas`);
+            return res;
+        }).catch(err => {
+            console.error(`[API] generateDasha ERROR:`, err);
+            throw err;
+        });
+    },
 
-    /**
-     * Generate Other Dasha Systems (Tribhagi, Shodashottari, etc.)
-     * @param type - tribhagi | shodashottari | dwadashottari | panchottari | chaturshitisama | satabdika | dwisaptati | shastihayani | shattrimshatsama | chara
-     * @param ayanamsa - 'lahiri' | 'raman' | 'kp'
-     */
     generateOtherDasha: (
         clientId: string,
         type: string,
         ayanamsa: string = 'lahiri',
         level: string = 'mahadasha',
         context: { mahaLord?: string; antarLord?: string; pratyantarLord?: string } = {}
-    ): Promise<DashaResponse> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/dasha/${type}`, {
+    ): Promise<DashaResponse> => {
+        console.log(`[API] generateOtherDasha - Client: ${clientId}, Type: ${type}, Ayanamsa: ${ayanamsa}, Level: ${level}`);
+        return apiFetch(`${CLIENT_URL}/clients/${clientId}/dasha/${type}`, {
             method: 'POST',
             body: JSON.stringify({ ayanamsa, level, save: false, ...context }),
         }).then((response: any) => {
-            // Normalize response format to match frontend expectations
+            console.log(`[API] generateOtherDasha SUCCESS - Type: ${type}, Periods: ${response.data?.length || 0}`);
             const normalizedData: DashaResponse = {
                 clientId: response.clientId || clientId,
                 clientName: response.clientName || '',
@@ -533,7 +489,6 @@ export const clientApi = {
             };
             return normalizedData;
         }).catch((error: Error) => {
-            // If no data, return valid empty structure instead of throwing
             console.warn(`Dasha ${type} not applicable for this chart:`, error.message);
             const emptyResponse: DashaResponse = {
                 clientId,
@@ -548,42 +503,27 @@ export const clientApi = {
                 calculatedAt: new Date().toISOString(),
             };
             return emptyResponse;
-        }),
+        });
+    },
 
-    /**
-     * Generate Ashtakavarga (Lahiri/Raman only)
-     * @param type - 'bhinna' (default) | 'sarva' | 'shodasha'
-     */
     generateAshtakavarga: (clientId: string, ayanamsa: string = 'lahiri', type: string = 'bhinna'): Promise<AshtakavargaResponse> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/ashtakavarga`, {
             method: 'POST',
             body: JSON.stringify({ ayanamsa, type }),
         }),
 
-    /**
-     * Generate Sudarshan Chakra
-     */
     generateSudarshanChakra: (clientId: string, ayanamsa: string = 'lahiri'): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/sudarshan-chakra`, {
             method: 'POST',
             body: JSON.stringify({ ayanamsa }),
         }),
 
-    /**
-     * Get Yoga Analysis for a specific client
-     */
     getYogaAnalysis: (clientId: string, yogaType: string, ayanamsa: string = 'lahiri'): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/yoga/${yogaType}?ayanamsa=${ayanamsa}`),
 
-    /**
-     * Get Dosha Analysis for a specific client
-     */
     getDoshaAnalysis: (clientId: string, doshaType: string, ayanamsa: string = 'lahiri'): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/dosha/${doshaType}?ayanamsa=${ayanamsa}`),
 
-    /**
-     * Get Shadbala Analysis (Lahiri exclusive)
-     */
     getShadbala: (clientId: string): Promise<any> => {
         console.log(`[api.ts] getShadbala requested for: ${clientId}`);
         return apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
@@ -595,10 +535,6 @@ export const clientApi = {
         });
     },
 
-    /**
-     * Get Pushkara Navamsha Analysis (Lahiri exclusive)
-     * Identifies auspicious navamsha divisions for each planet
-     */
     getPushkaraNavamsha: (clientId: string): Promise<any> => {
         console.log(`[api.ts] getPushkaraNavamsha requested for: ${clientId}`);
         return apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
@@ -610,25 +546,16 @@ export const clientApi = {
         });
     },
 
-    /**
-     * Get Avakhada Chakra
-     * Universal endpoint
-     */
     getAvakhadaChakra: (clientId: string): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
             method: 'POST',
-            body: JSON.stringify({ chartType: 'avakhada_chakra', ayanamsa: 'universal' }), // Explicit universal
+            body: JSON.stringify({ chartType: 'avakhada_chakra', ayanamsa: 'universal' }),
         }),
 
-    /**
-     * Get system capabilities - which chart types are available per ayanamsa
-     * SYNCED with backend endpoint-availability.ts (2026-01-21)
-     */
     getSystemCapabilities: (system: string): SystemCapabilities => {
         const CAPABILITIES: Record<string, SystemCapabilities> = {
             lahiri: {
                 charts: {
-                    // Synced with backend - removed D6 and D150 (not supported)
                     divisional: ['D1', 'D2', 'D3', 'D4', 'D7', 'D9', 'D10', 'D12', 'D16', 'D20', 'D24', 'D27', 'D30', 'D40', 'D45', 'D60'],
                     special: ['sudarshana', 'transit', 'shodasha_varga_signs'],
                     lagna: ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart', 'mandi', 'gulika']
@@ -648,7 +575,6 @@ export const clientApi = {
             },
             raman: {
                 charts: {
-                    // No D6 or D150 for Raman
                     divisional: ['D1', 'D2', 'D3', 'D4', 'D7', 'D9', 'D10', 'D12', 'D16', 'D20', 'D24', 'D27', 'D30', 'D40', 'D45', 'D60'],
                     special: ['sudarshana', 'transit', 'shodasha_varga_signs'],
                     lagna: ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9']
@@ -668,10 +594,8 @@ export const clientApi = {
             },
             kp: {
                 charts: {
-                    // KP: Uses Lahiri D-charts via frontend aliasing
                     divisional: ['D1', 'D2', 'D3', 'D4', 'D7', 'D9', 'D10', 'D12', 'D16', 'D20', 'D24', 'D27', 'D30', 'D40', 'D45', 'D60'],
                     special: ['planets_cusps', 'shodasha_varga'],
-                    // KP: Uses Lahiri Lagna charts via frontend aliasing
                     lagna: ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart', 'mandi', 'gulika']
                 },
                 features: {
@@ -712,27 +636,16 @@ export const clientApi = {
 };
 
 // ============ FAMILY API ============
-// Family relationship management for Kundali matching and family charts
 export const familyApi = {
-    /**
-     * Get all family links for a client
-     */
     getFamilyLinks: (clientId: string): Promise<FamilyLink[]> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/family`),
 
-    /**
-     * Link a family member to client
-     * Creates bidirectional relationship (e.g., parent-child)
-     */
     linkFamily: (clientId: string, data: FamilyLinkPayload): Promise<{ success: boolean }> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/family-link`, {
             method: 'POST',
             body: JSON.stringify(data),
         }),
 
-    /**
-     * Remove family link
-     */
     unlinkFamily: (clientId: string, relatedClientId: string): Promise<{ success: boolean }> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/family/${relatedClientId}`, {
             method: 'DELETE',
@@ -740,17 +653,10 @@ export const familyApi = {
 };
 
 // ============ GEOCODE API ============
-// Location services for accurate birth place coordinates
 export const geocodeApi = {
-    /**
-     * Get location suggestions for autocomplete
-     */
     getSuggestions: (query: string, limit: number = 5): Promise<{ suggestions: LocationSuggestion[] }> =>
         apiFetch(`${CLIENT_URL}/geocode/suggest?q=${encodeURIComponent(query)}&limit=${limit}`),
 
-    /**
-     * Get full geocoding result for a place
-     */
     geocodePlace: (place: string): Promise<LocationSuggestion> =>
         apiFetch(`${CLIENT_URL}/geocode`, {
             method: 'POST',
@@ -760,85 +666,39 @@ export const geocodeApi = {
 
 // ============ RAMAN API ============
 export const ramanApi = {
-    /**
-     * Get Raman Natal Chart
-     */
     getNatalChart: (clientId: string): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/natal`, {
             method: 'GET'
         }).catch(err => {
-            // Fallback if client service proxy isn't ready, try direct engine if possible or handle error
             console.error("Raman fetch failed", err);
             throw err;
         }),
-
-    // Note: If the backend architecture routes through client-service -> astro-engine,
-    // we should check if the client-service has these endpoints exposed.
-    // Based on `api.ts`, most calls go to `${CLIENT_URL}/clients/...`
-    // If not, we might need a direct proxy or check if `clientApi.generateChart` handles it.
-
-    // However, looking at the backend `raman.routes.ts`, they are in `astro-engine`.
-    // Usually the frontend talks to an API Gateway or Client Service.
-    // Let's assume for now we use the pattern of `clientApi` or existing gateway.
-
-    // Wait, the plan was to add `ramanApi`. 
-    // If we look at `clientApi.generateChart`, it sends `chartType` and `ayanamsa`.
-    // Maybe we don't need a separate API call if `generateChart` covers it?
-    // But `generateChart` returns `any`.
-
-    // Let's implement a specific method using the `apiFetch` but targeting the likely endpoint.
-    // If `CLIENT_URL` is the main entry point, likely: `${CLIENT_URL}/clients/${clientId}/raman/natal`
-    // OR directly to the gateway if it exposes raman.
-
-    // Re-reading `api.ts`:
-    // It uses `CLIENT_URL`.
-    // I will assume there is a pass-through or I should use `generateChart` with specialized params?
-    // No, strictly following plan:
 
     getNatal: (clientId: string): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/natal`, {
             method: 'POST'
         }),
 
-    /**
-     * Get Raman Transit Chart
-     */
     getTransit: (clientId: string): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/transit`, {
             method: 'POST'
         }),
 
-    /**
-     * Get Divisional Chart (D-Chart)
-     * type: D1, D9, D10, etc.
-     */
     getDivisional: (clientId: string, type: string): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/divisional/${type}`, {
             method: 'POST'
         }),
 
-    /**
-     * Get Ashtakavarga
-     * type: bhinna-ashtakavarga | sarva-ashtakavarga | shodasha-varga
-     */
     getAshtakavarga: (clientId: string, type: 'bhinna-ashtakavarga' | 'sarva-ashtakavarga' | 'shodasha-varga'): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/${type}`, {
             method: 'POST'
         }),
 
-    /**
-     * Get Dasha
-     * level: maha-antar | pratyantar | sookshma | prana
-     */
     getDasha: (clientId: string, level: 'maha-antar' | 'pratyantar' | 'sookshma' | 'prana'): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/dasha/${level}`, {
             method: 'POST'
         }),
 
-    /**
-     * Get Special Lagna Charts
-     * type: arudha-lagna | bhava-lagna | hora-lagna | karkamsha-d1 | karkamsha-d9
-     */
     getLagnaChart: (clientId: string, type: string): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/${type}`, {
             method: 'POST'
@@ -847,113 +707,63 @@ export const ramanApi = {
 
 // ============ KP (KRISHNAMURTI PADDHATI) API ============
 // KP System endpoints for stellar astrology
-import type {
-    KpPlanetsCuspsResponse,
-    KpRulingPlanetsResponse,
-    KpBhavaDetailsResponse,
-    KpSignificationsResponse,
-    KpHoraryResponse,
-} from '@/types/kp.types';
-
 export const kpApi = {
-    /**
-     * Get KP Planets and Cusps with sub-lords
-     * Core chart data for KP system
-     */
     getPlanetsCusps: (clientId: string): Promise<KpPlanetsCuspsResponse> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/planets-cusps`, {
             method: 'POST'
         }),
 
-    /**
-     * Get current Ruling Planets
-     * Time-sensitive - for timing analysis
-     */
     getRulingPlanets: (clientId: string): Promise<KpRulingPlanetsResponse> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/ruling-planets`, {
             method: 'POST'
         }),
 
-    /**
-     * Get Bhava (House) Details
-     */
     getBhavaDetails: (clientId: string): Promise<KpBhavaDetailsResponse> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/bhava-details`, {
             method: 'POST'
         }),
 
-    /**
-     * Get Significations
-     * Which planets signify which houses (key for KP predictions)
-     */
     getSignifications: (clientId: string): Promise<KpSignificationsResponse> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/significations`, {
             method: 'POST'
         }),
 
-    /**
-     * Get House Significations (Table 1)
-     */
     getHouseSignifications: (clientId: string): Promise<KpSignificationsResponse> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/house-significations`, {
             method: 'POST'
         }),
 
-    /**
-     * Get Planet Significators (Table 2 - Matrix)
-     */
     getPlanetSignificators: (clientId: string): Promise<KpSignificationsResponse> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/planets-significators`, {
             method: 'POST'
         }),
 
-    /**
-     * Get KP Cuspal Interlinks
-     */
     getInterlinks: (clientId: string): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/interlinks`, {
             method: 'POST'
         }),
 
-    /**
-     * Get KP Advanced Interlinks (SSL)
-     */
     getAdvancedInterlinks: (clientId: string): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/interlinks-advanced`, {
             method: 'POST'
         }),
 
-    /**
-     * Get KP Nakshatra Nadi
-     */
     getNakshatraNadi: (clientId: string): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/nakshatra-nadi`, {
             method: 'POST'
         }),
 
-    /**
-     * Get KP Pars Fortuna
-     */
     getFortuna: (clientId: string): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/fortuna`, {
             method: 'POST'
         }),
 
-    /**
-     * Get KP Horary (Prashna) Analysis
-     * @param clientId - Client ID for birth details
-     * @param horaryNumber - Number between 1-249
-     * @param question - The question being asked
-     */
     getHorary: (clientId: string, horaryNumber: number, question: string): Promise<KpHoraryResponse> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/horary`, {
             method: 'POST',
             body: JSON.stringify({ horaryNumber, question }),
         }),
 
-    /**
-     * Get Shadbala (Planetary Strength) for a client
-     */
     getShadbala: (clientId: string): Promise<any> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
             method: 'POST',

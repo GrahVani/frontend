@@ -73,7 +73,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
 
         // Determine promise level
         let promiseLevel = 'Neutral';
-        let promiseColor = 'text-muted-refined';
+        let promiseColor = 'text-primary';
         if (positiveRatio >= 70) { promiseLevel = 'Very Strong'; promiseColor = 'text-emerald-600'; }
         else if (positiveRatio >= 50) { promiseLevel = 'Strong'; promiseColor = 'text-emerald-500'; }
         else if (positiveRatio >= 30) { promiseLevel = 'Moderate'; promiseColor = 'text-amber-500'; }
@@ -92,7 +92,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
         <div className={cn("space-y-6 animate-in fade-in duration-500", className)}>
             {/* Cusp Selector */}
             <div className="flex items-center justify-center gap-1 p-2 bg-parchment rounded-xl border border-antique overflow-x-auto">
-                <button className="p-2 text-muted-refined hover:text-primary transition-colors" onClick={() => setSelectedCusp(Math.max(1, selectedCusp - 1))}>
+                <button className="p-2 text-primary hover:text-primary transition-colors" onClick={() => setSelectedCusp(Math.max(1, selectedCusp - 1))}>
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
                 </button>
                 {Array.from({ length: 12 }, (_, i) => i + 1).map(cusp => {
@@ -107,15 +107,15 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                                 "flex flex-col items-center justify-center min-w-[48px] h-14 rounded-lg transition-all duration-300 font-sans tracking-wide",
                                 isActive
                                     ? "bg-gradient-to-br from-gold-primary to-gold-dark text-white shadow-md scale-105 ring-1 ring-gold-primary/50"
-                                    : "bg-white text-secondary hover:bg-parchment hover:text-primary hover:shadow-sm border border-antique shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+                                    : "bg-white text-primary hover:bg-parchment hover:text-primary hover:shadow-sm border border-antique shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
                             )}
                         >
                             <span className="text-lg mb-0.5">{ZODIAC_SYMBOLS[signIdx] || '♈'}</span>
-                            <span className="text-[10px] font-semibold opacity-90">C{cusp}</span>
+                            <span className="text-[10px] font-semibold">C{cusp}</span>
                         </button>
                     );
                 })}
-                <button className="p-2 text-muted-refined hover:text-primary transition-colors" onClick={() => setSelectedCusp(Math.min(12, selectedCusp + 1))}>
+                <button className="p-2 text-primary hover:text-primary transition-colors" onClick={() => setSelectedCusp(Math.min(12, selectedCusp + 1))}>
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                 </button>
             </div>
@@ -126,8 +126,8 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                 <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-antique shadow-sm">
                     <div className="flex items-center justify-between mb-4">
                         <div>
-                            <h3 className="text-xs font-bold text-muted-refined uppercase tracking-widest font-sans">Sub-Sub Lord Analysis</h3>
-                            <p className="text-[10px] text-muted-refined mt-1">Final confirmation of house promise</p>
+                            <h3 className="text-xs font-bold text-primary uppercase tracking-widest font-sans">Sub-Sub Lord Analysis</h3>
+                            <p className="text-[10px] text-primary mt-1">Final confirmation of house promise</p>
                         </div>
                         <span className="px-3 py-1.5 bg-gradient-to-br from-parchment to-softwhite text-primary border border-antique rounded-lg text-xs font-bold font-sans tracking-wide shadow-sm">
                             {selectedCusp}{[1, 21, 31].includes(selectedCusp) ? 'st' : [2, 22].includes(selectedCusp) ? 'nd' : [3, 23].includes(selectedCusp) ? 'rd' : 'th'} House
@@ -139,12 +139,12 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                         <div className="flex items-start justify-between">
                             <div>
                                 <h2 className="text-xl font-serif font-bold text-primary">{houseInfo?.topic}</h2>
-                                <p className="text-3xl font-light text-muted-refined mt-1">{signName} <span className="text-lg">{degreeDisplay}</span></p>
+                                <p className="text-3xl font-light text-primary mt-1">{signName} <span className="text-lg">{degreeDisplay}</span></p>
                             </div>
                             <div className="text-right">
                                 <div className="flex flex-wrap gap-1 justify-end">
                                     {houseInfo?.keywords.map(k => (
-                                        <span key={k} className="px-2 py-0.5 bg-white rounded text-[10px] text-muted-refined border border-antique">{k}</span>
+                                        <span key={k} className="px-2 py-0.5 bg-white rounded text-[10px] text-primary border border-antique">{k}</span>
                                     ))}
                                 </div>
                             </div>
@@ -157,8 +157,8 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                             <div className="flex items-center justify-between">
                                 {/* Sign Lord */}
                                 <div className="flex-1 text-center p-3 bg-parchment/30 rounded-lg border border-antique/50">
-                                    <span className="text-2xl text-muted-refined block">{PLANET_SYMBOLS[currentPromise.chain.signLord.planet] || '☉'}</span>
-                                    <span className="text-[10px] text-muted-refined uppercase tracking-wider block mt-1">Sign Lord</span>
+                                    <span className="text-2xl text-primary block">{PLANET_SYMBOLS[currentPromise.chain.signLord.planet] || '☉'}</span>
+                                    <span className="text-[10px] text-primary uppercase tracking-wider block mt-1">Sign Lord</span>
                                     <span className="text-sm font-bold text-primary font-serif">{currentPromise.chain.signLord.planet}</span>
                                 </div>
 
@@ -166,8 +166,8 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
 
                                 {/* Star Lord */}
                                 <div className="flex-1 text-center p-3 bg-parchment/30 rounded-lg border border-antique/50">
-                                    <span className="text-2xl text-muted-refined block">{PLANET_SYMBOLS[currentPromise.chain.starLord.planet] || '☉'}</span>
-                                    <span className="text-[10px] text-muted-refined uppercase tracking-wider block mt-1">Star Lord</span>
+                                    <span className="text-2xl text-primary block">{PLANET_SYMBOLS[currentPromise.chain.starLord.planet] || '☉'}</span>
+                                    <span className="text-[10px] text-primary uppercase tracking-wider block mt-1">Star Lord</span>
                                     <span className="text-sm font-bold text-primary font-serif">{currentPromise.chain.starLord.planet}</span>
                                 </div>
 
@@ -187,7 +187,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                                     <span className="text-3xl text-white block mb-1">{PLANET_SYMBOLS[currentPromise.chain.subSubLord.planet] || '☉'}</span>
                                     <span className="text-[10px] text-white/90 uppercase tracking-wider block mt-1 font-sans font-semibold">Sub-Sub Lord</span>
                                     <span className="text-lg font-bold text-white font-serif tracking-wide">{currentPromise.chain.subSubLord.planet}</span>
-                                    <span className="text-[10px] text-white/80 block mt-1 font-sans italic">Final Confirmer</span>
+                                    <span className="text-[10px] text-white/80 block mt-1 font-sans">Final Confirmer</span>
                                 </div>
                             </div>
                         </div>
@@ -213,7 +213,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                                             </div>
                                         ))
                                     ) : (
-                                        <span className="text-emerald-400 text-sm italic">None found</span>
+                                        <span className="text-emerald-400 text-sm">None found</span>
                                     )}
                                 </div>
                             </div>
@@ -235,7 +235,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                                             </div>
                                         ))
                                     ) : (
-                                        <span className="text-rose-400 text-sm italic">None found</span>
+                                        <span className="text-rose-400 text-sm">None found</span>
                                     )}
                                 </div>
                             </div>
@@ -245,7 +245,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
 
                 {/* Right Panel - Promise Meter & Verdict */}
                 <div className="bg-white rounded-2xl p-6 border border-antique shadow-sm">
-                    <h3 className="text-xs font-bold text-muted-refined uppercase tracking-widest font-serif mb-6">Promise Analysis</h3>
+                    <h3 className="text-xs font-bold text-primary uppercase tracking-widest font-serif mb-6">Promise Analysis</h3>
 
                     {analysis && currentPromise && (
                         <div className="space-y-6">
@@ -267,7 +267,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                                     </svg>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                                         <span className="text-2xl font-bold text-primary">{Math.round(analysis.positiveRatio)}%</span>
-                                        <span className="text-[10px] text-muted-refined">Positive</span>
+                                        <span className="text-[10px] text-primary">Positive</span>
                                     </div>
                                 </div>
                                 <div className={cn("text-lg font-bold font-serif", analysis.promiseColor)}>
@@ -292,20 +292,20 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                             {/* SSL Verdict */}
                             <div className="p-4 bg-gradient-to-br from-parchment to-softwhite border border-antique rounded-xl text-center shadow-sm">
                                 <AlertCircle className="w-6 h-6 text-gold-dark mx-auto mb-2" />
-                                <h4 className="text-[10px] text-muted-refined uppercase tracking-wider font-semibold font-sans">SSL Verdict</h4>
+                                <h4 className="text-[10px] text-primary uppercase tracking-wider font-semibold font-sans">SSL Verdict</h4>
                                 <p className="text-primary font-sans mt-2 text-sm leading-relaxed">
                                     <span className="font-bold font-serif">{currentPromise.chain.subSubLord.planet}</span> as SSL
                                     {analysis.positiveRatio >= 50
                                         ? <span className="text-emerald-600 font-semibold"> confirms</span>
                                         : <span className="text-rose-600 font-semibold"> denies</span>
-                                    } the promise for <span className="font-semibold text-secondary">{houseInfo?.topic.toLowerCase()}</span>.
+                                    } the promise for <span className="font-semibold text-primary">{houseInfo?.topic.toLowerCase()}</span>.
                                 </p>
                             </div>
                         </div>
                     )}
 
                     {!currentPromise && (
-                        <div className="text-center py-8 text-muted-refined">
+                        <div className="text-center py-8 text-primary">
                             <Minus className="w-8 h-8 mx-auto mb-2 opacity-30" />
                             <p>No SSL data for House {selectedCusp}</p>
                         </div>
