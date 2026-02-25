@@ -61,14 +61,14 @@ export default function HoraryPanel({
                     </div>
                     <div>
                         <h3 className="font-serif font-bold text-lg text-primary">KP Horary (Prashna)</h3>
-                        <p className="text-xs text-muted-refined">Enter a number between 1-249 and your question</p>
+                        <p className="text-xs text-primary">Enter a number between 1-249 and your question</p>
                     </div>
                 </div>
 
                 <div className="space-y-4">
                     {/* Horary Number */}
                     <div>
-                        <label className="block text-xs font-semibold text-muted-refined uppercase tracking-wider mb-2">
+                        <label className="block text-xs font-semibold text-primary uppercase tracking-wider mb-2">
                             Horary Number (1-249)
                         </label>
                         <div className="flex gap-2">
@@ -99,7 +99,7 @@ export default function HoraryPanel({
 
                     {/* Question */}
                     <div>
-                        <label className="block text-xs font-semibold text-muted-refined uppercase tracking-wider mb-2">
+                        <label className="block text-xs font-semibold text-primary uppercase tracking-wider mb-2">
                             Your Question
                         </label>
                         <textarea
@@ -169,14 +169,14 @@ export default function HoraryPanel({
                                 )}>
                                     {result.verdict.favorable ? 'FAVORABLE' : 'NOT FAVORABLE'}
                                 </p>
-                                <p className="text-sm text-muted-refined mt-1">{result.verdict.reason}</p>
+                                <p className="text-sm text-primary mt-1">{result.verdict.reason}</p>
                             </div>
                         </div>
                     )}
 
                     {/* Question & Number */}
                     <div className="mb-4">
-                        <p className="text-xs text-muted-refined uppercase tracking-wider mb-1">Your Question</p>
+                        <p className="text-xs text-primary uppercase tracking-wider mb-1">Your Question</p>
                         <p className="text-primary font-medium">{result.question}</p>
                         <span className="inline-block mt-2 px-2 py-1 bg-gold-primary/10 text-gold-dark text-xs font-mono rounded">
                             Horary #{result.horaryNumber}
@@ -186,11 +186,11 @@ export default function HoraryPanel({
                     {/* Ascendant Details */}
                     {result.ascendant && (
                         <div className="p-4 bg-parchment rounded-xl mb-4">
-                            <p className="text-xs text-muted-refined uppercase tracking-wider mb-2">Horary Ascendant</p>
+                            <p className="text-xs text-primary uppercase tracking-wider mb-2">Horary Ascendant</p>
                             <div className="flex items-center gap-4">
                                 <span className="font-serif font-bold text-primary">{result.ascendant.sign}</span>
-                                <span className="text-xs text-muted-refined">{result.ascendant.degree}°</span>
-                                <span className="text-xs text-muted-refined">{result.ascendant.nakshatra}</span>
+                                <span className="text-xs text-primary">{result.ascendant.degree}°</span>
+                                <span className="text-xs text-primary">{result.ascendant.nakshatra}</span>
                                 <span className="px-2 py-0.5 bg-copper-100 text-copper-700 rounded text-xs font-semibold">
                                     Sub: {result.ascendant.subLord}
                                 </span>
@@ -201,12 +201,12 @@ export default function HoraryPanel({
                     {/* Significators Summary */}
                     {result.significators && result.significators.length > 0 && (
                         <div>
-                            <p className="text-xs text-muted-refined uppercase tracking-wider mb-2">House Significators</p>
+                            <p className="text-xs text-primary uppercase tracking-wider mb-2">House Significators</p>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                                 {result.significators.slice(0, 6).map((sig, idx) => (
                                     <div key={idx} className="p-2 bg-softwhite border border-antique rounded-lg text-xs">
                                         <span className="font-bold text-primary">House {sig.house}: </span>
-                                        <span className="text-muted-refined">{sig.significatorPlanets.join(', ')}</span>
+                                        <span className="text-primary">{sig.significatorPlanets.join(', ')}</span>
                                     </div>
                                 ))}
                             </div>

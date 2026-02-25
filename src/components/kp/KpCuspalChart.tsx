@@ -64,7 +64,7 @@ export default function KpCuspalChart({
     };
 
     return (
-        <svg viewBox="-10 -10 420 420" className={cn("w-full h-full drop-shadow-2xl", className)}>
+        <svg viewBox="-10 -10 420 420" className={cn("w-full h-full", className)}>
             <defs>
                 <linearGradient id="kpChartBg" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#FFF9E9" />

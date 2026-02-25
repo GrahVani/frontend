@@ -55,17 +55,19 @@ import {
 import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 
-type KpTab = 'planets-cusps' | 'significations' | 'bhava-details' | 'ruling-planets' | 'horary' | 'interlinks' | 'advanced-ssl' | 'fortuna' | 'nakshatra-nadi' | 'ashtakavarga';
+type KpTab = 'planets-cusps' | 'significations' | 'planetary-significators' | 'bhava-details' | 'ruling-planets' | 'horary' | 'interlinks' | 'advanced-ssl' | 'fortuna' | 'nakshatra-nadi' | 'ashtakavarga';
 
 const tabs: { id: KpTab; label: string; icon: React.ReactNode }[] = [
     { id: 'planets-cusps', label: 'Planets & Cusps', icon: <LayoutGrid className="w-4 h-4" /> },
-    { id: 'significations', label: 'Significations', icon: <Star className="w-4 h-4" /> },
+    { id: 'significations', label: 'House Significations', icon: <Star className="w-4 h-4" /> },
+    { id: 'planetary-significators', label: 'Planetary Significators', icon: <Grid3x3 className="w-4 h-4" /> },
     { id: 'bhava-details', label: 'Bhava Details', icon: <Home className="w-4 h-4" /> },
     { id: 'interlinks', label: 'Interlinks', icon: <LayoutGrid className="w-4 h-4" /> },
     { id: 'advanced-ssl', label: 'Advanced SSL', icon: <Star className="w-4 h-4" /> },
     { id: 'nakshatra-nadi', label: 'Nakshatra Nadi', icon: <HelpCircle className="w-4 h-4" /> },
     { id: 'fortuna', label: 'Pars Fortuna', icon: <Clock className="w-4 h-4" /> },
     { id: 'ruling-planets', label: 'Ruling Planets', icon: <Clock className="w-4 h-4" /> },
+    { id: 'ashtakavarga', label: 'Ashtakavarga Matrix', icon: <Grid3x3 className="w-4 h-4" /> },
 ];
 
 /**
@@ -87,7 +89,7 @@ export default function KpDashboardPage() {
     // Synchronize activeTab with URL search params
     React.useEffect(() => {
         const tab = searchParams.get('tab') as KpTab;
-        if (tab && ['planets-cusps', 'significations', 'bhava-details', 'ruling-planets', 'horary', 'interlinks', 'advanced-ssl', 'fortuna', 'nakshatra-nadi', 'ashtakavarga'].includes(tab)) {
+        if (tab && ['planets-cusps', 'significations', 'planetary-significators', 'bhava-details', 'ruling-planets', 'horary', 'interlinks', 'advanced-ssl', 'fortuna', 'nakshatra-nadi', 'ashtakavarga'].includes(tab)) {
             setActiveTab(tab);
             setViewMode('detailed');
         } else if (!tab) {
@@ -100,7 +102,7 @@ export default function KpDashboardPage() {
     // Queries - planetsCusps is always needed for the chart
     const planetsCuspsQuery = useKpPlanetsCusps(clientId);
     const houseSignificationsQuery = useKpHouseSignifications(clientId, { enabled: activeTab === 'significations' });
-    const planetSignificatorsQuery = useKpPlanetSignificators(clientId, { enabled: activeTab === 'significations' });
+    const planetSignificatorsQuery = useKpPlanetSignificators(clientId, { enabled: activeTab === 'planetary-significators' || activeTab === 'significations' });
     const bhavaDetailsQuery = useKpBhavaDetails(clientId, { enabled: activeTab === 'bhava-details' });
     const rulingPlanetsQuery = useKpRulingPlanets(clientId, { enabled: activeTab === 'ruling-planets' || activeSidebarSection === 'ruling-planets' || activeSidebarSection === 'dashboard' });
     const horaryMutation = useKpHoraryMutation();
@@ -193,7 +195,6 @@ export default function KpDashboardPage() {
                 nakshatra: c.nakshatra,
                 nakshatraLord: c.star_lord, // Map JSON star_lord -> nakshatraLord
                 subLord: c.sub_lord,      // Map JSON sub_lord -> subLord
-                subSubLord: c.sub_sub_lord || '-'
             })).sort((a, b) => a.cusp - b.cusp);
         }
 
@@ -213,8 +214,7 @@ export default function KpDashboardPage() {
                     degreeFormatted: h.degreeFormatted,
                     nakshatra: h.nakshatra || '-',
                     nakshatraLord: h.nakshatra_lord || '-',
-                    subLord: h.sub_lord || '-',
-                    subSubLord: h.sub_sub_lord || '-'
+                    subLord: h.sub_lord || '-'
                 }));
             }
         }
@@ -239,7 +239,6 @@ export default function KpDashboardPage() {
                 nakshatra: p.nakshatra,
                 nakshatraLord: p.star_lord || p.nakshatra_lord || p.nakshatraLord,
                 subLord: p.sub_lord || p.subLord,
-                subSubLord: p.sub_sub_lord || p.subSubLord || '-',
                 isRetrograde: p.is_retro || p.is_retrograde || p.isRetrograde || false
             }));
         }
@@ -257,7 +256,6 @@ export default function KpDashboardPage() {
                 nakshatra: p.nakshatra || '-',
                 nakshatraLord: p.star_lord || p.nakshatra_lord || p.nakshatraLord || '-',
                 subLord: p.sub_lord || p.subLord || '-',
-                subSubLord: p.sub_sub_lord || p.subSubLord || '-',
                 isRetrograde: p.isRetrograde || p.is_retro || p.is_retrograde || false
             }));
         }
@@ -609,7 +607,6 @@ export default function KpDashboardPage() {
             degree: c.degreeFormatted || `${c.degree?.toFixed(2)}°`,
             starLord: c.nakshatraLord || '—',
             subLord: c.subLord || '—',
-            subSubLord: c.subSubLord || '—',
         }));
     }, [cuspData]);
 
@@ -643,10 +640,10 @@ export default function KpDashboardPage() {
             {/* ==================== DETAILED VIEW (Existing Tab-Based) ==================== */}
             {
                 viewMode === 'detailed' && (
-                    <>
-                        {/* Tabs */}
+                    <div className="space-y-6">
+                        {/* Tabs - Persistent at the top, starting from left */}
                         {(activeTab as string) !== 'ashtakavarga' && (activeTab as string) !== 'horary' && (
-                            <div className="flex flex-wrap gap-2 p-1 bg-parchment rounded-xl border border-antique">
+                            <div className="flex flex-wrap gap-1.5 p-1 bg-parchment rounded-xl border border-antique sticky top-24 z-20 shadow-sm">
                                 {tabs.map((tab) => (
                                     <button
                                         key={tab.id}
@@ -657,10 +654,10 @@ export default function KpDashboardPage() {
                                             router.replace(`${pathname}?${params.toString()}`, { scroll: false });
                                         }}
                                         className={cn(
-                                            "flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all",
+                                            "flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all",
                                             activeTab === tab.id
                                                 ? "bg-gradient-to-r from-gold-primary to-gold-dark text-white shadow-md"
-                                                : "text-muted hover:text-ink hover:bg-white/50"
+                                                : "text-primary hover:text-ink hover:bg-white/50"
                                         )}
                                     >
                                         {tab.icon}
@@ -670,287 +667,350 @@ export default function KpDashboardPage() {
                             </div>
                         )}
 
-                        {/* Tab Content */}
-                        <div className="min-h-[400px]">
-                            {/* Planets & Cusps */}
-                            {activeTab === 'planets-cusps' && (
-                                <div className="space-y-6">
-                                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                                        {/* Cusps Chart */}
-                                        <div className="xl:col-span-1 bg-white border border-antique rounded-2xl p-6 h-fit">
-                                            <h3 className="font-serif font-bold text-lg text-ink mb-4 text-center">Cuspal Chart</h3>
+                        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+                            {/* Left Column: Persistent Cuspal Chart - Hidden in Ashtakavarga for full-width view */}
+                            {activeTab !== 'ashtakavarga' && (
+                                <div className="xl:col-span-4 sticky top-44">
+                                    <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
+                                        <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                                            <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Cuspal Chart</h3>
+                                        </div>
+                                        <div className="w-full">
                                             {planetsCuspsQuery.isLoading && !cuspData.length ? (
                                                 <div className="flex items-center justify-center py-12">
                                                     <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
                                                 </div>
                                             ) : cuspData.length > 0 ? (
-                                                <div className="aspect-square w-full max-w-[500px] mx-auto bg-parchment rounded-xl p-4 border border-antique/50">
+                                                <div className="w-full h-[450px]">
                                                     <KpCuspalChart
                                                         planets={d1Data.planets}
                                                         houseSigns={cuspData.map(c => c.signId)}
-                                                        className="w-full h-full"
+                                                        className="w-full h-full bg-transparent border-none"
                                                     />
                                                 </div>
                                             ) : (
-                                                <p className="text-muted text-center py-8">No cusp data available</p>
-                                            )}
-                                        </div>
-
-                                        {/* Planets Table */}
-                                        <div className="xl:col-span-2 bg-white border border-antique rounded-2xl p-6 overflow-hidden h-fit">
-                                            <h3 className="font-serif font-bold text-lg text-ink mb-4">Planetary Positions with Star & Sub Lords</h3>
-                                            {planetsCuspsQuery.isLoading && !planetaryData.length ? (
-                                                <div className="flex items-center justify-center py-12">
-                                                    <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
-                                                </div>
-                                            ) : planetaryData.length > 0 ? (
-                                                <KpPlanetaryTable planets={planetaryData} />
-                                            ) : (
-                                                <p className="text-muted text-center py-8">No planetary data available</p>
+                                                <p className="text-primary text-center py-8">No cusp data available</p>
                                             )}
                                         </div>
                                     </div>
                                 </div>
                             )}
 
-                            {/* Significations */}
-                            {activeTab === 'significations' && (
-                                <div className="bg-white border border-antique rounded-2xl p-6">
-                                    <div className="mb-6">
-                                        <h3 className="font-serif font-bold text-lg text-ink">Signification Matrix</h3>
-                                        <p className="text-sm text-muted mt-1">Which planets signify which houses - the core of KP prediction</p>
-                                    </div>
-                                    {/* Show loading ONLY if queries are loading AND we don't have data */}
-                                    {(houseSignificationsQuery.isLoading && !houseSignificators.length) || (planetSignificatorsQuery.isLoading && !significationData.length) ? (
-                                        <div className="flex items-center justify-center py-12">
-                                            <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
-                                        </div>
-                                    ) : (houseSignificators.length > 0 || significationData.length > 0) ? (
-                                        <div className="space-y-8">
-                                            {/* House View Table */}
-                                            {houseSignificators.length > 0 && (
-                                                <HouseSignificatorsTable data={houseSignificators} />
-                                            )}
-                                            {/* Planet View Table */}
-                                            <SignificationMatrix significations={significationData} />
-                                        </div>
-                                    ) : (
-                                        <p className="text-muted text-center py-8">No signification data available</p>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Bhava Details */}
-                            {activeTab === 'bhava-details' && (
-                                <div className="bg-white border border-antique rounded-2xl p-6 overflow-hidden">
-                                    {bhavaDetailsQuery.isLoading ? (
-                                        <div className="flex items-center justify-center py-12">
-                                            <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
-                                        </div>
-                                    ) : (
-                                        <BhavaDetailsTable bhavaDetails={bhavaDetails} className="w-full" />
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Ruling Planets */}
-                            {activeTab === 'ruling-planets' && (
-                                <div className="max-w-2xl mx-auto">
-                                    <RulingPlanetsWidget
-                                        data={rulingPlanetsQuery.data?.data || null}
-                                        isLoading={rulingPlanetsQuery.isLoading}
-                                        onRefresh={() => rulingPlanetsQuery.refetch()}
-                                        calculatedAt={rulingPlanetsQuery.data?.calculatedAt}
-                                    />
-                                </div>
-                            )}
-
-                            {/* Horary */}
-                            {activeTab === 'horary' && (
-                                <div className="max-w-2xl mx-auto">
-                                    <HoraryPanel
-                                        onSubmit={(horaryNumber, question) => {
-                                            horaryMutation.mutate({ clientId, horaryNumber, question });
-                                        }}
-                                        result={horaryMutation.data?.data}
-                                        isLoading={horaryMutation.isPending}
-                                        error={horaryMutation.error?.message}
-                                    />
-                                </div>
-                            )}
-
-                            {/* Cuspal Interlinks */}
-                            {/* Custom Interlinks - Debug Logs Included */}
-                            {/* Cuspal Interlinks */}
-
-                            {activeTab === 'interlinks' && (
-                                <div className="bg-white border border-antique rounded-2xl p-6 overflow-hidden">
-                                    {interlinksQuery.isLoading ? (
-                                        <div className="flex items-center justify-center py-12">
-                                            <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
-                                        </div>
-                                    ) : (
-                                        interlinksQuery.data?.data ? (
-                                            <KpFocusedCuspView promises={interlinksData} cusps={cuspData} />
-                                        ) : (
-                                            <p className="text-muted text-center py-8">No interlinks data available</p>
-                                        )
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Advanced SSL */}
-                            {activeTab === 'advanced-ssl' && (
-                                <div className="bg-white border border-antique rounded-2xl p-6 overflow-hidden">
-                                    {advancedSslQuery.isLoading ? (
-                                        <div className="flex items-center justify-center py-12">
-                                            <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
-                                        </div>
-                                    ) : (
-                                        advancedSslQuery.data?.data ? (
-                                            <KpAdvancedSslView promises={sslData} cusps={cuspData} />
-                                        ) : (
-                                            <p className="text-muted text-center py-8">No Advanced SSL data available</p>
-                                        )
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Nakshatra Nadi */}
-                            {activeTab === 'nakshatra-nadi' && (
-                                <div className="bg-white border border-antique rounded-2xl overflow-hidden">
-                                    {nakshatraNadiQuery.isLoading ? (
-                                        <div className="flex items-center justify-center py-12">
-                                            <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
-                                        </div>
-                                    ) : (
-                                        nakshatraNadiQuery.data?.data && nadiData ? (
-                                            <KpNakshatraNadiFocusedView data={{ nadiData }} />
-                                        ) : (
-                                            <p className="text-muted text-center py-8">No Nakshatra Nadi data available</p>
-                                        )
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Pars Fortuna */}
-                            {activeTab === 'fortuna' && (
-                                <div className="bg-white border border-antique rounded-2xl p-6 overflow-hidden">
-                                    {fortunaQuery.isLoading ? (
-                                        <div className="flex items-center justify-center py-12">
-                                            <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
-                                        </div>
-                                    ) : (
-                                        fortunaQuery.data?.data && fortunaData ? (
-                                            <KpFortunaView data={{ fortunaData }} />
-                                        ) : (
-                                            <p className="text-muted text-center py-8">No Fortuna data available</p>
-                                        )
-                                    )}
-                                </div>
-                            )}
-
-                            {activeTab === 'ashtakavarga' && (
-                                <div className="bg-white border border-antique rounded-2xl p-6 overflow-hidden">
-                                    {ashtakavargaQuery.isLoading ? (
-                                        <div className="flex items-center justify-center py-12">
-                                            <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
-                                        </div>
-                                    ) : (
-                                        ashtakavargaQuery.data?.data || ashtakavargaQuery.data ? (
-                                            <ShodashaVargaTable data={ashtakavargaQuery.data?.data || ashtakavargaQuery.data} />
-                                        ) : (
-                                            <p className="text-muted text-center py-8">No Ashtakavarga data available</p>
-                                        )
-                                    )}
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Debug Box */}
-                        <div className="mt-8 pt-8 border-t border-antique/20">
-                            <details className="bg-slate-900 rounded-xl overflow-hidden shadow-2xl border border-white/5">
-                                <summary className="p-4 text-white font-mono text-xs cursor-pointer hover:bg-slate-800 transition-colors flex items-center justify-between">
-                                    <span className="flex items-center gap-2">
-                                        <Star className="w-3 h-3 text-gold-primary" />
-                                        🛠️ KP Storage & Debug Inspector
-                                    </span>
-                                    <span className="text-[10px] opacity-50 uppercase tracking-widest">Click to Expand</span>
-                                </summary>
-                                <div className="p-6 bg-slate-950 space-y-6">
-                                    {/* Storage Status Grid */}
-                                    <div>
-                                        <h4 className="text-[10px] uppercase tracking-[0.2em] text-gold-primary mb-3 font-bold">Database Storage Status</h4>
-                                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                                            {[
-                                                { id: 'D1_kp', label: 'Natal Chart (KP)' },
-                                                { id: 'kp_planets_cusps_kp', label: 'Planets & Cusps' },
-                                                { id: 'kp_significations_kp', label: 'Significations' },
-                                                { id: 'kp_house_significations_kp', label: 'House Table' },
-                                                { id: 'kp_planet_significators_kp', label: 'Planet Matrix' },
-                                                { id: 'kp_bhava_details_kp', label: 'Bhava Details' },
-                                                { id: 'kp_interlinks_kp', label: 'Interlinks' },
-                                                { id: 'kp_interlinks_advanced_kp', label: 'Advanced SSL' },
-                                                { id: 'kp_interlinks_sl_kp', label: 'Interlinks (SL)' },
-                                                { id: 'kp_nakshatra_nadi_kp', label: 'Nakshatra Nadi' },
-                                                { id: 'kp_fortuna_kp', label: 'Pars Fortuna' },
-                                                { id: 'kp_ruling_planets_kp', label: 'Ruling Planets' },
-                                                { id: 'shodasha_varga_signs_kp', label: 'Shodasha Varga' },
-                                            ].map((item) => {
-                                                const isSaved = !!processedCharts[item.id];
-                                                return (
-                                                    <div key={item.id} className={cn(
-                                                        "p-2 rounded border text-[10px] font-mono flex items-center justify-between gap-2",
-                                                        isSaved
-                                                            ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                                                            : "bg-rose-500/10 border-rose-500/30 text-rose-400 opacity-60"
-                                                    )}>
-                                                        <span className="truncate">{item.label}</span>
-                                                        <span className="flex-shrink-0">{isSaved ? '✅ SAVED' : '❌ MISS'}</span>
+                            {/* Right Column: Content Area - Expanded to full width in Ashtakavarga */}
+                            <div className={cn(
+                                activeTab === 'ashtakavarga' ? "xl:col-span-12" : "xl:col-span-8"
+                            )}>
+                                {/* Tab Content */}
+                                <div className="min-h-[400px]">
+                                    {/* Planets & Cusps */}
+                                    {activeTab === 'planets-cusps' && (
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
+                                            {/* Planets Table */}
+                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Planetary Positions with Star & Sub Lords</h3>
+                                            </div>
+                                            <div className="w-full">
+                                                {planetsCuspsQuery.isLoading && !planetaryData.length ? (
+                                                    <div className="flex items-center justify-center py-12">
+                                                        <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
                                                     </div>
-                                                );
-                                            })}
+                                                ) : planetaryData.length > 0 ? (
+                                                    <KpPlanetaryTable planets={planetaryData} className="border-none shadow-none rounded-none" />
+                                                ) : (
+                                                    <p className="text-primary text-center py-8">No planetary data available</p>
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
 
-                                    {/* Raw API Response Viewers */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <h4 className="text-[10px] uppercase tracking-[0.2em] text-gold-primary mb-3 font-bold">Active Tab Query State</h4>
-                                            <div className="bg-black/40 rounded p-3 h-[200px] overflow-auto border border-white/5 scrollbar-thin">
-                                                <pre className="text-green-500 text-[10px] leading-relaxed">
-                                                    {activeTab === 'interlinks' && JSON.stringify(interlinksQuery.data, null, 2)}
-                                                    {activeTab === 'advanced-ssl' && JSON.stringify(advancedSslQuery.data, null, 2)}
-                                                    {activeTab === 'nakshatra-nadi' && JSON.stringify(nakshatraNadiQuery.data, null, 2)}
-                                                    {activeTab === 'fortuna' && JSON.stringify(fortunaQuery.data, null, 2)}
-                                                    {activeTab === 'planets-cusps' && JSON.stringify(planetsCuspsQuery.data, null, 2)}
-                                                    {activeTab === 'significations' && JSON.stringify({ house: houseSignificationsQuery.data, planet: planetSignificatorsQuery.data }, null, 2)}
-                                                    {activeTab === 'bhava-details' && JSON.stringify(bhavaDetailsQuery.data, null, 2)}
-                                                    {activeTab === 'ruling-planets' && JSON.stringify(rulingPlanetsQuery.data, null, 2)}
-                                                    {activeTab === 'ashtakavarga' && JSON.stringify(ashtakavargaQuery.data, null, 2)}
-                                                </pre>
+                                    {/* House Significations */}
+                                    {activeTab === 'significations' && (
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
+                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique flex justify-between items-center">
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">House Significations</h3>
+                                                <span className="text-[10px] text-primary/70 font-sans hidden sm:inline-block">Planets that signify specific houses based on their stellar positions</span>
+                                            </div>
+                                            <div className="w-full">
+                                                {houseSignificationsQuery.isLoading && !houseSignificators.length ? (
+                                                    <div className="flex items-center justify-center py-12">
+                                                        <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
+                                                    </div>
+                                                ) : houseSignificators.length > 0 ? (
+                                                    <HouseSignificatorsTable data={houseSignificators} className="border-none shadow-none rounded-none" />
+                                                ) : (
+                                                    <p className="text-primary text-center py-8">No house signification data available</p>
+                                                )}
                                             </div>
                                         </div>
-                                        <div>
-                                            <h4 className="text-[10px] uppercase tracking-[0.2em] text-gold-primary mb-3 font-bold">Full Payload Inspector</h4>
-                                            <div className="bg-black/40 rounded p-3 h-[200px] overflow-auto border border-white/5 scrollbar-thin">
-                                                <pre className="text-blue-400 text-[10px] leading-relaxed">
-                                                    {JSON.stringify({
-                                                        processedKeys: Object.keys(processedCharts).filter(k => k.toLowerCase().includes('kp') || k.startsWith('D1')),
-                                                        ayanamsa,
-                                                        clientId,
-                                                        tab: activeTab
-                                                    }, null, 2)}
-                                                </pre>
+                                    )}
+
+                                    {/* Planetary Significators */}
+                                    {activeTab === 'planetary-significators' && (
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
+                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique flex justify-between items-center">
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Planetary Significators</h3>
+                                                <span className="text-[10px] text-primary/70 font-sans hidden sm:inline-block">Which houses are signified by each planet - the core of KP prediction</span>
+                                            </div>
+                                            <div className="w-full">
+                                                {planetSignificatorsQuery.isLoading && !significationData.length ? (
+                                                    <div className="flex items-center justify-center py-12">
+                                                        <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
+                                                    </div>
+                                                ) : significationData.length > 0 ? (
+                                                    <SignificationMatrix significations={significationData} className="border-none shadow-none rounded-none" />
+                                                ) : (
+                                                    <p className="text-primary text-center py-8">No planetary significator data available</p>
+                                                )}
                                             </div>
                                         </div>
-                                    </div>
+                                    )}
+
+                                    {/* Bhava Details */}
+                                    {activeTab === 'bhava-details' && (
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
+                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique flex justify-between items-center">
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Bhava Chalit Details</h3>
+                                                <div className="px-2 py-0.5 bg-gold-primary/10 rounded border border-gold-primary/20">
+                                                    <span className="text-[9px] font-semibold text-accent-gold uppercase tracking-widest font-sans">Placidus / KP</span>
+                                                </div>
+                                            </div>
+                                            <div className="w-full">
+                                                {bhavaDetailsQuery.isLoading ? (
+                                                    <div className="flex items-center justify-center py-12">
+                                                        <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
+                                                    </div>
+                                                ) : (
+                                                    <BhavaDetailsTable bhavaDetails={bhavaDetails} className="w-full border-none shadow-none rounded-none" />
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Ruling Planets */}
+                                    {activeTab === 'ruling-planets' && (
+                                        <div className="max-w-2xl mx-auto">
+                                            <RulingPlanetsWidget
+                                                data={rulingPlanetsQuery.data?.data || null}
+                                                isLoading={rulingPlanetsQuery.isLoading}
+                                                onRefresh={() => rulingPlanetsQuery.refetch()}
+                                                calculatedAt={rulingPlanetsQuery.data?.calculatedAt}
+                                            />
+                                        </div>
+                                    )}
+
+                                    {/* Horary */}
+                                    {activeTab === 'horary' && (
+                                        <div className="max-w-2xl mx-auto">
+                                            <HoraryPanel
+                                                onSubmit={(horaryNumber, question) => {
+                                                    horaryMutation.mutate({ clientId, horaryNumber, question });
+                                                }}
+                                                result={horaryMutation.data?.data}
+                                                isLoading={horaryMutation.isPending}
+                                                error={horaryMutation.error?.message}
+                                            />
+                                        </div>
+                                    )}
+
+                                    {/* Cuspal Interlinks */}
+                                    {activeTab === 'interlinks' && (
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
+                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Cuspal Interlinks</h3>
+                                            </div>
+                                            <div className="w-full p-6">
+                                                {interlinksQuery.isLoading ? (
+                                                    <div className="flex items-center justify-center py-12">
+                                                        <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
+                                                    </div>
+                                                ) : (
+                                                    interlinksQuery.data?.data ? (
+                                                        <KpFocusedCuspView promises={interlinksData} cusps={cuspData} />
+                                                    ) : (
+                                                        <p className="text-muted text-center py-8">No interlinks data available</p>
+                                                    )
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Advanced SSL */}
+                                    {activeTab === 'advanced-ssl' && (
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
+                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Advanced Sub-Sub Lord View</h3>
+                                            </div>
+                                            <div className="w-full p-6">
+                                                {advancedSslQuery.isLoading ? (
+                                                    <div className="flex items-center justify-center py-12">
+                                                        <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
+                                                    </div>
+                                                ) : (
+                                                    advancedSslQuery.data?.data ? (
+                                                        <KpAdvancedSslView promises={sslData} cusps={cuspData} />
+                                                    ) : (
+                                                        <p className="text-muted text-center py-8">No Advanced SSL data available</p>
+                                                    )
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Nakshatra Nadi */}
+                                    {activeTab === 'nakshatra-nadi' && (
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
+                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Nakshatra Nadi Coordinates</h3>
+                                            </div>
+                                            <div className="w-full p-6">
+                                                {nakshatraNadiQuery.isLoading ? (
+                                                    <div className="flex items-center justify-center py-12">
+                                                        <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
+                                                    </div>
+                                                ) : (
+                                                    nakshatraNadiQuery.data?.data && nadiData ? (
+                                                        <KpNakshatraNadiFocusedView data={{ nadiData }} />
+                                                    ) : (
+                                                        <p className="text-muted text-center py-8">No Nakshatra Nadi data available</p>
+                                                    )
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Pars Fortuna */}
+                                    {activeTab === 'fortuna' && (
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
+                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Pars Fortuna</h3>
+                                            </div>
+                                            <div className="w-full p-6">
+                                                {fortunaQuery.isLoading ? (
+                                                    <div className="flex items-center justify-center py-12">
+                                                        <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
+                                                    </div>
+                                                ) : (
+                                                    fortunaQuery.data?.data && fortunaData ? (
+                                                        <KpFortunaView data={{ fortunaData }} />
+                                                    ) : (
+                                                        <p className="text-muted text-center py-8">No Fortuna data available</p>
+                                                    )
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Ashtakavarga */}
+                                    {activeTab === 'ashtakavarga' && (
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
+                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Ashtakavarga Matrix</h3>
+                                            </div>
+                                            <div className="w-full p-6">
+                                                {ashtakavargaQuery.isLoading ? (
+                                                    <div className="flex items-center justify-center py-12">
+                                                        <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
+                                                    </div>
+                                                ) : (
+                                                    ashtakavargaQuery.data?.data || ashtakavargaQuery.data ? (
+                                                        <ShodashaVargaTable data={ashtakavargaQuery.data?.data || ashtakavargaQuery.data} />
+                                                    ) : (
+                                                        <p className="text-muted text-center py-8">No Ashtakavarga data available</p>
+                                                    )
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
-                            </details>
+
+                                {/* Debug Box */}
+                                <div className="mt-8 pt-8 border-t border-antique/20">
+                                    <details className="bg-slate-900 rounded-xl overflow-hidden shadow-2xl border border-white/5">
+                                        <summary className="p-4 text-white font-mono text-xs cursor-pointer hover:bg-slate-800 transition-colors flex items-center justify-between">
+                                            <span className="flex items-center gap-2">
+                                                <Star className="w-3 h-3 text-gold-primary" />
+                                                🛠️ KP Storage & Debug Inspector
+                                            </span>
+                                            <span className="text-[10px] opacity-50 uppercase tracking-widest">Click to Expand</span>
+                                        </summary>
+                                        <div className="p-6 bg-slate-950 space-y-6">
+                                            {/* Storage Status Grid */}
+                                            <div>
+                                                <h4 className="text-[10px] uppercase tracking-[0.2em] text-gold-primary mb-3 font-bold">Database Storage Status</h4>
+                                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                                                    {[
+                                                        { id: 'D1_kp', label: 'Natal Chart (KP)' },
+                                                        { id: 'kp_planets_cusps_kp', label: 'Planets & Cusps' },
+                                                        { id: 'kp_significations_kp', label: 'Significations' },
+                                                        { id: 'kp_house_significations_kp', label: 'House Table' },
+                                                        { id: 'kp_planet_significators_kp', label: 'Planet Matrix' },
+                                                        { id: 'kp_bhava_details_kp', label: 'Bhava Details' },
+                                                        { id: 'kp_interlinks_kp', label: 'Interlinks' },
+                                                        { id: 'kp_interlinks_advanced_kp', label: 'Advanced SSL' },
+                                                        { id: 'kp_interlinks_sl_kp', label: 'Interlinks (SL)' },
+                                                        { id: 'kp_nakshatra_nadi_kp', label: 'Nakshatra Nadi' },
+                                                        { id: 'kp_fortuna_kp', label: 'Pars Fortuna' },
+                                                        { id: 'kp_ruling_planets_kp', label: 'Ruling Planets' },
+                                                        { id: 'dasha_chara_kp', label: 'Chara Dasha' },
+                                                        { id: 'shodasha_varga_signs_kp', label: 'Shodasha Varga' },
+                                                    ].map((item) => {
+                                                        const isSaved = !!processedCharts[item.id];
+                                                        return (
+                                                            <div key={item.id} className={cn(
+                                                                "p-2 rounded border text-[10px] font-mono flex items-center justify-between gap-2",
+                                                                isSaved
+                                                                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                                                                    : "bg-rose-500/10 border-rose-500/30 text-rose-400 opacity-60"
+                                                            )}>
+                                                                <span className="truncate">{item.label}</span>
+                                                                <span className="flex-shrink-0">{isSaved ? '✅ SAVED' : '❌ MISS'}</span>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </div>
+
+                                            {/* Raw API Response Viewers */}
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <h4 className="text-[10px] uppercase tracking-[0.2em] text-gold-primary mb-3 font-bold">Active Tab Query State</h4>
+                                                    <div className="bg-black/40 rounded p-3 h-[200px] overflow-auto border border-white/5 scrollbar-thin">
+                                                        <pre className="text-green-500 text-[10px] leading-relaxed">
+                                                            {activeTab === 'interlinks' && JSON.stringify(interlinksQuery.data, null, 2)}
+                                                            {activeTab === 'advanced-ssl' && JSON.stringify(advancedSslQuery.data, null, 2)}
+                                                            {activeTab === 'nakshatra-nadi' && JSON.stringify(nakshatraNadiQuery.data, null, 2)}
+                                                            {activeTab === 'fortuna' && JSON.stringify(fortunaQuery.data, null, 2)}
+                                                            {activeTab === 'planets-cusps' && JSON.stringify(planetsCuspsQuery.data, null, 2)}
+                                                            {activeTab === 'planetary-significators' && JSON.stringify(planetSignificatorsQuery.data, null, 2)}
+                                                            {activeTab === 'significations' && JSON.stringify(houseSignificationsQuery.data, null, 2)}
+                                                            {activeTab === 'bhava-details' && JSON.stringify(bhavaDetailsQuery.data, null, 2)}
+                                                            {activeTab === 'ruling-planets' && JSON.stringify(rulingPlanetsQuery.data, null, 2)}
+                                                            {activeTab === 'ashtakavarga' && JSON.stringify(ashtakavargaQuery.data, null, 2)}
+                                                        </pre>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h4 className="text-[10px] uppercase tracking-[0.2em] text-gold-primary mb-3 font-bold">Full Payload Inspector</h4>
+                                                    <div className="bg-black/40 rounded p-3 h-[200px] overflow-auto border border-white/5 scrollbar-thin">
+                                                        <pre className="text-blue-400 text-[10px] leading-relaxed">
+                                                            {JSON.stringify({
+                                                                processedKeys: Object.keys(processedCharts).filter(k => k.toLowerCase().includes('kp') || k.startsWith('D1')),
+                                                                ayanamsa,
+                                                                clientId,
+                                                                tab: activeTab
+                                                            }, null, 2)}
+                                                        </pre>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </details>
+                                </div>
+                            </div>
                         </div>
-                    </>
+                    </div>
                 )
             }
-        </div >
+        </div>
     );
 }

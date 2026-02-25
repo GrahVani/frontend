@@ -220,6 +220,7 @@ export default function VedicDashasPage() {
     };
 
     const handleSystemChange = (type: string) => {
+        console.log(`[VedicDashasPage] Changing Dasha System to: ${type}`);
         setSelectedDashaType(type);
         router.replace('?', { scroll: false });
     };

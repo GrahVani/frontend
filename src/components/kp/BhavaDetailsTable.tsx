@@ -29,7 +29,7 @@ const houseNames: Record<string, string> = {
 export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDetailsTableProps) {
     if (!bhavaDetails || Object.keys(bhavaDetails).length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-16 text-muted-refined">
+            <div className="flex flex-col items-center justify-center py-16 text-primary">
                 <Sparkles className="w-8 h-8 mb-3 opacity-20" />
                 <p>No bhava details available for this chart</p>
             </div>
@@ -40,29 +40,19 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
     const sortedKeys = Object.keys(bhavaDetails).sort((a, b) => parseInt(a) - parseInt(b));
 
     return (
-        <div className={cn("overflow-hidden", className)}>
-            <div className="flex items-center justify-between mb-6 px-2">
-                <div>
-                    <h3 className="font-serif font-bold text-xl text-primary">Bhava Chalit Details</h3>
-                    <p className="text-xs text-muted-refined uppercase tracking-wider mt-1 font-sans">KP System Cusp Coordinates</p>
-                </div>
-                <div className="px-3 py-1 bg-gold-primary/10 rounded-full border border-gold-primary/20">
-                    <span className="text-[10px] font-semibold text-accent-gold uppercase tracking-widest font-sans">Placidus / KP</span>
-                </div>
-            </div>
-
-            <div className="overflow-x-auto rounded-xl border border-antique shadow-sm">
-                <table className="w-full text-sm border-collapse bg-white font-sans text-primary">
-                    <thead className="tracking-wide">
-                        <tr className="bg-parchment/60 border-b border-antique">
-                            <th className="py-4 px-4 text-left font-serif font-semibold w-32">House</th>
-                            <th className="py-4 px-4 text-left font-serif font-semibold">Sign & Degree</th>
-                            <th className="py-4 px-4 text-left font-serif font-semibold">Nakshatra</th>
-                            <th className="py-4 px-4 text-center font-serif font-semibold w-16">Pada</th>
-                            <th className="py-4 px-4 text-center font-serif font-semibold text-muted-refined w-14" title="Rashi Lord">RL</th>
-                            <th className="py-4 px-4 text-center font-serif font-semibold text-muted-refined w-14" title="Nakshatra Lord">NL</th>
-                            <th className="py-4 px-4 text-center font-serif font-semibold text-accent-gold w-14" title="Sub Lord">SL</th>
-                            <th className="py-4 px-4 text-center font-serif font-semibold text-muted-refined w-14" title="Sub-Sub Lord">SS</th>
+        <div className={cn("overflow-hidden w-full", className)}>
+            <div className="overflow-x-auto h-[450px] overflow-y-auto w-full">
+                <table className="w-full h-full text-xs border-collapse font-sans text-primary">
+                    <thead className="tracking-wide sticky top-0 z-10">
+                        <tr className="bg-parchment/60 backdrop-blur-sm border-b border-antique">
+                            <th className="py-1.5 px-3 text-left font-serif font-semibold w-24">House</th>
+                            <th className="py-1.5 px-3 text-left font-serif font-semibold">Sign & Degree</th>
+                            <th className="py-1.5 px-3 text-left font-serif font-semibold">Nakshatra</th>
+                            <th className="py-1.5 px-3 text-center font-serif font-semibold w-12">Pada</th>
+                            <th className="py-1.5 px-3 text-center font-serif font-semibold text-primary w-12" title="Rashi Lord">RL</th>
+                            <th className="py-1.5 px-3 text-center font-serif font-semibold text-primary w-12" title="Nakshatra Lord">NL</th>
+                            <th className="py-1.5 px-3 text-center font-serif font-semibold text-accent-gold w-12" title="Sub Lord">SL</th>
+                            <th className="py-1.5 px-3 text-center font-serif font-semibold text-primary w-12" title="Sub-Sub Lord">SS</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-antique/50">
@@ -78,45 +68,40 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
                                         isAngular ? "bg-softwhite/50" : "bg-transparent"
                                     )}
                                 >
-                                    <td className="py-3 px-4">
-                                        <div className="flex flex-col">
-                                            <span className="font-serif font-semibold text-primary text-base">
-                                                {key}<sup className="text-[10px] ml-0.5">H</sup>
-                                            </span>
-                                            <span className="text-[10px] text-muted-refined hidden sm:inline-block opacity-70">
-                                                {houseNames[key].replace(' House', '')}
-                                            </span>
-                                        </div>
+                                    <td className="py-0.5 px-3">
+                                        <span className="font-serif font-semibold text-primary text-sm">
+                                            {key}<sup className="text-[10px] ml-0.2">H</sup>
+                                        </span>
                                     </td>
-                                    <td className="py-3 px-4">
-                                        <div className="flex items-center gap-2">
+                                    <td className="py-0.5 px-3">
+                                        <div className="flex items-center gap-1.5">
                                             <span
-                                                className="w-8 h-8 flex items-center justify-center rounded-full bg-parchment border border-antique text-lg text-primary font-serif"
+                                                className="w-6 h-6 flex items-center justify-center rounded-full bg-parchment border border-antique text-base text-primary font-serif"
                                                 title={bhava.sign}
                                             >
                                                 {signSymbols[bhava.sign] || ''}
                                             </span>
-                                            <div className="flex flex-col">
-                                                <span className="font-medium text-primary leading-tight">{bhava.sign}</span>
-                                                <span className="font-mono text-xs text-muted-refined/80 leading-tight">
+                                            <div className="flex items-center gap-1">
+                                                <span className="font-medium text-primary text-[11px] leading-tight">{bhava.sign}</span>
+                                                <span className="font-mono text-[10px] text-primary/60 leading-tight">
                                                     {bhava.longitude_dms.replace(/["]/g, '')}
                                                 </span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="py-3 px-4 text-primary font-medium">
+                                    <td className="py-0.5 px-3 text-primary font-medium text-[11px]">
                                         {bhava.nakshatra}
                                     </td>
-                                    <td className="py-3 px-4 text-center">
-                                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-white border border-antique text-xs font-serif text-primary">
+                                    <td className="py-0.5 px-3 text-center">
+                                        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white border border-antique text-[10px] font-serif text-primary">
                                             {bhava.pada}
                                         </span>
                                     </td>
                                     {['RL', 'NL', 'SL', 'SS'].map((lordType) => (
-                                        <td key={lordType} className="py-3 px-4 text-center">
+                                        <td key={lordType} className="py-0.5 px-3 text-center">
                                             <span className={cn(
-                                                "font-medium text-xs rounded px-1.5 py-0.5",
-                                                lordType === 'SL' ? "text-accent-gold font-bold bg-gold-soft/10 border border-gold-primary/20 shadow-sm" : "text-primary"
+                                                "font-medium text-[10px] rounded px-1.5 py-0",
+                                                lordType === 'SL' ? "text-accent-gold font-bold bg-gold-soft/10 border border-gold-primary/20 shadow-sm" : "text-primary opacity-80"
                                             )}>
                                                 {/* @ts-ignore - dynamic access */}
                                                 {(bhava[lordType] || '-').slice(0, 2)}
@@ -130,13 +115,13 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
                 </table>
             </div>
 
-            <div className="mt-4 flex justify-end gap-5 text-[10px] text-muted-refined font-sans">
+            <div className="mt-4 flex justify-end gap-5 text-[10px] text-primary font-sans">
                 <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-muted-refined"></span>
+                    <span className="w-2 h-2 rounded-full bg-primary"></span>
                     <span className="uppercase tracking-wider font-semibold">RL: Rashi Lord</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-muted-refined"></span>
+                    <span className="w-2 h-2 rounded-full bg-primary"></span>
                     <span className="uppercase tracking-wider font-semibold">NL: Nakshatra Lord</span>
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -144,7 +129,7 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
                     <span className="uppercase tracking-wider font-bold text-accent-gold">SL: Sub Lord</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-muted-refined"></span>
+                    <span className="w-2 h-2 rounded-full bg-primary"></span>
                     <span className="uppercase tracking-wider font-semibold">SS: Sub-Sub Lord</span>
                 </div>
             </div>

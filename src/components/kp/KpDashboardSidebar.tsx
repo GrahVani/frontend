@@ -69,7 +69,7 @@ export default function KpDashboardSidebar({
             className
         )}>
             <div className="mb-3 px-2">
-                <p className="text-[9px] uppercase tracking-widest text-muted-refined font-bold">KP Navigation</p>
+                <p className="text-[9px] uppercase tracking-widest text-primary font-bold">KP Navigation</p>
             </div>
             <nav className="space-y-0.5">
                 {SIDEBAR_ITEMS.map((item) => {
@@ -83,12 +83,12 @@ export default function KpDashboardSidebar({
                                 "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all text-left",
                                 isActive
                                     ? "bg-gold-primary/15 text-gold-dark border border-gold-primary/30 font-semibold"
-                                    : "text-secondary hover:text-primary hover:bg-parchment"
+                                    : "text-primary hover:text-primary hover:bg-parchment"
                             )}
                         >
                             <Icon className={cn(
                                 "w-4 h-4 shrink-0",
-                                isActive ? "text-gold-dark" : "text-muted-refined"
+                                isActive ? "text-gold-dark" : "text-primary"
                             )} />
                             <span className="font-serif text-[13px]">{item.label}</span>
                         </button>

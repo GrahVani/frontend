@@ -23,30 +23,24 @@ export default function HouseSignificatorsTable({ data, className }: HouseSignif
     };
 
     return (
-        <div className={cn("w-full overflow-hidden bg-white rounded-2xl border border-antique shadow-sm", className)}>
-            <div className="p-4 bg-parchment/30 border-b border-antique">
-                <h3 className="text-lg font-serif font-bold text-center text-primary">
-                    Significations of the Houses
-                </h3>
-            </div>
-
-            <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left">
-                    <thead className="text-xs uppercase bg-parchment/60 text-primary font-sans tracking-wide">
+        <div className={cn("w-full overflow-hidden", className)}>
+            <div className="overflow-x-auto h-[450px] overflow-y-auto w-full">
+                <table className="w-full h-full text-xs text-left">
+                    <thead className="text-[10px] uppercase bg-parchment/60 backdrop-blur-sm border-b border-antique text-primary font-sans tracking-wide sticky top-0 z-10">
                         <tr>
-                            <th scope="col" className="px-6 py-3 font-semibold border-b border-antique shadow-sm w-32">
+                            <th scope="col" className="px-3 py-1.5 font-semibold w-28">
                                 House
                             </th>
-                            <th scope="col" className="px-6 py-3 font-semibold border-b border-antique shadow-sm">
+                            <th scope="col" className="px-3 py-1.5 font-semibold">
                                 Planets in nak. of occupants
                             </th>
-                            <th scope="col" className="px-6 py-3 font-semibold border-b border-antique shadow-sm">
+                            <th scope="col" className="px-3 py-1.5 font-semibold">
                                 Occupants
                             </th>
-                            <th scope="col" className="px-6 py-3 font-semibold border-b border-antique shadow-sm">
+                            <th scope="col" className="px-3 py-1.5 font-semibold">
                                 Planets in nak. of cusp sign lord
                             </th>
-                            <th scope="col" className="px-6 py-3 font-semibold border-b border-antique shadow-sm">
+                            <th scope="col" className="px-3 py-1.5 font-semibold">
                                 Cusp sign lord
                             </th>
                         </tr>
@@ -54,20 +48,20 @@ export default function HouseSignificatorsTable({ data, className }: HouseSignif
                     <tbody className="divide-y divide-antique/50 font-sans">
                         {data.map((row) => (
                             <tr key={row.house} className="hover:bg-gold-primary/5 transition-colors bg-white">
-                                <th scope="row" className="px-6 py-4 font-semibold text-primary whitespace-nowrap">
-                                    <span className="inline-flex items-center justify-center w-6 h-6 rounded border border-antique bg-white text-primary text-xs font-semibold shadow-sm mr-2">{row.house}</span>
-                                    {houseNames[row.house - 1]}
+                                <th scope="row" className="px-3 py-1 font-semibold text-primary whitespace-nowrap">
+                                    <span className="inline-flex items-center justify-center w-5 h-5 rounded border border-antique bg-white text-[10px] font-semibold shadow-sm mr-2">{row.house}</span>
+                                    <span className="text-xs font-serif">{houseNames[row.house - 1]}</span>
                                 </th>
-                                <td className="px-6 py-4 text-secondary">
+                                <td className="px-3 py-1 text-primary text-[11px]">
                                     {formatPlanets(row.levelB)}
                                 </td>
-                                <td className="px-6 py-4 text-primary font-medium">
+                                <td className="px-3 py-1 text-primary font-medium text-[11px]">
                                     {formatPlanets(row.levelA)}
                                 </td>
-                                <td className="px-6 py-4 text-secondary">
+                                <td className="px-3 py-1 text-primary text-[11px]">
                                     {formatPlanets(row.levelD)}
                                 </td>
-                                <td className="px-6 py-4 text-muted-refined italic">
+                                <td className="px-3 py-1 text-primary text-[11px]">
                                     {formatPlanets(row.levelC)}
                                 </td>
                             </tr>
