@@ -474,14 +474,26 @@ export const clientApi = {
             method: 'POST',
             body: JSON.stringify({ ayanamsa, level, save: false, ...context }),
         }).then((response: any) => {
-            console.log(`[API] generateOtherDasha SUCCESS - Type: ${type}, Periods: ${response.data?.length || 0}`);
             const normalizedData: DashaResponse = {
                 clientId: response.clientId || clientId,
                 clientName: response.clientName || '',
                 level: response.level || 'mahadasha',
                 ayanamsa: response.ayanamsa || ayanamsa,
                 data: {
-                    mahadashas: response.data || response.periods || [],
+                    ...response,
+                    mahadashas: [
+                        response.ashtottari_dasha,
+                        response.ashtottari,
+                        response.ashthottari,
+                        response.data,
+                        response.periods,
+                        response.mahadashas,
+                        response.tribhagi_dashas_janma,
+                        response.tribhagi_40,
+                        response.tribhagi_40_years,
+                        response['tribhagi-40'],
+                        response.yogini_dasha
+                    ].find(x => Array.isArray(x) && x.length > 0) || response.data || response.periods || [],
                     current_dasha: response.current_dasha || undefined,
                 },
                 cached: response.cached || (response.cacheSource ? true : false),
@@ -614,12 +626,12 @@ export const clientApi = {
             yukteswar: {
                 charts: {
                     divisional: ['D1', 'D2', 'D3', 'D4', 'D7', 'D9', 'D10', 'D12', 'D16', 'D20', 'D24', 'D27', 'D30', 'D40', 'D45', 'D60'],
-                    special: ['equal_chart', 'sripathi_bhava', 'kp_bhava', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'karkamsha_d1', 'karkamsha_d9'],
-                    lagna: ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart', 'mandi', 'gulika']
+                    special: ['equal_chart', 'sudarshana', 'transit', 'sripathi_bhava', 'kp_bhava', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'karkamsha_d1', 'karkamsha_d9'],
+                    lagna: ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart']
                 },
                 features: {
-                    dasha: ['mahadasha', 'antardasha', 'pratyantardasha', 'sookshma', 'prana', 'tribhagi', 'yogini'],
-                    ashtakavarga: ['bhinna', 'sarva', 'shodasha_summary', 'temporal_maitri', 'karaka_strength'],
+                    dasha: ['mahadasha', 'antardasha', 'pratyantardasha', 'sookshma', 'prana', 'tribhagi', 'yogini', 'ashtottari'],
+                    ashtakavarga: ['bhinna', 'sarva', 'shodasha_summary'],
                     shadbala: [],
                     compatibility: [],
                     numerology: []

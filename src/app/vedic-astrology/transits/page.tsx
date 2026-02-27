@@ -603,9 +603,17 @@ export default function TransitsPage() {
     const settings = { ayanamsa, chartStyle, recentClientIds };
 
     const activeSystem = settings.ayanamsa.toLowerCase();
-    const [activeTab, setActiveTab] = useState<GocharTab>('daily_transit');
+    const isLahiri = activeSystem === 'lahiri';
+    const [activeTab, setActiveTab] = useState<GocharTab>(isLahiri ? 'daily_transit' : 'gochar');
     const [liveTransitChart, setLiveTransitChart] = useState<any>(null);
     const [isLiveLoading, setIsLiveLoading] = useState(false);
+
+    // Auto-switch tab when system changes: non-Lahiri systems don't have Daily Transit
+    useEffect(() => {
+        if (!isLahiri && activeTab === 'daily_transit') {
+            setActiveTab('gochar');
+        }
+    }, [activeSystem, isLahiri, activeTab]);
 
     const fetchLiveTransit = useCallback(async () => {
         if (!clientDetails?.id) return;
@@ -636,14 +644,26 @@ export default function TransitsPage() {
         // Prefer live fetched transit, fallback to context (though context likely empty for transit)
         const transitChart = liveTransitChart || processedCharts[`transit_${activeSystem}`];
 
-        if (!d1Chart?.chartData || !transitChart?.chartData) {
+        console.log(`[TransitsPage] useMemo - D1 key: ${d1Key}, D1 found: ${!!d1Chart?.chartData}, Transit found: ${!!transitChart?.chartData}`);
+
+        if (!transitChart?.chartData) {
             return { transitData: [], natalAscendant: 1, transitPlanets: [] };
         }
 
-        const natal = d1Chart.chartData;
         const transit = transitChart.chartData;
 
-        const { ascendant: ascSign } = parseChartData(natal);
+        // Use natal D1 ascendant if available, otherwise fall back to transit chart's own ascendant
+        let ascSign: number;
+        if (d1Chart?.chartData) {
+            const natalParsed = parseChartData(d1Chart.chartData);
+            ascSign = natalParsed.ascendant;
+        } else {
+            // Fallback: use transit chart's own ascendant
+            const transitParsed = parseChartData(transit);
+            ascSign = transitParsed.ascendant;
+            console.log(`[TransitsPage] D1 chart unavailable for ${activeSystem}, using transit ascendant: ${ascSign}`);
+        }
+
         const transits = mapChartToTransits(transit, ascSign);
 
         const planets: Planet[] = transits.map(t => ({
@@ -673,7 +693,6 @@ export default function TransitsPage() {
         );
     }
 
-    const isLahiri = activeSystem === 'lahiri';
 
     return (
         <div className="space-y-5 animate-in fade-in duration-700">
@@ -720,20 +739,19 @@ export default function TransitsPage() {
 
             {/* Tab Switcher */}
             <div className="flex items-center gap-1 bg-[#FAF7F2] rounded-xl p-1 border border-antique">
-                <button
-                    onClick={() => setActiveTab('daily_transit')}
-                    className={cn(
-                        "flex-1 px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-1.5",
-                        activeTab === 'daily_transit'
-                            ? "bg-white text-primary shadow-sm border border-[#D08C60]/20"
-                            : "text-primary hover:text-primary"
-                    )}
-                >
-                    Daily Transit
-                    {!isLahiri && (
-                        <span className="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-bold">Lahiri Only</span>
-                    )}
-                </button>
+                {isLahiri && (
+                    <button
+                        onClick={() => setActiveTab('daily_transit')}
+                        className={cn(
+                            "flex-1 px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-1.5",
+                            activeTab === 'daily_transit'
+                                ? "bg-white text-primary shadow-sm border border-[#D08C60]/20"
+                                : "text-primary hover:text-primary"
+                        )}
+                    >
+                        Daily Transit
+                    </button>
+                )}
                 <button
                     onClick={() => setActiveTab('gochar')}
                     className={cn(

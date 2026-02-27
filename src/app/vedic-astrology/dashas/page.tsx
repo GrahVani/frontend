@@ -25,6 +25,7 @@ const SatabdikaDasha = dynamic(() => import('@/components/astrology/SatabdikaDas
 const DwisaptatiDasha = dynamic(() => import('@/components/astrology/DwisaptatiDasha'), { loading: () => <DashaLoadingSkeleton /> });
 const ShasthihayaniDasha = dynamic(() => import('@/components/astrology/ShasthihayaniDasha'), { loading: () => <DashaLoadingSkeleton /> });
 const ShattrimshatsamaDasha = dynamic(() => import('@/components/astrology/ShattrimshatsamaDasha'), { loading: () => <DashaLoadingSkeleton /> });
+const AshtottariDasha = dynamic(() => import('@/components/astrology/AshtottariDasha'), { loading: () => <DashaLoadingSkeleton /> });
 
 function DashaLoadingSkeleton() {
     return (
@@ -127,16 +128,10 @@ export default function VedicDashasPage() {
     }, [showDebugPanel]);
 
     // Debug: Fetch Tribhagi 40 specifically for testing
-    const tribhagi40Query = useOtherDasha(
-        clientDetails?.id || '',
-        'tribhagi-40',
-        settings.ayanamsa.toLowerCase()
-    );
-
     // Queries
     const { data: treeResponse, isLoading: treeLoading, error: treeError } = useDasha(
         clientDetails?.id || '',
-        'tree',
+        'mahadasha',
         settings.ayanamsa.toLowerCase()
     );
 
@@ -192,7 +187,9 @@ export default function VedicDashasPage() {
             const processedTree = processDashaResponse(dashaData, maxLevel);
 
             if (processedTree.length > 0) {
-                setDashaTree(processedTree);
+                // Vimshottari has exactly 9 planetary lords per cycle - limit to one cycle
+                const finalTree = isVimshottari ? processedTree.slice(0, 9) : processedTree;
+                setDashaTree(finalTree);
 
                 // Real-time analysis of the current active sequence
                 // We can still use the raw response for this if findActiveDashaPath expects raw
@@ -276,7 +273,7 @@ export default function VedicDashasPage() {
                 const result = await clientApi.generateOtherDasha(
                     clientDetails.id,
                     'ashtottari',
-                    settings.ayanamsa,
+                    settings.ayanamsa.toLowerCase(),
                     'pratyantardasha',
                     { mahaLord, antarLord }
                 );
@@ -388,7 +385,7 @@ export default function VedicDashasPage() {
                                             if (settings.ayanamsa === 'KP') {
                                                 return sys.id === 'vimshottari' || sys.id === 'chara';
                                             }
-                                            return true;
+                                            return sys.id !== 'chara';
                                         }).map((sys, idx) => (
                                             <option key={sys.id} value={sys.id}>
                                                 {idx + 1}. {sys.name} {sys.years > 0 ? `(${sys.years} yrs)` : ''}
@@ -525,12 +522,10 @@ export default function VedicDashasPage() {
                                             periods={viewingPeriods}
                                             isApplicable={(otherData?.data?.mahadashas as any)?.meta?.is_applicable !== false}
                                         />
-                                    ) : isShattrimshatsama ? (
-                                        <ShattrimshatsamaDasha
+                                    ) : isAshtottari && currentLevel === 0 ? (
+                                        <AshtottariDasha
                                             periods={viewingPeriods}
-                                            isApplicable={(otherData?.data?.mahadashas as any)?.meta?.is_applicable !== false}
                                         />
-
                                     ) : (
                                         <table className="w-full">
 
@@ -708,15 +703,6 @@ export default function VedicDashasPage() {
                                 isExpanded={expandedDasha === 'active'}
                                 onToggle={() => setExpandedDasha(expandedDasha === 'active' ? null : 'active')}
                             />
-
-                            {/* Tribhagi-40 Dasha Status (FORCED CHECK) */}
-                            <DashaDebugRow
-                                name="Tribhagi Dasha 40yr (FORCED CHECK)"
-                                query={tribhagi40Query}
-                                isExpanded={expandedDasha === 'tribhagi-40'}
-                                onToggle={() => setExpandedDasha(expandedDasha === 'tribhagi-40' ? null : 'tribhagi-40')}
-                                highlight
-                            />
                         </div>
                     </div>
                 )}
@@ -768,7 +754,10 @@ function DashaDebugRow({
     const getStatusText = () => {
         if (isLoading) return 'Loading...';
         if (isFetching) return 'Refetching...';
-        if (isError) return `Error: ${(error as Error)?.message || 'Unknown error'}`;
+        if (isError) {
+            const errObj = error as any;
+            return `Error: ${errObj?.message || errObj?.statusText || (typeof error === 'string' ? error : 'Unknown error')}`;
+        }
         if (data) return 'Data received ✓';
         return 'Not fetched';
     };
@@ -814,7 +803,11 @@ function DashaDebugRow({
                     <div className="bg-black/30 rounded-lg p-3 max-h-60 overflow-auto">
                         <pre className="text-xs text-white/70 font-mono whitespace-pre-wrap">
                             {isError
-                                ? JSON.stringify({ error: (error as Error)?.message, stack: (error as Error)?.stack }, null, 2)
+                                ? JSON.stringify({
+                                    error: (error as any)?.message || error,
+                                    status: (error as any)?.status,
+                                    data: (error as any)?.data
+                                }, null, 2)
                                 : data
                                     ? JSON.stringify(data, null, 2)
                                     : 'No data available'
@@ -822,10 +815,20 @@ function DashaDebugRow({
                         </pre>
                     </div>
                     {data && (
-                        <div className="mt-2 flex gap-2 text-[10px] text-white/40 font-mono">
-                            <span>📊 Data size: {JSON.stringify(data).length} bytes</span>
-                            <span>|</span>
-                            <span>⏰ Fetched: {new Date().toLocaleTimeString()}</span>
+                        <div className="mt-2 flex flex-col gap-1 text-[10px] text-white/40 font-mono">
+                            <div className="flex gap-2">
+                                <span>📊 Data size: {JSON.stringify(data).length} bytes</span>
+                                <span>|</span>
+                                <span>⏰ Fetched: {new Date().toLocaleTimeString()}</span>
+                            </div>
+                            <div className="text-[#4ECCA3]/60 truncate">
+                                🔑 Keys: {Object.keys(data).join(', ')}
+                            </div>
+                            {data.data && (
+                                <div className="text-yellow-400/60 truncate italic pl-2">
+                                    ↳ data keys: {Object.keys(data.data).join(', ')}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
