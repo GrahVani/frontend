@@ -274,7 +274,7 @@ export default function VedicOverviewPage() {
                             </div>
                             <div className="p-0 flex-1">
                                 <VimshottariTreeGrid
-                                    data={dashaData ? processDashaResponse(dashaData) : []}
+                                    data={dashaData ? processDashaResponse(dashaData).slice(0, 9) : []}
                                     isLoading={dashaLoading}
                                     className="h-full border-none shadow-none rounded-none bg-transparent"
                                 />

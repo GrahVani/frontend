@@ -45,7 +45,8 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
     // Sync initial data
     useEffect(() => {
         if (initialData) {
-            const rawList = initialData.dasha_list || initialData.data?.mahadashas || [];
+            const rawList = (initialData.dasha_list || initialData.data?.mahadashas || [])
+                .slice(0, 9); // Vimshottari has exactly 9 planetary lords per cycle
             // Map backend data to UI format
             const mapped: DashaLevel[] = rawList.map((d: any) => ({
                 planet: d.planet,

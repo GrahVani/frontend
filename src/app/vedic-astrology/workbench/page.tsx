@@ -62,6 +62,7 @@ const CHART_NAMES: Record<string, string> = {
     'kp_bhava': 'KP Bhava (Stellar System)',
     'equal_bhava': 'Equal Bhava',
     'gl_chart': 'Gati Kalagna (GL Chart)',
+    'transit': 'Transit (Gochar)',
     'mandi': 'Mandi (Karmic Obstacles)',
     'gulika': 'Gulika (Instant Karma)',
 };

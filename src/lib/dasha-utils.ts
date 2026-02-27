@@ -151,17 +151,17 @@ export function extractPeriodsArray(data: any): any[] {
         // Specialized Systems Support (Normalization for Shattrimshatsama, Shasthihayani, Dwisaptati, etc.)
         // Robust check for nested dasha data structures
         const dashaContainer = data.mahadashas?.data || data.mahadashas || data;
-        const targetList = dashaContainer.timeline || dashaContainer.dasha_system || dashaContainer.dasha_table || dashaContainer.dasha_list;
+        const targetList = dashaContainer.timeline || dashaContainer.dasha_system || dashaContainer.dasha_table || dashaContainer.dasha_list || dashaContainer.schedule || dashaContainer.dasha_schedule;
 
 
         if (Array.isArray(targetList)) {
             return targetList.map((m: any) => {
-                const startDate = m.startDate || m.start_date || m.start || m.mahadasha_beginning || m.beginning;
-                const endDate = m.endDate || m.end_date || m.end || m.mahadasha_ending || m.ending;
+                const startDate = m.startDate || m.start_date || m.start || m.starting || m.starting_date || m.beginning || m.beginning_date || m.mahadasha_beginning || m.mahadasha_starting_date || m.from || m.from_date;
+                const endDate = m.endDate || m.end_date || m.end || m.ending || m.ending_date || m.mahadasha_ending || m.mahadasha_ending_date || m.to || m.to_date;
                 const isCurrent = isDateRangeCurrent(startDate, endDate);
 
                 return {
-                    planet: m.planet || m.lord || m.mahadasha || m.mahadasha_lord || m.lord_name || (m.sign !== undefined ? getSignLord(m.sign) : (m.sign_name ? getSignLord(m.sign_name) : 'Unknown')),
+                    planet: m.planet || m.lord || m.sign_lord || m.dasha_lord || m.mahadasha_lord || m.antardasha_lord || m.antar_lord || m.ad_lord || m.sub_planet || m.subplanet || m.name || m.planet_name || m.sign_name || m.mahadasha || m.antardasha || m.antar || m.pratyantardasha || m.pratyantar || m.sookshmadasha || m.sookshma_dasha || m.sookshma || m.prandasha || m.pran_dasha || m.prana || (m.sign !== undefined ? getSignLord(m.sign) : (m.sign_name ? getSignLord(m.sign_name) : 'Unknown')),
                     startDate,
                     endDate,
                     isCurrent,
@@ -170,10 +170,10 @@ export function extractPeriodsArray(data: any): any[] {
                     duration: m.duration ? (typeof m.duration === 'number' ? `${m.duration}y` : m.duration) : undefined,
                     raw: m,
                     sublevel: (m.antardashas || m.sublevels || m.sublevel || m.antar_dashas || []).map((a: any) => {
-                        const aStart = a.startDate || a.start_date || a.start || a.beginning;
-                        const aEnd = a.endDate || a.end_date || a.end || a.ending;
+                        const aStart = a.startDate || a.start_date || a.start || a.starting || a.starting_date || a.beginning || a.beginning_date || a.from || a.from_date;
+                        const aEnd = a.endDate || a.end_date || a.end || a.ending || a.ending_date || a.to || a.to_date;
                         return {
-                            planet: a.planet || a.antardasha_lord || a.antar_lord || a.lord || a.lord_name || (a.sign !== undefined ? getSignLord(a.sign) : (a.sign_name ? getSignLord(a.sign_name) : 'Unknown')),
+                            planet: a.planet || a.lord || a.sign_lord || a.dasha_lord || a.antardasha_lord || a.antar_lord || a.ad_lord || a.sub_planet || a.subplanet || a.name || a.planet_name || a.sign_name || a.antardasha || a.antar || a.pratyantardasha || a.pratyantar || a.sookshmadasha || a.sookshma_dasha || a.sookshma || a.prandasha || a.pran_dasha || a.prana || (a.sign !== undefined ? getSignLord(a.sign) : (a.sign_name ? getSignLord(a.sign_name) : 'Unknown')),
                             startDate: aStart,
                             endDate: aEnd,
                             isCurrent: isDateRangeCurrent(aStart, aEnd),
@@ -189,23 +189,44 @@ export function extractPeriodsArray(data: any): any[] {
             'mahadashas',
             'periods',
             'tribhagi_dashas_janma',
+            'tribhagi_40',
+            'tribhagi-40',
+            'tribhagi_40_years',
             'panchottari_dasha', // Add to keys to try as well
             'ashtottari_dasha',
             'ashtottari_antar',
             'ashtottari_pratyantardasha',
-            'chara_dasha', // NEW
+            'ashtottari',
+            'ashthottari',
+            'chara_dasha',
+            'yogini_dasha',
+            'shastihayani_dasha',
+            'shattrimshatsama_dasha',
             'pratyantardashas',
             'pratyantara_dashas',
             'sookshma_dashas',
-            'data', // Check nested data objects
-            'dasha_list'
+            'data',
+            'dasha_list',
+            'timeline',
+            'schedule',
+            'dasha_schedule',
+            'shodashottari_dasha',
+            'shodashottari',
+            'tribhagi_40_dashas',
+            'tribhagi_40',
+            'tribhagi_40_years',
+            'vimshottari_dasha',
+            'vimshottari'
         ];
 
         for (const key of keysToTry) {
             if (data[key]) {
-                // Special handling for chara_dasha object which contains mahadashas array
-                if (key === 'chara_dasha' && !Array.isArray(data[key]) && data[key].mahadashas) {
+                // Special handling for chara_dasha and shodashottari_dasha
+                if ((key === 'chara_dasha' || key === 'shodashottari_dasha') && !Array.isArray(data[key]) && data[key].mahadashas) {
                     const result = extractPeriodsArray(data[key].mahadashas);
+                    if (result.length > 0) return result;
+                } else if (key === 'shodashottari_dasha' && !Array.isArray(data[key]) && data[key].timeline) {
+                    const result = extractPeriodsArray(data[key].timeline);
                     if (result.length > 0) return result;
                 } else {
                     const result = extractPeriodsArray(data[key]);
@@ -249,8 +270,8 @@ export function findActiveDashaPath(rawResponse: any): ActiveDashaPath {
         let chainStart = parentStart;
 
         for (const p of currentLevel) {
-            const s = p.start_date || p.startDate || p.start || chainStart;
-            const e = p.end_date || p.endDate || p.end;
+            const s = p.start_date || p.startDate || p.start || p.starting || p.starting_date || p.beginning || p.beginning_date || p.mahadasha_beginning || p.mahadasha_starting_date || p.from || p.from_date || chainStart;
+            const e = p.end_date || p.endDate || p.end || p.ending || p.ending_date || p.mahadasha_ending || p.mahadasha_ending_date || p.to || p.to_date;
 
             if (s && e) {
                 const startTime = parseApiDate(s).getTime();
@@ -270,10 +291,10 @@ export function findActiveDashaPath(rawResponse: any): ActiveDashaPath {
         if (!activeNode) break;
 
         const sDate = activeNode._calculated_start;
-        const eDate = activeNode.end_date || activeNode.endDate || activeNode.end;
+        const eDate = activeNode.end_date || activeNode.endDate || activeNode.end || activeNode.ending || activeNode.ending_date || activeNode.mahadasha_ending || activeNode.mahadasha_ending_date || activeNode.to || activeNode.to_date;
 
         const standardizedNode: DashaNode = {
-            planet: activeNode.planet || activeNode.lord || (activeNode.sign !== undefined ? getSignLord(activeNode.sign) : (activeNode.sign_name ? getSignLord(activeNode.sign_name) : 'Unknown')),
+            planet: activeNode.planet || activeNode.lord || activeNode.sign_lord || activeNode.dasha_lord || activeNode.mahadasha_lord || activeNode.antardasha_lord || activeNode.antar_lord || activeNode.ad_lord || activeNode.sub_planet || activeNode.subplanet || activeNode.name || activeNode.planet_name || activeNode.sign_name || activeNode.mahadasha || activeNode.antardasha || activeNode.antar || activeNode.pratyantardasha || activeNode.pratyantar || activeNode.sookshmadasha || activeNode.sookshma_dasha || activeNode.sookshma || activeNode.prandasha || activeNode.pran_dasha || activeNode.prana || (activeNode.sign !== undefined ? getSignLord(activeNode.sign) : (activeNode.sign_name ? getSignLord(activeNode.sign_name) : 'Unknown')),
             startDate: sDate,
             endDate: eDate,
             isCurrent: true,
@@ -397,7 +418,12 @@ export function parseApiDate(dateStr: string): Date {
         }
     }
 
-    return new Date(dateStr.replace(' ', 'T'));
+    // Handle "DD MMM YYYY" or "MMM DD, YYYY" or other human formats
+    const parsed = new Date(dateStr.replace(' ', 'T'));
+    if (!isNaN(parsed.getTime())) return parsed;
+
+    // Last resort: simple Date constructor
+    return new Date(dateStr);
 }
 
 /**
@@ -432,7 +458,7 @@ function mapDashaLevelRecursive(node: any, level: number, inheritedStartDate?: s
     let mappedChildren: DashaNode[] = [];
 
     // START DATE RESOLUTION
-    let myStartDateRaw = node.start_date || node.startDate || node.start || node.mahadasha_beginning || node.beginning;
+    let myStartDateRaw = node.start_date || node.startDate || node.start || node.starting || node.starting_date || node.beginning || node.beginning_date || node.mahadasha_beginning || node.mahadasha_starting_date || node.from || node.from_date;
     if (!myStartDateRaw && inheritedStartDate) {
         myStartDateRaw = inheritedStartDate;
     }
@@ -441,27 +467,32 @@ function mapDashaLevelRecursive(node: any, level: number, inheritedStartDate?: s
         let runningStart = myStartDateRaw;
         mappedChildren = rawChildren.map((child: any) => {
             const mappedChild = mapDashaLevelRecursive(child, level + 1, runningStart, maxLevel);
-            if (child.end_date || child.endDate || child.end || child.ending || child.mahadasha_ending) {
-                runningStart = child.end_date || child.endDate || child.end || child.ending || child.mahadasha_ending;
-            }
+            runningStart = child.end_date || child.endDate || child.end || child.ending || child.ending_date || child.mahadasha_ending || child.mahadasha_ending_date || child.to || child.to_date;
             return mappedChild;
         });
     }
 
     const sDate = myStartDateRaw;
-    const eDate = node.end_date || node.endDate || node.end || node.ending || node.mahadasha_ending;
+    const eDate = node.end_date || node.endDate || node.end || node.ending || node.ending_date || node.mahadasha_ending || node.mahadasha_ending_date || node.to || node.to_date;
     const isCurrent = isDateRangeCurrent(sDate, eDate);
     const hasChildren = mappedChildren.length > 0;
 
     return {
         // Robust planet name fallbacks - prioritize Lords but map signs if lords are missing
-        planet: node.planet || node.lord || node.mahadasha || node.mahadasha_lord || node.antardasha_lord || node.antar_lord || node.lord_name || (node.sign !== undefined ? getSignLord(node.sign) : (node.sign_name ? getSignLord(node.sign_name) : 'Unknown')),
+        planet: node.planet || node.lord || node.sign_lord || node.dasha_lord || node.mahadasha_lord || node.antardasha_lord || node.antar_lord || node.ad_lord || node.sub_planet || node.subplanet || node.name || node.planet_name || node.sign_name || node.mahadasha || node.antardasha || node.antar || node.pratyantardasha || node.pratyantar || node.sookshmadasha || node.sookshma_dasha || node.sookshma || node.prandasha || node.pran_dasha || node.prana || (node.sign !== undefined ? getSignLord(node.sign) : (node.sign_name ? getSignLord(node.sign_name) : 'Unknown')),
         startDate: sDate,
         endDate: eDate,
         isCurrent,
         canDrillFurther: level < maxLevel && hasChildren,
         sublevel: level < maxLevel ? mappedChildren : [],
-        raw: node
+        raw: {
+            ...node,
+            duration_years: node.duration_years || (node.duration && typeof node.duration === 'number' ? node.duration : undefined) || (() => {
+                const s = parseApiDate(sDate).getTime();
+                const e = parseApiDate(eDate).getTime();
+                return (!isNaN(s) && !isNaN(e) && e > s) ? (e - s) / (365.25 * 24 * 60 * 60 * 1000) : 0;
+            })()
+        }
     };
 }
 
@@ -523,8 +554,8 @@ export function standardizeDashaLevels(periods: any[], parentStartDate?: string)
     let currentChainStart = parentStartDate || "";
 
     return periods.map((p) => {
-        const sDate = p.start_date || p.startDate || p.start || currentChainStart;
-        const eDate = p.end_date || p.endDate || p.end;
+        const sDate = p.start_date || p.startDate || p.start || p.starting || p.starting_date || p.beginning || p.beginning_date || p.mahadasha_beginning || p.mahadasha_starting_date || p.from || p.from_date || currentChainStart;
+        const eDate = p.end_date || p.endDate || p.end || p.ending || p.ending_date || p.mahadasha_ending || p.mahadasha_ending_date || p.to || p.to_date;
 
         // Advance currentChainStart for the next sibling
         if (eDate) currentChainStart = eDate;
@@ -542,12 +573,13 @@ export function standardizeDashaLevels(periods: any[], parentStartDate?: string)
         const displayDuration = ''; // Placeholder, as duration calculation is complex and often done in UI or a dedicated helper
 
         return {
-            planet: p.planet || p.lord || (p.sign !== undefined ? getSignLord(p.sign) : (p.sign_name ? getSignLord(p.sign_name) : 'Unknown')),
+            planet: p.planet || p.lord || p.sign_lord || p.dasha_lord || p.mahadasha_lord || p.antardasha_lord || p.antar_lord || p.ad_lord || p.sub_planet || p.subplanet || p.name || p.planet_name || p.sign_name || p.mahadasha || p.antardasha || p.antar || p.pratyantardasha || p.pratyantar || p.sookshmadasha || p.sookshma_dasha || p.sookshma || p.prandasha || p.pran_dasha || p.prana || (p.sign !== undefined ? getSignLord(p.sign) : (p.sign_name ? getSignLord(p.sign_name) : 'Unknown')),
             startDate: sDate,
             endDate: eDate,
             duration: displayDuration,
             isCurrent,
             canDrillFurther,
+            sublevel: Array.isArray(sublevels) ? standardizeDashaLevels(sublevels, eDate) : [],
             raw: p
         };
     });

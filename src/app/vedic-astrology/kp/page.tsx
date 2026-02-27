@@ -67,7 +67,6 @@ const tabs: { id: KpTab; label: string; icon: React.ReactNode }[] = [
     { id: 'nakshatra-nadi', label: 'Nakshatra Nadi', icon: <HelpCircle className="w-4 h-4" /> },
     { id: 'fortuna', label: 'Pars Fortuna', icon: <Clock className="w-4 h-4" /> },
     { id: 'ruling-planets', label: 'Ruling Planets', icon: <Clock className="w-4 h-4" /> },
-    { id: 'ashtakavarga', label: 'Ashtakavarga Matrix', icon: <Grid3x3 className="w-4 h-4" /> },
 ];
 
 /**
@@ -788,7 +787,7 @@ export default function KpDashboardPage() {
 
                                     {/* Ruling Planets */}
                                     {activeTab === 'ruling-planets' && (
-                                        <div className="max-w-2xl mx-auto">
+                                        <div className="w-full">
                                             <RulingPlanetsWidget
                                                 data={rulingPlanetsQuery.data?.data || null}
                                                 isLoading={rulingPlanetsQuery.isLoading}

@@ -55,7 +55,7 @@ const VEDIC_NAV_ITEMS: NavItem[] = [
     { name: "Yogas & Doshas", path: "/yoga-dosha", icon: Sparkles, systemFilter: ['Lahiri'] },
     { name: "Ashtakavargas", path: "/ashtakavarga", icon: Shield, systemFilter: ['Lahiri', 'Raman', 'Yukteswar'] },
     { name: "Shadbala", path: "/shadbala", icon: Orbit, systemFilter: ['Lahiri'] },
-    { name: "Gochar", path: "/transits", icon: Globe, systemFilter: ['Lahiri'] },
+    { name: "Gochar", path: "/transits", icon: Globe, systemFilter: ['Lahiri', 'Yukteswar'] },
     { name: "Upaya", path: "/remedies", icon: Gem, systemFilter: ['Lahiri'] },
     { name: "Sudarshan Chakra", path: "/chakras", icon: Layers },
     { name: "KP System", path: "/kp", icon: FlaskConical, systemFilter: ['KP'] },
