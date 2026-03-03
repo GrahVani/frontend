@@ -35,11 +35,13 @@ function DashaLoadingSkeleton() {
     );
 }
 
-import { PLANET_COLORS } from '@/lib/astrology-constants';
+import { PLANET_COLORS, SIGN_COLORS } from '@/lib/astrology-constants';
 import {
     findActiveDashaPath,
     processDashaResponse,
     standardizeDashaLevels,
+    extractPeriodsArray,
+    getSublevels,
     ActiveDashaPath,
     DashaNode,
     standardizeDuration,
@@ -153,6 +155,7 @@ export default function VedicDashasPage() {
     const isSatabdika = selectedDashaType === 'satabdika';
     const isDwisaptati = selectedDashaType === 'dwisaptati';
     const isAshtottari = selectedDashaType === 'ashtottari';
+    const isChara = selectedDashaType === 'chara';
     // Fallback detection for Shastihayani via metadata condition
     const hasShasthiMeta = Boolean((otherData?.data?.mahadashas as any)?.meta?.shastihayani_condition);
     const isShasthihayani = selectedDashaType === 'shastihayani' || hasShasthiMeta;
@@ -226,7 +229,7 @@ export default function VedicDashasPage() {
             // For other systems, just show the root level (processed via standardizeDashaLevels previously)
             // But now we rely on dashaTree being processed.
             // Actually, the original logic for non-vimshottari was just showing root.
-            if (!isVimshottari && !isTribhagi && !isShodashottari && !isDwadashottari && !isPanchottari && !isChaturshitisama && !isSatabdika && !isDwisaptati && !isAshtottari) {
+            if (!isVimshottari && !isTribhagi && !isShodashottari && !isDwadashottari && !isPanchottari && !isChaturshitisama && !isSatabdika && !isDwisaptati && !isAshtottari && !isChara) {
                 setViewingPeriods(dashaTree);
                 return;
             }
@@ -440,10 +443,12 @@ export default function VedicDashasPage() {
                                             onClick={() => handleBreadcrumbClick(idx)}
                                             className={cn(
                                                 "text-sm font-bold px-2 py-0.5 rounded border",
-                                                PLANET_COLORS[period.planet || period.lord || 'Jupiter'] || "bg-white border-gray-100"
+                                                isChara
+                                                    ? (SIGN_COLORS[period.raw?.sign_name || period.planet] || "bg-white border-gray-100")
+                                                    : (PLANET_COLORS[period.planet || period.lord || 'Jupiter'] || "bg-white border-gray-100")
                                             )}
                                         >
-                                            {period.planet || period.lord} {DASHA_LEVELS[idx].short}
+                                            {isChara ? (period.raw?.sign_name || period.planet) : (period.planet || period.lord)} {DASHA_LEVELS[idx].short}
                                         </button>
                                     </React.Fragment>
                                 ))}
@@ -525,10 +530,113 @@ export default function VedicDashasPage() {
                                     ) : isAshtottari && currentLevel === 0 ? (
                                         <AshtottariDasha
                                             periods={viewingPeriods}
+                                            onFetchPratyantar={async (mahaLord, antarLord) => {
+                                                if (!clientDetails?.id) return [];
+                                                try {
+                                                    const result = await clientApi.generateOtherDasha(
+                                                        clientDetails.id,
+                                                        'ashtottari',
+                                                        settings.ayanamsa.toLowerCase(),
+                                                        'pratyantardasha',
+                                                        { mahaLord, antarLord }
+                                                    );
+                                                    const rawPeriods = extractPeriodsArray(result?.data);
+
+                                                    // If the response IS the pratyantardasha list directly (common in Bhasin)
+                                                    if (rawPeriods.length > 0 && !getSublevels(rawPeriods[0])) {
+                                                        return standardizeDashaLevels(rawPeriods);
+                                                    }
+
+                                                    // Otherwise, navigate: find matching maha → antar → return pratyantar sublevels
+                                                    // Use Lord or Planet to be safe
+                                                    const mahaNode = rawPeriods.find((m: any) => (m.planet || m.lord) === mahaLord);
+                                                    if (mahaNode) {
+                                                        const antardashas = getSublevels(mahaNode);
+                                                        if (antardashas) {
+                                                            const antarNode = antardashas.find((a: any) => (a.planet || a.lord) === antarLord);
+                                                            const pratyantardashas = getSublevels(antarNode);
+                                                            if (pratyantardashas && pratyantardashas.length > 0) {
+                                                                return standardizeDashaLevels(pratyantardashas);
+                                                            }
+                                                        }
+                                                    }
+
+                                                    return [];
+                                                } catch (err) {
+                                                    console.error("Failed to fetch Ashtottari Pratyantar:", err);
+                                                    return [];
+                                                }
+                                            }}
                                         />
+                                    ) : isChara ? (
+                                        <table className="w-full">
+                                            <thead className="bg-[#3E2A1F]/5 text-[#5A3E2B]/70 font-black uppercase text-[9px] tracking-widest border-b border-[#D08C60]/10">
+                                                <tr>
+                                                    <th className="px-3 py-2 text-left">Sign</th>
+                                                    <th className="px-3 py-2 text-left">Start Date</th>
+                                                    <th className="px-3 py-2 text-left">End Date</th>
+                                                    <th className="px-3 py-2 text-left">Duration</th>
+                                                    <th className="px-3 py-2 text-center">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-[#D08C60]/10 font-medium">
+                                                {viewingPeriods.map((period, idx) => {
+                                                    const displayName = period.raw?.sign_name || period.planet;
+                                                    return (
+                                                        <tr
+                                                            key={idx}
+                                                            className={cn(
+                                                                "hover:bg-[#D08C60]/10 transition-colors group",
+                                                                period.isCurrent && "bg-[#D08C60]/5",
+                                                                (period.canDrillFurther || (allowMathematicalDrillDown && currentLevel < 4)) ? "cursor-pointer" : "cursor-default"
+                                                            )}
+                                                            onClick={() => (period.canDrillFurther || (allowMathematicalDrillDown && currentLevel < 4)) && (isSubLevelFetching ? null : handleDrillDown(period))}
+                                                        >
+                                                            <td className="px-3 py-2">
+                                                                <div className="flex items-center gap-2">
+                                                                    <span className={cn(
+                                                                        "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold border shadow-sm min-w-[60px] justify-center",
+                                                                        SIGN_COLORS[displayName] || "bg-white"
+                                                                    )}>
+                                                                        {displayName}
+                                                                    </span>
+                                                                    {period.isCurrent && (
+                                                                        <span className="inline-flex items-center px-1.5 py-0 rounded-full text-[8px] font-bold bg-green-100 text-green-700 border border-green-200 animate-pulse uppercase tracking-wider">
+                                                                            Current
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">
+                                                                <div className="flex items-center gap-1.5">
+                                                                    <Calendar className="w-3 h-3 text-[#8B5A2B]/40" />
+                                                                    {formatDateShort(period.startDate)}
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">{formatDateShort(period.endDate)}</td>
+                                                            <td className="px-3 py-2 text-xs text-[#8B5A2B] font-bold">
+                                                                {standardizeDuration(period.raw?.duration_years || 0, period.raw?.duration_days)}
+                                                            </td>
+                                                            <td className="px-3 py-2 text-center">
+                                                                <div className="flex items-center justify-center gap-2">
+                                                                    {period.isCurrent ? (
+                                                                        <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span>
+                                                                    ) : (
+                                                                        (period.canDrillFurther || (allowMathematicalDrillDown && currentLevel < 4)) ? (
+                                                                            <ChevronRight className="w-3 h-3 text-[#D08C60] transition-transform group-hover:scale-125" />
+                                                                        ) : (
+                                                                            <span className="text-[#D08C60]/40 text-xs">—</span>
+                                                                        )
+                                                                    )}
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })}
+                                            </tbody>
+                                        </table>
                                     ) : (
                                         <table className="w-full">
-
                                             <thead className="bg-[#3E2A1F]/5 text-[#5A3E2B]/70 font-black uppercase text-[9px] tracking-widest border-b border-[#D08C60]/10">
                                                 <tr>
                                                     <th className="px-3 py-2 text-left">Planet</th>
@@ -639,7 +747,7 @@ export default function VedicDashasPage() {
                                                 "font-bold text-lg",
                                                 i === 0 ? "text-[#D97706]" : i === 1 ? "text-[#C2410C]" : "text-[#BE185D]"
                                             )}>
-                                                {node.planet}
+                                                {isChara ? (node.raw?.sign_name || node.planet) : node.planet}
                                             </span>
                                         </div>
                                     </div>

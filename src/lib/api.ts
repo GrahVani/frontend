@@ -2,6 +2,7 @@
 // Handles communication with microservices
 
 import { CreateClientPayload, FamilyLinkPayload, Client, ClientListResponse, FamilyLink, LocationSuggestion } from '@/types/client';
+import { extractPeriodsArray } from './dasha-utils';
 import type {
     KpPlanetsCuspsResponse,
     KpRulingPlanetsResponse,
@@ -481,19 +482,7 @@ export const clientApi = {
                 ayanamsa: response.ayanamsa || ayanamsa,
                 data: {
                     ...response,
-                    mahadashas: [
-                        response.ashtottari_dasha,
-                        response.ashtottari,
-                        response.ashthottari,
-                        response.data,
-                        response.periods,
-                        response.mahadashas,
-                        response.tribhagi_dashas_janma,
-                        response.tribhagi_40,
-                        response.tribhagi_40_years,
-                        response['tribhagi-40'],
-                        response.yogini_dasha
-                    ].find(x => Array.isArray(x) && x.length > 0) || response.data || response.periods || [],
+                    mahadashas: extractPeriodsArray(response),
                     current_dasha: response.current_dasha || undefined,
                 },
                 cached: response.cached || (response.cacheSource ? true : false),
@@ -631,6 +620,25 @@ export const clientApi = {
                 },
                 features: {
                     dasha: ['mahadasha', 'antardasha', 'pratyantardasha', 'sookshma', 'prana', 'tribhagi', 'yogini', 'ashtottari'],
+                    ashtakavarga: ['bhinna', 'sarva', 'shodasha_summary'],
+                    shadbala: [],
+                    compatibility: [],
+                    numerology: []
+                },
+                hasDivisional: true,
+                hasAshtakavarga: true,
+                hasNumerology: false,
+                hasCompatibility: false,
+                hasHorary: false,
+            },
+            bhasin: {
+                charts: {
+                    divisional: ['D1', 'D2', 'D3', 'D4', 'D7', 'D9', 'D10', 'D12', 'D16', 'D20', 'D24', 'D27', 'D30', 'D40', 'D45', 'D60'],
+                    special: ['sudarshana', 'transit', 'shodasha_varga_signs'],
+                    lagna: ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart']
+                },
+                features: {
+                    dasha: ['mahadasha', 'antardasha', 'pratyantardasha', 'sookshma', 'prana', 'ashtottari'],
                     ashtakavarga: ['bhinna', 'sarva', 'shodasha_summary'],
                     shadbala: [],
                     compatibility: [],

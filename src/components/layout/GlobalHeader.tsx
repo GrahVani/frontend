@@ -263,6 +263,7 @@ function GlobalSettingsModal({ isOpen, onClose, router }: { isOpen: boolean; onC
         { id: 'KP', label: 'KP (Krishnamurti)', desc: 'Preferred for Stellar/Nakshatra precision' },
         { id: 'Raman', label: 'Raman', desc: 'BV Raman traditional ayanamsa' },
         { id: 'Yukteswar', label: 'Sri Yukteswar', desc: 'Galactic Center based precision' },
+        { id: 'Bhasin', label: 'Bhasin', desc: 'J.N. Bhasin ayanamsa system' },
         { id: 'Tropical', label: 'Tropical (Sayana)', desc: 'Western Zodiac aligned' },
     ];
 

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronUp, Calendar, Info, Clock, AlertCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, Calendar, AlertCircle } from 'lucide-react';
 import { DashaNode, formatDateDisplay, standardizeDuration } from '@/lib/dasha-utils';
 import { PLANET_COLORS } from '@/lib/astrology-constants';
 
@@ -12,11 +12,70 @@ interface ShodashottariDashaProps {
 
 
 export default function ShodashottariDasha({ periods }: ShodashottariDashaProps) {
+    const [selectedCycle, setSelectedCycle] = useState<number>(1);
     const [expandedMahadasha, setExpandedMahadasha] = useState<string | null>(null);
 
-    return (
-        <div className="space-y-6 animate-in fade-in duration-700">
+    // Group periods by cycle dynamically (8 planets per cycle for Shodashottari)
+    const cycles = useMemo(() => {
+        const grouped: Record<number, DashaNode[]> = {};
+        periods.forEach((p: DashaNode, idx: number) => {
+            const cNum = Math.floor(idx / 8) + 1;
+            if (!grouped[cNum]) grouped[cNum] = [];
+            grouped[cNum].push(p);
+        });
+        return grouped;
+    }, [periods]);
 
+    const availableCycles = useMemo(() => {
+        return Object.keys(cycles).map(Number).sort((a: number, b: number) => a - b);
+    }, [cycles]);
+
+    const activeCycleNum = useMemo(() => {
+        for (const cNum of availableCycles) {
+            if (cycles[cNum].some((p: DashaNode) => p.isCurrent)) return cNum;
+        }
+        return availableCycles.length > 0 ? availableCycles[0] : 1;
+    }, [cycles, availableCycles]);
+
+    // Auto-select active cycle on load
+    React.useEffect(() => {
+        if (activeCycleNum) setSelectedCycle(activeCycleNum);
+    }, [activeCycleNum]);
+
+    if (availableCycles.length === 0) return null;
+
+    const currentCyclePeriods = cycles[selectedCycle] || [];
+
+    return (
+        <div className="space-y-4 animate-in fade-in duration-700">
+            {/* Cycle Navigation */}
+            <div className="flex flex-wrap gap-2 items-center">
+                <div className="flex bg-[#F5E6D3]/40 rounded-lg p-0.5 gap-1 border border-[#D08C60]/10 backdrop-blur-sm overflow-x-auto scrollbar-hide">
+                    {availableCycles.map((c: number) => {
+                        const isActive = selectedCycle === c;
+                        const cyclePeriods = cycles[c];
+                        const startYear = cyclePeriods.length > 0 ? formatDateDisplay(cyclePeriods[0].startDate).split(' ').pop() : '';
+                        const endYear = cyclePeriods.length > 0 ? formatDateDisplay(cyclePeriods[cyclePeriods.length - 1].endDate).split(' ').pop() : '';
+
+                        return (
+                            <button
+                                key={c}
+                                onClick={() => setSelectedCycle(c)}
+                                className={cn(
+                                    "flex items-center gap-2 px-3 py-1.5 rounded-md transition-all duration-200 whitespace-nowrap",
+                                    isActive
+                                        ? "bg-[#3E2A1F] text-[#FFD27D] shadow-sm font-semibold"
+                                        : "hover:bg-[#3E2A1F]/5 text-[#3E2A1F]/70 font-medium"
+                                )}
+                            >
+                                <span className="text-[10px] uppercase tracking-wider">Cycle {c}</span>
+                                <span className="text-[10px] opacity-60">|</span>
+                                <span className="text-[10px] font-mono opacity-80">{startYear}-{endYear}</span>
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
 
             {/* Table */}
             <div className="overflow-x-auto">
@@ -31,7 +90,7 @@ export default function ShodashottariDasha({ periods }: ShodashottariDashaProps)
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-[#D08C60]/10 font-medium">
-                        {periods.map((mahadasha, mIdx) => {
+                        {currentCyclePeriods.map((mahadasha: DashaNode, mIdx: number) => {
                             const isExpanded = expandedMahadasha === mahadasha.planet;
                             const antardashas = mahadasha.sublevel || [];
                             const isBalance = mahadasha.raw?.is_balance === true;
@@ -98,7 +157,7 @@ export default function ShodashottariDasha({ periods }: ShodashottariDashaProps)
                                                 </div>
                                                 <table className="w-full">
                                                     <tbody className="divide-y divide-[#D08C60]/10">
-                                                        {antardashas.map((antar, aIdx) => (
+                                                        {antardashas.map((antar: DashaNode, aIdx: number) => (
                                                             <tr key={aIdx} className={cn(
                                                                 "hover:bg-white/50 transition-colors",
                                                                 antar.isCurrent && "bg-green-50/50"
