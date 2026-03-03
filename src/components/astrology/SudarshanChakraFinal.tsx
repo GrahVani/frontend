@@ -39,15 +39,19 @@ const SIGN_NUMBERS: Record<string, number> = {
     'Libra': 7, 'Scorpio': 8, 'Sagittarius': 9, 'Capricorn': 10, 'Aquarius': 11, 'Pisces': 12
 };
 
-const getAbbr = (planet: string) => PLANET_ABBR[planet] || planet.substring(0, 2);
+const getAbbr = (planet: string) => {
+    // Handle names like "Sun (18.28°)"
+    const nameOnly = planet.split(' ')[0];
+    return PLANET_ABBR[nameOnly] || nameOnly.substring(0, 2);
+};
 
 export default function SudarshanChakraFinal({ data, className }: SudarshanChakraFinalProps) {
     if (!data) return null;
 
     const chakra = data.sudarshan_chakra || data;
-    const surya = chakra.surya_chart || chakra.surya;
-    const chandra = chakra.chandra_chart || chakra.chandra;
-    const lagna = chakra.lagna_chart || chakra.lagna;
+    const surya = chakra.surya_chart || chakra.surya || chakra.layer_3_sun;
+    const chandra = chakra.chandra_chart || chakra.chandra || chakra.layer_2_moon;
+    const lagna = chakra.lagna_chart || chakra.lagna || chakra.layer_1_lagna;
 
     if (!surya || !chandra || !lagna) return (
         <div className="flex items-center justify-center p-8 border border-dashed border-copper-200 rounded-3xl text-copper-400 italic">

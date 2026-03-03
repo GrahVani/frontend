@@ -2,16 +2,45 @@
 
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronUp, Calendar, AlertCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, Calendar, AlertCircle, Loader2 } from 'lucide-react';
 import { DashaNode, formatDateDisplay, standardizeDuration } from '@/lib/dasha-utils';
 import { PLANET_COLORS } from '@/lib/astrology-constants';
 
 interface AshtottariDashaProps {
     periods: DashaNode[];
+    onFetchPratyantar?: (mahaLord: string, antarLord: string) => Promise<DashaNode[]>;
 }
 
-export default function AshtottariDasha({ periods }: AshtottariDashaProps) {
+export default function AshtottariDasha({ periods, onFetchPratyantar }: AshtottariDashaProps) {
     const [expandedMahadasha, setExpandedMahadasha] = useState<string | null>(null);
+    const [expandedAntardasha, setExpandedAntardasha] = useState<string | null>(null);
+    const [pratyantarData, setPratyantarData] = useState<Record<string, DashaNode[]>>({});
+    const [loadingPratyantar, setLoadingPratyantar] = useState<string | null>(null);
+
+    const handleAntarClick = async (mahaLord: string, antarLord: string) => {
+        const key = `${mahaLord}:${antarLord}`;
+
+        // Toggle if already expanded
+        if (expandedAntardasha === key) {
+            setExpandedAntardasha(null);
+            return;
+        }
+
+        setExpandedAntardasha(key);
+
+        // Fetch if not already loaded and callback is available
+        if (!pratyantarData[key] && onFetchPratyantar) {
+            setLoadingPratyantar(key);
+            try {
+                const subPeriods = await onFetchPratyantar(mahaLord, antarLord);
+                setPratyantarData(prev => ({ ...prev, [key]: subPeriods }));
+            } catch (err) {
+                console.error("Failed to fetch Ashtottari Pratyantar:", err);
+            } finally {
+                setLoadingPratyantar(null);
+            }
+        }
+    };
 
     return (
         <div className="space-y-6 animate-in fade-in duration-700">
@@ -95,31 +124,89 @@ export default function AshtottariDasha({ periods }: AshtottariDashaProps) {
                                                 </div>
                                                 <table className="w-full">
                                                     <tbody className="divide-y divide-[#D08C60]/10">
-                                                        {antardashas.map((antar, aIdx) => (
-                                                            <tr key={aIdx} className={cn(
-                                                                "hover:bg-white/50 transition-colors",
-                                                                antar.isCurrent && "bg-green-50/50"
-                                                            )}>
-                                                                <td className="px-3 py-2">
-                                                                    <span className={cn(
-                                                                        "inline-flex items-center px-1.5 py-0.5 rounded text-xs font-bold border",
-                                                                        PLANET_COLORS[antar.planet || ''] || "bg-white"
-                                                                    )}>
-                                                                        {antar.planet}
-                                                                    </span>
-                                                                </td>
-                                                                <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(antar.startDate)}</td>
-                                                                <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(antar.endDate)}</td>
-                                                                <td className="px-3 py-2 text-xs text-[#8B5A2B] font-bold">
-                                                                    {standardizeDuration(antar.raw?.duration_years || antar.raw?.years || 0, antar.raw?.duration_days)}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-center">
-                                                                    {antar.isCurrent && (
-                                                                        <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 animate-pulse">ACTIVE</span>
+                                                        {antardashas.map((antar, aIdx) => {
+                                                            const antarKey = `${mahadasha.planet}:${antar.planet}`;
+                                                            const isAntarExpanded = expandedAntardasha === antarKey;
+                                                            const pratyantarPeriods = pratyantarData[antarKey] || antar.sublevel || [];
+                                                            const isLoading = loadingPratyantar === antarKey;
+                                                            const hasPratyantar = pratyantarPeriods.length > 0 || onFetchPratyantar;
+
+                                                            return (
+                                                                <React.Fragment key={aIdx}>
+                                                                    <tr
+                                                                        className={cn(
+                                                                            "hover:bg-white/50 transition-colors",
+                                                                            antar.isCurrent && "bg-green-50/50",
+                                                                            hasPratyantar && "cursor-pointer"
+                                                                        )}
+                                                                        onClick={() => hasPratyantar && handleAntarClick(mahadasha.planet!, antar.planet!)}
+                                                                    >
+                                                                        <td className="px-3 py-2">
+                                                                            <span className={cn(
+                                                                                "inline-flex items-center px-1.5 py-0.5 rounded text-xs font-bold border",
+                                                                                PLANET_COLORS[antar.planet || ''] || "bg-white"
+                                                                            )}>
+                                                                                {antar.planet}
+                                                                            </span>
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(antar.startDate)}</td>
+                                                                        <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(antar.endDate)}</td>
+                                                                        <td className="px-3 py-2 text-xs text-[#8B5A2B] font-bold">
+                                                                            {standardizeDuration(antar.raw?.duration_years || antar.raw?.years || 0, antar.raw?.duration_days)}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-center">
+                                                                            {isLoading ? (
+                                                                                <Loader2 className="w-3 h-3 text-[#D08C60] animate-spin mx-auto" />
+                                                                            ) : antar.isCurrent ? (
+                                                                                <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 animate-pulse">ACTIVE</span>
+                                                                            ) : hasPratyantar ? (
+                                                                                isAntarExpanded ? <ChevronUp className="w-3.5 h-3.5 text-[#D08C60] mx-auto" /> : <ChevronDown className="w-3.5 h-3.5 text-[#D08C60] mx-auto" />
+                                                                            ) : null}
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    {/* Expanded Pratyantardasha Row */}
+                                                                    {isAntarExpanded && pratyantarPeriods.length > 0 && (
+                                                                        <tr>
+                                                                            <td colSpan={5} className="bg-[#F5EDE5]/60 px-4 py-2">
+                                                                                <div className="text-2xs font-black text-[#A0724E] uppercase tracking-[0.2em] mb-1.5 pl-2">
+                                                                                    Pratyantardasha ({mahadasha.planet} → {antar.planet})
+                                                                                </div>
+                                                                                <table className="w-full">
+                                                                                    <tbody className="divide-y divide-[#D08C60]/5">
+                                                                                        {pratyantarPeriods.map((pd, pIdx) => (
+                                                                                            <tr key={pIdx} className={cn(
+                                                                                                "hover:bg-white/30 transition-colors",
+                                                                                                pd.isCurrent && "bg-green-50/30"
+                                                                                            )}>
+                                                                                                <td className="px-3 py-1.5">
+                                                                                                    <span className={cn(
+                                                                                                        "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold border",
+                                                                                                        PLANET_COLORS[pd.planet || ''] || "bg-white"
+                                                                                                    )}>
+                                                                                                        {pd.planet}
+                                                                                                    </span>
+                                                                                                </td>
+                                                                                                <td className="px-3 py-1.5 text-[10px] text-[#3E2A1F] font-mono">{formatDateDisplay(pd.startDate)}</td>
+                                                                                                <td className="px-3 py-1.5 text-[10px] text-[#3E2A1F] font-mono">{formatDateDisplay(pd.endDate)}</td>
+                                                                                                <td className="px-3 py-1.5 text-[10px] text-[#8B5A2B] font-bold">
+                                                                                                    {standardizeDuration(pd.raw?.duration_years || 0, pd.raw?.duration_days)}
+                                                                                                </td>
+                                                                                                <td className="px-3 py-1.5 text-center">
+                                                                                                    {pd.isCurrent && (
+                                                                                                        <span className="text-[8px] font-black text-green-600 bg-green-50 px-1 py-0.5 rounded border border-green-200 animate-pulse">ACTIVE</span>
+                                                                                                    )}
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        ))}
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
                                                                     )}
-                                                                </td>
-                                                            </tr>
-                                                        ))}
+                                                                </React.Fragment>
+                                                            );
+                                                        })}
                                                     </tbody>
                                                 </table>
                                             </td>

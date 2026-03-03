@@ -10,37 +10,36 @@ interface KarakaStrengthAnalysisProps {
 }
 
 export default function KarakaStrengthAnalysis({ data, className }: KarakaStrengthAnalysisProps) {
-    if (!data || !data.planets) return null;
+    if (!data || !data.karakas) return null;
 
-    const planets = Object.entries(data.planets).map(([name, info]: [string, any]) => ({
-        name,
-        ...info
-    })).sort((a, b) => (b.strength || 0) - (a.strength || 0));
+    const karakas = data.karakas || [];
+    const calculationMethod = data.calculation_method || {};
+    const atmakaraka = karakas.find((k: any) => k.karaka_abbr === 'AK');
 
     return (
         <div className={cn("w-full space-y-6", className)}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard
                     title="Ayanamsa"
-                    value={data.metadata?.ayanamsa || 'Standard'}
+                    value={calculationMethod.ayanamsa || 'Standard'}
                     icon={<Shield className="w-4 h-4" />}
                     color="amber"
                 />
                 <StatCard
                     title="House System"
-                    value={data.metadata?.house_system || 'Whole Sign'}
+                    value={calculationMethod.house_system || 'Whole Sign'}
                     icon={<Activity className="w-4 h-4" />}
                     color="rose"
                 />
                 <StatCard
-                    title="Highest Strength"
-                    value={planets[0]?.strength?.toFixed(2) || '0.00'}
+                    title="Highest Degree"
+                    value={karakas.find((k: any) => k.is_highest_degree)?.degrees_in_sign?.toFixed(2) || '0.00'}
                     icon={<Zap className="w-4 h-4" />}
                     color="copper"
                 />
                 <StatCard
                     title="Atmakaraka"
-                    value={planets.find(p => p.chara_karaka === 'Atmakaraka')?.name || 'N/A'}
+                    value={atmakaraka?.planet || 'N/A'}
                     icon={<Target className="w-4 h-4" />}
                     color="amber"
                 />
@@ -55,43 +54,47 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
                         <thead>
                             <tr className="bg-parchment/30 text-[10px] uppercase font-bold text-primary tracking-wider">
                                 <th className="px-4 py-3 border-b border-antique/30">Planet</th>
+                                <th className="px-4 py-3 border-b border-antique/30">Abbr</th>
                                 <th className="px-4 py-3 border-b border-antique/30">Chara Karaka</th>
-                                <th className="px-4 py-3 border-b border-antique/30">Fixed Karaka</th>
-                                <th className="px-4 py-3 border-b border-antique/30 text-center">House</th>
-                                <th className="px-4 py-3 border-b border-antique/30 text-right">Strength</th>
+                                <th className="px-4 py-3 border-b border-antique/30">Sign/House</th>
+                                <th className="px-4 py-3 border-b border-antique/30 text-right">Degrees</th>
                             </tr>
                         </thead>
                         <tbody className="text-sm">
-                            {planets.map((p, idx) => (
-                                <tr key={p.name} className={cn(
+                            {karakas.map((k: any, idx: number) => (
+                                <tr key={k.planet} className={cn(
                                     "hover:bg-parchment/50 transition-colors border-b border-antique/20 last:border-0",
-                                    idx % 2 === 1 ? "bg-antique/5" : "bg-transparent"
+                                    idx % 2 === 1 ? "bg-antique/5" : "bg-transparent",
+                                    k.is_highest_degree && "bg-amber-50/30"
                                 )}>
                                     <td className="px-4 py-3">
                                         <div className="flex flex-col">
-                                            <span className="font-bold text-primary">{p.name}</span>
-                                            <span className="text-[10px] text-secondary font-mono">{(p.longitude || 0).toFixed(2)}°</span>
+                                            <span className="font-bold text-primary">{k.planet}</span>
+                                            <span className="text-[10px] text-secondary font-mono">{k.dms_in_sign}</span>
                                         </div>
                                     </td>
-                                    <td className="px-4 py-3 font-medium text-emerald-700">
-                                        {p.chara_karaka || '—'}
+                                    <td className="px-4 py-3 font-mono text-[11px] font-bold text-rose-600">
+                                        {k.karaka_abbr}
                                     </td>
-                                    <td className="px-4 py-3 text-secondary italic">
-                                        {p.fixed_karaka || '—'}
+                                    <td className="px-4 py-3">
+                                        <div className="flex flex-col">
+                                            <span className="font-medium text-emerald-700">{k.karaka_full}</span>
+                                            <span className="text-[10px] text-secondary italic">{k.karaka_desc}</span>
+                                        </div>
                                     </td>
-                                    <td className="px-4 py-3 text-center font-bold text-primary">
-                                        {p.house}
+                                    <td className="px-4 py-3 text-primary">
+                                        <span className="font-bold">S{k.sign_index}</span>
                                     </td>
                                     <td className="px-4 py-3 text-right">
                                         <div className="flex items-center justify-end gap-2">
                                             <div className="w-24 h-1.5 bg-antique/20 rounded-full overflow-hidden hidden sm:block">
                                                 <div
                                                     className="h-full bg-gold-primary rounded-full"
-                                                    style={{ width: `${Math.min(100, (p.strength || 0) * 33)}%` }}
+                                                    style={{ width: `${(k.degrees_in_sign / 30) * 100}%` }}
                                                 />
                                             </div>
                                             <span className="font-mono font-bold text-primary w-10 text-right">
-                                                {(p.strength || 0).toFixed(2)}
+                                                {k.degrees_in_sign.toFixed(2)}°
                                             </span>
                                         </div>
                                     </td>

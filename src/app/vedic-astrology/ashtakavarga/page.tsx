@@ -129,17 +129,28 @@ export default function AshtakavargaPage() {
         let scores: Record<number, number> = {};
 
         if (activeTab === 'sarva' && data.sarva) {
-            const sarvaData = data.sarva.sarvashtakavarga || data.sarva.ashtakvarga || data.sarva;
-            const signs = sarvaData.signs || sarvaData.houses_matrix || sarvaData.houses || {};
+            const sarvaData = data.sarva.sarvashtakavarga || data.sarva.sarvashtakavarga_summary || data.sarva.ashtakvarga || data.sarva;
+            const signs = sarvaData.signs || sarvaData.houses_matrix || sarvaData.houses || sarvaData.sarvashtakavarga_summary || {};
 
-            Object.entries(signs).forEach(([s, v]) => {
-                const signId = SIGN_MAP[s] || SIGN_MAP[s.charAt(0).toUpperCase() + s.slice(1)] ||
-                    (s.startsWith('House') ? ((ascSign + parseInt(s.split(' ')[1]) - 2) % 12) + 1 : parseInt(s));
+            // Handle house_strength_matrix array format (Bhasin): [{house_number, sign_name, total_points}]
+            const houseMatrix = sarvaData.house_strength_matrix || data.sarva.house_strength_matrix;
+            if (Array.isArray(houseMatrix)) {
+                houseMatrix.forEach((h: any) => {
+                    const signId = SIGN_MAP[h.sign_name] || h.house_number;
+                    if (signId && signId >= 1 && signId <= 12) {
+                        scores[signId] = h.total_points || 0;
+                    }
+                });
+            } else if (typeof signs === 'object' && !Array.isArray(signs)) {
+                Object.entries(signs).forEach(([s, v]) => {
+                    const signId = SIGN_MAP[s] || SIGN_MAP[s.charAt(0).toUpperCase() + s.slice(1)] ||
+                        (s.startsWith('House') ? ((ascSign + parseInt(s.split(' ')[1]) - 2) % 12) + 1 : parseInt(s));
 
-                if (signId && signId >= 1 && signId <= 12) {
-                    scores[signId] = v as number;
-                }
-            });
+                    if (signId && signId >= 1 && signId <= 12) {
+                        scores[signId] = v as number;
+                    }
+                });
+            }
         } else if (activeTab === 'bhinna' && data.bhinna) {
             const bhinnaRoot = data.bhinna.bhinnashtakavarga || data.bhinna.ashtakvarga || data.bhinna;
             const planetKey = selectedPlanet === 'Lagna' ? 'Ascendant' : selectedPlanet;

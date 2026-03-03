@@ -69,9 +69,9 @@ export default function VedicDashasPage() {
     const [selectedDashaType, setSelectedDashaType] = useState<string>('vimshottari');
     const [dashaTree, setDashaTree] = useState<any[]>([]);
     const [selectedPath, setSelectedPath] = useState<any[]>([]);
-    const [selectedIntelPlanet, setSelectedIntelPlanet] = useState<string | null>(null);
-
+    const [selectedIntelPlanet, setSelectedIntelPlanet] = useState<string>('');
     const isVimshottari = selectedDashaType === 'vimshottari';
+    const isChara = selectedDashaType === 'chara';
 
     // 1. Determine Drill-down Path for Backend Request
     const backendContext = useMemo(() => {
@@ -310,17 +310,17 @@ export default function VedicDashasPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                             <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold block mb-1">Mahadasha</label>
-                            <div className="text-2xl font-black">{activeLords[0].planet}</div>
+                            <div className="text-2xl font-black">{isChara ? (activeLords[0].raw?.sign_name || activeLords[0].planet) : activeLords[0].planet}</div>
                             <div className="text-[10px] text-white/40 mt-1">{formatDateShort(activeLords[0].startDate)} - {formatDateShort(activeLords[0].endDate)}</div>
                         </div>
                         <div className="bg-white/10 rounded-xl p-4 border border-white/20 transform scale-105 shadow-xl">
                             <label className="text-[10px] uppercase tracking-widest text-yellow-400 font-bold block mb-1 underline decoration-yellow-400/30 underline-offset-4">Antardasha</label>
-                            <div className="text-2xl font-black text-yellow-300">{activeLords[1]?.planet || '—'}</div>
+                            <div className="text-2xl font-black text-yellow-300">{activeLords[1] ? (isChara ? (activeLords[1].raw?.sign_name || activeLords[1].planet) : activeLords[1].planet) : '—'}</div>
                             <div className="text-[10px] text-white/60 mt-1">{formatDateShort(activeLords[1]?.startDate)} - {formatDateShort(activeLords[1]?.endDate)}</div>
                         </div>
                         <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                             <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold block mb-1">Pratyantardasha</label>
-                            <div className="text-2xl font-black">{activeLords[2]?.planet || '—'}</div>
+                            <div className="text-2xl font-black">{activeLords[2] ? (isChara ? (activeLords[2].raw?.sign_name || activeLords[2].planet) : activeLords[2].planet) : '—'}</div>
                             <div className="text-[10px] text-white/40 mt-1">{formatDateShort(activeLords[2]?.startDate)} - {formatDateShort(activeLords[2]?.endDate)}</div>
                         </div>
                     </div>
@@ -334,7 +334,7 @@ export default function VedicDashasPage() {
                                 <div className="flex items-center gap-1 mt-0.5">
                                     {activeLords.slice(0, 5).map((l, i) => (
                                         <React.Fragment key={i}>
-                                            <span className={cn("text-xs font-bold", i === 1 ? "text-yellow-400" : "text-white")}>{l.planet}</span>
+                                            <span className={cn("text-xs font-bold", i === 1 ? "text-yellow-400" : "text-white")}>{isChara ? (l.raw?.sign_name || l.planet) : l.planet}</span>
                                             {i < 4 && <ChevronRight className="w-3 h-3 text-white/20" />}
                                         </React.Fragment>
                                     ))}
@@ -421,7 +421,7 @@ export default function VedicDashasPage() {
                                             PLANET_COLORS[period.planet || period.lord || 'Jupiter'] || "bg-white border-gray-100"
                                         )}
                                     >
-                                        {period.planet || period.lord} {DASHA_LEVELS[idx].short}
+                                        {isChara ? (period.raw?.sign_name || period.planet) : (period.planet || period.lord)} {DASHA_LEVELS[idx].short}
                                     </button>
                                 </React.Fragment>
                             ))}
@@ -468,10 +468,10 @@ export default function VedicDashasPage() {
                                                             "w-10 h-10 rounded-xl flex items-center justify-center border font-bold text-xs shadow-sm",
                                                             PLANET_COLORS[period.planet] || "bg-white border-gray-100"
                                                         )}>
-                                                            {period.planet.slice(0, 2)}
+                                                            {(isChara ? (period.raw?.sign_name || period.planet) : period.planet).slice(0, 2)}
                                                         </div>
                                                         <div>
-                                                            <div className="font-bold text-[#3E2A1F]">{period.planet}</div>
+                                                            <div className="font-bold text-[#3E2A1F]">{isChara ? (period.raw?.sign_name || period.planet) : period.planet}</div>
                                                             {period.isCurrent && (
                                                                 <span className="text-[9px] font-black uppercase text-[#D08C60] bg-[#D08C60]/10 px-1.5 py-0.5 rounded tracking-tighter">Current Period</span>
                                                             )}

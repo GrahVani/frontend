@@ -13,3 +13,21 @@ export const PLANET_COLORS: Record<string, string> = {
   Rahu: "bg-purple-100 text-purple-800 border-purple-300",
   Ketu: "bg-indigo-100 text-indigo-800 border-indigo-300",
 };
+
+/**
+ * Shared sign color classes based on ruling planets.
+ */
+export const SIGN_COLORS: Record<string, string> = {
+  Aries: PLANET_COLORS.Mars,
+  Scorpio: PLANET_COLORS.Mars,
+  Taurus: PLANET_COLORS.Venus,
+  Libra: PLANET_COLORS.Venus,
+  Gemini: PLANET_COLORS.Mercury,
+  Virgo: PLANET_COLORS.Mercury,
+  Cancer: PLANET_COLORS.Moon,
+  Leo: PLANET_COLORS.Sun,
+  Sagittarius: PLANET_COLORS.Jupiter,
+  Pisces: PLANET_COLORS.Jupiter,
+  Capricorn: PLANET_COLORS.Saturn,
+  Aquarius: PLANET_COLORS.Saturn,
+};

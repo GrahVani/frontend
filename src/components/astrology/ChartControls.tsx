@@ -74,6 +74,7 @@ export default function ChartControls() {
                             { value: 'Raman', label: 'Raman' },
                             { value: 'KP', label: 'KP' },
                             { value: 'Yukteswar', label: 'Sri Yukteswar' },
+                            { value: 'Bhasin', label: 'Bhasin' },
                         ]}
                     />
                     <p className="text-[9px] text-[#9C7A2F]/60 mt-2 italic">* This updates your global astrologer preferences.</p>
