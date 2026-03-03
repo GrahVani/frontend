@@ -76,17 +76,18 @@ export default function AnalyticalWorkbenchPage() {
     const [selectedChartType, setSelectedChartType] = useState('D1');
     const [activeTab, setActiveTab] = useState<'chart' | 'dignity' | 'lagna'>('chart');
     const [isGeneratingLocal, setIsGeneratingLocal] = useState(false);
+    const [generateError, setGenerateError] = useState<string | null>(null);
 
     // Handler for generating individual charts
     const handleGenerateChart = async () => {
         if (!clientDetails?.id) return;
         setIsGeneratingLocal(true);
+        setGenerateError(null);
         try {
             await clientApi.generateChart(clientDetails.id, selectedChartType, settings.ayanamsa.toLowerCase());
             await refreshCharts();
-        } catch (err: any) {
-            console.error('Chart generation failed:', err);
-            alert(`Failed to generate ${selectedChartType}: ${err.message || 'Unknown error'}`);
+        } catch (err: unknown) {
+            setGenerateError(`Failed to generate ${selectedChartType}: ${err instanceof Error ? err.message : 'Unknown error'}`);
         } finally {
             setIsGeneratingLocal(false);
         }
@@ -140,12 +141,20 @@ export default function AnalyticalWorkbenchPage() {
                 ))}
             </div>
 
+            {/* Error Banner */}
+            {generateError && (
+                <div className="flex items-center justify-between bg-red-50 border border-red-200 text-red-800 text-sm rounded-lg px-4 py-2">
+                    <span className="font-serif">{generateError}</span>
+                    <button onClick={() => setGenerateError(null)} className="ml-2 text-red-600 hover:text-red-800 font-bold">✕</button>
+                </div>
+            )}
+
             {/* Content Area */}
             <div className={cn("grid grid-cols-1 gap-6", activeTab === 'dignity' ? "lg:grid-cols-1" : "lg:grid-cols-5")}>
                 <div className={cn("space-y-6", activeTab === 'dignity' ? "lg:col-span-1" : "lg:col-span-3")}>
                     {activeTab === 'chart' || activeTab === 'lagna' ? (
-                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm bg-[#FFFCF6]">
-                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique flex justify-between items-center">
+                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm bg-surface-warm">
+                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">
                                     {activeTab === 'lagna' ? 'Lagna Manifestation' : 'Interactive Visualization'}
                                 </h3>
@@ -177,7 +186,7 @@ export default function AnalyticalWorkbenchPage() {
                                         <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
                                             <p className="text-primary italic mb-4">No data for {CHART_NAMES[selectedChartType] || selectedChartType}</p>
                                             <button
-                                                onClick={() => clientApi.generateChart(clientDetails.id!, selectedChartType, activeSystem as any).then(refreshCharts)}
+                                                onClick={handleGenerateChart}
                                                 className="px-6 py-2 bg-gold-primary text-ink rounded-xl font-bold hover:shadow-lg transition-all"
                                             >
                                                 {isGeneratingLocal ? (
@@ -208,7 +217,7 @@ export default function AnalyticalWorkbenchPage() {
                                         To view the complete Dignity Matrix and Vimsopaka strengths, we need to generate the Shodasha Varga summary.
                                     </p>
                                     <button
-                                        onClick={() => clientApi.generateChart(clientDetails.id!, 'shodasha_varga_signs', activeSystem as any).then(refreshCharts)}
+                                        onClick={() => clientApi.generateChart(clientDetails.id!, 'shodasha_varga_signs', activeSystem).then(refreshCharts)}
                                         className="px-10 py-4 bg-copper-900 text-white rounded-2xl font-bold hover:shadow-2xl transition-all flex items-center gap-3 group"
                                     >
                                         {isGeneratingLocal ? (
@@ -227,8 +236,8 @@ export default function AnalyticalWorkbenchPage() {
                 {/* Right Panel */}
                 {activeTab !== 'dignity' && (
                     <div className="space-y-4 h-full w-145">
-                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm bg-[#FFFCF6] flex flex-col h-full">
-                            <div className="bg-[#EAD8B1] px-4 py-2 border-b border-antique shrink-0">
+                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm bg-surface-warm flex flex-col h-full">
+                            <div className="bg-border-warm px-4 py-2 border-b border-antique shrink-0">
                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Birth Planetary Positions</h3>
                             </div>
 

@@ -14,7 +14,7 @@ export interface SidebarItem {
 
 interface SectionSidebarProps {
     title: string;
-    basePath: string; // e.g. "/muhurta"
+    basePath: string;
     items: SidebarItem[];
 }
 
@@ -23,52 +23,47 @@ export default function SectionSidebar({ title, basePath, items }: SectionSideba
 
     return (
         <aside
-            className="w-full lg:w-64 h-full py-6 px-4 flex flex-col gap-2 border-r border-[#D08C60]/30 bg-header-gradient"
-            style={{
-                boxShadow: 'inset 0 2px 4px rgba(255,210,125,0.15), inset 0 -2px 4px rgba(0,0,0,0.3)',
-            }}
+            role="navigation"
+            aria-label={`${title} section navigation`}
+            className="w-full lg:w-64 h-full py-6 px-4 flex flex-col gap-2 border-r border-header-border/30 bg-header-gradient shadow-[inset_0_2px_4px_rgba(255,210,125,0.15),inset_0_-2px_4px_rgba(0,0,0,0.3)]"
         >
-
             <div className="mb-6 px-2">
-                <h3 className="text-xs font-bold text-[#D08C60] tracking-widest font-serif">
+                <h3 className="text-xs font-bold text-header-border tracking-widest font-serif">
                     {title}
                 </h3>
             </div>
 
             <nav className="space-y-1">
                 {items.map((item) => {
-                    // Check if absolute path or relative
                     const href = item.path.startsWith('/') ? item.path : `${basePath}/${item.path}`;
-
-                    // Simple active check
-                    // If pathname is exactly the href OR pathname starts with href/
                     const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
                     return (
                         <Link
                             key={item.name}
                             href={href}
+                            aria-current={isActive ? "page" : undefined}
                             className={cn(
                                 "flex items-center justify-between px-3 py-3 rounded-lg transition-all duration-200 group",
                                 isActive
-                                    ? "bg-[#FEFAEA]/10 text-[#FFD27D] font-bold shadow-sm border border-[#D08C60]/50"
-                                    : "text-white hover:bg-[#FEFAEA]/5 hover:text-[#FFD27D]"
+                                    ? "bg-softwhite/10 text-active-glow font-bold shadow-sm border border-header-border/50"
+                                    : "text-white hover:bg-softwhite/5 hover:text-active-glow"
                             )}
                         >
                             <div className="flex items-center gap-3">
-                                <item.icon className={cn("w-5 h-5", isActive ? "text-[#FFD27D]" : "text-[#D08C60] group-hover:text-[#FFD27D]")} />
+                                <item.icon className={cn("w-5 h-5", isActive ? "text-active-glow" : "text-header-border group-hover:text-active-glow")} />
                                 <span className="font-serif text-sm tracking-wide">{item.name}</span>
                             </div>
-                            {isActive && <ChevronRight className="w-4 h-4 text-[#FFD27D]" />}
+                            {isActive && <ChevronRight className="w-4 h-4 text-active-glow" />}
                         </Link>
                     );
                 })}
             </nav>
 
-            <div className="mt-auto pt-6 border-t border-[#D08C60]/30 px-2">
+            <div className="mt-auto pt-6 border-t border-header-border/30 px-2">
                 <Link
-                    href={`/settings`}
-                    className="flex items-center gap-3 text-[#FEFAEA]/70 hover:text-white transition-colors"
+                    href="/settings"
+                    className="flex items-center gap-3 text-softwhite/70 hover:text-white transition-colors"
                 >
                     <Settings className="w-5 h-5" />
                     <span className="font-serif text-sm">Settings</span>

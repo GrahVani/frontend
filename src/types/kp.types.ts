@@ -98,8 +98,8 @@ export interface KpPlanetsCuspsResponse {
         };
         house_cusps: Record<string, KpCuspRaw>;
         planets: Record<string, KpPlanetRaw>;
-        significators?: Record<string, any>;
-        metadata?: any;
+        significators?: Record<string, string[]>;
+        metadata?: Record<string, unknown>;
         user_name?: string;
     };
     cached: boolean;

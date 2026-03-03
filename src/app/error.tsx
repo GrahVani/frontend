@@ -10,13 +10,13 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Unhandled error:", error);
+    // Error logged by Next.js error boundary
   }, [error]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#fdf6e3] px-4">
-      <div className="max-w-md w-full text-center space-y-6">
-        <div className="text-6xl">&#9788;</div>
+    <div className="min-h-screen flex items-center justify-center bg-parchment-light px-4">
+      <div className="max-w-md w-full text-center space-y-6" role="alert">
+        <div className="text-6xl" aria-hidden="true">&#9788;</div>
         <h1 className="text-2xl font-serif text-amber-900">
           Something went wrong
         </h1>
@@ -26,6 +26,7 @@ export default function GlobalError({
         </p>
         <button
           onClick={reset}
+          aria-label="Retry loading"
           className="px-6 py-2.5 bg-amber-700 text-white rounded-lg hover:bg-amber-800 transition-colors font-medium"
         >
           Try Again

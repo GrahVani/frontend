@@ -1,12 +1,16 @@
+import { SkeletonCard, SkeletonChart } from "@/components/ui/Skeleton";
+
 export default function VedicAstrologyLoading() {
-  return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="text-center space-y-4">
-        <div className="w-10 h-10 border-3 border-amber-300 border-t-amber-700 rounded-full animate-spin mx-auto" />
-        <p className="text-amber-800/70 text-sm font-medium">
-          Loading astrology data...
-        </p>
-      </div>
-    </div>
-  );
+    return (
+        <div className="max-w-7xl mx-auto space-y-6 animate-in fade-in duration-300" role="status" aria-label="Loading vedic astrology" aria-busy="true">
+            <div className="space-y-2">
+                <div className="h-10 w-52 bg-parchment/50 rounded-lg animate-pulse" />
+                <div className="h-5 w-72 bg-parchment/30 rounded-lg animate-pulse" />
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <SkeletonChart />
+                <SkeletonCard />
+            </div>
+        </div>
+    );
 }

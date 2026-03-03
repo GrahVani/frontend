@@ -8,6 +8,7 @@ import { useVedicClient } from "@/context/VedicClientContext";
 import { useAstrologerStore } from "@/store/useAstrologerStore";
 import { SidebarItem } from "@/components/layout/SectionSidebar";
 import { clientApi } from "@/lib/api";
+import { VedicClientDetails } from "@/context/VedicClientContext";
 import {
     LayoutDashboard,
     Compass,
@@ -35,19 +36,12 @@ import {
 // ============================================================================
 // Navigation Items with Jyotish Terminology + System Compatibility
 // ============================================================================
-// systemFilter: which ayanamsa systems should show this item
-//   - undefined = show for all systems
-//   - ['Lahiri'] = show only for Lahiri
-//   - ['KP'] = show only for KP
-//   - ['Lahiri', 'Raman', 'Yukteswar'] = show for these systems
-
 interface NavItem extends SidebarItem {
     systemFilter?: string[];
-    isOverflow?: boolean; // true = goes into "More" dropdown
+    isOverflow?: boolean;
 }
 
 const VEDIC_NAV_ITEMS: NavItem[] = [
-    // ── Primary Navigation (always visible, system-filtered) ──
     { name: "Kundali", path: "/overview", icon: LayoutTemplate },
     { name: "Work Bench", path: "/workbench", icon: LayoutDashboard },
     { name: "Divisional Charts", path: "/divisional", icon: Map, systemFilter: ['Lahiri', 'Raman', 'Yukteswar', 'Bhasin'] },
@@ -61,8 +55,6 @@ const VEDIC_NAV_ITEMS: NavItem[] = [
     { name: "KP System", path: "/kp", icon: FlaskConical, systemFilter: ['KP'] },
     { name: "Ashtakavarga", path: "/kp?tab=ashtakavarga", icon: Shield, systemFilter: ['KP'] },
     { name: "Horary", path: "/kp?tab=horary", icon: HelpCircle, systemFilter: ['KP'] },
-
-    // ── Overflow Navigation (inside "More" dropdown) ──
     { name: "Compatibility", path: "/comparison", icon: Heart, isOverflow: true },
     { name: "Pushkara Navamsha", path: "/pushkara-navamsha", icon: Sparkles, isOverflow: true, systemFilter: ['Lahiri'] },
     { name: "Phala Jyotish", path: "/reports", icon: FileText, isOverflow: true },
@@ -72,12 +64,17 @@ const VEDIC_NAV_ITEMS: NavItem[] = [
 // ============================================================================
 // Sub-Header Navigation Bar
 // ============================================================================
-function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, ayanamsa }: any) {
+function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, ayanamsa }: {
+    clientDetails: VedicClientDetails | null;
+    setClientDetails: (d: VedicClientDetails | null) => void;
+    pathname: string;
+    router: ReturnType<typeof useRouter>;
+    ayanamsa: string;
+}) {
     const searchParams = useSearchParams();
     const [isMoreOpen, setIsMoreOpen] = React.useState(false);
     const moreRef = React.useRef<HTMLDivElement>(null);
 
-    // Close dropdown when clicking outside
     React.useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (moreRef.current && !moreRef.current.contains(event.target as Node)) {
@@ -88,73 +85,53 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    // Filter nav items based on system compatibility
     const filteredPrimaryItems = VEDIC_NAV_ITEMS.filter(item => {
-        if (item.isOverflow) return false; // Skip overflow items
-
+        if (item.isOverflow) return false;
         const capabilities = clientApi.getSystemCapabilities(ayanamsa);
-
-        // Custom logic based on capabilities
         if (item.name === "Divisional Charts" && !capabilities.hasDivisional) return false;
         if (item.name === "Ashtakavargas" && !capabilities.hasAshtakavarga) return false;
         if (item.name === "Shadbala" && capabilities.features.shadbala.length === 0) return false;
         if (item.name === "Gochar" && !capabilities.charts.special.includes('transit')) return false;
         if (item.name === "Sudarshan Chakra" && !capabilities.charts.special.includes('sudarshana')) return false;
         if (item.name === "KP System" && (!capabilities.hasHorary && ayanamsa !== 'KP')) return false;
-
-        // Fallback to manual filter if present
         if (item.systemFilter && !item.systemFilter.includes(ayanamsa)) return false;
-
         return true;
     });
 
     const filteredOverflowItems = VEDIC_NAV_ITEMS.filter(item => {
         if (!item.isOverflow) return false;
-
         const capabilities = clientApi.getSystemCapabilities(ayanamsa);
-
         if (item.name === "Compatibility" && !capabilities.hasCompatibility) return false;
         if (item.name === "Numerology" && !capabilities.hasNumerology) return false;
-
         if (item.systemFilter && !item.systemFilter.includes(ayanamsa)) return false;
         return true;
     });
 
-
     return (
-        <div
-            className="sticky top-14 left-0 right-0 z-40 h-12 bg-header-gradient flex items-center px-4 md:px-6 gap-4"
-        >
+        <div className="sticky top-14 left-0 right-0 z-40 h-12 bg-header-gradient flex items-center px-4 md:px-6 gap-4" role="navigation" aria-label="Vedic astrology sections">
             {/* Top Border Indicator */}
-            <div className="absolute top-0 left-0 right-0 h-[1px] bg-[#D08C60] opacity-10" />
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-header-border opacity-10" />
 
             {/* Bottom Ornament */}
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#D08C60] to-transparent shadow-[0_1px_3px_rgba(0,0,0,0.3)]" />
+            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-header-border to-transparent shadow-[0_1px_3px_rgba(0,0,0,0.3)]" />
 
             {/* Navigation Items */}
-            <nav className="flex-1 flex items-center gap-0.5 overflow-x-auto no-scrollbar h-full">
+            <nav className="flex-1 flex items-center gap-0.5 overflow-x-auto no-scrollbar h-full" aria-label="Vedic astrology sub-navigation">
                 {filteredPrimaryItems.map((item) => {
                     const href = item.path === "" ? "/vedic-astrology" : `/vedic-astrology${item.path}`;
-
-                    // Improved active check to handle query parameters
                     let isActive = pathname === href;
 
                     if (item.path.includes('?')) {
                         const [purePath, queryString] = item.path.split('?');
                         const fullPurePath = `/vedic-astrology${purePath}`;
                         const itemParams = new URLSearchParams(queryString);
-
-                        // Check if path matches and all defined params match current URL
                         const pathMatches = pathname === fullPurePath;
                         let paramsMatch = true;
                         itemParams.forEach((value, key) => {
                             if (searchParams.get(key) !== value) paramsMatch = false;
                         });
-
                         isActive = pathMatches && paramsMatch;
                     } else if (pathname === href) {
-                        // If current URL has params but item path doesn't, it's not active
-                        // (e.g. /kp?tab=ashtakavarga should not highlight /kp)
                         if (Array.from(searchParams.keys()).length > 0 && pathname === href) {
                             isActive = false;
                         } else {
@@ -166,41 +143,41 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                         <Link
                             key={item.name}
                             href={href}
+                            aria-current={isActive ? "page" : undefined}
                             className={cn(
                                 "flex items-center px-3 py-2 transition-all duration-300 relative group shrink-0 whitespace-nowrap font-serif text-sm font-medium tracking-wide",
                                 isActive
-                                    ? "text-[#FFD27D] text-shadow-glow"
-                                    : "text-white hover:text-[#FFD27D]"
+                                    ? "text-active-glow text-shadow-glow"
+                                    : "text-white hover:text-active-glow"
                             )}
                         >
                             <span>{item.name}</span>
-
-                            {/* Active Indicator */}
                             {isActive && (
                                 <>
-                                    <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#FFD27D] to-transparent shadow-[0_0_10px_2px_rgba(255,210,125,0.5)]" />
+                                    <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-active-glow to-transparent shadow-[0_0_10px_2px_rgba(255,210,125,0.5)]" />
                                     <span
-                                        className="absolute inset-0 -z-10 rounded-lg opacity-20 blur-md pointer-events-none"
-                                        style={{ background: 'radial-gradient(ellipse at center, #FFD27D 0%, transparent 70%)' }}
+                                        className="absolute inset-0 -z-10 rounded-lg opacity-20 blur-md pointer-events-none [background:radial-gradient(ellipse_at_center,var(--active-glow)_0%,transparent_70%)]"
                                     />
                                 </>
                             )}
                         </Link>
                     );
                 })}
-
             </nav>
 
-            {/* "More" Dropdown - Outside nav to avoid overflow clipping */}
+            {/* "More" Dropdown */}
             {filteredOverflowItems.length > 0 && (
                 <div ref={moreRef} className="relative shrink-0 flex items-center h-full">
                     <button
                         onClick={() => setIsMoreOpen(!isMoreOpen)}
+                        aria-haspopup="true"
+                        aria-expanded={isMoreOpen}
+                        aria-label="More navigation options"
                         className={cn(
                             "flex items-center gap-1 px-3 py-2 transition-all duration-300 font-serif text-sm font-medium tracking-wide",
                             isMoreOpen
-                                ? "text-[#FFD27D]"
-                                : "text-white hover:text-[#FFD27D]"
+                                ? "text-active-glow"
+                                : "text-white hover:text-active-glow"
                         )}
                     >
                         <span>More</span>
@@ -208,7 +185,7 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                     </button>
 
                     {isMoreOpen && (
-                        <div className="absolute top-full right-0 mt-0 w-48 bg-[#FFFCF6] border border-[#D08C60]/30 rounded-xl shadow-2xl overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                        <div role="menu" aria-label="Additional navigation" className="absolute top-full right-0 mt-0 w-48 bg-surface-warm border border-header-border/30 rounded-xl shadow-2xl overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
                             {filteredOverflowItems.map((item) => {
                                 const href = `/vedic-astrology${item.path}`;
                                 const isActive = pathname === href;
@@ -217,12 +194,13 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                                     <Link
                                         key={item.name}
                                         href={href}
+                                        role="menuitem"
                                         onClick={() => setIsMoreOpen(false)}
                                         className={cn(
                                             "flex items-center gap-3 px-4 py-3 text-sm font-serif transition-all",
                                             isActive
-                                                ? "text-[#D08C60] bg-[#D08C60]/10 font-bold"
-                                                : "text-[#4A3F32] hover:text-[#D08C60] hover:bg-[#D08C60]/5"
+                                                ? "text-header-border bg-header-border/10 font-bold"
+                                                : "text-secondary hover:text-header-border hover:bg-header-border/5"
                                         )}
                                     >
                                         {Icon && <Icon className="w-4 h-4 opacity-70" />}
@@ -237,15 +215,15 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
 
             {/* Client Profile Card (Right) */}
             {clientDetails && (
-                <div className="flex items-center gap-4 pl-6 border-l border-[#D08C60]/20 shrink-0 h-10 ml-4">
+                <div className="flex items-center gap-4 pl-6 border-l border-header-border/20 shrink-0 h-10 ml-4">
                     <div
                         className="flex items-center gap-3 cursor-pointer group"
                         onClick={() => router.push(`/vedic-astrology/overview`)}
                     >
                         <div className="hidden sm:block text-right">
-                            <h2 className="text-white font-serif font-semibold text-md tracking-wide group-hover:text-[#FFD27D] transition-colors">{clientDetails.name}</h2>
+                            <h2 className="text-white font-serif font-semibold text-md tracking-wide group-hover:text-active-glow transition-colors">{clientDetails.name}</h2>
                         </div>
-                        <div className="w-9 h-9 rounded-full bg-[#2A1810] border border-[#D08C60]/30 flex items-center justify-center text-[#FFD27D] font-serif font-bold text-sm shadow-[0_0_15px_rgba(208,140,96,0.1)] group-hover:border-[#FFD27D]/50 transition-all">
+                        <div className="w-9 h-9 rounded-full bg-ink-deep border border-header-border/30 flex items-center justify-center text-active-glow font-serif font-bold text-sm shadow-[0_0_15px_rgba(208,140,96,0.1)] group-hover:border-active-glow/50 transition-all">
                             {clientDetails.name.charAt(0)}
                         </div>
                     </div>
@@ -264,14 +242,12 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
     const pathname = usePathname();
     const router = useRouter();
 
-    // If client is not set and not on the registry page, redirect to registry
     React.useEffect(() => {
         if (isInitialized && !isClientSet && pathname !== "/vedic-astrology") {
             router.push("/vedic-astrology");
         }
     }, [isInitialized, isClientSet, pathname, router]);
 
-    // Show nothing while redirecting or initializing
     if ((!isInitialized || !isClientSet) && pathname !== "/vedic-astrology") {
         return null;
     }
@@ -280,11 +256,7 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
         <div className="flex flex-col min-h-screen pt-14 bg-luxury-radial relative">
             {/* Subtle Texture Overlay */}
             <div
-                className="absolute inset-0 opacity-15 pointer-events-none z-0"
-                style={{
-                    backgroundImage: "url('https://www.transparenttextures.com/patterns/aged-paper.png')",
-                    backgroundBlendMode: 'multiply'
-                }}
+                className="absolute inset-0 opacity-15 pointer-events-none z-0 bg-[url('/textures/aged-paper.png')] bg-blend-multiply"
             />
 
             {/* Sub-Header Hub */}
@@ -299,7 +271,7 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
             )}
 
             {/* Main Content Area */}
-            <main className="flex-1 relative z-10 transition-all duration-500">
+            <main className="flex-1 relative z-10 transition-all duration-500" aria-label="Vedic astrology content">
                 <div className="p-2 lg:p-4 w-full h-full pb-20">
                     {children}
                 </div>

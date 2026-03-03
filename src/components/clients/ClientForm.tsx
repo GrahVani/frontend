@@ -118,7 +118,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
         }
     }, [initialData]);
 
-    const handleChange = (field: string, value: any) => {
+    const handleChange = (field: string, value: string | number | undefined) => {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
@@ -133,9 +133,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
         try {
             const response = await geocodeApi.getSuggestions(query, 5);
             setLocationSuggestions(response.suggestions || []);
-        } catch (err) {
-            console.error('Failed to fetch location suggestions:', err);
-            setLocationSuggestions([]);
+        } catch (err) {            setLocationSuggestions([]);
         } finally {
             setLoadingSuggestions(false);
         }
@@ -202,74 +200,65 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                 // Metadata - Cast to any to bypass strict type checking until types are fully synced
                 // The backend accepts 'notes' as a string in the update payload
                 notes: formData.notes || undefined,
-            } as any;
+            } as CreateClientPayload;
 
             if (mode === 'edit' && initialData?.id) {
                 const updateVariables = { id: initialData.id, data: payload };
                 await updateClient.mutateAsync(updateVariables, {
-                    onSuccess: (updated) => {
-                        console.log("Client updated (via mutation):", updated);
-                        if (onSuccess) {
-                            onSuccess(updated as any);
+                    onSuccess: (updated) => {                        if (onSuccess) {
+                            onSuccess(updated as Client);
                         } else {
                             router.push('/clients');
                         }
                     },
-                    onError: (err: any) => {
-                        console.error("Failed to update client:", err);
-                        setError(err.message || 'Failed to update client. Please try again.');
+                    onError: (err: Error) => {                        setError(err.message || 'Failed to update client. Please try again.');
                     }
                 });
             } else {
                 await createClient.mutateAsync(payload, {
-                    onSuccess: (newClient) => {
-                        console.log("Client created (via mutation):", newClient);
-                        if (onSuccess) {
-                            onSuccess(newClient as any);
+                    onSuccess: (newClient) => {                        if (onSuccess) {
+                            onSuccess(newClient as Client);
                         } else {
                             router.push('/clients');
                         }
                     },
-                    onError: (err: any) => {
-                        console.error("Failed to create client:", err);
-                        setError(err.message || 'Failed to create client. Please try again.');
+                    onError: (err: Error) => {                        setError(err.message || 'Failed to create client. Please try again.');
                     }
                 });
             }
-        } catch (err: any) {
-            // This catch block might be redundant with onError callbacks but serves as a safety net
-            console.error("Unexpected error in submission:", err);
-            // setError handles safely inside mutation callbacks usually, but if something fails outside mutation:
-            setError(err.message || "An unexpected error occurred.");
+        } catch (err: unknown) {
+            // This catch block might be redundant with onError callbacks but serves as a safety net            // setError handles safely inside mutation callbacks usually, but if something fails outside mutation:
+            setError(err instanceof Error ? err.message : "An unexpected error occurred.");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="w-full">
+        <form onSubmit={handleSubmit} className="w-full" aria-label={mode === 'edit' ? 'Edit client form' : 'Client registration form'}>
             {/* Error Display */}
             {error && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                <div role="alert" className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
                     {error}
                 </div>
             )}
 
             {/* 1. Personal Identity Section */}
             <div className="mb-6">
-                <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#DCC9A6]">
-                    <User className="w-5 h-5 text-[#8B6914]" />
-                    <h2 className="font-serif text-lg font-bold text-[#2A1810]">Personal Identity</h2>
+                <div className="flex items-center gap-2 mb-4 pb-2 border-b border-divider">
+                    <User className="w-5 h-5 text-gold-burnished" />
+                    <h2 className="font-serif text-lg font-bold text-ink-deep">Personal Identity</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
                     <div>
-                        <label className="block text-[11px] font-bold font-serif text-[#3E2A1F] uppercase tracking-widest mb-1">
+                        <label className="block text-[11px] font-bold font-serif text-ink uppercase tracking-widest mb-1">
                             Full Name <span className="text-red-600">*</span>
                         </label>
                         <ParchmentInput
                             placeholder="Full Name"
                             required
+                            aria-required="true"
                             value={formData.fullName}
                             onChange={(e) => handleChange('fullName', e.target.value)}
                         />
@@ -278,11 +267,13 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <label className="block text-[11px] font-bold font-serif text-[#3E2A1F] uppercase tracking-widest mb-1">
+                        <label className="block text-[11px] font-bold font-serif text-ink uppercase tracking-widest mb-1">
                             Gender <span className="text-red-600">*</span>
                         </label>
                         <ParchmentSelect
                             label=""
+                            aria-label="Gender"
+                            aria-required="true"
                             value={formData.gender}
                             onChange={(e) => handleChange('gender', e.target.value)}
                             options={[
@@ -293,11 +284,12 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                         />
                     </div>
                     <div>
-                        <label className="block text-[11px] font-bold font-serif text-[#3E2A1F] uppercase tracking-widest mb-1">
+                        <label className="block text-[11px] font-bold font-serif text-ink uppercase tracking-widest mb-1">
                             Marital Status
                         </label>
                         <ParchmentSelect
                             label=""
+                            aria-label="Marital status"
                             value={formData.maritalStatus}
                             onChange={(e) => handleChange('maritalStatus', e.target.value)}
                             options={[
@@ -314,9 +306,9 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
 
             {/* 2. Contact Information Section */}
             <div className="mb-6">
-                <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#DCC9A6]">
-                    <Phone className="w-5 h-5 text-[#8B6914]" />
-                    <h2 className="font-serif text-lg font-bold text-[#2A1810]">Contact Information</h2>
+                <div className="flex items-center gap-2 mb-4 pb-2 border-b border-divider">
+                    <Phone className="w-5 h-5 text-gold-burnished" />
+                    <h2 className="font-serif text-lg font-bold text-ink-deep">Contact Information</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
@@ -355,14 +347,14 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
 
             {/* 3. Birth Data Section - Critical for Astrology */}
             <div className="mb-6">
-                <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#DCC9A6]">
-                    <Calendar className="w-5 h-5 text-[#8B6914]" />
-                    <h2 className="font-serif text-lg font-bold text-[#2A1810]">Cosmic Snapshot (Birth Data)</h2>
+                <div className="flex items-center gap-2 mb-4 pb-2 border-b border-divider">
+                    <Calendar className="w-5 h-5 text-gold-burnished" />
+                    <h2 className="font-serif text-lg font-bold text-ink-deep">Cosmic Snapshot (Birth Data)</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
                     <div>
-                        <label className="block text-[11px] font-bold font-serif text-[#3E2A1F] uppercase tracking-widest mb-1">
+                        <label className="block text-[11px] font-bold font-serif text-ink uppercase tracking-widest mb-1">
                             Date of Birth <span className="text-red-600">*</span>
                         </label>
                         <ParchmentDatePicker
@@ -373,7 +365,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                         />
                     </div>
                     <div>
-                        <label className="block text-[11px] font-bold font-serif text-[#3E2A1F] uppercase tracking-widest mb-1">
+                        <label className="block text-[11px] font-bold font-serif text-ink uppercase tracking-widest mb-1">
                             Time of Birth <span className="text-red-600">*</span>
                         </label>
                         <ParchmentTimePicker
@@ -387,15 +379,20 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
 
                 {/* Birth Place with Autocomplete */}
                 <div className="mb-4">
-                    <label className="block text-[11px] font-bold font-serif text-[#3E2A1F] uppercase tracking-widest mb-1">
+                    <label className="block text-[11px] font-bold font-serif text-ink uppercase tracking-widest mb-1">
                         Place of Birth <span className="text-red-600">*</span>
                     </label>
                     <div className="relative">
                         <div className="relative">
-                            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B6914]" />
+                            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gold-burnished" />
                             <input
                                 type="text"
                                 placeholder="Search city or town..."
+                                aria-label="Place of birth"
+                                aria-required="true"
+                                aria-autocomplete="list"
+                                aria-expanded={showSuggestions && locationSuggestions.length > 0}
+                                role="combobox"
                                 value={locationQuery}
                                 onChange={(e) => {
                                     setLocationQuery(e.target.value);
@@ -438,26 +435,28 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                         });
                                     }
                                 }}
-                                className="w-full bg-transparent border-b border-[#C9A24D]/50 py-2 pl-10 pr-10 text-[#2A1810] font-serif placeholder:text-[#8B6914] placeholder:opacity-80 focus:outline-none focus:border-[#9C7A2F] transition-colors"
+                                className="w-full bg-transparent border-b border-gold-primary/50 py-2 pl-10 pr-10 text-ink-deep font-serif placeholder:text-gold-burnished placeholder:opacity-80 focus:outline-none focus:border-gold-dark transition-colors"
                                 required
                             />
                             {loadingSuggestions && (
-                                <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B6914] animate-spin" />
+                                <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gold-burnished animate-spin" />
                             )}
                         </div>
 
                         {/* Suggestions Dropdown */}
                         {showSuggestions && locationSuggestions.length > 0 && (
-                            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#DCC9A6] rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
+                            <div role="listbox" aria-label="Location suggestions" className="absolute top-full left-0 right-0 mt-1 bg-white border border-divider rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
                                 {locationSuggestions.map((suggestion, index) => (
                                     <button
                                         key={index}
                                         type="button"
+                                        role="option"
+                                        aria-selected={false}
                                         onClick={() => selectLocation(suggestion)}
-                                        className="w-full px-4 py-3 text-left hover:bg-[#FEFAEA] border-b border-[#DCC9A6]/30 last:border-0 transition-colors"
+                                        className="w-full px-4 py-3 text-left hover:bg-softwhite border-b border-divider/30 last:border-0 transition-colors"
                                     >
-                                        <p className="text-[#3E2A1F] font-medium text-sm">{suggestion.formatted}</p>
-                                        <p className="text-[#9C7A2F] text-xs mt-1">
+                                        <p className="text-ink font-medium text-sm">{suggestion.formatted}</p>
+                                        <p className="text-gold-dark text-xs mt-1">
                                             {suggestion.latitude.toFixed(4)}° N, {suggestion.longitude.toFixed(4)}° E • {suggestion.timezone}
                                         </p>
                                     </button>
@@ -482,51 +481,57 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                 handleChange('birthTimezone', 'Asia/Kolkata');
                             }
                         }}
-                        className="w-4 h-4 accent-[#9C7A2F] cursor-pointer"
+                        className="w-4 h-4 accent-gold-dark cursor-pointer"
                     />
-                    <label htmlFor="manualCoords" className="text-sm text-[#3E2A1F] font-serif cursor-pointer">
+                    <label htmlFor="manualCoords" className="text-sm text-ink font-serif cursor-pointer">
                         Enter coordinates manually (for precise calculations)
                     </label>
                 </div>
 
                 {/* Coordinates Display - Now shows for manual mode OR after location selection */}
                 {(manualCoordinates || (formData.birthLatitude !== undefined && formData.birthLongitude !== undefined)) && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-[#FEFAEA] rounded-xl border border-[#DCC9A6] shadow-sm">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-softwhite rounded-xl border border-divider shadow-sm">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-[#9C7A2F] uppercase tracking-wider block">Latitude <span className="text-red-500">*</span></label>
+                            <label className="text-[10px] font-bold text-gold-dark uppercase tracking-wider block">Latitude <span className="text-red-500">*</span></label>
                             <input
                                 type="number"
                                 step="0.0001"
                                 value={formData.birthLatitude}
                                 onChange={(e) => handleChange('birthLatitude', parseFloat(e.target.value))}
-                                className="w-full bg-transparent border-b border-[#DCC9A6] focus:border-[#9C7A2F] focus:outline-none py-1 text-[#3E2A1F] font-serif"
+                                className="w-full bg-transparent border-b border-divider focus:border-gold-dark focus:outline-none py-1 text-ink font-serif"
                                 required
+                                aria-required="true"
+                                aria-label="Birth latitude"
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-[#9C7A2F] uppercase tracking-wider block">Longitude <span className="text-red-500">*</span></label>
+                            <label className="text-[10px] font-bold text-gold-dark uppercase tracking-wider block">Longitude <span className="text-red-500">*</span></label>
                             <input
                                 type="number"
                                 step="0.0001"
                                 value={formData.birthLongitude}
                                 onChange={(e) => handleChange('birthLongitude', parseFloat(e.target.value))}
-                                className="w-full bg-transparent border-b border-[#DCC9A6] focus:border-[#9C7A2F] focus:outline-none py-1 text-[#3E2A1F] font-serif"
+                                className="w-full bg-transparent border-b border-divider focus:border-gold-dark focus:outline-none py-1 text-ink font-serif"
                                 required
+                                aria-required="true"
+                                aria-label="Birth longitude"
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-[#9C7A2F] uppercase tracking-wider block">Timezone <span className="text-red-500">*</span></label>
+                            <label className="text-[10px] font-bold text-gold-dark uppercase tracking-wider block">Timezone <span className="text-red-500">*</span></label>
                             <input
                                 type="text"
                                 value={formData.birthTimezone}
                                 onChange={(e) => handleChange('birthTimezone', e.target.value)}
                                 placeholder="e.g. Asia/Kolkata"
-                                className="w-full bg-transparent border-b border-[#DCC9A6] focus:border-[#9C7A2F] focus:outline-none py-1 text-[#3E2A1F] font-serif"
+                                className="w-full bg-transparent border-b border-divider focus:border-gold-dark focus:outline-none py-1 text-ink font-serif"
                                 required
+                                aria-required="true"
+                                aria-label="Birth timezone"
                             />
                         </div>
                         {/* Validation hints */}
-                        <div className="md:col-span-3 text-xs text-[#9C7A2F]/70 italic">
+                        <div className="md:col-span-3 text-xs text-gold-dark/70 italic">
                             Latitude: -90 to 90 (e.g., 27.1833 for Agra) • Longitude: -180 to 180 (e.g., 78.0167)
                         </div>
                     </div>
@@ -535,26 +540,27 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
 
             {/* 4. Notes & Observations */}
             <div className="mb-6">
-                <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#DCC9A6]">
-                    <FileText className="w-5 h-5 text-[#8B6914]" />
-                    <h2 className="font-serif text-lg font-bold text-[#2A1810]">Notes & Observations</h2>
+                <div className="flex items-center gap-2 mb-4 pb-2 border-b border-divider">
+                    <FileText className="w-5 h-5 text-gold-burnished" />
+                    <h2 className="font-serif text-lg font-bold text-ink-deep">Notes & Observations</h2>
                 </div>
 
                 <div className="space-y-2">
-                    <label className="block text-[11px] font-bold font-serif text-[#3E2A1F] uppercase tracking-widest mb-1">
+                    <label className="block text-[11px] font-bold font-serif text-ink uppercase tracking-widest mb-1">
                         Client Notes
                     </label>
                     <textarea
                         value={formData.notes}
                         onChange={(e) => handleChange('notes', e.target.value)}
                         placeholder="Add any initial observations, specific questions, or important context about the client here..."
-                        className="w-full bg-transparent border border-[#C9A24D]/50 rounded-lg p-3 min-h-[100px] text-[#2A1810] font-serif placeholder:text-[#8B6914] placeholder:opacity-80 focus:outline-none focus:border-[#9C7A2F] transition-colors resize-y"
+                        aria-label="Client notes"
+                        className="w-full bg-transparent border border-gold-primary/50 rounded-lg p-3 min-h-[100px] text-ink-deep font-serif placeholder:text-gold-burnished placeholder:opacity-80 focus:outline-none focus:border-gold-dark transition-colors resize-y"
                     />
                 </div>
             </div>
 
             {/* Actions */}
-            <div className="flex justify-end pt-6 border-t border-[#DCC9A6]">
+            <div className="flex justify-end pt-6 border-t border-divider">
                 <div className="w-full md:w-auto">
                     <GoldenButton
                         topText={loading ? "Preserving" : (mode === 'edit' ? "Update" : "Save")}

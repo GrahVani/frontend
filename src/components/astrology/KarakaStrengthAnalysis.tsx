@@ -4,8 +4,27 @@ import React from 'react';
 import { cn } from "@/lib/utils";
 import { Shield, Activity, Target, Zap } from 'lucide-react';
 
+interface KarakaEntry {
+    planet: string;
+    karaka_abbr: string;
+    karaka_full: string;
+    karaka_desc: string;
+    sign_index: number;
+    degrees_in_sign: number;
+    dms_in_sign: string;
+    is_highest_degree: boolean;
+}
+
+interface KarakaData {
+    karakas: KarakaEntry[];
+    calculation_method?: {
+        ayanamsa?: string;
+        house_system?: string;
+    };
+}
+
 interface KarakaStrengthAnalysisProps {
-    data: any;
+    data: KarakaData;
     className?: string;
 }
 
@@ -14,7 +33,7 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
 
     const karakas = data.karakas || [];
     const calculationMethod = data.calculation_method || {};
-    const atmakaraka = karakas.find((k: any) => k.karaka_abbr === 'AK');
+    const atmakaraka = karakas.find((k: KarakaEntry) => k.karaka_abbr === 'AK');
 
     return (
         <div className={cn("w-full space-y-6", className)}>
@@ -33,7 +52,7 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
                 />
                 <StatCard
                     title="Highest Degree"
-                    value={karakas.find((k: any) => k.is_highest_degree)?.degrees_in_sign?.toFixed(2) || '0.00'}
+                    value={karakas.find((k: KarakaEntry) => k.is_highest_degree)?.degrees_in_sign?.toFixed(2) || '0.00'}
                     icon={<Zap className="w-4 h-4" />}
                     color="copper"
                 />
@@ -45,8 +64,8 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
                 />
             </div>
 
-            <div className="bg-[#FFFCF6] border border-antique rounded-xl overflow-hidden shadow-sm">
-                <div className="bg-[#EAD8B1] px-4 py-2 border-b border-antique">
+            <div className="bg-surface-warm border border-antique rounded-xl overflow-hidden shadow-sm">
+                <div className="bg-border-warm px-4 py-2 border-b border-antique">
                     <h3 className="text-lg font-serif font-bold text-primary">Karaka Strength Analysis</h3>
                 </div>
                 <div className="overflow-x-auto">
@@ -61,7 +80,7 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
                             </tr>
                         </thead>
                         <tbody className="text-sm">
-                            {karakas.map((k: any, idx: number) => (
+                            {karakas.map((k: KarakaEntry, idx: number) => (
                                 <tr key={k.planet} className={cn(
                                     "hover:bg-parchment/50 transition-colors border-b border-antique/20 last:border-0",
                                     idx % 2 === 1 ? "bg-antique/5" : "bg-transparent",

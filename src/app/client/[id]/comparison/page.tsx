@@ -55,22 +55,19 @@ export default function ClientComparisonPage() {
         <div className="space-y-6 max-w-6xl mx-auto pb-10">
             {/* Header Card */}
             <div
-                className="rounded-lg p-6 shadow-sm relative overflow-hidden border border-[#D08C60]/30"
-                style={{
-                    background: 'linear-gradient(180deg, #98522F 0%, #763A1F 40%, #55250F 100%)',
-                }}
+                className="rounded-lg p-6 shadow-sm relative overflow-hidden border border-header-border/30 bg-header-gradient"
             >
                 <div className="flex items-center gap-2 mb-2 relative z-10">
-                    <GitCompare className="w-5 h-5 text-[#D08C60]" />
-                    <h1 className="font-serif text-2xl font-bold text-[#FEFAEA]">Chart Comparison</h1>
+                    <GitCompare className="w-5 h-5 text-header-border" />
+                    <h1 className="font-serif text-2xl font-bold text-softwhite">Chart Comparison</h1>
                 </div>
-                <p className="text-[#FEFAEA]/80 font-serif italic text-sm max-w-2xl relative z-10">
+                <p className="text-softwhite/80 font-serif italic text-sm max-w-2xl relative z-10">
                     Compare two charts side-by-side to analyze compatibility (Synastry) or overlay transit planetary positions against the natal chart.
                 </p>
             </div>
 
             {/* Controls Section */}
-            <div className="bg-[#FEFAEA] border border-[#E7D6B8] rounded-lg p-6 shadow-sm">
+            <div className="bg-softwhite border border-antique rounded-lg p-6 shadow-sm">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     {/* 1. Ayanamsa */}
                     <ParchmentSelect

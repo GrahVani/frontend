@@ -20,7 +20,7 @@ import { parseChartData, signIdToName } from '@/lib/chart-helpers';
 type ColumnCount = 1 | 2 | 3 | 4 | 5;
 
 // Safe degree parsing - handles string/number from API (Keep if needed locally or move to utils if generic)
-function parseDegree(value: any): number | null {
+function parseDegree(value: unknown): number | null {
     if (value === null || value === undefined) return null;
     if (typeof value === 'number') return isNaN(value) ? null : value;
     if (typeof value === 'string') {
@@ -41,7 +41,7 @@ function formatDegree(degrees: number | null | undefined): string {
 }
 
 // Get house-wise planet distribution (Uses standardized logic via helpers if possible, but keep local for now as it does specific formatting)
-function getHouseDistribution(chartData: any, ascendantSign: number): Record<number, { planets: string[], signName: string }> {
+function getHouseDistribution(chartData: Record<string, unknown> | null, ascendantSign: number): Record<number, { planets: string[], signName: string }> {
     const houses: Record<number, { planets: string[], signName: string }> = {};
 
     for (let i = 1; i <= 12; i++) {
@@ -52,7 +52,7 @@ function getHouseDistribution(chartData: any, ascendantSign: number): Record<num
     const positions = chartData?.planetary_positions || chartData?.planets;
     if (positions) {
         // Reuse standardized logic? For now keep existing but fix sign lookups
-        const processPlanet = (key: string, value: any) => {
+        const processPlanet = (key: string, value: Record<string, unknown>) => {
             const sign = value?.sign || value?.sign_name || "";
             // ... (rest logic can remain or use parsed Planets from helper)
             // Ideally we should use the parsed planets to avoid re-parsing
@@ -110,7 +110,7 @@ export default function VedicDivisionalPage() {
         chartDesc: string;
         planets: Planet[];
         ascendant: number;
-        chartData: any;
+        chartData: Record<string, unknown> | null;
     } | null>(null);
 
     // Customization panel state
@@ -213,7 +213,7 @@ export default function VedicDivisionalPage() {
     if (!clientDetails) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-                <p className="font-serif text-xl text-[#8B5A2B]">Please select a client to view divisional charts</p>
+                <p className="font-serif text-xl text-bronze">Please select a client to view divisional charts</p>
             </div>
         );
     }
@@ -246,7 +246,7 @@ export default function VedicDivisionalPage() {
                     <button
                         onClick={refreshCharts}
                         disabled={isLoadingCharts}
-                        className="p-2 rounded-lg bg-white border border-[#D08C60]/30 hover:bg-[#D08C60]/10 text-[#8B5A2B] disabled:opacity-50"
+                        className="p-2 rounded-lg bg-white border border-header-border/30 hover:bg-header-border/10 text-bronze disabled:opacity-50"
                         title="Refresh Charts"
                     >
                         <RefreshCw className={cn("w-4 h-4", isRefreshingCharts && "animate-spin")} />
@@ -263,12 +263,12 @@ export default function VedicDivisionalPage() {
                     </button>
 
                     {/* Current Chart Style Badge */}
-                    <div className="px-2 py-1 rounded-lg bg-[#FAF8F5] border border-[#D08C60]/30 text-[10px] font-bold text-[#8B5A2B] uppercase tracking-wider">
+                    <div className="px-2 py-1 rounded-lg bg-surface-pure border border-header-border/30 text-[10px] font-bold text-bronze uppercase tracking-wider">
                         {chartStyle === 'South Indian' ? '🔲 South' : '◇ North'}
                     </div>
 
                     {/* Column Count Selector */}
-                    <div className="flex items-center gap-1 bg-white border border-[#D08C60]/30 rounded-lg p-1">
+                    <div className="flex items-center gap-1 bg-white border border-header-border/30 rounded-lg p-1">
                         {([1, 2, 3, 4, 5] as ColumnCount[]).map((col) => (
                             <button
                                 key={col}
@@ -276,8 +276,8 @@ export default function VedicDivisionalPage() {
                                 className={cn(
                                     "w-8 h-8 rounded-md flex items-center justify-center text-xs font-bold transition-all",
                                     columnCount === col
-                                        ? "bg-[#D08C60] text-white shadow-sm"
-                                        : "text-[#8B5A2B] hover:bg-[#D08C60]/10"
+                                        ? "bg-header-border text-white shadow-sm"
+                                        : "text-bronze hover:bg-header-border/10"
                                 )}
                                 title={`${col} column${col > 1 ? 's' : ''}`}
                             >
@@ -291,8 +291,8 @@ export default function VedicDivisionalPage() {
             {/* Loading State - Only show if NO data exists */}
             {isLoadingCharts && Object.keys(processedCharts).length === 0 && (
                 <div className="flex flex-col items-center justify-center py-20">
-                    <Loader2 className="w-10 h-10 text-[#D08C60] animate-spin mb-4" />
-                    <p className="font-serif text-[#8B5A2B]">Loading divisional charts...</p>
+                    <Loader2 className="w-10 h-10 text-header-border animate-spin mb-4" />
+                    <p className="font-serif text-bronze">Loading divisional charts...</p>
                 </div>
             )}
 
@@ -329,7 +329,7 @@ export default function VedicDivisionalPage() {
                             <div
                                 key={`${chartType}-${idx}`}
                                 className={cn(
-                                    "bg-[#FFFFFa] border border-[#D08C60]/20 rounded-xl p-3 relative group transition-all hover:border-[#D08C60]/50 shadow-sm w-full",
+                                    "bg-softwhite border border-header-border/20 rounded-xl p-3 relative group transition-all hover:border-header-border/50 shadow-sm w-full",
                                     maximizedChart === chartType ? "col-span-full mx-auto" : "mx-auto"
                                 )}
                                 style={{
@@ -345,8 +345,8 @@ export default function VedicDivisionalPage() {
                                 {/* Header */}
                                 <div className="flex justify-between items-start mb-2">
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="font-serif font-bold text-[#3E2A1F] text-sm truncate">{chartType} - {meta.name}</h3>
-                                        <p className="text-[9px] uppercase tracking-wider text-[#8B5A2B] truncate">{meta.desc}</p>
+                                        <h3 className="font-serif font-bold text-ink text-sm truncate">{chartType} - {meta.name}</h3>
+                                        <p className="text-[9px] uppercase tracking-wider text-bronze truncate">{meta.desc}</p>
                                     </div>
 
                                     <div className="flex items-center gap-1 ml-2">
@@ -355,8 +355,8 @@ export default function VedicDivisionalPage() {
                                             <button
                                                 onClick={() => toggleHouseDetails(chartType)}
                                                 className={cn(
-                                                    "p-1 rounded text-[#8B5A2B] transition-colors",
-                                                    isHouseDetailsOpen ? "bg-[#D08C60]/20" : "hover:bg-[#D08C60]/10"
+                                                    "p-1 rounded text-bronze transition-colors",
+                                                    isHouseDetailsOpen ? "bg-header-border/20" : "hover:bg-header-border/10"
                                                 )}
                                                 title="House Details"
                                             >
@@ -381,7 +381,7 @@ export default function VedicDivisionalPage() {
                                                     "p-1 rounded transition-colors",
                                                     chartColorModes[chartType] === 'blackwhite'
                                                         ? "bg-gray-200 text-gray-700"
-                                                        : "hover:bg-[#D08C60]/10 text-[#8B5A2B]"
+                                                        : "hover:bg-header-border/10 text-bronze"
                                                 )}
                                                 title={chartColorModes[chartType] === 'blackwhite' ? "Switch to Color" : "Switch to B&W"}
                                             >
@@ -397,7 +397,7 @@ export default function VedicDivisionalPage() {
                                         {chartData && (
                                             <button
                                                 onClick={openZoomModal}
-                                                className="p-1 hover:bg-[#D08C60]/10 rounded text-[#8B5A2B]"
+                                                className="p-1 hover:bg-header-border/10 rounded text-bronze"
                                                 title="Zoom Details"
                                             >
                                                 <Maximize2 className="w-3.5 h-3.5" />
@@ -408,15 +408,15 @@ export default function VedicDivisionalPage() {
                                         <div className="relative">
                                             <button
                                                 onClick={() => setShowSettings(showSettings === idx ? null : idx)}
-                                                className="p-1 hover:bg-[#D08C60]/10 rounded text-[#8B5A2B]"
+                                                className="p-1 hover:bg-header-border/10 rounded text-bronze"
                                                 title="Options"
                                             >
                                                 <Settings2 className="w-3.5 h-3.5" />
                                             </button>
 
                                             {showSettings === idx && (
-                                                <div className="absolute right-0 top-7 z-30 bg-white border border-[#D08C60]/30 rounded-xl shadow-2xl py-2 min-w-[200px]">
-                                                    <div className="px-3 py-1.5 text-[10px] text-[#8B5A2B]/70 uppercase font-bold border-b border-[#D08C60]/10 flex items-center gap-2">
+                                                <div className="absolute right-0 top-7 z-30 bg-white border border-header-border/30 rounded-xl shadow-2xl py-2 min-w-[200px]">
+                                                    <div className="px-3 py-1.5 text-[10px] text-bronze/70 uppercase font-bold border-b border-header-border/10 flex items-center gap-2">
                                                         <RefreshCw className="w-3 h-3" />
                                                         Replace / Swap With
                                                     </div>
@@ -434,21 +434,21 @@ export default function VedicDivisionalPage() {
                                                                     className={cn(
                                                                         "w-full px-3 py-2 text-left text-xs flex items-center justify-between gap-2 transition-colors",
                                                                         isCurrentChart
-                                                                            ? "bg-[#D08C60]/15 cursor-default"
+                                                                            ? "bg-header-border/15 cursor-default"
                                                                             : isDisplayed
                                                                                 ? "hover:bg-amber-50 border-l-2 border-transparent hover:border-amber-400"
-                                                                                : "hover:bg-[#D08C60]/10"
+                                                                                : "hover:bg-header-border/10"
                                                                     )}
                                                                 >
                                                                     <div className="flex items-center gap-2">
                                                                         <span className={cn(
                                                                             "font-bold",
-                                                                            isCurrentChart ? "text-[#D08C60]" : "text-[#3E2A1F]"
+                                                                            isCurrentChart ? "text-header-border" : "text-ink"
                                                                         )}>{chart}</span>
-                                                                        <span className="text-[9px] text-[#8B5A2B]/60">{CHART_METADATA[chart]?.name}</span>
+                                                                        <span className="text-[9px] text-bronze/60">{CHART_METADATA[chart]?.name}</span>
                                                                     </div>
                                                                     {isCurrentChart ? (
-                                                                        <span className="text-[9px] bg-[#D08C60]/20 text-[#8B5A2B] px-1.5 py-0.5 rounded-full font-bold">Current</span>
+                                                                        <span className="text-[9px] bg-header-border/20 text-bronze px-1.5 py-0.5 rounded-full font-bold">Current</span>
                                                                     ) : isDisplayed ? (
                                                                         <span className="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-bold flex items-center gap-1">
                                                                             <RefreshCw className="w-2.5 h-2.5" /> Swap #{displayIndex}
@@ -458,7 +458,7 @@ export default function VedicDivisionalPage() {
                                                             );
                                                         })}
                                                     </div>
-                                                    <div className="border-t border-[#D08C60]/10 mt-1 pt-1">
+                                                    <div className="border-t border-header-border/10 mt-1 pt-1">
                                                         <button
                                                             onClick={() => removeChart(idx)}
                                                             className="w-full px-3 py-2 text-left text-xs text-red-600 hover:bg-red-50 flex items-center gap-2"
@@ -475,13 +475,13 @@ export default function VedicDivisionalPage() {
 
                                 {/* Chart Display */}
                                 <div className={cn(
-                                    "bg-[#FDFBF7] rounded-lg border border-[#D08C60]/10 p-2 flex items-center justify-center",
+                                    "bg-surface-warm rounded-lg border border-header-border/10 p-2 flex items-center justify-center",
                                     maximizedChart ? "aspect-square max-w-md mx-auto" : "aspect-square"
                                 )}>
                                     {isGenerating ? (
                                         <div className="flex flex-col items-center justify-center text-center">
-                                            <Loader2 className="w-5 h-5 text-[#D08C60]/50 animate-spin mb-1" />
-                                            <p className="text-[10px] text-[#8B5A2B]/60">Generating...</p>
+                                            <Loader2 className="w-5 h-5 text-header-border/50 animate-spin mb-1" />
+                                            <p className="text-[10px] text-bronze/60">Generating...</p>
                                         </div>
                                     ) : chartData ? (
                                         // Render correct chart based on global chartStyle setting
@@ -503,25 +503,25 @@ export default function VedicDivisionalPage() {
                                         )
                                     ) : (
                                         <div className="flex flex-col items-center justify-center text-center">
-                                            <p className="text-[10px] text-[#8B5A2B]/60">Awaiting data...</p>
+                                            <p className="text-[10px] text-bronze/60">Awaiting data...</p>
                                         </div>
                                     )}
                                 </div>
 
                                 {/* House Details Panel - Stays open independently for each chart */}
                                 {isHouseDetailsOpen && chartData && (
-                                    <div className="mt-3 pt-3 border-t border-[#D08C60]/10 space-y-1">
-                                        <div className="text-[10px] font-bold uppercase text-[#8B5A2B]/60 mb-2">House-wise Positions</div>
+                                    <div className="mt-3 pt-3 border-t border-header-border/10 space-y-1">
+                                        <div className="text-[10px] font-bold uppercase text-bronze/60 mb-2">House-wise Positions</div>
                                         <div className="grid grid-cols-3 gap-1 text-[9px]">
                                             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(h => (
                                                 <div key={h} className={cn(
                                                     "px-1.5 py-1 rounded",
-                                                    houseData[h]?.planets.length ? "bg-[#D08C60]/10" : "bg-gray-50"
+                                                    houseData[h]?.planets.length ? "bg-header-border/10" : "bg-gray-50"
                                                 )}>
-                                                    <span className="font-bold text-[#3E2A1F]">H{h}</span>
-                                                    <span className="ml-1 text-[#8B5A2B]">{houseData[h]?.signName?.substring(0, 3)}</span>
+                                                    <span className="font-bold text-ink">H{h}</span>
+                                                    <span className="ml-1 text-bronze">{houseData[h]?.signName?.substring(0, 3)}</span>
                                                     {houseData[h]?.planets.length > 0 && (
-                                                        <div className="text-[8px] text-[#3E2A1F] mt-0.5">
+                                                        <div className="text-[8px] text-ink mt-0.5">
                                                             {houseData[h].planets.join(', ')}
                                                         </div>
                                                     )}
@@ -533,9 +533,9 @@ export default function VedicDivisionalPage() {
 
                                 {/* Quick Stats - Ascendant Info (only when house details closed) */}
                                 {chartData && !isHouseDetailsOpen && (
-                                    <div className="mt-2 flex items-center justify-between text-[9px] text-[#8B5A2B]">
-                                        <span>Asc: <strong className="text-[#3E2A1F]">{signIdToName[ascendant] || 'Aries'}</strong></span>
-                                        <span className="text-[#8B5A2B]/50">{planets.filter(p => p.isRetro).length > 0 ? `${planets.filter(p => p.isRetro).length} Retro` : 'No Retro'}</span>
+                                    <div className="mt-2 flex items-center justify-between text-[9px] text-bronze">
+                                        <span>Asc: <strong className="text-ink">{signIdToName[ascendant] || 'Aries'}</strong></span>
+                                        <span className="text-bronze/50">{planets.filter(p => p.isRetro).length > 0 ? `${planets.filter(p => p.isRetro).length} Retro` : 'No Retro'}</span>
                                     </div>
                                 )}
 
@@ -559,7 +559,7 @@ export default function VedicDivisionalPage() {
                     <div className="relative">
                         <button
                             onClick={() => setShowAddChartSelector(!showAddChartSelector)}
-                            className="flex items-center gap-2 px-4 py-2 bg-[#D08C60] text-white rounded-lg text-sm font-medium hover:bg-[#D08C60]/90 shadow-md"
+                            className="flex items-center gap-2 px-4 py-2 bg-header-border text-white rounded-lg text-sm font-medium hover:bg-header-border/90 shadow-md"
                         >
                             <Plus className="w-4 h-4" />
                             Add Chart
@@ -568,8 +568,8 @@ export default function VedicDivisionalPage() {
 
                         {/* Chart Selector Dropdown - Opens UPWARDS now */}
                         {showAddChartSelector && (
-                            <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-[60] bg-white border border-[#D08C60]/30 rounded-xl shadow-2xl py-2 min-w-[280px] max-h-60 overflow-y-auto">
-                                <div className="px-3 py-1 text-[10px] text-[#8B5A2B]/60 uppercase font-bold border-b border-[#D08C60]/10 mb-1">
+                            <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-[60] bg-white border border-header-border/30 rounded-xl shadow-2xl py-2 min-w-[280px] max-h-60 overflow-y-auto">
+                                <div className="px-3 py-1 text-[10px] text-bronze/60 uppercase font-bold border-b border-header-border/10 mb-1">
                                     Select Chart to Add
                                 </div>
                                 <div className="grid grid-cols-2 gap-1 px-2">
@@ -577,10 +577,10 @@ export default function VedicDivisionalPage() {
                                         <button
                                             key={chart}
                                             onClick={() => addChart(chart)}
-                                            className="px-3 py-2 text-left text-xs hover:bg-[#D08C60]/10 rounded-lg flex flex-col"
+                                            className="px-3 py-2 text-left text-xs hover:bg-header-border/10 rounded-lg flex flex-col"
                                         >
-                                            <span className="font-bold text-[#3E2A1F]">{chart}</span>
-                                            <span className="text-[9px] text-[#8B5A2B]/60">{CHART_METADATA[chart]?.name || 'Chart'}</span>
+                                            <span className="font-bold text-ink">{chart}</span>
+                                            <span className="text-[9px] text-bronze/60">{CHART_METADATA[chart]?.name || 'Chart'}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -608,7 +608,7 @@ export default function VedicDivisionalPage() {
                     chartDesc={zoomModalData.chartDesc}
                     planets={zoomModalData.planets}
                     ascendantSign={zoomModalData.ascendant}
-                    chartData={zoomModalData.chartData}
+                    chartData={zoomModalData.chartData ?? undefined}
                 />
             )}
 

@@ -48,16 +48,13 @@ export default function ReportsPage() {
         <div className="space-y-6 max-w-5xl mx-auto">
             {/* Header Card */}
             <div
-                className="rounded-lg p-6 shadow-sm relative overflow-hidden border border-[#D08C60]/30"
-                style={{
-                    background: 'linear-gradient(180deg, #98522F 0%, #763A1F 40%, #55250F 100%)',
-                }}
+                className="rounded-lg p-6 shadow-sm relative overflow-hidden border border-header-border/30 bg-header-gradient"
             >
                 <div className="flex items-center gap-2 mb-2 relative z-10">
-                    <FileText className="w-5 h-5 text-[#D08C60]" />
-                    <h1 className="font-serif text-2xl font-bold text-[#FEFAEA]">Available Reports</h1>
+                    <FileText className="w-5 h-5 text-header-border" />
+                    <h1 className="font-serif text-2xl font-bold text-softwhite">Available Reports</h1>
                 </div>
-                <p className="text-[#FEFAEA]/80 font-serif italic text-sm max-w-2xl relative z-10">
+                <p className="text-softwhite/80 font-serif italic text-sm max-w-2xl relative z-10">
                     Generate and download comprehensive astrological reports. Select from our range of classical and modern analysis modules.
                 </p>
             </div>
@@ -65,19 +62,19 @@ export default function ReportsPage() {
             {/* Reports Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {reports.map((report, index) => (
-                    <div key={index} className="bg-[#FEFAEA] border border-[#E7D6B8] rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col">
+                    <div key={index} className="bg-softwhite border border-antique rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col">
                         <div className="flex justify-between items-start mb-4">
-                            <div className="w-10 h-10 rounded-full bg-[#E7D6B8]/30 flex items-center justify-center text-[#9C7A2F]">
+                            <div className="w-10 h-10 rounded-full bg-antique/30 flex items-center justify-center text-gold-dark">
                                 <report.icon className="w-5 h-5" />
                             </div>
-                            <span className={`text-[10px] font-bold px-2 py-1 rounded tracking-widest uppercase ${report.isFree ? 'bg-[#D6E7D8] text-[#2F5A34]' : 'bg-[#E7D6B8] text-[#5A3E2B]'
+                            <span className={`text-[10px] font-bold px-2 py-1 rounded tracking-widest uppercase ${report.isFree ? 'bg-emerald-100 text-emerald-800' : 'bg-antique text-body'
                                 }`}>
                                 {report.price}
                             </span>
                         </div>
 
-                        <h3 className="font-serif text-lg font-bold text-[#3E2A1F] mb-2">{report.title}</h3>
-                        <p className="text-[#7A5A43] text-sm font-serif leading-relaxed mb-6 flex-1">
+                        <h3 className="font-serif text-lg font-bold text-ink mb-2">{report.title}</h3>
+                        <p className="text-muted text-sm font-serif leading-relaxed mb-6 flex-1">
                             {report.description}
                         </p>
 

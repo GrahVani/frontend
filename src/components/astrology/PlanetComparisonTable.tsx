@@ -29,21 +29,18 @@ export default function PlanetComparisonTable({
     const getPlanetData = (list: Planet[], name: string) => list.find(p => p.name === name);
 
     return (
-        <div className="w-full border border-[#DCC9A6] rounded-md overflow-hidden bg-[#FEFAEA]">
+        <div className="w-full border border-divider rounded-md overflow-hidden bg-softwhite">
             <table className="w-full text-sm font-serif">
                 <thead
-                    style={{
-                        background: 'linear-gradient(180deg, #98522F 0%, #763A1F 40%, #55250F 100%)',
-                    }}
-                    className="border-b border-[#DCC9A6]"
+                    className="border-b border-divider bg-header-gradient"
                 >
                     <tr>
-                        <th className="py-2 px-4 text-left text-[#FEFAEA] uppercase tracking-wider font-bold">Planet</th>
-                        <th className="py-2 px-4 text-left text-[#FEFAEA] uppercase tracking-wider font-bold">{chartAName}</th>
-                        <th className="py-2 px-4 text-left text-[#FEFAEA] uppercase tracking-wider font-bold">{chartBName}</th>
+                        <th className="py-2 px-4 text-left text-softwhite uppercase tracking-wider font-bold">Planet</th>
+                        <th className="py-2 px-4 text-left text-softwhite uppercase tracking-wider font-bold">{chartAName}</th>
+                        <th className="py-2 px-4 text-left text-softwhite uppercase tracking-wider font-bold">{chartBName}</th>
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-[#DCC9A6]/30">
+                <tbody className="divide-y divide-divider/30">
                     {PLANET_ORDER.map((planetName) => {
                         const pA = getPlanetData(planetsA, planetName);
                         const pB = getPlanetData(planetsB, planetName);
@@ -51,9 +48,9 @@ export default function PlanetComparisonTable({
                         if (!pA && !pB) return null;
 
                         return (
-                            <tr key={planetName} className="hover:bg-[#F2DCBC]/20 transition-colors">
-                                <td className="py-2 px-4 font-bold text-[#3E2A1F]">{planetName}</td>
-                                <td className="py-2 px-4 text-[#5C4033]">
+                            <tr key={planetName} className="hover:bg-parchment-soft/20 transition-colors">
+                                <td className="py-2 px-4 font-bold text-ink">{planetName}</td>
+                                <td className="py-2 px-4 text-body">
                                     {pA ? (
                                         <span className="flex items-center gap-2">
                                             <span>{ZODIAC_SIGNS[pA.signId - 1]}</span>
@@ -62,7 +59,7 @@ export default function PlanetComparisonTable({
                                         </span>
                                     ) : "-"}
                                 </td>
-                                <td className="py-2 px-4 text-[#5C4033]">
+                                <td className="py-2 px-4 text-body">
                                     {pB ? (
                                         <span className="flex items-center gap-2">
                                             <span>{ZODIAC_SIGNS[pB.signId - 1]}</span>

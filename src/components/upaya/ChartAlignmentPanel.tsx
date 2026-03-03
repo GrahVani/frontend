@@ -4,16 +4,29 @@ import React from 'react';
 import NorthIndianChart from '../astrology/NorthIndianChart/NorthIndianChart';
 import { cn } from "@/lib/utils";
 
+interface PlanetaryPosition {
+    sign: string;
+    degree: number;
+    retrograde: boolean;
+    house: number;
+    positional_status?: string;
+}
+
+interface ChartData {
+    planetary_positions: Record<string, PlanetaryPosition>;
+    ascendant: { sign_number: number; sign?: string };
+}
+
 interface ChartAlignmentPanelProps {
-    chartData: any;
-    planetaryAnalysis: any;
+    chartData: ChartData;
+    planetaryAnalysis: Record<string, unknown>;
 }
 
 export default function ChartAlignmentPanel({ chartData, planetaryAnalysis }: ChartAlignmentPanelProps) {
     if (!chartData) return null;
 
     // Map planets for NorthIndianChart
-    const planets = Object.entries(chartData.planetary_positions).map(([name, data]: [string, any]) => ({
+    const planets = Object.entries(chartData.planetary_positions).map(([name, data]: [string, PlanetaryPosition]) => ({
         name: name.substring(0, 2), // Su, Mo, etc.
         signId: getSignId(data.sign),
         degree: `${Math.floor(data.degree)}°`,
@@ -31,7 +44,7 @@ export default function ChartAlignmentPanel({ chartData, planetaryAnalysis }: Ch
 
     // Find clusters (houses with 3+ planets)
     const houseCounts: Record<number, number> = {};
-    Object.values(chartData.planetary_positions).forEach((p: any) => {
+    Object.values(chartData.planetary_positions).forEach((p: PlanetaryPosition) => {
         houseCounts[p.house] = (houseCounts[p.house] || 0) + 1;
     });
 
@@ -40,13 +53,13 @@ export default function ChartAlignmentPanel({ chartData, planetaryAnalysis }: Ch
         .map(([house, _]) => `Significant ${getOrdinal(parseInt(house))} House Cluster`);
 
     return (
-        <div className={cn("p-6 h-full relative overflow-hidden group rounded-3xl", "bg-[rgba(254,250,234,0.6)] border border-[#E7D6B8] backdrop-blur-md")}>
+        <div className={cn("p-6 h-full relative overflow-hidden group rounded-3xl", "bg-[rgba(254,250,234,0.6)] border border-antique backdrop-blur-md")}>
             {/* Subtle Glow Effect - Adjusted for Light Theme */}
             <div className="absolute -top-24 -left-24 w-48 h-48 bg-amber-500/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-amber-500/10 transition-all duration-700" />
 
-            <h3 className="text-sm font-semibold mb-6 flex items-center gap-2" style={{ color: 'var(--ink)' }}>
-                <span className="w-4 h-4 rounded-full flex items-center justify-center border" style={{ backgroundColor: 'rgba(201, 162, 77, 0.1)', borderColor: 'var(--gold-primary)' }}>
-                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: 'var(--gold-primary)' }} />
+            <h3 className="text-sm font-semibold mb-6 flex items-center gap-2 text-ink">
+                <span className="w-4 h-4 rounded-full flex items-center justify-center border bg-gold-primary/10 border-gold-primary">
+                    <span className="w-1.5 h-1.5 rounded-full bg-gold-primary" />
                 </span>
                 Birth Chart & Planetary Alignments
             </h3>
@@ -61,7 +74,7 @@ export default function ChartAlignmentPanel({ chartData, planetaryAnalysis }: Ch
             </div>
 
             <style jsx global>{`
-                .chart-parchment-theme g[stroke="#D08C60"] {
+                .chart-parchment-theme g[stroke="var(--header-border)"] {
                     stroke: #3E2A1F; /* Ink */
                     stroke-opacity: 0.8;
                 }
@@ -80,22 +93,22 @@ export default function ChartAlignmentPanel({ chartData, planetaryAnalysis }: Ch
 
             <div className="mt-8 space-y-3">
                 {highlights.map((h, i) => (
-                    <div key={i} className="flex items-center gap-3 border rounded-xl p-3" style={{ backgroundColor: 'rgba(201, 162, 77, 0.05)', borderColor: 'var(--gold-primary)' }}>
-                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--gold-primary)' }} />
-                        <span className="text-sm font-medium" style={{ color: 'var(--ink)' }}>{h}</span>
+                    <div key={i} className="flex items-center gap-3 border border-gold-primary rounded-xl p-3 bg-gold-primary/5">
+                        <div className="w-2 h-2 rounded-full bg-gold-primary" />
+                        <span className="text-sm font-medium text-ink">{h}</span>
                     </div>
                 ))}
                 {clusters.map((c, i) => (
-                    <div key={i} className="flex items-center gap-3 border rounded-xl p-3" style={{ backgroundColor: 'rgba(99, 102, 241, 0.05)', borderColor: 'rgba(99, 102, 241, 0.2)' }}>
+                    <div key={i} className="flex items-center gap-3 border border-indigo-500/20 rounded-xl p-3 bg-indigo-500/5">
                         <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
-                        <span className="text-sm font-medium" style={{ color: 'var(--ink)' }}>{c}</span>
+                        <span className="text-sm font-medium text-ink">{c}</span>
                     </div>
                 ))}
             </div>
 
             <div className="mt-6 text-center">
-                <p className="text-[10px] uppercase tracking-widest font-bold" style={{ color: 'var(--text-muted)' }}>Karmic Focus Area</p>
-                <p className="text-xs mt-1 italic" style={{ color: 'var(--text-body)' }}>"The 5th house concentration indicates high creative and intelligence merit from past lives."</p>
+                <p className="text-[10px] uppercase tracking-widest font-bold text-muted">Karmic Focus Area</p>
+                <p className="text-xs mt-1 italic text-body">"The 5th house concentration indicates high creative and intelligence merit from past lives."</p>
             </div>
         </div>
     );

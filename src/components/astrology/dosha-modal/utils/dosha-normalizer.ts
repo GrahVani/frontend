@@ -1,5 +1,58 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- API boundary normalizer for 5 polymorphic dosha response shapes */
 import { NormalizedDoshaData, RawDoshaResponse } from '@/types/dosha.types';
 import { PlanetPosition } from '@/types/yoga.types';
+
+// ─── Types for polymorphic dosha API response normalization ─────────────
+// The Astro Engine returns different JSON shapes per dosha type (Angarak, Shrapit,
+// Manglik, Pitra, Sade Sati). Callback parameters and array items are strictly typed;
+// top-level data params use RawDoshaResponse which covers known response shapes.
+
+type RemedyType = 'mantra' | 'ritual' | 'lifestyle' | 'general';
+
+interface DoshaImpactItem {
+    title: string;
+    content: string;
+    type: 'impact' | 'analysis';
+}
+
+interface DoshaRemedyItem {
+    text: string;
+    type: RemedyType;
+}
+
+interface CancellationFactor {
+    factor: string;
+    description: string;
+    impact: string;
+}
+
+interface ShrapitAggravation {
+    type: string;
+    effect: string;
+}
+
+interface PitraIndicator {
+    rule: string;
+    description: string;
+    severity: string;
+}
+
+interface PitraCancellation {
+    type: string;
+    description: string;
+    strength: string;
+}
+
+interface RawPlanetEntry {
+    sign_name?: string;
+    sign?: string;
+    house?: number;
+    sign_degree?: string;
+    degrees?: string;
+    degree_in_sign?: number;
+    degree?: number;
+    [key: string]: unknown;
+}
 
 /**
  * Transforms various Dosha JSON shapes into a unified NormalizedDoshaData structure.
@@ -108,7 +161,7 @@ function extractDoshaSeverity(data: any) {
 }
 
 function extractImpacts(data: any) {
-    const impacts: any[] = [];
+    const impacts: DoshaImpactItem[] = [];
     const angarak = data.angarak_dosha_analysis;
     const shrapit = data.shrapit_dosha_analysis;
     const sadeSati = data.sade_sati;
@@ -151,7 +204,7 @@ function extractImpacts(data: any) {
 
         // 4. Cancellation factors
         if (Array.isArray(angarak.cancellation_factors)) {
-            angarak.cancellation_factors.forEach((cf: any) => {
+            angarak.cancellation_factors.forEach((cf: CancellationFactor) => {
                 impacts.push({
                     title: `Cancellation: ${cf.factor}`,
                     content: `${cf.description}. Effect: ${cf.impact}`,
@@ -187,7 +240,7 @@ function extractImpacts(data: any) {
         }
 
         if (Array.isArray(shrapit.aggravations)) {
-            shrapit.aggravations.forEach((agg: any) => {
+            shrapit.aggravations.forEach((agg: ShrapitAggravation) => {
                 impacts.push({
                     title: `Aggravating Factor: ${agg.type}`,
                     content: agg.effect,
@@ -199,7 +252,7 @@ function extractImpacts(data: any) {
 
     if (pitra) {
         if (Array.isArray(pitra.indicators)) {
-            pitra.indicators.forEach((ind: any) => {
+            pitra.indicators.forEach((ind: PitraIndicator) => {
                 impacts.push({
                     title: `Indicator: ${ind.rule}`,
                     content: `${ind.description}. (Severity: ${ind.severity})`,
@@ -209,7 +262,7 @@ function extractImpacts(data: any) {
         }
 
         if (Array.isArray(pitra.cancellation_factors)) {
-            pitra.cancellation_factors.forEach((cf: any) => {
+            pitra.cancellation_factors.forEach((cf: PitraCancellation) => {
                 impacts.push({
                     title: `Protection: ${cf.type}`,
                     content: `${cf.description}. (Strength: ${cf.strength})`,
@@ -272,7 +325,7 @@ function extractImpacts(data: any) {
 }
 
 function extractRemedies(data: any) {
-    const remedies: any[] = [];
+    const remedies: DoshaRemedyItem[] = [];
     const angarak = data.angarak_dosha_analysis;
     const shrapit = data.shrapit_dosha_analysis;
     const pitra = data.pitra_dosha_analysis;
@@ -281,7 +334,7 @@ function extractRemedies(data: any) {
     // 1. Pitra Remedies
     if (Array.isArray(pitra?.remedial_guidance?.primary_remedies)) {
         pitra.remedial_guidance.primary_remedies.forEach((rec: string) => {
-            let type: any = 'ritual';
+            let type: RemedyType = 'ritual';
             if (rec.toLowerCase().includes('chant') || rec.toLowerCase().includes('recite')) type = 'mantra';
             if (rec.toLowerCase().includes('donate') || rec.toLowerCase().includes('charitable')) type = 'ritual';
             remedies.push({ text: rec, type });
@@ -291,7 +344,7 @@ function extractRemedies(data: any) {
     // 2. Top level recommendations (Sade Sati sample)
     if (Array.isArray(topRecs)) {
         topRecs.forEach((rec: string) => {
-            let type: any = 'general';
+            let type: RemedyType = 'general';
             if (rec.toLowerCase().includes('chant') || rec.toLowerCase().includes('mantra')) type = 'mantra';
             if (rec.toLowerCase().includes('puja') || rec.toLowerCase().includes('temple') || rec.toLowerCase().includes('worship')) type = 'ritual';
             if (rec.toLowerCase().includes('donate') || rec.toLowerCase().includes('serve') || rec.toLowerCase().includes('plant')) type = 'ritual';
@@ -303,7 +356,7 @@ function extractRemedies(data: any) {
     // ... (rest of function)
     if (Array.isArray(shrapit?.recommendations)) {
         shrapit.recommendations.forEach((rec: string) => {
-            let type: any = 'general';
+            let type: RemedyType = 'general';
             if (rec.toLowerCase().includes('chant') || rec.toLowerCase().includes('mantra')) type = 'mantra';
             if (rec.toLowerCase().includes('puja') || rec.toLowerCase().includes('temple') || rec.toLowerCase().includes('worship')) type = 'ritual';
             if (rec.toLowerCase().includes('donate') || rec.toLowerCase().includes('serve') || rec.toLowerCase().includes('plant')) type = 'ritual';
@@ -325,12 +378,12 @@ function extractRemedies(data: any) {
 
     const generic = data.remedial_suggestions;
     if (Array.isArray(generic)) {
-        generic.forEach((r: any) => remedies.push({ text: typeof r === 'string' ? r : JSON.stringify(r), type: 'general' }));
+        generic.forEach((r: unknown) => remedies.push({ text: typeof r === 'string' ? r : JSON.stringify(r), type: 'general' }));
     } else if (generic && typeof generic === 'object') {
-        const g = generic as any;
-        if (g.mantras) g.mantras.forEach((r: any) => remedies.push({ text: r, type: 'mantra' }));
-        if (g.rituals) g.rituals.forEach((r: any) => remedies.push({ text: r, type: 'ritual' }));
-        if (g.lifestyle) g.lifestyle.forEach((r: any) => remedies.push({ text: r, type: 'lifestyle' }));
+        const g = generic as Record<string, string[]>;
+        if (g.mantras) g.mantras.forEach((r: string) => remedies.push({ text: r, type: 'mantra' }));
+        if (g.rituals) g.rituals.forEach((r: string) => remedies.push({ text: r, type: 'ritual' }));
+        if (g.lifestyle) g.lifestyle.forEach((r: string) => remedies.push({ text: r, type: 'lifestyle' }));
     }
 
     const recs = data.sade_sati_analysis?.recommendations;
@@ -346,13 +399,16 @@ function extractPlanets(data: any) {
     const positions = data.planetary_positions || data.all_planetary_positions || chartPlanets;
     if (!positions) return [];
 
-    return Object.entries(positions).map(([name, pos]: [string, any]) => ({
-        name,
-        sign: pos.sign_name || pos.sign,
-        house: pos.house,
-        degree: pos.sign_degree || pos.degrees || pos.degree_in_sign || (pos.degree !== undefined ? `${pos.degree}°` : (pos.degree_in_sign !== undefined ? `${pos.degree_in_sign}°` : "0°")),
-        isFocal: name === 'Mars' || name === 'Rahu' || name === 'Saturn' || name === 'Sat'
-    }));
+    return Object.entries(positions).map(([name, val]) => {
+        const pos = val as RawPlanetEntry;
+        return {
+            name,
+            sign: pos.sign_name || pos.sign || 'Unknown',
+            house: pos.house || 1,
+            degree: String(pos.sign_degree || pos.degrees || (pos.degree_in_sign !== undefined ? `${pos.degree_in_sign}°` : (pos.degree !== undefined ? `${pos.degree}°` : "0°"))),
+            isFocal: name === 'Mars' || name === 'Rahu' || name === 'Saturn' || name === 'Sat'
+        };
+    });
 }
 
 function extractTechnical(data: any) {

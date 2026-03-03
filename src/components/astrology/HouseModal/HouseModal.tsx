@@ -26,28 +26,35 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
         return () => window.removeEventListener('keydown', handleEscape);
     }, [onClose]);
 
+    const titleId = `house-modal-title-${houseNumber}`;
+
     return (
         <>
             {/* Backdrop with Blur */}
             <div
-                className="fixed inset-0 z-[200] bg-[#3E2A1F]/30 backdrop-blur-md animate-in fade-in duration-300"
+                className="fixed inset-0 z-[200] bg-ink/30 backdrop-blur-md animate-in fade-in duration-300"
                 onClick={onClose}
+                aria-hidden="true"
             />
 
             {/* Modal Container */}
             <div className="fixed inset-0 z-[201] flex items-center justify-center p-6 pointer-events-none">
                 <div
-                    className="bg-[#FEFAEA] border-[3px] border-[#D08C60]/60 rounded-[3.5rem] p-12 max-w-3xl w-full relative shadow-[0_50px_150px_rgba(62,42,31,0.5)] pointer-events-auto animate-in zoom-in-95 fade-in duration-500 overflow-hidden"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby={titleId}
+                    className="bg-softwhite border-[3px] border-header-border/60 rounded-[3.5rem] p-12 max-w-3xl w-full relative shadow-[0_50px_150px_rgba(62,42,31,0.5)] pointer-events-auto animate-in zoom-in-95 fade-in duration-500 overflow-hidden"
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* Decorative Background Elements */}
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-[#D08C60]/10 rounded-full blur-[120px] pointer-events-none" />
-                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#FFD27D]/10 rounded-full blur-[100px] pointer-events-none" />
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-header-border/10 rounded-full blur-[120px] pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-active-glow/10 rounded-full blur-[100px] pointer-events-none" />
 
                     {/* Close Button */}
                     <button
                         onClick={onClose}
-                        className="absolute top-8 right-8 p-4 rounded-2xl bg-[#3E2A1F]/5 hover:bg-[#D08C60]/20 border border-[#3E2A1F]/10 hover:border-[#D08C60]/40 text-[#3E2A1F] hover:text-[#D08C60] transition-all group z-10"
+                        aria-label="Close house details"
+                        className="absolute top-8 right-8 p-4 rounded-2xl bg-ink/5 hover:bg-header-border/20 border border-ink/10 hover:border-header-border/40 text-ink hover:text-header-border transition-all group z-10"
                     >
                         <X className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
                     </button>
@@ -55,14 +62,14 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
                     {/* Header */}
                     <div className="relative z-10 mb-10">
                         <div className="flex items-center gap-4 mb-3">
-                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#D08C60] to-[#8B5A2B] flex items-center justify-center text-white shadow-xl border-2 border-[#FFD27D]/40">
+                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-header-border to-bronze flex items-center justify-center text-white shadow-xl border-2 border-active-glow/40">
                                 <span className="text-3xl font-serif font-black">{houseNumber}</span>
                             </div>
                             <div>
-                                <h2 className="text-4xl font-serif text-[#3E2A1F] font-black tracking-tight">
+                                <h2 id={titleId} className="text-4xl font-serif text-ink font-black tracking-tight">
                                     {houseDetails.name}
                                 </h2>
-                                <p className="text-[11px] text-[#D08C60] uppercase tracking-[0.3em] font-black mt-1">
+                                <p className="text-[11px] text-header-border uppercase tracking-[0.3em] font-black mt-1">
                                     House {houseNumber} • {houseDetails.sign.name} {houseDetails.sign.symbol}
                                 </p>
                             </div>
@@ -73,31 +80,31 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
                     <div className="relative z-10 space-y-8">
 
                         {/* Zodiac Sign Information */}
-                        <div className="bg-gradient-to-br from-[#D08C60]/10 to-transparent border border-[#D08C60]/30 rounded-[2.5rem] p-8">
+                        <div className="bg-gradient-to-br from-header-border/10 to-transparent border border-header-border/30 rounded-[2.5rem] p-8">
                             <div className="flex items-start gap-6">
-                                <div className="w-14 h-14 rounded-xl bg-[#D08C60]/20 flex items-center justify-center text-[#D08C60] shrink-0">
+                                <div className="w-14 h-14 rounded-xl bg-header-border/20 flex items-center justify-center text-header-border shrink-0">
                                     <Star className="w-7 h-7" />
                                 </div>
                                 <div className="flex-1">
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#8B5A2B] mb-3">
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-bronze mb-3">
                                         Zodiac Sign
                                     </h3>
                                     <div className="space-y-3">
                                         <div className="flex items-baseline gap-3">
                                             <span className="text-5xl">{houseDetails.sign.symbol}</span>
                                             <div>
-                                                <p className="text-2xl font-serif font-black text-[#3E2A1F]">{houseDetails.sign.name}</p>
-                                                <p className="text-sm text-[#5A3E2B]/80 font-bold mt-1">
+                                                <p className="text-2xl font-serif font-black text-ink">{houseDetails.sign.name}</p>
+                                                <p className="text-sm text-body/80 font-bold mt-1">
                                                     {houseDetails.sign.element} • {houseDetails.sign.quality}
                                                 </p>
                                             </div>
                                         </div>
-                                        <p className="text-sm text-[#5A3E2B] leading-relaxed font-serif italic">
+                                        <p className="text-sm text-body leading-relaxed font-serif italic">
                                             {houseDetails.sign.description}
                                         </p>
-                                        <div className="flex items-center gap-2 bg-[#3E2A1F]/5 px-4 py-2 rounded-xl w-fit">
-                                            <Orbit className="w-4 h-4 text-[#D08C60]" />
-                                            <span className="text-xs font-black text-[#3E2A1F]">
+                                        <div className="flex items-center gap-2 bg-ink/5 px-4 py-2 rounded-xl w-fit">
+                                            <Orbit className="w-4 h-4 text-header-border" />
+                                            <span className="text-xs font-black text-ink">
                                                 Ruler: {houseDetails.sign.rulingPlanet}
                                             </span>
                                         </div>
@@ -107,19 +114,19 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
                         </div>
 
                         {/* House Signification */}
-                        <div className="bg-[#3E2A1F]/5 border border-[#3E2A1F]/10 rounded-[2.5rem] p-8">
+                        <div className="bg-ink/5 border border-ink/10 rounded-[2.5rem] p-8">
                             <div className="flex items-start gap-6">
-                                <div className="w-14 h-14 rounded-xl bg-[#3E2A1F]/10 flex items-center justify-center text-[#3E2A1F] shrink-0">
+                                <div className="w-14 h-14 rounded-xl bg-ink/10 flex items-center justify-center text-ink shrink-0">
                                     <Info className="w-7 h-7" />
                                 </div>
                                 <div className="flex-1">
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#8B5A2B] mb-3">
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-bronze mb-3">
                                         House Signification
                                     </h3>
-                                    <p className="text-xl font-serif text-[#D08C60] font-bold mb-3">
+                                    <p className="text-xl font-serif text-header-border font-bold mb-3">
                                         {houseDetails.signification}
                                     </p>
-                                    <p className="text-sm text-[#5A3E2B] leading-relaxed mb-4">
+                                    <p className="text-sm text-body leading-relaxed mb-4">
                                         {houseDetails.description}
                                     </p>
 
@@ -128,7 +135,7 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
                                         {houseDetails.keywords.map((keyword, idx) => (
                                             <span
                                                 key={idx}
-                                                className="px-3 py-1 bg-[#D08C60]/10 border border-[#D08C60]/20 rounded-full text-[10px] font-black uppercase tracking-wider text-[#D08C60]"
+                                                className="px-3 py-1 bg-header-border/10 border border-header-border/20 rounded-full text-[10px] font-black uppercase tracking-wider text-header-border"
                                             >
                                                 {keyword}
                                             </span>
@@ -137,14 +144,14 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
 
                                     {/* Life Areas */}
                                     <div>
-                                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#5A3E2B]/60 mb-2">
+                                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-body/60 mb-2">
                                             Life Areas Governed
                                         </p>
                                         <div className="grid grid-cols-2 gap-2">
                                             {houseDetails.areas.map((area, idx) => (
                                                 <div key={idx} className="flex items-center gap-2">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-[#D08C60]" />
-                                                    <span className="text-xs text-[#3E2A1F] font-bold">{area}</span>
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-header-border" />
+                                                    <span className="text-xs text-ink font-bold">{area}</span>
                                                 </div>
                                             ))}
                                         </div>
@@ -154,13 +161,13 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
                         </div>
 
                         {/* Planets in House */}
-                        <div className="bg-gradient-to-br from-[#FFD27D]/20 to-transparent border border-[#FFD27D]/40 rounded-[2.5rem] p-8">
+                        <div className="bg-gradient-to-br from-active-glow/20 to-transparent border border-active-glow/40 rounded-[2.5rem] p-8">
                             <div className="flex items-start gap-6">
-                                <div className="w-14 h-14 rounded-xl bg-[#FFD27D]/30 flex items-center justify-center text-[#8B5A2B] shrink-0">
+                                <div className="w-14 h-14 rounded-xl bg-active-glow/30 flex items-center justify-center text-bronze shrink-0">
                                     <Sparkles className="w-7 h-7" />
                                 </div>
                                 <div className="flex-1">
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#8B5A2B] mb-4">
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-bronze mb-4">
                                         Planets Positioned
                                     </h3>
                                     {planetsInHouse.length > 0 ? (
@@ -168,29 +175,29 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
                                             {planetsInHouse.map((planet, idx) => (
                                                 <div
                                                     key={idx}
-                                                    className="flex items-center justify-between bg-[#3E2A1F]/5 px-5 py-3 rounded-xl border border-[#3E2A1F]/10"
+                                                    className="flex items-center justify-between bg-ink/5 px-5 py-3 rounded-xl border border-ink/10"
                                                 >
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 rounded-lg bg-[#D08C60]/20 flex items-center justify-center">
-                                                            <span className="font-serif font-black text-[#D08C60]">{planet.name}</span>
+                                                        <div className="w-10 h-10 rounded-lg bg-header-border/20 flex items-center justify-center">
+                                                            <span className="font-serif font-black text-header-border">{planet.name}</span>
                                                         </div>
                                                         <div>
-                                                            <p className="font-bold text-[#3E2A1F]">{planet.name}</p>
+                                                            <p className="font-bold text-ink">{planet.name}</p>
                                                             {planet.isRetro && (
-                                                                <span className="text-[9px] text-[#D08C60] uppercase tracking-wider font-black">
+                                                                <span className="text-[9px] text-header-border uppercase tracking-wider font-black">
                                                                     Retrograde
                                                                 </span>
                                                             )}
                                                         </div>
                                                     </div>
-                                                    <span className="text-sm font-bold text-[#5A3E2B] font-mono">
+                                                    <span className="text-sm font-bold text-body font-mono">
                                                         {planet.degree}
                                                     </span>
                                                 </div>
                                             ))}
                                         </div>
                                     ) : (
-                                        <p className="text-sm text-[#5A3E2B]/60 italic">
+                                        <p className="text-sm text-body/60 italic">
                                             No planets currently positioned in this house.
                                         </p>
                                     )}
@@ -200,7 +207,7 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
                     </div>
 
                     {/* Footer Decoration */}
-                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-[#D08C60] to-transparent opacity-30" />
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-header-border to-transparent opacity-30" />
                 </div>
             </div>
         </>

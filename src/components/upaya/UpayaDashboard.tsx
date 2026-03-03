@@ -6,8 +6,30 @@ import GemstoneAnalysisCard from '@/components/upaya/GemstoneAnalysisCard';
 import DebugConsole from '@/components/debug/DebugConsole';
 import { Sparkles, ShieldAlert, BadgeCheck, User } from 'lucide-react';
 
+interface GemstoneEntry {
+    planet: string;
+    gemstone?: string;
+    [key: string]: unknown;
+}
+
+interface UpayaDashboardData {
+    recommended_gemstones?: GemstoneEntry[];
+    not_recommended_gemstones?: GemstoneEntry[];
+    meta?: {
+        user?: string;
+        ascendant?: string;
+        current_mahadasha?: string;
+        current_antardasha?: string;
+        lagna_lord?: string;
+        life_concern?: string;
+    };
+    chart_details?: Record<string, unknown>;
+    planetary_strength_analysis?: Record<string, unknown>;
+    dasha_details?: Record<string, unknown>;
+}
+
 interface UpayaDashboardProps {
-    data: any; // Refined gemstone JSON data
+    data: UpayaDashboardData;
     className?: string;
 }
 
@@ -63,10 +85,11 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
 
                 {recommended.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {recommended.map((gem: any, idx: number) => (
+                        {recommended.map((gem: GemstoneEntry, idx: number) => (
                             <GemstoneAnalysisCard
                                 key={gem.planet}
-                                gemstone={gem}
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+                                gemstone={gem as any}
                                 isRecommended={true}
                                 priority={idx + 1}
                             />
@@ -90,10 +113,11 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
-                        {notRecommended.map((gem: any) => (
+                        {notRecommended.map((gem: GemstoneEntry) => (
                             <GemstoneAnalysisCard
                                 key={gem.planet}
-                                gemstone={gem}
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+                                gemstone={gem as any}
                                 isRecommended={false}
                             />
                         ))}
@@ -105,12 +129,15 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
             {(data.chart_details || data.planetary_strength_analysis) && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-8">
                     <ChartAlignmentPanel
-                        chartData={data.chart_details}
-                        planetaryAnalysis={data.planetary_strength_analysis}
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+                        chartData={data.chart_details as any}
+                        planetaryAnalysis={data.planetary_strength_analysis as Record<string, unknown>}
                     />
                     <VigorTimelinePanel
-                        strengthAnalysis={data.planetary_strength_analysis}
-                        dashaDetails={data.dasha_details}
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+                        strengthAnalysis={data.planetary_strength_analysis as any}
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+                        dashaDetails={data.dasha_details as any}
                     />
                 </div>
             )}

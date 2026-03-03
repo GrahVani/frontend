@@ -55,22 +55,22 @@ export default function ClientsNavigationSidebar({ activeClientName }: ClientsNa
     ];
 
     return (
-        <aside className="w-72 h-full flex flex-col bg-header-gradient border-r border-[#D08C60]/20 shadow-2xl">
+        <aside className="w-72 h-full flex flex-col bg-header-gradient border-r border-header-border/20 shadow-2xl" role="navigation" aria-label="Client management navigation">
             {/* Header */}
             <div className="p-6 pb-4">
-                <h2 className="text-[#D08C60] text-xs font-black uppercase tracking-[0.2em] mb-4">
+                <h2 className="text-header-border text-xs font-black uppercase tracking-[0.2em] mb-4">
                     Clients
                 </h2>
 
                 {/* Active Client Indicator */}
                 {activeClientName && (
-                    <div className="bg-white/10 border border-[#FFD27D]/30 rounded-xl p-4 mb-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="bg-white/10 border border-active-glow/30 rounded-xl p-4 mb-4 animate-in fade-in slide-in-from-top-2 duration-300">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-[#FFD27D]/20 flex items-center justify-center border border-[#FFD27D]/40">
-                                <User className="w-5 h-5 text-[#FFD27D]" />
+                            <div className="w-10 h-10 rounded-full bg-active-glow/20 flex items-center justify-center border border-active-glow/40">
+                                <User className="w-5 h-5 text-active-glow" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-[#D08C60] mb-0.5">Viewing Profile</p>
+                                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-header-border mb-0.5">Viewing Profile</p>
                                 <p className="text-white font-serif font-semibold text-sm truncate">{activeClientName}</p>
                             </div>
                         </div>
@@ -79,7 +79,7 @@ export default function ClientsNavigationSidebar({ activeClientName }: ClientsNa
             </div>
 
             {/* Navigation Menu */}
-            <nav className="flex-1 px-4 space-y-2 overflow-y-auto custom-scrollbar">
+            <nav className="flex-1 px-4 space-y-2 overflow-y-auto custom-scrollbar" aria-label="Client menu">
                 {menuItems.map((item) => {
                     const Icon = item.icon;
                     const isHighlighted = item.highlighted;
@@ -91,21 +91,21 @@ export default function ClientsNavigationSidebar({ activeClientName }: ClientsNa
                             className={cn(
                                 "w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 group text-left",
                                 isHighlighted
-                                    ? "bg-white/10 text-white border border-[#D08C60]/30"
+                                    ? "bg-white/10 text-white border border-header-border/30"
                                     : "text-white/70 hover:text-white hover:bg-white/5"
                             )}
                         >
                             <div className="flex items-center gap-3">
                                 <Icon className={cn(
                                     "w-5 h-5 transition-transform group-hover:scale-110",
-                                    isHighlighted ? "text-[#FFD27D]" : "text-[#D08C60]"
+                                    isHighlighted ? "text-active-glow" : "text-header-border"
                                 )} />
                                 <span className="font-serif text-sm tracking-wide font-medium">
                                     {item.label}
                                 </span>
                             </div>
                             {isHighlighted && (
-                                <ChevronRight className="w-4 h-4 text-[#D08C60]" />
+                                <ChevronRight className="w-4 h-4 text-header-border" />
                             )}
                         </Link>
                     );

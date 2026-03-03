@@ -90,30 +90,30 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
     const normalize = (val: string) => val?.trim() || '';
 
     // Get planets and cusps arrays
-    const planets = useMemo(() => {
+    const planets = useMemo((): NadiItem[] => {
         if (!nadiData?.planets) return [];
-        return Array.isArray(nadiData.planets) ? nadiData.planets : Object.values(nadiData.planets);
+        return (Array.isArray(nadiData.planets) ? nadiData.planets : Object.values(nadiData.planets)) as NadiItem[];
     }, [nadiData]);
 
-    const cusps = useMemo(() => {
+    const cusps = useMemo((): NadiItem[] => {
         if (!nadiData?.cusps) return [];
-        return Array.isArray(nadiData.cusps) ? nadiData.cusps : Object.values(nadiData.cusps);
+        return (Array.isArray(nadiData.cusps) ? nadiData.cusps : Object.values(nadiData.cusps)) as NadiItem[];
     }, [nadiData]);
 
     // Get selected item details
     const selectedDetails = useMemo((): NadiItem | null => {
         if (!selectedItem) return null;
         if (activeTab === 'planets') {
-            return (planets.find((p: any) => normalize(p.name) === normalize(selectedItem)) as NadiItem) || null;
+            return (planets.find((p: NadiItem) => normalize(p.name || '') === normalize(selectedItem)) as NadiItem) || null;
         }
-        return (cusps.find((c: any) => normalize(c.label) === normalize(selectedItem)) as NadiItem) || null;
+        return (cusps.find((c: NadiItem) => normalize(c.label || '') === normalize(selectedItem)) as NadiItem) || null;
     }, [selectedItem, activeTab, planets, cusps]);
 
     if (!nadiData) {
         return <div className="p-8 text-center bg-white rounded-xl text-primary">Loading Nadi Data...</div>;
     }
 
-    const TabButton = ({ id, label, icon: Icon }: { id: 'planets' | 'cusps', label: string, icon: any }) => (
+    const TabButton = ({ id, label, icon: Icon }: { id: 'planets' | 'cusps', label: string, icon: React.ComponentType<{ className?: string }> }) => (
         <button
             onClick={() => { setActiveTab(id); setSelectedItem(null); }}
             className={cn(
@@ -142,14 +142,14 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                 <div className="lg:col-span-2 bg-white border-r border-antique/20 p-4">
                     {activeTab === 'planets' ? (
                         <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
-                            {planets.map((planet: any) => {
-                                const name = normalize(planet.name);
+                            {planets.map((planet: NadiItem) => {
+                                const name = normalize(planet.name || '');
                                 const pData = PLANET_DATA[name] || { symbol: '☉', color: 'from-gray-400 to-gray-500', element: 'Unknown' };
                                 const isSelected = selectedItem === planet.name;
                                 return (
                                     <button
-                                        key={planet.name}
-                                        onClick={() => setSelectedItem(planet.name)}
+                                        key={planet.name || name}
+                                        onClick={() => setSelectedItem(planet.name || name)}
                                         className={cn(
                                             "relative p-4 rounded-xl transition-all duration-300 border-2 text-center group",
                                             isSelected
@@ -174,15 +174,15 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                         </div>
                     ) : (
                         <div className="grid grid-cols-4 md:grid-cols-6 gap-3">
-                            {cusps.map((cusp: any) => {
+                            {cusps.map((cusp: NadiItem) => {
                                 const signName = normalize(cusp.sign);
                                 const signData = ZODIAC_DATA[signName] || { symbol: '♈', element: 'Fire', quality: 'Cardinal' };
                                 const isSelected = selectedItem === cusp.label;
                                 const cuspNum = (cusp.label || '').replace('Cusp ', '').replace('C', '');
                                 return (
                                     <button
-                                        key={cusp.label}
-                                        onClick={() => setSelectedItem(cusp.label)}
+                                        key={cusp.label || `cusp-${cuspNum}`}
+                                        onClick={() => setSelectedItem(cusp.label || '')}
                                         className={cn(
                                             "relative p-3 rounded-xl transition-all duration-300 border-2 text-center",
                                             isSelected

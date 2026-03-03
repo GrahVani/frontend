@@ -128,6 +128,7 @@ export default function ChartWithPopup({ planets, ascendantSign, className = "",
                         onClick={(e) => e.stopPropagation()}
                         role="dialog"
                         aria-modal="true"
+                        aria-labelledby="chart-popup-house-title"
                     >
                         {/* Close Button - Minimal */}
                         <button
@@ -144,7 +145,7 @@ export default function ChartWithPopup({ planets, ascendantSign, className = "",
                                 {selectedHouse}
                             </div>
                             <div className="min-w-0">
-                                <h3 className="font-serif font-bold text-ink text-base leading-tight truncate">{houseDetails.name}</h3>
+                                <h3 id="chart-popup-house-title" className="font-serif font-bold text-ink text-base leading-tight truncate">{houseDetails.name}</h3>
                                 <p className="text-[9px] text-muted uppercase tracking-wider font-medium truncate">
                                     {houseDetails.sign.name}
                                 </p>

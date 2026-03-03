@@ -135,8 +135,8 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
                                 </div>
                             </div>
                             <div>
-                                <h3 className="text-base font-bold tracking-tight leading-tight" style={{ color: 'var(--ink)' }}>{dosha.dosha_name}</h3>
-                                <p className="text-[11px] mt-1 leading-normal" style={{ color: 'var(--text-body)' }}>{dosha.description}</p>
+                                <h3 className="text-base font-bold tracking-tight leading-tight text-ink">{dosha.dosha_name}</h3>
+                                <p className="text-[11px] mt-1 leading-normal text-body">{dosha.description}</p>
                             </div>
                         </div>
 
@@ -145,7 +145,7 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
                             <div>
                                 <div className="flex flex-wrap gap-1.5">
                                     {dosha.impact_areas.map((area, i) => (
-                                        <span key={i} className="text-[9px] px-2 py-0.5 bg-white/40 rounded-md border font-bold uppercase tracking-tight" style={{ color: 'var(--ink)', borderColor: 'var(--border-antique)' }}>
+                                        <span key={i} className="text-[9px] px-2 py-0.5 bg-white/40 rounded-md border border-antique font-bold uppercase tracking-tight text-ink">
                                             {area}
                                         </span>
                                     ))}
@@ -154,14 +154,14 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
 
                             {/* Technical Analysis / Cancellations */}
                             {analysis && (analysis.cancellation_factors?.length || analysis.positive_note) && (
-                                <div className="p-3 rounded-xl border bg-indigo-50/20" style={{ borderColor: 'rgba(99, 102, 241, 0.1)' }}>
+                                <div className="p-3 rounded-xl border border-indigo-500/10 bg-indigo-50/20">
                                     <div className="flex items-center gap-1.5 mb-1.5">
                                         <FileWarning className="w-2.5 h-2.5 text-indigo-500" />
                                         <span className="text-[9px] font-black uppercase tracking-widest text-indigo-600">Neutralizing Factors</span>
                                     </div>
                                     <ul className="space-y-1">
                                         {analysis.cancellation_factors?.map((factor, i) => (
-                                            <li key={i} className="text-[10px] flex items-start gap-1.5" style={{ color: 'var(--text-body)' }}>
+                                            <li key={i} className="text-[10px] flex items-start gap-1.5 text-body">
                                                 <span className="text-indigo-400 mt-0.5">•</span>
                                                 {factor}
                                             </li>
@@ -177,20 +177,20 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
                             )}
 
                             {/* Remedial Steps */}
-                            <div className="border-t pt-3" style={{ borderColor: 'rgba(0,0,0,0.03)' }}>
+                            <div className="border-t border-black/[0.03] pt-3">
                                 <div className="flex items-center gap-1.5 mb-2">
-                                    <HandHeart className="w-2.5 h-2.5" style={{ color: lightStyles.accent }} />
-                                    <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: 'var(--ink)' }}>Prescribed Action</span>
+                                    <HandHeart className={cn("w-2.5 h-2.5", lightStyles.accent)} />
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-ink">Prescribed Action</span>
                                 </div>
                                 <div className="grid grid-cols-1 gap-1.5">
                                     {dosha.remedies.slice(0, 3).map((remedy, i) => (
                                         <div key={i} className="flex items-center gap-2 px-2.5 py-1.5 bg-white/40 rounded-md border border-transparent hover:border-purple-100 hover:bg-white transition-all cursor-default">
                                             <div className="w-1 h-1 rounded-full bg-purple-400 shrink-0" />
-                                            <span className="text-xs font-medium" style={{ color: 'var(--ink)' }}>{remedy}</span>
+                                            <span className="text-xs font-medium text-ink">{remedy}</span>
                                         </div>
                                     ))}
                                     {dosha.remedies.length > 3 && (
-                                        <button className="text-[9px] font-black uppercase tracking-widest mt-1 flex items-center gap-1 hover:opacity-75 transition-colors ml-3" style={{ color: lightStyles.accent }}>
+                                        <button className={cn("text-[9px] font-black uppercase tracking-widest mt-1 flex items-center gap-1 hover:opacity-75 transition-colors ml-3", lightStyles.accent)}>
                                             +{dosha.remedies.length - 3} More <ChevronRight className="w-2.5 h-2.5" />
                                         </button>
                                     )}

@@ -11,11 +11,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="min-h-screen bg-luxury-radial relative">
                 {/* Subtle Texture Overlay - matching Client Layout */}
                 <div
-                    className="absolute inset-0 opacity-15 pointer-events-none z-0"
-                    style={{
-                        backgroundImage: "url('https://www.transparenttextures.com/patterns/aged-paper.png')",
-                        backgroundBlendMode: 'multiply'
-                    }}
+                    className="absolute inset-0 opacity-15 pointer-events-none z-0 bg-[url('/textures/aged-paper.png')] [background-blend-mode:multiply]"
                 />
 
                 <div className="pt-14 relative z-10 w-full min-h-screen">

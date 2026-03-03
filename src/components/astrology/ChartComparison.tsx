@@ -15,12 +15,12 @@ interface ChartComparisonProps {
 
 export default function ChartComparison({ chart1, chart2 }: ChartComparisonProps) {
     return (
-        <div className="space-y-8 p-4 bg-[#FAF5E6] rounded-lg border border-[#DCC9A6]">
+        <div className="space-y-8 p-4 bg-parchment-light rounded-lg border border-divider">
 
             {/* Header / Title could go here */}
-            <div className="flex items-center justify-between border-b border-[#DCC9A6] pb-4">
-                <h2 className="text-xl font-serif font-bold text-[#3E2A1F]">Chart Comparison</h2>
-                <div className="text-sm text-[#7A5A43] font-serif italic">
+            <div className="flex items-center justify-between border-b border-divider pb-4">
+                <h2 className="text-xl font-serif font-bold text-ink">Chart Comparison</h2>
+                <div className="text-sm text-muted font-serif italic">
                     Comparing {chart1.name} w/ {chart2.name}
                 </div>
             </div>
@@ -29,7 +29,7 @@ export default function ChartComparison({ chart1, chart2 }: ChartComparisonProps
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Chart 1 */}
                 <div className="flex flex-col gap-2">
-                    <h3 className="text-center font-bold text-[#9C7A2F] font-serif">{chart1.name}</h3>
+                    <h3 className="text-center font-bold text-gold-dark font-serif">{chart1.name}</h3>
                     <div className="aspect-square w-full max-w-[400px] mx-auto">
                         <NorthIndianChart
                             planets={chart1.planets}
@@ -40,7 +40,7 @@ export default function ChartComparison({ chart1, chart2 }: ChartComparisonProps
 
                 {/* Chart 2 */}
                 <div className="flex flex-col gap-2">
-                    <h3 className="text-center font-bold text-[#9C7A2F] font-serif">{chart2.name}</h3>
+                    <h3 className="text-center font-bold text-gold-dark font-serif">{chart2.name}</h3>
                     <div className="aspect-square w-full max-w-[400px] mx-auto">
                         <NorthIndianChart
                             planets={chart2.planets}
@@ -52,7 +52,7 @@ export default function ChartComparison({ chart1, chart2 }: ChartComparisonProps
 
             {/* Planetary Comparison Table */}
             <div className="mt-8">
-                <h3 className="font-serif font-bold text-[#3E2A1F] mb-4">Planetary Positions</h3>
+                <h3 className="font-serif font-bold text-ink mb-4">Planetary Positions</h3>
                 <PlanetComparisonTable
                     planetsA={chart1.planets}
                     planetsB={chart2.planets}

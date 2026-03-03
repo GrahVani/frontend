@@ -5,9 +5,14 @@ import { motion } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
+interface YantraRecommendation {
+    planet: string;
+    [key: string]: unknown;
+}
+
 interface MantraFocusPanelProps {
     currentDasha: string;
-    yantras: any[];
+    yantras: YantraRecommendation[];
 }
 
 const Waveform = ({ color = "amber" }: { color?: "amber" | "indigo" }) => (

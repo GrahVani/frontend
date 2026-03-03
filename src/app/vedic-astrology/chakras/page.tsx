@@ -83,11 +83,10 @@ export default function ChakrasPage() {
                 <div className="lg:col-span-8 space-y-6">
                     <div
                         ref={chartContainerRef}
-                        className="relative w-full bg-[#fdfcfb] rounded-[3rem] border border-copper-200 shadow-[0_32px_64px_-16px_rgba(139,92,71,0.15)] overflow-hidden flex items-center justify-center p-2 group overflow-y-auto"
+                        className="relative w-full bg-surface-warm rounded-[3rem] border border-copper-200 shadow-[0_32px_64px_-16px_rgba(139,92,71,0.15)] overflow-hidden flex items-center justify-center p-2 group overflow-y-auto"
                     >
                         {/* Parchment Texture Overlay */}
-                        <div className="absolute inset-0 opacity-20 pointer-events-none mix-blend-multiply"
-                            style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/parchment.png")' }} />
+                        <div className="absolute inset-0 opacity-20 pointer-events-none mix-blend-multiply bg-[url('/textures/parchment.png')]" />
 
                         <div className="absolute inset-0 bg-gradient-to-tr from-copper-50/20 via-transparent to-amber-50/20 pointer-events-none" />
 
@@ -104,7 +103,7 @@ export default function ChakrasPage() {
                             </div>
                         ) : (
                             <div className="w-full h-full relative z-10 animate-in zoom-in-95 duration-1000 flex items-center justify-center">
-                                <div style={{ transform: `scale(${zoomScale})`, transition: 'transform 0.3s ease-out' }} className="w-full h-full flex items-center justify-center">
+                                <div style={{ transform: `scale(${zoomScale})` }} className="w-full h-full flex items-center justify-center transition-transform duration-300 ease-out">
                                     <SudarshanChakraFinal
                                         data={chakraData}
                                         className="max-w-[100%] max-h-[100%] scale-100"
@@ -142,13 +141,12 @@ export default function ChakrasPage() {
                         </div>
                         <div className="space-y-6">
                             {[
-                                { label: 'Surya Chart', circle: 'Outer Circle', color: 'border-slate-800', desc: 'Soul\'s physical destiny & vitality' },
-                                { label: 'Chandra Chart', circle: 'Middle Circle', color: 'border-slate-500', desc: 'Mental landscape & emotional flow' },
-                                { label: 'Birth Chart', circle: 'Inner Circle', color: 'border-slate-300', desc: 'The core karmic blueprint (Lagna)' },
+                                { label: 'Surya Chart', circle: 'Outer Circle', color: 'border-slate-800', bgColor: 'bg-slate-700', desc: 'Soul\'s physical destiny & vitality' },
+                                { label: 'Chandra Chart', circle: 'Middle Circle', color: 'border-slate-500', bgColor: 'bg-slate-500', desc: 'Mental landscape & emotional flow' },
+                                { label: 'Birth Chart', circle: 'Inner Circle', color: 'border-slate-300', bgColor: 'bg-slate-400', desc: 'The core karmic blueprint (Lagna)' },
                             ].map((item, i) => (
                                 <div key={i} className="flex gap-4 group">
-                                    <div className={cn("w-1.5 h-auto rounded-full transition-all group-hover:w-2", item.color, "bg-current border-none opacity-20")}
-                                        style={{ backgroundColor: i === 0 ? '#334155' : i === 1 ? '#64748b' : '#94a3b8' }} />
+                                    <div className={cn("w-1.5 h-auto rounded-full transition-all group-hover:w-2 border-none opacity-20", item.bgColor)} />
                                     <div>
                                         <div className="flex items-center gap-2">
                                             <span className="text-sm font-black text-primary underline decoration-copper-200 decoration-4 underline-offset-4">{item.label}</span>

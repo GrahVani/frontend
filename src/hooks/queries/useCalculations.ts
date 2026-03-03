@@ -6,7 +6,7 @@ export function useDasha(
     clientId: string,
     type: 'basic' | 'deep' | 'tree' | 'mahadasha' | 'antardasha' | 'pratyantardasha' | 'sookshma' | 'prana' = 'basic',
     ayanamsa: string,
-    context?: any
+    context?: Record<string, unknown>
 ) {
     return useQuery({
         queryKey: ['dasha', clientId, type, ayanamsa, context],
@@ -25,7 +25,7 @@ export function useOtherDasha(
     type: string,
     ayanamsa: string,
     level: string = 'mahadasha',
-    context: any = {}
+    context: Record<string, unknown> = {}
 ) {
     return useQuery({
         queryKey: ['dasha', 'other', clientId, type, ayanamsa, level, context],

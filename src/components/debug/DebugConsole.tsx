@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 interface DebugConsoleProps {
     title: string;
-    data: any;
+    data: unknown;
     className?: string;
 }
 

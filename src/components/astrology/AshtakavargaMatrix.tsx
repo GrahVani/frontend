@@ -3,10 +3,22 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
+interface ContributorEntry {
+    contributor: string;
+    bindus: number[];
+}
+
+interface AshtakavargaData {
+    bhinnashtakavarga?: Record<string, Record<number, number> | number[]>;
+    ashtakvarga?: Record<string, Record<number, number> | number[]>;
+    contributors?: ContributorEntry[];
+    [key: string]: unknown;
+}
+
 interface MatrixProps {
     type: 'sarva' | 'bhinna';
     planet?: string;
-    data: any;
+    data: AshtakavargaData;
     className?: string;
 }
 
@@ -33,13 +45,13 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
     if (!data) return null;
 
     const isSarva = type === 'sarva';
-    const payload = data.bhinnashtakavarga || data.ashtakvarga || data;
+    const payload: Record<string, Record<number, number> | number[]> = (data.bhinnashtakavarga || data.ashtakvarga || data) as Record<string, Record<number, number> | number[]>;
     const contribs = data.contributors;
 
-    let rows = isSarva ? PLANETS : (contribs ? contribs.map((c: any) => c.contributor) : [planet || 'Sun']);
+    let rows = isSarva ? PLANETS : (contribs ? contribs.map((c: ContributorEntry) => c.contributor) : [planet || 'Sun']);
     rows = rows.filter((p: string) => !['Lagna', 'Ascendant', 'lagna', 'ascendant'].includes(p));
 
-    const getVal = (rd: any, s: number) => {
+    const getVal = (rd: Record<string | number, number> | number[], s: number): number => {
         if (!rd) return 0;
         if (Array.isArray(rd)) return rd[s - 1] ?? 0;
         return rd[s] ?? rd[SIGN_NAMES[s - 1]] ?? rd[SIGN_NAMES[s - 1]?.toLowerCase()] ?? 0;
@@ -50,9 +62,9 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
     SIGNS.forEach(s => {
         let tot = 0;
         rows.forEach((p: string) => {
-            let rd: any = {};
+            let rd: Record<string | number, number> | number[] = {};
             if (contribs) {
-                const c = contribs.find((x: any) => x.contributor === p);
+                const c = contribs.find((x: ContributorEntry) => x.contributor === p);
                 if (c?.bindus) c.bindus.forEach((v: number, i: number) => { rd[i + 1] = v; });
             } else {
                 rd = payload[p] || payload[p.toLowerCase()] || {};
@@ -77,7 +89,7 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
             <div className="overflow-x-auto rounded-xl border border-antique">
 
                 {/* Table */}
-                <table className="w-full border-collapse text-sm">
+                <table className="w-full border-collapse text-sm" role="table" aria-label={isSarva ? "Sarvashtakavarga matrix showing planetary bindus across signs" : `Bhinnashtakavarga matrix for ${planet || 'planet'}`}>
                     <thead>
                         <tr className="bg-amber-50/30 border-b border-antique">
                             <th className="py-2 px-2 text-left font-semibold text-primary font-sans uppercase w-16 border-r border-antique">
@@ -91,9 +103,9 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                     </thead>
                     <tbody>
                         {rows.map((p: string, idx: number) => {
-                            let rd: any = {};
+                            let rd: Record<string | number, number> | number[] = {};
                             if (contribs) {
-                                const c = contribs.find((x: any) => x.contributor === p);
+                                const c = contribs.find((x: ContributorEntry) => x.contributor === p);
                                 if (c?.bindus) c.bindus.forEach((v: number, i: number) => { rd[i + 1] = v; });
                             } else {
                                 rd = payload[p] || payload[p.toLowerCase()] || {};
@@ -134,7 +146,7 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
             </div>
 
             {/* House Group Analysis Cards */}
-            <div className="mt-6 grid grid-cols-4 gap-3">
+            <div className="mt-6 grid grid-cols-4 gap-3" role="group" aria-label="House group analysis summary">
                 {groupTotals.map(g => {
                     const borderColor = g.key === 'dharma' ? 'border-purple-400' :
                         g.key === 'artha' ? 'border-amber-400' :

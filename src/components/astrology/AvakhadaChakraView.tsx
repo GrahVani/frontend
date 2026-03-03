@@ -29,23 +29,19 @@ interface AvakhadaChakraViewProps {
 export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakraViewProps) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [data, setData] = useState<any>(null);
+    const [data, setData] = useState<Record<string, string> | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const result = await clientApi.getAvakhadaChakra(clientId);
-                console.log("Avakhada API Result:", result);
-
+                const result = await clientApi.getAvakhadaChakra(clientId) as any;
                 // Extract inner data: Wrapper (chartData) -> Response -> avakhada_chakra
                 const rawData = result.chartData || result.data || result;
                 const cleanData = rawData.avakhada_chakra || rawData;
 
                 setData(cleanData);
-            } catch (err: any) {
-                console.error("Avakhada Fetch Error:", err);
-                setError(err.message || "Failed to load Avakhada Chakra");
+            } catch (err: unknown) {                setError(err instanceof Error ? err.message : "Failed to load Avakhada Chakra");
             } finally {
                 setLoading(false);
             }
@@ -101,15 +97,15 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
     ];
 
     return (
-        <div className="flex flex-col h-full bg-[#FFFCF6]">
+        <div className="flex flex-col h-full bg-surface-warm">
             {/* COMPACT HEADER */}
-            <div className="bg-gradient-to-r from-[#2C1810] to-[#4A2C20] text-parchment px-6 py-4 flex justify-between items-center shrink-0">
+            <div className="bg-gradient-to-r from-ink-deep to-[#4A2C20] text-parchment px-6 py-4 flex justify-between items-center shrink-0">
                 <div className="flex items-center gap-4">
                     <div className="p-2 bg-white/5 rounded-lg border border-white/10">
                         <Star className="w-5 h-5 text-gold-primary" />
                     </div>
                     <div>
-                        <h2 className="text-xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#FFD27D] to-[#D08C60]">
+                        <h2 className="text-xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-active-glow to-header-border">
                             Avakhada Chakra
                         </h2>
                         <p className="text-xs text-parchment/60 font-sans tracking-wide uppercase">
@@ -139,7 +135,7 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
                             <div key={item.key} className="bg-white border border-antique/40 p-2.5 rounded-xl hover:border-gold-primary/40 hover:shadow-md transition-all group flex flex-col justify-between min-h-[85px]">
                                 <div className="flex justify-between items-start mb-0.5">
                                     <span className="text-[9px] font-bold uppercase tracking-wider text-muted-refined/80">{item.label}</span>
-                                    <item.icon className="w-3 h-3 text-[#D08C60]/60 group-hover:text-[#D08C60] transition-colors" />
+                                    <item.icon className="w-3 h-3 text-header-border/60 group-hover:text-header-border transition-colors" />
                                 </div>
                                 <div>
                                     <div className="font-serif text-sm font-semibold text-primary leading-tight line-clamp-1" title={value}>
@@ -158,7 +154,7 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
                         <div className="bg-white border border-antique/40 p-2.5 rounded-xl hover:border-gold-primary/40 hover:shadow-md transition-all group flex flex-col justify-between min-h-[85px]">
                             <div className="flex justify-between items-start mb-0.5">
                                 <span className="text-[9px] font-bold uppercase tracking-wider text-muted-refined/80">Hamsa Swara</span>
-                                <Feather className="w-3 h-3 text-[#D08C60]/60" />
+                                <Feather className="w-3 h-3 text-header-border/60" />
                             </div>
                             <div className="font-serif text-sm font-semibold text-primary leading-tight">
                                 {data.hamsa_swara}
@@ -184,7 +180,7 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
 }
 
 // Custom Icons
-function UsersIcon(props: any) {
+function UsersIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}
@@ -206,7 +202,7 @@ function UsersIcon(props: any) {
     )
 }
 
-function TypeIcon(props: any) {
+function TypeIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}

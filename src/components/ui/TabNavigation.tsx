@@ -26,9 +26,9 @@ export default function TabNavigation({ basePath }: TabNavigationProps) {
     ];
 
     return (
-        <div className="w-full border-b border-[#DCC9A6] bg-[#FEFAEA]/50 backdrop-blur-md sticky top-[88px] z-30">
+        <div className="w-full border-b border-divider bg-softwhite/50 backdrop-blur-md sticky top-[88px] z-30">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <nav className="flex items-center gap-8 -mb-[1px]">
+                <nav className="flex items-center gap-8 -mb-[1px]" role="tablist" aria-label="Client detail sections">
                     {tabs.map((tab) => {
                         const fullPath = `${basePath}${tab.path}`;
                         // Check if current path starts with this tab's path (active state)
@@ -39,11 +39,14 @@ export default function TabNavigation({ basePath }: TabNavigationProps) {
                             <Link
                                 key={tab.name}
                                 href={fullPath}
+                                role="tab"
+                                aria-selected={isActive}
+                                aria-current={isActive ? "page" : undefined}
                                 className={`
                                     py-4 px-2 font-serif text-lg tracking-wide border-b-2 transition-all duration-300
                                     ${isActive
-                                        ? 'border-[#C9A24D] text-[#3E2A1F] font-bold'
-                                        : 'border-transparent text-[#7A5A43] hover:text-[#9C7A2F] hover:border-[#E7D6B8]'
+                                        ? 'border-gold-primary text-ink font-bold'
+                                        : 'border-transparent text-muted hover:text-gold-dark hover:border-antique'
                                     }
                                 `}
                             >

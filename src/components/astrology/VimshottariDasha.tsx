@@ -48,15 +48,16 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
             const rawList = (initialData.dasha_list || initialData.data?.mahadashas || [])
                 .slice(0, 9); // Vimshottari has exactly 9 planetary lords per cycle
             // Map backend data to UI format
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic backend response shapes
             const mapped: DashaLevel[] = rawList.map((d: any) => ({
                 planet: d.planet,
-                start: d.start_date,
-                end: d.end_date,
+                start: d.start_date || d.startDate || '',
+                end: d.end_date || d.endDate || '',
                 sublevels: d.sublevels?.map((s: any) => ({
                     planet: s.planet,
-                    start: s.start_date,
-                    end: s.end_date,
-                    sublevels: [] // Start empty for sub-levels unless provided
+                    start: s.start_date || s.startDate || '',
+                    end: s.end_date || s.endDate || '',
+                    sublevels: []
                 }))
             }));
 
@@ -87,7 +88,7 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
         if (!nextLevel) return;
 
         try {
-            const context: any = {};
+            const context: Record<string, string> = {};
             if (path.length > 0) context.mahaLord = path[0];
             if (path.length > 1) context.antarLord = path[1];
             if (path.length > 2) context.pratyantarLord = path[2];
@@ -104,10 +105,11 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
             const rawList = result.dasha_list || result.data?.mahadashas || [];
             if (!rawList.length) return;
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic backend response
             const newSublevels: DashaLevel[] = rawList.map((d: any) => ({
                 planet: d.planet,
-                start: d.start_date,
-                end: d.end_date,
+                start: d.start_date || d.startDate || '',
+                end: d.end_date || d.endDate || '',
                 sublevels: []
             }));
 
@@ -126,9 +128,7 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
 
             setDashaData(prev => updateTree(prev, path));
 
-        } catch (error) {
-            console.error(`Failed to fetch ${nextLevel}:`, error);
-        }
+        } catch (error) {        }
     };
 
     const toggle = (id: string, level: DashaLevel, depth: number, path: string[]) => {
@@ -144,7 +144,7 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
             <div className="flex items-center gap-2 mb-6 text-sm overflow-x-auto">
                 <button
                     onClick={() => setExpanded([])}
-                    className={cn("hover:text-[#D08C60] transition-colors font-semibold uppercase tracking-widest text-xs", expanded.length === 0 ? "text-[#D08C60]" : "text-[#3E2A1F]/60")}
+                    className={cn("hover:text-header-border transition-colors font-semibold uppercase tracking-widest text-xs", expanded.length === 0 ? "text-header-border" : "text-ink/60")}
                 >
                     Mahadasha
                 </button>
@@ -152,8 +152,8 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
                     const label = id.split('-').pop();
                     return (
                         <React.Fragment key={id}>
-                            <ChevronRight className="w-3 h-3 text-[#D08C60]/40" />
-                            <span className="font-semibold uppercase tracking-widest text-xs text-[#D08C60] whitespace-nowrap">
+                            <ChevronRight className="w-3 h-3 text-header-border/40" />
+                            <span className="font-semibold uppercase tracking-widest text-xs text-header-border whitespace-nowrap">
                                 {label}
                             </span>
                         </React.Fragment>
@@ -166,38 +166,38 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
     if (loading && !dashaData.length) {
         return (
             <div className={cn(
-                "bg-[#FFFFFF] border border-[#D08C60]/20 rounded-[2.5rem] p-8 backdrop-blur-3xl h-full flex items-center justify-center shadow-xl",
+                "bg-white border border-header-border/20 rounded-[2.5rem] p-8 backdrop-blur-3xl h-full flex items-center justify-center shadow-xl",
                 compact && "p-6 rounded-[2rem] shadow-2xl"
             )}>
-                <Loader2 className="w-8 h-8 text-[#D08C60] animate-spin" />
+                <Loader2 className="w-8 h-8 text-header-border animate-spin" role="status" aria-label="Loading dasha data" />
             </div>
         );
     }
 
     return (
         <div className={cn(
-            "bg-[#FFFFFF] border border-[#D08C60]/20 rounded-[2.5rem] p-8 backdrop-blur-3xl h-full overflow-hidden flex flex-col shadow-xl",
-            compact && "p-6 rounded-[2rem] bg-[#FFFFFF] shadow-2xl"
+            "bg-white border border-header-border/20 rounded-[2.5rem] p-8 backdrop-blur-3xl h-full overflow-hidden flex flex-col shadow-xl",
+            compact && "p-6 rounded-[2rem] bg-white shadow-2xl"
         )}>
             <div className="flex items-center justify-between mb-4">
                 <div>
                     {!compact ? (
                         <>
-                            <h3 className="text-xs font-semibold text-[#D08C60] uppercase tracking-[0.3em] mb-1">Vimshottari System</h3>
-                            <h2 className="text-2xl font-serif text-[#3E2A1F] font-bold tracking-tight italic">Temporal Matrix</h2>
+                            <h3 className="text-xs font-semibold text-header-border uppercase tracking-[0.3em] mb-1">Vimshottari System</h3>
+                            <h2 className="text-2xl font-serif text-ink font-bold tracking-tight italic">Temporal Matrix</h2>
                         </>
                     ) : (
                         <div>
-                            <h2 className="text-lg font-serif text-[#3E2A1F] font-bold tracking-tight">{currentMaha} Mahadasha</h2>
-                            <p className="text-2xs text-[#A8653A] uppercase tracking-[0.3em] font-semibold mt-1">Time Lord Sequence</p>
+                            <h2 className="text-lg font-serif text-ink font-bold tracking-tight">{currentMaha} Mahadasha</h2>
+                            <p className="text-2xs text-copper-dark uppercase tracking-[0.3em] font-semibold mt-1">Time Lord Sequence</p>
                         </div>
                     )}
                 </div>
                 {
                     !compact && currentMaha && (
-                        <div className="bg-[#FFD27D]/10 px-4 py-1.5 rounded-full border border-[#FFD27D]/30 flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-[#FFD27D] animate-pulse" />
-                            <span className="text-[9px] font-semibold text-[#FFD27D] uppercase tracking-widest">Active: {currentMaha}</span>
+                        <div className="bg-active-glow/10 px-4 py-1.5 rounded-full border border-active-glow/30 flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-active-glow animate-pulse" />
+                            <span className="text-[9px] font-semibold text-active-glow uppercase tracking-widest">Active: {currentMaha}</span>
                         </div>
                     )
                 }
@@ -205,7 +205,7 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
 
             {renderBreadcrumbs()}
 
-            <div className="flex-1 overflow-y-auto custom-scrollbar pr-4 space-y-3">
+            <div className="flex-1 overflow-y-auto custom-scrollbar pr-4 space-y-3" role="tree" aria-label="Vimshottari dasha periods">
                 {dashaData
                     .filter(d => !compact || d.planet === currentMaha)
                     .map((d) => (
@@ -239,42 +239,42 @@ function DashaItem({ level, depth, expanded, onToggle, compact = false, path }: 
     const isActive = new Date(level.start) <= now && new Date(level.end) >= now;
 
     return (
-        <div className="space-y-2">
+        <div className="space-y-2" role="treeitem" aria-expanded={canExpand ? isExpanded : undefined} aria-label={`${level.planet} dasha period${isActive ? ' (current)' : ''}`}>
             <div
                 onClick={() => !compact && canExpand && onToggle(uniqueId, level, depth, path)}
                 className={cn(
                     "flex items-center justify-between p-4 rounded-2xl transition-all cursor-pointer border group",
-                    depth === 0 ? "bg-[#FFF9F0] border-[#D08C60]/10 hover:bg-[#FEFAEA] shadow-sm" : "bg-transparent border-transparent hover:bg-[#FFF9F0]/50",
-                    isExpanded && depth === 0 && !compact && "bg-[#FEFAEA] border-[#D08C60]/30",
-                    isActive && depth > 0 && "bg-[#FFD27D]/20 border-[#FFD27D]/40",
+                    depth === 0 ? "bg-surface-modal border-header-border/10 hover:bg-softwhite shadow-sm" : "bg-transparent border-transparent hover:bg-surface-modal/50",
+                    isExpanded && depth === 0 && !compact && "bg-softwhite border-header-border/30",
+                    isActive && depth > 0 && "bg-active-glow/20 border-active-glow/40",
                     compact && "p-3 cursor-default"
                 )}
             >
                 <div className="flex items-center gap-4">
                     {!compact && canExpand && (
-                        <ChevronRight className={cn("w-4 h-4 text-[#D08C60] transition-transform duration-300", isExpanded && "rotate-90")} />
+                        <ChevronRight className={cn("w-4 h-4 text-header-border transition-transform duration-300", isExpanded && "rotate-90")} />
                     )}
                     {!compact && !canExpand && <div className="w-4" />}
 
                     <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-all",
-                        depth === 0 ? "bg-[#D08C60]/10 text-[#D08C60]" : "bg-[#D08C60]/5 text-[#D08C60]/40",
+                        depth === 0 ? "bg-header-border/10 text-header-border" : "bg-header-border/5 text-header-border/40",
                         compact && "w-8 h-8 rounded-lg",
-                        isActive && "bg-[#FFD27D] text-[#3E2A1F] shadow-lg"
+                        isActive && "bg-active-glow text-ink shadow-lg"
                     )}>
                         <Star className={cn("w-5 h-5", compact && "w-4 h-4")} />
                     </div>
 
                     <div>
                         <h4 className={cn("font-serif font-bold tracking-tight flex items-center gap-2",
-                            depth === 0 ? "text-lg text-[#3E2A1F]" : "text-md text-[#5A3E2B]",
+                            depth === 0 ? "text-lg text-ink" : "text-md text-body",
                             compact && (depth === 0 ? "text-md" : "text-sm")
                         )}>
                             {level.planet}
-                            {isActive && <span className="text-[9px] bg-[#3E2A1F] text-[#FFD27D] px-1.5 py-0.5 rounded uppercase tracking-wider">Current</span>}
+                            {isActive && <span className="text-[9px] bg-ink text-active-glow px-1.5 py-0.5 rounded uppercase tracking-wider">Current</span>}
                         </h4>
                         <div className="flex items-center gap-2 mt-0.5">
-                            <Calendar className="w-3 h-3 text-[#D08C60]/60" />
-                            <span className="text-2xs font-semibold text-[#8B5A2B]/40 uppercase tracking-widest">{formatDate(level.start)} — {formatDate(level.end)}</span>
+                            <Calendar className="w-3 h-3 text-header-border/60" />
+                            <span className="text-2xs font-semibold text-bronze/40 uppercase tracking-widest">{formatDate(level.start)} — {formatDate(level.end)}</span>
                         </div>
                     </div>
                 </div>
@@ -282,7 +282,7 @@ function DashaItem({ level, depth, expanded, onToggle, compact = false, path }: 
 
             {isExpanded && (
                 <div className={cn(
-                    "ml-10 border-l border-[#D08C60]/20 pl-4 space-y-2 animate-in slide-in-from-left-2 duration-300",
+                    "ml-10 border-l border-header-border/20 pl-4 space-y-2 animate-in slide-in-from-left-2 duration-300",
                     compact && "ml-4 pl-3"
                 )}>
                     {level.sublevels && level.sublevels.length > 0 ? (
@@ -298,9 +298,9 @@ function DashaItem({ level, depth, expanded, onToggle, compact = false, path }: 
                             />
                         ))
                     ) : (
-                        <div className="flex items-center gap-2 p-2">
-                            <Loader2 className="w-4 h-4 text-[#D08C60] animate-spin" />
-                            <span className="text-xs text-[#D08C60]">Loading sub-periods...</span>
+                        <div className="flex items-center gap-2 p-2" role="status" aria-label="Loading sub-periods">
+                            <Loader2 className="w-4 h-4 text-header-border animate-spin" />
+                            <span className="text-xs text-header-border">Loading sub-periods...</span>
                         </div>
                     )}
                 </div>

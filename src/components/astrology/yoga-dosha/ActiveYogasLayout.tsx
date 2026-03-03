@@ -63,8 +63,8 @@ export default function ActiveYogasLayout({
         <div className={cn("flex flex-col lg:flex-row gap-4 p-4 bg-parchment min-h-screen font-sans", className)}>
             {/* LEFT: Birth Chart - Fixed Width */}
             <div className="flex flex-col gap-2 h-[480px] w-full lg:w-[440px] shrink-0">
-                <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-[#FFFCF6] max-w-[440px]">
-                    <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique flex justify-between items-center shrink-0">
+                <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm max-w-[440px]">
+                    <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center shrink-0">
                         <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Birth Chart (D1)</h3>
                         <button
                             onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })}
@@ -88,8 +88,8 @@ export default function ActiveYogasLayout({
 
             {/* RIGHT: Yogas & Details - Flexible Width */}
             <div className="flex-1 flex flex-col gap-2 h-[480px] min-w-0">
-                <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-[#FFFCF6]">
-                    <div className="bg-[#EAD8B1] px-4 py-2 border-b border-antique flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
+                <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm">
+                    <div className="bg-border-warm px-4 py-2 border-b border-antique flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
                         <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide whitespace-nowrap">Yogas & Combinations</h3>
 
                         {/* Integrated Header Dropdown */}

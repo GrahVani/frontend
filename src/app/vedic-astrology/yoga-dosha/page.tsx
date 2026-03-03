@@ -22,7 +22,7 @@ import ActiveYogasLayout from '@/components/astrology/yoga-dosha/ActiveYogasLayo
 import Link from 'next/link';
 import { useDasha } from '@/hooks/queries/useCalculations';
 import { parseChartData } from '@/lib/chart-helpers';
-import { findActiveDashaPath } from '@/lib/dasha-utils';
+import { findActiveDashaPath, RawDashaPeriod } from '@/lib/dasha-utils';
 import { useMemo } from 'react';
 
 // ============================================================================
@@ -108,9 +108,9 @@ export default function YogaDoshaPage() {
         };
 
         const list = Object.values(processedCharts)
-            .filter((c: any) => c.chartType?.startsWith('yoga_'))
-            .map((c: any) => {
-                const subType = c.chartType.replace('yoga_', '');
+            .filter((c: { chartType?: string }) => c.chartType?.startsWith('yoga_'))
+            .map((c: { chartType?: string; id?: string; metadata?: { benefit?: string; description?: string } }) => {
+                const subType = (c.chartType || '').replace('yoga_', '');
                 const label = subType.split('_').map((s: string) => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
 
                 // Try to get a benefit/description from the chart metadata if available
@@ -141,7 +141,7 @@ export default function YogaDoshaPage() {
     // 4. Calculate Current Dasha Progress
     const dashaProgress = useMemo(() => {
         if (!dashaResponse) return { planet: 'Loading...', subPlanet: '...', percentage: 0 };
-        const activePath = findActiveDashaPath(dashaResponse);
+        const activePath = findActiveDashaPath(dashaResponse as unknown as RawDashaPeriod);
         const nodes = activePath.nodes;
         const currentPlanet = nodes.length > 0 ? nodes[0].planet : 'Unknown';
         const currentSubPlanet = nodes.length > 1 ? nodes[1].planet : '...';

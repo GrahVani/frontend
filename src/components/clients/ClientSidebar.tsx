@@ -41,17 +41,13 @@ export default function ClientSidebar({ basePath }: ClientSidebarProps) {
 
     return (
         <aside
-            className="w-full lg:w-64 h-full py-8 px-5 flex flex-col gap-2 border-r border-[#D08C60]/30 z-40"
-            style={{
-                background: 'linear-gradient(180deg, #2A1810 0%, #1A0A05 100%)',
-                boxShadow: '4px 0 24px rgba(0,0,0,0.5)',
-            }}
+            className="w-full lg:w-64 h-full py-8 px-5 flex flex-col gap-2 border-r border-header-border/30 z-40 bg-gradient-to-b from-ink-deep to-ink-abyss shadow-[4px_0_24px_rgba(0,0,0,0.5)]"
         >
             {/* Glossy Overlay */}
             <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none opacity-40" />
 
             <div className="mb-8 px-2 relative z-10">
-                <h3 className="text-[10px] font-black text-[#D08C60] uppercase tracking-[0.2em] font-serif">
+                <h3 className="text-[10px] font-black text-header-border uppercase tracking-[0.2em] font-serif">
                     Workspace
                 </h3>
             </div>
@@ -68,24 +64,24 @@ export default function ClientSidebar({ basePath }: ClientSidebarProps) {
                             className={cn(
                                 "flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-300 group relative overflow-hidden",
                                 isActive
-                                    ? "bg-gradient-to-r from-[#FFD27D]/20 to-transparent text-[#FFD27D] font-bold border-l-4 border-[#FFD27D] shadow-[0_4px_20px_rgba(255,210,125,0.1)]"
+                                    ? "bg-gradient-to-r from-active-glow/20 to-transparent text-active-glow font-bold border-l-4 border-active-glow shadow-[0_4px_20px_rgba(255,210,125,0.1)]"
                                     : "text-white/50 hover:text-white hover:bg-white/5"
                             )}
                         >
                             <div className="flex items-center gap-4">
-                                <item.icon className={cn("w-5 h-5 transition-transform duration-300 group-hover:scale-110", isActive ? "text-[#FFD27D]" : "text-[#D08C60]")} />
+                                <item.icon className={cn("w-5 h-5 transition-transform duration-300 group-hover:scale-110", isActive ? "text-active-glow" : "text-header-border")} />
                                 <span className="font-serif text-[13px] tracking-widest uppercase font-medium">{item.name}</span>
                             </div>
-                            {isActive && <ChevronRight className="w-3.5 h-3.5 text-[#FFD27D] animate-pulse" />}
+                            {isActive && <ChevronRight className="w-3.5 h-3.5 text-active-glow animate-pulse" />}
                         </Link>
                     );
                 })}
             </nav>
 
-            <div className="mt-auto pt-6 border-t border-[#D08C60]/30 px-2">
+            <div className="mt-auto pt-6 border-t border-header-border/30 px-2">
                 <Link
                     href={`${basePath}/settings`}
-                    className="flex items-center gap-3 text-[#FEFAEA]/70 hover:text-white transition-colors"
+                    className="flex items-center gap-3 text-softwhite/70 hover:text-white transition-colors"
                 >
                     <Settings className="w-5 h-5" />
                     <span className="font-serif text-sm">Settings</span>

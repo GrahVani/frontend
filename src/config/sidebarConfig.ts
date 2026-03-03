@@ -18,7 +18,12 @@ import {
     PlusCircle,
     History,
     AlertCircle,
-    Gem
+    Gem,
+    Settings,
+    Palette,
+    Lock,
+    Monitor,
+    CreditCard as Billing,
 } from 'lucide-react';
 import { SidebarItem } from '@/components/layout/SectionSidebar';
 
@@ -59,4 +64,12 @@ export const CALENDAR_Sidebar: SidebarItem[] = [
     { name: "Planetary Transits", path: "/calendar/transits", icon: Moon },
     { name: "Festivals", path: "/calendar/festivals", icon: Star },
     { name: "Personal Events", path: "/calendar/personal", icon: FileText },
+];
+
+export const SETTINGS_Sidebar: SidebarItem[] = [
+    { name: "Chart Preferences", path: "/settings", icon: Settings },
+    { name: "Display", path: "/settings/display", icon: Monitor },
+    { name: "Notifications", path: "/settings/notifications", icon: Bell },
+    { name: "Security", path: "/settings/security", icon: Lock },
+    { name: "Subscription", path: "/settings/subscription", icon: Billing },
 ];

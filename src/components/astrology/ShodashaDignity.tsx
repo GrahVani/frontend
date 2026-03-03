@@ -59,7 +59,7 @@ const extractPlanetSign = (chartData: Record<string, unknown> | undefined, plane
     const dataArray = Array.isArray(chartData.planets) ? chartData.planets :
         Array.isArray(chartData.planetary_positions) ? chartData.planetary_positions : null;
     if (dataArray) {
-        const found = dataArray.find((item: any) =>
+        const found = dataArray.find((item: Record<string, unknown>) =>
             item.name === planet || item.planet === planet ||
             (fullName && (item.name === fullName || item.planet === fullName))
         );

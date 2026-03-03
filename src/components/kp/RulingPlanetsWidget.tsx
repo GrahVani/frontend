@@ -81,9 +81,9 @@ export default function RulingPlanetsWidget({
     const strengthOrder = data?.ruling_planets?.strength_order_explanation || {};
 
     return (
-        <div className={cn("border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6] w-full", className)}>
+        <div className={cn("border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm w-full", className)}>
             {/* Header / Toolbar */}
-            <div className="bg-[#EAD8B1] px-4 py-2.5 border-b border-antique flex justify-between items-center">
+            <div className="bg-border-warm px-4 py-2.5 border-b border-antique flex justify-between items-center">
                 <div className="flex items-center gap-2">
                     <h3 className="font-serif text-lg font-bold text-primary leading-tight tracking-wide">
                         Ruling Planets (RP)

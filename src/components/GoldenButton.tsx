@@ -6,21 +6,11 @@ interface PremiumButtonProps {
     topText: string;
     bottomText: string;
     onClick?: () => void;
-    className?: string; // Added
-    disabled?: boolean; // Added
-    type?: "button" | "submit" | "reset"; // Added
+    className?: string;
+    disabled?: boolean;
+    type?: "button" | "submit" | "reset";
 }
 
-/**
- * PremiumButton Component
- * 
- * A luxury astrology button with:
- * - Chamfered/angled corners on left and right
- * - Gold border all around
- * - Gold dots at the 4 corner junctions
- * - Dark bronze gradient background
- * - Two lines of text
- */
 export default function PremiumButton({
     topText,
     bottomText,
@@ -34,60 +24,25 @@ export default function PremiumButton({
             type={type}
             onClick={onClick}
             disabled={disabled}
-            className={`relative group ${className} ${disabled ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
-            style={{
-                background: 'transparent',
-                border: 'none',
-                padding: 0,
-            }}
+            aria-disabled={disabled || undefined}
+            aria-label={`${topText} ${bottomText}`}
+            className={`relative group bg-transparent border-none p-0 ${disabled ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'} ${className}`}
         >
             {/* Main button container with clip-path for chamfered corners */}
             <div
-                className="relative"
-                style={{
-                    padding: '2px',
-                    background: 'linear-gradient(135deg, #E8C872 0%, #C9A24C 50%, #8B6B2E 100%)',
-                    clipPath: 'polygon(12px 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0 50%)',
-                }}
+                className="relative p-[2px] bg-gradient-to-br from-gold-soft via-gold-primary to-gold-dark [clip-path:polygon(12px_0,calc(100%-12px)_0,100%_50%,calc(100%-12px)_100%,12px_100%,0_50%)]"
             >
                 {/* Inner button with Header background gradient */}
                 <div
-                    className="bg-header-gradient"
-                    style={{
-                        clipPath: 'polygon(12px 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0 50%)',
-                        padding: '10px 28px',
-                        minWidth: '200px',
-                        textAlign: 'center', // Ensure text is centered
-                    }}
+                    className="bg-header-gradient text-center min-w-[200px] px-7 py-2.5 [clip-path:polygon(12px_0,calc(100%-12px)_0,100%_50%,calc(100%-12px)_100%,12px_100%,0_50%)]"
                 >
                     {/* Top text */}
-                    <div
-                        style={{
-                            fontFamily: "'Playfair Display', serif",
-                            fontSize: '0.7rem',
-                            fontWeight: 700,
-                            letterSpacing: '2px',
-                            textTransform: 'uppercase',
-                            color: '#FFFFFF',
-                            textShadow: '0 1px 2px rgba(0, 0, 0, 0.4)',
-                            lineHeight: '1.2',
-                        }}
+                    <div className="font-serif text-[0.7rem] font-bold tracking-[2px] uppercase text-white leading-tight [text-shadow:0_1px_2px_rgba(0,0,0,0.4)]"
                     >
                         {topText}
                     </div>
                     {/* Bottom text */}
-                    <div
-                        style={{
-                            fontFamily: "'Playfair Display', serif",
-                            fontSize: '0.6rem',
-                            fontWeight: 500,
-                            letterSpacing: '1.5px',
-                            textTransform: 'uppercase',
-                            color: '#FFDEB3',
-                            textShadow: '0 1px 2px rgba(0, 0, 0, 0.4)',
-                            lineHeight: '1.2',
-                            marginTop: '2px',
-                        }}
+                    <div className="font-serif text-[0.6rem] font-medium tracking-[1.5px] uppercase text-parchment-soft leading-tight mt-0.5 [text-shadow:0_1px_2px_rgba(0,0,0,0.4)]"
                     >
                         {bottomText}
                     </div>
@@ -95,33 +50,11 @@ export default function PremiumButton({
             </div>
 
             {/* Gold dots at left and right pointed tips */}
-            {/* Left tip dot */}
             <div
-                className="absolute"
-                style={{
-                    width: '7px',
-                    height: '7px',
-                    background: 'radial-gradient(circle, #F0D878 0%, #C9A24C 60%, #8B6B2E 100%)',
-                    borderRadius: '50%',
-                    top: '50%',
-                    left: '-3px',
-                    transform: 'translateY(-50%)',
-                    boxShadow: '0 0 4px rgba(200, 160, 60, 0.8)',
-                }}
+                className="absolute top-1/2 -left-[3px] -translate-y-1/2 w-[7px] h-[7px] rounded-full shadow-[0_0_4px_rgba(200,160,60,0.8)] [background:radial-gradient(circle,#F0D878_0%,#C9A24C_60%,#8B6B2E_100%)]"
             />
-            {/* Right tip dot */}
             <div
-                className="absolute"
-                style={{
-                    width: '7px',
-                    height: '7px',
-                    background: 'radial-gradient(circle, #F0D878 0%, #C9A24C 60%, #8B6B2E 100%)',
-                    borderRadius: '50%',
-                    top: '50%',
-                    right: '-3px',
-                    transform: 'translateY(-50%)',
-                    boxShadow: '0 0 4px rgba(200, 160, 60, 0.8)',
-                }}
+                className="absolute top-1/2 -right-[3px] -translate-y-1/2 w-[7px] h-[7px] rounded-full shadow-[0_0_4px_rgba(200,160,60,0.8)] [background:radial-gradient(circle,#F0D878_0%,#C9A24C_60%,#8B6B2E_100%)]"
             />
         </button>
     );

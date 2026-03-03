@@ -12,19 +12,19 @@ export default function RahuKaalAlert({ isActive = true, recommendedAction = "Fo
     if (!isActive) return null;
 
     return (
-        <div className="w-full rounded-2xl px-6 py-3 flex items-center justify-between backdrop-blur-md shadow-sm" style={{ backgroundColor: 'rgba(255, 247, 237, 0.8)', borderColor: 'rgba(251, 146, 60, 0.3)', border: '1px solid rgba(251, 146, 60, 0.3)' }}>
+        <div className="w-full rounded-2xl px-6 py-3 flex items-center justify-between backdrop-blur-md shadow-sm bg-orange-50/80 border border-orange-400/30">
             <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-6 h-6 rounded-full" style={{ backgroundColor: 'rgba(255, 237, 213, 1)', color: '#ea580c' }}>
+                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-orange-100 text-orange-600">
                     <AlertCircle className="w-3.5 h-3.5" />
                 </div>
                 <div className="flex items-center gap-1.5 whitespace-nowrap">
-                    <span className="font-bold uppercase tracking-wider text-[11px]" style={{ color: '#c2410c' }}>Rahu Kaal Active.</span>
-                    <span className="text-xs" style={{ color: '#431407' }}>Recommended Action: {recommendedAction}</span>
+                    <span className="font-bold uppercase tracking-wider text-[11px] text-orange-700">Rahu Kaal Active.</span>
+                    <span className="text-xs text-orange-950">Recommended Action: {recommendedAction}</span>
                 </div>
             </div>
 
-            <button className="flex items-center gap-1.5 transition-colors group" style={{ color: '#c2410c' }}>
-                <span className="text-[11px] font-bold uppercase tracking-widest border-b" style={{ borderColor: 'rgba(234, 88, 12, 0.5)' }}>Practice Now</span>
+            <button className="flex items-center gap-1.5 transition-colors group text-orange-700">
+                <span className="text-[11px] font-bold uppercase tracking-widest border-b border-orange-600/50">Practice Now</span>
                 <ArrowRight className="w-3 h-3 transform group-hover:translate-x-1 transition-transform" />
             </button>
         </div>

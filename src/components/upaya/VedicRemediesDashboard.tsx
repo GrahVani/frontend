@@ -21,15 +21,17 @@ import { useVedicClient } from '@/context/VedicClientContext';
 import DebugConsole from '@/components/debug/DebugConsole';
 
 interface VedicRemediesDashboardProps {
-    data: any;
+    data: Record<string, unknown>;
 }
 
 const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data }) => {
     const { processedCharts } = useVedicClient();
 
     // Extract data from the complex nested structure
-    const analysis = data?.analysis || {};
-    const remedies = data?.remedies || {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+    const analysis = (data?.analysis || {}) as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+    const remedies = (data?.remedies || {}) as any;
 
     const dashaRemedies = remedies?.dasha_remedies || {};
     const doshaRemedies = remedies?.dosha_remedies || {};
@@ -43,10 +45,10 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
         <div className={cn("min-h-screen p-4 lg:p-6 space-y-6 animate-in fade-in duration-700", styles.dashboardContainer)}>
             {/* Header Area */}
             <div className="flex flex-col gap-6">
-                <div className="flex items-center justify-between border-b pb-4" style={{ borderColor: 'var(--border-divider)' }}>
+                <div className="flex items-center justify-between border-b border-divider pb-4">
                     <div className="flex items-center gap-3">
-                        <h2 className="text-xl font-bold tracking-tight" style={{ color: 'var(--ink)' }}>
-                            Vedic Remedies : {data.user_name || "User"}
+                        <h2 className="text-xl font-bold tracking-tight text-ink">
+                            Vedic Remedies : {String(data.user_name || "User")}
                         </h2>
                     </div>
                 </div>
@@ -80,7 +82,7 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
                                 <ScrollText className="w-4 h-4 text-purple-600" />
                             </div>
                             <div>
-                                <h3 className="text-sm font-black uppercase tracking-[0.2em]" style={{ color: 'var(--ink)' }}>Active Dosha Analysis</h3>
+                                <h3 className="text-sm font-black uppercase tracking-[0.2em] text-ink">Active Dosha Analysis</h3>
                                 <p className="text-[10px] font-bold uppercase tracking-wider">Karmic Afflictions & Remedial Directives</p>
                             </div>
                         </div>
@@ -93,14 +95,14 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
             </div>
 
             {/* Footer / General Recommendations - Premium Styling */}
-            <div className="border-t pt-8 mt-12 bg-white/30 rounded-3xl p-6 border-antique/20" style={{ borderColor: 'var(--border-antique)' }}>
+            <div className="border-t border-antique pt-8 mt-12 bg-white/30 rounded-3xl p-6">
                 <div className="flex items-center gap-2 mb-6 px-2">
                     <Sparkles className="w-4 h-4 text-amber-500" />
                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em]">General Daily Alignment</h4>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {generalRecommendations.slice(0, 4).map((rec: string, idx: number) => (
-                        <div key={idx} className="flex items-start gap-3 text-[11px] p-4 rounded-2xl border bg-white/50 backdrop-blur-sm hover:border-purple-200 transition-all group" style={{ borderColor: 'var(--border-antique)', color: 'var(--text-body)' }}>
+                        <div key={idx} className="flex items-start gap-3 text-[11px] p-4 rounded-2xl border border-antique bg-white/50 backdrop-blur-sm hover:border-purple-200 transition-all group text-body">
                             <div className="w-5 h-5 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 border border-emerald-100 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
                                 <CheckCircle2 className="w-3 h-3" />
                             </div>

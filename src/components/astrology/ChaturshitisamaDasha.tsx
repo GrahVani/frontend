@@ -21,7 +21,7 @@ export default function ChaturshitisamaDasha({ periods }: ChaturshitisamaDashaPr
             {/* Table */}
             <div className="overflow-x-auto">
                 <table className="w-full">
-                    <thead className="bg-[#3E2A1F]/5 text-[#5A3E2B]/70 font-black uppercase text-[9px] tracking-widest border-b border-[#D08C60]/10">
+                    <thead className="bg-ink/5 text-body/70 font-black uppercase text-[9px] tracking-widest border-b border-header-border/10">
                         <tr>
                             <th className="px-3 py-2 text-left">Planet</th>
                             <th className="px-3 py-2 text-left">Start Date</th>
@@ -30,18 +30,18 @@ export default function ChaturshitisamaDasha({ periods }: ChaturshitisamaDashaPr
                             <th className="px-3 py-2 text-center">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#D08C60]/10 font-medium">
+                    <tbody className="divide-y divide-header-border/10 font-medium">
                         {periods.map((mahadasha, mIdx) => {
                             const isExpanded = expandedMahadasha === mahadasha.planet;
                             const antardashas = mahadasha.sublevel || [];
-                            const isBalance = (mahadasha.raw as any)?.dasha_balance_at_birth != null && mIdx === 0;
+                            const isBalance = mahadasha.raw?.dasha_balance_at_birth != null && mIdx === 0;
 
                             return (
                                 <React.Fragment key={mIdx}>
                                     <tr
                                         className={cn(
-                                            "hover:bg-[#D08C60]/10 transition-colors group cursor-pointer",
-                                            mahadasha.isCurrent && "bg-[#D08C60]/5"
+                                            "hover:bg-header-border/10 transition-colors group cursor-pointer",
+                                            mahadasha.isCurrent && "bg-header-border/5"
                                         )}
                                         onClick={() => setExpandedMahadasha(isExpanded ? null : mahadasha.planet)}
                                     >
@@ -66,14 +66,14 @@ export default function ChaturshitisamaDasha({ periods }: ChaturshitisamaDashaPr
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">
+                                        <td className="px-3 py-2 text-xs text-ink font-mono">
                                             <div className="flex items-center gap-1.5">
-                                                <Calendar className="w-3 h-3 text-[#8B5A2B]/40" />
+                                                <Calendar className="w-3 h-3 text-bronze/40" />
                                                 {formatDateDisplay(mahadasha.startDate)}
                                             </div>
                                         </td>
-                                        <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(mahadasha.endDate)}</td>
-                                        <td className="px-3 py-2 text-xs text-[#8B5A2B] font-bold">
+                                        <td className="px-3 py-2 text-xs text-ink font-mono">{formatDateDisplay(mahadasha.endDate)}</td>
+                                        <td className="px-3 py-2 text-xs text-bronze font-bold">
                                             {calculateDuration(mahadasha.startDate, mahadasha.endDate)}
                                         </td>
                                         <td className="px-3 py-2 text-center">
@@ -81,9 +81,9 @@ export default function ChaturshitisamaDasha({ periods }: ChaturshitisamaDashaPr
                                                 {mahadasha.isCurrent ? (
                                                     <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span>
                                                 ) : antardashas.length > 0 ? (
-                                                    isExpanded ? <ChevronUp className="w-3 h-3 text-[#D08C60]" /> : <ChevronDown className="w-3 h-3 text-[#D08C60]" />
+                                                    isExpanded ? <ChevronUp className="w-3 h-3 text-header-border" /> : <ChevronDown className="w-3 h-3 text-header-border" />
                                                 ) : (
-                                                    <span className="text-[#D08C60]/40 text-xs">—</span>
+                                                    <span className="text-header-border/40 text-xs">—</span>
                                                 )}
                                             </div>
                                         </td>
@@ -92,12 +92,12 @@ export default function ChaturshitisamaDasha({ periods }: ChaturshitisamaDashaPr
                                     {/* Expanded Antardasha Row */}
                                     {isExpanded && antardashas.length > 0 && (
                                         <tr>
-                                            <td colSpan={5} className="bg-[#FAF7F2]/60 px-3 py-2">
-                                                <div className="text-[9px] font-black text-[#8B5A2B] uppercase tracking-[0.2em] mb-2 pl-2 border-l-2 border-[#D08C60]/30 ml-1">
+                                            <td colSpan={5} className="bg-surface-pure/60 px-3 py-2">
+                                                <div className="text-[9px] font-black text-bronze uppercase tracking-[0.2em] mb-2 pl-2 border-l-2 border-header-border/30 ml-1">
                                                     Sub-Periods
                                                 </div>
                                                 <table className="w-full">
-                                                    <tbody className="divide-y divide-[#D08C60]/10">
+                                                    <tbody className="divide-y divide-header-border/10">
                                                         {antardashas.map((antar, aIdx) => (
                                                             <tr key={aIdx} className={cn(
                                                                 "hover:bg-white/50 transition-colors",
@@ -111,9 +111,9 @@ export default function ChaturshitisamaDasha({ periods }: ChaturshitisamaDashaPr
                                                                         {antar.planet}
                                                                     </span>
                                                                 </td>
-                                                                <td className="px-3 py-1.5 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(antar.startDate)}</td>
-                                                                <td className="px-3 py-1.5 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(antar.endDate)}</td>
-                                                                <td className="px-3 py-1.5 text-xs text-[#8B5A2B] font-bold">
+                                                                <td className="px-3 py-1.5 text-xs text-ink font-mono">{formatDateDisplay(antar.startDate)}</td>
+                                                                <td className="px-3 py-1.5 text-xs text-ink font-mono">{formatDateDisplay(antar.endDate)}</td>
+                                                                <td className="px-3 py-1.5 text-xs text-bronze font-bold">
                                                                     {calculateDuration(antar.startDate, antar.endDate)}
                                                                 </td>
                                                                 <td className="px-3 py-1.5 text-center">

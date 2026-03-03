@@ -157,9 +157,9 @@ export default function VedicDashasPage() {
     const isAshtottari = selectedDashaType === 'ashtottari';
     const isChara = selectedDashaType === 'chara';
     // Fallback detection for Shastihayani via metadata condition
-    const hasShasthiMeta = Boolean((otherData?.data?.mahadashas as any)?.meta?.shastihayani_condition);
+    const hasShasthiMeta = Boolean(((otherData?.data?.mahadashas as Record<string, unknown> | undefined)?.meta as Record<string, unknown> | undefined)?.shastihayani_condition);
     const isShasthihayani = selectedDashaType === 'shastihayani' || hasShasthiMeta;
-    const hasShattrimMeta = Boolean((otherData?.data?.mahadashas as any)?.meta?.shattrimshatsama_condition);
+    const hasShattrimMeta = Boolean(((otherData?.data?.mahadashas as Record<string, unknown> | undefined)?.meta as Record<string, unknown> | undefined)?.shattrimshatsama_condition);
     const isShattrimshatsama = selectedDashaType === 'shattrimshatsama' || hasShattrimMeta;
 
     const allowMathematicalDrillDown = isVimshottari && !isTribhagi && !isShodashottari && !isDwadashottari && !isPanchottari && !isChaturshitisama && !isSatabdika && !isDwisaptati && !isShasthihayani && !isShattrimshatsama && !isAshtottari;
@@ -291,9 +291,7 @@ export default function VedicDashasPage() {
                         period.sublevel = antarNode.sublevel;
                     }
                 }
-            } catch (err) {
-                console.error("Failed to fetch Ashtottari Pratyantar:", err);
-            } finally {
+            } catch (err) {            } finally {
                 setIsSubLevelFetching(false);
             }
         }
@@ -345,7 +343,7 @@ export default function VedicDashasPage() {
     if (!clientDetails) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-                <p className="font-serif text-xl text-[#8B5A2B]">Please select a client to view Dasha details</p>
+                <p className="font-serif text-xl text-bronze">Please select a client to view Dasha details</p>
             </div>
         );
     }
@@ -370,16 +368,16 @@ export default function VedicDashasPage() {
                 {/* LEFT SIDE - MAIN DASHA TABLE (2/3 width) */}
                 {/* ================================================================= */}
                 <div className="lg:col-span-2">
-                    <div className="bg-white rounded-2xl border border-[#D08C60]/20 overflow-hidden shadow-sm">
+                    <div className="bg-white rounded-2xl border border-header-border/20 overflow-hidden shadow-sm">
                         {/* Selector Tray */}
-                        <div className="p-4 border-b border-[#D08C60]/10 flex flex-wrap items-center justify-between gap-4">
+                        <div className="p-4 border-b border-header-border/10 flex flex-wrap items-center justify-between gap-4">
                             <div className="flex items-center gap-3">
-                                <label className="text-xs font-bold text-[#8B5A2B] uppercase tracking-wider">System</label>
+                                <label className="text-xs font-bold text-bronze uppercase tracking-wider">System</label>
                                 <div className="relative">
                                     <select
                                         value={selectedDashaType}
                                         onChange={(e) => handleSystemChange(e.target.value)}
-                                        className="appearance-none bg-[#FAF7F2] border border-[#D08C60]/30 rounded-xl px-4 py-2 pr-10 text-[#3E2A1F] font-medium focus:outline-none focus:ring-2 focus:ring-[#D08C60]/40 cursor-pointer min-w-[200px]"
+                                        className="appearance-none bg-surface-pure border border-header-border/30 rounded-xl px-4 py-2 pr-10 text-ink font-medium focus:outline-none focus:ring-2 focus:ring-header-border/40 cursor-pointer min-w-[200px]"
                                     >
                                         {DASHA_SYSTEMS.filter(sys => {
                                             if (settings.ayanamsa === 'Raman') {
@@ -395,7 +393,7 @@ export default function VedicDashasPage() {
                                             </option>
                                         ))}
                                     </select>
-                                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B5A2B] pointer-events-none" />
+                                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-bronze pointer-events-none" />
                                 </div>
                             </div>
 
@@ -410,9 +408,9 @@ export default function VedicDashasPage() {
                                             className={cn(
                                                 "px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap border",
                                                 currentLevel === idx
-                                                    ? "bg-[#D08C60] text-white border-[#D08C60] shadow-sm"
+                                                    ? "bg-header-border text-white border-header-border shadow-sm"
                                                     : idx <= selectedPath.length
-                                                        ? "bg-white text-[#8B5A2B] border-[#D08C60]/30 hover:bg-[#D08C60]/10"
+                                                        ? "bg-white text-bronze border-header-border/30 hover:bg-header-border/10"
                                                         : "bg-gray-50 text-gray-400 border-gray-100 cursor-not-allowed"
                                             )}
                                         >
@@ -426,36 +424,36 @@ export default function VedicDashasPage() {
                         {/* Breadcrumbs */}
                         {/* Breadcrumbs - Hidden for Specialized Views */}
                         {!isTribhagi && !isShodashottari && !isDwadashottari && !isPanchottari && !isChaturshitisama && !isSatabdika && !isDwisaptati && (
-                            <div className="px-4 py-3 bg-[#FAF7F2] border-b border-[#D08C60]/10 flex items-center gap-2 overflow-x-auto">
+                            <div className="px-4 py-3 bg-surface-pure border-b border-header-border/10 flex items-center gap-2 overflow-x-auto">
                                 <button
                                     onClick={() => handleBreadcrumbClick(-1)}
                                     className={cn(
                                         "text-sm font-bold",
-                                        currentLevel === 0 ? "text-[#D08C60]" : "text-[#8B5A2B] hover:text-[#D08C60]"
+                                        currentLevel === 0 ? "text-header-border" : "text-bronze hover:text-header-border"
                                     )}
                                 >
                                     Mahadasha
                                 </button>
                                 {selectedPath.map((period, idx) => (
                                     <React.Fragment key={idx}>
-                                        <ChevronRight className="w-4 h-4 text-[#8B5A2B]/40" />
+                                        <ChevronRight className="w-4 h-4 text-bronze/40" />
                                         <button
                                             onClick={() => handleBreadcrumbClick(idx)}
                                             className={cn(
                                                 "text-sm font-bold px-2 py-0.5 rounded border",
                                                 isChara
-                                                    ? (SIGN_COLORS[period.raw?.sign_name || period.planet] || "bg-white border-gray-100")
+                                                    ? (SIGN_COLORS[String(period.raw?.sign_name || period.planet)] || "bg-white border-gray-100")
                                                     : (PLANET_COLORS[period.planet || period.lord || 'Jupiter'] || "bg-white border-gray-100")
                                             )}
                                         >
-                                            {isChara ? (period.raw?.sign_name || period.planet) : (period.planet || period.lord)} {DASHA_LEVELS[idx].short}
+                                            {isChara ? String(period.raw?.sign_name || period.planet) : (period.planet || period.lord)} {DASHA_LEVELS[idx].short}
                                         </button>
                                     </React.Fragment>
                                 ))}
                                 {currentLevel > 0 && (
                                     <>
-                                        <ChevronRight className="w-4 h-4 text-[#8B5A2B]/40" />
-                                        <span className="text-sm font-bold text-[#D08C60]">{DASHA_LEVELS[currentLevel].name}</span>
+                                        <ChevronRight className="w-4 h-4 text-bronze/40" />
+                                        <span className="text-sm font-bold text-header-border">{DASHA_LEVELS[currentLevel].name}</span>
                                     </>
                                 )}
                             </div>
@@ -465,8 +463,8 @@ export default function VedicDashasPage() {
                         <div className="overflow-x-auto min-h-[400px]">
                             {isLoading ? (
                                 <div className="flex flex-col items-center justify-center h-[400px]">
-                                    <Loader2 className="w-10 h-10 text-[#D08C60] animate-spin mb-4" />
-                                    <p className="font-serif text-sm text-[#8B5A2B] animate-pulse italic">Quantum Calculating Eras...</p>
+                                    <Loader2 className="w-10 h-10 text-header-border animate-spin mb-4" />
+                                    <p className="font-serif text-sm text-bronze animate-pulse italic">Quantum Calculating Eras...</p>
                                 </div>
                             ) : (
                                 <>
@@ -475,14 +473,14 @@ export default function VedicDashasPage() {
                                         <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-orange-100">
                                             {selectedPath[0] && (
                                                 <div className="flex flex-col">
-                                                    <span className="text-[10px] font-black text-[#8B5A2B]/40 uppercase tracking-widest mb-1">Mahadasha (M)</span>
-                                                    <span className="text-sm font-black text-[#5A3E2B] uppercase">{selectedPath[0].planet}</span>
+                                                    <span className="text-[10px] font-black text-bronze/40 uppercase tracking-widest mb-1">Mahadasha (M)</span>
+                                                    <span className="text-sm font-black text-body uppercase">{selectedPath[0].planet}</span>
                                                 </div>
                                             )}
                                             {selectedPath[1] && (
                                                 <div className="flex flex-col">
-                                                    <span className="text-[10px] font-black text-[#8B5A2B]/40 uppercase tracking-widest mb-1">Antardasha (A)</span>
-                                                    <span className="text-sm font-black text-[#5A3E2B] uppercase">{selectedPath[1].planet}</span>
+                                                    <span className="text-[10px] font-black text-bronze/40 uppercase tracking-widest mb-1">Antardasha (A)</span>
+                                                    <span className="text-sm font-black text-body uppercase">{selectedPath[1].planet}</span>
                                                 </div>
                                             )}
                                         </div>
@@ -515,17 +513,17 @@ export default function VedicDashasPage() {
                                     ) : isDwisaptati ? (
                                         <DwisaptatiDasha
                                             periods={viewingPeriods}
-                                            isApplicable={(otherData?.data?.mahadashas as any)?.meta?.is_applicable !== false}
+                                            isApplicable={((otherData?.data?.mahadashas as Record<string, unknown> | undefined)?.meta as Record<string, unknown> | undefined)?.is_applicable !== false}
                                         />
                                     ) : isShasthihayani ? (
                                         <ShasthihayaniDasha
                                             periods={viewingPeriods}
-                                            isApplicable={(otherData?.data?.mahadashas as any)?.meta?.is_applicable !== false}
+                                            isApplicable={((otherData?.data?.mahadashas as Record<string, unknown> | undefined)?.meta as Record<string, unknown> | undefined)?.is_applicable !== false}
                                         />
                                     ) : isShattrimshatsama ? (
                                         <ShattrimshatsamaDasha
                                             periods={viewingPeriods}
-                                            isApplicable={(otherData?.data?.mahadashas as any)?.meta?.is_applicable !== false}
+                                            isApplicable={((otherData?.data?.mahadashas as Record<string, unknown> | undefined)?.meta as Record<string, unknown> | undefined)?.is_applicable !== false}
                                         />
                                     ) : isAshtottari && currentLevel === 0 ? (
                                         <AshtottariDasha
@@ -549,12 +547,12 @@ export default function VedicDashasPage() {
 
                                                     // Otherwise, navigate: find matching maha → antar → return pratyantar sublevels
                                                     // Use Lord or Planet to be safe
-                                                    const mahaNode = rawPeriods.find((m: any) => (m.planet || m.lord) === mahaLord);
+                                                    const mahaNode = rawPeriods.find((m: Record<string, unknown>) => (m.planet || m.lord) === mahaLord);
                                                     if (mahaNode) {
                                                         const antardashas = getSublevels(mahaNode);
                                                         if (antardashas) {
-                                                            const antarNode = antardashas.find((a: any) => (a.planet || a.lord) === antarLord);
-                                                            const pratyantardashas = getSublevels(antarNode);
+                                                            const antarNode = antardashas.find((a: Record<string, unknown>) => (a.planet || a.lord) === antarLord);
+                                                            const pratyantardashas = antarNode ? getSublevels(antarNode) : null;
                                                             if (pratyantardashas && pratyantardashas.length > 0) {
                                                                 return standardizeDashaLevels(pratyantardashas);
                                                             }
@@ -562,15 +560,13 @@ export default function VedicDashasPage() {
                                                     }
 
                                                     return [];
-                                                } catch (err) {
-                                                    console.error("Failed to fetch Ashtottari Pratyantar:", err);
-                                                    return [];
+                                                } catch (err) {                                                    return [];
                                                 }
                                             }}
                                         />
                                     ) : isChara ? (
                                         <table className="w-full">
-                                            <thead className="bg-[#3E2A1F]/5 text-[#5A3E2B]/70 font-black uppercase text-[9px] tracking-widest border-b border-[#D08C60]/10">
+                                            <thead className="bg-ink/5 text-body/70 font-black uppercase text-[9px] tracking-widest border-b border-header-border/10">
                                                 <tr>
                                                     <th className="px-3 py-2 text-left">Sign</th>
                                                     <th className="px-3 py-2 text-left">Start Date</th>
@@ -579,15 +575,15 @@ export default function VedicDashasPage() {
                                                     <th className="px-3 py-2 text-center">Status</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-[#D08C60]/10 font-medium">
+                                            <tbody className="divide-y divide-header-border/10 font-medium">
                                                 {viewingPeriods.map((period, idx) => {
-                                                    const displayName = period.raw?.sign_name || period.planet;
+                                                    const displayName = String(period.raw?.sign_name || period.planet);
                                                     return (
                                                         <tr
                                                             key={idx}
                                                             className={cn(
-                                                                "hover:bg-[#D08C60]/10 transition-colors group",
-                                                                period.isCurrent && "bg-[#D08C60]/5",
+                                                                "hover:bg-header-border/10 transition-colors group",
+                                                                period.isCurrent && "bg-header-border/5",
                                                                 (period.canDrillFurther || (allowMathematicalDrillDown && currentLevel < 4)) ? "cursor-pointer" : "cursor-default"
                                                             )}
                                                             onClick={() => (period.canDrillFurther || (allowMathematicalDrillDown && currentLevel < 4)) && (isSubLevelFetching ? null : handleDrillDown(period))}
@@ -607,15 +603,15 @@ export default function VedicDashasPage() {
                                                                     )}
                                                                 </div>
                                                             </td>
-                                                            <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">
+                                                            <td className="px-3 py-2 text-xs text-ink font-mono">
                                                                 <div className="flex items-center gap-1.5">
-                                                                    <Calendar className="w-3 h-3 text-[#8B5A2B]/40" />
+                                                                    <Calendar className="w-3 h-3 text-bronze/40" />
                                                                     {formatDateShort(period.startDate)}
                                                                 </div>
                                                             </td>
-                                                            <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">{formatDateShort(period.endDate)}</td>
-                                                            <td className="px-3 py-2 text-xs text-[#8B5A2B] font-bold">
-                                                                {standardizeDuration(period.raw?.duration_years || 0, period.raw?.duration_days)}
+                                                            <td className="px-3 py-2 text-xs text-ink font-mono">{formatDateShort(period.endDate)}</td>
+                                                            <td className="px-3 py-2 text-xs text-bronze font-bold">
+                                                                {standardizeDuration((period.raw?.duration_years as number) || 0, period.raw?.duration_days as number)}
                                                             </td>
                                                             <td className="px-3 py-2 text-center">
                                                                 <div className="flex items-center justify-center gap-2">
@@ -623,9 +619,9 @@ export default function VedicDashasPage() {
                                                                         <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span>
                                                                     ) : (
                                                                         (period.canDrillFurther || (allowMathematicalDrillDown && currentLevel < 4)) ? (
-                                                                            <ChevronRight className="w-3 h-3 text-[#D08C60] transition-transform group-hover:scale-125" />
+                                                                            <ChevronRight className="w-3 h-3 text-header-border transition-transform group-hover:scale-125" />
                                                                         ) : (
-                                                                            <span className="text-[#D08C60]/40 text-xs">—</span>
+                                                                            <span className="text-header-border/40 text-xs">—</span>
                                                                         )
                                                                     )}
                                                                 </div>
@@ -637,7 +633,7 @@ export default function VedicDashasPage() {
                                         </table>
                                     ) : (
                                         <table className="w-full">
-                                            <thead className="bg-[#3E2A1F]/5 text-[#5A3E2B]/70 font-black uppercase text-[9px] tracking-widest border-b border-[#D08C60]/10">
+                                            <thead className="bg-ink/5 text-body/70 font-black uppercase text-[9px] tracking-widest border-b border-header-border/10">
                                                 <tr>
                                                     <th className="px-3 py-2 text-left">Planet</th>
                                                     <th className="px-3 py-2 text-left">Start Date</th>
@@ -646,13 +642,13 @@ export default function VedicDashasPage() {
                                                     <th className="px-3 py-2 text-center">Status</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-[#D08C60]/10 font-medium">
+                                            <tbody className="divide-y divide-header-border/10 font-medium">
                                                 {viewingPeriods.map((period, idx) => (
                                                     <tr
                                                         key={idx}
                                                         className={cn(
-                                                            "hover:bg-[#D08C60]/10 transition-colors group",
-                                                            period.isCurrent && "bg-[#D08C60]/5",
+                                                            "hover:bg-header-border/10 transition-colors group",
+                                                            period.isCurrent && "bg-header-border/5",
                                                             (period.canDrillFurther || (isAshtottari && currentLevel < 2) || (allowMathematicalDrillDown && currentLevel < 4)) ? "cursor-pointer" : "cursor-default"
                                                         )}
                                                         onClick={() => (period.canDrillFurther || (isAshtottari && currentLevel < 2) || (allowMathematicalDrillDown && currentLevel < 4)) && (isSubLevelFetching ? null : handleDrillDown(period))}
@@ -672,27 +668,27 @@ export default function VedicDashasPage() {
                                                                 )}
                                                             </div>
                                                         </td>
-                                                        <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">
+                                                        <td className="px-3 py-2 text-xs text-ink font-mono">
                                                             <div className="flex items-center gap-1.5">
-                                                                <Calendar className="w-3 h-3 text-[#8B5A2B]/40" />
+                                                                <Calendar className="w-3 h-3 text-bronze/40" />
                                                                 {formatDateShort(period.startDate)}
                                                             </div>
                                                         </td>
-                                                        <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">{formatDateShort(period.endDate)}</td>
-                                                        <td className="px-3 py-2 text-xs text-[#8B5A2B] font-bold">
-                                                            {standardizeDuration(period.raw?.duration_years || 0, period.raw?.duration_days)}
+                                                        <td className="px-3 py-2 text-xs text-ink font-mono">{formatDateShort(period.endDate)}</td>
+                                                        <td className="px-3 py-2 text-xs text-bronze font-bold">
+                                                            {standardizeDuration((period.raw?.duration_years as number) || 0, period.raw?.duration_days as number)}
                                                         </td>
                                                         <td className="px-3 py-2 text-center">
                                                             <div className="flex items-center justify-center gap-2">
                                                                 {isSubLevelFetching && currentLevel === 1 && period.planet === selectedIntelPlanet ? (
-                                                                    <Loader2 className="w-3 h-3 text-[#D08C60] animate-spin" />
+                                                                    <Loader2 className="w-3 h-3 text-header-border animate-spin" />
                                                                 ) : period.isCurrent ? (
                                                                     <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span>
                                                                 ) : (
                                                                     (period.canDrillFurther || (isAshtottari && currentLevel < 2) || (allowMathematicalDrillDown && currentLevel < 4)) ? (
-                                                                        <ChevronRight className="w-3 h-3 text-[#D08C60] transition-transform group-hover:scale-125" />
+                                                                        <ChevronRight className="w-3 h-3 text-header-border transition-transform group-hover:scale-125" />
                                                                     ) : (
-                                                                        <span className="text-[#D08C60]/40 text-xs">—</span>
+                                                                        <span className="text-header-border/40 text-xs">—</span>
                                                                     )
                                                                 )}
                                                             </div>
@@ -713,16 +709,16 @@ export default function VedicDashasPage() {
                 {/* RIGHT SIDE - CURRENT DASHA CARD (1/3 width) */}
                 {/* ================================================================= */}
                 <div className="lg:col-span-1">
-                    <div className="bg-[#FAF7F2] border border-[#D08C60]/30 rounded-xl p-4 shadow-sm lg:sticky lg:top-4">
+                    <div className="bg-surface-pure border border-header-border/30 rounded-xl p-4 shadow-sm lg:sticky lg:top-4">
                         <div className="space-y-4">
                             {/* Header with Icon */}
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-[#D08C60]/10 flex items-center justify-center shrink-0">
-                                    <TrendingUp className="w-5 h-5 text-[#D08C60]" />
+                                <div className="w-10 h-10 rounded-lg bg-header-border/10 flex items-center justify-center shrink-0">
+                                    <TrendingUp className="w-5 h-5 text-header-border" />
                                 </div>
                                 <div>
-                                    <h2 className="font-serif font-bold text-lg text-[#3E2A1F] leading-tight">Current Dasha</h2>
-                                    <div className="flex items-center gap-2 text-[10px] text-[#8B5A2B] font-mono">
+                                    <h2 className="font-serif font-bold text-lg text-ink leading-tight">Current Dasha</h2>
+                                    <div className="flex items-center gap-2 text-[10px] text-bronze font-mono">
                                         <span className="text-green-600 font-bold tracking-widest uppercase">● Live</span>
                                     </div>
                                 </div>
@@ -730,7 +726,7 @@ export default function VedicDashasPage() {
 
                             {/* Date Range */}
                             {activeLords[0] && (
-                                <div className="text-xs text-[#8B5A2B] font-mono border-t border-[#D08C60]/20 pt-3">
+                                <div className="text-xs text-bronze font-mono border-t border-header-border/20 pt-3">
                                     {`${formatDateShort(activeLords[0].startDate)} — ${formatDateShort(activeLords[0].endDate)}`}
                                 </div>
                             )}
@@ -739,15 +735,15 @@ export default function VedicDashasPage() {
                             <div className="space-y-3">
                                 {activeLords.slice(0, 3).map((node, i) => (
                                     <div key={i} className="flex flex-col">
-                                        <span className="text-[10px] uppercase tracking-wider text-[#8B5A2B]/60 font-bold mb-1">
+                                        <span className="text-[10px] uppercase tracking-wider text-bronze/60 font-bold mb-1">
                                             {i === 0 ? 'Mahadasha' : i === 1 ? 'Antardasha' : 'Pratyantardasha'}
                                         </span>
                                         <div className="flex items-baseline gap-1.5">
                                             <span className={cn(
                                                 "font-bold text-lg",
-                                                i === 0 ? "text-[#D97706]" : i === 1 ? "text-[#C2410C]" : "text-[#BE185D]"
+                                                i === 0 ? "text-amber-600" : i === 1 ? "text-orange-700" : "text-pink-700"
                                             )}>
-                                                {isChara ? (node.raw?.sign_name || node.planet) : node.planet}
+                                                {isChara ? String(node.raw?.sign_name || node.planet) : node.planet}
                                             </span>
                                         </div>
                                     </div>
@@ -756,18 +752,18 @@ export default function VedicDashasPage() {
 
                             {/* Progress Bar */}
                             {activeLords[0] && (
-                                <div className="border-t border-[#D08C60]/20 pt-3">
+                                <div className="border-t border-header-border/20 pt-3">
                                     <div className="flex justify-between text-[10px] mb-2 font-medium tracking-tight">
-                                        <span className="text-[#8B5A2B] uppercase">Maha Progress</span>
-                                        <span className="text-[#D97706] font-bold">{activeAnalysis?.progress}%</span>
+                                        <span className="text-bronze uppercase">Maha Progress</span>
+                                        <span className="text-amber-600 font-bold">{activeAnalysis?.progress}%</span>
                                     </div>
-                                    <div className="h-2 bg-[#D08C60]/10 rounded-full overflow-hidden">
+                                    <div className="h-2 bg-header-border/10 rounded-full overflow-hidden">
                                         <div
                                             className="h-full bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full"
                                             style={{ width: `${activeAnalysis?.progress || 0}%` }}
                                         />
                                     </div>
-                                    <div className="text-[10px] text-right mt-2 text-[#8B5A2B]/60 font-mono">
+                                    <div className="text-[10px] text-right mt-2 text-bronze/60 font-mono">
                                         {getDaysRemaining(activeLords[0].endDate).toLocaleString()} days left
                                     </div>
                                 </div>
@@ -783,11 +779,11 @@ export default function VedicDashasPage() {
             {/* 🔧 DASHA DEBUG PANEL - FLOATING ICON MODE */}
             <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2">
                 {showDebugPanel && (
-                    <div className="bg-gradient-to-r from-[#1a1a2e] to-[#16213e] border border-[#4ECCA3]/30 rounded-2xl overflow-hidden shadow-2xl w-[400px] max-w-[90vw] animate-in slide-in-from-bottom-5 fade-in duration-200">
+                    <div className="bg-gradient-to-r from-[#1a1a2e] to-[#16213e] border border-emerald-400/30 rounded-2xl overflow-hidden shadow-2xl w-[400px] max-w-[90vw] animate-in slide-in-from-bottom-5 fade-in duration-200">
                         <div className="flex items-center justify-between p-3 border-b border-white/10 bg-white/5">
                             <div className="flex items-center gap-2">
-                                <Bug className="w-4 h-4 text-[#4ECCA3]" />
-                                <span className="font-mono text-xs font-bold text-[#4ECCA3] uppercase tracking-widest">
+                                <Bug className="w-4 h-4 text-emerald-400" />
+                                <span className="font-mono text-xs font-bold text-emerald-400 uppercase tracking-widest">
                                     Debug Console
                                 </span>
                             </div>
@@ -807,7 +803,7 @@ export default function VedicDashasPage() {
                             {/* Selected Dasha Status */}
                             <DashaDebugRow
                                 name={`Active System: ${selectedDashaType}`}
-                                query={isVimshottari ? treeResponse : otherError ? { error: otherError, isError: true } : { data: otherData, isLoading: otherLoading, isError: !!otherError }}
+                                query={(isVimshottari ? treeResponse : otherError ? { error: otherError, isError: true } : { data: otherData, isLoading: otherLoading, isError: !!otherError }) as Record<string, unknown>}
                                 isExpanded={expandedDasha === 'active'}
                                 onToggle={() => setExpandedDasha(expandedDasha === 'active' ? null : 'active')}
                             />
@@ -820,8 +816,8 @@ export default function VedicDashasPage() {
                     className={cn(
                         "p-3 rounded-full shadow-lg border transition-all duration-200 flex items-center justify-center",
                         showDebugPanel
-                            ? "bg-[#4ECCA3] border-[#4ECCA3] text-[#1a1a2e] rotate-90"
-                            : "bg-[#1a1a2e] border-[#4ECCA3]/50 text-[#4ECCA3] hover:bg-[#4ECCA3] hover:text-[#1a1a2e]"
+                            ? "bg-emerald-400 border-emerald-400 text-[#1a1a2e] rotate-90"
+                            : "bg-[#1a1a2e] border-emerald-400/50 text-emerald-400 hover:bg-emerald-400 hover:text-[#1a1a2e]"
                     )}
                     title="Toggle Debug Panel"
                 >
@@ -841,16 +837,16 @@ function DashaDebugRow({
     highlight = false
 }: {
     name: string;
-    query: any;
+    query: Record<string, unknown>;
     isExpanded: boolean;
     onToggle: () => void;
     highlight?: boolean;
 }) {
-    const data = query?.data;
-    const isLoading = query?.isLoading;
-    const isError = query?.isError;
-    const error = query?.error;
-    const isFetching = query?.isFetching;
+    const data = query?.data as Record<string, unknown> | undefined;
+    const isLoading = query?.isLoading as boolean | undefined;
+    const isError = query?.isError as boolean | undefined;
+    const error = query?.error as Record<string, unknown> | string | undefined;
+    const isFetching = query?.isFetching as boolean | undefined;
 
     const getStatusIcon = () => {
         if (isLoading || isFetching) return <Loader2 className="w-4 h-4 text-yellow-400 animate-spin" />;
@@ -863,8 +859,8 @@ function DashaDebugRow({
         if (isLoading) return 'Loading...';
         if (isFetching) return 'Refetching...';
         if (isError) {
-            const errObj = error as any;
-            return `Error: ${errObj?.message || errObj?.statusText || (typeof error === 'string' ? error : 'Unknown error')}`;
+            const errObj = error instanceof Error ? error : null;
+            return `Error: ${errObj?.message || (typeof error === 'string' ? error : 'Unknown error')}`;
         }
         if (data) return 'Data received ✓';
         return 'Not fetched';
@@ -884,7 +880,7 @@ function DashaDebugRow({
     };
 
     return (
-        <div className={`rounded-xl border ${highlight ? 'border-[#4ECCA3]/50 bg-[#4ECCA3]/5' : 'border-white/10 bg-white/5'}`}>
+        <div className={`rounded-xl border ${highlight ? 'border-emerald-400/50 bg-emerald-400/5' : 'border-white/10 bg-white/5'}`}>
             <button
                 type="button"
                 onClick={(e) => {
@@ -895,7 +891,7 @@ function DashaDebugRow({
             >
                 <div className="flex items-center gap-3">
                     {getStatusIcon()}
-                    <span className={`font-mono text-sm ${highlight ? 'text-[#4ECCA3] font-bold' : 'text-white/80'}`}>
+                    <span className={`font-mono text-sm ${highlight ? 'text-emerald-400 font-bold' : 'text-white/80'}`}>
                         {name}
                     </span>
                     {getSourceBadge()}
@@ -912,9 +908,8 @@ function DashaDebugRow({
                         <pre className="text-xs text-white/70 font-mono whitespace-pre-wrap">
                             {isError
                                 ? JSON.stringify({
-                                    error: (error as any)?.message || error,
-                                    status: (error as any)?.status,
-                                    data: (error as any)?.data
+                                    error: error instanceof Error ? error.message : String(error),
+                                    type: error instanceof Error ? error.name : typeof error
                                 }, null, 2)
                                 : data
                                     ? JSON.stringify(data, null, 2)
@@ -929,14 +924,14 @@ function DashaDebugRow({
                                 <span>|</span>
                                 <span>⏰ Fetched: {new Date().toLocaleTimeString()}</span>
                             </div>
-                            <div className="text-[#4ECCA3]/60 truncate">
+                            <div className="text-emerald-400/60 truncate">
                                 🔑 Keys: {Object.keys(data).join(', ')}
                             </div>
-                            {data.data && (
+                            {(data.data != null && typeof data.data === 'object') ? (
                                 <div className="text-yellow-400/60 truncate italic pl-2">
-                                    ↳ data keys: {Object.keys(data.data).join(', ')}
+                                    ↳ data keys: {Object.keys(data.data as Record<string, unknown>).join(', ')}
                                 </div>
-                            )}
+                            ) : null}
                         </div>
                     )}
                 </div>

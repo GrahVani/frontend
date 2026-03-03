@@ -26,7 +26,7 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
     const cycles = useMemo(() => {
         const grouped: Record<number, DashaNode[]> = {};
         periods.forEach((p, idx) => {
-            const cNum = p.raw?.cycle || Math.floor(idx / 9) + 1;
+            const cNum = (p.raw?.cycle as number) || Math.floor(idx / 9) + 1;
             if (!grouped[cNum]) grouped[cNum] = [];
             grouped[cNum].push(p);
         });
@@ -56,7 +56,7 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
         <div className="space-y-3 animate-in fade-in duration-700">
             {/* Cycle/Era Navigation - Compact Tabs */}
             <div className="flex flex-wrap gap-2 items-center">
-                <div className="flex bg-[#F5E6D3]/40 rounded-lg p-0.5 gap-1 border border-[#D08C60]/10 backdrop-blur-sm overflow-x-auto scrollbar-hide">
+                <div className="flex bg-gold-soft/40 rounded-lg p-0.5 gap-1 border border-header-border/10 backdrop-blur-sm overflow-x-auto scrollbar-hide">
                     {availableCycles.map((c) => {
                         const isActive = selectedCycle === c;
                         const cyclePeriods = cycles[c];
@@ -70,8 +70,8 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
                                 className={cn(
                                     "flex items-center gap-2 px-3 py-1.5 rounded-md transition-all duration-200 whitespace-nowrap",
                                     isActive
-                                        ? "bg-[#3E2A1F] text-[#FFD27D] shadow-sm font-semibold"
-                                        : "hover:bg-[#3E2A1F]/5 text-[#3E2A1F]/70 font-medium"
+                                        ? "bg-primary text-active-glow shadow-sm font-semibold"
+                                        : "hover:bg-primary/5 text-primary/70 font-medium"
                                 )}
                             >
                                 <span className="text-[10px] uppercase tracking-wider">Cycle {c}</span>
@@ -83,16 +83,16 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
                 </div>
 
                 <div className="ml-auto hidden sm:flex items-center gap-2">
-                    <h3 className="text-[10px] font-bold text-[#5A3E2B] flex items-center gap-2 uppercase tracking-wider bg-[#F5E6D3]/30 px-2 py-1 rounded-md border border-[#D08C60]/10">
-                        <Milestone className="w-3 h-3 text-[#D08C60]" />
+                    <h3 className="text-[10px] font-bold text-secondary flex items-center gap-2 uppercase tracking-wider bg-gold-soft/30 px-2 py-1 rounded-md border border-header-border/10">
+                        <Milestone className="w-3 h-3 text-accent-gold" />
                         {ERA_NAMES[selectedCycle] || `Cycle ${selectedCycle}`}
                     </h3>
                 </div>
             </div>
 
             <div className="flex items-center justify-end sm:hidden">
-                <h3 className="text-[10px] font-bold text-[#5A3E2B] flex items-center gap-2 uppercase tracking-wider">
-                    <Milestone className="w-3.5 h-3.5 text-[#D08C60]" />
+                <h3 className="text-[10px] font-bold text-secondary flex items-center gap-2 uppercase tracking-wider">
+                    <Milestone className="w-3.5 h-3.5 text-accent-gold" />
                     {ERA_NAMES[selectedCycle] || `Cycle ${selectedCycle}`}
                 </h3>
             </div>
@@ -100,7 +100,7 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
             {/* Table */}
             <div className="overflow-x-auto">
                 <table className="w-full">
-                    <thead className="bg-[#3E2A1F]/5 text-[#5A3E2B]/70 font-black uppercase text-[9px] tracking-widest border-b border-[#D08C60]/10">
+                    <thead className="bg-primary/5 text-secondary/70 font-black uppercase text-[9px] tracking-widest border-b border-header-border/10">
                         <tr>
                             <th className="px-3 py-2 text-left">Planet</th>
                             <th className="px-3 py-2 text-left">Start Date</th>
@@ -109,7 +109,7 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
                             <th className="px-3 py-2 text-center">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#D08C60]/10 font-medium">
+                    <tbody className="divide-y divide-header-border/10 font-medium">
                         {currentCyclePeriods.map((mahadasha, mIdx) => {
                             const isExpanded = expandedMahadasha === `${selectedCycle}-${mahadasha.planet}`;
                             const antardashas = mahadasha.sublevel || [];
@@ -118,8 +118,8 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
                                 <React.Fragment key={mIdx}>
                                     <tr
                                         className={cn(
-                                            "hover:bg-[#D08C60]/10 transition-colors group cursor-pointer",
-                                            mahadasha.isCurrent && "bg-[#D08C60]/5"
+                                            "hover:bg-accent-gold/10 transition-colors group cursor-pointer",
+                                            mahadasha.isCurrent && "bg-accent-gold/5"
                                         )}
                                         onClick={() => setExpandedMahadasha(isExpanded ? null : `${selectedCycle}-${mahadasha.planet}`)}
                                     >
@@ -138,24 +138,24 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">
+                                        <td className="px-3 py-2 text-xs text-primary font-mono">
                                             <div className="flex items-center gap-1.5">
-                                                <Calendar className="w-3 h-3 text-[#8B5A2B]/40" />
+                                                <Calendar className="w-3 h-3 text-muted/40" />
                                                 {formatDateDisplay(mahadasha.startDate)}
                                             </div>
                                         </td>
-                                        <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(mahadasha.endDate)}</td>
-                                        <td className="px-3 py-2 text-xs text-[#8B5A2B] font-bold">
-                                            {standardizeDuration(mahadasha.raw?.duration_years || mahadasha.raw?.years || 0, mahadasha.raw?.duration_days)}
+                                        <td className="px-3 py-2 text-xs text-primary font-mono">{formatDateDisplay(mahadasha.endDate)}</td>
+                                        <td className="px-3 py-2 text-xs text-muted font-bold">
+                                            {standardizeDuration((mahadasha.raw?.duration_years as number) || (mahadasha.raw?.years as number) || 0, mahadasha.raw?.duration_days as number)}
                                         </td>
                                         <td className="px-3 py-2 text-center">
                                             <div className="flex items-center justify-center gap-2">
                                                 {mahadasha.isCurrent ? (
                                                     <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span>
                                                 ) : antardashas.length > 0 ? (
-                                                    isExpanded ? <ChevronUp className="w-3 h-3 text-[#D08C60]" /> : <ChevronDown className="w-3 h-3 text-[#D08C60]" />
+                                                    isExpanded ? <ChevronUp className="w-3 h-3 text-accent-gold" /> : <ChevronDown className="w-3 h-3 text-accent-gold" />
                                                 ) : (
-                                                    <span className="text-[#D08C60]/40 text-xs">—</span>
+                                                    <span className="text-accent-gold/40 text-xs">—</span>
                                                 )}
                                             </div>
                                         </td>
@@ -164,12 +164,12 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
                                     {/* Expanded Antardasha Row */}
                                     {isExpanded && antardashas.length > 0 && (
                                         <tr>
-                                            <td colSpan={5} className="bg-[#FAF7F2]/60 px-3 py-2">
-                                                <div className="text-[9px] font-black text-[#8B5A2B] uppercase tracking-[0.2em] mb-2 pl-2 border-l-2 border-[#D08C60]/30 ml-1">
+                                            <td colSpan={5} className="bg-parchment/60/60 px-3 py-2">
+                                                <div className="text-[9px] font-black text-muted uppercase tracking-[0.2em] mb-2 pl-2 border-l-2 border-header-border/30 ml-1">
                                                     Sub-Periods
                                                 </div>
                                                 <table className="w-full">
-                                                    <tbody className="divide-y divide-[#D08C60]/10">
+                                                    <tbody className="divide-y divide-header-border/10">
                                                         {antardashas.map((antar, aIdx) => (
                                                             <tr key={aIdx} className={cn(
                                                                 "hover:bg-white/50 transition-colors",
@@ -183,10 +183,10 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
                                                                         {antar.planet}
                                                                     </span>
                                                                 </td>
-                                                                <td className="px-3 py-1.5 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(antar.startDate)}</td>
-                                                                <td className="px-3 py-1.5 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(antar.endDate)}</td>
-                                                                <td className="px-3 py-1.5 text-xs text-[#8B5A2B] font-bold">
-                                                                    {standardizeDuration(antar.raw?.duration_years || antar.raw?.years || 0, antar.raw?.duration_days)}
+                                                                <td className="px-3 py-1.5 text-xs text-primary font-mono">{formatDateDisplay(antar.startDate)}</td>
+                                                                <td className="px-3 py-1.5 text-xs text-primary font-mono">{formatDateDisplay(antar.endDate)}</td>
+                                                                <td className="px-3 py-1.5 text-xs text-muted font-bold">
+                                                                    {standardizeDuration((antar.raw?.duration_years as number) || (antar.raw?.years as number) || 0, antar.raw?.duration_days as number)}
                                                                 </td>
                                                                 <td className="px-3 py-1.5 text-center">
                                                                     {antar.isCurrent && (

@@ -59,18 +59,18 @@ interface ShadbalaData {
     planets: ShadbalaPlanet[];
     ayanamsa: string;
     system: string;
-    raw?: any; // To store original response if needed
+    raw?: Record<string, unknown>; // To store original response if needed
 }
 
 // Planet Themes for Professional UI
-const PLANET_THEMES: Record<string, { color: string, bg: string, text: string, border: string, iconColor: string }> = {
-    'Sun': { color: '#F97316', bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', iconColor: 'text-orange-500' },
-    'Moon': { color: '#64748B', bg: 'bg-slate-50', text: 'text-slate-700', border: 'border-slate-200', iconColor: 'text-slate-400' },
-    'Mars': { color: '#EF4444', bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200', iconColor: 'text-red-500' },
-    'Mercury': { color: '#10B981', bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', iconColor: 'text-emerald-500' },
-    'Jupiter': { color: '#EAB308', bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200', iconColor: 'text-yellow-600' },
-    'Venus': { color: '#D946EF', bg: 'bg-pink-50', text: 'text-pink-700', border: 'border-pink-200', iconColor: 'text-pink-500' },
-    'Saturn': { color: '#334155', bg: 'bg-gray-100', text: 'text-gray-800', border: 'border-gray-300', iconColor: 'text-gray-600' }
+const PLANET_THEMES: Record<string, { color: string, bg: string, text: string, border: string, iconColor: string, twText: string, twBg: string }> = {
+    'Sun': { color: '#F97316', bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', iconColor: 'text-orange-500', twText: 'text-orange-500', twBg: 'bg-orange-500' },
+    'Moon': { color: '#64748B', bg: 'bg-slate-50', text: 'text-slate-700', border: 'border-slate-200', iconColor: 'text-slate-400', twText: 'text-slate-500', twBg: 'bg-slate-500' },
+    'Mars': { color: '#EF4444', bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200', iconColor: 'text-red-500', twText: 'text-red-500', twBg: 'bg-red-500' },
+    'Mercury': { color: '#10B981', bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', iconColor: 'text-emerald-500', twText: 'text-emerald-500', twBg: 'bg-emerald-500' },
+    'Jupiter': { color: '#EAB308', bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200', iconColor: 'text-yellow-600', twText: 'text-yellow-500', twBg: 'bg-yellow-500' },
+    'Venus': { color: '#D946EF', bg: 'bg-pink-50', text: 'text-pink-700', border: 'border-pink-200', iconColor: 'text-pink-500', twText: 'text-fuchsia-500', twBg: 'bg-fuchsia-500' },
+    'Saturn': { color: '#334155', bg: 'bg-gray-100', text: 'text-gray-800', border: 'border-gray-300', iconColor: 'text-gray-600', twText: 'text-slate-800', twBg: 'bg-slate-800' }
 };
 
 // ============================================================================
@@ -83,7 +83,7 @@ export default function ShadbalaPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [data, setData] = useState<ShadbalaData | null>(null);
-    const [rawResponse, setRawResponse] = useState<any>(null);
+    const [rawResponse, setRawResponse] = useState<Record<string, unknown> | null>(null);
 
     const clientId = clientDetails?.id || '';
 
@@ -101,17 +101,17 @@ export default function ShadbalaPage() {
     /**
      * Normalizes complex Python engine response to clean frontend types
      */
-    const normalizeShadbalaData = (raw: any): ShadbalaData => {
+    const normalizeShadbalaData = (raw: Record<string, Record<string, unknown>>): ShadbalaData => {
         const planets: ShadbalaPlanet[] = [];
         const planetKeys = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
 
         planetKeys.forEach(p => {
-            const details = raw[`${p}_details`] || {};
-            const virupas = raw.shadbala_virupas?.[p] || 0;
-            const rupas = raw.shadbala_rupas?.[p] || 0;
-            const rank = raw.relative_rank?.[p] || 0;
-            const strength = raw.strength_summary?.[p] || 'Weak';
-            const ishKas = raw.ishta_kashta_phala?.[p] || { Ishta: 0, Kashta: 0 };
+            const details = (raw[`${p}_details`] || {}) as Record<string, number>;
+            const virupas = ((raw.shadbala_virupas as Record<string, number>)?.[p]) || 0;
+            const rupas = ((raw.shadbala_rupas as Record<string, number>)?.[p]) || 0;
+            const rank = ((raw.relative_rank as Record<string, number>)?.[p]) || 0;
+            const strength = ((raw.strength_summary as Record<string, string>)?.[p]) || 'Weak';
+            const ishKas = ((raw.ishta_kashta_phala as Record<string, Record<string, number>>)?.[p]) || { Ishta: 0, Kashta: 0 };
 
             // Calculate Temporal (Kala) Bala from sub-components
             const kalaComponents = [
@@ -152,42 +152,28 @@ export default function ShadbalaPage() {
 
         return {
             planets,
-            ayanamsa: raw.meta?.ayanamsa || 'Lahiri',
+            ayanamsa: String((raw.meta as Record<string, unknown>)?.ayanamsa || 'Lahiri'),
             system: 'Chitrapaksha',
             raw: raw
         };
     };
 
     const fetchShadbala = async (force: boolean = false) => {
-        if (!clientId) {
-            console.warn("[Shadbala] No clientId found in context, skipping fetch.");
-            return;
+        if (!clientId) {            return;
         }
 
         setLoading(true);
         setError(null);
-        try {
-            console.log(`[Shadbala] Fetching data for client: ${clientId}...`);
-            const result = await clientApi.getShadbala(clientId);
-            console.log("[Shadbala] FULL Result Object:", result);
-
+        try {            const result = await clientApi.getShadbala(clientId) as any;
             // Robust extraction: Handle nested data structure
             const rawData = result.data?.data || result.chartData?.data || result.data || result.chartData || result;
-            console.log("[Shadbala] EXTRACTED rawData for normalization:", rawData);
-
             setRawResponse(result); // Store FULL result for debug console (to see cached flag)
 
-            if (rawData && rawData.shadbala_virupas) {
-                console.info("[Shadbala] shadbala_virupas found. Normalizing...");
-                const normalized = normalizeShadbalaData(rawData);
+            if (rawData && rawData.shadbala_virupas) {                const normalized = normalizeShadbalaData(rawData);
                 setData(normalized);
-            } else {
-                console.warn("[Shadbala] Data received, but 'shadbala_virupas' missing.");
-                setData(null);
+            } else {                setData(null);
             }
-        } catch (err: any) {
-            console.error("[Shadbala] Fetch error:", err);
-            setError(err.message || "Failed to calculate Shadbala strengths");
+        } catch (err: unknown) {            setError(err instanceof Error ? err.message : "Failed to calculate Shadbala strengths");
         } finally {
             setLoading(false);
         }
@@ -327,7 +313,7 @@ function RadialGauge({ planet, rupaBala, minRequired, isStrong, color, rank }: {
             <div className="relative">
                 <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
                     {/* Background arc */}
-                    <path d={describeArc(0, sweepAngle)} fill="none" stroke="#e8e0d0" strokeWidth={strokeWidth} strokeLinecap="round" />
+                    <path d={describeArc(0, sweepAngle)} fill="none" stroke="var(--cream-light)" strokeWidth={strokeWidth} strokeLinecap="round" />
                     {/* Value arc */}
                     <motion.path
                         d={describeArc(0, valueAngle)}
@@ -344,26 +330,26 @@ function RadialGauge({ planet, rupaBala, minRequired, isStrong, color, rank }: {
                     <line
                         x1={minTickInner.x} y1={minTickInner.y}
                         x2={minTickOuter.x} y2={minTickOuter.y}
-                        stroke="#EF4444" strokeWidth={2.5} strokeLinecap="round"
+                        stroke="var(--color-red-500)" strokeWidth={2.5} strokeLinecap="round"
                     />
                     {/* Planet symbol in center */}
                     <text x={center} y={center - 6} textAnchor="middle" dominantBaseline="central"
-                        fontSize="24" fill={color} fontWeight="700" style={{ fontFamily: 'serif' }}>
+                        fontSize="24" fill={color} fontWeight="700" className="font-serif">
                         {PLANET_SYMBOLS[planet]}
                     </text>
                     {/* Rupa value */}
                     <text x={center} y={center + 18} textAnchor="middle" dominantBaseline="central"
-                        fontSize="13" fill="#3E2A1F" fontWeight="800">
+                        fontSize="13" fill="var(--ink)" fontWeight="800">
                         {rupaBala.toFixed(2)}
                     </text>
                     <text x={center} y={center + 32} textAnchor="middle" dominantBaseline="central"
-                        fontSize="8" fill="#8B7355" fontWeight="700" letterSpacing="1.5">
+                        fontSize="8" fill="var(--muted)" fontWeight="700" letterSpacing="1.5">
                         RUPA
                     </text>
                 </svg>
             </div>
             <div className="mt-1 text-center">
-                <p className="text-xs font-bold tracking-tight" style={{ color: 'var(--ink)' }}>{planet}</p>
+                <p className="text-xs font-bold tracking-tight text-ink">{planet}</p>
                 <div className="flex items-center justify-center gap-1 mt-0.5">
                     <span className="text-[9px] font-bold text-slate-400">#{rank}</span>
                     <span className={cn(
@@ -395,7 +381,7 @@ function getHeatmapStyle(value: number, maxVal: number): React.CSSProperties {
 // Enhanced Dashboard Sub-component
 // ============================================================================
 
-function ShadbalaDashboard({ displayData, rawResponse }: { displayData: ShadbalaData, rawResponse: any }) {
+function ShadbalaDashboard({ displayData, rawResponse }: { displayData: ShadbalaData, rawResponse: Record<string, unknown> | null }) {
     const sortedPlanets = [...displayData.planets].sort((a, b) => a.rank - b.rank);
     const strongest = sortedPlanets[0];
     const weakest = sortedPlanets[sortedPlanets.length - 1];
@@ -405,7 +391,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
     // Compute max values for heatmap scaling
     const tableMaxValues: Record<string, number> = {};
     BALA_AXES.forEach(axis => {
-        tableMaxValues[axis.key] = Math.max(...displayData.planets.map(p => Math.abs((p as any)[axis.key] || 0)));
+        tableMaxValues[axis.key] = Math.max(...displayData.planets.map(p => Math.abs((p as unknown as Record<string, number>)[axis.key] || 0)));
     });
 
     const strongestTheme = PLANET_THEMES[strongest.planet];
@@ -419,7 +405,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
         const dashOffset = circumference * (1 - pct);
         return (
             <svg width="56" height="56" viewBox="0 0 56 56">
-                <circle cx="28" cy="28" r={r} fill="none" stroke="#e8e0d0" strokeWidth="5" />
+                <circle cx="28" cy="28" r={r} fill="none" stroke="var(--cream-light)" strokeWidth="5" />
                 <motion.circle
                     cx="28" cy="28" r={r} fill="none" stroke={color} strokeWidth="5"
                     strokeLinecap="round" strokeDasharray={circumference}
@@ -459,8 +445,8 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                                 <h3 className="text-[10px] font-bold text-primary tracking-[0.15em] uppercase">Strongest</h3>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className="text-2xl" style={{ color: strongestTheme.color }}>{PLANET_SYMBOLS[strongest.planet]}</span>
-                                <span className="text-xl font-bold font-serif" style={{ color: 'var(--ink)' }}>{strongest.planet}</span>
+                                <span className={cn("text-2xl", strongestTheme.twText)}>{PLANET_SYMBOLS[strongest.planet]}</span>
+                                <span className="text-xl font-bold font-serif text-ink">{strongest.planet}</span>
                             </div>
                             <p className="text-[10px] font-bold text-emerald-600 mt-1 tracking-wider">
                                 {strongest.rupaBala.toFixed(2)} Rupa · Rank #{strongest.rank}
@@ -486,8 +472,8 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                                 <h3 className="text-[10px] font-bold text-primary tracking-[0.15em] uppercase">Weakest</h3>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className="text-2xl" style={{ color: weakestTheme.color }}>{PLANET_SYMBOLS[weakest.planet]}</span>
-                                <span className="text-xl font-bold font-serif" style={{ color: 'var(--ink)' }}>{weakest.planet}</span>
+                                <span className={cn("text-2xl", weakestTheme.twText)}>{PLANET_SYMBOLS[weakest.planet]}</span>
+                                <span className="text-xl font-bold font-serif text-ink">{weakest.planet}</span>
                             </div>
                             <p className="text-[10px] font-bold text-rose-500 mt-1 tracking-wider">
                                 {weakest.rupaBala.toFixed(2)} Rupa · Rank #{weakest.rank}
@@ -506,7 +492,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                 <div className="lg:col-span-8 bg-white border border-antique rounded-3xl shadow-sm overflow-hidden flex flex-col">
                     <div className="p-4 border-b border-antique bg-parchment/10 flex items-center gap-2">
                         <Compass className="w-4 h-4 text-gold-primary" />
-                        <h3 className="text-xs font-bold tracking-wider" style={{ color: 'var(--ink)' }}>Six-Fold Strength Profile</h3>
+                        <h3 className="text-xs font-bold tracking-wider text-ink">Six-Fold Strength Profile</h3>
                         <span className="text-[9px] ml-auto font-bold text-slate-400 tracking-wider">STRENGTH ACROSS 6 DIMENSIONS</span>
                     </div>
                     <div className="p-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -515,7 +501,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                             // Get bala values for this planet
                             const balas = BALA_AXES.map(axis => ({
                                 label: axis.shortLabel,
-                                value: (p as any)[axis.key] || 0,
+                                value: (p as unknown as Record<string, number>)[axis.key] || 0,
                             }));
                             // Find planet-local max for scaling bars within this card
                             const localMax = Math.max(...balas.map(b => Math.abs(b.value)), 1);
@@ -532,13 +518,12 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                                     {/* Planet Header */}
                                     <div className="flex items-center justify-between mb-3">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-sm font-bold shadow-sm"
-                                                style={{ backgroundColor: theme.color }}>
+                                            <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center text-white text-sm font-bold shadow-sm", theme.twBg)}>
                                                 {PLANET_SYMBOLS[p.planet]}
                                             </div>
                                             <div>
-                                                <h4 className="text-sm font-bold" style={{ color: 'var(--ink)' }}>{p.planet}</h4>
-                                                <p className="text-[9px] font-bold tracking-wider" style={{ color: theme.color }}>
+                                                <h4 className="text-sm font-bold text-ink">{p.planet}</h4>
+                                                <p className={cn("text-[9px] font-bold tracking-wider", theme.twText)}>
                                                     {p.rupaBala.toFixed(2)} Rupa · #{p.rank}
                                                 </p>
                                             </div>
@@ -568,7 +553,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                                                             animate={{ width: `${barWidth}%` }}
                                                             transition={{ duration: 0.8, ease: 'easeOut' }}
                                                             style={{
-                                                                backgroundColor: isNegative ? '#EF4444' : theme.color,
+                                                                backgroundColor: isNegative ? 'var(--color-red-500)' : theme.color,
                                                                 opacity: isNegative ? 0.7 : 0.85,
                                                             }}
                                                         />
@@ -594,7 +579,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                     <div className="p-4 border-b border-antique bg-parchment/10">
                         <div className="flex items-center gap-2">
                             <Activity className="w-4 h-4 text-emerald-600" />
-                            <h3 className="text-xs font-bold tracking-wider" style={{ color: 'var(--ink)' }}>Ishta & Kashta Phala</h3>
+                            <h3 className="text-xs font-bold tracking-wider text-ink">Ishta & Kashta Phala</h3>
                         </div>
                         <p className="text-[9px] mt-1 text-slate-400 font-bold tracking-wider">AUSPICIOUS vs INAUSPICIOUS STRENGTH</p>
                     </div>
@@ -611,13 +596,12 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                                 <div key={`phala-${p.planet}`} className="group">
                                     <div className="flex items-center gap-2.5 mb-1.5">
                                         {/* Planet Icon Circle */}
-                                        <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-sm"
-                                            style={{ backgroundColor: theme.color }}>
+                                        <div className={cn("w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-sm", theme.twBg)}>
                                             {PLANET_SYMBOLS[p.planet]}
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex justify-between items-center mb-1">
-                                                <span className="text-[11px] font-bold tracking-tight" style={{ color: 'var(--ink)' }}>{p.planet}</span>
+                                                <span className="text-[11px] font-bold tracking-tight text-ink">{p.planet}</span>
                                                 <div className="flex gap-2 text-[9px] font-bold tracking-tighter">
                                                     <span className="text-emerald-600">I:{ishtaVal.toFixed(1)}</span>
                                                     <span className="text-rose-500">K:{kashtaVal.toFixed(1)}</span>
@@ -625,13 +609,12 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                                             </div>
                                             <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden flex group-hover:scale-[1.02] transition-transform shadow-inner">
                                                 <motion.div
-                                                    className="h-full rounded-l-full"
-                                                    style={{ background: 'linear-gradient(90deg, #10B981, #34D399)', width: `${ishtaWidth}%` }}
+                                                    className="h-full rounded-l-full bg-gradient-to-r from-emerald-500 to-emerald-400"
                                                     initial={{ width: 0 }}
                                                     animate={{ width: `${ishtaWidth}%` }}
                                                     transition={{ duration: 1, ease: 'easeOut' }}
                                                 />
-                                                <div className="h-full flex-1 rounded-r-full" style={{ background: 'linear-gradient(90deg, #FB7185, #EF4444)' }} />
+                                                <div className="h-full flex-1 rounded-r-full bg-gradient-to-r from-rose-400 to-red-500" />
                                             </div>
                                         </div>
                                     </div>
@@ -659,7 +642,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
             <div className="bg-white border border-antique rounded-3xl shadow-sm overflow-hidden">
                 <div className="p-4 border-b border-antique bg-parchment/10 flex items-center gap-2">
                     <BarChart2 className="w-4 h-4 text-gold-primary" />
-                    <h3 className="text-xs font-bold tracking-wider" style={{ color: 'var(--ink)' }}>Rupa Strength Overview</h3>
+                    <h3 className="text-xs font-bold tracking-wider text-ink">Rupa Strength Overview</h3>
                     <span className="text-[9px] ml-auto font-bold text-slate-400 tracking-wider">RED TICK = MIN. REQUIRED</span>
                 </div>
                 <div className="p-6 flex flex-wrap items-center justify-center gap-4 md:gap-6">
@@ -687,7 +670,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
             <div className="bg-white border border-antique rounded-3xl shadow-sm overflow-hidden">
                 <div className="p-4 border-b border-antique bg-parchment/5 flex items-center gap-2">
                     <Layers className="w-4 h-4 text-indigo-500" />
-                    <h3 className="text-xs font-bold tracking-wider" style={{ color: 'var(--ink)' }}>Six-Fold Virupa Breakdown</h3>
+                    <h3 className="text-xs font-bold tracking-wider text-ink">Six-Fold Virupa Breakdown</h3>
                     <span className="text-[9px] ml-auto font-bold text-slate-400 tracking-wider">CELL COLOR = RELATIVE STRENGTH</span>
                 </div>
                 <div className="overflow-x-auto">
@@ -708,9 +691,9 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                                 const theme = PLANET_THEMES[p.planet];
                                 return (
                                     <tr key={`table-${p.planet}`} className="border-b border-antique last:border-0 hover:bg-parchment/5 transition-colors">
-                                        <td className="p-4 text-sm font-bold" style={{ color: 'var(--ink)' }}>
+                                        <td className="p-4 text-sm font-bold text-ink">
                                             <div className="flex items-center gap-2">
-                                                <span className="text-base" style={{ color: theme.color }}>{PLANET_SYMBOLS[p.planet]}</span>
+                                                <span className={cn("text-base", theme.twText)}>{PLANET_SYMBOLS[p.planet]}</span>
                                                 {p.planet}
                                             </div>
                                         </td>

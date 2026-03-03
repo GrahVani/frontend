@@ -15,10 +15,15 @@ interface UserProfile {
     createdAt?: string;
 }
 
+interface LoginCredentials {
+    email: string;
+    password: string;
+}
+
 interface AuthContextType {
     user: UserProfile | null;
     loading: boolean;
-    login: (credentials: any) => Promise<void>;
+    login: (credentials: LoginCredentials) => Promise<void>;
     logout: () => Promise<void>;
     refreshProfile: () => Promise<void>;
     isAuthenticated: boolean;
@@ -27,10 +32,11 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    const { data: user = null, isLoading: loading, refetch: refreshProfile } = useUserProfile();
+    const { data: rawUser = null, isLoading: loading, refetch: refreshProfile } = useUserProfile();
+    const user = rawUser as UserProfile | null;
     const { loginMutation, logoutMutation } = useAuthMutations();
 
-    const login = async (credentials: any) => {
+    const login = async (credentials: LoginCredentials) => {
         await loginMutation.mutateAsync(credentials);
     };
 

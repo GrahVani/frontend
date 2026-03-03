@@ -13,6 +13,7 @@ import { useDasha, useOtherDasha } from '@/hooks/queries/useCalculations';
 import {
     DashaNode,
     ActiveDashaPath,
+    RawDashaPeriod,
     standardizeDashaLevels,
     findActiveDashaPath,
     getSublevels
@@ -67,8 +68,8 @@ export default function VedicDashasPage() {
 
     // State
     const [selectedDashaType, setSelectedDashaType] = useState<string>('vimshottari');
-    const [dashaTree, setDashaTree] = useState<any[]>([]);
-    const [selectedPath, setSelectedPath] = useState<any[]>([]);
+    const [dashaTree, setDashaTree] = useState<Record<string, unknown>[]>([]);
+    const [selectedPath, setSelectedPath] = useState<Record<string, unknown>[]>([]);
     const [selectedIntelPlanet, setSelectedIntelPlanet] = useState<string>('');
     const isVimshottari = selectedDashaType === 'vimshottari';
     const isChara = selectedDashaType === 'chara';
@@ -100,7 +101,7 @@ export default function VedicDashasPage() {
     const activeAnalysis = useMemo(() => {
         const response = isVimshottari ? treeResponse : otherData;
         if (!response?.data) return null;
-        const backendPath = (response.data as any).curr_path;
+        const backendPath = (response.data as Record<string, unknown>).curr_path;
         if (backendPath && Array.isArray(backendPath) && backendPath.length >= 5) {
             return {
                 nodes: backendPath,
@@ -113,25 +114,25 @@ export default function VedicDashasPage() {
 
     const { currentPath, viewingPeriods, isPathSatisfied } = useMemo(() => {
         const response = isVimshottari ? treeResponse : otherData;
-        const rawMahadashas = (response?.data as any)?.mahadashas || (response?.data as any)?.periods || [];
+        const rawMahadashas = (response?.data as Record<string, unknown>)?.mahadashas as Record<string, unknown>[] || (response?.data as Record<string, unknown>)?.periods as Record<string, unknown>[] || [];
 
         const pathParam = searchParams.get('p') || "";
         const targetPlanets = pathParam ? pathParam.split(',') : [];
 
         let branch = rawMahadashas;
         let parentStart = "";
-        let reconciledPath: any[] = [];
+        let reconciledPath: (Record<string, unknown> & { planet?: string; lord?: string; raw?: Record<string, unknown>; sign_name?: string })[] = [];
         let viewingBranch = rawMahadashas;
         let satisfiedCount = 0;
 
         if (rawMahadashas.length > 0) {
             for (const pName of targetPlanets) {
-                const match = branch.find((n: any) =>
-                    (n.planet || n.lord || '').toLowerCase() === (pName || '').toLowerCase()
+                const match = branch.find((n: Record<string, unknown>) =>
+                    ((n.planet as string) || (n.lord as string) || '').toLowerCase() === (pName || '').toLowerCase()
                 );
                 if (match) {
                     reconciledPath.push(match);
-                    parentStart = match.start_date || match.startDate;
+                    parentStart = (match.start_date || match.startDate) as string;
                     satisfiedCount++;
                     const subs = getSublevels(match);
                     // Critical: ONLY transition the viewing branch if children actually exist
@@ -160,7 +161,7 @@ export default function VedicDashasPage() {
     useEffect(() => {
         const response = isVimshottari ? treeResponse : otherData;
         if (response?.data) {
-            const raw = (response.data as any).mahadashas || (response.data as any).periods || [];
+            const raw = (response.data as Record<string, unknown>).mahadashas as Record<string, unknown>[] || (response.data as Record<string, unknown>).periods as Record<string, unknown>[] || [];
             if (raw.length > 0) setDashaTree(raw);
         }
     }, [treeResponse, otherData, isVimshottari]);
@@ -183,8 +184,8 @@ export default function VedicDashasPage() {
         if (currentLevel >= 4) return;
 
         const raw = period.raw;
-        if (getSublevels(raw)) {
-            const newPathArr = [...currentPath, raw];
+        if (raw && getSublevels(raw as RawDashaPeriod)) {
+            const newPathArr = [...currentPath, raw as RawDashaPeriod];
             const urlPlanets = newPathArr.map(p => p.planet || p.lord).join(',');
             router.replace(`?p=${urlPlanets}`, { scroll: false });
             setSelectedIntelPlanet(period.planet);
@@ -219,16 +220,14 @@ export default function VedicDashasPage() {
         }
     };
 
-    const handleSystemChange = (type: string) => {
-        console.log(`[VedicDashasPage] Changing Dasha System to: ${type}`);
-        setSelectedDashaType(type);
+    const handleSystemChange = (type: string) => {        setSelectedDashaType(type);
         router.replace('?', { scroll: false });
     };
 
     if (!clientDetails) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-                <p className="font-serif text-xl text-[#8B5A2B]">Please select a client to view Dasha details</p>
+                <p className="font-serif text-xl text-bronze">Please select a client to view Dasha details</p>
             </div>
         );
     }
@@ -240,17 +239,17 @@ export default function VedicDashasPage() {
         <div className="min-h-screen space-y-4 pt-2">
 
             {/* HEADER: Client Info & Actions */}
-            <div className="bg-white rounded-2xl border border-[#D08C60]/20 p-4 shadow-sm">
+            <div className="bg-white rounded-2xl border border-header-border/20 p-4 shadow-sm">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
-                            <User className="w-5 h-5 text-[#D08C60]" />
-                            <div className="font-serif font-black text-[#3E2A1F] text-lg">
+                            <User className="w-5 h-5 text-header-border" />
+                            <div className="font-serif font-black text-ink text-lg">
                                 {clientDetails.name}
                             </div>
                         </div>
 
-                        <div className="hidden md:flex items-center gap-4 text-sm text-[#8B5A2B] border-l border-[#D08C60]/20 pl-4">
+                        <div className="hidden md:flex items-center gap-4 text-sm text-bronze border-l border-header-border/20 pl-4">
                             <span className="flex items-center gap-1">
                                 <Calendar className="w-3.5 h-3.5" />
                                 {formatDateShort(clientDetails.dateOfBirth)}
@@ -263,20 +262,20 @@ export default function VedicDashasPage() {
                                 <MapPin className="w-3.5 h-3.5" />
                                 {clientDetails.placeOfBirth?.city || 'Unknown'}
                             </span>
-                            <span className="px-2 py-0.5 bg-[#D08C60]/10 text-[#D08C60] text-xs font-bold rounded-full">
+                            <span className="px-2 py-0.5 bg-header-border/10 text-header-border text-xs font-bold rounded-full">
                                 {metadata?.nakshatraAtBirth || 'Vishakha'}
                             </span>
                         </div>
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <span className="px-3 py-1 bg-[#3E2A1F] text-white text-xs font-bold rounded-full uppercase">
+                        <span className="px-3 py-1 bg-ink text-white text-xs font-bold rounded-full uppercase">
                             {ayanamsa}
                         </span>
-                        <button className="p-2 rounded-lg hover:bg-[#D08C60]/10 text-[#8B5A2B]" title="Print">
+                        <button className="p-2 rounded-lg hover:bg-header-border/10 text-bronze" title="Print">
                             <Printer className="w-4 h-4" />
                         </button>
-                        <button className="p-2 rounded-lg hover:bg-[#D08C60]/10 text-[#8B5A2B]" title="Export PDF">
+                        <button className="p-2 rounded-lg hover:bg-header-border/10 text-bronze" title="Export PDF">
                             <Download className="w-4 h-4" />
                         </button>
                         <button
@@ -284,7 +283,7 @@ export default function VedicDashasPage() {
                             disabled={isFetching}
                             className={cn(
                                 "p-2 rounded-lg transition-all",
-                                isFetching ? "text-[#D08C60] opacity-50 cursor-wait" : "hover:bg-[#D08C60]/10 text-[#8B5A2B]"
+                                isFetching ? "text-header-border opacity-50 cursor-wait" : "hover:bg-header-border/10 text-bronze"
                             )}
                             title="Refresh Data"
                         >
@@ -295,7 +294,7 @@ export default function VedicDashasPage() {
             </div>
 
             {/* CURRENT PERIOD CARD */}
-            <div className="bg-gradient-to-r from-[#3E2A1F] to-[#5A3E2B] rounded-2xl p-5 text-white shadow-lg">
+            <div className="bg-gradient-to-r from-ink to-body rounded-2xl p-5 text-white shadow-lg">
                 <div className="flex items-center gap-2 mb-4">
                     <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
                         <TrendingUp className="w-4 h-4" />
@@ -310,17 +309,17 @@ export default function VedicDashasPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                             <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold block mb-1">Mahadasha</label>
-                            <div className="text-2xl font-black">{isChara ? (activeLords[0].raw?.sign_name || activeLords[0].planet) : activeLords[0].planet}</div>
+                            <div className="text-2xl font-black">{isChara ? String(activeLords[0].raw?.sign_name || activeLords[0].planet) : activeLords[0].planet}</div>
                             <div className="text-[10px] text-white/40 mt-1">{formatDateShort(activeLords[0].startDate)} - {formatDateShort(activeLords[0].endDate)}</div>
                         </div>
                         <div className="bg-white/10 rounded-xl p-4 border border-white/20 transform scale-105 shadow-xl">
                             <label className="text-[10px] uppercase tracking-widest text-yellow-400 font-bold block mb-1 underline decoration-yellow-400/30 underline-offset-4">Antardasha</label>
-                            <div className="text-2xl font-black text-yellow-300">{activeLords[1] ? (isChara ? (activeLords[1].raw?.sign_name || activeLords[1].planet) : activeLords[1].planet) : '—'}</div>
+                            <div className="text-2xl font-black text-yellow-300">{activeLords[1] ? (isChara ? String(activeLords[1].raw?.sign_name || activeLords[1].planet) : activeLords[1].planet) : '—'}</div>
                             <div className="text-[10px] text-white/60 mt-1">{formatDateShort(activeLords[1]?.startDate)} - {formatDateShort(activeLords[1]?.endDate)}</div>
                         </div>
                         <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                             <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold block mb-1">Pratyantardasha</label>
-                            <div className="text-2xl font-black">{activeLords[2] ? (isChara ? (activeLords[2].raw?.sign_name || activeLords[2].planet) : activeLords[2].planet) : '—'}</div>
+                            <div className="text-2xl font-black">{activeLords[2] ? (isChara ? String(activeLords[2].raw?.sign_name || activeLords[2].planet) : activeLords[2].planet) : '—'}</div>
                             <div className="text-[10px] text-white/40 mt-1">{formatDateShort(activeLords[2]?.startDate)} - {formatDateShort(activeLords[2]?.endDate)}</div>
                         </div>
                     </div>
@@ -334,7 +333,7 @@ export default function VedicDashasPage() {
                                 <div className="flex items-center gap-1 mt-0.5">
                                     {activeLords.slice(0, 5).map((l, i) => (
                                         <React.Fragment key={i}>
-                                            <span className={cn("text-xs font-bold", i === 1 ? "text-yellow-400" : "text-white")}>{isChara ? (l.raw?.sign_name || l.planet) : l.planet}</span>
+                                            <span className={cn("text-xs font-bold", i === 1 ? "text-yellow-400" : "text-white")}>{isChara ? String(l.raw?.sign_name || l.planet) : l.planet}</span>
                                             {i < 4 && <ChevronRight className="w-3 h-3 text-white/20" />}
                                         </React.Fragment>
                                     ))}
@@ -354,23 +353,23 @@ export default function VedicDashasPage() {
             {/* MAIN CONTENT AREA */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <div className="lg:col-span-2 space-y-4">
-                    <div className="bg-white rounded-2xl border border-[#D08C60]/20 overflow-hidden shadow-sm">
+                    <div className="bg-white rounded-2xl border border-header-border/20 overflow-hidden shadow-sm">
 
                         {/* Selector Tray */}
-                        <div className="p-4 border-b border-[#D08C60]/10 flex flex-wrap items-center justify-between gap-4">
+                        <div className="p-4 border-b border-header-border/10 flex flex-wrap items-center justify-between gap-4">
                             <div className="flex items-center gap-3">
-                                <label className="text-xs font-bold text-[#8B5A2B] uppercase tracking-wider">System</label>
+                                <label className="text-xs font-bold text-bronze uppercase tracking-wider">System</label>
                                 <div className="relative">
                                     <select
                                         value={selectedDashaType}
                                         onChange={(e) => handleSystemChange(e.target.value)}
-                                        className="appearance-none bg-[#FAF7F2] border border-[#D08C60]/30 rounded-xl px-4 py-2 pr-10 text-[#3E2A1F] font-medium focus:outline-none focus:ring-2 focus:ring-[#D08C60]/40 cursor-pointer min-w-[200px]"
+                                        className="appearance-none bg-surface-pure border border-header-border/30 rounded-xl px-4 py-2 pr-10 text-ink font-medium focus:outline-none focus:ring-2 focus:ring-header-border/40 cursor-pointer min-w-[200px]"
                                     >
                                         <option value="vimshottari">① Vimshottari (120 yrs)</option>
                                         <option value="chara">② Jaimini Chara Dasha</option>
                                         <option value="yogini">③ Yogini (36 yrs)</option>
                                     </select>
-                                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B5A2B] pointer-events-none" />
+                                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-bronze pointer-events-none" />
                                 </div>
                             </div>
 
@@ -386,9 +385,9 @@ export default function VedicDashasPage() {
                                                 className={cn(
                                                     "px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap border",
                                                     currentLevel === idx
-                                                        ? "bg-[#D08C60] text-white border-[#D08C60] shadow-sm cursor-default"
+                                                        ? "bg-header-border text-white border-header-border shadow-sm cursor-default"
                                                         : isNavigable
-                                                            ? "bg-white text-[#8B5A2B] border-[#D08C60]/30 hover:bg-[#D08C60]/10"
+                                                            ? "bg-white text-bronze border-header-border/30 hover:bg-header-border/10"
                                                             : "bg-gray-50 text-gray-400 border-gray-100 cursor-not-allowed"
                                                 )}
                                             >
@@ -401,19 +400,19 @@ export default function VedicDashasPage() {
                         </div>
 
                         {/* Breadcrumbs */}
-                        <div className="px-4 py-3 bg-[#FAF7F2] border-b border-[#D08C60]/10 flex items-center gap-2 overflow-x-auto">
+                        <div className="px-4 py-3 bg-surface-pure border-b border-header-border/10 flex items-center gap-2 overflow-x-auto">
                             <button
                                 onClick={() => handleBreadcrumbClick(-1)}
                                 className={cn(
                                     "text-sm font-bold",
-                                    currentLevel === 0 ? "text-[#D08C60]" : "text-[#8B5A2B] hover:text-[#D08C60]"
+                                    currentLevel === 0 ? "text-header-border" : "text-bronze hover:text-header-border"
                                 )}
                             >
                                 Mahadasha
                             </button>
                             {currentPath.map((period, idx) => (
                                 <React.Fragment key={idx}>
-                                    <ChevronRight className="w-4 h-4 text-[#8B5A2B]/40" />
+                                    <ChevronRight className="w-4 h-4 text-bronze/40" />
                                     <button
                                         onClick={() => handleBreadcrumbClick(idx)}
                                         className={cn(
@@ -421,14 +420,14 @@ export default function VedicDashasPage() {
                                             PLANET_COLORS[period.planet || period.lord || 'Jupiter'] || "bg-white border-gray-100"
                                         )}
                                     >
-                                        {isChara ? (period.raw?.sign_name || period.planet) : (period.planet || period.lord)} {DASHA_LEVELS[idx].short}
+                                        {isChara ? (String(period.raw?.sign_name || period.planet || '')) : (period.planet || period.lord)} {DASHA_LEVELS[idx].short}
                                     </button>
                                 </React.Fragment>
                             ))}
                             {currentLevel > 0 && (
                                 <>
-                                    <ChevronRight className="w-4 h-4 text-[#8B5A2B]/40" />
-                                    <span className="text-sm font-bold text-[#D08C60]">{DASHA_LEVELS[currentLevel]?.name}</span>
+                                    <ChevronRight className="w-4 h-4 text-bronze/40" />
+                                    <span className="text-sm font-bold text-header-border">{DASHA_LEVELS[currentLevel]?.name}</span>
                                 </>
                             )}
                         </div>
@@ -437,14 +436,14 @@ export default function VedicDashasPage() {
                         <div className="overflow-x-auto min-h-[400px]">
                             {(isLoading || !isPathSatisfied) ? (
                                 <div className="flex flex-col items-center justify-center h-[400px]">
-                                    <Loader2 className="w-10 h-10 text-[#D08C60] animate-spin mb-4" />
-                                    <p className="font-serif text-sm text-[#8B5A2B] animate-pulse italic">
+                                    <Loader2 className="w-10 h-10 text-header-border animate-spin mb-4" />
+                                    <p className="font-serif text-sm text-bronze animate-pulse italic">
                                         {!isPathSatisfied ? `Diving into ${DASHA_LEVELS[currentLevel]?.name}...` : "Quantum Calculating Eras..."}
                                     </p>
                                 </div>
                             ) : (
                                 <table className="w-full text-left">
-                                    <thead className="bg-[#3E2A1F]/5 text-[#5A3E2B]/70 font-black uppercase text-[10px] tracking-widest border-b border-[#D08C60]/10">
+                                    <thead className="bg-ink/5 text-body/70 font-black uppercase text-[10px] tracking-widest border-b border-header-border/10">
                                         <tr>
                                             <th className="px-6 py-4">Planet</th>
                                             <th className="px-6 py-4">Start Date</th>
@@ -453,13 +452,13 @@ export default function VedicDashasPage() {
                                             <th className="px-6 py-4 text-center">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-[#D08C60]/10">
+                                    <tbody className="divide-y divide-header-border/10">
                                         {viewingPeriods.length > 0 ? viewingPeriods.map((period, idx) => (
                                             <tr
                                                 key={idx}
                                                 className={cn(
                                                     "transition-colors",
-                                                    period.isCurrent ? "bg-[#D08C60]/5" : (currentLevel < 4 ? "hover:bg-[#FAF7F2]" : "")
+                                                    period.isCurrent ? "bg-header-border/5" : (currentLevel < 4 ? "hover:bg-surface-pure" : "")
                                                 )}
                                             >
                                                 <td className="px-6 py-4">
@@ -468,19 +467,19 @@ export default function VedicDashasPage() {
                                                             "w-10 h-10 rounded-xl flex items-center justify-center border font-bold text-xs shadow-sm",
                                                             PLANET_COLORS[period.planet] || "bg-white border-gray-100"
                                                         )}>
-                                                            {(isChara ? (period.raw?.sign_name || period.planet) : period.planet).slice(0, 2)}
+                                                            {String(isChara ? (period.raw?.sign_name || period.planet) : period.planet).slice(0, 2)}
                                                         </div>
                                                         <div>
-                                                            <div className="font-bold text-[#3E2A1F]">{isChara ? (period.raw?.sign_name || period.planet) : period.planet}</div>
+                                                            <div className="font-bold text-ink">{isChara ? String(period.raw?.sign_name || period.planet) : period.planet}</div>
                                                             {period.isCurrent && (
-                                                                <span className="text-[9px] font-black uppercase text-[#D08C60] bg-[#D08C60]/10 px-1.5 py-0.5 rounded tracking-tighter">Current Period</span>
+                                                                <span className="text-[9px] font-black uppercase text-header-border bg-header-border/10 px-1.5 py-0.5 rounded tracking-tighter">Current Period</span>
                                                             )}
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4 text-sm text-[#5A3E2B] font-medium">{formatDateShort(period.startDate)}</td>
-                                                <td className="px-6 py-4 text-sm text-[#5A3E2B] font-medium">{formatDateShort(period.endDate)}</td>
-                                                <td className="px-6 py-4 text-sm text-[#8B5A2B]/70 font-bold">{period.duration}</td>
+                                                <td className="px-6 py-4 text-sm text-body font-medium">{formatDateShort(period.startDate)}</td>
+                                                <td className="px-6 py-4 text-sm text-body font-medium">{formatDateShort(period.endDate)}</td>
+                                                <td className="px-6 py-4 text-sm text-bronze/70 font-bold">{period.duration}</td>
                                                 <td className="px-6 py-4 text-center">
                                                     <div className="flex items-center justify-center gap-2">
                                                         <button
@@ -488,17 +487,17 @@ export default function VedicDashasPage() {
                                                             className={cn(
                                                                 "p-2 rounded-lg border shadow-sm transition-all",
                                                                 currentLevel < 4
-                                                                    ? "bg-white border-[#D08C60]/20 text-[#D08C60] hover:bg-[#D08C60] hover:text-white"
+                                                                    ? "bg-white border-header-border/20 text-header-border hover:bg-header-border hover:text-white"
                                                                     : "bg-gray-50 border-gray-100 text-gray-300 cursor-default"
                                                             )}
                                                             title={currentLevel < 4 ? "View Intelligence" : "Final Stage"}
                                                         >
                                                             <BrainCircuit className="w-4 h-4" />
                                                         </button>
-                                                        {getSublevels(period.raw) && currentLevel < 4 && (
+                                                        {period.raw && getSublevels(period.raw as RawDashaPeriod) && currentLevel < 4 && (
                                                             <button
                                                                 onClick={() => handleDrillDown(period)}
-                                                                className="p-2 rounded-lg bg-[#FAF7F2] text-[#8B5A2B] hover:bg-[#D08C60] hover:text-white transition-all"
+                                                                className="p-2 rounded-lg bg-surface-pure text-bronze hover:bg-header-border hover:text-white transition-all"
                                                                 title="Drill Down"
                                                             >
                                                                 <ChevronRight className="w-4 h-4" />
@@ -509,7 +508,7 @@ export default function VedicDashasPage() {
                                             </tr>
                                         )) : (
                                             <tr>
-                                                <td colSpan={5} className="text-center py-20 text-[#8B5A2B]/40 italic font-serif">
+                                                <td colSpan={5} className="text-center py-20 text-bronze/40 italic font-serif">
                                                     No dasha cycles calculated for this level.
                                                 </td>
                                             </tr>
@@ -522,8 +521,8 @@ export default function VedicDashasPage() {
 
                     {/* Life Timeline Placeholder (For UI Parity with Senior Design) */}
                     {isVimshottari && currentLevel === 0 && (
-                        <div className="bg-white rounded-2xl border border-[#D08C60]/20 p-5 shadow-sm">
-                            <h4 className="text-[10px] font-black uppercase text-[#3E2A1F] tracking-widest mb-4 flex items-center gap-2">
+                        <div className="bg-white rounded-2xl border border-header-border/20 p-5 shadow-sm">
+                            <h4 className="text-[10px] font-black uppercase text-ink tracking-widest mb-4 flex items-center gap-2">
                                 <Clock className="w-3.5 h-3.5" />
                                 LIFE TIMELINE (MAHADASHA)
                             </h4>
@@ -532,11 +531,11 @@ export default function VedicDashasPage() {
                                     <div key={i} className="flex flex-col items-center gap-2 min-w-[80px]">
                                         <div className={cn(
                                             "w-12 h-12 rounded-xl border flex items-center justify-center text-[10px] font-black shadow-sm",
-                                            PLANET_COLORS[d.planet || d.lord] || "bg-white border-gray-100"
+                                            PLANET_COLORS[String(d.planet || d.lord || 'Jupiter')] || "bg-white border-gray-100"
                                         )}>
-                                            {d.planet?.slice(0, 2) || d.lord?.slice(0, 2)}
+                                            {String(d.planet || d.lord || '').slice(0, 2)}
                                         </div>
-                                        <span className="text-[9px] font-bold text-[#8B5A2B] uppercase">{d.planet || d.lord}</span>
+                                        <span className="text-[9px] font-bold text-bronze uppercase">{String(d.planet || d.lord || '')}</span>
                                     </div>
                                 ))}
                             </div>
@@ -546,14 +545,14 @@ export default function VedicDashasPage() {
 
                 {/* SIDEBAR: INTEL */}
                 <div className="space-y-4">
-                    <div className="bg-white rounded-2xl border border-[#D08C60]/20 p-5 shadow-sm sticky top-4">
-                        <div className="flex items-center gap-2 mb-6 border-b border-[#D08C60]/10 pb-4">
-                            <div className="w-8 h-8 rounded-lg bg-[#D08C60]/10 flex items-center justify-center text-[#D08C60]">
+                    <div className="bg-white rounded-2xl border border-header-border/20 p-5 shadow-sm sticky top-4">
+                        <div className="flex items-center gap-2 mb-6 border-b border-header-border/10 pb-4">
+                            <div className="w-8 h-8 rounded-lg bg-header-border/10 flex items-center justify-center text-header-border">
                                 <BrainCircuit className="w-4 h-4" />
                             </div>
                             <div>
-                                <h3 className="font-serif font-black text-[#3E2A1F]">{selectedIntelPlanet || 'Rahu'} Dasha Intel</h3>
-                                <p className="text-[10px] text-[#8B5A2B]/60 font-bold uppercase tracking-wider">Psychological \u0026 Physical Impacts</p>
+                                <h3 className="font-serif font-black text-ink">{selectedIntelPlanet || 'Rahu'} Dasha Intel</h3>
+                                <p className="text-[10px] text-bronze/60 font-bold uppercase tracking-wider">Psychological \u0026 Physical Impacts</p>
                             </div>
                         </div>
 
@@ -561,30 +560,30 @@ export default function VedicDashasPage() {
                             <div>
                                 <div className="flex items-center gap-2 mb-3">
                                     <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
-                                    <span className="text-xs font-black uppercase text-[#3E2A1F] tracking-widest">Key Themes</span>
+                                    <span className="text-xs font-black uppercase text-ink tracking-widest">Key Themes</span>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {['Ambition', 'Foreign Influence', 'Sudden Gains', 'Materialism'].map(tag => (
-                                        <span key={tag} className="px-2 py-1 bg-[#FAF7F2] border border-[#D08C60]/20 text-[#8B5A2B] rounded-lg text-[10px] font-bold">
+                                        <span key={tag} className="px-2 py-1 bg-surface-pure border border-header-border/20 text-bronze rounded-lg text-[10px] font-bold">
                                             {tag}
                                         </span>
                                     ))}
                                 </div>
                             </div>
 
-                            <div className="p-4 bg-gradient-to-br from-[#FAF7F2] to-white rounded-xl border-l-4 border-[#D08C60] shadow-inner">
+                            <div className="p-4 bg-gradient-to-br from-surface-pure to-white rounded-xl border-l-4 border-header-border shadow-inner">
                                 <div className="flex items-start gap-3">
-                                    <Info className="w-4 h-4 text-[#D08C60] mt-1 shrink-0" />
+                                    <Info className="w-4 h-4 text-header-border mt-1 shrink-0" />
                                     <div>
-                                        <div className="text-xs font-black text-[#3E2A1F] mb-1">Dasha Sentiment</div>
-                                        <p className="text-xs text-[#8B5A2B] leading-relaxed">
+                                        <div className="text-xs font-black text-ink mb-1">Dasha Sentiment</div>
+                                        <p className="text-xs text-bronze leading-relaxed">
                                             This period favors material advancement but may cause internal restlessness. Focus on grounding practices.
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
-                            <button className="w-full py-4 bg-[#3E2A1F] text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-[#3E2A1F]/20 hover:bg-[#5A3E2B] transition-all flex items-center justify-center gap-2">
+                            <button className="w-full py-4 bg-ink text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-ink/20 hover:bg-body transition-all flex items-center justify-center gap-2">
                                 <FileText className="w-4 h-4" />
                                 Generate Full Analysis
                             </button>

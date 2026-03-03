@@ -38,7 +38,21 @@ function PanchangaItem({ label, value, subValue, icon: Icon, color }: PanchangaI
     );
 }
 
-export default function BirthPanchanga({ data }: { data: any }) {
+interface BirthPanchangaData {
+    panchanga: {
+        tithi: { name: string; paksha: string };
+        nakshatra: { name: string; pada: number };
+        yoga: { name: string };
+        karana: { name: string };
+        vara: { name: string };
+    };
+    times: {
+        sunrise: { time: string };
+        sunset: { time: string };
+    };
+}
+
+export default function BirthPanchanga({ data }: { data: BirthPanchangaData | null }) {
     if (!data || !data.panchanga) {
         return (
             <div className="p-3 text-center border border-antique/30 rounded-lg bg-softwhite/50  text-primary text-[10px] font-serif">

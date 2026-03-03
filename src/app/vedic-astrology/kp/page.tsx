@@ -127,7 +127,7 @@ export default function KpDashboardPage() {
             }
 
             // Parse Planets
-            const visualPlanets: any[] = [];
+            const visualPlanets: { name: string; signId: number; degree: string; isRetro: boolean; house: number }[] = [];
             // Handle Record<string, Planet>
             if (planets && !Array.isArray(planets)) {
                 Object.entries(planets).forEach(([name, p]) => {
@@ -199,9 +199,7 @@ export default function KpDashboardPage() {
 
         // Fallback to D1_kp houses
         const d1Kp = processedCharts['D1_kp'];
-        if (d1Kp?.chartData) {
-            console.log('[KP Cusps] Using D1_kp fallback');
-            const data = d1Kp.chartData.data || d1Kp.chartData;
+        if (d1Kp?.chartData) {            const data = d1Kp.chartData.data || d1Kp.chartData;
             const houses = data.houses || data.observations || [];
 
             if (Array.isArray(houses) && houses.length > 0) {
@@ -227,23 +225,27 @@ export default function KpDashboardPage() {
 
         // Check if it's the new Record format (check if keys are strings like "Sun")
         if (rawPlanets && !Array.isArray(rawPlanets)) {
-            return Object.entries(rawPlanets).map(([name, p]: [string, any]) => ({
-                name: name,
-                fullName: name,
-                sign: p.sign,
-                signId: signNameToId[p.sign] || 1,
-                degree: parseDms(p.longitude || p.degreeFormatted || p.degree),
-                degreeFormatted: p.longitude || p.degreeFormatted || p.degree,
-                house: p.house || p.bhava,
-                nakshatra: p.nakshatra,
-                nakshatraLord: p.star_lord || p.nakshatra_lord || p.nakshatraLord,
-                subLord: p.sub_lord || p.subLord,
-                isRetrograde: p.is_retro || p.is_retrograde || p.isRetrograde || false
-            }));
+            return Object.entries(rawPlanets).map(([name, val]) => {
+                const p = val as Record<string, string | number | boolean | undefined>;
+                return {
+                    name,
+                    fullName: name,
+                    sign: p.sign,
+                    signId: signNameToId[p.sign as string] || 1,
+                    degree: parseDms(String(p.longitude || p.degreeFormatted || p.degree || '')),
+                    degreeFormatted: p.longitude || p.degreeFormatted || p.degree,
+                    house: p.house || p.bhava,
+                    nakshatra: p.nakshatra,
+                    nakshatraLord: p.star_lord || p.nakshatra_lord || p.nakshatraLord,
+                    subLord: p.sub_lord || p.subLord,
+                    isRetrograde: p.is_retro || p.is_retrograde || p.isRetrograde || false
+                };
+            });
         }
 
         // Handle Array format (legacy or fallback)
         if (Array.isArray(rawPlanets)) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return rawPlanets.map((p: any) => ({
                 name: p.name || p.planet,
                 fullName: p.full_name || p.name || p.planet,
@@ -421,7 +423,7 @@ export default function KpDashboardPage() {
 
         return Object.entries(analysis).map(([house, item]: [string, any]) => ({
             houseNumber: parseInt(house),
-            topic: item.interpretation?.split('-')[0]?.trim() || `House ${house}`,
+            topic: ((item.interpretation as string)?.split('-')[0]?.trim()) || `House ${house}`,
             chain: {
                 signLord: { planet: item.cusp_lords?.sign_lord || '-', isRetro: false },
                 starLord: { planet: item.cusp_lords?.star_lord || '-', isRetro: false },
@@ -534,13 +536,6 @@ export default function KpDashboardPage() {
     }, [bhavaDetailsQuery.data, processedCharts]);
 
     // KP Debug Logs
-    console.log('KP Debug Data:', {
-        interlinks: interlinksQuery.data,
-        ssl: advancedSslQuery.data,
-        nadi: nakshatraNadiQuery.data,
-        fortuna: fortunaQuery.data
-    });
-
     if (ayanamsa !== 'KP') {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
@@ -670,8 +665,8 @@ export default function KpDashboardPage() {
                             {/* Left Column: Persistent Cuspal Chart - Hidden in Ashtakavarga for full-width view */}
                             {activeTab !== 'ashtakavarga' && (
                                 <div className="xl:col-span-4 sticky top-44">
-                                    <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
-                                        <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                                    <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
+                                        <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
                                             <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Cuspal Chart</h3>
                                         </div>
                                         <div className="w-full">
@@ -703,9 +698,9 @@ export default function KpDashboardPage() {
                                 <div className="min-h-[400px]">
                                     {/* Planets & Cusps */}
                                     {activeTab === 'planets-cusps' && (
-                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
                                             {/* Planets Table */}
-                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
                                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Planetary Positions with Star & Sub Lords</h3>
                                             </div>
                                             <div className="w-full">
@@ -724,8 +719,8 @@ export default function KpDashboardPage() {
 
                                     {/* House Significations */}
                                     {activeTab === 'significations' && (
-                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
-                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique flex justify-between items-center">
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
+                                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
                                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">House Significations</h3>
                                                 <span className="text-[10px] text-primary/70 font-sans hidden sm:inline-block">Planets that signify specific houses based on their stellar positions</span>
                                             </div>
@@ -745,8 +740,8 @@ export default function KpDashboardPage() {
 
                                     {/* Planetary Significators */}
                                     {activeTab === 'planetary-significators' && (
-                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
-                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique flex justify-between items-center">
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
+                                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
                                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Planetary Significators</h3>
                                                 <span className="text-[10px] text-primary/70 font-sans hidden sm:inline-block">Which houses are signified by each planet - the core of KP prediction</span>
                                             </div>
@@ -766,8 +761,8 @@ export default function KpDashboardPage() {
 
                                     {/* Bhava Details */}
                                     {activeTab === 'bhava-details' && (
-                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
-                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique flex justify-between items-center">
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
+                                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
                                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Bhava Chalit Details</h3>
                                                 <div className="px-2 py-0.5 bg-gold-primary/10 rounded border border-gold-primary/20">
                                                     <span className="text-[9px] font-semibold text-accent-gold uppercase tracking-widest font-sans">Placidus / KP</span>
@@ -813,8 +808,8 @@ export default function KpDashboardPage() {
 
                                     {/* Cuspal Interlinks */}
                                     {activeTab === 'interlinks' && (
-                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
-                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
+                                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
                                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Cuspal Interlinks</h3>
                                             </div>
                                             <div className="w-full p-6">
@@ -835,8 +830,8 @@ export default function KpDashboardPage() {
 
                                     {/* Advanced SSL */}
                                     {activeTab === 'advanced-ssl' && (
-                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
-                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
+                                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
                                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Advanced Sub-Sub Lord View</h3>
                                             </div>
                                             <div className="w-full p-6">
@@ -857,8 +852,8 @@ export default function KpDashboardPage() {
 
                                     {/* Nakshatra Nadi */}
                                     {activeTab === 'nakshatra-nadi' && (
-                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
-                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
+                                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
                                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Nakshatra Nadi Coordinates</h3>
                                             </div>
                                             <div className="w-full p-6">
@@ -879,8 +874,8 @@ export default function KpDashboardPage() {
 
                                     {/* Pars Fortuna */}
                                     {activeTab === 'fortuna' && (
-                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
-                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
+                                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
                                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Pars Fortuna</h3>
                                             </div>
                                             <div className="w-full p-6">
@@ -901,8 +896,8 @@ export default function KpDashboardPage() {
 
                                     {/* Ashtakavarga */}
                                     {activeTab === 'ashtakavarga' && (
-                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
-                                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
+                                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
                                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Ashtakavarga Matrix</h3>
                                             </div>
                                             <div className="w-full p-6">

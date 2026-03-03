@@ -96,7 +96,7 @@ const DASHA_LIST = [
 
 export default function AstrologyDashboard() {
     return (
-        <div className="min-h-screen bg-[#FDFBF7] text-slate-900 font-sans selection:bg-orange-100 pt-[64px]">
+        <div className="min-h-screen bg-surface-warm text-slate-900 font-sans selection:bg-orange-100 pt-[64px]">
             {/* 1. TOP HEADER: Very compact, "Parashara" style data density */}
             <header className="bg-slate-900 text-amber-50 px-4 py-1.5 border-b border-slate-700 flex justify-between items-center text-xs shadow-md">
                 <div className="flex items-center gap-6">
@@ -187,7 +187,7 @@ export default function AstrologyDashboard() {
                     <div className="grid grid-cols-2 gap-3 flex-1 min-h-0">
                         {/* D1 RASHI */}
                         <ChartCard title="Lagna Chart (D1)">
-                            <div className="w-full h-full p-2 flex items-center justify-center bg-[#FFFCF5]">
+                            <div className="w-full h-full p-2 flex items-center justify-center bg-surface-warm">
                                 <NorthIndianChart
                                     planets={D1_PLANETS}
                                     ascendantSign={D1_ASC_SIGN}
@@ -199,7 +199,7 @@ export default function AstrologyDashboard() {
 
                         {/* D9 NAVAMSA */}
                         <ChartCard title="Navamsa Chart (D9)">
-                            <div className="w-full h-full p-2 flex items-center justify-center bg-[#FFFCF5]">
+                            <div className="w-full h-full p-2 flex items-center justify-center bg-surface-warm">
                                 <NorthIndianChart
                                     planets={D9_PLANETS}
                                     ascendantSign={D9_ASC_SIGN}
@@ -218,7 +218,7 @@ export default function AstrologyDashboard() {
                         </div>
                         <div className="flex-1 overflow-auto">
                             <table className="w-full text-xs text-left border-collapse">
-                                <thead className="bg-[#FFF9EE] sticky top-0 z-10 text-slate-600">
+                                <thead className="bg-surface-modal sticky top-0 z-10 text-slate-600">
                                     <tr>
                                         <th className="py-1 px-2 border-r border-b border-slate-200 font-semibold w-16">Planet</th>
                                         <th className="py-1 px-2 border-r border-b border-slate-200 font-semibold w-8">R/C</th>
@@ -233,7 +233,7 @@ export default function AstrologyDashboard() {
                                 </thead>
                                 <tbody>
                                     {PLANETARY_DETAILS.map((p, i) => (
-                                        <tr key={p.name} className={`hover:bg-blue-50/50 ${i % 2 === 0 ? 'bg-white' : 'bg-[#FAFAFA]'}`}>
+                                        <tr key={p.name} className={`hover:bg-blue-50/50 ${i % 2 === 0 ? 'bg-white' : 'bg-zinc-50'}`}>
                                             <td className="py-1 px-2 border-r border-slate-200 font-medium text-slate-800">{p.name}</td>
                                             <td className="py-1 px-2 border-r border-slate-200 text-center text-red-600 font-bold">{p.r}</td>
                                             <td className="py-1 px-2 border-r border-slate-200 text-slate-600">{p.sign}</td>
@@ -341,7 +341,7 @@ function PanchangItem({ label, value }: { label: string; value: string }) {
 function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
     return (
         <div className="bg-white border border-slate-200 rounded-sm shadow-sm flex flex-col h-full overflow-hidden">
-            <div className="bg-[#F8F9FA] px-3 py-1.5 border-b border-slate-200 flex justify-between items-center">
+            <div className="bg-gray-50 px-3 py-1.5 border-b border-slate-200 flex justify-between items-center">
                 <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide">{title}</h3>
                 <div className="flex gap-1.5">
                     <div className="w-2 h-2 rounded-full bg-red-400" title="Retrograde"></div>

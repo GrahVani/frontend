@@ -76,7 +76,7 @@ export interface YogaPlanetAnalysis {
     sign: string;
     degrees: string;
     retrograde: string;
-    strength_factors: any;
+    strength_factors: Record<string, string | number | boolean>;
     strength_summary: string;
 }
 
@@ -91,8 +91,8 @@ export interface YogaAnalysis {
     jupiter_analysis?: YogaPlanetAnalysis;
     moon_analysis?: YogaPlanetAnalysis;
     comprehensive_effects: {
-        jupiter_house_effects: any;
-        moon_house_effects: any;
+        jupiter_house_effects: Record<string, string>;
+        moon_house_effects: Record<string, string>;
         sign_combination_effects: string;
         strength_assessment: string;
         malefic_influences: string;

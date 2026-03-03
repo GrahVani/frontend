@@ -10,11 +10,7 @@ export default function CalendarLayout({ children }: { children: React.ReactNode
         <ProtectedRoute>
             <div className="min-h-screen bg-luxury-radial relative">
                 <div
-                    className="absolute inset-0 opacity-15 pointer-events-none z-0"
-                    style={{
-                        backgroundImage: "url('https://www.transparenttextures.com/patterns/aged-paper.png')",
-                        backgroundBlendMode: 'multiply'
-                    }}
+                    className="absolute inset-0 opacity-15 pointer-events-none z-0 bg-[url('/textures/aged-paper.png')] bg-blend-multiply"
                 />
                 <div className="pt-14 relative z-10 w-full min-h-screen">
                     <div className="hidden lg:block fixed left-0 top-14 bottom-0 w-64 overflow-y-auto z-20">

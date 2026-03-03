@@ -1,12 +1,19 @@
+import { SkeletonCard } from "@/components/ui/Skeleton";
+
 export default function DashboardLoading() {
-  return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="text-center space-y-4">
-        <div className="w-10 h-10 border-3 border-amber-300 border-t-amber-700 rounded-full animate-spin mx-auto" />
-        <p className="text-amber-800/70 text-sm font-medium">
-          Loading dashboard...
-        </p>
-      </div>
-    </div>
-  );
+    return (
+        <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-300" role="status" aria-label="Loading dashboard" aria-busy="true">
+            <div className="space-y-2">
+                <div className="h-10 w-48 bg-parchment/50 rounded-lg animate-pulse" />
+                <div className="h-5 w-64 bg-parchment/30 rounded-lg animate-pulse" />
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="col-span-full lg:col-span-2"><SkeletonCard /></div>
+                <SkeletonCard />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
+            </div>
+        </div>
+    );
 }

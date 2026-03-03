@@ -63,9 +63,7 @@ export function VedicClientProvider({ children }: { children: ReactNode }) {
                 const parsed = JSON.parse(stored);
                 setClientDetails(parsed);
                 // Schema check or revalidation could happen here
-            } catch (e) {
-                console.error("Failed to parse stored client details", e);
-            }
+            } catch (e) {            }
         }
         setIsInitialized(true);
     }, []);

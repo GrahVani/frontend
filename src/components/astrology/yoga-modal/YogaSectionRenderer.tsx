@@ -32,7 +32,7 @@ export const YogaSectionRenderer = memo(function YogaSectionRenderer({ data }: Y
                 // Skip empty objects (for planets Record)
                 if (typeof sectionData === 'object' && !Array.isArray(sectionData) && Object.keys(sectionData).length === 0) return null;
 
-                return <Component key={key} data={sectionData} />;
+                return <Component key={key} data={sectionData as Record<string, unknown>} />;
             })}
         </div>
     );

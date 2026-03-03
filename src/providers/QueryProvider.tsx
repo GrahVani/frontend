@@ -10,15 +10,11 @@ export default function QueryProvider({ children }: { children: ReactNode }) {
                 queryCache: new QueryCache({
                     onError: (error) => {
                         // Global query error handler — log non-401 errors
-                        if (!error.message.includes("401")) {
-                            console.error("[QueryCache] Query failed:", error.message);
-                        }
+                        if (!error.message.includes("401")) {                        }
                     },
                 }),
                 mutationCache: new MutationCache({
-                    onError: (error) => {
-                        console.error("[MutationCache] Mutation failed:", error.message);
-                    },
+                    onError: (error) => {                    },
                 }),
                 defaultOptions: {
                     queries: {

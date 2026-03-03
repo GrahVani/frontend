@@ -19,7 +19,7 @@ export function ApiErrorFallback({
     "An unexpected error occurred. Please try again.";
 
   return (
-    <div className="flex items-center justify-center p-8">
+    <div className="flex items-center justify-center p-8" role="alert" aria-live="assertive">
       <div className="max-w-sm w-full text-center space-y-4">
         <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto">
           <span className="text-red-600 text-xl">!</span>

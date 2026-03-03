@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
 
@@ -11,18 +11,43 @@ interface ModalProps {
 }
 
 export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, className }) => {
+    const dialogRef = useRef<HTMLDivElement>(null);
+    const titleId = React.useId();
+
     useEffect(() => {
+        if (!isOpen) return;
+
         const handleEscape = (e: KeyboardEvent) => {
             if (e.key === 'Escape') onClose();
         };
 
-        if (isOpen) {
-            document.addEventListener('keydown', handleEscape);
-            document.body.style.overflow = 'hidden';
-        }
+        // Focus trap
+        const handleTab = (e: KeyboardEvent) => {
+            if (e.key !== 'Tab' || !dialogRef.current) return;
+            const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last?.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first?.focus();
+            }
+        };
+
+        document.addEventListener('keydown', handleEscape);
+        document.addEventListener('keydown', handleTab);
+        document.body.style.overflow = 'hidden';
+
+        // Focus the dialog
+        dialogRef.current?.focus();
 
         return () => {
             document.removeEventListener('keydown', handleEscape);
+            document.removeEventListener('keydown', handleTab);
             document.body.style.overflow = 'unset';
         };
     }, [isOpen, onClose]);
@@ -33,12 +58,20 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
         <div className="fixed inset-0 z-[1000] bg-ink/70 backdrop-blur-md animate-in fade-in duration-300 overflow-y-auto">
             <div className="flex min-h-full items-start justify-center p-4 md:p-8 pt-32 sm:pt-40 md:pt-56 lg:pt-30">
                 <div
+                    ref={dialogRef}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby={titleId}
+                    tabIndex={-1}
                     className={cn(
                         "relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-antique animate-in zoom-in-95 duration-200",
                         className
                     )}
                     onClick={(e) => e.stopPropagation()}
                 >
+                    {/* Screen-reader-only title */}
+                    <span id={titleId} className="sr-only">{title}</span>
+
                     <button
                         onClick={onClose}
                         className="absolute right-4 top-4 p-2 bg-white text-secondary hover:text-primary hover:bg-gold-primary transition-all rounded-full border border-antique shadow-sm z-50 ring-1 ring-black/5"
@@ -47,7 +80,6 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
                         <X className="w-6 h-6" />
                     </button>
 
-                    {/* Content */}
                     <div className="p-0">
                         {children}
                     </div>

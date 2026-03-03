@@ -45,11 +45,11 @@ export default function ComparisonPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#FEFAEA] p-8">
+        <div className="min-h-screen bg-softwhite p-8">
             <div className="max-w-6xl mx-auto space-y-8">
                 <header>
-                    <h1 className="text-3xl font-serif text-[#3E2A1F] font-bold">Astrology Tools</h1>
-                    <p className="text-[#7A5A43]">Advanced Chart Comparison Module</p>
+                    <h1 className="text-3xl font-serif text-ink font-bold">Astrology Tools</h1>
+                    <p className="text-muted">Advanced Chart Comparison Module</p>
                 </header>
 
                 <main>

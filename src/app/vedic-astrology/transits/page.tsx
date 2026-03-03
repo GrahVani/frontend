@@ -22,8 +22,8 @@ interface TransitPlanet {
 }
 
 // Map API data to transit format using robust parser
-function mapChartToTransits(chartData: any, natalAscendant: number): TransitPlanet[] {
-    const { planets } = parseChartData(chartData);
+function mapChartToTransits(chartData: Record<string, unknown> | null | undefined, natalAscendant: number): TransitPlanet[] {
+    const { planets } = parseChartData(chartData || {});
     if (planets.length === 0) return [];
 
     return planets
@@ -70,9 +70,7 @@ function getDateRange(tab: DurationTab): { start: string; end: string } {
     };
 }
 
-function getSafeDateRange(tab: DurationTab, custom?: { start: string; end: string }): { start: string; end: string } {
-    console.log('[DailyTransit] getSafeDateRange called with:', { tab, custom });
-    if (tab === 'custom' && custom) return custom;
+function getSafeDateRange(tab: DurationTab, custom?: { start: string; end: string }): { start: string; end: string } {    if (tab === 'custom' && custom) return custom;
     return getDateRange(tab);
 }
 
@@ -95,7 +93,7 @@ function formatDateLabel(dateStr: string): { day: string; monthYear: string; wee
 
 function DailyTransitView({ clientId }: { clientId: string }) {
     const [durationTab, setDurationTab] = useState<DurationTab>('week');
-    const [data, setData] = useState<any[]>([]);
+    const [data, setData] = useState<Record<string, unknown>[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -111,14 +109,10 @@ function DailyTransitView({ clientId }: { clientId: string }) {
         setLoading(true);
         setError(null);
         setActiveIndex(0); // Reset to today/first day
-        try {
-            console.log('[DailyTransit] fetchTransits state:', { customStart, customEnd, tab });
-            const { start, end } = getSafeDateRange(tab, { start: customStart, end: customEnd });
-            console.log(`[DailyTransit] Fetching for ${start} to ${end}`);
-            const response = await clientApi.generateDailyTransit(clientId, start, end);
+        try {            const { start, end } = getSafeDateRange(tab, { start: customStart, end: customEnd });            const response = await clientApi.generateDailyTransit(clientId, start, end) as any;
 
 
-            let entries: any[] = [];
+            let entries: Record<string, unknown>[] = [];
             if (response?.chartData?.data?.transit_data) {
                 entries = response.chartData.data.transit_data;
             } else if (response?.chartData?.transit_data) {
@@ -128,11 +122,11 @@ function DailyTransitView({ clientId }: { clientId: string }) {
             } else if (Array.isArray(response?.chartData)) {
                 entries = response.chartData;
             } else {
-                const findTransitData = (obj: any): any[] | null => {
+                const findTransitData = (obj: Record<string, unknown>): Record<string, unknown>[] | null => {
                     if (!obj || typeof obj !== 'object') return null;
                     if (Array.isArray(obj.transit_data)) return obj.transit_data;
                     for (const key in obj) {
-                        const result = findTransitData(obj[key]);
+                        const result = findTransitData(obj[key] as Record<string, unknown>);
                         if (result) return result;
                     }
                     return null;
@@ -140,11 +134,7 @@ function DailyTransitView({ clientId }: { clientId: string }) {
                 entries = findTransitData(response) || [];
             }
 
-            setData(entries);
-            console.log(`[DailyTransit] Extracted ${entries.length} entries`);
-        } catch (err: any) {
-            console.error('[DailyTransit] Fetch Error:', err);
-            setError(err.message || 'Failed to fetch daily transit data');
+            setData(entries);        } catch (err: unknown) {            setError(err instanceof Error ? err.message : 'Failed to fetch daily transit data');
             setData([]);
         } finally {
             setLoading(false);
@@ -177,8 +167,8 @@ function DailyTransitView({ clientId }: { clientId: string }) {
         }
 
         const events: TransitEvent[] = [];
-        const currPlanets = currentEntry.planetary_positions || {};
-        const nextPlanets = nextEntry.planetary_positions || {};
+        const currPlanets = (currentEntry as any).planetary_positions || {};
+        const nextPlanets = (nextEntry as any).planetary_positions || {};
 
         Object.keys(currPlanets).forEach(pName => {
             const curr = currPlanets[pName];
@@ -248,8 +238,8 @@ function DailyTransitView({ clientId }: { clientId: string }) {
     const insights = getTransitInsights();
 
     // Mapping for UI
-    const getPlanetRows = (entry: any) => {
-        const planets = entry?.planetary_positions || entry?.planets || {};
+    const getPlanetRows = (entry: Record<string, unknown>) => {
+        const planets: Record<string, any> = (entry as any)?.planetary_positions || (entry as any)?.planets || {};
         const keys = Object.keys(planets).filter(k => typeof planets[k] === 'object' && planets[k] !== null);
 
         const sorted = PLANET_ORDER.filter(p => keys.some(k => k.toLowerCase() === p.toLowerCase()))
@@ -289,7 +279,7 @@ function DailyTransitView({ clientId }: { clientId: string }) {
                             className={cn(
                                 "px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all flex items-center gap-2",
                                 durationTab === tab.key
-                                    ? "bg-[#D08C60] text-white shadow-md shadow-[#D08C60]/20"
+                                    ? "bg-header-border text-white shadow-md shadow-header-border/20"
                                     : "text-primary hover:text-primary hover:bg-white/50"
                             )}
                         >
@@ -300,7 +290,7 @@ function DailyTransitView({ clientId }: { clientId: string }) {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    {loading && <Loader2 className="w-4 h-4 text-[#D08C60] animate-spin" />}
+                    {loading && <Loader2 className="w-4 h-4 text-header-border animate-spin" />}
                     <div className="text-right">
                         <p className="text-[10px] text-primary font-black uppercase tracking-widest leading-none">Status</p>
                         <p className="text-xs font-serif text-primary font-bold mt-1">
@@ -328,7 +318,7 @@ function DailyTransitView({ clientId }: { clientId: string }) {
                     <button
                         onClick={() => fetchTransits('custom')}
                         disabled={loading}
-                        className="bg-[#D08C60] hover:bg-[#B57A50] text-white px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md transition-all flex items-center gap-2 mb-1 disabled:opacity-50"
+                        className="bg-header-border hover:bg-amber-700 text-white px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md transition-all flex items-center gap-2 mb-1 disabled:opacity-50"
                     >
                         {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CalendarRange className="w-3.5 h-3.5" />}
                         Confirm & Project
@@ -360,7 +350,7 @@ function DailyTransitView({ clientId }: { clientId: string }) {
             {!loading && data.length > 0 && (
                 <div className="flex bg-white/40 border-b border-antique overflow-x-auto scrollbar-hide shrink-0 snap-x">
                     {data.map((entry, idx) => {
-                        const dateStr = entry.date || entry.transit_date || '';
+                        const dateStr = String(entry.date || entry.transit_date || '');
                         const { day, weekday, isToday } = formatDateLabel(dateStr);
                         const isSelected = activeIndex === idx;
 
@@ -371,13 +361,13 @@ function DailyTransitView({ clientId }: { clientId: string }) {
                                 className={cn(
                                     "flex flex-col items-center justify-center min-w-[70px] py-3 transition-all border-r border-antique/10 snap-start",
                                     isSelected
-                                        ? "bg-white border-b-2 border-b-[#D08C60]"
+                                        ? "bg-white border-b-2 border-b-header-border"
                                         : "hover:bg-white/60 opacity-60 hover:opacity-100"
                                 )}
                             >
                                 <span className={cn(
                                     "text-[9px] font-black uppercase tracking-tighter mb-0.5",
-                                    isToday && !isSelected ? "text-[#D08C60]" : "text-primary"
+                                    isToday && !isSelected ? "text-header-border" : "text-primary"
                                 )}>{weekday}</span>
                                 <span className={cn(
                                     "text-lg font-black leading-none",
@@ -393,7 +383,7 @@ function DailyTransitView({ clientId }: { clientId: string }) {
             <div className="flex-1 flex flex-col lg:flex-row">
                 {loading ? (
                     <div className="flex-1 flex flex-col items-center justify-center py-20">
-                        <Loader2 className="w-12 h-12 text-[#D08C60] animate-spin mb-4" />
+                        <Loader2 className="w-12 h-12 text-header-border animate-spin mb-4" />
                         <h3 className="font-serif text-2xl text-primary font-bold">Projecting Transits</h3>
                         <p className="text-primary text-sm mt-2">Calculating planetary motions for {durationTab}...</p>
                     </div>
@@ -403,8 +393,8 @@ function DailyTransitView({ clientId }: { clientId: string }) {
                         <div className="lg:w-[380px] w-full border-r border-antique flex flex-col p-6 bg-white shrink-0">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-xs font-black text-primary uppercase tracking-[0.2em]">Gochar Chart</h3>
-                                <div className="px-2 py-0.5 bg-[#D08C60]/10 rounded border border-[#D08C60]/20">
-                                    <span className="text-[9px] font-black text-[#D08C60] uppercase">Lahiri</span>
+                                <div className="px-2 py-0.5 bg-header-border/10 rounded border border-header-border/20">
+                                    <span className="text-[9px] font-black text-header-border uppercase">Lahiri</span>
                                 </div>
                             </div>
 
@@ -422,7 +412,7 @@ function DailyTransitView({ clientId }: { clientId: string }) {
                             <div className="mt-6 pt-6 border-t border-antique/10">
                                 <div className="flex items-center gap-4">
                                     <div className="p-2.5 bg-antique rounded-xl">
-                                        <Info className="w-5 h-5 text-[#D08C60]" />
+                                        <Info className="w-5 h-5 text-header-border" />
                                     </div>
                                     <div>
                                         <p className="text-[9px] font-black text-primary uppercase tracking-widest">Astro Tip</p>
@@ -443,7 +433,7 @@ function DailyTransitView({ clientId }: { clientId: string }) {
 
                             <div className="flex-1">
                                 <table className="w-full border-collapse">
-                                    <thead className="sticky top-0 bg-[#FAF7F2] z-10 shadow-sm">
+                                    <thead className="sticky top-0 bg-surface-pure z-10 shadow-sm">
                                         <tr>
                                             <th className="px-6 py-3 text-left text-[9px] font-black text-primary uppercase tracking-widest border-b border-antique/10">Planet</th>
                                             <th className="px-4 py-3 text-left text-[9px] font-black text-primary uppercase tracking-widest border-b border-antique/10">Sign</th>
@@ -495,11 +485,11 @@ function DailyTransitView({ clientId }: { clientId: string }) {
                             <h3 className="text-xs font-black text-primary uppercase tracking-[0.2em] mb-6">Daily Insights</h3>
 
                             {/* Lagna Box */}
-                            <div className="bg-[#D08C60]/5 rounded-2xl p-5 border border-[#D08C60]/10 mb-6">
-                                <p className="text-[9px] font-black text-[#D08C60] uppercase tracking-widest mb-3">Lagna (Ascendant)</p>
+                            <div className="bg-header-border/5 rounded-2xl p-5 border border-header-border/10 mb-6">
+                                <p className="text-[9px] font-black text-header-border uppercase tracking-widest mb-3">Lagna (Ascendant)</p>
                                 <div className="flex items-baseline gap-2">
-                                    <h4 className="text-2xl font-serif text-primary font-bold">{currentEntry.ascendant?.sign}</h4>
-                                    <span className="text-xs font-mono text-primary">{currentEntry.ascendant?.degrees}</span>
+                                    <h4 className="text-2xl font-serif text-primary font-bold">{String((currentEntry.ascendant as Record<string, unknown>)?.sign || '')}</h4>
+                                    <span className="text-xs font-mono text-primary">{String((currentEntry.ascendant as Record<string, unknown>)?.degrees || '')}</span>
                                 </div>
                                 <p className="text-[10px] text-primary mt-1">Starting point of planetary influence today.</p>
                             </div>
@@ -514,24 +504,24 @@ function DailyTransitView({ clientId }: { clientId: string }) {
                                 {/* Date Header */}
                                 <div className="flex items-center gap-2 mb-4 px-1">
                                     <div className="px-2 py-1 bg-antique/30 rounded text-[9px] font-bold text-primary border border-antique/20">
-                                        {formatDateLabel(currentEntry.date || currentEntry.transit_date).day} {formatDateLabel(currentEntry.date || currentEntry.transit_date).monthYear}
+                                        {formatDateLabel(String(currentEntry.date || currentEntry.transit_date || '')).day} {formatDateLabel(String(currentEntry.date || currentEntry.transit_date || '')).monthYear}
                                     </div>
                                     <span className="text-primary">→</span>
                                     <div className="px-2 py-1 bg-antique/30 rounded text-[9px] font-bold text-primary border border-antique/20">
-                                        {formatDateLabel(nextEntry?.date || nextEntry?.transit_date || '').day} {formatDateLabel(nextEntry?.date || nextEntry?.transit_date || '').monthYear}
+                                        {formatDateLabel(String(nextEntry?.date || nextEntry?.transit_date || '')).day} {formatDateLabel(String(nextEntry?.date || nextEntry?.transit_date || '')).monthYear}
                                     </div>
                                 </div>
 
                                 <div className="space-y-2">
                                     {insights.length > 0 ? (
                                         insights.map((event, k) => (
-                                            <div key={k} className="p-3 bg-white border border-antique/30 rounded-lg group hover:border-[#D08C60]/40 transition-all shadow-sm">
+                                            <div key={k} className="p-3 bg-white border border-antique/30 rounded-lg group hover:border-header-border/40 transition-all shadow-sm">
                                                 <div className="flex items-center justify-between mb-1.5">
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-sm" title={event.planet}>{PLANET_SYMBOLS[event.planet]}</span>
                                                         <span className={cn(
                                                             "text-xs font-bold",
-                                                            event.severity === 'high' ? "text-[#D08C60]" : "text-primary"
+                                                            event.severity === 'high' ? "text-header-border" : "text-primary"
                                                         )}>
                                                             {event.planet}
                                                         </span>
@@ -574,7 +564,7 @@ function DailyTransitView({ clientId }: { clientId: string }) {
                             <div className="mt-auto pt-6 border-t border-antique/10 text-center">
                                 <p className="text-[9px] font-black text-primary uppercase tracking-[0.3em] mb-2">Transit Summary</p>
                                 <div className="text-xs font-serif text-primary italic leading-relaxed">
-                                    {currentEntry.notes?.chart_type || "Standard Daily Gochar Analysis"}
+                                    {String((currentEntry as any).notes?.chart_type || "Standard Daily Gochar Analysis")}
                                 </div>
                             </div>
                         </div>
@@ -605,7 +595,7 @@ export default function TransitsPage() {
     const activeSystem = settings.ayanamsa.toLowerCase();
     const isLahiri = activeSystem === 'lahiri';
     const [activeTab, setActiveTab] = useState<GocharTab>(isLahiri ? 'daily_transit' : 'gochar');
-    const [liveTransitChart, setLiveTransitChart] = useState<any>(null);
+    const [liveTransitChart, setLiveTransitChart] = useState<Record<string, unknown> | null>(null);
     const [isLiveLoading, setIsLiveLoading] = useState(false);
 
     // Auto-switch tab when system changes: non-Lahiri systems don't have Daily Transit
@@ -618,13 +608,9 @@ export default function TransitsPage() {
     const fetchLiveTransit = useCallback(async () => {
         if (!clientDetails?.id) return;
         setIsLiveLoading(true);
-        try {
-            console.log(`[TransitsPage] Fetching live transit for ${activeSystem}...`);
-            const res = await clientApi.generateChart(clientDetails.id, 'transit', activeSystem);
+        try {            const res = await clientApi.generateChart(clientDetails.id, 'transit', activeSystem);
             setLiveTransitChart(res);
-        } catch (err) {
-            console.error("[TransitsPage] Failed to fetch live transit:", err);
-        } finally {
+        } catch (err) {        } finally {
             setIsLiveLoading(false);
         }
     }, [clientDetails?.id, activeSystem]);
@@ -643,9 +629,6 @@ export default function TransitsPage() {
         const d1Chart = processedCharts[d1Key];
         // Prefer live fetched transit, fallback to context (though context likely empty for transit)
         const transitChart = liveTransitChart || processedCharts[`transit_${activeSystem}`];
-
-        console.log(`[TransitsPage] useMemo - D1 key: ${d1Key}, D1 found: ${!!d1Chart?.chartData}, Transit found: ${!!transitChart?.chartData}`);
-
         if (!transitChart?.chartData) {
             return { transitData: [], natalAscendant: 1, transitPlanets: [] };
         }
@@ -660,9 +643,7 @@ export default function TransitsPage() {
         } else {
             // Fallback: use transit chart's own ascendant
             const transitParsed = parseChartData(transit);
-            ascSign = transitParsed.ascendant;
-            console.log(`[TransitsPage] D1 chart unavailable for ${activeSystem}, using transit ascendant: ${ascSign}`);
-        }
+            ascSign = transitParsed.ascendant;        }
 
         const transits = mapChartToTransits(transit, ascSign);
 
@@ -700,12 +681,12 @@ export default function TransitsPage() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-xl font-serif text-primary font-black tracking-tight flex items-center gap-2">
-                        <RefreshCcw className="w-5 h-5 text-[#D08C60]" />
+                        <RefreshCcw className="w-5 h-5 text-header-border" />
                         Transit Impact Analysis
                     </h1>
                     <div className="flex items-center gap-2">
                         <p className="text-primary font-serif text-sm">Gochar positions for {clientDetails.name}</p>
-                        <span className="px-2 py-0.5 bg-[#D08C60]/10 text-[#D08C60] text-[10px] font-bold uppercase rounded-full border border-[#D08C60]/30">
+                        <span className="px-2 py-0.5 bg-header-border/10 text-header-border text-[10px] font-bold uppercase rounded-full border border-header-border/30">
                             {settings.ayanamsa}
                         </span>
                         {(isGeneratingCharts || isLiveLoading) && (
@@ -726,7 +707,7 @@ export default function TransitsPage() {
                     <button
                         onClick={() => activeTab === 'gochar' ? fetchLiveTransit() : refreshCharts()}
                         disabled={isLoadingCharts || isLiveLoading}
-                        className="p-2 rounded-lg bg-white border border-[#D08C60]/30 hover:bg-[#D08C60]/10 text-[#8B5A2B] disabled:opacity-50"
+                        className="p-2 rounded-lg bg-white border border-header-border/30 hover:bg-header-border/10 text-bronze disabled:opacity-50"
                     >
                         <RefreshCcw className={cn("w-4 h-4", (isRefreshingCharts || isLiveLoading) && "animate-spin")} />
                     </button>
@@ -738,14 +719,14 @@ export default function TransitsPage() {
             </div>
 
             {/* Tab Switcher */}
-            <div className="flex items-center gap-1 bg-[#FAF7F2] rounded-xl p-1 border border-antique">
+            <div className="flex items-center gap-1 bg-surface-pure rounded-xl p-1 border border-antique">
                 {isLahiri && (
                     <button
                         onClick={() => setActiveTab('daily_transit')}
                         className={cn(
                             "flex-1 px-4 py-2 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-1.5",
                             activeTab === 'daily_transit'
-                                ? "bg-white text-primary shadow-sm border border-[#D08C60]/20"
+                                ? "bg-white text-primary shadow-sm border border-header-border/20"
                                 : "text-primary hover:text-primary"
                         )}
                     >
@@ -757,7 +738,7 @@ export default function TransitsPage() {
                     className={cn(
                         "flex-1 px-4 py-2 text-sm font-bold rounded-lg transition-all",
                         activeTab === 'gochar'
-                            ? "bg-white text-primary shadow-sm border border-[#D08C60]/20"
+                            ? "bg-white text-primary shadow-sm border border-header-border/20"
                             : "text-primary hover:text-primary"
                     )}
                 >
@@ -770,7 +751,7 @@ export default function TransitsPage() {
                 <>
                     {(isLiveLoading || (isLoadingCharts && Object.keys(processedCharts).length === 0)) && (
                         <div className="flex flex-col items-center justify-center py-16">
-                            <Loader2 className="w-8 h-8 text-[#D08C60] animate-spin mb-3" />
+                            <Loader2 className="w-8 h-8 text-header-border animate-spin mb-3" />
                             <p className="font-serif text-primary">Calculating transit positions...</p>
                         </div>
                     )}
@@ -782,7 +763,7 @@ export default function TransitsPage() {
                             <p className="text-sm text-primary mb-4">Charts are being generated for this client</p>
                             <button
                                 onClick={refreshCharts}
-                                className="px-4 py-2 bg-[#D08C60] text-white rounded-lg font-medium hover:bg-[#D08C60]/90"
+                                className="px-4 py-2 bg-header-border text-white rounded-lg font-medium hover:bg-header-border/90"
                             >
                                 Refresh
                             </button>
@@ -806,8 +787,8 @@ export default function TransitsPage() {
                                     </div>
                                 )}
 
-                                <div className="bg-[#D08C60]/10 border border-[#D08C60]/30 rounded-xl p-3 flex items-start gap-3">
-                                    <div className="p-1.5 bg-[#D08C60]/20 rounded-lg text-primary">
+                                <div className="bg-header-border/10 border border-header-border/30 rounded-xl p-3 flex items-start gap-3">
+                                    <div className="p-1.5 bg-header-border/20 rounded-lg text-primary">
                                         <ShieldAlert className="w-5 h-5" />
                                     </div>
                                     <div>
@@ -822,9 +803,9 @@ export default function TransitsPage() {
                             </div>
 
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                                <div className="bg-[#FFFFFa] border border-antique rounded-xl p-4">
+                                <div className="bg-softwhite border border-antique rounded-xl p-4">
                                     <h3 className="font-serif font-bold text-primary text-sm text-center mb-3">Gochar Chart</h3>
-                                    <div className="aspect-square bg-[#FDFBF7] rounded-lg border border-[#D08C60]/10 p-3 flex items-center justify-center">
+                                    <div className="aspect-square bg-surface-warm rounded-lg border border-header-border/10 p-3 flex items-center justify-center">
                                         <ChartWithPopup
                                             ascendantSign={natalAscendant}
                                             planets={transitPlanets}
@@ -837,8 +818,8 @@ export default function TransitsPage() {
                                     </p>
                                 </div>
 
-                                <div className="lg:col-span-2 bg-[#FFFFFa] border border-antique rounded-xl overflow-hidden">
-                                    <div className="p-3 border-b border-[#D08C60]/10 bg-[#FAF7F2] flex justify-between items-center">
+                                <div className="lg:col-span-2 bg-softwhite border border-antique rounded-xl overflow-hidden">
+                                    <div className="p-3 border-b border-header-border/10 bg-surface-pure flex justify-between items-center">
                                         <h3 className="font-serif font-bold text-primary text-sm">Transit Positions</h3>
                                         <div className="flex items-center gap-1 text-[10px] text-primary">
                                             <Calendar className="w-3 h-3" />
@@ -847,7 +828,7 @@ export default function TransitsPage() {
                                     </div>
                                     <div className="overflow-x-auto">
                                         <table className="w-full text-xs">
-                                            <thead className="bg-[#3E2A1F]/5 text-primary font-black uppercase text-[9px] tracking-wider">
+                                            <thead className="bg-ink/5 text-primary font-black uppercase text-[9px] tracking-wider">
                                                 <tr>
                                                     <th className="px-3 py-2 text-left">Planet</th>
                                                     <th className="px-3 py-2 text-left">Sign</th>
@@ -856,9 +837,9 @@ export default function TransitsPage() {
                                                     <th className="px-3 py-2 text-center">House</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-[#D08C60]/10">
+                                            <tbody className="divide-y divide-header-border/10">
                                                 {transitData.map((row, i) => (
-                                                    <tr key={i} className="hover:bg-[#3E2A1F]/5 transition-colors">
+                                                    <tr key={i} className="hover:bg-ink/5 transition-colors">
                                                         <td className="px-3 py-2 font-bold text-primary">
                                                             <span className="flex items-center gap-1.5">
                                                                 {row.planet}

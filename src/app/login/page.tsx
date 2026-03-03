@@ -35,9 +35,7 @@ export default function LoginPage() {
         try {
             await login({ email, password });
             // AuthContext handles redirecting to /dashboard on success
-        } catch (err: any) {
-            console.error("Login failed:", err);
-            setError(err.message || "Failed to enter the sanctum. Please verify your cosmic credentials.");
+        } catch (err: unknown) {            setError(err instanceof Error ? err.message : "Failed to enter the sanctum. Please verify your cosmic credentials.");
         } finally {
             setLoading(false);
         }
@@ -47,11 +45,7 @@ export default function LoginPage() {
         <div className="min-h-screen bg-luxury-radial flex items-center justify-center p-4 relative overflow-hidden">
             {/* Subtle Texture Overlay */}
             <div
-                className="absolute inset-0 opacity-15 pointer-events-none"
-                style={{
-                    backgroundImage: "url('https://www.transparenttextures.com/patterns/aged-paper.png')",
-                    backgroundBlendMode: 'multiply'
-                }}
+                className="absolute inset-0 opacity-15 pointer-events-none bg-[url('/textures/aged-paper.png')] bg-blend-multiply"
             />
 
             {/* Main Stage */}
@@ -62,19 +56,14 @@ export default function LoginPage() {
                     initial={{ y: 220, opacity: 0 }}
                     animate={{ y: isUnfurled ? 0 : 220, opacity: 1 }}
                     transition={{ duration: 1.2, ease: "easeInOut" }}
-                    className="relative z-30 w-full h-[48px]"
-                    style={{
-                        background: 'linear-gradient(180deg, #98522F 0%, #763A1F 40%, #55250F 100%)', // Header background gradient
-                        borderRadius: '24px',
-                        boxShadow: '0 8px 20px rgba(61, 38, 24, 0.4)',
-                    }}
+                    className="relative z-30 w-full h-[48px] bg-header-gradient rounded-[24px] shadow-[0_8px_20px_rgba(61,38,24,0.4)]"
                 >
                     {/* Ornate End Caps */}
-                    <div className="absolute left-[-8px] top-1/2 -translate-y-1/2 w-[24px] h-[36px] bg-[#3D2618] rounded-l-lg shadow-md border-r border-[#2B1510] flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-[#D4A574]" />
+                    <div className="absolute left-[-8px] top-1/2 -translate-y-1/2 w-[24px] h-[36px] bg-ink-deep rounded-l-lg shadow-md border-r border-brown-dark flex items-center justify-center">
+                        <div className="w-2 h-2 rounded-full bg-accent-gold-light" />
                     </div>
-                    <div className="absolute right-[-8px] top-1/2 -translate-y-1/2 w-[24px] h-[36px] bg-[#3D2618] rounded-r-lg shadow-md border-l border-[#2B1510] flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-[#D4A574]" />
+                    <div className="absolute right-[-8px] top-1/2 -translate-y-1/2 w-[24px] h-[36px] bg-ink-deep rounded-r-lg shadow-md border-l border-brown-dark flex items-center justify-center">
+                        <div className="w-2 h-2 rounded-full bg-accent-gold-light" />
                     </div>
 
                     {/* Shine */}
@@ -86,13 +75,7 @@ export default function LoginPage() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: isUnfurled ? "auto" : 0, opacity: 1 }}
                     transition={{ duration: 1.2, ease: "easeInOut" }} // Matched timing precisely
-                    className="relative z-20 w-[92%] bg-softwhite overflow-hidden origin-top"
-                    style={{
-                        backgroundImage: `url('https://www.transparenttextures.com/patterns/cream-paper.png')`,
-                        boxShadow: '0 10px 40px -10px rgba(61, 38, 24, 0.3), inset 0 0 40px rgba(139,90,43,0.1)',
-                        borderLeft: '1px solid rgba(139,90,43,0.1)',
-                        borderRight: '1px solid rgba(139,90,43,0.1)'
-                    }}
+                    className="relative z-20 w-[92%] bg-softwhite overflow-hidden origin-top bg-[url('/textures/cream-paper.png')] shadow-[0_10px_40px_-10px_rgba(61,38,24,0.3),inset_0_0_40px_rgba(139,90,43,0.1)] border-x border-[rgba(139,90,43,0.1)]"
                 >
                     <div className="px-8 py-10 flex flex-col items-center">
                         <motion.div
@@ -105,10 +88,10 @@ export default function LoginPage() {
                             <div className="flex flex-col items-center mb-8">
                                 <div className="w-20 h-20 relative mb-4 flex items-center justify-center">
                                     {/* Sun/Moon Emblem Simulation */}
-                                    <div className="absolute inset-0 border-2 border-[#8B5A2B] rounded-full opacity-30 animate-spin-slow" style={{ borderStyle: 'dotted' }} />
-                                    <div className="w-12 h-12 bg-gradient-to-br from-[#D4A574] to-[#8B5A2B] rounded-full flex items-center justify-center shadow-inner">
-                                        <div className="w-8 h-8 rounded-full bg-[#FFFDF7] relative overflow-hidden">
-                                            <div className="absolute -right-2 -top-2 w-6 h-6 bg-[#D4A574] rounded-full" />
+                                    <div className="absolute inset-0 border-2 border-dotted border-bronze rounded-full opacity-30 animate-spin-slow" />
+                                    <div className="w-12 h-12 bg-gradient-to-br from-accent-gold-light to-bronze rounded-full flex items-center justify-center shadow-inner">
+                                        <div className="w-8 h-8 rounded-full bg-surface-warm relative overflow-hidden">
+                                            <div className="absolute -right-2 -top-2 w-6 h-6 bg-accent-gold-light rounded-full" />
                                         </div>
                                     </div>
                                 </div>
@@ -218,19 +201,14 @@ export default function LoginPage() {
                     initial={{ y: -220, opacity: 0 }}
                     animate={{ y: isUnfurled ? 0 : -220, opacity: 1 }}
                     transition={{ duration: 1.2, ease: "easeInOut" }}
-                    className="relative z-30 w-full h-[54px] -mt-1"
-                    style={{
-                        background: 'linear-gradient(180deg, #98522F 0%, #763A1F 40%, #55250F 100%)', // Header background gradient
-                        borderRadius: '27px',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-                    }}
+                    className="relative z-30 w-full h-[54px] -mt-1 bg-header-gradient rounded-[27px] shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
                 >
                     {/* Ornate End Caps */}
-                    <div className="absolute left-[-10px] top-1/2 -translate-y-1/2 w-[28px] h-[40px] bg-[#3D2618] rounded-l-lg shadow-md border-r border-[#2B1510] flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-[#D4A574]" />
+                    <div className="absolute left-[-10px] top-1/2 -translate-y-1/2 w-[28px] h-[40px] bg-ink-deep rounded-l-lg shadow-md border-r border-brown-dark flex items-center justify-center">
+                        <div className="w-2 h-2 rounded-full bg-accent-gold-light" />
                     </div>
-                    <div className="absolute right-[-10px] top-1/2 -translate-y-1/2 w-[28px] h-[40px] bg-[#3D2618] rounded-r-lg shadow-md border-l border-[#2B1510] flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-[#D4A574]" />
+                    <div className="absolute right-[-10px] top-1/2 -translate-y-1/2 w-[28px] h-[40px] bg-ink-deep rounded-r-lg shadow-md border-l border-brown-dark flex items-center justify-center">
+                        <div className="w-2 h-2 rounded-full bg-accent-gold-light" />
                     </div>
 
                     {/* Reflection */}

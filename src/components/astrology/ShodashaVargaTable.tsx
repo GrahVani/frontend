@@ -4,7 +4,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface ShodashaVargaTableProps {
-    data: any;
+    data: Record<string, unknown>;
     className?: string;
 }
 
@@ -68,14 +68,14 @@ const DIGNITY_STYLE: Record<string, string> = {
 export default function ShodashaVargaTable({ data, className }: ShodashaVargaTableProps) {
     if (!data) return null;
 
-    const summary = data.shodasha_varga_summary || data.shodasha_varga_signs || data;
+    const summary = (data.shodasha_varga_summary || data.shodasha_varga_signs || data) as Record<string, Record<string, unknown>>;
 
     const getSign = (planet: string, varga: string): string => {
         const pd = summary[planet];
         if (!pd) return '-';
-        const v = pd[varga];
+        const v = pd[varga] as Record<string, unknown> | string | undefined;
         if (!v) return '-';
-        return typeof v === 'object' && v.sign ? v.sign : String(v);
+        return typeof v === 'object' && v.sign ? String(v.sign) : String(v);
     };
 
     // 🌟 Calculate Dignity Scores for each planet
@@ -111,7 +111,7 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
             </div>
 
             <div className="overflow-x-auto rounded-xl border border-antique max-w-7xl mx-auto">
-                <table className="w-full border-collapse text-xs">
+                <table className="w-full border-collapse text-xs" role="table" aria-label="Shodasha Varga summary showing planetary signs across 16 divisional charts">
                     <thead>
                         <tr className="bg-amber-50/30 border-b border-antique">
                             <th className="py-2 px-3 text-left font-semibold text-primary font-sans uppercase border-r border-antique w-28">Varga</th>
@@ -154,7 +154,7 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
             {/* 🌟 NEW: Dignity Score Cards */}
             <div className="mt-6">
                 <div className="text-xs font-bold text-primary uppercase mb-2 font-sans">Planetary Dignity Score (across 16 Vargas)</div>
-                <div className="grid grid-cols-9 gap-2">
+                <div className="grid grid-cols-9 gap-2" role="group" aria-label="Planetary dignity scores across 16 Vargas">
                     {dignityScores.map(ps => (
                         <div key={ps.planet} className={cn(
                             "rounded-lg p-2 text-center border",

@@ -18,6 +18,31 @@ import { cn } from "@/lib/utils";
 import { clientApi } from '@/lib/api';
 import DebugConsole from '../debug/DebugConsole';
 
+interface AngarakDoshaData {
+    has_angarak_dosha: boolean;
+    conjunction_details?: Record<string, unknown>;
+    overall_severity?: string;
+    house_effects?: { areas?: string[]; effects?: string[] };
+    cancellation_factors?: Record<string, unknown>;
+    placement?: { house?: number };
+    remedies?: { mantras?: string[]; lifestyle?: string[] };
+}
+
+interface SadeSatiData {
+    active: boolean;
+    phase?: string;
+    interpretation?: { description?: string };
+    description?: string;
+    recommendations?: string[];
+}
+
+interface DhaiyaData {
+    has_dhaiya: boolean;
+    dhaiya_type?: string;
+    effects?: string;
+    remedies?: string[];
+}
+
 interface DoshaAnalysisProps {
     clientId: string;
     doshaType: string;
@@ -28,6 +53,7 @@ interface DoshaAnalysisProps {
 export default function DoshaAnalysis({ clientId, doshaType, ayanamsa = 'lahiri', className }: DoshaAnalysisProps) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic dosha response shapes
     const [data, setData] = useState<any>(null);
 
     useEffect(() => {
@@ -37,8 +63,8 @@ export default function DoshaAnalysis({ clientId, doshaType, ayanamsa = 'lahiri'
             try {
                 const result = await clientApi.getDoshaAnalysis(clientId, doshaType, ayanamsa);
                 setData(result.data);
-            } catch (err: any) {
-                setError(err.message || 'Failed to fetch dosha analysis');
+            } catch (err: unknown) {
+                setError(err instanceof Error ? err.message : 'Failed to fetch dosha analysis');
             } finally {
                 setLoading(false);
             }
@@ -104,7 +130,7 @@ export default function DoshaAnalysis({ clientId, doshaType, ayanamsa = 'lahiri'
 /**
  * ANGARAK DOSHA VIEW
  */
-function AngarakDoshaView({ data, className }: { data: any; className?: string }) {
+function AngarakDoshaView({ data, className }: { data: AngarakDoshaData; className?: string }) {
     if (!data.has_angarak_dosha) {
         return (
             <div className="space-y-4 p-6">
@@ -222,7 +248,7 @@ function AngarakDoshaView({ data, className }: { data: any; className?: string }
 /**
  * SADE SATI VIEW
  */
-function SadeSatiView({ data, className }: { data: any; className?: string }) {
+function SadeSatiView({ data, className }: { data: SadeSatiData; className?: string }) {
     if (!data.active) {
         return (
             <div className="space-y-4 p-6">
@@ -286,7 +312,7 @@ function SadeSatiView({ data, className }: { data: any; className?: string }) {
 /**
  * DHAIYA VIEW
  */
-function DhaiyaView({ data, className }: { data: any; className?: string }) {
+function DhaiyaView({ data, className }: { data: DhaiyaData; className?: string }) {
     if (!data.has_dhaiya) {
         return (
             <div className="space-y-4">

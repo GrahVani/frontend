@@ -42,7 +42,7 @@ const MantraTimingCard: React.FC<MantraTimingCardProps> = ({ timing }) => {
     const isRahuKaalActive = rahu_kaal.recommendation.toLowerCase().includes("avoid");
 
     return (
-        <div className="p-6 rounded-[2.5rem] bg-[rgba(254,250,234,0.6)] border border-[#E7D6B8] backdrop-blur-md space-y-6">
+        <div className="p-6 rounded-[2.5rem] bg-[rgba(254,250,234,0.6)] border border-antique backdrop-blur-md space-y-6">
             <div className="flex items-center gap-2 mb-2 px-2">
                 <Clock className="w-4 h-4 text-amber-600" />
                 <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-amber-900/60">Sacred Timing Analysis</h3>

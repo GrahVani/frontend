@@ -27,6 +27,48 @@ import { clientApi } from '@/lib/api';
 import { YogaAnalysis } from '@/types/astrology';
 import DebugConsole from '../debug/DebugConsole';
 
+interface YogaResponseData {
+    yoga_present?: boolean;
+    yoga_type?: string;
+    yoga_strength?: string;
+    house_relationship?: string;
+    comprehensive_effects?: {
+        specific_effects?: string[];
+        overall_prediction?: string;
+    };
+    malefic_penalty?: number;
+    timing_analysis?: {
+        best_periods?: string;
+        activation_transits?: string;
+        remedial_timing?: string;
+    };
+    remedial_suggestions?: string[];
+    comprehensive_gaja_kesari_analysis?: Record<string, unknown>;
+    data?: Record<string, unknown>;
+    [key: string]: unknown;
+}
+
+interface GajaKesariData {
+    comprehensive_gaja_kesari_analysis?: {
+        yoga_present?: boolean;
+        reason?: string;
+    };
+    all_planetary_positions?: Record<string, { sign?: string; house?: number | string; degree?: number; retrograde?: boolean; positional_status?: string }>;
+    calculation_notes?: {
+        analysis_type?: string;
+        ayanamsa_value?: string;
+        house_system?: string;
+        critical_fixes?: string[];
+    };
+    birth_details?: {
+        birth_date?: string;
+        birth_time?: string;
+        ascendant?: { sign?: string };
+    };
+    user_name?: string;
+    data?: GajaKesariData;
+}
+
 interface YogaAnalysisProps {
     clientId: string;
     yogaType: string;
@@ -38,19 +80,19 @@ interface YogaAnalysisProps {
 export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahiri', className, onClose }: YogaAnalysisProps) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [data, setData] = useState<any | null>(null);
+    const [data, setData] = useState<YogaResponseData | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             setError(null);
             try {
-                const result = await clientApi.getYogaAnalysis(clientId, yogaType, ayanamsa);
+                const result = await clientApi.getYogaAnalysis(clientId, yogaType, ayanamsa) as any;
                 // Safely unwrap data: backend might return { data: { data: ... } } (double nested)
                 const responseData = result.data?.data || result.data;
-                setData(responseData);
-            } catch (err: any) {
-                setError(err.message || 'Failed to fetch yoga analysis');
+                setData(responseData as YogaResponseData);
+            } catch (err: unknown) {
+                setError(err instanceof Error ? err.message : 'Failed to fetch yoga analysis');
             } finally {
                 setLoading(false);
             }
@@ -151,7 +193,7 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
                         <Target className="w-4 h-4 text-gold-primary" /> Potential Impacts
                     </h3>
                     <div className="space-y-3">
-                        {data.comprehensive_effects?.specific_effects?.map((effect: any, i: number) => (
+                        {data.comprehensive_effects?.specific_effects?.map((effect: string, i: number) => (
                             <div key={i} className="flex gap-3 items-start group">
                                 <div className="p-1 px-1.5 bg-gold-primary/20 text-secondary rounded-md text-[10px] font-bold mt-0.5 group-hover:bg-gold-primary group-hover:text-white transition-colors">
                                     0{i + 1}
@@ -169,7 +211,7 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
                     <div className="p-4 bg-parchment/50 rounded-xl border border-antique/50 italic text-xs leading-relaxed text-ink/80">
                         "{data.comprehensive_effects?.overall_prediction}"
                     </div>
-                    {data.malefic_penalty < 0 && (
+                    {(data.malefic_penalty ?? 0) < 0 && (
                         <div className="mt-4 flex items-center gap-2 p-2 px-3 bg-red-50 border border-red-100 rounded-lg">
                             <ShieldCheck className="w-3.5 h-3.5 text-red-500" />
                             <span className="text-[10px] font-bold text-red-700">Mitigated by Malefic Influence: {data.malefic_penalty} Points</span>
@@ -217,7 +259,7 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
 
                 <h3 className="text-lg font-serif font-bold text-ink mb-4">Empowering Rituals & Remedies</h3>
                 <div className="flex flex-wrap gap-2">
-                    {data.remedial_suggestions?.map((suggestion: any, i: number) => (
+                    {data.remedial_suggestions?.map((suggestion: string, i: number) => (
                         <div key={i} className="flex items-center gap-2 px-4 py-2 bg-white border border-antique rounded-xl shadow-sm hover:border-gold-primary transition-colors cursor-default">
                             <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
                             <span className="text-xs font-medium text-primary">{suggestion}</span>
@@ -237,7 +279,7 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
  * 
  * Designed to be "Above the Fold" with high information density.
  */
-function GajaKesariView({ data, className, onClose }: { data: any, className?: string, onClose?: () => void }) {
+function GajaKesariView({ data, className, onClose }: { data: GajaKesariData, className?: string, onClose?: () => void }) {
     // Correctly handle the case where data might be double-nested
     const rawData = data?.data || data;
     const analysis = rawData.comprehensive_gaja_kesari_analysis || {};
@@ -379,7 +421,7 @@ function GajaKesariView({ data, className, onClose }: { data: any, className?: s
                     </h3>
 
                     <div className="flex-1 space-y-3 overflow-y-auto max-h-[140px] pr-2 custom-scrollbar">
-                        {notes.critical_fixes?.length > 0 ? notes.critical_fixes.map((fix: string, i: number) => (
+                        {(notes.critical_fixes?.length ?? 0) > 0 ? notes.critical_fixes!.map((fix: string, i: number) => (
                             <div key={i} className="flex gap-3 items-start group">
                                 <span className="text-[9px] font-mono text-zinc-500 mt-0.5">0{i + 1}</span>
                                 <p className="text-[11px] leading-tight group-hover:text-white transition-colors">
@@ -412,7 +454,7 @@ function GajaKesariView({ data, className, onClose }: { data: any, className?: s
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-9 gap-2">
-                    {Object.entries(positions).map(([planet, details]: [string, any]) => (
+                    {Object.entries(positions).map(([planet, details]: [string, { sign?: string; house?: number | string }]) => (
                         <div key={planet} className={cn(
                             "flex items-center gap-2 bg-zinc-50 border border-zinc-100 rounded-lg p-1.5 hover:border-gold-primary/30 transition-colors",
                             (planet === 'Jupiter' || planet === 'Moon') && "bg-gold-primary/5 border-gold-primary/20"

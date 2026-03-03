@@ -55,7 +55,7 @@ export default function ShasthihayaniDasha({ periods, isApplicable = true }: Sha
             {/* Table */}
             <div className="overflow-x-auto">
                 <table className="w-full">
-                    <thead className="bg-[#3E2A1F]/5 text-[#5A3E2B]/70 font-black uppercase text-[9px] tracking-widest border-b border-[#D08C60]/10">
+                    <thead className="bg-ink/5 text-body/70 font-black uppercase text-[9px] tracking-widest border-b border-header-border/10">
                         <tr>
                             <th className="px-3 py-2 text-left">Planet</th>
                             <th className="px-3 py-2 text-left">Start Date</th>
@@ -64,20 +64,20 @@ export default function ShasthihayaniDasha({ periods, isApplicable = true }: Sha
                             <th className="px-3 py-2 text-center">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#D08C60]/10 font-medium">
+                    <tbody className="divide-y divide-header-border/10 font-medium">
                         {shastraPeriods.map((mahadasha, mIdx) => {
                             const uniqueId = `shasthi-${mahadasha.planet}-${mIdx}`;
                             const isExpanded = expandedMahadasha === uniqueId;
                             const antardashas = mahadasha.sublevel || [];
-                            const isBalance = mIdx === 0 && ((mahadasha as any).type === "Balance" || (mahadasha as any).isBalance);
+                            const isBalance = mIdx === 0 && (mahadasha.type === "Balance" || mahadasha.isBalance);
                             const fixedYears = FIXED_DURATIONS[mahadasha.planet || ""];
 
                             return (
                                 <React.Fragment key={uniqueId}>
                                     <tr
                                         className={cn(
-                                            "hover:bg-[#D08C60]/10 transition-colors group cursor-pointer",
-                                            mahadasha.isCurrent && "bg-[#D08C60]/5"
+                                            "hover:bg-header-border/10 transition-colors group cursor-pointer",
+                                            mahadasha.isCurrent && "bg-header-border/5"
                                         )}
                                         onClick={() => setExpandedMahadasha(isExpanded ? null : uniqueId)}
                                     >
@@ -102,18 +102,18 @@ export default function ShasthihayaniDasha({ periods, isApplicable = true }: Sha
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">
+                                        <td className="px-3 py-2 text-xs text-ink font-mono">
                                             <div className="flex items-center gap-1.5">
-                                                <Calendar className="w-3 h-3 text-[#8B5A2B]/40" />
+                                                <Calendar className="w-3 h-3 text-bronze/40" />
                                                 {formatDateDisplay(mahadasha.startDate)}
                                             </div>
                                         </td>
-                                        <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(mahadasha.endDate)}</td>
-                                        <td className="px-3 py-2 text-xs text-[#8B5A2B] font-bold">
+                                        <td className="px-3 py-2 text-xs text-ink font-mono">{formatDateDisplay(mahadasha.endDate)}</td>
+                                        <td className="px-3 py-2 text-xs text-bronze font-bold">
                                             <div className="flex flex-col">
                                                 <span>{calculateDuration(mahadasha.startDate, mahadasha.endDate)}</span>
                                                 {fixedYears && !isBalance && (
-                                                    <span className="text-2xs text-[#D08C60] leading-none mt-0.5">{fixedYears} Years Fixed</span>
+                                                    <span className="text-2xs text-header-border leading-none mt-0.5">{fixedYears} Years Fixed</span>
                                                 )}
                                             </div>
                                         </td>
@@ -122,9 +122,9 @@ export default function ShasthihayaniDasha({ periods, isApplicable = true }: Sha
                                                 {mahadasha.isCurrent ? (
                                                     <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm animate-pulse">ACTIVE</span>
                                                 ) : antardashas.length > 0 ? (
-                                                    isExpanded ? <ChevronUp className="w-4 h-4 text-[#D08C60]" /> : <ChevronDown className="w-4 h-4 text-[#D08C60]" />
+                                                    isExpanded ? <ChevronUp className="w-4 h-4 text-header-border" /> : <ChevronDown className="w-4 h-4 text-header-border" />
                                                 ) : (
-                                                    <span className="text-[#D08C60]/40 text-xs">—</span>
+                                                    <span className="text-header-border/40 text-xs">—</span>
                                                 )}
                                             </div>
                                         </td>
@@ -133,12 +133,12 @@ export default function ShasthihayaniDasha({ periods, isApplicable = true }: Sha
                                     {/* Expanded Antardasha Row */}
                                     {isExpanded && antardashas.length > 0 && (
                                         <tr>
-                                            <td colSpan={5} className="bg-[#FAF7F2]/60 px-3 py-2">
-                                                <div className="text-2xs font-black text-[#8B5A2B] uppercase tracking-[0.2em] mb-2 pl-2">
+                                            <td colSpan={5} className="bg-surface-pure/60 px-3 py-2">
+                                                <div className="text-2xs font-black text-bronze uppercase tracking-[0.2em] mb-2 pl-2">
                                                     Antardasha Sub-Periods
                                                 </div>
                                                 <table className="w-full">
-                                                    <tbody className="divide-y divide-[#D08C60]/10">
+                                                    <tbody className="divide-y divide-header-border/10">
                                                         {antardashas.map((antar, aIdx) => (
                                                             <tr key={aIdx} className={cn(
                                                                 "hover:bg-white/50 transition-colors",
@@ -152,9 +152,9 @@ export default function ShasthihayaniDasha({ periods, isApplicable = true }: Sha
                                                                         {antar.planet}
                                                                     </span>
                                                                 </td>
-                                                                <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(antar.startDate)}</td>
-                                                                <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(antar.endDate)}</td>
-                                                                <td className="px-3 py-2 text-xs text-[#8B5A2B] font-bold">
+                                                                <td className="px-3 py-2 text-xs text-ink font-mono">{formatDateDisplay(antar.startDate)}</td>
+                                                                <td className="px-3 py-2 text-xs text-ink font-mono">{formatDateDisplay(antar.endDate)}</td>
+                                                                <td className="px-3 py-2 text-xs text-bronze font-bold">
                                                                     {calculateDuration(antar.startDate, antar.endDate)}
                                                                 </td>
                                                                 <td className="px-3 py-2 text-center">
@@ -179,7 +179,7 @@ export default function ShasthihayaniDasha({ periods, isApplicable = true }: Sha
             {/* Shastra Rule Footer */}
             {!moonFound && periods.length > 0 && (
                 <div className="text-center pt-2">
-                    <p className="text-xs font-semibold text-[#8B5A2B]/40 uppercase tracking-widest italic">
+                    <p className="text-xs font-semibold text-bronze/40 uppercase tracking-widest italic">
                         Timeline truncated as per Shastra rules (Single 60-Year Cycle)
                     </p>
                 </div>

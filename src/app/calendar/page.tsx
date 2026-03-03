@@ -1,28 +1,66 @@
 "use client";
 
-import React from 'react';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { useState } from "react";
+import { Calendar as CalendarIcon } from "lucide-react";
+import PanchangCalendar from "@/components/calendar/PanchangCalendar";
+import EmptyState from "@/components/ui/EmptyState";
+import { SkeletonCard } from "@/components/ui/Skeleton";
+import { useMonthlyCalendar } from "@/hooks/queries/useCalendar";
 
 export default function CalendarPage() {
+    const now = new Date();
+    const [year, setYear] = useState(now.getFullYear());
+    const [month, setMonth] = useState(now.getMonth());
+
+    const { data: days, isLoading } = useMonthlyCalendar(year, month);
+
     return (
-        <div className="max-w-5xl mx-auto space-y-8">
-            <div
-                className="rounded-lg p-6 shadow-sm relative overflow-hidden border border-[#D08C60]/30"
-                style={{
-                    background: 'linear-gradient(180deg, #98522F 0%, #763A1F 40%, #55250F 100%)',
-                }}
-            >
-                <div className="flex items-center gap-2 mb-2 relative z-10">
-                    <CalendarIcon className="w-5 h-5 text-[#D08C60]" />
-                    <h1 className="font-serif text-2xl font-bold text-[#FEFAEA]">Panchang Calendar</h1>
+        <div className="max-w-5xl mx-auto space-y-6">
+            <div className="bg-header-gradient rounded-xl p-6 border border-header-border/30">
+                <div className="flex items-center gap-2 mb-1">
+                    <CalendarIcon className="w-5 h-5 text-active-glow" />
+                    <h1 className="font-serif text-2xl font-bold text-softwhite">Panchang Calendar</h1>
                 </div>
-                <p className="text-[#FEFAEA]/80 font-serif italic text-sm max-w-2xl relative z-10">
-                    View daily Panchang, planetary transits, and upcoming festivals.
+                <p className="text-softwhite/80 font-serif italic text-sm max-w-2xl">
+                    View daily Panchang details — tithi, nakshatra, yoga, and karana for each day.
                 </p>
             </div>
 
-            <div className="p-12 text-center border border-dashed border-[#D08C60] rounded-lg bg-[#FEFAEA]/50">
-                <p className="text-[#7A5A43] font-serif">Calendar module content goes here.</p>
+            {isLoading ? (
+                <SkeletonCard />
+            ) : days && days.length > 0 ? (
+                <PanchangCalendar
+                    days={days}
+                    year={year}
+                    month={month}
+                    onMonthChange={(y, m) => { setYear(y); setMonth(m); }}
+                    onDayClick={(day) => {
+                        // Day detail shown inline in the calendar
+                    }}
+                />
+            ) : (
+                <PanchangCalendar
+                    days={[]}
+                    year={year}
+                    month={month}
+                    onMonthChange={(y, m) => { setYear(y); setMonth(m); }}
+                />
+            )}
+
+            <div className="bg-softwhite border border-antique rounded-xl p-5">
+                <h3 className="text-xs font-bold text-header-border tracking-widest font-serif uppercase mb-3">
+                    How to Read the Calendar
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-muted-refined">
+                    <div>
+                        <p className="font-serif"><span className="font-semibold text-ink">Tithi:</span> Lunar day based on Sun-Moon angular distance</p>
+                        <p className="font-serif mt-1"><span className="font-semibold text-ink">Nakshatra:</span> Lunar mansion the Moon occupies</p>
+                    </div>
+                    <div>
+                        <p className="font-serif"><span className="font-semibold text-ink">Yoga:</span> Sun-Moon combined longitude classification</p>
+                        <p className="font-serif mt-1"><span className="font-semibold text-ink">Karana:</span> Half of a tithi, important for muhurta</p>
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -68,8 +68,8 @@ export const YogaModal = memo(function YogaModal({
     // ─── Loading State ─────────────────────────────────────────────
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center p-8 bg-parchment/30 rounded-2xl border border-antique">
-                <Loader2 className="w-6 h-6 text-gold-primary animate-spin mb-3" />
+            <div className="flex flex-col items-center justify-center p-8 bg-parchment/30 rounded-2xl border border-antique" role="status" aria-label="Loading yoga analysis" aria-busy="true">
+                <Loader2 className="w-6 h-6 text-gold-primary animate-spin mb-3" aria-hidden="true" />
                 <p className="text-xs font-serif text-secondary italic">Analyzing celestial alignments...</p>
             </div>
         );
@@ -79,8 +79,8 @@ export const YogaModal = memo(function YogaModal({
     if (error || !normalized) {
         return (
             <div className="space-y-4">
-                <div className="p-4 bg-amber-50 border border-amber-100 rounded-2xl text-center">
-                    <Info className="w-6 h-6 text-amber-500 mx-auto mb-2" />
+                <div className="p-4 bg-amber-50 border border-amber-100 rounded-2xl text-center" role="alert">
+                    <Info className="w-6 h-6 text-amber-500 mx-auto mb-2" aria-hidden="true" />
                     <h3 className="text-amber-900 font-bold font-serif text-sm">Yoga Detail Pending</h3>
                     <p className="text-[10px] text-amber-600">
                         {error || 'Detailed analysis not currently available for this client'}

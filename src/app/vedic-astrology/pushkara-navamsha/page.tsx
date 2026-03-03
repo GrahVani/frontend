@@ -60,8 +60,8 @@ interface PushkaraData {
     ascendant: PlanetData;
     planets: Record<string, PlanetData>;
     pushkara_summary: PushkaraSummary;
-    birth_details: any;
-    calculation_settings: any;
+    birth_details: Record<string, unknown>;
+    calculation_settings: Record<string, unknown>;
     user_name: string;
 }
 
@@ -69,17 +69,17 @@ interface PushkaraData {
 // Constants
 // ============================================================================
 
-const PLANET_COLORS: Record<string, { primary: string; bg: string; border: string }> = {
-    'Sun': { primary: '#F97316', bg: 'rgba(249, 115, 22, 0.08)', border: 'rgba(249, 115, 22, 0.25)' },
-    'Moon': { primary: '#64748B', bg: 'rgba(100, 116, 139, 0.08)', border: 'rgba(100, 116, 139, 0.25)' },
-    'Mars': { primary: '#EF4444', bg: 'rgba(239, 68, 68, 0.08)', border: 'rgba(239, 68, 68, 0.25)' },
-    'Mercury': { primary: '#10B981', bg: 'rgba(16, 185, 129, 0.08)', border: 'rgba(16, 185, 129, 0.25)' },
-    'Jupiter': { primary: '#EAB308', bg: 'rgba(234, 179, 8, 0.08)', border: 'rgba(234, 179, 8, 0.25)' },
-    'Venus': { primary: '#D946EF', bg: 'rgba(217, 70, 239, 0.08)', border: 'rgba(217, 70, 239, 0.25)' },
-    'Saturn': { primary: '#334155', bg: 'rgba(51, 65, 85, 0.08)', border: 'rgba(51, 65, 85, 0.25)' },
-    'Rahu': { primary: '#6366F1', bg: 'rgba(99, 102, 241, 0.08)', border: 'rgba(99, 102, 241, 0.25)' },
-    'Ketu': { primary: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.08)', border: 'rgba(139, 92, 246, 0.25)' },
-    'Ascendant': { primary: '#C9A24D', bg: 'rgba(201, 162, 77, 0.08)', border: 'rgba(201, 162, 77, 0.25)' },
+const PLANET_COLORS: Record<string, { primary: string; bg: string; border: string; twText: string }> = {
+    'Sun': { primary: '#F97316', bg: 'rgba(249, 115, 22, 0.08)', border: 'rgba(249, 115, 22, 0.25)', twText: 'text-orange-500' },
+    'Moon': { primary: '#64748B', bg: 'rgba(100, 116, 139, 0.08)', border: 'rgba(100, 116, 139, 0.25)', twText: 'text-slate-500' },
+    'Mars': { primary: '#EF4444', bg: 'rgba(239, 68, 68, 0.08)', border: 'rgba(239, 68, 68, 0.25)', twText: 'text-red-500' },
+    'Mercury': { primary: '#10B981', bg: 'rgba(16, 185, 129, 0.08)', border: 'rgba(16, 185, 129, 0.25)', twText: 'text-emerald-500' },
+    'Jupiter': { primary: '#EAB308', bg: 'rgba(234, 179, 8, 0.08)', border: 'rgba(234, 179, 8, 0.25)', twText: 'text-yellow-500' },
+    'Venus': { primary: '#D946EF', bg: 'rgba(217, 70, 239, 0.08)', border: 'rgba(217, 70, 239, 0.25)', twText: 'text-fuchsia-500' },
+    'Saturn': { primary: '#334155', bg: 'rgba(51, 65, 85, 0.08)', border: 'rgba(51, 65, 85, 0.25)', twText: 'text-slate-800' },
+    'Rahu': { primary: '#6366F1', bg: 'rgba(99, 102, 241, 0.08)', border: 'rgba(99, 102, 241, 0.25)', twText: 'text-indigo-500' },
+    'Ketu': { primary: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.08)', border: 'rgba(139, 92, 246, 0.25)', twText: 'text-violet-500' },
+    'Ascendant': { primary: '#C9A24D', bg: 'rgba(201, 162, 77, 0.08)', border: 'rgba(201, 162, 77, 0.25)', twText: 'text-gold-primary' },
 };
 
 const PLANET_ABBR: Record<string, string> = {
@@ -112,7 +112,7 @@ export default function PushkaraNavamshaPage() {
         setLoading(true);
         setError(null);
         try {
-            const result = await clientApi.getPushkaraNavamsha(clientId);
+            const result = await clientApi.getPushkaraNavamsha(clientId) as any;
             const rawData = result.data?.data || result.chartData?.data || result.data || result.chartData || result;
 
             if (rawData && rawData.planets) {
@@ -129,8 +129,8 @@ export default function PushkaraNavamshaPage() {
             } else {
                 setError("No Pushkara Navamsha data found.");
             }
-        } catch (err: any) {
-            setError(err.message || "Failed to load Pushkara Navamsha data");
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : "Failed to load Pushkara Navamsha data");
         } finally {
             setLoading(false);
         }
@@ -229,7 +229,7 @@ function PushkaraDashboard({ data }: { data: PushkaraData }) {
                             <h3 className="text-[10px] font-bold tracking-[0.15em] uppercase text-primary">In Pushkara</h3>
                         </div>
                         <div className="flex items-baseline gap-2">
-                            <span className="text-3xl font-bold font-serif" style={{ color: summary.total_planets_in_pushkara > 0 ? '#10B981' : 'var(--ink)' }}>
+                            <span className={cn("text-3xl font-bold font-serif", summary.total_planets_in_pushkara > 0 ? "text-emerald-500" : "text-ink")}>
                                 {summary.total_planets_in_pushkara}
                             </span>
                             <span className="text-xs text-primary/60">planet{summary.total_planets_in_pushkara !== 1 ? 's' : ''}</span>
@@ -267,7 +267,7 @@ function PushkaraDashboard({ data }: { data: PushkaraData }) {
                             <h3 className="text-[10px] font-bold tracking-[0.15em] uppercase text-primary">Pushkara Bhaga</h3>
                         </div>
                         <div className="flex items-baseline gap-2">
-                            <span className="text-3xl font-bold font-serif" style={{ color: summary.total_pushkara_bhaga > 0 ? '#D97706' : 'var(--ink)' }}>
+                            <span className={cn("text-3xl font-bold font-serif", summary.total_pushkara_bhaga > 0 ? "text-amber-600" : "text-ink")}>
                                 {summary.total_pushkara_bhaga}
                             </span>
                             <span className="text-xs text-primary/60">exact degree{summary.total_pushkara_bhaga !== 1 ? 's' : ''}</span>
@@ -305,7 +305,7 @@ function PushkaraDashboard({ data }: { data: PushkaraData }) {
                             <h3 className="text-[10px] font-bold tracking-[0.15em] uppercase text-primary">Vargottama Pushkara</h3>
                         </div>
                         <div className="flex items-baseline gap-2">
-                            <span className="text-3xl font-bold font-serif" style={{ color: summary.vargottama_pushkaras.length > 0 ? '#7C3AED' : 'var(--ink)' }}>
+                            <span className={cn("text-3xl font-bold font-serif", summary.vargottama_pushkaras.length > 0 ? "text-violet-600" : "text-ink")}>
                                 {summary.vargottama_pushkaras.length}
                             </span>
                             <span className="text-xs text-primary/60">double blessed</span>
@@ -334,7 +334,7 @@ function PushkaraDashboard({ data }: { data: PushkaraData }) {
             <div className="bg-white border border-antique rounded-3xl shadow-sm overflow-hidden">
                 <div className="p-4 border-b border-antique bg-parchment/10 flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-gold-primary" />
-                    <h3 className="text-xs font-bold tracking-wider" style={{ color: 'var(--ink)' }}>Planetary Pushkara Analysis</h3>
+                    <h3 className="text-xs font-bold tracking-wider text-ink">Planetary Pushkara Analysis</h3>
                     <span className="text-[9px] ml-auto font-bold text-slate-400 tracking-wider">
                         {summary.total_planets_in_pushkara} OF {Object.keys(data.planets).length} IN PUSHKARA
                     </span>
@@ -382,7 +382,7 @@ function AscendantCard({ planet }: { planet: PlanetData }) {
                 </div>
                 <div className="flex-1">
                     <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-bold" style={{ color: 'var(--ink)' }}>Ascendant (Lagna)</h4>
+                        <h4 className="text-sm font-bold text-ink">Ascendant (Lagna)</h4>
                         {isPushkara ? (
                             <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1">
                                 <Star className="w-2.5 h-2.5" /> PUSHKARA
@@ -453,7 +453,7 @@ function PlanetPushkaraCard({ planet, index }: { planet: PlanetData; index: numb
                             )}
                             style={{
                                 backgroundColor: isPushkara ? colors.bg : 'rgba(0,0,0,0.02)',
-                                color: isPushkara ? colors.primary : '#94a3b8',
+                                color: isPushkara ? colors.primary : 'var(--color-slate-400)',
                                 borderColor: isPushkara ? colors.border : undefined,
                             }}
                         >
@@ -463,7 +463,8 @@ function PlanetPushkaraCard({ planet, index }: { planet: PlanetData; index: numb
                             <h4 className={cn(
                                 "text-sm font-bold tracking-tight",
                                 isPushkara ? "" : "text-slate-400"
-                            )} style={{ color: isPushkara ? 'var(--ink)' : undefined }}>
+                            , isPushkara && "text-ink"
+                            )}>
                                 {planet.name}
                             </h4>
                             <p className={cn(
@@ -507,13 +508,13 @@ function PlanetPushkaraCard({ planet, index }: { planet: PlanetData; index: numb
                         {planet.pushkara_navamsha.pushkara_range && (
                             <div className="flex items-center gap-2 text-[10px] mb-1.5">
                                 <span className="font-bold text-primary/50 tracking-wider">RANGE</span>
-                                <span className="font-bold" style={{ color: colors.primary }}>{planet.pushkara_navamsha.pushkara_range}</span>
+                                <span className={cn("font-bold", colors.twText)}>{planet.pushkara_navamsha.pushkara_range}</span>
                             </div>
                         )}
                         {planet.pushkara_navamsha.ruling_navamsha && (
                             <div className="flex items-center gap-2 text-[10px] mb-1.5">
                                 <span className="font-bold text-primary/50 tracking-wider">RULING</span>
-                                <span className="font-bold" style={{ color: colors.primary }}>
+                                <span className={cn("font-bold", colors.twText)}>
                                     {SIGN_SYMBOLS[planet.pushkara_navamsha.ruling_navamsha] || ''} {planet.pushkara_navamsha.ruling_navamsha}
                                 </span>
                             </div>

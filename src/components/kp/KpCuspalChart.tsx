@@ -67,13 +67,13 @@ export default function KpCuspalChart({
         <svg viewBox="-10 -10 420 420" className={cn("w-full h-full", className)}>
             <defs>
                 <linearGradient id="kpChartBg" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#FFF9E9" />
-                    <stop offset="100%" stopColor="#FEFAEA" />
+                    <stop offset="0%" stopColor="var(--surface-warm)" />
+                    <stop offset="100%" stopColor="var(--softwhite)" />
                 </linearGradient>
             </defs>
 
             {/* Background is handled by parent container but we keep SVG geometry */}
-            <g stroke="#D08C60" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <g stroke="var(--header-border)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 {/* Outer Square Border */}
                 <rect x="10" y="10" width="380" height="380" fill="none" />
                 {/* Cross Lines (X) */}
@@ -125,7 +125,7 @@ export default function KpCuspalChart({
                             fontSize="22"
                             fontFamily="serif"
                             fontWeight="900"
-                            fill="#3D2618"
+                            fill="var(--ink)"
                             fillOpacity="0.5"
                             textAnchor="middle"
                             dominantBaseline="central"
@@ -149,7 +149,7 @@ export default function KpCuspalChart({
                                                 fontSize="14"
                                                 fontFamily="serif"
                                                 fontWeight="900"
-                                                fill="#3D2618"
+                                                fill="var(--ink)"
                                                 textAnchor="middle"
                                                 dominantBaseline="central"
                                                 className={cn(
@@ -158,7 +158,7 @@ export default function KpCuspalChart({
                                                 )}
                                             >
                                                 {displayName}
-                                                <tspan fontSize="9" fontWeight="500" fill="#3D2618" dx="2">
+                                                <tspan fontSize="9" fontWeight="500" fill="var(--ink)" dx="2">
                                                     {p.degree}
                                                 </tspan>
                                             </text>

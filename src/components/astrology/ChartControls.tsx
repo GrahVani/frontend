@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { Eye, Settings } from 'lucide-react';
 import ParchmentSelect from "@/components/ui/ParchmentSelect";
 import GoldenButton from "@/components/GoldenButton";
-import { useAstrologerStore } from "@/store/useAstrologerStore";
+import { useAstrologerStore, type Ayanamsa } from "@/store/useAstrologerStore";
 import { ChevronDown, Info } from 'lucide-react';
 import { clientApi, CHART_METADATA } from '@/lib/api';
 
@@ -13,8 +13,8 @@ export default function ChartControls() {
     const { ayanamsa, chartStyle, recentClientIds, setAyanamsa } = useAstrologerStore();
     const settings = { ayanamsa, chartStyle, recentClientIds };
 
-    const updateAyanamsa = (newAyanamsa: any) => {
-        setAyanamsa(newAyanamsa);
+    const updateAyanamsa = (newAyanamsa: string) => {
+        setAyanamsa(newAyanamsa as Ayanamsa);
         // Redirect to Kundali (Overview) page if system changed
         router.push('/vedic-astrology/overview');
     };
@@ -33,29 +33,29 @@ export default function ChartControls() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between border-b border-[#E7D6B8] pb-2">
-                <h3 className="font-serif text-[#9C7A2F] text-sm font-bold uppercase tracking-widest">
+            <div className="flex items-center justify-between border-b border-antique pb-2">
+                <h3 className="font-serif text-gold-dark text-sm font-bold uppercase tracking-widest">
                     Chart Configuration
                 </h3>
-                <div className="flex items-center gap-1.5 px-2 py-0.5 bg-[#FFD27D]/20 rounded-full border border-[#FFD27D]/30">
-                    <span className="text-[10px] text-[#9C7A2F] font-serif font-bold uppercase tracking-tighter">{settings.ayanamsa}</span>
+                <div className="flex items-center gap-1.5 px-2 py-0.5 bg-active-glow/20 rounded-full border border-active-glow/30">
+                    <span className="text-[10px] text-gold-dark font-serif font-bold uppercase tracking-tighter">{settings.ayanamsa}</span>
                 </div>
             </div>
 
             {/* Ayanamsa Info / Toggle */}
-            <div className="bg-[#FAF5E6] border border-[#E7D6B8] rounded-xl p-3 flex items-center justify-between">
+            <div className="bg-parchment-light border border-antique rounded-xl p-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-white border border-[#E7D6B8] flex items-center justify-center">
-                        <Info className="w-4 h-4 text-[#9C7A2F]" />
+                    <div className="w-8 h-8 rounded-lg bg-white border border-antique flex items-center justify-center">
+                        <Info className="w-4 h-4 text-gold-dark" />
                     </div>
                     <div>
-                        <p className="text-[9px] text-[#7A5A43] uppercase tracking-widest font-bold">Current Ayanamsa</p>
-                        <p className="text-xs font-serif text-[#3E2A1F] font-bold">{settings.ayanamsa} (Default)</p>
+                        <p className="text-[9px] text-muted uppercase tracking-widest font-bold">Current Ayanamsa</p>
+                        <p className="text-xs font-serif text-ink font-bold">{settings.ayanamsa} (Default)</p>
                     </div>
                 </div>
                 <button
                     onClick={() => setShowAdvanced(!showAdvanced)}
-                    className="text-[10px] text-[#9C7A2F] font-bold uppercase hover:underline"
+                    className="text-[10px] text-gold-dark font-bold uppercase hover:underline"
                 >
                     {showAdvanced ? "Hide" : "Change"}
                 </button>
@@ -63,11 +63,11 @@ export default function ChartControls() {
 
             {/* Advanced Settings (Hidden by default) */}
             {showAdvanced && (
-                <div className="bg-[#FEFAEA] border border-[#D08C60]/30 rounded-xl p-4 animate-in slide-in-from-top-2 duration-300">
+                <div className="bg-softwhite border border-header-border/30 rounded-xl p-4 animate-in slide-in-from-top-2 duration-300">
                     <ParchmentSelect
                         label="Override Ayanamsa"
                         defaultValue={settings.ayanamsa.toLowerCase()}
-                        onChange={(e) => updateAyanamsa(e.target.value as any)}
+                        onChange={(e) => updateAyanamsa(e.target.value)}
                         onClick={() => setShowAdvanced(!showAdvanced)}
                         options={[
                             { value: 'Lahiri', label: 'Lahiri (Chitrapaksha)' },
@@ -77,10 +77,10 @@ export default function ChartControls() {
                             { value: 'Bhasin', label: 'Bhasin' },
                         ]}
                     />
-                    <p className="text-[9px] text-[#9C7A2F]/60 mt-2 italic">* This updates your global astrologer preferences.</p>
+                    <p className="text-[9px] text-gold-dark/60 mt-2 italic">* This updates your global astrologer preferences.</p>
 
                     {/* System capability info */}
-                    <div className="mt-3 p-2 bg-[#FAF5E6] rounded-lg text-[9px] text-[#7A5A43]">
+                    <div className="mt-3 p-2 bg-parchment-light rounded-lg text-[9px] text-muted">
                         <span className="font-bold uppercase">Available Features:</span>
                         <div className="mt-1 flex flex-wrap gap-1">
                             {systemCapabilities.hasDivisional && <span className="px-1.5 py-0.5 bg-green-100 text-green-700 rounded">Divisional</span>}
@@ -110,22 +110,22 @@ export default function ChartControls() {
             {/* Toggles */}
             <div className="space-y-3 pt-2">
                 <label className="flex items-center gap-3 cursor-pointer group">
-                    <div className="w-4 h-4 border border-[#C9A24D] rounded bg-[#FEFAEA] group-hover:bg-white flex items-center justify-center">
-                        <div className="w-2 h-2 bg-[#9C7A2F]" />
+                    <div className="w-4 h-4 border border-gold-primary rounded bg-softwhite group-hover:bg-white flex items-center justify-center">
+                        <div className="w-2 h-2 bg-gold-dark" />
                     </div>
-                    <span className="text-sm font-serif text-[#3E2A1F]">Show Degrees</span>
+                    <span className="text-sm font-serif text-ink">Show Degrees</span>
                 </label>
 
                 <label className="flex items-center gap-3 cursor-pointer group">
-                    <div className="w-4 h-4 border border-[#C9A24D] rounded bg-[#FEFAEA] group-hover:bg-white flex items-center justify-center">
+                    <div className="w-4 h-4 border border-gold-primary rounded bg-softwhite group-hover:bg-white flex items-center justify-center">
                         {/* Unchecked */}
                     </div>
-                    <span className="text-sm font-serif text-[#7A5A43]">Show Arudhas</span>
+                    <span className="text-sm font-serif text-muted">Show Arudhas</span>
                 </label>
             </div>
 
             {/* Action Button */}
-            <div className="pt-4 border-t border-[#E7D6B8] flex justify-center">
+            <div className="pt-4 border-t border-antique flex justify-center">
                 <GoldenButton
                     topText="Generate"
                     bottomText="Chart"

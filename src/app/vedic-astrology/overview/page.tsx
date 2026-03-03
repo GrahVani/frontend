@@ -23,9 +23,9 @@ import { DashaResponse } from '@/lib/api';
 import DoshaAnalysis from '@/components/astrology/DoshaAnalysis';
 import YogaAnalysisView from '@/components/astrology/YogaAnalysis';
 import PlanetaryTable from '@/components/astrology/PlanetaryTable';
-import { parseChartData, signIdToName } from '@/lib/chart-helpers';
+import { parseChartData, signIdToName, type ProcessedChartData } from '@/lib/chart-helpers';
 import VimshottariTreeGrid from '@/components/astrology/VimshottariTreeGrid';
-import { processDashaResponse } from '@/lib/dasha-utils';
+import { processDashaResponse, RawDashaPeriod } from '@/lib/dasha-utils';
 import BirthPanchanga from '@/components/astrology/BirthPanchanga';
 
 // Helper for formatting
@@ -127,11 +127,12 @@ export default function VedicOverviewPage() {
 
     const analysisItems = React.useMemo(() => {
         return Object.values(processedCharts)
-            .filter((c: any) => c.chartType?.startsWith('yoga_') || c.chartType?.startsWith('dosha_') || c.chartType === 'sade_sati' || c.chartType === 'dhaiya')
-            .map((c: any) => {
-                const isYoga = c.chartType.startsWith('yoga_');
+            .filter((c: Record<string, unknown>) => (c.chartType as string)?.startsWith('yoga_') || (c.chartType as string)?.startsWith('dosha_') || c.chartType === 'sade_sati' || c.chartType === 'dhaiya')
+            .map((c: Record<string, unknown>) => {
+                const chartType = c.chartType as string;
+                const isYoga = chartType.startsWith('yoga_');
                 // Normalize type for display and modal
-                let subType = c.chartType;
+                let subType = chartType;
                 if (subType.startsWith('yoga_')) subType = subType.replace('yoga_', '');
                 if (subType.startsWith('dosha_')) subType = subType.replace('dosha_', '');
 
@@ -162,11 +163,11 @@ export default function VedicOverviewPage() {
                 <div className="col-span-12 lg:col-span-5 flex flex-col gap-2">
                     {/* D1 Chart Window */}
                     <div className="border border-antique rounded-lg overflow-hidden shadow-sm">
-                        <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique flex justify-between items-center">
+                        <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
                             <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Birth Chart (D1)</h3>
                             <button onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })} className="text-secondary hover:text-accent-gold transition-colors"><Maximize2 className="w-3 h-3" /></button>
                         </div>
-                        <div className="w-full h-[380px] bg-[#FFFCF6]">
+                        <div className="w-full h-[380px] bg-surface-warm">
                             <ChartWithPopup
                                 ascendantSign={d1Data.ascendant}
                                 planets={d1Data.planets}
@@ -179,10 +180,10 @@ export default function VedicOverviewPage() {
 
                     {/* Planetary Details Window */}
                     <div className="border border-antique rounded-lg overflow-hidden shadow-sm">
-                        <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                        <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
                             <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Birth Planetary Positions</h3>
                         </div>
-                        <div className="overflow-x-auto text-[10px] md:text-xs bg-[#FFFCF6]">
+                        <div className="overflow-x-auto text-[10px] md:text-xs bg-surface-warm">
                             <PlanetaryTable
                                 planets={planetaryTableData}
                             />
@@ -196,8 +197,8 @@ export default function VedicOverviewPage() {
                     {/* Top Row: Profile & Dasha */}
                     <div className="grid grid-cols-12 gap-2 auto-rows-fr">
                         {/* Profile & Info */}
-                        <div className="col-span-12 md:col-span-5 lg:col-span-4 border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
-                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                        <div className="col-span-12 md:col-span-5 lg:col-span-4 border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
+                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Client Profile</h3>
                             </div>
                             <div className="p-2.5 space-y-2.5 flex-1">
@@ -255,7 +256,7 @@ export default function VedicOverviewPage() {
                                             {/* Full-width CTA button */}
                                             <Link
                                                 href="/vedic-astrology/panchanga"
-                                                className="mt-2 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#D08C60] to-[#B8733D] text-white text-[11px] font-bold tracking-wide shadow-md hover:shadow-lg hover:from-[#C07A50] hover:to-[#A6652F] active:scale-[0.98] transition-all"
+                                                className="mt-2 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-header-border to-amber-700 text-white text-[11px] font-bold tracking-wide shadow-md hover:shadow-lg hover:from-amber-600 hover:to-amber-800 active:scale-[0.98] transition-all"
                                             >
                                                 <Sparkle className="w-3 h-3" />
                                                 View Full Panchanga Overview
@@ -268,13 +269,13 @@ export default function VedicOverviewPage() {
                         </div>
 
                         {/* Vimshottari Dasha */}
-                        <div className="col-span-12 md:col-span-7 lg:col-span-8 border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-[#FFFCF6]">
-                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique">
+                        <div className="col-span-12 md:col-span-7 lg:col-span-8 border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
+                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Vimshottari Dasha</h3>
                             </div>
                             <div className="p-0 flex-1">
                                 <VimshottariTreeGrid
-                                    data={dashaData ? processDashaResponse(dashaData).slice(0, 9) : []}
+                                    data={dashaData ? processDashaResponse(dashaData as unknown as RawDashaPeriod).slice(0, 9) : []}
                                     isLoading={dashaLoading}
                                     className="h-full border-none shadow-none rounded-none bg-transparent"
                                 />
@@ -286,11 +287,11 @@ export default function VedicOverviewPage() {
                     <div className="grid grid-cols-2 gap-2">
                         {/* D9 Navamsha */}
                         <div className="border border-antique rounded-lg overflow-hidden shadow-sm">
-                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique flex justify-between items-center">
+                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Navamsha (D9)</h3>
                                 <button onClick={() => setZoomedChart({ varga: "D9", label: "Navamsha (D9)" })} className="text-secondary hover:text-accent-gold transition-colors"><Maximize2 className="w-3 h-3" /></button>
                             </div>
-                            <div className="w-full h-[320px] bg-[#FFFCF6]">
+                            <div className="w-full h-[320px] bg-surface-warm">
                                 {d9Data.planets.length > 0 ? (
                                     <ChartWithPopup ascendantSign={d9Data.ascendant} planets={d9Data.planets} className="bg-transparent border-none w-full h-full" preserveAspectRatio="none" showDegrees={false} />
                                 ) : <div className="font-sans text-xs text-muted-refined p-2">Loading...</div>}
@@ -299,11 +300,11 @@ export default function VedicOverviewPage() {
 
                         {/* D10 Dashamsha */}
                         <div className="border border-antique rounded-lg overflow-hidden shadow-sm">
-                            <div className="bg-[#EAD8B1] px-3 py-1.5 border-b border-antique flex justify-between items-center">
+                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Dashamsha (D10)</h3>
                                 <button onClick={() => setZoomedChart({ varga: "D10", label: "Dashamsha (D10)" })} className="text-secondary hover:text-accent-gold transition-colors"><Maximize2 className="w-3 h-3" /></button>
                             </div>
-                            <div className="w-full h-[320px] bg-[#FFFCF6]">
+                            <div className="w-full h-[320px] bg-surface-warm">
                                 {d10Data.planets.length > 0 ? (
                                     <ChartWithPopup ascendantSign={d10Data.ascendant} planets={d10Data.planets} className="bg-transparent border-none w-full h-full" preserveAspectRatio="none" showDegrees={false} />
                                 ) : <div className="font-sans text-xs text-muted-refined p-2">Loading...</div>}
@@ -346,7 +347,7 @@ export default function VedicOverviewPage() {
                         {analysisModal.type === 'yoga' ? (
                             <YogaAnalysisView clientId={clientDetails?.id || ""} yogaType={analysisModal.subType} ayanamsa={settings.ayanamsa} />
                         ) : (
-                            <DoshaAnalysis clientId={clientDetails?.id || ""} doshaType={analysisModal.subType as any} ayanamsa={settings.ayanamsa} />
+                            <DoshaAnalysis clientId={clientDetails?.id || ""} doshaType={analysisModal.subType} ayanamsa={settings.ayanamsa} />
                         )}
                     </div>
                 </div>
@@ -360,7 +361,7 @@ export default function VedicOverviewPage() {
 
 // Sub-components
 
-function SmallChartCard({ varga, label, data, onZoom }: { varga: string, label: string, data: any, onZoom: () => void }) {
+function SmallChartCard({ varga, label, data, onZoom }: { varga: string, label: string, data: ProcessedChartData, onZoom: () => void }) {
     return (
         <div className="flex flex-col items-center transition-colors cursor-pointer group" onClick={onZoom}>
             <div className="w-full aspect-square mb-2 relative overflow-hidden flex items-center justify-center">

@@ -4,8 +4,14 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
 
+interface PlanetStrengthData {
+    is_weak: boolean;
+    percentage_of_required: number;
+    strength_category: string;
+}
+
 interface StrengtheningPanelProps {
-    planetaryStrengths: any;
+    planetaryStrengths: Record<string, PlanetStrengthData>;
 }
 
 const CircularProgress = ({ percentage, color = "amber" }: { percentage: number, color?: "amber" | "indigo" }) => {
@@ -49,8 +55,8 @@ export default function StrengtheningPanel({ planetaryStrengths }: Strengthening
 
     // Filter for weak planets to display
     const weakPlanets = Object.entries(planetaryStrengths)
-        .filter(([_, data]: [string, any]) => data.is_weak || data.percentage_of_required < 100)
-        .sort((a: any, b: any) => a[1].percentage_of_required - b[1].percentage_of_required)
+        .filter(([_, data]: [string, PlanetStrengthData]) => data.is_weak || data.percentage_of_required < 100)
+        .sort((a: [string, PlanetStrengthData], b: [string, PlanetStrengthData]) => a[1].percentage_of_required - b[1].percentage_of_required)
         .slice(0, 4); // Show top 4 in grid
 
     return (
@@ -58,7 +64,7 @@ export default function StrengtheningPanel({ planetaryStrengths }: Strengthening
             <h3 className="text-[13px] font-medium tracking-[0.05em] text-amber-900/60 px-2">2. Long-Term Strengthening (Weak Planets)</h3>
 
             <div className="grid grid-cols-2 gap-4">
-                {weakPlanets.map(([name, data]: [string, any], idx) => {
+                {weakPlanets.map(([name, data]: [string, PlanetStrengthData], idx) => {
                     const percentage = Math.round(data.percentage_of_required);
                     const isIndigo = name === 'Moon' || name === 'Jupiter' || name === 'Mars'; // Variance
 
@@ -83,7 +89,7 @@ export default function StrengtheningPanel({ planetaryStrengths }: Strengthening
 
 // Helper (matching original logic)
 function getTargetCount(name: string): number {
-    const targets: any = {
+    const targets: Record<string, number> = {
         'Mercury': 18036,
         'Moon': 11016,
         'Jupiter': 19008,

@@ -84,7 +84,7 @@ const REMEDY_TABS: RemedyTab[] = [
 // ============================================================================
 // Generic Remedy Data Renderer
 // ============================================================================
-function RemedyDataView({ data, type }: { data: any; type: string }) {
+function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: string }) {
     if (!data) {
         return (
             <div className="p-8 text-center">
@@ -126,7 +126,7 @@ function RemedyDataView({ data, type }: { data: any; type: string }) {
     if (typeof remedyContent === 'object' && !Array.isArray(remedyContent)) {
         return (
             <div className="space-y-4">
-                {Object.entries(remedyContent).map(([key, value]: [string, any]) => {
+                {Object.entries(remedyContent).map(([key, value]: [string, unknown]) => {
                     // Skip metadata keys
                     if (['ayanamsa', 'system', 'cached', 'chart_type', 'birth_details'].includes(key)) return null;
 
@@ -141,13 +141,13 @@ function RemedyDataView({ data, type }: { data: any; type: string }) {
                             ) : typeof value === 'object' && value !== null ? (
                                 <div className="space-y-2">
                                     {Array.isArray(value) ? (
-                                        value.map((item: any, i: number) => (
+                                        value.map((item: unknown, i: number) => (
                                             <div key={i} className="bg-parchment/50 rounded-xl p-4 border border-antique/50">
                                                 {typeof item === 'string' ? (
                                                     <p className="text-sm text-primary">{item}</p>
-                                                ) : typeof item === 'object' ? (
+                                                ) : (typeof item === 'object' && item !== null) ? (
                                                     <div className="grid grid-cols-2 gap-2">
-                                                        {Object.entries(item).map(([k, v]) => (
+                                                        {Object.entries(item as Record<string, unknown>).map(([k, v]) => (
                                                             <div key={k} className="text-sm">
                                                                 <span className="text-primary text-xs uppercase tracking-wider">{k.replace(/_/g, ' ')}: </span>
                                                                 <span className="text-primary font-medium">{String(v)}</span>
@@ -182,13 +182,13 @@ function RemedyDataView({ data, type }: { data: any; type: string }) {
     if (Array.isArray(remedyContent)) {
         return (
             <div className="space-y-3">
-                {remedyContent.map((item: any, i: number) => (
+                {remedyContent.map((item: unknown, i: number) => (
                     <div key={i} className="bg-white border border-antique rounded-2xl p-5">
                         {typeof item === 'string' ? (
                             <p className="text-sm text-primary">{item}</p>
-                        ) : typeof item === 'object' ? (
+                        ) : (typeof item === 'object' && item !== null) ? (
                             <div className="space-y-2">
-                                {Object.entries(item).map(([k, v]) => (
+                                {Object.entries(item as Record<string, unknown>).map(([k, v]) => (
                                     <div key={k} className="flex items-start gap-2 text-sm">
                                         <span className="text-primary min-w-[120px] text-xs uppercase tracking-wider font-medium">{k.replace(/_/g, ' ')}</span>
                                         <span className="text-primary">{String(v)}</span>
@@ -221,7 +221,7 @@ export default function RemediesPage() {
     const [activeTab, setActiveTab] = useState('gemstone');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [remedyData, setRemedyData] = useState<Record<string, any>>({});
+    const [remedyData, setRemedyData] = useState<Record<string, Record<string, unknown>>>({});
 
     const [selectedPlanet, setSelectedPlanet] = useState<string>('');
     const [selectedHouse, setSelectedHouse] = useState<string>('');
@@ -250,7 +250,7 @@ export default function RemediesPage() {
             setError(null);
             try {
                 // Prepare options for Lal Kitab
-                const options: any = {};
+                const options: Record<string, unknown> = {};
                 if (activeTab === 'lal_kitab') {
                     if (selectedPlanet) options.planet = selectedPlanet;
                     if (selectedHouse) options.house = parseInt(selectedHouse);
@@ -264,11 +264,9 @@ export default function RemediesPage() {
                 );
                 setRemedyData(prev => ({
                     ...prev,
-                    [activeTab]: result.data || result.chartData || result
+                    [activeTab]: (result.data || result.chartData || result) as Record<string, unknown>
                 }));
-            } catch (err: any) {
-                console.error(`[Remedies] Error fetching ${activeTab}:`, err);
-                setError(err.message || `Failed to fetch ${activeRemedyTab.name} data`);
+            } catch (err: unknown) {                setError(err instanceof Error ? err.message : `Failed to fetch ${activeRemedyTab.name} data`);
             } finally {
                 setLoading(false);
             }
@@ -290,7 +288,7 @@ export default function RemediesPage() {
         setError(null);
         try {
             // Prepare options for Lal Kitab
-            const options: any = {};
+            const options: Record<string, unknown> = {};
             if (activeTab === 'lal_kitab') {
                 if (selectedPlanet) options.planet = selectedPlanet;
                 if (selectedHouse) options.house = parseInt(selectedHouse);
@@ -304,10 +302,10 @@ export default function RemediesPage() {
             );
             setRemedyData(prev => ({
                 ...prev,
-                [activeTab]: result.data || result.chartData || result
+                [activeTab]: (result.data || result.chartData || result) as Record<string, unknown>
             }));
-        } catch (err: any) {
-            setError(err.message || `Failed to fetch ${activeRemedyTab.name} data`);
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : `Failed to fetch ${activeRemedyTab.name} data`);
         } finally {
             setLoading(false);
         }

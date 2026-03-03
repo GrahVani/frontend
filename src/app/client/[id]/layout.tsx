@@ -33,11 +33,7 @@ export default async function ClientLayout({
         <div className="min-h-screen bg-luxury-radial relative">
             {/* Subtle Texture Overlay */}
             <div
-                className="absolute inset-0 opacity-15 pointer-events-none z-0"
-                style={{
-                    backgroundImage: "url('https://www.transparenttextures.com/patterns/aged-paper.png')",
-                    backgroundBlendMode: 'multiply'
-                }}
+                className="absolute inset-0 opacity-15 pointer-events-none z-0 bg-[url('/textures/aged-paper.png')] bg-blend-multiply"
             />
 
             {/* Content starts below header */}

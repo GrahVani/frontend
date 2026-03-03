@@ -43,11 +43,11 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
         <div className={cn("p-6 shadow-sm relative overflow-hidden h-full backdrop-blur-md", styles.glassPanel)}>
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <h3 className="text-xl font-bold tracking-tight flex items-center gap-2" style={{ color: 'var(--ink)' }}>
+                    <h3 className="text-xl font-bold tracking-tight flex items-center gap-2 text-ink">
                         <Zap className="w-5 h-5 text-purple-600" />
                         Planetary Vigor
                     </h3>
-                    <p className="text-xs mt-1 uppercase tracking-widest font-bold" style={{ color: 'var(--text-muted)' }}>Strength & Afflictions Analysis</p>
+                    <p className="text-xs mt-1 uppercase tracking-widest font-bold text-muted">Strength & Afflictions Analysis</p>
                 </div>
                 <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest">
                     <div className="flex items-center gap-1.5">
@@ -77,7 +77,7 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
                     >
                         <div className="flex justify-between items-start mb-3">
                             <div>
-                                <h4 className="font-bold uppercase tracking-wider text-xs" style={{ color: 'var(--ink)' }}>{name}</h4>
+                                <h4 className="font-bold uppercase tracking-wider text-xs text-ink">{name}</h4>
                                 <div className="flex items-center gap-1 mt-1">
                                     <span className={cn(
                                         "text-[9px] font-bold uppercase tracking-tight",
@@ -88,8 +88,8 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
                                 </div>
                             </div>
                             <div className="text-right">
-                                <span className="text-xl font-black leading-none" style={{ color: 'var(--ink)' }}>{data.strength_score}</span>
-                                <span className="text-[8px] block font-bold uppercase -mt-1" style={{ color: 'var(--text-muted)' }}>Vigor</span>
+                                <span className="text-xl font-black leading-none text-ink">{data.strength_score}</span>
+                                <span className="text-[8px] block font-bold uppercase -mt-1 text-muted">Vigor</span>
                             </div>
                         </div>
 

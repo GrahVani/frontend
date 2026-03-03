@@ -1,18 +1,26 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display, Inter, Spectral } from "next/font/google";
 import "./globals.css";
 import GlobalHeader from "@/components/layout/GlobalHeader";
 import { VedicClientProvider } from "@/context/VedicClientContext";
+import { ToastProvider } from "@/context/ToastContext";
 
 
 const playfair = Playfair_Display({
-  variable: "--font-serif",
+  variable: "--font-playfair",
   subsets: ["latin"],
   display: 'swap',
 });
 
 const inter = Inter({
   variable: "--font-sans",
+  subsets: ["latin"],
+  display: 'swap',
+});
+
+const spectral = Spectral({
+  variable: "--font-serif",
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   display: 'swap',
 });
@@ -70,20 +78,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${playfair.variable} ${inter.variable} antialiased`}>
+      <body className={`${spectral.variable} ${playfair.variable} ${inter.variable} antialiased`}>
         <QueryProvider>
           <AuthProvider>
             <VedicClientProvider>
-              <a
-                href="#main-content"
-                className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:bg-amber-800 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-semibold"
-              >
-                Skip to main content
-              </a>
-              <GlobalHeader />
-              <main id="main-content">
-                {children}
-              </main>
+              <ToastProvider>
+                <a
+                  href="#main-content"
+                  className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:bg-amber-800 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-semibold"
+                >
+                  Skip to main content
+                </a>
+                <GlobalHeader />
+                <main id="main-content">
+                  {children}
+                </main>
+              </ToastProvider>
             </VedicClientProvider>
           </AuthProvider>
         </QueryProvider>

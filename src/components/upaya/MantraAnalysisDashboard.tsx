@@ -25,15 +25,17 @@ import styles from './RemedialShared.module.css';
 import DebugConsole from '@/components/debug/DebugConsole';
 
 interface MantraAnalysisDashboardProps {
-    data: any;
+    data: Record<string, unknown>;
 }
 
 const MantraAnalysisDashboard: React.FC<MantraAnalysisDashboardProps> = ({ data }) => {
     const { processedCharts } = useVedicClient();
 
     // Extract data from the nested structure
-    const analysis = data?.analysis || {};
-    const mantraAnalysis = data?.mantra_analysis || {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic mantra analysis response
+    const analysis = (data?.analysis || {}) as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const mantraAnalysis = (data?.mantra_analysis || {}) as any;
 
     // Fallback for D1 Chart
     const d1Chart = analysis?.chart || processedCharts["D1_lahiri"]?.chartData;
@@ -47,10 +49,10 @@ const MantraAnalysisDashboard: React.FC<MantraAnalysisDashboardProps> = ({ data 
         <div className={cn("min-h-screen p-4 lg:p-6 space-y-6 animate-in fade-in duration-700", styles.dashboardContainer)}>
             {/* Header Area */}
             <div className="flex flex-col gap-6">
-                <div className="flex items-center justify-between border-b pb-4" style={{ borderColor: 'var(--border-antique)' }}>
+                <div className="flex items-center justify-between border-b border-antique pb-4">
                     <div className="flex items-center gap-3">
-                        <h2 className="text-xl font-bold tracking-tight" style={{ color: 'var(--ink)' }}>
-                            Mantras : {data.user_name || "Sadhaka"}
+                        <h2 className="text-xl font-bold tracking-tight text-ink">
+                            Mantras : {String(data.user_name || "Sadhaka")}
                         </h2>
                     </div>
                 </div>
@@ -71,7 +73,7 @@ const MantraAnalysisDashboard: React.FC<MantraAnalysisDashboardProps> = ({ data 
 
                 {/* Right Side: Main Panels (8/12) - Unified Light Glass Dashboard */}
                 <div className="lg:col-span-8">
-                    <div className="rounded-[2.5rem] bg-[rgba(254,250,234,0.6)] border border-[#E7D6B8] shadow-xl backdrop-blur-md overflow-hidden flex flex-col p-6 space-y-4 h-fit">
+                    <div className="rounded-[2.5rem] bg-[rgba(254,250,234,0.6)] border border-antique shadow-xl backdrop-blur-md overflow-hidden flex flex-col p-6 space-y-4 h-fit">
                         <div className="flex items-center justify-between px-2">
                             <h2 className="text-2xl font-medium text-ink tracking-tight">Today's Mantra Focus (Priority)</h2>
                             <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.3)] animate-pulse" />
@@ -96,12 +98,12 @@ const MantraAnalysisDashboard: React.FC<MantraAnalysisDashboardProps> = ({ data 
                             <div className="space-y-4">
                                 <h3 className="text-[13px] font-medium tracking-[0.05em] text-amber-900/60 px-2">3. Daily Ritual Sequence</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    {recommendations.map((item: any, idx: number) => (
+                                    {recommendations.map((item: { category: string; action: string; note: string }, idx: number) => (
                                         <div
                                             key={idx}
                                             className="flex items-start gap-4 p-4 rounded-2xl border bg-white/40 backdrop-blur-sm transition-all group cursor-pointer border-antique/20 hover:bg-white/60"
                                         >
-                                            <div className="flex-shrink-0 w-6 h-6 rounded-full border border-antique/30 flex items-center justify-center text-[12px] font-medium transition-all mt-0.5 bg-white group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600" style={{ color: 'var(--text-muted)' }}>
+                                            <div className="flex-shrink-0 w-6 h-6 rounded-full border border-antique/30 flex items-center justify-center text-[12px] font-medium transition-all mt-0.5 bg-white group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 text-muted">
                                                 {idx + 1}
                                             </div>
                                             <div className="min-w-0">

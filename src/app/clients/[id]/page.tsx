@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ClientsNavigationSidebar from '@/components/clients/ClientsNavigationSidebar';
 
@@ -103,7 +103,7 @@ export default function ClientProfilePage() {
 
     // Core state
     const { data: rawClient, isLoading: loading, error: queryError } = useClient(clientId);
-    const client = rawClient ? deriveNames(rawClient) : undefined;
+    const client = useMemo(() => rawClient ? deriveNames(rawClient) : undefined, [rawClient]);
 
     const [editData, setEditData] = useState<Partial<Client>>({});
     const [isEditing, setIsEditing] = useState(false);
@@ -183,9 +183,7 @@ export default function ClientProfilePage() {
             setIsAddingRel(false);
             setSearchRel("");
             // setAvailableClients([]); // No need, derived from searchRel=""
-        } catch (err: any) {
-            console.error('Failed to add family link:', err);
-            setError(err.message || 'Failed to add family member');
+        } catch (err: unknown) {            setError(err instanceof Error ? err.message : 'Failed to add family member');
         } finally {
             setAddingFamily(false);
         }
@@ -195,9 +193,7 @@ export default function ClientProfilePage() {
     const handleRemoveFamilyLink = async (relatedClientId: string) => {
         try {
             await unlinkFamily.mutateAsync({ clientId, relatedClientId });
-        } catch (err: any) {
-            console.error('Failed to remove family link:', err);
-        }
+        } catch (err: unknown) {        }
     };
 
     // Save client changes
@@ -211,13 +207,15 @@ export default function ClientProfilePage() {
 
             // Scrub derived fields that don't belong in the backend update schema
             const {
-                firstName, lastName, phone, dateOfBirth, timeOfBirth, placeOfBirth, avatar,
-                familyLinksFrom, familyLinksTo, consultations, notes: clientNotes, remedies,
+                firstName: _fn, lastName: _ln, phone: _ph, dateOfBirth: _dob, timeOfBirth: _tob,
+                placeOfBirth: _pob, avatar: _av,
+                familyLinksFrom: _flf, familyLinksTo: _flt, consultations: _con,
+                notes: _clientNotes, remedies: _rem,
                 ...cleanData
-            } = editData as any;
+            } = editData;
 
             // Send birth details directly (they are already normalized in state by deriveNames/deriveNames)
-            const payload = {
+            const payload: Record<string, unknown> = {
                 ...cleanData,
                 fullName: updatedFullName,
                 birthDate: editData.birthDate || undefined,
@@ -243,9 +241,7 @@ export default function ClientProfilePage() {
                 }
             });
 
-        } catch (err: any) {
-            console.error('Failed to update client:', err);
-            setError(err.message || 'Failed to update client profile');
+        } catch (err: unknown) {            setError(err instanceof Error ? err.message : 'Failed to update client profile');
         } finally {
             setIsSaving(false);
         }
@@ -263,9 +259,7 @@ export default function ClientProfilePage() {
             });
             // Re-fetch handled by mutation invalidation
             // await fetchClient(); 
-        } catch (err: any) {
-            console.error('Failed to save notes:', err);
-            setError(err.message || 'Failed to save notes');
+        } catch (err: unknown) {            setError(err instanceof Error ? err.message : 'Failed to save notes');
         } finally {
             setIsSavingNotes(false);
         }
@@ -446,7 +440,7 @@ export default function ClientProfilePage() {
                                         isEditing={isEditing}
                                         type="select"
                                         options={[{ v: 'male', l: 'Male' }, { v: 'female', l: 'Female' }, { v: 'other', l: 'Other' }]}
-                                        onChange={(val) => setEditData(prev => ({ ...prev, gender: val as any }))}
+                                        onChange={(val) => setEditData(prev => ({ ...prev, gender: val as 'male' | 'female' | 'other' }))}
                                     />
                                     <DetailItem
                                         label="Date of Birth"

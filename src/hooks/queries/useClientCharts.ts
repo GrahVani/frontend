@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { clientApi } from "@/lib/api";
 
 export interface ChartLookup {
-    [key: string]: any;
+    [key: string]: Record<string, unknown>;
 }
 
 export function useClientCharts(clientId?: string) {
@@ -17,7 +17,7 @@ export function useClientCharts(clientId?: string) {
         refetchInterval: false, // DISABLED for performance audit (Phase 1 Fix)
         /*
         refetchInterval: (query) => {
-            const data = query.state.data as any;
+            const data = query.state.data as Record<string, unknown> | undefined;
 
             // Optimization: Stop polling if we have > 20 charts (likely complete)
             if (data && Object.keys(data).length > 20) return false;
@@ -41,6 +41,7 @@ export function useClientCharts(clientId?: string) {
             // List of lagna charts that should also be aliased from Lahiri for KP
             const LAGNA_CHARTS = ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9'];
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic chart record from API
             data.forEach((c: any) => {
                 // Prioritize ayanamsa field, fallback to system for backward compatibility with DB records
                 const ayanamsa = (c.ayanamsa || c.chartConfig?.ayanamsa || c.system || c.chartConfig?.system || 'lahiri').toLowerCase();

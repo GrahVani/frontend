@@ -71,7 +71,7 @@ export default function NotesHistoryPage() {
     );
 }
 
-function ConsultationCard({ session }: { session: any }) {
+function ConsultationCard({ session }: { session: { id: number; date: string; topic: string; predictions: string; status: string; remedies: string } }) {
     const statusIcon = session.status === "verified"
         ? <CheckCircle2 className="w-4 h-4 text-green-600" />
         : <Clock className="w-4 h-4 text-gold-dark" />;

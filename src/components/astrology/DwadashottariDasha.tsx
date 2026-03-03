@@ -50,7 +50,7 @@ export default function DwadashottariDasha({ periods }: DwadashottariDashaProps)
         <div className="space-y-4 animate-in fade-in duration-700">
             {/* Cycle Navigation */}
             <div className="flex flex-wrap gap-2 items-center">
-                <div className="flex bg-[#F5E6D3]/40 rounded-lg p-0.5 gap-1 border border-[#D08C60]/10 backdrop-blur-sm overflow-x-auto scrollbar-hide">
+                <div className="flex bg-parchment-soft/40 rounded-lg p-0.5 gap-1 border border-header-border/10 backdrop-blur-sm overflow-x-auto scrollbar-hide">
                     {availableCycles.map((c: number) => {
                         const isActive = selectedCycle === c;
                         const cyclePeriods = cycles[c];
@@ -64,8 +64,8 @@ export default function DwadashottariDasha({ periods }: DwadashottariDashaProps)
                                 className={cn(
                                     "flex items-center gap-2 px-3 py-1.5 rounded-md transition-all duration-200 whitespace-nowrap",
                                     isActive
-                                        ? "bg-[#3E2A1F] text-[#FFD27D] shadow-sm font-semibold"
-                                        : "hover:bg-[#3E2A1F]/5 text-[#3E2A1F]/70 font-medium"
+                                        ? "bg-ink text-active-glow shadow-sm font-semibold"
+                                        : "hover:bg-ink/5 text-ink/70 font-medium"
                                 )}
                             >
                                 <span className="text-[10px] uppercase tracking-wider">Cycle {c}</span>
@@ -80,7 +80,7 @@ export default function DwadashottariDasha({ periods }: DwadashottariDashaProps)
             {/* Table */}
             <div className="overflow-x-auto">
                 <table className="w-full">
-                    <thead className="bg-[#3E2A1F]/5 text-[#5A3E2B]/70 font-black uppercase text-[9px] tracking-widest border-b border-[#D08C60]/10">
+                    <thead className="bg-ink/5 text-body/70 font-black uppercase text-[9px] tracking-widest border-b border-header-border/10">
                         <tr>
                             <th className="px-3 py-2 text-left">Planet</th>
                             <th className="px-3 py-2 text-left">Start Date</th>
@@ -89,7 +89,7 @@ export default function DwadashottariDasha({ periods }: DwadashottariDashaProps)
                             <th className="px-3 py-2 text-center">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#D08C60]/10 font-medium">
+                    <tbody className="divide-y divide-header-border/10 font-medium">
                         {currentCyclePeriods.map((mahadasha: DashaNode, mIdx: number) => {
                             const isExpanded = expandedMahadasha === mahadasha.planet;
                             const antardashas = mahadasha.sublevel || [];
@@ -99,8 +99,8 @@ export default function DwadashottariDasha({ periods }: DwadashottariDashaProps)
                                 <React.Fragment key={mIdx}>
                                     <tr
                                         className={cn(
-                                            "hover:bg-[#D08C60]/10 transition-colors group cursor-pointer",
-                                            mahadasha.isCurrent && "bg-[#D08C60]/5"
+                                            "hover:bg-header-border/10 transition-colors group cursor-pointer",
+                                            mahadasha.isCurrent && "bg-header-border/5"
                                         )}
                                         onClick={() => setExpandedMahadasha(isExpanded ? null : mahadasha.planet)}
                                     >
@@ -125,24 +125,24 @@ export default function DwadashottariDasha({ periods }: DwadashottariDashaProps)
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">
+                                        <td className="px-3 py-2 text-xs text-ink font-mono">
                                             <div className="flex items-center gap-1.5">
-                                                <Calendar className="w-3 h-3 text-[#8B5A2B]/40" />
+                                                <Calendar className="w-3 h-3 text-bronze/40" />
                                                 {formatDateDisplay(mahadasha.startDate)}
                                             </div>
                                         </td>
-                                        <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(mahadasha.endDate)}</td>
-                                        <td className="px-3 py-2 text-xs text-[#8B5A2B] font-bold">
-                                            {mahadasha.raw?.duration_formatted || standardizeDuration(mahadasha.raw?.duration_years || mahadasha.raw?.years || 0)}
+                                        <td className="px-3 py-2 text-xs text-ink font-mono">{formatDateDisplay(mahadasha.endDate)}</td>
+                                        <td className="px-3 py-2 text-xs text-bronze font-bold">
+                                            {String(mahadasha.raw?.duration_formatted || standardizeDuration((mahadasha.raw?.duration_years as number) || (mahadasha.raw?.years as number) || 0))}
                                         </td>
                                         <td className="px-3 py-2 text-center">
                                             <div className="flex items-center justify-center gap-2">
                                                 {mahadasha.isCurrent ? (
                                                     <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm animate-pulse">ACTIVE</span>
                                                 ) : antardashas.length > 0 ? (
-                                                    isExpanded ? <ChevronUp className="w-4 h-4 text-[#D08C60]" /> : <ChevronDown className="w-4 h-4 text-[#D08C60]" />
+                                                    isExpanded ? <ChevronUp className="w-4 h-4 text-header-border" /> : <ChevronDown className="w-4 h-4 text-header-border" />
                                                 ) : (
-                                                    <span className="text-[#D08C60]/40 text-xs">—</span>
+                                                    <span className="text-header-border/40 text-xs">—</span>
                                                 )}
                                             </div>
                                         </td>
@@ -151,14 +151,14 @@ export default function DwadashottariDasha({ periods }: DwadashottariDashaProps)
                                     {/* Expanded Antardasha Row */}
                                     {isExpanded && antardashas.length > 0 && (
                                         <tr>
-                                            <td colSpan={5} className="bg-[#FAF7F2]/60 px-3 py-2">
-                                                <div className="text-2xs font-black text-[#8B5A2B] uppercase tracking-[0.2em] mb-2 pl-2">
+                                            <td colSpan={5} className="bg-surface-pure/60 px-3 py-2">
+                                                <div className="text-2xs font-black text-bronze uppercase tracking-[0.2em] mb-2 pl-2">
                                                     Antardasha Sub-Periods
                                                 </div>
                                                 <table className="w-full">
-                                                    <tbody className="divide-y divide-[#D08C60]/10">
+                                                    <tbody className="divide-y divide-header-border/10">
                                                         {antardashas.map((antar: DashaNode, aIdx: number) => {
-                                                            const isAntarBalance = antar.raw?.antardasha_type?.toLowerCase().includes('balance') || antar.raw?.is_balance === true;
+                                                            const isAntarBalance = (antar.raw?.antardasha_type as string)?.toLowerCase().includes('balance') || antar.raw?.is_balance === true;
 
                                                             return (
                                                                 <tr key={aIdx} className={cn(
@@ -178,10 +178,10 @@ export default function DwadashottariDasha({ periods }: DwadashottariDashaProps)
                                                                             )}
                                                                         </div>
                                                                     </td>
-                                                                    <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(antar.startDate)}</td>
-                                                                    <td className="px-3 py-2 text-xs text-[#3E2A1F] font-mono">{formatDateDisplay(antar.endDate)}</td>
-                                                                    <td className="px-3 py-2 text-xs text-[#8B5A2B] font-bold">
-                                                                        {antar.raw?.duration_formatted || standardizeDuration(antar.raw?.duration_years || antar.raw?.years || 0, antar.raw?.duration_days)}
+                                                                    <td className="px-3 py-2 text-xs text-ink font-mono">{formatDateDisplay(antar.startDate)}</td>
+                                                                    <td className="px-3 py-2 text-xs text-ink font-mono">{formatDateDisplay(antar.endDate)}</td>
+                                                                    <td className="px-3 py-2 text-xs text-bronze font-bold">
+                                                                        {String(antar.raw?.duration_formatted || standardizeDuration((antar.raw?.duration_years as number) || (antar.raw?.years as number) || 0, antar.raw?.duration_days as number))}
                                                                     </td>
                                                                     <td className="px-3 py-2 text-center">
                                                                         {antar.isCurrent && (

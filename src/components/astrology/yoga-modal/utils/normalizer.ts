@@ -41,7 +41,86 @@ import type {
     CancellationFactor,
     RajYogasData,
     RajYogaEntry,
+    HouseSign,
 } from '@/types/yoga.types';
+
+// ─── Local Interfaces for Polymorphic API Fields ────────────────────
+// The Astro Engine returns different JSON shapes per yoga type. These small
+// interfaces type the dynamic fields accessed via index signatures on
+// YogaAnalysisCore and RawYogaResponse (both have [key: string]: unknown).
+
+/** Fields found on shubh/kala-sarpa/kalpadruma analysis cores */
+interface YogaAnalysisExtended {
+    overall_assessment?: { total_yogas_found?: number; [key: string]: unknown };
+    overall_category?: string;
+    overall_strength?: number;
+    strength_percentage?: number;
+    final_assessment?: {
+        yoga_classification?: string;
+        strength?: string;
+        cancellation_score?: number;
+        recommendation?: string;
+        [key: string]: unknown;
+    };
+    yoga_analysis?: KalpadrumaCondition[];
+    rule_by_rule_analysis?: Record<string, RuleByRuleEntry>;
+}
+
+/** Kalpadruma-style yoga_analysis array element */
+interface KalpadrumaCondition {
+    planet: string;
+    role: string;
+    sign: string;
+    house: number;
+    in_exaltation?: boolean;
+    in_kendra?: boolean;
+    in_trikona?: boolean;
+    condition_met: boolean;
+}
+
+/** Kala-sarpa rule_by_rule_analysis entry */
+interface RuleByRuleEntry {
+    description?: string;
+    yoga_present?: boolean;
+    [key: string]: unknown;
+}
+
+/** Top-level fields on RawYogaResponse accessed via index signature */
+interface RawYogaExtended {
+    yoga_strength?: string;
+    base_strength_score?: number;
+    malefic_penalty?: number;
+    comprehensive_effects?: {
+        specific_effects?: string[];
+        overall_prediction?: string;
+        [key: string]: unknown;
+    };
+    timing_analysis?: {
+        best_periods?: string;
+        activation_transits?: string;
+        peak_effects?: string;
+        remedial_timing?: string;
+        [key: string]: unknown;
+    };
+    remedial_suggestions?: string[] | Record<string, string[]>;
+    spiritual_recommendations?: string[];
+    cancellation_factors?: CancellationFactor[];
+    overall_severity?: string;
+    severity_description?: string;
+    financial_outlook?: string;
+}
+
+/** Birth location sub-object when birth.location is an object */
+interface BirthLocationObject {
+    latitude?: number;
+    longitude?: number;
+    timezone_offset?: number;
+}
+
+/** House sign entry with optional lord (chart_foundations shape) */
+interface HouseSignWithLord extends HouseSign {
+    lord?: string;
+}
 
 // ─── Key Detection Helpers ─────────────────────────────────────────
 
@@ -251,7 +330,8 @@ function extractHeader(data: Record<string, unknown>, analysis: YogaAnalysisCore
 
     // yoga_present can live at top-level, nested under yoga_formation_analysis,
     // or be derived from total_yogas_found / total_count > 0
-    const overallAssessment = (analysis as any)?.overall_assessment;
+    const ext = analysis as (YogaAnalysisCore & YogaAnalysisExtended) | null;
+    const overallAssessment = ext?.overall_assessment;
     const totalYogasFound = (analysis?.total_yogas_found ?? analysis?.total_count ?? overallAssessment?.total_yogas_found) as number | undefined;
     const isPresent = analysis?.yoga_present
         ?? analysis?.overall_yoga_present
@@ -259,17 +339,18 @@ function extractHeader(data: Record<string, unknown>, analysis: YogaAnalysisCore
         ?? (totalYogasFound !== undefined ? totalYogasFound > 0 : false);
 
     // Strength label — multiple sources
+    const dataExt = data as Record<string, unknown> & RawYogaExtended;
     const strength = analysis?.yoga_strength
         ?? analysis?.strongest_combination?.overall_strength
-        ?? (analysis as any)?.overall_category
-        ?? (analysis as any)?.final_assessment?.yoga_classification
-        ?? (typeof (data as any).yoga_strength === 'string' ? (data as any).yoga_strength : undefined);
+        ?? ext?.overall_category
+        ?? ext?.final_assessment?.yoga_classification
+        ?? (typeof dataExt.yoga_strength === 'string' ? dataExt.yoga_strength : undefined);
 
     // Strength score — multiple sources
     const strengthScore = analysis?.total_strength_score
         ?? analysis?.strongest_combination?.strength_score
-        ?? (analysis as any)?.overall_strength
-        ?? (typeof (data as any).base_strength_score === 'number' ? (data as any).base_strength_score : undefined);
+        ?? ext?.overall_strength
+        ?? (typeof dataExt.base_strength_score === 'number' ? dataExt.base_strength_score : undefined);
 
     // Raja yoga stats
     const rajYogas = data[RAJ_YOGAS_KEY] as Record<string, unknown> | undefined;
@@ -332,8 +413,9 @@ function extractMeta(data: Record<string, unknown>): NormalizedMeta | null {
 
     if (birth?.location) {
         if (typeof birth.location === 'object') {
-            lat = lat ?? (birth.location as any).latitude;
-            lon = lon ?? (birth.location as any).longitude;
+            const loc = birth.location as BirthLocationObject;
+            lat = lat ?? loc.latitude;
+            lon = lon ?? loc.longitude;
         } else if (typeof birth.location === 'string') {
             const match = birth.location.match(/Lat:\s*([0-9.]+),\s*Lon:\s*([0-9.]+)/);
             if (match) {
@@ -387,7 +469,8 @@ function extractDescription(analysis: YogaAnalysisCore | null): NormalizedDescri
 
 function extractEffects(data: Record<string, unknown>, analysis: YogaAnalysisCore | null): NormalizedEffects | null {
     // From the old YogaAnalysis shape (gaja_kesari-like)
-    const compEffects = (data as any).comprehensive_effects;
+    const dataExt = data as Record<string, unknown> & RawYogaExtended;
+    const compEffects = dataExt.comprehensive_effects;
     if (compEffects) {
         return {
             specific: compEffects.specific_effects ?? [],
@@ -428,18 +511,20 @@ function extractEffects(data: Record<string, unknown>, analysis: YogaAnalysisCor
 }
 
 function extractStrength(data: Record<string, unknown>, analysis: YogaAnalysisCore | null): NormalizedStrength | null {
+    const ext = analysis as (YogaAnalysisCore & YogaAnalysisExtended) | null;
+    const dataExt = data as Record<string, unknown> & RawYogaExtended;
     const score = analysis?.total_strength_score
         ?? analysis?.strongest_combination?.strength_score
-        ?? (analysis as any)?.overall_strength
-        ?? (analysis as any)?.strength_percentage
-        ?? (analysis as any)?.final_assessment?.cancellation_score;
+        ?? ext?.overall_strength
+        ?? ext?.strength_percentage
+        ?? ext?.final_assessment?.cancellation_score;
     const label = analysis?.yoga_strength
         ?? analysis?.strongest_combination?.overall_strength
-        ?? (analysis as any)?.overall_category
-        ?? (analysis as any)?.final_assessment?.strength
-        ?? (typeof (data as any).yoga_strength === 'string' ? (data as any).yoga_strength : undefined);
-    const base = typeof (data as any).base_strength_score === 'number' ? (data as any).base_strength_score : undefined;
-    const penalty = typeof (data as any).malefic_penalty === 'number' ? (data as any).malefic_penalty : undefined;
+        ?? ext?.overall_category
+        ?? ext?.final_assessment?.strength
+        ?? (typeof dataExt.yoga_strength === 'string' ? dataExt.yoga_strength : undefined);
+    const base = typeof dataExt.base_strength_score === 'number' ? dataExt.base_strength_score : undefined;
+    const penalty = typeof dataExt.malefic_penalty === 'number' ? dataExt.malefic_penalty : undefined;
     const overallRating = analysis?.overall_rating as number | undefined;
 
     // Raj yoga average strength
@@ -464,9 +549,10 @@ function extractConditions(analysis: YogaAnalysisCore | null): NormalizedConditi
     let failed = (analysis?.conditions_failed as string[] | undefined) ?? [];
 
     // Kalpadruma-style yoga_analysis array
-    const kalpaAnalysis = (analysis as any)?.yoga_analysis;
+    const ext = analysis as (YogaAnalysisCore & YogaAnalysisExtended) | null;
+    const kalpaAnalysis = ext?.yoga_analysis;
     if (Array.isArray(kalpaAnalysis)) {
-        kalpaAnalysis.forEach((cond: any) => {
+        kalpaAnalysis.forEach((cond: KalpadrumaCondition) => {
             const label = `${cond.role}: ${cond.planet} in ${cond.sign} (H${cond.house})`;
             if (cond.condition_met) {
                 if (!met.includes(label)) met.push(label);
@@ -477,9 +563,9 @@ function extractConditions(analysis: YogaAnalysisCore | null): NormalizedConditi
     }
 
     // Kala-sarpa-style rule_by_rule_analysis
-    const ruleByRule = (analysis as any)?.rule_by_rule_analysis;
+    const ruleByRule = ext?.rule_by_rule_analysis;
     if (ruleByRule && typeof ruleByRule === 'object') {
-        Object.entries(ruleByRule).forEach(([ruleName, ruleData]: [string, any]) => {
+        Object.entries(ruleByRule).forEach(([ruleName, ruleData]: [string, RuleByRuleEntry]) => {
             const label = `${ruleName.replace(/_/g, ' ')}: ${ruleData.description ?? ''}`;
             if (ruleData.yoga_present) {
                 if (!met.includes(label)) met.push(label);
@@ -490,7 +576,7 @@ function extractConditions(analysis: YogaAnalysisCore | null): NormalizedConditi
     }
 
     // Kala-sarpa final_assessment as header-like summary → also inject into conditions
-    const finalAssessment = (analysis as any)?.final_assessment;
+    const finalAssessment = ext?.final_assessment;
     if (finalAssessment?.recommendation) {
         const recLabel = `Recommendation: ${finalAssessment.recommendation}`;
         if (!met.includes(recLabel) && !failed.includes(recLabel)) {
@@ -591,7 +677,8 @@ function extractHouses(data: Record<string, unknown>): NormalizedHouse[] | null 
         .map(([key, value]) => {
             const num = parseInt(key.replace(/\D/g, ''), 10);
             // Lords can use "House 1", "1", or "house_1" format, OR be inline in chart_foundations
-            const lordKey = (value as any).lord
+            const valueWithLord = value as HouseSignWithLord;
+            const lordKey = valueWithLord.lord
                 ?? (lords ? (lords[key] ?? lords[`House ${num}`] ?? lords[String(num)] ?? lords[`house_${num}`]) : undefined);
             return {
                 houseNumber: isNaN(num) ? 0 : num,
@@ -604,7 +691,8 @@ function extractHouses(data: Record<string, unknown>): NormalizedHouse[] | null 
 }
 
 function extractTiming(data: Record<string, unknown>): NormalizedTiming | null {
-    const timing = (data as any).timing_analysis;
+    const dataExt = data as Record<string, unknown> & RawYogaExtended;
+    const timing = dataExt.timing_analysis;
     if (!timing) return null;
 
     return {
@@ -616,12 +704,14 @@ function extractTiming(data: Record<string, unknown>): NormalizedTiming | null {
 }
 
 function extractRemedies(data: Record<string, unknown>): (string[] | NormalizedRemedyCategory[]) | null {
+    const dataExt = data as Record<string, unknown> & RawYogaExtended;
+
     // Flat array: remedial_suggestions (top-level)
-    const suggestions = (data as any).remedial_suggestions;
+    const suggestions = dataExt.remedial_suggestions;
     if (Array.isArray(suggestions) && suggestions.length > 0) return suggestions;
 
     // Flat array: spiritual_recommendations (spiritual-prosperity)
-    const spiritualRecs = (data as any).spiritual_recommendations;
+    const spiritualRecs = dataExt.spiritual_recommendations;
     if (Array.isArray(spiritualRecs) && spiritualRecs.length > 0) return spiritualRecs;
 
     // Flat array: classical_analysis.remedial_suggestions (dhan-yoga)
@@ -646,18 +736,21 @@ function extractRemedies(data: Record<string, unknown>): (string[] | NormalizedR
 }
 
 function extractCancellation(data: Record<string, unknown>): CancellationFactor[] | null {
-    const factors = (data as any).cancellation_factors;
+    const dataExt = data as Record<string, unknown> & RawYogaExtended;
+    const factors = dataExt.cancellation_factors;
     if (Array.isArray(factors) && factors.length > 0) return factors;
     return null;
 }
 
 function extractDoshaSeverity(data: Record<string, unknown>, analysis: YogaAnalysisCore | null): NormalizedDoshaSeverity | null {
+    const dataExt = data as Record<string, unknown> & RawYogaExtended;
+
     // Top-level severity
-    const severity = (data as any).overall_severity;
+    const severity = dataExt.overall_severity;
     if (severity) {
         return {
             level: severity,
-            description: (data as any).severity_description ?? (data as any).financial_outlook,
+            description: dataExt.severity_description ?? dataExt.financial_outlook,
         };
     }
 
@@ -684,7 +777,7 @@ function extractTechnical(data: Record<string, unknown>, normalizedMeta: Normali
         ayanamsa: normalizedMeta?.ayanamsa,
         ayanamsaValue: normalizedMeta?.ayanamsaValue,
         houseSystem: normalizedMeta?.houseSystem,
-        calculationMethod: (notes?.calculation_method ?? (notes as any)?.calculation_type) as string | undefined,
+        calculationMethod: (notes?.calculation_method ?? (notes?.['calculation_type'] as string | undefined)) as string | undefined,
         chartType: normalizedMeta?.chartType,
         yogaRules: (notes?.yoga_validation ?? notes?.conjunction_rule ?? notes?.kaal_sarpa_rule) as string | undefined,
         coordinateSystem: (notes?.coordinate_system ?? notes?.ephemeris ?? calcInfo?.coordinate_system ?? calcInfo?.ephemeris ?? techNotes?.coordinate_system ?? techNotes?.ephemeris) as string | undefined,

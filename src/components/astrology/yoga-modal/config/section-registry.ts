@@ -32,8 +32,7 @@ export interface RegistryEntry {
     /** Must match a key in NormalizedYogaData (excluding 'raw') */
     key: SectionKey;
     /** The React component to render for this section */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    component: React.ComponentType<{ data: any }>;
+    component: React.ComponentType<{ data: Record<string, unknown> }>;
     /** Higher priority = renders first. Title > Meta > Insight > Technical > Remedy > Notes */
     priority: number;
 }

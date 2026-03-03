@@ -81,9 +81,9 @@ const DashaRemediesCard: React.FC<DashaRemediesCardProps> = ({ dashaData }) => {
             {/* Header */}
             <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-4 mb-8">
                 <div>
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: 'var(--ink)' }}>Current Mahadasha Phase</h3>
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 text-ink">Current Mahadasha Phase</h3>
                     <div className="flex items-baseline gap-2">
-                        <h2 className="text-4xl font-black tracking-tighter" style={{ color: 'var(--ink)' }}>{current_dasha_lord}</h2>
+                        <h2 className="text-4xl font-black tracking-tighter text-ink">{current_dasha_lord}</h2>
                         <span className="text-sm font-bold uppercase tracking-widest">Protocol</span>
                     </div>
                 </div>
@@ -112,8 +112,7 @@ const DashaRemediesCard: React.FC<DashaRemediesCardProps> = ({ dashaData }) => {
                 {remedies.map((remedy, idx) => (
                     <motion.div
                         key={idx}
-                        className="border p-4 rounded-2xl flex flex-col gap-2 transition-all group overflow-hidden relative"
-                        style={{ backgroundColor: 'rgba(255,255,255,0.3)', borderColor: 'rgba(226, 204, 153, 0.2)' }}
+                        className="border border-divider/20 p-4 rounded-2xl flex flex-col gap-2 transition-all group overflow-hidden relative bg-white/30"
                     >
                         <div className="flex items-center justify-between mb-1">
                             <div className="flex items-center gap-2">
@@ -132,18 +131,18 @@ const DashaRemediesCard: React.FC<DashaRemediesCardProps> = ({ dashaData }) => {
 
                         <div className="flex-1">
                             {remedy.mantra && (
-                                <p className="text-sm font-bold leading-tight italic mb-2 tracking-tight" style={{ color: 'var(--ink)' }}>"{remedy.mantra}"</p>
+                                <p className="text-sm font-bold leading-tight italic mb-2 tracking-tight text-ink">"{remedy.mantra}"</p>
                             )}
                             {remedy.items && (
-                                <p className="text-xs font-semibold" style={{ color: 'var(--text-body)' }}>
+                                <p className="text-xs font-semibold text-body">
                                     <span className="text-[9px] uppercase tracking-wider font-black mr-2">Donate:</span> {remedy.items.join(', ')}
                                 </p>
                             )}
                             {remedy.suggestions && (
-                                <p className="text-xs font-semibold" style={{ color: 'var(--text-body)' }}>{remedy.suggestions[0]}</p>
+                                <p className="text-xs font-semibold text-body">{remedy.suggestions[0]}</p>
                             )}
                             {remedy.yantra && (
-                                <p className="text-xs font-semibold" style={{ color: 'var(--text-body)' }}>
+                                <p className="text-xs font-semibold text-body">
                                     <span className="text-[9px] uppercase tracking-wider font-black mr-2">Worship:</span> {remedy.yantra}
                                 </p>
                             )}

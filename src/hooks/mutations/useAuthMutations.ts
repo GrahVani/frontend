@@ -8,7 +8,7 @@ export function useAuthMutations() {
     const router = useRouter();
 
     const loginMutation = useMutation({
-        mutationFn: (credentials: any) => authApi.login(credentials),
+        mutationFn: (credentials: { email: string; password: string }) => authApi.login(credentials),
         onSuccess: (data) => {
             if (data.tokens?.accessToken) {
                 // Store tokens in in-memory Zustand store (XSS mitigation)

@@ -1,29 +1,54 @@
 "use client";
 
-import React from 'react';
-import { Heart } from 'lucide-react';
+import { useState } from "react";
+import { Heart } from "lucide-react";
+import MatchInputForm from "@/components/matchmaking/MatchInputForm";
+import GunaChart from "@/components/matchmaking/GunaChart";
+import MatchScoreCard from "@/components/matchmaking/MatchScoreCard";
+import EmptyState from "@/components/ui/EmptyState";
+import type { BirthDetails, MatchResult } from "@/types/matchmaking.types";
 
 export default function MatchmakingPage() {
+    const [result, setResult] = useState<MatchResult | null>(null);
+    const [loading, setLoading] = useState(false);
+
+    const handleAnalyze = async (bride: BirthDetails, groom: BirthDetails) => {
+        setLoading(true);
+        try {
+            // TODO: Replace with actual API call via useMatchAnalysis
+            // For now, show the empty state after form submit
+            setResult(null);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
-        <div className="max-w-5xl mx-auto space-y-8">
-            <div
-                className="rounded-lg p-6 shadow-sm relative overflow-hidden border border-[#D08C60]/30"
-                style={{
-                    background: 'linear-gradient(180deg, #98522F 0%, #763A1F 40%, #55250F 100%)',
-                }}
-            >
-                <div className="flex items-center gap-2 mb-2 relative z-10">
-                    <Heart className="w-5 h-5 text-[#D08C60]" />
-                    <h1 className="font-serif text-2xl font-bold text-[#FEFAEA]">Matchmaking (Guna Milan)</h1>
+        <div className="max-w-5xl mx-auto space-y-6">
+            <div className="bg-header-gradient rounded-xl p-6 border border-header-border/30">
+                <div className="flex items-center gap-2 mb-1">
+                    <Heart className="w-5 h-5 text-active-glow" />
+                    <h1 className="font-serif text-2xl font-bold text-softwhite">New Match Analysis</h1>
                 </div>
-                <p className="text-[#FEFAEA]/80 font-serif italic text-sm max-w-2xl relative z-10">
-                    Analyze compatibility between prospective partners using the Ashta Koota method.
+                <p className="text-softwhite/80 font-serif italic text-sm max-w-2xl">
+                    Analyze compatibility between prospective partners using the Ashta Koota (36-point) method.
                 </p>
             </div>
 
-            <div className="p-12 text-center border border-dashed border-[#D08C60] rounded-lg bg-[#FEFAEA]/50">
-                <p className="text-[#7A5A43] font-serif">Matchmaking module content goes here.</p>
-            </div>
+            <MatchInputForm onSubmit={handleAnalyze} loading={loading} />
+
+            {result ? (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <MatchScoreCard result={result} />
+                    <GunaChart kootas={result.kootas} totalScore={result.totalScore} />
+                </div>
+            ) : (
+                <EmptyState
+                    icon={Heart}
+                    title="Enter birth details to begin"
+                    description="Fill in the bride and groom birth details above, then click 'Analyze Compatibility' to see the Ashta Koota matching results."
+                />
+            )}
         </div>
     );
 }

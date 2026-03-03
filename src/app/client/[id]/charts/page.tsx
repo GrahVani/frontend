@@ -55,9 +55,7 @@ export default function ChartsPage({ params }: ChartsPageProps) {
         try {
             await generateFullVedicProfile.mutateAsync(clientId);
             refetch();
-        } catch (err) {
-            console.error("Failed to generate charts", err);
-        }
+        } catch (err) {        }
     };
 
     if (isLoading) {
@@ -71,20 +69,16 @@ export default function ChartsPage({ params }: ChartsPageProps) {
     return (
         <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-140px)]">
             {/* Left Sidebar: Controls */}
-            <div className="w-full lg:w-[280px] shrink-0 bg-[#FEFAEA] border border-[#E7D6B8] rounded p-4 overflow-y-auto custom-scrollbar">
+            <div className="w-full lg:w-[280px] shrink-0 bg-softwhite border border-antique rounded p-4 overflow-y-auto custom-scrollbar">
                 <ChartControls />
             </div>
 
             {/* Right Area: Chart Canvas & Data */}
-            <div className="flex-1 bg-[#FEFAEA] border border-[#E7D6B8] rounded p-6 shadow-inner overflow-y-auto custom-scrollbar relative">
+            <div className="flex-1 bg-softwhite border border-antique rounded p-6 shadow-inner overflow-y-auto custom-scrollbar relative">
 
                 {/* Decorative Background */}
                 <div
-                    className="absolute inset-0 opacity-30 pointer-events-none sticky top-0"
-                    style={{
-                        backgroundImage: "url('https://www.transparenttextures.com/patterns/aged-paper.png')",
-                        backgroundBlendMode: 'multiply'
-                    }}
+                    className="absolute inset-0 opacity-30 pointer-events-none sticky top-0 bg-[url('/textures/aged-paper.png')] bg-blend-multiply"
                 />
 
                 <div className="relative z-10 flex flex-col items-center gap-10 max-w-4xl mx-auto">
@@ -113,10 +107,10 @@ export default function ChartsPage({ params }: ChartsPageProps) {
                                         </div>
                                         {/* Planetary Table Section */}
                                         <div className="w-full">
-                                            <h3 className="font-serif text-[#9C7A2F] text-lg font-bold mb-4 flex items-center gap-2">
-                                                <span className="w-8 h-[1px] bg-[#9C7A2F]/50"></span>
+                                            <h3 className="font-serif text-gold-dark text-lg font-bold mb-4 flex items-center gap-2">
+                                                <span className="w-8 h-[1px] bg-gold-dark/50"></span>
                                                 Planetary Details
-                                                <span className="w-8 h-[1px] bg-[#9C7A2F]/50"></span>
+                                                <span className="w-8 h-[1px] bg-gold-dark/50"></span>
                                             </h3>
                                             <PlanetaryTable planets={planetaryInfo} />
                                         </div>

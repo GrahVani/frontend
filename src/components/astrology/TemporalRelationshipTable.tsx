@@ -3,8 +3,22 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
 
+interface TemporalRelationEntry {
+    planet: string;
+    relations?: Record<string, string>;
+    friends?: string[];
+    Friends?: string[];
+    enemies?: string[];
+    Enemies?: string[];
+}
+
+interface TemporalRelationshipData {
+    tatkalik_maitri_chakra?: TemporalRelationEntry[];
+    [key: string]: unknown;
+}
+
 interface TemporalRelationshipTableProps {
-    data: any;
+    data: TemporalRelationshipData | TemporalRelationEntry[];
     className?: string;
 }
 
@@ -14,11 +28,11 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
     if (!data) return null;
 
     // Handle both cases: data is the array, or data is an object containing the array
-    const entries = Array.isArray(data) ? data : (data.tatkalik_maitri_chakra || []);
+    const entries: TemporalRelationEntry[] = Array.isArray(data) ? data : ((data as TemporalRelationshipData).tatkalik_maitri_chakra || []);
 
     return (
-        <div className={cn("w-full bg-[#FFFCF6] border border-antique rounded-xl overflow-hidden shadow-sm", className)}>
-            <div className="bg-[#EAD8B1] px-4 py-2 border-b border-antique">
+        <div className={cn("w-full bg-surface-warm border border-antique rounded-xl overflow-hidden shadow-sm", className)}>
+            <div className="bg-border-warm px-4 py-2 border-b border-antique">
                 <h3 className="text-lg font-serif font-bold text-primary text-center">
                     Tatkalik Maitri Chakra <span className="text-sm font-normal text-secondary">(Temporal Relationship)</span>
                 </h3>
@@ -44,7 +58,7 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
                             </td>
                             {PLANETS.map(planetName => {
                                 // Find entry for this planet
-                                const entry = entries.find((e: any) => e.planet === planetName);
+                                const entry = entries.find((e: TemporalRelationEntry) => e.planet === planetName);
                                 let friends: string[] = [];
 
                                 if (entry?.relations) {
@@ -76,7 +90,7 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
                             </td>
                             {PLANETS.map(planetName => {
                                 // Find entry for this planet
-                                const entry = entries.find((e: any) => e.planet === planetName);
+                                const entry = entries.find((e: TemporalRelationEntry) => e.planet === planetName);
                                 let enemies: string[] = [];
 
                                 if (entry?.relations) {

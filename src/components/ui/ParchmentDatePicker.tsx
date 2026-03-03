@@ -13,6 +13,7 @@ interface ParchmentDatePickerProps {
     label?: string;
     placeholder?: string;
     className?: string;
+    required?: boolean;
 }
 
 export default function ParchmentDatePicker({
@@ -20,7 +21,8 @@ export default function ParchmentDatePicker({
     setDate,
     label,
     placeholder = "Select Date",
-    className
+    className,
+    required
 }: ParchmentDatePickerProps) {
     const [open, setOpen] = React.useState(false);
 
@@ -44,7 +46,7 @@ export default function ParchmentDatePicker({
     return (
         <div className={cn("flex flex-col gap-1", className)}>
             {label && (
-                <label className="block text-[11px] font-bold font-serif text-[#6B4F1D] uppercase tracking-widest pl-1">
+                <label className="block text-[11px] font-bold font-serif text-muted-refined uppercase tracking-widest pl-1">
                     {label}
                 </label>
             )}
@@ -52,13 +54,17 @@ export default function ParchmentDatePicker({
                 <PopoverTrigger asChild>
                     <button
                         type="button"
+                        aria-label={label || placeholder}
+                        aria-required={required || undefined}
+                        aria-haspopup="dialog"
+                        aria-expanded={open}
                         className={cn(
-                            "w-full bg-transparent border-b border-[#C9A24D]/50 px-2 py-2 font-serif text-[#2A1810] focus:outline-none focus:border-[#9C7A2F] transition-colors flex items-center justify-between group hover:border-[#9C7A2F] text-left",
-                            !date && "text-[#8B6914]"
+                            "w-full bg-transparent border-b border-gold-primary/50 px-2 py-2 font-serif text-ink-deep focus:outline-none focus:border-gold-dark transition-colors flex items-center justify-between group hover:border-gold-dark text-left",
+                            !date && "text-gold-burnished"
                         )}
                     >
                         {selectedDate ? format(selectedDate, "PPP") : <span className="opacity-80">{placeholder}</span>}
-                        <CalendarIcon className="w-4 h-4 text-[#9C7A2F] group-hover:text-[#8B6914] transition-colors" />
+                        <CalendarIcon className="w-4 h-4 text-gold-dark group-hover:text-gold-burnished transition-colors" />
                     </button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">

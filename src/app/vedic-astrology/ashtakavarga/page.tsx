@@ -31,11 +31,11 @@ const SIGN_MAP: Record<string, number> = {
 };
 
 interface AshtakavargaData {
-    sarva?: any;
-    bhinna?: any;
-    shodasha?: any;
-    temporal?: any;
-    karaka?: any;
+    sarva?: Record<string, unknown>;
+    bhinna?: Record<string, unknown>;
+    shodasha?: Record<string, unknown>;
+    temporal?: Record<string, unknown>;
+    karaka?: Record<string, unknown>;
     ascendant?: number;
 }
 
@@ -135,10 +135,10 @@ export default function AshtakavargaPage() {
             // Handle house_strength_matrix array format (Bhasin): [{house_number, sign_name, total_points}]
             const houseMatrix = sarvaData.house_strength_matrix || data.sarva.house_strength_matrix;
             if (Array.isArray(houseMatrix)) {
-                houseMatrix.forEach((h: any) => {
-                    const signId = SIGN_MAP[h.sign_name] || h.house_number;
+                houseMatrix.forEach((h: Record<string, unknown>) => {
+                    const signId = SIGN_MAP[h.sign_name as string] || h.house_number as number;
                     if (signId && signId >= 1 && signId <= 12) {
-                        scores[signId] = h.total_points || 0;
+                        scores[signId] = (h.total_points as number) || 0;
                     }
                 });
             } else if (typeof signs === 'object' && !Array.isArray(signs)) {
@@ -157,7 +157,7 @@ export default function AshtakavargaPage() {
 
             // Handle array of tables from some backend versions
             const tables = bhinnaRoot.tables || [];
-            const specificTable = Array.isArray(tables) ? tables.find((t: any) => t.planet === planetKey || t.planet === selectedPlanet) : null;
+            const specificTable = Array.isArray(tables) ? tables.find((t: Record<string, unknown>) => t.planet === planetKey || t.planet === selectedPlanet) : null;
 
             // Priority: direct total_bindus array > 'total' field in matrix > 'total_bindus' field in matrix
             let planetData = specificTable?.total_bindus || bhinnaRoot[planetKey] || bhinnaRoot[planetKey.toLowerCase()] || {};
@@ -175,7 +175,7 @@ export default function AshtakavargaPage() {
                 Object.entries(planetData).forEach(([s, v]) => {
                     const signId = SIGN_MAP[s] || SIGN_MAP[s.charAt(0).toUpperCase() + s.slice(1)] || parseInt(s);
                     if (signId && signId >= 1 && signId <= 12) {
-                        scores[signId] = (typeof v === 'number' ? v : (v as any).total) || 0;
+                        scores[signId] = (typeof v === 'number' ? v : (v as Record<string, unknown>).total as number) || 0;
                     }
                 });
             }
@@ -281,10 +281,10 @@ export default function AshtakavargaPage() {
                                             </h3>
                                             <AshtakavargaMatrix
                                                 type={activeTab === 'sarva' ? 'sarva' : 'bhinna'}
-                                                data={activeTab === 'sarva' ? data?.sarva : (data?.bhinna?.ashtakvarga?.tables?.find((t: any) =>
+                                                data={activeTab === 'sarva' ? data?.sarva : ((data?.bhinna as Record<string, Record<string, unknown>> | undefined)?.ashtakvarga?.tables as Record<string, unknown>[] | undefined)?.find((t: Record<string, unknown>) =>
                                                     t.planet === selectedPlanet ||
                                                     (selectedPlanet === 'Lagna' && (t.planet === 'Ascendant' || t.planet === 'Lagna'))
-                                                ) || data?.bhinna?.bhinnashtakavarga?.[selectedPlanet] || data?.bhinna?.bhinnashtakavarga?.[selectedPlanet.toLowerCase()] || data?.bhinna?.[selectedPlanet.toLowerCase()])}
+                                                ) || (data?.bhinna as Record<string, Record<string, unknown>> | undefined)?.bhinnashtakavarga?.[selectedPlanet] || (data?.bhinna as Record<string, Record<string, unknown>> | undefined)?.bhinnashtakavarga?.[selectedPlanet.toLowerCase()] || (data?.bhinna as Record<string, unknown> | undefined)?.[selectedPlanet.toLowerCase()]}
                                                 planet={selectedPlanet}
                                             />
                                         </div>
@@ -317,7 +317,7 @@ export default function AshtakavargaPage() {
                                 <div className="flex flex-col items-center justify-center h-[400px] bg-softwhite rounded-3xl border border-antique border-dashed p-12 text-center">
                                     <h3 className="text-xl font-serif text-primary font-bold mb-4">No Temporal Relationship Data</h3>
                                     <button
-                                        onClick={() => clientApi.generateChart(clientDetails.id!, 'tatkalik_maitri_chakra', activeSystem as any).then(() => window.location.reload())}
+                                        onClick={() => clientApi.generateChart(clientDetails.id!, 'tatkalik_maitri_chakra', activeSystem).then(() => window.location.reload())}
                                         className="px-8 py-3 bg-gold-primary text-ink rounded-2xl font-bold hover:shadow-xl transition-all"
                                     >
                                         Generate Tatkalik Maitri
@@ -333,7 +333,7 @@ export default function AshtakavargaPage() {
                                 <div className="flex flex-col items-center justify-center h-[400px] bg-softwhite rounded-3xl border border-antique border-dashed p-12 text-center">
                                     <h3 className="text-xl font-serif text-primary font-bold mb-4">No Karaka Strength Data</h3>
                                     <button
-                                        onClick={() => clientApi.generateChart(clientDetails.id!, 'karaka_strength', activeSystem as any).then(() => window.location.reload())}
+                                        onClick={() => clientApi.generateChart(clientDetails.id!, 'karaka_strength', activeSystem).then(() => window.location.reload())}
                                         className="px-8 py-3 bg-gold-primary text-ink rounded-2xl font-bold hover:shadow-xl transition-all"
                                     >
                                         Generate Karaka Strength

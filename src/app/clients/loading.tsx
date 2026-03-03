@@ -1,12 +1,13 @@
+import { SkeletonTable } from "@/components/ui/Skeleton";
+
 export default function ClientsLoading() {
-  return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="text-center space-y-4">
-        <div className="w-10 h-10 border-3 border-amber-300 border-t-amber-700 rounded-full animate-spin mx-auto" />
-        <p className="text-amber-800/70 text-sm font-medium">
-          Loading clients...
-        </p>
-      </div>
-    </div>
-  );
+    return (
+        <div className="max-w-7xl mx-auto space-y-6 animate-in fade-in duration-300" role="status" aria-label="Loading clients" aria-busy="true">
+            <div className="space-y-2">
+                <div className="h-10 w-40 bg-parchment/50 rounded-lg animate-pulse" />
+                <div className="h-5 w-56 bg-parchment/30 rounded-lg animate-pulse" />
+            </div>
+            <SkeletonTable rows={8} />
+        </div>
+    );
 }

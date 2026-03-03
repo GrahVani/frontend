@@ -18,14 +18,14 @@ interface PlanetaryTableProps {
 
 export default function PlanetaryTable({ planets, className }: PlanetaryTableProps) {
     return (
-        <div className={cn("w-full", className)}>
+        <div className={cn("w-full", className)} role="table" aria-label="Planetary positions table">
             {/* Header */}
-            <div className="flex bg-[#EAD8B1] py-1.5 px-3 border-b border-antique font-sans text-sm font-semibold text-primary capitalize tracking-wider leading-normal">
-                <div className="flex-1 min-w-[80px]">Planet</div>
-                <div className="flex-1 min-w-[80px]">Sign</div>
-                <div className="flex-1 min-w-[60px]">Deg</div>
-                <div className="flex-1 min-w-[100px]">Nakshatra</div>
-                <div className="w-[40px] text-center">House</div>
+            <div className="flex bg-border-warm py-1.5 px-3 border-b border-antique font-sans text-sm font-semibold text-primary capitalize tracking-wider leading-normal" role="row">
+                <div className="flex-1 min-w-[80px]" role="columnheader">Planet</div>
+                <div className="flex-1 min-w-[80px]" role="columnheader">Sign</div>
+                <div className="flex-1 min-w-[60px]" role="columnheader">Degree</div>
+                <div className="flex-1 min-w-[100px]" role="columnheader">Nakshatra</div>
+                <div className="w-[40px] text-center" role="columnheader">House</div>
             </div>
 
             {/* Rows */}

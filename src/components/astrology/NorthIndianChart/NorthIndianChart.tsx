@@ -36,8 +36,6 @@ export default function NorthIndianChart({
     const [hoveredHouse, setHoveredHouse] = useState<number | null>(null);
 
     // DEBUG: Check props
-    console.log("🔍 DEBUG: NorthIndianChart Render", { planetsCount: planets.length, ascendantSign });
-
     // Helpers for Heatmap
     const getHouseColor = (houseNum: number) => {
         if (!houseValues || !houseValues[houseNum]) return "transparent";
@@ -117,16 +115,16 @@ export default function NorthIndianChart({
     };
 
     return (
-        <svg viewBox="-10 -10 420 420" preserveAspectRatio={preserveAspectRatio} className={cn("w-full h-full drop-shadow-2xl", className)}>
+        <svg viewBox="-10 -10 420 420" preserveAspectRatio={preserveAspectRatio} className={cn("w-full h-full drop-shadow-2xl", className)} role="img" aria-label="North Indian birth chart">
             <defs>
                 <linearGradient id="chartParchment" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#FFF9E9" />
-                    <stop offset="100%" stopColor="#FEFAEA" />
+                    <stop offset="0%" stopColor="var(--surface-warm)" />
+                    <stop offset="100%" stopColor="var(--softwhite)" />
                 </linearGradient>
             </defs>
 
             {/* Background is handled by parent container */}
-            <g stroke="#D08C60" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <g stroke="var(--header-border)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 {/* Outer Square Border */}
                 <rect x="10" y="10" width="380" height="380" fill="none" />
                 {/* Cross Lines (X) */}
@@ -140,19 +138,27 @@ export default function NorthIndianChart({
             </g>
 
             {/* Clickable Regions & Heatmap for Houses */}
-            {houseCenters.map((pos) => (
-                <polygon
-                    key={`poly-${pos.h}`}
-                    points={housePolygons[pos.h]}
-                    fill={hoveredHouse === pos.h ? "rgba(208, 140, 96, 0.25)" : getHouseColor(pos.h)}
-                    stroke="transparent"
-                    strokeWidth="0"
-                    className={cn("transition-all duration-300", onHouseClick && "cursor-pointer")}
-                    onMouseEnter={() => setHoveredHouse(pos.h)}
-                    onMouseLeave={() => setHoveredHouse(null)}
-                    onClick={() => handleHouseClick(pos.h)}
-                />
-            ))}
+            {houseCenters.map((pos) => {
+                const signId = ((ascendantSign + pos.h - 2) % 12) + 1;
+                const SIGN_NAMES_SHORT = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+                return (
+                    <polygon
+                        key={`poly-${pos.h}`}
+                        points={housePolygons[pos.h]}
+                        fill={hoveredHouse === pos.h ? "rgba(208, 140, 96, 0.25)" : getHouseColor(pos.h)}
+                        stroke="transparent"
+                        strokeWidth="0"
+                        className={cn("transition-all duration-300", onHouseClick && "cursor-pointer")}
+                        onMouseEnter={() => setHoveredHouse(pos.h)}
+                        onMouseLeave={() => setHoveredHouse(null)}
+                        onClick={() => handleHouseClick(pos.h)}
+                        tabIndex={onHouseClick ? 0 : undefined}
+                        role={onHouseClick ? "button" : undefined}
+                        aria-label={onHouseClick ? `House ${pos.h} - ${SIGN_NAMES_SHORT[signId - 1]}` : undefined}
+                        onKeyDown={onHouseClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleHouseClick(pos.h); } } : undefined}
+                    />
+                );
+            })}
 
             {/* Render Houses & Planets */}
             {houseCenters.map((pos) => {
@@ -174,7 +180,7 @@ export default function NorthIndianChart({
                             fontSize="18"
                             fontFamily="'Spectral', 'Crimson Pro', serif"
                             fontWeight="700"
-                            fill="#4A3F32"
+                            fill="var(--text-secondary)"
                             fillOpacity="0.9"
                             textAnchor="middle"
                             dominantBaseline="central"
@@ -191,7 +197,7 @@ export default function NorthIndianChart({
                                 fontSize="34"
                                 fontFamily="'Inter', 'Source Sans 3', sans-serif"
                                 fontWeight="600"
-                                fill={houseValues[pos.h] < 20 ? "#E11D48" : houseValues[pos.h] >= 30 ? "#10B981" : "#2D2419"}
+                                fill={houseValues[pos.h] < 20 ? "var(--status-error)" : houseValues[pos.h] >= 30 ? "var(--status-success)" : "var(--text-primary)"}
                                 textAnchor="middle"
                                 dominantBaseline="central"
                                 className="select-none pointer-events-none"
@@ -220,7 +226,7 @@ export default function NorthIndianChart({
                                         'Ke': '#EA580C', 'Ketu': '#EA580C',       // Orange
                                         'As': '#7C3AED', 'Asc': '#7C3AED',        // Purple
                                     };
-                                    const planetColor = planetColors[p.name] || '#3D2618';
+                                    const planetColor = planetColors[p.name] || 'var(--ink)';
 
                                     return (
                                         <g key={p.name} transform={`translate(0, ${yOffset})`}>
@@ -238,10 +244,10 @@ export default function NorthIndianChart({
                                             >
                                                 {p.name}
                                                 {p.isRetro && (
-                                                    <tspan fontSize="12" fontWeight="bold" fill="#DC2626" dx="1">R</tspan>
+                                                    <tspan fontSize="12" fontWeight="bold" fill="var(--status-error)" dx="1">R</tspan>
                                                 )}
                                                 {showDegrees && (
-                                                    <tspan fontSize="10" fontWeight="400" fill="#4A3F32" dx="2">
+                                                    <tspan fontSize="10" fontWeight="400" fill="var(--text-secondary)" dx="2">
                                                         {p.degree}
                                                     </tspan>
                                                 )}

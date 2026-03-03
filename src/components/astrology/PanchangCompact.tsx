@@ -6,22 +6,22 @@ import { Sun, Moon, Wind, Compass } from 'lucide-react';
 export default function PanchangCompact() {
     // Mock data for UI demonstration
     const data = [
-        { label: "Tithi", value: "Shukla Navami", icon: Moon, color: "text-[#FFD27D]" },
-        { label: "Nakshatra", value: "Magha", icon: Sun, color: "text-[#D08C60]" },
-        { label: "Yoga", value: "Vyatipata", icon: Wind, color: "text-[#FFD27D]" },
-        { label: "Karana", value: "Taitila", icon: Compass, color: "text-[#D08C60]" }
+        { label: "Tithi", value: "Shukla Navami", icon: Moon, color: "text-active-glow" },
+        { label: "Nakshatra", value: "Magha", icon: Sun, color: "text-header-border" },
+        { label: "Yoga", value: "Vyatipata", icon: Wind, color: "text-active-glow" },
+        { label: "Karana", value: "Taitila", icon: Compass, color: "text-header-border" }
     ];
 
     return (
-        <div className="bg-[#2A1810]/40 backdrop-blur-sm border border-[#D08C60]/30 rounded-2xl overflow-hidden shadow-2xl">
-            <div className="bg-[#D08C60]/10 px-4 py-2 border-b border-[#D08C60]/20 flex items-center justify-between">
-                <span className="text-[10px] font-bold text-[#FFD27D] uppercase tracking-widest font-serif">Daily Panchang</span>
+        <div className="bg-ink-deep/40 backdrop-blur-sm border border-header-border/30 rounded-2xl overflow-hidden shadow-2xl">
+            <div className="bg-header-border/10 px-4 py-2 border-b border-header-border/20 flex items-center justify-between">
+                <span className="text-[10px] font-bold text-active-glow uppercase tracking-widest font-serif">Daily Panchang</span>
                 <span className="text-[9px] text-white/40 uppercase tracking-tighter">New Delhi • 11:45 AM</span>
             </div>
 
-            <div className="grid grid-cols-2 gap-px bg-[#D08C60]/10">
+            <div className="grid grid-cols-2 gap-px bg-header-border/10">
                 {data.map((item, i) => (
-                    <div key={i} className="bg-[#2A1810]/60 p-4 flex items-center gap-3">
+                    <div key={i} className="bg-ink-deep/60 p-4 flex items-center gap-3">
                         <div className={`p-2 rounded-lg bg-white/5 ${item.color}`}>
                             <item.icon className="w-4 h-4" />
                         </div>
@@ -33,8 +33,8 @@ export default function PanchangCompact() {
                 ))}
             </div>
 
-            <div className="p-3 bg-[#1A0A05]/80 text-center">
-                <button className="text-[10px] font-bold text-[#D08C60] uppercase tracking-widest hover:text-[#FFD27D] transition-colors">
+            <div className="p-3 bg-ink-deep/80 text-center">
+                <button className="text-[10px] font-bold text-header-border uppercase tracking-widest hover:text-active-glow transition-colors">
                     View Full Calendar →
                 </button>
             </div>

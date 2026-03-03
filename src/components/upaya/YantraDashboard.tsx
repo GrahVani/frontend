@@ -11,7 +11,7 @@ import { Sparkles } from 'lucide-react';
 import DebugConsole from '@/components/debug/DebugConsole';
 
 interface YantraDashboardProps {
-    data: any; // Full yantra JSON data
+    data: Record<string, unknown>;
     className?: string;
 }
 
@@ -19,17 +19,20 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
     const { processedCharts } = useVedicClient();
     if (!data) return null;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+    const detailedAnalysis = (data.detailed_analysis || {}) as any;
+
     // Fallback for D1 Chart
-    const d1Chart = data.detailed_analysis?.chart || processedCharts["D1_lahiri"]?.chartData;
+    const d1Chart = detailedAnalysis?.chart || processedCharts["D1_lahiri"]?.chartData;
 
     return (
         <div className={cn("min-h-screen p-4 lg:p-6 space-y-6 animate-in fade-in duration-700", styles.dashboardContainer, className)}>
             {/* Header Area */}
             <div className="flex flex-col gap-6">
-                <div className="flex items-center justify-between border-b pb-4" style={{ borderColor: 'var(--border-antique)' }}>
+                <div className="flex items-center justify-between border-b border-antique pb-4">
                     <div className="flex items-center gap-3">
-                        <h2 className="text-xl font-medium tracking-tight" style={{ color: 'var(--ink)' }}>
-                            Yantras : {data.user_name || "Sadhaka"}
+                        <h2 className="text-xl font-medium tracking-tight text-ink">
+                            Yantras : {String(data.user_name || "Sadhaka")}
                         </h2>
                     </div>
                 </div>
@@ -42,7 +45,7 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
                 <div className="lg:col-span-4 space-y-6">
                     <SadhanaChartPanel
                         chartData={d1Chart}
-                        doshaStatus={data.detailed_analysis?.doshas || {}}
+                        doshaStatus={detailedAnalysis?.doshas || {}}
                     />
 
                     {/* Legend / Subtle Footer - Integrated into Sidebar */}
@@ -67,7 +70,7 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
 
                 {/* Right Side: Main Panels (8/12) - Unified Light Glass Dashboard */}
                 <div className="lg:col-span-8">
-                    <div className="rounded-[2.5rem] bg-[rgba(254,250,234,0.6)] border border-[#E7D6B8] shadow-xl backdrop-blur-md overflow-hidden flex flex-col p-6 space-y-4 h-fit">
+                    <div className="rounded-[2.5rem] bg-[rgba(254,250,234,0.6)] border border-antique shadow-xl backdrop-blur-md overflow-hidden flex flex-col p-6 space-y-4 h-fit">
                         <div className="flex items-center justify-between px-2">
                             <h2 className="text-2xl font-medium text-ink tracking-tight">Today's Yantra Focus (Priority)</h2>
                             <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.3)] animate-pulse" />
@@ -75,14 +78,16 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
 
                         <div className="space-y-6">
                             <MantraFocusPanel
-                                currentDasha={data.current_dasha}
-                                yantras={data.yantra_recommendations}
+                                currentDasha={data.current_dasha as string}
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+                                yantras={data.yantra_recommendations as any[]}
                             />
 
                             <div className="h-px bg-amber-900/10 mx-2" />
 
                             <StrengtheningPanel
-                                planetaryStrengths={data.planetary_strengths}
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+                                planetaryStrengths={data.planetary_strengths as any}
                             />
                         </div>
                     </div>

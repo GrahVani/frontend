@@ -46,15 +46,15 @@ const COLOR_THEMES: Record<ChartColorTheme, {
     centerText: string;
 }> = {
     classic: {
-        background: '#FFFDF9',
-        border: '#5D3A24',
-        gridLine: '#3E2A1F',
-        ascLine: '#D08C60',
-        ascText: '#D08C60',
-        signText: '#6B5420',
-        planetText: '#3E2A1F',
+        background: 'var(--surface-warm)',
+        border: 'var(--ink)',
+        gridLine: 'var(--ink)',
+        ascLine: 'var(--header-border)',
+        ascText: 'var(--header-border)',
+        signText: 'var(--text-tertiary)',
+        planetText: 'var(--ink)',
         centerBg: 'rgba(42, 24, 16, 0.05)',
-        centerText: '#6B5420'
+        centerText: 'var(--text-tertiary)'
     },
     modern: {
         background: '#EEF2FF',
@@ -126,7 +126,7 @@ export default function SouthIndianChart({
     const scheme = colorMode === 'blackwhite' ? BW_SCHEME : COLOR_THEMES[colorTheme];
 
     return (
-        <svg viewBox="0 0 400 400" className={cn("w-full h-full drop-shadow-lg overflow-visible", className)}>
+        <svg viewBox="0 0 400 400" className={cn("w-full h-full drop-shadow-lg overflow-visible", className)} role="img" aria-label="South Indian birth chart">
             {/* Background */}
             <rect x="0" y="0" width="400" height="400" fill={scheme.background} rx="8" />
 

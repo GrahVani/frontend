@@ -1,18 +1,19 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { Search, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
+import { Search, AlertCircle, RefreshCw } from 'lucide-react';
 import GoldenButton from "@/components/GoldenButton";
 import ParchmentInput from "@/components/ui/ParchmentInput";
 import ClientListRow from "@/components/clients/ClientListRow";
-import { Client, ClientListResponse } from "@/types/client";
-import { clientApi } from "@/lib/api";
+import { Client } from "@/types/client";
 import { useRouter } from 'next/navigation';
 import { useClients } from "@/hooks/queries/useClients";
 import { useClientMutations } from "@/hooks/mutations/useClientMutations";
+import { useConfirmDialog } from "@/hooks/useConfirmDialog";
+import { useToast } from "@/context/ToastContext";
+import { SkeletonTable } from "@/components/ui/Skeleton";
 
-// Helper to derive firstName/lastName from fullName for display
 const deriveNames = (client: Client): Client => {
     if (client.firstName && client.lastName) return client;
     if (client.fullName) {
@@ -21,7 +22,6 @@ const deriveNames = (client: Client): Client => {
             ...client,
             firstName: parts[0] || '',
             lastName: parts.slice(1).join(' ') || '',
-            // Backwards compatibility
             placeOfBirth: client.birthPlace || client.placeOfBirth,
             dateOfBirth: client.birthDate || client.dateOfBirth,
             timeOfBirth: client.birthTime || client.timeOfBirth,
@@ -33,10 +33,11 @@ const deriveNames = (client: Client): Client => {
 
 export default function ClientsPage() {
     const router = useRouter();
+    const toast = useToast();
+    const { confirm, dialog } = useConfirmDialog();
     const [searchQuery, setSearchQuery] = useState('');
     const [pagination, setPagination] = useState({ page: 1, limit: 20 });
 
-    // Query Hooks
     const { data, isLoading: loading, error: queryError, refetch } = useClients({
         page: pagination.page,
         limit: pagination.limit,
@@ -45,35 +46,39 @@ export default function ClientsPage() {
 
     const { deleteClient } = useClientMutations();
 
-    // Derived State
     const clients = data?.clients?.map(deriveNames) || [];
     const total = data?.pagination?.total || 0;
     const totalPages = data?.pagination?.totalPages || 1;
     const error = queryError ? (queryError as Error).message : null;
 
-    // Handle Editing
     const handleEditClient = (client: Client) => {
         router.push(`/clients/${client.id}`);
     };
 
-    // Handle Deletion
     const handleDeleteClient = async (client: Client) => {
-        const confirmed = window.confirm(`Are you certain you wish to purge the record of ${client.firstName || client.fullName || 'this soul'}? This action cannot be undone.`);
+        const confirmed = await confirm({
+            title: "Purge Client Record",
+            description: `Are you certain you wish to purge the record of ${client.firstName || client.fullName || 'this soul'}? This action cannot be undone.`,
+            confirmLabel: "Purge Record",
+            variant: "danger",
+        });
 
         if (!confirmed) return;
 
         try {
             await deleteClient.mutateAsync(client.id);
-            // Refetch is automatic via invalidation in hook
-        } catch (err: any) {
-            console.error('Failed to delete client:', err);
-            alert(err.message || 'Failed to delete client record. Please try again.');
+            toast.success("Client record purged successfully.");
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : 'Failed to delete client record. Please try again.';
+            toast.error(message);
         }
     };
 
     return (
         <div className="w-full space-y-6 animate-in fade-in duration-700 py-4 px-2 lg:px-4">
-            <div className="text-xs font-serif uppercase tracking-widest font-bold text-[#6B4423]">
+            {dialog}
+
+            <div className="text-xs font-serif uppercase tracking-widest font-bold text-bronze-dark">
                 Client Almanac
             </div>
             {/* Page Header */}
@@ -103,6 +108,7 @@ export default function ClientsPage() {
                 <div className="relative z-10">
                     <ParchmentInput
                         placeholder="Search soul archives by name or city..."
+                        aria-label="Search clients"
                         icon={<Search className="w-5 h-5 text-gold-dark" />}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -110,15 +116,15 @@ export default function ClientsPage() {
                     />
                 </div>
 
-                {/* Offline/Error indicator */}
                 {error && (
-                    <div className="mt-4 flex items-center justify-between p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                    <div className="mt-4 flex items-center justify-between p-3 bg-amber-50 border border-amber-200 rounded-lg" role="alert">
                         <div className="flex items-center gap-2 text-amber-700 text-sm">
                             <AlertCircle className="w-4 h-4" />
                             <span>{error}</span>
                         </div>
                         <button
                             onClick={() => refetch()}
+                            aria-label="Retry loading clients"
                             className="flex items-center gap-1 text-amber-700 hover:text-amber-800 text-sm font-medium"
                         >
                             <RefreshCw className="w-4 h-4" />
@@ -129,14 +135,11 @@ export default function ClientsPage() {
             </div>
 
             {/* Client List */}
-            <div className="space-y-4">
+            <div className="space-y-4" aria-busy={loading} aria-label="Client list">
                 {loading ? (
-                    <div className="text-center py-32 rounded-3xl bg-softwhite border border-antique">
-                        <Loader2 className="w-8 h-8 text-gold-primary mx-auto mb-4 animate-spin" />
-                        <p className="font-serif text-xl text-muted">Loading soul records...</p>
-                    </div>
+                    <SkeletonTable rows={6} cols={5} />
                 ) : clients.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 gap-4" role="list" aria-label={`${clients.length} clients`}>
                         {clients.map(client => (
                             <ClientListRow
                                 key={client.id}
@@ -158,7 +161,7 @@ export default function ClientsPage() {
 
             {/* Pagination / Total Count Footer */}
             <div className="pt-8 border-t border-divider text-center">
-                <span className="font-serif text-[10px] text-bronze font-black uppercase tracking-[0.3em]">
+                <span className="font-serif text-xs text-bronze font-black uppercase tracking-[0.3em]">
                     Synchronized with {total} Collective Records
                     {totalPages > 1 && (
                         <span className="ml-2">• Page {pagination.page} of {totalPages}</span>

@@ -7,14 +7,22 @@
 
 export interface DashaNode {
     planet: string;
+    lord?: string;
     startDate: string;
     endDate: string;
     isCurrent?: boolean;
     canDrillFurther?: boolean;
     sublevel?: DashaNode[];
-    raw?: any;
-    [key: string]: any;
+    raw?: Record<string, unknown>;
+    duration?: string;
+    type?: string;
+    isBalance?: boolean;
+    _calculated_start?: string;
 }
+
+/** Raw dasha period record from the Astro Engine — shape varies across 12+ dasha systems */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type RawDashaPeriod = Record<string, any>;
 
 export interface DashaMetadata {
     moonLongitude: number;
@@ -58,7 +66,7 @@ export function getSignLord(sign: number | string): string {
 /**
  * Robustly find sublevels in a dasha node regardless of naming convention.
  */
-export function getSublevels(node: any): any[] | null {
+export function getSublevels(node: RawDashaPeriod): RawDashaPeriod[] | null {
     if (!node) return null;
     const sublevels = node.sublevels ||
         node.antardashas ||
@@ -78,7 +86,7 @@ export function getSublevels(node: any): any[] | null {
  * Recursively find the first available array in a nested object.
  * Essential for systems like Tribhagi where dasha periods are buried in data.mahadashas.data.tribhagi_dashas_janma
  */
-export function extractPeriodsArray(data: any): any[] {
+export function extractPeriodsArray(data: RawDashaPeriod | RawDashaPeriod[]): RawDashaPeriod[] {
     if (!data) return [];
     if (Array.isArray(data)) return data;
 
@@ -86,7 +94,7 @@ export function extractPeriodsArray(data: any): any[] {
     if (typeof data === 'object') {
         // Dwadashottari/Specialized wrapped structure support
         if (data.detailed_mahadashas_with_antardashas && Array.isArray(data.detailed_mahadashas_with_antardashas)) {
-            return data.detailed_mahadashas_with_antardashas.map((item: any) => ({
+            return data.detailed_mahadashas_with_antardashas.map((item: RawDashaPeriod) => ({
                 ...(item.mahadasha || {}),
                 antardashas: item.antardashas || []
             }));
@@ -101,12 +109,12 @@ export function extractPeriodsArray(data: any): any[] {
         // MUST BE BEFORE Chaturshitisama as both use dasha_table
         // Path: data.mahadashas.data.meta.system_years
         if (data.mahadashas && data.mahadashas.data && data.mahadashas.data.dasha_table && (data.mahadashas.data.meta?.system_years === 144 || data.mahadashas.meta?.system_years === 144)) {
-            return data.mahadashas.data.dasha_table.map((m: any, idx: number) => ({
+            return data.mahadashas.data.dasha_table.map((m: RawDashaPeriod, idx: number) => ({
                 planet: m.mahadasha,
                 startDate: m.start,
                 endDate: m.end,
                 raw: { ...m, cycle: idx < 8 ? 1 : 2 },
-                sublevels: (m.antardashas || []).map((a: any) => ({
+                sublevels: (m.antardashas || []).map((a: RawDashaPeriod) => ({
                     planet: a.antar_lord,
                     startDate: a.start,
                     endDate: a.end,
@@ -117,13 +125,13 @@ export function extractPeriodsArray(data: any): any[] {
 
         // Chaturshitisama Support (Normalization) - 84 Year System
         if (data.mahadashas && data.mahadashas.data && data.mahadashas.data.dasha_table && (data.mahadashas.data.meta?.system_years === 84 || data.mahadashas.meta?.system_years === 84)) {
-            return data.mahadashas.data.dasha_table.map((m: any) => ({
+            return data.mahadashas.data.dasha_table.map((m: RawDashaPeriod) => ({
                 planet: m.mahadasha_lord,
                 startDate: m.mahadasha_beginning,
                 endDate: m.mahadasha_ending,
                 duration: m.duration,
                 raw: m,
-                sublevels: (m.antardashas || []).map((a: any) => ({
+                sublevels: (m.antardashas || []).map((a: RawDashaPeriod) => ({
                     planet: a.antardasha_lord,
                     startDate: a.beginning,
                     endDate: a.ending,
@@ -134,12 +142,12 @@ export function extractPeriodsArray(data: any): any[] {
 
         // Satabdika Support (Normalization) - 100 Year System
         if (data.mahadashas && data.mahadashas.data && data.mahadashas.data.satabdika_dasha) {
-            return data.mahadashas.data.satabdika_dasha.map((m: any) => ({
+            return data.mahadashas.data.satabdika_dasha.map((m: RawDashaPeriod) => ({
                 planet: m.lord,
                 startDate: m.start_date,
                 endDate: m.end_date,
                 raw: m,
-                sublevels: (m.antardashas || []).map((a: any) => ({
+                sublevels: (m.antardashas || []).map((a: RawDashaPeriod) => ({
                     planet: a.lord,
                     startDate: a.start_date,
                     endDate: a.end_date,
@@ -155,7 +163,7 @@ export function extractPeriodsArray(data: any): any[] {
 
 
         if (Array.isArray(targetList)) {
-            return targetList.map((m: any) => {
+            return targetList.map((m: RawDashaPeriod) => {
                 const startDate = m.startDate || m.start_date || m.start || m.starting || m.starting_date || m.beginning || m.beginning_date || m.mahadasha_beginning || m.mahadasha_starting_date || m.from || m.from_date;
                 const endDate = m.endDate || m.end_date || m.end || m.ending || m.ending_date || m.mahadasha_ending || m.mahadasha_ending_date || m.to || m.to_date;
                 const isCurrent = isDateRangeCurrent(startDate, endDate);
@@ -169,7 +177,7 @@ export function extractPeriodsArray(data: any): any[] {
                     isBalance: m.type === "Balance" || m.is_balance === true || m.balance_at_birth === true,
                     duration: m.duration ? (typeof m.duration === 'number' ? `${m.duration}y` : m.duration) : undefined,
                     raw: m,
-                    sublevel: (m.antardashas || m.sublevels || m.sublevel || m.antar_dashas || []).map((a: any) => {
+                    sublevel: (m.antardashas || m.sublevels || m.sublevel || m.antar_dashas || []).map((a: RawDashaPeriod) => {
                         const aStart = a.startDate || a.start_date || a.start || a.starting || a.starting_date || a.beginning || a.beginning_date || a.from || a.from_date;
                         const aEnd = a.endDate || a.end_date || a.end || a.ending || a.ending_date || a.to || a.to_date;
                         return {
@@ -270,7 +278,7 @@ export function extractPeriodsArray(data: any): any[] {
  * Traverse a nested Dasha tree to find the current active path based on time.
  * Logic: missing start_date = end_date of previous sibling or parent start.
  */
-export function findActiveDashaPath(rawResponse: any): ActiveDashaPath {
+export function findActiveDashaPath(rawResponse: RawDashaPeriod): ActiveDashaPath {
     const now = new Date();
     const path: DashaNode[] = [];
 
@@ -283,13 +291,13 @@ export function findActiveDashaPath(rawResponse: any): ActiveDashaPath {
 
     const mahadashas = extractPeriodsArray(rawResponse);
     let currentLevel = mahadashas;
-    let foundNode: any = null;
+    let foundNode: RawDashaPeriod | null = null;
     let foundStart: string = "";
     let parentStart: string = "";
 
     // Traverse down the hierarchy
     while (currentLevel && Array.isArray(currentLevel) && currentLevel.length > 0) {
-        let activeNode: any = null;
+        let activeNode: RawDashaPeriod | null = null;
         let chainStart = parentStart;
 
         for (const p of currentLevel) {
@@ -475,7 +483,7 @@ export function isDateRangeCurrent(start: string, end: string): boolean {
  * Recursive mapper to process the raw Dasha tree.
  * Handles date inheritance (waterfall logic) and standardizes the structure.
  */
-function mapDashaLevelRecursive(node: any, level: number, inheritedStartDate?: string, maxLevel: number = 4): DashaNode {
+function mapDashaLevelRecursive(node: RawDashaPeriod, level: number, inheritedStartDate?: string, maxLevel: number = 4): DashaNode {
     // Determine children using robust helper
     const rawChildren = getSublevels(node);
     let mappedChildren: DashaNode[] = [];
@@ -488,7 +496,7 @@ function mapDashaLevelRecursive(node: any, level: number, inheritedStartDate?: s
 
     if (Array.isArray(rawChildren)) {
         let runningStart = myStartDateRaw;
-        mappedChildren = rawChildren.map((child: any) => {
+        mappedChildren = rawChildren.map((child: RawDashaPeriod) => {
             const mappedChild = mapDashaLevelRecursive(child, level + 1, runningStart, maxLevel);
             runningStart = child.end_date || child.endDate || child.end || child.ending || child.ending_date || child.mahadasha_ending || child.mahadasha_ending_date || child.to || child.to_date;
             return mappedChild;
@@ -523,7 +531,7 @@ function mapDashaLevelRecursive(node: any, level: number, inheritedStartDate?: s
  * Process the full API response into a standardized Dasha tree.
  * robustly handling missing start dates and verifying structure.
  */
-export function processDashaResponse(data: any, maxLevel: number = 4): DashaNode[] {
+export function processDashaResponse(data: RawDashaPeriod, maxLevel: number = 4): DashaNode[] {
     if (!data) return [];
 
     const periods = extractPeriodsArray(data);
@@ -546,7 +554,7 @@ export function processDashaResponse(data: any, maxLevel: number = 4): DashaNode
         }
     }
 
-    return periods.map((m: any) => {
+    return periods.map((m: RawDashaPeriod) => {
         // Handle varying date keys (Tribhagi uses 'start', others 'start_date')
         const s = m.start_date || m.start;
         if (s) currentStart = s;
@@ -564,7 +572,7 @@ export function processDashaResponse(data: any, maxLevel: number = 4): DashaNode
  * Standardize a level of periods for the table view.
  * Logic: missing start_date = end_date of previous sibling or parent start.
  */
-export function standardizeDashaLevels(periods: any[], parentStartDate?: string): DashaNode[] {
+export function standardizeDashaLevels(periods: RawDashaPeriod[], parentStartDate?: string): DashaNode[] {
     // If periods are already processed DashaNodes (have sublevel etc), just return them
     // This allows the UI to handle both raw and processed arrays seamlessly
     if (periods.length > 0 && (periods[0].sublevel !== undefined || periods[0].canDrillFurther !== undefined)) {
@@ -611,7 +619,14 @@ export function standardizeDashaLevels(periods: any[], parentStartDate?: string)
 /**
  * Planet Metadata & Interpretations (Ported from Senior Knowledge Base)
  */
-export const PLANET_INTEL: Record<string, any> = {
+interface PlanetIntelEntry {
+    nature: string;
+    themes: string[];
+    advice: string;
+    tip: string;
+}
+
+export const PLANET_INTEL: Record<string, PlanetIntelEntry> = {
     Sun: {
         nature: 'Malefic (Natural)',
         themes: ['Authority', 'Soul', 'Father', 'Government'],

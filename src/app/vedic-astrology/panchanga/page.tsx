@@ -38,7 +38,7 @@ import {
 // ============================================================================
 
 // Icon components for Avakhada items
-function UsersIcon(props: any) {
+function UsersIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
@@ -49,7 +49,7 @@ function UsersIcon(props: any) {
     );
 }
 
-function TypeIcon(props: any) {
+function TypeIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="4 7 4 4 20 4 20 7" />
@@ -112,7 +112,7 @@ export default function PanchangaOverviewPage() {
     const activeSystem = ayanamsa.toLowerCase();
 
     // Avakhada data state
-    const [avakhadaData, setAvakhadaData] = useState<any>(null);
+    const [avakhadaData, setAvakhadaData] = useState<Record<string, unknown> | null>(null);
     const [avakhadaLoading, setAvakhadaLoading] = useState(true);
     const [avakhadaError, setAvakhadaError] = useState<string | null>(null);
 
@@ -135,12 +135,10 @@ export default function PanchangaOverviewPage() {
             setAvakhadaError(null);
             try {
                 const result = await clientApi.getAvakhadaChakra(clientDetails.id);
-                const rawData = result.chartData || result.data || result;
-                const cleanData = rawData.avakhada_chakra || rawData;
+                const rawData = (result as Record<string, any>).chartData || (result as Record<string, any>).data || result;
+                const cleanData = (rawData as Record<string, any>).avakhada_chakra || rawData;
                 setAvakhadaData(cleanData);
-            } catch (err: any) {
-                console.error("Avakhada Fetch Error:", err);
-                setAvakhadaError(err.message || "Failed to load Avakhada Chakra");
+            } catch (err: unknown) {                setAvakhadaError(err instanceof Error ? err.message : "Failed to load Avakhada Chakra");
             } finally {
                 setAvakhadaLoading(false);
             }
@@ -186,10 +184,10 @@ export default function PanchangaOverviewPage() {
             {/* ═══════════════════════════════════════════════════════════ */}
             {/* SECTION 1: CLIENT PROFILE BANNER                          */}
             {/* ═══════════════════════════════════════════════════════════ */}
-            <div className="bg-[#EAD8B1] border border-antique rounded-2xl p-6 shadow-sm relative overflow-hidden">
+            <div className="bg-border-warm border border-antique rounded-2xl p-6 shadow-sm relative overflow-hidden">
                 <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-6">
                     {/* Avatar */}
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#D08C60] to-[#B8733D] flex items-center justify-center text-white font-serif font-bold text-2xl shrink-0 shadow-lg">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-header-border to-amber-700 flex items-center justify-center text-white font-serif font-bold text-2xl shrink-0 shadow-lg">
                         {clientDetails.name.charAt(0)}
                     </div>
 
@@ -235,10 +233,10 @@ export default function PanchangaOverviewPage() {
             {/* ═══════════════════════════════════════════════════════════ */}
             {/* SECTION 2: BIRTH PANCHANGA — Expanded Premium Layout       */}
             {/* ═══════════════════════════════════════════════════════════ */}
-            <div className="border border-antique rounded-2xl overflow-hidden shadow-sm bg-[#FFFCF6]">
-                <div className="bg-[#EAD8B1] px-5 py-3 border-b border-antique flex items-center gap-3">
+            <div className="border border-antique rounded-2xl overflow-hidden shadow-sm bg-surface-warm">
+                <div className="bg-border-warm px-5 py-3 border-b border-antique flex items-center gap-3">
                     <div className="p-1.5 bg-white/60 rounded-lg shadow-xs">
-                        <Sparkle className="w-4 h-4 text-[#D08C60]" />
+                        <Sparkle className="w-4 h-4 text-header-border" />
                     </div>
                     <div>
                         <h3 className="font-serif text-lg font-bold text-primary leading-tight tracking-wide">Birth Panchanga</h3>
@@ -344,10 +342,10 @@ export default function PanchangaOverviewPage() {
             {/* ═══════════════════════════════════════════════════════════ */}
             {/* SECTION 3: AVAKHADA CHAKRA — Full-Width Detailed Grid      */}
             {/* ═══════════════════════════════════════════════════════════ */}
-            <div className="border border-antique rounded-2xl overflow-hidden shadow-sm bg-[#FFFCF6]">
-                <div className="bg-[#EAD8B1] px-5 py-3 border-b border-antique flex items-center gap-3">
+            <div className="border border-antique rounded-2xl overflow-hidden shadow-sm bg-surface-warm">
+                <div className="bg-border-warm px-5 py-3 border-b border-antique flex items-center gap-3">
                     <div className="p-1.5 bg-white/60 rounded-lg shadow-xs">
-                        <Star className="w-4 h-4 text-[#D08C60]" />
+                        <Star className="w-4 h-4 text-header-border" />
                     </div>
                     <div>
                         <h3 className="font-serif text-lg font-bold text-primary leading-tight tracking-wide">
@@ -376,7 +374,7 @@ export default function PanchangaOverviewPage() {
                     <div className="p-5">
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
                             {AVAKHADA_ITEMS.map((item) => {
-                                const value = avakhadaData[item.key] || avakhadaData[item.key.toLowerCase()];
+                                const value = String(avakhadaData[item.key] || avakhadaData[item.key.toLowerCase()] || '');
                                 if (!value) return null;
 
                                 return (
@@ -409,7 +407,7 @@ export default function PanchangaOverviewPage() {
                             })}
 
                             {/* Hamsa Swara (extra field) */}
-                            {avakhadaData.hamsa_swara && (
+                            {avakhadaData.hamsa_swara != null && (
                                 <div className="relative bg-gradient-to-br from-sky-500/10 to-blue-500/10 p-4 rounded-xl border border-antique/30 hover:border-gold-primary/40 hover:shadow-lg transition-all group">
                                     <div className="flex justify-between items-start mb-2">
                                         <div>
@@ -419,7 +417,7 @@ export default function PanchangaOverviewPage() {
                                         <Feather className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity text-sky-600" />
                                     </div>
                                     <div className="font-serif text-base font-bold text-primary leading-tight mb-1">
-                                        {avakhadaData.hamsa_swara}
+                                        {String(avakhadaData.hamsa_swara)}
                                     </div>
                                     <div className="text-primary font-medium italic leading-snug transition-opacity">
                                         Life breath classification

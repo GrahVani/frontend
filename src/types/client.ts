@@ -44,11 +44,15 @@ export interface Client {
     tags?: string[];
     metadata?: {
         quickNotes?: string;
-        [key: string]: any;
+        [key: string]: unknown;
     };
 
-    // Relations (Partial)
+    // Relations (Partial — populated by API joins, excluded from update payloads)
     notes?: { id: string; noteContent: string; createdAt: string }[];
+    familyLinksFrom?: Record<string, unknown>[];
+    familyLinksTo?: Record<string, unknown>[];
+    consultations?: Record<string, unknown>[];
+    remedies?: Record<string, unknown>[];
 
     // Computed Astrological Data
     rashi?: string;       // Moon Sign (e.g., 'Leo')
@@ -92,7 +96,7 @@ export interface CreateClientPayload {
     state?: string;
     country?: string;
     tags?: string[];
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
 }
 
 export interface ClientListResponse {

@@ -20,8 +20,32 @@ const PLANET_GEM_COLORS: Record<string, { bg: string; border: string; text: stri
     'Ketu': { bg: '#FFF7ED', border: '#F97316', text: '#7C2D12', dot: '#F97316' },
 };
 
+interface GemstoneData {
+    planet: string;
+    analysis: {
+        nature: string;
+        logic: string;
+    };
+    gem_data: {
+        stone: string;
+        metal: string;
+        finger: string;
+    };
+    position: {
+        sign: string;
+        house: number;
+        is_retro?: boolean;
+        is_combust?: boolean;
+    };
+    rulerships: number[];
+    dasha_status: {
+        is_active: boolean;
+        period?: string;
+    };
+}
+
 interface GemstoneAnalysisCardProps {
-    gemstone: any;
+    gemstone: GemstoneData;
     isRecommended: boolean;
     priority?: number;
 }
@@ -55,17 +79,11 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
                     </div>
                     <div className="min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className="font-serif font-bold text-[15px] leading-tight"
-                                style={{ color: 'var(--ink)' }}>
+                            <h3 className="font-serif font-bold text-[15px] leading-tight text-ink">
                                 {gem_data.stone}
                             </h3>
                             {priority && (
-                                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md tracking-wider"
-                                    style={{
-                                        backgroundColor: 'var(--gold-primary)',
-                                        color: 'white',
-                                        opacity: 0.9,
-                                    }}>
+                                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md tracking-wider bg-gold-primary text-white opacity-90">
                                     Priority {priority}
                                 </span>
                             )}
@@ -107,13 +125,11 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
                         <Info className={cn("w-3.5 h-3.5 shrink-0",
                             isRecommended ? "text-gold-dark" : "text-red-400"
                         )} />
-                        <span className="text-[9px] font-bold uppercase tracking-[0.12em]"
-                            style={{ color: 'var(--text-muted-refined, #6B5D4F)' }}>
+                        <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-muted">
                             Astrological Rationale
                         </span>
                     </div>
-                    <p className="text-[12px] leading-relaxed italic font-medium pl-5.5"
-                        style={{ color: 'var(--text-secondary, #4A3F32)' }}>
+                    <p className="text-[12px] leading-relaxed italic font-medium pl-5.5 text-body">
                         "{analysis.logic}"
                     </p>
                 </div>
@@ -123,24 +139,22 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
                     <div className="p-3 rounded-xl bg-white border border-antique/30">
                         <div className="flex items-center gap-1.5 mb-1.5">
                             <Hand className="w-3 h-3 text-gold-primary" />
-                            <p className="text-[9px] font-bold uppercase tracking-[0.1em]"
-                                style={{ color: 'var(--text-muted-refined, #6B5D4F)' }}>
+                            <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted">
                                 Metal & Finger
                             </p>
                         </div>
-                        <p className="text-[12px] font-semibold" style={{ color: 'var(--ink)' }}>
+                        <p className="text-[12px] font-semibold text-ink">
                             {gem_data.metal} — {gem_data.finger}
                         </p>
                     </div>
                     <div className="p-3 rounded-xl bg-white border border-antique/30">
                         <div className="flex items-center gap-1.5 mb-1.5">
                             <Home className="w-3 h-3 text-gold-primary" />
-                            <p className="text-[9px] font-bold uppercase tracking-[0.1em]"
-                                style={{ color: 'var(--text-muted-refined, #6B5D4F)' }}>
+                            <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted">
                                 Placement
                             </p>
                         </div>
-                        <p className="text-[12px] font-semibold" style={{ color: 'var(--ink)' }}>
+                        <p className="text-[12px] font-semibold text-ink">
                             {position.sign} in {position.house}{getOrdinal(position.house)} House
                             {position.is_retro && <span className="ml-1 text-red-500 text-[9px] font-bold">(R)</span>}
                             {position.is_combust && <span className="ml-1 text-amber-600 text-[9px] font-bold">(C)</span>}

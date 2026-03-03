@@ -22,13 +22,13 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
     // Color logic from North Indian Chart
     const getValueColor = (val: number) => {
         if (type === 'sarva') {
-            if (val >= 30) return "#10B981"; // Emerald
-            if (val < 22) return "#E11D48";  // Rose
+            if (val >= 30) return "var(--status-success)";
+            if (val < 22) return "var(--status-error)";
         } else {
-            if (val >= 5) return "#10B981";
-            if (val < 4) return "#E11D48";
+            if (val >= 5) return "var(--status-success)";
+            if (val < 4) return "var(--status-error)";
         }
-        return "#2D2419"; // Bronze/Ink
+        return "var(--text-primary)";
     };
 
     // House positions for house values (centered in segments)
@@ -67,10 +67,10 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
         <div className={cn("flex flex-col items-center", className)}>
             <svg viewBox="0 0 280 280" className="w-full max-w-[260px] drop-shadow-sm">
                 {/* Background */}
-                <rect x="0" y="0" width="280" height="280" fill="#FFF9E9" />
+                <rect x="0" y="0" width="280" height="280" fill="var(--surface-warm)" />
 
                 {/* Chart lines */}
-                <g stroke="#D08C60" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                <g stroke="var(--header-border)" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="1" y="1" width="278" height="278" strokeWidth="2" />
                     <line x1="0" y1="0" x2="280" y2="280" />
                     <line x1="280" y1="0" x2="0" y2="280" />
@@ -119,7 +119,7 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
                                     cx={vP.x + 15}
                                     cy={vP.y - 10}
                                     r="2.2"
-                                    fill={isMax ? '#10B981' : '#E11D48'}
+                                    fill={isMax ? 'var(--status-success)' : 'var(--status-error)'}
                                 />
                             )}
 
@@ -144,16 +144,16 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
             {/* Legend */}
             <div className="mt-3 flex flex-col gap-1.5 text-[10px] text-center font-serif">
                 <div className="flex items-center justify-center gap-4 text-secondary/80 font-medium tracking-normal">
-                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>{type === 'sarva' ? '30+ Strong' : '5+ Strong'}</span>
+                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>{type === 'sarva' ? '30+ Strong' : '5+ Strong'}</span>
                     <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-amber-500/50"></span>{type === 'sarva' ? '22-29' : '4 Avg'}</span>
-                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#E11D48]"></span>{type === 'sarva' ? '<22 Weak' : '<4 Weak'}</span>
+                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-rose-600"></span>{type === 'sarva' ? '<22 Weak' : '<4 Weak'}</span>
                 </div>
                 <div className="flex items-center justify-center gap-5 font-medium text-primary/70">
                     <span className="inline-flex items-center gap-1">
-                        Best House: <span className="text-[#10B981]">H{maxH} ({maxV})</span>
+                        Best House: <span className="text-emerald-500">H{maxH} ({maxV})</span>
                     </span>
                     <span className="inline-flex items-center gap-1">
-                        Weak House: <span className="text-[#E11D48]">H{minH} ({minV})</span>
+                        Weak House: <span className="text-rose-600">H{minH} ({minV})</span>
                     </span>
                 </div>
             </div>

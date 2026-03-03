@@ -36,7 +36,7 @@ export const KpFortunaView: React.FC<KpFortunaViewPropsNew> = ({ data }) => {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-antique/50">
-                        {(Array.isArray(calculation) ? calculation : Object.values(calculation || {})).map((row: any, idx) => (
+                        {(Array.isArray(calculation) ? calculation : Object.values(calculation || {})).map((r: any, idx) => { const row = r as { component: string; dms: string; longitude: number; sign: string; house: number }; return (
                             <tr key={row.component} className={cn(
                                 "transition-colors",
                                 row.component === 'Pars Fortuna' ? "bg-gold-soft/10 font-bold text-accent-gold" : "hover:bg-gold-primary/5 bg-white"
@@ -59,7 +59,7 @@ export const KpFortunaView: React.FC<KpFortunaViewPropsNew> = ({ data }) => {
                                     {row.house}
                                 </td>
                             </tr>
-                        ))}
+                        ); })}
                     </tbody>
                 </table>
             </div>
