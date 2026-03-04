@@ -37,27 +37,27 @@ export default function VedicClientSelectionPage() {
             {/* Page Header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-4">
                 <div>
-                    <h1 className="font-serif text-5xl font-bold text-primary tracking-tight leading-tight mb-2">
+                    <h1 className="font-serif text-3xl font-bold text-primary tracking-tight leading-tight mb-2">
                         Client Registry
                     </h1>
-                    <p className="font-serif text-lg text-secondary italic leading-relaxed opacity-90">
-                        The archives of souls and their celestial blueprints.
+                    <p className="font-serif text-lg text-secondary italic leading-relaxed">
+                        Client records and their astrological profiles.
                     </p>
                 </div>
 
                 <div className="flex items-center gap-4">
                     <Link href="/clients/new" className="px-8 py-4 bg-gradient-to-r from-gold-primary to-gold-dark text-white rounded-2xl font-sans text-xs font-bold uppercase tracking-wider shadow-button hover:scale-105 transition-transform border border-white/10 leading-compact">
-                        Add New Soul
+                        + Add Client
                     </Link>
                 </div>
             </div>
 
             {/* Search & Filter Bar */}
-            <div className="mx-0 bg-softwhite backdrop-blur-md p-4 rounded-3xl border border-antique shadow-card relative overflow-hidden group">
+            <div className="mx-0 bg-softwhite backdrop-blur-md p-4 rounded-2xl border border-antique shadow-card relative overflow-hidden group">
                 <div className="absolute inset-0 bg-parchment opacity-50 pointer-events-none" />
                 <div className="relative z-10">
                     <ParchmentInput
-                        placeholder="Search soul archives by name or city..."
+                        placeholder="Search clients by name or city..."
                         icon={<Search className="w-5 h-5 text-gold-dark" />}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -72,13 +72,13 @@ export default function VedicClientSelectionPage() {
                 {loading && (
                     <div className="flex flex-col items-center justify-center py-20 animate-pulse">
                         <Loader2 className="w-10 h-10 text-gold-primary animate-spin mb-4" />
-                        <p className="font-serif text-base text-secondary leading-relaxed">Accessing Soul Archives...</p>
+                        <p className="font-serif text-base text-secondary leading-relaxed">Loading clients...</p>
                     </div>
                 )}
 
                 {/* Error State */}
                 {!loading && error && (
-                    <div className="text-center py-32 rounded-3xl bg-red-50 border border-red-100">
+                    <div className="text-center py-16 rounded-2xl bg-red-50 border border-red-100">
                         <p className="font-serif text-xl text-red-600 leading-tight mb-2">{error}</p>
                         <button
                             onClick={() => window.location.reload()}
@@ -100,9 +100,9 @@ export default function VedicClientSelectionPage() {
 
                 {/* Empty State */}
                 {!loading && !error && filteredClients.length === 0 && (
-                    <div className="text-center py-32 rounded-3xl bg-softwhite border border-antique">
+                    <div className="text-center py-16 rounded-2xl bg-softwhite border border-antique">
                         <p className="font-serif text-2xl italic text-muted-refined leading-relaxed">
-                            No constellations match your search.
+                            No clients match your search.
                         </p>
                     </div>
                 )}
@@ -112,7 +112,7 @@ export default function VedicClientSelectionPage() {
             {!loading && !error && (
                 <div className="pt-8 border-t border-divider text-center">
                     <span className="font-sans text-xs text-secondary font-semibold uppercase tracking-wider leading-compact">
-                        Synchronized with {filteredClients.length} Collective Records
+                        {filteredClients.length} clients
                     </span>
                 </div>
             )}

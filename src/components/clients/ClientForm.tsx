@@ -349,7 +349,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
             <div className="mb-6">
                 <div className="flex items-center gap-2 mb-4 pb-2 border-b border-divider">
                     <Calendar className="w-5 h-5 text-gold-burnished" />
-                    <h2 className="font-serif text-lg font-bold text-ink-deep">Cosmic Snapshot (Birth Data)</h2>
+                    <h2 className="font-serif text-lg font-bold text-ink-deep">Birth Details</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
@@ -563,8 +563,8 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
             <div className="flex justify-end pt-6 border-t border-divider">
                 <div className="w-full md:w-auto">
                     <GoldenButton
-                        topText={loading ? "Preserving" : (mode === 'edit' ? "Update" : "Save")}
-                        bottomText={loading ? "Record..." : "Profile"}
+                        topText={loading ? "Saving" : (mode === 'edit' ? "Update" : "Save")}
+                        bottomText={loading ? "..." : "Client"}
                         type="submit"
                         disabled={loading}
                         className="w-full md:w-[240px]"

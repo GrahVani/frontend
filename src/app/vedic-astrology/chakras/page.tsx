@@ -97,7 +97,7 @@ export default function ChakrasPage() {
                                     <Compass className="w-8 h-8 text-primary absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse" />
                                 </div>
                                 <div className="text-center space-y-2">
-                                    <p className="text-primary font-serif text-sm font-bold animate-pulse">Drafting Celestial Map...</p>
+                                    <p className="text-primary font-serif text-sm font-bold animate-pulse">Generating chart...</p>
                                     <p className="text-primary text-[10px] italic">Synchronizing Surya, Chandra, & Birth chart layers</p>
                                 </div>
                             </div>
@@ -141,7 +141,7 @@ export default function ChakrasPage() {
                         </div>
                         <div className="space-y-6">
                             {[
-                                { label: 'Surya Chart', circle: 'Outer Circle', color: 'border-slate-800', bgColor: 'bg-slate-700', desc: 'Soul\'s physical destiny & vitality' },
+                                { label: 'Surya Chart', circle: 'Outer Circle', color: 'border-slate-800', bgColor: 'bg-slate-700', desc: 'Physical destiny & vitality' },
                                 { label: 'Chandra Chart', circle: 'Middle Circle', color: 'border-slate-500', bgColor: 'bg-slate-500', desc: 'Mental landscape & emotional flow' },
                                 { label: 'Birth Chart', circle: 'Inner Circle', color: 'border-slate-300', bgColor: 'bg-slate-400', desc: 'The core karmic blueprint (Lagna)' },
                             ].map((item, i) => (

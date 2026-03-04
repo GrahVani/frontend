@@ -35,7 +35,7 @@ export default function LoginPage() {
         try {
             await login({ email, password });
             // AuthContext handles redirecting to /dashboard on success
-        } catch (err: unknown) {            setError(err instanceof Error ? err.message : "Failed to enter the sanctum. Please verify your cosmic credentials.");
+        } catch (err: unknown) {            setError(err instanceof Error ? err.message : "Login failed. Please check your credentials.");
         } finally {
             setLoading(false);
         }
@@ -110,8 +110,8 @@ export default function LoginPage() {
                                 <div className="space-y-5">
                                     {/* Inputs - Designed to look like lines on a ledger */}
                                     <div className="relative group">
-                                        <label htmlFor="login-email" className="block text-[10px] font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
-                                            Cosmic Identity
+                                        <label htmlFor="login-email" className="block text-xs font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
+                                            Email Address
                                         </label>
                                         <div className="relative flex items-center">
                                             <Mail className="absolute left-0 w-4 h-4 text-gold-primary" />
@@ -121,14 +121,14 @@ export default function LoginPage() {
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
                                                 className="w-full pl-8 pr-2 py-2 bg-transparent border-b-2 border-gold-primary/40 text-ink font-serif placeholder-muted focus:outline-none focus:border-gold-dark transition-colors"
-                                                placeholder="seeker@cosmos.com"
+                                                placeholder="you@example.com"
                                                 required
                                             />
                                         </div>
                                     </div>
 
                                     <div className="relative group">
-                                        <label htmlFor="login-password" className="block text-[10px] font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
+                                        <label htmlFor="login-password" className="block text-xs font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
                                             Password
                                         </label>
                                         <div className="relative flex items-center">
@@ -151,9 +151,9 @@ export default function LoginPage() {
                                         <div className="w-3.5 h-3.5 border border-gold-dark rounded-[2px] flex items-center justify-center">
                                             <div className="w-1.5 h-1.5 bg-gold-dark opacity-0" />
                                         </div>
-                                        <span className="text-[10px] font-serif text-body uppercase tracking-wide">Remember me</span>
+                                        <span className="text-xs font-serif text-body uppercase tracking-wide">Remember me</span>
                                     </label>
-                                    <a href="#" className="text-[10px] font-serif text-gold-dark font-bold uppercase tracking-wide hover:underline">
+                                    <a href="#" className="text-xs font-serif text-gold-dark font-bold uppercase tracking-wide hover:underline">
                                         Forgot Password?
                                     </a>
                                 </div>
@@ -168,9 +168,9 @@ export default function LoginPage() {
                                     >
                                         {(() => {
                                             const lowerError = error.toLowerCase();
-                                            if (lowerError.includes('user not found') || lowerError.includes('invalid credentials')) return "The stars do not recognize this identity. Please check your credentials.";
-                                            if (lowerError.includes('password')) return "The secret key is incorrect. The sanctum remains closed.";
-                                            if (lowerError.includes('verify')) return "Your soul signature is pending verification. Please check your spirit owl (email).";
+                                            if (lowerError.includes('user not found') || lowerError.includes('invalid credentials')) return "Invalid email or password. Please try again.";
+                                            if (lowerError.includes('password')) return "Incorrect password. Please try again.";
+                                            if (lowerError.includes('verify')) return "Your account is pending verification. Please check your email.";
                                             return error;
                                         })()}
                                     </motion.div>
@@ -179,8 +179,8 @@ export default function LoginPage() {
                                 {/* Premium Button using GoldenButton Component */}
                                 <div className="w-full flex justify-center">
                                     <PremiumButton
-                                        topText={loading ? 'Consulting' : 'Enter'}
-                                        bottomText={loading ? 'Stars...' : 'Sanctum'}
+                                        topText={loading ? 'Signing' : 'Sign'}
+                                        bottomText={loading ? 'In...' : 'In'}
                                         type="submit"
                                         disabled={loading}
                                     />
@@ -188,7 +188,7 @@ export default function LoginPage() {
                             </form>
 
                             <div className="mt-8">
-                                <p className="text-[10px] font-serif text-muted italic">
+                                <p className="text-xs font-serif text-muted italic">
                                     New to Grahvani? <Link href="/register" className="font-bold text-gold-dark hover:underline">Create an account</Link>
                                 </p>
                             </div>

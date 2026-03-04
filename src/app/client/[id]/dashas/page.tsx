@@ -310,7 +310,7 @@ export default function VedicDashasPage() {
                         <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                             <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold block mb-1">Mahadasha</label>
                             <div className="text-2xl font-black">{isChara ? String(activeLords[0].raw?.sign_name || activeLords[0].planet) : activeLords[0].planet}</div>
-                            <div className="text-[10px] text-white/40 mt-1">{formatDateShort(activeLords[0].startDate)} - {formatDateShort(activeLords[0].endDate)}</div>
+                            <div className="text-[10px] text-white/60 mt-1">{formatDateShort(activeLords[0].startDate)} - {formatDateShort(activeLords[0].endDate)}</div>
                         </div>
                         <div className="bg-white/10 rounded-xl p-4 border border-white/20 transform scale-105 shadow-xl">
                             <label className="text-[10px] uppercase tracking-widest text-yellow-400 font-bold block mb-1 underline decoration-yellow-400/30 underline-offset-4">Antardasha</label>
@@ -320,7 +320,7 @@ export default function VedicDashasPage() {
                         <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                             <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold block mb-1">Pratyantardasha</label>
                             <div className="text-2xl font-black">{activeLords[2] ? (isChara ? String(activeLords[2].raw?.sign_name || activeLords[2].planet) : activeLords[2].planet) : '—'}</div>
-                            <div className="text-[10px] text-white/40 mt-1">{formatDateShort(activeLords[2]?.startDate)} - {formatDateShort(activeLords[2]?.endDate)}</div>
+                            <div className="text-[10px] text-white/60 mt-1">{formatDateShort(activeLords[2]?.startDate)} - {formatDateShort(activeLords[2]?.endDate)}</div>
                         </div>
                     </div>
                 )}
@@ -329,7 +329,7 @@ export default function VedicDashasPage() {
                     <div className="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                             <div className="flex flex-col">
-                                <span className="text-[10px] uppercase text-white/40 font-bold tracking-tight">Active Path Summary</span>
+                                <span className="text-[10px] uppercase text-white/60 font-bold tracking-tight">Active Path Summary</span>
                                 <div className="flex items-center gap-1 mt-0.5">
                                     {activeLords.slice(0, 5).map((l, i) => (
                                         <React.Fragment key={i}>

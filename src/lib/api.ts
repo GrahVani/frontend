@@ -159,7 +159,7 @@ export const CHART_METADATA: Record<string, { name: string; desc: string; catego
     'D45': { name: 'Akshavedamsha', desc: 'General Indications', category: 'divisional' },
     'D60': { name: 'Shashtiamsha', desc: 'Past Karma & Results', category: 'divisional' },
     'moon': { name: 'Moon Chart', desc: 'Emotional & Mental State', category: 'special' },
-    'sun': { name: 'Sun Chart', desc: 'Soul Purpose & Father', category: 'special' },
+    'sun': { name: 'Sun Chart', desc: 'Life Purpose & Father', category: 'special' },
     'sudarshan': { name: 'Sudarshan Chakra', desc: 'Triple View Analysis', category: 'special' },
     'transit': { name: 'Transit', desc: 'Current Planetary Positions', category: 'special' },
     'arudha': { name: 'Arudha Lagna', desc: 'Worldly Image & Perception', category: 'lagna' },

@@ -15,10 +15,10 @@ export default function NewClientPage() {
                 <div className="relative">
                     <div className="mb-4 text-center">
                         <h1 className="text-2xl font-serif font-bold text-ink-deep mb-1">
-                            New Soul Record
+                            New Client
                         </h1>
                         <p className="text-body font-serif italic text-sm">
-                            Accurately record the birth details for a precise cosmic map.
+                            Accurately record the birth details for a precise birth chart.
                         </p>
                     </div>
 

@@ -29,7 +29,7 @@ export default function ClientHeader({ client }: ClientHeaderProps) {
                                     Primary Record
                                 </div>
                             </div>
-                            <div className="flex flex-wrap items-center gap-3 text-white/40 text-[11px] font-serif uppercase tracking-widest font-bold">
+                            <div className="flex flex-wrap items-center gap-3 text-white/60 text-[11px] font-serif uppercase tracking-widest font-bold">
                                 <span>{(client.dateOfBirth || client.birthDate) ? new Date(client.dateOfBirth || client.birthDate || '').toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Unknown'}</span>
                                 <span className="w-1.5 h-1.5 rounded-full bg-header-border/40" />
                                 <span>{client.timeOfBirth || client.birthTime || 'Unknown'} IST</span>
@@ -46,7 +46,7 @@ export default function ClientHeader({ client }: ClientHeaderProps) {
                             <MetadataTag icon={Star} label="Rashi" value={client.rashi || "Unknown"} orange />
                             <MetadataTag icon={Zap} label="Dasha" value="Jup-Sat" />
                         </div>
-                        <button className="ml-2 p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white/40 hover:text-active-glow transition-all" title="Modify Soul Record">
+                        <button className="ml-2 p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white/60 hover:text-active-glow transition-all" title="Edit Client">
                             <Pencil className="w-4 h-4" />
                         </button>
                     </div>
@@ -59,7 +59,7 @@ export default function ClientHeader({ client }: ClientHeaderProps) {
 function MetadataTag({ icon: Icon, label, value, orange = false }: { icon: React.ElementType, label: string, value: string, orange?: boolean }) {
     return (
         <div className={`px-4 py-2 rounded-xl border flex flex-col min-w-[90px] transition-all ${orange ? 'bg-header-border/10 border-header-border/40' : 'bg-white/5 border-white/10'}`}>
-            <span className="text-[8px] font-black uppercase tracking-tighter text-white/30 mb-0.5">{label}</span>
+            <span className="text-[8px] font-black uppercase tracking-tighter text-white/60 mb-0.5">{label}</span>
             <span className={`text-xs font-serif font-black tracking-wide ${orange ? 'text-active-glow' : 'text-white/80'}`}>{value}</span>
         </div>
     );

@@ -90,7 +90,7 @@ export const VARGA_EDUCATION: Record<string, {
     'D9': {
         purpose: 'Marriage, spouse, and dharmic path',
         keyPlanets: ['Venus', 'Jupiter', '7th Lord'],
-        significance: 'Most important varga after D1 - shows soul\'s true nature',
+        significance: 'Most important varga after D1 - shows native\'s true nature',
         tip: 'Compare D1 and D9 positions for accurate predictions'
     },
     'D10': {

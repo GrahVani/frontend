@@ -16,7 +16,7 @@ export default function PanchangCompact() {
         <div className="bg-ink-deep/40 backdrop-blur-sm border border-header-border/30 rounded-2xl overflow-hidden shadow-2xl">
             <div className="bg-header-border/10 px-4 py-2 border-b border-header-border/20 flex items-center justify-between">
                 <span className="text-[10px] font-bold text-active-glow uppercase tracking-widest font-serif">Daily Panchang</span>
-                <span className="text-[9px] text-white/40 uppercase tracking-tighter">New Delhi • 11:45 AM</span>
+                <span className="text-[9px] text-white/60 uppercase tracking-tighter">New Delhi • 11:45 AM</span>
             </div>
 
             <div className="grid grid-cols-2 gap-px bg-header-border/10">
@@ -26,7 +26,7 @@ export default function PanchangCompact() {
                             <item.icon className="w-4 h-4" />
                         </div>
                         <div>
-                            <p className="text-[9px] text-white/30 uppercase tracking-wider mb-0.5">{item.label}</p>
+                            <p className="text-[9px] text-white/60 uppercase tracking-wider mb-0.5">{item.label}</p>
                             <p className="text-sm font-serif text-white font-bold">{item.value}</p>
                         </div>
                     </div>

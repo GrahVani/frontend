@@ -13,8 +13,8 @@
   /* TEXT & BORDER COLORS                         */
   /* ============================================ */
   --ink: #3E2A1F;
-  --text-body: #5A3E2B;
-  --text-muted: #7A5A43;
+  --text-body: #4A3020;
+  --text-muted: #5C3D26;
   --text-dark: #2b1510;
 
   /* Border Colors */
@@ -93,11 +93,11 @@
 
   /* --- Text Colors (Optimized for Readability) --- */
   --text-primary: #2D2419;
-  --text-secondary: #4A3F32;
-  --text-muted-refined: #6B5D4F;
+  --text-secondary: #3D3228;
+  --text-muted-refined: #4D3F32;
   --text-accent-gold: #B8860B;
   --text-accent-gold-light: #D4A574;
-  --text-disabled: #9B8D7E;
+  --text-disabled: #6B5F52;
 
   /* --- Typography Families --- */
   --font-family-serif: 'Spectral', 'Crimson Pro', 'Lora', Georgia, serif;

@@ -570,7 +570,7 @@ function DailyTransitView({ clientId }: { clientId: string }) {
                         </div>
                     </>
                 ) : (
-                    <div className="flex-1 flex flex-col items-center justify-center py-32 text-center">
+                    <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
                         <Info className="w-16 h-16 text-primary mb-4" />
                         <h4 className="font-serif text-xl font-bold text-primary">Data Feed Interrupted</h4>
                         <p className="text-sm text-primary mt-2 max-w-md mx-6">

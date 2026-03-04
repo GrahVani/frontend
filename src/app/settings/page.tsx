@@ -30,7 +30,7 @@ export default function SettingsPage() {
 
             {/* Ayanamsa */}
             <div className="bg-softwhite border border-antique rounded-xl p-5">
-                <h3 className="text-xs font-bold text-header-border tracking-widest font-serif uppercase mb-4">
+                <h3 className="text-sm font-bold text-header-border tracking-widest font-serif uppercase mb-4">
                     Ayanamsa System
                 </h3>
                 <div className="grid grid-cols-3 gap-3">
@@ -57,7 +57,7 @@ export default function SettingsPage() {
 
             {/* Chart Style */}
             <div className="bg-softwhite border border-antique rounded-xl p-5">
-                <h3 className="text-xs font-bold text-header-border tracking-widest font-serif uppercase mb-4">
+                <h3 className="text-sm font-bold text-header-border tracking-widest font-serif uppercase mb-4">
                     Default Chart Style
                 </h3>
                 <div className="grid grid-cols-3 gap-3">
@@ -84,7 +84,7 @@ export default function SettingsPage() {
 
             {/* Display Options */}
             <div className="bg-softwhite border border-antique rounded-xl p-5">
-                <h3 className="text-xs font-bold text-header-border tracking-widest font-serif uppercase mb-4">
+                <h3 className="text-sm font-bold text-header-border tracking-widest font-serif uppercase mb-4">
                     Display Options
                 </h3>
                 <div className="space-y-4">

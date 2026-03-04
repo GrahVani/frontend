@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation';
-import { Edit2, Trash2, Calendar, MapPin, ChevronRight } from 'lucide-react';
+import { Edit2, Trash2, Calendar, MapPin, ChevronRight, Clock, Phone } from 'lucide-react';
 import { Client } from '@/types/client';
 import { useVedicClient } from '@/context/VedicClientContext';
 
@@ -47,7 +47,7 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSelectClient(); } }}
                 className="
                     relative flex items-center p-4
-                    bg-softwhite border border-antique rounded-3xl
+                    bg-softwhite border border-antique rounded-2xl
                     transition-all duration-300
                     hover:border-gold-primary hover:shadow-card
                     cursor-pointer overflow-hidden
@@ -77,25 +77,25 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
                                 {client.fullName || `${client.firstName || ''} ${client.lastName || ''}`.trim() || 'Unknown'}
                             </h3>
                             <div className="flex items-center flex-wrap gap-4 xl:gap-6 mt-2">
-                                <div className="flex items-center text-brown-dark text-xs font-sans uppercase tracking-widest font-bold">
+                                <div className="flex items-center text-brown-dark text-xs font-sans uppercase tracking-wider font-bold">
                                     <MapPin className="w-3.5 h-3.5 mr-2 text-bronze" />
                                     {client.placeOfBirth || client.birthPlace || 'Unknown'}
                                 </div>
-                                <div className="flex items-center text-brown-dark text-xs font-sans uppercase tracking-widest font-bold">
+                                <div className="flex items-center text-brown-dark text-xs font-sans uppercase tracking-wider font-bold">
                                     <Calendar className="w-3.5 h-3.5 mr-2 text-bronze" />
                                     {(client.dateOfBirth || client.birthDate) ? new Date(client.dateOfBirth || client.birthDate || '').toLocaleDateString('en-US', {
                                         day: 'numeric', month: 'long', year: 'numeric'
                                     }) : 'Unknown'}
                                 </div>
                                 {(client.timeOfBirth || client.birthTime) && (
-                                    <div className="hidden xl:flex items-center text-brown-dark text-xs font-sans uppercase tracking-widest font-bold">
-                                        <span className="text-bronze mr-2">⏰</span>
+                                    <div className="hidden xl:flex items-center text-brown-dark text-xs font-sans uppercase tracking-wider font-bold">
+                                        <Clock className="w-3.5 h-3.5 mr-2 text-bronze" />
                                         {client.timeOfBirth || client.birthTime}
                                     </div>
                                 )}
                                 {(client.phone || client.phonePrimary) && (
-                                    <div className="hidden 2xl:flex items-center text-brown-dark text-xs font-sans uppercase tracking-widest font-bold">
-                                        <span className="text-bronze mr-2">📞</span>
+                                    <div className="hidden 2xl:flex items-center text-brown-dark text-xs font-sans uppercase tracking-wider font-bold">
+                                        <Phone className="w-3.5 h-3.5 mr-2 text-bronze" />
                                         {client.phone || client.phonePrimary}
                                     </div>
                                 )}
@@ -105,9 +105,9 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
                         {/* 3. Right Side: Indicators */}
                         <div className="flex items-center gap-6">
                             <div className="hidden md:block text-right">
-                                <span className="block text-[8px] font-black uppercase tracking-[0.3em] text-bronze-dark mb-1">Soul Signature</span>
+                                <span className="block text-[10px] font-black uppercase tracking-[0.3em] text-bronze-dark mb-1">Moon Sign</span>
                                 <span className="text-xs font-serif font-bold text-brown-dark">
-                                    {client.rashi} Rashi
+                                    {client.rashi}
                                 </span>
                             </div>
                             <div className="flex items-center gap-2 px-4 py-2 bg-parchment rounded-full border border-antique group-hover:border-gold-primary/30 transition-all">
@@ -130,7 +130,7 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
                                 </button>
                                 <button
                                     className="p-2.5 rounded-xl bg-white border border-antique text-muted hover:text-red-600 hover:border-red-200 shadow-sm transition-all"
-                                    title="Purge Record"
+                                    title="Delete"
                                     aria-label={`Delete ${client.fullName || client.firstName || 'client'}`}
                                     onClick={(e) => {
                                         e.stopPropagation();

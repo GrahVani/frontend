@@ -6,11 +6,10 @@ export default function NotFound() {
       <div className="max-w-lg w-full text-center space-y-6 py-20">
         <div className="text-7xl font-serif text-gold-primary">404</div>
         <h1 className="text-3xl font-serif font-bold text-ink">
-          Lost in the Cosmos
+          Page Not Found
         </h1>
         <p className="text-secondary text-sm max-w-md mx-auto">
-          The celestial path you seek does not exist in our star maps.
-          Perhaps the stars have realigned since you last visited.
+          The page you are looking for does not exist or has been moved.
         </p>
         <Link
           href="/dashboard"

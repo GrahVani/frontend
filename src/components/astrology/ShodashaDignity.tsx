@@ -77,7 +77,7 @@ const VARGAS = [
     { id: 'D2', weight: 2, label: 'Hora', description: 'Wealth, prosperity and family' },
     { id: 'D3', weight: 4, label: 'Drekkana', description: 'Siblings, courage and enterprise' },
     { id: 'D7', weight: 5, label: 'Saptamsha', description: 'Children and grandchildren' },
-    { id: 'D9', weight: 5, label: 'Navamsha', description: 'Marriage, strength and internal soul' },
+    { id: 'D9', weight: 5, label: 'Navamsha', description: 'Marriage, strength and inner nature' },
     { id: 'D10', weight: 4, label: 'Dashamsha', description: 'Profession, success and public image' },
     { id: 'D12', weight: 4, label: 'Dwadashamsha', description: 'Parents and lineage' },
     { id: 'D16', weight: 2, label: 'Shodashamsha', description: 'Conveyances, comforts and luxuries' },

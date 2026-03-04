@@ -789,14 +789,14 @@ export default function VedicDashasPage() {
                             </div>
                             <button
                                 onClick={() => setShowDebugPanel(false)}
-                                className="text-white/40 hover:text-white transition-colors"
+                                className="text-white/60 hover:text-white transition-colors"
                             >
                                 <ChevronDown className="w-4 h-4" />
                             </button>
                         </div>
 
                         <div className="p-3 space-y-3 max-h-[60vh] overflow-y-auto">
-                            <div className="text-[10px] text-white/40 font-mono mb-2">
+                            <div className="text-[10px] text-white/60 font-mono mb-2">
                                 Client: {clientDetails?.id?.slice(0, 8)}... | Sys: {selectedDashaType}
                             </div>
 
@@ -852,7 +852,7 @@ function DashaDebugRow({
         if (isLoading || isFetching) return <Loader2 className="w-4 h-4 text-yellow-400 animate-spin" />;
         if (isError) return <XCircle className="w-4 h-4 text-red-400" />;
         if (data) return <CheckCircle className="w-4 h-4 text-green-400" />;
-        return <Database className="w-4 h-4 text-white/40" />;
+        return <Database className="w-4 h-4 text-white/60" />;
     };
 
     const getStatusText = () => {
@@ -898,7 +898,7 @@ function DashaDebugRow({
                 </div>
                 <div className="flex items-center gap-2">
                     <span className="text-xs text-white/50 font-mono">{getStatusText()}</span>
-                    {isExpanded ? <ChevronUp className="w-4 h-4 text-white/40" /> : <ChevronDown className="w-4 h-4 text-white/40" />}
+                    {isExpanded ? <ChevronUp className="w-4 h-4 text-white/60" /> : <ChevronDown className="w-4 h-4 text-white/60" />}
                 </div>
             </button>
 
@@ -918,7 +918,7 @@ function DashaDebugRow({
                         </pre>
                     </div>
                     {data && (
-                        <div className="mt-2 flex flex-col gap-1 text-[10px] text-white/40 font-mono">
+                        <div className="mt-2 flex flex-col gap-1 text-[10px] text-white/60 font-mono">
                             <div className="flex gap-2">
                                 <span>📊 Data size: {JSON.stringify(data).length} bytes</span>
                                 <span>|</span>

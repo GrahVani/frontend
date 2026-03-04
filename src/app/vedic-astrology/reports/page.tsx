@@ -29,7 +29,7 @@ export default function VedicReportsPage() {
     if (!clientDetails) return null;
 
     return (
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-10">
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-10">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>

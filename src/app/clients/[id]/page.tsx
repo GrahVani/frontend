@@ -297,7 +297,7 @@ export default function ClientProfilePage() {
             <div className="fixed inset-0 pt-[64px] flex items-center justify-center bg-parchment">
                 <div className="text-center">
                     <Loader2 className="w-8 h-8 text-gold-primary mx-auto mb-4 animate-spin" />
-                    <p className="font-serif text-xl text-muted">Loading soul record...</p>
+                    <p className="font-serif text-xl text-muted">Loading client...</p>
                 </div>
             </div>
         );
@@ -602,7 +602,7 @@ export default function ClientProfilePage() {
                             <h2 className="text-2xl font-serif text-ink font-bold mb-6">Family Connections</h2>
                             <div className="animate-in slide-in-from-bottom-4 duration-500">
                                 <div className="flex items-center justify-between mb-8">
-                                    <p className="text-muted">Manage known connections for this soul record.</p>
+                                    <p className="text-muted">Manage known connections for this client.</p>
                                     <button
                                         onClick={() => setIsAddingRel(!isAddingRel)}
                                         className="px-5 py-2.5 bg-gold-primary text-white rounded-lg font-semibold text-sm hover:bg-gold-dark transition-colors flex items-center gap-2"

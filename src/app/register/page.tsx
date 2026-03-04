@@ -31,7 +31,7 @@ export default function RegisterPage() {
         setError(null);
 
         if (password !== confirmPassword) {
-            setError("Passwords do not match. The cosmic harmony is disrupted.");
+            setError("Passwords do not match. Please try again.");
             setLoading(false);
             return;
         }
@@ -41,7 +41,7 @@ export default function RegisterPage() {
 
             // On success, redirect to login
             router.push("/login?registered=true");
-        } catch (err: unknown) {            setError(err instanceof Error ? err.message : "Failed to initiate registration. Please check your celestial alignment.");
+        } catch (err: unknown) {            setError(err instanceof Error ? err.message : "Registration failed. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -85,11 +85,11 @@ export default function RegisterPage() {
                         >
                             <div className="flex flex-col items-center mb-8">
                                 <h1 className="text-2xl font-serif font-bold tracking-[0.15em] text-ink uppercase">
-                                    Join the Order
+                                    Create Account
                                 </h1>
                                 <div className="flex items-center gap-2 mt-2 opacity-80">
                                     <div className="h-[1px] w-6 bg-gold-dark" />
-                                    <span className="text-[9px] font-serif uppercase tracking-widest text-gold-dark">Initiate Your Celestial Account</span>
+                                    <span className="text-[9px] font-serif uppercase tracking-widest text-gold-dark">Professional Astrology Platform</span>
                                     <div className="h-[1px] w-6 bg-gold-dark" />
                                 </div>
                             </div>
@@ -98,7 +98,7 @@ export default function RegisterPage() {
                                 <div className="space-y-4">
                                     {/* Name */}
                                     <div className="relative group">
-                                        <label className="block text-[10px] font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
+                                        <label className="block text-xs font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
                                             Full Name
                                         </label>
                                         <div className="relative flex items-center">
@@ -108,7 +108,7 @@ export default function RegisterPage() {
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
                                                 className="w-full pl-8 pr-2 py-1.5 bg-transparent border-b-2 border-gold-primary/40 text-ink font-serif placeholder-muted focus:outline-none focus:border-gold-dark transition-colors"
-                                                placeholder="Astro Master"
+                                                placeholder="Your full name"
                                                 required
                                             />
                                         </div>
@@ -116,8 +116,8 @@ export default function RegisterPage() {
 
                                     {/* Email */}
                                     <div className="relative group">
-                                        <label className="block text-[10px] font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
-                                            Celestial Email
+                                        <label className="block text-xs font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
+                                            Email Address
                                         </label>
                                         <div className="relative flex items-center">
                                             <Mail className="absolute left-0 w-4 h-4 text-gold-primary" />
@@ -126,7 +126,7 @@ export default function RegisterPage() {
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
                                                 className="w-full pl-8 pr-2 py-1.5 bg-transparent border-b-2 border-gold-primary/40 text-ink font-serif placeholder-muted focus:outline-none focus:border-gold-dark transition-colors"
-                                                placeholder="seeker@cosmos.com"
+                                                placeholder="you@example.com"
                                                 required
                                             />
                                         </div>
@@ -135,8 +135,8 @@ export default function RegisterPage() {
                                     {/* Password */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div className="relative group">
-                                            <label className="block text-[10px] font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
-                                                Secret Key
+                                            <label className="block text-xs font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
+                                                Password
                                             </label>
                                             <div className="relative flex items-center">
                                                 <Lock className="absolute left-0 w-4 h-4 text-gold-primary" />
@@ -152,8 +152,8 @@ export default function RegisterPage() {
                                         </div>
 
                                         <div className="relative group">
-                                            <label className="block text-[10px] font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
-                                                Confirm Key
+                                            <label className="block text-xs font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
+                                                Confirm Password
                                             </label>
                                             <div className="relative flex items-center">
                                                 <ShieldCheck className="absolute left-0 w-4 h-4 text-gold-primary" />
@@ -179,7 +179,7 @@ export default function RegisterPage() {
                                     <motion.div
                                         initial={{ opacity: 0, x: -10 }}
                                         animate={{ opacity: 1, x: [0, -10, 10, -5, 5, 0] }}
-                                        className="text-red-900/80 text-[10px] font-serif bg-red-50/50 p-2 rounded border border-red-100/50 text-center"
+                                        className="text-red-900/80 text-xs font-serif bg-red-50/50 p-2 rounded border border-red-100/50 text-center"
                                     >
                                         {error}
                                     </motion.div>
@@ -187,8 +187,8 @@ export default function RegisterPage() {
 
                                 <div className="w-full flex justify-center pt-4">
                                     <PremiumButton
-                                        topText={loading ? 'Forging' : 'Register'}
-                                        bottomText={loading ? 'Identity...' : 'Account'}
+                                        topText={loading ? 'Creating' : 'Create'}
+                                        bottomText={loading ? 'Account...' : 'Account'}
                                         type="submit"
                                         disabled={loading}
                                     />
@@ -196,7 +196,7 @@ export default function RegisterPage() {
                             </form>
 
                             <div className="mt-8">
-                                <p className="text-[10px] font-serif text-muted italic">
+                                <p className="text-xs font-serif text-muted italic">
                                     Already have an account? <Link href="/login" className="font-bold text-gold-dark hover:underline">Return to Login</Link>
                                 </p>
                             </div>

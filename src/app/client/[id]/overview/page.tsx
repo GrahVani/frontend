@@ -34,7 +34,7 @@ export default function ClientOverviewPage() {
     };
 
     return (
-        <div className="space-y-8 max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="space-y-6 max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
 
             {/* Top Workspace Header (Brief Summary) */}
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 bg-softwhite/5 border border-header-border/20 p-6 rounded-3xl backdrop-blur-md">
@@ -45,9 +45,9 @@ export default function ClientOverviewPage() {
                     <div>
                         <div className="flex items-center gap-3">
                             <h1 className="text-3xl font-serif text-white font-bold tracking-tight">{displayClient.name}</h1>
-                            <span className="bg-active-glow/10 text-active-glow text-[10px] px-2 py-0.5 rounded-full border border-active-glow/30 font-bold uppercase tracking-widest">Active Soul</span>
+                            <span className="bg-active-glow/10 text-active-glow text-[10px] px-2 py-0.5 rounded-full border border-active-glow/30 font-bold uppercase tracking-widest">Active</span>
                         </div>
-                        <p className="text-header-border text-xs font-serif italic mt-1">Recording the cosmic journey of {displayClient.name}</p>
+                        <p className="text-header-border text-xs font-serif italic mt-1">Astrological profile for {displayClient.name}</p>
                     </div>
                 </div>
 
@@ -63,7 +63,7 @@ export default function ClientOverviewPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                {/* LEFT: Soul Meta Info */}
+                {/* LEFT: Client Meta Info */}
                 <div className="lg:col-span-4 space-y-8">
 
                     {/* AVATAR DATA CARD */}
@@ -176,7 +176,7 @@ function BirthDatum({ icon: Icon, label, value, subValue }: { icon: React.Elemen
                 <Icon className="w-5 h-5" />
             </div>
             <div>
-                <p className="text-[10px] font-bold tracking-widest uppercase text-white/30">{label}</p>
+                <p className="text-[10px] font-bold tracking-widest uppercase text-white/60">{label}</p>
                 <p className="font-serif text-lg font-bold text-white/90">{value}</p>
                 {subValue && <p className="text-[10px] text-header-border font-serif italic">{subValue}</p>}
             </div>
@@ -187,7 +187,7 @@ function BirthDatum({ icon: Icon, label, value, subValue }: { icon: React.Elemen
 function SignatureCard({ label, value, highlight = false }: { label: string, value: string, highlight?: boolean }) {
     return (
         <div className={`p-4 rounded-2xl border transition-all ${highlight ? 'bg-active-glow/10 border-active-glow/40 shadow-[0_0_20px_rgba(255,210,125,0.1)]' : 'bg-white/5 border-white/10'}`}>
-            <p className="text-[9px] uppercase tracking-widest text-white/30 mb-1 font-bold">{label}</p>
+            <p className="text-[9px] uppercase tracking-widest text-white/60 mb-1 font-bold">{label}</p>
             <p className={`font-serif text-lg font-extrabold ${highlight ? 'text-active-glow' : 'text-white/80'}`}>{value}</p>
         </div>
     );
@@ -198,7 +198,7 @@ function TimelineMark({ label, value, year, active = false }: { label: string, v
         <div className={`space-y-1 ${active ? 'opacity-100 scale-110' : 'opacity-40'}`}>
             <p className="text-[8px] font-black tracking-tighter uppercase text-header-border">{label}</p>
             <p className="text-xs font-serif font-bold text-white">{value}</p>
-            <p className="text-[9px] text-white/40 font-bold">{year}</p>
+            <p className="text-[9px] text-white/60 font-bold">{year}</p>
         </div>
     );
 }
@@ -210,7 +210,7 @@ function ActionCard({ title, desc, href, icon: Icon }: { title: string, desc: st
                 <Icon className="w-6 h-6" />
             </div>
             <h4 className="text-lg font-serif font-bold text-white mb-2">{title}</h4>
-            <p className="text-[11px] text-white/40 leading-relaxed font-light">{desc}</p>
+            <p className="text-[11px] text-white/60 leading-relaxed font-light">{desc}</p>
         </Link>
     );
 }

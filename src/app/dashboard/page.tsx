@@ -76,9 +76,9 @@ function ActiveSessionsWidget() {
 
 export default function Dashboard() {
     return (
-        <div className="max-w-7xl mx-auto space-y-8">
+        <div className="max-w-7xl mx-auto space-y-6">
             <div>
-                <h1 className="text-4xl font-serif text-ink font-bold mb-2">Dashboard</h1>
+                <h1 className="text-3xl font-serif text-ink font-bold mb-2">Dashboard</h1>
                 <p className="text-muted-refined font-serif italic">Your astrology command center</p>
             </div>
 

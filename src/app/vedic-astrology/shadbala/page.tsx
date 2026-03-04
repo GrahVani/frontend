@@ -231,7 +231,7 @@ export default function ShadbalaPage() {
             ) : data?.planets ? (
                 <ShadbalaDashboard displayData={data} rawResponse={rawResponse} />
             ) : (
-                <div className="p-10 bg-parchment/30 border border-antique rounded-3xl text-center lg:py-32">
+                <div className="p-10 bg-parchment/30 border border-antique rounded-2xl text-center lg:py-16">
                     <Orbit className="w-10 h-10 text-primary mx-auto mb-4" />
                     <p className="text-sm text-primary">No Shadbala data found for this chart.</p>
                 </div>

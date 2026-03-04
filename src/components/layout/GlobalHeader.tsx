@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Settings, Clock, User, ChevronDown, Menu } from "lucide-react";
-import GoldenButton from "@/components/GoldenButton";
+import Button from "@/components/ui/Button";
 import { useAstrologerStore } from "@/store/useAstrologerStore";
 import { useAuth } from "@/context/AuthContext";
 import { LogOut } from "lucide-react";
@@ -156,8 +156,8 @@ export default function GlobalHeader() {
                                         <p className="font-serif font-bold text-lg leading-tight truncate">
                                             {user?.name || user?.email}
                                         </p>
-                                        <p className="text-active-glow/70 text-xs tracking-widest mt-1 truncate">
-                                            {user?.role || 'Astro Seeker'} • {user?.email}
+                                        <p className="text-active-glow/70 text-xs tracking-wide mt-1 truncate">
+                                            {user?.role || 'Astrologer'} • {user?.email}
                                         </p>
                                     </div>
                                     <div className="p-2">
@@ -168,7 +168,7 @@ export default function GlobalHeader() {
                                             onClick={() => setIsProfileOpen(false)}
                                         >
                                             <User className="w-4 h-4 text-header-border" />
-                                            <span>My Journey</span>
+                                            <span>My Profile</span>
                                         </Link>
                                         <Link
                                             href="/settings"
@@ -177,7 +177,7 @@ export default function GlobalHeader() {
                                             onClick={() => setIsProfileOpen(false)}
                                         >
                                             <Settings className="w-4 h-4 text-header-border" />
-                                            <span>Sanctum Settings</span>
+                                            <span>Settings</span>
                                         </Link>
                                         <div className="h-[1px] bg-header-border/10 my-2 mx-2" role="separator" />
                                         <button
@@ -189,7 +189,7 @@ export default function GlobalHeader() {
                                             className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-700 hover:bg-red-50 rounded-xl transition-colors font-bold"
                                         >
                                             <LogOut className="w-4 h-4" />
-                                            <span>Leave Sanctum</span>
+                                            <span>Sign Out</span>
                                         </button>
                                     </div>
                                 </div>
@@ -284,8 +284,8 @@ function GlobalSettingsModal({ isOpen, onClose, router }: { isOpen: boolean; onC
                 {/* Header */}
                 <div className="p-8 bg-gradient-to-r from-copper-dark to-mahogany flex items-center justify-between shrink-0">
                     <div>
-                        <h2 id={settingsTitleId} className="text-2xl font-serif text-white font-bold tracking-wide">Global Preference Matrix</h2>
-                        <p className="text-active-glow/80 text-xs uppercase tracking-widest mt-1">System-wide Astronomical Constants</p>
+                        <h2 id={settingsTitleId} className="text-2xl font-serif text-white font-bold tracking-wide">Global Settings</h2>
+                        <p className="text-active-glow/80 text-xs uppercase tracking-widest mt-1">Default preferences for charts and calculations</p>
                     </div>
                     <button onClick={onClose} aria-label="Close settings" className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all">
                         <ChevronDown className="w-6 h-6 rotate-90" />
@@ -336,12 +336,9 @@ function GlobalSettingsModal({ isOpen, onClose, router }: { isOpen: boolean; onC
                         <button onClick={onClose} aria-label="Cancel settings changes" className="px-6 py-3 rounded-xl text-bronze text-xs font-bold uppercase tracking-wider hover:bg-bronze/5 transition-colors">
                             Cancel
                         </button>
-                        <GoldenButton
-                            topText={isSaving ? "Saving" : "Update"}
-                            bottomText={isSaving ? "..." : "Matrix"}
-                            onClick={handleSave}
-                            disabled={isSaving}
-                        />
+                        <Button variant="primary" onClick={handleSave} disabled={isSaving} loading={isSaving}>
+                            Save Changes
+                        </Button>
                     </div>
                 </div>
             </div>

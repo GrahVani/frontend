@@ -78,7 +78,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${spectral.variable} ${playfair.variable} ${inter.variable} antialiased`}>
+      <body className={`${spectral.variable} ${playfair.variable} ${inter.variable} antialiased flex flex-col min-h-screen`}>
         <QueryProvider>
           <AuthProvider>
             <VedicClientProvider>
@@ -90,7 +90,7 @@ export default function RootLayout({
                   Skip to main content
                 </a>
                 <GlobalHeader />
-                <main id="main-content">
+                <main id="main-content" className="flex-1">
                   {children}
                 </main>
               </ToastProvider>

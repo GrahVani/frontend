@@ -629,9 +629,9 @@ interface PlanetIntelEntry {
 export const PLANET_INTEL: Record<string, PlanetIntelEntry> = {
     Sun: {
         nature: 'Malefic (Natural)',
-        themes: ['Authority', 'Soul', 'Father', 'Government'],
+        themes: ['Authority', 'Vitality', 'Father', 'Government'],
         advice: 'Period of self-realization and recognition. Focus on discipline and leadership.',
-        tip: 'Best period for soul-searching and starting new ventures. Avoid excessive ego.'
+        tip: 'Best period for self-reflection and starting new ventures. Avoid excessive ego.'
     },
     Moon: {
         nature: 'Benefic (Natural)',
