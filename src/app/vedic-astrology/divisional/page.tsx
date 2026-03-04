@@ -12,6 +12,7 @@ import ChartCustomizationPanel from '@/components/astrology/ChartCustomizationPa
 const DivisionalChartZoomModal = dynamic(() => import('@/components/astrology/DivisionalChartZoomModal'));
 const DivisionalChartInsights = dynamic(() => import('@/components/astrology/DivisionalChartInsights'));
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/design-tokens/typography";
 import { clientApi, CHART_METADATA } from '@/lib/api';
 import { useSystemCapabilities } from "@/hooks/queries/useCalculations";
 
@@ -213,7 +214,7 @@ export default function VedicDivisionalPage() {
     if (!clientDetails) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-                <p className="font-serif text-xl text-bronze">Please select a client to view divisional charts</p>
+                <p className={TYPOGRAPHY.sectionTitle}>Please select a client to view divisional charts</p>
             </div>
         );
     }
@@ -223,7 +224,7 @@ export default function VedicDivisionalPage() {
             {/* Header */}
             <header className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-serif font-bold text-primary">
+                    <h1 className={TYPOGRAPHY.sectionTitle}>
                         Shodashvarga Matrix
                     </h1>
                     <div className="flex items-center gap-2">
@@ -292,7 +293,7 @@ export default function VedicDivisionalPage() {
             {isLoadingCharts && Object.keys(processedCharts).length === 0 && (
                 <div className="flex flex-col items-center justify-center py-20">
                     <Loader2 className="w-10 h-10 text-header-border animate-spin mb-4" />
-                    <p className="font-serif text-bronze">Loading divisional charts...</p>
+                    <p className={TYPOGRAPHY.sectionTitle}>Loading divisional charts...</p>
                 </div>
             )}
 
@@ -344,9 +345,9 @@ export default function VedicDivisionalPage() {
                             >
                                 {/* Header */}
                                 <div className="flex justify-between items-start mb-2">
-                                    <div className="flex-1 min-w-0">
-                                        <h3 className="font-serif font-bold text-ink text-sm truncate">{chartType} - {meta.name}</h3>
-                                        <p className="text-[9px] uppercase tracking-wider text-bronze truncate">{meta.desc}</p>
+                                    <div className="flex-1 min-w-0 flex flex-col items-start justify-start">
+                                        <h3 className={cn(TYPOGRAPHY.value, "truncate text-primary")}>{chartType} - {meta.name}</h3>
+                                        <p className={cn(TYPOGRAPHY.label, "truncate")}>{meta.desc}</p>
                                     </div>
 
                                     <div className="flex items-center gap-1 ml-2">
@@ -442,10 +443,10 @@ export default function VedicDivisionalPage() {
                                                                 >
                                                                     <div className="flex items-center gap-2">
                                                                         <span className={cn(
-                                                                            "font-bold",
-                                                                            isCurrentChart ? "text-header-border" : "text-ink"
+                                                                            TYPOGRAPHY.value,
+                                                                            isCurrentChart ? "text-accent-gold" : "text-primary"
                                                                         )}>{chart}</span>
-                                                                        <span className="text-[9px] text-bronze/60">{CHART_METADATA[chart]?.name}</span>
+                                                                        <span className={TYPOGRAPHY.subValue}>{CHART_METADATA[chart]?.name}</span>
                                                                     </div>
                                                                     {isCurrentChart ? (
                                                                         <span className="text-[9px] bg-header-border/20 text-bronze px-1.5 py-0.5 rounded-full font-bold">Current</span>
@@ -511,17 +512,17 @@ export default function VedicDivisionalPage() {
                                 {/* House Details Panel - Stays open independently for each chart */}
                                 {isHouseDetailsOpen && chartData && (
                                     <div className="mt-3 pt-3 border-t border-header-border/10 space-y-1">
-                                        <div className="text-[10px] font-bold uppercase text-bronze/60 mb-2">House-wise Positions</div>
+                                        <div className={TYPOGRAPHY.label}>House-wise Positions</div>
                                         <div className="grid grid-cols-3 gap-1 text-[9px]">
                                             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(h => (
                                                 <div key={h} className={cn(
                                                     "px-1.5 py-1 rounded",
                                                     houseData[h]?.planets.length ? "bg-header-border/10" : "bg-gray-50"
                                                 )}>
-                                                    <span className="font-bold text-ink">H{h}</span>
-                                                    <span className="ml-1 text-bronze">{houseData[h]?.signName?.substring(0, 3)}</span>
+                                                    <span className="font-bold text-primary">H{h}</span>
+                                                    <span className="ml-1 text-primary">{houseData[h]?.signName?.substring(0, 3)}</span>
                                                     {houseData[h]?.planets.length > 0 && (
-                                                        <div className="text-[8px] text-ink mt-0.5">
+                                                        <div className="text-[10px] text-primary mt-0.5 font-sans">
                                                             {houseData[h].planets.join(', ')}
                                                         </div>
                                                     )}
@@ -533,9 +534,9 @@ export default function VedicDivisionalPage() {
 
                                 {/* Quick Stats - Ascendant Info (only when house details closed) */}
                                 {chartData && !isHouseDetailsOpen && (
-                                    <div className="mt-2 flex items-center justify-between text-[9px] text-bronze">
-                                        <span>Asc: <strong className="text-ink">{signIdToName[ascendant] || 'Aries'}</strong></span>
-                                        <span className="text-bronze/50">{planets.filter(p => p.isRetro).length > 0 ? `${planets.filter(p => p.isRetro).length} Retro` : 'No Retro'}</span>
+                                    <div className={cn(TYPOGRAPHY.subValue, "flex items-center justify-between")}>
+                                        <span>Asc: <strong className="text-primary">{signIdToName[ascendant] || 'Aries'}</strong></span>
+                                        <span className="text-primary/70">{planets.filter(p => p.isRetro).length > 0 ? `${planets.filter(p => p.isRetro).length} Retro` : 'No Retro'}</span>
                                     </div>
                                 )}
 
@@ -569,7 +570,7 @@ export default function VedicDivisionalPage() {
                         {/* Chart Selector Dropdown - Opens UPWARDS now */}
                         {showAddChartSelector && (
                             <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-[60] bg-white border border-header-border/30 rounded-xl shadow-2xl py-2 min-w-[280px] max-h-60 overflow-y-auto">
-                                <div className="px-3 py-1 text-[10px] text-bronze/60 uppercase font-bold border-b border-header-border/10 mb-1">
+                                <div className={cn(TYPOGRAPHY.label, "px-3 py-1 border-b border-header-border/10 mb-1")}>
                                     Select Chart to Add
                                 </div>
                                 <div className="grid grid-cols-2 gap-1 px-2">
@@ -579,8 +580,8 @@ export default function VedicDivisionalPage() {
                                             onClick={() => addChart(chart)}
                                             className="px-3 py-2 text-left text-xs hover:bg-header-border/10 rounded-lg flex flex-col"
                                         >
-                                            <span className="font-bold text-ink">{chart}</span>
-                                            <span className="text-[9px] text-bronze/60">{CHART_METADATA[chart]?.name || 'Chart'}</span>
+                                            <span className={TYPOGRAPHY.value}>{chart}</span>
+                                            <span className={TYPOGRAPHY.subValue}>{CHART_METADATA[chart]?.name || 'Chart'}</span>
                                         </button>
                                     ))}
                                 </div>

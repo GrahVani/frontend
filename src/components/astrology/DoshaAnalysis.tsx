@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -15,6 +15,7 @@ import {
     Moon
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { clientApi } from '@/lib/api';
 import DebugConsole from '../debug/DebugConsole';
 
@@ -77,9 +78,9 @@ export default function DoshaAnalysis({ clientId, doshaType, ayanamsa = 'lahiri'
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center p-12 bg-parchment/30 rounded-2xl border border-antique">
+            <div className="flex flex-col items-center justify-center p-12 bg-parchment/30 rounded-2xl border border-border-warm">
                 <Loader2 className="w-8 h-8 text-gold-primary animate-spin mb-4" />
-                <p className="text-sm font-serif text-secondary italic">Consulting Stellar records...</p>
+                <p className={cn(TYPOGRAPHY.subValue, "text-sm italic")}>Consulting Stellar records...</p>
             </div>
         );
     }
@@ -89,8 +90,8 @@ export default function DoshaAnalysis({ clientId, doshaType, ayanamsa = 'lahiri'
             <div className="space-y-4 p-6">
                 <div className="p-6 bg-red-50 border border-red-100 rounded-2xl text-center">
                     <AlertTriangle className="w-8 h-8 text-red-500 mx-auto mb-3" />
-                    <h3 className="text-red-900 font-bold font-serif mb-1">Analysis Unavailable</h3>
-                    <p className="text-xs text-red-600">{error || 'Data could not be retrieved'}</p>
+                    <h2 className={cn(TYPOGRAPHY.sectionTitle, "mb-1 text-red-900")}>Analysis Unavailable</h2>
+                    <p className={cn(TYPOGRAPHY.subValue, "text-red-600")}>{error || 'Data could not be retrieved'}</p>
                 </div>
                 {error && <DebugConsole title={`Dosha Analysis Error: ${doshaType}`} data={{ error, doshaType, ayanamsa }} />}
             </div>
@@ -113,7 +114,7 @@ export default function DoshaAnalysis({ clientId, doshaType, ayanamsa = 'lahiri'
     // Fallback for types not yet fully implemented with custom views
     return (
         <div className="space-y-6 p-6">
-            <div className="bg-softwhite border border-antique rounded-2xl p-6">
+            <div className="bg-softwhite border border-border-warm rounded-2xl p-6">
                 <div className="flex items-center gap-3 mb-4">
                     <div className="p-2 bg-gold-primary/10 rounded-lg">
                         <Zap className="w-5 h-5 text-accent-gold" />
@@ -136,8 +137,8 @@ function AngarakDoshaView({ data, className }: { data: AngarakDoshaData; classNa
             <div className="space-y-4 p-6">
                 <div className={cn("bg-green-50 border border-green-100 rounded-2xl p-6 text-center", className)}>
                     <CheckCircle2 className="w-10 h-10 text-green-500 mx-auto mb-3" />
-                    <h3 className="text-green-900 font-serif font-bold text-lg">Dosha Absent</h3>
-                    <p className="text-sm text-green-700 mt-1">Mars and Rahu are harmoniously placed. No Angarak Dosha signature found.</p>
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-green-900")}>Dosha Absent</h3>
+                    <p className={cn(TYPOGRAPHY.value, "text-green-700 mt-1")}>Mars and Rahu are harmoniously placed. No Angarak Dosha signature found.</p>
                 </div>
                 <DebugConsole title="Angarak Dosha Raw Data (Absent)" data={data} />
             </div>
@@ -149,7 +150,7 @@ function AngarakDoshaView({ data, className }: { data: AngarakDoshaData; classNa
     return (
         <div className={cn("space-y-6 p-6", className)}>
             {/* 1. Header & Severity */}
-            <div className="bg-softwhite border border-antique rounded-2xl p-6 shadow-sm overflow-hidden relative">
+            <div className="bg-softwhite border border-border-warm rounded-2xl p-6 shadow-sm overflow-hidden relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full -mr-16 -mt-16 blur-3xl" />
 
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -158,8 +159,8 @@ function AngarakDoshaView({ data, className }: { data: AngarakDoshaData; classNa
                             <Flame className="w-8 h-8" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-serif font-bold text-ink">Angarak Dosha</h2>
-                            <p className="text-sm text-red-700 font-medium">Mars-Rahu Conjunction in House {data.placement?.house}</p>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl")}>Angarak Dosha</h2>
+                            <p className={cn(TYPOGRAPHY.value, "text-sm text-red-700")}>Mars-Rahu Conjunction in House {data.placement?.house}</p>
                         </div>
                     </div>
 
@@ -181,20 +182,20 @@ function AngarakDoshaView({ data, className }: { data: AngarakDoshaData; classNa
 
             {/* 2. Impact Matrix */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-softwhite border border-antique rounded-2xl p-5">
-                    <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-sm uppercase">
+                <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-4 flex items-center gap-2 text-sm uppercase")}>
                         <Target className="w-4 h-4 text-red-600" /> Focus Areas
                     </h3>
                     <div className="flex flex-wrap gap-2">
                         {house_effects?.areas?.map((area: string, i: number) => (
-                            <span key={i} className="px-3 py-1 bg-parchment border border-antique rounded-lg text-[10px] font-medium text-ink">
+                            <span key={i} className="px-3 py-1 bg-parchment border border-border-warm rounded-lg text-[10px] font-medium text-ink">
                                 {area}
                             </span>
                         ))}
                     </div>
                 </div>
-                <div className="bg-softwhite border border-antique rounded-2xl p-5">
-                    <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-sm uppercase">
+                <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-4 flex items-center gap-2 text-sm uppercase")}>
                         <AlertTriangle className="w-4 h-4 text-orange-500" /> Specific Effects
                     </h3>
                     <ul className="space-y-2">
@@ -254,8 +255,8 @@ function SadeSatiView({ data, className }: { data: SadeSatiData; className?: str
             <div className="space-y-4 p-6">
                 <div className={cn("bg-blue-50 border border-blue-100 rounded-2xl p-6 text-center", className)}>
                     <CheckCircle2 className="w-10 h-10 text-blue-500 mx-auto mb-3" />
-                    <h3 className="text-blue-900 font-serif font-bold text-lg">Sade Sati Inactive</h3>
-                    <p className="text-sm text-blue-700 mt-1">Transiting Saturn is currently not in the 12th, 1st, or 2nd from your Natal Moon.</p>
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-blue-900")}>Sade Sati Inactive</h3>
+                    <p className={cn(TYPOGRAPHY.value, "text-blue-700 mt-1")}>Transiting Saturn is currently not in the 12th, 1st, or 2nd from your Natal Moon.</p>
                 </div>
                 <DebugConsole title="Sade Sati Raw Data (Inactive)" data={data} />
             </div>
@@ -271,8 +272,8 @@ function SadeSatiView({ data, className }: { data: SadeSatiData; className?: str
                         <Moon className="w-8 h-8" />
                     </div>
                     <div>
-                        <h2 className="text-2xl font-serif font-bold">Sade Sati Analysis</h2>
-                        <p className="text-sm text-indigo-300 font-medium">Saturn Transiting {data.phase}</p>
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl text-white")}>Sade Sati Analysis</h2>
+                        <p className={cn(TYPOGRAPHY.value, "text-sm text-indigo-300")}>Saturn Transiting {data.phase}</p>
                     </div>
                 </div>
                 <div className="mt-6 p-4 bg-white/5 border border-white/10 rounded-xl">
@@ -283,21 +284,21 @@ function SadeSatiView({ data, className }: { data: SadeSatiData; className?: str
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="bg-softwhite border border-antique rounded-2xl p-5">
-                    <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-sm uppercase">
+                <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-4 flex items-center gap-2 text-sm uppercase")}>
                         <Info className="w-4 h-4 text-indigo-600" /> Details
                     </h3>
                     <p className="text-[11px] text-secondary leading-relaxed">{data.description}</p>
                 </div>
-                <div className="bg-softwhite border border-antique rounded-2xl p-5">
-                    <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-sm uppercase">
+                <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-4 flex items-center gap-2 text-sm uppercase")}>
                         <CheckCircle2 className="w-4 h-4 text-green-600" /> Recommendations
                     </h3>
                     <ul className="space-y-2">
                         {data.recommendations?.slice(0, 4).map((rec: string, i: number) => (
                             <li key={i} className="text-[11px] text-secondary flex items-start gap-2 leading-tight">
                                 <div className="w-1 h-1 rounded-full bg-indigo-400 mt-1.5 shrink-0" />
-                                {rec.replace(/[🕉️🙏📿💖🪔👴⏸️]/g, '')}
+                                {rec.replace(/[ðŸ•‰ï¸ðŸ™ðŸ“¿ðŸ’–ðŸª”ðŸ‘´â¸ï¸]/g, '')}
                             </li>
                         ))}
                     </ul>
@@ -342,13 +343,13 @@ function DhaiyaView({ data, className }: { data: DhaiyaData; className?: string 
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="bg-softwhite border border-antique rounded-2xl p-5">
+                <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
                     <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-sm uppercase">
                         <Info className="w-4 h-4 text-slate-600" /> Effects
                     </h3>
                     <p className="text-[11px] text-muted leading-relaxed">{data.effects}</p>
                 </div>
-                <div className="bg-softwhite border border-antique rounded-2xl p-5">
+                <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
                     <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-sm uppercase">
                         <Hammer className="w-4 h-4 text-gold-primary" /> Remedies
                     </h3>
@@ -367,3 +368,4 @@ function DhaiyaView({ data, className }: { data: DhaiyaData; className?: string 
         </div>
     );
 }
+

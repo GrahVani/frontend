@@ -27,6 +27,7 @@ import { parseChartData, signIdToName, type ProcessedChartData } from '@/lib/cha
 import VimshottariTreeGrid from '@/components/astrology/VimshottariTreeGrid';
 import { processDashaResponse, RawDashaPeriod } from '@/lib/dasha-utils';
 import BirthPanchanga from '@/components/astrology/BirthPanchanga';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 // Helper for formatting
 const formatDate = (dateStr: string) => {
@@ -149,7 +150,7 @@ export default function VedicOverviewPage() {
     const birthPanchangaData = processedCharts['birth_panchanga_universal']?.chartData;
 
     return (
-        <div className="p-2 w-full min-h-screen animate-in fade-in duration-500">
+        <div className="p-0 w-full min-h-screen animate-in fade-in duration-500">
             {/* Header / Client Context - Removed and moved to Profile Card */}
             {isLoading && (
                 <div className="absolute top-4 right-4 z-50 flex items-center gap-2 px-4 py-2 bg-gold-primary/90 text-white rounded-full font-sans text-xs font-medium shadow-lg animate-in fade-in slide-in-from-top-2">
@@ -162,10 +163,10 @@ export default function VedicOverviewPage() {
                 {/* LEFT COLUMN: D1 & Planetary Details */}
                 <div className="col-span-12 lg:col-span-5 flex flex-col gap-2">
                     {/* D1 Chart Window */}
-                    <div className="border border-antique rounded-lg overflow-hidden shadow-sm">
-                        <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
-                            <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Birth Chart (D1)</h3>
-                            <button onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })} className="text-secondary hover:text-accent-gold transition-colors"><Maximize2 className="w-3 h-3" /></button>
+                    <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm">
+                        <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm flex justify-between items-center">
+                            <h3 className={TYPOGRAPHY.sectionTitle}>Birth Chart (D1)</h3>
+                            <button onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })} className="text-primary hover:text-accent-gold transition-colors"><Maximize2 className="w-3 h-3" /></button>
                         </div>
                         <div className="w-full h-[380px] bg-surface-warm">
                             <ChartWithPopup
@@ -179,9 +180,9 @@ export default function VedicOverviewPage() {
                     </div>
 
                     {/* Planetary Details Window */}
-                    <div className="border border-antique rounded-lg overflow-hidden shadow-sm">
-                        <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
-                            <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Birth Planetary Positions</h3>
+                    <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm">
+                        <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm">
+                            <h3 className={TYPOGRAPHY.sectionTitle}>Birth Planetary Positions</h3>
                         </div>
                         <div className="overflow-x-auto text-[10px] md:text-xs bg-surface-warm">
                             <PlanetaryTable
@@ -194,90 +195,88 @@ export default function VedicOverviewPage() {
                 {/* RIGHT COLUMN: Divisional Charts, Dasha, Profile */}
                 <div className="col-span-12 lg:col-span-7 flex flex-col gap-2">
 
-                    {/* Top Row: Profile & Dasha */}
-                    <div className="grid grid-cols-12 gap-2 auto-rows-fr">
-                        {/* Profile & Info */}
-                        <div className="col-span-12 md:col-span-5 lg:col-span-4 border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
-                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
-                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Client Profile</h3>
+                    {/* Client Identity Bar */}
+                    {clientDetails && (
+                        <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm bg-surface-warm">
+                            <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm">
+                                <h3 className={TYPOGRAPHY.sectionTitle}>Client Profile</h3>
                             </div>
-                            <div className="p-2.5 space-y-2.5 flex-1">
-                                {clientDetails && (
-                                    <div className="space-y-2.5">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-lg bg-gold-primary flex items-center justify-center text-white font-serif font-semibold text-lg shrink-0 shadow-sm">
-                                                {clientDetails.name.charAt(0)}
-                                            </div>
-                                            <div className="min-w-0">
-                                                <div className="font-serif text-md font-bold text-primary leading-tight truncate">{clientDetails.name}</div>
-                                                <div className="font-serif text-[10px] text-primary leading-compact flex flex-wrap gap-x-2 mt-0.5">
-                                                    <span>{formatDate(clientDetails.dateOfBirth)}</span>
-                                                    <span className="text-primary">•</span>
-                                                    <span>{formatTime(clientDetails.timeOfBirth)}</span>
-                                                </div>
-                                                <div className="font-serif text-[10px] text-primary leading-compact truncate mt-0.5 max-w-[150px] ">{clientDetails.placeOfBirth.city}</div>
-                                            </div>
-                                        </div>
-
-
-
-                                        <div className="grid grid-cols-3 gap-1.5">
-                                            <div className="bg-softwhite p-2 rounded-lg border border-antique/30 shadow-sm group hover:border-gold-primary/30 transition-colors">
-                                                <span className="block font-serif text-[9px] font-bold text-primary mb-1">Lagna</span>
-                                                <span className="font-serif text-sm font-bold text-primary group-hover:text-accent-gold transition-colors">{signIdToName[(d1Data.ascendant || 1) as number]}</span>
-                                            </div>
-                                            <div className="bg-softwhite p-1.5 rounded-lg border border-antique/30 shadow-sm group hover:border-gold-primary/30 transition-colors">
-                                                <span className="block font-serif text-[9px] font-bold text-primary mb-1">Moon</span>
-                                                <span className="font-serif text-sm font-bold text-primary group-hover:text-accent-gold transition-colors">{
-                                                    d1Data.planets.find(p => p.name === "Mo")
-                                                        ? signIdToName[d1Data.planets.find(p => p.name === "Mo")!.signId]
-                                                        : "-"
-                                                }</span>
-                                            </div>
-                                            <div className="bg-softwhite p-1.5 rounded-lg border border-antique/30 shadow-sm group hover:border-gold-primary/30 transition-colors">
-                                                <span className="block font-serif text-[9px] font-bold text-primary mb-1">Sun</span>
-                                                <span className="font-serif text-sm font-bold text-primary group-hover:text-accent-gold transition-colors">{
-                                                    d1Data.planets.find(p => p.name === "Su")
-                                                        ? signIdToName[d1Data.planets.find(p => p.name === "Su")!.signId]
-                                                        : "-"
-                                                }</span>
-                                            </div>
-                                        </div>
-
-                                        <hr className="border-antique/40 border-dashed" />
-
-                                        <div className="space-y-1.5">
-                                            <div className="flex items-center gap-1.5">
-                                                <Sparkle className="w-2.5 h-2.5 text-accent-gold animate-pulse" />
-                                                <h4 className="font-serif text-[10px] font-bold text-primary tracking-wider">Birth Panchanga</h4>
-                                            </div>
-                                            <BirthPanchanga data={birthPanchangaData} />
-
-                                            {/* Full-width CTA button */}
-                                            <Link
-                                                href="/vedic-astrology/panchanga"
-                                                className="mt-2 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-header-border to-amber-700 text-white text-[11px] font-bold tracking-wide shadow-md hover:shadow-lg hover:from-amber-600 hover:to-amber-800 active:scale-[0.98] transition-all"
-                                            >
-                                                <Sparkle className="w-3 h-3" />
-                                                View Full Panchanga Overview
-                                                <ArrowRight className="w-3 h-3" />
-                                            </Link>
+                            <div className="px-3 py-2 flex flex-wrap items-center gap-x-4 gap-y-2">
+                                {/* Name & Details */}
+                                <div className="flex items-center gap-4">
+                                    <div className={cn("w-12 h-12 rounded-lg bg-gold-primary flex items-center justify-center text-white shrink-0 shadow-sm", TYPOGRAPHY.value)}>
+                                        {clientDetails.name.charAt(0)}
+                                    </div>
+                                    <div className="min-w-0">
+                                        <div className={TYPOGRAPHY.profileName}>{clientDetails.name}</div>
+                                        <div className={cn(TYPOGRAPHY.profileDetail, "flex flex-wrap gap-x-2 mt-1")}>
+                                            <span>{formatDate(clientDetails.dateOfBirth)}</span>
+                                            <span className="text-primary opacity-60">•</span>
+                                            <span>{formatTime(clientDetails.timeOfBirth)}</span>
+                                            <span className="text-primary opacity-60">•</span>
+                                            <span className="truncate max-w-[250px]">{clientDetails.placeOfBirth.city}</span>
                                         </div>
                                     </div>
-                                )}
+                                </div>
+
+                                {/* Lagna / Moon / Sun — inline chips */}
+                                <div className="flex items-center gap-1.5 ml-auto">
+                                    <div className="bg-softwhite px-2.5 py-1 rounded-lg border border-antique/30 shadow-sm group hover:border-gold-primary/30 transition-colors flex items-center gap-1.5">
+                                        <span className={TYPOGRAPHY.badgeLabel}>Lagna :</span>
+                                        <span className={cn(TYPOGRAPHY.badgeValue, "group-hover:text-accent-gold transition-colors")}>{signIdToName[(d1Data.ascendant || 1) as number]}</span>
+                                    </div>
+                                    <div className="bg-softwhite px-2.5 py-1 rounded-lg border border-antique/30 shadow-sm group hover:border-gold-primary/30 transition-colors flex items-center gap-1.5">
+                                        <span className={TYPOGRAPHY.badgeLabel}>Moon :</span>
+                                        <span className={cn(TYPOGRAPHY.badgeValue, "group-hover:text-accent-gold transition-colors")}>{
+                                            d1Data.planets.find(p => p.name === "Mo")
+                                                ? signIdToName[d1Data.planets.find(p => p.name === "Mo")!.signId]
+                                                : "-"
+                                        }</span>
+                                    </div>
+                                    <div className="bg-softwhite px-2.5 py-1 rounded-lg border border-antique/30 shadow-sm group hover:border-gold-primary/30 transition-colors flex items-center gap-1.5">
+                                        <span className={TYPOGRAPHY.badgeLabel}>Sun :</span>
+                                        <span className={cn(TYPOGRAPHY.badgeValue, "group-hover:text-accent-gold transition-colors")}>{
+                                            d1Data.planets.find(p => p.name === "Su")
+                                                ? signIdToName[d1Data.planets.find(p => p.name === "Su")!.signId]
+                                                : "-"
+                                        }</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Panchanga & Dasha side-by-side */}
+                    <div className="grid grid-cols-12 gap-2">
+                        {/* Birth Panchanga Card */}
+                        <div className="col-span-12 md:col-span-5 lg:col-span-4 border border-border-warm rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
+                            <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm flex items-center gap-1.5">
+                                <Sparkle className="w-3 h-3 text-accent-gold" />
+                                <h3 className={TYPOGRAPHY.sectionTitle}>Birth Panchanga</h3>
+                            </div>
+                            <div className="p-2.5 flex-1 flex flex-col justify-between gap-2">
+                                <BirthPanchanga data={birthPanchangaData} />
+                                <Link
+                                    href="/vedic-astrology/panchanga"
+                                    className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-header-border to-amber-700 text-white text-[11px] font-bold tracking-wide shadow-md hover:shadow-lg hover:from-amber-600 hover:to-amber-800 active:scale-[0.98] transition-all"
+                                >
+                                    <Sparkle className="w-3 h-3" />
+                                    View Full Panchanga Overview
+                                    <ArrowRight className="w-3 h-3" />
+                                </Link>
                             </div>
                         </div>
 
                         {/* Vimshottari Dasha */}
-                        <div className="col-span-12 md:col-span-7 lg:col-span-8 border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
-                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
-                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Vimshottari Dasha</h3>
+                        <div className="col-span-12 md:col-span-7 lg:col-span-8 border border-border-warm rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
+                            <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm">
+                                <h3 className={TYPOGRAPHY.sectionTitle}>Vimshottari Dasha</h3>
                             </div>
-                            <div className="p-0 flex-1">
+                            <div className="p-0">
                                 <VimshottariTreeGrid
                                     data={dashaData ? processDashaResponse(dashaData as unknown as RawDashaPeriod).slice(0, 9) : []}
                                     isLoading={dashaLoading}
-                                    className="h-full border-none shadow-none rounded-none bg-transparent"
+                                    className="border-none shadow-none rounded-none bg-transparent"
                                 />
                             </div>
                         </div>
@@ -286,28 +285,28 @@ export default function VedicOverviewPage() {
                     {/* Middle Row: D9 & D10 */}
                     <div className="grid grid-cols-2 gap-2">
                         {/* D9 Navamsha */}
-                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm">
-                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
-                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Navamsha (D9)</h3>
-                                <button onClick={() => setZoomedChart({ varga: "D9", label: "Navamsha (D9)" })} className="text-secondary hover:text-accent-gold transition-colors"><Maximize2 className="w-3 h-3" /></button>
+                        <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm">
+                            <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm flex justify-between items-center">
+                                <h3 className={TYPOGRAPHY.sectionTitle}>Navamsha (D9)</h3>
+                                <button onClick={() => setZoomedChart({ varga: "D9", label: "Navamsha (D9)" })} className="text-primary hover:text-accent-gold transition-colors"><Maximize2 className="w-3 h-3" /></button>
                             </div>
                             <div className="w-full h-[320px] bg-surface-warm">
                                 {d9Data.planets.length > 0 ? (
                                     <ChartWithPopup ascendantSign={d9Data.ascendant} planets={d9Data.planets} className="bg-transparent border-none w-full h-full" preserveAspectRatio="none" showDegrees={false} />
-                                ) : <div className="font-sans text-xs text-muted-refined p-2">Loading...</div>}
+                                ) : <div className={cn(TYPOGRAPHY.subValue, "p-2")}>Loading...</div>}
                             </div>
                         </div>
 
                         {/* D10 Dashamsha */}
-                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm">
-                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
-                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Dashamsha (D10)</h3>
-                                <button onClick={() => setZoomedChart({ varga: "D10", label: "Dashamsha (D10)" })} className="text-secondary hover:text-accent-gold transition-colors"><Maximize2 className="w-3 h-3" /></button>
+                        <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm">
+                            <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm flex justify-between items-center">
+                                <h3 className={TYPOGRAPHY.sectionTitle}>Dashamsha (D10)</h3>
+                                <button onClick={() => setZoomedChart({ varga: "D10", label: "Dashamsha (D10)" })} className="text-primary hover:text-accent-gold transition-colors"><Maximize2 className="w-3 h-3" /></button>
                             </div>
                             <div className="w-full h-[320px] bg-surface-warm">
                                 {d10Data.planets.length > 0 ? (
                                     <ChartWithPopup ascendantSign={d10Data.ascendant} planets={d10Data.planets} className="bg-transparent border-none w-full h-full" preserveAspectRatio="none" showDegrees={false} />
-                                ) : <div className="font-sans text-xs text-muted-refined p-2">Loading...</div>}
+                                ) : <div className={cn(TYPOGRAPHY.subValue, "p-2")}>Loading...</div>}
                             </div>
                         </div>
                     </div>
@@ -320,12 +319,12 @@ export default function VedicOverviewPage() {
             {zoomedChart && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl bg-ink/40 animate-in fade-in zoom-in-95 duration-300">
                     <div className="bg-softwhite border border-antique rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl">
-                        <button onClick={() => setZoomedChart(null)} className="absolute top-4 right-4 p-2 rounded-xl bg-parchment text-secondary hover:bg-gold-primary/20 hover:text-accent-gold transition-all">
+                        <button onClick={() => setZoomedChart(null)} className="absolute top-4 right-4 p-2 rounded-xl bg-parchment text-primary hover:bg-gold-primary/20 hover:text-accent-gold transition-all">
                             <X className="w-5 h-5" />
                         </button>
                         <div className="mb-6 text-center">
-                            <h2 className="font-serif text-xl font-semibold text-primary leading-tight">{zoomedChart.label}</h2>
-                            <p className="font-sans text-xs text-muted-refined uppercase tracking-wider leading-compact mt-2">{zoomedChart.varga} Divisional Chart</p>
+                            <h2 className={TYPOGRAPHY.sectionTitle}>{zoomedChart.label}</h2>
+                            <p className={TYPOGRAPHY.label}>{zoomedChart.varga} Divisional Chart</p>
                         </div>
                         <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6 border border-antique">
                             <ChartWithPopup ascendantSign={zoomedData.ascendant} planets={zoomedData.planets} className="bg-transparent border-none" showDegrees={zoomedChart?.varga === 'D1'} />
@@ -338,11 +337,11 @@ export default function VedicOverviewPage() {
             {analysisModal && (
                 <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 backdrop-blur-xl bg-ink/60 animate-in fade-in zoom-in-95 duration-300">
                     <div className="bg-parchment border border-antique rounded-[2.5rem] p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl custom-scrollbar border-b-8 border-gold-primary">
-                        <button onClick={() => setAnalysisModal(null)} className="absolute top-6 right-6 p-2 rounded-2xl bg-white border border-antique text-secondary hover:bg-red-50 hover:text-red-500 transition-all">
+                        <button onClick={() => setAnalysisModal(null)} className="absolute top-6 right-6 p-2 rounded-2xl bg-white border border-antique text-primary hover:bg-red-50 hover:text-red-500 transition-all">
                             <X className="w-6 h-6" />
                         </button>
                         <div className="mb-8">
-                            <h2 className="font-serif text-xl font-semibold text-primary leading-tight">{analysisModal.label}</h2>
+                            <h2 className={TYPOGRAPHY.sectionTitle}>{analysisModal.label}</h2>
                         </div>
                         {analysisModal.type === 'yoga' ? (
                             <YogaAnalysisView clientId={clientDetails?.id || ""} yogaType={analysisModal.subType} ayanamsa={settings.ayanamsa} />
@@ -368,14 +367,14 @@ function SmallChartCard({ varga, label, data, onZoom }: { varga: string, label: 
                 {data.planets.length > 0 ? (
                     <ChartWithPopup ascendantSign={data.ascendant} planets={data.planets} className="bg-transparent border-none scale-[0.8] origin-center" />
                 ) : (
-                    <div className="font-sans text-2xs text-muted-refined italic">loading...</div>
+                    <div className={cn(TYPOGRAPHY.subValue, "italic")}>loading...</div>
                 )}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <Maximize2 className="w-4 h-4 text-primary" />
                 </div>
             </div>
-            <span className="font-sans text-sm font-semibold text-primary">{varga}</span>
-            <span className="font-sans text-xs text-secondary">{label}</span>
+            <span className={TYPOGRAPHY.value}>{varga}</span>
+            <span className={TYPOGRAPHY.subValue}>{label}</span>
         </div>
     );
 }
@@ -383,9 +382,9 @@ function SmallChartCard({ varga, label, data, onZoom }: { varga: string, label: 
 function ProfileItem({ label, value, sub, highlight }: { label: string, value: string, sub?: string, highlight?: boolean }) {
     return (
         <div className={cn("p-3 rounded-xl border transition-colors", highlight ? "bg-gold-primary/5 border-gold-primary/30" : "bg-softwhite border-antique/50 hover:border-gold-primary/20 hidden-scrollbar")}>
-            <div className="font-sans text-xs text-secondary uppercase tracking-wider font-medium mb-1 leading-compact">{label}</div>
-            <div className={cn("font-serif text-base font-semibold leading-tight", highlight ? "text-accent-gold" : "text-primary")}>{value}</div>
-            {sub && <div className="font-sans text-xs text-muted-refined italic mt-0.5 leading-compact">{sub}</div>}
+            <div className={TYPOGRAPHY.label}>{label}</div>
+            <div className={cn(TYPOGRAPHY.value, highlight ? "text-accent-gold" : "")}>{value}</div>
+            {sub && <div className={cn(TYPOGRAPHY.subValue, "italic")}>{sub}</div>}
         </div>
     );
 }
@@ -393,10 +392,10 @@ function ProfileItem({ label, value, sub, highlight }: { label: string, value: s
 const DashaRow = ({ planet, start, ends, duration, active }: { planet: string, start: string, ends: string, duration: string, active?: boolean }) => {
     return (
         <div className={cn("grid grid-cols-4 gap-2 p-3 rounded-xl border items-center text-center", active ? "bg-gold-primary/10 border-gold-primary/30" : "bg-parchment border-antique/30")}>
-            <span className="font-sans text-base font-medium text-primary text-left pl-2 leading-normal">{planet}</span>
-            <span className="font-sans text-xs text-muted-refined leading-compact">{start}</span>
-            <span className="font-sans text-xs text-muted-refined leading-compact">{ends}</span>
-            <span className="font-sans text-base font-regular text-primary leading-normal">{duration}</span>
+            <span className={cn(TYPOGRAPHY.planetName, "text-left pl-2")}>{planet}</span>
+            <span className={TYPOGRAPHY.dateAndDuration}>{start}</span>
+            <span className={TYPOGRAPHY.dateAndDuration}>{ends}</span>
+            <span className={TYPOGRAPHY.dateAndDuration}>{duration}</span>
         </div>
     );
 };

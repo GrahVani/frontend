@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { memo } from 'react';
 import { LayoutGrid } from 'lucide-react';
@@ -13,7 +13,7 @@ export const DoshaPlanets = memo(function DoshaPlanets({ data }: DoshaPlanetsPro
     if (data.length === 0) return null;
 
     return (
-        <div className="bg-white border border-antique rounded-2xl p-5 shadow-sm">
+        <div className="bg-white border border-border-warm rounded-2xl p-5 shadow-sm">
             <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-[10px] uppercase tracking-widest transition-colors">
                 <LayoutGrid className="w-3.5 h-3.5 text-red-500" /> Chart Foundations
             </h3>
@@ -29,7 +29,7 @@ export const DoshaPlanets = memo(function DoshaPlanets({ data }: DoshaPlanetsPro
                     >
                         <div className={cn(
                             "w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black shrink-0 transition-transform group-hover/planet:scale-105",
-                            planet.isFocal ? "bg-red-500 text-white shadow-sm" : "bg-white border border-antique text-ink shadow-xs"
+                            planet.isFocal ? "bg-red-500 text-white shadow-sm" : "bg-white border border-border-warm text-ink shadow-xs"
                         )}>
                             {planet.name.substring(0, 2).toUpperCase()}
                         </div>
@@ -47,3 +47,4 @@ export const DoshaPlanets = memo(function DoshaPlanets({ data }: DoshaPlanetsPro
         </div>
     );
 });
+

@@ -3,6 +3,7 @@
 import React, { memo } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import type { NormalizedDoshaSeverity } from '@/types/yoga.types';
 
 interface YogaDoshaSeverityProps {
@@ -36,7 +37,7 @@ export const YogaDoshaSeverity = memo(function YogaDoshaSeverity({ data }: YogaD
                     </span>
                 </div>
                 {data.description && (
-                    <p className="text-xs text-primary leading-relaxed">{data.description}</p>
+                    <p className={cn(TYPOGRAPHY.value, "text-xs leading-relaxed")}>{data.description}</p>
                 )}
             </div>
         </div>

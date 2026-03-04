@@ -23,6 +23,7 @@ import SadhanaChartPanel from '@/components/upaya/SadhanaChartPanel';
 import { useVedicClient } from '@/context/VedicClientContext';
 import styles from './RemedialShared.module.css';
 import DebugConsole from '@/components/debug/DebugConsole';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface MantraAnalysisDashboardProps {
     data: Record<string, unknown>;
@@ -51,7 +52,7 @@ const MantraAnalysisDashboard: React.FC<MantraAnalysisDashboardProps> = ({ data 
             <div className="flex flex-col gap-6">
                 <div className="flex items-center justify-between border-b border-antique pb-4">
                     <div className="flex items-center gap-3">
-                        <h2 className="text-xl font-bold tracking-tight text-ink">
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-bold tracking-tight")}>
                             Mantras : {String(data.user_name || "Sadhaka")}
                         </h2>
                     </div>
@@ -75,7 +76,7 @@ const MantraAnalysisDashboard: React.FC<MantraAnalysisDashboardProps> = ({ data 
                 <div className="lg:col-span-8">
                     <div className="rounded-[2.5rem] bg-[rgba(254,250,234,0.6)] border border-antique shadow-xl backdrop-blur-md overflow-hidden flex flex-col p-6 space-y-4 h-fit">
                         <div className="flex items-center justify-between px-2">
-                            <h2 className="text-2xl font-medium text-ink tracking-tight">Today's Mantra Focus (Priority)</h2>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-medium tracking-tight")}>Today's Mantra Focus (Priority)</h2>
                             <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.3)] animate-pulse" />
                         </div>
 

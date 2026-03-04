@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -23,6 +23,7 @@ import {
     X
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { clientApi } from '@/lib/api';
 import { YogaAnalysis } from '@/types/astrology';
 import DebugConsole from '../debug/DebugConsole';
@@ -105,9 +106,9 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center p-8 bg-parchment/30 rounded-2xl border border-antique">
+            <div className="flex flex-col items-center justify-center p-8 bg-parchment/30 rounded-2xl border border-border-warm">
                 <Loader2 className="w-6 h-6 text-gold-primary animate-spin mb-3" />
-                <p className="text-xs font-serif text-secondary italic">Analyzing celestial alignments...</p>
+                <p className={cn(TYPOGRAPHY.subValue, "italic")}>Analyzing celestial alignments...</p>
             </div>
         );
     }
@@ -117,8 +118,8 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
             <div className="space-y-4">
                 <div className="p-4 bg-amber-50 border border-amber-100 rounded-2xl text-center">
                     <Info className="w-6 h-6 text-amber-500 mx-auto mb-2" />
-                    <h3 className="text-amber-900 font-bold font-serif text-sm">Yoga Detail Pending</h3>
-                    <p className="text-[10px] text-amber-600">{error || 'Detailed analysis not currently available for this client'}</p>
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-sm text-amber-900")}>Yoga Detail Pending</h3>
+                    <p className={cn(TYPOGRAPHY.subValue, "text-amber-600")}>{error || 'Detailed analysis not currently available for this client'}</p>
                 </div>
                 {error && <DebugConsole title={`Yoga Analysis Error: ${yogaType}`} data={{ error, yogaType, ayanamsa }} />}
             </div>
@@ -133,10 +134,10 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
     if (!data.yoga_present) {
         return (
             <div className="space-y-4">
-                <div className={cn("bg-parchment/50 border border-antique rounded-2xl p-6 text-center opacity-60", className)}>
+                <div className={cn("bg-parchment/50 border border-border-warm rounded-2xl p-6 text-center opacity-60", className)}>
                     <Info className="w-8 h-8 text-secondary mx-auto mb-2" />
-                    <h3 className="text-secondary font-serif font-bold text-lg capitalize">{yogaType.replace('_', ' ')} Absent</h3>
-                    <p className="text-xs text-secondary mt-1">Planetary conditions for this specific yoga are not fully met in the natal chart.</p>
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg capitalize")}>{yogaType.replace('_', ' ')} Absent</h3>
+                    <p className={cn(TYPOGRAPHY.subValue, "mt-1")}>Planetary conditions for this specific yoga are not fully met in the natal chart.</p>
                 </div>
                 <DebugConsole title={`Yoga Analysis (Absent): ${yogaType}`} data={data} />
             </div>
@@ -146,7 +147,7 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
     return (
         <div className={cn("space-y-6 relative p-6", className)}>
             {/* 1. Header & Grandeur */}
-            <div className="bg-white border border-antique rounded-3xl p-6 shadow-sm overflow-hidden relative">
+            <div className="bg-white border border-border-warm rounded-3xl p-6 shadow-sm overflow-hidden relative">
                 <div className="absolute top-0 right-0 w-40 h-40 bg-gold-primary/5 rounded-full -mr-20 -mt-20 blur-3xl" />
 
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
@@ -155,24 +156,24 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
                             <Trophy className="w-8 h-8" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-serif font-bold text-ink">{data.yoga_type}</h2>
-                            <p className="text-sm text-secondary font-medium">{data.house_relationship}</p>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl")}>{data.yoga_type}</h2>
+                            <p className={cn(TYPOGRAPHY.value, "text-sm")}>{data.house_relationship}</p>
                         </div>
                     </div>
 
                     <div className="flex items-center gap-5">
                         <div className="text-right">
-                            <p className="text-[10px] uppercase tracking-widest text-secondary font-bold mb-1">Manifestation Strength</p>
+                            <p className={cn(TYPOGRAPHY.label, "mb-1")}>Manifestation Strength</p>
                             <span className={cn(
                                 "px-4 py-1.5 rounded-full text-xs font-bold border",
                                 data.yoga_strength?.includes('Exceptional') ? "bg-amber-600 text-white border-amber-700" :
                                     data.yoga_strength?.includes('Strong') ? "bg-gold-primary text-ink border-primary" :
-                                        "bg-parchment text-secondary border-antique"
+                                        "bg-parchment text-secondary border-border-warm"
                             )}>
                                 {data.yoga_strength}
                             </span>
                         </div>
-                        <div className="w-24 h-2 bg-parchment rounded-full overflow-hidden border border-antique">
+                        <div className="w-24 h-2 bg-parchment rounded-full overflow-hidden border border-border-warm">
                             <div
                                 className={cn(
                                     "h-full transition-all duration-1000",
@@ -188,8 +189,8 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
 
             {/* 2. Score Breakdown (Astro-Metrix) */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-softwhite border border-antique rounded-2xl p-5">
-                    <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
+                <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-4 flex items-center gap-2 text-sm uppercase tracking-wider")}>
                         <Target className="w-4 h-4 text-gold-primary" /> Potential Impacts
                     </h3>
                     <div className="space-y-3">
@@ -204,11 +205,11 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
                     </div>
                 </div>
 
-                <div className="bg-softwhite border border-antique rounded-2xl p-5">
-                    <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
+                <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-4 flex items-center gap-2 text-sm uppercase tracking-wider")}>
                         <Activity className="w-4 h-4 text-gold-primary" /> Core Assessment
                     </h3>
-                    <div className="p-4 bg-parchment/50 rounded-xl border border-antique/50 italic text-xs leading-relaxed text-ink/80">
+                    <div className="p-4 bg-parchment/50 rounded-xl border border-border-warm/50 italic text-xs leading-relaxed text-ink/80">
                         "{data.comprehensive_effects?.overall_prediction}"
                     </div>
                     {(data.malefic_penalty ?? 0) < 0 && (
@@ -221,7 +222,7 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
             </div>
 
             {/* 3. Activation Timeline */}
-            <div className="bg-softwhite border border-antique rounded-2xl p-6">
+            <div className="bg-softwhite border border-border-warm rounded-2xl p-6">
                 <h3 className="font-serif font-bold text-ink mb-6 flex items-center gap-2 uppercase tracking-widest text-xs">
                     <Zap className="w-4 h-4 text-gold-primary" /> When it Manifests (Activation)
                 </h3>
@@ -230,13 +231,13 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
                     <div className="space-y-4">
                         <div className="relative pl-6 border-l-2 border-gold-primary/20">
                             <div className="absolute w-3 h-3 bg-gold-primary rounded-full -left-[7px] top-1 border-2 border-softwhite shadow-sm" />
-                            <h4 className="text-[10px] font-bold text-muted-refined uppercase mb-1">Primary Dasha Periods</h4>
-                            <p className="text-xs text-secondary leading-relaxed">{data.timing_analysis?.best_periods}</p>
+                            <h4 className={cn(TYPOGRAPHY.label, "mb-1")}>Primary Dasha Periods</h4>
+                            <p className={cn(TYPOGRAPHY.subValue, "text-xs")}>{data.timing_analysis?.best_periods}</p>
                         </div>
                         <div className="relative pl-6 border-l-2 border-gold-primary/20">
                             <div className="absolute w-3 h-3 bg-gold-primary/60 rounded-full -left-[7px] top-1 border-2 border-softwhite" />
-                            <h4 className="text-[10px] font-bold text-muted-refined uppercase mb-1">Transit Triggers</h4>
-                            <p className="text-xs text-secondary leading-relaxed">{data.timing_analysis?.activation_transits}</p>
+                            <h4 className={cn(TYPOGRAPHY.label, "mb-1")}>Transit Triggers</h4>
+                            <p className={cn(TYPOGRAPHY.subValue, "text-xs")}>{data.timing_analysis?.activation_transits}</p>
                         </div>
                     </div>
 
@@ -252,7 +253,7 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
             </div>
 
             {/* 4. Actionable Remedies */}
-            <div className="bg-parchment border border-antique rounded-3xl p-6 relative overflow-hidden">
+            <div className="bg-parchment border border-border-warm rounded-3xl p-6 relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-4 opacity-10">
                     <Stars className="w-16 h-16 text-gold-primary" />
                 </div>
@@ -260,7 +261,7 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
                 <h3 className="text-lg font-serif font-bold text-ink mb-4">Empowering Rituals & Remedies</h3>
                 <div className="flex flex-wrap gap-2">
                     {data.remedial_suggestions?.map((suggestion: string, i: number) => (
-                        <div key={i} className="flex items-center gap-2 px-4 py-2 bg-white border border-antique rounded-xl shadow-sm hover:border-gold-primary transition-colors cursor-default">
+                        <div key={i} className="flex items-center gap-2 px-4 py-2 bg-white border border-border-warm rounded-xl shadow-sm hover:border-gold-primary transition-colors cursor-default">
                             <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
                             <span className="text-xs font-medium text-primary">{suggestion}</span>
                         </div>
@@ -306,23 +307,24 @@ function GajaKesariView({ data, className, onClose }: { data: GajaKesariData, cl
                         <Sparkles className="w-5 h-5" />
                     </div>
                     <div>
-                        <h2 className="text-xl font-serif font-black text-ink leading-none">Gaja Kesari <span className="text-secondary">Yoga</span></h2>
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-xl leading-none")}>Gaja Kesari <span className="text-secondary font-normal">Yoga</span></h2>
                         <div className="flex items-center gap-2 mt-1">
                             <span className={cn(
-                                "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border",
+                                TYPOGRAPHY.label,
+                                "px-2 py-0.5 rounded-md border",
                                 analysis.yoga_present
                                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                     : "bg-orange-50 text-orange-700 border-orange-200"
                             )}>
                                 {analysis.yoga_present ? "Active" : "Inactive"}
                             </span>
-                            <span className="text-[10px] text-muted-refined font-medium">{notes.analysis_type}</span>
+                            <span className={cn(TYPOGRAPHY.subValue, "font-medium")}>{notes.analysis_type}</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Compact Identity Strip */}
-                <div className="flex items-center gap-6 text-xs z-10 bg-parchment/30 px-4 py-2 rounded-lg border border-antique/50">
+                <div className="flex items-center gap-6 text-xs z-10 bg-parchment/30 px-4 py-2 rounded-lg border border-border-warm/50">
                     <div className="flex items-center gap-2">
                         <User className="w-3.5 h-3.5 text-secondary" />
                         <span className="font-bold text-ink">{rawData.user_name}</span>
@@ -349,7 +351,7 @@ function GajaKesariView({ data, className, onClose }: { data: GajaKesariData, cl
                 {/* LEFT: VISUAL MATRIX & STATUS (Compact) */}
                 <div className="lg:col-span-8 flex flex-col gap-4">
                     {/* Horizontal Matrix */}
-                    <div className="bg-white border border-antique rounded-2xl p-6 shadow-sm flex-1 flex flex-col justify-center relative overflow-hidden">
+                    <div className="bg-white border border-border-warm rounded-2xl p-6 shadow-sm flex-1 flex flex-col justify-center relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold-primary/50 to-transparent opacity-20" />
 
                         <div className="flex items-center justify-between max-w-2xl mx-auto w-full relative">
@@ -368,9 +370,9 @@ function GajaKesariView({ data, className, onClose }: { data: GajaKesariData, cl
                             </div>
 
                             {/* Gap Pill */}
-                            <div className="relative z-10 bg-white border border-antique shadow-sm px-4 py-1.5 rounded-full flex flex-col items-center">
-                                <span className="text-[9px] text-muted-refined font-bold uppercase tracking-widest">Angle</span>
-                                <span className={cn("text-xl font-serif font-black leading-none", analysis.yoga_present ? "text-emerald-600" : "text-orange-500")}>
+                            <div className="relative z-10 bg-white border border-border-warm shadow-sm px-4 py-1.5 rounded-full flex flex-col items-center">
+                                <span className={cn(TYPOGRAPHY.label, "leading-tight")}>Angle</span>
+                                <span className={cn(TYPOGRAPHY.sectionTitle, "text-xl leading-none", analysis.yoga_present ? "text-emerald-600" : "text-orange-500")}>
                                     {isNaN(houseGap) ? '?' : houseGap}
                                 </span>
                             </div>
@@ -404,7 +406,7 @@ function GajaKesariView({ data, className, onClose }: { data: GajaKesariData, cl
                             {analysis.yoga_present ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
                         </div>
                         <div>
-                            <h4 className={cn("text-sm font-serif font-bold", analysis.yoga_present ? "text-emerald-900" : "text-orange-900")}>
+                            <h4 className={cn(TYPOGRAPHY.sectionTitle, "text-sm", analysis.yoga_present ? "text-emerald-900" : "text-orange-900")}>
                                 {analysis.yoga_present ? "Yoga Formed" : "Conditions Not Met"}
                             </h4>
                             <p className="text-xs text-secondary mt-0.5 leading-snug">
@@ -447,7 +449,7 @@ function GajaKesariView({ data, className, onClose }: { data: GajaKesariData, cl
             </div>
 
             {/* 3. PLANETARY STRIP (Bottom) */}
-            <div className="bg-white border border-antique rounded-xl p-3 shadow-none">
+            <div className="bg-white border border-border-warm rounded-xl p-3 shadow-none">
                 <div className="flex items-center gap-2 mb-2 px-1">
                     <LayoutGrid className="w-3.5 h-3.5 text-gold-primary" />
                     <span className="text-[10px] font-bold uppercase tracking-wider text-muted-refined">Chart Positions</span>
@@ -482,3 +484,4 @@ function GajaKesariView({ data, className, onClose }: { data: GajaKesariData, cl
         </div>
     );
 }
+

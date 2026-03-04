@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState } from 'react';
 import {
@@ -41,7 +41,8 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
                 const cleanData = rawData.avakhada_chakra || rawData;
 
                 setData(cleanData);
-            } catch (err: unknown) {                setError(err instanceof Error ? err.message : "Failed to load Avakhada Chakra");
+            } catch (err: unknown) {
+                setError(err instanceof Error ? err.message : "Failed to load Avakhada Chakra");
             } finally {
                 setLoading(false);
             }
@@ -71,7 +72,7 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
                 {/* Debug Console for Error State */}
                 <DebugConsole title="Debug: Raw Response (Error State)" data={{ error, rawData: data }} className="text-left" />
 
-                <button onClick={onClose} className="px-4 py-2 bg-white border border-antique rounded-lg text-sm hover:bg-red-50 transition-colors mt-4">
+                <button onClick={onClose} className="px-4 py-2 bg-white border border-border-warm rounded-lg text-sm hover:bg-red-50 transition-colors mt-4">
                     Close
                 </button>
             </div>
@@ -132,7 +133,7 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
                         if (!value) return null;
 
                         return (
-                            <div key={item.key} className="bg-white border border-antique/40 p-2.5 rounded-xl hover:border-gold-primary/40 hover:shadow-md transition-all group flex flex-col justify-between min-h-[85px]">
+                            <div key={item.key} className="bg-white border border-border-warm/40 p-2.5 rounded-xl hover:border-gold-primary/40 hover:shadow-md transition-all group flex flex-col justify-between min-h-[85px]">
                                 <div className="flex justify-between items-start mb-0.5">
                                     <span className="text-[9px] font-bold uppercase tracking-wider text-muted-refined/80">{item.label}</span>
                                     <item.icon className="w-3 h-3 text-header-border/60 group-hover:text-header-border transition-colors" />
@@ -151,7 +152,7 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
 
                     {/* Extra items like Hamsa Swara if present */}
                     {data.hamsa_swara && (
-                        <div className="bg-white border border-antique/40 p-2.5 rounded-xl hover:border-gold-primary/40 hover:shadow-md transition-all group flex flex-col justify-between min-h-[85px]">
+                        <div className="bg-white border border-border-warm/40 p-2.5 rounded-xl hover:border-gold-primary/40 hover:shadow-md transition-all group flex flex-col justify-between min-h-[85px]">
                             <div className="flex justify-between items-start mb-0.5">
                                 <span className="text-[9px] font-bold uppercase tracking-wider text-muted-refined/80">Hamsa Swara</span>
                                 <Feather className="w-3 h-3 text-header-border/60" />
@@ -167,7 +168,7 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
             </div>
 
             {/* Footer Status Bar if needed, otherwise clean break */}
-            <div className="bg-softwhite border-t border-antique/20 px-6 py-3 flex justify-between items-center shrink-0">
+            <div className="bg-softwhite border-t border-border-warm/20 px-6 py-3 flex justify-between items-center shrink-0">
                 <span className="text-[10px] text-muted-refined font-sans">
                     * Calculation based on Lahiri Ayanamsa
                 </span>
@@ -222,3 +223,4 @@ function TypeIcon(props: React.SVGProps<SVGSVGElement>) {
         </svg>
     )
 }
+

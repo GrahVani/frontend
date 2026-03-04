@@ -272,7 +272,7 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
 
             {/* Main Content Area */}
             <main className="flex-1 relative z-10 transition-all duration-500" aria-label="Vedic astrology content">
-                <div className="p-4 sm:p-6 lg:p-8 w-full h-full pb-20">
+                <div className="p-1 sm:p-2 lg:p-2 w-full h-full pb-10">
                     {children}
                 </div>
             </main>

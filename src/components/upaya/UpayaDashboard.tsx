@@ -5,6 +5,7 @@ import VigorTimelinePanel from '@/components/upaya/VigorTimelinePanel';
 import GemstoneAnalysisCard from '@/components/upaya/GemstoneAnalysisCard';
 import DebugConsole from '@/components/debug/DebugConsole';
 import { Sparkles, ShieldAlert, BadgeCheck, User } from 'lucide-react';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface GemstoneEntry {
     planet: string;
@@ -51,7 +52,7 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
                         <User className="w-8 h-8" />
                     </div>
                     <div>
-                        <h2 className="text-2xl font-serif font-black text-ink">{meta.user || 'Sadhaka'}</h2>
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-black")}>{meta.user || 'Sadhaka'}</h2>
                         <div className="flex flex-wrap gap-2 mt-1">
                             <span className="text-[10px] font-bold bg-ink/5 px-2 py-0.5 rounded-full text-muted uppercase tracking-wider border border-ink/10">
                                 {meta.ascendant} Ascendant
@@ -79,7 +80,7 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
             <div className="space-y-6">
                 <div className="flex items-center gap-3 px-2">
                     <BadgeCheck className="w-6 h-6 text-emerald-600" />
-                    <h3 className="text-xl font-serif font-black text-ink">Recommended Gemstones</h3>
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-black")}>Recommended Gemstones</h3>
                     <div className="h-px flex-1 bg-gradient-to-r from-emerald-100 to-transparent ml-4" />
                 </div>
 
@@ -108,7 +109,7 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
                 <div className="space-y-6 pt-6">
                     <div className="flex items-center gap-3 px-2">
                         <ShieldAlert className="w-6 h-6 text-red-600" />
-                        <h3 className="text-xl font-serif font-black text-ink">Caution: Avoid These Gemstones</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-black")}>Caution: Avoid These Gemstones</h3>
                         <div className="h-px flex-1 bg-gradient-to-r from-red-100 to-transparent ml-4" />
                     </div>
 

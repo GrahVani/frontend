@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { memo } from 'react';
 import { Shield, Calendar, User, Compass } from 'lucide-react';
@@ -34,7 +34,7 @@ export const DoshaHeader = memo(function DoshaHeader({ data, meta }: DoshaHeader
                                 "px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest border",
                                 data.isPresent
                                     ? "bg-red-50 text-red-700 border-red-200"
-                                    : "bg-parchment text-secondary border-antique"
+                                    : "bg-parchment text-secondary border-border-warm"
                             )}>
                                 {data.strengthBadge}
                             </span>
@@ -47,7 +47,7 @@ export const DoshaHeader = memo(function DoshaHeader({ data, meta }: DoshaHeader
 
                 {/* 2. Compact Identity Strip */}
                 {meta && (
-                    <div className="flex items-center gap-4 text-[10px] bg-parchment/30 px-4 py-2 rounded-xl border border-antique/50">
+                    <div className="flex items-center gap-4 text-[10px] bg-parchment/30 px-4 py-2 rounded-xl border border-border-warm/50">
                         <div className="flex items-center gap-1.5">
                             <User className="w-3 h-3 text-secondary" />
                             <span className="font-bold text-ink">{meta.userName}</span>
@@ -67,3 +67,4 @@ export const DoshaHeader = memo(function DoshaHeader({ data, meta }: DoshaHeader
         </div>
     );
 });
+

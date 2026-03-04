@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useMemo, memo } from 'react';
 import { Loader2, Info } from 'lucide-react';
@@ -17,7 +17,7 @@ interface YogaModalProps {
 }
 
 /**
- * YogaModal — the orchestrator component.
+ * YogaModal â€” the orchestrator component.
  *
  * 1. Fetches yoga data from the existing API (unchanged)
  * 2. Normalizes via normalizeYogaData()
@@ -59,23 +59,23 @@ export const YogaModal = memo(function YogaModal({
         }
     }, [clientId, yogaType, ayanamsa]);
 
-    // Normalize data — memoized to avoid re-processing on every render
+    // Normalize data â€” memoized to avoid re-processing on every render
     const normalized = useMemo(() => {
         if (!rawData) return null;
         return normalizeYogaData(rawData);
     }, [rawData]);
 
-    // ─── Loading State ─────────────────────────────────────────────
+    // â”€â”€â”€ Loading State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center p-8 bg-parchment/30 rounded-2xl border border-antique" role="status" aria-label="Loading yoga analysis" aria-busy="true">
+            <div className="flex flex-col items-center justify-center p-8 bg-parchment/30 rounded-2xl border border-border-warm" role="status" aria-label="Loading yoga analysis" aria-busy="true">
                 <Loader2 className="w-6 h-6 text-gold-primary animate-spin mb-3" aria-hidden="true" />
                 <p className="text-xs font-serif text-secondary italic">Analyzing celestial alignments...</p>
             </div>
         );
     }
 
-    // ─── Error State ───────────────────────────────────────────────
+    // â”€â”€â”€ Error State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if (error || !normalized) {
         return (
             <div className="space-y-4">
@@ -91,11 +91,11 @@ export const YogaModal = memo(function YogaModal({
         );
     }
 
-    // ─── Yoga Not Present ──────────────────────────────────────────
+    // â”€â”€â”€ Yoga Not Present â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if (normalized.header && !normalized.header.isPresent) {
         return (
             <div className={cn('space-y-4 p-4', className)}>
-                {/* Still render section renderer — it will show header (with "Inactive" badge),
+                {/* Still render section renderer â€” it will show header (with "Inactive" badge),
             meta, description, planets, etc. even for absent yogas */}
                 <YogaSectionRenderer data={normalized} />
                 <DebugConsole title={`Yoga (Inactive): ${yogaType}`} data={rawData} />
@@ -110,3 +110,4 @@ export const YogaModal = memo(function YogaModal({
         </div>
     );
 });
+

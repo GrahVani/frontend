@@ -1,9 +1,10 @@
-"use client";
+﻿"use client";
 
 import React, { useMemo, useState } from 'react';
 import { cn } from "@/lib/utils";
-import { ChevronRight, ChevronLeft, ChevronDown, Loader2, Home } from 'lucide-react';
+import { ChevronRight, ChevronDown, Loader2 } from 'lucide-react';
 import { DashaNode, isDateRangeCurrent, calculateDuration, generateVimshottariSubperiods, parseApiDate } from '@/lib/dasha-utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface VimshottariTreeGridProps {
     data: DashaNode[];
@@ -12,14 +13,14 @@ interface VimshottariTreeGridProps {
 }
 
 const PLANET_SYMBOLS: Record<string, string> = {
-    'Sun': '☉', 'Moon': '☽', 'Mars': '♂', 'Mercury': '☿', 'Jupiter': '♃',
-    'Venus': '♀', 'Saturn': '♄', 'Rahu': '☊', 'Ketu': '☋',
+    'Sun': 'â˜‰', 'Moon': 'â˜½', 'Mars': 'â™‚', 'Mercury': 'â˜¿', 'Jupiter': 'â™ƒ',
+    'Venus': 'â™€', 'Saturn': 'â™„', 'Rahu': 'â˜Š', 'Ketu': 'â˜‹',
 };
 
 const LEVEL_LABELS = ["MAHA", "ANTAR", "PRATYANTAR", "SOOKSHMA", "PRANA"];
 
 const formatDate = (dateStr?: string) => {
-    if (!dateStr) return '—';
+    if (!dateStr) return 'â€”';
     try {
         const d = parseApiDate(dateStr);
         const day = String(d.getDate()).padStart(2, '0');
@@ -27,7 +28,7 @@ const formatDate = (dateStr?: string) => {
         const year = d.getFullYear();
         return `${day}-${month}-${year}`;
     } catch {
-        return dateStr || '—';
+        return dateStr || 'â€”';
     }
 };
 
@@ -64,49 +65,39 @@ export default function VimshottariTreeGrid({ data, isLoading, className }: Vims
         }
     };
 
-    const handleBack = () => {
-        setNavPath(navPath.slice(0, -1));
-    };
+
 
     const handleReset = () => {
         setNavPath([]);
     };
 
     return (
-        <div className={cn("w-full h-full flex flex-col overflow-hidden rounded-lg border border-antique/20 bg-white shadow-sm", className)}>
+        <div className={cn("w-full flex flex-col overflow-hidden rounded-lg border border-border-warm/20 bg-white shadow-sm", className)}>
             {/* Navigation Header / Breadcrumbs */}
-            <div className="bg-parchment/30 border-b border-antique/10 p-1.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-                <button
-                    onClick={handleReset}
-                    className={cn(
-                        "p-1 rounded transition-colors",
-                        navPath.length === 0 ? "text-disabled cursor-default" : "text-accent-gold hover:bg-gold-primary/10"
-                    )}
-                >
-                    <Home className="w-3 h-3 text-primary" />
-                </button>
-
-                {navPath.map((node, i) => (
-                    <React.Fragment key={i}>
-                        <ChevronRight className="w-2.5 h-2.5 text-primary/70 flex-shrink-0" />
-                        <button
-                            onClick={() => setNavPath(navPath.slice(0, i + 1))}
-                            className="px-1.5 py-0.5 rounded font-sans text-xs font-medium text-accent-gold hover:bg-gold-primary/10 whitespace-nowrap transition-colors leading-compact"
-                        >
-                            {node.planet}
-                        </button>
-                    </React.Fragment>
-                ))}
-            </div>
+            {navPath.length > 0 && (
+                <div className="bg-parchment/30 border-b border-border-warm/10 p-1.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                    {navPath.map((node, i) => (
+                        <React.Fragment key={i}>
+                            {i > 0 && <ChevronRight className="w-2.5 h-2.5 text-primary/70 flex-shrink-0" />}
+                            <button
+                                onClick={() => setNavPath(navPath.slice(0, i + 1))}
+                                className={cn("px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors leading-compact", TYPOGRAPHY.breadcrumb)}
+                            >
+                                {node.planet}
+                            </button>
+                        </React.Fragment>
+                    ))}
+                </div>
+            )}
 
             <div className="flex-1 overflow-x-auto scrollbar-hidden">
                 <table className="w-full border-collapse table-fixed">
                     <thead className="sticky top-0 z-20 bg-parchment/95 backdrop-blur-sm shadow-sm">
-                        <tr className="font-sans text-sm font-semibold text-secondary tracking-wider border-b border-antique/10 leading-normal">
-                            <th className="px-1.5 py-1 text-left w-[45%]">{currentLevelName}</th>
-                            <th className="px-1.5 py-1 text-left w-[20%]">Start</th>
-                            <th className="px-1.5 py-1 text-left w-[20%]">End</th>
-                            <th className="px-1.5 py-1 text-left w-[15%]">Dur</th>
+                        <tr className={cn("border-b border-border-warm/10", TYPOGRAPHY.tableHeader)}>
+                            <th className="px-0.5 py-0.5 text-left w-[30%]">{currentLevelName}</th>
+                            <th className="px-0.5 py-0.5 text-left w-[25%]">Start</th>
+                            <th className="px-0.5 py-0.5 text-left w-[25%]">End</th>
+                            <th className="px-0.5 py-0.5 text-left w-[20%]">Dur</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-antique/5">
@@ -128,14 +119,6 @@ export default function VimshottariTreeGrid({ data, isLoading, className }: Vims
                 </table>
             </div>
 
-            {navPath.length > 0 && (
-                <button
-                    onClick={handleBack}
-                    className="p-2 border-t border-antique/10 bg-parchment/20 flex items-center justify-center gap-1.5 font-sans text-xs font-medium text-accent-gold hover:bg-gold-primary/10 transition-colors leading-compact"
-                >
-                    <ChevronLeft className="w-3 h-3" /> Back to {LEVEL_LABELS[navPath.length - 1] || "Previous"}
-                </button>
-            )}
         </div>
     );
 }
@@ -165,39 +148,39 @@ function DashaDrillRow({ node, depth, onDrill }: { node: DashaNode; depth: numbe
         <tr
             onClick={isDrillable ? onDrill : undefined}
             className={cn(
-                "transition-colors group border-b border-antique/5",
+                "transition-colors group border-b border-border-warm/5",
                 isActive ? "bg-gold-primary/10 font-bold" : "hover:bg-gold-primary/5 text-ink",
                 isDrillable ? "cursor-pointer" : "cursor-default",
                 depth > 0 ? "text-[10px]" : "text-[11px]"
             )}
         >
-            <td className="px-1.5 py-1 align-middle">
-                <div className="flex flex-col gap-1 w-full">
-                    <div className="flex items-center gap-2">
+            <td className="px-0.5 py-0.5 align-middle">
+                <div className="flex flex-col gap-0.5 w-full">
+                    <div className="flex items-center gap-1.5">
                         {isDrillable ? (
                             <ChevronRight className="w-2.5 h-2.5 text-primary/70 group-hover:text-accent-gold transition-colors flex-shrink-0" />
                         ) : (
                             // Spacer for alignment if no chevron
                             <span className="w-2.5 inline-block" />
                         )}
-                        <span className="font-sans text-base font-medium text-primary leading-normal">
+                        <span className={TYPOGRAPHY.planetName}>
                             {node.planet}
                         </span>
                         {isActive && (
-                            <span className="ml-1 px-1 py-0.5 font-sans text-2xs font-semibold text-green-800 bg-green-100 border border-green-300 rounded leading-none">
+                            <span className={cn("ml-1 px-1.5 py-0.5 bg-green-500/20 border border-green-500/30 rounded-full leading-none", TYPOGRAPHY.breadcrumb, "text-green-700 font-bold text-[9px]")}>
                                 A
                             </span>
                         )}
                     </div>
                 </div>
             </td>
-            <td className="px-1.5 py-1 font-sans text-xs text-primary whitespace-nowrap overflow-hidden leading-compact tracking-tight">
+            <td className={cn("px-0.5 py-0.5 overflow-hidden", TYPOGRAPHY.dateAndDuration)}>
                 {formatDate(node.startDate)}
             </td>
-            <td className="px-1.5 py-1 font-sans text-xs text-primary whitespace-nowrap overflow-hidden leading-compact tracking-tight">
+            <td className={cn("px-0.5 py-0.5 overflow-hidden", TYPOGRAPHY.dateAndDuration)}>
                 {formatDate(node.endDate)}
             </td>
-            <td className="px-1.5 py-1 font-sans text-xs text-primary whitespace-nowrap overflow-hidden leading-compact tracking-tight">
+            <td className={cn("px-0.5 py-0.5 overflow-hidden", TYPOGRAPHY.dateAndDuration)}>
                 {durationDisplay}
             </td>
         </tr>

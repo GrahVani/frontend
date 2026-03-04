@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
-import React from 'react';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface ContributorEntry {
     contributor: string;
@@ -86,19 +86,19 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
 
     return (
         <div className={className}>
-            <div className="overflow-x-auto rounded-xl border border-antique">
+            <div className="overflow-x-auto rounded-xl border border-border-warm">
 
                 {/* Table */}
                 <table className="w-full border-collapse text-sm" role="table" aria-label={isSarva ? "Sarvashtakavarga matrix showing planetary bindus across signs" : `Bhinnashtakavarga matrix for ${planet || 'planet'}`}>
                     <thead>
-                        <tr className="bg-amber-50/30 border-b border-antique">
-                            <th className="py-2 px-2 text-left font-semibold text-primary font-sans uppercase w-16 border-r border-antique">
+                        <tr className="bg-amber-50/30 border-b border-border-warm">
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-2 text-left w-16 border-r border-border-warm")}>
                                 {isSarva ? 'Planet' : planet?.substring(0, 4)}
                             </th>
                             {SIGNS.map(s => (
-                                <th key={s} className="py-2 px-1 text-center font-semibold text-secondary font-sans w-8 border-r border-antique">{s}</th>
+                                <th key={s} className={cn(TYPOGRAPHY.tableHeader, "py-2 px-1 text-center w-8 border-r border-border-warm text-secondary")}>{s}</th>
                             ))}
-                            <th className="py-2 px-1.5 text-center font-semibold text-primary font-sans bg-softwhite w-10">Tot</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-1.5 text-center bg-softwhite w-10")}>Tot</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -114,30 +114,30 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                             SIGNS.forEach(s => { rowTot += getVal(rd, s); });
 
                             return (
-                                <tr key={p} className={cn("border-b border-antique", idx % 2 === 1 && "bg-parchment/30")}>
-                                    <td className="py-1.5 px-2 font-medium text-primary font-sans border-r border-antique">{p.substring(0, 3)}</td>
+                                <tr key={p} className={cn("border-b border-border-warm", idx % 2 === 1 && "bg-parchment/30")}>
+                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "py-1.5 px-2 font-medium border-r border-border-warm")}>{p.substring(0, 3)}</td>
                                     {SIGNS.map(s => (
-                                        <td key={s} className="py-1.5 px-1 text-center font-sans text-primary border-r border-antique">{getVal(rd, s)}</td>
+                                        <td key={s} className={cn(TYPOGRAPHY.dateAndDuration, "py-1.5 px-1 text-center border-r border-border-warm")}>{getVal(rd, s)}</td>
                                     ))}
-                                    <td className="py-1.5 px-1.5 text-center font-semibold text-primary font-sans bg-softwhite">{rowTot}</td>
+                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "py-1.5 px-1.5 text-center font-semibold bg-softwhite")}>{rowTot}</td>
                                 </tr>
                             );
                         })}
                     </tbody>
                     <tfoot>
-                        <tr className="bg-softwhite border-t border-b border-antique">
-                            <td className="py-2 px-2 font-semibold text-primary font-sans uppercase text-xs border-r border-antique">SAV</td>
+                        <tr className="bg-softwhite border-t border-b border-border-warm">
+                            <td className={cn(TYPOGRAPHY.label, "py-2 px-2 border-r border-border-warm mb-0")}>SAV</td>
                             {SIGNS.map(s => {
                                 const v = sav[s];
                                 return (
-                                    <td key={s} className="py-2 px-1 text-center border-r border-antique">
+                                    <td key={s} className="py-2 px-1 text-center border-r border-border-warm">
                                         <div className="flex flex-col items-center justify-center leading-none">
-                                            <span className="font-semibold text-primary font-sans text-sm">{v}</span>
+                                            <span className={cn(TYPOGRAPHY.value, "leading-none")}>{v}</span>
                                         </div>
                                     </td>
                                 );
                             })}
-                            <td className="py-2 px-1.5 text-center font-bold text-primary font-sans bg-amber-50/50">
+                            <td className={cn(TYPOGRAPHY.value, "py-2 px-1.5 text-center bg-amber-50/50")}>
                                 {Object.values(sav).reduce((a, b) => a + b, 0)}
                             </td>
                         </tr>
@@ -153,10 +153,10 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                             g.key === 'kama' ? 'border-pink-400' : 'border-blue-400';
                     return (
                         <div key={g.key} className={cn("rounded-lg p-2 border-l-2 bg-softwhite text-center", borderColor)}>
-                            <div className="text-xs font-semibold uppercase text-secondary font-sans">{g.name}</div>
-                            <div className="text-2xs text-muted-refined font-sans">{g.houses.join('-')}</div>
-                            <div className="text-base font-bold text-primary font-sans">{g.total}</div>
-                            <div className="text-2xs text-muted-refined font-sans">{g.desc}</div>
+                            <div className={cn(TYPOGRAPHY.label, "text-secondary")}>{g.name}</div>
+                            <div className={cn(TYPOGRAPHY.subValue, "text-muted-refined mt-0")}>{g.houses.join('-')}</div>
+                            <div className={cn(TYPOGRAPHY.value, "text-base mt-1")}>{g.total}</div>
+                            <div className={cn(TYPOGRAPHY.subValue, "text-muted-refined")}>{g.desc}</div>
                         </div>
                     );
                 })}
@@ -169,13 +169,14 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                 </span>
                 <div className="flex gap-4">
                     <span className="text-secondary inline-flex items-center gap-1">
-                        ↑ Best: Sign {SIGNS.find(s => sav[s] === maxS)} <span className="font-semibold text-primary">({maxS})</span>
+                        â†‘ Best: Sign {SIGNS.find(s => sav[s] === maxS)} <span className="font-semibold text-primary">({maxS})</span>
                     </span>
                     <span className="text-secondary inline-flex items-center gap-1">
-                        ↓ Weak: Sign {SIGNS.find(s => sav[s] === minS)} <span className="font-semibold text-primary">({minS})</span>
+                        â†“ Weak: Sign {SIGNS.find(s => sav[s] === minS)} <span className="font-semibold text-primary">({minS})</span>
                     </span>
                 </div>
             </div>
         </div>
     );
 }
+
