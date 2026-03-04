@@ -33,6 +33,8 @@ import {
 } from 'lucide-react';
 
 
+import { TYPOGRAPHY } from '@/design-tokens/typography';
+
 // ============================================================================
 // PANCHANGA OVERVIEW PAGE — Full-page view with 3 sections
 // ============================================================================
@@ -138,7 +140,8 @@ export default function PanchangaOverviewPage() {
                 const rawData = (result as Record<string, any>).chartData || (result as Record<string, any>).data || result;
                 const cleanData = (rawData as Record<string, any>).avakhada_chakra || rawData;
                 setAvakhadaData(cleanData);
-            } catch (err: unknown) {                setAvakhadaError(err instanceof Error ? err.message : "Failed to load Avakhada Chakra");
+            } catch (err: unknown) {
+                setAvakhadaError(err instanceof Error ? err.message : "Failed to load Avakhada Chakra");
             } finally {
                 setAvakhadaLoading(false);
             }
@@ -166,67 +169,17 @@ export default function PanchangaOverviewPage() {
             {/* ═══════════════════════════════════════════════════════════ */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
                 <div>
-                    <div className="flex items-center gap-2 text-muted-refined text-2xs mb-1 tracking-normal font-medium font-serif">
-                        <Link href="/vedic-astrology/overview" className="hover:text-gold-primary transition-colors flex items-center gap-1">
-                            <ArrowLeft className="w-3 h-3" />
-                            Kundali
-                        </Link>
-                        <span>/</span>
-                        <span>Panchanga Overview</span>
+                    <div className={TYPOGRAPHY.breadcrumb}>
+                        <div className="flex items-center gap-2 mb-1">
+                            <Link href="/vedic-astrology/overview" className="hover:text-gold-primary transition-colors flex items-center gap-1">
+                                <ArrowLeft className="w-3 h-3" />
+                                Kundali
+                            </Link>
+                            <span className="text-primary">/</span>
+                            <span>Panchanga Overview</span>
+                        </div>
                     </div>
                     <h1 className="text-2xl font-serif font-bold text-ink tracking-tight">Panchanga Overview</h1>
-                    <p className="text-2xs text-secondary mt-0.5 font-medium italic font-serif">
-                        Birth-time cosmic alignment for <span className="text-primary font-bold not-italic">{clientDetails.name}</span>
-                    </p>
-                </div>
-            </div>
-
-            {/* ═══════════════════════════════════════════════════════════ */}
-            {/* SECTION 1: CLIENT PROFILE BANNER                          */}
-            {/* ═══════════════════════════════════════════════════════════ */}
-            <div className="bg-border-warm border border-antique rounded-2xl p-6 shadow-sm relative overflow-hidden">
-                <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-6">
-                    {/* Avatar */}
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-header-border to-amber-700 flex items-center justify-center text-white font-serif font-bold text-2xl shrink-0 shadow-lg">
-                        {clientDetails.name.charAt(0)}
-                    </div>
-
-                    {/* Name & Birth Details */}
-                    <div className="flex-1 min-w-0">
-                        <h2 className="text-xl font-serif font-bold text-primary">
-                            {clientDetails.name}
-                        </h2>
-                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2">
-                            <div className="flex items-center gap-1.5 text-primary text-xs font-bold">
-                                <Calendar className="w-3.5 h-3.5 text-accent-gold" />
-                                <span>{formatDate(clientDetails.dateOfBirth)}</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 text-primary text-xs font-bold">
-                                <Clock className="w-3.5 h-3.5 text-accent-gold" />
-                                <span>{formatTime(clientDetails.timeOfBirth)}</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 text-primary text-xs font-bold">
-                                <MapPin className="w-3.5 h-3.5 text-accent-gold" />
-                                <span>{clientDetails.placeOfBirth.city}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Quick Astro Stats */}
-                    <div className="flex gap-3 shrink-0">
-                        <div className="bg-parchment border border-antique/50 rounded-xl px-4 py-3 text-center min-w-[80px]">
-                            <p className="text-2xs tracking-normal text-primary font-bold mb-1 font-serif">Lagna</p>
-                            <p className="font-serif text-sm font-bold text-primary">{signIdToName[(d1Data.ascendant || 1) as number] || '—'}</p>
-                        </div>
-                        <div className="bg-parchment border border-antique/50 rounded-xl px-4 py-3 text-center min-w-[80px]">
-                            <p className="text-2xs tracking-normal text-primary font-bold mb-1 font-serif">Moon</p>
-                            <p className="font-serif text-sm font-bold text-primary">{moonPlanet ? signIdToName[moonPlanet.signId] : '—'}</p>
-                        </div>
-                        <div className="bg-parchment border border-antique/50 rounded-xl px-4 py-3 text-center min-w-[80px]">
-                            <p className="text-2xs tracking-normal text-primary font-bold mb-1 font-serif">Sun</p>
-                            <p className="font-serif text-sm font-bold text-primary">{sunPlanet ? signIdToName[sunPlanet.signId] : '—'}</p>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -239,15 +192,15 @@ export default function PanchangaOverviewPage() {
                         <Sparkle className="w-4 h-4 text-header-border" />
                     </div>
                     <div>
-                        <h3 className="font-serif text-lg font-bold text-primary leading-tight tracking-wide">Birth Panchanga</h3>
-                        <p className="text-2xs text-primary font-medium italic font-serif">Five-fold daily cosmic markers at the moment of birth</p>
+                        <h3 className={TYPOGRAPHY.sectionTitle}>Birth Panchanga</h3>
+                        <p className={cn(TYPOGRAPHY.subValue, "text-primary")}>Five-fold daily cosmic markers at the moment of birth</p>
                     </div>
                 </div>
 
                 {!panchanga ? (
                     <div className="p-12 text-center">
                         <Loader2 className="w-6 h-6 text-gold-primary animate-spin mx-auto mb-3" />
-                        <p className="text-xs font-serif text-primary italic">Loading birth panchanga data...</p>
+                        <p className="text-xs font-serif text-primary">Loading birth panchanga data...</p>
                     </div>
                 ) : (
                     <div className="p-5">
@@ -320,8 +273,8 @@ export default function PanchangaOverviewPage() {
                                         <Sunrise className="w-5 h-5 text-amber-500" />
                                     </div>
                                     <div>
-                                        <p className="text-2xs tracking-normal text-primary font-bold mb-0.5">Sunrise</p>
-                                        <p className="font-serif text-lg font-bold text-primary">{times.sunrise?.time || '—'}</p>
+                                        <p className={TYPOGRAPHY.label}>Sunrise</p>
+                                        <p className={TYPOGRAPHY.value}>{times.sunrise?.time || '—'}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-indigo-50/80 to-transparent rounded-xl border border-indigo-200/30">
@@ -329,8 +282,8 @@ export default function PanchangaOverviewPage() {
                                         <Sunset className="w-5 h-5 text-indigo-500" />
                                     </div>
                                     <div>
-                                        <p className="text-2xs tracking-normal text-primary font-bold mb-0.5">Sunset</p>
-                                        <p className="font-serif text-lg font-bold text-primary">{times.sunset?.time || '—'}</p>
+                                        <p className={TYPOGRAPHY.label}>Sunset</p>
+                                        <p className={TYPOGRAPHY.value}>{times.sunset?.time || '—'}</p>
                                     </div>
                                 </div>
                             </div>
@@ -348,10 +301,10 @@ export default function PanchangaOverviewPage() {
                         <Star className="w-4 h-4 text-header-border" />
                     </div>
                     <div>
-                        <h3 className="font-serif text-lg font-bold text-primary leading-tight tracking-wide">
+                        <h3 className={TYPOGRAPHY.sectionTitle}>
                             Avakhada Chakra
                         </h3>
-                        <p className="text-2xs text-primary font-medium italic font-serif">
+                        <p className={cn(TYPOGRAPHY.subValue, "text-primary")}>
                             Foundational classification — compatibility & character attributes
                         </p>
                     </div>
@@ -372,61 +325,147 @@ export default function PanchangaOverviewPage() {
                     </div>
                 ) : (
                     <div className="p-5">
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                            {AVAKHADA_ITEMS.map((item) => {
-                                const value = String(avakhadaData[item.key] || avakhadaData[item.key.toLowerCase()] || '');
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {[
+                                {
+                                    key: "varna",
+                                    label: "Varna",
+                                    description: "Represents the inherent temperament, ego, and spiritual inclination of the individual. It is categorized into four types (Brahmin, Kshatriya, Vaishya, Shudra).",
+                                    getInChart: (val: string) => val?.toLowerCase() === 'brahmin' ? "Brahmin indicates a natural inclination towards intellectual pursuits, teaching, learning, and spiritual or philosophical matters. In compatibility, it reflects the \"ego level\" of the partners." : null,
+                                    icon: Shield, color: 'from-amber-500/10 to-orange-500/10', borderColor: 'border-amber-200/50', bgColor: 'bg-amber-100/50', textColor: 'text-amber-900', titleColor: 'text-amber-700'
+                                },
+                                {
+                                    key: "vashya",
+                                    label: "Vashya",
+                                    description: "Translates to \"control\" or \"attraction.\" It classifies signs into different categories (bipeds, quadrupeds, insects, water-dwelling, etc.) to evaluate mutual attraction and power dynamics in a relationship.",
+                                    getInChart: (val: string) => val?.toLowerCase() === 'jalachara' ? "Jalachara (Water-dwelling) is derived from the Moon being in Cancer." : null,
+                                    icon: Anchor, color: 'from-blue-500/10 to-cyan-500/10', borderColor: 'border-blue-200/50', bgColor: 'bg-blue-100/50', textColor: 'text-blue-900', titleColor: 'text-blue-700'
+                                },
+                                {
+                                    key: "nakshatra_pada",
+                                    label: "Nakshatra - Pada",
+                                    description: "The exact lunar mansion (out of 27) the Moon occupied at birth. Each Nakshatra is divided into 4 quarters called Padas.",
+                                    getInChart: (val: string) => (val?.toLowerCase().includes('ashlesha') && val?.includes('2')) ? "The Moon was in Ashlesha Nakshatra, specifically in its 2nd quarter. This is the precise coordinate used to calculate many of the other factors in this table." : null,
+                                    icon: Star, color: 'from-yellow-500/10 to-amber-500/10', borderColor: 'border-yellow-200/50', bgColor: 'bg-yellow-100/50', textColor: 'text-yellow-900', titleColor: 'text-yellow-700'
+                                },
+                                {
+                                    key: "yoni",
+                                    label: "Yoni",
+                                    description: "Translates to \"source\" or \"female reproductive organ,\" but in this context, it assigns an animal archetype to the Nakshatra. It is primarily used to assess physical, sexual, and instinctual compatibility (Yoni Koota) between partners to ensure there is no natural enmity (like Dog and Hare).",
+                                    getInChart: (val: string) => val?.toLowerCase() === 'marjara' ? "Marjara means Cat." : null,
+                                    icon: Hexagon, color: 'from-emerald-500/10 to-green-500/10', borderColor: 'border-emerald-200/50', bgColor: 'bg-emerald-100/50', textColor: 'text-emerald-900', titleColor: 'text-emerald-700'
+                                },
+                                {
+                                    key: "rashi_lord",
+                                    label: "Rashish",
+                                    description: "The planetary lord or ruler of the person's Moon sign (Rashi).",
+                                    getInChart: (val: string, rashi: string) => (rashi?.toLowerCase() === 'cancer' && val?.toLowerCase() === 'moon') ? "Because the Rashi is Cancer, the planetary ruler is the Moon (Chandra)." : null,
+                                    icon: Moon, color: 'from-indigo-500/10 to-blue-500/10', borderColor: 'border-indigo-200/50', bgColor: 'bg-indigo-100/50', textColor: 'text-indigo-900', titleColor: 'text-indigo-700'
+                                },
+                                {
+                                    key: "gana",
+                                    label: "Gana",
+                                    description: "Classifies the temperament of the Nakshatra into three categories: Deva (Divine), Manushya (Human), or Rakshasa (Demon/Fierce). It indicates how a person reacts to challenges.",
+                                    getInChart: (val: string) => val?.toLowerCase() === 'rakshasa' ? "Rakshasa indicates a strong-willed, independent, fiercely protective, and highly intuitive nature that can be unyielding or aggressive when pushed." : null,
+                                    icon: UsersIcon, color: 'from-violet-500/10 to-purple-500/10', borderColor: 'border-violet-200/50', bgColor: 'bg-violet-100/50', textColor: 'text-violet-900', titleColor: 'text-violet-700'
+                                },
+                                {
+                                    key: "rashi",
+                                    label: "Rashi",
+                                    description: "The Zodiac sign (out of 12) where the Moon was placed at birth. It governs the mind, emotions, and psychological disposition.",
+                                    getInChart: (val: string) => val?.toLowerCase() === 'cancer' ? "Cancer (Karka), a water sign indicating emotional depth and sensitivity." : null,
+                                    icon: Moon, color: 'from-sky-500/10 to-blue-500/10', borderColor: 'border-sky-200/50', bgColor: 'bg-sky-100/50', textColor: 'text-sky-900', titleColor: 'text-sky-700'
+                                },
+                                {
+                                    key: "nadi",
+                                    label: "Nadi",
+                                    description: "Represents the physiological and neurobiological constitution of the individual, roughly correlating to the three Ayurvedic doshas (Vata, Pitta, Kapha). It is the most heavily weighted factor (8 points) in marriage compatibility to ensure genetic and energetic health of progeny.",
+                                    getInChart: (val: string) => val?.toLowerCase() === 'antya' ? "Antya (ending) generally corresponds to Kapha (phlegm/water) energy." : null,
+                                    icon: Activity, color: 'from-rose-500/10 to-pink-500/10', borderColor: 'border-rose-200/50', bgColor: 'bg-rose-100/50', textColor: 'text-rose-900', titleColor: 'text-rose-700'
+                                },
+                                {
+                                    key: "varga",
+                                    label: "Varga",
+                                    description: "Similar to Yoni, this assigns an animal classification (often based on the starting letter of the name) used to check for mutual friendships or enmities in basic daily interactions.",
+                                    getInChart: (val: string) => val?.toLowerCase() === 'shwana' ? "Shwana means Dog." : null,
+                                    icon: UsersIcon, color: 'from-stone-500/10 to-neutral-500/10', borderColor: 'border-stone-200/50', bgColor: 'bg-stone-100/50', textColor: 'text-stone-900', titleColor: 'text-stone-700'
+                                },
+                                {
+                                    key: "yunja",
+                                    label: "Yunja",
+                                    description: "Relates to the \"connection\" or binding energy of the Nakshatra, sometimes used to see the flow of prosperity or energy.",
+                                    getInChart: (val: string) => val?.toLowerCase() === 'madya' ? "Madya means middle." : null,
+                                    icon: Zap, color: 'from-fuchsia-500/10 to-pink-500/10', borderColor: 'border-fuchsia-200/50', bgColor: 'bg-fuchsia-100/50', textColor: 'text-fuchsia-900', titleColor: 'text-fuchsia-700'
+                                },
+                                {
+                                    key: "symbol_tatva",
+                                    label: "Hansak / Tatwa",
+                                    description: "The elemental nature of the Moon sign (Fire, Earth, Air, or Water).",
+                                    getInChart: (val: string, rashi: string) => val?.toLowerCase() === 'jala' ? `Jala means Water, aligning with the ${rashi || 'Cancer'} Rashi.` : null,
+                                    icon: Feather, color: 'from-teal-500/10 to-emerald-500/10', borderColor: 'border-teal-200/50', bgColor: 'bg-teal-100/50', textColor: 'text-teal-900', titleColor: 'text-teal-700'
+                                },
+                                {
+                                    key: "namakshar",
+                                    label: "Naamakshar",
+                                    description: "The highly auspicious starting phonetic sound or syllable for the person's given name. This is directly dictated by the Nakshatra Pada. Traditional pundits use this heavily for naming and quick compatibility checks.",
+                                    getInChart: () => null,
+                                    icon: TypeIcon, color: 'from-cyan-500/10 to-sky-500/10', borderColor: 'border-cyan-200/50', bgColor: 'bg-cyan-100/50', textColor: 'text-cyan-900', titleColor: 'text-cyan-700'
+                                },
+                                {
+                                    key: "paya",
+                                    label: "Paya (Rashi/Nakshatra)",
+                                    description: "Refers to the \"footing\" or foundation on which the Moon arrived at birth. It predicts the general ease, wealth, and auspiciousness of the person's early life.",
+                                    getInChart: (val: string) => (val?.toLowerCase().includes('silver') || val?.toLowerCase().includes('copper')) ? "Silver is considered highly auspicious and prosperous, while Copper is also very positive, indicating stability." : null,
+                                    icon: Disc, color: 'from-slate-500/10 to-gray-500/10', borderColor: 'border-slate-200/50', bgColor: 'bg-slate-100/50', textColor: 'text-slate-900', titleColor: 'text-slate-700'
+                                }
+                            ].map((item, idx) => {
+                                let value = '';
+                                if (item.key === 'nakshatra_pada') {
+                                    const nakshatra = String(avakhadaData?.nakshatra || avakhadaData?.Nakshatra || '');
+                                    const pada = String(avakhadaData?.pada || avakhadaData?.Pada || '');
+                                    value = [nakshatra, pada].filter(Boolean).join(' - ');
+                                } else if (item.key === 'paya') {
+                                    const rashi = String(avakhadaData?.paya_rashi || avakhadaData?.Paya_Rashi || '');
+                                    const nakshatra = String(avakhadaData?.paya_nakshatra || avakhadaData?.Paya_Nakshatra || '');
+                                    value = [rashi, nakshatra].filter(Boolean).join('/');
+                                } else {
+                                    value = String(avakhadaData?.[item.key] || avakhadaData?.[item.key.toLowerCase()] || avakhadaData?.[item.label] || '');
+                                }
+
                                 if (!value) return null;
 
+                                const rashi = String(avakhadaData?.rashi || avakhadaData?.Rashi || '');
+                                const inChart = item.getInChart(value, rashi);
+
                                 return (
-                                    <div
-                                        key={item.key}
-                                        className={cn(
-                                            "relative bg-gradient-to-br p-4 rounded-xl border hover:shadow-lg transition-all group",
-                                            item.color,
-                                            "border-antique/30 hover:border-gold-primary/40"
-                                        )}
-                                    >
-                                        {/* Header */}
-                                        <div className="flex justify-between items-start mb-2">
-                                            <div>
-                                                <span className="font-bold tracking-normal text-primary block font-serif">{item.label}</span>
-                                                <span className="text-primary font-serif font-bold">{item.sanskrit}</span>
+                                    <div key={item.key} className={cn("rounded-2xl border p-5 flex flex-col h-full bg-gradient-to-br shadow-sm hover:shadow-md transition-shadow", item.color, item.borderColor)}>
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className={cn("p-2 rounded-xl bg-white/80 shadow-sm", item.titleColor)}>
+                                                    <item.icon className="w-5 h-5" />
+                                                </div>
+                                                <h4 className={TYPOGRAPHY.planetName}>{item.label}</h4>
                                             </div>
-                                            <item.icon className={cn("w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity", item.accent)} />
+                                            <span className={cn(TYPOGRAPHY.value, item.titleColor)}>{value}</span>
                                         </div>
-                                        {/* Value */}
-                                        <div className="font-serif text-base font-bold text-primary leading-tight mb-1" title={value}>
-                                            {value}
-                                        </div>
-                                        {/* Description */}
-                                        <div className="text-primary font-medium italic leading-snug transition-opacity">
-                                            {item.desc}
-                                        </div>
+                                        <p className="text-sm font-medium text-primary leading-relaxed mb-5 flex-grow font-sans">
+                                            {item.description}
+                                        </p>
+                                        {inChart && (
+                                            <div className={cn("mt-auto p-4 rounded-xl border border-white/20", item.bgColor)}>
+                                                <div className="flex items-center gap-1.5 mb-2">
+                                                    <Sparkle className={cn("w-4 h-4 text-accent-gold", item.titleColor)} />
+                                                    <span className={cn("font-bold text-xs uppercase tracking-wider font-sans", item.titleColor)}>In this chart</span>
+                                                </div>
+                                                <p className={cn("text-sm font-medium leading-relaxed font-sans", item.textColor)}>
+                                                    {inChart}
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
                                 );
                             })}
-
-                            {/* Hamsa Swara (extra field) */}
-                            {avakhadaData.hamsa_swara != null && (
-                                <div className="relative bg-gradient-to-br from-sky-500/10 to-blue-500/10 p-4 rounded-xl border border-antique/30 hover:border-gold-primary/40 hover:shadow-lg transition-all group">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <div>
-                                            <span className="font-bold tracking-normal text-primary block font-serif">Hamsa Swara</span>
-                                            <span className="text-primary font-serif font-bold">हंस स्वर</span>
-                                        </div>
-                                        <Feather className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity text-sky-600" />
-                                    </div>
-                                    <div className="font-serif text-base font-bold text-primary leading-tight mb-1">
-                                        {String(avakhadaData.hamsa_swara)}
-                                    </div>
-                                    <div className="text-primary font-medium italic leading-snug transition-opacity">
-                                        Life breath classification
-                                    </div>
-                                </div>
-                            )}
                         </div>
-
-
                     </div>
                 )}
             </div>
@@ -458,18 +497,18 @@ function PanchangaCard({
         )}>
             <div className="flex items-start justify-between mb-3">
                 <div>
-                    <p className="text-2xs font-bold tracking-normal text-primary font-serif">{label}</p>
-                    <p className="text-2xs text-primary font-serif font-medium">{sanskrit}</p>
+                    <p className={TYPOGRAPHY.label}>{label}</p>
+                    <p className={cn(TYPOGRAPHY.subValue, "text-primary mt-0.5")}>{sanskrit}</p>
                 </div>
                 <div className="p-1.5 bg-white/80 rounded-lg shadow-xs group-hover:shadow-sm transition-shadow">
                     <Icon className={cn("w-4 h-4", iconColor)} />
                 </div>
             </div>
-            <p className="font-serif text-lg font-bold text-primary leading-tight">{value}</p>
+            <p className={TYPOGRAPHY.value}>{value}</p>
             {subValue && (
-                <p className="text-2xs text-primary font-bold mt-0.5">{subValue}</p>
+                <p className={TYPOGRAPHY.subValue}>{subValue}</p>
             )}
-            <p className="text-2xs text-primary font-medium italic mt-2 leading-snug transition-opacity">{description}</p>
+            <p className={cn(TYPOGRAPHY.subValue, "text-primary mt-2 whitespace-normal leading-snug")}>{description}</p>
         </div>
     );
 }

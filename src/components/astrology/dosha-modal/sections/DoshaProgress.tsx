@@ -3,6 +3,7 @@
 import React, { memo } from 'react';
 import { Zap, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface DoshaProgressProps {
     data: {
@@ -43,7 +44,7 @@ export const DoshaProgress = memo(function DoshaProgress({ data }: DoshaProgress
                     <h4 className="text-[10px] font-black text-red-900 uppercase mb-2 flex items-center gap-1.5">
                         <Zap className="w-3 h-3" /> Phase Specifics
                     </h4>
-                    <p className="text-xs text-secondary leading-relaxed italic">
+                    <p className={cn(TYPOGRAPHY.subValue, " leading-relaxed italic")}>
                         "{data.description}"
                     </p>
                 </div>

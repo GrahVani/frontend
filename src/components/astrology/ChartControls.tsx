@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Eye, Settings } from 'lucide-react';
 import ParchmentSelect from "@/components/ui/ParchmentSelect";
@@ -33,7 +33,7 @@ export default function ChartControls() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between border-b border-antique pb-2">
+            <div className="flex items-center justify-between border-b border-border-warm pb-2">
                 <h3 className="font-serif text-gold-dark text-sm font-bold uppercase tracking-widest">
                     Chart Configuration
                 </h3>
@@ -43,9 +43,9 @@ export default function ChartControls() {
             </div>
 
             {/* Ayanamsa Info / Toggle */}
-            <div className="bg-parchment-light border border-antique rounded-xl p-3 flex items-center justify-between">
+            <div className="bg-parchment-light border border-border-warm rounded-xl p-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-white border border-antique flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-white border border-border-warm flex items-center justify-center">
                         <Info className="w-4 h-4 text-gold-dark" />
                     </div>
                     <div>
@@ -125,7 +125,7 @@ export default function ChartControls() {
             </div>
 
             {/* Action Button */}
-            <div className="pt-4 border-t border-antique flex justify-center">
+            <div className="pt-4 border-t border-border-warm flex justify-center">
                 <GoldenButton
                     topText="Generate"
                     bottomText="Chart"
@@ -136,4 +136,5 @@ export default function ChartControls() {
         </div>
     );
 }
+
 

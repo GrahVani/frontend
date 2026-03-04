@@ -18,6 +18,7 @@ import {
     Moon
 } from 'lucide-react';
 import DebugConsole from '@/components/debug/DebugConsole';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface LalKitabDashboardProps {
     data: Record<string, unknown>;
@@ -51,10 +52,10 @@ export default function LalKitabDashboard({ data, className }: LalKitabDashboard
                             <Sparkles className="w-6 h-6 text-accent-gold" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-serif font-black text-text-tertiary tracking-tight flex items-center gap-3">
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-black tracking-tight flex items-center gap-3")}>
                                 Lal Kitab Remedial Plan
                             </h2>
-                            <p className="text-muted-refined text-xs font-medium uppercase tracking-widest mt-0.5">
+                            <p className={cn(TYPOGRAPHY.label, "mt-0.5 text-muted-refined")}>
                                 Accurate Prescription for <span className="text-accent-gold font-bold">{String(data.user_name || "Sadhaka")}</span>
                             </p>
                         </div>

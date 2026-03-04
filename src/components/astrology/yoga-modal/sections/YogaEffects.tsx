@@ -1,6 +1,8 @@
-'use client';
+﻿'use client';
 
 import React, { memo } from 'react';
+import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { Target } from 'lucide-react';
 import type { NormalizedEffects } from '@/types/yoga.types';
 
@@ -10,7 +12,7 @@ interface YogaEffectsProps {
 
 export const YogaEffects = memo(function YogaEffects({ data }: YogaEffectsProps) {
     return (
-        <div className="bg-softwhite border border-antique rounded-2xl p-5">
+        <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
             <h3 className="font-serif font-bold text-primary mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
                 <Target className="w-4 h-4 text-gold-primary" /> Effects & Impacts
             </h3>
@@ -22,7 +24,7 @@ export const YogaEffects = memo(function YogaEffects({ data }: YogaEffectsProps)
                             <div className="p-1 px-1.5 bg-gold-primary/20 text-primary rounded-md text-[10px] font-bold mt-0.5 group-hover:bg-gold-primary group-hover:text-white transition-colors shrink-0">
                                 0{i + 1}
                             </div>
-                            <p className="text-xs text-primary leading-relaxed capitalize">
+                            <p className={cn(TYPOGRAPHY.value, "text-xs leading-relaxed capitalize")}>
                                 {effect.replace(/_/g, ' ')}
                             </p>
                         </div>
@@ -31,10 +33,11 @@ export const YogaEffects = memo(function YogaEffects({ data }: YogaEffectsProps)
             )}
 
             {data.overall && (
-                <div className="p-3 bg-parchment/50 rounded-xl border border-antique/50 italic text-[11px] leading-relaxed text-primary opacity-80">
+                <div className="p-3 bg-parchment/50 rounded-xl border border-border-warm/50 italic text-[11px] leading-relaxed text-primary opacity-80">
                     &ldquo;{data.overall}&rdquo;
                 </div>
             )}
         </div>
     );
 });
+

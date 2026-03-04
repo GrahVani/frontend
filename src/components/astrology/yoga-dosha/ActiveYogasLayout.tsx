@@ -1,8 +1,9 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronRight, Sparkles, Clock, Info, Maximize2, X, ArrowDown, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import NorthIndianChart, { Planet } from '@/components/astrology/NorthIndianChart/NorthIndianChart';
 import { ChartWithPopup } from "@/components/astrology/NorthIndianChart";
 import { Modal } from '@/components/ui/Modal';
@@ -63,9 +64,9 @@ export default function ActiveYogasLayout({
         <div className={cn("flex flex-col lg:flex-row gap-4 p-4 bg-parchment min-h-screen font-sans", className)}>
             {/* LEFT: Birth Chart - Fixed Width */}
             <div className="flex flex-col gap-2 h-[480px] w-full lg:w-[440px] shrink-0">
-                <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm max-w-[440px]">
-                    <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center shrink-0">
-                        <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Birth Chart (D1)</h3>
+                <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm max-w-[440px]">
+                    <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm flex justify-between items-center shrink-0">
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "leading-tight tracking-wide")}>Birth Chart (D1)</h3>
                         <button
                             onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })}
                             className="text-primary hover:text-accent-gold transition-colors"
@@ -88,9 +89,9 @@ export default function ActiveYogasLayout({
 
             {/* RIGHT: Yogas & Details - Flexible Width */}
             <div className="flex-1 flex flex-col gap-2 h-[480px] min-w-0">
-                <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm">
-                    <div className="bg-border-warm px-4 py-2 border-b border-antique flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
-                        <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide whitespace-nowrap">Yogas & Combinations</h3>
+                <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm">
+                    <div className="bg-border-warm px-4 py-2 border-b border-border-warm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "leading-tight tracking-wide whitespace-nowrap")}>Yogas & Combinations</h3>
 
                         {/* Integrated Header Dropdown */}
                         <div className="relative group w-full sm:w-48 shrink-0">
@@ -109,8 +110,9 @@ export default function ActiveYogasLayout({
                                             type: item.id
                                         });
                                     }
-                                }}
-                                className="w-full pl-3 pr-8 py-1.5 bg-white/80 border border-gold-primary/30 rounded-xl text-[10px] font-bold text-primary appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-gold-primary/30 transition-all shadow-sm group-hover:bg-white"
+                                }
+                                }
+                                className={cn(TYPOGRAPHY.value, "w-full pl-3 pr-8 py-1.5 bg-white/80 border border-gold-primary/30 rounded-xl appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-gold-primary/30 transition-all shadow-sm group-hover:bg-white")}
                             >
                                 <optgroup label="Benefic" className="font-serif italic text-primary">
                                     {allYogas.filter(y => y.category === 'benefic').map(y => (
@@ -149,7 +151,7 @@ export default function ActiveYogasLayout({
                                     </div>
 
                                     {/* Detail Footer - Simplified */}
-                                    <div className="bg-parchment/30 px-5 py-3 border-t border-antique/30 flex justify-center shrink-0">
+                                    <div className="bg-parchment/30 px-5 py-3 border-t border-border-warm/30 flex justify-center shrink-0">
                                         <button
                                             onClick={() => setSelectedYoga(null)}
                                             className="text-primary hover:text-accent-gold transition-colors text-[9px] font-bold uppercase tracking-[0.15em] flex items-center gap-1.5"
@@ -167,7 +169,7 @@ export default function ActiveYogasLayout({
             {/* Modal for Zoom */}
             {zoomedChart && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl bg-ink/40 animate-in fade-in zoom-in-95 duration-300">
-                    <div className="bg-softwhite border border-antique rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl">
+                    <div className="bg-softwhite border border-border-warm rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl">
                         <button
                             onClick={() => setZoomedChart(null)}
                             className="absolute top-4 right-4 p-2 rounded-xl bg-parchment text-primary hover:bg-gold-primary/20 hover:text-accent-gold transition-all"
@@ -175,10 +177,10 @@ export default function ActiveYogasLayout({
                             <X className="w-5 h-5" />
                         </button>
                         <div className="mb-6 text-center">
-                            <h2 className="font-serif text-xl font-semibold text-primary leading-tight">{zoomedChart.label}</h2>
-                            <p className="font-sans text-xs text-primary uppercase tracking-wider leading-compact mt-2">{zoomedChart.varga} Divisional Chart</p>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-xl")}>{zoomedChart.label}</h2>
+                            <p className={cn(TYPOGRAPHY.label, "mt-2")}>{zoomedChart.varga} Divisional Chart</p>
                         </div>
-                        <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6 border border-antique">
+                        <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6 border border-border-warm">
                             <ChartWithPopup
                                 ascendantSign={ascendantSign}
                                 planets={planets}
@@ -192,3 +194,4 @@ export default function ActiveYogasLayout({
         </div>
     );
 }
+

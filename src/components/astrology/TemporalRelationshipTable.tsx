@@ -1,7 +1,8 @@
-"use client";
+﻿"use client";
 
 import React from 'react';
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface TemporalRelationEntry {
     planet: string;
@@ -31,9 +32,9 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
     const entries: TemporalRelationEntry[] = Array.isArray(data) ? data : ((data as TemporalRelationshipData).tatkalik_maitri_chakra || []);
 
     return (
-        <div className={cn("w-full bg-surface-warm border border-antique rounded-xl overflow-hidden shadow-sm", className)}>
-            <div className="bg-border-warm px-4 py-2 border-b border-antique">
-                <h3 className="text-lg font-serif font-bold text-primary text-center">
+        <div className={cn("w-full bg-surface-warm border border-border-warm rounded-xl overflow-hidden shadow-sm", className)}>
+            <div className="bg-border-warm px-4 py-2 border-b border-border-warm">
+                <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-center")}>
                     Tatkalik Maitri Chakra <span className="text-sm font-normal text-secondary">(Temporal Relationship)</span>
                 </h3>
             </div>
@@ -42,9 +43,9 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
                 <table className="w-full border-collapse">
                     <thead>
                         <tr className="bg-parchment/30">
-                            <th className="border border-antique/50 p-2 bg-parchment/50"></th>
+                            <th className="border border-border-warm/50 p-2 bg-parchment/50"></th>
                             {PLANETS.map(planet => (
-                                <th key={planet} className="border border-antique/50 p-2 text-xs font-bold text-primary font-serif">
+                                <th key={planet} className={cn(TYPOGRAPHY.tableHeader, "border border-border-warm/50 p-2 text-center")}>
                                     {planet}
                                 </th>
                             ))}
@@ -53,7 +54,7 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
                     <tbody>
                         {/* Friends Row */}
                         <tr>
-                            <td className="border border-antique/50 p-3 text-sm font-bold text-primary bg-parchment/50 font-serif">
+                            <td className={cn(TYPOGRAPHY.label, "border border-border-warm/50 p-3 bg-parchment/50 mb-0")}>
                                 Friends
                             </td>
                             {PLANETS.map(planetName => {
@@ -72,12 +73,12 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
                                 }
 
                                 return (
-                                    <td key={planetName} className="border border-antique/50 p-2 text-xs text-primary text-center align-top min-w-[80px]">
+                                    <td key={planetName} className={cn(TYPOGRAPHY.value, "border border-border-warm/50 p-2 text-center align-top min-w-[80px] font-normal")}>
                                         <div className="flex flex-col gap-1">
                                             {friends.map((friend: string) => (
                                                 <span key={friend}>{friend}</span>
                                             ))}
-                                            {friends.length === 0 && <span className="text-secondary/50">—</span>}
+                                            {friends.length === 0 && <span className="text-secondary/50">â€”</span>}
                                         </div>
                                     </td>
                                 );
@@ -85,7 +86,7 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
                         </tr>
                         {/* Enemies Row */}
                         <tr className="bg-antique/5">
-                            <td className="border border-antique/50 p-3 text-sm font-bold text-primary bg-parchment/50 font-serif">
+                            <td className={cn(TYPOGRAPHY.label, "border border-border-warm/50 p-3 bg-parchment/50 mb-0")}>
                                 Enemies
                             </td>
                             {PLANETS.map(planetName => {
@@ -102,12 +103,12 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
                                 }
 
                                 return (
-                                    <td key={planetName} className="border border-antique/50 p-2 text-xs text-primary text-center align-top min-w-[80px]">
+                                    <td key={planetName} className={cn(TYPOGRAPHY.value, "border border-border-warm/50 p-2 text-center align-top min-w-[80px] font-normal")}>
                                         <div className="flex flex-col gap-1">
                                             {enemies.map((enemy: string) => (
                                                 <span key={enemy}>{enemy}</span>
                                             ))}
-                                            {enemies.length === 0 && <span className="text-secondary/50">—</span>}
+                                            {enemies.length === 0 && <span className="text-secondary/50">â€”</span>}
                                         </div>
                                     </td>
                                 );
@@ -119,3 +120,4 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
         </div>
     );
 }
+

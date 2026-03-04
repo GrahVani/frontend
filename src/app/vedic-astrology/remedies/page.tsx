@@ -19,6 +19,7 @@ import { useVedicClient } from '@/context/VedicClientContext';
 import { useAstrologerStore } from '@/store/useAstrologerStore';
 import { clientApi } from '@/lib/api';
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import UpayaDashboard from '@/components/upaya/UpayaDashboard';
 import YantraDashboard from '@/components/upaya/YantraDashboard';
 import LalKitabDashboard from '@/components/upaya/LalKitabDashboard';
@@ -132,44 +133,44 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
 
                     return (
                         <div key={key} className="bg-white border border-antique rounded-2xl p-5 hover:shadow-md transition-shadow">
-                            <h3 className="font-serif font-bold text-primary text-base capitalize mb-3 flex items-center gap-2">
+                            <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-3 flex items-center gap-2")}>
                                 <Sparkles className="w-4 h-4 text-gold-primary" />
                                 {key.replace(/_/g, ' ')}
                             </h3>
                             {typeof value === 'string' ? (
-                                <p className="text-sm text-primary leading-relaxed">{value}</p>
+                                <p className={TYPOGRAPHY.value}>{value}</p>
                             ) : typeof value === 'object' && value !== null ? (
                                 <div className="space-y-2">
                                     {Array.isArray(value) ? (
                                         value.map((item: unknown, i: number) => (
                                             <div key={i} className="bg-parchment/50 rounded-xl p-4 border border-antique/50">
                                                 {typeof item === 'string' ? (
-                                                    <p className="text-sm text-primary">{item}</p>
+                                                    <p className={TYPOGRAPHY.value}>{item}</p>
                                                 ) : (typeof item === 'object' && item !== null) ? (
                                                     <div className="grid grid-cols-2 gap-2">
                                                         {Object.entries(item as Record<string, unknown>).map(([k, v]) => (
                                                             <div key={k} className="text-sm">
-                                                                <span className="text-primary text-xs uppercase tracking-wider">{k.replace(/_/g, ' ')}: </span>
-                                                                <span className="text-primary font-medium">{String(v)}</span>
+                                                                <span className={TYPOGRAPHY.label}>{k.replace(/_/g, ' ')}: </span>
+                                                                <span className={TYPOGRAPHY.value}>{String(v)}</span>
                                                             </div>
                                                         ))}
                                                     </div>
                                                 ) : (
-                                                    <p className="text-sm text-primary">{String(item)}</p>
+                                                    <p className={TYPOGRAPHY.value}>{String(item)}</p>
                                                 )}
                                             </div>
                                         ))
                                     ) : (
                                         Object.entries(value).map(([k, v]) => (
                                             <div key={k} className="flex items-start gap-2 text-sm bg-parchment/30 rounded-lg p-3">
-                                                <span className="text-primary min-w-[120px] text-xs uppercase tracking-wider font-medium">{k.replace(/_/g, ' ')}</span>
-                                                <span className="text-primary">{typeof v === 'object' ? JSON.stringify(v, null, 2) : String(v)}</span>
+                                                <span className={cn(TYPOGRAPHY.label, "min-w-[120px]")}>{k.replace(/_/g, ' ')}</span>
+                                                <span className={TYPOGRAPHY.value}>{typeof v === 'object' ? JSON.stringify(v, null, 2) : String(v)}</span>
                                             </div>
                                         ))
                                     )}
                                 </div>
                             ) : (
-                                <p className="text-sm text-primary">{String(value)}</p>
+                                <p className={TYPOGRAPHY.value}>{String(value)}</p>
                             )}
                         </div>
                     );
@@ -185,13 +186,13 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
                 {remedyContent.map((item: unknown, i: number) => (
                     <div key={i} className="bg-white border border-antique rounded-2xl p-5">
                         {typeof item === 'string' ? (
-                            <p className="text-sm text-primary">{item}</p>
+                            <p className={TYPOGRAPHY.value}>{item}</p>
                         ) : (typeof item === 'object' && item !== null) ? (
                             <div className="space-y-2">
                                 {Object.entries(item as Record<string, unknown>).map(([k, v]) => (
                                     <div key={k} className="flex items-start gap-2 text-sm">
-                                        <span className="text-primary min-w-[120px] text-xs uppercase tracking-wider font-medium">{k.replace(/_/g, ' ')}</span>
-                                        <span className="text-primary">{String(v)}</span>
+                                        <span className={cn(TYPOGRAPHY.label, "min-w-[120px]")}>{k.replace(/_/g, ' ')}</span>
+                                        <span className={TYPOGRAPHY.value}>{String(v)}</span>
                                     </div>
                                 ))}
                             </div>
@@ -266,7 +267,8 @@ export default function RemediesPage() {
                     ...prev,
                     [activeTab]: (result.data || result.chartData || result) as Record<string, unknown>
                 }));
-            } catch (err: unknown) {                setError(err instanceof Error ? err.message : `Failed to fetch ${activeRemedyTab.name} data`);
+            } catch (err: unknown) {
+                setError(err instanceof Error ? err.message : `Failed to fetch ${activeRemedyTab.name} data`);
             } finally {
                 setLoading(false);
             }
@@ -316,8 +318,8 @@ export default function RemediesPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
                 <Gem className="w-12 h-12 text-primary mb-4" />
-                <h2 className="text-xl font-serif font-bold text-primary mb-2">Upaya — Lahiri Only</h2>
-                <p className="text-primary text-sm max-w-md">
+                <h2 className={cn(TYPOGRAPHY.sectionTitle, "mb-2")}>Upaya — Lahiri Only</h2>
+                <p className={cn(TYPOGRAPHY.value, "max-w-md")}>
                     Remedial prescriptions are currently available exclusively with the <strong>Lahiri Ayanamsa</strong>.
                     Please switch to Lahiri from the header dropdown to access remedies.
                 </p>
@@ -353,7 +355,7 @@ export default function RemediesPage() {
             {activeTab === 'lal_kitab' && (
                 <div className="flex flex-wrap gap-4 p-4 bg-white/50 rounded-xl border border-antique shadow-sm animate-in slide-in-from-top-2">
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-serif font-medium text-primary uppercase tracking-wider">Select Planet</label>
+                        <label className={cn(TYPOGRAPHY.label, "mb-0")}>Select Planet</label>
                         <select
                             value={selectedPlanet}
                             onChange={(e) => setSelectedPlanet(e.target.value)}
@@ -367,7 +369,7 @@ export default function RemediesPage() {
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-serif font-medium text-primary uppercase tracking-wider">Select House</label>
+                        <label className={cn(TYPOGRAPHY.label, "mb-0")}>Select House</label>
                         <select
                             value={selectedHouse}
                             onChange={(e) => setSelectedHouse(e.target.value)}
@@ -397,7 +399,7 @@ export default function RemediesPage() {
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-16 bg-parchment/30 rounded-2xl border border-antique">
                         <Loader2 className="w-8 h-8 text-gold-primary animate-spin mb-4" />
-                        <p className="text-sm font-serif text-muted italic">Consulting planetary prescriptions...</p>
+                        <p className={cn(TYPOGRAPHY.subValue, "italic")}>Consulting planetary prescriptions...</p>
                     </div>
                 ) : error ? (
                     <div className="p-8 bg-red-50 border border-red-100 rounded-2xl text-center">
@@ -416,15 +418,15 @@ export default function RemediesPage() {
                 ) : activeTab === 'lal_kitab' ? (
                     <div className="flex flex-col items-center justify-center py-16 bg-parchment/30 rounded-2xl border border-antique animate-in fade-in">
                         <Scroll className="w-10 h-10 text-gold-primary mb-4 opacity-70" />
-                        <h3 className="text-lg font-serif font-bold text-primary mb-2">Lal Kitab Remedies</h3>
-                        <p className="text-sm text-primary/70 max-w-md text-center mb-6">
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-2")}>Lal Kitab Remedies</h3>
+                        <p className={cn(TYPOGRAPHY.value, "max-w-md text-center mb-6 text-primary/70")}>
                             Lal Kitab remedies are highly specific. Please select a Planet and a House above to view the precise remedial measures.
                         </p>
                     </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center py-16 bg-parchment/30 rounded-2xl border border-antique">
                         <Gem className="w-8 h-8 text-primary mb-3" />
-                        <p className="text-sm text-primary">Select a remedy type to view prescriptions</p>
+                        <p className={TYPOGRAPHY.value}>Select a remedy type to view prescriptions</p>
                     </div>
                 )}
             </div>

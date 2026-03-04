@@ -1,10 +1,11 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef, useEffect } from 'react';
 import NorthIndianChart, { Planet } from './NorthIndianChart';
 import { X, Star, Orbit, Sparkles } from 'lucide-react';
 import { getHouseDetails } from '@/data/house-data';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface ChartWithPopupProps {
     planets: Planet[];
@@ -140,30 +141,30 @@ export default function ChartWithPopup({ planets, ascendantSign, className = "",
                         </button>
 
                         {/* Header: House Number & Name */}
-                        <div className="flex items-center gap-3 mb-3 pb-2 border-b border-antique/40">
-                            <div className="w-8 h-8 rounded-lg bg-gold-primary flex items-center justify-center text-white font-serif font-bold text-base shadow-sm shrink-0">
+                        <div className="flex items-center gap-3 mb-3 pb-2 border-b border-border-warm/40">
+                            <div className={cn("w-8 h-8 rounded-lg bg-gold-primary flex items-center justify-center text-white shadow-sm shrink-0", TYPOGRAPHY.value)}>
                                 {selectedHouse}
                             </div>
                             <div className="min-w-0">
-                                <h3 id="chart-popup-house-title" className="font-serif font-bold text-ink text-base leading-tight truncate">{houseDetails.name}</h3>
-                                <p className="text-[9px] text-muted uppercase tracking-wider font-medium truncate">
+                                <h3 id="chart-popup-house-title" className={cn("truncate", TYPOGRAPHY.sectionTitle)}>{houseDetails.name}</h3>
+                                <p className={cn("truncate", TYPOGRAPHY.label)}>
                                     {houseDetails.sign.name}
                                 </p>
                             </div>
                         </div>
 
                         {/* Sign Info - Compact Row */}
-                        <div className="flex items-center justify-between bg-parchment/40 rounded-lg p-2 mb-3 border border-antique/30">
+                        <div className="flex items-center justify-between bg-parchment/40 rounded-lg p-2 mb-3 border border-border-warm/30">
                             <div className="flex items-center gap-2">
                                 <div className="text-xl leading-none">{houseDetails.sign.symbol}</div>
                                 <div>
-                                    <div className="text-[10px] font-bold text-ink leading-tight">{houseDetails.sign.rulingPlanet}</div>
-                                    <div className="text-[8px] text-muted leading-tight">Ruler</div>
+                                    <div className={cn("leading-tight", TYPOGRAPHY.value)} style={{ fontSize: '10px' }}>{houseDetails.sign.rulingPlanet}</div>
+                                    <div className={cn("leading-tight", TYPOGRAPHY.label)} style={{ fontSize: '8px' }}>Ruler</div>
                                 </div>
                             </div>
                             <div className="text-right">
-                                <div className="text-[9px] font-medium text-ink">{houseDetails.sign.element}</div>
-                                <div className="text-[8px] text-muted">{houseDetails.sign.quality}</div>
+                                <div className={cn(TYPOGRAPHY.value)} style={{ fontSize: '9px' }}>{houseDetails.sign.element}</div>
+                                <div className={cn(TYPOGRAPHY.label)} style={{ fontSize: '8px' }}>{houseDetails.sign.quality}</div>
                             </div>
                         </div>
 
@@ -172,13 +173,13 @@ export default function ChartWithPopup({ planets, ascendantSign, className = "",
                             <div className="">
                                 <div className="flex items-center gap-1.5 mb-1.5">
                                     <Sparkles className="w-3 h-3 text-gold-primary" />
-                                    <span className="text-[9px] font-bold text-muted uppercase tracking-wider">Planets Here</span>
+                                    <span className={TYPOGRAPHY.label}>Planets Here</span>
                                 </div>
                                 <div className="space-y-1">
                                     {planetsInHouse.map((p, i) => (
-                                        <div key={i} className="flex items-center justify-between text-xs py-1 px-2 rounded bg-gold-primary/5 hover:bg-gold-primary/10 transition-colors border border-transparent hover:border-gold-primary/20">
-                                            <span className="font-serif font-bold text-ink">{p.name} {p.isRetro && <span className="text-red-500 ml-0.5 text-[9px]">(R)</span>}</span>
-                                            <span className="font-mono text-[10px] text-ink/70">
+                                        <div key={i} className="flex items-center justify-between py-1 px-2 rounded bg-gold-primary/5 hover:bg-gold-primary/10 transition-colors border border-transparent hover:border-gold-primary/20">
+                                            <span className={TYPOGRAPHY.value}>{p.name} {p.isRetro && <span className="text-red-500 ml-0.5 text-[9px]">(R)</span>}</span>
+                                            <span className={TYPOGRAPHY.subValue}>
                                                 {p.degree}
                                             </span>
                                         </div>
@@ -197,3 +198,4 @@ export default function ChartWithPopup({ planets, ascendantSign, className = "",
         </div>
     );
 }
+

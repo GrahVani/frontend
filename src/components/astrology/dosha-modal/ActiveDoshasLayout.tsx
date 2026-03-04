@@ -1,8 +1,9 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from 'react';
 import { ChevronDown, Shield, Maximize2, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import NorthIndianChart, { Planet } from '@/components/astrology/NorthIndianChart/NorthIndianChart';
 import { ChartWithPopup } from "@/components/astrology/NorthIndianChart";
 import { DoshaModal } from '@/components/astrology/dosha-modal/DoshaModal';
@@ -36,7 +37,7 @@ export default function ActiveDoshasLayout({
             <div className="flex flex-col gap-2 h-[480px] w-full lg:w-[440px] shrink-0">
                 <div className="border border-red-200 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm max-w-[440px]">
                     <div className="bg-red-50 px-3 py-1.5 border-b border-red-100 flex justify-between items-center shrink-0">
-                        <h3 className="font-serif text-lg font-semibold text-red-900 leading-tight tracking-wide">Birth Chart (D1)</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-red-900 leading-tight tracking-wide")}>Birth Chart (D1)</h3>
                         <button
                             onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })}
                             className="text-red-900 hover:text-red-600 transition-colors"
@@ -61,14 +62,14 @@ export default function ActiveDoshasLayout({
             <div className="flex-1 flex flex-col gap-2 h-[480px] min-w-0">
                 <div className="border border-red-200 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm">
                     <div className="bg-red-50 px-4 py-2 border-b border-red-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
-                        <h3 className="font-serif text-lg font-semibold text-red-900 leading-tight tracking-wide whitespace-nowrap">Dosha Analysis</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-red-900 leading-tight tracking-wide whitespace-nowrap")}>Dosha Analysis</h3>
 
                         {/* Integrated Header Dropdown */}
                         <div className="relative group w-full sm:w-64 shrink-0">
                             <select
                                 value={selectedDoshaId}
                                 onChange={(e) => setSelectedDoshaId(e.target.value)}
-                                className="w-full pl-3 pr-8 py-1.5 bg-white/80 border border-red-200 rounded-xl text-[10px] font-bold text-red-900 appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-red-300 transition-all shadow-sm group-hover:bg-white"
+                                className={cn(TYPOGRAPHY.value, "w-full pl-3 pr-8 py-1.5 bg-white/80 border border-red-200 rounded-xl text-red-900 appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-red-300 transition-all shadow-sm group-hover:bg-white")}
                             >
                                 <optgroup label="Karmic / Ancestral" className="font-serif italic text-red-900">
                                     {allDoshas.filter(d => d.category === 'karmic').map(dosha => (
@@ -134,7 +135,7 @@ export default function ActiveDoshasLayout({
             {/* Modal for Zoom */}
             {zoomedChart && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl bg-ink/40 animate-in fade-in zoom-in-95 duration-300">
-                    <div className="bg-softwhite border border-antique rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl">
+                    <div className="bg-softwhite border border-border-warm rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl">
                         <button
                             onClick={() => setZoomedChart(null)}
                             className="absolute top-4 right-4 p-2 rounded-xl bg-parchment text-primary hover:bg-gold-primary/20 hover:text-accent-gold transition-all"
@@ -142,10 +143,10 @@ export default function ActiveDoshasLayout({
                             <X className="w-5 h-5" />
                         </button>
                         <div className="mb-6 text-center">
-                            <h2 className="font-serif text-xl font-semibold text-primary leading-tight">{zoomedChart.label}</h2>
-                            <p className="font-sans text-xs text-primary uppercase tracking-wider leading-compact mt-2">{zoomedChart.varga} Divisional Chart</p>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-xl")}>{zoomedChart.label}</h2>
+                            <p className={cn(TYPOGRAPHY.label, "mt-2")}>{zoomedChart.varga} Divisional Chart</p>
                         </div>
-                        <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6 border border-antique">
+                        <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6 border border-border-warm">
                             <ChartWithPopup
                                 ascendantSign={ascendantSign}
                                 planets={planets}
@@ -159,3 +160,4 @@ export default function ActiveDoshasLayout({
         </div>
     );
 }
+

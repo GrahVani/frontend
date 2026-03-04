@@ -1,8 +1,9 @@
-'use client';
+﻿'use client';
 
 import React, { memo } from 'react';
 import { Activity, ShieldCheck, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import type { NormalizedStrength } from '@/types/yoga.types';
 
 interface YogaStrengthIndicatorProps {
@@ -18,7 +19,7 @@ export const YogaStrengthIndicator = memo(function YogaStrengthIndicator({ data 
         .join(' ');
 
     return (
-        <div className="bg-softwhite border border-antique rounded-2xl p-5">
+        <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
             <h3 className="font-serif font-bold text-primary mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
                 <Activity className="w-4 h-4 text-gold-primary" /> Strength Assessment
             </h3>
@@ -26,9 +27,9 @@ export const YogaStrengthIndicator = memo(function YogaStrengthIndicator({ data 
             {/* Score Metrics */}
             <div className="grid grid-cols-3 gap-3 mb-4">
                 {base !== undefined && (
-                    <div className="bg-white rounded-xl border border-antique/50 p-3 text-center">
+                    <div className="bg-white rounded-xl border border-border-warm/50 p-3 text-center">
                         <span className="block text-[9px] text-primary opacity-60 uppercase font-bold tracking-wider">Base</span>
-                        <span className="text-lg font-serif font-bold text-primary">{base}</span>
+                        <span className={cn(TYPOGRAPHY.sectionTitle, "")}>{base}</span>
                     </div>
                 )}
                 {penalty !== undefined && penalty !== 0 && (
@@ -64,7 +65,7 @@ export const YogaStrengthIndicator = memo(function YogaStrengthIndicator({ data 
                                         ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                         : value === 'malefic'
                                             ? "bg-red-50 text-red-700 border-red-200"
-                                            : "bg-parchment text-primary border-antique"
+                                            : "bg-parchment text-primary border-border-warm"
                                 )}
                             >
                                 {key}: {value}
@@ -91,3 +92,4 @@ export const YogaStrengthIndicator = memo(function YogaStrengthIndicator({ data 
         </div>
     );
 });
+

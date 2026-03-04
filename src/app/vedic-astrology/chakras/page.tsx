@@ -17,6 +17,7 @@ import { useAstrologerStore } from '@/store/useAstrologerStore';
 import { clientApi } from '@/lib/api';
 import { useSudarshanChakra } from '@/hooks/queries/useCalculations';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import SudarshanChakraFinal from '@/components/astrology/SudarshanChakraFinal';
 
 export default function ChakrasPage() {
@@ -70,7 +71,7 @@ export default function ChakrasPage() {
             {/* Professional Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-2">
                 <div className="space-y-1">
-                    <h1 className="text-2xl font-serif font-bold text-primary">
+                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-bold")}>
                         Sudarshan Chakra
                     </h1>
                 </div>
@@ -137,7 +138,7 @@ export default function ChakrasPage() {
                     {/* Dynamic Legend Card */}
                     <div className=" rounded-3xl border border-copper-200 p-8 shadow-sm space-y-6">
                         <div className="border-b border-copper-100 pb-4">
-                            <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">Chart Legend</h3>
+                            <h3 className={cn(TYPOGRAPHY.label, "mb-0")}>Chart Legend</h3>
                         </div>
                         <div className="space-y-6">
                             {[
@@ -149,10 +150,10 @@ export default function ChakrasPage() {
                                     <div className={cn("w-1.5 h-auto rounded-full transition-all group-hover:w-2 border-none opacity-20", item.bgColor)} />
                                     <div>
                                         <div className="flex items-center gap-2">
-                                            <span className="text-sm font-black text-primary underline decoration-copper-200 decoration-4 underline-offset-4">{item.label}</span>
-                                            <span className="text-[10px] font-bold text-primary uppercase tracking-wider">— {item.circle}</span>
+                                            <span className={cn(TYPOGRAPHY.value, "underline decoration-copper-200 decoration-4 underline-offset-4")}>{item.label}</span>
+                                            <span className={cn(TYPOGRAPHY.label, "mb-0")}>— {item.circle}</span>
                                         </div>
-                                        <p className="text-xs text-primary mt-2 font-medium leading-relaxed italic">{item.desc}</p>
+                                        <p className={cn(TYPOGRAPHY.subValue, "mt-1 italic")}>{item.desc}</p>
                                     </div>
                                 </div>
                             ))}

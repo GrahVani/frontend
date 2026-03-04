@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 export interface Planet {
     name: string;
@@ -177,10 +178,10 @@ export default function NorthIndianChart({
                         <text
                             x={signNumberPositions[pos.h].x}
                             y={signNumberPositions[pos.h].y}
-                            fontSize="18"
-                            fontFamily="'Spectral', 'Crimson Pro', serif"
-                            fontWeight="700"
-                            fill="var(--text-secondary)"
+                            fontSize={TYPOGRAPHY.svgSignNumber.fontSize}
+                            fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
+                            fontWeight={TYPOGRAPHY.svgSignNumber.fontWeight}
+                            fill={TYPOGRAPHY.svgSignNumber.fill}
                             fillOpacity="0.9"
                             textAnchor="middle"
                             dominantBaseline="central"
@@ -195,7 +196,7 @@ export default function NorthIndianChart({
                                 x={pos.x}
                                 y={pos.y}
                                 fontSize="34"
-                                fontFamily="'Inter', 'Source Sans 3', sans-serif"
+                                fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
                                 fontWeight="600"
                                 fill={houseValues[pos.h] < 20 ? "var(--status-error)" : houseValues[pos.h] >= 30 ? "var(--status-success)" : "var(--text-primary)"}
                                 textAnchor="middle"
@@ -231,9 +232,9 @@ export default function NorthIndianChart({
                                     return (
                                         <g key={p.name} transform={`translate(0, ${yOffset})`}>
                                             <text
-                                                fontSize="14"
-                                                fontFamily="'Spectral', 'Crimson Pro', serif"
-                                                fontWeight="600"
+                                                fontSize={TYPOGRAPHY.svgPlanetName.fontSize}
+                                                fontFamily={TYPOGRAPHY.svgPlanetName.fontFamily}
+                                                fontWeight={TYPOGRAPHY.svgPlanetName.fontWeight}
                                                 fill={planetColor}
                                                 textAnchor="middle"
                                                 dominantBaseline="central"
@@ -247,7 +248,12 @@ export default function NorthIndianChart({
                                                     <tspan fontSize="12" fontWeight="bold" fill="var(--status-error)" dx="1">R</tspan>
                                                 )}
                                                 {showDegrees && (
-                                                    <tspan fontSize="10" fontWeight="400" fill="var(--text-secondary)" dx="2">
+                                                    <tspan
+                                                        fontSize={TYPOGRAPHY.svgDegree.fontSize}
+                                                        fontWeight={TYPOGRAPHY.svgDegree.fontWeight}
+                                                        fill={TYPOGRAPHY.svgDegree.fill}
+                                                        dx="2"
+                                                    >
                                                         {p.degree}
                                                     </tspan>
                                                 )}

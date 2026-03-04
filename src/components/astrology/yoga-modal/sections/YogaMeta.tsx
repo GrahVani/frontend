@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { memo } from 'react';
 import { User, Calendar, Clock, Compass, MapPin } from 'lucide-react';
@@ -20,7 +20,7 @@ export const YogaMeta = memo(function YogaMeta({ data }: YogaMetaProps) {
     if (chips.length === 0) return null;
 
     return (
-        <div className="flex items-center gap-4 flex-wrap text-xs bg-parchment/30 px-4 py-2.5 rounded-xl border border-antique/50">
+        <div className="flex items-center gap-4 flex-wrap text-xs bg-parchment/30 px-4 py-2.5 rounded-xl border border-border-warm/50">
             {chips.map((chip, i) => (
                 <React.Fragment key={chip.label}>
                     {i > 0 && <div className="w-px h-3 bg-antique/50" />}
@@ -33,3 +33,4 @@ export const YogaMeta = memo(function YogaMeta({ data }: YogaMetaProps) {
         </div>
     );
 });
+

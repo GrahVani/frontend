@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { memo } from 'react';
 import { LayoutGrid } from 'lucide-react';
@@ -30,7 +30,7 @@ export const YogaPlanetsGrid = memo(function YogaPlanetsGrid({ data }: YogaPlane
     if (planetEntries.length === 0) return null;
 
     return (
-        <div className="bg-white border border-antique rounded-xl p-4">
+        <div className="bg-white border border-border-warm rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3 px-1">
                 <LayoutGrid className="w-3.5 h-3.5 text-gold-primary" />
                 <span className="text-[10px] font-bold uppercase tracking-wider text-primary opacity-60">
@@ -46,7 +46,7 @@ export const YogaPlanetsGrid = memo(function YogaPlanetsGrid({ data }: YogaPlane
                     >
                         <div className={cn(
                             "w-7 h-7 rounded flex items-center justify-center text-[9px] font-black shrink-0",
-                            PLANET_STYLES[planet] ?? 'bg-white border border-antique text-primary'
+                            PLANET_STYLES[planet] ?? 'bg-white border border-border-warm text-primary'
                         )}>
                             {PLANET_ABBR[planet] ?? planet.substring(0, 2).toUpperCase()}
                         </div>
@@ -63,3 +63,4 @@ export const YogaPlanetsGrid = memo(function YogaPlanetsGrid({ data }: YogaPlane
         </div>
     );
 });
+

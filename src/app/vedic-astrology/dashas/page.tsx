@@ -10,8 +10,9 @@ import {
 import Link from 'next/link';
 import { useVedicClient } from '@/context/VedicClientContext';
 import { useAstrologerStore } from '@/store/useAstrologerStore';
-import { DASHA_TYPES, clientApi } from '@/lib/api';
+import { clientApi } from '@/lib/api';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { useDasha, useOtherDasha } from '@/hooks/queries/useCalculations';
 import { useQueryClient } from "@tanstack/react-query";
 import dynamic from 'next/dynamic';
@@ -291,7 +292,7 @@ export default function VedicDashasPage() {
                         period.sublevel = antarNode.sublevel;
                     }
                 }
-            } catch (err) {            } finally {
+            } catch (err) { } finally {
                 setIsSubLevelFetching(false);
             }
         }
@@ -355,7 +356,7 @@ export default function VedicDashasPage() {
         <div className="-mt-2 lg:-mt-4 min-h-screen">
             {/* Page Heading */}
             <div className="mb-4">
-                <h1 className="text-2xl font-serif font-bold text-primary">Dasha System</h1>
+                <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-bold")}>Dasha System</h1>
             </div>
 
             {/* ================================================================= */}
@@ -372,7 +373,7 @@ export default function VedicDashasPage() {
                         {/* Selector Tray */}
                         <div className="p-4 border-b border-header-border/10 flex flex-wrap items-center justify-between gap-4">
                             <div className="flex items-center gap-3">
-                                <label className="text-xs font-bold text-bronze uppercase tracking-wider">System</label>
+                                <label className={TYPOGRAPHY.label}>System</label>
                                 <div className="relative">
                                     <select
                                         value={selectedDashaType}
@@ -560,13 +561,14 @@ export default function VedicDashasPage() {
                                                     }
 
                                                     return [];
-                                                } catch (err) {                                                    return [];
+                                                } catch (err) {
+                                                    return [];
                                                 }
                                             }}
                                         />
                                     ) : isChara ? (
                                         <table className="w-full">
-                                            <thead className="bg-ink/5 text-body/70 font-black uppercase text-[9px] tracking-widest border-b border-header-border/10">
+                                            <thead className={cn(TYPOGRAPHY.tableHeader, "bg-ink/5 border-b border-header-border/10")}>
                                                 <tr>
                                                     <th className="px-3 py-2 text-left">Sign</th>
                                                     <th className="px-3 py-2 text-left">Start Date</th>
@@ -603,14 +605,14 @@ export default function VedicDashasPage() {
                                                                     )}
                                                                 </div>
                                                             </td>
-                                                            <td className="px-3 py-2 text-xs text-ink font-mono">
-                                                                <div className="flex items-center gap-1.5">
+                                                            <td className="px-3 py-2">
+                                                                <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}>
                                                                     <Calendar className="w-3 h-3 text-bronze/40" />
                                                                     {formatDateShort(period.startDate)}
                                                                 </div>
                                                             </td>
-                                                            <td className="px-3 py-2 text-xs text-ink font-mono">{formatDateShort(period.endDate)}</td>
-                                                            <td className="px-3 py-2 text-xs text-bronze font-bold">
+                                                            <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{formatDateShort(period.endDate)}</td>
+                                                            <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>
                                                                 {standardizeDuration((period.raw?.duration_years as number) || 0, period.raw?.duration_days as number)}
                                                             </td>
                                                             <td className="px-3 py-2 text-center">
@@ -633,7 +635,7 @@ export default function VedicDashasPage() {
                                         </table>
                                     ) : (
                                         <table className="w-full">
-                                            <thead className="bg-ink/5 text-body/70 font-black uppercase text-[9px] tracking-widest border-b border-header-border/10">
+                                            <thead className={cn(TYPOGRAPHY.tableHeader, "bg-ink/5 border-b border-header-border/10")}>
                                                 <tr>
                                                     <th className="px-3 py-2 text-left">Planet</th>
                                                     <th className="px-3 py-2 text-left">Start Date</th>
@@ -668,14 +670,14 @@ export default function VedicDashasPage() {
                                                                 )}
                                                             </div>
                                                         </td>
-                                                        <td className="px-3 py-2 text-xs text-ink font-mono">
-                                                            <div className="flex items-center gap-1.5">
+                                                        <td className="px-3 py-2">
+                                                            <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}>
                                                                 <Calendar className="w-3 h-3 text-bronze/40" />
                                                                 {formatDateShort(period.startDate)}
                                                             </div>
                                                         </td>
-                                                        <td className="px-3 py-2 text-xs text-ink font-mono">{formatDateShort(period.endDate)}</td>
-                                                        <td className="px-3 py-2 text-xs text-bronze font-bold">
+                                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{formatDateShort(period.endDate)}</td>
+                                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>
                                                             {standardizeDuration((period.raw?.duration_years as number) || 0, period.raw?.duration_days as number)}
                                                         </td>
                                                         <td className="px-3 py-2 text-center">
@@ -717,9 +719,9 @@ export default function VedicDashasPage() {
                                     <TrendingUp className="w-5 h-5 text-header-border" />
                                 </div>
                                 <div>
-                                    <h2 className="font-serif font-bold text-lg text-ink leading-tight">Current Dasha</h2>
-                                    <div className="flex items-center gap-2 text-[10px] text-bronze font-mono">
-                                        <span className="text-green-600 font-bold tracking-widest uppercase">● Live</span>
+                                    <h2 className={TYPOGRAPHY.sectionTitle}>Current Dasha</h2>
+                                    <div className="flex items-center gap-2 text-[10px] text-bronze font-sans">
+                                        <span className={cn(TYPOGRAPHY.label, "text-green-600 mt-1")}>● Live</span>
                                     </div>
                                 </div>
                             </div>

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { ChevronRight, Calendar, Star, Zap, Loader2 } from 'lucide-react';
 import { useVedicClient } from '@/context/VedicClientContext';
 import { clientApi } from '@/lib/api'; // Keep for now if we do manual expansion triggers, or remove if fully hookified

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { useVedicClient } from '@/context/VedicClientContext';
 import { useAstrologerStore } from '@/store/useAstrologerStore';
 import { YogaModal } from '@/components/astrology/yoga-modal/index';
@@ -163,8 +164,8 @@ export default function YogaDoshaPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
                 <Sparkles className="w-12 h-12 text-primary mb-4" />
-                <h2 className="text-xl font-serif font-bold text-ink mb-2">Yoga & Dosha — Lahiri Only</h2>
-                <p className="text-primary text-sm max-w-md">
+                <h2 className={cn(TYPOGRAPHY.sectionTitle, "mb-2")}>Yoga & Dosha — Lahiri Only</h2>
+                <p className={cn(TYPOGRAPHY.value, "max-w-md")}>
                     Yoga and Dosha analysis is currently available exclusively with the <strong>Lahiri Ayanamsa</strong>.
                     Please switch to Lahiri from the header dropdown to access these features.
                 </p>
@@ -185,7 +186,7 @@ export default function YogaDoshaPage() {
             {/* Header: Title + Tabs */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-serif font-bold text-primary">Yoga & Dosha Analysis</h1>
+                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-bold")}>Yoga & Dosha Analysis</h1>
                 </div>
 
                 {/* Main Tabs: Yogas / Doshas */}
@@ -223,7 +224,7 @@ export default function YogaDoshaPage() {
                     {isLoadingCharts || isGeneratingCharts ? (
                         <div className="flex flex-col items-center justify-center min-h-[300px] bg-white/50 rounded-2xl m-4 border border-antique border-dashed animate-pulse">
                             <Sparkles className="w-6 h-6 text-gold-primary mb-3 animate-spin" />
-                            <p className="font-serif italic text-secondary text-xs">Synthesizing Client Dashboard...</p>
+                            <p className={cn(TYPOGRAPHY.subValue, "italic")}>Synthesizing Client Dashboard...</p>
                         </div>
                     ) : (
                         <ActiveYogasLayout

@@ -12,6 +12,7 @@ import {
     ScrollText
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import DashaRemediesCard from '@/components/upaya/DashaRemediesCard';
 import DoshaRemedyGrid from '@/components/upaya/DoshaRemedyGrid';
 import VedicStrengthPanel from '@/components/upaya/VedicStrengthPanel';
@@ -47,7 +48,7 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
             <div className="flex flex-col gap-6">
                 <div className="flex items-center justify-between border-b border-divider pb-4">
                     <div className="flex items-center gap-3">
-                        <h2 className="text-xl font-bold tracking-tight text-ink">
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-bold tracking-tight")}>
                             Vedic Remedies : {String(data.user_name || "User")}
                         </h2>
                     </div>
@@ -82,8 +83,8 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
                                 <ScrollText className="w-4 h-4 text-purple-600" />
                             </div>
                             <div>
-                                <h3 className="text-sm font-black uppercase tracking-[0.2em] text-ink">Active Dosha Analysis</h3>
-                                <p className="text-[10px] font-bold uppercase tracking-wider">Karmic Afflictions & Remedial Directives</p>
+                                <h3 className={cn(TYPOGRAPHY.label, "mb-0 text-ink tracking-[0.2em]")}>Active Dosha Analysis</h3>
+                                <p className={cn(TYPOGRAPHY.subValue, "uppercase tracking-wider text-[10px] font-bold")}>Karmic Afflictions & Remedial Directives</p>
                             </div>
                         </div>
                         <DoshaRemedyGrid

@@ -3,6 +3,7 @@
 import React, { memo } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import type { NormalizedDoshaSeverity } from '@/types/dosha.types';
 
 interface DoshaSeverityProps {
@@ -37,7 +38,7 @@ export const DoshaSeverity = memo(function DoshaSeverity({ data }: DoshaSeverity
                     </span>
                 </div>
                 {data.description && (
-                    <p className="text-xs text-primary leading-relaxed opacity-90">{data.description}</p>
+                    <p className={cn(TYPOGRAPHY.value, "text-xs leading-relaxed opacity-90")}>{data.description}</p>
                 )}
             </div>
         </div>

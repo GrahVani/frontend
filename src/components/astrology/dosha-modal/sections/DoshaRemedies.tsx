@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { memo } from 'react';
 import { Stars, CheckCircle2, Sparkles } from 'lucide-react';
@@ -19,7 +19,7 @@ export const DoshaRemedies = memo(function DoshaRemedies({ data }: DoshaRemedies
     };
 
     return (
-        <div className="bg-parchment border border-antique rounded-3xl p-6 relative overflow-hidden group">
+        <div className="bg-parchment border border-border-warm rounded-3xl p-6 relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-10 transition-transform group-hover:scale-110 duration-700">
                 <Stars className="w-16 h-16 text-red-500" />
             </div>
@@ -39,7 +39,7 @@ export const DoshaRemedies = memo(function DoshaRemedies({ data }: DoshaRemedies
                                 {items.map((remedy, i) => (
                                     <div
                                         key={i}
-                                        className="flex items-center gap-2 px-4 py-2 bg-white border border-antique rounded-xl shadow-sm hover:border-red-300 hover:shadow-md transition-all cursor-default group/item"
+                                        className="flex items-center gap-2 px-4 py-2 bg-white border border-border-warm rounded-xl shadow-sm hover:border-red-300 hover:shadow-md transition-all cursor-default group/item"
                                     >
                                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 group-hover/item:scale-110 transition-transform" />
                                         <span className="text-[11px] font-medium text-primary">{remedy.text}</span>
@@ -53,3 +53,4 @@ export const DoshaRemedies = memo(function DoshaRemedies({ data }: DoshaRemedies
         </div>
     );
 });
+

@@ -1,7 +1,8 @@
-"use client";
+﻿"use client";
 
 import React from 'react';
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { Shield, Activity, Target, Zap } from 'lucide-react';
 
 interface KarakaEntry {
@@ -64,32 +65,32 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
                 />
             </div>
 
-            <div className="bg-surface-warm border border-antique rounded-xl overflow-hidden shadow-sm">
-                <div className="bg-border-warm px-4 py-2 border-b border-antique">
-                    <h3 className="text-lg font-serif font-bold text-primary">Karaka Strength Analysis</h3>
+            <div className="bg-surface-warm border border-border-warm rounded-xl overflow-hidden shadow-sm">
+                <div className="bg-border-warm px-4 py-2 border-b border-border-warm">
+                    <h3 className={TYPOGRAPHY.sectionTitle}>Karaka Strength Analysis</h3>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-parchment/30 text-[10px] uppercase font-bold text-primary tracking-wider">
-                                <th className="px-4 py-3 border-b border-antique/30">Planet</th>
-                                <th className="px-4 py-3 border-b border-antique/30">Abbr</th>
-                                <th className="px-4 py-3 border-b border-antique/30">Chara Karaka</th>
-                                <th className="px-4 py-3 border-b border-antique/30">Sign/House</th>
-                                <th className="px-4 py-3 border-b border-antique/30 text-right">Degrees</th>
+                            <tr className="bg-parchment/30">
+                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-3 border-b border-border-warm/30")}>Planet</th>
+                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-3 border-b border-border-warm/30")}>Abbr</th>
+                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-3 border-b border-border-warm/30")}>Chara Karaka</th>
+                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-3 border-b border-border-warm/30")}>Sign/House</th>
+                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-3 border-b border-border-warm/30 text-right")}>Degrees</th>
                             </tr>
                         </thead>
                         <tbody className="text-sm">
                             {karakas.map((k: KarakaEntry, idx: number) => (
                                 <tr key={k.planet} className={cn(
-                                    "hover:bg-parchment/50 transition-colors border-b border-antique/20 last:border-0",
+                                    "hover:bg-parchment/50 transition-colors border-b border-border-warm/20 last:border-0",
                                     idx % 2 === 1 ? "bg-antique/5" : "bg-transparent",
                                     k.is_highest_degree && "bg-amber-50/30"
                                 )}>
                                     <td className="px-4 py-3">
                                         <div className="flex flex-col">
-                                            <span className="font-bold text-primary">{k.planet}</span>
-                                            <span className="text-[10px] text-secondary font-mono">{k.dms_in_sign}</span>
+                                            <span className={cn(TYPOGRAPHY.value, "mb-0.5")}>{k.planet}</span>
+                                            <span className={cn(TYPOGRAPHY.subValue, "font-mono")}>{k.dms_in_sign}</span>
                                         </div>
                                     </td>
                                     <td className="px-4 py-3 font-mono text-[11px] font-bold text-rose-600">
@@ -97,12 +98,12 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
                                     </td>
                                     <td className="px-4 py-3">
                                         <div className="flex flex-col">
-                                            <span className="font-medium text-emerald-700">{k.karaka_full}</span>
-                                            <span className="text-[10px] text-secondary italic">{k.karaka_desc}</span>
+                                            <span className={cn(TYPOGRAPHY.value, "text-emerald-700 mb-0.5")}>{k.karaka_full}</span>
+                                            <span className={cn(TYPOGRAPHY.subValue, "italic")}>{k.karaka_desc}</span>
                                         </div>
                                     </td>
                                     <td className="px-4 py-3 text-primary">
-                                        <span className="font-bold">S{k.sign_index}</span>
+                                        <span className={TYPOGRAPHY.value}>S{k.sign_index}</span>
                                     </td>
                                     <td className="px-4 py-3 text-right">
                                         <div className="flex items-center justify-end gap-2">
@@ -112,8 +113,8 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
                                                     style={{ width: `${(k.degrees_in_sign / 30) * 100}%` }}
                                                 />
                                             </div>
-                                            <span className="font-mono font-bold text-primary w-10 text-right">
-                                                {k.degrees_in_sign.toFixed(2)}°
+                                            <span className={cn(TYPOGRAPHY.value, "font-mono w-10 text-right")}>
+                                                {k.degrees_in_sign.toFixed(2)}Â°
                                             </span>
                                         </div>
                                     </td>
@@ -144,9 +145,10 @@ function StatCard({ title, value, icon, color }: { title: string; value: string;
                 {icon}
             </div>
             <div>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-secondary">{title}</p>
-                <p className="text-sm font-serif font-bold text-primary">{value}</p>
+                <p className={cn(TYPOGRAPHY.label, "mb-0")}>{title}</p>
+                <p className={TYPOGRAPHY.value}>{value}</p>
             </div>
         </div>
     );
 }
+

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { memo } from 'react';
 import { CheckCircle2, XCircle, ListChecks } from 'lucide-react';
@@ -12,7 +12,7 @@ export const YogaConditions = memo(function YogaConditions({ data }: YogaConditi
     const { met, failed } = data;
 
     return (
-        <div className="bg-softwhite border border-antique rounded-2xl p-5">
+        <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
             <h3 className="font-serif font-bold text-primary mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
                 <ListChecks className="w-4 h-4 text-gold-primary" /> Formation Conditions
             </h3>
@@ -22,7 +22,7 @@ export const YogaConditions = memo(function YogaConditions({ data }: YogaConditi
                 {met.length > 0 && (
                     <div className="space-y-2">
                         <h4 className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 mb-2">
-                            ✦ Conditions Satisfied ({met.length})
+                            âœ¦ Conditions Satisfied ({met.length})
                         </h4>
                         {met.map((condition, i) => (
                             <div key={i} className="flex items-start gap-2.5 group">
@@ -39,7 +39,7 @@ export const YogaConditions = memo(function YogaConditions({ data }: YogaConditi
                 {failed.length > 0 && (
                     <div className="space-y-2">
                         <h4 className="text-[10px] font-bold uppercase tracking-widest text-red-500 mb-2">
-                            ✦ Conditions Not Met ({failed.length})
+                            âœ¦ Conditions Not Met ({failed.length})
                         </h4>
                         {failed.map((condition, i) => (
                             <div key={i} className="flex items-start gap-2.5 group">
@@ -55,3 +55,4 @@ export const YogaConditions = memo(function YogaConditions({ data }: YogaConditi
         </div>
     );
 });
+

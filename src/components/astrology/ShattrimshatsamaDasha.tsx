@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { ChevronDown, ChevronUp, Calendar, Info, Milestone, AlertCircle } from 'lucide-react';
 import { DashaNode, formatDateDisplay, calculateDuration } from '@/lib/dasha-utils';
 import { PLANET_COLORS } from '@/lib/astrology-constants';
@@ -103,7 +104,7 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
             {/* Table */}
             <div className="overflow-x-auto">
                 <table className="w-full">
-                    <thead className="bg-primary/5 text-secondary/70 font-black uppercase text-[9px] tracking-widest border-b border-header-border/10">
+                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-ink/5 border-b border-header-border/10")}>
                         <tr>
                             <th className="px-3 py-2 text-left">Planet</th>
                             <th className="px-3 py-2 text-left">Start Date</th>
@@ -150,14 +151,14 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-3 py-2 text-xs text-primary font-mono">
-                                            <div className="flex items-center gap-1.5">
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>
+                                            <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}>
                                                 <Calendar className="w-3 h-3 text-muted/40" />
                                                 {formatDateDisplay(mahadasha.startDate)}
                                             </div>
                                         </td>
-                                        <td className="px-3 py-2 text-xs text-primary font-mono">{formatDateDisplay(mahadasha.endDate)}</td>
-                                        <td className="px-3 py-2 text-xs text-muted font-bold">
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{formatDateDisplay(mahadasha.endDate)}</td>
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>
                                             <div className="flex flex-col">
                                                 <span>{calculateDuration(mahadasha.startDate, mahadasha.endDate)}</span>
                                                 {fixedYears && (
@@ -200,9 +201,9 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
                                                                         {antar.planet}
                                                                     </span>
                                                                 </td>
-                                                                <td className="px-3 py-1.5 text-xs text-primary font-mono">{formatDateDisplay(antar.startDate)}</td>
-                                                                <td className="px-3 py-1.5 text-xs text-primary font-mono">{formatDateDisplay(antar.endDate)}</td>
-                                                                <td className="px-3 py-1.5 text-xs text-muted font-bold">
+                                                                <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>{formatDateDisplay(antar.startDate)}</td>
+                                                                <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>{formatDateDisplay(antar.endDate)}</td>
+                                                                <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
                                                                     {calculateDuration(antar.startDate, antar.endDate)}
                                                                 </td>
                                                                 <td className="px-3 py-1.5 text-center">

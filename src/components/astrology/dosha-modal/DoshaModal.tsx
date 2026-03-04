@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useMemo, memo } from 'react';
 import { Loader2, Info } from 'lucide-react';
@@ -16,7 +16,7 @@ interface DoshaModalProps {
 }
 
 /**
- * DoshaModal — independent orchestrator for Dosha analysis.
+ * DoshaModal â€” independent orchestrator for Dosha analysis.
  */
 export const DoshaModal = memo(function DoshaModal({
     clientId,
@@ -57,7 +57,7 @@ export const DoshaModal = memo(function DoshaModal({
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center p-8 bg-parchment/30 rounded-2xl border border-antique" role="status" aria-label="Loading dosha analysis" aria-busy="true">
+            <div className="flex flex-col items-center justify-center p-8 bg-parchment/30 rounded-2xl border border-border-warm" role="status" aria-label="Loading dosha analysis" aria-busy="true">
                 <Loader2 className="w-6 h-6 text-red-500 animate-spin mb-3" aria-hidden="true" />
                 <p className="text-xs font-serif text-secondary italic">Mapping karmic patterns...</p>
             </div>
@@ -86,3 +86,4 @@ export const DoshaModal = memo(function DoshaModal({
         </div>
     );
 });
+

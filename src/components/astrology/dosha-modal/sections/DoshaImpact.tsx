@@ -1,8 +1,9 @@
-'use client';
+﻿'use client';
 
 import React, { memo } from 'react';
 import { Target, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import type { NormalizedDoshaImpact } from '@/types/dosha.types';
 
 interface DoshaImpactProps {
@@ -30,7 +31,7 @@ export const DoshaImpact = memo(function DoshaImpact({ data }: DoshaImpactProps)
                             </div>
                             <div className="space-y-0.5">
                                 <h4 className="text-[10px] font-black uppercase text-red-900/60 tracking-tight">{item.title}</h4>
-                                <p className="text-xs text-primary leading-relaxed">{item.content}</p>
+                                <p className={cn(TYPOGRAPHY.value, "text-xs leading-relaxed")}>{item.content}</p>
                             </div>
                         </div>
                     ))}
@@ -51,7 +52,7 @@ export const DoshaImpact = memo(function DoshaImpact({ data }: DoshaImpactProps)
                         </div>
                     ))}
                     {analyses.length === 0 && (
-                        <div className="p-4 bg-parchment/30 rounded-xl border border-antique border-dashed text-[10px] text-center italic text-secondary">
+                        <div className="p-4 bg-parchment/30 rounded-xl border border-border-warm border-dashed text-[10px] text-center italic text-secondary">
                             Detailed summary not specified.
                         </div>
                     )}
@@ -60,3 +61,4 @@ export const DoshaImpact = memo(function DoshaImpact({ data }: DoshaImpactProps)
         </div>
     );
 });
+
