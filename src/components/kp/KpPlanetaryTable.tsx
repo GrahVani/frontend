@@ -4,6 +4,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import type { KpPlanet } from '@/types/kp.types';
 import { ArrowDown } from 'lucide-react';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface KpPlanetaryTableProps {
     planets: KpPlanet[];
@@ -41,13 +42,13 @@ export default function KpPlanetaryTable({ planets, className }: KpPlanetaryTabl
             <table className="w-full h-full text-xs border-collapse font-sans text-primary">
                 <thead className="sticky top-0 z-10">
                     <tr className="bg-parchment/60 border-y border-antique backdrop-blur-sm">
-                        <th className="py-1.5 px-3 text-left font-serif font-semibold text-primary">Planet</th>
-                        <th className="py-1.5 px-3 text-left font-serif font-semibold text-primary">Sign</th>
-                        <th className="py-1.5 px-3 text-left font-serif font-semibold text-primary">Degree</th>
-                        <th className="py-1.5 px-3 text-left font-serif font-semibold text-primary">House</th>
-                        <th className="py-1.5 px-3 text-left font-serif font-semibold text-primary">Nakshatra</th>
-                        <th className="py-1.5 px-3 text-left font-serif font-semibold text-primary">Star Lord</th>
-                        <th className="py-1.5 px-3 text-left font-serif font-semibold text-accent-gold">Sub Lord</th>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Planet</th>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Sign</th>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Degree</th>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>House</th>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Nakshatra</th>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Star lord</th>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left !text-accent-gold")}>Sub lord</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,13 +63,13 @@ export default function KpPlanetaryTable({ planets, className }: KpPlanetaryTabl
                             <td className="py-1 px-3">
                                 <span className="flex items-center gap-2">
                                     <span className="text-lg text-primary font-serif">{planetEmojis[planet.name] || planetEmojis[planet.fullName || ''] || '●'}</span>
-                                    <span className="font-semibold text-primary">
+                                    <span className={cn(TYPOGRAPHY.value, "font-semibold text-primary")}>
                                         {planet.fullName || planet.name}
                                     </span>
                                     {planet.isRetrograde && (
                                         <span className="flex items-center text-rose-500" title="Retrograde">
                                             <ArrowDown className="w-2.5 h-2.5" />
-                                            <span className="text-[9px] font-bold">R</span>
+                                            <span className={cn(TYPOGRAPHY.label, "text-[9px] !text-rose-500")}>R</span>
                                         </span>
                                     )}
                                 </span>
@@ -76,10 +77,10 @@ export default function KpPlanetaryTable({ planets, className }: KpPlanetaryTabl
                             <td className="py-1 px-3">
                                 <span className="flex items-center gap-1">
                                     <span className="text-sm text-primary font-serif">{signSymbols[planet.sign] || ''}</span>
-                                    <span className="text-primary font-medium">{planet.sign}</span>
+                                    <span className={cn(TYPOGRAPHY.value, "text-xs font-medium")}>{planet.sign}</span>
                                 </span>
                             </td>
-                            <td className="py-1 px-3 font-mono text-[11px] text-primary">
+                            <td className="py-1 px-3 font-mono text-[11px] text-ink font-semibold">
                                 {planet.degreeFormatted || `${planet.degree.toFixed(2)}°`}
                             </td>
                             <td className="py-1 px-3">
@@ -87,16 +88,22 @@ export default function KpPlanetaryTable({ planets, className }: KpPlanetaryTabl
                                     {planet.house}
                                 </span>
                             </td>
-                            <td className="py-1 px-3 text-primary font-medium text-[11px]">
-                                {planet.nakshatra}
+                            <td className="py-1 px-3 text-primary font-medium">
+                                <span className={cn(TYPOGRAPHY.value, "text-[11px]")}>{planet.nakshatra}</span>
                             </td>
                             <td className="py-1 px-3">
-                                <span className="px-1.5 py-0 bg-parchment border border-antique text-primary rounded font-medium text-[11px] shadow-sm">
+                                <span className={cn(
+                                    TYPOGRAPHY.label,
+                                    "px-1.5 py-0 bg-parchment border border-antique text-primary rounded text-[11px] shadow-sm"
+                                )}>
                                     {planet.nakshatraLord}
                                 </span>
                             </td>
                             <td className="py-1 px-3">
-                                <span className="px-1.5 py-0 bg-gold-primary/10 border border-gold-primary/30 text-accent-gold rounded font-semibold text-[11px] shadow-sm">
+                                <span className={cn(
+                                    TYPOGRAPHY.label,
+                                    "px-1.5 py-0 bg-gold-primary/10 border border-gold-primary/30 text-accent-gold rounded text-[11px] shadow-sm"
+                                )}>
                                     {planet.subLord}
                                 </span>
                             </td>

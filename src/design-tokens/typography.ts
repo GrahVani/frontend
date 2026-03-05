@@ -15,7 +15,7 @@ export const TYPOGRAPHY = {
     breadcrumb: "font-sans text-xs font-medium text-primary whitespace-nowrap",
 
     // Panchanga & Profile Details
-    label: "font-sans text-xs text-primary font-semibold tracking-wider uppercase mb-0.5",
+    label: "font-sans text-xs text-primary font-semibold tracking-wider mb-0.5",
     value: "font-sans text-sm font-bold text-primary leading-tight",
     subValue: "font-sans text-[11px] text-primary leading-none mt-1 font-medium whitespace-nowrap",
 

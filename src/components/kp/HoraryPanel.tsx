@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import type { KpHoraryResponse } from '@/types/kp.types';
 import { HelpCircle, Shuffle, Send, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface HoraryPanelProps {
     onSubmit: (horaryNumber: number, question: string) => void;
@@ -60,15 +61,15 @@ export default function HoraryPanel({
                         <HelpCircle className="w-5 h-5 text-indigo-600" />
                     </div>
                     <div>
-                        <h3 className="font-serif font-bold text-lg text-primary">KP Horary (Prashna)</h3>
-                        <p className="text-xs text-primary">Enter a number between 1-249 and your question</p>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg")}>KP Horary (Prashna)</h3>
+                        <p className={cn(TYPOGRAPHY.subValue, "text-xs")}>Enter a number between 1-249 and your question</p>
                     </div>
                 </div>
 
                 <div className="space-y-4">
                     {/* Horary Number */}
                     <div>
-                        <label className="block text-xs font-semibold text-primary uppercase tracking-wider mb-2">
+                        <label className={cn(TYPOGRAPHY.label, "block text-[10px] uppercase tracking-wider mb-2")}>
                             Horary Number (1-249)
                         </label>
                         <div className="flex gap-2">
@@ -92,14 +93,14 @@ export default function HoraryPanel({
                                 title="Generate Random Number"
                             >
                                 <Shuffle className="w-5 h-5 text-gold-dark" />
-                                <span className="text-sm font-medium text-primary">Random</span>
+                                <span className={cn(TYPOGRAPHY.value, "text-sm font-semibold")}>Random</span>
                             </button>
                         </div>
                     </div>
 
                     {/* Question */}
                     <div>
-                        <label className="block text-xs font-semibold text-primary uppercase tracking-wider mb-2">
+                        <label className={cn(TYPOGRAPHY.label, "block text-[10px] uppercase tracking-wider mb-2")}>
                             Your Question
                         </label>
                         <textarea
@@ -130,12 +131,12 @@ export default function HoraryPanel({
                         {isLoading ? (
                             <>
                                 <Loader2 className="w-5 h-5 animate-spin" />
-                                Analyzing...
+                                <span className={TYPOGRAPHY.value}>Analyzing...</span>
                             </>
                         ) : (
                             <>
                                 <Send className="w-5 h-5" />
-                                Get Answer
+                                <span className={TYPOGRAPHY.value}>Get Answer</span>
                             </>
                         )}
                     </button>
@@ -164,21 +165,22 @@ export default function HoraryPanel({
                             </div>
                             <div>
                                 <p className={cn(
-                                    "font-serif font-bold text-lg",
-                                    result.verdict.favorable ? "text-green-700" : "text-red-700"
+                                    TYPOGRAPHY.sectionTitle,
+                                    "text-lg",
+                                    result.verdict.favorable ? "!text-green-700" : "!text-red-700"
                                 )}>
                                     {result.verdict.favorable ? 'FAVORABLE' : 'NOT FAVORABLE'}
                                 </p>
-                                <p className="text-sm text-primary mt-1">{result.verdict.reason}</p>
+                                <p className={cn(TYPOGRAPHY.subValue, "text-sm mt-1")}>{result.verdict.reason}</p>
                             </div>
                         </div>
                     )}
 
                     {/* Question & Number */}
                     <div className="mb-4">
-                        <p className="text-xs text-primary uppercase tracking-wider mb-1">Your Question</p>
-                        <p className="text-primary font-medium">{result.question}</p>
-                        <span className="inline-block mt-2 px-2 py-1 bg-gold-primary/10 text-gold-dark text-xs font-mono rounded">
+                        <p className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wider mb-1 opacity-70")}>Your Question</p>
+                        <p className={cn(TYPOGRAPHY.value, "text-base")}>{result.question}</p>
+                        <span className={cn(TYPOGRAPHY.label, "inline-block mt-2 px-2 py-1 bg-gold-primary/10 !text-gold-dark text-[10px] font-mono rounded")}>
                             Horary #{result.horaryNumber}
                         </span>
                     </div>
@@ -186,12 +188,12 @@ export default function HoraryPanel({
                     {/* Ascendant Details */}
                     {result.ascendant && (
                         <div className="p-4 bg-parchment rounded-xl mb-4">
-                            <p className="text-xs text-primary uppercase tracking-wider mb-2">Horary Ascendant</p>
+                            <p className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wider mb-2 opacity-70")}>Horary Ascendant</p>
                             <div className="flex items-center gap-4">
-                                <span className="font-serif font-bold text-primary">{result.ascendant.sign}</span>
-                                <span className="text-xs text-primary">{result.ascendant.degree}°</span>
-                                <span className="text-xs text-primary">{result.ascendant.nakshatra}</span>
-                                <span className="px-2 py-0.5 bg-copper-100 text-copper-700 rounded text-xs font-semibold">
+                                <span className={cn(TYPOGRAPHY.value, "text-base")}>{result.ascendant.sign}</span>
+                                <span className={cn(TYPOGRAPHY.subValue, "text-xs")}>{result.ascendant.degree}°</span>
+                                <span className={cn(TYPOGRAPHY.subValue, "text-xs")}>{result.ascendant.nakshatra}</span>
+                                <span className={cn(TYPOGRAPHY.label, "px-2 py-0.5 bg-copper-100 !text-copper-700 rounded text-[10px] !font-bold")}>
                                     Sub: {result.ascendant.subLord}
                                 </span>
                             </div>
@@ -201,12 +203,12 @@ export default function HoraryPanel({
                     {/* Significators Summary */}
                     {result.significators && result.significators.length > 0 && (
                         <div>
-                            <p className="text-xs text-primary uppercase tracking-wider mb-2">House Significators</p>
+                            <p className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wider mb-2 opacity-70")}>House Significators</p>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                                 {result.significators.slice(0, 6).map((sig, idx) => (
-                                    <div key={idx} className="p-2 bg-softwhite border border-antique rounded-lg text-xs">
-                                        <span className="font-bold text-primary">House {sig.house}: </span>
-                                        <span className="text-primary">{sig.significatorPlanets.join(', ')}</span>
+                                    <div key={idx} className="p-2 bg-softwhite border border-antique rounded-lg">
+                                        <span className={cn(TYPOGRAPHY.label, "text-[10px] !font-bold")}>House {sig.house}: </span>
+                                        <span className={cn(TYPOGRAPHY.value, "text-xs")}>{sig.significatorPlanets.join(', ')}</span>
                                     </div>
                                 ))}
                             </div>

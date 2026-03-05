@@ -126,7 +126,7 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
                             isRecommended ? "text-gold-dark" : "text-red-400"
                         )} />
                         <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-muted">
-                            Astrological Rationale
+                            Astrological rationale
                         </span>
                     </div>
                     <p className="text-[12px] leading-relaxed italic font-medium pl-5.5 text-body">
@@ -140,7 +140,7 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
                         <div className="flex items-center gap-1.5 mb-1.5">
                             <Hand className="w-3 h-3 text-gold-primary" />
                             <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted">
-                                Metal & Finger
+                                Metal & finger
                             </p>
                         </div>
                         <p className="text-[12px] font-semibold text-ink">

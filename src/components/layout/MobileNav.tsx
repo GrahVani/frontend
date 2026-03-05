@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { X, LayoutDashboard, Users, Star, Clock, Heart, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/design-tokens/typography";
 
 const NAV_ITEMS = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -15,18 +16,11 @@ const NAV_ITEMS = [
     { href: "/calendar", label: "Calendar", icon: Calendar },
 ];
 
-interface MobileNavProps {
-    isOpen: boolean;
-    onClose: () => void;
-}
-
-export default function MobileNav({ isOpen, onClose }: MobileNavProps) {
+export default function MobileNav({ onClose }: { onClose: () => void }) {
     const pathname = usePathname();
     const overlayRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
-        if (!isOpen) return;
-
         const handleEscape = (e: KeyboardEvent) => {
             if (e.key === "Escape") onClose();
         };
@@ -37,9 +31,7 @@ export default function MobileNav({ isOpen, onClose }: MobileNavProps) {
             document.removeEventListener("keydown", handleEscape);
             document.body.style.overflow = "unset";
         };
-    }, [isOpen, onClose]);
-
-    if (!isOpen) return null;
+    }, [onClose]);
 
     return (
         <div
@@ -54,12 +46,12 @@ export default function MobileNav({ isOpen, onClose }: MobileNavProps) {
             <nav
                 role="navigation"
                 aria-label="Mobile navigation"
-                aria-expanded={isOpen}
+                aria-expanded={true}
                 className="absolute left-0 top-0 bottom-0 w-72 bg-header-gradient shadow-2xl animate-in slide-in-from-left duration-300 flex flex-col"
             >
                 {/* Header */}
                 <div className="flex items-center justify-between p-5 border-b border-header-border/30">
-                    <span className="font-serif text-xl font-bold text-white tracking-wide">Grahvani</span>
+                    <span className={cn(TYPOGRAPHY.sectionTitle, "text-xl !font-bold !text-white !mb-0 tracking-wide")}>Grahvani</span>
                     <button
                         onClick={onClose}
                         className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
@@ -88,7 +80,7 @@ export default function MobileNav({ isOpen, onClose }: MobileNavProps) {
                                 )}
                             >
                                 <Icon className={cn("w-5 h-5 shrink-0", isActive ? "text-active-glow" : "text-header-border")} />
-                                <span className="font-serif text-sm tracking-wide">{item.label}</span>
+                                <span className={cn(TYPOGRAPHY.value, "!text-sm tracking-wide !mt-0", isActive ? "!text-active-glow" : "!text-white")}>{item.label}</span>
                             </Link>
                         );
                     })}

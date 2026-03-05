@@ -66,7 +66,7 @@ interface BirthPanchangaData {
 export default function BirthPanchanga({ data }: { data: BirthPanchangaData | null }) {
     if (!data || !data.panchanga) {
         return (
-            <div className="p-4 text-center border border-antique/30 rounded-xl bg-softwhite/50 text-primary text-[10px] font-sans tracking-wide uppercase">
+            <div className="p-4 text-center border border-antique/30 rounded-xl bg-softwhite/50 text-primary text-[10px] font-sans tracking-wide">
                 Panchanga data loading...
             </div>
         );
@@ -125,7 +125,7 @@ export default function BirthPanchanga({ data }: { data: BirthPanchangaData | nu
 
             <div className="pt-1">
                 <div className="text-center bg-softwhite/40 py-1.5 rounded-lg border border-antique/10">
-                    <span className={cn(TYPOGRAPHY.label, "mb-0 mr-2")}>Birth Vara :</span>
+                    <span className={cn(TYPOGRAPHY.label, "mb-0 mr-2")}>Birth vara :</span>
                     <span className={TYPOGRAPHY.value}>{vara.name}</span>
                 </div>
             </div>

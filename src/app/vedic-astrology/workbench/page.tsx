@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import NorthIndianChart, { ChartWithPopup, Planet } from "@/components/astrology/NorthIndianChart";
 import ShodashaDignity from '@/components/astrology/ShodashaDignity';
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { COLORS } from '@/design-tokens/colors';
 import {
     LayoutDashboard,
     TrendingUp,
@@ -31,12 +33,12 @@ import { parseChartData, signIdToName } from '@/lib/chart-helpers';
 
 const CHART_NAMES: Record<string, string> = {
     // Divisional Charts
-    'D1': 'Rashi (Birth Chart)',
+    'D1': 'Rashi (Birth chart)',
     'D2': 'Hora (Wealth)',
     'D3': 'Drekkana (Siblings)',
     'D4': 'Chaturthamsha (Fortune)',
     'D7': 'Saptamsha (Children)',
-    'D9': 'Navamsha (Spouse & Dharma)',
+    'D9': 'Navamsha (Spouse & dharma)',
     'D10': 'Dashamsha (Career)',
     'D12': 'Dwadashamsha (Parents)',
     'D16': 'Shodashamsha (Vehicles)',
@@ -46,25 +48,25 @@ const CHART_NAMES: Record<string, string> = {
     'D30': 'Trimshamsha (Misfortunes)',
     'D40': 'Khavedamsha (Auspiciousness)',
     'D45': 'Akshavedamsha (General)',
-    'D60': 'Shashtiamsha (Past Karma)',
+    'D60': 'Shashtiamsha (Past karma)',
 
     // Chandra & Surya Lagna
-    'moon_chart': 'Chandra Lagna (Moon Chart)',
-    'sun_chart': 'Surya Lagna (Sun Chart)',
+    'moon_chart': 'Chandra lagna (Moon chart)',
+    'sun_chart': 'Surya lagna (Sun chart)',
 
     // Special Lagnas & Analysis
-    'arudha_lagna': 'Arudha Lagna (Perception)',
-    'bhava_lagna': 'Bhava Lagna (Relative Strength)',
-    'hora_lagna': 'Hora Lagna (Prosperity)',
-    'karkamsha_d1': 'Karkamsha D1 (Life Purpose)',
-    'karkamsha_d9': 'Karkamsha D9 (Inner Nature)',
-    'sripathi_bhava': 'Sripathi Bhava (House Analysis)',
-    'kp_bhava': 'KP Bhava (Stellar System)',
-    'equal_bhava': 'Equal Bhava',
-    'gl_chart': 'Gati Kalagna (GL Chart)',
+    'arudha_lagna': 'Arudha lagna (Perception)',
+    'bhava_lagna': 'Bhava lagna (Relative strength)',
+    'hora_lagna': 'Hora lagna (Prosperity)',
+    'karkamsha_d1': 'Karkamsha D1 (Life purpose)',
+    'karkamsha_d9': 'Karkamsha D9 (Inner nature)',
+    'sripathi_bhava': 'Sripathi bhava (House analysis)',
+    'kp_bhava': 'KP bhava (Stellar system)',
+    'equal_bhava': 'Equal bhava',
+    'gl_chart': 'Gati kalagna (GL chart)',
     'transit': 'Transit (Gochar)',
-    'mandi': 'Mandi (Karmic Obstacles)',
-    'gulika': 'Gulika (Instant Karma)',
+    'mandi': 'Mandi (Karmic obstacles)',
+    'gulika': 'Gulika (Instant karma)',
 };
 
 export default function AnalyticalWorkbenchPage() {
@@ -116,7 +118,7 @@ export default function AnalyticalWorkbenchPage() {
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <div>
-                        <h1 className="text-2xl font-serif font-bold text-primary">Analytical Workbench</h1>
+                        <h1 className="text-2xl font-serif font-bold text-primary">Analytical workbench</h1>
                         <div className="flex items-center gap-2">
 
                         </div>
@@ -135,8 +137,8 @@ export default function AnalyticalWorkbenchPage() {
             {/* View Tabs */}
             <div className="flex bg-white/50 p-1 rounded-2xl border border-antique/50 w-fit">
                 {(['chart', 'dignity', 'lagna'] as const).map(tab => (
-                    <button key={tab} onClick={() => { setActiveTab(tab); if (tab === 'lagna') setSelectedChartType('arudha_lagna'); else if (tab === 'chart') setSelectedChartType('D1'); }} className={cn("px-6 py-2 rounded-xl text-xs font-bold capitalize transition-all", activeTab === tab ? "bg-gold-primary text-ink shadow-lg" : "text-primary hover:bg-parchment")}>
-                        {tab === 'lagna' ? 'Lagna Analysis' : tab === 'dignity' ? 'Dignity Matrix' : 'Interactive Chart'}
+                    <button key={tab} onClick={() => { setActiveTab(tab); if (tab === 'lagna') setSelectedChartType('arudha_lagna'); else if (tab === 'chart') setSelectedChartType('D1'); }} className={cn("px-6 py-2 rounded-xl text-xs font-bold transition-all", activeTab === tab ? COLORS.wbActiveTab : "text-primary hover:bg-parchment")}>
+                        {tab === 'lagna' ? 'Lagna analysis' : tab === 'dignity' ? 'Dignity matrix' : 'Interactive chart'}
                     </button>
                 ))}
             </div>
@@ -156,7 +158,7 @@ export default function AnalyticalWorkbenchPage() {
                         <div className="border border-antique rounded-lg overflow-hidden shadow-sm bg-surface-warm">
                             <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">
-                                    {activeTab === 'lagna' ? 'Lagna Manifestation' : 'Interactive Visualization'}
+                                    {activeTab === 'lagna' ? 'Lagna manifestation' : 'Interactive visualization'}
                                 </h3>
                                 <select
                                     className="text-xs bg-white/50 border border-antique/50 rounded-lg px-2 py-0.5 focus:outline-none focus:border-gold-primary font-bold"
@@ -165,13 +167,13 @@ export default function AnalyticalWorkbenchPage() {
                                 >
                                     {activeTab === 'chart' ? (
                                         <>
-                                            <optgroup label="Divisional Charts (Vargas)">
+                                            <optgroup label="Divisional charts (Vargas)">
                                                 {divisionalCharts.map(c => <option key={c} value={c}>{c} - {CHART_NAMES[c] || c}</option>)}
                                             </optgroup>
                                         </>
                                     ) : (
-                                        <optgroup label="Lagna Analysis">
-                                            {lagnaCharts.map(c => <option key={c} value={c}>{CHART_NAMES[c] || c.toUpperCase() + ' Analysis'}</option>)}
+                                        <optgroup label="Lagna analysis">
+                                            {lagnaCharts.map(c => <option key={c} value={c}>{CHART_NAMES[c] || c.toUpperCase() + ' analysis'}</option>)}
                                         </optgroup>
                                     )}
                                 </select>
@@ -212,9 +214,9 @@ export default function AnalyticalWorkbenchPage() {
                                     <div className="p-6 bg-copper-50 rounded-full mb-6">
                                         <Shield className="w-12 h-12 text-copper-300" />
                                     </div>
-                                    <h3 className="text-2xl font-serif font-bold text-copper-900 mb-3">Shodasha Analysis Required</h3>
+                                    <h3 className="text-2xl font-serif font-bold text-copper-900 mb-3">Shodasha analysis required</h3>
                                     <p className="text-copper-600 mb-8 max-w-md leading-relaxed font-medium">
-                                        To view the complete Dignity Matrix and Vimsopaka strengths, we need to generate the Shodasha Varga summary.
+                                        To view the complete Dignity Matrix and Vimsopaka strengths, we need to generate the Shodasha varga summary.
                                     </p>
                                     <button
                                         onClick={() => clientApi.generateChart(clientDetails.id!, 'shodasha_varga_signs', activeSystem).then(refreshCharts)}
@@ -225,7 +227,7 @@ export default function AnalyticalWorkbenchPage() {
                                         ) : (
                                             <Sparkles className="w-5 h-5 text-amber-400 group-hover:rotate-12 transition-transform" />
                                         )}
-                                        Generate Dignity Analysis
+                                        Generate dignity analysis
                                     </button>
                                 </div>
                             )}
@@ -238,11 +240,11 @@ export default function AnalyticalWorkbenchPage() {
                     <div className="space-y-4 h-full w-145">
                         <div className="border border-antique rounded-lg overflow-hidden shadow-sm bg-surface-warm flex flex-col h-full">
                             <div className="bg-border-warm px-4 py-2 border-b border-antique shrink-0">
-                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Birth Planetary Positions</h3>
+                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Birth planetary positions</h3>
                             </div>
 
                             {/* Table Headers */}
-                            <div className="grid grid-cols-12 px-4 py-2 border-b border-antique/30 bg-white/30 text-[10px] uppercase font-bold text-primary-refined tracking-wider shrink-0">
+                            <div className="grid grid-cols-12 px-4 py-2 border-b border-antique/30 bg-white/30 text-[10px] font-bold text-primary-refined tracking-wider shrink-0">
                                 <div className="col-span-3">Planet</div>
                                 <div className="col-span-6 text-center">Sign</div>
                                 <div className="col-span-3 text-right">Deg</div>

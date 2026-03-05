@@ -3,6 +3,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Compass } from 'lucide-react';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 const planetEmojis: Record<string, string> = {
     'Sun': '☉', 'Moon': '☽', 'Mars': '♂', 'Mercury': '☿',
@@ -58,7 +59,7 @@ export default function KpChartSummaryPanel({
 }: KpChartSummaryPanelProps) {
     return (
         <div className={cn("bg-softwhite border border-antique rounded-2xl p-5", className)}>
-            <h3 className="text-base font-serif text-primary mb-4 flex items-center gap-2 font-semibold">
+            <h3 className={cn(TYPOGRAPHY.value, "text-base mb-4 flex items-center gap-2 font-semibold")}>
                 <div className="p-1.5 bg-parchment rounded-lg border border-antique">
                     <Compass className="w-3.5 h-3.5 text-gold-dark" />
                 </div>
@@ -85,7 +86,7 @@ export default function KpChartSummaryPanel({
             {/* Planet Snapshot */}
             {planets.length > 0 && (
                 <div className="mt-4 pt-3 border-t border-antique/50">
-                    <p className="text-[9px] uppercase tracking-widest text-primary font-bold mb-2">Planet Snapshot</p>
+                    <p className={cn(TYPOGRAPHY.label, "text-[9px] uppercase tracking-widest !font-bold mb-2")}>Planet Snapshot</p>
                     <div className="flex flex-wrap gap-1.5">
                         {planets.map((p) => (
                             <div
@@ -94,7 +95,7 @@ export default function KpChartSummaryPanel({
                                 title={`${p.name} in ${p.sign}${p.isRetrograde ? ' (R)' : ''}`}
                             >
                                 <span className="text-sm">{planetEmojis[p.name] || '●'}</span>
-                                <span className="font-sans text-primary font-medium">
+                                <span className={cn(TYPOGRAPHY.value, "text-xs font-medium")}>
                                     {signAbbreviations[p.sign] || p.sign?.slice(0, 3)}
                                 </span>
                                 {p.isRetrograde && (
@@ -112,10 +113,11 @@ export default function KpChartSummaryPanel({
 function DetailRow({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
     return (
         <div className="flex items-center justify-between gap-2">
-            <span className="text-[10px] uppercase tracking-widest text-primary font-bold shrink-0">{label}</span>
+            <span className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-widest !font-bold shrink-0")}>{label}</span>
             <span className={cn(
-                "text-sm font-serif font-medium text-right",
-                highlight ? "text-gold-dark font-bold" : "text-primary"
+                TYPOGRAPHY.value,
+                "text-sm font-medium text-right",
+                highlight ? "!text-gold-dark !font-bold" : "!text-primary"
             )}>
                 {value}
             </span>

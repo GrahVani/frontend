@@ -176,10 +176,10 @@ export default function PanchangaOverviewPage() {
                                 Kundali
                             </Link>
                             <span className="text-primary">/</span>
-                            <span>Panchanga Overview</span>
+                            <span>Panchanga</span>
                         </div>
                     </div>
-                    <h1 className="text-2xl font-serif font-bold text-ink tracking-tight">Panchanga Overview</h1>
+                    <h1 className="text-2xl font-serif font-bold text-ink tracking-tight">Panchanga</h1>
                 </div>
             </div>
 
@@ -455,7 +455,7 @@ export default function PanchangaOverviewPage() {
                                             <div className={cn("mt-auto p-4 rounded-xl border border-white/20", item.bgColor)}>
                                                 <div className="flex items-center gap-1.5 mb-2">
                                                     <Sparkle className={cn("w-4 h-4 text-accent-gold", item.titleColor)} />
-                                                    <span className={cn("font-bold text-xs uppercase tracking-wider font-sans", item.titleColor)}>In this chart</span>
+                                                    <span className={cn("font-bold text-xs tracking-wider font-sans", item.titleColor)}>In this chart</span>
                                                 </div>
                                                 <p className={cn("text-sm font-medium leading-relaxed font-sans", item.textColor)}>
                                                     {inChart}

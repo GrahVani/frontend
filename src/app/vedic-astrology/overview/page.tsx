@@ -28,6 +28,7 @@ import VimshottariTreeGrid from '@/components/astrology/VimshottariTreeGrid';
 import { processDashaResponse, RawDashaPeriod } from '@/lib/dasha-utils';
 import BirthPanchanga from '@/components/astrology/BirthPanchanga';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { COLORS } from '@/design-tokens/colors';
 
 // Helper for formatting
 const formatDate = (dateStr: string) => {
@@ -153,9 +154,9 @@ export default function VedicOverviewPage() {
         <div className="p-0 w-full min-h-screen animate-in fade-in duration-500">
             {/* Header / Client Context - Removed and moved to Profile Card */}
             {isLoading && (
-                <div className="absolute top-4 right-4 z-50 flex items-center gap-2 px-4 py-2 bg-gold-primary/90 text-white rounded-full font-sans text-xs font-medium shadow-lg animate-in fade-in slide-in-from-top-2">
+                <div className={cn(TYPOGRAPHY.label, "absolute top-4 right-4 z-50 flex items-center gap-2 px-4 py-2 bg-gold-primary/90 !text-white rounded-full !text-xs !font-medium shadow-lg animate-in fade-in slide-in-from-top-2 !mb-0")}>
                     <Loader2 className="w-3 h-3 animate-spin" />
-                    Analyzing Chart...
+                    Analyzing chart...
                 </div>
             )}
 
@@ -165,7 +166,7 @@ export default function VedicOverviewPage() {
                     {/* D1 Chart Window */}
                     <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm">
                         <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm flex justify-between items-center">
-                            <h3 className={TYPOGRAPHY.sectionTitle}>Birth Chart (D1)</h3>
+                            <h3 className={TYPOGRAPHY.sectionTitle}>Birth chart (D1)</h3>
                             <button onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })} className="text-primary hover:text-accent-gold transition-colors"><Maximize2 className="w-3 h-3" /></button>
                         </div>
                         <div className="w-full h-[380px] bg-surface-warm">
@@ -182,7 +183,7 @@ export default function VedicOverviewPage() {
                     {/* Planetary Details Window */}
                     <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm">
                         <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm">
-                            <h3 className={TYPOGRAPHY.sectionTitle}>Birth Planetary Positions</h3>
+                            <h3 className={TYPOGRAPHY.sectionTitle}>Birth planetary positions</h3>
                         </div>
                         <div className="overflow-x-auto text-[10px] md:text-xs bg-surface-warm">
                             <PlanetaryTable
@@ -199,7 +200,7 @@ export default function VedicOverviewPage() {
                     {clientDetails && (
                         <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm bg-surface-warm">
                             <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm">
-                                <h3 className={TYPOGRAPHY.sectionTitle}>Client Profile</h3>
+                                <h3 className={TYPOGRAPHY.sectionTitle}>Client profile</h3>
                             </div>
                             <div className="px-3 py-2 flex flex-wrap items-center gap-x-4 gap-y-2">
                                 {/* Name & Details */}
@@ -209,12 +210,12 @@ export default function VedicOverviewPage() {
                                     </div>
                                     <div className="min-w-0">
                                         <div className={TYPOGRAPHY.profileName}>{clientDetails.name}</div>
-                                        <div className={cn(TYPOGRAPHY.profileDetail, "flex flex-wrap gap-x-2 mt-1")}>
-                                            <span>{formatDate(clientDetails.dateOfBirth)}</span>
+                                        <div className={cn(TYPOGRAPHY.profileDetail, "flex flex-wrap gap-x-2 mt-1 !font-serif")}>
+                                            <span className="!font-serif">{formatDate(clientDetails.dateOfBirth)}</span>
                                             <span className="text-primary opacity-60">•</span>
-                                            <span>{formatTime(clientDetails.timeOfBirth)}</span>
+                                            <span className="!font-serif">{formatTime(clientDetails.timeOfBirth)}</span>
                                             <span className="text-primary opacity-60">•</span>
-                                            <span className="truncate max-w-[250px]">{clientDetails.placeOfBirth.city}</span>
+                                            <span className="truncate max-w-[250px] !font-serif">{clientDetails.placeOfBirth.city}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -252,16 +253,16 @@ export default function VedicOverviewPage() {
                         <div className="col-span-12 md:col-span-5 lg:col-span-4 border border-border-warm rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
                             <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm flex items-center gap-1.5">
                                 <Sparkle className="w-3 h-3 text-accent-gold" />
-                                <h3 className={TYPOGRAPHY.sectionTitle}>Birth Panchanga</h3>
+                                <h3 className={TYPOGRAPHY.sectionTitle}>Birth panchanga</h3>
                             </div>
                             <div className="p-2.5 flex-1 flex flex-col justify-between gap-2">
                                 <BirthPanchanga data={birthPanchangaData} />
                                 <Link
                                     href="/vedic-astrology/panchanga"
-                                    className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-header-border to-amber-700 text-white text-[11px] font-bold tracking-wide shadow-md hover:shadow-lg hover:from-amber-600 hover:to-amber-800 active:scale-[0.98] transition-all"
+                                    className={cn(TYPOGRAPHY.label, "w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl !text-white !text-[11px] !font-bold tracking-wide shadow-md active:scale-[0.98] transition-all !mb-0", COLORS.premiumGradient, COLORS.premiumGradientHover)}
                                 >
                                     <Sparkle className="w-3 h-3" />
-                                    View Full Panchanga Overview
+                                    View full panchanga
                                     <ArrowRight className="w-3 h-3" />
                                 </Link>
                             </div>
@@ -270,7 +271,7 @@ export default function VedicOverviewPage() {
                         {/* Vimshottari Dasha */}
                         <div className="col-span-12 md:col-span-7 lg:col-span-8 border border-border-warm rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
                             <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm">
-                                <h3 className={TYPOGRAPHY.sectionTitle}>Vimshottari Dasha</h3>
+                                <h3 className={TYPOGRAPHY.sectionTitle}>Vimshottari dasha</h3>
                             </div>
                             <div className="p-0">
                                 <VimshottariTreeGrid
@@ -323,8 +324,8 @@ export default function VedicOverviewPage() {
                             <X className="w-5 h-5" />
                         </button>
                         <div className="mb-6 text-center">
-                            <h2 className={TYPOGRAPHY.sectionTitle}>{zoomedChart.label}</h2>
-                            <p className={TYPOGRAPHY.label}>{zoomedChart.varga} Divisional Chart</p>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "!mb-0")}>{zoomedChart.label}</h2>
+                            <p className={cn(TYPOGRAPHY.label, "!mb-0")}>{zoomedChart.varga} divisional chart</p>
                         </div>
                         <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6 border border-antique">
                             <ChartWithPopup ascendantSign={zoomedData.ascendant} planets={zoomedData.planets} className="bg-transparent border-none" showDegrees={zoomedChart?.varga === 'D1'} />
@@ -373,8 +374,8 @@ function SmallChartCard({ varga, label, data, onZoom }: { varga: string, label: 
                     <Maximize2 className="w-4 h-4 text-primary" />
                 </div>
             </div>
-            <span className={TYPOGRAPHY.value}>{varga}</span>
-            <span className={TYPOGRAPHY.subValue}>{label}</span>
+            <span className={cn(TYPOGRAPHY.value, "!mt-0")}>{varga}</span>
+            <span className={cn(TYPOGRAPHY.subValue, "!mt-0")}>{label}</span>
         </div>
     );
 }

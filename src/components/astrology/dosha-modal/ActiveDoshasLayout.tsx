@@ -37,9 +37,9 @@ export default function ActiveDoshasLayout({
             <div className="flex flex-col gap-2 h-[480px] w-full lg:w-[440px] shrink-0">
                 <div className="border border-red-200 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm max-w-[440px]">
                     <div className="bg-red-50 px-3 py-1.5 border-b border-red-100 flex justify-between items-center shrink-0">
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-red-900 leading-tight tracking-wide")}>Birth Chart (D1)</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-red-900 leading-tight tracking-wide")}>Birth chart (D1)</h3>
                         <button
-                            onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })}
+                            onClick={() => setZoomedChart({ varga: "D1", label: "Birth chart (D1)" })}
                             className="text-red-900 hover:text-red-600 transition-colors"
                         >
                             <Maximize2 className="w-3 h-3" />
@@ -62,7 +62,7 @@ export default function ActiveDoshasLayout({
             <div className="flex-1 flex flex-col gap-2 h-[480px] min-w-0">
                 <div className="border border-red-200 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm">
                     <div className="bg-red-50 px-4 py-2 border-b border-red-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-red-900 leading-tight tracking-wide whitespace-nowrap")}>Dosha Analysis</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-red-900 leading-tight tracking-wide whitespace-nowrap")}>Dosha analysis</h3>
 
                         {/* Integrated Header Dropdown */}
                         <div className="relative group w-full sm:w-64 shrink-0">
@@ -71,21 +71,21 @@ export default function ActiveDoshasLayout({
                                 onChange={(e) => setSelectedDoshaId(e.target.value)}
                                 className={cn(TYPOGRAPHY.value, "w-full pl-3 pr-8 py-1.5 bg-white/80 border border-red-200 rounded-xl text-red-900 appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-red-300 transition-all shadow-sm group-hover:bg-white")}
                             >
-                                <optgroup label="Karmic / Ancestral" className="font-serif italic text-red-900">
+                                <optgroup label="Karmic / ancestral" className="font-serif italic text-red-900">
                                     {allDoshas.filter(d => d.category === 'karmic').map(dosha => (
                                         <option key={dosha.id} value={dosha.id} className="font-sans not-italic font-medium text-ink">
                                             {dosha.name} ({dosha.severity.toUpperCase()})
                                         </option>
                                     ))}
                                 </optgroup>
-                                <optgroup label="Planetary Afflictions" className="font-serif italic text-red-900">
+                                <optgroup label="Planetary afflictions" className="font-serif italic text-red-900">
                                     {allDoshas.filter(d => d.category === 'planetary').map(dosha => (
                                         <option key={dosha.id} value={dosha.id} className="font-sans not-italic font-medium text-ink">
                                             {dosha.name} ({dosha.severity.toUpperCase()})
                                         </option>
                                     ))}
                                 </optgroup>
-                                <optgroup label="Periodic / Transits" className="font-serif italic text-red-900">
+                                <optgroup label="Periodic / transits" className="font-serif italic text-red-900">
                                     {allDoshas.filter(d => d.category === 'transit').map(dosha => (
                                         <option key={dosha.id} value={dosha.id} className="font-sans not-italic font-medium text-ink">
                                             {dosha.name} ({dosha.severity.toUpperCase()})
@@ -119,10 +119,10 @@ export default function ActiveDoshasLayout({
                                             onClick={() => setSelectedDoshaId("")}
                                             className="text-red-900/60 hover:text-red-900 transition-colors text-[9px] font-bold uppercase tracking-[0.15em] flex items-center gap-1.5"
                                         >
-                                            Clear Selection
+                                            Clear selection
                                         </button>
                                         <div className="flex items-center gap-2 text-red-900/40 text-[8px] font-bold uppercase tracking-[0.1em]">
-                                            <Shield className="w-2.5 h-2.5" /> Specialized Dosha Rendering Engine
+                                            <Shield className="w-2.5 h-2.5" /> Specialized dosha rendering engine
                                         </div>
                                     </div>
                                 </div>
@@ -144,7 +144,7 @@ export default function ActiveDoshasLayout({
                         </button>
                         <div className="mb-6 text-center">
                             <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-xl")}>{zoomedChart.label}</h2>
-                            <p className={cn(TYPOGRAPHY.label, "mt-2")}>{zoomedChart.varga} Divisional Chart</p>
+                            <p className={cn(TYPOGRAPHY.label, "mt-2")}>{zoomedChart.varga} divisional chart</p>
                         </div>
                         <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6 border border-border-warm">
                             <ChartWithPopup

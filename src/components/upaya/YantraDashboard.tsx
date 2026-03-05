@@ -51,19 +51,19 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
 
                     {/* Legend / Subtle Footer - Integrated into Sidebar */}
                     <div className="bg-white/30 rounded-3xl p-6 border border-antique/20 space-y-4">
-                        <h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-amber-900/60 px-1">Practice Insights</h4>
+                        <h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-amber-900/60 px-1">Practice insights</h4>
                         <div className="space-y-3">
                             <div className="flex items-center gap-3 text-[12px] font-medium text-ink">
                                 <div className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.3)]" />
-                                Karmic Priority
+                                Karmic priority
                             </div>
                             <div className="flex items-center gap-3 text-[12px] font-medium text-ink">
                                 <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(79,70,229,0.3)]" />
-                                Dasha Influence
+                                Dasha influence
                             </div>
                             <div className="flex items-center gap-3 text-[12px] font-medium text-ink">
                                 <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
-                                Growth Potential
+                                Growth potential
                             </div>
                         </div>
                     </div>
@@ -73,7 +73,7 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
                 <div className="lg:col-span-8">
                     <div className="rounded-[2.5rem] bg-[rgba(254,250,234,0.6)] border border-antique shadow-xl backdrop-blur-md overflow-hidden flex flex-col p-6 space-y-4 h-fit">
                         <div className="flex items-center justify-between px-2">
-                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-medium tracking-tight")}>Today's Yantra Focus (Priority)</h2>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-medium tracking-tight")}>Today's yantra focus (priority)</h2>
                             <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.3)] animate-pulse" />
                         </div>
 

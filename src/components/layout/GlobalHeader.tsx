@@ -3,7 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 import { Settings, Clock, User, ChevronDown, Menu } from "lucide-react";
+import { TYPOGRAPHY } from "@/design-tokens/typography";
 import Button from "@/components/ui/Button";
 import { useAstrologerStore } from "@/store/useAstrologerStore";
 import { useAuth } from "@/context/AuthContext";
@@ -78,9 +80,9 @@ export default function GlobalHeader() {
                     <Link href="/dashboard" className="group">
                         <div className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-full border border-header-border flex items-center justify-center bg-ink-deep">
-                                <span className="font-serif text-white font-bold text-lg leading-none pt-1">G</span>
+                                <span className={cn(TYPOGRAPHY.value, "text-white !font-bold text-lg leading-none pt-1")}>G</span>
                             </div>
-                            <span className="font-serif text-xl font-semibold text-white tracking-wide group-hover:text-header-border transition-colors">
+                            <span className={cn(TYPOGRAPHY.profileName, "!text-white tracking-wide group-hover:!text-header-border transition-colors")}>
                                 Grahvani
                             </span>
                         </div>
@@ -101,10 +103,10 @@ export default function GlobalHeader() {
                 <div className="flex items-center gap-4 lg:gap-6">
                     {/* Time / Ayanamsa Display (Static) */}
                     <div className="hidden lg:flex flex-col items-end mr-2 text-right">
-                        <span className="text-xs font-serif text-white tracking-wider">{settings.ayanamsa} Ayanamsa</span>
+                        <span className={cn(TYPOGRAPHY.subValue, "!text-white tracking-wider !mt-0")}>{settings.ayanamsa} Ayanamsa</span>
                         <div className="flex items-center gap-1.5 text-white">
                             <Clock className="w-3 h-3" />
-                            <span className="text-xs font-serif tracking-wider" suppressHydrationWarning>
+                            <span className={cn(TYPOGRAPHY.subValue, "!text-white tracking-wider !mt-0")} suppressHydrationWarning>
                                 {mounted ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "--:--"}
                             </span>
                         </div>
@@ -153,10 +155,10 @@ export default function GlobalHeader() {
                                 />
                                 <div className="absolute right-0 mt-2 w-64 bg-surface-modal rounded-2xl shadow-2xl border border-header-border/20 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2" role="menu" aria-label="User menu">
                                     <div className="p-5 bg-gradient-to-br from-copper-dark to-mahogany text-white">
-                                        <p className="font-serif font-bold text-lg leading-tight truncate">
+                                        <p className={cn(TYPOGRAPHY.profileName, "!text-white !font-bold truncate")}>
                                             {user?.name || user?.email}
                                         </p>
-                                        <p className="text-active-glow/70 text-xs tracking-wide mt-1 truncate">
+                                        <p className={cn(TYPOGRAPHY.profileDetail, "!text-active-glow/70 !tracking-wide mt-1 truncate")}>
                                             {user?.role || 'Astrologer'} • {user?.email}
                                         </p>
                                     </div>
@@ -200,10 +202,14 @@ export default function GlobalHeader() {
             </div>
 
             {/* Global Settings Modal */}
-            <GlobalSettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} router={router} />
+            {isSettingsOpen && (
+                <GlobalSettingsModal onClose={() => setIsSettingsOpen(false)} router={router} />
+            )}
 
             {/* Mobile Navigation Drawer */}
-            <MobileNav isOpen={isMobileNavOpen} onClose={() => setIsMobileNavOpen(false)} />
+            {isMobileNavOpen && (
+                <MobileNav onClose={() => setIsMobileNavOpen(false)} />
+            )}
         </header>
     );
 }
@@ -213,13 +219,11 @@ function NavLink({ href, label, active }: { href: string; label: string; active:
         <Link
             href={href}
             aria-current={active ? "page" : undefined}
-            className={`
-                px-4 py-2 font-serif text-sm font-semibold tracking-wide transition-all duration-300 relative
-                ${active
-                    ? 'text-active-glow text-shadow-glow'
-                    : 'text-white hover:text-active-glow'
-                }
-            `}
+            className={cn(
+                TYPOGRAPHY.tableHeader,
+                "px-4 py-2 !font-semibold transition-all duration-300 relative",
+                active ? "text-active-glow text-shadow-glow" : "text-white hover:text-active-glow"
+            )}
         >
             {label}
             {active && (
@@ -234,7 +238,7 @@ function NavLink({ href, label, active }: { href: string; label: string; active:
     );
 }
 
-function GlobalSettingsModal({ isOpen, onClose, router }: { isOpen: boolean; onClose: () => void; router: AppRouterInstance }) {
+function GlobalSettingsModal({ onClose, router }: { onClose: () => void; router: AppRouterInstance }) {
     const { ayanamsa, chartStyle, recentClientIds, updateSettings } = useAstrologerStore();
 
     const settings = React.useMemo(() => ({
@@ -246,11 +250,7 @@ function GlobalSettingsModal({ isOpen, onClose, router }: { isOpen: boolean; onC
     const [tempSettings, setTempSettings] = React.useState(settings);
     const [isSaving, setIsSaving] = React.useState(false);
 
-    React.useEffect(() => {
-        if (isOpen) setTempSettings(settings);
-    }, [isOpen, settings]);
-
-    if (!isOpen) return null;
+    const settingsTitleId = React.useId();
 
     const handleSave = () => {
         setIsSaving(true);
@@ -275,8 +275,6 @@ function GlobalSettingsModal({ isOpen, onClose, router }: { isOpen: boolean; onC
         { id: 'Tropical', label: 'Tropical (Sayana)', desc: 'Western Zodiac aligned' },
     ];
 
-    const settingsTitleId = React.useId();
-
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300" role="dialog" aria-modal="true" aria-labelledby={settingsTitleId}>
             <div className="w-full max-w-2xl bg-surface-modal rounded-[2rem] shadow-2xl overflow-hidden border border-header-border/30 animate-in zoom-in-95 duration-500 flex flex-col max-h-[90vh]">
@@ -284,8 +282,8 @@ function GlobalSettingsModal({ isOpen, onClose, router }: { isOpen: boolean; onC
                 {/* Header */}
                 <div className="p-8 bg-gradient-to-r from-copper-dark to-mahogany flex items-center justify-between shrink-0">
                     <div>
-                        <h2 id={settingsTitleId} className="text-2xl font-serif text-white font-bold tracking-wide">Global Settings</h2>
-                        <p className="text-active-glow/80 text-xs uppercase tracking-widest mt-1">Default preferences for charts and calculations</p>
+                        <h2 id={settingsTitleId} className={cn(TYPOGRAPHY.sectionTitle, "text-2xl !text-white !font-bold !tracking-wide")}>Global Settings</h2>
+                        <p className={cn(TYPOGRAPHY.label, "!text-active-glow/80 !mb-0 mt-1")}>Default preferences for charts and calculations</p>
                     </div>
                     <button onClick={onClose} aria-label="Close settings" className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all">
                         <ChevronDown className="w-6 h-6 rotate-90" />
@@ -295,7 +293,7 @@ function GlobalSettingsModal({ isOpen, onClose, router }: { isOpen: boolean; onC
                 {/* Body */}
                 <div className="flex-1 overflow-y-auto p-10 space-y-10">
                     <section>
-                        <h3 className="text-header-border text-xs font-black uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
+                        <h3 className={cn(TYPOGRAPHY.label, "!text-header-border !font-black !tracking-[0.3em] !mb-6 flex items-center gap-3")}>
                             <span className="w-8 h-[1px] bg-header-border" />
                             Ayanamsa System
                             <span className="flex-1 h-[1px] bg-header-border/20" />
@@ -313,16 +311,21 @@ function GlobalSettingsModal({ isOpen, onClose, router }: { isOpen: boolean; onC
                                         }`}
                                 >
                                     <div className="flex justify-between items-start mb-2">
-                                        <span className={`text-sm font-serif font-bold ${tempSettings.ayanamsa === a.id ? 'text-white' : 'text-ink'
-                                            }`}>{a.label}</span>
+                                        <span className={cn(
+                                            TYPOGRAPHY.value,
+                                            tempSettings.ayanamsa === a.id ? "!text-white" : "!text-ink"
+                                        )}>{a.label}</span>
                                         {tempSettings.ayanamsa === a.id && (
                                             <div className="w-4 h-4 rounded-full bg-active-glow flex items-center justify-center">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-copper-dark" />
                                             </div>
                                         )}
                                     </div>
-                                    <p className={`text-xs font-medium leading-relaxed ${tempSettings.ayanamsa === a.id ? 'text-white/60' : 'text-bronze/60'
-                                        }`}>{a.desc}</p>
+                                    <p className={cn(
+                                        TYPOGRAPHY.subValue,
+                                        tempSettings.ayanamsa === a.id ? "!text-white/60" : "!text-bronze/60",
+                                        "!mt-0"
+                                    )}>{a.desc}</p>
                                 </button>
                             ))}
                         </div>
@@ -331,9 +334,9 @@ function GlobalSettingsModal({ isOpen, onClose, router }: { isOpen: boolean; onC
 
                 {/* Footer */}
                 <div className="p-8 bg-softwhite border-t border-header-border/10 flex items-center justify-between shrink-0">
-                    <span className="text-xs text-bronze font-medium italic">Changes reflect immediately across all open modules.</span>
+                    <span className={cn(TYPOGRAPHY.subValue, "!text-bronze !font-medium")}>Changes reflect immediately across all open modules.</span>
                     <div className="flex gap-4">
-                        <button onClick={onClose} aria-label="Cancel settings changes" className="px-6 py-3 rounded-xl text-bronze text-xs font-bold uppercase tracking-wider hover:bg-bronze/5 transition-colors">
+                        <button onClick={onClose} aria-label="Cancel settings changes" className={cn(TYPOGRAPHY.label, "px-6 py-3 rounded-xl !text-bronze !mb-0 hover:bg-bronze/5 transition-colors")}>
                             Cancel
                         </button>
                         <Button variant="primary" onClick={handleSave} disabled={isSaving} loading={isSaving}>

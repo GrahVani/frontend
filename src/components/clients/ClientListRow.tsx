@@ -2,6 +2,8 @@ import { useRouter } from 'next/navigation';
 import { Edit2, Trash2, Calendar, MapPin, ChevronRight, Clock, Phone } from 'lucide-react';
 import { Client } from '@/types/client';
 import { useVedicClient } from '@/context/VedicClientContext';
+import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/design-tokens/typography";
 
 interface ClientListRowProps {
     client: Client;
@@ -62,7 +64,7 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
                         {client.avatar ? (
                             <img src={client.avatar} alt={client.firstName} className="w-full h-full object-cover" />
                         ) : (
-                            <span className="font-serif text-2xl text-gold-dark font-bold tracking-tight">
+                            <span className={cn(TYPOGRAPHY.sectionTitle, "text-2xl !text-gold-dark !font-bold tracking-tight !mb-0")}>
                                 {(client.firstName || client.fullName || '?')[0]}
                             </span>
                         )}
@@ -72,29 +74,29 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
                 {/* 2. Main Info */}
                 <div className="flex-1 relative z-10">
                     <div className="flex items-center justify-between">
-                        <div>
-                            <h3 className="font-serif text-2xl font-bold text-brown-dark group-hover:text-gold-dark transition-colors tracking-tight">
+                        <div className="flex-1">
+                            <h3 className={cn(TYPOGRAPHY.value, "text-2xl !font-bold !text-brown-dark group-hover:!text-gold-dark transition-colors tracking-tight !mt-0")}>
                                 {client.fullName || `${client.firstName || ''} ${client.lastName || ''}`.trim() || 'Unknown'}
                             </h3>
                             <div className="flex items-center flex-wrap gap-4 xl:gap-6 mt-2">
-                                <div className="flex items-center text-brown-dark text-xs font-sans uppercase tracking-wider font-bold">
+                                <div className={cn(TYPOGRAPHY.subValue, "flex items-center !text-brown-dark !text-xs !tracking-wider !font-bold !mt-0")}>
                                     <MapPin className="w-3.5 h-3.5 mr-2 text-bronze" />
                                     {client.placeOfBirth || client.birthPlace || 'Unknown'}
                                 </div>
-                                <div className="flex items-center text-brown-dark text-xs font-sans uppercase tracking-wider font-bold">
+                                <div className={cn(TYPOGRAPHY.subValue, "flex items-center !text-brown-dark !text-xs !tracking-wider !font-bold !mt-0")}>
                                     <Calendar className="w-3.5 h-3.5 mr-2 text-bronze" />
                                     {(client.dateOfBirth || client.birthDate) ? new Date(client.dateOfBirth || client.birthDate || '').toLocaleDateString('en-US', {
                                         day: 'numeric', month: 'long', year: 'numeric'
                                     }) : 'Unknown'}
                                 </div>
                                 {(client.timeOfBirth || client.birthTime) && (
-                                    <div className="hidden xl:flex items-center text-brown-dark text-xs font-sans uppercase tracking-wider font-bold">
+                                    <div className={cn(TYPOGRAPHY.subValue, "hidden xl:flex items-center !text-brown-dark !text-xs !tracking-wider !font-bold !mt-0")}>
                                         <Clock className="w-3.5 h-3.5 mr-2 text-bronze" />
                                         {client.timeOfBirth || client.birthTime}
                                     </div>
                                 )}
                                 {(client.phone || client.phonePrimary) && (
-                                    <div className="hidden 2xl:flex items-center text-brown-dark text-xs font-sans uppercase tracking-wider font-bold">
+                                    <div className={cn(TYPOGRAPHY.subValue, "hidden 2xl:flex items-center !text-brown-dark !text-xs !tracking-wider !font-bold !mt-0")}>
                                         <Phone className="w-3.5 h-3.5 mr-2 text-bronze" />
                                         {client.phone || client.phonePrimary}
                                     </div>
@@ -105,8 +107,8 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
                         {/* 3. Right Side: Indicators */}
                         <div className="flex items-center gap-6">
                             <div className="hidden md:block text-right">
-                                <span className="block text-[10px] font-black uppercase tracking-[0.3em] text-bronze-dark mb-1">Moon Sign</span>
-                                <span className="text-xs font-serif font-bold text-brown-dark">
+                                <span className={cn(TYPOGRAPHY.label, "block !text-[10px] !font-black uppercase tracking-[0.3em] !text-bronze-dark !mb-1")}>Moon Sign</span>
+                                <span className={cn(TYPOGRAPHY.value, "!text-xs !font-bold !text-brown-dark !mt-0")}>
                                     {client.rashi}
                                 </span>
                             </div>

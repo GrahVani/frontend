@@ -3,6 +3,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { FileDown, GitCompare, Sparkles, HelpCircle, Clock, MapPin, Calendar } from 'lucide-react';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface KpDashboardHeaderProps {
     clientName?: string;
@@ -53,10 +54,10 @@ export default function KpDashboardHeader({
                         </span>
                     </div>
                     <div>
-                        <h2 className="text-lg font-serif font-bold text-primary leading-tight">
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-lg leading-tight")}>
                             {clientName}
                         </h2>
-                        <div className="flex items-center gap-3 mt-0.5 text-xs text-primary flex-wrap">
+                        <div className={cn(TYPOGRAPHY.subValue, "flex items-center gap-3 mt-0.5 text-xs flex-wrap")}>
                             {birthDate && (
                                 <span className="flex items-center gap-1">
                                     <Calendar className="w-3 h-3" />
@@ -83,26 +84,26 @@ export default function KpDashboardHeader({
                 <div className="flex items-center gap-3 flex-wrap">
                     {lagna && (
                         <div className="px-3 py-1.5 bg-parchment border border-antique rounded-lg text-center">
-                            <p className="text-[9px] uppercase tracking-widest text-primary font-bold">Lagna</p>
-                            <p className="text-sm font-serif font-bold text-primary">{lagna}</p>
+                            <p className={cn(TYPOGRAPHY.label, "text-[9px] tracking-widest")}>Lagna</p>
+                            <p className={cn(TYPOGRAPHY.value, "text-sm text-primary")}>{lagna}</p>
                         </div>
                     )}
                     {moonSign && (
                         <div className="px-3 py-1.5 bg-parchment border border-antique rounded-lg text-center">
-                            <p className="text-[9px] uppercase tracking-widest text-primary font-bold">Moon Sign</p>
-                            <p className="text-sm font-serif font-bold text-primary">{moonSign}</p>
+                            <p className={cn(TYPOGRAPHY.label, "text-[9px] tracking-widest")}>Moon sign</p>
+                            <p className={cn(TYPOGRAPHY.value, "text-sm text-primary")}>{moonSign}</p>
                         </div>
                     )}
                     {moonNakshatra && (
                         <div className="px-3 py-1.5 bg-parchment border border-antique rounded-lg text-center">
-                            <p className="text-[9px] uppercase tracking-widest text-primary font-bold">Nakshatra</p>
-                            <p className="text-sm font-serif font-bold text-primary">{moonNakshatra}</p>
+                            <p className={cn(TYPOGRAPHY.label, "text-[9px] tracking-widest")}>Nakshatra</p>
+                            <p className={cn(TYPOGRAPHY.value, "text-sm text-primary")}>{moonNakshatra}</p>
                         </div>
                     )}
                     {ayanamsaValue && (
                         <div className="px-3 py-1.5 bg-gold-primary/10 border border-gold-primary/30 rounded-lg text-center">
-                            <p className="text-[9px] uppercase tracking-widest text-gold-dark font-bold">KP Ayanamsa</p>
-                            <p className="text-sm font-sans font-semibold text-gold-dark">{ayanamsaValue}</p>
+                            <p className={cn(TYPOGRAPHY.label, "text-[9px] tracking-widest !text-gold-dark")}>KP ayanamsa</p>
+                            <p className={cn(TYPOGRAPHY.value, "text-sm !text-gold-dark font-sans")}>{ayanamsaValue}</p>
                         </div>
                     )}
                 </div>
@@ -112,7 +113,11 @@ export default function KpDashboardHeader({
                     {onGeneratePrediction && (
                         <button
                             onClick={onGeneratePrediction}
-                            className="px-3 py-2 bg-gold-primary text-white rounded-lg text-xs font-semibold hover:bg-gold-dark transition-colors flex items-center gap-1.5"
+                            className={cn(
+                                "px-3 py-2 bg-gold-primary text-white rounded-lg transition-colors flex items-center gap-1.5",
+                                TYPOGRAPHY.value,
+                                "text-xs font-semibold"
+                            )}
                         >
                             <Sparkles className="w-3.5 h-3.5" />
                             Predict
@@ -121,7 +126,11 @@ export default function KpDashboardHeader({
                     {onRunHorary && (
                         <button
                             onClick={onRunHorary}
-                            className="px-3 py-2 bg-softwhite border border-antique text-primary rounded-lg text-xs font-semibold hover:bg-gold-primary/10 hover:border-gold-primary/50 transition-colors flex items-center gap-1.5"
+                            className={cn(
+                                "px-3 py-2 bg-softwhite border border-antique text-primary rounded-lg transition-colors flex items-center gap-1.5",
+                                TYPOGRAPHY.value,
+                                "text-xs font-semibold hover:bg-gold-primary/10 hover:border-gold-primary/50"
+                            )}
                         >
                             <HelpCircle className="w-3.5 h-3.5" />
                             Horary
@@ -130,7 +139,11 @@ export default function KpDashboardHeader({
                     {onExportReport && (
                         <button
                             onClick={onExportReport}
-                            className="px-3 py-2 bg-softwhite border border-antique text-primary rounded-lg text-xs font-semibold hover:bg-gold-primary/10 hover:border-gold-primary/50 transition-colors flex items-center gap-1.5"
+                            className={cn(
+                                "px-3 py-2 bg-softwhite border border-antique text-primary rounded-lg transition-colors flex items-center gap-1.5",
+                                TYPOGRAPHY.value,
+                                "text-xs font-semibold hover:bg-gold-primary/10 hover:border-gold-primary/50"
+                            )}
                         >
                             <FileDown className="w-3.5 h-3.5" />
                             Export
@@ -139,7 +152,11 @@ export default function KpDashboardHeader({
                     {onCompareCharts && (
                         <button
                             onClick={onCompareCharts}
-                            className="px-3 py-2 bg-softwhite border border-antique text-primary rounded-lg text-xs font-semibold hover:bg-gold-primary/10 hover:border-gold-primary/50 transition-colors flex items-center gap-1.5"
+                            className={cn(
+                                "px-3 py-2 bg-softwhite border border-antique text-primary rounded-lg transition-colors flex items-center gap-1.5",
+                                TYPOGRAPHY.value,
+                                "text-xs font-semibold hover:bg-gold-primary/10 hover:border-gold-primary/50"
+                            )}
                         >
                             <GitCompare className="w-3.5 h-3.5" />
                             Compare

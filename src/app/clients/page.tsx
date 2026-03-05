@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Search, AlertCircle, RefreshCw } from 'lucide-react';
 import Button from "@/components/ui/Button";
+import { cn } from "@/lib/utils";
 import ParchmentInput from "@/components/ui/ParchmentInput";
 import ClientListRow from "@/components/clients/ClientListRow";
 import { Client } from "@/types/client";
@@ -13,6 +14,7 @@ import { useClientMutations } from "@/hooks/mutations/useClientMutations";
 import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 import { useToast } from "@/context/ToastContext";
 import { SkeletonTable } from "@/components/ui/Skeleton";
+import { TYPOGRAPHY } from "@/design-tokens/typography";
 
 const deriveNames = (client: Client): Client => {
     if (client.firstName && client.lastName) return client;
@@ -78,16 +80,16 @@ export default function ClientsPage() {
         <div className="w-full space-y-6 animate-in fade-in duration-700 py-4 px-2 lg:px-4">
             {dialog}
 
-            <div className="text-xs font-serif uppercase tracking-widest font-bold text-bronze-dark">
+            <div className={cn(TYPOGRAPHY.label, "!text-xs !tracking-widest !font-bold !text-bronze-dark !mb-0")}>
                 Client Almanac
             </div>
             {/* Page Header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h1 className="text-3xl font-serif font-bold text-ink tracking-tight mb-2">
+                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-3xl !font-bold !text-ink tracking-tight !mb-2")}>
                         Client Registry
                     </h1>
-                    <p className="font-serif text-muted italic text-lg">
+                    <p className={cn(TYPOGRAPHY.label, "!text-muted italic !text-lg !mb-0")}>
                         Client records and their astrological profiles.
                     </p>
                 </div>

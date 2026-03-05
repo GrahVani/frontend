@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LucideIcon, ChevronRight, Settings } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/design-tokens/typography";
 
 export interface SidebarItem {
     name: string;
@@ -28,7 +29,7 @@ export default function SectionSidebar({ title, basePath, items }: SectionSideba
             className="w-full lg:w-64 h-full py-6 px-4 flex flex-col gap-2 border-r border-header-border/30 bg-header-gradient shadow-[inset_0_2px_4px_rgba(255,210,125,0.15),inset_0_-2px_4px_rgba(0,0,0,0.3)]"
         >
             <div className="mb-6 px-2">
-                <h3 className="text-xs font-bold text-header-border tracking-widest font-serif">
+                <h3 className={cn(TYPOGRAPHY.label, "!text-xs !font-bold !text-header-border tracking-widest !mb-0")}>
                     {title}
                 </h3>
             </div>
@@ -52,7 +53,7 @@ export default function SectionSidebar({ title, basePath, items }: SectionSideba
                         >
                             <div className="flex items-center gap-3">
                                 <item.icon className={cn("w-5 h-5", isActive ? "text-active-glow" : "text-header-border group-hover:text-active-glow")} />
-                                <span className="font-serif text-sm tracking-wide">{item.name}</span>
+                                <span className={cn(TYPOGRAPHY.value, "!text-sm tracking-wide !mt-0", isActive ? "!text-active-glow" : "!text-white")}>{item.name}</span>
                             </div>
                             {isActive && <ChevronRight className="w-4 h-4 text-active-glow" />}
                         </Link>
@@ -66,7 +67,7 @@ export default function SectionSidebar({ title, basePath, items }: SectionSideba
                     className="flex items-center gap-3 text-softwhite/70 hover:text-white transition-colors"
                 >
                     <Settings className="w-5 h-5" />
-                    <span className="font-serif text-sm">Settings</span>
+                    <span className={cn(TYPOGRAPHY.value, "!text-sm !mt-0")}>Settings</span>
                 </Link>
             </div>
         </aside>
