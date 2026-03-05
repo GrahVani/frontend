@@ -83,8 +83,8 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
                                 <ScrollText className="w-4 h-4 text-purple-600" />
                             </div>
                             <div>
-                                <h3 className={cn(TYPOGRAPHY.label, "mb-0 text-ink tracking-[0.2em]")}>Active Dosha Analysis</h3>
-                                <p className={cn(TYPOGRAPHY.subValue, "uppercase tracking-wider text-[10px] font-bold")}>Karmic Afflictions & Remedial Directives</p>
+                                <h3 className={cn(TYPOGRAPHY.label, "mb-0 text-ink tracking-[0.2em]")}>Active dosha analysis</h3>
+                                <p className={cn(TYPOGRAPHY.subValue, "uppercase tracking-wider text-[10px] font-bold")}>Karmic afflictions & remedial directives</p>
                             </div>
                         </div>
                         <DoshaRemedyGrid
@@ -99,7 +99,7 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
             <div className="border-t border-antique pt-8 mt-12 bg-white/30 rounded-3xl p-6">
                 <div className="flex items-center gap-2 mb-6 px-2">
                     <Sparkles className="w-4 h-4 text-amber-500" />
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em]">General Daily Alignment</h4>
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em]">General daily alignment</h4>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {generalRecommendations.slice(0, 4).map((rec: string, idx: number) => (

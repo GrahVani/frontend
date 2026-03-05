@@ -14,6 +14,7 @@ import {
     FileText,
     Compass,
 } from 'lucide-react';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 export type KpSection =
     | 'dashboard'
@@ -69,7 +70,7 @@ export default function KpDashboardSidebar({
             className
         )}>
             <div className="mb-3 px-2">
-                <p className="text-[9px] uppercase tracking-widest text-primary font-bold">KP Navigation</p>
+                <p className={cn(TYPOGRAPHY.label, "text-[9px] uppercase tracking-widest")}>KP Navigation</p>
             </div>
             <nav className="space-y-0.5">
                 {SIDEBAR_ITEMS.map((item) => {
@@ -90,7 +91,7 @@ export default function KpDashboardSidebar({
                                 "w-4 h-4 shrink-0",
                                 isActive ? "text-gold-dark" : "text-primary"
                             )} />
-                            <span className="font-serif text-[13px]">{item.label}</span>
+                            <span className={cn(TYPOGRAPHY.value, "text-[13px] font-semibold")}>{item.label}</span>
                         </button>
                     );
                 })}

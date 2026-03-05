@@ -46,13 +46,13 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
                     color="amber"
                 />
                 <StatCard
-                    title="House System"
-                    value={calculationMethod.house_system || 'Whole Sign'}
+                    title="House system"
+                    value={calculationMethod.house_system || 'Whole sign'}
                     icon={<Activity className="w-4 h-4" />}
                     color="rose"
                 />
                 <StatCard
-                    title="Highest Degree"
+                    title="Highest degree"
                     value={karakas.find((k: KarakaEntry) => k.is_highest_degree)?.degrees_in_sign?.toFixed(2) || '0.00'}
                     icon={<Zap className="w-4 h-4" />}
                     color="copper"
@@ -67,7 +67,7 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
 
             <div className="bg-surface-warm border border-border-warm rounded-xl overflow-hidden shadow-sm">
                 <div className="bg-border-warm px-4 py-2 border-b border-border-warm">
-                    <h3 className={TYPOGRAPHY.sectionTitle}>Karaka Strength Analysis</h3>
+                    <h3 className={TYPOGRAPHY.sectionTitle}>Karaka strength analysis</h3>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
@@ -75,8 +75,8 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
                             <tr className="bg-parchment/30">
                                 <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-3 border-b border-border-warm/30")}>Planet</th>
                                 <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-3 border-b border-border-warm/30")}>Abbr</th>
-                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-3 border-b border-border-warm/30")}>Chara Karaka</th>
-                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-3 border-b border-border-warm/30")}>Sign/House</th>
+                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-3 border-b border-border-warm/30")}>Chara karaka</th>
+                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-3 border-b border-border-warm/30")}>Sign/house</th>
                                 <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-3 border-b border-border-warm/30 text-right")}>Degrees</th>
                             </tr>
                         </thead>

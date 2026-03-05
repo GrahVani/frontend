@@ -35,7 +35,7 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
         <div className={cn("w-full bg-surface-warm border border-border-warm rounded-xl overflow-hidden shadow-sm", className)}>
             <div className="bg-border-warm px-4 py-2 border-b border-border-warm">
                 <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-center")}>
-                    Tatkalik Maitri Chakra <span className="text-sm font-normal text-secondary">(Temporal Relationship)</span>
+                    Tatkalik maitri chakra <span className="text-sm font-normal text-secondary">(Temporal relationship)</span>
                 </h3>
             </div>
 

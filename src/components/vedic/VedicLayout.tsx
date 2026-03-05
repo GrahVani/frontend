@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { cn } from "@/lib/utils";
 import { useVedicClient } from "@/context/VedicClientContext";
 import { useAstrologerStore } from "@/store/useAstrologerStore";
+import { TYPOGRAPHY } from "@/design-tokens/typography";
 import { SidebarItem } from "@/components/layout/SectionSidebar";
 import { clientApi } from "@/lib/api";
 import { VedicClientDetails } from "@/context/VedicClientContext";
@@ -145,7 +146,8 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                             href={href}
                             aria-current={isActive ? "page" : undefined}
                             className={cn(
-                                "flex items-center px-3 py-2 transition-all duration-300 relative group shrink-0 whitespace-nowrap font-serif text-sm font-medium tracking-wide",
+                                TYPOGRAPHY.tableHeader,
+                                "flex items-center px-3 py-2 transition-all duration-300 relative group shrink-0 whitespace-nowrap !font-medium",
                                 isActive
                                     ? "text-active-glow text-shadow-glow"
                                     : "text-white hover:text-active-glow"
@@ -174,7 +176,8 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                         aria-expanded={isMoreOpen}
                         aria-label="More navigation options"
                         className={cn(
-                            "flex items-center gap-1 px-3 py-2 transition-all duration-300 font-serif text-sm font-medium tracking-wide",
+                            TYPOGRAPHY.tableHeader,
+                            "flex items-center gap-1 px-3 py-2 transition-all duration-300 !font-medium",
                             isMoreOpen
                                 ? "text-active-glow"
                                 : "text-white hover:text-active-glow"
@@ -197,9 +200,10 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                                         role="menuitem"
                                         onClick={() => setIsMoreOpen(false)}
                                         className={cn(
-                                            "flex items-center gap-3 px-4 py-3 text-sm font-serif transition-all",
+                                            TYPOGRAPHY.tableHeader,
+                                            "flex items-center gap-3 px-4 py-3 transition-all !capitalize",
                                             isActive
-                                                ? "text-header-border bg-header-border/10 font-bold"
+                                                ? "text-header-border bg-header-border/10 !font-bold"
                                                 : "text-secondary hover:text-header-border hover:bg-header-border/5"
                                         )}
                                     >
@@ -221,7 +225,7 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                         onClick={() => router.push(`/vedic-astrology/overview`)}
                     >
                         <div className="hidden sm:block text-right">
-                            <h2 className="text-white font-serif font-semibold text-md tracking-wide group-hover:text-active-glow transition-colors">{clientDetails.name}</h2>
+                            <h2 className={cn(TYPOGRAPHY.profileName, "!text-white !text-md tracking-wide group-hover:!text-active-glow transition-colors")}>{clientDetails.name}</h2>
                         </div>
                         <div className="w-9 h-9 rounded-full bg-ink-deep border border-header-border/30 flex items-center justify-center text-active-glow font-serif font-bold text-sm shadow-[0_0_15px_rgba(208,140,96,0.1)] group-hover:border-active-glow/50 transition-all">
                             {clientDetails.name.charAt(0)}

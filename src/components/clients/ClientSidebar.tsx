@@ -14,6 +14,7 @@ import {
     LayoutTemplate
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/design-tokens/typography";
 
 interface ClientSidebarProps {
     basePath: string;
@@ -47,7 +48,7 @@ export default function ClientSidebar({ basePath }: ClientSidebarProps) {
             <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none opacity-40" />
 
             <div className="mb-8 px-2 relative z-10">
-                <h3 className="text-[10px] font-black text-header-border uppercase tracking-[0.2em] font-serif">
+                <h3 className={cn(TYPOGRAPHY.label, "text-[10px] !font-black !text-header-border uppercase tracking-[0.2em] !mb-0")}>
                     Workspace
                 </h3>
             </div>
@@ -70,7 +71,7 @@ export default function ClientSidebar({ basePath }: ClientSidebarProps) {
                         >
                             <div className="flex items-center gap-4">
                                 <item.icon className={cn("w-5 h-5 transition-transform duration-300 group-hover:scale-110", isActive ? "text-active-glow" : "text-header-border")} />
-                                <span className="font-serif text-[13px] tracking-widest uppercase font-medium">{item.name}</span>
+                                <span className={cn(TYPOGRAPHY.value, "text-[13px] tracking-widest uppercase !font-medium !mt-0", isActive ? "!text-active-glow" : "!text-white/70")}>{item.name}</span>
                             </div>
                             {isActive && <ChevronRight className="w-3.5 h-3.5 text-active-glow animate-pulse" />}
                         </Link>
@@ -84,7 +85,7 @@ export default function ClientSidebar({ basePath }: ClientSidebarProps) {
                     className="flex items-center gap-3 text-softwhite/70 hover:text-white transition-colors"
                 >
                     <Settings className="w-5 h-5" />
-                    <span className="font-serif text-sm">Settings</span>
+                    <span className={cn(TYPOGRAPHY.value, "!text-sm !mt-0")}>Settings</span>
                 </Link>
             </div>
         </aside>

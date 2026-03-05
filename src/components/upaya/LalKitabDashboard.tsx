@@ -53,21 +53,21 @@ export default function LalKitabDashboard({ data, className }: LalKitabDashboard
                         </div>
                         <div>
                             <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-black tracking-tight flex items-center gap-3")}>
-                                Lal Kitab Remedial Plan
+                                Lal kitab remedial plan
                             </h2>
                             <p className={cn(TYPOGRAPHY.label, "mt-0.5 text-muted-refined")}>
-                                Accurate Prescription for <span className="text-accent-gold font-bold">{String(data.user_name || "Sadhaka")}</span>
+                                Accurate prescription for <span className="text-accent-gold font-bold">{String(data.user_name || "Sadhaka")}</span>
                             </p>
                         </div>
                     </div>
 
                     <div className="flex gap-3">
                         <div className="bg-white/60 backdrop-blur-md px-4 py-2 rounded-xl border border-white/50 shadow-sm text-center">
-                            <p className="text-[10px] uppercase font-black text-accent-gold mb-0.5">Cycle Duration</p>
+                            <p className="text-[10px] uppercase font-black text-accent-gold mb-0.5">Cycle duration</p>
                             <p className="text-sm font-serif font-bold text-text-tertiary">{remedyData.remedy_cycle || "43 Days"}</p>
                         </div>
                         <div className="bg-white/60 backdrop-blur-md px-4 py-2 rounded-xl border border-white/50 shadow-sm text-center">
-                            <p className="text-[10px] uppercase font-black text-accent-gold mb-0.5">Primary Focus</p>
+                            <p className="text-[10px] uppercase font-black text-accent-gold mb-0.5">Primary focus</p>
                             <p className="text-sm font-serif font-bold text-text-tertiary">{remedyData.planet} in {remedyData.house}{getOrdinal(remedyData.house)}</p>
                         </div>
                     </div>
@@ -95,11 +95,11 @@ export default function LalKitabDashboard({ data, className }: LalKitabDashboard
                         <div className="bg-white p-5 rounded-[1.5rem] border-2 border-parchment-soft shadow-sm flex-1 relative overflow-hidden group hover:shadow-md transition-shadow">
                             <h3 className="text-sm font-serif font-black text-text-tertiary mb-4 uppercase tracking-widest flex items-center gap-2">
                                 <Scroll className="w-4 h-4 text-accent-gold" />
-                                Scriptural Diagnosis
+                                Scriptural diagnosis
                             </h3>
                             <div className="space-y-4">
                                 <div className="bg-[#FFF9E5] p-3 rounded-xl border border-parchment-soft/50">
-                                    <p className="text-[10px] font-black text-accent-gold uppercase mb-1">Karmic Trigger</p>
+                                    <p className="text-[10px] font-black text-accent-gold uppercase mb-1">Karmic trigger</p>
                                     <p className="text-xs text-text-tertiary font-medium leading-relaxed italic">
                                         "{details.why || "Planetary energy requires specific material grounding to stabilize."}"
                                     </p>
@@ -121,7 +121,7 @@ export default function LalKitabDashboard({ data, className }: LalKitabDashboard
                         <div className="bg-sky-50 p-4 rounded-2xl border border-sky-100 flex items-start gap-3">
                             <BookOpen className="w-5 h-5 text-sky-600 shrink-0 mt-0.5" />
                             <div>
-                                <h4 className="text-xs font-black text-sky-800 uppercase tracking-wider mb-1">Practical Logic</h4>
+                                <h4 className="text-xs font-black text-sky-800 uppercase tracking-wider mb-1">Practical logic</h4>
                                 <p className="text-xs text-sky-700 leading-snug">{details.practical || "Ensure consistency in actions for best results."}</p>
                             </div>
                         </div>
@@ -132,7 +132,7 @@ export default function LalKitabDashboard({ data, className }: LalKitabDashboard
                         <div className="bg-white p-5 rounded-[1.5rem] border-2 border-parchment-soft shadow-sm flex-1 relative flex flex-col">
                             <h3 className="text-sm font-serif font-black text-text-tertiary mb-3 uppercase tracking-widest flex items-center gap-2">
                                 <Utensils className="w-4 h-4 text-accent-gold" />
-                                Supplementary Measures
+                                Supplementary measures
                             </h3>
                             <div className="flex-1 space-y-2 overflow-y-auto max-h-[150px] pr-2 custom-scrollbar">
                                 {details.remedies?.slice(1).map((r: string, idx: number) => (
@@ -144,7 +144,7 @@ export default function LalKitabDashboard({ data, className }: LalKitabDashboard
                             </div>
                             <div className="mt-4 pt-4 border-t border-parchment-soft">
                                 <h4 className="text-xs font-black text-red-800 uppercase mb-2 flex items-center gap-1.5">
-                                    <AlertTriangle className="w-3.5 h-3.5" /> Major Cautions
+                                    <AlertTriangle className="w-3.5 h-3.5" /> Major cautions
                                 </h4>
                                 <ul className="space-y-1">
                                     {details.cautions?.map((c: string, idx: number) => (
@@ -170,7 +170,7 @@ export default function LalKitabDashboard({ data, className }: LalKitabDashboard
                         <div className="h-[1px] w-12 bg-accent-gold/30"></div>
                         <h3 className="text-text-tertiary font-serif font-black text-sm uppercase tracking-[0.3em] flex items-center gap-3">
                             <Sparkles className="w-4 h-4 text-accent-gold" />
-                            Golden Rules for Success
+                            Golden rules for success
                             <Sparkles className="w-4 h-4 text-accent-gold" />
                         </h3>
                         <div className="h-[1px] w-12 bg-accent-gold/30"></div>

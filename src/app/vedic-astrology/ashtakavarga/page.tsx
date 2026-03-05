@@ -20,6 +20,7 @@ import { clientApi } from '@/lib/api';
 import { useAshtakavarga } from '@/hooks/queries/useCalculations';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { COLORS } from '@/design-tokens/colors';
 import NorthIndianChart from '@/components/astrology/NorthIndianChart/NorthIndianChart';
 import AshtakavargaChart from '@/components/astrology/AshtakavargaChart';
 import ShodashaVargaTable from '@/components/astrology/ShodashaVargaTable';
@@ -58,8 +59,8 @@ const AnalyzeCard = ({ icon, title, desc, color }: { icon: React.ReactNode; titl
         )}>
             {icon}
         </div>
-        <h4 className="text-sm font-serif font-bold text-primary mb-2">{title}</h4>
-        <p className="text-[10px] text-primary leading-relaxed">{desc}</p>
+        <h4 className={cn(TYPOGRAPHY.value, "!text-sm mb-2 text-primary")}>{title}</h4>
+        <p className={cn(TYPOGRAPHY.subValue, "!text-[10px] leading-relaxed text-primary")}>{desc}</p>
     </div>
 );
 
@@ -191,11 +192,11 @@ export default function AshtakavargaPage() {
     }
 
     return (
-        <div className="-mt-2 lg:-mt-4 space-y-4">
+        <div className="space-y-4 pt-4 px-1 sm:px-0">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div>
                     <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-bold")}>
-                        Ashtakavarga Systems
+                        Ashtakavarga systems
                     </h1>
                 </div>
 
@@ -214,16 +215,18 @@ export default function AshtakavargaPage() {
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
                                     className={cn(
-                                        "px-3 py-1 rounded-lg text-sm font-semibold font-sans capitalize transition-all whitespace-nowrap",
+                                        "px-3 py-1 rounded-lg transition-all whitespace-nowrap",
+                                        TYPOGRAPHY.label,
+                                        "!text-sm !font-bold !mb-0",
                                         activeTab === tab
-                                            ? "bg-gold-primary text-primary shadow-sm scale-[1.02]"
+                                            ? cn("text-primary shadow-sm scale-[1.02]", COLORS.wbActiveTab)
                                             : "text-secondary hover:bg-gold-primary/10 hover:text-primary"
                                     )}
                                 >
                                     {tab === 'sarva' ? 'Sarvashtakavarga' :
                                         tab === 'bhinna' ? 'Bhinnashtakavarga' :
                                             tab === 'shodasha' ? 'Shodasha' :
-                                                tab === 'temporal' ? 'Tatkalik Maitri' : 'Karaka Strength'}
+                                                tab === 'temporal' ? 'Tatkalik maitri' : 'Karaka strength'}
                                 </button>
                             ))}
                     </div>
@@ -236,7 +239,7 @@ export default function AshtakavargaPage() {
                 <div className="flex items-center justify-center h-[50vh]">
                     <div className="text-center">
                         <Loader2 className="w-12 h-12 text-primary animate-spin mx-auto mb-4" />
-                        <p className="text-primary font-serif">Compiling Bindu Matrices...</p>
+                        <p className={cn(TYPOGRAPHY.sectionTitle, "text-base")}>Compiling bindu matrices...</p>
                     </div>
                 </div>
             ) : (
@@ -265,7 +268,9 @@ export default function AshtakavargaPage() {
                                                         onClick={() => setSelectedPlanet(p)}
                                                         className={cn(
                                                             "px-3 py-1 text-sm font-semibold font-sans rounded-lg transition-all whitespace-nowrap",
-                                                            selectedPlanet === p ? "bg-gold-primary text-primary shadow-sm scale-105" : "text-secondary hover:bg-gold-primary/10 hover:text-primary"
+                                                            selectedPlanet === p
+                                                                ? cn("text-primary shadow-sm scale-105", COLORS.wbActiveTab)
+                                                                : "text-secondary hover:bg-gold-primary/10 hover:text-primary"
                                                         )}
                                                     >
                                                         {p}
@@ -278,7 +283,7 @@ export default function AshtakavargaPage() {
                                     <div className="p-4 grid grid-cols-1 xl:grid-cols-[3fr_2fr] gap-4 items-start">
                                         <div className="space-y-2">
                                             <h3 className={cn(TYPOGRAPHY.label, "text-secondary flex items-center gap-2")}>
-                                                <Grid3X3 className="w-3.5 h-3.5" /> Bindu Matrix
+                                                <Grid3X3 className="w-3.5 h-3.5" /> Bindu matrix
                                             </h3>
                                             <AshtakavargaMatrix
                                                 type={activeTab === 'sarva' ? 'sarva' : 'bhinna'}
@@ -292,7 +297,7 @@ export default function AshtakavargaPage() {
 
                                         <div className="space-y-2">
                                             <h3 className={cn(TYPOGRAPHY.label, "text-secondary flex items-center gap-2")}>
-                                                <MapIcon className="w-3.5 h-3.5" /> House Distribution
+                                                <MapIcon className="w-3.5 h-3.5" /> House distribution
                                             </h3>
                                             <div className="bg-softwhite rounded-lg border border-antique p-2 flex items-center justify-center">
                                                 <AshtakavargaChart
@@ -316,12 +321,12 @@ export default function AshtakavargaPage() {
                                 <TemporalRelationshipTable data={data.temporal} />
                             ) : (
                                 <div className="flex flex-col items-center justify-center h-[400px] bg-softwhite rounded-3xl border border-antique border-dashed p-12 text-center">
-                                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-bold mb-4")}>No Temporal Relationship Data</h3>
+                                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-bold mb-4")}>No temporal relationship data</h3>
                                     <button
                                         onClick={() => clientApi.generateChart(clientDetails.id!, 'tatkalik_maitri_chakra', activeSystem).then(() => window.location.reload())}
-                                        className="px-8 py-3 bg-gold-primary text-ink rounded-2xl font-bold hover:shadow-xl transition-all"
+                                        className={cn("px-8 py-3 text-ink rounded-2xl font-bold hover:shadow-xl transition-all", COLORS.premiumGradient)}
                                     >
-                                        Generate Tatkalik Maitri
+                                        Generate tatkalik maitri
                                     </button>
                                 </div>
                             )}
@@ -332,12 +337,12 @@ export default function AshtakavargaPage() {
                                 <KarakaStrengthAnalysis data={data.karaka} />
                             ) : (
                                 <div className="flex flex-col items-center justify-center h-[400px] bg-softwhite rounded-3xl border border-antique border-dashed p-12 text-center">
-                                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-bold mb-4")}>No Karaka Strength Data</h3>
+                                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-bold mb-4")}>No karaka strength data</h3>
                                     <button
                                         onClick={() => clientApi.generateChart(clientDetails.id!, 'karaka_strength', activeSystem).then(() => window.location.reload())}
-                                        className="px-8 py-3 bg-gold-primary text-ink rounded-2xl font-bold hover:shadow-xl transition-all"
+                                        className={cn("px-8 py-3 text-ink rounded-2xl font-bold hover:shadow-xl transition-all", COLORS.premiumGradient)}
                                     >
-                                        Generate Karaka Strength
+                                        Generate karaka strength
                                     </button>
                                 </div>
                             )}

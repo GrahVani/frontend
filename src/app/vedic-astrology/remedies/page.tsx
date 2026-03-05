@@ -20,6 +20,7 @@ import { useAstrologerStore } from '@/store/useAstrologerStore';
 import { clientApi } from '@/lib/api';
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { COLORS } from '@/design-tokens/colors';
 import UpayaDashboard from '@/components/upaya/UpayaDashboard';
 import YantraDashboard from '@/components/upaya/YantraDashboard';
 import LalKitabDashboard from '@/components/upaya/LalKitabDashboard';
@@ -135,7 +136,7 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
                         <div key={key} className="bg-white border border-antique rounded-2xl p-5 hover:shadow-md transition-shadow">
                             <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-3 flex items-center gap-2")}>
                                 <Sparkles className="w-4 h-4 text-gold-primary" />
-                                {key.replace(/_/g, ' ')}
+                                {key.replace(/_/g, ' ').toLowerCase().replace(/^\w/, (c) => c.toUpperCase())}
                             </h3>
                             {typeof value === 'string' ? (
                                 <p className={TYPOGRAPHY.value}>{value}</p>
@@ -318,7 +319,7 @@ export default function RemediesPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
                 <Gem className="w-12 h-12 text-primary mb-4" />
-                <h2 className={cn(TYPOGRAPHY.sectionTitle, "mb-2")}>Upaya — Lahiri Only</h2>
+                <h2 className={cn(TYPOGRAPHY.sectionTitle, "mb-2")}>Upaya — Lahiri only</h2>
                 <p className={cn(TYPOGRAPHY.value, "max-w-md")}>
                     Remedial prescriptions are currently available exclusively with the <strong>Lahiri Ayanamsa</strong>.
                     Please switch to Lahiri from the header dropdown to access remedies.
@@ -339,9 +340,11 @@ export default function RemediesPage() {
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={cn(
-                            "flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-serif font-medium transition-all",
+                            "flex items-center gap-2 px-4 py-2.5 rounded-lg transition-all",
+                            TYPOGRAPHY.label,
+                            "!font-bold !mb-0",
                             activeTab === tab.id
-                                ? "bg-gradient-to-r from-gold-primary to-gold-dark text-white shadow-md"
+                                ? cn("text-white shadow-md", COLORS.wbActiveTab)
                                 : "text-primary hover:text-primary hover:bg-white/50"
                         )}
                     >
@@ -355,7 +358,7 @@ export default function RemediesPage() {
             {activeTab === 'lal_kitab' && (
                 <div className="flex flex-wrap gap-4 p-4 bg-white/50 rounded-xl border border-antique shadow-sm animate-in slide-in-from-top-2">
                     <div className="flex flex-col gap-1.5">
-                        <label className={cn(TYPOGRAPHY.label, "mb-0")}>Select Planet</label>
+                        <label className={cn(TYPOGRAPHY.label, "mb-0")}>Select planet</label>
                         <select
                             value={selectedPlanet}
                             onChange={(e) => setSelectedPlanet(e.target.value)}
@@ -369,7 +372,7 @@ export default function RemediesPage() {
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label className={cn(TYPOGRAPHY.label, "mb-0")}>Select House</label>
+                        <label className={cn(TYPOGRAPHY.label, "mb-0")}>Select house</label>
                         <select
                             value={selectedHouse}
                             onChange={(e) => setSelectedHouse(e.target.value)}
@@ -388,7 +391,7 @@ export default function RemediesPage() {
                             className="px-4 py-2 bg-gold-primary text-white text-sm font-medium rounded-lg hover:bg-gold-dark transition-colors flex items-center gap-2 shadow-sm"
                         >
                             <RefreshCw className="w-4 h-4" />
-                            Get Remedies
+                            Get remedies
                         </button>
                     </div>
                 </div>
@@ -404,13 +407,13 @@ export default function RemediesPage() {
                 ) : error ? (
                     <div className="p-8 bg-red-50 border border-red-100 rounded-2xl text-center">
                         <AlertTriangle className="w-8 h-8 text-red-500 mx-auto mb-3" />
-                        <h3 className="text-red-900 font-bold font-serif mb-1">Prescription Unavailable</h3>
-                        <p className="text-xs text-red-600 max-w-md mx-auto">{error}</p>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 mb-1")}>Prescription unavailable</h3>
+                        <p className={cn(TYPOGRAPHY.subValue, "text-red-600 max-w-md mx-auto !text-xs")}>{error}</p>
                         <button
                             onClick={handleRefresh}
-                            className="mt-4 px-4 py-2 bg-red-100 text-red-700 rounded-lg text-xs font-medium hover:bg-red-200 transition-colors"
+                            className={cn(TYPOGRAPHY.label, "mt-4 px-4 py-2 bg-red-100 text-red-700 rounded-lg !text-xs !font-bold hover:bg-red-200 transition-colors !mb-0")}
                         >
-                            Try Again
+                            Try again
                         </button>
                     </div>
                 ) : remedyData[activeTab] ? (
@@ -418,7 +421,7 @@ export default function RemediesPage() {
                 ) : activeTab === 'lal_kitab' ? (
                     <div className="flex flex-col items-center justify-center py-16 bg-parchment/30 rounded-2xl border border-antique animate-in fade-in">
                         <Scroll className="w-10 h-10 text-gold-primary mb-4 opacity-70" />
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-2")}>Lal Kitab Remedies</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-2")}>Lal Kitab remedies</h3>
                         <p className={cn(TYPOGRAPHY.value, "max-w-md text-center mb-6 text-primary/70")}>
                             Lal Kitab remedies are highly specific. Please select a Planet and a House above to view the precise remedial measures.
                         </p>

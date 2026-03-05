@@ -12,6 +12,8 @@ import ParchmentTimePicker from "@/components/ui/ParchmentTimePicker";
 import { clientApi, geocodeApi } from "@/lib/api";
 import { LocationSuggestion, CreateClientPayload, Client } from "@/types/client";
 import { useClientMutations } from "@/hooks/mutations/useClientMutations";
+import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/design-tokens/typography";
 
 interface ClientFormProps {
     mode?: 'create' | 'edit';
@@ -133,7 +135,8 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
         try {
             const response = await geocodeApi.getSuggestions(query, 5);
             setLocationSuggestions(response.suggestions || []);
-        } catch (err) {            setLocationSuggestions([]);
+        } catch (err) {
+            setLocationSuggestions([]);
         } finally {
             setLoadingSuggestions(false);
         }
@@ -205,24 +208,28 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
             if (mode === 'edit' && initialData?.id) {
                 const updateVariables = { id: initialData.id, data: payload };
                 await updateClient.mutateAsync(updateVariables, {
-                    onSuccess: (updated) => {                        if (onSuccess) {
+                    onSuccess: (updated) => {
+                        if (onSuccess) {
                             onSuccess(updated as Client);
                         } else {
                             router.push('/clients');
                         }
                     },
-                    onError: (err: Error) => {                        setError(err.message || 'Failed to update client. Please try again.');
+                    onError: (err: Error) => {
+                        setError(err.message || 'Failed to update client. Please try again.');
                     }
                 });
             } else {
                 await createClient.mutateAsync(payload, {
-                    onSuccess: (newClient) => {                        if (onSuccess) {
+                    onSuccess: (newClient) => {
+                        if (onSuccess) {
                             onSuccess(newClient as Client);
                         } else {
                             router.push('/clients');
                         }
                     },
-                    onError: (err: Error) => {                        setError(err.message || 'Failed to create client. Please try again.');
+                    onError: (err: Error) => {
+                        setError(err.message || 'Failed to create client. Please try again.');
                     }
                 });
             }
@@ -247,12 +254,12 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
             <div className="mb-6">
                 <div className="flex items-center gap-2 mb-4 pb-2 border-b border-divider">
                     <User className="w-5 h-5 text-gold-burnished" />
-                    <h2 className="font-serif text-lg font-bold text-ink-deep">Personal Identity</h2>
+                    <h2 className={cn(TYPOGRAPHY.sectionTitle, "!text-lg !font-bold !text-ink-deep !mb-0")}>Personal Identity</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
                     <div>
-                        <label className="block text-[11px] font-bold font-serif text-ink uppercase tracking-widest mb-1">
+                        <label className={cn(TYPOGRAPHY.label, "block !text-[11px] !font-bold !text-ink uppercase tracking-widest !mb-1")}>
                             Full Name <span className="text-red-600">*</span>
                         </label>
                         <ParchmentInput
@@ -267,7 +274,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <label className="block text-[11px] font-bold font-serif text-ink uppercase tracking-widest mb-1">
+                        <label className={cn(TYPOGRAPHY.label, "block !text-[11px] !font-bold !text-ink uppercase tracking-widest !mb-1")}>
                             Gender <span className="text-red-600">*</span>
                         </label>
                         <ParchmentSelect
@@ -284,7 +291,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                         />
                     </div>
                     <div>
-                        <label className="block text-[11px] font-bold font-serif text-ink uppercase tracking-widest mb-1">
+                        <label className={cn(TYPOGRAPHY.label, "block !text-[11px] !font-bold !text-ink uppercase tracking-widest !mb-1")}>
                             Marital Status
                         </label>
                         <ParchmentSelect
@@ -308,7 +315,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
             <div className="mb-6">
                 <div className="flex items-center gap-2 mb-4 pb-2 border-b border-divider">
                     <Phone className="w-5 h-5 text-gold-burnished" />
-                    <h2 className="font-serif text-lg font-bold text-ink-deep">Contact Information</h2>
+                    <h2 className={cn(TYPOGRAPHY.sectionTitle, "!text-lg !font-bold !text-ink-deep !mb-0")}>Contact Information</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
@@ -349,12 +356,12 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
             <div className="mb-6">
                 <div className="flex items-center gap-2 mb-4 pb-2 border-b border-divider">
                     <Calendar className="w-5 h-5 text-gold-burnished" />
-                    <h2 className="font-serif text-lg font-bold text-ink-deep">Birth Details</h2>
+                    <h2 className={cn(TYPOGRAPHY.sectionTitle, "!text-lg !font-bold !text-ink-deep !mb-0")}>Birth Details</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
                     <div>
-                        <label className="block text-[11px] font-bold font-serif text-ink uppercase tracking-widest mb-1">
+                        <label className={cn(TYPOGRAPHY.label, "block !text-[11px] !font-bold !text-ink uppercase tracking-widest !mb-1")}>
                             Date of Birth <span className="text-red-600">*</span>
                         </label>
                         <ParchmentDatePicker
@@ -365,7 +372,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                         />
                     </div>
                     <div>
-                        <label className="block text-[11px] font-bold font-serif text-ink uppercase tracking-widest mb-1">
+                        <label className={cn(TYPOGRAPHY.label, "block !text-[11px] !font-bold !text-ink uppercase tracking-widest !mb-1")}>
                             Time of Birth <span className="text-red-600">*</span>
                         </label>
                         <ParchmentTimePicker
@@ -379,7 +386,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
 
                 {/* Birth Place with Autocomplete */}
                 <div className="mb-4">
-                    <label className="block text-[11px] font-bold font-serif text-ink uppercase tracking-widest mb-1">
+                    <label className={cn(TYPOGRAPHY.label, "block !text-[11px] !font-bold !text-ink uppercase tracking-widest !mb-1")}>
                         Place of Birth <span className="text-red-600">*</span>
                     </label>
                     <div className="relative">
@@ -435,7 +442,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                         });
                                     }
                                 }}
-                                className="w-full bg-transparent border-b border-gold-primary/50 py-2 pl-10 pr-10 text-ink-deep font-serif placeholder:text-gold-burnished placeholder:opacity-80 focus:outline-none focus:border-gold-dark transition-colors"
+                                className={cn(TYPOGRAPHY.value, "w-full bg-transparent border-b border-gold-primary/50 py-2 pl-10 pr-10 !text-ink-deep !font-serif placeholder:text-gold-burnished placeholder:opacity-80 focus:outline-none focus:border-gold-dark transition-colors !mt-0")}
                                 required
                             />
                             {loadingSuggestions && (
@@ -492,39 +499,39 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                 {(manualCoordinates || (formData.birthLatitude !== undefined && formData.birthLongitude !== undefined)) && (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-softwhite rounded-xl border border-divider shadow-sm">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-gold-dark uppercase tracking-wider block">Latitude <span className="text-red-500">*</span></label>
+                            <label className={cn(TYPOGRAPHY.label, "!text-[10px] !font-bold !text-gold-dark uppercase tracking-wider block !mb-0")}>Latitude <span className="text-red-500">*</span></label>
                             <input
                                 type="number"
                                 step="0.0001"
                                 value={formData.birthLatitude}
                                 onChange={(e) => handleChange('birthLatitude', parseFloat(e.target.value))}
-                                className="w-full bg-transparent border-b border-divider focus:border-gold-dark focus:outline-none py-1 text-ink font-serif"
+                                className={cn(TYPOGRAPHY.value, "w-full bg-transparent border-b border-divider focus:border-gold-dark focus:outline-none py-1 !text-ink !mt-0")}
                                 required
                                 aria-required="true"
                                 aria-label="Birth latitude"
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-gold-dark uppercase tracking-wider block">Longitude <span className="text-red-500">*</span></label>
+                            <label className={cn(TYPOGRAPHY.label, "!text-[10px] !font-bold !text-gold-dark uppercase tracking-wider block !mb-0")}>Longitude <span className="text-red-500">*</span></label>
                             <input
                                 type="number"
                                 step="0.0001"
                                 value={formData.birthLongitude}
                                 onChange={(e) => handleChange('birthLongitude', parseFloat(e.target.value))}
-                                className="w-full bg-transparent border-b border-divider focus:border-gold-dark focus:outline-none py-1 text-ink font-serif"
+                                className={cn(TYPOGRAPHY.value, "w-full bg-transparent border-b border-divider focus:border-gold-dark focus:outline-none py-1 !text-ink !font-serif !mt-0")}
                                 required
                                 aria-required="true"
                                 aria-label="Birth longitude"
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-gold-dark uppercase tracking-wider block">Timezone <span className="text-red-500">*</span></label>
+                            <label className={cn(TYPOGRAPHY.label, "!text-[10px] !font-bold !text-gold-dark uppercase tracking-wider block !mb-0")}>Timezone <span className="text-red-500">*</span></label>
                             <input
                                 type="text"
                                 value={formData.birthTimezone}
                                 onChange={(e) => handleChange('birthTimezone', e.target.value)}
                                 placeholder="e.g. Asia/Kolkata"
-                                className="w-full bg-transparent border-b border-divider focus:border-gold-dark focus:outline-none py-1 text-ink font-serif"
+                                className={cn(TYPOGRAPHY.value, "w-full bg-transparent border-b border-divider focus:border-gold-dark focus:outline-none py-1 !text-ink !font-serif !mt-0")}
                                 required
                                 aria-required="true"
                                 aria-label="Birth timezone"
@@ -542,11 +549,11 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
             <div className="mb-6">
                 <div className="flex items-center gap-2 mb-4 pb-2 border-b border-divider">
                     <FileText className="w-5 h-5 text-gold-burnished" />
-                    <h2 className="font-serif text-lg font-bold text-ink-deep">Notes & Observations</h2>
+                    <h2 className={cn(TYPOGRAPHY.sectionTitle, "!text-lg !font-bold !text-ink-deep !mb-0")}>Notes & Observations</h2>
                 </div>
 
                 <div className="space-y-2">
-                    <label className="block text-[11px] font-bold font-serif text-ink uppercase tracking-widest mb-1">
+                    <label className={cn(TYPOGRAPHY.label, "block !text-[11px] !font-bold !text-ink uppercase tracking-widest !mb-1")}>
                         Client Notes
                     </label>
                     <textarea
@@ -554,7 +561,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                         onChange={(e) => handleChange('notes', e.target.value)}
                         placeholder="Add any initial observations, specific questions, or important context about the client here..."
                         aria-label="Client notes"
-                        className="w-full bg-transparent border border-gold-primary/50 rounded-lg p-3 min-h-[100px] text-ink-deep font-serif placeholder:text-gold-burnished placeholder:opacity-80 focus:outline-none focus:border-gold-dark transition-colors resize-y"
+                        className={cn(TYPOGRAPHY.value, "w-full bg-transparent border border-gold-primary/50 rounded-lg p-3 min-h-[100px] !text-ink-deep !font-serif placeholder:text-gold-burnished placeholder:opacity-80 focus:outline-none focus:border-gold-dark transition-colors resize-y !mt-0")}
                     />
                 </div>
             </div>

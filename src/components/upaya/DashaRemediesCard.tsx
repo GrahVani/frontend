@@ -81,7 +81,7 @@ const DashaRemediesCard: React.FC<DashaRemediesCardProps> = ({ dashaData }) => {
             {/* Header */}
             <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-4 mb-8">
                 <div>
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 text-ink">Current Mahadasha Phase</h3>
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 text-ink">Current mahadasha phase</h3>
                     <div className="flex items-baseline gap-2">
                         <h2 className="text-4xl font-black tracking-tighter text-ink">{current_dasha_lord}</h2>
                         <span className="text-sm font-bold uppercase tracking-widest">Protocol</span>

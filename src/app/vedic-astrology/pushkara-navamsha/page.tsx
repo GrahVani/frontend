@@ -21,6 +21,7 @@ import { useVedicClient } from '@/context/VedicClientContext';
 import { useAstrologerStore } from '@/store/useAstrologerStore';
 import { clientApi } from '@/lib/api';
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/design-tokens/typography";
 
 // ============================================================================
 // Types
@@ -146,11 +147,11 @@ export default function PushkaraNavamshaPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
                 <Sparkles className="w-12 h-12 text-primary mb-4" />
-                <h2 className="text-xl font-serif font-bold text-primary mb-2">Pushkara Navamsha — Lahiri Only</h2>
-                <p className="text-primary text-sm max-w-md">
+                <h2 className={cn(TYPOGRAPHY.sectionTitle, "!text-primary !mb-2")}>Pushkara Navamsha — Lahiri Only</h2>
+                <p className={cn(TYPOGRAPHY.subValue, "!text-primary !text-sm max-w-md !mt-0")}>
                     Pushkara Navamsha analysis is currently available exclusively with the <strong>Lahiri Ayanamsa</strong>.
                 </p>
-                <Link href="/vedic-astrology/overview" className="mt-6 text-sm font-medium text-gold-dark hover:text-gold-primary transition-colors flex items-center gap-1">
+                <Link href="/vedic-astrology/overview" className={cn(TYPOGRAPHY.label, "!mt-6 !text-sm !text-gold-dark hover:!text-gold-primary transition-colors flex items-center gap-1")}>
                     <ArrowLeft className="w-4 h-4" /> Back to Kundali
                 </Link>
             </div>
@@ -160,25 +161,25 @@ export default function PushkaraNavamshaPage() {
     if (!clientDetails) return null;
 
     return (
-        <div className="-mt-2 lg:-mt-4 space-y-2 animate-in fade-in duration-500 pb-12">
+        <div className="space-y-4 animate-in fade-in duration-500 pb-12 pt-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-serif font-bold text-primary">Pushkara Navamsha</h1>
-                    <p className="text-xs text-primary/60 mt-1 font-serif italic">Auspicious Navamsha divisions — blessings from past karma</p>
+                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "!text-primary font-bold")}>Pushkara Navamsha</h1>
+                    <p className={cn(TYPOGRAPHY.label, "!text-primary/60 !mb-0 mt-1 italic")}>Auspicious Navamsha divisions — blessings from past karma</p>
                 </div>
             </div>
 
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-24 bg-parchment/30 rounded-3xl border border-antique">
                     <Loader2 className="w-10 h-10 text-gold-primary animate-spin mb-4" />
-                    <p className="text-sm font-serif text-primary italic tracking-wide">Analyzing Pushkara positions...</p>
+                    <p className={cn(TYPOGRAPHY.subValue, "!text-primary italic tracking-wide !mt-0")}>Analyzing Pushkara positions...</p>
                 </div>
             ) : error ? (
                 <div className="p-10 bg-red-50 border border-red-100 rounded-3xl text-center">
                     <AlertTriangle className="w-10 h-10 text-red-500 mx-auto mb-4" />
-                    <h3 className="text-red-900 font-bold font-serif text-lg mb-2">Analysis Error</h3>
-                    <p className="text-sm text-red-600 max-w-md mx-auto mb-6">{error}</p>
-                    <button onClick={fetchData} className="px-6 py-2.5 bg-red-100 text-red-700 rounded-xl text-sm font-bold hover:bg-red-200 transition-colors">
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 !mb-2")}>Analysis Error</h3>
+                    <p className={cn(TYPOGRAPHY.subValue, "!text-red-600 max-w-md mx-auto !mb-6")}>{error}</p>
+                    <button onClick={fetchData} className={cn(TYPOGRAPHY.label, "px-6 py-2.5 bg-red-100 text-red-700 rounded-xl !text-sm !font-bold hover:bg-red-200 transition-colors")}>
                         Retry
                     </button>
                 </div>
@@ -226,18 +227,18 @@ function PushkaraDashboard({ data }: { data: PushkaraData }) {
                     <div className="relative z-10">
                         <div className="flex items-center gap-2 mb-3">
                             <Star className={cn("w-4 h-4", summary.total_planets_in_pushkara > 0 ? "text-emerald-600" : "text-slate-400")} />
-                            <h3 className="text-[10px] font-bold tracking-[0.15em] uppercase text-primary">In Pushkara</h3>
+                            <h3 className={cn(TYPOGRAPHY.label, "!text-[10px] !mb-0 !font-bold tracking-[0.15em] uppercase !text-primary")}>In Pushkara</h3>
                         </div>
                         <div className="flex items-baseline gap-2">
-                            <span className={cn("text-3xl font-bold font-serif", summary.total_planets_in_pushkara > 0 ? "text-emerald-500" : "text-ink")}>
+                            <span className={cn(TYPOGRAPHY.value, "text-3xl !font-bold", summary.total_planets_in_pushkara > 0 ? "!text-emerald-500" : "!text-ink")}>
                                 {summary.total_planets_in_pushkara}
                             </span>
-                            <span className="text-xs text-primary/60">planet{summary.total_planets_in_pushkara !== 1 ? 's' : ''}</span>
+                            <span className={cn(TYPOGRAPHY.subValue, "!text-primary/60 !mt-0")}>planet{summary.total_planets_in_pushkara !== 1 ? 's' : ''}</span>
                         </div>
                         {summary.planets_in_pushkara.length > 0 && (
                             <div className="flex flex-wrap gap-1.5 mt-3">
                                 {summary.planets_in_pushkara.map(p => (
-                                    <span key={p} className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                    <span key={p} className={cn(TYPOGRAPHY.label, "!text-[10px] !font-bold px-2 py-0.5 rounded-full bg-emerald-50 !text-emerald-700 border border-emerald-100 !mb-0")}>
                                         {p}
                                     </span>
                                 ))}
@@ -264,18 +265,18 @@ function PushkaraDashboard({ data }: { data: PushkaraData }) {
                     <div className="relative z-10">
                         <div className="flex items-center gap-2 mb-3">
                             <Crown className={cn("w-4 h-4", summary.total_pushkara_bhaga > 0 ? "text-amber-600" : "text-slate-400")} />
-                            <h3 className="text-[10px] font-bold tracking-[0.15em] uppercase text-primary">Pushkara Bhaga</h3>
+                            <h3 className={cn(TYPOGRAPHY.label, "!text-[10px] !mb-0 !font-bold tracking-[0.15em] uppercase !text-primary")}>Pushkara Bhaga</h3>
                         </div>
                         <div className="flex items-baseline gap-2">
-                            <span className={cn("text-3xl font-bold font-serif", summary.total_pushkara_bhaga > 0 ? "text-amber-600" : "text-ink")}>
+                            <span className={cn(TYPOGRAPHY.value, "text-3xl !font-bold", summary.total_pushkara_bhaga > 0 ? "!text-amber-600" : "!text-ink")}>
                                 {summary.total_pushkara_bhaga}
                             </span>
-                            <span className="text-xs text-primary/60">exact degree{summary.total_pushkara_bhaga !== 1 ? 's' : ''}</span>
+                            <span className={cn(TYPOGRAPHY.subValue, "!text-primary/60 !mt-0")}>exact degree{summary.total_pushkara_bhaga !== 1 ? 's' : ''}</span>
                         </div>
                         {summary.planets_in_pushkara_bhaga.length > 0 && (
                             <div className="flex flex-wrap gap-1.5 mt-3">
                                 {summary.planets_in_pushkara_bhaga.map(p => (
-                                    <span key={p} className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-100">
+                                    <span key={p} className={cn(TYPOGRAPHY.label, "!text-[10px] !font-bold px-2 py-0.5 rounded-full bg-amber-50 !text-amber-700 border border-amber-100 !mb-0")}>
                                         {p}
                                     </span>
                                 ))}
@@ -302,18 +303,18 @@ function PushkaraDashboard({ data }: { data: PushkaraData }) {
                     <div className="relative z-10">
                         <div className="flex items-center gap-2 mb-3">
                             <Gem className={cn("w-4 h-4", summary.vargottama_pushkaras.length > 0 ? "text-violet-600" : "text-slate-400")} />
-                            <h3 className="text-[10px] font-bold tracking-[0.15em] uppercase text-primary">Vargottama Pushkara</h3>
+                            <h3 className={cn(TYPOGRAPHY.label, "!text-[10px] !mb-0 !font-bold tracking-[0.15em] uppercase !text-primary")}>Vargottama Pushkara</h3>
                         </div>
                         <div className="flex items-baseline gap-2">
-                            <span className={cn("text-3xl font-bold font-serif", summary.vargottama_pushkaras.length > 0 ? "text-violet-600" : "text-ink")}>
+                            <span className={cn(TYPOGRAPHY.value, "text-3xl !font-bold", summary.vargottama_pushkaras.length > 0 ? "!text-violet-600" : "!text-ink")}>
                                 {summary.vargottama_pushkaras.length}
                             </span>
-                            <span className="text-xs text-primary/60">double blessed</span>
+                            <span className={cn(TYPOGRAPHY.subValue, "!text-primary/60 !mt-0")}>double blessed</span>
                         </div>
                         {summary.vargottama_pushkaras.length > 0 && (
                             <div className="flex flex-wrap gap-1.5 mt-3">
                                 {summary.vargottama_pushkaras.map(p => (
-                                    <span key={p} className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-50 text-violet-700 border border-violet-100">
+                                    <span key={p} className={cn(TYPOGRAPHY.label, "!text-[10px] !font-bold px-2 py-0.5 rounded-full bg-violet-50 !text-violet-700 border border-violet-100 !mb-0")}>
                                         {p}
                                     </span>
                                 ))}
@@ -334,8 +335,8 @@ function PushkaraDashboard({ data }: { data: PushkaraData }) {
             <div className="bg-white border border-antique rounded-3xl shadow-sm overflow-hidden">
                 <div className="p-4 border-b border-antique bg-parchment/10 flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-gold-primary" />
-                    <h3 className="text-xs font-bold tracking-wider text-ink">Planetary Pushkara Analysis</h3>
-                    <span className="text-[9px] ml-auto font-bold text-slate-400 tracking-wider">
+                    <h3 className={cn(TYPOGRAPHY.label, "!text-xs font-bold tracking-wider !text-ink !mb-0")}>Planetary Pushkara Analysis</h3>
+                    <span className={cn(TYPOGRAPHY.label, "text-[9px] ml-auto !font-bold !text-slate-400 tracking-wider !mb-0")}>
                         {summary.total_planets_in_pushkara} OF {Object.keys(data.planets).length} IN PUSHKARA
                     </span>
                 </div>
@@ -382,24 +383,24 @@ function AscendantCard({ planet }: { planet: PlanetData }) {
                 </div>
                 <div className="flex-1">
                     <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-bold text-ink">Ascendant (Lagna)</h4>
+                        <h4 className={cn(TYPOGRAPHY.value, "!text-sm font-bold !text-ink")}>Ascendant (Lagna)</h4>
                         {isPushkara ? (
-                            <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1">
+                            <span className={cn(TYPOGRAPHY.label, "text-[9px] !font-bold px-2 py-0.5 rounded-full bg-emerald-50 !text-emerald-600 border border-emerald-100 flex items-center gap-1 !mb-0")}>
                                 <Star className="w-2.5 h-2.5" /> PUSHKARA
                             </span>
                         ) : (
-                            <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-50 text-slate-400 border border-slate-100">
+                            <span className={cn(TYPOGRAPHY.label, "text-[9px] !font-bold px-2 py-0.5 rounded-full bg-slate-50 !text-slate-400 border border-slate-100 !mb-0")}>
                                 NOT IN PUSHKARA
                             </span>
                         )}
                     </div>
-                    <div className="flex items-center gap-4 mt-1.5 text-xs text-primary/70">
+                    <div className={cn(TYPOGRAPHY.subValue, "flex items-center gap-4 mt-1.5 !text-primary/70 !mt-1")}>
                         <span className="font-bold">{SIGN_SYMBOLS[planet.sign] || ''} {planet.sign}</span>
                         <span>{planet.degree_formatted}</span>
                         <span className="text-primary/50">→ Nav: {planet.navamsha_sign}</span>
                     </div>
                     {isPushkara && planet.pushkara_navamsha.pushkara_range && (
-                        <p className="text-[10px] text-emerald-600 font-bold mt-1.5 tracking-wider">
+                        <p className={cn(TYPOGRAPHY.subValue, "text-[10px] !text-emerald-600 !font-bold mt-1.5 tracking-wider !mt-1")}>
                             Range: {planet.pushkara_navamsha.pushkara_range} • Ruling: {planet.pushkara_navamsha.ruling_navamsha}
                         </p>
                     )}
@@ -461,15 +462,17 @@ function PlanetPushkaraCard({ planet, index }: { planet: PlanetData; index: numb
                         </div>
                         <div>
                             <h4 className={cn(
-                                "text-sm font-bold tracking-tight",
-                                isPushkara ? "" : "text-slate-400"
-                            , isPushkara && "text-ink"
+                                TYPOGRAPHY.value,
+                                "!text-sm font-bold tracking-tight",
+                                isPushkara ? "" : "!text-slate-400"
+                                , isPushkara && "!text-ink"
                             )}>
                                 {planet.name}
                             </h4>
                             <p className={cn(
-                                "text-[10px] font-bold",
-                                isPushkara ? "text-primary/60" : "text-slate-300"
+                                TYPOGRAPHY.subValue,
+                                "text-[10px] !font-bold !mt-0",
+                                isPushkara ? "!text-primary/60" : "!text-slate-300"
                             )}>
                                 {planet.degree_formatted}
                             </p>
@@ -488,8 +491,9 @@ function PlanetPushkaraCard({ planet, index }: { planet: PlanetData; index: numb
 
                 {/* Sign & Navamsha */}
                 <div className={cn(
-                    "flex items-center gap-3 text-xs mb-2",
-                    isPushkara ? "text-primary/70" : "text-slate-300"
+                    TYPOGRAPHY.subValue,
+                    "flex items-center gap-3 !mt-0 mb-2",
+                    isPushkara ? "!text-primary/70" : "!text-slate-300"
                 )}>
                     <div className="flex items-center gap-1">
                         <span className="text-sm">{SIGN_SYMBOLS[planet.sign] || ''}</span>
@@ -506,13 +510,13 @@ function PlanetPushkaraCard({ planet, index }: { planet: PlanetData; index: numb
                 {isPushkara && (
                     <div className="mt-3 pt-3 border-t" style={{ borderColor: colors.border }}>
                         {planet.pushkara_navamsha.pushkara_range && (
-                            <div className="flex items-center gap-2 text-[10px] mb-1.5">
+                            <div className={cn(TYPOGRAPHY.subValue, "flex items-center gap-2 text-[10px] mb-1.5 !mt-0")}>
                                 <span className="font-bold text-primary/50 tracking-wider">RANGE</span>
                                 <span className={cn("font-bold", colors.twText)}>{planet.pushkara_navamsha.pushkara_range}</span>
                             </div>
                         )}
                         {planet.pushkara_navamsha.ruling_navamsha && (
-                            <div className="flex items-center gap-2 text-[10px] mb-1.5">
+                            <div className={cn(TYPOGRAPHY.subValue, "flex items-center gap-2 text-[10px] mb-1.5 !mt-0")}>
                                 <span className="font-bold text-primary/50 tracking-wider">RULING</span>
                                 <span className={cn("font-bold", colors.twText)}>
                                     {SIGN_SYMBOLS[planet.pushkara_navamsha.ruling_navamsha] || ''} {planet.pushkara_navamsha.ruling_navamsha}
@@ -537,7 +541,7 @@ function PlanetPushkaraCard({ planet, index }: { planet: PlanetData; index: numb
                 {/* Non-pushkara indicator */}
                 {!isPushkara && (
                     <div className="mt-2 pt-2 border-t border-slate-100">
-                        <p className="text-[9px] font-bold text-slate-300 tracking-wider">NOT IN PUSHKARA NAVAMSHA</p>
+                        <p className={cn(TYPOGRAPHY.subValue, "text-[9px] !font-bold !text-slate-300 tracking-wider !mt-0 uppercase")}>NOT IN PUSHKARA NAVAMSHA</p>
                     </div>
                 )}
             </div>

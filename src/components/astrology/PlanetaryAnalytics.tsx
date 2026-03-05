@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { Star, Shield, Zap, TrendingDown, Anchor } from 'lucide-react';
 
 export interface DetailedPlanetInfo {
@@ -30,9 +31,9 @@ export default function PlanetaryAnalytics({ planets }: PlanetaryAnalyticsProps)
             <div className="p-6 border-b border-header-border/20 flex items-center justify-between bg-gradient-to-r from-header-border/10 to-transparent">
                 <div className="flex items-center gap-3">
                     <Shield className="w-5 h-5 text-header-border" />
-                    <h3 className="text-sm font-bold text-ink uppercase tracking-[0.2em] font-serif">Planetary State Mastery</h3>
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-sm lowercase")}>Planetary State Mastery</h3>
                 </div>
-                <div className="bg-header-border/10 text-header-border text-[9px] px-3 py-1 rounded-full border border-header-border/30 font-black uppercase tracking-widest">
+                <div className={cn(TYPOGRAPHY.label, "bg-header-border/10 text-header-border px-3 py-1 rounded-full border border-header-border/30 lowercase")}>
                     Live Computation
                 </div>
             </div>
@@ -41,14 +42,14 @@ export default function PlanetaryAnalytics({ planets }: PlanetaryAnalyticsProps)
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="bg-ink/5 border-b border-header-border/20">
-                            <th className="p-4 px-6 text-[9px] font-black uppercase tracking-widest text-body/70">Graha</th>
-                            <th className="p-4 px-6 text-[9px] font-black uppercase tracking-widest text-body/70">Longitude</th>
-                            <th className="p-4 px-6 text-[9px] font-black uppercase tracking-widest text-body/70">Sign (Rashi)</th>
-                            <th className="p-4 px-6 text-[9px] font-black uppercase tracking-widest text-body/70">Nakshatra</th>
-                            <th className="p-4 px-6 text-[9px] font-black uppercase tracking-widest text-body/70">Shadbala</th>
-                            <th className="p-4 px-6 text-[9px] font-black uppercase tracking-widest text-body/70">Avastha</th>
-                            <th className="p-4 px-6 text-[9px] font-black uppercase tracking-widest text-body/70">Dignity</th>
-                            <th className="p-4 px-6 text-[9px] font-black uppercase tracking-widest text-body/70">Karaka</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Graha</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Longitude</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Sign (Rashi)</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Nakshatra</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Shadbala</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Avastha</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Dignity</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Karaka</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-header-border/10">
@@ -60,23 +61,23 @@ export default function PlanetaryAnalytics({ planets }: PlanetaryAnalyticsProps)
                                             "w-2 h-2 rounded-full",
                                             planet.isRetro ? "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" : "bg-header-border"
                                         )} />
-                                        <span className="font-serif font-extrabold text-ink text-lg tracking-tight">{planet.planet}</span>
+                                        <span className={cn(TYPOGRAPHY.planetName, "text-lg tracking-tight")}>{planet.planet}</span>
                                         {planet.isRetro && <TrendingDown className="w-3 h-3 text-red-500 animate-pulse" />}
                                     </div>
                                 </td>
                                 <td className="p-4 px-6">
-                                    <span className="font-mono text-xs text-ink font-bold bg-ink/5 px-2 py-1 rounded border border-ink/10">{planet.degree}</span>
+                                    <span className={cn(TYPOGRAPHY.value, "text-xs font-mono bg-ink/5 px-2 py-1 rounded border border-ink/10 font-normal")}>{planet.degree}</span>
                                 </td>
                                 <td className="p-4 px-6">
                                     <div className="flex flex-col">
-                                        <span className="text-ink font-serif font-bold">{planet.sign}</span>
-                                        <span className="text-[9px] text-ink/50 uppercase font-black">House {planet.house}</span>
+                                        <span className={cn(TYPOGRAPHY.value)}>{planet.sign}</span>
+                                        <span className={cn(TYPOGRAPHY.label, "lowercase opacity-50")}>House {planet.house}</span>
                                     </div>
                                 </td>
                                 <td className="p-4 px-6">
                                     <div className="flex flex-col">
-                                        <span className="text-ink font-serif font-bold">{planet.nakshatra} - {planet.pada}</span>
-                                        <span className="text-[9px] text-copper-dark uppercase font-black tracking-widest">Lord: {planet.nakshatraLord}</span>
+                                        <span className={cn(TYPOGRAPHY.value)}>{planet.nakshatra} - {planet.pada}</span>
+                                        <span className={cn(TYPOGRAPHY.label, "text-copper-dark lowercase")}>Lord: {planet.nakshatraLord}</span>
                                     </div>
                                 </td>
 
@@ -84,8 +85,8 @@ export default function PlanetaryAnalytics({ planets }: PlanetaryAnalyticsProps)
                                 <td className="p-4 px-6">
                                     <div className="flex flex-col gap-1 w-24">
                                         <div className="flex justify-between items-end">
-                                            <span className="text-xs font-bold text-ink">{planet.shadbala || 0}</span>
-                                            <span className="text-[8px] text-bronze uppercase">Rupas</span>
+                                            <span className={cn(TYPOGRAPHY.value, "text-xs")}>{planet.shadbala || 0}</span>
+                                            <span className={cn(TYPOGRAPHY.label, "text-bronze lowercase")}>Rupas</span>
                                         </div>
                                         <div className="w-full h-1.5 bg-ink/10 rounded-full overflow-hidden">
                                             <div
@@ -98,7 +99,7 @@ export default function PlanetaryAnalytics({ planets }: PlanetaryAnalyticsProps)
 
                                 {/* Avastha Cell */}
                                 <td className="p-4 px-6">
-                                    <span className="text-xs font-serif font-medium text-ink italic">{planet.avastha || "—"}</span>
+                                    <span className={cn(TYPOGRAPHY.value, "text-xs italic font-normal")}>{planet.avastha || "—"}</span>
                                 </td>
 
                                 <td className="p-4 px-6">
@@ -108,11 +109,11 @@ export default function PlanetaryAnalytics({ planets }: PlanetaryAnalyticsProps)
                                 {/* Karaka Cell */}
                                 <td className="p-4 px-6">
                                     {planet.karaka ? (
-                                        <span className="bg-ink text-softwhite text-[9px] font-black px-2 py-0.5 rounded border border-header-border/50 uppercase tracking-widest shadow-sm">
+                                        <span className={cn(TYPOGRAPHY.label, "bg-ink text-softwhite px-2 py-0.5 rounded border border-header-border/50 lowercase shadow-sm")}>
                                             {planet.karaka}
                                         </span>
                                     ) : (
-                                        <span className="text-ink/20 text-[8px] font-black uppercase tracking-tighter">—</span>
+                                        <span className={cn(TYPOGRAPHY.label, "opacity-20 lowercase")}>—</span>
                                     )}
                                 </td>
                             </tr>
@@ -125,7 +126,7 @@ export default function PlanetaryAnalytics({ planets }: PlanetaryAnalyticsProps)
 }
 
 function DignityBadge({ dignity }: { dignity?: DetailedPlanetInfo['dignity'] }) {
-    if (!dignity) return <span className="text-ink/20 text-[8px] font-black uppercase tracking-tighter">—</span>;
+    if (!dignity) return <span className={cn(TYPOGRAPHY.label, "opacity-20 lowercase")}>—</span>;
 
     const styles: Record<string, string> = {
         'Exalted': 'bg-green-500/10 text-green-700 border-green-500/30 shadow-[0_0_10px_rgba(34,197,94,0.1)]',
@@ -139,7 +140,8 @@ function DignityBadge({ dignity }: { dignity?: DetailedPlanetInfo['dignity'] }) 
 
     return (
         <div className={cn(
-            "inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[9px] font-black uppercase tracking-widest",
+            "inline-flex items-center gap-1.5 px-3 py-1 rounded-full border lowercase",
+            TYPOGRAPHY.label,
             styles[dignity] || styles['Neutral']
         )}>
             {dignity === 'Exalted' && <Zap className="w-2 h-2" />}

@@ -102,7 +102,7 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
         <div className={cn("w-full bg-softwhite rounded-xl border border-border-warm shadow-card p-4", className)}>
             {/* Header with Legend */}
             <div className="flex items-center justify-between mb-4">
-                <h2 className={TYPOGRAPHY.sectionTitle}>Shodashvarga Summary</h2>
+                <h2 className={TYPOGRAPHY.sectionTitle}>Shodashavarga summary</h2>
                 <div className="flex gap-3 text-xs font-medium font-sans">
                     <span className="text-primary flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-700"></span>Exalted</span>
                     <span className="text-primary flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-green-600"></span>Own</span>
@@ -153,7 +153,7 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
 
             {/* ðŸŒŸ NEW: Dignity Score Cards */}
             <div className="mt-6">
-                <div className={cn(TYPOGRAPHY.label, "mb-2")}>Planetary Dignity Score (across 16 Vargas)</div>
+                <div className={cn(TYPOGRAPHY.label, "mb-2")}>Planetary dignity score (across 16 Vargas)</div>
                 <div className="grid grid-cols-9 gap-2" role="group" aria-label="Planetary dignity scores across 16 Vargas">
                     {dignityScores.map(ps => (
                         <div key={ps.planet} className={cn(

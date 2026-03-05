@@ -4,6 +4,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import type { KpBhavaRaw } from '@/types/kp.types';
 import { Sparkles } from 'lucide-react';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface BhavaDetailsTableProps {
     bhavaDetails: Record<string, KpBhavaRaw>;
@@ -45,14 +46,14 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
                 <table className="w-full h-full text-xs border-collapse font-sans text-primary">
                     <thead className="tracking-wide sticky top-0 z-10">
                         <tr className="bg-parchment/60 backdrop-blur-sm border-b border-antique">
-                            <th className="py-1.5 px-3 text-left font-serif font-semibold w-24">House</th>
-                            <th className="py-1.5 px-3 text-left font-serif font-semibold">Sign & Degree</th>
-                            <th className="py-1.5 px-3 text-left font-serif font-semibold">Nakshatra</th>
-                            <th className="py-1.5 px-3 text-center font-serif font-semibold w-12">Pada</th>
-                            <th className="py-1.5 px-3 text-center font-serif font-semibold text-primary w-12" title="Rashi Lord">RL</th>
-                            <th className="py-1.5 px-3 text-center font-serif font-semibold text-primary w-12" title="Nakshatra Lord">NL</th>
-                            <th className="py-1.5 px-3 text-center font-serif font-semibold text-accent-gold w-12" title="Sub Lord">SL</th>
-                            <th className="py-1.5 px-3 text-center font-serif font-semibold text-primary w-12" title="Sub-Sub Lord">SS</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left w-24")}>House</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Sign & degree</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Nakshatra</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center w-12")}>Pada</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center w-12")} title="Rashi Lord">RL</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center w-12")} title="Nakshatra Lord">NL</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center !text-accent-gold w-12")} title="Sub Lord">SL</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center w-12")} title="Sub-Sub Lord">SS</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-antique/50">
@@ -69,7 +70,7 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
                                     )}
                                 >
                                     <td className="py-0.5 px-3">
-                                        <span className="font-serif font-semibold text-primary text-sm">
+                                        <span className={cn(TYPOGRAPHY.value, "text-primary text-sm")}>
                                             {key}<sup className="text-[10px] ml-0.2">H</sup>
                                         </span>
                                     </td>
@@ -82,26 +83,30 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
                                                 {signSymbols[bhava.sign] || ''}
                                             </span>
                                             <div className="flex items-center gap-1">
-                                                <span className="font-medium text-primary text-[11px] leading-tight">{bhava.sign}</span>
-                                                <span className="font-mono text-[10px] text-primary/60 leading-tight">
+                                                <span className={cn(TYPOGRAPHY.value, "text-[11px] leading-tight")}>{bhava.sign}</span>
+                                                <span className="font-mono text-[10px] text-ink font-semibold leading-tight">
                                                     {bhava.longitude_dms.replace(/["]/g, '')}
                                                 </span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="py-0.5 px-3 text-primary font-medium text-[11px]">
-                                        {bhava.nakshatra}
+                                    <td className="py-0.5 px-3 text-primary font-medium">
+                                        <span className={cn(TYPOGRAPHY.value, "text-[11px]")}>{bhava.nakshatra}</span>
                                     </td>
                                     <td className="py-0.5 px-3 text-center">
-                                        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white border border-antique text-[10px] font-serif text-primary">
+                                        <span className={cn(
+                                            TYPOGRAPHY.label,
+                                            "inline-flex items-center justify-center w-5 h-5 rounded-full bg-white border border-antique text-[10px] text-primary"
+                                        )}>
                                             {bhava.pada}
                                         </span>
                                     </td>
                                     {['RL', 'NL', 'SL', 'SS'].map((lordType) => (
                                         <td key={lordType} className="py-0.5 px-3 text-center">
                                             <span className={cn(
-                                                "font-medium text-[10px] rounded px-1.5 py-0",
-                                                lordType === 'SL' ? "text-accent-gold font-bold bg-gold-soft/10 border border-gold-primary/20 shadow-sm" : "text-primary opacity-80"
+                                                TYPOGRAPHY.label,
+                                                "text-[10px] rounded px-1.5 py-0",
+                                                lordType === 'SL' ? "text-ink !font-bold bg-gold-soft/10 border border-gold-primary/20 shadow-sm" : "text-ink !font-bold"
                                             )}>
                                                 {/* @ts-ignore - dynamic access */}
                                                 {(bhava[lordType] || '-').slice(0, 2)}
@@ -115,22 +120,22 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
                 </table>
             </div>
 
-            <div className="mt-4 flex justify-end gap-5 text-[10px] text-primary font-sans">
+            <div className="mt-4 flex justify-end gap-5 text-[10px] text-ink font-sans">
                 <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-primary"></span>
-                    <span className="uppercase tracking-wider font-semibold">RL: Rashi Lord</span>
+                    <span className="uppercase tracking-wider font-semibold">RL: Rashi lord</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-primary"></span>
-                    <span className="uppercase tracking-wider font-semibold">NL: Nakshatra Lord</span>
+                    <span className="uppercase tracking-wider font-semibold">NL: Nakshatra lord</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-accent-gold shadow-[0_0_4px_rgba(201,162,77,0.5)]"></span>
-                    <span className="uppercase tracking-wider font-bold text-accent-gold">SL: Sub Lord</span>
+                    <span className="uppercase tracking-wider font-bold text-accent-gold">SL: Sub lord</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-primary"></span>
-                    <span className="uppercase tracking-wider font-semibold">SS: Sub-Sub Lord</span>
+                    <span className="uppercase tracking-wider font-semibold">SS: Sub-sub lord</span>
                 </div>
             </div>
         </div>

@@ -13,6 +13,7 @@ import { useAstrologerStore } from '@/store/useAstrologerStore';
 import { clientApi } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { COLORS } from '@/design-tokens/colors';
 import { useDasha, useOtherDasha } from '@/hooks/queries/useCalculations';
 import { useQueryClient } from "@tanstack/react-query";
 import dynamic from 'next/dynamic';
@@ -344,19 +345,18 @@ export default function VedicDashasPage() {
     if (!clientDetails) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-                <p className="font-serif text-xl text-bronze">Please select a client to view Dasha details</p>
+                <p className={cn(TYPOGRAPHY.sectionTitle, "!text-xl !text-bronze !mb-0")}>Please select a client to view Dasha details</p>
             </div>
         );
     }
-
     const activeLords = activeAnalysis?.nodes || [];
     const metadata = activeAnalysis?.metadata;
 
     return (
-        <div className="-mt-2 lg:-mt-4 min-h-screen">
+        <div className="space-y-6 animate-in fade-in duration-500 pt-4">
             {/* Page Heading */}
             <div className="mb-4">
-                <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-bold")}>Dasha System</h1>
+                <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-bold")}>Dasha system</h1>
             </div>
 
             {/* ================================================================= */}
@@ -373,7 +373,7 @@ export default function VedicDashasPage() {
                         {/* Selector Tray */}
                         <div className="p-4 border-b border-header-border/10 flex flex-wrap items-center justify-between gap-4">
                             <div className="flex items-center gap-3">
-                                <label className={TYPOGRAPHY.label}>System</label>
+                                <label className={cn(TYPOGRAPHY.label, "!mb-0")}>System</label>
                                 <div className="relative">
                                     <select
                                         value={selectedDashaType}
@@ -409,7 +409,7 @@ export default function VedicDashasPage() {
                                             className={cn(
                                                 "px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap border",
                                                 currentLevel === idx
-                                                    ? "bg-header-border text-white border-header-border shadow-sm"
+                                                    ? cn(COLORS.wbActiveTab, "border-transparent shadow-sm")
                                                     : idx <= selectedPath.length
                                                         ? "bg-white text-bronze border-header-border/30 hover:bg-header-border/10"
                                                         : "bg-gray-50 text-gray-400 border-gray-100 cursor-not-allowed"
@@ -429,8 +429,9 @@ export default function VedicDashasPage() {
                                 <button
                                     onClick={() => handleBreadcrumbClick(-1)}
                                     className={cn(
-                                        "text-sm font-bold",
-                                        currentLevel === 0 ? "text-header-border" : "text-bronze hover:text-header-border"
+                                        TYPOGRAPHY.label,
+                                        "!text-sm !font-bold !mb-0",
+                                        currentLevel === 0 ? "!text-header-border" : "!text-bronze hover:!text-header-border"
                                     )}
                                 >
                                     Mahadasha
@@ -454,7 +455,7 @@ export default function VedicDashasPage() {
                                 {currentLevel > 0 && (
                                     <>
                                         <ChevronRight className="w-4 h-4 text-bronze/40" />
-                                        <span className="text-sm font-bold text-header-border">{DASHA_LEVELS[currentLevel].name}</span>
+                                        <span className={cn(TYPOGRAPHY.label, "!text-sm !font-bold !text-header-border !mb-0")}>{DASHA_LEVELS[currentLevel].name}</span>
                                     </>
                                 )}
                             </div>
@@ -480,8 +481,8 @@ export default function VedicDashasPage() {
                                             )}
                                             {selectedPath[1] && (
                                                 <div className="flex flex-col">
-                                                    <span className="text-[10px] font-black text-bronze/40 uppercase tracking-widest mb-1">Antardasha (A)</span>
-                                                    <span className="text-sm font-black text-body uppercase">{selectedPath[1].planet}</span>
+                                                    <span className={cn(TYPOGRAPHY.label, "!text-[10px] !font-black !text-bronze/40 uppercase tracking-widest !mb-1")}>Antardasha (A)</span>
+                                                    <span className={cn(TYPOGRAPHY.value, "!text-sm !font-black !text-body uppercase !mt-0")}>{selectedPath[1].planet}</span>
                                                 </div>
                                             )}
                                         </div>
@@ -571,8 +572,8 @@ export default function VedicDashasPage() {
                                             <thead className={cn(TYPOGRAPHY.tableHeader, "bg-ink/5 border-b border-header-border/10")}>
                                                 <tr>
                                                     <th className="px-3 py-2 text-left">Sign</th>
-                                                    <th className="px-3 py-2 text-left">Start Date</th>
-                                                    <th className="px-3 py-2 text-left">End Date</th>
+                                                    <th className="px-3 py-2 text-left">Start date</th>
+                                                    <th className="px-3 py-2 text-left">End date</th>
                                                     <th className="px-3 py-2 text-left">Duration</th>
                                                     <th className="px-3 py-2 text-center">Status</th>
                                                 </tr>
@@ -638,8 +639,8 @@ export default function VedicDashasPage() {
                                             <thead className={cn(TYPOGRAPHY.tableHeader, "bg-ink/5 border-b border-header-border/10")}>
                                                 <tr>
                                                     <th className="px-3 py-2 text-left">Planet</th>
-                                                    <th className="px-3 py-2 text-left">Start Date</th>
-                                                    <th className="px-3 py-2 text-left">End Date</th>
+                                                    <th className="px-3 py-2 text-left">Start date</th>
+                                                    <th className="px-3 py-2 text-left">End date</th>
                                                     <th className="px-3 py-2 text-left">Duration</th>
                                                     <th className="px-3 py-2 text-center">Status</th>
                                                 </tr>
@@ -711,7 +712,7 @@ export default function VedicDashasPage() {
                 {/* RIGHT SIDE - CURRENT DASHA CARD (1/3 width) */}
                 {/* ================================================================= */}
                 <div className="lg:col-span-1">
-                    <div className="bg-surface-pure border border-header-border/30 rounded-xl p-4 shadow-sm lg:sticky lg:top-4">
+                    <div className="bg-surface-pure border border-header-border/30 rounded-xl p-4 shadow-sm lg:sticky lg:top-[7.5rem]">
                         <div className="space-y-4">
                             {/* Header with Icon */}
                             <div className="flex items-center gap-3">
@@ -719,7 +720,7 @@ export default function VedicDashasPage() {
                                     <TrendingUp className="w-5 h-5 text-header-border" />
                                 </div>
                                 <div>
-                                    <h2 className={TYPOGRAPHY.sectionTitle}>Current Dasha</h2>
+                                    <h2 className={TYPOGRAPHY.sectionTitle}>Current dasha</h2>
                                     <div className="flex items-center gap-2 text-[10px] text-bronze font-sans">
                                         <span className={cn(TYPOGRAPHY.label, "text-green-600 mt-1")}>● Live</span>
                                     </div>
@@ -756,7 +757,7 @@ export default function VedicDashasPage() {
                             {activeLords[0] && (
                                 <div className="border-t border-header-border/20 pt-3">
                                     <div className="flex justify-between text-[10px] mb-2 font-medium tracking-tight">
-                                        <span className="text-bronze uppercase">Maha Progress</span>
+                                        <span className="text-bronze uppercase">Maha progress</span>
                                         <span className="text-amber-600 font-bold">{activeAnalysis?.progress}%</span>
                                     </div>
                                     <div className="h-2 bg-header-border/10 rounded-full overflow-hidden">
@@ -786,7 +787,7 @@ export default function VedicDashasPage() {
                             <div className="flex items-center gap-2">
                                 <Bug className="w-4 h-4 text-emerald-400" />
                                 <span className="font-mono text-xs font-bold text-emerald-400 uppercase tracking-widest">
-                                    Debug Console
+                                    Debug console
                                 </span>
                             </div>
                             <button
@@ -876,7 +877,7 @@ function DashaDebugRow({
                 ? 'bg-blue-500/20 text-blue-400 border border-blue-400/30'
                 : 'bg-green-500/20 text-green-400 border border-green-400/30'
                 }`}>
-                {cached ? '📦 FROM CACHE/DB' : '🔥 FRESH FROM API'}
+                {cached ? '📦 From cache/db' : '🔥 Fresh from API'}
             </span>
         );
     };

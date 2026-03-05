@@ -144,16 +144,16 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
             {/* Legend */}
             <div className="mt-3 flex flex-col gap-1.5 text-[10px] text-center font-serif">
                 <div className="flex items-center justify-center gap-4 text-secondary/80 font-medium tracking-normal">
-                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>{type === 'sarva' ? '30+ Strong' : '5+ Strong'}</span>
-                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-amber-500/50"></span>{type === 'sarva' ? '22-29' : '4 Avg'}</span>
-                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-rose-600"></span>{type === 'sarva' ? '<22 Weak' : '<4 Weak'}</span>
+                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>{type === 'sarva' ? '30+ strong' : '5+ strong'}</span>
+                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-amber-500/50"></span>{type === 'sarva' ? '22-29' : '4 avg'}</span>
+                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-rose-600"></span>{type === 'sarva' ? '<22 weak' : '<4 weak'}</span>
                 </div>
                 <div className="flex items-center justify-center gap-5 font-medium text-primary/70">
                     <span className="inline-flex items-center gap-1">
-                        Best House: <span className="text-emerald-500">H{maxH} ({maxV})</span>
+                        Best house: <span className="text-emerald-500">H{maxH} ({maxV})</span>
                     </span>
                     <span className="inline-flex items-center gap-1">
-                        Weak House: <span className="text-rose-600">H{minH} ({minV})</span>
+                        Weak house: <span className="text-rose-600">H{minH} ({minV})</span>
                     </span>
                 </div>
             </div>

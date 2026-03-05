@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Planet } from '../astrology/NorthIndianChart/NorthIndianChart';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 export interface KpCuspalChartProps {
     planets: Planet[]; // Planets mapped to houses
@@ -146,19 +147,21 @@ export default function KpCuspalChart({
                                     return (
                                         <g key={p.name} transform={`translate(0, ${yOffset})`}>
                                             <text
-                                                fontSize="14"
-                                                fontFamily="serif"
-                                                fontWeight="900"
+                                                fontSize={TYPOGRAPHY.svgPlanetName.fontSize}
+                                                fontFamily={TYPOGRAPHY.svgPlanetName.fontFamily}
+                                                fontWeight={isHovered ? "800" : TYPOGRAPHY.svgPlanetName.fontWeight}
                                                 fill="var(--ink)"
                                                 textAnchor="middle"
                                                 dominantBaseline="central"
-                                                className={cn(
-                                                    "select-none transition-all duration-300",
-                                                    isHovered && "font-black"
-                                                )}
+                                                className="select-none transition-all duration-300"
                                             >
                                                 {displayName}
-                                                <tspan fontSize="9" fontWeight="500" fill="var(--ink)" dx="2">
+                                                <tspan
+                                                    fontSize={TYPOGRAPHY.svgDegree.fontSize}
+                                                    fontWeight={TYPOGRAPHY.svgDegree.fontWeight}
+                                                    fill="var(--ink)"
+                                                    dx="2"
+                                                >
                                                     {p.degree}
                                                 </tspan>
                                             </text>

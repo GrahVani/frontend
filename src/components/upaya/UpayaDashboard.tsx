@@ -66,11 +66,11 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
 
                 <div className="flex gap-4">
                     <div className="text-center px-4 py-2 bg-white/50 rounded-xl border border-antique">
-                        <p className="text-[9px] font-black text-muted uppercase mb-0.5">Lagna Lord</p>
+                        <p className="text-[9px] font-black text-muted uppercase mb-0.5">Lagna lord</p>
                         <p className="text-sm font-bold text-ink">{meta.lagna_lord}</p>
                     </div>
                     <div className="text-center px-4 py-2 bg-white/50 rounded-xl border border-antique">
-                        <p className="text-[9px] font-black text-muted uppercase mb-0.5">Analysis Type</p>
+                        <p className="text-[9px] font-black text-muted uppercase mb-0.5">Analysis type</p>
                         <p className="text-sm font-bold text-gold-dark capitalize">{meta.life_concern}</p>
                     </div>
                 </div>
@@ -80,7 +80,7 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
             <div className="space-y-6">
                 <div className="flex items-center gap-3 px-2">
                     <BadgeCheck className="w-6 h-6 text-emerald-600" />
-                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-black")}>Recommended Gemstones</h3>
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-black")}>Recommended gemstones</h3>
                     <div className="h-px flex-1 bg-gradient-to-r from-emerald-100 to-transparent ml-4" />
                 </div>
 
@@ -109,7 +109,7 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
                 <div className="space-y-6 pt-6">
                     <div className="flex items-center gap-3 px-2">
                         <ShieldAlert className="w-6 h-6 text-red-600" />
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-black")}>Caution: Avoid These Gemstones</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-black")}>Caution: avoid these gemstones</h3>
                         <div className="h-px flex-1 bg-gradient-to-r from-red-100 to-transparent ml-4" />
                     </div>
 

@@ -76,7 +76,7 @@ const MantraAnalysisDashboard: React.FC<MantraAnalysisDashboardProps> = ({ data 
                 <div className="lg:col-span-8">
                     <div className="rounded-[2.5rem] bg-[rgba(254,250,234,0.6)] border border-antique shadow-xl backdrop-blur-md overflow-hidden flex flex-col p-6 space-y-4 h-fit">
                         <div className="flex items-center justify-between px-2">
-                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-medium tracking-tight")}>Today's Mantra Focus (Priority)</h2>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-medium tracking-tight")}>Today's mantra focus (priority)</h2>
                             <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.3)] animate-pulse" />
                         </div>
 
@@ -90,14 +90,14 @@ const MantraAnalysisDashboard: React.FC<MantraAnalysisDashboardProps> = ({ data 
                             ) : (
                                 <div className="p-8 text-center bg-white/40 rounded-[2rem] border border-antique/20">
                                     <Sparkles className="w-8 h-8 text-amber-300 mx-auto mb-3 opacity-50" />
-                                    <p className="text-[12px] font-medium tracking-[0.05em] text-amber-900/40">Harmonic Balance Achieved</p>
+                                    <p className="text-[12px] font-medium tracking-[0.05em] text-amber-900/40">Harmonic balance achieved</p>
                                 </div>
                             )}
 
                             <div className="h-px bg-amber-900/10 mx-2" />
 
                             <div className="space-y-4">
-                                <h3 className="text-[13px] font-medium tracking-[0.05em] text-amber-900/60 px-2">3. Daily Ritual Sequence</h3>
+                                <h3 className="text-[13px] font-medium tracking-[0.05em] text-amber-900/60 px-2">3. Daily ritual sequence</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     {recommendations.map((item: { category: string; action: string; note: string }, idx: number) => (
                                         <div

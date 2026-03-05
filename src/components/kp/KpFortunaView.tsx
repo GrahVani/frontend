@@ -2,6 +2,7 @@ import React from 'react';
 import { KpFortunaResponse } from '@/types/kp.types';
 import { cn } from '@/lib/utils';
 import { Calculator, ArrowRight } from 'lucide-react';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface KpFortunaViewPropsNew {
     data: KpFortunaResponse;
@@ -19,47 +20,46 @@ export const KpFortunaView: React.FC<KpFortunaViewPropsNew> = ({ data }) => {
 
             <div className="bg-white border border-antique rounded-2xl shadow-sm overflow-hidden">
                 <div className="bg-parchment/60 p-4 border-b border-antique flex items-center justify-between">
-                    <h3 className="font-serif font-bold text-lg text-primary flex items-center gap-2">
+                    <h3 className={cn(TYPOGRAPHY.value, "text-lg text-primary flex items-center gap-2")}>
                         <Calculator className="w-5 h-5 text-accent-gold" />
-                        Mathematical Derivation
+                        Mathematical derivation
                     </h3>
-                    <span className="text-xs font-mono text-primary uppercase tracking-wider">Formula: Ascendant + Moon - Sun</span>
+                    <span className={cn(TYPOGRAPHY.label, "text-[10px] opacity-70")}>Formula: ascendant + moon - sun</span>
                 </div>
 
                 <table className="w-full text-sm text-left font-sans text-primary">
-                    <thead className="tracking-wide text-xs border-b border-antique bg-parchment/60 backdrop-blur-sm uppercase sticky top-0 z-10">
+                    <thead className="bg-parchment/60 backdrop-blur-sm border-b border-antique tracking-wide sticky top-0 z-10">
                         <tr>
-                            <th className="px-3 py-1.5 font-serif font-semibold w-1/4">Component</th>
-                            <th className="px-3 py-1.5 font-serif font-semibold w-1/4">Longitude (Deg)</th>
-                            <th className="px-3 py-1.5 font-serif font-semibold w-1/4">Sign</th>
-                            <th className="px-3 py-1.5 font-serif font-semibold w-1/4">House</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 w-1/4")}>Component</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 w-1/4")}>Longitude (deg)</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 w-1/4")}>Sign</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 w-1/4")}>House</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-antique/50">
-                        {(Array.isArray(calculation) ? calculation : Object.values(calculation || {})).map((r: any, idx) => { const row = r as { component: string; dms: string; longitude: number; sign: string; house: number }; return (
-                            <tr key={row.component} className={cn(
-                                "transition-colors",
-                                row.component === 'Pars Fortuna' ? "bg-gold-soft/10 font-bold text-accent-gold" : "hover:bg-gold-primary/5 bg-white"
-                            )}>
-                                <td className="px-3 py-1.5 flex items-center gap-2">
-                                    {row.component === 'Pars Fortuna' && <span className="text-xl text-accent-gold/80">⊗</span>}
-                                    {row.component === 'Ascendant' && <span className="text-md font-serif text-primary">Asc</span>}
-                                    {row.component === 'Sun' && <span className="text-md text-primary">⊙</span>}
-                                    {row.component === 'Moon' && <span className="text-md text-primary">☾</span>}
-
-                                    <span className={cn(row.component === 'Pars Fortuna' && "font-serif text-base text-accent-gold")}>{row.component}</span>
-                                </td>
-                                <td className="px-3 py-1.5 font-mono text-primary whitespace-nowrap">
-                                    {row.dms} <span className="text-[10px] text-primary ml-1">({row.longitude.toFixed(2)}°)</span>
-                                </td>
-                                <td className="px-3 py-1.5 whitespace-nowrap">
-                                    {row.sign}
-                                </td>
-                                <td className="px-3 py-1.5">
-                                    {row.house}
-                                </td>
-                            </tr>
-                        ); })}
+                        {(Array.isArray(calculation) ? calculation : Object.values(calculation || {})).map((r: any, idx) => {
+                            const row = r as { component: string; dms: string; longitude: number; sign: string; house: number }; return (
+                                <tr key={row.component} className={cn(
+                                    "transition-colors",
+                                    row.component === 'Pars Fortuna' ? "bg-gold-soft/10 font-bold text-accent-gold" : "hover:bg-gold-primary/5 bg-white"
+                                )}>
+                                    <td className="px-3 py-1.5 flex items-center gap-2">
+                                        {row.component === 'Pars Fortuna' && <span className="text-xl text-accent-gold/80">⊗</span>}
+                                        <span className={cn(TYPOGRAPHY.value, row.component === 'Pars Fortuna' && "!text-accent-gold font-bold")}>{row.component}</span>
+                                    </td>
+                                    <td className="px-3 py-1.5 whitespace-nowrap">
+                                        <span className={cn(TYPOGRAPHY.value, "font-mono text-xs")}>{row.dms}</span>
+                                        <span className={cn(TYPOGRAPHY.subValue, "text-[10px] ml-1")}>({row.longitude.toFixed(2)}°)</span>
+                                    </td>
+                                    <td className="px-3 py-1.5 whitespace-nowrap">
+                                        <span className={TYPOGRAPHY.value}>{row.sign}</span>
+                                    </td>
+                                    <td className="px-3 py-1.5">
+                                        <span className={TYPOGRAPHY.value}>{row.house}</span>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>
@@ -67,17 +67,17 @@ export const KpFortunaView: React.FC<KpFortunaViewPropsNew> = ({ data }) => {
             {/* Analysis Box */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="p-6 rounded-2xl bg-emerald-50/50 border border-emerald-200/60 shadow-sm">
-                    <h4 className="font-serif font-bold text-emerald-800 mb-2 flex items-center gap-2">
+                    <h4 className={cn(TYPOGRAPHY.value, "text-emerald-800 mb-2 flex items-center gap-2")}>
                         <ArrowRight className="w-4 h-4 text-emerald-600" />
-                        Fortuna Placement
+                        Fortuna placement
                     </h4>
                     {fortunaHouse ? (
                         <>
-                            <p className="text-sm text-emerald-900 leading-relaxed font-sans">
-                                Fortuna is located in <strong className="font-semibold px-1 rounded bg-white shadow-sm border border-emerald-100">{fortunaHouse.sign}</strong>
-                                in the <strong className="font-semibold px-1 rounded bg-white shadow-sm border border-emerald-100">House {fortunaHouse.houseNumber}</strong>.
+                            <p className={cn(TYPOGRAPHY.subValue, "text-emerald-900 leading-relaxed font-sans")}>
+                                Fortuna is located in <strong className="font-bold text-ink">{fortunaHouse.sign}</strong>
+                                in the <strong className="font-bold text-ink">House {fortunaHouse.houseNumber}</strong>.
                             </p>
-                            <p className="text-xs text-emerald-700 mt-3 font-mono">
+                            <p className={cn(TYPOGRAPHY.label, "text-[10px] text-emerald-700/70 mt-3 font-mono")}>
                                 Cusp Longitude: {fortunaHouse.cuspLongitude}
                             </p>
                         </>
@@ -87,11 +87,11 @@ export const KpFortunaView: React.FC<KpFortunaViewPropsNew> = ({ data }) => {
                 </div>
 
                 <div className="p-6 rounded-2xl bg-white border border-antique shadow-sm">
-                    <h4 className="font-serif font-bold text-primary mb-3">Interpretation Key</h4>
-                    <ul className="text-sm text-primary space-y-2 list-disc pl-5 font-sans">
-                        <li><strong className="text-primary">Formula</strong>: Used for Day Birth. (Night Birth reverses Sun/Moon).</li>
-                        <li><strong className="text-primary">House</strong>: The area of life where material prosperity is most easily accessible.</li>
-                        <li><strong className="text-primary">Sign</strong>: The manner in which you achieve success.</li>
+                    <h4 className={cn(TYPOGRAPHY.value, "text-primary mb-3")}>Interpretation key</h4>
+                    <ul className={cn(TYPOGRAPHY.subValue, "text-sm space-y-2 list-disc pl-5")}>
+                        <li><strong className="text-ink">Formula</strong>: Used for Day Birth. (Night Birth reverses Sun/Moon).</li>
+                        <li><strong className="text-ink">House</strong>: The area of life where material prosperity is most easily accessible.</li>
+                        <li><strong className="text-ink">Sign</strong>: The manner in which you achieve success.</li>
                     </ul>
                 </div>
             </div>

@@ -66,9 +66,9 @@ export default function ActiveYogasLayout({
             <div className="flex flex-col gap-2 h-[480px] w-full lg:w-[440px] shrink-0">
                 <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm max-w-[440px]">
                     <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm flex justify-between items-center shrink-0">
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "leading-tight tracking-wide")}>Birth Chart (D1)</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "leading-tight tracking-wide")}>Birth chart (D1)</h3>
                         <button
-                            onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })}
+                            onClick={() => setZoomedChart({ varga: "D1", label: "Birth chart (D1)" })}
                             className="text-primary hover:text-accent-gold transition-colors"
                         >
                             <Maximize2 className="w-3 h-3" />
@@ -91,7 +91,7 @@ export default function ActiveYogasLayout({
             <div className="flex-1 flex flex-col gap-2 h-[480px] min-w-0">
                 <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm">
                     <div className="bg-border-warm px-4 py-2 border-b border-border-warm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "leading-tight tracking-wide whitespace-nowrap")}>Yogas & Combinations</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "leading-tight tracking-wide whitespace-nowrap")}>Yoga & combinations</h3>
 
                         {/* Integrated Header Dropdown */}
                         <div className="relative group w-full sm:w-48 shrink-0">
@@ -156,7 +156,7 @@ export default function ActiveYogasLayout({
                                             onClick={() => setSelectedYoga(null)}
                                             className="text-primary hover:text-accent-gold transition-colors text-[9px] font-bold uppercase tracking-[0.15em] flex items-center gap-1.5"
                                         >
-                                            Clear Selection
+                                            Clear selection
                                         </button>
                                     </div>
                                 </div>
@@ -178,7 +178,7 @@ export default function ActiveYogasLayout({
                         </button>
                         <div className="mb-6 text-center">
                             <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-xl")}>{zoomedChart.label}</h2>
-                            <p className={cn(TYPOGRAPHY.label, "mt-2")}>{zoomedChart.varga} Divisional Chart</p>
+                            <p className={cn(TYPOGRAPHY.label, "mt-2")}>{zoomedChart.varga} divisional chart</p>
                         </div>
                         <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6 border border-border-warm">
                             <ChartWithPopup

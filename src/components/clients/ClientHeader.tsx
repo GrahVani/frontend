@@ -1,6 +1,7 @@
-import React from 'react';
 import { Pencil, Zap, Compass, Star } from 'lucide-react';
 import { Client } from '@/types/client';
+import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/design-tokens/typography";
 
 interface ClientHeaderProps {
     client: Client;
@@ -18,23 +19,23 @@ export default function ClientHeader({ client }: ClientHeaderProps) {
                     {/* Header Left: Name & Birth Metadata */}
                     <div className="flex items-center gap-6">
                         <div className="hidden sm:flex w-14 h-14 rounded-full bg-gradient-to-br from-header-border to-ink border border-active-glow/30 items-center justify-center text-white shadow-xl">
-                            <span className="text-2xl font-serif font-bold">{(client.firstName || client.fullName || '?').charAt(0)}</span>
+                            <span className={cn(TYPOGRAPHY.sectionTitle, "text-2xl !font-bold !text-white !mb-0")}>{(client.firstName || client.fullName || '?').charAt(0)}</span>
                         </div>
-                        <div>
+                        <div className="flex-1">
                             <div className="flex items-center gap-3 mb-1.5">
-                                <h1 className="text-3xl font-serif font-bold text-white tracking-tight">
+                                <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-3xl !font-bold !text-white tracking-tight !mb-0")}>
                                     {client.firstName || ''} {client.lastName || client.fullName || ''}
                                 </h1>
-                                <div className="bg-active-glow/10 text-active-glow text-[9px] px-2 py-0.5 rounded-full border border-active-glow/30 font-black uppercase tracking-widest">
-                                    Primary Record
+                                <div className={cn(TYPOGRAPHY.label, "bg-active-glow/10 !text-active-glow !text-[9px] px-2 py-0.5 rounded-full border border-active-glow/30 !font-black tracking-widest !mb-0")}>
+                                    Primary record
                                 </div>
                             </div>
-                            <div className="flex flex-wrap items-center gap-3 text-white/60 text-[11px] font-serif uppercase tracking-widest font-bold">
+                            <div className={cn(TYPOGRAPHY.label, "flex flex-wrap items-center gap-3 !text-white/60 !text-[11px] tracking-widest !font-bold !mt-0")}>
                                 <span>{(client.dateOfBirth || client.birthDate) ? new Date(client.dateOfBirth || client.birthDate || '').toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Unknown'}</span>
                                 <span className="w-1.5 h-1.5 rounded-full bg-header-border/40" />
                                 <span>{client.timeOfBirth || client.birthTime || 'Unknown'} IST</span>
                                 <span className="w-1.5 h-1.5 rounded-full bg-header-border/40" />
-                                <span className="text-active-glow">{client.placeOfBirth || client.birthPlace || 'Unknown'}</span>
+                                <span className="!text-active-glow">{client.placeOfBirth || client.birthPlace || 'Unknown'}</span>
                             </div>
                         </div>
                     </div>
@@ -58,9 +59,12 @@ export default function ClientHeader({ client }: ClientHeaderProps) {
 
 function MetadataTag({ icon: Icon, label, value, orange = false }: { icon: React.ElementType, label: string, value: string, orange?: boolean }) {
     return (
-        <div className={`px-4 py-2 rounded-xl border flex flex-col min-w-[90px] transition-all ${orange ? 'bg-header-border/10 border-header-border/40' : 'bg-white/5 border-white/10'}`}>
-            <span className="text-[8px] font-black uppercase tracking-tighter text-white/60 mb-0.5">{label}</span>
-            <span className={`text-xs font-serif font-black tracking-wide ${orange ? 'text-active-glow' : 'text-white/80'}`}>{value}</span>
+        <div className={cn(
+            "px-4 py-2 rounded-xl border flex flex-col min-w-[90px] transition-all",
+            orange ? "bg-header-border/10 border-header-border/40" : "bg-white/5 border-white/10"
+        )}>
+            <span className={cn(TYPOGRAPHY.label, "text-[8px] !font-black tracking-tighter !text-white/60 !mb-0.5")}>{label}</span>
+            <span className={cn(TYPOGRAPHY.value, "text-xs !font-bold tracking-wide !mt-0", orange ? "text-active-glow" : "!text-white/80")}>{value}</span>
         </div>
     );
 }
