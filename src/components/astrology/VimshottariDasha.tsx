@@ -129,7 +129,7 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
 
             setDashaData(prev => updateTree(prev, path));
 
-        } catch (error) {        }
+        } catch (error) { }
     };
 
     const toggle = (id: string, level: DashaLevel, depth: number, path: string[]) => {
@@ -142,7 +142,7 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
     const renderBreadcrumbs = () => {
         if (compact) return null;
         return (
-            <div className="flex items-center gap-2 mb-6 text-sm overflow-x-auto">
+            <div className="flex items-center gap-2 mb-6 text-sm overflow-x-auto sticky top-[72px] bg-white z-10 py-2 border-b border-header-border/10">
                 <button
                     onClick={() => setExpanded([])}
                     className={cn("hover:text-header-border transition-colors font-semibold uppercase tracking-widest text-xs", expanded.length === 0 ? "text-header-border" : "text-ink/60")}
@@ -177,36 +177,38 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
 
     return (
         <div className={cn(
-            "bg-white border border-header-border/20 rounded-[2.5rem] p-8 backdrop-blur-3xl h-full overflow-hidden flex flex-col shadow-xl",
-            compact && "p-6 rounded-[2rem] bg-white shadow-2xl"
+            "bg-white border border-header-border/20 rounded-[1.5rem] p-4 backdrop-blur-3xl min-h-full flex flex-col shadow-xl",
+            compact && "p-3 rounded-[1rem] bg-white shadow-2xl"
         )}>
-            <div className="flex items-center justify-between mb-4">
-                <div>
-                    {!compact ? (
-                        <>
-                            <h3 className="text-xs font-semibold text-header-border uppercase tracking-[0.3em] mb-1">Vimshottari System</h3>
-                            <h2 className="text-2xl font-serif text-ink font-bold tracking-tight italic">Temporal Matrix</h2>
-                        </>
-                    ) : (
-                        <div>
-                            <h2 className="text-lg font-serif text-ink font-bold tracking-tight">{currentMaha} Mahadasha</h2>
-                            <p className="text-2xs text-copper-dark uppercase tracking-[0.3em] font-semibold mt-1">Time Lord Sequence</p>
-                        </div>
-                    )}
+            <div className="sticky top-0 bg-white z-20 pb-4 border-b border-header-border/10 mb-4">
+                <div className="flex items-center justify-between">
+                    <div>
+                        {!compact ? (
+                            <>
+                                <h3 className="text-xs font-semibold text-header-border uppercase tracking-[0.3em] mb-1">Vimshottari System</h3>
+                                <h2 className="text-2xl font-serif text-ink font-bold tracking-tight italic">Temporal Matrix</h2>
+                            </>
+                        ) : (
+                            <div>
+                                <h2 className="text-lg font-serif text-ink font-bold tracking-tight">{currentMaha} Mahadasha</h2>
+                                <p className="text-2xs text-copper-dark uppercase tracking-[0.3em] font-semibold mt-1">Time Lord Sequence</p>
+                            </div>
+                        )}
+                    </div>
+                    {
+                        !compact && currentMaha && (
+                            <div className="bg-active-glow/10 px-4 py-1.5 rounded-full border border-active-glow/30 flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 rounded-full bg-active-glow animate-pulse" />
+                                <span className="text-[9px] font-semibold text-active-glow uppercase tracking-widest">Active: {currentMaha}</span>
+                            </div>
+                        )
+                    }
                 </div>
-                {
-                    !compact && currentMaha && (
-                        <div className="bg-active-glow/10 px-4 py-1.5 rounded-full border border-active-glow/30 flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-active-glow animate-pulse" />
-                            <span className="text-[9px] font-semibold text-active-glow uppercase tracking-widest">Active: {currentMaha}</span>
-                        </div>
-                    )
-                }
-            </div >
+            </div>
 
             {renderBreadcrumbs()}
 
-            <div className="flex-1 overflow-y-auto custom-scrollbar pr-4 space-y-3" role="tree" aria-label="Vimshottari dasha periods">
+            <div className="flex-1 pr-4 space-y-3 mt-4" role="tree" aria-label="Vimshottari dasha periods">
                 {dashaData
                     .filter(d => !compact || d.planet === currentMaha)
                     .map((d) => (
@@ -244,11 +246,11 @@ function DashaItem({ level, depth, expanded, onToggle, compact = false, path }: 
             <div
                 onClick={() => !compact && canExpand && onToggle(uniqueId, level, depth, path)}
                 className={cn(
-                    "flex items-center justify-between p-4 rounded-2xl transition-all cursor-pointer border group",
+                    "flex items-center justify-between p-2.5 rounded-xl transition-all cursor-pointer border group",
                     depth === 0 ? "bg-surface-modal border-header-border/10 hover:bg-softwhite shadow-sm" : "bg-transparent border-transparent hover:bg-surface-modal/50",
                     isExpanded && depth === 0 && !compact && "bg-softwhite border-header-border/30",
                     isActive && depth > 0 && "bg-active-glow/20 border-active-glow/40",
-                    compact && "p-3 cursor-default"
+                    compact && "p-2 cursor-default"
                 )}
             >
                 <div className="flex items-center gap-4">
@@ -257,18 +259,18 @@ function DashaItem({ level, depth, expanded, onToggle, compact = false, path }: 
                     )}
                     {!compact && !canExpand && <div className="w-4" />}
 
-                    <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-all",
+                    <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center transition-all",
                         depth === 0 ? "bg-header-border/10 text-header-border" : "bg-header-border/5 text-header-border/40",
-                        compact && "w-8 h-8 rounded-lg",
+                        compact && "w-7 h-7 rounded-md",
                         isActive && "bg-active-glow text-ink shadow-lg"
                     )}>
-                        <Star className={cn("w-5 h-5", compact && "w-4 h-4")} />
+                        <Star className={cn("w-4 h-4", compact && "w-3.5 h-3.5")} />
                     </div>
 
                     <div>
                         <h4 className={cn("font-serif font-bold tracking-tight flex items-center gap-2",
-                            depth === 0 ? "text-lg text-ink" : "text-md text-body",
-                            compact && (depth === 0 ? "text-md" : "text-sm")
+                            depth === 0 ? "text-base text-ink" : "text-sm text-body",
+                            compact && (depth === 0 ? "text-sm" : "text-xs")
                         )}>
                             {level.planet}
                             {isActive && <span className="text-[9px] bg-ink text-active-glow px-1.5 py-0.5 rounded uppercase tracking-wider">Current</span>}

@@ -22,7 +22,6 @@ import WeakPlanetSadhana from '@/components/upaya/WeakPlanetSadhana';
 import SadhanaChartPanel from '@/components/upaya/SadhanaChartPanel';
 import { useVedicClient } from '@/context/VedicClientContext';
 import styles from './RemedialShared.module.css';
-import DebugConsole from '@/components/debug/DebugConsole';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface MantraAnalysisDashboardProps {
@@ -47,86 +46,91 @@ const MantraAnalysisDashboard: React.FC<MantraAnalysisDashboardProps> = ({ data 
     const recommendations = mantraAnalysis?.recommendations || [];
 
     return (
-        <div className={cn("min-h-screen p-4 lg:p-6 space-y-6 animate-in fade-in duration-700", styles.dashboardContainer)}>
+        <div className={cn("animate-in fade-in duration-700 flex flex-col h-full overflow-hidden", styles.dashboardContainer)}>
             {/* Header Area */}
-            <div className="flex flex-col gap-6">
-                <div className="flex items-center justify-between border-b border-antique pb-4">
-                    <div className="flex items-center gap-3">
-                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-bold tracking-tight")}>
-                            Mantras : {String(data.user_name || "Sadhaka")}
-                        </h2>
+            <div className="flex-shrink-0 px-4 pt-4 pb-2">
+                <div className="flex items-center justify-between border-b border-divider pb-3">
+                    <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] lg:text-[22px] font-bold tracking-tight")}>
+                        Mantras : {String(data.user_name || "Sadhaka")}
+                    </h2>
+                    <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.3)]" />
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-amber-900/40">Active analysis</span>
                     </div>
                 </div>
             </div>
 
-            {/* Main Dashboard Layout - Rebalanced for consistency */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-
-                {/* Left Side: Chart & Focus (4/12) */}
-                <div className="lg:col-span-4 space-y-6">
-                    <SadhanaChartPanel
-                        chartData={d1Chart}
-                        doshaStatus={analysis?.doshas || {}}
-                    />
-                    <MantraTimingCard timing={timing} />
-
+            {/* Main Split Layout: Fixed Left Chart + Scrollable Right */}
+            <div className="flex-1 flex gap-4 px-4 pb-4 min-h-0 relative z-10">
+                {/* LEFT COLUMN - Fixed D1 Chart */}
+                <div className="w-[360px] lg:w-[400px] flex-shrink-0 flex flex-col gap-4 overflow-hidden">
+                    {d1Chart && (
+                        <SadhanaChartPanel
+                            chartData={d1Chart}
+                            doshaStatus={analysis?.doshas || {}}
+                        />
+                    )}
                 </div>
 
-                {/* Right Side: Main Panels (8/12) - Unified Light Glass Dashboard */}
-                <div className="lg:col-span-8">
-                    <div className="rounded-[2.5rem] bg-[rgba(254,250,234,0.6)] border border-antique shadow-xl backdrop-blur-md overflow-hidden flex flex-col p-6 space-y-4 h-fit">
-                        <div className="flex items-center justify-between px-2">
-                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-medium tracking-tight")}>Today's mantra focus (priority)</h2>
-                            <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.3)] animate-pulse" />
+                {/* RIGHT COLUMN - Scrollable Content */}
+                <div className="flex-1 overflow-y-auto min-h-0 pr-1 space-y-4"
+                    style={{
+                        scrollbarWidth: 'thin',
+                        scrollbarColor: 'rgba(180,83,9,0.2) transparent'
+                    }}>
+
+                    <div className="rounded-[2rem] bg-[rgba(254,250,234,0.6)] border border-antique shadow-xl backdrop-blur-md overflow-hidden flex flex-col p-4 space-y-4">
+                        <div className="flex items-center justify-between px-1">
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[16px] font-bold tracking-tight")}>Today's mantra focus (priority)</h2>
                         </div>
 
-                        <div className="space-y-6">
+                        <div className="space-y-4">
                             <DashaMantraPanel mantras={dashaMantras} />
 
-                            <div className="h-px bg-amber-900/10 mx-2" />
+                            <div className="h-px bg-amber-900/10 mx-1" />
 
                             {weakPlanets.length > 0 ? (
                                 <WeakPlanetSadhana weakPlanets={weakPlanets} />
                             ) : (
-                                <div className="p-8 text-center bg-white/40 rounded-[2rem] border border-antique/20">
-                                    <Sparkles className="w-8 h-8 text-amber-300 mx-auto mb-3 opacity-50" />
-                                    <p className="text-[12px] font-medium tracking-[0.05em] text-amber-900/40">Harmonic balance achieved</p>
+                                <div className="p-4 text-center bg-white/40 rounded-xl border border-antique/20">
+                                    <Sparkles className="w-5 h-5 text-amber-300 mx-auto mb-1 opacity-50" />
+                                    <p className="text-[13px] font-medium tracking-[0.05em] text-amber-900/40">Harmonic balance achieved</p>
                                 </div>
                             )}
 
-                            <div className="h-px bg-amber-900/10 mx-2" />
+                            <div className="h-px bg-amber-900/10 mx-1" />
 
-                            <div className="space-y-4">
-                                <h3 className="text-[13px] font-medium tracking-[0.05em] text-amber-900/60 px-2">3. Daily ritual sequence</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div className="space-y-2">
+                                <h3 className="text-[13px] font-bold tracking-[0.05em] text-amber-900/60 px-1 uppercase">Daily ritual sequence</h3>
+                                <div className="grid grid-cols-1 gap-2">
                                     {recommendations.map((item: { category: string; action: string; note: string }, idx: number) => (
                                         <div
                                             key={idx}
-                                            className="flex items-start gap-4 p-4 rounded-2xl border bg-white/40 backdrop-blur-sm transition-all group cursor-pointer border-antique/20 hover:bg-white/60"
+                                            className="flex items-center gap-3 px-3 py-2.5 rounded-xl border bg-white/40 border-antique/20 hover:bg-white/60 transition-all group cursor-pointer"
                                         >
-                                            <div className="flex-shrink-0 w-6 h-6 rounded-full border border-antique/30 flex items-center justify-center text-[12px] font-medium transition-all mt-0.5 bg-white group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 text-muted">
+                                            <div className="flex-shrink-0 w-7 h-7 rounded-full border border-antique/30 flex items-center justify-center text-[12px] font-bold bg-white group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 text-muted transition-all">
                                                 {idx + 1}
                                             </div>
-                                            <div className="min-w-0">
-                                                <h3 className="text-[11px] font-medium tracking-widest mb-1 group-hover:text-indigo-600 transition-colors text-ink">{item.category}</h3>
-                                                <p className="text-sm font-medium leading-tight mb-2 text-ink/80">{item.action}</p>
-                                                <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/60 border border-antique/10 text-[10px] font-medium italic text-slate-500">
-                                                    <span className="truncate">{item.note}</span>
+                                            <div className="flex flex-col min-w-0 flex-1">
+                                                <div className="flex items-baseline gap-2">
+                                                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-900/40 shrink-0">{item.category}</span>
+                                                    <span className="text-sm font-semibold text-ink/80 truncate">{item.action}</span>
                                                 </div>
+                                                <span className="text-[11px] font-medium text-slate-400 mt-0.5">{item.note}</span>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                             </div>
+
+                            <div className="h-px bg-amber-900/10 mx-1" />
+
+                            {/* Sacred Timing — compact horizontal strip */}
+                            <MantraTimingCard timing={timing} />
                         </div>
                     </div>
                 </div>
             </div>
-            {/* Debugging Console */}
-            <DebugConsole
-                title="Mantra Analysis Raw Data"
-                data={data}
-            />
         </div>
     );
 };

@@ -62,8 +62,10 @@ export default function RemedyListPanel({ recommendations }: RemedyListPanelProp
 
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-start justify-between mb-1">
-                                    <h4 className="text-sm font-bold truncate text-ink">
-                                        <span className="mr-2 text-gold-dark">{rec.priority}.</span>
+                                    <h4 className="text-sm font-bold truncate text-ink flex items-center">
+                                        <span className="inline-flex items-center justify-center w-5 h-5 text-[10px] font-black rounded-full bg-gold-primary text-white shadow-sm shrink-0 mr-2">
+                                            P{rec.priority}
+                                        </span>
                                         {rec.gemstone_info.primary}
                                     </h4>
                                     <div className="px-2 py-0.5 rounded-full border bg-gold-primary/10 border-gold-primary/20">
@@ -88,7 +90,7 @@ export default function RemedyListPanel({ recommendations }: RemedyListPanelProp
                             <div className="grid grid-cols-2 gap-3 mb-3">
                                 <div>
                                     <p className="text-[9px] uppercase tracking-widest font-bold mb-1 text-ink">Mantra</p>
-                                    <p className="text-[10px] italic leading-tight line-clamp-2 text-ink">"{rec.gemstone_info.mantra.split('(')[0]}"</p>
+                                    <p className="text-[10px] leading-tight line-clamp-2 text-ink">{rec.gemstone_info.mantra.split('(')[0]}</p>
                                 </div>
                                 <div>
                                     <p className="text-[9px] uppercase tracking-widest font-bold mb-1 text-ink">Finger & Day</p>

@@ -11,7 +11,6 @@ interface ShodashottariDashaProps {
     periods: DashaNode[];
 }
 
-
 export default function ShodashottariDasha({ periods }: ShodashottariDashaProps) {
     const [selectedCycle, setSelectedCycle] = useState<number>(1);
     const [expandedMahadasha, setExpandedMahadasha] = useState<string | null>(null);
@@ -50,7 +49,7 @@ export default function ShodashottariDasha({ periods }: ShodashottariDashaProps)
     return (
         <div className="space-y-4 animate-in fade-in duration-700">
             {/* Cycle Navigation */}
-            <div className="flex flex-wrap gap-2 items-center">
+            <div className="flex flex-wrap gap-2 items-center px-4 pt-2">
                 <div className="flex bg-gold-soft/40 rounded-lg p-0.5 gap-1 border border-header-border/10 backdrop-blur-sm overflow-x-auto scrollbar-hide">
                     {availableCycles.map((c: number) => {
                         const isActive = selectedCycle === c;
@@ -79,15 +78,15 @@ export default function ShodashottariDasha({ periods }: ShodashottariDashaProps)
             </div>
 
             {/* Table */}
-            <div className="overflow-x-auto">
-                <table className="w-full">
-                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-ink/5 border-b border-header-border/10")}>
+            <div className="">
+                <table className="w-full border-separate border-spacing-0">
+                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-white border-b border-header-border/20 sticky top-0 z-10 shadow-sm")}>
                         <tr>
-                            <th className="px-3 py-2 text-left">Planet</th>
-                            <th className="px-3 py-2 text-left">Start Date</th>
-                            <th className="px-3 py-2 text-left">End Date</th>
-                            <th className="px-3 py-2 text-left">Duration</th>
-                            <th className="px-3 py-2 text-center">Status</th>
+                            <th className="px-3 py-2 text-left border-b border-header-border/10">Planet</th>
+                            <th className="px-3 py-2 text-left border-b border-header-border/10">Start Date</th>
+                            <th className="px-3 py-2 text-left border-b border-header-border/10">End Date</th>
+                            <th className="px-3 py-2 text-left border-b border-header-border/10">Duration</th>
+                            <th className="px-3 py-2 text-center border-b border-header-border/10">Status</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-header-border/10 font-medium">
@@ -105,7 +104,7 @@ export default function ShodashottariDasha({ periods }: ShodashottariDashaProps)
                                         )}
                                         onClick={() => setExpandedMahadasha(isExpanded ? null : mahadasha.planet)}
                                     >
-                                        <td className="px-3 py-2">
+                                        <td className="px-3 py-1.5">
                                             <div className="flex items-center gap-2">
                                                 <span className={cn(
                                                     "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold border shadow-sm min-w-[60px] justify-center",
@@ -126,17 +125,17 @@ export default function ShodashottariDasha({ periods }: ShodashottariDashaProps)
                                                 )}
                                             </div>
                                         </td>
-                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
                                             <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}>
                                                 <Calendar className="w-3 h-3 text-muted/40" />
                                                 {formatDateDisplay(mahadasha.startDate)}
                                             </div>
                                         </td>
-                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{formatDateDisplay(mahadasha.endDate)}</td>
-                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>{formatDateDisplay(mahadasha.endDate)}</td>
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
                                             {standardizeDuration((mahadasha.raw?.duration_years as number) || (mahadasha.raw?.years as number) || 0)}
                                         </td>
-                                        <td className="px-3 py-2 text-center">
+                                        <td className="px-3 py-1.5 text-center">
                                             <div className="flex items-center justify-center gap-2">
                                                 {mahadasha.isCurrent ? (
                                                     <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm animate-pulse">ACTIVE</span>

@@ -617,13 +617,13 @@ export default function KpDashboardPage() {
     };
 
     return (
-        <div className="space-y-6 animate-in fade-in duration-500 pt-4">
+        <div className="space-y-6 animate-in fade-in duration-500">
             {/* Header */}
             {(activeTab as string) !== 'ashtakavarga' && (activeTab as string) !== 'horary' && (
                 <div className="flex items-center justify-between">
                     <div>
 
-                        <h1 className={TYPOGRAPHY.sectionTitle}>KP dashboard</h1>
+                        <h1 className="text-2xl font-serif font-bold text-primary">KP dashboard</h1>
                     </div>
                     <div className="flex items-center gap-3">
                     </div>
@@ -640,7 +640,7 @@ export default function KpDashboardPage() {
                     <div className="space-y-6">
                         {/* Tabs - Persistent at the top, starting from left */}
                         {(activeTab as string) !== 'ashtakavarga' && (activeTab as string) !== 'horary' && (
-                            <div className="flex flex-wrap gap-1.5 p-1 bg-parchment rounded-xl border border-antique sticky top-[6.5rem] z-20 shadow-sm">
+                            <div className="flex bg-white/50 p-1 rounded-2xl border border-antique/50 w-fit">
                                 {tabs.map((tab) => (
                                     <button
                                         key={tab.id}
@@ -651,28 +651,25 @@ export default function KpDashboardPage() {
                                             router.replace(`${pathname}?${params.toString()}`, { scroll: false });
                                         }}
                                         className={cn(
-                                            "flex items-center gap-1.5 px-3 py-2 rounded-lg transition-all",
-                                            TYPOGRAPHY.value,
-                                            "text-xs font-semibold", // Keeping size/weight as button specific
+                                            "px-6 py-2 rounded-xl text-xs font-bold transition-all",
                                             activeTab === tab.id
-                                                ? cn("text-white shadow-md border-transparent", COLORS.wbActiveTab)
-                                                : "text-primary hover:text-ink hover:bg-white/50 border-transparent"
+                                                ? COLORS.wbActiveTab
+                                                : "text-primary hover:bg-parchment"
                                         )}
                                     >
-                                        {tab.icon}
                                         {tab.label}
                                     </button>
                                 ))}
                             </div>
                         )}
 
-                        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                             {/* Left Column: Persistent Cuspal Chart - Hidden in Ashtakavarga for full-width view */}
                             {activeTab !== 'ashtakavarga' && (
-                                <div className="xl:col-span-4 sticky top-[10.5rem]">
+                                <div className="lg:col-span-5">
                                     <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
                                         <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
-                                            <h3 className={cn(TYPOGRAPHY.value, "text-lg text-primary leading-tight tracking-wide")}>Cuspal chart</h3>
+                                            <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Cuspal chart</h3>
                                         </div>
                                         <div className="w-full">
                                             {planetsCuspsQuery.isLoading && !cuspData.length ? (
@@ -680,7 +677,7 @@ export default function KpDashboardPage() {
                                                     <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
                                                 </div>
                                             ) : cuspData.length > 0 ? (
-                                                <div className="w-full h-[450px]">
+                                                <div className="w-full h-[490px]">
                                                     <KpCuspalChart
                                                         planets={d1Data.planets}
                                                         houseSigns={cuspData.map(c => c.signId)}
@@ -697,7 +694,7 @@ export default function KpDashboardPage() {
 
                             {/* Right Column: Content Area - Expanded to full width in Ashtakavarga */}
                             <div className={cn(
-                                activeTab === 'ashtakavarga' ? "xl:col-span-12" : "xl:col-span-8"
+                                activeTab === 'ashtakavarga' ? "lg:col-span-12" : "lg:col-span-7"
                             )}>
                                 {/* Tab Content */}
                                 <div className="min-h-[400px]">
@@ -706,7 +703,7 @@ export default function KpDashboardPage() {
                                         <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
                                             {/* Planets Table */}
                                             <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
-                                                <h3 className={cn(TYPOGRAPHY.value, "text-lg text-primary leading-tight tracking-wide")}>Planetary positions with star & sub lords</h3>
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Planetary positions with star & sub lords</h3>
                                             </div>
                                             <div className="w-full">
                                                 {planetsCuspsQuery.isLoading && !planetaryData.length ? (
@@ -726,7 +723,7 @@ export default function KpDashboardPage() {
                                     {activeTab === 'significations' && (
                                         <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
                                             <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
-                                                <h3 className={cn(TYPOGRAPHY.value, "text-lg text-primary leading-tight tracking-wide")}>House significations</h3>
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">House significations</h3>
                                                 <span className={cn(TYPOGRAPHY.subValue, "text-[10px] hidden sm:inline-block")}>Planets that signify specific houses based on their stellar positions</span>
                                             </div>
                                             <div className="w-full">
@@ -747,7 +744,7 @@ export default function KpDashboardPage() {
                                     {activeTab === 'planetary-significators' && (
                                         <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
                                             <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
-                                                <h3 className={cn(TYPOGRAPHY.value, "text-lg text-primary leading-tight tracking-wide")}>Planetary significators</h3>
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Planetary significators</h3>
                                                 <span className={cn(TYPOGRAPHY.subValue, "text-[10px] hidden sm:inline-block")}>Which houses are signified by each planet - the core of KP prediction</span>
                                             </div>
                                             <div className="w-full">
@@ -768,7 +765,7 @@ export default function KpDashboardPage() {
                                     {activeTab === 'bhava-details' && (
                                         <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
                                             <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
-                                                <h3 className={cn(TYPOGRAPHY.value, "text-lg text-primary leading-tight tracking-wide")}>Bhava Details</h3>
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Bhava Details</h3>
                                                 <div className="px-2 py-0.5 bg-gold-primary/10 rounded border border-gold-primary/20">
                                                     <span className={cn(TYPOGRAPHY.label, "text-[9px] uppercase tracking-widest")}>Placidus / KP</span>
                                                 </div>
@@ -815,9 +812,9 @@ export default function KpDashboardPage() {
                                     {activeTab === 'interlinks' && (
                                         <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
                                             <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
-                                                <h3 className={cn(TYPOGRAPHY.value, "text-lg text-primary leading-tight tracking-wide")}>Cuspal Interlinks</h3>
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Cuspal Interlinks</h3>
                                             </div>
-                                            <div className="w-full p-6">
+                                            <div className="w-full p-6 overflow-y-auto custom-scrollbar">
                                                 {interlinksQuery.isLoading ? (
                                                     <div className="flex items-center justify-center py-12">
                                                         <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
@@ -837,9 +834,9 @@ export default function KpDashboardPage() {
                                     {activeTab === 'advanced-ssl' && (
                                         <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
                                             <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
-                                                <h3 className={cn(TYPOGRAPHY.value, "text-lg text-primary leading-tight tracking-wide")}>Advanced Sub-Sub Lord View</h3>
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Advanced Sub-Sub Lord View</h3>
                                             </div>
-                                            <div className="w-full p-6">
+                                            <div className="w-full p-6 overflow-y-auto custom-scrollbar">
                                                 {advancedSslQuery.isLoading ? (
                                                     <div className="flex items-center justify-center py-12">
                                                         <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
@@ -859,9 +856,9 @@ export default function KpDashboardPage() {
                                     {activeTab === 'nakshatra-nadi' && (
                                         <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
                                             <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
-                                                <h3 className={cn(TYPOGRAPHY.value, "text-lg text-primary leading-tight tracking-wide")}>Nakshatra Nadi Coordinates</h3>
+                                                <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Nakshatra Nadi Coordinates</h3>
                                             </div>
-                                            <div className="w-full p-6">
+                                            <div className="w-full p-6 overflow-y-auto custom-scrollbar">
                                                 {nakshatraNadiQuery.isLoading ? (
                                                     <div className="flex items-center justify-center py-12">
                                                         <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
@@ -922,89 +919,6 @@ export default function KpDashboardPage() {
                                     )}
                                 </div>
 
-                                {/* Debug Box */}
-                                <div className="mt-8 pt-8 border-t border-antique/20">
-                                    <details className="bg-slate-900 rounded-xl overflow-hidden shadow-2xl border border-white/5">
-                                        <summary className="p-4 text-white font-mono text-xs cursor-pointer hover:bg-slate-800 transition-colors flex items-center justify-between">
-                                            <span className="flex items-center gap-2">
-                                                <Star className="w-3 h-3 text-gold-primary" />
-                                                🛠️ KP Storage & Debug Inspector
-                                            </span>
-                                            <span className="text-[10px] opacity-50 uppercase tracking-widest">Click to Expand</span>
-                                        </summary>
-                                        <div className="p-6 bg-slate-950 space-y-6">
-                                            {/* Storage Status Grid */}
-                                            <div>
-                                                <h4 className="text-[10px] uppercase tracking-[0.2em] text-gold-primary mb-3 font-bold">Database Storage Status</h4>
-                                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                                                    {[
-                                                        { id: 'D1_kp', label: 'Natal Chart (KP)' },
-                                                        { id: 'kp_planets_cusps_kp', label: 'Planets & Cusps' },
-                                                        { id: 'kp_significations_kp', label: 'Significations' },
-                                                        { id: 'kp_house_significations_kp', label: 'House Table' },
-                                                        { id: 'kp_planet_significators_kp', label: 'Planet Matrix' },
-                                                        { id: 'kp_bhava_details_kp', label: 'Bhava Details' },
-                                                        { id: 'kp_interlinks_kp', label: 'Interlinks' },
-                                                        { id: 'kp_interlinks_advanced_kp', label: 'Advanced SSL' },
-                                                        { id: 'kp_interlinks_sl_kp', label: 'Interlinks (SL)' },
-                                                        { id: 'kp_nakshatra_nadi_kp', label: 'Nakshatra Nadi' },
-                                                        { id: 'kp_fortuna_kp', label: 'Pars Fortuna' },
-                                                        { id: 'kp_ruling_planets_kp', label: 'Ruling Planets' },
-                                                        { id: 'dasha_chara_kp', label: 'Chara Dasha' },
-                                                        { id: 'shodasha_varga_signs_kp', label: 'Shodasha Varga' },
-                                                    ].map((item) => {
-                                                        const isSaved = !!processedCharts[item.id];
-                                                        return (
-                                                            <div key={item.id} className={cn(
-                                                                "p-2 rounded border text-[10px] font-mono flex items-center justify-between gap-2",
-                                                                isSaved
-                                                                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                                                                    : "bg-rose-500/10 border-rose-500/30 text-rose-400 opacity-60"
-                                                            )}>
-                                                                <span className="truncate">{item.label}</span>
-                                                                <span className="flex-shrink-0">{isSaved ? '✅ SAVED' : '❌ MISS'}</span>
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            </div>
-
-                                            {/* Raw API Response Viewers */}
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div>
-                                                    <h4 className="text-[10px] uppercase tracking-[0.2em] text-gold-primary mb-3 font-bold">Active Tab Query State</h4>
-                                                    <div className="bg-black/40 rounded p-3 h-[200px] overflow-auto border border-white/5 scrollbar-thin">
-                                                        <pre className="text-green-500 text-[10px] leading-relaxed">
-                                                            {activeTab === 'interlinks' && JSON.stringify(interlinksQuery.data, null, 2)}
-                                                            {activeTab === 'advanced-ssl' && JSON.stringify(advancedSslQuery.data, null, 2)}
-                                                            {activeTab === 'nakshatra-nadi' && JSON.stringify(nakshatraNadiQuery.data, null, 2)}
-                                                            {activeTab === 'fortuna' && JSON.stringify(fortunaQuery.data, null, 2)}
-                                                            {activeTab === 'planets-cusps' && JSON.stringify(planetsCuspsQuery.data, null, 2)}
-                                                            {activeTab === 'planetary-significators' && JSON.stringify(planetSignificatorsQuery.data, null, 2)}
-                                                            {activeTab === 'significations' && JSON.stringify(houseSignificationsQuery.data, null, 2)}
-                                                            {activeTab === 'bhava-details' && JSON.stringify(bhavaDetailsQuery.data, null, 2)}
-                                                            {activeTab === 'ruling-planets' && JSON.stringify(rulingPlanetsQuery.data, null, 2)}
-                                                            {activeTab === 'ashtakavarga' && JSON.stringify(ashtakavargaQuery.data, null, 2)}
-                                                        </pre>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <h4 className="text-[10px] uppercase tracking-[0.2em] text-gold-primary mb-3 font-bold">Full Payload Inspector</h4>
-                                                    <div className="bg-black/40 rounded p-3 h-[200px] overflow-auto border border-white/5 scrollbar-thin">
-                                                        <pre className="text-blue-400 text-[10px] leading-relaxed">
-                                                            {JSON.stringify({
-                                                                processedKeys: Object.keys(processedCharts).filter(k => k.toLowerCase().includes('kp') || k.startsWith('D1')),
-                                                                ayanamsa,
-                                                                clientId,
-                                                                tab: activeTab
-                                                            }, null, 2)}
-                                                        </pre>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </details>
-                                </div>
                             </div>
                         </div>
                     </div>

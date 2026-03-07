@@ -116,7 +116,7 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.05 + idx * 0.05 }}
                         className={cn(
-                            "group relative rounded-2xl border p-5 transition-all duration-300",
+                            "group relative rounded-[1.5rem] border p-5 transition-all duration-300",
                             lightStyles.container,
                             "hover:shadow-sm hover:bg-white"
                         )}
@@ -167,7 +167,7 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
                                             </li>
                                         ))}
                                         {analysis.positive_note && (
-                                            <li className="text-[10px] italic flex items-start gap-1.5 mt-1 text-emerald-700">
+                                            <li className="text-[10px] flex items-start gap-1.5 mt-1 text-emerald-700">
                                                 <Compass className="w-2.5 h-2.5 mt-0.5 shrink-0" />
                                                 <span>{analysis.positive_note}</span>
                                             </li>
@@ -183,17 +183,12 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
                                     <span className="text-[9px] font-black uppercase tracking-widest text-ink">Prescribed Action</span>
                                 </div>
                                 <div className="grid grid-cols-1 gap-1.5">
-                                    {dosha.remedies.slice(0, 3).map((remedy, i) => (
+                                    {dosha.remedies.map((remedy, i) => (
                                         <div key={i} className="flex items-center gap-2 px-2.5 py-1.5 bg-white/40 rounded-md border border-transparent hover:border-purple-100 hover:bg-white transition-all cursor-default">
                                             <div className="w-1 h-1 rounded-full bg-purple-400 shrink-0" />
                                             <span className="text-xs font-medium text-ink">{remedy}</span>
                                         </div>
                                     ))}
-                                    {dosha.remedies.length > 3 && (
-                                        <button className={cn("text-[9px] font-black uppercase tracking-widest mt-1 flex items-center gap-1 hover:opacity-75 transition-colors ml-3", lightStyles.accent)}>
-                                            +{dosha.remedies.length - 3} More <ChevronRight className="w-2.5 h-2.5" />
-                                        </button>
-                                    )}
                                 </div>
                             </div>
                         </div>

@@ -40,16 +40,16 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
     };
 
     return (
-        <div className={cn("p-6 shadow-sm relative overflow-hidden h-full backdrop-blur-md", styles.glassPanel)}>
-            <div className="flex items-center justify-between mb-8">
+        <div className={cn("p-4 md:p-5 shadow-sm relative overflow-hidden backdrop-blur-md rounded-[2rem]", styles.glassPanel)}>
+            <div className="flex items-center justify-between mb-5">
                 <div>
-                    <h3 className="text-xl font-bold tracking-tight flex items-center gap-2 text-ink">
-                        <Zap className="w-5 h-5 text-purple-600" />
+                    <h3 className="text-[20px] font-bold tracking-tight flex items-center gap-2 text-ink">
+                        <Zap className="w-6 h-6 text-purple-600" />
                         Planetary Vigor
                     </h3>
-                    <p className="text-xs mt-1 uppercase tracking-widest font-bold text-muted">Strength & Afflictions Analysis</p>
+                    <p className="text-[11px] mt-1 uppercase tracking-widest font-bold text-muted">Strength & Afflictions Analysis</p>
                 </div>
-                <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest">
+                <div className="flex items-center gap-4 text-[11px] font-bold uppercase tracking-widest">
                     <div className="flex items-center gap-1.5">
                         <span className="w-2 h-2 rounded-full bg-emerald-500" />
                         <span className="text-emerald-700">Strong</span>
@@ -69,7 +69,7 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.05 }}
                         className={cn(
-                            "group border rounded-2xl p-4 transition-all",
+                            "group border rounded-[1.5rem] p-4 transition-all",
                             data.is_weak
                                 ? "border-rose-200 bg-rose-50/30"
                                 : "border-emerald-100 bg-emerald-50/20 hover:border-purple-200 hover:bg-white"
@@ -77,10 +77,10 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
                     >
                         <div className="flex justify-between items-start mb-3">
                             <div>
-                                <h4 className="font-bold uppercase tracking-wider text-xs text-ink">{name}</h4>
+                                <h4 className="font-bold uppercase tracking-wider text-[14px] text-ink">{name}</h4>
                                 <div className="flex items-center gap-1 mt-1">
                                     <span className={cn(
-                                        "text-[9px] font-bold uppercase tracking-tight",
+                                        "text-[11px] font-bold uppercase tracking-tight",
                                         data.is_weak ? "text-rose-600" : "text-emerald-600"
                                     )}>
                                         {data.is_weak ? 'Needs Vigor' : 'Stable'}
@@ -88,8 +88,8 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
                                 </div>
                             </div>
                             <div className="text-right">
-                                <span className="text-xl font-black leading-none text-ink">{data.strength_score}</span>
-                                <span className="text-[8px] block font-bold uppercase -mt-1 text-muted">Vigor</span>
+                                <span className="text-[22px] font-black leading-none text-ink">{data.strength_score}</span>
+                                <span className="text-[10px] block font-bold uppercase -mt-1 text-muted">Vigor</span>
                             </div>
                         </div>
 
@@ -109,13 +109,13 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
                         {/* Factors - More Compact */}
                         <div className="flex flex-wrap gap-1">
                             {data.afflictions.length > 0 && (
-                                <span className="text-[8px] px-1.5 py-0.5 bg-rose-500/5 text-rose-600 border border-rose-500/10 rounded font-medium flex items-center gap-0.5">
-                                    <ShieldAlert className="w-2 h-2" /> {data.afflictions[0].substring(0, 15)}...
+                                <span className="text-[10px] px-1.5 py-0.5 bg-rose-500/5 text-rose-600 border border-rose-500/10 rounded font-medium flex items-center gap-1">
+                                    <ShieldAlert className="w-3 h-3" /> {data.afflictions[0].substring(0, 15)}...
                                 </span>
                             )}
                             {data.benefic_factors.length > 0 && (
-                                <span className="text-[8px] px-1.5 py-0.5 bg-emerald-500/5 text-emerald-600 border border-emerald-500/10 rounded font-medium flex items-center gap-0.5">
-                                    <ShieldCheck className="w-2 h-2" /> {data.benefic_factors[0].substring(0, 15)}...
+                                <span className="text-[10px] px-1.5 py-0.5 bg-emerald-500/5 text-emerald-600 border border-emerald-500/10 rounded font-medium flex items-center gap-1">
+                                    <ShieldCheck className="w-3 h-3" /> {data.benefic_factors[0].substring(0, 15)}...
                                 </span>
                             )}
                         </div>
@@ -123,8 +123,8 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
                         {/* Recommendation Trigger */}
                         {data.is_weak && (
                             <div className="mt-3 pt-3 border-t border-antique/20 flex items-center justify-between">
-                                <span className="text-[10px] text-purple-600 font-bold uppercase tracking-wider">Priority Mitigation</span>
-                                <Award className="w-3 h-3 text-purple-600 animate-pulse" />
+                                <span className="text-[11px] text-purple-600 font-bold uppercase tracking-wider">Priority Mitigation</span>
+                                <Award className="w-4 h-4 text-purple-600 animate-pulse" />
                             </div>
                         )}
                     </motion.div>

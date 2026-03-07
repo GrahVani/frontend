@@ -46,7 +46,7 @@ export default function RemedyCard({
 
     return (
         <div className={cn(
-            "bg-white rounded-3xl overflow-hidden flex flex-col shadow-xl transition-all duration-500 hover:scale-[1.02]",
+            "bg-white rounded-[2rem] overflow-hidden flex flex-col shadow-xl transition-all duration-500 hover:scale-[1.02]",
             isJupiter ? "border-l-[6px] border-amber-500" : "border-l-[6px] border-blue-600"
         )}>
             {/* Header / Title bar */}
@@ -60,7 +60,7 @@ export default function RemedyCard({
             {/* Main Content Area */}
             <div className="p-5 flex gap-5">
                 {/* Visual Icon Section */}
-                <div className="flex-shrink-0 w-24 h-24 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center relative group-hover:bg-white transition-colors">
+                <div className="flex-shrink-0 w-24 h-24 bg-slate-50 rounded-[1.5rem] border border-slate-100 flex items-center justify-center relative group-hover:bg-white transition-colors">
                     {getIcon()}
                     {/* Tiny info pulse */}
                     <div className="absolute top-1 right-1 w-2 h-2 rounded-full bg-blue-500/20" />
