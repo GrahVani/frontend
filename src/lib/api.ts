@@ -525,11 +525,14 @@ export const clientApi = {
         ayanamsa: string = 'lahiri',
         save: boolean = false,
         context: { mahaLord?: string; antarLord?: string; pratyantarLord?: string; drillDownPath?: string[] } = {}
-    ): Promise<DashaResponse> => {        return apiFetch<DashaResponse>(`${CLIENT_URL}/clients/${clientId}/dasha`, {
+    ): Promise<DashaResponse> => {
+        return apiFetch<DashaResponse>(`${CLIENT_URL}/clients/${clientId}/dasha`, {
             method: 'POST',
             body: JSON.stringify({ level, ayanamsa, save, ...context }),
-        }).then(res => {            return res;
-        }).catch(err => {            throw err;
+        }).then(res => {
+            return res;
+        }).catch(err => {
+            throw err;
         });
     },
 
@@ -539,7 +542,8 @@ export const clientApi = {
         ayanamsa: string = 'lahiri',
         level: string = 'mahadasha',
         context: { mahaLord?: string; antarLord?: string; pratyantarLord?: string } = {}
-    ): Promise<DashaResponse> => {        return apiFetch<Record<string, unknown>>(`${CLIENT_URL}/clients/${clientId}/dasha/${type}`, {
+    ): Promise<DashaResponse> => {
+        return apiFetch<Record<string, unknown>>(`${CLIENT_URL}/clients/${clientId}/dasha/${type}`, {
             method: 'POST',
             body: JSON.stringify({ ayanamsa, level, save: false, ...context }),
         }).then((response: Record<string, unknown>) => {
@@ -557,7 +561,8 @@ export const clientApi = {
                 calculatedAt: (res.calculatedAt as string) || new Date().toISOString(),
             };
             return normalizedData;
-        }).catch((error: Error) => {            const emptyResponse: DashaResponse = {
+        }).catch((error: Error) => {
+            const emptyResponse: DashaResponse = {
                 clientId,
                 clientName: '',
                 level: 'mahadasha',
@@ -591,17 +596,21 @@ export const clientApi = {
     getDoshaAnalysis: (clientId: string, doshaType: string, ayanamsa: string = 'lahiri'): Promise<AstrologicalReport<RawDoshaResponse>> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/dosha/${doshaType}?ayanamsa=${ayanamsa}`),
 
-    getShadbala: (clientId: string): Promise<ChartGenerateResponse> => {        return apiFetch<ChartGenerateResponse>(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
+    getShadbala: (clientId: string): Promise<ChartGenerateResponse> => {
+        return apiFetch<ChartGenerateResponse>(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
             method: 'POST',
             body: JSON.stringify({ chartType: 'shadbala', ayanamsa: 'lahiri' }),
-        }).then(res => {            return res;
+        }).then(res => {
+            return res;
         });
     },
 
-    getPushkaraNavamsha: (clientId: string): Promise<ChartGenerateResponse> => {        return apiFetch<ChartGenerateResponse>(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
+    getPushkaraNavamsha: (clientId: string): Promise<ChartGenerateResponse> => {
+        return apiFetch<ChartGenerateResponse>(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
             method: 'POST',
             body: JSON.stringify({ chartType: 'pushkara_navamsha', ayanamsa: 'lahiri' }),
-        }).then(res => {            return res;
+        }).then(res => {
+            return res;
         });
     },
 
@@ -711,6 +720,66 @@ export const clientApi = {
         };
         return CAPABILITIES[system.toLowerCase()] || CAPABILITIES.lahiri;
     },
+
+    // ============ KP (KRISHNAMURTI PADDHATI) API ============
+    // KP System endpoints for stellar astrology
+    kpApi: {
+        getPlanetsCusps: (clientId: string): Promise<KpPlanetsCuspsResponse> =>
+            apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/planets-cusps`, {
+                method: 'POST'
+            }),
+
+        getRulingPlanets: (clientId: string): Promise<KpRulingPlanetsResponse> =>
+            apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/ruling-planets`, {
+                method: 'POST'
+            }),
+
+        getBhavaDetails: (clientId: string): Promise<KpBhavaDetailsResponse> =>
+            apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/bhava-details`, {
+                method: 'POST'
+            }),
+
+        getSignifications: (clientId: string): Promise<KpSignificationsResponse> =>
+            apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/significations`, {
+                method: 'POST'
+            }),
+
+        getHouseSignifications: (clientId: string): Promise<KpSignificationsResponse> =>
+            apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/house-significations`, {
+                method: 'POST'
+            }),
+
+        getPlanetSignificators: (clientId: string): Promise<KpSignificationsResponse> =>
+            apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/planets-significators`, {
+                method: 'POST'
+            }),
+
+        getInterlinks: (clientId: string): Promise<KpInterlinkResponse> =>
+            apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/interlinks`, {
+                method: 'POST'
+            }),
+
+        getAdvancedInterlinks: (clientId: string): Promise<KpInterlinkResponse> =>
+            apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/interlinks-advanced`, {
+                method: 'POST'
+            }),
+
+        getNakshatraNadi: (clientId: string): Promise<KpNakshatraNadiResponse> =>
+            apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/nakshatra-nadi`, {
+                method: 'POST'
+            }),
+
+        getFortuna: (clientId: string): Promise<KpFortunaResponse> =>
+            apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/fortuna`, {
+                method: 'POST'
+            }),
+
+        getHorary: (clientId: string, horaryNumber: number, question: string): Promise<KpHoraryResponse> =>
+            apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/horary`, {
+                method: 'POST',
+                body: JSON.stringify({ horaryNumber, question }),
+            }),
+    }
 };
 
 // ============ FAMILY API ============
@@ -747,7 +816,8 @@ export const ramanApi = {
     getNatalChart: (clientId: string): Promise<RamanApiResponse<RamanNatalResponse>> =>
         apiFetch<RamanApiResponse<RamanNatalResponse>>(`${CLIENT_URL}/clients/${clientId}/raman/natal`, {
             method: 'GET'
-        }).catch(err => {            throw err;
+        }).catch(err => {
+            throw err;
         }),
 
     getNatal: (clientId: string): Promise<RamanApiResponse<RamanNatalResponse>> =>
@@ -781,68 +851,3 @@ export const ramanApi = {
         }),
 };
 
-// ============ KP (KRISHNAMURTI PADDHATI) API ============
-// KP System endpoints for stellar astrology
-export const kpApi = {
-    getPlanetsCusps: (clientId: string): Promise<KpPlanetsCuspsResponse> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/planets-cusps`, {
-            method: 'POST'
-        }),
-
-    getRulingPlanets: (clientId: string): Promise<KpRulingPlanetsResponse> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/ruling-planets`, {
-            method: 'POST'
-        }),
-
-    getBhavaDetails: (clientId: string): Promise<KpBhavaDetailsResponse> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/bhava-details`, {
-            method: 'POST'
-        }),
-
-    getSignifications: (clientId: string): Promise<KpSignificationsResponse> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/significations`, {
-            method: 'POST'
-        }),
-
-    getHouseSignifications: (clientId: string): Promise<KpSignificationsResponse> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/house-significations`, {
-            method: 'POST'
-        }),
-
-    getPlanetSignificators: (clientId: string): Promise<KpSignificationsResponse> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/planets-significators`, {
-            method: 'POST'
-        }),
-
-    getInterlinks: (clientId: string): Promise<KpInterlinkResponse> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/interlinks`, {
-            method: 'POST'
-        }),
-
-    getAdvancedInterlinks: (clientId: string): Promise<KpInterlinkResponse> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/interlinks-advanced`, {
-            method: 'POST'
-        }),
-
-    getNakshatraNadi: (clientId: string): Promise<KpNakshatraNadiResponse> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/nakshatra-nadi`, {
-            method: 'POST'
-        }),
-
-    getFortuna: (clientId: string): Promise<KpFortunaResponse> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/fortuna`, {
-            method: 'POST'
-        }),
-
-    getHorary: (clientId: string, horaryNumber: number, question: string): Promise<KpHoraryResponse> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/kp/horary`, {
-            method: 'POST',
-            body: JSON.stringify({ horaryNumber, question }),
-        }),
-
-    getShadbala: (clientId: string): Promise<ChartGenerateResponse> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
-            method: 'POST',
-            body: JSON.stringify({ chartType: 'shadbala', ayanamsa: 'lahiri' }),
-        }),
-};

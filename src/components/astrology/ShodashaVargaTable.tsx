@@ -101,7 +101,7 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
     return (
         <div className={cn("w-full bg-softwhite rounded-xl border border-border-warm shadow-card p-4", className)}>
             {/* Header with Legend */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-0">
                 <h2 className={TYPOGRAPHY.sectionTitle}>Shodashavarga summary</h2>
                 <div className="flex gap-3 text-xs font-medium font-sans">
                     <span className="text-primary flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-700"></span>Exalted</span>
@@ -109,15 +109,14 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
                     <span className="text-primary flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>Debilitated</span>
                 </div>
             </div>
-
-            <div className="overflow-x-auto rounded-xl border border-border-warm max-w-7xl mx-auto">
+            <div className="rounded-xl border border-border-warm w-full">
                 <table className="w-full border-collapse text-xs" role="table" aria-label="Shodasha Varga summary showing planetary signs across 16 divisional charts">
                     <thead>
                         <tr className="bg-amber-50/30 border-b border-border-warm">
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-3 text-left border-r border-border-warm w-28")}>Varga</th>
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-1 text-center border-r border-border-warm")}>Asc</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left border-r border-border-warm w-28")}>Varga</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-1 text-center border-r border-border-warm")}>Asc</th>
                             {PLANETS.map(p => (
-                                <th key={p} className={cn(TYPOGRAPHY.tableHeader, "py-2 px-1 text-center border-r border-border-warm")}>
+                                <th key={p} className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-1 text-center border-r border-border-warm")}>
                                     {p.substring(0, 3)}
                                 </th>
                             ))}
@@ -126,11 +125,11 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
                     <tbody>
                         {VARGA_ORDER.map((v, i) => (
                             <tr key={v.key} className={cn("border-b border-border-warm", i % 2 === 1 && "bg-parchment/30")}>
-                                <td className={cn(TYPOGRAPHY.dateAndDuration, "py-1.5 px-3 border-r border-border-warm")}>
+                                <td className={cn(TYPOGRAPHY.dateAndDuration, "py-1 px-3 border-r border-border-warm")}>
                                     <span className="font-bold mr-1.5">{v.key}</span>
                                     <span>{v.name}</span>
                                 </td>
-                                <td className={cn(TYPOGRAPHY.dateAndDuration, "py-1.5 text-center border-r border-border-warm")}>
+                                <td className={cn(TYPOGRAPHY.dateAndDuration, "py-1 text-center border-r border-border-warm")}>
                                     {SIGN_ABBR[getSign('Ascendant', v.key).charAt(0).toUpperCase() + getSign('Ascendant', v.key).slice(1).toLowerCase()] || getSign('Ascendant', v.key).substring(0, 2)}
                                 </td>
                                 {PLANETS.map(p => {
@@ -138,7 +137,7 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
                                     const abbr = SIGN_ABBR[sign.charAt(0).toUpperCase() + sign.slice(1).toLowerCase()] || sign.substring(0, 2);
                                     const dignity = getDignity(p, sign);
                                     return (
-                                        <td key={p} className={cn(TYPOGRAPHY.dateAndDuration, "py-1.5 text-center border-r border-border-warm")}>
+                                        <td key={p} className={cn(TYPOGRAPHY.dateAndDuration, "py-1 text-center border-r border-border-warm")}>
                                             <span className={cn("font-medium", DIGNITY_STYLE[dignity])}>
                                                 {sign === '-' ? '-' : abbr}
                                             </span>
@@ -151,34 +150,6 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
                 </table>
             </div>
 
-            {/* ðŸŒŸ NEW: Dignity Score Cards */}
-            <div className="mt-6">
-                <div className={cn(TYPOGRAPHY.label, "mb-2")}>Planetary dignity score (across 16 Vargas)</div>
-                <div className="grid grid-cols-9 gap-2" role="group" aria-label="Planetary dignity scores across 16 Vargas">
-                    {dignityScores.map(ps => (
-                        <div key={ps.planet} className={cn(
-                            "rounded-lg p-2 text-center border",
-                            ps.score > 3 ? "bg-green-50 border-green-200" :
-                                ps.score < 0 ? "bg-red-50 border-red-200" :
-                                    "bg-softwhite border-border-warm"
-                        )}>
-                            <div className={cn(TYPOGRAPHY.label, "mb-0")}>{ps.planet.substring(0, 3)}</div>
-                            <div className={cn(TYPOGRAPHY.value, "text-lg")}>{ps.score}</div>
-                            <div className={cn(TYPOGRAPHY.subValue, "flex justify-center gap-1 text-[9px] mt-0.5")}>
-                                {ps.exalted > 0 && <span className="text-emerald-600">{ps.exalted}E</span>}
-                                {ps.own > 0 && <span className="text-green-600">{ps.own}O</span>}
-                                {ps.debilitated > 0 && <span className="text-red-500">{ps.debilitated}D</span>}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Summary */}
-            <div className="flex justify-between mt-3 text-xs font-medium font-sans">
-                <span className="text-emerald-700">â­ Strongest: {strongestPlanet.planet} (Score: {strongestPlanet.score})</span>
-                <span className="text-red-600">âš  Weakest: {weakestPlanet.planet} (Score: {weakestPlanet.score})</span>
-            </div>
         </div>
     );
 }

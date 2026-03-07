@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface AshtakavargaChartProps {
     type: 'sarva' | 'bhinna';
@@ -64,8 +65,8 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
     ];
 
     return (
-        <div className={cn("flex flex-col items-center", className)}>
-            <svg viewBox="0 0 280 280" className="w-full max-w-[260px] drop-shadow-sm">
+        <div className={cn("flex flex-col items-center w-full", className)}>
+            <svg viewBox="0 0 280 280" className="w-full max-w-[380px] drop-shadow-sm transition-all duration-300">
                 {/* Background */}
                 <rect x="0" y="0" width="280" height="280" fill="var(--surface-warm)" />
 
@@ -96,15 +97,26 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
                         <g key={houseNum}>
                             {/* ASC label */}
                             {houseNum === 1 && (
-                                <text x={vP.x} y={vP.y - 18} fontSize="10" fontWeight="600" fontFamily="'Spectral', serif" fill="var(--text-accent-gold)" textAnchor="middle">Asc</text>
+                                <text
+                                    x={vP.x}
+                                    y={vP.y - 18}
+                                    fontSize="11"
+                                    fontWeight="700"
+                                    fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
+                                    fill="var(--text-accent-gold)"
+                                    textAnchor="middle"
+                                    className="uppercase tracking-wider"
+                                >
+                                    Asc
+                                </text>
                             )}
 
                             {/* Value */}
                             <text
                                 x={vP.x}
                                 y={vP.y}
-                                fontSize="22"
-                                fontFamily="'Spectral', serif"
+                                fontSize="12"
+                                fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
                                 fontWeight="500"
                                 fill={vColor}
                                 textAnchor="middle"
@@ -127,10 +139,10 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
                             <text
                                 x={sP.x}
                                 y={sP.y}
-                                fontSize="14"
+                                fontSize="12"
                                 fontWeight="500"
-                                fontFamily="'Spectral', serif"
-                                fill="var(--text-primary)"
+                                fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
+                                fill={vColor}
                                 textAnchor="middle"
                                 dominantBaseline="middle"
                             >
@@ -142,18 +154,27 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
             </svg>
 
             {/* Legend */}
-            <div className="mt-3 flex flex-col gap-1.5 text-[10px] text-center font-serif">
-                <div className="flex items-center justify-center gap-4 text-secondary/80 font-medium tracking-normal">
-                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>{type === 'sarva' ? '30+ strong' : '5+ strong'}</span>
-                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-amber-500/50"></span>{type === 'sarva' ? '22-29' : '4 avg'}</span>
-                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-rose-600"></span>{type === 'sarva' ? '<22 weak' : '<4 weak'}</span>
-                </div>
-                <div className="flex items-center justify-center gap-5 font-medium text-primary/70">
-                    <span className="inline-flex items-center gap-1">
-                        Best house: <span className="text-emerald-500">H{maxH} ({maxV})</span>
+            <div className="mt-4 flex flex-col gap-2 text-center">
+                <div className="flex items-center justify-center gap-5 tracking-tight">
+                    <span className={cn(TYPOGRAPHY.subValue, "flex items-center gap-1.5")}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        {type === 'sarva' ? '30+ strong' : '5+ strong'}
                     </span>
-                    <span className="inline-flex items-center gap-1">
-                        Weak house: <span className="text-rose-600">H{minH} ({minV})</span>
+                    <span className={cn(TYPOGRAPHY.subValue, "flex items-center gap-1.5")}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500/50" />
+                        {type === 'sarva' ? '22-29' : '4 avg'}
+                    </span>
+                    <span className={cn(TYPOGRAPHY.subValue, "flex items-center gap-1.5")}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-rose-600" />
+                        {type === 'sarva' ? '<22 weak' : '<4 weak'}
+                    </span>
+                </div>
+                <div className="flex items-center justify-center gap-5">
+                    <span className={cn(TYPOGRAPHY.value, "inline-flex items-center gap-1.5")}>
+                        Best house: <span className="text-emerald-500 font-black">H{maxH} ({maxV})</span>
+                    </span>
+                    <span className={cn(TYPOGRAPHY.value, "inline-flex items-center gap-1.5")}>
+                        Weak house: <span className="text-rose-600 font-black">H{minH} ({minV})</span>
                     </span>
                 </div>
             </div>

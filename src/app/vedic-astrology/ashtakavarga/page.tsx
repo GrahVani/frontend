@@ -192,7 +192,7 @@ export default function AshtakavargaPage() {
     }
 
     return (
-        <div className="space-y-4 pt-4 px-1 sm:px-0">
+        <div className="space-y-3 pt-2 px-1 sm:px-0">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div>
                     <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-bold")}>
@@ -243,10 +243,10 @@ export default function AshtakavargaPage() {
                     </div>
                 </div>
             ) : (
-                <div className="space-y-4">
+                <div className="space-y-3">
                     {activeTab === 'sarva' || activeTab === 'bhinna' ? (
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                            <div className="lg:col-span-12 space-y-4">
+                            <div className="lg:col-span-12 space-y-3">
                                 <div className="bg-softwhite rounded-xl border border-antique shadow-card overflow-hidden">
                                     <div className="p-3 border-b border-antique flex flex-col md:flex-row md:items-center justify-between gap-3 bg-parchment/30">
                                         <div>
@@ -280,9 +280,23 @@ export default function AshtakavargaPage() {
                                         )}
                                     </div>
 
-                                    <div className="p-4 grid grid-cols-1 xl:grid-cols-[3fr_2fr] gap-4 items-start">
-                                        <div className="space-y-2">
-                                            <h3 className={cn(TYPOGRAPHY.label, "text-secondary flex items-center gap-2")}>
+                                    <div className="p-4 grid grid-cols-1 lg:grid-cols-[5fr_12fr] gap-5 items-start">
+                                        <div className="space-y-3">
+                                            <h3 className={cn(TYPOGRAPHY.label, "text-primary flex items-center gap-2")}>
+                                                <MapIcon className="w-3.5 h-3.5" /> House distribution
+                                            </h3>
+                                            <div className="flex justify-start w-full max-w-lg mx-auto lg:mx-0">
+                                                <AshtakavargaChart
+                                                    type={activeTab === 'sarva' ? 'sarva' : 'bhinna'}
+                                                    ascendantSign={data?.ascendant || 1}
+                                                    houseValues={houseValues}
+                                                    className="items-start"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4 w-full">
+                                            <h3 className={cn(TYPOGRAPHY.label, "text-primary flex items-center gap-2")}>
                                                 <Grid3X3 className="w-3.5 h-3.5" /> Bindu matrix
                                             </h3>
                                             <AshtakavargaMatrix
@@ -293,19 +307,6 @@ export default function AshtakavargaPage() {
                                                 ) || (data?.bhinna as Record<string, Record<string, unknown>> | undefined)?.bhinnashtakavarga?.[selectedPlanet] || (data?.bhinna as Record<string, Record<string, unknown>> | undefined)?.bhinnashtakavarga?.[selectedPlanet.toLowerCase()] || (data?.bhinna as Record<string, unknown> | undefined)?.[selectedPlanet.toLowerCase()]}
                                                 planet={selectedPlanet}
                                             />
-                                        </div>
-
-                                        <div className="space-y-2">
-                                            <h3 className={cn(TYPOGRAPHY.label, "text-secondary flex items-center gap-2")}>
-                                                <MapIcon className="w-3.5 h-3.5" /> House distribution
-                                            </h3>
-                                            <div className="bg-softwhite rounded-lg border border-antique p-2 flex items-center justify-center">
-                                                <AshtakavargaChart
-                                                    type={activeTab === 'sarva' ? 'sarva' : 'bhinna'}
-                                                    ascendantSign={data?.ascendant || 1}
-                                                    houseValues={houseValues}
-                                                />
-                                            </div>
                                         </div>
                                     </div>
                                 </div>

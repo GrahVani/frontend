@@ -274,29 +274,60 @@ function DailyTransitView({ clientId }: { clientId: string }) {
     ];
 
     return (
-        <div className="flex flex-col min-h-[740px] h-auto bg-antique/30 rounded-2xl border border-antique">
+        <div className="flex flex-col h-[calc(100vh-180px)] bg-antique/30 rounded-2xl border border-antique overflow-hidden">
             {/* 1. Header & Duration Selection */}
-            <div className="px-6 py-4 bg-white/80 border-b border-antique flex items-center justify-between gap-4 shrink-0 rounded-t-2xl">
-                <div className="flex items-center gap-1.5 bg-antique/50 p-1 rounded-xl border border-antique/20">
-                    {DURATION_TABS.map(tab => (
-                        <button
-                            key={tab.key}
-                            onClick={() => setDurationTab(tab.key)}
-                            className={cn(
-                                TYPOGRAPHY.value,
-                                "px-4 py-2 uppercase tracking-wider rounded-lg transition-all flex items-center gap-2",
-                                durationTab === tab.key
-                                    ? cn("text-white shadow-md shadow-header-border/20", COLORS.wbActiveTab)
-                                    : "text-primary hover:text-primary hover:bg-white/50"
-                            )}
-                        >
-                            {tab.icon}
-                            {tab.label}
-                        </button>
-                    ))}
+            <div className="px-4 py-1.5 bg-white/80 border-b border-antique flex items-center justify-between gap-4 shrink-0 rounded-t-2xl">
+                <div className="flex items-center gap-4 min-w-0">
+                    <div className="flex items-center gap-1 bg-antique/50 p-0.5 rounded-lg border border-antique/20 shrink-0">
+                        {DURATION_TABS.map(tab => (
+                            <button
+                                key={tab.key}
+                                onClick={() => setDurationTab(tab.key)}
+                                className={cn(
+                                    TYPOGRAPHY.value,
+                                    "px-2.5 py-1 text-xs sm:text-[12px] rounded transition-all flex items-center gap-1",
+                                    durationTab === tab.key
+                                        ? cn("text-white shadow-sm border border-header-border/20", COLORS.wbActiveTab)
+                                        : "text-primary hover:text-primary hover:bg-white/50"
+                                )}
+                            >
+                                {tab.icon}
+                                {tab.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Ultra-compact Inline Custom Date Range Picker */}
+                    {durationTab === 'custom' && (
+                        <div className="flex items-center gap-4 animate-in fade-in slide-in-from-left-2 duration-300">
+                            <div className="flex items-center gap-3 shrink-0">
+                                <ParchmentDatePicker
+                                    label="Start date:-"
+                                    date={customStart}
+                                    setDate={(d) => d && setCustomStart(d)}
+                                    variant="inline"
+                                    className="w-auto h-7"
+                                />
+                                <ParchmentDatePicker
+                                    label="End date:-"
+                                    date={customEnd}
+                                    setDate={(d) => d && setCustomEnd(d)}
+                                    variant="inline"
+                                    className="w-auto h-7"
+                                />
+                                <button
+                                    onClick={() => fetchTransits('custom')}
+                                    disabled={loading}
+                                    className={cn(TYPOGRAPHY.value, "text-[11px] sm:text-[12px] text-white px-4 py-1.5 rounded-md tracking-wider shadow-sm transition-all flex items-center gap-2 disabled:opacity-50", COLORS.premiumGradient)}
+                                >
+                                    Confirm
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 shrink-0">
                     {loading && <Loader2 className="w-4 h-4 text-header-border animate-spin" />}
                     <div className="text-right">
                         <p className={cn(TYPOGRAPHY.label, "leading-none")}>Status</p>
@@ -307,34 +338,6 @@ function DailyTransitView({ clientId }: { clientId: string }) {
                 </div>
             </div>
 
-            {/* 1.5. Custom Date Range Picker (Conditional) */}
-            {durationTab === 'custom' && (
-                <div className="px-6 py-4 bg-white/40 border-b border-antique flex flex-wrap items-end gap-6 animate-in slide-in-from-top-4 duration-300">
-                    <ParchmentDatePicker
-                        label="Start Date"
-                        date={customStart}
-                        setDate={(d) => d && setCustomStart(d)}
-                        className="w-48"
-                    />
-                    <ParchmentDatePicker
-                        label="End Date"
-                        date={customEnd}
-                        setDate={(d) => d && setCustomEnd(d)}
-                        className="w-48"
-                    />
-                    <button
-                        onClick={() => fetchTransits('custom')}
-                        disabled={loading}
-                        className={cn(TYPOGRAPHY.value, "text-white px-6 py-2 rounded-xl uppercase tracking-widest shadow-md transition-all flex items-center gap-2 mb-1 disabled:opacity-50", COLORS.premiumGradient)}
-                    >
-                        {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CalendarRange className="w-3.5 h-3.5" />}
-                        Confirm & project
-                    </button>
-                    <p className={cn(TYPOGRAPHY.subValue, "mb-2.5 max-w-[200px]")}>
-                        Select a range (max 365 days) to see daily movement.
-                    </p>
-                </div>
-            )}
 
             {/* Error Message rendering */}
             {error && (
@@ -366,20 +369,19 @@ function DailyTransitView({ clientId }: { clientId: string }) {
                                 key={idx}
                                 onClick={() => setActiveIndex(idx)}
                                 className={cn(
-                                    "flex flex-col items-center justify-center min-w-[70px] py-3 transition-all border-r border-antique/10 snap-start",
+                                    "flex flex-col items-center justify-center min-w-[44px] py-1 transition-all border-r border-antique/10 snap-start",
                                     isSelected
                                         ? "bg-white border-b-2 border-b-header-border"
                                         : "hover:bg-white/60 opacity-60 hover:opacity-100"
                                 )}
                             >
                                 <span className={cn(
-                                    TYPOGRAPHY.label,
-                                    "mb-0.5",
-                                    isToday && !isSelected ? "text-header-border" : "text-primary"
-                                )}>{weekday}</span>
+                                    "text-[10px] font-medium mb-0.5 capitalize",
+                                    isToday && !isSelected ? "text-header-border" : "text-primary/70"
+                                )}>{weekday.toLowerCase()}</span>
                                 <span className={cn(
                                     TYPOGRAPHY.sectionTitle,
-                                    "text-lg",
+                                    "text-sm",
                                     isSelected ? "text-primary" : "text-primary"
                                 )}>{day}</span>
                             </button>
@@ -389,7 +391,7 @@ function DailyTransitView({ clientId }: { clientId: string }) {
             )}
 
             {/* 3. Main Dashboard Body (Flexible Height) */}
-            <div className="flex-1 flex flex-col lg:flex-row">
+            <div className={cn("flex-1 flex flex-col lg:flex-row min-h-0", COLORS.wbContainer)}>
                 {loading ? (
                     <div className="flex-1 flex flex-col items-center justify-center py-20">
                         <Loader2 className="w-12 h-12 text-header-border animate-spin mb-4" />
@@ -398,89 +400,62 @@ function DailyTransitView({ clientId }: { clientId: string }) {
                     </div>
                 ) : data.length > 0 ? (
                     <>
-                        {/* Column 1: Gochar Chart (Visual) */}
-                        <div className="lg:w-[380px] w-full border-r border-antique flex flex-col p-6 bg-white shrink-0">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className={cn(TYPOGRAPHY.label, "tracking-[0.2em]")}>Gochar chart</h3>
+                        <div className="lg:w-[420px] w-full border-r border-antique flex flex-col bg-transparent shrink-0">
+                            <div className={cn("flex items-center justify-between px-4 py-2 h-11 shrink-0", COLORS.wbSectionHeader)}>
+                                <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Gochar chart</h3>
                                 <div className="px-2 py-0.5 bg-header-border/10 rounded border border-header-border/20">
-                                    <span className={cn(TYPOGRAPHY.label, "text-header-border")}>Lahiri</span>
+                                    <span className={cn(TYPOGRAPHY.label, "text-primary !mb-0")}>Lahiri</span>
                                 </div>
                             </div>
-
-                            <div className="flex-1 relative aspect-square max-w-[340px] mx-auto min-h-[300px]">
-                                {chartData && (
-                                    <ChartWithPopup
-                                        planets={chartData.planets}
-                                        ascendantSign={chartData.ascendant}
-                                        className="w-full h-full"
-                                        showDegrees={false} // Cleaner for dash view
-                                    />
-                                )}
-                            </div>
-
-                            <div className="mt-6 pt-6 border-t border-antique/10">
-                                <div className="flex items-center gap-4">
-                                    <div className="p-2.5 bg-antique rounded-xl">
-                                        <Info className="w-5 h-5 text-header-border" />
-                                    </div>
-                                    <div>
-                                        <p className={cn(TYPOGRAPHY.label, "tracking-widest")}>Astro tip</p>
-                                        <p className={cn(TYPOGRAPHY.subValue, "italic leading-relaxed whitespace-normal")}>
-                                            Planets in the 1st, 5th, and 9th houses from Lagos exert the strongest transit influence.
-                                        </p>
-                                    </div>
+                            <div className="flex-1 flex flex-col items-center justify-start pt-0 bg-transparent">
+                                <div className="w-[420px] aspect-square -mt-3">
+                                    {chartData && (
+                                        <ChartWithPopup
+                                            planets={chartData.planets}
+                                            ascendantSign={chartData.ascendant}
+                                            className="w-full h-full"
+                                            showDegrees={false}
+                                        />
+                                    )}
                                 </div>
                             </div>
                         </div>
 
                         {/* Column 2: Positions Table (High Density) */}
-                        <div className="flex-1 bg-white/60 flex flex-col border-b lg:border-b-0">
-                            <div className="px-6 py-4 border-b border-antique flex items-center justify-between shrink-0">
-                                <h3 className={cn(TYPOGRAPHY.label, "tracking-[0.2em]")}>Planetary coordinates</h3>
+                        <div className="bg-transparent flex flex-col border-b lg:border-b-0 shrink-0">
+                            <div className={cn("px-4 py-2 h-11 flex items-center justify-between shrink-0", COLORS.wbSectionHeader)}>
+                                <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Planetary coordinates</h3>
                             </div>
 
-                            <div className="flex-1">
-                                <table className="w-full border-collapse">
-                                    <thead className="sticky top-[6.5rem] bg-surface-pure z-10 shadow-sm">
+                            <div className="flex-1 min-h-0 overflow-hidden">
+                                <table>
+                                    <thead>
                                         <tr>
-                                            <th className={cn(TYPOGRAPHY.tableHeader, "px-6 py-3 text-left border-b border-antique/10")}>Planet</th>
-                                            <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-3 text-left border-b border-antique/10")}>Sign</th>
-                                            <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-3 text-left border-b border-antique/10")}>Degree</th>
-                                            <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-3 text-left border-b border-antique/10")}>Nakshatra</th>
-                                            <th className={cn(TYPOGRAPHY.tableHeader, "px-6 py-3 text-right border-b border-antique/10")}>House</th>
+                                            <th className={cn(TYPOGRAPHY.tableHeader, "px-2 py-1.5 text-left")}>Planet</th>
+                                            <th className={cn(TYPOGRAPHY.tableHeader, "px-2 py-1.5 text-left")}>Sign</th>
+                                            <th className={cn(TYPOGRAPHY.tableHeader, "px-2 py-1.5 text-left")}>Degree</th>
+                                            <th className={cn(TYPOGRAPHY.tableHeader, "px-2 py-1.5 text-left")}>Nakshatra</th>
+                                            <th className={cn(TYPOGRAPHY.tableHeader, "px-2 py-1.5 text-center")}>Pada</th>
+                                            <th className={cn(TYPOGRAPHY.tableHeader, "px-2 py-1.5 text-center")}>House</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-antique/5">
+                                    <tbody className="divide-y divide-header-border/10">
                                         {getPlanetRows(currentEntry).map((row, idx) => (
-                                            <tr key={idx} className="hover:bg-white transition-colors group">
-                                                <td className="px-6 py-3">
-                                                    <div className="flex items-center gap-3">
-                                                        <span className="text-lg leading-none">{PLANET_SYMBOLS[row.name] || '●'}</span>
-                                                        <div className="flex flex-col">
-                                                            <span className={cn(TYPOGRAPHY.value, "text-xs")}>{row.name}</span>
-                                                            {row.isRetro && (
-                                                                <span className={cn(TYPOGRAPHY.label, "text-[7px] text-red-500")}>Retrograde</span>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-4 py-3">
-                                                    <span className={cn(TYPOGRAPHY.value, "text-xs font-serif")}>{row.sign}</span>
-                                                </td>
-                                                <td className="px-4 py-3">
-                                                    <span className={cn(TYPOGRAPHY.subValue, "font-mono")}>{row.degree}</span>
-                                                </td>
-                                                <td className="px-4 py-3">
-                                                    <div className="flex flex-col">
-                                                        <span className={cn(TYPOGRAPHY.value, "text-xs")}>{row.nakshatra}</span>
-                                                        <span className={cn(TYPOGRAPHY.subValue)}>{row.pada}</span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-3 text-right">
-                                                    <span className={cn(TYPOGRAPHY.value, "px-2 py-1 bg-antique text-[10px] rounded-md")}>
-                                                        H{row.house}
+                                            <tr key={idx} className="hover:bg-primary/5 transition-colors">
+                                                <td className="px-2 py-1.5">
+                                                    <span className={cn(TYPOGRAPHY.planetName, "flex items-center gap-1")}>
+                                                        <span className="text-sm text-primary/70">{PLANET_SYMBOLS[row.name] || '●'}</span>
+                                                        {row.name}
+                                                        {row.isRetro && (
+                                                            <span className="text-[9px] font-bold text-red-500 bg-red-50 px-1 py-0.5 rounded">R</span>
+                                                        )}
                                                     </span>
                                                 </td>
+                                                <td className={cn(TYPOGRAPHY.value, "px-2 py-1.5")}>{row.sign}</td>
+                                                <td className={cn(TYPOGRAPHY.dateAndDuration, "px-2 py-1.5 font-mono")}>{row.degree}</td>
+                                                <td className={cn(TYPOGRAPHY.value, "px-2 py-1.5")}>{row.nakshatra}</td>
+                                                <td className={cn(TYPOGRAPHY.value, "px-2 py-1.5 text-center")}>{row.pada}</td>
+                                                <td className={cn(TYPOGRAPHY.value, "px-2 py-1.5 text-center")}>{row.house}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -489,94 +464,92 @@ function DailyTransitView({ clientId }: { clientId: string }) {
                         </div>
 
                         {/* Column 3: Insights & Shifts (Log) */}
-                        <div className="lg:w-[320px] w-full border-l border-antique bg-white p-6 flex flex-col shrink-0">
-                            <h3 className={cn(TYPOGRAPHY.label, "tracking-[0.2em] mb-6")}>Daily insights</h3>
-
-                            {/* Lagna Box */}
-                            <div className="bg-header-border/5 rounded-2xl p-5 border border-header-border/10 mb-6">
-                                <p className={cn(TYPOGRAPHY.label, "text-header-border mb-3")}>Lagna (Ascendant)</p>
-                                <div className="flex items-baseline gap-2">
-                                    <h4 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl")}>{String((currentEntry.ascendant as Record<string, unknown>)?.sign || '')}</h4>
-                                    <span className={cn(TYPOGRAPHY.subValue, "font-mono")}>{String((currentEntry.ascendant as Record<string, unknown>)?.degrees || '')}</span>
-                                </div>
-                                <p className={cn(TYPOGRAPHY.subValue, "mt-1 whitespace-normal")}>Starting point of planetary influence today.</p>
+                        <div className="flex-1 w-full border-l border-antique bg-transparent flex flex-col min-w-[280px]">
+                            <div className={cn("px-4 py-2 h-11 flex items-center shrink-0", COLORS.wbSectionHeader)}>
+                                <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Daily insights</h3>
                             </div>
-
-                            {/* Daily Planetary Log */}
-                            <div className="flex-1 flex flex-col min-h-0">
-                                <div className="flex items-center justify-between mb-2">
-                                    <h4 className={cn(TYPOGRAPHY.label)}>Daily planetary log</h4>
-                                    <span className={cn(TYPOGRAPHY.label, "bg-green-50 text-green-600 px-1.5 py-0.5 rounded border border-green-100")}>{insights.length} events</span>
-                                </div>
-
-                                {/* Date Header */}
-                                <div className="flex items-center gap-2 mb-4 px-1">
-                                    <div className={cn(TYPOGRAPHY.label, "px-2 py-1 bg-antique/30 rounded border border-antique/20")}>
-                                        {formatDateLabel(String(currentEntry.date || currentEntry.transit_date || '')).day} {formatDateLabel(String(currentEntry.date || currentEntry.transit_date || '')).monthYear}
+                            <div className="px-3 py-3 flex flex-col flex-1 min-h-0 overflow-hidden">
+                                {/* Lagna Box */}
+                                <div className="bg-header-border/5 rounded-xl p-4 border border-header-border/10 mb-3 shrink-0">
+                                    <p className={cn(TYPOGRAPHY.label, "text-primary mb-1")}>Lagna (Ascendant)</p>
+                                    <div className="flex items-baseline gap-2">
+                                        <h4 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl")}>{String((currentEntry.ascendant as Record<string, unknown>)?.sign || '')}</h4>
+                                        <span className={cn(TYPOGRAPHY.dateAndDuration, "font-mono")}>{String((currentEntry.ascendant as Record<string, unknown>)?.degrees || '')}</span>
                                     </div>
-                                    <span className="text-primary">→</span>
-                                    <div className={cn(TYPOGRAPHY.label, "px-2 py-1 bg-antique/30 rounded border border-antique/20")}>
-                                        {formatDateLabel(String(nextEntry?.date || nextEntry?.transit_date || '')).day} {formatDateLabel(String(nextEntry?.date || nextEntry?.transit_date || '')).monthYear}
+                                    <p className={cn(TYPOGRAPHY.subValue, "mt-1 whitespace-normal")}>Starting point of planetary influence today.</p>
+                                </div>
+
+                                {/* Daily Planetary Log */}
+                                <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+                                    <div className="flex items-center justify-between mb-2 px-1">
+                                        <h4 className={cn(TYPOGRAPHY.label)}>Daily planetary log</h4>
+                                        <span className={cn(TYPOGRAPHY.label, "bg-green-100/50 text-green-700 px-2 py-0.5 rounded-full border border-green-200/50")}>
+                                            {insights.length} events
+                                        </span>
+                                    </div>
+
+                                    <div className="flex-1 overflow-y-auto overflow-x-hidden bg-white/30">
+                                        <table className="w-full border-collapse table-fixed">
+                                            <thead className="sticky top-0 bg-parchment/80 backdrop-blur-sm z-10">
+                                                <tr className="border-b border-antique/20">
+                                                    <th className={cn(TYPOGRAPHY.tableHeader, "!text-[10px] px-3 py-2 text-left border-r border-antique/10 w-[70px]")}>Planet</th>
+                                                    <th className={cn(TYPOGRAPHY.tableHeader, "!text-[10px] px-3 py-2 text-left border-r border-antique/10 w-[65px]")}>Type</th>
+                                                    <th className={cn(TYPOGRAPHY.tableHeader, "!text-[10px] px-3 py-2 text-left")}>Shift</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-antique/10">
+                                                {insights.length > 0 ? (
+                                                    insights.map((event, k) => (
+                                                        <tr key={k} className="hover:bg-white/50 transition-colors group">
+                                                            <td className="px-3 py-2 border-r border-antique/10">
+                                                                <div className="flex items-center gap-1.5">
+                                                                    <span className="text-xs text-primary">{PLANET_SYMBOLS[event.planet]}</span>
+                                                                    <span className={cn(TYPOGRAPHY.value, "!text-xs")}>{event.planet}</span>
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-3 py-2 border-r border-antique/10">
+                                                                <span className={cn(
+                                                                    TYPOGRAPHY.label,
+                                                                    "!text-[9px] px-1.5 py-0.5 rounded-md",
+                                                                    event.type === 'sign' ? "bg-purple-100/50 text-purple-700" :
+                                                                        event.type === 'house' ? "bg-blue-100/50 text-blue-700" :
+                                                                            event.type === 'retro' ? "bg-red-100/50 text-red-700" :
+                                                                                "bg-gray-100/50 text-gray-600"
+                                                                )}>
+                                                                    {event.type}
+                                                                </span>
+                                                            </td>
+                                                            <td className="px-3 py-2">
+                                                                <p className={cn(TYPOGRAPHY.value, "!text-xs !leading-snug whitespace-normal")}>
+                                                                    {event.description}
+                                                                </p>
+                                                                <div className="flex items-center gap-1 mt-0.5">
+                                                                    <span className={cn(TYPOGRAPHY.subValue, "uppercase tracking-tight")}>
+                                                                        {event.from} <span className="text-primary mx-0.5">→</span> <span className="font-bold text-primary">{event.to}</span>
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    ))
+                                                ) : (
+                                                    <tr>
+                                                        <td colSpan={3} className="py-12 text-center">
+                                                            <div className="flex flex-col items-center">
+                                                                <div className="w-10 h-10 rounded-full bg-antique/20 flex items-center justify-center mb-2">
+                                                                    <span className="text-lg opacity-40">—</span>
+                                                                </div>
+                                                                <p className={cn(TYPOGRAPHY.label, "!text-[9px] uppercase tracking-widest opacity-40")}>No Transits</p>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
 
-                                <div className="space-y-2">
-                                    {insights.length > 0 ? (
-                                        insights.map((event, k) => (
-                                            <div key={k} className="p-3 bg-white border border-antique/30 rounded-lg group hover:border-header-border/40 transition-all shadow-sm">
-                                                <div className="flex items-center justify-between mb-1.5">
-                                                    <div className="flex items-center gap-2">
-                                                        <span className="text-sm" title={event.planet}>{PLANET_SYMBOLS[event.planet]}</span>
-                                                        <span className={cn(
-                                                            TYPOGRAPHY.value,
-                                                            "text-xs",
-                                                            event.severity === 'high' ? "text-header-border" : "text-primary"
-                                                        )}>
-                                                            {event.planet}
-                                                        </span>
-                                                    </div>
-                                                    <span className={cn(
-                                                        TYPOGRAPHY.label,
-                                                        "px-1.5 py-0.5 rounded",
-                                                        event.type === 'sign' ? "bg-purple-50 text-purple-700" :
-                                                            event.type === 'house' ? "bg-blue-50 text-blue-700" :
-                                                                event.type === 'retro' ? "bg-red-50 text-red-700" :
-                                                                    "bg-gray-50 text-gray-600"
-                                                    )}>
-                                                        {event.type}
-                                                    </span>
-                                                </div>
-
-                                                <p className={cn(TYPOGRAPHY.subValue, "whitespace-normal text-primary leading-snug border-l-2 border-antique/20 pl-2 mb-1")}>
-                                                    {event.description}
-                                                </p>
-
-                                                <div className="flex items-center gap-2 mt-1 pl-2">
-                                                    <span className={cn(TYPOGRAPHY.subValue)}>
-                                                        {event.from} <span className="text-primary">→</span> <span className={cn(TYPOGRAPHY.value, "text-[11px]")}>{event.to}</span>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="py-12 flex flex-col items-center justify-center text-center">
-                                            <div className="w-12 h-12 rounded-full bg-antique/20 flex items-center justify-center mb-2">
-                                                <span className="text-lg">—</span>
-                                            </div>
-                                            <p className={cn(TYPOGRAPHY.label, "!text-[10px] !font-black uppercase tracking-widest !mb-0")}>No Transits</p>
-                                            <p className={cn(TYPOGRAPHY.subValue, "!text-[9px] italic mt-1")}>Stable planetary energies today.</p>
-                                        </div>
-                                    )}
-                                </div>
                             </div>
 
-                            {/* Summary Footer */}
-                            <div className="mt-auto pt-6 border-t border-antique/10 text-center">
-                                <p className={cn(TYPOGRAPHY.label, "tracking-[0.3em] mb-2")}>Transit summary</p>
-                                <div className={cn(TYPOGRAPHY.subValue, "italic leading-relaxed whitespace-normal")}>
-                                    {String((currentEntry as any).notes?.chart_type || "Standard Daily Gochar Analysis")}
-                                </div>
-                            </div>
                         </div>
                     </>
                 ) : (
@@ -688,76 +661,62 @@ export default function TransitsPage() {
 
 
     return (
-        <div className="space-y-3 animate-in fade-in duration-500 pt-4">
-            {/* Header */}
-            <div className="flex items-center justify-between">
+        <div className="space-y-2 animate-in fade-in duration-500 pt-0 overflow-hidden">
+            {/* Header with inline Tab Switcher */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-xl flex items-center gap-2")}>
-                        <RefreshCcw className="w-5 h-5 text-header-border" />
                         Transit impact analysis
                     </h1>
-                    <div className="flex items-center gap-2">
-                        <p className={cn(TYPOGRAPHY.value, "text-sm font-serif font-normal")}>Gochar positions for {clientDetails.name}</p>
-                        <span className={cn(TYPOGRAPHY.label, "px-2 py-0.5 bg-header-border/10 text-header-border rounded-full border border-header-border/30")}>
-                            {settings.ayanamsa}
-                        </span>
-                        {(isGeneratingCharts || isLiveLoading) && (
-                            <span className={cn(TYPOGRAPHY.label, "flex items-center gap-1.5 px-2 py-0.5 bg-green-100/80 text-green-700 rounded-full border border-green-200 animate-pulse")}>
-                                <Loader2 className="w-3 h-3 animate-spin" />
-                                {isGeneratingCharts ? 'Generating...' : 'Fetching Live Gochar...'}
-                            </span>
-                        )}
-                        {isRefreshingCharts && !isGeneratingCharts && !isLiveLoading && (
-                            <span className={cn(TYPOGRAPHY.label, "flex items-center gap-1.5 px-2 py-0.5 bg-blue-100/80 text-blue-700 rounded-full border border-blue-200")}>
-                                <Loader2 className="w-3 h-3 animate-spin" />
-                                Refreshing...
-                            </span>
-                        )}
-                    </div>
-                </div>
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={() => activeTab === 'gochar' ? fetchLiveTransit() : refreshCharts()}
-                        disabled={isLoadingCharts || isLiveLoading}
-                        className="p-2 rounded-lg bg-white border border-header-border/30 hover:bg-header-border/10 text-bronze disabled:opacity-50"
-                    >
-                        <RefreshCcw className={cn("w-4 h-4", (isRefreshingCharts || isLiveLoading) && "animate-spin")} />
-                    </button>
-                    <div className="bg-green-100 px-2 py-1 rounded-lg border border-green-200 flex items-center gap-1.5">
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                        <span className={cn(TYPOGRAPHY.label, "text-green-700")}>Live</span>
-                    </div>
-                </div>
-            </div>
-
-            {/* Tab Switcher */}
-            <div className="flex items-center gap-1 bg-surface-pure rounded-xl p-1 border border-antique">
-                {isLahiri && (
-                    <button
-                        onClick={() => setActiveTab('daily_transit')}
-                        className={cn(
-                            "flex-1 px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-1.5",
-                            TYPOGRAPHY.value,
-                            activeTab === 'daily_transit'
-                                ? cn("text-primary shadow-sm border border-header-border/20", COLORS.wbActiveTab)
-                                : "text-primary hover:text-primary"
-                        )}
-                    >
-                        Daily transit
-                    </button>
-                )}
-                <button
-                    onClick={() => setActiveTab('gochar')}
-                    className={cn(
-                        "flex-1 px-4 py-2 rounded-lg transition-all",
-                        TYPOGRAPHY.value,
-                        activeTab === 'gochar'
-                            ? cn("text-primary shadow-sm border border-header-border/20", COLORS.wbActiveTab)
-                            : "text-primary hover:text-primary"
+                    {(isGeneratingCharts || isLiveLoading || isRefreshingCharts) && (
+                        <div className="flex items-center gap-2 mt-2">
+                            {(isGeneratingCharts || isLiveLoading) && (
+                                <span className={cn(TYPOGRAPHY.label, "flex items-center gap-1.5 px-2 py-0.5 bg-green-100/80 text-green-700 rounded-full border border-green-200 animate-pulse")}>
+                                    <Loader2 className="w-3 h-3 animate-spin" />
+                                    {isGeneratingCharts ? 'Generating...' : 'Fetching Live Gochar...'}
+                                </span>
+                            )}
+                            {isRefreshingCharts && !isGeneratingCharts && !isLiveLoading && (
+                                <span className={cn(TYPOGRAPHY.label, "flex items-center gap-1.5 px-2 py-0.5 bg-blue-100/80 text-blue-700 rounded-full border border-blue-200")}>
+                                    <Loader2 className="w-3 h-3 animate-spin" />
+                                    Refreshing...
+                                </span>
+                            )}
+                        </div>
                     )}
-                >
-                    Gochar
-                </button>
+                </div>
+
+                {/* Compact Tab Switcher */}
+                <div className="inline-flex items-center gap-1 bg-surface-pure rounded-lg p-1 border border-antique shrink-0 mt-2 sm:mt-0 shadow-sm">
+                    {isLahiri && (
+                        <button
+                            onClick={() => setActiveTab('daily_transit')}
+                            className={cn(
+                                "px-3 py-1.5 rounded-md transition-all flex items-center justify-center gap-1.5 whitespace-nowrap",
+                                TYPOGRAPHY.value,
+                                "!text-xs",
+                                activeTab === 'daily_transit'
+                                    ? COLORS.wbActiveTab
+                                    : "text-primary hover:bg-black/5"
+                            )}
+                        >
+                            Daily transit
+                        </button>
+                    )}
+                    <button
+                        onClick={() => setActiveTab('gochar')}
+                        className={cn(
+                            "px-3 py-1.5 rounded-md transition-all whitespace-nowrap",
+                            TYPOGRAPHY.value,
+                            "!text-xs",
+                            activeTab === 'gochar'
+                                ? COLORS.wbActiveTab
+                                : "text-primary hover:bg-black/5"
+                        )}
+                    >
+                        Gochar
+                    </button>
+                </div>
             </div>
 
             {/* ========== GOCHAR TAB ========== */}
@@ -786,9 +745,9 @@ export default function TransitsPage() {
 
                     {transitData.length > 0 && (
                         <>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                 {retroPlanets.length > 0 && (
-                                    <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-start gap-3">
+                                    <div className="bg-red-50 border border-red-200 rounded-md p-3 flex items-start gap-3">
                                         <div className="p-1.5 bg-red-100 rounded-lg text-red-600">
                                             <AlertTriangle className="w-5 h-5" />
                                         </div>
@@ -801,7 +760,7 @@ export default function TransitsPage() {
                                     </div>
                                 )}
 
-                                <div className="bg-header-border/10 border border-header-border/30 rounded-xl p-3 flex items-start gap-3">
+                                <div className="bg-header-border/10 border border-header-border/30 rounded-md p-3 flex items-start gap-3">
                                     <div className="p-1.5 bg-header-border/20 rounded-lg text-primary">
                                         <ShieldAlert className="w-5 h-5" />
                                     </div>
@@ -816,68 +775,82 @@ export default function TransitsPage() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                                <div className="bg-softwhite border border-antique rounded-xl p-4">
-                                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-sm text-center mb-3")}>Gochar Chart</h3>
-                                    <div className="aspect-square bg-surface-warm rounded-lg border border-header-border/10 p-3 flex items-center justify-center">
-                                        <ChartWithPopup
-                                            ascendantSign={natalAscendant}
-                                            planets={transitPlanets}
-                                            className="bg-transparent border-none w-full h-full"
-                                            showDegrees={false}
-                                        />
+                            <div className={cn("flex flex-col lg:flex-row overflow-hidden", COLORS.wbContainer)}>
+                                <div className="lg:w-[440px] w-full flex flex-col border-r border-antique shrink-0 bg-white/20">
+                                    <div className={cn("px-4 py-2 h-11 flex items-center shrink-0", COLORS.wbSectionHeader)}>
+                                        <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Gochar chart</h3>
                                     </div>
-                                    <p className={cn(TYPOGRAPHY.subValue, "text-center mt-2")}>
-                                        Natal Ascendant: {signIdToName[natalAscendant]}
-                                    </p>
+                                    <div className="flex-1 flex flex-col items-center justify-start pt-0">
+                                        <div className="w-full aspect-square -mt-3">
+                                            <ChartWithPopup
+                                                ascendantSign={natalAscendant}
+                                                planets={transitPlanets}
+                                                className="w-full h-full"
+                                                showDegrees={false}
+                                            />
+                                        </div>
+                                        <p className={cn(TYPOGRAPHY.subValue, "text-center mt-2 font-medium text-primary")}>
+                                            Natal Ascendant: {signIdToName[natalAscendant]}
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <div className="lg:col-span-2 bg-softwhite border border-antique rounded-xl overflow-hidden">
-                                    <div className="p-3 border-b border-header-border/10 bg-surface-pure flex justify-between items-center">
-                                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-sm")}>Transit Positions</h3>
-                                        <div className={cn(TYPOGRAPHY.subValue, "flex items-center gap-1")}>
-                                            <Calendar className="w-3 h-3" />
+                                <div className="flex-1 flex flex-col min-w-0">
+                                    <div className={cn("px-4 py-2 h-11 flex justify-between items-center shrink-0", COLORS.wbSectionHeader)}>
+                                        <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Transit positions</h3>
+                                        <div className={cn(TYPOGRAPHY.label, "flex items-center gap-1.5 text-primary !mb-0")}>
+                                            <Calendar className="w-3.5 h-3.5" />
                                             {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                         </div>
                                     </div>
-                                    <div className="overflow-x-auto">
-                                        <table className="w-full text-xs">
-                                            <thead className="bg-ink/5 border-b border-header-border/10">
+                                    <div className="flex-1 overflow-y-auto bg-white/40">
+                                        <table className="w-full border-collapse">
+                                            <thead className="sticky top-0 bg-parchment/90 backdrop-blur-md z-10 border-b border-antique/20">
                                                 <tr>
-                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-2 text-left uppercase")}>Planet</th>
-                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-2 text-left uppercase")}>Sign</th>
-                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-2 text-left uppercase")}>Degree</th>
-                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-2 text-left uppercase")}>Nakshatra</th>
-                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-2 text-center uppercase")}>House</th>
+                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-left")}>Planet</th>
+                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-left")}>Sign</th>
+                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-left")}>Degree</th>
+                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-left")}>Nakshatra</th>
+                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-center")}>House</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="divide-y divide-header-border/10">
                                                 {transitData.map((row, i) => (
-                                                    <tr key={i} className="hover:bg-ink/5 transition-colors">
+                                                    <tr key={i} className="hover:bg-primary/5 transition-colors border-b border-header-border/5 last:border-0">
                                                         <td className="px-3 py-2">
-                                                            <span className={cn(TYPOGRAPHY.value, "flex items-center gap-1.5 text-xs")}>
+                                                            <span className={cn(TYPOGRAPHY.planetName, "flex items-center gap-2")}>
+                                                                <span className="text-base text-primary/70">{PLANET_SYMBOLS[row.planet] || '●'}</span>
                                                                 {row.planet}
                                                                 {row.isRetro && (
-                                                                    <span className={cn(TYPOGRAPHY.label, "text-[9px] text-red-500 bg-red-50 px-1 py-0.5 rounded animate-pulse")}>R</span>
+                                                                    <span className="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded ml-1">R</span>
                                                                 )}
                                                             </span>
                                                         </td>
-                                                        <td className="px-3 py-2">
-                                                            <span className={cn(TYPOGRAPHY.value, "font-serif text-xs font-normal")}>{row.sign}</span>
-                                                        </td>
-                                                        <td className="px-3 py-2">
-                                                            <span className={cn(TYPOGRAPHY.subValue, "font-mono")}>{row.degree}</span>
-                                                        </td>
-                                                        <td className="px-3 py-2">
-                                                            <span className={cn(TYPOGRAPHY.subValue, "whitespace-normal")}>{row.nakshatra}</span>
-                                                        </td>
-                                                        <td className="px-3 py-2 text-center">
-                                                            <span className={cn(TYPOGRAPHY.value, "text-xs")}>{row.house}</span>
-                                                        </td>
+                                                        <td className={cn(TYPOGRAPHY.value, "px-3 py-2")}>{row.sign}</td>
+                                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2 font-mono text-sm")}>{row.degree}</td>
+                                                        <td className={cn(TYPOGRAPHY.value, "px-3 py-2 font-medium")}>{row.nakshatra}</td>
+                                                        <td className={cn(TYPOGRAPHY.value, "px-3 py-2 text-center text-base")}>{row.house}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
                                         </table>
+                                    </div>
+
+                                    {/* Legend / Key Area to use bottom gap */}
+                                    <div className="mt-auto px-4 py-1.5 bg-parchment/30 border-t border-antique flex items-center justify-between shrink-0">
+                                        <div className="flex items-center gap-6">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded border border-red-100">R</span>
+                                                <span className={cn(TYPOGRAPHY.label, "!mb-0 text-[11px]")}>Retrograde Motion</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 rounded-full bg-primary/70"></div>
+                                                <span className={cn(TYPOGRAPHY.label, "!mb-0 text-[11px]")}>Strong Influence</span>
+                                            </div>
+                                        </div>
+                                        <div className={cn(TYPOGRAPHY.label, "text-header-border text-[10px] font-mono italic")}>
+                                            Refreshed: {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -909,7 +882,6 @@ export default function TransitsPage() {
                     )}
                 </>
             )}
-
         </div>
     );
 }

@@ -45,36 +45,7 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
     return (
         <div className={cn("min-h-screen p-4 lg:p-6 space-y-8 animate-in fade-in duration-700 pb-20", className)}>
 
-            {/* 1. Meta Context Banner */}
-            <div className="bg-gradient-to-r from-parchment to-white border border-antique rounded-2xl p-5 shadow-sm flex flex-col md:flex-row items-center justify-between gap-5">
-                <div className="flex items-center gap-5">
-                    <div className="w-16 h-16 rounded-full bg-gold-primary/10 border-2 border-gold-primary/20 flex items-center justify-center text-gold-dark">
-                        <User className="w-8 h-8" />
-                    </div>
-                    <div>
-                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-black")}>{meta.user || 'Sadhaka'}</h2>
-                        <div className="flex flex-wrap gap-2 mt-1">
-                            <span className="text-[10px] font-bold bg-ink/5 px-2 py-0.5 rounded-full text-muted uppercase tracking-wider border border-ink/10">
-                                {meta.ascendant} Ascendant
-                            </span>
-                            <span className="text-[10px] font-bold bg-gold-primary/5 px-2 py-0.5 rounded-full text-gold-dark uppercase tracking-wider border border-gold-primary/10">
-                                {meta.current_mahadasha} - {meta.current_antardasha} Period
-                            </span>
-                        </div>
-                    </div>
-                </div>
 
-                <div className="flex gap-4">
-                    <div className="text-center px-4 py-2 bg-white/50 rounded-xl border border-antique">
-                        <p className="text-[9px] font-black text-muted uppercase mb-0.5">Lagna lord</p>
-                        <p className="text-sm font-bold text-ink">{meta.lagna_lord}</p>
-                    </div>
-                    <div className="text-center px-4 py-2 bg-white/50 rounded-xl border border-antique">
-                        <p className="text-[9px] font-black text-muted uppercase mb-0.5">Analysis type</p>
-                        <p className="text-sm font-bold text-gold-dark capitalize">{meta.life_concern}</p>
-                    </div>
-                </div>
-            </div>
 
             {/* 2. Main High-Impact Recommendations Section */}
             <div className="space-y-6">

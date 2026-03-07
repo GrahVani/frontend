@@ -10,7 +10,8 @@ import {
     Maximize2,
     Info,
     LayoutDashboard,
-    Hexagon
+    Hexagon,
+    Layers
 } from 'lucide-react';
 import { useVedicClient } from '@/context/VedicClientContext';
 import { useAstrologerStore } from '@/store/useAstrologerStore';
@@ -67,7 +68,7 @@ export default function ChakrasPage() {
     }
 
     return (
-        <div className="-mt-2 lg:-mt-4 min-h-screen space-y-2 animate-in fade-in duration-700">
+        <div className="space-y-2 animate-in fade-in duration-700">
             {/* Professional Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-2">
                 <div className="space-y-1">
@@ -84,7 +85,7 @@ export default function ChakrasPage() {
                 <div className="lg:col-span-8 space-y-6">
                     <div
                         ref={chartContainerRef}
-                        className="relative w-full bg-surface-warm rounded-[3rem] border border-copper-200 shadow-[0_32px_64px_-16px_rgba(139,92,71,0.15)] overflow-hidden flex items-center justify-center p-2 group overflow-y-auto"
+                        className="relative w-full bg-surface-warm rounded-[3rem] border border-copper-200 shadow-[0_32px_64px_-16px_rgba(139,92,71,0.15)] overflow-hidden flex items-center justify-center p-2 group"
                     >
                         {/* Parchment Texture Overlay */}
                         <div className="absolute inset-0 opacity-20 pointer-events-none mix-blend-multiply bg-[url('/textures/parchment.png')]" />
@@ -136,27 +137,84 @@ export default function ChakrasPage() {
                 {/* Technical Side Panel Column */}
                 <div className="lg:col-span-4 space-y-8">
                     {/* Dynamic Legend Card */}
-                    <div className=" rounded-3xl border border-copper-200 p-8 shadow-sm space-y-6">
-                        <div className="border-b border-copper-100 pb-4">
-                            <h3 className={cn(TYPOGRAPHY.label, "mb-0")}>Chart Legend</h3>
+                    <div className="bg-white/40 backdrop-blur-sm rounded-[2.5rem] border border-copper-200/60 p-8 shadow-[0_8px_32px_-12px_rgba(139,92,71,0.1)] space-y-8 relative overflow-hidden group/legend">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl transition-all group-hover/legend:bg-primary/10" />
+
+                        <div className="flex items-center gap-3 border-b border-copper-100/50 pb-5">
+                            <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center border border-primary/10">
+                                <Layers className="w-5 h-5 text-primary" />
+                            </div>
+                            <div>
+                                <h3 className={cn(TYPOGRAPHY.label, "mb-0 text-primary uppercase tracking-[0.2em] text-[10px]")}>Technical Layers</h3>
+                                <p className={cn(TYPOGRAPHY.sectionTitle, "text-lg")}>Chart Legend</p>
+                            </div>
                         </div>
-                        <div className="space-y-6">
+
+                        <div className="space-y-4">
                             {[
-                                { label: 'Surya Chart', circle: 'Outer Circle', color: 'border-slate-800', bgColor: 'bg-slate-700', desc: 'Physical destiny & vitality' },
-                                { label: 'Chandra Chart', circle: 'Middle Circle', color: 'border-slate-500', bgColor: 'bg-slate-500', desc: 'Mental landscape & emotional flow' },
-                                { label: 'Birth Chart', circle: 'Inner Circle', color: 'border-slate-300', bgColor: 'bg-slate-400', desc: 'The core karmic blueprint (Lagna)' },
+                                {
+                                    label: 'Surya Chart',
+                                    circle: 'Outer Circle',
+                                    color: 'text-amber-700',
+                                    bgColor: 'bg-amber-100',
+                                    ringIcon: (
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="group-hover:scale-110 transition-transform duration-500">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" className="opacity-100" />
+                                            <circle cx="12" cy="12" r="6" stroke="currentColor" strokeWidth="1.5" className="opacity-20" />
+                                            <circle cx="12" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" className="opacity-10" />
+                                        </svg>
+                                    ),
+                                    desc: 'Physical destiny & vitality'
+                                },
+                                {
+                                    label: 'Chandra Chart',
+                                    circle: 'Middle Circle',
+                                    color: 'text-blue-700',
+                                    bgColor: 'bg-blue-100',
+                                    ringIcon: (
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="group-hover:scale-110 transition-transform duration-500">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" className="opacity-20" />
+                                            <circle cx="12" cy="12" r="6" stroke="currentColor" strokeWidth="2.5" className="opacity-100" />
+                                            <circle cx="12" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" className="opacity-10" />
+                                        </svg>
+                                    ),
+                                    desc: 'Mental landscape & emotional flow'
+                                },
+                                {
+                                    label: 'Birth Chart',
+                                    circle: 'Inner Circle',
+                                    color: 'text-emerald-700',
+                                    bgColor: 'bg-emerald-100',
+                                    ringIcon: (
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="group-hover:scale-110 transition-transform duration-500">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" className="opacity-10" />
+                                            <circle cx="12" cy="12" r="6" stroke="currentColor" strokeWidth="1.5" className="opacity-20" />
+                                            <circle cx="12" cy="12" r="2" stroke="currentColor" strokeWidth="3" className="opacity-100" />
+                                        </svg>
+                                    ),
+                                    desc: 'The core karmic blueprint (Lagna)'
+                                },
                             ].map((item, i) => (
-                                <div key={i} className="flex gap-4 group">
-                                    <div className={cn("w-1.5 h-auto rounded-full transition-all group-hover:w-2 border-none opacity-20", item.bgColor)} />
-                                    <div>
+                                <div key={i} className="flex items-start gap-5 p-4 rounded-2xl transition-all duration-300 hover:bg-white hover:shadow-md hover:translate-x-1 group border border-transparent hover:border-copper-100/50">
+                                    <div className={cn("mt-1 flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-xl transition-all", item.color, item.bgColor)}>
+                                        {item.ringIcon}
+                                    </div>
+                                    <div className="space-y-1">
                                         <div className="flex items-center gap-2">
-                                            <span className={cn(TYPOGRAPHY.value, "underline decoration-copper-200 decoration-4 underline-offset-4")}>{item.label}</span>
-                                            <span className={cn(TYPOGRAPHY.label, "mb-0")}>— {item.circle}</span>
+                                            <span className={cn(TYPOGRAPHY.value, "text-base font-semibold text-primary")}>{item.label}</span>
+                                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-copper-50 text-primary font-bold uppercase tracking-wider">{item.circle}</span>
                                         </div>
-                                        <p className={cn(TYPOGRAPHY.subValue, "mt-1 italic")}>{item.desc}</p>
+                                        <p className={cn(TYPOGRAPHY.subValue, "text-primary font-medium leading-relaxed")}>{item.desc}</p>
                                     </div>
                                 </div>
                             ))}
+                        </div>
+
+                        <div className="pt-6 border-t border-copper-100/30">
+                            <div className="flex items-center gap-2 text-[11px] text-primary font-semibold">
+                                <Info className="w-3 h-3" />
+                                <span>Radial synchronization of three vital planes</span>
+                            </div>
                         </div>
                     </div>
 
