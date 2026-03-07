@@ -525,11 +525,14 @@ export const clientApi = {
         ayanamsa: string = 'lahiri',
         save: boolean = false,
         context: { mahaLord?: string; antarLord?: string; pratyantarLord?: string; drillDownPath?: string[] } = {}
-    ): Promise<DashaResponse> => {        return apiFetch<DashaResponse>(`${CLIENT_URL}/clients/${clientId}/dasha`, {
+    ): Promise<DashaResponse> => {
+        return apiFetch<DashaResponse>(`${CLIENT_URL}/clients/${clientId}/dasha`, {
             method: 'POST',
             body: JSON.stringify({ level, ayanamsa, save, ...context }),
-        }).then(res => {            return res;
-        }).catch(err => {            throw err;
+        }).then(res => {
+            return res;
+        }).catch(err => {
+            throw err;
         });
     },
 
@@ -539,7 +542,8 @@ export const clientApi = {
         ayanamsa: string = 'lahiri',
         level: string = 'mahadasha',
         context: { mahaLord?: string; antarLord?: string; pratyantarLord?: string } = {}
-    ): Promise<DashaResponse> => {        return apiFetch<Record<string, unknown>>(`${CLIENT_URL}/clients/${clientId}/dasha/${type}`, {
+    ): Promise<DashaResponse> => {
+        return apiFetch<Record<string, unknown>>(`${CLIENT_URL}/clients/${clientId}/dasha/${type}`, {
             method: 'POST',
             body: JSON.stringify({ ayanamsa, level, save: false, ...context }),
         }).then((response: Record<string, unknown>) => {
@@ -557,7 +561,8 @@ export const clientApi = {
                 calculatedAt: (res.calculatedAt as string) || new Date().toISOString(),
             };
             return normalizedData;
-        }).catch((error: Error) => {            const emptyResponse: DashaResponse = {
+        }).catch((error: Error) => {
+            const emptyResponse: DashaResponse = {
                 clientId,
                 clientName: '',
                 level: 'mahadasha',
@@ -591,17 +596,21 @@ export const clientApi = {
     getDoshaAnalysis: (clientId: string, doshaType: string, ayanamsa: string = 'lahiri'): Promise<AstrologicalReport<RawDoshaResponse>> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/dosha/${doshaType}?ayanamsa=${ayanamsa}`),
 
-    getShadbala: (clientId: string): Promise<ChartGenerateResponse> => {        return apiFetch<ChartGenerateResponse>(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
+    getShadbala: (clientId: string): Promise<ChartGenerateResponse> => {
+        return apiFetch<ChartGenerateResponse>(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
             method: 'POST',
             body: JSON.stringify({ chartType: 'shadbala', ayanamsa: 'lahiri' }),
-        }).then(res => {            return res;
+        }).then(res => {
+            return res;
         });
     },
 
-    getPushkaraNavamsha: (clientId: string): Promise<ChartGenerateResponse> => {        return apiFetch<ChartGenerateResponse>(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
+    getPushkaraNavamsha: (clientId: string): Promise<ChartGenerateResponse> => {
+        return apiFetch<ChartGenerateResponse>(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
             method: 'POST',
             body: JSON.stringify({ chartType: 'pushkara_navamsha', ayanamsa: 'lahiri' }),
-        }).then(res => {            return res;
+        }).then(res => {
+            return res;
         });
     },
 
@@ -713,74 +722,6 @@ export const clientApi = {
     },
 };
 
-// ============ FAMILY API ============
-export const familyApi = {
-    getFamilyLinks: (clientId: string): Promise<FamilyLink[]> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/family`),
-
-    linkFamily: (clientId: string, data: FamilyLinkPayload): Promise<{ success: boolean }> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/family-link`, {
-            method: 'POST',
-            body: JSON.stringify(data),
-        }),
-
-    unlinkFamily: (clientId: string, relatedClientId: string): Promise<{ success: boolean }> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/family/${relatedClientId}`, {
-            method: 'DELETE',
-        }),
-};
-
-// ============ GEOCODE API ============
-export const geocodeApi = {
-    getSuggestions: (query: string, limit: number = 5): Promise<{ suggestions: LocationSuggestion[] }> =>
-        apiFetch(`${CLIENT_URL}/geocode/suggest?q=${encodeURIComponent(query)}&limit=${limit}`),
-
-    geocodePlace: (place: string): Promise<LocationSuggestion> =>
-        apiFetch(`${CLIENT_URL}/geocode`, {
-            method: 'POST',
-            body: JSON.stringify({ place }),
-        }),
-};
-
-// ============ RAMAN API ============
-export const ramanApi = {
-    getNatalChart: (clientId: string): Promise<RamanApiResponse<RamanNatalResponse>> =>
-        apiFetch<RamanApiResponse<RamanNatalResponse>>(`${CLIENT_URL}/clients/${clientId}/raman/natal`, {
-            method: 'GET'
-        }).catch(err => {            throw err;
-        }),
-
-    getNatal: (clientId: string): Promise<RamanApiResponse<RamanNatalResponse>> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/natal`, {
-            method: 'POST'
-        }),
-
-    getTransit: (clientId: string): Promise<RamanApiResponse<Record<string, unknown>>> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/transit`, {
-            method: 'POST'
-        }),
-
-    getDivisional: (clientId: string, type: string): Promise<RamanApiResponse<Record<string, unknown>>> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/divisional/${type}`, {
-            method: 'POST'
-        }),
-
-    getAshtakavarga: (clientId: string, type: 'bhinna-ashtakavarga' | 'sarva-ashtakavarga' | 'shodasha-varga'): Promise<RamanApiResponse<Record<string, unknown>>> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/${type}`, {
-            method: 'POST'
-        }),
-
-    getDasha: (clientId: string, level: 'maha-antar' | 'pratyantar' | 'sookshma' | 'prana'): Promise<RamanApiResponse<Record<string, unknown>>> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/dasha/${level}`, {
-            method: 'POST'
-        }),
-
-    getLagnaChart: (clientId: string, type: string): Promise<RamanApiResponse<Record<string, unknown>>> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/${type}`, {
-            method: 'POST'
-        }),
-};
-
 // ============ KP (KRISHNAMURTI PADDHATI) API ============
 // KP System endpoints for stellar astrology
 export const kpApi = {
@@ -839,10 +780,74 @@ export const kpApi = {
             method: 'POST',
             body: JSON.stringify({ horaryNumber, question }),
         }),
+};
 
-    getShadbala: (clientId: string): Promise<ChartGenerateResponse> =>
-        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
+// ============ FAMILY API ============
+export const familyApi = {
+    getFamilyLinks: (clientId: string): Promise<FamilyLink[]> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/family`),
+
+    linkFamily: (clientId: string, data: FamilyLinkPayload): Promise<{ success: boolean }> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/family-link`, {
             method: 'POST',
-            body: JSON.stringify({ chartType: 'shadbala', ayanamsa: 'lahiri' }),
+            body: JSON.stringify(data),
+        }),
+
+    unlinkFamily: (clientId: string, relatedClientId: string): Promise<{ success: boolean }> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/family/${relatedClientId}`, {
+            method: 'DELETE',
         }),
 };
+
+// ============ GEOCODE API ============
+export const geocodeApi = {
+    getSuggestions: (query: string, limit: number = 5): Promise<{ suggestions: LocationSuggestion[] }> =>
+        apiFetch(`${CLIENT_URL}/geocode/suggest?q=${encodeURIComponent(query)}&limit=${limit}`),
+
+    geocodePlace: (place: string): Promise<LocationSuggestion> =>
+        apiFetch(`${CLIENT_URL}/geocode`, {
+            method: 'POST',
+            body: JSON.stringify({ place }),
+        }),
+};
+
+// ============ RAMAN API ============
+export const ramanApi = {
+    getNatalChart: (clientId: string): Promise<RamanApiResponse<RamanNatalResponse>> =>
+        apiFetch<RamanApiResponse<RamanNatalResponse>>(`${CLIENT_URL}/clients/${clientId}/raman/natal`, {
+            method: 'GET'
+        }).catch(err => {
+            throw err;
+        }),
+
+    getNatal: (clientId: string): Promise<RamanApiResponse<RamanNatalResponse>> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/natal`, {
+            method: 'POST'
+        }),
+
+    getTransit: (clientId: string): Promise<RamanApiResponse<Record<string, unknown>>> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/transit`, {
+            method: 'POST'
+        }),
+
+    getDivisional: (clientId: string, type: string): Promise<RamanApiResponse<Record<string, unknown>>> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/divisional/${type}`, {
+            method: 'POST'
+        }),
+
+    getAshtakavarga: (clientId: string, type: 'bhinna-ashtakavarga' | 'sarva-ashtakavarga' | 'shodasha-varga'): Promise<RamanApiResponse<Record<string, unknown>>> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/${type}`, {
+            method: 'POST'
+        }),
+
+    getDasha: (clientId: string, level: 'maha-antar' | 'pratyantar' | 'sookshma' | 'prana'): Promise<RamanApiResponse<Record<string, unknown>>> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/dasha/${level}`, {
+            method: 'POST'
+        }),
+
+    getLagnaChart: (clientId: string, type: string): Promise<RamanApiResponse<Record<string, unknown>>> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/raman/${type}`, {
+            method: 'POST'
+        }),
+};
+

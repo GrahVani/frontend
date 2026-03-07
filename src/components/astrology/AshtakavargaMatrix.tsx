@@ -85,20 +85,20 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
     });
 
     return (
-        <div className={className}>
-            <div className="overflow-x-auto rounded-xl border border-border-warm">
+        <div className={cn(className, "h-full flex flex-col")}>
+            <div className="rounded-xl border border-primary flex-1 overflow-hidden">
 
                 {/* Table */}
-                <table className="w-full border-collapse text-sm" role="table" aria-label={isSarva ? "Sarvashtakavarga matrix showing planetary bindus across signs" : `Bhinnashtakavarga matrix for ${planet || 'planet'}`}>
+                <table className="w-full h-full border-collapse text-sm" role="table" aria-label={isSarva ? "Sarvashtakavarga matrix showing planetary bindus across signs" : `Bhinnashtakavarga matrix for ${planet || 'planet'}`}>
                     <thead>
-                        <tr className="bg-amber-50/30 border-b border-border-warm">
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-2 text-left w-16 border-r border-border-warm")}>
+                        <tr className="bg-amber-50/30 border-b border-primary">
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-3 px-2 text-left w-16 border-r border-primary")}>
                                 {isSarva ? 'Planet' : planet?.substring(0, 4)}
                             </th>
                             {SIGNS.map(s => (
-                                <th key={s} className={cn(TYPOGRAPHY.tableHeader, "py-2 px-1 text-center w-8 border-r border-border-warm text-secondary")}>{s}</th>
+                                <th key={s} className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1 text-center w-8 border-r border-primary text-primary font-bold")}>{s}</th>
                             ))}
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-1.5 text-center bg-softwhite w-10")}>Tot</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1.5 text-center bg-softwhite w-10")}>Tot</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -114,30 +114,30 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                             SIGNS.forEach(s => { rowTot += getVal(rd, s); });
 
                             return (
-                                <tr key={p} className={cn("border-b border-border-warm", idx % 2 === 1 && "bg-parchment/30")}>
-                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "py-1.5 px-2 font-medium border-r border-border-warm")}>{p.substring(0, 3)}</td>
+                                <tr key={p} className={cn("border-b border-primary", idx % 2 === 1 && "bg-parchment/30")}>
+                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-2 font-medium border-r border-primary")}>{p.substring(0, 3)}</td>
                                     {SIGNS.map(s => (
-                                        <td key={s} className={cn(TYPOGRAPHY.dateAndDuration, "py-1.5 px-1 text-center border-r border-border-warm")}>{getVal(rd, s)}</td>
+                                        <td key={s} className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1 text-center border-r border-primary")}>{getVal(rd, s)}</td>
                                     ))}
-                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "py-1.5 px-1.5 text-center font-semibold bg-softwhite")}>{rowTot}</td>
+                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1.5 text-center font-semibold bg-softwhite")}>{rowTot}</td>
                                 </tr>
                             );
                         })}
                     </tbody>
                     <tfoot>
-                        <tr className="bg-softwhite border-t border-b border-border-warm">
-                            <td className={cn(TYPOGRAPHY.label, "py-2 px-2 border-r border-border-warm mb-0")}>SAV</td>
+                        <tr className="bg-softwhite border-t border-primary">
+                            <td className={cn(TYPOGRAPHY.label, "py-3 px-2 border-r border-primary mb-0")}>SAV</td>
                             {SIGNS.map(s => {
                                 const v = sav[s];
                                 return (
-                                    <td key={s} className="py-2 px-1 text-center border-r border-border-warm">
+                                    <td key={s} className="py-3 px-1 text-center border-r border-primary">
                                         <div className="flex flex-col items-center justify-center leading-none">
                                             <span className={cn(TYPOGRAPHY.value, "leading-none")}>{v}</span>
                                         </div>
                                     </td>
                                 );
                             })}
-                            <td className={cn(TYPOGRAPHY.value, "py-2 px-1.5 text-center bg-amber-50/50")}>
+                            <td className={cn(TYPOGRAPHY.value, "py-3 px-1.5 text-center bg-amber-50/50")}>
                                 {Object.values(sav).reduce((a, b) => a + b, 0)}
                             </td>
                         </tr>
@@ -145,34 +145,19 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                 </table>
             </div>
 
-            {/* House Group Analysis Cards */}
-            <div className="mt-6 grid grid-cols-4 gap-3" role="group" aria-label="House group analysis summary">
-                {groupTotals.map(g => {
-                    const borderColor = g.key === 'dharma' ? 'border-purple-400' :
-                        g.key === 'artha' ? 'border-amber-400' :
-                            g.key === 'kama' ? 'border-pink-400' : 'border-blue-400';
-                    return (
-                        <div key={g.key} className={cn("rounded-lg p-2 border-l-2 bg-softwhite text-center", borderColor)}>
-                            <div className={cn(TYPOGRAPHY.label, "text-secondary")}>{g.name}</div>
-                            <div className={cn(TYPOGRAPHY.subValue, "text-muted-refined mt-0")}>{g.houses.join('-')}</div>
-                            <div className={cn(TYPOGRAPHY.value, "text-base mt-1")}>{g.total}</div>
-                            <div className={cn(TYPOGRAPHY.subValue, "text-muted-refined")}>{g.desc}</div>
-                        </div>
-                    );
-                })}
-            </div>
+
 
             {/* Quick Summary */}
-            <div className="flex justify-between mt-2 text-xs font-medium font-sans">
-                <span className="text-secondary">
-                    Strongest: <span className="text-primary font-semibold">{groupTotals.sort((a, b) => b.total - a.total)[0].name}</span>
+            <div className="flex justify-between mt-3 px-1">
+                <span className={cn(TYPOGRAPHY.subValue, "text-primary")}>
+                    Strongest: <span className="text-primary font-black uppercase tracking-wider">{groupTotals.sort((a, b) => b.total - a.total)[0].name}</span>
                 </span>
-                <div className="flex gap-4">
-                    <span className="text-secondary inline-flex items-center gap-1">
-                        â†‘ Best: Sign {SIGNS.find(s => sav[s] === maxS)} <span className="font-semibold text-primary">({maxS})</span>
+                <div className="flex gap-6">
+                    <span className={cn(TYPOGRAPHY.subValue, "text-primary inline-flex items-center gap-1.5")}>
+                        â†‘ Best: Sign {SIGNS.find(s => sav[s] === maxS)} <span className="font-black text-primary">({maxS})</span>
                     </span>
-                    <span className="text-secondary inline-flex items-center gap-1">
-                        â†“ Weak: Sign {SIGNS.find(s => sav[s] === minS)} <span className="font-semibold text-primary">({minS})</span>
+                    <span className={cn(TYPOGRAPHY.subValue, "text-primary inline-flex items-center gap-1.5")}>
+                        â†“ Weak: Sign {SIGNS.find(s => sav[s] === minS)} <span className="font-black text-primary">({minS})</span>
                     </span>
                 </div>
             </div>

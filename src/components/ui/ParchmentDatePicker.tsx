@@ -14,6 +14,7 @@ interface ParchmentDatePickerProps {
     placeholder?: string;
     className?: string;
     required?: boolean;
+    variant?: 'default' | 'inline';
 }
 
 export default function ParchmentDatePicker({
@@ -22,7 +23,8 @@ export default function ParchmentDatePicker({
     label,
     placeholder = "Select Date",
     className,
-    required
+    required,
+    variant = 'default'
 }: ParchmentDatePickerProps) {
     const [open, setOpen] = React.useState(false);
 
@@ -43,10 +45,15 @@ export default function ParchmentDatePicker({
         }
     };
 
+    const isInline = variant === 'inline';
+
     return (
-        <div className={cn("flex flex-col gap-1", className)}>
+        <div className={cn(!isInline && "flex flex-col gap-1", isInline && "flex items-center gap-1.5", className)}>
             {label && (
-                <label className="block text-[11px] font-bold font-serif text-muted-refined uppercase tracking-widest pl-1">
+                <label className={cn(
+                    "font-serif uppercase tracking-widest pl-1",
+                    isInline ? "text-[10px] sm:text-[11px] pr-1.5 border-r border-gold-primary/20 leading-none text-primary font-bold" : "block text-[11px] font-bold text-muted-refined"
+                )}>
                     {label}
                 </label>
             )}
@@ -59,15 +66,19 @@ export default function ParchmentDatePicker({
                         aria-haspopup="dialog"
                         aria-expanded={open}
                         className={cn(
-                            "w-full bg-transparent border-b border-gold-primary/50 px-2 py-2 font-serif text-ink-deep focus:outline-none focus:border-gold-dark transition-colors flex items-center justify-between group hover:border-gold-dark text-left",
+                            "bg-transparent border-b border-gold-primary/50 px-2 py-1 font-serif text-ink-deep focus:outline-none focus:border-gold-dark transition-colors flex items-center justify-between group hover:border-gold-dark text-left whitespace-nowrap",
+                            !isInline && "w-full py-2",
+                            isInline && "min-w-[80px] text-[12px] h-7",
                             !date && "text-gold-burnished"
                         )}
                     >
-                        {selectedDate ? format(selectedDate, "PPP") : <span className="opacity-80">{placeholder}</span>}
-                        <CalendarIcon className="w-4 h-4 text-gold-dark group-hover:text-gold-burnished transition-colors" />
+                        <span className="truncate mr-2">
+                            {selectedDate ? format(selectedDate, isInline ? "dd/MM/yyyy" : "PPP") : <span className="opacity-80">{placeholder}</span>}
+                        </span>
+                        <CalendarIcon className={cn("text-gold-dark group-hover:text-gold-burnished transition-colors", isInline ? "w-3 h-3" : "w-4 h-4")} />
                     </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-auto p-0" align={isInline ? "end" : "start"}>
                     <Calendar
                         mode="single"
                         selected={selectedDate}

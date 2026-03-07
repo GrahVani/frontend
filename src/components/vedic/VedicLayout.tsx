@@ -31,8 +31,13 @@ import {
     FlaskConical,
     Hash,
     Heart,
-    HelpCircle
+    HelpCircle,
+    Settings2,
+    LayoutGrid,
+    Moon
 } from "lucide-react";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/Popover";
+import { CHART_METADATA, DASHA_TYPES } from "@/lib/api";
 
 // ============================================================================
 // Navigation Items with Jyotish Terminology + System Compatibility
@@ -167,6 +172,8 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                 })}
             </nav>
 
+            {/* Popover logic removed - now a regular link in filteredOverflowItems */}
+
             {/* "More" Dropdown */}
             {filteredOverflowItems.length > 0 && (
                 <div ref={moreRef} className="relative shrink-0 flex items-center h-full">
@@ -204,10 +211,10 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                                             "flex items-center gap-3 px-4 py-3 transition-all !capitalize",
                                             isActive
                                                 ? "text-header-border bg-header-border/10 !font-bold"
-                                                : "text-secondary hover:text-header-border hover:bg-header-border/5"
+                                                : "text-primary hover:text-header-border hover:bg-header-border/5"
                                         )}
                                     >
-                                        {Icon && <Icon className="w-4 h-4 opacity-70" />}
+                                        {Icon && <Icon className="w-4 h-4" />}
                                         <span>{item.name}</span>
                                     </Link>
                                 );
@@ -275,7 +282,7 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
             )}
 
             {/* Main Content Area */}
-            <main className="flex-1 relative z-10 transition-all duration-500" aria-label="Vedic astrology content">
+            <main className="flex-1 relative transition-all duration-500" aria-label="Vedic astrology content">
                 <div className="p-1 sm:p-2 lg:p-2 w-full h-full pb-10">
                     {children}
                 </div>

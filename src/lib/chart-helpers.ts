@@ -15,11 +15,18 @@ export interface ProcessedChartData {
     ascendant: number;
 }
 
-const planetMap: Record<string, string> = {
+export const planetMap: Record<string, string> = {
     'Sun': 'Su', 'Moon': 'Mo', 'Mars': 'Ma', 'Mercury': 'Me',
     'Jupiter': 'Ju', 'Venus': 'Ve', 'Saturn': 'Sa', 'Rahu': 'Ra', 'Ketu': 'Ke',
     'Uranus': 'Ur', 'Neptune': 'Ne', 'Pluto': 'Pl', 'Mandi': 'Man', 'Gulika': 'Gk'
 };
+
+export const fullPlanetNames: Record<string, string> = Object.fromEntries(
+    Object.entries(planetMap).map(([full, short]) => [short, full])
+);
+
+// Add special points
+fullPlanetNames['As'] = 'Ascendant';
 
 /**
  * Standardizes chart data parsing for all chart types (D1, D9, etc.)`
@@ -127,7 +134,9 @@ export function parseChartData(chartData: Record<string, unknown> | object): Pro
             signId: ascendant,
             degree: formatPlanetDegree(rawDegree),
             isRetro: false,
-            house: 1
+            house: 1,
+            nakshatra: asc.nakshatra || asc.nakshatra_name,
+            pada: asc.pada || asc.nakshatra_pada
         });
     }
 

@@ -23,7 +23,7 @@ import { DashaResponse } from '@/lib/api';
 import DoshaAnalysis from '@/components/astrology/DoshaAnalysis';
 import YogaAnalysisView from '@/components/astrology/YogaAnalysis';
 import PlanetaryTable from '@/components/astrology/PlanetaryTable';
-import { parseChartData, signIdToName, type ProcessedChartData } from '@/lib/chart-helpers';
+import { parseChartData, signIdToName, fullPlanetNames, type ProcessedChartData } from '@/lib/chart-helpers';
 import VimshottariTreeGrid from '@/components/astrology/VimshottariTreeGrid';
 import { processDashaResponse, RawDashaPeriod } from '@/lib/dasha-utils';
 import BirthPanchanga from '@/components/astrology/BirthPanchanga';
@@ -114,8 +114,8 @@ export default function VedicOverviewPage() {
 
     // Prepare Planetary Data for Table
     const planetaryTableData = React.useMemo(() => {
-        return d1Data.planets.filter(p => p.name !== 'As').map(p => ({
-            planet: p.name,
+        return d1Data.planets.map(p => ({
+            planet: fullPlanetNames[p.name] || p.name,
             sign: signIdToName[p.signId] || '-',
             degree: p.degree,
             nakshatra: p.nakshatra || '-',
@@ -169,7 +169,7 @@ export default function VedicOverviewPage() {
                             <h3 className={TYPOGRAPHY.sectionTitle}>Birth chart (D1)</h3>
                             <button onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })} className="text-primary hover:text-accent-gold transition-colors"><Maximize2 className="w-3 h-3" /></button>
                         </div>
-                        <div className="w-full h-[380px] bg-surface-warm">
+                        <div className="w-full h-[417px] bg-surface-warm">
                             <ChartWithPopup
                                 ascendantSign={d1Data.ascendant}
                                 planets={d1Data.planets}
@@ -185,9 +185,11 @@ export default function VedicOverviewPage() {
                         <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm">
                             <h3 className={TYPOGRAPHY.sectionTitle}>Birth planetary positions</h3>
                         </div>
-                        <div className="overflow-x-auto text-[10px] md:text-xs bg-surface-warm">
+                        <div className="bg-surface-warm">
                             <PlanetaryTable
                                 planets={planetaryTableData}
+                                variant="compact"
+                                rowClassName="py-1"
                             />
                         </div>
                     </div>

@@ -76,12 +76,23 @@ export default function VimshottariTreeGrid({ data, isLoading, className }: Vims
             {/* Navigation Header / Breadcrumbs */}
             {navPath.length > 0 && (
                 <div className="bg-parchment/30 border-b border-border-warm/10 p-1.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                    <button
+                        onClick={handleReset}
+                        className={cn("px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors leading-compact text-primary/60", TYPOGRAPHY.breadcrumb)}
+                    >
+                        Home
+                    </button>
+                    <ChevronRight className="w-2.5 h-2.5 text-primary flex-shrink-0" />
                     {navPath.map((node, i) => (
                         <React.Fragment key={i}>
-                            {i > 0 && <ChevronRight className="w-2.5 h-2.5 text-primary/70 flex-shrink-0" />}
+                            {i > 0 && <ChevronRight className="w-2.5 h-2.5 text-primary flex-shrink-0" />}
                             <button
                                 onClick={() => setNavPath(navPath.slice(0, i + 1))}
-                                className={cn("px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors leading-compact", TYPOGRAPHY.breadcrumb)}
+                                className={cn(
+                                    "px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors leading-compact",
+                                    i === navPath.length - 1 ? "font-bold text-primary" : "text-primary/70",
+                                    TYPOGRAPHY.breadcrumb
+                                )}
                             >
                                 {node.planet}
                             </button>

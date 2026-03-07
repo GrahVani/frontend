@@ -23,13 +23,15 @@ import {
     Shield
 } from 'lucide-react';
 import Link from 'next/link';
+import BirthPanchanga from '@/components/astrology/BirthPanchanga';
+import PlanetaryTable from '@/components/astrology/PlanetaryTable';
 import { useVedicClient } from '@/context/VedicClientContext';
 import { useAstrologerStore } from '@/store/useAstrologerStore';
 import { clientApi } from '@/lib/api';
 import { useSystemCapabilities } from "@/hooks/queries/useCalculations";
 import { useChartMutations } from "@/hooks/mutations/useChartMutations";
 
-import { parseChartData, signIdToName } from '@/lib/chart-helpers';
+import { parseChartData, signIdToName, fullPlanetNames } from '@/lib/chart-helpers';
 
 const CHART_NAMES: Record<string, string> = {
     // Divisional Charts
@@ -110,6 +112,19 @@ export default function AnalyticalWorkbenchPage() {
     // Use shared parser
     const { planets: displayPlanets, ascendant: ascendantSign } = parseChartData(currentChart?.chartData);
 
+    // Prepare Planetary Data for Table
+    const planetaryTableData = React.useMemo(() => {
+        return displayPlanets.map(p => ({
+            planet: fullPlanetNames[p.name] || p.name,
+            sign: signIdToName[p.signId] || '-',
+            degree: p.degree,
+            nakshatra: p.nakshatra || '-',
+            nakshatraPart: p.pada ? (typeof p.pada === 'number' ? p.pada : parseInt(String(p.pada).replace('Pada ', ''))) : undefined,
+            house: p.house || 0,
+            isRetro: p.isRetro
+        }));
+    }, [displayPlanets]);
+
     if (!clientDetails) return <div className="flex flex-col items-center justify-center min-h-[400px] text-center"><p className="font-serif text-xl text-primary">Please select a client to begin analysis</p></div>;
 
     return (
@@ -152,8 +167,8 @@ export default function AnalyticalWorkbenchPage() {
             )}
 
             {/* Content Area */}
-            <div className={cn("grid grid-cols-1 gap-6", activeTab === 'dignity' ? "lg:grid-cols-1" : "lg:grid-cols-5")}>
-                <div className={cn("space-y-6", activeTab === 'dignity' ? "lg:col-span-1" : "lg:col-span-3")}>
+            <div className={cn("grid grid-cols-1 gap-3", activeTab === 'dignity' ? "lg:grid-cols-1" : "lg:grid-cols-12")}>
+                <div className={cn("space-y-6", activeTab === 'dignity' ? "lg:col-span-1" : "lg:col-span-5")}>
                     {activeTab === 'chart' || activeTab === 'lagna' ? (
                         <div className="border border-antique rounded-lg overflow-hidden shadow-sm bg-surface-warm">
                             <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
@@ -178,31 +193,29 @@ export default function AnalyticalWorkbenchPage() {
                                     )}
                                 </select>
                             </div>
-                            <div className="p-6">
-                                <div className="aspect-square max-w-md mx-auto bg-parchment rounded-3xl p-6 border border-antique relative shadow-inner">
-                                    {isLoadingCharts && Object.keys(processedCharts).length === 0 ? (
-                                        <div className="absolute inset-0 flex items-center justify-center"><Loader2 className="w-8 h-8 text-gold-primary animate-spin" /></div>
-                                    ) : displayPlanets.length > 0 ? (
-                                        <ChartWithPopup ascendantSign={ascendantSign} planets={displayPlanets} className="bg-transparent border-none" showDegrees={selectedChartType === 'D1'} />
-                                    ) : (
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-                                            <p className="text-primary italic mb-4">No data for {CHART_NAMES[selectedChartType] || selectedChartType}</p>
-                                            <button
-                                                onClick={handleGenerateChart}
-                                                className="px-6 py-2 bg-gold-primary text-ink rounded-xl font-bold hover:shadow-lg transition-all"
-                                            >
-                                                {isGeneratingLocal ? (
-                                                    <>
-                                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                                        Generating...
-                                                    </>
-                                                ) : (
-                                                    `Generate ${selectedChartType}`
-                                                )}
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
+                            <div className="w-full h-[450px] bg-surface-warm">
+                                {isLoadingCharts && Object.keys(processedCharts).length === 0 ? (
+                                    <div className="flex items-center justify-center h-full"><Loader2 className="w-8 h-8 text-gold-primary animate-spin" /></div>
+                                ) : displayPlanets.length > 0 ? (
+                                    <ChartWithPopup ascendantSign={ascendantSign} planets={displayPlanets} className="bg-transparent border-none w-full h-full" preserveAspectRatio="none" showDegrees={selectedChartType === 'D1'} />
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center text-center p-6 h-full">
+                                        <p className="text-primary italic mb-4">No data for {CHART_NAMES[selectedChartType] || selectedChartType}</p>
+                                        <button
+                                            onClick={handleGenerateChart}
+                                            className="px-6 py-2 bg-gold-primary text-ink rounded-xl font-bold hover:shadow-lg transition-all"
+                                        >
+                                            {isGeneratingLocal ? (
+                                                <>
+                                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                                    Generating...
+                                                </>
+                                            ) : (
+                                                `Generate ${selectedChartType}`
+                                            )}
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ) : (
@@ -237,36 +250,18 @@ export default function AnalyticalWorkbenchPage() {
 
                 {/* Right Panel */}
                 {activeTab !== 'dignity' && (
-                    <div className="space-y-4 h-full w-145">
+                    <div className="space-y-4 h-full lg:col-span-7">
                         <div className="border border-antique rounded-lg overflow-hidden shadow-sm bg-surface-warm flex flex-col h-full">
                             <div className="bg-border-warm px-4 py-2 border-b border-antique shrink-0">
                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Birth planetary positions</h3>
                             </div>
 
-                            {/* Table Headers */}
-                            <div className="grid grid-cols-12 px-4 py-2 border-b border-antique/30 bg-white/30 text-[10px] font-bold text-primary-refined tracking-wider shrink-0">
-                                <div className="col-span-3">Planet</div>
-                                <div className="col-span-6 text-center">Sign</div>
-                                <div className="col-span-3 text-right">Deg</div>
-                            </div>
-
                             <div className="p-0 flex-1 overflow-auto scrollbar-hide">
-                                <div className="text-sm">
-                                    {displayPlanets.map((p, i) => (
-                                        <div key={i} className="grid grid-cols-12 items-center px-4 py-3 border-b border-antique/20 last:border-0 hover:bg-parchment/20 transition-colors">
-                                            <div className="col-span-3 flex items-center gap-1">
-                                                <span className="font-bold text-primary">{p.name}</span>
-                                                {p.isRetro && <span className="text-red-500 font-bold text-[10px]">(R)</span>}
-                                            </div>
-                                            <div className="col-span-6 text-primary font-medium text-center">
-                                                {signIdToName[p.signId]}
-                                            </div>
-                                            <div className="col-span-3 text-right font-mono text-xs text-primary">
-                                                {p.degree}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+                                <PlanetaryTable
+                                    planets={planetaryTableData}
+                                    variant="expanded"
+                                    rowClassName="py-2.5"
+                                />
                             </div>
                         </div>
                     </div>
