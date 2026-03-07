@@ -116,11 +116,13 @@ function RemedyDataView({
 
     // Special view for Gemstones (Dashboard style)
     if (type === 'gemstone') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return <UpayaDashboard data={data as any} />;
     }
 
     // Special view for Yantras (Sadhana Dashboard style)
     if (type === 'yantra') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return <YantraDashboard data={data as any} />;
     }
 
@@ -128,6 +130,7 @@ function RemedyDataView({
     if (type === 'lal_kitab') {
         return (
             <LalKitabDashboard
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 data={data as any}
                 selectedPlanet={selectedPlanet}
                 selectedHouse={selectedHouse}
@@ -140,11 +143,13 @@ function RemedyDataView({
 
     // Special view for Vedic Remedies (Royal Purple Dashboard style)
     if (type === 'vedic_remedies' || type === 'vedic') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return <VedicRemediesDashboard data={data as any} />;
     }
 
     // Special view for Mantra Analysis (Sacred Sadhana Dashboard style)
     if (type === 'mantra') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return <MantraAnalysisDashboard data={data as any} />;
     }
 

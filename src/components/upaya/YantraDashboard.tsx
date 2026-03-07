@@ -77,7 +77,7 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
 
                     <div className="rounded-[2rem] bg-[rgba(254,250,234,0.6)] border border-antique shadow-xl backdrop-blur-md overflow-hidden flex flex-col p-4 space-y-4">
                         <div className="flex items-center justify-between px-1">
-                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[16px] font-bold tracking-tight")}>Today's yantra focus (priority)</h2>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[16px] font-bold tracking-tight")}>Today&apos;s yantra focus (priority)</h2>
                         </div>
 
                         <div className="space-y-4">

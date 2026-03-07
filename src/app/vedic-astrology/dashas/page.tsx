@@ -609,10 +609,13 @@ export default function VedicDashasPage() {
                                     ) : isSatabdika ? (
                                         <SatabdikaDasha periods={viewingPeriods} />
                                     ) : isDwisaptati ? (
+                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                         <DwisaptatiDasha periods={viewingPeriods} isApplicable={((otherData?.data?.mahadashas as any)?.meta)?.is_applicable !== false} />
                                     ) : isShasthihayani ? (
+                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                         <ShasthihayaniDasha periods={viewingPeriods} isApplicable={((otherData?.data?.mahadashas as any)?.meta)?.is_applicable !== false} />
                                     ) : isShattrimshatsama ? (
+                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                         <ShattrimshatsamaDasha periods={viewingPeriods} isApplicable={((otherData?.data?.mahadashas as any)?.meta)?.is_applicable !== false} />
                                     ) : isAshtottari && currentLevel === 0 ? (
                                         <AshtottariDasha
@@ -623,10 +626,12 @@ export default function VedicDashasPage() {
                                                     const result = await clientApi.generateOtherDasha(clientDetails.id, 'ashtottari', settings.ayanamsa.toLowerCase(), 'pratyantardasha', { mahaLord, antarLord });
                                                     const rawPeriods = extractPeriodsArray(result?.data);
                                                     if (rawPeriods.length > 0 && !getSublevels(rawPeriods[0])) return standardizeDashaLevels(rawPeriods);
+                                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                                     const mahaNode = rawPeriods.find((m: any) => (m.planet || m.lord) === mahaLord);
                                                     if (mahaNode) {
                                                         const antardashas = getSublevels(mahaNode);
                                                         if (antardashas) {
+                                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                                             const antarNode = antardashas.find((a: any) => (a.planet || a.lord) === antarLord);
                                                             const pratyantardashas = antarNode ? getSublevels(antarNode) : null;
                                                             if (pratyantardashas && pratyantardashas.length > 0) return standardizeDashaLevels(pratyantardashas);

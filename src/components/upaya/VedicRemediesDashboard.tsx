@@ -34,9 +34,13 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
 
     // Extract data from the complex nested structure
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const analysis = (data?.analysis || {}) as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const remedies = (data?.remedies || {}) as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mantraAnalysis = (data?.mantra_analysis || {}) as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const detailedAnalysis = (data?.detailed_analysis || {}) as any;
 
     const dashaRemedies = remedies?.dasha_remedies || {};
@@ -49,8 +53,11 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
     const weakPlanets = mantraAnalysis?.weak_planets || [];
     const recommendations = mantraAnalysis?.recommendations || [];
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const yantras = (data?.yantra_recommendations as any[]) || [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const planetaryStrengths = (data?.planetary_strengths as any) || {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const functionalNature = (data?.functional_nature as any) || {};
     const currentDasha = data?.current_dasha as string;
 
