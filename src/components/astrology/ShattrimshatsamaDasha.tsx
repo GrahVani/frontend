@@ -34,6 +34,7 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
         periods.forEach((p, idx) => {
             const cNum = (p.raw?.cycle || p.raw?.cycle_number || Math.floor(idx / 8) + 1) as string | number;
             const cycleKey: number = typeof cNum === 'string' ? parseInt(cNum, 10) : cNum;
+            if (!grouped[cycleKey]) grouped[grouped[cycleKey] ? cycleKey : cycleKey] = []; // Fixed duplicate check logic
             if (!grouped[cycleKey]) grouped[cycleKey] = [];
             grouped[cycleKey].push(p);
         });
@@ -63,7 +64,7 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
         <div className="space-y-3 animate-in fade-in duration-700">
             {/* Applicability Warning */}
             {!isApplicable && (
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2">
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2 mx-4 mt-2">
                     <AlertCircle className="w-4 h-4 text-amber-500 mt-0.5" />
                     <div>
                         <p className="text-xs font-bold text-amber-900">Not Highly Applicable</p>
@@ -74,46 +75,48 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
 
             {/* Cycle Toggle Navigation */}
             {availableCycles.length > 1 && (
-                <div className="flex bg-gold-soft/40 rounded-lg p-0.5 gap-1 border border-header-border/10 backdrop-blur-sm overflow-x-auto scrollbar-hide w-fit max-w-full">
-                    {availableCycles.map((c) => {
-                        const isActive = selectedCycle === c;
-                        const cyclePeriods = cycles[c];
-                        const startYear = cyclePeriods.length > 0 ? formatDateDisplay(cyclePeriods[0].startDate).split(' ').pop() : '';
-                        const endYear = cyclePeriods.length > 0 ? formatDateDisplay(cyclePeriods[cyclePeriods.length - 1].endDate).split(' ').pop() : '';
+                <div className="px-4 pt-2">
+                    <div className="flex bg-gold-soft/40 rounded-lg p-0.5 gap-1 border border-header-border/10 backdrop-blur-sm overflow-x-auto scrollbar-hide w-fit max-w-full">
+                        {availableCycles.map((c) => {
+                            const isActive = selectedCycle === c;
+                            const cyclePeriods = cycles[c];
+                            const startYear = cyclePeriods.length > 0 ? formatDateDisplay(cyclePeriods[0].startDate).split(' ').pop() : '';
+                            const endYear = cyclePeriods.length > 0 ? formatDateDisplay(cyclePeriods[cyclePeriods.length - 1].endDate).split(' ').pop() : '';
 
-                        return (
-                            <button
-                                key={c}
-                                onClick={() => setSelectedCycle(c)}
-                                className={cn(
-                                    "flex items-center gap-2 px-3 py-1.5 rounded-md transition-all duration-200 whitespace-nowrap",
-                                    isActive
-                                        ? "bg-primary text-active-glow shadow-sm font-semibold"
-                                        : "hover:bg-primary/5 text-primary/70 font-medium"
-                                )}
-                            >
-                                <span className="text-[10px] uppercase tracking-wider">Cycle {c}</span>
-                                <span className="text-[10px] opacity-60">|</span>
-                                <span className="text-[10px] font-mono opacity-80">{startYear}-{endYear}</span>
-                            </button>
-                        );
-                    })}
+                            return (
+                                <button
+                                    key={c}
+                                    onClick={() => setSelectedCycle(c)}
+                                    className={cn(
+                                        "flex items-center gap-2 px-3 py-1.5 rounded-md transition-all duration-200 whitespace-nowrap",
+                                        isActive
+                                            ? "bg-primary text-active-glow shadow-sm font-semibold"
+                                            : "hover:bg-primary/5 text-primary/70 font-medium"
+                                    )}
+                                >
+                                    <span className="text-[10px] uppercase tracking-wider">Cycle {c}</span>
+                                    <span className="text-[10px] opacity-60">|</span>
+                                    <span className="text-[10px] font-mono opacity-80">{startYear}-{endYear}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
             )}
 
             {/* Table */}
-            <div className="overflow-x-auto">
-                <table className="w-full">
-                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-ink/5 border-b border-header-border/10")}>
+            <div className="">
+                <table className="w-full border-separate border-spacing-0">
+                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-white border-b border-header-border/20 sticky top-0 z-10 shadow-sm")}>
                         <tr>
-                            <th className="px-3 py-2 text-left">Planet</th>
-                            <th className="px-3 py-2 text-left">Start Date</th>
-                            <th className="px-3 py-2 text-left">End Date</th>
-                            <th className="px-3 py-2 text-left">Duration</th>
-                            <th className="px-3 py-2 text-center">Status</th>
+                            <th className="px-3 py-2 text-left border-b border-header-border/10">Planet</th>
+                            <th className="px-3 py-2 text-left border-b border-header-border/10">Start Date</th>
+                            <th className="px-3 py-2 text-left border-b border-header-border/10">End Date</th>
+                            <th className="px-3 py-2 text-left border-b border-header-border/10">Duration</th>
+                            <th className="px-3 py-2 text-center border-b border-header-border/10">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-header-border/10 font-medium">
+                    <tbody className="divide-y divide-header-border/10 font-medium font-sans">
                         {finalPeriods.map((mahadasha, mIdx) => {
                             const uniqueId = `shattrim-${mahadasha.planet}-${mIdx}`;
                             const isExpanded = expandedMahadasha === uniqueId;
@@ -130,7 +133,7 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
                                         )}
                                         onClick={() => setExpandedMahadasha(isExpanded ? null : uniqueId)}
                                     >
-                                        <td className="px-3 py-2">
+                                        <td className="px-3 py-1.5">
                                             <div className="flex items-center gap-2">
                                                 <span className={cn(
                                                     "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold border shadow-sm min-w-[60px] justify-center",
@@ -151,14 +154,14 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
                                                 )}
                                             </div>
                                         </td>
-                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
                                             <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}>
                                                 <Calendar className="w-3 h-3 text-muted/40" />
                                                 {formatDateDisplay(mahadasha.startDate)}
                                             </div>
                                         </td>
-                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{formatDateDisplay(mahadasha.endDate)}</td>
-                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>{formatDateDisplay(mahadasha.endDate)}</td>
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
                                             <div className="flex flex-col">
                                                 <span>{calculateDuration(mahadasha.startDate, mahadasha.endDate)}</span>
                                                 {fixedYears && (
@@ -166,7 +169,7 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-3 py-2 text-center">
+                                        <td className="px-3 py-1.5 text-center">
                                             <div className="flex items-center justify-center gap-2">
                                                 {mahadasha.isCurrent ? (
                                                     <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span>

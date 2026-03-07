@@ -630,7 +630,7 @@ export const clientApi = {
                 },
                 features: {
                     dasha: ['mahadasha', 'antardasha', 'pratyantardasha', 'sookshma', 'prana'],
-                    ashtakavarga: ['bhinna', 'sarva', 'shodasha_summary', 'temporal_maitri', 'karaka_strength'],
+                    ashtakavarga: ['bhinna', 'sarva', 'shodasha_summary', 'temporal_maitri'],
                     shadbala: ['shadbala'],
                     compatibility: ['synastry', 'composite', 'progressed'],
                     numerology: ['chaldean', 'lo_shu']

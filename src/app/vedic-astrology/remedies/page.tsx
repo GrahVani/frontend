@@ -86,7 +86,25 @@ const REMEDY_TABS: RemedyTab[] = [
 // ============================================================================
 // Generic Remedy Data Renderer
 // ============================================================================
-function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: string }) {
+interface RemedyDataViewProps {
+    data: Record<string, unknown>;
+    type: string;
+    selectedPlanet?: string;
+    selectedHouse?: string;
+    onPlanetChange?: (val: string) => void;
+    onHouseChange?: (val: string) => void;
+    onGetRemedies?: () => void;
+}
+
+function RemedyDataView({
+    data,
+    type,
+    selectedPlanet,
+    selectedHouse,
+    onPlanetChange,
+    onHouseChange,
+    onGetRemedies
+}: RemedyDataViewProps) {
     if (!data) {
         return (
             <div className="p-8 text-center">
@@ -98,27 +116,41 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
 
     // Special view for Gemstones (Dashboard style)
     if (type === 'gemstone') {
-        return <UpayaDashboard data={data} />;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return <UpayaDashboard data={data as any} />;
     }
 
     // Special view for Yantras (Sadhana Dashboard style)
     if (type === 'yantra') {
-        return <YantraDashboard data={data} />;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return <YantraDashboard data={data as any} />;
     }
 
     // Special view for Lal Kitab (Remedial Dashboard style)
     if (type === 'lal_kitab') {
-        return <LalKitabDashboard data={data} />;
+        return (
+            <LalKitabDashboard
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                data={data as any}
+                selectedPlanet={selectedPlanet}
+                selectedHouse={selectedHouse}
+                onPlanetChange={onPlanetChange}
+                onHouseChange={onHouseChange}
+                onGetRemedies={onGetRemedies}
+            />
+        );
     }
 
     // Special view for Vedic Remedies (Royal Purple Dashboard style)
     if (type === 'vedic_remedies' || type === 'vedic') {
-        return <VedicRemediesDashboard data={data} />;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return <VedicRemediesDashboard data={data as any} />;
     }
 
     // Special view for Mantra Analysis (Sacred Sadhana Dashboard style)
     if (type === 'mantra') {
-        return <MantraAnalysisDashboard data={data} />;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return <MantraAnalysisDashboard data={data as any} />;
     }
 
     // Try to extract the actual remedy content from various response formats
@@ -127,7 +159,7 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
     // If it's an object with named keys (common pattern from astro engine)
     if (typeof remedyContent === 'object' && !Array.isArray(remedyContent)) {
         return (
-            <div className="space-y-4">
+            <div className="h-full overflow-y-auto pr-2 space-y-4 no-scrollbar">
                 {Object.entries(remedyContent).map(([key, value]: [string, unknown]) => {
                     // Skip metadata keys
                     if (['ayanamsa', 'system', 'cached', 'chart_type', 'birth_details'].includes(key)) return null;
@@ -331,107 +363,77 @@ export default function RemediesPage() {
     if (!clientDetails) return null;
 
     return (
-        <div className="space-y-6 animate-in fade-in duration-500 pb-10">
-
-            {/* Remedy Type Tabs */}
-            <div className="flex flex-wrap gap-2 p-1 bg-parchment rounded-xl border border-antique">
-                {REMEDY_TABS.map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={cn(
-                            "flex items-center gap-2 px-4 py-2.5 rounded-lg transition-all",
-                            TYPOGRAPHY.label,
-                            "!font-bold !mb-0",
-                            activeTab === tab.id
-                                ? cn("text-white shadow-md", COLORS.wbActiveTab)
-                                : "text-primary hover:text-primary hover:bg-white/50"
-                        )}
-                    >
-                        {tab.icon}
-                        <span>{tab.name}</span>
-                    </button>
-                ))}
+        <div className="flex flex-col h-[calc(100vh-130px)] overflow-hidden animate-in fade-in duration-500">
+            {/* Sticky Header Container */}
+            <div className="flex-shrink-0 z-30 py-3 bg-paper/95 backdrop-blur-sm">
+                {/* Remedy Type Tabs */}
+                <div className="flex flex-wrap gap-2 p-1 bg-parchment rounded-xl border border-antique">
+                    {REMEDY_TABS.map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={cn(
+                                "flex items-center gap-2 px-4 py-2.5 rounded-lg transition-all",
+                                TYPOGRAPHY.label,
+                                "!font-bold !mb-0",
+                                activeTab === tab.id
+                                    ? cn("text-white shadow-md", COLORS.wbActiveTab)
+                                    : "text-primary hover:text-primary hover:bg-white/50"
+                            )}
+                        >
+                            {tab.icon}
+                            <span>{tab.name}</span>
+                        </button>
+                    ))}
+                </div>
             </div>
 
-            {/* Lal Kitab Specific Inputs */}
-            {activeTab === 'lal_kitab' && (
-                <div className="flex flex-wrap gap-4 p-4 bg-white/50 rounded-xl border border-antique shadow-sm animate-in slide-in-from-top-2">
-                    <div className="flex flex-col gap-1.5">
-                        <label className={cn(TYPOGRAPHY.label, "mb-0")}>Select planet</label>
-                        <select
-                            value={selectedPlanet}
-                            onChange={(e) => setSelectedPlanet(e.target.value)}
-                            className="px-3 py-2 rounded-lg border border-antique bg-white text-sm text-primary focus:outline-none focus:ring-2 focus:ring-gold-primary/20 min-w-[150px]"
-                        >
-                            <option value="">-- All / General --</option>
-                            {PLANETS.map(p => (
-                                <option key={p} value={p}>{p}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                        <label className={cn(TYPOGRAPHY.label, "mb-0")}>Select house</label>
-                        <select
-                            value={selectedHouse}
-                            onChange={(e) => setSelectedHouse(e.target.value)}
-                            className="px-3 py-2 rounded-lg border border-antique bg-white text-sm text-primary focus:outline-none focus:ring-2 focus:ring-gold-primary/20 min-w-[150px]"
-                        >
-                            <option value="">-- All / General --</option>
-                            {HOUSES.map(h => (
-                                <option key={h} value={h}>{h} House</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className="flex items-end">
-                        <button
-                            onClick={handleRefresh}
-                            className="px-4 py-2 bg-gold-primary text-white text-sm font-medium rounded-lg hover:bg-gold-dark transition-colors flex items-center gap-2 shadow-sm"
-                        >
-                            <RefreshCw className="w-4 h-4" />
-                            Get remedies
-                        </button>
-                    </div>
+            <div className="flex-1 min-h-0">
+                {/* Content Area */}
+                <div className="h-full">
+                    {loading ? (
+                        <div className="flex flex-col items-center justify-center py-16 bg-parchment/30 rounded-2xl border border-antique">
+                            <Loader2 className="w-8 h-8 text-gold-primary animate-spin mb-4" />
+                            <p className={cn(TYPOGRAPHY.subValue)}>Consulting planetary prescriptions...</p>
+                        </div>
+                    ) : error ? (
+                        <div className="p-8 bg-red-50 border border-red-100 rounded-2xl text-center">
+                            <AlertTriangle className="w-8 h-8 text-red-500 mx-auto mb-3" />
+                            <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 mb-1")}>Prescription unavailable</h3>
+                            <p className={cn(TYPOGRAPHY.subValue, "text-red-600 max-w-md mx-auto !text-xs")}>{error}</p>
+                            <button
+                                onClick={handleRefresh}
+                                className={cn(TYPOGRAPHY.label, "mt-4 px-4 py-2 bg-red-100 text-red-700 rounded-lg !text-xs !font-bold hover:bg-red-200 transition-colors !mb-0")}
+                            >
+                                Try again
+                            </button>
+                        </div>
+                    ) : remedyData[activeTab] ? (
+                        <RemedyDataView
+                            data={remedyData[activeTab]}
+                            type={activeTab}
+                            selectedPlanet={selectedPlanet}
+                            selectedHouse={selectedHouse}
+                            onPlanetChange={setSelectedPlanet}
+                            onHouseChange={setSelectedHouse}
+                            onGetRemedies={handleRefresh}
+                        />
+                    ) : activeTab === 'lal_kitab' ? (
+                        <LalKitabDashboard
+                            data={{ data: {}, user_name: clientDetails?.name }}
+                            selectedPlanet={selectedPlanet}
+                            selectedHouse={selectedHouse}
+                            onPlanetChange={setSelectedPlanet}
+                            onHouseChange={setSelectedHouse}
+                            onGetRemedies={handleRefresh}
+                        />
+                    ) : (
+                        <div className="flex flex-col items-center justify-center py-16 bg-parchment/30 rounded-2xl border border-antique">
+                            <Gem className="w-8 h-8 text-primary mb-3" />
+                            <p className={TYPOGRAPHY.value}>Select a remedy type to view prescriptions</p>
+                        </div>
+                    )}
                 </div>
-            )}
-
-            {/* Content Area */}
-            <div className="min-h-[300px]">
-                {loading ? (
-                    <div className="flex flex-col items-center justify-center py-16 bg-parchment/30 rounded-2xl border border-antique">
-                        <Loader2 className="w-8 h-8 text-gold-primary animate-spin mb-4" />
-                        <p className={cn(TYPOGRAPHY.subValue, "italic")}>Consulting planetary prescriptions...</p>
-                    </div>
-                ) : error ? (
-                    <div className="p-8 bg-red-50 border border-red-100 rounded-2xl text-center">
-                        <AlertTriangle className="w-8 h-8 text-red-500 mx-auto mb-3" />
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 mb-1")}>Prescription unavailable</h3>
-                        <p className={cn(TYPOGRAPHY.subValue, "text-red-600 max-w-md mx-auto !text-xs")}>{error}</p>
-                        <button
-                            onClick={handleRefresh}
-                            className={cn(TYPOGRAPHY.label, "mt-4 px-4 py-2 bg-red-100 text-red-700 rounded-lg !text-xs !font-bold hover:bg-red-200 transition-colors !mb-0")}
-                        >
-                            Try again
-                        </button>
-                    </div>
-                ) : remedyData[activeTab] ? (
-                    <RemedyDataView data={remedyData[activeTab]} type={activeTab} />
-                ) : activeTab === 'lal_kitab' ? (
-                    <div className="flex flex-col items-center justify-center py-16 bg-parchment/30 rounded-2xl border border-antique animate-in fade-in">
-                        <Scroll className="w-10 h-10 text-gold-primary mb-4 opacity-70" />
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-2")}>Lal Kitab remedies</h3>
-                        <p className={cn(TYPOGRAPHY.value, "max-w-md text-center mb-6 text-primary/70")}>
-                            Lal Kitab remedies are highly specific. Please select a Planet and a House above to view the precise remedial measures.
-                        </p>
-                    </div>
-                ) : (
-                    <div className="flex flex-col items-center justify-center py-16 bg-parchment/30 rounded-2xl border border-antique">
-                        <Gem className="w-8 h-8 text-primary mb-3" />
-                        <p className={TYPOGRAPHY.value}>Select a remedy type to view prescriptions</p>
-                    </div>
-                )}
             </div>
         </div>
     );

@@ -76,10 +76,10 @@ const DashaRemediesCard: React.FC<DashaRemediesCardProps> = ({ dashaData }) => {
         <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className={cn("p-6 h-full backdrop-blur-md relative overflow-hidden group flex flex-col", styles.glassPanel)}
+            className={cn("p-4 md:p-5 backdrop-blur-md relative overflow-hidden group flex flex-col rounded-[2rem]", styles.glassPanel)}
         >
             {/* Header */}
-            <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-4 mb-8">
+            <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-3 mb-5">
                 <div>
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 text-ink">Current mahadasha phase</h3>
                     <div className="flex items-baseline gap-2">
@@ -112,9 +112,9 @@ const DashaRemediesCard: React.FC<DashaRemediesCardProps> = ({ dashaData }) => {
                 {remedies.map((remedy, idx) => (
                     <motion.div
                         key={idx}
-                        className="border border-divider/20 p-4 rounded-2xl flex flex-col gap-2 transition-all group overflow-hidden relative bg-white/30"
+                        className="border border-divider/20 p-3 md:p-4 rounded-2xl flex flex-col gap-1.5 transition-all group overflow-hidden relative bg-white/30"
                     >
-                        <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center justify-between mb-0.5">
                             <div className="flex items-center gap-2">
                                 <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-purple-50 text-purple-600 border border-purple-100/50">
                                     {getCategoryIcon(remedy.category)}
@@ -122,7 +122,7 @@ const DashaRemediesCard: React.FC<DashaRemediesCardProps> = ({ dashaData }) => {
                                 <h3 className="text-[10px] font-black uppercase tracking-widest">{remedy.category}</h3>
                             </div>
                             <span className={cn(
-                                "px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-widest border",
+                                "px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest border",
                                 getPriorityColor(remedy.priority)
                             )}>
                                 {remedy.priority}
@@ -131,30 +131,27 @@ const DashaRemediesCard: React.FC<DashaRemediesCardProps> = ({ dashaData }) => {
 
                         <div className="flex-1">
                             {remedy.mantra && (
-                                <p className="text-sm font-bold leading-tight italic mb-2 tracking-tight text-ink">"{remedy.mantra}"</p>
+                                <p className="text-[13px] font-bold leading-tight mb-1.5 tracking-tight text-ink">{remedy.mantra}</p>
                             )}
                             {remedy.items && (
-                                <p className="text-xs font-semibold text-body">
-                                    <span className="text-[9px] uppercase tracking-wider font-black mr-2">Donate:</span> {remedy.items.join(', ')}
+                                <p className="text-[11px] font-semibold text-body">
+                                    <span className="text-[9px] uppercase tracking-wider font-black mr-1.5">Donate:</span> {remedy.items.join(', ')}
                                 </p>
                             )}
                             {remedy.suggestions && (
-                                <p className="text-xs font-semibold text-body">{remedy.suggestions[0]}</p>
+                                <p className="text-[11px] font-semibold text-body">{remedy.suggestions[0]}</p>
                             )}
                             {remedy.yantra && (
-                                <p className="text-xs font-semibold text-body">
-                                    <span className="text-[9px] uppercase tracking-wider font-black mr-2">Worship:</span> {remedy.yantra}
+                                <p className="text-[11px] font-semibold text-body">
+                                    <span className="text-[9px] uppercase tracking-wider font-black mr-1.5">Worship:</span> {remedy.yantra}
                                 </p>
                             )}
                         </div>
 
-                        <div className="mt-2 pt-2 border-t flex items-center justify-between border-antique/20">
+                        <div className="mt-1.5 pt-1.5 border-t flex items-center justify-between border-antique/20">
                             <span className="text-[9px] font-black uppercase tracking-widest">
                                 {remedy.deity || (remedy.count ? `${remedy.count.toLocaleString()} Chants` : '') || (remedy.color ? `Color: ${remedy.color}` : 'Standard')}
                             </span>
-                            <div className="w-5 h-5 rounded-full flex items-center justify-center bg-white/50 border border-antique/20 text-antique group-hover:bg-purple-50 group-hover:text-purple-600 transition-colors">
-                                <ArrowRight className="w-2.5 h-2.5" />
-                            </div>
                         </div>
                     </motion.div>
                 ))}

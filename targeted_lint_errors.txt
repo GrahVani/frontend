@@ -1,0 +1,90 @@
+﻿
+D:\Grahvani\frontend-grahvani-software\src\app\vedic-astrology\dashas\page.tsx
+    3:38   warning  'useMemo' is defined but never used                                                                                               @typescript-eslint/no-unused-vars
+    5:28   warning  'ChevronLeft' is defined but never used                                                                                           @typescript-eslint/no-unused-vars
+    6:39   warning  'Clock' is defined but never used                                                                                                 @typescript-eslint/no-unused-vars
+    7:42   warning  'Zap' is defined but never used                                                                                                   @typescript-eslint/no-unused-vars
+    7:47   warning  'Search' is defined but never used                                                                                                @typescript-eslint/no-unused-vars
+    8:5    warning  'User' is defined but never used                                                                                                  @typescript-eslint/no-unused-vars
+    8:11   warning  'MapPin' is defined but never used                                                                                                @typescript-eslint/no-unused-vars
+   10:8    warning  'Link' is defined but never used                                                                                                  @typescript-eslint/no-unused-vars
+  110:11   warning  'queryClient' is assigned a value but never used                                                                                  @typescript-eslint/no-unused-vars
+  127:8    warning  React Hook useEffect has a missing dependency: 'refreshCharts'. Either include it or remove the dependency array                  react-hooks/exhaustive-deps
+  152:64   warning  'treeError' is assigned a value but never used                                                                                    @typescript-eslint/no-unused-vars
+  282:8    warning  React Hook useEffect has missing dependencies: 'isChara' and 'isVimshottari'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  315:22   warning  'err' is defined but never used                                                                                                   @typescript-eslint/no-unused-vars
+  372:11   warning  'metadata' is assigned a value but never used                                                                                     @typescript-eslint/no-unused-vars
+  612:130  error    Unexpected any. Specify a different type                                                                                          @typescript-eslint/no-explicit-any
+  614:133  error    Unexpected any. Specify a different type                                                                                          @typescript-eslint/no-explicit-any
+  616:136  error    Unexpected any. Specify a different type                                                                                          @typescript-eslint/no-explicit-any
+  626:90   error    Unexpected any. Specify a different type                                                                                          @typescript-eslint/no-explicit-any
+  630:100  error    Unexpected any. Specify a different type                                                                                          @typescript-eslint/no-explicit-any
+  636:58   warning  'err' is defined but never used                                                                                                   @typescript-eslint/no-unused-vars
+
+D:\Grahvani\frontend-grahvani-software\src\app\vedic-astrology\kp\page.tsx
+   21:5    warning  'KpDashboardHeader' is defined but never used                                                                                                                                                    @typescript-eslint/no-unused-vars
+   22:5    warning  'KpChartSummaryPanel' is defined but never used                                                                                                                                                  @typescript-eslint/no-unused-vars
+   23:5    warning  'KpDashboardSidebar' is defined but never used                                                                                                                                                   @typescript-eslint/no-unused-vars
+   27:10   warning  'ChartWithPopup' is defined but never used                                                                                                                                                       @typescript-eslint/no-unused-vars
+   54:5    warning  'ArrowLeft' is defined but never used                                                                                                                                                            @typescript-eslint/no-unused-vars
+   55:5    warning  'Compass' is defined but never used                                                                                                                                                              @typescript-eslint/no-unused-vars
+   57:8    warning  'Link' is defined but never used                                                                                                                                                                 @typescript-eslint/no-unused-vars
+  209:39   error    Unexpected any. Specify a different type                                                                                                                                                         @typescript-eslint/no-explicit-any
+  285:40   error    Unexpected any. Specify a different type                                                                                                                                                         @typescript-eslint/no-explicit-any
+  289:70   error    Unexpected any. Specify a different type                                                                                                                                                         @typescript-eslint/no-explicit-any
+  294:87   error    Unexpected any. Specify a different type                                                                                                                                                         @typescript-eslint/no-explicit-any
+  349:55   error    Unexpected any. Specify a different type                                                                                                                                                         @typescript-eslint/no-explicit-any
+  404:107  error    Unexpected any. Specify a different type                                                                                                                                                         @typescript-eslint/no-explicit-any
+  427:70   error    Unexpected any. Specify a different type                                                                                                                                                         @typescript-eslint/no-explicit-any
+  451:70   error    Unexpected any. Specify a different type                                                                                                                                                         @typescript-eslint/no-explicit-any
+  473:84   error    Unexpected any. Specify a different type                                                                                                                                                         @typescript-eslint/no-explicit-any
+  484:80   error    Unexpected any. Specify a different type                                                                                                                                                         @typescript-eslint/no-explicit-any
+  563:11   warning  'summaryPlanets' is assigned a value but never used                                                                                                                                              @typescript-eslint/no-unused-vars
+  563:28   error    React Hook "React.useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+  571:11   warning  'lagnaInfo' is assigned a value but never used                                                                                                                                                   @typescript-eslint/no-unused-vars
+  571:23   error    React Hook "React.useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+  579:11   warning  'moonInfo' is assigned a value but never used                                                                                                                                                    @typescript-eslint/no-unused-vars
+  579:22   error    React Hook "React.useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+  588:11   warning  'ayanamsaInfo' is assigned a value but never used                                                                                                                                                @typescript-eslint/no-unused-vars
+  588:26   error    React Hook "React.useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+  600:11   warning  'cuspalTableData' is assigned a value but never used                                                                                                                                             @typescript-eslint/no-unused-vars
+  600:29   error    React Hook "React.useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+  611:11   warning  'handleSidebarSection' is assigned a value but never used                                                                                                                                        @typescript-eslint/no-unused-vars
+
+D:\Grahvani\frontend-grahvani-software\src\app\vedic-astrology\remedies\page.tsx
+    7:5   warning  'HandHeart' is defined but never used                                                                                                                   @typescript-eslint/no-unused-vars
+   14:5   warning  'ArrowLeft' is defined but never used                                                                                                                   @typescript-eslint/no-unused-vars
+   15:5   warning  'RefreshCw' is defined but never used                                                                                                                   @typescript-eslint/no-unused-vars
+   17:8   warning  'Link' is defined but never used                                                                                                                        @typescript-eslint/no-unused-vars
+  119:46  error    Unexpected any. Specify a different type                                                                                                                @typescript-eslint/no-explicit-any
+  124:47  error    Unexpected any. Specify a different type                                                                                                                @typescript-eslint/no-explicit-any
+  131:31  error    Unexpected any. Specify a different type                                                                                                                @typescript-eslint/no-explicit-any
+  143:54  error    Unexpected any. Specify a different type                                                                                                                @typescript-eslint/no-explicit-any
+  148:55  error    Unexpected any. Specify a different type                                                                                                                @typescript-eslint/no-explicit-any
+  258:11  warning  'PLANETS' is assigned a value but never used                                                                                                            @typescript-eslint/no-unused-vars
+  262:11  warning  'HOUSES' is assigned a value but never used                                                                                                             @typescript-eslint/no-unused-vars
+  306:8   warning  React Hook useEffect has missing dependencies: 'remedyData', 'selectedHouse', and 'selectedPlanet'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+D:\Grahvani\frontend-grahvani-software\src\components\astrology\AshtottariDasha.tsx
+  38:22  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\Grahvani\frontend-grahvani-software\src\components\upaya\VedicRemediesDashboard.tsx
+   6:5   warning  'BookOpen' is defined but never used                   @typescript-eslint/no-unused-vars
+   7:5   warning  'Heart' is defined but never used                      @typescript-eslint/no-unused-vars
+   8:5   warning  'Flower2' is defined but never used                    @typescript-eslint/no-unused-vars
+   9:5   warning  'Compass' is defined but never used                    @typescript-eslint/no-unused-vars
+  11:5   warning  'Crown' is defined but never used                      @typescript-eslint/no-unused-vars
+  38:48  error    Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  39:61  error    Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  40:11  warning  'detailedAnalysis' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  40:65  error    Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  50:11  warning  'recommendations' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  52:54  error    Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  53:62  error    Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  54:58  error    Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+
+D:\Grahvani\frontend-grahvani-software\src\components\upaya\YantraDashboard.tsx
+  80:118  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+Γ£û 75 problems (32 errors, 43 warnings)
+
