@@ -1,8 +1,12 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode, useEffect, useMemo, useCallback } from "react";
+import { usePathname } from "next/navigation";
 import { useClientCharts, type ChartLookup } from "@/hooks/queries/useClientCharts";
 import { useGenerateProfile } from "@/hooks/mutations/useGenerateProfile";
+
+/** Pages that consume chart data — only fetch charts when on these routes */
+const CHART_ROUTES = ['/vedic-astrology', '/client/', '/comparison', '/matchmaking'];
 
 export interface VedicClientDetails {
     id?: string;
@@ -40,12 +44,18 @@ const VedicClientContext = createContext<VedicClientContextType | undefined>(und
 export function VedicClientProvider({ children }: { children: ReactNode }) {
     const [clientDetails, setClientDetails] = useState<VedicClientDetails | null>(null);
     const [isInitialized, setIsInitialized] = useState(false);
+    const pathname = usePathname();
+
+    // Only fetch charts when on pages that actually need them (avoids 401 on dashboard/settings)
+    const needsCharts = CHART_ROUTES.some(route => pathname?.startsWith(route));
+    const chartClientId = needsCharts ? clientDetails?.id : undefined;
+
     const {
         data: processedCharts = {},
         isLoading: isQueryLoading,
         isRefetching: isRefreshingCharts,
         refetch: refreshCharts
-    } = useClientCharts(clientDetails?.id);
+    } = useClientCharts(chartClientId);
 
     const generateMutation = useGenerateProfile();
     const isGeneratingCharts = generateMutation.isPending;
