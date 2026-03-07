@@ -1,10 +1,6 @@
 // Panchang API — standalone panchang calculations (no client required)
-// Primary: Gateway route /api/v1/panchang → astro-engine /api/panchanga
-// Fallback: Direct Astro Engine call if gateway route is unavailable
+// Calls Astro Engine directly — panchang is a public endpoint, no auth needed.
 
-import { apiFetch } from './core';
-
-const GATEWAY_URL = process.env.NEXT_PUBLIC_AUTH_SERVICE_URL?.replace('/api/v1', '') || 'http://localhost:8080';
 const ASTRO_ENGINE_URL = process.env.NEXT_PUBLIC_ASTRO_ENGINE_URL || 'https://api-astro.grahvani.in';
 
 export interface PanchangRequest {
@@ -44,31 +40,31 @@ function todayRequest(overrides?: Partial<PanchangRequest>): PanchangRequest {
     };
 }
 
-/** Try gateway first, fall back to direct Astro Engine if gateway returns 404 */
-async function fetchWithFallback(gatewayPath: string, enginePath: string, body: string): Promise<PanchangResponse> {
-    try {
-        return await apiFetch(`${GATEWAY_URL}${gatewayPath}`, { method: 'POST', body });
-    } catch (error: unknown) {
-        const is404 = error instanceof Error && ('status' in error) && (error as { status: number }).status === 404;
-        const isNetworkError = error instanceof Error && error.message === 'Failed to fetch';
-        if (is404 || isNetworkError) {
-            // Gateway doesn't have this route yet — call Astro Engine directly
-            return await apiFetch(`${ASTRO_ENGINE_URL}${enginePath}`, { method: 'POST', body });
-        }
-        throw error;
+/** Direct Astro Engine fetch — no auth token, no gateway proxy */
+async function panchangFetch(path: string, body: string): Promise<PanchangResponse> {
+    const response = await fetch(`${ASTRO_ENGINE_URL}${path}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body,
+    });
+
+    if (!response.ok) {
+        throw new Error(`Panchang API error: ${response.status} ${response.statusText}`);
     }
+
+    return response.json();
 }
 
 export const panchangApi = {
     getPanchang: (req?: Partial<PanchangRequest>): Promise<PanchangResponse> =>
-        fetchWithFallback('/api/v1/panchang', '/api/panchanga', JSON.stringify(todayRequest(req))),
+        panchangFetch('/api/panchanga', JSON.stringify(todayRequest(req))),
 
     getChoghadiya: (req?: Partial<PanchangRequest>): Promise<PanchangResponse> =>
-        fetchWithFallback('/api/v1/panchang/choghadiya', '/api/panchanga/choghadiya', JSON.stringify(todayRequest(req))),
+        panchangFetch('/api/panchanga/choghadiya', JSON.stringify(todayRequest(req))),
 
     getHora: (req?: Partial<PanchangRequest>): Promise<PanchangResponse> =>
-        fetchWithFallback('/api/v1/panchang/hora', '/api/panchanga/hora', JSON.stringify(todayRequest(req))),
+        panchangFetch('/api/panchanga/hora', JSON.stringify(todayRequest(req))),
 
     getMuhurat: (req?: Partial<PanchangRequest>): Promise<PanchangResponse> =>
-        fetchWithFallback('/api/v1/panchang/muhurat', '/api/panchanga/muhurat', JSON.stringify(todayRequest(req))),
+        panchangFetch('/api/panchanga/muhurat', JSON.stringify(todayRequest(req))),
 };
