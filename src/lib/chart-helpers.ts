@@ -32,7 +32,7 @@ fullPlanetNames['As'] = 'Ascendant';
  * Standardizes chart data parsing for all chart types (D1, D9, etc.)`
  * Extracts Planets and Ascendant Sign ID.
  */
-export function parseChartData(chartData: Record<string, unknown> | object): ProcessedChartData {
+export function parseChartData(chartData: unknown): ProcessedChartData {
     if (!chartData) return { planets: [], ascendant: 1 };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Polymorphic Astro Engine API: duck-typing across many response shapes

@@ -340,7 +340,7 @@ function PushkaraDashboard({ data }: { data: PushkaraData }) {
                         {summary.total_planets_in_pushkara} OF {Object.keys(data.planets).length} IN PUSHKARA
                     </span>
                 </div>
-                <div className="p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {allPlanets.map((planet, idx) => (
                         <PlanetPushkaraCard key={planet.name} planet={planet} index={idx} />
                     ))}

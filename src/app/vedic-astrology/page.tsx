@@ -101,9 +101,23 @@ export default function VedicClientSelectionPage() {
                 {/* Empty State */}
                 {!loading && !error && filteredClients.length === 0 && (
                     <div className="text-center py-16 rounded-2xl bg-softwhite border border-antique">
-                        <p className="font-serif text-2xl italic text-muted-refined leading-relaxed">
-                            No clients match your search.
-                        </p>
+                        {searchQuery ? (
+                            <p className="font-serif text-2xl italic text-muted-refined leading-relaxed">
+                                No clients match your search.
+                            </p>
+                        ) : (
+                            <>
+                                <p className="font-serif text-2xl italic text-muted-refined leading-relaxed mb-4">
+                                    No clients yet. Create your first client to begin charting.
+                                </p>
+                                <Link
+                                    href="/clients/new"
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-gold-primary text-white font-serif font-bold rounded-xl hover:bg-gold-dark transition-colors"
+                                >
+                                    + Create First Client
+                                </Link>
+                            </>
+                        )}
                     </div>
                 )}
             </div>

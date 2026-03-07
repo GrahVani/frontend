@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Users, Star, Clock, CalendarDays, Zap, ArrowRight } from "lucide-react";
-import { SkeletonCard } from "@/components/ui/Skeleton";
+import { Users, Star, Clock, CalendarDays, ArrowRight, Sunrise, Sunset } from "lucide-react";
+import { usePanchang } from "@/hooks/queries/usePanchang";
+import { cn } from "@/lib/utils";
 
 function QuickActionCard({ href, icon: Icon, title, description }: {
     href: string;
@@ -27,7 +28,21 @@ function QuickActionCard({ href, icon: Icon, title, description }: {
     );
 }
 
+function PanchangSkeleton() {
+    return (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+            {['Tithi', 'Nakshatra', 'Yoga', 'Karana'].map((label) => (
+                <div key={label} className="bg-parchment/50 rounded-lg p-3">
+                    <span className="text-xs text-muted-refined font-medium block">{label}</span>
+                    <div className="h-4 w-24 bg-antique/40 rounded animate-pulse mt-1" />
+                </div>
+            ))}
+        </div>
+    );
+}
+
 function PanchangWidget() {
+    const { data: panchang, isLoading, isError } = usePanchang();
     const today = new Date();
     const dateStr = today.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -37,24 +52,48 @@ function PanchangWidget() {
                 Today&apos;s Panchang
             </h2>
             <p className="text-lg font-serif text-ink font-semibold">{dateStr}</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
-                <div className="bg-parchment/50 rounded-lg p-3">
-                    <span className="text-xs text-muted-refined font-medium block">Tithi</span>
-                    <span className="text-sm font-serif font-semibold text-ink">Shukla Ekadashi</span>
+
+            {isLoading ? (
+                <PanchangSkeleton />
+            ) : isError ? (
+                <div className="mt-4 bg-parchment/30 rounded-lg p-4 text-center">
+                    <p className="text-sm text-muted-refined">Unable to load today&apos;s panchang</p>
+                    <p className="text-xs text-muted-refined mt-1 italic">Please try refreshing the page</p>
                 </div>
-                <div className="bg-parchment/50 rounded-lg p-3">
-                    <span className="text-xs text-muted-refined font-medium block">Nakshatra</span>
-                    <span className="text-sm font-serif font-semibold text-ink">Uttara Phalguni</span>
-                </div>
-                <div className="bg-parchment/50 rounded-lg p-3">
-                    <span className="text-xs text-muted-refined font-medium block">Yoga</span>
-                    <span className="text-sm font-serif font-semibold text-ink">Siddha</span>
-                </div>
-                <div className="bg-parchment/50 rounded-lg p-3">
-                    <span className="text-xs text-muted-refined font-medium block">Karana</span>
-                    <span className="text-sm font-serif font-semibold text-ink">Balava</span>
-                </div>
-            </div>
+            ) : panchang ? (
+                <>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+                        {[
+                            { label: 'Tithi', value: panchang.tithi },
+                            { label: 'Nakshatra', value: panchang.nakshatra },
+                            { label: 'Yoga', value: panchang.yoga },
+                            { label: 'Karana', value: panchang.karana },
+                        ].map(({ label, value }) => (
+                            <div key={label} className="bg-parchment/50 rounded-lg p-3">
+                                <span className="text-xs text-muted-refined font-medium block">{label}</span>
+                                <span className="text-sm font-serif font-semibold text-ink block mt-1">{value}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Sunrise/Sunset row */}
+                    {(panchang.sunrise !== '-' || panchang.sunset !== '-') && (
+                        <div className="flex gap-6 mt-3 text-xs text-muted-refined">
+                            <span className="inline-flex items-center gap-1">
+                                <Sunrise className="w-3.5 h-3.5 text-amber-500" />
+                                {panchang.sunrise}
+                            </span>
+                            <span className="inline-flex items-center gap-1">
+                                <Sunset className="w-3.5 h-3.5 text-orange-500" />
+                                {panchang.sunset}
+                            </span>
+                            {panchang.vara && panchang.vara !== '-' && (
+                                <span className="text-muted-refined">{panchang.vara}</span>
+                            )}
+                        </div>
+                    )}
+                </>
+            ) : null}
         </div>
     );
 }
@@ -76,7 +115,7 @@ function ActiveSessionsWidget() {
 
 export default function Dashboard() {
     return (
-        <div className="max-w-7xl mx-auto space-y-6">
+        <div className="space-y-6">
             <div>
                 <h1 className="text-3xl font-serif text-ink font-bold mb-2">Dashboard</h1>
                 <p className="text-muted-refined font-serif italic">Your astrology command center</p>

@@ -66,13 +66,13 @@ export default function PlanetaryTable({ planets, className, rowClassName, varia
                         )}
                     >
                         {/* Planet Name */}
-                        <div className={cn(colWidths.planet, "shrink-0 truncate", TYPOGRAPHY.planetName)}>
+                        <div className={cn(colWidths.planet, "shrink-0 truncate", TYPOGRAPHY.planetName)} title={p.planet}>
                             {p.planet}
                             {p.isRetro && <span className="ml-0.5 text-red-600 text-xs">(R)</span>}
                         </div>
 
                         {/* Sign */}
-                        <div className={cn(colWidths.sign, "shrink-0 truncate font-regular", TYPOGRAPHY.planetName)}>
+                        <div className={cn(colWidths.sign, "shrink-0 truncate font-regular", TYPOGRAPHY.planetName)} title={p.sign}>
                             {p.sign}
                         </div>
 
@@ -82,7 +82,7 @@ export default function PlanetaryTable({ planets, className, rowClassName, varia
                         </div>
 
                         {/* Nakshatra */}
-                        <div className={cn(colWidths.nakshatra, "truncate font-regular", TYPOGRAPHY.planetName)}>
+                        <div className={cn(colWidths.nakshatra, "truncate font-regular", TYPOGRAPHY.planetName)} title={p.nakshatra}>
                             {p.nakshatra}
                         </div>
 

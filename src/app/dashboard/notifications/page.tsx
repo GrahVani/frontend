@@ -28,10 +28,10 @@ function NotificationItem({ notification, onToggleRead }: {
                     : "bg-parchment/30 border-gold-primary/20"
             }`}
         >
-            <div className={`w-2 h-2 rounded-full mt-2 shrink-0 ${notification.read ? "bg-antique" : "bg-gold-primary"}`} />
+            <div className={`w-2 h-2 rounded-full mt-2 shrink-0 ${notification.read ? "bg-antique" : "bg-gold-primary"}`} aria-label={notification.read ? "Read" : "Unread"} role="img" />
             <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
-                    <h3 className="text-sm font-serif font-semibold text-ink truncate">{notification.title}</h3>
+                    <h3 className="text-sm font-serif font-semibold text-ink truncate" title={notification.title}>{notification.title}</h3>
                     <Badge variant={badgeVariant} size="sm">{notification.type}</Badge>
                 </div>
                 <p className="text-sm text-muted-refined">{notification.message}</p>
@@ -39,7 +39,7 @@ function NotificationItem({ notification, onToggleRead }: {
             </div>
             <button
                 onClick={() => onToggleRead(notification.id)}
-                className="shrink-0 p-1.5 rounded-md hover:bg-parchment transition-colors"
+                className="shrink-0 p-2.5 rounded-md hover:bg-parchment transition-colors"
                 aria-label={notification.read ? "Mark as unread" : "Mark as read"}
             >
                 {notification.read ? (

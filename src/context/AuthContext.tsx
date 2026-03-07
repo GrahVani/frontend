@@ -1,7 +1,6 @@
 "use client";
 
-import React, { createContext, useContext } from "react";
-import { authApi, userApi } from "@/lib/api";
+import React, { createContext, useContext, useMemo, useCallback } from "react";
 import { useUserProfile } from "@/hooks/queries/useUserProfile";
 import { useAuthMutations } from "@/hooks/mutations/useAuthMutations";
 
@@ -36,25 +35,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const user = rawUser as UserProfile | null;
     const { loginMutation, logoutMutation } = useAuthMutations();
 
-    const login = async (credentials: LoginCredentials) => {
+    const login = useCallback(async (credentials: LoginCredentials) => {
         await loginMutation.mutateAsync(credentials);
-    };
+    }, [loginMutation]);
 
-    const logout = async () => {
+    const logout = useCallback(async () => {
         await logoutMutation.mutateAsync();
-    };
+    }, [logoutMutation]);
+
+    const handleRefreshProfile = useCallback(async () => {
+        await refreshProfile();
+    }, [refreshProfile]);
+
+    // ST-001: Memoize context value to prevent unnecessary consumer re-renders
+    const value = useMemo<AuthContextType>(() => ({
+        user,
+        loading,
+        login,
+        logout,
+        refreshProfile: handleRefreshProfile,
+        isAuthenticated: !!user,
+    }), [user, loading, login, logout, handleRefreshProfile]);
 
     return (
-        <AuthContext.Provider
-            value={{
-                user,
-                loading,
-                login,
-                logout,
-                refreshProfile: async () => { await refreshProfile(); },
-                isAuthenticated: !!user,
-            }}
-        >
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );

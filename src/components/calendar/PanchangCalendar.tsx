@@ -55,11 +55,11 @@ export default function PanchangCalendar({
         <div className={cn("bg-softwhite border border-antique rounded-xl p-5", className)}>
             {/* Month Navigation */}
             <div className="flex items-center justify-between mb-4">
-                <button onClick={handlePrev} className="p-1.5 rounded-md hover:bg-parchment transition-colors" aria-label="Previous month">
+                <button onClick={handlePrev} className="p-2.5 rounded-md hover:bg-parchment transition-colors" aria-label="Previous month">
                     <ChevronLeft className="w-5 h-5 text-ink" />
                 </button>
                 <h3 className="text-lg font-serif font-bold text-ink">{monthName}</h3>
-                <button onClick={handleNext} className="p-1.5 rounded-md hover:bg-parchment transition-colors" aria-label="Next month">
+                <button onClick={handleNext} className="p-2.5 rounded-md hover:bg-parchment transition-colors" aria-label="Next month">
                     <ChevronRight className="w-5 h-5 text-ink" />
                 </button>
             </div>
@@ -124,21 +124,21 @@ export default function PanchangCalendar({
                 const dayData = days.find((d) => d.date === selectedDate);
                 if (!dayData) return null;
                 return (
-                    <div className="mt-4 pt-4 border-t border-antique/50">
+                    <div className="mt-3 pt-3 border-t border-antique/50">
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                            <div className="bg-parchment/40 rounded-lg p-2">
+                            <div className="bg-parchment/40 rounded-lg p-3">
                                 <span className="text-xs text-muted-refined block">Tithi</span>
                                 <span className="text-sm font-serif font-semibold text-ink">{dayData.tithi}</span>
                             </div>
-                            <div className="bg-parchment/40 rounded-lg p-2">
+                            <div className="bg-parchment/40 rounded-lg p-3">
                                 <span className="text-xs text-muted-refined block">Nakshatra</span>
                                 <span className="text-sm font-serif font-semibold text-ink">{dayData.nakshatra}</span>
                             </div>
-                            <div className="bg-parchment/40 rounded-lg p-2">
+                            <div className="bg-parchment/40 rounded-lg p-3">
                                 <span className="text-xs text-muted-refined block">Yoga</span>
                                 <span className="text-sm font-serif font-semibold text-ink">{dayData.yoga}</span>
                             </div>
-                            <div className="bg-parchment/40 rounded-lg p-2">
+                            <div className="bg-parchment/40 rounded-lg p-3">
                                 <span className="text-xs text-muted-refined block">Karana</span>
                                 <span className="text-sm font-serif font-semibold text-ink">{dayData.karana}</span>
                             </div>

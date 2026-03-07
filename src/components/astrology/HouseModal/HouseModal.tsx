@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect } from 'react';
-import { X, Sparkles, Home as HomeIcon, Star, Info, Orbit } from 'lucide-react';
+import React from 'react';
+import { X, Sparkles, Star, Info, Orbit } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getHouseDetails } from '@/data/house-data';
 import { Planet } from '../NorthIndianChart/NorthIndianChart';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface HouseModalProps {
     houseNumber: number;
@@ -16,15 +17,7 @@ interface HouseModalProps {
 export default function HouseModal({ houseNumber, ascendantSign, planets, onClose }: HouseModalProps) {
     const houseDetails = getHouseDetails(houseNumber, ascendantSign);
     const planetsInHouse = planets.filter(p => p.signId === ((ascendantSign + houseNumber - 2) % 12) + 1);
-
-    // Close on ESC key
-    useEffect(() => {
-        const handleEscape = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') onClose();
-        };
-        window.addEventListener('keydown', handleEscape);
-        return () => window.removeEventListener('keydown', handleEscape);
-    }, [onClose]);
+    const trapRef = useFocusTrap(onClose);
 
     const titleId = `house-modal-title-${houseNumber}`;
 
@@ -40,10 +33,12 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
             {/* Modal Container */}
             <div className="fixed inset-0 z-[201] flex items-center justify-center p-6 pointer-events-none">
                 <div
+                    ref={trapRef}
                     role="dialog"
                     aria-modal="true"
                     aria-labelledby={titleId}
-                    className="bg-softwhite border-[3px] border-header-border/60 rounded-[3.5rem] p-12 max-w-3xl w-full relative shadow-[0_50px_150px_rgba(62,42,31,0.5)] pointer-events-auto animate-in zoom-in-95 fade-in duration-500 overflow-hidden"
+                    tabIndex={-1}
+                    className="bg-softwhite border-[3px] border-header-border/60 rounded-[3.5rem] p-12 max-w-3xl w-full relative shadow-[0_50px_150px_rgba(62,42,31,0.5)] pointer-events-auto animate-in zoom-in-95 fade-in duration-500 overflow-hidden outline-none"
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* Decorative Background Elements */}

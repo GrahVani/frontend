@@ -1,24 +1,71 @@
 "use client";
 
-import { useState } from "react";
-import { Settings, Save } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Save } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { useToast } from "@/context/ToastContext";
 
 type Ayanamsa = "lahiri" | "raman" | "kp";
 type ChartStyle = "north_indian" | "south_indian" | "east_indian";
 
+const SETTINGS_KEY = "grahvani:chart-preferences";
+
+interface ChartPreferences {
+    ayanamsa: Ayanamsa;
+    chartStyle: ChartStyle;
+    defaultOrb: string;
+    showRetro: boolean;
+    showDegrees: boolean;
+}
+
+const DEFAULTS: ChartPreferences = {
+    ayanamsa: "lahiri",
+    chartStyle: "north_indian",
+    defaultOrb: "8",
+    showRetro: true,
+    showDegrees: true,
+};
+
+function loadPreferences(): ChartPreferences {
+    if (typeof window === "undefined") return DEFAULTS;
+    try {
+        const raw = localStorage.getItem(SETTINGS_KEY);
+        if (!raw) return DEFAULTS;
+        return { ...DEFAULTS, ...JSON.parse(raw) };
+    } catch {
+        return DEFAULTS;
+    }
+}
+
 export default function SettingsPage() {
     const toast = useToast();
-    const [ayanamsa, setAyanamsa] = useState<Ayanamsa>("lahiri");
-    const [chartStyle, setChartStyle] = useState<ChartStyle>("north_indian");
-    const [defaultOrb, setDefaultOrb] = useState("8");
-    const [showRetro, setShowRetro] = useState(true);
-    const [showDegrees, setShowDegrees] = useState(true);
+    const [loaded, setLoaded] = useState(false);
+    const [ayanamsa, setAyanamsa] = useState<Ayanamsa>(DEFAULTS.ayanamsa);
+    const [chartStyle, setChartStyle] = useState<ChartStyle>(DEFAULTS.chartStyle);
+    const [defaultOrb, setDefaultOrb] = useState(DEFAULTS.defaultOrb);
+    const [showRetro, setShowRetro] = useState(DEFAULTS.showRetro);
+    const [showDegrees, setShowDegrees] = useState(DEFAULTS.showDegrees);
+
+    // Hydrate from localStorage after mount
+    useEffect(() => {
+        const prefs = loadPreferences();
+        setAyanamsa(prefs.ayanamsa);
+        setChartStyle(prefs.chartStyle);
+        setDefaultOrb(prefs.defaultOrb);
+        setShowRetro(prefs.showRetro);
+        setShowDegrees(prefs.showDegrees);
+        setLoaded(true);
+    }, []);
 
     const handleSave = () => {
-        // TODO: Persist to user settings API
-        toast.success("Chart preferences saved successfully.");
+        const prefs: ChartPreferences = { ayanamsa, chartStyle, defaultOrb, showRetro, showDegrees };
+        try {
+            localStorage.setItem(SETTINGS_KEY, JSON.stringify(prefs));
+            // TODO: Also persist to user settings API when available
+            toast.success("Chart preferences saved successfully.");
+        } catch {
+            toast.error("Failed to save preferences.");
+        }
     };
 
     return (
@@ -97,6 +144,7 @@ export default function SettingsPage() {
                             value={defaultOrb}
                             onChange={(e) => setDefaultOrb(e.target.value)}
                             className="px-3 py-1.5 bg-parchment/50 border border-antique rounded-lg text-sm font-serif text-ink focus:outline-none focus:border-gold-primary"
+                            aria-label="Default orb degrees"
                         >
                             {[5, 6, 7, 8, 9, 10].map((n) => (
                                 <option key={n} value={n}>{n}</option>
@@ -106,14 +154,16 @@ export default function SettingsPage() {
 
                     <div className="flex items-center justify-between">
                         <div>
-                            <span className="text-sm font-serif text-ink block">Show Retrograde Markers</span>
-                            <span className="text-xs text-muted-refined">Display (R) next to retrograde planets</span>
+                            <span id="retro-label" className="text-sm font-serif text-ink block">Show Retrograde Markers</span>
+                            <span id="retro-desc" className="text-xs text-muted-refined">Display (R) next to retrograde planets</span>
                         </div>
                         <button
                             onClick={() => setShowRetro(!showRetro)}
-                            className={`w-11 h-6 rounded-full transition-colors ${showRetro ? "bg-gold-primary" : "bg-antique"}`}
+                            className={`w-11 h-6 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-2 ${showRetro ? "bg-gold-primary" : "bg-antique"}`}
                             role="switch"
                             aria-checked={showRetro}
+                            aria-labelledby="retro-label"
+                            aria-describedby="retro-desc"
                         >
                             <div className={`w-5 h-5 rounded-full bg-softwhite shadow transition-transform ${showRetro ? "translate-x-5" : "translate-x-0.5"}`} />
                         </button>
@@ -121,14 +171,16 @@ export default function SettingsPage() {
 
                     <div className="flex items-center justify-between">
                         <div>
-                            <span className="text-sm font-serif text-ink block">Show Degrees in Chart</span>
-                            <span className="text-xs text-muted-refined">Display exact degree positions of planets</span>
+                            <span id="degrees-label" className="text-sm font-serif text-ink block">Show Degrees in Chart</span>
+                            <span id="degrees-desc" className="text-xs text-muted-refined">Display exact degree positions of planets</span>
                         </div>
                         <button
                             onClick={() => setShowDegrees(!showDegrees)}
-                            className={`w-11 h-6 rounded-full transition-colors ${showDegrees ? "bg-gold-primary" : "bg-antique"}`}
+                            className={`w-11 h-6 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-2 ${showDegrees ? "bg-gold-primary" : "bg-antique"}`}
                             role="switch"
                             aria-checked={showDegrees}
+                            aria-labelledby="degrees-label"
+                            aria-describedby="degrees-desc"
                         >
                             <div className={`w-5 h-5 rounded-full bg-softwhite shadow transition-transform ${showDegrees ? "translate-x-5" : "translate-x-0.5"}`} />
                         </button>

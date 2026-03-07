@@ -67,7 +67,7 @@ export default function MuhurtaCalendarView({
                     >
                         <span className="font-semibold">{day.date || ""}</span>
                         {day.label && (
-                            <span className="text-[9px] leading-tight truncate max-w-full px-0.5">{day.label}</span>
+                            <span className="text-[9px] leading-tight truncate max-w-full px-0.5" title={day.label}>{day.label}</span>
                         )}
                     </button>
                 ))}

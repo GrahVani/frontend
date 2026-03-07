@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { clientApi } from "@/lib/api";
+import { queryKeys } from "@/lib/query-keys";
 
 export interface ClientQueryParams {
     page?: number;
@@ -12,18 +13,18 @@ export interface ClientQueryParams {
 
 export function useClients(params: ClientQueryParams = {}) {
     return useQuery({
-        queryKey: ['clients', params],
+        queryKey: queryKeys.clients.list(params),
         queryFn: async () => {
             return await clientApi.getClients(params);
         },
-        placeholderData: (previousData) => previousData, // Keep previous data while fetching new page
-        staleTime: 1000 * 60, // 1 minute
+        placeholderData: (previousData) => previousData,
+        staleTime: 1000 * 60,
     });
 }
 
 export function useClient(id?: string) {
     return useQuery({
-        queryKey: ['client', id],
+        queryKey: queryKeys.clients.detail(id ?? ''),
         queryFn: async () => {
             if (!id) throw new Error("Client ID is required");
             return await clientApi.getClient(id);

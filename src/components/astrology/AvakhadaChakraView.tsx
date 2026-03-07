@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { clientApi } from '@/lib/api';
-import DebugConsole from '@/components/debug/DebugConsole';
+
 
 interface AvakhadaChakraViewProps {
     clientId: string;
@@ -68,9 +68,6 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
                 </div>
                 <h3 className="text-lg font-serif font-bold text-red-900 mb-2">Unavailable</h3>
                 <p className="text-sm text-red-600 mb-6">{error || "Data not found"}</p>
-
-                {/* Debug Console for Error State */}
-                <DebugConsole title="Debug: Raw Response (Error State)" data={{ error, rawData: data }} className="text-left" />
 
                 <button onClick={onClose} className="px-4 py-2 bg-white border border-border-warm rounded-lg text-sm hover:bg-red-50 transition-colors mt-4">
                     Close
@@ -164,7 +161,6 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
                     )}
                 </div>
 
-                <DebugConsole title="Raw Data" data={data} className="mt-8 opacity-50 hover:opacity-100 transition-opacity" />
             </div>
 
             {/* Footer Status Bar if needed, otherwise clean break */}

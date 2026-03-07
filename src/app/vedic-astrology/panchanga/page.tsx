@@ -6,6 +6,7 @@ import { useVedicClient } from '@/context/VedicClientContext';
 import { useAstrologerStore } from '@/store/useAstrologerStore';
 import { clientApi } from '@/lib/api';
 import { parseChartData, signIdToName } from '@/lib/chart-helpers';
+import type { BirthPanchangaData } from '@/components/astrology/BirthPanchanga';
 import Link from 'next/link';
 import {
     ArrowLeft,
@@ -125,7 +126,7 @@ export default function PanchangaOverviewPage() {
     }, [processedCharts, activeSystem]);
 
     // Birth Panchanga data
-    const birthPanchangaData = processedCharts['birth_panchanga_universal']?.chartData;
+    const birthPanchangaData = processedCharts['birth_panchanga_universal']?.chartData as unknown as BirthPanchangaData | undefined;
     const panchanga = birthPanchangaData?.panchanga;
     const times = birthPanchangaData?.times;
 

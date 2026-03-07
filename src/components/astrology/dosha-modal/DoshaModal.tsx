@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { clientApi } from '@/lib/api';
 import { normalizeDoshaData } from './utils/dosha-normalizer';
 import { DoshaSectionRenderer } from '@/components/astrology/dosha-modal/DoshaSectionRenderer';
-import DebugConsole from '@/components/debug/DebugConsole';
+
 
 interface DoshaModalProps {
     clientId: string;
@@ -74,7 +74,6 @@ export const DoshaModal = memo(function DoshaModal({
                         {error || 'Detailed analysis not currently available for this client'}
                     </p>
                 </div>
-                {error && <DebugConsole title={`Dosha Error: ${doshaType}`} data={{ error, doshaType, ayanamsa }} />}
             </div>
         );
     }
@@ -82,7 +81,6 @@ export const DoshaModal = memo(function DoshaModal({
     return (
         <div className={cn('space-y-4 p-4 animate-in fade-in slide-in-from-bottom-2 duration-300', className)}>
             <DoshaSectionRenderer data={normalized} />
-            <DebugConsole title={`Dosha: ${doshaType}`} data={rawData} />
         </div>
     );
 });

@@ -4,6 +4,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Planet } from './NorthIndianChart/NorthIndianChart';
 import { ChartColorTheme } from '@/store/useAstrologerStore';
+import { CHART_THEMES } from '@/design-tokens/colors';
 
 export type ChartColorMode = 'color' | 'blackwhite';
 
@@ -33,74 +34,38 @@ const GRID_MAP = [
     { signId: 9, x: 0, y: 3 }, { signId: 8, x: 1, y: 3 }, { signId: 7, x: 2, y: 3 }, { signId: 6, x: 3, y: 3 }
 ];
 
-// Color themes with full color palettes
-const COLOR_THEMES: Record<ChartColorTheme, {
-    background: string;
-    border: string;
-    gridLine: string;
-    ascLine: string;
-    ascText: string;
-    signText: string;
-    planetText: string;
-    centerBg: string;
-    centerText: string;
-}> = {
-    classic: {
-        background: 'var(--surface-warm)',
-        border: 'var(--ink)',
-        gridLine: 'var(--ink)',
-        ascLine: 'var(--header-border)',
-        ascText: 'var(--header-border)',
-        signText: 'var(--text-tertiary)',
-        planetText: 'var(--ink)',
-        centerBg: 'rgba(42, 24, 16, 0.05)',
-        centerText: 'var(--text-tertiary)'
-    },
-    modern: {
-        background: '#EEF2FF',
-        border: '#4F46E5',
-        gridLine: '#6366F1',
-        ascLine: '#4F46E5',
-        ascText: '#4F46E5',
-        signText: '#6366F1',
-        planetText: '#1E1B4B',
-        centerBg: 'rgba(99, 102, 241, 0.1)',
-        centerText: '#6366F1'
-    },
-    royal: {
-        background: '#FAF5FF',
-        border: '#7C3AED',
-        gridLine: '#9333EA',
-        ascLine: '#7C3AED',
-        ascText: '#7C3AED',
-        signText: '#9333EA',
-        planetText: '#581C87',
-        centerBg: 'rgba(147, 51, 234, 0.1)',
-        centerText: '#9333EA'
-    },
-    earth: {
-        background: '#ECFDF5',
-        border: '#047857',
-        gridLine: '#059669',
-        ascLine: '#047857',
-        ascText: '#047857',
-        signText: '#059669',
-        planetText: '#064E3B',
-        centerBg: 'rgba(5, 150, 105, 0.1)',
-        centerText: '#059669'
-    },
-    ocean: {
-        background: '#F0F9FF',
-        border: '#0369A1',
-        gridLine: '#0EA5E9',
-        ascLine: '#0369A1',
-        ascText: '#0369A1',
-        signText: '#0EA5E9',
-        planetText: '#0C4A6E',
-        centerBg: 'rgba(14, 165, 233, 0.1)',
-        centerText: '#0EA5E9'
-    }
+// SVG-specific center background opacities per theme
+const CENTER_BG: Record<string, string> = {
+    classic: 'rgba(42, 24, 16, 0.05)',
+    modern: 'rgba(99, 102, 241, 0.1)',
+    royal: 'rgba(147, 51, 234, 0.1)',
+    earth: 'rgba(5, 150, 105, 0.1)',
+    ocean: 'rgba(14, 165, 233, 0.1)',
 };
+
+// Color themes derived from centralized tokens + SVG-specific centerBg
+const COLOR_THEMES: Record<ChartColorTheme, {
+    background: string; border: string; gridLine: string;
+    ascLine: string; ascText: string; signText: string;
+    planetText: string; centerBg: string; centerText: string;
+}> = Object.fromEntries(
+    Object.entries(CHART_THEMES).map(([key, t]) => [key, {
+        // Classic theme uses CSS variables for parchment consistency
+        background: key === 'classic' ? 'var(--surface-warm)' : t.background,
+        border: key === 'classic' ? 'var(--ink)' : t.border,
+        gridLine: key === 'classic' ? 'var(--ink)' : t.gridLine,
+        ascLine: key === 'classic' ? 'var(--header-border)' : t.ascLine,
+        ascText: key === 'classic' ? 'var(--header-border)' : t.ascText,
+        signText: key === 'classic' ? 'var(--text-tertiary)' : t.signText,
+        planetText: key === 'classic' ? 'var(--ink)' : t.planetText,
+        centerBg: CENTER_BG[key] ?? CENTER_BG.classic,
+        centerText: key === 'classic' ? 'var(--text-tertiary)' : t.centerText,
+    }])
+) as Record<ChartColorTheme, {
+    background: string; border: string; gridLine: string;
+    ascLine: string; ascText: string; signText: string;
+    planetText: string; centerBg: string; centerText: string;
+}>;
 
 // B&W scheme (for printing)
 const BW_SCHEME = {
@@ -126,7 +91,8 @@ export default function SouthIndianChart({
     const scheme = colorMode === 'blackwhite' ? BW_SCHEME : COLOR_THEMES[colorTheme];
 
     return (
-        <svg viewBox="0 0 400 400" className={cn("w-full h-full drop-shadow-lg overflow-visible", className)} role="img" aria-label="South Indian birth chart">
+        <svg viewBox="0 0 400 400" className={cn("w-full h-full drop-shadow-lg overflow-visible", className)} role="img" aria-label="South Indian birth chart with fixed sign positions">
+            <desc>Grid-based South Indian style horoscope chart with fixed sign positions and planets placed in signs</desc>
             {/* Background */}
             <rect x="0" y="0" width="400" height="400" fill={scheme.background} rx="8" />
 

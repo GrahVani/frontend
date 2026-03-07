@@ -49,7 +49,7 @@ function PanchangaItem({ label, value, subValue, icon: Icon, color }: PanchangaI
     );
 }
 
-interface BirthPanchangaData {
+export interface BirthPanchangaData {
     panchanga: {
         tithi: { name: string; paksha: string };
         nakshatra: { name: string; pada: number };

@@ -71,7 +71,7 @@ export default function ClientsNavigationSidebar({ activeClientName }: ClientsNa
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-header-border mb-0.5">Viewing Profile</p>
-                                <p className="text-white font-serif font-semibold text-sm truncate">{activeClientName}</p>
+                                <p className="text-white font-serif font-semibold text-sm truncate" title={activeClientName}>{activeClientName}</p>
                             </div>
                         </div>
                     </div>

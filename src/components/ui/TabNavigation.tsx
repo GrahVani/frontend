@@ -26,8 +26,8 @@ export default function TabNavigation({ basePath }: TabNavigationProps) {
     ];
 
     return (
-        <div className="w-full border-b border-divider bg-softwhite/50 backdrop-blur-md sticky top-[88px] z-30">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full border-b border-divider bg-softwhite/50 backdrop-blur-md sticky top-12 z-30">
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
                 <nav className="flex items-center gap-8 -mb-[1px]" role="tablist" aria-label="Client detail sections">
                     {tabs.map((tab) => {
                         const fullPath = `${basePath}${tab.path}`;

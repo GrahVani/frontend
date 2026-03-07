@@ -2,7 +2,7 @@ import { SkeletonTable } from "@/components/ui/Skeleton";
 
 export default function ClientsLoading() {
     return (
-        <div className="max-w-7xl mx-auto space-y-6 animate-in fade-in duration-300" role="status" aria-label="Loading clients" aria-busy="true">
+        <div className="space-y-6 animate-in fade-in duration-300" role="status" aria-label="Loading clients" aria-busy="true">
             <div className="space-y-2">
                 <div className="h-10 w-40 bg-parchment/50 rounded-lg animate-pulse" />
                 <div className="h-5 w-56 bg-parchment/30 rounded-lg animate-pulse" />

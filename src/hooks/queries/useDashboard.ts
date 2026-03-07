@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useClients } from "./useClients";
+import { queryKeys } from "@/lib/query-keys";
 
 // Dashboard overview: recent clients for the widget
 export function useRecentClients(limit = 5) {
@@ -17,7 +18,7 @@ export interface DashboardActivity {
 
 export function useDashboardActivity() {
     return useQuery<DashboardActivity[]>({
-        queryKey: ["dashboard", "activity"],
+        queryKey: queryKeys.dashboard.activity,
         queryFn: async () => {
             // TODO: Replace with actual API call when dashboard endpoints are available
             return [];
@@ -38,7 +39,7 @@ export interface DashboardNotification {
 
 export function useDashboardNotifications() {
     return useQuery<DashboardNotification[]>({
-        queryKey: ["dashboard", "notifications"],
+        queryKey: queryKeys.dashboard.notifications,
         queryFn: async () => {
             // TODO: Replace with actual API call when notification endpoints are available
             return [];
@@ -57,7 +58,7 @@ export interface DashboardStats {
 
 export function useDashboardStats() {
     return useQuery<DashboardStats>({
-        queryKey: ["dashboard", "stats"],
+        queryKey: queryKeys.dashboard.stats,
         queryFn: async () => {
             // TODO: Replace with actual API aggregation
             return {

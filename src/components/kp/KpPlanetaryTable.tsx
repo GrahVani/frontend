@@ -38,7 +38,7 @@ export default function KpPlanetaryTable({ planets, className }: KpPlanetaryTabl
     }
 
     return (
-        <div className={cn("overflow-x-auto h-[450px] overflow-y-auto", className)}>
+        <div className={cn("overflow-x-auto min-h-[300px] max-h-[calc(100vh-280px)] overflow-y-auto", className)}>
             <table className="w-full h-full text-xs border-collapse font-sans text-primary">
                 <thead className="sticky top-0 z-10">
                     <tr className="bg-parchment/60 border-y border-antique backdrop-blur-sm">

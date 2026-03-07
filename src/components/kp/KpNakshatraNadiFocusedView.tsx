@@ -4,19 +4,14 @@ import { cn } from '@/lib/utils';
 import { KpNakshatraNadiResponse } from '@/types/kp.types';
 import { Sparkles, Compass, Star, Moon, Sun, CircleDot } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { PLANET_COLORS } from '@/design-tokens/colors';
 
-// Planet symbols and colors
-const PLANET_DATA: Record<string, { symbol: string; color: string; element: string }> = {
-    'Sun': { symbol: '☉', color: 'from-orange-400 to-amber-500', element: 'Fire' },
-    'Moon': { symbol: '☽', color: 'from-slate-300 to-slate-400', element: 'Water' },
-    'Mars': { symbol: '♂', color: 'from-red-500 to-rose-600', element: 'Fire' },
-    'Mercury': { symbol: '☿', color: 'from-emerald-400 to-green-500', element: 'Earth' },
-    'Jupiter': { symbol: '♃', color: 'from-yellow-400 to-amber-500', element: 'Ether' },
-    'Venus': { symbol: '♀', color: 'from-pink-400 to-rose-400', element: 'Water' },
-    'Saturn': { symbol: '♄', color: 'from-indigo-500 to-violet-600', element: 'Air' },
-    'Rahu': { symbol: '☊', color: 'from-slate-600 to-slate-700', element: 'Shadow' },
-    'Ketu': { symbol: '☋', color: 'from-amber-600 to-orange-700', element: 'Shadow' },
-};
+// Planet data derived from centralized tokens
+const PLANET_DATA: Record<string, { symbol: string; color: string; element: string }> = Object.fromEntries(
+    Object.entries(PLANET_COLORS).map(([name, c]) => [name, {
+        symbol: c.symbol, color: c.gradient, element: c.element,
+    }])
+);
 
 // Zodiac data
 const ZODIAC_DATA: Record<string, { symbol: string; element: string; quality: string }> = {

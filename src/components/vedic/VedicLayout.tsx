@@ -4,6 +4,7 @@ import React from "react";
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { cn } from "@/lib/utils";
+import PageContainer from "@/components/layout/PageContainer";
 import { useVedicClient } from "@/context/VedicClientContext";
 import { useAstrologerStore } from "@/store/useAstrologerStore";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
@@ -114,7 +115,7 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
     });
 
     return (
-        <div className="sticky top-14 left-0 right-0 z-40 h-12 bg-header-gradient flex items-center px-4 md:px-6 gap-4" role="navigation" aria-label="Vedic astrology sections">
+        <div className="sticky top-12 left-0 right-0 z-40 h-12 bg-header-gradient flex items-center px-4 md:px-6 gap-4" role="navigation" aria-label="Vedic astrology sections">
             {/* Top Border Indicator */}
             <div className="absolute top-0 left-0 right-0 h-[1px] bg-header-border opacity-10" />
 
@@ -123,7 +124,7 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
 
             {/* Navigation Items */}
             <nav className="flex-1 flex items-center gap-0.5 overflow-x-auto no-scrollbar h-full" aria-label="Vedic astrology sub-navigation">
-                {filteredPrimaryItems.map((item) => {
+                {filteredPrimaryItems.map((item, index) => {
                     const href = item.path === "" ? "/vedic-astrology" : `/vedic-astrology${item.path}`;
                     let isActive = pathname === href;
 
@@ -145,29 +146,37 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                         }
                     }
 
+                    // Visual separator between generic items and system-specific groups (e.g. KP)
+                    const prevItem = index > 0 ? filteredPrimaryItems[index - 1] : null;
+                    const isGroupTransition = item.systemFilter && !prevItem?.systemFilter;
+
                     return (
-                        <Link
-                            key={item.name}
-                            href={href}
-                            aria-current={isActive ? "page" : undefined}
-                            className={cn(
-                                TYPOGRAPHY.tableHeader,
-                                "flex items-center px-3 py-2 transition-all duration-300 relative group shrink-0 whitespace-nowrap !font-medium",
-                                isActive
-                                    ? "text-active-glow text-shadow-glow"
-                                    : "text-white hover:text-active-glow"
+                        <React.Fragment key={item.name}>
+                            {isGroupTransition && (
+                                <div className="w-[1px] h-6 bg-header-border/30 mx-1 shrink-0" aria-hidden="true" />
                             )}
-                        >
-                            <span>{item.name}</span>
-                            {isActive && (
-                                <>
-                                    <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-active-glow to-transparent shadow-[0_0_10px_2px_rgba(255,210,125,0.5)]" />
-                                    <span
-                                        className="absolute inset-0 -z-10 rounded-lg opacity-20 blur-md pointer-events-none [background:radial-gradient(ellipse_at_center,var(--active-glow)_0%,transparent_70%)]"
-                                    />
-                                </>
-                            )}
-                        </Link>
+                            <Link
+                                href={href}
+                                aria-current={isActive ? "page" : undefined}
+                                className={cn(
+                                    TYPOGRAPHY.tableHeader,
+                                    "flex items-center px-3 py-2 transition-all duration-300 relative group shrink-0 whitespace-nowrap !font-medium",
+                                    isActive
+                                        ? "text-active-glow text-shadow-glow"
+                                        : "text-white hover:text-active-glow"
+                                )}
+                            >
+                                <span>{item.name}</span>
+                                {isActive && (
+                                    <>
+                                        <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-active-glow to-transparent shadow-[0_0_10px_2px_rgba(255,210,125,0.5)]" />
+                                        <span
+                                            className="absolute inset-0 -z-10 rounded-lg opacity-20 blur-md pointer-events-none [background:radial-gradient(ellipse_at_center,var(--active-glow)_0%,transparent_70%)]"
+                                        />
+                                    </>
+                                )}
+                            </Link>
+                        </React.Fragment>
                     );
                 })}
             </nav>
@@ -264,7 +273,7 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
     }
 
     return (
-        <div className="flex flex-col min-h-screen pt-14 bg-luxury-radial relative">
+        <div className="flex flex-col min-h-screen pt-12 bg-luxury-radial relative">
             {/* Subtle Texture Overlay */}
             <div
                 className="absolute inset-0 opacity-15 pointer-events-none z-0 bg-[url('/textures/aged-paper.png')] bg-blend-multiply"
@@ -283,8 +292,10 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
 
             {/* Main Content Area */}
             <main className="flex-1 relative transition-all duration-500" aria-label="Vedic astrology content">
-                <div className="p-1 sm:p-2 lg:p-2 w-full h-full pb-10">
-                    {children}
+                <div className="p-1 sm:p-2 lg:p-4 w-full h-full pb-10">
+                    <PageContainer variant="wide">
+                        {children}
+                    </PageContainer>
                 </div>
             </main>
         </div>

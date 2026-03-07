@@ -35,6 +35,8 @@ export interface MuhurtaFiltersState {
 
 export interface DailyMuhurta {
     date: string;
+    sunrise?: string;
+    sunset?: string;
     abhijitMuhurta: MuhurtaTimeWindow;
     brahmaMuhurta: MuhurtaTimeWindow;
     rahuKaal: MuhurtaTimeWindow;

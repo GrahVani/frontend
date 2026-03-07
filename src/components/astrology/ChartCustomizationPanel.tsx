@@ -4,51 +4,21 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useAstrologerStore, ChartStyle, ChartColorTheme } from '@/store/useAstrologerStore';
 import { Palette, Layout, HelpCircle, X, ChevronDown, BookOpen, Star, Sparkles } from 'lucide-react';
+import { CHART_THEMES } from '@/design-tokens/colors';
 
-// Color themes with their color palettes
+// Re-export for backward compatibility with any file importing from here
 export const CHART_COLOR_THEMES: Record<ChartColorTheme, {
     name: string;
     primary: string;
     secondary: string;
     accent: string;
     preview: string[];
-}> = {
-    classic: {
-        name: 'Classic',
-        primary: '#D08C60',
-        secondary: '#3E2A1F',
-        accent: '#8B5A2B',
-        preview: ['#D08C60', '#3E2A1F', '#FFFDF9']
-    },
-    modern: {
-        name: 'Modern',
-        primary: '#6366F1',
-        secondary: '#1E1B4B',
-        accent: '#A5B4FC',
-        preview: ['#6366F1', '#1E1B4B', '#EEF2FF']
-    },
-    royal: {
-        name: 'Royal',
-        primary: '#9333EA',
-        secondary: '#581C87',
-        accent: '#C084FC',
-        preview: ['#9333EA', '#581C87', '#FAF5FF']
-    },
-    earth: {
-        name: 'Earth',
-        primary: '#059669',
-        secondary: '#064E3B',
-        accent: '#34D399',
-        preview: ['#059669', '#064E3B', '#ECFDF5']
-    },
-    ocean: {
-        name: 'Ocean',
-        primary: '#0EA5E9',
-        secondary: '#0C4A6E',
-        accent: '#38BDF8',
-        preview: ['#0EA5E9', '#0C4A6E', '#F0F9FF']
-    }
-};
+}> = Object.fromEntries(
+    Object.entries(CHART_THEMES).map(([key, t]) => [key, {
+        name: t.name, primary: t.primary, secondary: t.secondary,
+        accent: t.accent, preview: [...t.preview],
+    }])
+) as Record<ChartColorTheme, { name: string; primary: string; secondary: string; accent: string; preview: string[] }>;
 
 // Educational content for each divisional chart
 export const VARGA_EDUCATION: Record<string, {
@@ -184,7 +154,7 @@ export default function ChartCustomizationPanel({ isOpen, onClose, selectedChart
                             {selectedChart ? `${selectedChart} Settings` : 'Chart Customization'}
                         </h2>
                     </div>
-                    <button onClick={onClose} className="p-1 hover:bg-white/10 rounded-lg text-white/80 hover:text-white">
+                    <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-lg text-white/80 hover:text-white">
                         <X className="w-5 h-5" />
                     </button>
                 </div>

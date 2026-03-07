@@ -39,73 +39,72 @@ interface DoshaRemedyGridProps {
     doshaAnalysis: Record<string, DoshaAnalysis>;
 }
 
+const getSeverityStyles = (severity: string) => {
+    switch (severity.toLowerCase()) {
+        case 'high':
+            return {
+                border: 'border-rose-500/30',
+                bg: 'bg-rose-500/5',
+                accent: 'text-rose-400',
+                dot: 'bg-rose-500',
+                glow: 'shadow-[0_0_20px_rgba(244,63,94,0.1)]',
+                icon: <ShieldAlert className="w-5 h-5 text-rose-400" />
+            };
+        case 'medium':
+            return {
+                border: 'border-amber-500/30',
+                bg: 'bg-amber-500/5',
+                accent: 'text-amber-400',
+                dot: 'bg-amber-500',
+                glow: 'shadow-[0_0_20px_rgba(245,158,11,0.1)]',
+                icon: <AlertTriangle className="w-5 h-5 text-amber-400" />
+            };
+        default:
+            return {
+                border: 'border-emerald-500/30',
+                bg: 'bg-emerald-500/5',
+                accent: 'text-emerald-400',
+                dot: 'bg-emerald-500',
+                glow: 'shadow-[0_0_20px_rgba(16,185,129,0.1)]',
+                icon: <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+            };
+    }
+};
+
+const getLightSeverityStyles = (severity: string) => {
+    switch (severity.toLowerCase()) {
+        case 'high':
+            return {
+                container: 'bg-rose-50/20 border-rose-200/50 hover:border-rose-400/50',
+                iconBg: 'bg-rose-100/50 text-rose-600',
+                badge: 'bg-rose-100 text-rose-700 border-rose-200',
+                accent: 'text-rose-700'
+            };
+        case 'medium':
+            return {
+                container: 'bg-amber-50/20 border-amber-200/50 hover:border-amber-400/50',
+                iconBg: 'bg-amber-100/50 text-amber-600',
+                badge: 'bg-amber-100 text-amber-700 border-amber-200',
+                accent: 'text-amber-700'
+            };
+        default:
+            return {
+                container: 'bg-emerald-50/20 border-emerald-200/50 hover:border-emerald-400/50',
+                iconBg: 'bg-emerald-100/50 text-emerald-600',
+                badge: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                accent: 'text-emerald-700'
+            };
+    }
+};
+
 const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaAnalysis }) => {
     const doshaList = Object.entries(doshaRemedies);
-
-    const getSeverityStyles = (severity: string) => {
-        switch (severity.toLowerCase()) {
-            case 'high':
-                return {
-                    border: 'border-rose-500/30',
-                    bg: 'bg-rose-500/5',
-                    accent: 'text-rose-400',
-                    dot: 'bg-rose-500',
-                    glow: 'shadow-[0_0_20px_rgba(244,63,94,0.1)]',
-                    icon: <ShieldAlert className="w-5 h-5 text-rose-400" />
-                };
-            case 'medium':
-                return {
-                    border: 'border-amber-500/30',
-                    bg: 'bg-amber-500/5',
-                    accent: 'text-amber-400',
-                    dot: 'bg-amber-500',
-                    glow: 'shadow-[0_0_20px_rgba(245,158,11,0.1)]',
-                    icon: <AlertTriangle className="w-5 h-5 text-amber-400" />
-                };
-            default:
-                return {
-                    border: 'border-emerald-500/30',
-                    bg: 'bg-emerald-500/5',
-                    accent: 'text-emerald-400',
-                    dot: 'bg-emerald-500',
-                    glow: 'shadow-[0_0_20px_rgba(16,185,129,0.1)]',
-                    icon: <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                };
-        }
-    };
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {doshaList.map(([key, dosha], idx) => {
                 const styles = getSeverityStyles(dosha.severity);
                 const analysis = doshaAnalysis[key];
-
-                // Light Theme Severity Styles override
-                const getLightSeverityStyles = (severity: string) => {
-                    switch (severity.toLowerCase()) {
-                        case 'high':
-                            return {
-                                container: 'bg-rose-50/20 border-rose-200/50 hover:border-rose-400/50',
-                                iconBg: 'bg-rose-100/50 text-rose-600',
-                                badge: 'bg-rose-100 text-rose-700 border-rose-200',
-                                accent: 'text-rose-700'
-                            };
-                        case 'medium':
-                            return {
-                                container: 'bg-amber-50/20 border-amber-200/50 hover:border-amber-400/50',
-                                iconBg: 'bg-amber-100/50 text-amber-600',
-                                badge: 'bg-amber-100 text-amber-700 border-amber-200',
-                                accent: 'text-amber-700'
-                            };
-                        default:
-                            return {
-                                container: 'bg-emerald-50/20 border-emerald-200/50 hover:border-emerald-400/50',
-                                iconBg: 'bg-emerald-100/50 text-emerald-600',
-                                badge: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-                                accent: 'text-emerald-700'
-                            };
-                    }
-                };
 
                 const lightStyles = getLightSeverityStyles(dosha.severity);
 

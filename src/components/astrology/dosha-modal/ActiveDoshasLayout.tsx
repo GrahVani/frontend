@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, Shield, Maximize2, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
@@ -29,12 +29,19 @@ export default function ActiveDoshasLayout({
     const [selectedDoshaId, setSelectedDoshaId] = useState<string>(() => allDoshas[0]?.id || "");
     const [zoomedChart, setZoomedChart] = useState<{ varga: string, label: string } | null>(null);
 
+    useEffect(() => {
+        if (!zoomedChart) return;
+        const handleEscape = (e: KeyboardEvent) => { if (e.key === 'Escape') setZoomedChart(null); };
+        document.addEventListener('keydown', handleEscape);
+        return () => document.removeEventListener('keydown', handleEscape);
+    }, [zoomedChart]);
+
     const activeDosha = allDoshas.find(d => d.id === selectedDoshaId);
 
     return (
         <div className={cn("flex flex-col lg:flex-row gap-4 p-4 bg-parchment min-h-screen font-sans", className)}>
             {/* LEFT: Birth Chart - Fixed Width */}
-            <div className="flex flex-col gap-2 h-[480px] w-full lg:w-[440px] shrink-0">
+            <div className="flex flex-col gap-2 min-h-[360px] h-[60vh] max-h-[600px] w-full lg:w-[440px] shrink-0">
                 <div className="border border-red-200 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm max-w-[440px]">
                     <div className="bg-red-50 px-3 py-1.5 border-b border-red-100 flex justify-between items-center shrink-0">
                         <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-red-900 leading-tight tracking-wide")}>Birth chart (D1)</h3>
@@ -59,7 +66,7 @@ export default function ActiveDoshasLayout({
             </div>
 
             {/* RIGHT: Doshas & Details - Flexible Width */}
-            <div className="flex-1 flex flex-col gap-2 h-[480px] min-w-0">
+            <div className="flex-1 flex flex-col gap-2 min-h-[360px] h-[60vh] max-h-[600px] min-w-0">
                 <div className="border border-red-200 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm">
                     <div className="bg-red-50 px-4 py-2 border-b border-red-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
                         <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-red-900 leading-tight tracking-wide whitespace-nowrap")}>Dosha analysis</h3>
@@ -134,10 +141,11 @@ export default function ActiveDoshasLayout({
 
             {/* Modal for Zoom */}
             {zoomedChart && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl bg-ink/40 animate-in fade-in zoom-in-95 duration-300">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl bg-ink/40 animate-in fade-in zoom-in-95 duration-300" role="dialog" aria-modal="true" aria-label={zoomedChart.label}>
                     <div className="bg-softwhite border border-border-warm rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl">
                         <button
                             onClick={() => setZoomedChart(null)}
+                            aria-label="Close zoomed chart"
                             className="absolute top-4 right-4 p-2 rounded-xl bg-parchment text-primary hover:bg-gold-primary/20 hover:text-accent-gold transition-all"
                         >
                             <X className="w-5 h-5" />

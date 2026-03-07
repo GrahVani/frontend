@@ -23,9 +23,11 @@ import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { COLORS } from '@/design-tokens/colors';
 import NorthIndianChart from '@/components/astrology/NorthIndianChart/NorthIndianChart';
 import AshtakavargaChart from '@/components/astrology/AshtakavargaChart';
-import ShodashaVargaTable from '@/components/astrology/ShodashaVargaTable';
-import TemporalRelationshipTable from '@/components/astrology/TemporalRelationshipTable';
-import KarakaStrengthAnalysis from '@/components/astrology/KarakaStrengthAnalysis';
+import dynamic from 'next/dynamic';
+
+const ShodashaVargaTable = dynamic(() => import('@/components/astrology/ShodashaVargaTable'));
+const TemporalRelationshipTable = dynamic(() => import('@/components/astrology/TemporalRelationshipTable'));
+const KarakaStrengthAnalysis = dynamic(() => import('@/components/astrology/KarakaStrengthAnalysis'));
 
 const SIGN_MAP: Record<string, number> = {
     'Aries': 1, 'Taurus': 2, 'Gemini': 3, 'Cancer': 4, 'Leo': 5, 'Virgo': 6,
@@ -46,7 +48,7 @@ const HOUSES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 const AnalyzeCard = ({ icon, title, desc, color }: { icon: React.ReactNode; title: string; desc: string; color: 'amber' | 'rose' | 'copper' }) => (
     <div className={cn(
-        "p-6 rounded-3xl border transition-all hover:shadow-lg",
+        "p-4 rounded-3xl border transition-all hover:shadow-lg",
         color === 'amber' ? "bg-amber-50/50 border-amber-100" :
             color === 'rose' ? "bg-rose-50/50 border-rose-100" :
                 "bg-copper-50/50 border-copper-100"
@@ -102,11 +104,12 @@ export default function AshtakavargaPage() {
         return {
             loading: false,
             data: {
-                sarva: sarvaRaw?.data || sarvaRaw,
-                bhinna: bhinnaRaw?.data || bhinnaRaw,
-                shodasha: shodashaRaw?.data || shodashaRaw,
-                temporal: temporalRaw?.data || temporalRaw,
-                karaka: karakaRaw?.data || karakaRaw,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Polymorphic Astro Engine API; duck-typed throughout page
+                sarva: (sarvaRaw?.data || sarvaRaw) as any,
+                bhinna: (bhinnaRaw?.data || bhinnaRaw) as any,
+                shodasha: (shodashaRaw?.data || shodashaRaw) as any,
+                temporal: (temporalRaw?.data || temporalRaw) as any,
+                karaka: (karakaRaw?.data || karakaRaw) as any,
                 ascendant
             }
         };
@@ -116,7 +119,7 @@ export default function AshtakavargaPage() {
 
     if (!clientDetails) {
         return (
-            <div className="flex flex-col items-center justify-center h-[60vh] text-center p-8 bg-copper-50/30 rounded-2xl border border-dashed border-copper-200">
+            <div className="flex flex-col items-center justify-center h-[60vh] text-center p-6 bg-copper-50/30 rounded-2xl border border-dashed border-copper-200">
                 <Shield className="w-16 h-16 text-primary mb-4 animate-pulse" />
                 <h2 className="text-lg font-serif text-primary mb-2">No Client Selected</h2>
                 <p className="text-xs text-primary max-w-md">Please select a client from the workbench to analyze their Ashtakavarga strengths.</p>
@@ -321,7 +324,7 @@ export default function AshtakavargaPage() {
                             {data?.temporal ? (
                                 <TemporalRelationshipTable data={data.temporal} />
                             ) : (
-                                <div className="flex flex-col items-center justify-center h-[400px] bg-softwhite rounded-3xl border border-antique border-dashed p-12 text-center">
+                                <div className="flex flex-col items-center justify-center min-h-[300px] bg-softwhite rounded-3xl border border-antique border-dashed p-12 text-center">
                                     <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-bold mb-4")}>No temporal relationship data</h3>
                                     <button
                                         onClick={() => clientApi.generateChart(clientDetails.id!, 'tatkalik_maitri_chakra', activeSystem).then(() => window.location.reload())}
@@ -337,7 +340,7 @@ export default function AshtakavargaPage() {
                             {data?.karaka ? (
                                 <KarakaStrengthAnalysis data={data.karaka} />
                             ) : (
-                                <div className="flex flex-col items-center justify-center h-[400px] bg-softwhite rounded-3xl border border-antique border-dashed p-12 text-center">
+                                <div className="flex flex-col items-center justify-center min-h-[300px] bg-softwhite rounded-3xl border border-antique border-dashed p-12 text-center">
                                     <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-bold mb-4")}>No karaka strength data</h3>
                                     <button
                                         onClick={() => clientApi.generateChart(clientDetails.id!, 'karaka_strength', activeSystem).then(() => window.location.reload())}

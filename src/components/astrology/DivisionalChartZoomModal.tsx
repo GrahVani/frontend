@@ -1,36 +1,10 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { X, Sun, Home, Sparkles, Star, Crown, AlertTriangle, Shield, Moon } from 'lucide-react';
 import NorthIndianChart, { Planet } from '@/components/astrology/NorthIndianChart/NorthIndianChart';
-
-// Planet color mapping
-const PLANET_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-    'Su': { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200' },
-    'Sun': { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200' },
-    'Mo': { bg: 'bg-slate-50', text: 'text-slate-700', border: 'border-slate-200' },
-    'Moon': { bg: 'bg-slate-50', text: 'text-slate-700', border: 'border-slate-200' },
-    'Ma': { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200' },
-    'Mars': { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200' },
-    'Me': { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200' },
-    'Mercury': { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200' },
-    'Ju': { bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200' },
-    'Jupiter': { bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200' },
-    'Ve': { bg: 'bg-pink-50', text: 'text-pink-700', border: 'border-pink-200' },
-    'Venus': { bg: 'bg-pink-50', text: 'text-pink-700', border: 'border-pink-200' },
-    'Sa': { bg: 'bg-indigo-50', text: 'text-indigo-700', border: 'border-indigo-200' },
-    'Saturn': { bg: 'bg-indigo-50', text: 'text-indigo-700', border: 'border-indigo-200' },
-    'Ra': { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-300' },
-    'Rahu': { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-300' },
-    'Ke': { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200' },
-    'Ketu': { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200' },
-};
-
-const SIGN_NAMES: Record<number, string> = {
-    1: 'Aries', 2: 'Taurus', 3: 'Gemini', 4: 'Cancer',
-    5: 'Leo', 6: 'Virgo', 7: 'Libra', 8: 'Scorpio',
-    9: 'Sagittarius', 10: 'Capricorn', 11: 'Aquarius', 12: 'Pisces'
-};
+import { getPlanetColor } from '@/design-tokens/colors';
+import { ZODIAC_SIGNS } from '@/lib/chart-geometry';
 
 const ZODIAC_SYMBOLS: Record<number, string> = {
     1: '♈', 2: '♉', 3: '♊', 4: '♋', 5: '♌', 6: '♍',
@@ -185,24 +159,45 @@ export default function DivisionalChartZoomModal({
     ascendantSign,
 }: DivisionalChartZoomModalProps) {
     const [selectedHouse, setSelectedHouse] = useState<number | null>(null);
+    const dialogRef = useRef<HTMLDivElement>(null);
 
-    // ESC key handler
+    // ESC key + focus trap
     useEffect(() => {
-        const handleEscape = (e: KeyboardEvent) => {
+        if (!isOpen) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') {
                 if (selectedHouse) {
                     setSelectedHouse(null);
                 } else {
                     onClose();
                 }
+                return;
+            }
+
+            if (e.key === 'Tab' && dialogRef.current) {
+                const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+                if (focusable.length === 0) return;
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
             }
         };
-        if (isOpen) {
-            document.addEventListener('keydown', handleEscape);
-            document.body.style.overflow = 'hidden';
-        }
+
+        document.addEventListener('keydown', handleKeyDown);
+        document.body.style.overflow = 'hidden';
+        dialogRef.current?.focus();
+
         return () => {
-            document.removeEventListener('keydown', handleEscape);
+            document.removeEventListener('keydown', handleKeyDown);
             document.body.style.overflow = 'unset';
         };
     }, [isOpen, onClose, selectedHouse]);
@@ -218,7 +213,10 @@ export default function DivisionalChartZoomModal({
         planetsByHouse[house].push(p);
     });
 
-    const getPlanetColor = (name: string) => PLANET_COLORS[name] || { bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200' };
+    const getColor = (name: string) => {
+        const c = getPlanetColor(name);
+        return { bg: c.bgSoft, text: c.textOnSoft, border: c.border };
+    };
     const retroPlanets = planets.filter(p => p.isRetro);
     const filteredPlanets = planets.filter(p => p.name !== 'As' && p.name !== 'Asc');
 
@@ -244,10 +242,12 @@ export default function DivisionalChartZoomModal({
         >
             {/* Modal Container */}
             <div
+                ref={dialogRef}
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="divisional-chart-title"
-                className="bg-surface-warm rounded-xl shadow-2xl overflow-hidden flex flex-col lg:flex-row w-full max-w-6xl border-2 border-header-border/40"
+                tabIndex={-1}
+                className="bg-surface-warm rounded-xl shadow-2xl overflow-hidden flex flex-col lg:flex-row w-full max-w-6xl border-2 border-header-border/40 outline-none"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* LEFT - Chart Section */}
@@ -259,8 +259,8 @@ export default function DivisionalChartZoomModal({
                                 {chartType}
                             </div>
                             <div className="min-w-0">
-                                <h2 id="divisional-chart-title" className="text-lg font-serif font-bold truncate">{chartName}</h2>
-                                <p className="text-white/70 text-xs truncate">{chartDesc}</p>
+                                <h2 id="divisional-chart-title" className="text-lg font-serif font-bold truncate" title={chartName}>{chartName}</h2>
+                                <p className="text-white/70 text-xs truncate" title={chartDesc}>{chartDesc}</p>
                             </div>
                         </div>
                         <button
@@ -295,7 +295,7 @@ export default function DivisionalChartZoomModal({
                         </div>
                         <div className="min-w-0 flex-1">
                             <span className="text-[8px] text-purple-600 uppercase tracking-wider font-bold">Lagna</span>
-                            <h3 className="text-sm font-serif font-bold text-purple-900">{SIGN_NAMES[ascendantSign]}</h3>
+                            <h3 className="text-sm font-serif font-bold text-purple-900">{ZODIAC_SIGNS[ascendantSign - 1]}</h3>
                         </div>
                         <div className="flex gap-3 shrink-0">
                             <div className="text-center">
@@ -316,7 +316,7 @@ export default function DivisionalChartZoomModal({
                         </h4>
                         <div className="space-y-1.5">
                             {filteredPlanets.map((planet, idx) => {
-                                const colors = getPlanetColor(planet.name);
+                                const colors = getColor(planet.name);
                                 const house = planet.house || ((planet.signId - ascendantSign + 12) % 12) + 1;
                                 const dignity = getDignity(planet.name, planet.signId);
                                 const nakshatra = getNakshatraInfo(planet.signId, planet.degree);
@@ -349,7 +349,7 @@ export default function DivisionalChartZoomModal({
                                                 )}
                                             </div>
                                             <div className="text-[9px] text-bronze/80">
-                                                {ZODIAC_SYMBOLS[planet.signId]} {SIGN_NAMES[planet.signId]} · {planet.degree}
+                                                {ZODIAC_SYMBOLS[planet.signId]} {ZODIAC_SIGNS[planet.signId - 1]} · {planet.degree}
                                             </div>
                                             <div className="text-[8px] text-bronze/60 flex items-center gap-1">
                                                 <Moon className="w-2.5 h-2.5" />
@@ -381,7 +381,7 @@ export default function DivisionalChartZoomModal({
                                     <button
                                         key={house}
                                         onClick={() => handleHouseClick(house)}
-                                        aria-label={`House ${house} - ${SIGN_NAMES[signId]}${hasPlayers ? `, ${housePlanets.length} planet${housePlanets.length > 1 ? 's' : ''}` : ''}`}
+                                        aria-label={`House ${house} - ${ZODIAC_SIGNS[signId - 1]}${hasPlayers ? `, ${housePlanets.length} planet${housePlanets.length > 1 ? 's' : ''}` : ''}`}
                                         aria-pressed={isSelected}
                                         className={cn(
                                             "p-1.5 rounded-lg text-center text-[9px] transition-all cursor-pointer",
@@ -410,7 +410,7 @@ export default function DivisionalChartZoomModal({
                                     <div>
                                         <span className="text-lg font-bold text-ink">House {selectedHouse}</span>
                                         <span className="text-xs text-bronze/70 ml-2">
-                                            {ZODIAC_SYMBOLS[((ascendantSign + selectedHouse - 2) % 12) + 1]} {SIGN_NAMES[((ascendantSign + selectedHouse - 2) % 12) + 1]}
+                                            {ZODIAC_SYMBOLS[((ascendantSign + selectedHouse - 2) % 12) + 1]} {ZODIAC_SIGNS[((ascendantSign + selectedHouse - 2) % 12)]}
                                         </span>
                                     </div>
                                     <button

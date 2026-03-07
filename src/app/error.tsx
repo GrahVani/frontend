@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { captureException } from "@/lib/monitoring";
 
 export default function GlobalError({
   error,
@@ -10,7 +11,11 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Error logged by Next.js error boundary
+    captureException(error, {
+      level: 'fatal',
+      tags: { boundary: 'route', section: 'global' },
+      extra: { digest: error.digest },
+    });
   }, [error]);
 
   return (
@@ -24,13 +29,21 @@ export default function GlobalError({
           An unexpected error occurred. Please try again or contact support if
           the issue persists.
         </p>
-        <button
-          onClick={reset}
-          aria-label="Retry loading"
-          className="px-6 py-2.5 bg-amber-700 text-white rounded-lg hover:bg-amber-800 transition-colors font-medium"
-        >
-          Try Again
-        </button>
+        <div className="flex items-center justify-center gap-4">
+          <button
+            onClick={reset}
+            aria-label="Retry loading"
+            className="px-6 py-2.5 bg-amber-700 text-white rounded-lg hover:bg-amber-800 transition-colors font-medium"
+          >
+            Try Again
+          </button>
+          <a
+            href="/dashboard"
+            className="px-6 py-2.5 text-amber-700 border border-amber-700/30 rounded-lg hover:bg-amber-50 transition-colors font-medium"
+          >
+            Go to Dashboard
+          </a>
+        </div>
       </div>
     </div>
   );

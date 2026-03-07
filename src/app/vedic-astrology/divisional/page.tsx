@@ -269,7 +269,7 @@ export default function VedicDivisionalPage() {
                     </div>
 
                     {/* Column Count Selector */}
-                    <div className="flex items-center gap-1 bg-white border border-header-border/30 rounded-lg p-1">
+                    <div className="flex items-center gap-1 bg-white border border-header-border/30 rounded-lg p-1" role="group" aria-label="Grid column count">
                         {([1, 2, 3, 4, 5] as ColumnCount[]).map((col) => (
                             <button
                                 key={col}
@@ -281,6 +281,8 @@ export default function VedicDivisionalPage() {
                                         : "text-bronze hover:bg-header-border/10"
                                 )}
                                 title={`${col} column${col > 1 ? 's' : ''}`}
+                                aria-label={`${col} column${col > 1 ? 's' : ''}`}
+                                aria-pressed={columnCount === col}
                             >
                                 {col}
                             </button>
@@ -356,10 +358,11 @@ export default function VedicDivisionalPage() {
                                             <button
                                                 onClick={() => toggleHouseDetails(chartType)}
                                                 className={cn(
-                                                    "p-1 rounded text-bronze transition-colors",
+                                                    "p-1.5 rounded text-bronze transition-colors",
                                                     isHouseDetailsOpen ? "bg-header-border/20" : "hover:bg-header-border/10"
                                                 )}
                                                 title="House Details"
+                                                aria-label={`${isHouseDetailsOpen ? 'Hide' : 'Show'} house details for ${chartType}`}
                                             >
                                                 <House className="w-3.5 h-3.5" />
                                             </button>
@@ -368,8 +371,9 @@ export default function VedicDivisionalPage() {
                                         {/* Learn - Opens educational content */}
                                         <button
                                             onClick={() => setCustomizationPanel({ isOpen: true, selectedChart: chartType })}
-                                            className="p-1 hover:bg-purple-100 rounded text-purple-600"
+                                            className="p-1.5 hover:bg-purple-100 rounded text-purple-600"
                                             title={`Learn about ${chartType}`}
+                                            aria-label={`Learn about ${chartType}`}
                                         >
                                             <BookOpen className="w-3.5 h-3.5" />
                                         </button>
@@ -379,12 +383,13 @@ export default function VedicDivisionalPage() {
                                             <button
                                                 onClick={() => toggleChartColorMode(chartType)}
                                                 className={cn(
-                                                    "p-1 rounded transition-colors",
+                                                    "p-1.5 rounded transition-colors",
                                                     chartColorModes[chartType] === 'blackwhite'
                                                         ? "bg-gray-200 text-gray-700"
                                                         : "hover:bg-header-border/10 text-bronze"
                                                 )}
                                                 title={chartColorModes[chartType] === 'blackwhite' ? "Switch to Color" : "Switch to B&W"}
+                                                aria-label={`${chartColorModes[chartType] === 'blackwhite' ? 'Switch to color mode' : 'Switch to black and white mode'} for ${chartType}`}
                                             >
                                                 {chartColorModes[chartType] === 'blackwhite' ? (
                                                     <EyeOff className="w-3.5 h-3.5" />
@@ -398,8 +403,9 @@ export default function VedicDivisionalPage() {
                                         {chartData && (
                                             <button
                                                 onClick={openZoomModal}
-                                                className="p-1 hover:bg-header-border/10 rounded text-bronze"
+                                                className="p-1.5 hover:bg-header-border/10 rounded text-bronze"
                                                 title="Zoom Details"
+                                                aria-label={`Zoom into ${chartType} chart`}
                                             >
                                                 <Maximize2 className="w-3.5 h-3.5" />
                                             </button>
@@ -409,15 +415,18 @@ export default function VedicDivisionalPage() {
                                         <div className="relative">
                                             <button
                                                 onClick={() => setShowSettings(showSettings === idx ? null : idx)}
-                                                className="p-1 hover:bg-header-border/10 rounded text-bronze"
+                                                className="p-1.5 hover:bg-header-border/10 rounded text-bronze"
                                                 title="Options"
+                                                aria-label={`Options for ${chartType} chart`}
+                                                aria-expanded={showSettings === idx}
+                                                aria-haspopup="menu"
                                             >
                                                 <Settings2 className="w-3.5 h-3.5" />
                                             </button>
 
                                             {showSettings === idx && (
-                                                <div className="absolute right-0 top-7 z-30 bg-white border border-header-border/30 rounded-xl shadow-2xl py-2 min-w-[200px]">
-                                                    <div className="px-3 py-1.5 text-[10px] text-bronze/70 uppercase font-bold border-b border-header-border/10 flex items-center gap-2">
+                                                <div className="absolute right-0 top-7 z-30 bg-white border border-header-border/30 rounded-xl shadow-2xl py-2 min-w-[200px]" role="menu" aria-label={`Options for ${chartType}`}>
+                                                    <div className="px-3 py-1.5 text-[10px] text-bronze/70 uppercase font-bold border-b border-header-border/10 flex items-center gap-2" role="presentation">
                                                         <RefreshCw className="w-3 h-3" />
                                                         Replace / Swap With
                                                     </div>
@@ -430,6 +439,7 @@ export default function VedicDivisionalPage() {
                                                             return (
                                                                 <button
                                                                     key={chart}
+                                                                    role="menuitem"
                                                                     onClick={() => !isCurrentChart && replaceChart(idx, chart)}
                                                                     disabled={isCurrentChart}
                                                                     className={cn(
@@ -461,6 +471,7 @@ export default function VedicDivisionalPage() {
                                                     </div>
                                                     <div className="border-t border-header-border/10 mt-1 pt-1">
                                                         <button
+                                                            role="menuitem"
                                                             onClick={() => removeChart(idx)}
                                                             className="w-full px-3 py-2 text-left text-xs text-red-600 hover:bg-red-50 flex items-center gap-2"
                                                         >
@@ -513,7 +524,7 @@ export default function VedicDivisionalPage() {
                                 {isHouseDetailsOpen && chartData && (
                                     <div className="mt-3 pt-3 border-t border-header-border/10 space-y-1">
                                         <div className={TYPOGRAPHY.label}>House-wise Positions</div>
-                                        <div className="grid grid-cols-3 gap-1 text-[9px]">
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-1 text-[9px]">
                                             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(h => (
                                                 <div key={h} className={cn(
                                                     "px-1.5 py-1 rounded",

@@ -43,11 +43,19 @@ export default function TransitsPage() {
                     <TransitTimeline transits={transits} />
                 </div>
             ) : (
-                <EmptyState
-                    icon={Moon}
-                    title="No transits data available"
-                    description="Planetary transit data for this month will be available once connected to the astro engine API."
-                />
+                <div className="space-y-4">
+                    <div className="bg-gold-primary/10 border border-gold-primary/30 rounded-xl p-4 flex items-center gap-3">
+                        <Moon className="w-5 h-5 text-gold-dark shrink-0" />
+                        <p className="text-sm text-ink font-serif">
+                            <span className="font-semibold">Coming Soon</span> — Planetary transit data will be available once connected to the astro engine API.
+                        </p>
+                    </div>
+                    <EmptyState
+                        icon={Moon}
+                        title="No transits data yet"
+                        description="Transit tracking for sign changes, retrogrades, and combustions is planned for an upcoming release."
+                    />
+                </div>
             )}
         </div>
     );

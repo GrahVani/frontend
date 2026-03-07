@@ -80,9 +80,9 @@ export default function ChakrasPage() {
 
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
                 {/* Main Visualization Column */}
-                <div className="lg:col-span-8 space-y-6">
+                <div className="md:col-span-8 space-y-6">
                     <div
                         ref={chartContainerRef}
                         className="relative w-full bg-surface-warm rounded-[3rem] border border-copper-200 shadow-[0_32px_64px_-16px_rgba(139,92,71,0.15)] overflow-hidden flex items-center justify-center p-2 group"
@@ -135,7 +135,7 @@ export default function ChakrasPage() {
                 </div>
 
                 {/* Technical Side Panel Column */}
-                <div className="lg:col-span-4 space-y-8">
+                <div className="md:col-span-4 space-y-8">
                     {/* Dynamic Legend Card */}
                     <div className="bg-white/40 backdrop-blur-sm rounded-[2.5rem] border border-copper-200/60 p-8 shadow-[0_8px_32px_-12px_rgba(139,92,71,0.1)] space-y-8 relative overflow-hidden group/legend">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl transition-all group-hover/legend:bg-primary/10" />

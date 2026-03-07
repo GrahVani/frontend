@@ -4,10 +4,10 @@ import { cn } from '@/lib/utils';
 import { KpPromise } from '@/types/kp.types';
 import { CheckCircle2, XCircle, AlertCircle, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { ZODIAC_SIGNS } from '@/lib/chart-geometry';
 
-// Zodiac symbols for cusp selector
 const ZODIAC_SYMBOLS = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
-const ZODIAC_NAMES = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+const ZODIAC_NAMES = ZODIAC_SIGNS;
 
 // House significations for astrological interpretation
 const HOUSE_SIGNIFICATIONS: Record<number, { topic: string; keywords: string[] }> = {

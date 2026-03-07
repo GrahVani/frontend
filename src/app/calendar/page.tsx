@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Calendar as CalendarIcon } from "lucide-react";
 import PanchangCalendar from "@/components/calendar/PanchangCalendar";
-import EmptyState from "@/components/ui/EmptyState";
 import { SkeletonCard } from "@/components/ui/Skeleton";
 import { useMonthlyCalendar } from "@/hooks/queries/useCalendar";
 
@@ -34,9 +33,6 @@ export default function CalendarPage() {
                     year={year}
                     month={month}
                     onMonthChange={(y, m) => { setYear(y); setMonth(m); }}
-                    onDayClick={(day) => {
-                        // Day detail shown inline in the calendar
-                    }}
                 />
             ) : (
                 <PanchangCalendar

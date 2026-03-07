@@ -19,7 +19,7 @@ export const DoshaTechnical = memo(function DoshaTechnical({ data }: DoshaTechni
             </h3>
 
             {/* Critical Fixes / Notes */}
-            <div className="flex-1 space-y-3 overflow-y-auto max-h-[140px] pr-2 custom-scrollbar mb-4">
+            <div className="flex-1 space-y-3 overflow-y-auto max-h-[200px] pr-2 custom-scrollbar mb-4">
                 {data.fixes && data.fixes.length > 0 ? data.fixes.map((fix: string, i: number) => (
                     <div key={i} className="flex gap-3 items-start group/fix">
                         <span className="text-[9px] font-mono text-zinc-600 mt-0.5 group-hover/fix:text-red-400 transition-colors">0{i + 1}</span>

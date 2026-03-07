@@ -51,7 +51,7 @@ export const YogaPlanetsGrid = memo(function YogaPlanetsGrid({ data }: YogaPlane
                             {PLANET_ABBR[planet] ?? planet.substring(0, 2).toUpperCase()}
                         </div>
                         <div className="flex flex-col leading-none min-w-0">
-                            <span className="text-[10px] font-bold text-primary truncate">{details.sign}</span>
+                            <span className="text-[10px] font-bold text-primary truncate" title={details.sign}>{details.sign}</span>
                             <span className="text-[9px] text-primary opacity-60 font-mono">
                                 H{details.house}
                                 {details.retrograde === 'R' && <span className="text-red-500 ml-0.5">R</span>}

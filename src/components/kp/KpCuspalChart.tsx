@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Planet } from '../astrology/NorthIndianChart/NorthIndianChart';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { HOUSE_CENTERS, HOUSE_POLYGONS } from '@/lib/chart-geometry';
 
 export interface KpCuspalChartProps {
     planets: Planet[]; // Planets mapped to houses
@@ -26,37 +27,8 @@ export default function KpCuspalChart({
 }: KpCuspalChartProps) {
     const [hoveredHouse, setHoveredHouse] = useState<number | null>(null);
 
-    // Helpers for Geometry
-    const houseCenters = [
-        { h: 1, x: 200, y: 105 }, // Top Diamond
-        { h: 2, x: 105, y: 45 },  // Top Left Triangle (Top-most)
-        { h: 3, x: 45, y: 105 },  // Top Left Triangle (Left-most)
-        { h: 4, x: 105, y: 200 }, // Left Diamond
-        { h: 5, x: 45, y: 295 },  // Bottom Left Triangle (Left-most)
-        { h: 6, x: 105, y: 355 }, // Bottom Left Triangle (Bottom-most)
-        { h: 7, x: 200, y: 295 }, // Bottom Diamond
-        { h: 8, x: 295, y: 355 }, // Bottom Right Triangle (Bottom-most)
-        { h: 9, x: 355, y: 295 }, // Bottom Right Triangle (Right-most)
-        { h: 10, x: 295, y: 200 },// Right Diamond
-        { h: 11, x: 355, y: 105 },// Top Right Triangle (Right-most)
-        { h: 12, x: 295, y: 45 }, // Top Right Triangle (Top-most)
-    ];
-
-    // Define clickable polygon regions for each house
-    const housePolygons: Record<number, string> = {
-        1: "200,10 105,105 200,200 295,105",              // Top inner diamond
-        2: "10,10 200,10 105,105",                        // Top-left corner (upper)
-        3: "10,10 105,105 10,200",                       // Top-left corner (lower)
-        4: "10,200 105,105 200,200 105,295",             // Left inner diamond
-        5: "10,200 105,295 10,390",                      // Bottom-left corner (upper)
-        6: "10,390 105,295 200,390",                      // Bottom-left corner (lower)
-        7: "200,390 105,295 200,200 295,295",             // Bottom inner diamond
-        8: "200,390 295,295 390,390",                     // Bottom-right corner (lower)
-        9: "390,200 295,295 390,390",                     // Bottom-right corner (upper)
-        10: "390,200 295,105 200,200 295,295",             // Right inner diamond
-        11: "390,10 295,105 390,200",                      // Top-right corner (lower)
-        12: "200,10 390,10 295,105",                       // Top-right corner (upper)
-    };
+    const houseCenters = HOUSE_CENTERS;
+    const housePolygons = HOUSE_POLYGONS;
 
     const handleHouseClick = (houseNum: number) => {
         if (onHouseClick) {
@@ -65,7 +37,8 @@ export default function KpCuspalChart({
     };
 
     return (
-        <svg viewBox="-10 -10 420 420" className={cn("w-full h-full", className)}>
+        <svg viewBox="-10 -10 420 420" className={cn("w-full h-full", className)} role="img" aria-label="KP Cuspal birth chart showing planetary positions in houses">
+            <desc>KP System cuspal chart with unequal house signs and planetary placements</desc>
             <defs>
                 <linearGradient id="kpChartBg" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="var(--surface-warm)" />

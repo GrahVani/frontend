@@ -111,6 +111,8 @@
   --font-size-sm: 0.8125rem;
   --font-size-xs: 0.75rem;
   --font-size-2xs: 0.6875rem;
+  --font-size-3xs: 0.625rem;  /* 10px — data-dense labels, badges */
+  --font-size-4xs: 0.5625rem; /* 9px — micro labels, decorative text */
 
   /* --- Font Weights --- */
   --font-weight-regular: 400;
@@ -129,6 +131,26 @@
   --letter-spacing-normal: 0;
   --letter-spacing-wide: 0.01em;
   --letter-spacing-wider: 0.05em;
+
+  /* ============================================ */
+  /* SPACING & LAYOUT SYSTEM                     */
+  /* ============================================ */
+  --spacing-section: 1.5rem;   /* 24px — between major sections */
+  --spacing-card: 1rem;        /* 16px — card internal padding */
+  --spacing-card-gap: 0.75rem; /* 12px — gap between cards in a grid */
+  --spacing-inline: 0.5rem;    /* 8px — between inline elements */
+  --spacing-tight: 0.25rem;    /* 4px — tight spacing (labels, badges) */
+
+  /* Container max widths */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
+
+  /* Sidebar width */
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 64px;
 }
 
 @theme {
@@ -216,6 +238,8 @@
   --font-size-sm: var(--font-size-sm);
   --font-size-xs: var(--font-size-xs);
   --font-size-2xs: var(--font-size-2xs);
+  --font-size-3xs: var(--font-size-3xs);
+  --font-size-4xs: var(--font-size-4xs);
 
   /* --- Font Weights --- */
   --font-weight-regular: var(--font-weight-regular);
@@ -349,61 +373,8 @@ body::before {
   font-weight: 600;
 }
 
-/* Clean Hexagon Clip */
-.hex-clip {
-  clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
-}
-
-/* Hero Specific Styles */
-.hero-parchment-texture {
-  background-image: url("/textures/aged-paper.png");
-  background-color: var(--hero-bg);
-  background-blend-mode: multiply;
-}
-
 .hero-vignette {
   box-shadow: inset 0 0 150px rgba(43, 21, 16, 0.1);
-}
-
-.btn-premium-cta {
-  background: linear-gradient(135deg, var(--bronze-accent), var(--bronze-dark));
-  border: 2px solid var(--gold-primary);
-  color: var(--hero-bg);
-  box-shadow: 0 4px 15px rgba(139, 90, 43, 0.4);
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.btn-premium-cta:hover {
-  background: linear-gradient(135deg, var(--bronze-hover), var(--bronze-accent));
-  border-color: #e6b87d;
-  box-shadow: 0 6px 20px rgba(139, 90, 43, 0.6);
-  transform: translateY(-2px);
-}
-
-/* Decorative Brackets for Button Corners */
-.btn-premium-cta::before,
-.btn-premium-cta::after {
-  content: "";
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  border: 1px solid var(--gold-primary);
-  pointer-events: none;
-}
-
-.btn-premium-cta::before {
-  top: 4px;
-  left: 4px;
-  border-right: 0;
-  border-bottom: 0;
-}
-
-.btn-premium-cta::after {
-  bottom: 4px;
-  right: 4px;
-  border-left: 0;
-  border-top: 0;
 }
 
 @keyframes float {
@@ -420,30 +391,6 @@ body::before {
 
 .animate-float-gentle {
   animation: float 6s ease-in-out infinite;
-}
-
-@keyframes sparkle {
-
-  0%,
-  100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 0.8;
-    transform: scale(1.5);
-  }
-}
-
-.sparkle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: var(--gold-primary);
-  border-radius: 50%;
-  filter: blur(1px);
-  animation: sparkle 3s infinite;
 }
 
 /* ============================================ */
@@ -521,22 +468,6 @@ body::before {
   display: none;
 }
 
-/* Smooth scroll with snap for wheel pickers */
-.wheel-scroll {
-  scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
-}
-
-.wheel-scroll>* {
-  scroll-snap-align: center;
-}
-
-/* Gradient fade edges for wheel picker */
-.wheel-fade-top {
-  mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%);
-}
-
 /* Hide scrollbar in calendar dropdowns (year/month select) */
 select::-webkit-scrollbar {
   display: none;
@@ -546,4 +477,112 @@ select::-webkit-scrollbar {
 select {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* ============================================ */
+/* REDUCED MOTION — GLOBAL (A11Y-004)          */
+/* ============================================ */
+/* Respects user's OS-level motion preference.  */
+/* Disables all CSS transitions/animations AND  */
+/* tells framer-motion to skip via data attr.   */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-spin,
+  .animate-pulse,
+  .animate-bounce,
+  .animate-float-gentle {
+    animation: none !important;
+  }
+}
+
+/* ============================================ */
+/* DARK MODE FOUNDATION                        */
+/* ============================================ */
+/* Apply by adding class="dark" to <html>.     */
+/* All CSS variable overrides — no component   */
+/* changes needed. Toggle via ThemeProvider.    */
+
+.dark {
+  --parchment: #1A1410;
+  --softwhite: #201A14;
+  --surface-modal: #2A2218;
+  --bg-hover: #2E2518;
+
+  --ink: #E8DCC8;
+  --text-body: #D4C4A8;
+  --text-muted: #A89070;
+  --text-dark: #F0E8D8;
+
+  --border-antique: #3D3020;
+  --border-divider: #4A3A28;
+  --header-border: #8B6540;
+
+  --gold-primary: #D4AD5A;
+  --gold-soft: #B89040;
+  --gold-dark: #E6C97A;
+  --gold-hover: #E0B860;
+  --gold-pressed: #C49A48;
+  --active-glow: #FFD27D;
+
+  --bronze-accent: #A07040;
+  --bronze-dark: #C08850;
+  --bronze-hover: #B08050;
+
+  --status-success: #4ADE80;
+  --status-error: #F87171;
+  --status-warning: #FBBF24;
+  --status-info: #60A5FA;
+
+  --parchment-soft: #2A2018;
+  --cream-gold: #3A2E20;
+  --header-bg: #1E1810;
+  --text-hover: #D4A050;
+  --sun-gold: #F4A460;
+  --moon-blue: #6090C0;
+
+  --surface-warm: #1E1810;
+  --surface-pure: #241C14;
+  --parchment-light: #1A1410;
+  --border-warm: #3A2E20;
+  --ink-deep: #F0E8D8;
+  --ink-abyss: #FAF5E6;
+  --text-tertiary: #C0A880;
+  --gold-burnished: #D4A040;
+  --copper-dark: #B06838;
+  --mahogany: #A05030;
+  --mahogany-deep: #C06040;
+
+  --header-ornate-bg-from: #2A2018;
+  --header-ornate-bg-to: #1E1810;
+  --header-text-cream: #E8DCC8;
+
+  --hero-bg: #1A1410;
+  --hero-bg-secondary: #201A14;
+  --hero-texture: rgba(40, 30, 20, 0.3);
+
+  --shadow-color: rgba(0, 0, 0, 0.4);
+
+  --text-primary: #E8DCC8;
+  --text-secondary: #D4C4A8;
+  --text-muted-refined: #A89070;
+  --text-accent-gold: #D4AD5A;
+  --text-accent-gold-light: #C49848;
+  --text-disabled: #6B5F52;
+}
+
+.dark body {
+  background: radial-gradient(circle at 50% 40%, #201A14 0%, #1A1410 40%, #100C08 100%);
+  background-color: var(--parchment);
+}
+
+.dark body::before {
+  opacity: 0.05;
 }

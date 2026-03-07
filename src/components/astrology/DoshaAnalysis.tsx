@@ -17,7 +17,7 @@ import {
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { clientApi } from '@/lib/api';
-import DebugConsole from '../debug/DebugConsole';
+
 
 interface AngarakDoshaData {
     has_angarak_dosha: boolean;
@@ -93,7 +93,6 @@ export default function DoshaAnalysis({ clientId, doshaType, ayanamsa = 'lahiri'
                     <h2 className={cn(TYPOGRAPHY.sectionTitle, "mb-1 text-red-900")}>Analysis Unavailable</h2>
                     <p className={cn(TYPOGRAPHY.subValue, "text-red-600")}>{error || 'Data could not be retrieved'}</p>
                 </div>
-                {error && <DebugConsole title={`Dosha Analysis Error: ${doshaType}`} data={{ error, doshaType, ayanamsa }} />}
             </div>
         );
     }
@@ -122,7 +121,6 @@ export default function DoshaAnalysis({ clientId, doshaType, ayanamsa = 'lahiri'
                     <h2 className="text-xl font-serif font-bold text-ink capitalize">{doshaType.replace('_', ' ')} Analysis</h2>
                 </div>
                 <p className="text-sm text-secondary">Detailed report for {doshaType} is being prepared by the engine.</p>
-                <DebugConsole title={`Dosha Analysis: ${doshaType}`} data={data} className="mt-6" />
             </div>
         </div>
     );
@@ -140,7 +138,6 @@ function AngarakDoshaView({ data, className }: { data: AngarakDoshaData; classNa
                     <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-green-900")}>Dosha Absent</h3>
                     <p className={cn(TYPOGRAPHY.value, "text-green-700 mt-1")}>Mars and Rahu are harmoniously placed. No Angarak Dosha signature found.</p>
                 </div>
-                <DebugConsole title="Angarak Dosha Raw Data (Absent)" data={data} />
             </div>
         );
     }
@@ -240,8 +237,6 @@ function AngarakDoshaView({ data, className }: { data: AngarakDoshaData; classNa
                 </div>
             </div>
 
-            {/* Debug Console */}
-            <DebugConsole title="Angarak Dosha Raw Data" data={data} />
         </div>
     );
 }
@@ -258,7 +253,6 @@ function SadeSatiView({ data, className }: { data: SadeSatiData; className?: str
                     <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-blue-900")}>Sade Sati Inactive</h3>
                     <p className={cn(TYPOGRAPHY.value, "text-blue-700 mt-1")}>Transiting Saturn is currently not in the 12th, 1st, or 2nd from your Natal Moon.</p>
                 </div>
-                <DebugConsole title="Sade Sati Raw Data (Inactive)" data={data} />
             </div>
         );
     }
@@ -305,7 +299,6 @@ function SadeSatiView({ data, className }: { data: SadeSatiData; className?: str
                 </div>
             </div>
 
-            <DebugConsole title="Sade Sati Raw Data" data={data} />
         </div>
     );
 }
@@ -322,7 +315,6 @@ function DhaiyaView({ data, className }: { data: DhaiyaData; className?: string 
                     <h3 className="text-green-900 font-serif font-bold text-lg">No Dhaiya</h3>
                     <p className="text-sm text-green-700 mt-1">Saturn is not currently in the 4th or 8th house from your Natal Moon.</p>
                 </div>
-                <DebugConsole title="Dhaiya Raw Data (Inactive)" data={data} />
             </div>
         );
     }
@@ -364,7 +356,6 @@ function DhaiyaView({ data, className }: { data: DhaiyaData; className?: string 
                 </div>
             </div>
 
-            <DebugConsole title="Dhaiya Raw Data" data={data} />
         </div>
     );
 }

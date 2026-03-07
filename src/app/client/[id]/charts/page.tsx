@@ -8,6 +8,7 @@ import NorthIndianChart from "@/components/astrology/NorthIndianChart";
 import PlanetaryTable from "@/components/astrology/PlanetaryTable";
 import { useClientCharts } from "@/hooks/queries/useClientCharts";
 import { useChartMutations } from "@/hooks/mutations/useChartMutations";
+import { captureException } from "@/lib/monitoring";
 import { parseChartData, signIdToName } from "@/lib/chart-helpers";
 
 interface ChartsPageProps {
@@ -55,7 +56,9 @@ export default function ChartsPage({ params }: ChartsPageProps) {
         try {
             await generateFullVedicProfile.mutateAsync(clientId);
             refetch();
-        } catch (err) {        }
+        } catch (err) {
+            captureException(err, { tags: { section: 'charts', action: 'generate' } });
+        }
     };
 
     if (isLoading) {

@@ -3,7 +3,8 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
-import { Star, Shield, Zap, TrendingDown, Anchor } from 'lucide-react';
+import { Shield, Zap, TrendingDown, Anchor } from 'lucide-react';
+import DataGrid, { type DataGridColumn } from '@/components/ui/DataGrid';
 
 export interface DetailedPlanetInfo {
     planet: string;
@@ -16,14 +17,144 @@ export interface DetailedPlanetInfo {
     isRetro?: boolean;
     dignity?: 'Exalted' | 'Debilitated' | 'Moolatrikona' | 'Own Sign' | 'Friend' | 'Neutral' | 'Enemy';
     isCombust?: boolean;
-    shadbala?: number; // In Rupas
-    avastha?: string; // e.g., Jagrat
-    karaka?: string; // e.g., Atmakaraka
+    shadbala?: number;
+    avastha?: string;
+    karaka?: string;
 }
 
 interface PlanetaryAnalyticsProps {
     planets: DetailedPlanetInfo[];
 }
+
+const DIGNITY_STYLES: Record<string, string> = {
+    'Exalted': 'bg-green-500/10 text-green-700 border-green-500/30 shadow-[0_0_10px_rgba(34,197,94,0.1)]',
+    'Debilitated': 'bg-red-500/10 text-red-600 border-red-500/30',
+    'Moolatrikona': 'bg-active-glow/20 text-[#A06D00] border-active-glow/50',
+    'Own Sign': 'bg-blue-500/10 text-blue-700 border-blue-500/30',
+    'Friend': 'bg-ink/5 text-ink/70 border-ink/10',
+    'Neutral': 'bg-ink/5 text-ink/40 border-ink/10',
+    'Enemy': 'bg-slate-500/10 text-slate-600 border-slate-500/20',
+};
+
+function DignityBadge({ dignity }: { dignity?: DetailedPlanetInfo['dignity'] }) {
+    if (!dignity) return <span className={cn(TYPOGRAPHY.label, "opacity-20 lowercase")}>{'\u2014'}</span>;
+    return (
+        <div className={cn(
+            "inline-flex items-center gap-1.5 px-3 py-1 rounded-full border lowercase",
+            TYPOGRAPHY.label,
+            DIGNITY_STYLES[dignity] || DIGNITY_STYLES['Neutral']
+        )}>
+            {dignity === 'Exalted' && <Zap className="w-2 h-2" />}
+            {dignity === 'Debilitated' && <Anchor className="w-2 h-2" />}
+            {dignity}
+        </div>
+    );
+}
+
+const COLUMNS: DataGridColumn<DetailedPlanetInfo>[] = [
+    {
+        key: 'planet',
+        header: 'Graha',
+        sortable: true,
+        cellClassName: 'px-6',
+        headerClassName: 'px-6',
+        render: (row) => (
+            <div className="flex items-center gap-3">
+                <div className={cn(
+                    "w-2 h-2 rounded-full",
+                    row.isRetro ? "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" : "bg-header-border"
+                )} />
+                <span className={cn(TYPOGRAPHY.planetName, "text-lg tracking-tight")}>{row.planet}</span>
+                {row.isRetro && <TrendingDown className="w-3 h-3 text-red-500 animate-pulse" />}
+            </div>
+        ),
+    },
+    {
+        key: 'degree',
+        header: 'Longitude',
+        cellClassName: 'px-6',
+        headerClassName: 'px-6',
+        render: (row) => (
+            <span className={cn(TYPOGRAPHY.value, "text-xs font-mono bg-ink/5 px-2 py-1 rounded border border-ink/10 font-normal")}>{row.degree}</span>
+        ),
+    },
+    {
+        key: 'sign',
+        header: 'Sign (Rashi)',
+        sortable: true,
+        cellClassName: 'px-6',
+        headerClassName: 'px-6',
+        render: (row) => (
+            <div className="flex flex-col">
+                <span className={cn(TYPOGRAPHY.value)}>{row.sign}</span>
+                <span className={cn(TYPOGRAPHY.label, "lowercase opacity-50")}>House {row.house}</span>
+            </div>
+        ),
+    },
+    {
+        key: 'nakshatra',
+        header: 'Nakshatra',
+        cellClassName: 'px-6',
+        headerClassName: 'px-6',
+        render: (row) => (
+            <div className="flex flex-col">
+                <span className={cn(TYPOGRAPHY.value)}>{row.nakshatra} - {row.pada}</span>
+                <span className={cn(TYPOGRAPHY.label, "text-copper-dark lowercase")}>Lord: {row.nakshatraLord}</span>
+            </div>
+        ),
+    },
+    {
+        key: 'shadbala',
+        header: 'Shadbala',
+        sortable: true,
+        sortFn: (a, b) => (a.shadbala || 0) - (b.shadbala || 0),
+        cellClassName: 'px-6',
+        headerClassName: 'px-6',
+        render: (row) => (
+            <div className="flex flex-col gap-1 w-24">
+                <div className="flex justify-between items-end">
+                    <span className={cn(TYPOGRAPHY.value, "text-xs")}>{row.shadbala || 0}</span>
+                    <span className={cn(TYPOGRAPHY.label, "text-bronze lowercase")}>Rupas</span>
+                </div>
+                <div className="w-full h-1.5 bg-ink/10 rounded-full overflow-hidden">
+                    <div
+                        className="h-full bg-gradient-to-r from-header-border to-bronze rounded-full"
+                        style={{ width: `${Math.min(((row.shadbala || 0) / 8) * 100, 100)}%` }}
+                    />
+                </div>
+            </div>
+        ),
+    },
+    {
+        key: 'avastha',
+        header: 'Avastha',
+        cellClassName: 'px-6',
+        headerClassName: 'px-6',
+        render: (row) => (
+            <span className={cn(TYPOGRAPHY.value, "text-xs italic font-normal")}>{row.avastha || '\u2014'}</span>
+        ),
+    },
+    {
+        key: 'dignity',
+        header: 'Dignity',
+        cellClassName: 'px-6',
+        headerClassName: 'px-6',
+        render: (row) => <DignityBadge dignity={row.dignity} />,
+    },
+    {
+        key: 'karaka',
+        header: 'Karaka',
+        cellClassName: 'px-6',
+        headerClassName: 'px-6',
+        render: (row) => row.karaka ? (
+            <span className={cn(TYPOGRAPHY.label, "bg-ink text-softwhite px-2 py-0.5 rounded border border-header-border/50 lowercase shadow-sm")}>
+                {row.karaka}
+            </span>
+        ) : (
+            <span className={cn(TYPOGRAPHY.label, "opacity-20 lowercase")}>{'\u2014'}</span>
+        ),
+    },
+];
 
 export default function PlanetaryAnalytics({ planets }: PlanetaryAnalyticsProps) {
     return (
@@ -37,116 +168,13 @@ export default function PlanetaryAnalytics({ planets }: PlanetaryAnalyticsProps)
                     Live Computation
                 </div>
             </div>
-
-            <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                    <thead>
-                        <tr className="bg-ink/5 border-b border-header-border/20">
-                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Graha</th>
-                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Longitude</th>
-                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Sign (Rashi)</th>
-                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Nakshatra</th>
-                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Shadbala</th>
-                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Avastha</th>
-                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Dignity</th>
-                            <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Karaka</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-header-border/10">
-                        {planets.map((planet) => (
-                            <tr key={planet.planet} className="hover:bg-ink/5 transition-colors group/row">
-                                <td className="p-4 px-6">
-                                    <div className="flex items-center gap-3">
-                                        <div className={cn(
-                                            "w-2 h-2 rounded-full",
-                                            planet.isRetro ? "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" : "bg-header-border"
-                                        )} />
-                                        <span className={cn(TYPOGRAPHY.planetName, "text-lg tracking-tight")}>{planet.planet}</span>
-                                        {planet.isRetro && <TrendingDown className="w-3 h-3 text-red-500 animate-pulse" />}
-                                    </div>
-                                </td>
-                                <td className="p-4 px-6">
-                                    <span className={cn(TYPOGRAPHY.value, "text-xs font-mono bg-ink/5 px-2 py-1 rounded border border-ink/10 font-normal")}>{planet.degree}</span>
-                                </td>
-                                <td className="p-4 px-6">
-                                    <div className="flex flex-col">
-                                        <span className={cn(TYPOGRAPHY.value)}>{planet.sign}</span>
-                                        <span className={cn(TYPOGRAPHY.label, "lowercase opacity-50")}>House {planet.house}</span>
-                                    </div>
-                                </td>
-                                <td className="p-4 px-6">
-                                    <div className="flex flex-col">
-                                        <span className={cn(TYPOGRAPHY.value)}>{planet.nakshatra} - {planet.pada}</span>
-                                        <span className={cn(TYPOGRAPHY.label, "text-copper-dark lowercase")}>Lord: {planet.nakshatraLord}</span>
-                                    </div>
-                                </td>
-
-                                {/* Shadbala Cell */}
-                                <td className="p-4 px-6">
-                                    <div className="flex flex-col gap-1 w-24">
-                                        <div className="flex justify-between items-end">
-                                            <span className={cn(TYPOGRAPHY.value, "text-xs")}>{planet.shadbala || 0}</span>
-                                            <span className={cn(TYPOGRAPHY.label, "text-bronze lowercase")}>Rupas</span>
-                                        </div>
-                                        <div className="w-full h-1.5 bg-ink/10 rounded-full overflow-hidden">
-                                            <div
-                                                className="h-full bg-gradient-to-r from-header-border to-bronze rounded-full"
-                                                style={{ width: `${Math.min(((planet.shadbala || 0) / 8) * 100, 100)}%` }}
-                                            />
-                                        </div>
-                                    </div>
-                                </td>
-
-                                {/* Avastha Cell */}
-                                <td className="p-4 px-6">
-                                    <span className={cn(TYPOGRAPHY.value, "text-xs italic font-normal")}>{planet.avastha || "—"}</span>
-                                </td>
-
-                                <td className="p-4 px-6">
-                                    <DignityBadge dignity={planet.dignity} />
-                                </td>
-
-                                {/* Karaka Cell */}
-                                <td className="p-4 px-6">
-                                    {planet.karaka ? (
-                                        <span className={cn(TYPOGRAPHY.label, "bg-ink text-softwhite px-2 py-0.5 rounded border border-header-border/50 lowercase shadow-sm")}>
-                                            {planet.karaka}
-                                        </span>
-                                    ) : (
-                                        <span className={cn(TYPOGRAPHY.label, "opacity-20 lowercase")}>—</span>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    );
-}
-
-function DignityBadge({ dignity }: { dignity?: DetailedPlanetInfo['dignity'] }) {
-    if (!dignity) return <span className={cn(TYPOGRAPHY.label, "opacity-20 lowercase")}>—</span>;
-
-    const styles: Record<string, string> = {
-        'Exalted': 'bg-green-500/10 text-green-700 border-green-500/30 shadow-[0_0_10px_rgba(34,197,94,0.1)]',
-        'Debilitated': 'bg-red-500/10 text-red-600 border-red-500/30',
-        'Moolatrikona': 'bg-active-glow/20 text-[#A06D00] border-active-glow/50',
-        'Own Sign': 'bg-blue-500/10 text-blue-700 border-blue-500/30',
-        'Friend': 'bg-ink/5 text-ink/70 border-ink/10',
-        'Neutral': 'bg-ink/5 text-ink/40 border-ink/10',
-        'Enemy': 'bg-slate-500/10 text-slate-600 border-slate-500/20'
-    };
-
-    return (
-        <div className={cn(
-            "inline-flex items-center gap-1.5 px-3 py-1 rounded-full border lowercase",
-            TYPOGRAPHY.label,
-            styles[dignity] || styles['Neutral']
-        )}>
-            {dignity === 'Exalted' && <Zap className="w-2 h-2" />}
-            {dignity === 'Debilitated' && <Anchor className="w-2 h-2" />}
-            {dignity}
+            <DataGrid
+                columns={COLUMNS}
+                data={planets}
+                rowKey={(row) => row.planet}
+                cellPadding="p-4"
+                ariaLabel="Planetary state analysis table"
+            />
         </div>
     );
 }

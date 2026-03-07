@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Button from "@/components/ui/Button";
 import { RefreshCw } from "lucide-react";
+import { captureException } from "@/lib/monitoring";
 
 export default function SettingsError({
   error,
@@ -12,7 +13,10 @@ export default function SettingsError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Error logged by Next.js error boundary
+    captureException(error, {
+      tags: { boundary: 'route', section: 'settings' },
+      extra: { digest: error.digest },
+    });
   }, [error]);
 
   return (

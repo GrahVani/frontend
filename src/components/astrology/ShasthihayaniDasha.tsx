@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
-import { ChevronDown, ChevronUp, Calendar, Info, Clock, AlertCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, Calendar, AlertCircle } from 'lucide-react';
 import { DashaNode, formatDateDisplay, calculateDuration } from '@/lib/dasha-utils';
 import { PLANET_COLORS } from '@/lib/astrology-constants';
 

@@ -167,8 +167,8 @@ export default function AnalyticalWorkbenchPage() {
             )}
 
             {/* Content Area */}
-            <div className={cn("grid grid-cols-1 gap-3", activeTab === 'dignity' ? "lg:grid-cols-1" : "lg:grid-cols-12")}>
-                <div className={cn("space-y-6", activeTab === 'dignity' ? "lg:col-span-1" : "lg:col-span-5")}>
+            <div className={cn("grid grid-cols-1 gap-3", activeTab === 'dignity' ? "md:grid-cols-1" : "md:grid-cols-12")}>
+                <div className={cn("space-y-6", activeTab === 'dignity' ? "md:col-span-1" : "md:col-span-5")}>
                     {activeTab === 'chart' || activeTab === 'lagna' ? (
                         <div className="border border-antique rounded-lg overflow-hidden shadow-sm bg-surface-warm">
                             <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
@@ -193,7 +193,7 @@ export default function AnalyticalWorkbenchPage() {
                                     )}
                                 </select>
                             </div>
-                            <div className="w-full h-[450px] bg-surface-warm">
+                            <div className="w-full min-h-[300px] h-[50vh] max-h-[500px] bg-surface-warm">
                                 {isLoadingCharts && Object.keys(processedCharts).length === 0 ? (
                                     <div className="flex items-center justify-center h-full"><Loader2 className="w-8 h-8 text-gold-primary animate-spin" /></div>
                                 ) : displayPlanets.length > 0 ? (
@@ -250,7 +250,7 @@ export default function AnalyticalWorkbenchPage() {
 
                 {/* Right Panel */}
                 {activeTab !== 'dignity' && (
-                    <div className="space-y-4 h-full lg:col-span-7">
+                    <div className="space-y-4 h-full md:col-span-7">
                         <div className="border border-antique rounded-lg overflow-hidden shadow-sm bg-surface-warm flex flex-col h-full">
                             <div className="bg-border-warm px-4 py-2 border-b border-antique shrink-0">
                                 <h3 className="font-serif text-lg font-semibold text-primary leading-tight tracking-wide">Birth planetary positions</h3>

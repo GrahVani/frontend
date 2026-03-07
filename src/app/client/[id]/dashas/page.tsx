@@ -272,10 +272,10 @@ export default function VedicDashasPage() {
                         <span className="px-3 py-1 bg-ink text-white text-xs font-bold rounded-full uppercase">
                             {ayanamsa}
                         </span>
-                        <button className="p-2 rounded-lg hover:bg-header-border/10 text-bronze" title="Print">
+                        <button className="p-2.5 rounded-lg hover:bg-header-border/10 text-bronze" title="Print" aria-label="Print dasha chart">
                             <Printer className="w-4 h-4" />
                         </button>
-                        <button className="p-2 rounded-lg hover:bg-header-border/10 text-bronze" title="Export PDF">
+                        <button className="p-2.5 rounded-lg hover:bg-header-border/10 text-bronze" title="Export PDF" aria-label="Export dasha chart as PDF">
                             <Download className="w-4 h-4" />
                         </button>
                         <button
@@ -358,9 +358,10 @@ export default function VedicDashasPage() {
                         {/* Selector Tray */}
                         <div className="p-4 border-b border-header-border/10 flex flex-wrap items-center justify-between gap-4">
                             <div className="flex items-center gap-3">
-                                <label className="text-xs font-bold text-bronze uppercase tracking-wider">System</label>
+                                <label htmlFor="dasha-system-select" className="text-xs font-bold text-bronze uppercase tracking-wider">System</label>
                                 <div className="relative">
                                     <select
+                                        id="dasha-system-select"
                                         value={selectedDashaType}
                                         onChange={(e) => handleSystemChange(e.target.value)}
                                         className="appearance-none bg-surface-pure border border-header-border/30 rounded-xl px-4 py-2 pr-10 text-ink font-medium focus:outline-none focus:ring-2 focus:ring-header-border/40 cursor-pointer min-w-[200px]"

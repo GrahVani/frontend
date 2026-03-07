@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { captureException } from "@/lib/monitoring";
 
 export default function DashboardError({
   error,
@@ -10,7 +11,10 @@ export default function DashboardError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Error logged by Next.js error boundary
+    captureException(error, {
+      tags: { boundary: 'route', section: 'dashboard' },
+      extra: { digest: error.digest },
+    });
   }, [error]);
 
   return (

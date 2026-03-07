@@ -2,8 +2,8 @@
 
 import React, { useMemo, useState } from 'react';
 import { cn } from "@/lib/utils";
-import { ChevronRight, ChevronDown, Loader2 } from 'lucide-react';
-import { DashaNode, isDateRangeCurrent, calculateDuration, generateVimshottariSubperiods, parseApiDate } from '@/lib/dasha-utils';
+import { ChevronRight, Loader2 } from 'lucide-react';
+import { DashaNode, calculateDuration, generateVimshottariSubperiods, parseApiDate } from '@/lib/dasha-utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 
 interface VimshottariTreeGridProps {

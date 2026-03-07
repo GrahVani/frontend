@@ -3,12 +3,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
     Loader2, ChevronRight, ChevronLeft,
-    Calendar, ChevronDown, ChevronUp, Clock,
-    Bug, CheckCircle, XCircle, Database, Zap, Search,
+    Calendar, ChevronDown, Clock,
     User, MapPin, TrendingUp
 } from 'lucide-react';
 import Link from 'next/link';
 import { useVedicClient } from '@/context/VedicClientContext';
+import { captureException } from '@/lib/monitoring';
 import { useAstrologerStore } from '@/store/useAstrologerStore';
 import { clientApi } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -51,10 +51,7 @@ import {
     standardizeDuration,
     generateVimshottariSubperiods
 } from '@/lib/dasha-utils';
-
-// =============================================================================
-// SENIOR UTILS (Formatting & Progress)
-// =============================================================================
+import { DASHA_LEVELS, DASHA_SYSTEMS } from '@/lib/dasha-constants';
 
 function parseDateStr(dateStr: string): Date | null {
     if (!dateStr) return null;
@@ -64,7 +61,7 @@ function parseDateStr(dateStr: string): Date | null {
 
 function formatDateShort(dateStr: string): string {
     const date = parseDateStr(dateStr);
-    if (!date) return '—';
+    if (!date) return '\u2014';
     return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
@@ -74,33 +71,6 @@ function getDaysRemaining(endDateStr: string): number {
     const now = new Date();
     return Math.max(0, Math.ceil((end.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
 }
-
-
-// Level configuration for parity
-const DASHA_LEVELS = [
-    { id: 'mahadasha', name: 'Mahadasha', short: 'Maha' },
-    { id: 'antardasha', name: 'Antardasha', short: 'Antar' },
-    { id: 'pratyantardasha', name: 'Pratyantardasha', short: 'Pratyantar' },
-    { id: 'sookshmadasha', name: 'Sookshma', short: 'Sookshma' },
-    { id: 'pranadasha', name: 'Prana', short: 'Prana' },
-];
-
-// All 11 Dasha Systems metadata (Parity with Demo)
-const DASHA_SYSTEMS = [
-    { id: 'vimshottari', name: 'Vimshottari', years: 120, category: 'primary', applicable: true, desc: 'Universal Moon-nakshatra based' },
-    { id: 'tribhagi', name: 'Tribhagi', years: 80, category: 'conditional', applicable: true, desc: 'One-third of Vimshottari' },
-    { id: 'tribhagi-40', name: 'Tribhagi (40 Years)', years: 40, category: 'conditional', applicable: true, desc: '40 Year Cycle Variation' },
-    { id: 'ashtottari', name: 'Ashtottari', years: 108, category: 'conditional', applicable: true, desc: 'Rahu & Venus Special Conditions' },
-    { id: 'shodashottari', name: 'Shodashottari', years: 116, category: 'conditional', applicable: true, desc: 'Venus in 9th + Lagna hora' },
-    { id: 'dwadashottari', name: 'Dwadashottari', years: 112, category: 'conditional', applicable: true, desc: 'Venus in Lagna' },
-    { id: 'panchottari', name: 'Panchottari', years: 105, category: 'conditional', applicable: true, desc: 'Cancer Lagna + Dhanishtha' },
-    { id: 'chaturshitisama', name: 'Chaturshitisama', years: 84, category: 'conditional', applicable: false, desc: '10th lord in 10th' },
-    { id: 'satabdika', name: 'Satabdika', years: 100, category: 'conditional', applicable: true, desc: 'Vargottama Lagna' },
-    { id: 'dwisaptati', name: 'Dwisaptati Sama', years: 72, category: 'conditional', applicable: true, desc: 'Lagna lord in 7th' },
-    { id: 'shastihayani', name: 'Shastihayani', years: 60, category: 'conditional', applicable: false, desc: 'Sun in Lagna' },
-    { id: 'shattrimshatsama', name: 'Shattrimshatsama', years: 36, category: 'conditional', applicable: false, desc: 'Daytime + Moon in Lagna' },
-    { id: 'chara', name: 'Chara (Jaimini)', years: 0, category: 'jaimini', applicable: true, desc: 'Sign-based system' },
-];
 
 // =============================================================================
 // MAIN COMPONENT
@@ -135,19 +105,8 @@ export default function VedicDashasPage() {
     const [activeAnalysis, setActiveAnalysis] = useState<ActiveDashaPath | null>(null);
     const [selectedIntelPlanet, setSelectedIntelPlanet] = useState<string | null>(null);
 
-    // 🔧 DEBUG PANEL STATE
-    const [showDebugPanel, setShowDebugPanel] = useState(false);
-    const [expandedDasha, setExpandedDasha] = useState<string | null>(null);
     const [isSubLevelFetching, setIsSubLevelFetching] = useState(false);
 
-    // Auto-expand active system when panel opens
-    useEffect(() => {
-        if (showDebugPanel) {
-            setExpandedDasha('active');
-        }
-    }, [showDebugPanel]);
-
-    // Debug: Fetch Tribhagi 40 specifically for testing
     // Queries
     const { data: treeResponse, isLoading: treeLoading, error: treeError } = useDasha(
         clientDetails?.id || '',
@@ -312,7 +271,9 @@ export default function VedicDashasPage() {
                         period.sublevel = antarNode.sublevel;
                     }
                 }
-            } catch (err) { } finally {
+            } catch (err) {
+                captureException(err, { tags: { section: 'dashas', action: 'fetch-sublevel' } });
+            } finally {
                 setIsSubLevelFetching(false);
             }
         }
@@ -483,9 +444,10 @@ export default function VedicDashasPage() {
                         {/* Selector Tray - Fixed Top */}
                         <div className="p-4 border-b border-header-border/10 flex flex-wrap items-center justify-between gap-4 shrink-0">
                             <div className="flex items-center gap-3">
-                                <label className={cn(TYPOGRAPHY.label, "!mb-0")}>System</label>
+                                <label htmlFor="vedic-dasha-system-select" className={cn(TYPOGRAPHY.label, "!mb-0")}>System</label>
                                 <div className="relative">
                                     <select
+                                        id="vedic-dasha-system-select"
                                         value={selectedDashaType}
                                         onChange={(e) => handleSystemChange(e.target.value)}
                                         className="appearance-none bg-surface-pure border border-header-border/30 rounded-xl px-4 py-2 pr-10 text-ink font-medium focus:outline-none focus:ring-2 focus:ring-header-border/40 cursor-pointer min-w-[200px]"
@@ -709,166 +671,8 @@ export default function VedicDashasPage() {
 
             {/* End Grid Layout */}
 
-            {/* 🔧 DASHA DEBUG PANEL - FLOATING ICON MODE */}
-            <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2">
-                {showDebugPanel && (
-                    <div className="bg-gradient-to-r from-[#1a1a2e] to-[#16213e] border border-emerald-400/30 rounded-2xl overflow-hidden shadow-2xl w-[400px] max-w-[90vw] animate-in slide-in-from-bottom-5 fade-in duration-200">
-                        <div className="flex items-center justify-between p-3 border-b border-white/10 bg-white/5">
-                            <div className="flex items-center gap-2">
-                                <Bug className="w-4 h-4 text-emerald-400" />
-                                <span className="font-mono text-xs font-bold text-emerald-400 uppercase tracking-widest">
-                                    Debug console
-                                </span>
-                            </div>
-                            <button
-                                onClick={() => setShowDebugPanel(false)}
-                                className="text-white/60 hover:text-white transition-colors"
-                            >
-                                <ChevronDown className="w-4 h-4" />
-                            </button>
-                        </div>
-
-                        <div className="p-3 space-y-3 max-h-[60vh] overflow-y-auto">
-                            <div className="text-[10px] text-white/60 font-mono mb-2">
-                                Client: {clientDetails?.id?.slice(0, 8)}... | Sys: {selectedDashaType}
-                            </div>
-
-                            {/* Selected Dasha Status */}
-                            <DashaDebugRow
-                                name={`Active System: ${selectedDashaType}`}
-                                query={(isVimshottari ? treeResponse : otherError ? { error: otherError, isError: true } : { data: otherData, isLoading: otherLoading, isError: !!otherError }) as Record<string, unknown>}
-                                isExpanded={expandedDasha === 'active'}
-                                onToggle={() => setExpandedDasha(expandedDasha === 'active' ? null : 'active')}
-                            />
-                        </div>
-                    </div>
-                )}
-
-                <button
-                    onClick={() => setShowDebugPanel(!showDebugPanel)}
-                    className={cn(
-                        "p-3 rounded-full shadow-lg border transition-all duration-200 flex items-center justify-center",
-                        showDebugPanel
-                            ? "bg-emerald-400 border-emerald-400 text-[#1a1a2e] rotate-90"
-                            : "bg-[#1a1a2e] border-emerald-400/50 text-emerald-400 hover:bg-emerald-400 hover:text-[#1a1a2e]"
-                    )}
-                    title="Toggle Debug Panel"
-                >
-                    <Bug className="w-5 h-5" />
-                </button>
-            </div>
         </div >
     );
 }
 
-// 🔧 DEBUG COMPONENT - Dasha Status Row
-function DashaDebugRow({
-    name,
-    query,
-    isExpanded,
-    onToggle,
-    highlight = false
-}: {
-    name: string;
-    query: Record<string, unknown>;
-    isExpanded: boolean;
-    onToggle: () => void;
-    highlight?: boolean;
-}) {
-    const data = query?.data as Record<string, unknown> | undefined;
-    const isLoading = query?.isLoading as boolean | undefined;
-    const isError = query?.isError as boolean | undefined;
-    const error = query?.error as Record<string, unknown> | string | undefined;
-    const isFetching = query?.isFetching as boolean | undefined;
 
-    const getStatusIcon = () => {
-        if (isLoading || isFetching) return <Loader2 className="w-4 h-4 text-yellow-400 animate-spin" />;
-        if (isError) return <XCircle className="w-4 h-4 text-red-400" />;
-        if (data) return <CheckCircle className="w-4 h-4 text-green-400" />;
-        return <Database className="w-4 h-4 text-white/60" />;
-    };
-
-    const getStatusText = () => {
-        if (isLoading) return 'Loading...';
-        if (isFetching) return 'Refetching...';
-        if (isError) {
-            const errObj = error instanceof Error ? error : null;
-            return `Error: ${errObj?.message || (typeof error === 'string' ? error : 'Unknown error')}`;
-        }
-        if (data) return 'Data received ✓';
-        return 'Not fetched';
-    };
-
-    const getSourceBadge = () => {
-        if (!data) return null;
-        const cached = data?.cached;
-        return (
-            <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono ${cached
-                ? 'bg-blue-500/20 text-blue-400 border border-blue-400/30'
-                : 'bg-green-500/20 text-green-400 border border-green-400/30'
-                }`}>
-                {cached ? '📦 From cache/db' : '🔥 Fresh from API'}
-            </span>
-        );
-    };
-
-    return (
-        <div className={`rounded-xl border ${highlight ? 'border-emerald-400/50 bg-emerald-400/5' : 'border-white/10 bg-white/5'}`}>
-            <button
-                type="button"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onToggle();
-                }}
-                className="w-full flex items-center justify-between p-3 hover:bg-white/5 transition-colors cursor-pointer"
-            >
-                <div className="flex items-center gap-3">
-                    {getStatusIcon()}
-                    <span className={`font-mono text-sm ${highlight ? 'text-emerald-400 font-bold' : 'text-white/80'}`}>
-                        {name}
-                    </span>
-                    {getSourceBadge()}
-                </div>
-                <div className="flex items-center gap-2">
-                    <span className="text-xs text-white/50 font-mono">{getStatusText()}</span>
-                    {isExpanded ? <ChevronUp className="w-4 h-4 text-white/60" /> : <ChevronDown className="w-4 h-4 text-white/60" />}
-                </div>
-            </button>
-
-            {isExpanded && (
-                <div className="p-3 pt-0 border-t border-white/10">
-                    <div className="bg-black/30 rounded-lg p-3 max-h-60 overflow-auto">
-                        <pre className="text-xs text-white/70 font-mono whitespace-pre-wrap">
-                            {isError
-                                ? JSON.stringify({
-                                    error: error instanceof Error ? error.message : String(error),
-                                    type: error instanceof Error ? error.name : typeof error
-                                }, null, 2)
-                                : data
-                                    ? JSON.stringify(data, null, 2)
-                                    : 'No data available'
-                            }
-                        </pre>
-                    </div>
-                    {data && (
-                        <div className="mt-2 flex flex-col gap-1 text-[10px] text-white/60 font-mono">
-                            <div className="flex gap-2">
-                                <span>📊 Data size: {JSON.stringify(data).length} bytes</span>
-                                <span>|</span>
-                                <span>⏰ Fetched: {new Date().toLocaleTimeString()}</span>
-                            </div>
-                            <div className="text-emerald-400/60 truncate">
-                                🔑 Keys: {Object.keys(data).join(', ')}
-                            </div>
-                            {(data.data != null && typeof data.data === 'object') ? (
-                                <div className="text-yellow-400/60 truncate italic pl-2">
-                                    ↳ data keys: {Object.keys(data.data as Record<string, unknown>).join(', ')}
-                                </div>
-                            ) : null}
-                        </div>
-                    )}
-                </div>
-            )}
-        </div>
-    );
-}

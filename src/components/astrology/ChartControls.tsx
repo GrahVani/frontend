@@ -1,4 +1,6 @@
-﻿import React from 'react';
+﻿"use client";
+
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Eye, Settings } from 'lucide-react';
 import ParchmentSelect from "@/components/ui/ParchmentSelect";

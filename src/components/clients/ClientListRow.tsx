@@ -1,3 +1,5 @@
+"use client";
+
 import { useRouter } from 'next/navigation';
 import { Edit2, Trash2, Calendar, MapPin, ChevronRight, Clock, Phone } from 'lucide-react';
 import { Client } from '@/types/client';

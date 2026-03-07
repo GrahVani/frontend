@@ -3,10 +3,10 @@ import React, { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { KpPromise } from '@/types/kp.types';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { ZODIAC_SIGNS } from '@/lib/chart-geometry';
 
-// Zodiac symbols for cusp selector
 const ZODIAC_SYMBOLS = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
-const ZODIAC_NAMES = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+const ZODIAC_NAMES = ZODIAC_SIGNS;
 
 // House topics for interpretation
 const HOUSE_TOPICS: Record<number, string> = {

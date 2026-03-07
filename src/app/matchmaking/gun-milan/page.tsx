@@ -1,14 +1,21 @@
 "use client";
 
-import { Star } from "lucide-react";
-import GunaChart from "@/components/matchmaking/GunaChart";
-import EmptyState from "@/components/ui/EmptyState";
+import { useSearchParams } from "next/navigation";
+import { Star, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
+import GunaChart from "@/components/matchmaking/GunaChart";
+import MatchScoreCard from "@/components/matchmaking/MatchScoreCard";
+import DoshaComparisonView from "@/components/matchmaking/DoshaComparisonView";
+import { useSavedMatch } from "@/hooks/queries/useMatchmaking";
 import { ASHTA_KOOTA_NAMES, ASHTA_KOOTA_MAX_SCORES } from "@/types/matchmaking.types";
 
 export default function GunMilanPage() {
-    // TODO: Load from query param ?id= or show reference info
+    const searchParams = useSearchParams();
+    const matchId = searchParams.get("id");
+    const { data: savedMatch, isLoading } = useSavedMatch(matchId);
+    const result = savedMatch?.result ?? null;
+
     return (
         <div className="max-w-4xl mx-auto space-y-6">
             <div className="bg-header-gradient rounded-xl p-6 border border-header-border/30">
@@ -20,6 +27,31 @@ export default function GunMilanPage() {
                     The Ashta Koota system evaluates 8 criteria for compatibility, totaling 36 points.
                 </p>
             </div>
+
+            {/* Loaded Match Results */}
+            {matchId && isLoading && (
+                <div className="flex items-center justify-center gap-2 py-8 text-muted-refined">
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span className="text-sm font-serif">Loading match details...</span>
+                </div>
+            )}
+
+            {result && (
+                <div className="space-y-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <MatchScoreCard result={result} />
+                        <GunaChart kootas={result.kootas} totalScore={result.totalScore} />
+                    </div>
+                    <DoshaComparisonView result={result} />
+                </div>
+            )}
+
+            {matchId && !isLoading && !result && (
+                <div className="bg-status-warning/10 border border-status-warning/30 rounded-xl p-4 text-center">
+                    <p className="text-sm font-serif text-ink">Match not found</p>
+                    <p className="text-xs text-muted-refined mt-1">This match may have been deleted.</p>
+                </div>
+            )}
 
             {/* Reference Table */}
             <div className="bg-softwhite border border-antique rounded-xl p-5">
@@ -83,19 +115,21 @@ export default function GunMilanPage() {
                 </div>
             </div>
 
-            <EmptyState
-                icon={Star}
-                title="Run a match analysis to see results here"
-                description="Start a new match analysis from the main matchmaking page to see detailed Gun Milan results."
-                action={
-                    <Link
-                        href="/matchmaking"
-                        className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-softwhite bg-gold-dark rounded-lg hover:bg-gold-primary transition-colors"
-                    >
-                        New Match <ArrowRight className="w-4 h-4" />
-                    </Link>
-                }
-            />
+            {!matchId && (
+                <EmptyState
+                    icon={Star}
+                    title="Run a match analysis to see results here"
+                    description="Start a new match analysis from the main matchmaking page to see detailed Gun Milan results."
+                    action={
+                        <Link
+                            href="/matchmaking"
+                            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-softwhite bg-gold-dark rounded-lg hover:bg-gold-primary transition-colors"
+                        >
+                            New Match <ArrowRight className="w-4 h-4" />
+                        </Link>
+                    }
+                />
+            )}
         </div>
     );
 }

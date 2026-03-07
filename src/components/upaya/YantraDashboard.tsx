@@ -92,8 +92,6 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
                             <StrengtheningPanel
                                 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
                                 planetaryStrengths={data.planetary_strengths as any}
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                functionalNature={data.functional_nature as any}
                             />
                         </div>
                     </div>

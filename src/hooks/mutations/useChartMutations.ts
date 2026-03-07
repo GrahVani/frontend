@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { clientApi } from "@/lib/api";
+import { queryKeys } from "@/lib/query-keys";
 
 export function useChartMutations() {
     const queryClient = useQueryClient();
@@ -8,15 +9,14 @@ export function useChartMutations() {
         mutationFn: ({ clientId, chartType, ayanamsa }: { clientId: string; chartType: string; ayanamsa: string }) =>
             clientApi.generateChart(clientId, chartType, ayanamsa),
         onSuccess: (_, variables) => {
-            // Invalidate the specific client's charts
-            queryClient.invalidateQueries({ queryKey: ['charts', variables.clientId] });
+            queryClient.invalidateQueries({ queryKey: queryKeys.charts.byClient(variables.clientId) });
         },
     });
 
     const generateFullVedicProfileMutation = useMutation({
         mutationFn: (clientId: string) => clientApi.generateFullVedicProfile(clientId),
         onSuccess: (_, clientId) => {
-            queryClient.invalidateQueries({ queryKey: ['charts', clientId] });
+            queryClient.invalidateQueries({ queryKey: queryKeys.charts.byClient(clientId) });
         },
     });
 

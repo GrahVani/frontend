@@ -127,19 +127,24 @@ export default function DoshaAnalysisPage() {
                 ))}
             </div>
 
-            <EmptyState
-                icon={Search}
-                title="Analyze a specific match for dosha details"
-                description="Run a new match analysis to see personalized dosha findings for a bride and groom pair."
-                action={
+            {/* CTA to matchmaking — personalized dosha results will appear here once API is connected (Sprint 25) */}
+            <div className="bg-softwhite border border-antique rounded-xl p-5 flex items-start gap-4">
+                <div className="w-10 h-10 bg-gold-primary/10 rounded-full flex items-center justify-center shrink-0">
+                    <Search className="w-5 h-5 text-gold-dark" />
+                </div>
+                <div>
+                    <h3 className="text-sm font-serif font-semibold text-ink mb-1">Personalized Dosha Analysis</h3>
+                    <p className="text-xs text-muted-refined mb-3">
+                        Run a match analysis to detect doshas specific to a bride and groom pair. Personalized results will show here once the API is connected.
+                    </p>
                     <Link
                         href="/matchmaking"
                         className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-softwhite bg-gold-dark rounded-lg hover:bg-gold-primary transition-colors"
                     >
                         New Match Analysis <ArrowRight className="w-4 h-4" />
                     </Link>
-                }
-            />
+                </div>
+            </div>
         </div>
     );
 }

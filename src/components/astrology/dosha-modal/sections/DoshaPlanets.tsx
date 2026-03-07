@@ -34,7 +34,7 @@ export const DoshaPlanets = memo(function DoshaPlanets({ data }: DoshaPlanetsPro
                             {planet.name.substring(0, 2).toUpperCase()}
                         </div>
                         <div className="flex flex-col leading-tight overflow-hidden">
-                            <span className="text-[10px] font-black text-ink uppercase tracking-tight truncate">{planet.name}</span>
+                            <span className="text-[10px] font-black text-ink uppercase tracking-tight truncate" title={planet.name}>{planet.name}</span>
                             <div className="flex items-center gap-1.5 mt-0.5">
                                 <span className="text-[10px] font-serif italic text-secondary">{planet.sign}</span>
                                 <span className="w-1 h-1 bg-antique rounded-full" />

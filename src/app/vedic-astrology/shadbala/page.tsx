@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
     Orbit,
     ArrowLeft,
@@ -29,6 +29,8 @@ import { useAstrologerStore } from '@/store/useAstrologerStore';
 import { clientApi } from '@/lib/api';
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { PLANET_COLORS } from '@/design-tokens/colors';
+import DataGrid, { type DataGridColumn } from '@/components/ui/DataGrid';
 
 // ============================================================================
 // Shadbala Types & Interfaces
@@ -63,16 +65,13 @@ interface ShadbalaData {
     raw?: Record<string, unknown>; // To store original response if needed
 }
 
-// Planet Themes for Professional UI
-const PLANET_THEMES: Record<string, { color: string, bg: string, text: string, border: string, iconColor: string, twText: string, twBg: string }> = {
-    'Sun': { color: '#F97316', bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', iconColor: 'text-orange-500', twText: 'text-orange-500', twBg: 'bg-orange-500' },
-    'Moon': { color: '#64748B', bg: 'bg-slate-50', text: 'text-slate-700', border: 'border-slate-200', iconColor: 'text-slate-400', twText: 'text-slate-500', twBg: 'bg-slate-500' },
-    'Mars': { color: '#EF4444', bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200', iconColor: 'text-red-500', twText: 'text-red-500', twBg: 'bg-red-500' },
-    'Mercury': { color: '#10B981', bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', iconColor: 'text-emerald-500', twText: 'text-emerald-500', twBg: 'bg-emerald-500' },
-    'Jupiter': { color: '#EAB308', bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200', iconColor: 'text-yellow-600', twText: 'text-yellow-500', twBg: 'bg-yellow-500' },
-    'Venus': { color: '#D946EF', bg: 'bg-pink-50', text: 'text-pink-700', border: 'border-pink-200', iconColor: 'text-pink-500', twText: 'text-fuchsia-500', twBg: 'bg-fuchsia-500' },
-    'Saturn': { color: '#334155', bg: 'bg-gray-100', text: 'text-gray-800', border: 'border-gray-300', iconColor: 'text-gray-600', twText: 'text-slate-800', twBg: 'bg-slate-800' }
-};
+// Planet themes derived from centralized design tokens
+const PLANET_THEMES: Record<string, { color: string, bg: string, text: string, border: string, iconColor: string, twText: string, twBg: string }> = Object.fromEntries(
+    Object.entries(PLANET_COLORS).map(([name, c]) => [name, {
+        color: c.hex, bg: c.bgSoft, text: c.textOnSoft, border: c.border,
+        iconColor: c.text, twText: c.text, twBg: c.bg,
+    }])
+);
 
 // ============================================================================
 // Shadbala Page Component
@@ -375,13 +374,19 @@ function RadialGauge({ planet, rupaBala, minRequired, isStrong, color, rank }: {
 // ============================================================================
 // Heatmap Cell Helper
 // ============================================================================
-function getHeatmapStyle(value: number, maxVal: number): React.CSSProperties {
+function getHeatmapStyle(value: number, maxVal: number): { style: React.CSSProperties; indicator: string } {
     if (value < 0) {
         const intensity = Math.min(Math.abs(value) / 50, 1);
-        return { backgroundColor: `rgba(239, 68, 68, ${intensity * 0.15})` };
+        return {
+            style: { backgroundColor: `rgba(155, 44, 44, ${0.08 + intensity * 0.18})` },
+            indicator: intensity > 0.5 ? '\u25BC' : '\u25BD', // filled/hollow down triangle
+        };
     }
     const intensity = Math.min(value / maxVal, 1);
-    return { backgroundColor: `rgba(201, 162, 77, ${intensity * 0.18})` };
+    return {
+        style: { backgroundColor: `rgba(156, 122, 47, ${0.06 + intensity * 0.20})` },
+        indicator: intensity > 0.66 ? '\u25B2' : intensity > 0.33 ? '\u25B3' : '', // filled/hollow up triangle
+    };
 }
 
 // ============================================================================
@@ -682,43 +687,56 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                     <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Six-Fold Virupa Breakdown</h3>
                     <span className={cn(TYPOGRAPHY.label, "ml-auto text-slate-400 font-normal lowercase tracking-wider")}>Cell color = relative strength</span>
                 </div>
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="bg-slate-50/50 border-b border-antique">
-                                <th className={cn(TYPOGRAPHY.tableHeader, "p-4 px-6 text-left")}>Planet</th>
-                                {BALA_AXES.map(axis => (
-                                    <th key={axis.key} className={cn(TYPOGRAPHY.tableHeader, "p-4 text-center")} title={axis.label}>
-                                        {axis.shortLabel}
-                                    </th>
-                                ))}
-                                <th className={cn(TYPOGRAPHY.tableHeader, "p-4 text-center bg-gold-primary/5 text-gold-dark")}>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {sortedPlanets.map((p) => {
-                                const theme = PLANET_THEMES[p.planet];
+                <DataGrid
+                    columns={[
+                        {
+                            key: 'planet',
+                            header: 'Planet',
+                            headerClassName: 'px-6',
+                            cellClassName: 'px-6',
+                            render: (row: ShadbalaPlanet) => {
+                                const theme = PLANET_THEMES[row.planet];
                                 return (
-                                    <tr key={`table-${p.planet}`} className="border-b border-antique last:border-0 hover:bg-parchment/5 transition-colors">
-                                        <td className="p-4 px-6">
-                                            <div className={cn(TYPOGRAPHY.value, "flex items-center gap-2 text-sm")}>
-                                                <span className={cn(TYPOGRAPHY.profileName, "text-base", theme.twText)}>{PLANET_SYMBOLS[p.planet]}</span>
-                                                {p.planet}
-                                            </div>
-                                        </td>
-                                        <td className={cn(TYPOGRAPHY.value, "p-4 text-xs text-center tabular-nums")} style={getHeatmapStyle(p.sthalaBala, tableMaxValues['sthalaBala'])}>{p.sthalaBala.toFixed(0)}</td>
-                                        <td className={cn(TYPOGRAPHY.value, "p-4 text-xs text-center tabular-nums")} style={getHeatmapStyle(p.digBala, tableMaxValues['digBala'])}>{p.digBala.toFixed(0)}</td>
-                                        <td className={cn(TYPOGRAPHY.value, "p-4 text-xs text-center tabular-nums")} style={getHeatmapStyle(p.kalaBala, tableMaxValues['kalaBala'])}>{p.kalaBala.toFixed(0)}</td>
-                                        <td className={cn(TYPOGRAPHY.value, "p-4 text-xs text-center tabular-nums")} style={getHeatmapStyle(p.cheshtaBala, tableMaxValues['cheshtaBala'])}>{p.cheshtaBala.toFixed(0)}</td>
-                                        <td className={cn(TYPOGRAPHY.value, "p-4 text-xs text-center tabular-nums")} style={getHeatmapStyle(p.naisargikaBala, tableMaxValues['naisargikaBala'])}>{p.naisargikaBala.toFixed(0)}</td>
-                                        <td className={cn(TYPOGRAPHY.value, "p-4 text-xs text-center tabular-nums")} style={getHeatmapStyle(p.drikBala, tableMaxValues['drikBala'])}>{p.drikBala.toFixed(0)}</td>
-                                        <td className={cn(TYPOGRAPHY.value, "p-4 text-xs text-center text-gold-dark bg-gold-primary/5 tabular-nums")}>{p.totalBala.toFixed(1)}</td>
-                                    </tr>
+                                    <div className={cn(TYPOGRAPHY.value, "flex items-center gap-2 text-sm")}>
+                                        <span className={cn(TYPOGRAPHY.profileName, "text-base", theme.twText)}>{PLANET_SYMBOLS[row.planet]}</span>
+                                        {row.planet}
+                                    </div>
                                 );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
+                            },
+                        },
+                        ...BALA_AXES.map(axis => ({
+                            key: axis.key,
+                            header: axis.shortLabel,
+                            align: 'center' as const,
+                            cellClassName: cn(TYPOGRAPHY.value, "text-xs tabular-nums"),
+                            render: (row: ShadbalaPlanet) => {
+                                const val = (row as unknown as Record<string, number>)[axis.key] || 0;
+                                const { style, indicator } = getHeatmapStyle(val, tableMaxValues[axis.key]);
+                                return (
+                                    <span style={style} className="inline-flex items-center gap-0.5 px-1 rounded">
+                                        {val.toFixed(0)}
+                                        {indicator && <span className="text-[8px] opacity-70" aria-hidden="true">{indicator}</span>}
+                                    </span>
+                                );
+                            },
+                        })),
+                        {
+                            key: 'totalBala',
+                            header: 'Total',
+                            align: 'center' as const,
+                            headerClassName: 'bg-gold-primary/5 text-gold-dark',
+                            cellClassName: cn(TYPOGRAPHY.value, "text-xs text-gold-dark bg-gold-primary/5 tabular-nums"),
+                            sortable: true,
+                            render: (row: ShadbalaPlanet) => row.totalBala.toFixed(1),
+                        },
+                    ] satisfies DataGridColumn<ShadbalaPlanet>[]}
+                    data={sortedPlanets}
+                    rowKey={(row) => row.planet}
+                    cellPadding="p-4"
+                    headerClassName="bg-slate-50/50 border-b border-antique"
+                    ariaLabel="Shadbala six-fold strength breakdown"
+                    scrollShadows={true}
+                />
             </div>
         </div>
     );

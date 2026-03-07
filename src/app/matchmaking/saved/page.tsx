@@ -1,11 +1,13 @@
 "use client";
 
-import { Heart, Trash2, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { Heart, ArrowRight, Trash2 } from "lucide-react";
 import Link from "next/link";
 import Badge from "@/components/ui/Badge";
 import EmptyState from "@/components/ui/EmptyState";
 import { SkeletonCard } from "@/components/ui/Skeleton";
-import { useSavedMatches } from "@/hooks/queries/useMatchmaking";
+import { useSavedMatches, useDeleteMatch } from "@/hooks/queries/useMatchmaking";
+import { useToast } from "@/context/ToastContext";
 
 const VERDICT_BADGE: Record<string, { variant: "success" | "default" | "warning" | "error"; label: string }> = {
     excellent: { variant: "success", label: "Excellent" },
@@ -16,6 +18,19 @@ const VERDICT_BADGE: Record<string, { variant: "success" | "default" | "warning"
 
 export default function SavedMatchesPage() {
     const { data: matches, isLoading } = useSavedMatches();
+    const deleteMutation = useDeleteMatch();
+    const toast = useToast();
+    const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+    const handleDelete = async (matchId: string) => {
+        try {
+            await deleteMutation.mutateAsync(matchId);
+            setConfirmDeleteId(null);
+            toast.success("Match deleted");
+        } catch {
+            toast.error("Failed to delete match");
+        }
+    };
 
     return (
         <div className="max-w-5xl mx-auto space-y-6">
@@ -32,6 +47,7 @@ export default function SavedMatchesPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {matches.map((match) => {
                         const badge = VERDICT_BADGE[match.result.overallVerdict] ?? VERDICT_BADGE.average;
+                        const isConfirming = confirmDeleteId === match.id;
                         return (
                             <div key={match.id} className="bg-softwhite border border-antique rounded-xl p-5 hover:shadow-md transition-shadow">
                                 <div className="flex items-start justify-between mb-3">
@@ -47,12 +63,40 @@ export default function SavedMatchesPage() {
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-lg font-serif font-bold text-ink">{match.result.totalScore}/36</span>
-                                    <Link
-                                        href={`/matchmaking/gun-milan?id=${match.id}`}
-                                        className="inline-flex items-center gap-1 text-xs font-medium text-gold-primary hover:text-gold-dark transition-colors"
-                                    >
-                                        View details <ArrowRight className="w-3 h-3" />
-                                    </Link>
+                                    <div className="flex items-center gap-3">
+                                        {isConfirming ? (
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs text-status-error">Delete?</span>
+                                                <button
+                                                    onClick={() => handleDelete(match.id)}
+                                                    disabled={deleteMutation.isPending}
+                                                    className="text-xs font-medium text-status-error hover:text-red-700 transition-colors"
+                                                >
+                                                    Yes
+                                                </button>
+                                                <button
+                                                    onClick={() => setConfirmDeleteId(null)}
+                                                    className="text-xs font-medium text-muted-refined hover:text-ink transition-colors"
+                                                >
+                                                    No
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={() => setConfirmDeleteId(match.id)}
+                                                className="text-muted-refined hover:text-status-error transition-colors"
+                                                aria-label={`Delete match between ${match.result.bride.name} and ${match.result.groom.name}`}
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        )}
+                                        <Link
+                                            href={`/matchmaking/gun-milan?id=${match.id}`}
+                                            className="inline-flex items-center gap-1 text-xs font-medium text-gold-primary hover:text-gold-dark transition-colors"
+                                        >
+                                            View details <ArrowRight className="w-3 h-3" />
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
                         );

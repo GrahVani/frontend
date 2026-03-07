@@ -5,9 +5,18 @@ import { GitCompare, Heart, AlertTriangle, Users, Check, X } from 'lucide-react'
 import { useVedicClient } from '@/context/VedicClientContext';
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
+import DataGrid, { type DataGridColumn } from '@/components/ui/DataGrid';
+
+interface GunaEntry {
+    name: string;
+    max: number;
+    obtained: number;
+    desc: string;
+    [key: string]: unknown;
+}
 
 // Mock Compatibility Data
-const GUNAS = [
+const GUNAS: GunaEntry[] = [
     { name: "Varna", max: 1, obtained: 1, desc: "Work/Ego Compatibility" },
     { name: "Vashya", max: 2, obtained: 1.5, desc: "Dominance/Control" },
     { name: "Tara", max: 3, obtained: 3, desc: "Destiny/Health" },
@@ -86,29 +95,43 @@ export default function VedicComparisonPage() {
                         </span>
                     </div>
                 </div>
-                <table className="w-full text-left text-sm">
-                    <thead className="bg-ink/5 text-body/70 font-black uppercase text-[10px] tracking-widest">
-                        <tr>
-                            <th className="px-6 py-3">Koota (Area)</th>
-                            <th className="px-6 py-3">Description</th>
-                            <th className="px-6 py-3 text-right">Max Points</th>
-                            <th className="px-6 py-3 text-right">Obtained</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-header-border/10">
-                        {GUNAS.map((guna, i) => (
-                            <tr key={i} className={cn("hover:bg-ink/5 transition-colors", guna.obtained === 0 && "bg-red-50")}>
-                                <td className={cn(TYPOGRAPHY.value, "px-6 py-3 !text-sm")}>{guna.name}</td>
-                                <td className={cn(TYPOGRAPHY.subValue, "px-6 py-3 !text-xs")}>
-                                    {guna.desc}
-                                    {guna.obtained === 0 && <span className={cn(TYPOGRAPHY.label, "!text-[10px] !mb-0 !font-black text-red-600 bg-red-100 px-1 py-0.5 rounded border border-red-200 ml-2")}>DOSHA</span>}
-                                </td>
-                                <td className={cn(TYPOGRAPHY.subValue, "px-6 py-3 text-right font-mono")}>{guna.max}</td>
-                                <td className={cn(TYPOGRAPHY.value, "px-6 py-3 text-right !font-bold")}>{guna.obtained}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <DataGrid<GunaEntry>
+                    columns={[
+                        {
+                            key: 'name',
+                            header: 'Koota (Area)',
+                            cellClassName: cn(TYPOGRAPHY.value, "!text-sm"),
+                        },
+                        {
+                            key: 'desc',
+                            header: 'Description',
+                            render: (row) => (
+                                <span className={cn(TYPOGRAPHY.subValue, "!text-xs")}>
+                                    {row.desc}
+                                    {row.obtained === 0 && <span className={cn(TYPOGRAPHY.label, "!text-[10px] !mb-0 !font-black text-red-600 bg-red-100 px-1 py-0.5 rounded border border-red-200 ml-2")}>DOSHA</span>}
+                                </span>
+                            ),
+                        },
+                        {
+                            key: 'max',
+                            header: 'Max Points',
+                            align: 'right',
+                            cellClassName: cn(TYPOGRAPHY.subValue, "font-mono"),
+                        },
+                        {
+                            key: 'obtained',
+                            header: 'Obtained',
+                            align: 'right',
+                            cellClassName: cn(TYPOGRAPHY.value, "!font-bold"),
+                        },
+                    ]}
+                    data={GUNAS}
+                    rowKey={(row) => row.name}
+                    cellPadding="px-6 py-3"
+                    rowClassName={(row) => row.obtained === 0 ? 'bg-red-50' : ''}
+                    ariaLabel="Ashtakoota Guna Milan scorecard"
+                    scrollShadows={true}
+                />
             </div>
 
             {/* MANGAL DOSHA CHECK */}

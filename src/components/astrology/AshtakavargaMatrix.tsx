@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { ZODIAC_SIGNS } from '@/lib/chart-geometry';
 
 interface ContributorEntry {
     contributor: string;
@@ -24,7 +25,7 @@ interface MatrixProps {
 
 const PLANETS = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
 const SIGNS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-const SIGN_NAMES = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+const SIGN_NAMES = ZODIAC_SIGNS;
 
 // House Groups for astrological analysis
 const HOUSE_GROUPS = {
@@ -89,8 +90,9 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
             <div className="rounded-xl border border-primary flex-1 overflow-hidden">
 
                 {/* Table */}
+                <div className="overflow-x-auto">
                 <table className="w-full h-full border-collapse text-sm" role="table" aria-label={isSarva ? "Sarvashtakavarga matrix showing planetary bindus across signs" : `Bhinnashtakavarga matrix for ${planet || 'planet'}`}>
-                    <thead>
+                    <thead className="sticky top-0 z-10">
                         <tr className="bg-amber-50/30 border-b border-primary">
                             <th className={cn(TYPOGRAPHY.tableHeader, "py-3 px-2 text-left w-16 border-r border-primary")}>
                                 {isSarva ? 'Planet' : planet?.substring(0, 4)}
@@ -143,6 +145,7 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                         </tr>
                     </tfoot>
                 </table>
+                </div>
             </div>
 
 

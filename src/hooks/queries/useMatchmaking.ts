@@ -1,38 +1,45 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { BirthDetails, MatchResult, SavedMatch } from "@/types/matchmaking.types";
+import { queryKeys } from "@/lib/query-keys";
+import { matchmakingApi } from "@/lib/api/matchmaking";
+import { STALE_TIMES } from "@/lib/api/stale-times";
 
-export function useMatchAnalysis(bride?: BirthDetails, groom?: BirthDetails) {
-    return useQuery<MatchResult>({
-        queryKey: ["matchmaking", "analysis", bride, groom],
-        queryFn: async () => {
-            // TODO: Replace with actual matchmaking API call
-            throw new Error("Matchmaking API not yet connected");
+export function useMatchAnalysis() {
+    const queryClient = useQueryClient();
+
+    return useMutation<MatchResult, Error, { bride: BirthDetails; groom: BirthDetails }>({
+        mutationFn: ({ bride, groom }) => matchmakingApi.analyze(bride, groom),
+        onSuccess: () => {
+            // Invalidate saved list so new analysis shows up if auto-saved
+            queryClient.invalidateQueries({ queryKey: queryKeys.matchmaking.saved });
         },
-        enabled: false, // Only runs when explicitly triggered
     });
 }
 
 export function useSavedMatches() {
     return useQuery<SavedMatch[]>({
-        queryKey: ["matchmaking", "saved"],
-        queryFn: async () => {
-            // TODO: Replace with actual saved matches API
-            return [];
-        },
-        staleTime: 1000 * 60 * 2,
+        queryKey: queryKeys.matchmaking.saved,
+        queryFn: () => matchmakingApi.listSaved(),
+        staleTime: STALE_TIMES.SAVED_MATCHES,
+    });
+}
+
+export function useSavedMatch(id: string | null) {
+    return useQuery<SavedMatch | null>({
+        queryKey: queryKeys.matchmaking.detail(id || ''),
+        queryFn: () => matchmakingApi.getSaved(id!),
+        enabled: !!id,
+        staleTime: STALE_TIMES.MATCHMAKING,
     });
 }
 
 export function useSaveMatch() {
     const queryClient = useQueryClient();
 
-    return useMutation({
-        mutationFn: async (result: MatchResult) => {
-            // TODO: Replace with actual save API call
-            return { id: crypto.randomUUID(), result, savedAt: new Date().toISOString() };
-        },
+    return useMutation<SavedMatch, Error, { result: MatchResult; notes?: string }>({
+        mutationFn: ({ result, notes }) => matchmakingApi.saveMatch(result, notes),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["matchmaking", "saved"] });
+            queryClient.invalidateQueries({ queryKey: queryKeys.matchmaking.saved });
         },
     });
 }
@@ -40,13 +47,10 @@ export function useSaveMatch() {
 export function useDeleteMatch() {
     const queryClient = useQueryClient();
 
-    return useMutation({
-        mutationFn: async (matchId: string) => {
-            // TODO: Replace with actual delete API
-            return matchId;
-        },
+    return useMutation<void, Error, string>({
+        mutationFn: (matchId) => matchmakingApi.deleteMatch(matchId),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["matchmaking", "saved"] });
+            queryClient.invalidateQueries({ queryKey: queryKeys.matchmaking.saved });
         },
     });
 }

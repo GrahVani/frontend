@@ -43,7 +43,7 @@ const SIGN_LORDS: Record<string, string> = {
 
 import { parseChartData, signIdToName } from '@/lib/chart-helpers';
 
-function mapChartToPlanetInfo(chartData: Record<string, unknown>): PlanetInfo[] {
+function mapChartToPlanetInfo(chartData: unknown): PlanetInfo[] {
     // Leverage the robust parser we alread fixed
     const { planets } = parseChartData(chartData);
 

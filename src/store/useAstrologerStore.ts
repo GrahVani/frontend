@@ -50,8 +50,20 @@ export const useAstrologerStore = create<AstrologerStore>()(
             })),
         }),
         {
-            name: 'grahvani_astrologer_settings_store', // unique name
+            name: 'grahvani_astrologer_settings_store',
             storage: createJSONStorage(() => localStorage),
+            // ST-011: Validate rehydrated state from localStorage
+            onRehydrateStorage: () => (state) => {
+                if (!state) return;
+                // Validate recentClientIds are actual strings (not corrupted data)
+                if (!Array.isArray(state.recentClientIds) || !state.recentClientIds.every(id => typeof id === 'string' && id.length > 0)) {
+                    state.recentClientIds = [];
+                }
+                // Cap at 5 entries
+                if (state.recentClientIds.length > 5) {
+                    state.recentClientIds = state.recentClientIds.slice(0, 5);
+                }
+            },
         }
     )
 );

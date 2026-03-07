@@ -34,6 +34,12 @@ const sizeClasses: Record<ButtonSize, string> = {
     lg: "px-6 py-3 text-base rounded-xl",
 };
 
+const iconSizeClasses: Record<ButtonSize, string> = {
+    sm: "w-3.5 h-3.5",
+    md: "w-4 h-4",
+    lg: "w-5 h-5",
+};
+
 export default function Button({
     variant = "primary",
     size = "md",
@@ -51,6 +57,7 @@ export default function Button({
             aria-disabled={disabled || loading || undefined}
             className={cn(
                 "inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 cursor-pointer",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-2",
                 "disabled:opacity-60 disabled:cursor-not-allowed",
                 variantClasses[variant],
                 sizeClasses[size],
@@ -59,9 +66,9 @@ export default function Button({
             {...props}
         >
             {loading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className={cn("animate-spin", iconSizeClasses[size])} />
             ) : Icon ? (
-                <Icon className="w-4 h-4" />
+                <Icon className={iconSizeClasses[size]} />
             ) : null}
             {children}
         </button>

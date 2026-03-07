@@ -39,11 +39,19 @@ export default function FestivalsPage() {
                     </div>
                 </div>
             ) : (
-                <EmptyState
-                    icon={Star}
-                    title="No festival data available"
-                    description="Festival data will populate once connected to the panchang API. Check back soon."
-                />
+                <div className="space-y-4">
+                    <div className="bg-gold-primary/10 border border-gold-primary/30 rounded-xl p-4 flex items-center gap-3">
+                        <Star className="w-5 h-5 text-gold-dark shrink-0" />
+                        <p className="text-sm text-ink font-serif">
+                            <span className="font-semibold">Coming Soon</span> — Festival data will populate once connected to the panchang API.
+                        </p>
+                    </div>
+                    <EmptyState
+                        icon={Star}
+                        title="No festival data yet"
+                        description="Hindu festivals, Vedic observances, and auspicious days will appear here in an upcoming release."
+                    />
+                </div>
             )}
         </div>
     );

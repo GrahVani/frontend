@@ -66,7 +66,7 @@ export default function ParchmentDatePicker({
                         aria-haspopup="dialog"
                         aria-expanded={open}
                         className={cn(
-                            "bg-transparent border-b border-gold-primary/50 px-2 py-1 font-serif text-ink-deep focus:outline-none focus:border-gold-dark transition-colors flex items-center justify-between group hover:border-gold-dark text-left whitespace-nowrap",
+                            "bg-transparent border border-gold-primary/30 rounded-xl px-3 py-1 font-serif text-ink-deep focus:outline-none focus:border-gold-dark focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-1 transition-colors flex items-center justify-between group hover:border-gold-dark text-left whitespace-nowrap",
                             !isInline && "w-full py-2",
                             isInline && "min-w-[80px] text-[12px] h-7",
                             !date && "text-gold-burnished"

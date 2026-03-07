@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Lock, Mail, User, ShieldCheck } from "lucide-react";
+import { Lock, Mail, User, ShieldCheck, Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
 import { authApi } from "@/lib/api";
 import PremiumButton from "@/components/GoldenButton";
@@ -16,6 +16,9 @@ export default function RegisterPage() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [touched, setTouched] = useState<Record<string, boolean>>({});
 
     // Animation state
     const [isUnfurled, setIsUnfurled] = useState(false);
@@ -24,6 +27,22 @@ export default function RegisterPage() {
         const timer = setTimeout(() => setIsUnfurled(true), 300);
         return () => clearTimeout(timer);
     }, []);
+
+    // Password strength checks
+    const passwordChecks = {
+        length: password.length >= 8,
+        upper: /[A-Z]/.test(password),
+        lower: /[a-z]/.test(password),
+        number: /\d/.test(password),
+        special: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password),
+    };
+    const strengthScore = Object.values(passwordChecks).filter(Boolean).length;
+    const strengthLabel = strengthScore <= 1 ? "Weak" : strengthScore <= 3 ? "Fair" : strengthScore <= 4 ? "Good" : "Strong";
+    const strengthColor = strengthScore <= 1 ? "bg-status-error" : strengthScore <= 3 ? "bg-status-warning" : strengthScore <= 4 ? "bg-gold-primary" : "bg-status-success";
+
+    // Inline validation
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const passwordsMatch = password === confirmPassword;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -125,11 +144,17 @@ export default function RegisterPage() {
                                                 type="email"
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
-                                                className="w-full pl-8 pr-2 py-1.5 bg-transparent border-b-2 border-gold-primary/40 text-ink font-serif placeholder-muted focus:outline-none focus:border-gold-dark transition-colors"
+                                                onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+                                                className={`w-full pl-8 pr-2 py-1.5 bg-transparent border-b-2 text-ink font-serif placeholder-muted focus:outline-none transition-colors ${
+                                                    touched.email && !emailValid ? "border-status-error/60" : "border-gold-primary/40 focus:border-gold-dark"
+                                                }`}
                                                 placeholder="you@example.com"
                                                 required
                                             />
                                         </div>
+                                        {touched.email && email && !emailValid && (
+                                            <p className="text-[10px] text-status-error mt-1 font-serif">Please enter a valid email address.</p>
+                                        )}
                                     </div>
 
                                     {/* Password */}
@@ -141,13 +166,23 @@ export default function RegisterPage() {
                                             <div className="relative flex items-center">
                                                 <Lock className="absolute left-0 w-4 h-4 text-gold-primary" />
                                                 <input
-                                                    type="password"
+                                                    type={showPassword ? "text" : "password"}
                                                     value={password}
                                                     onChange={(e) => setPassword(e.target.value)}
-                                                    className="w-full pl-8 pr-2 py-1.5 bg-transparent border-b-2 border-gold-primary/40 text-ink font-serif placeholder-muted focus:outline-none focus:border-gold-dark transition-colors"
+                                                    onBlur={() => setTouched((t) => ({ ...t, password: true }))}
+                                                    className="w-full pl-8 pr-8 py-1.5 bg-transparent border-b-2 border-gold-primary/40 text-ink font-serif placeholder-muted focus:outline-none focus:border-gold-dark transition-colors"
                                                     placeholder="••••••••"
                                                     required
                                                 />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    className="absolute right-0 p-1 text-gold-primary/60 hover:text-gold-dark transition-colors"
+                                                    aria-label={showPassword ? "Hide password" : "Show password"}
+                                                    tabIndex={-1}
+                                                >
+                                                    {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                                                </button>
                                             </div>
                                         </div>
 
@@ -158,20 +193,57 @@ export default function RegisterPage() {
                                             <div className="relative flex items-center">
                                                 <ShieldCheck className="absolute left-0 w-4 h-4 text-gold-primary" />
                                                 <input
-                                                    type="password"
+                                                    type={showConfirmPassword ? "text" : "password"}
                                                     value={confirmPassword}
                                                     onChange={(e) => setConfirmPassword(e.target.value)}
-                                                    className="w-full pl-8 pr-2 py-1.5 bg-transparent border-b-2 border-gold-primary/40 text-ink font-serif placeholder-muted focus:outline-none focus:border-gold-dark transition-colors"
+                                                    onBlur={() => setTouched((t) => ({ ...t, confirmPassword: true }))}
+                                                    className={`w-full pl-8 pr-8 py-1.5 bg-transparent border-b-2 text-ink font-serif placeholder-muted focus:outline-none transition-colors ${
+                                                        touched.confirmPassword && confirmPassword && !passwordsMatch ? "border-status-error/60" : "border-gold-primary/40 focus:border-gold-dark"
+                                                    }`}
                                                     placeholder="••••••••"
                                                     required
                                                 />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                                    className="absolute right-0 p-1 text-gold-primary/60 hover:text-gold-dark transition-colors"
+                                                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                                                    tabIndex={-1}
+                                                >
+                                                    {showConfirmPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                                                </button>
                                             </div>
+                                            {touched.confirmPassword && confirmPassword && !passwordsMatch && (
+                                                <p className="text-[10px] text-status-error mt-1 font-serif">Passwords do not match.</p>
+                                            )}
                                         </div>
                                     </div>
 
-                                    <p className="text-[8px] text-muted italic leading-tight">
-                                        Password must contain uppercase, lowercase, number, and special character.
-                                    </p>
+                                    {/* Password Strength Meter */}
+                                    {password && (
+                                        <div className="space-y-1.5">
+                                            <div className="flex items-center gap-2">
+                                                <div className="flex-1 h-1.5 bg-antique/40 rounded-full overflow-hidden">
+                                                    <div
+                                                        className={`h-full rounded-full transition-all duration-300 ${strengthColor}`}
+                                                        style={{ width: `${(strengthScore / 5) * 100}%` }}
+                                                    />
+                                                </div>
+                                                <span className={`text-[9px] font-serif font-semibold uppercase tracking-wide ${
+                                                    strengthScore <= 1 ? "text-status-error" : strengthScore <= 3 ? "text-status-warning" : "text-status-success"
+                                                }`}>
+                                                    {strengthLabel}
+                                                </span>
+                                            </div>
+                                            <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[8px] font-serif text-muted-refined">
+                                                <span className={passwordChecks.length ? "text-status-success" : ""}>8+ chars</span>
+                                                <span className={passwordChecks.upper ? "text-status-success" : ""}>Uppercase</span>
+                                                <span className={passwordChecks.lower ? "text-status-success" : ""}>Lowercase</span>
+                                                <span className={passwordChecks.number ? "text-status-success" : ""}>Number</span>
+                                                <span className={passwordChecks.special ? "text-status-success" : ""}>Special</span>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Error Message */}

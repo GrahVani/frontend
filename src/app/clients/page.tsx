@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import Link from 'next/link';
-import { Search, AlertCircle, RefreshCw } from 'lucide-react';
+import { Search, AlertCircle, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import Button from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import ParchmentInput from "@/components/ui/ParchmentInput";
@@ -48,16 +48,20 @@ export default function ClientsPage() {
 
     const { deleteClient } = useClientMutations();
 
-    const clients = data?.clients?.map(deriveNames) || [];
+    const clients = useMemo(() => data?.clients?.map(deriveNames) || [], [data?.clients]);
     const total = data?.pagination?.total || 0;
     const totalPages = data?.pagination?.totalPages || 1;
     const error = queryError ? (queryError as Error).message : null;
 
-    const handleEditClient = (client: Client) => {
-        router.push(`/clients/${client.id}`);
-    };
+    const handleSelectClient = useCallback((c: Client) => {
+        router.push(`/clients/${c.id}`);
+    }, [router]);
 
-    const handleDeleteClient = async (client: Client) => {
+    const handleEditClient = useCallback((client: Client) => {
+        router.push(`/clients/${client.id}`);
+    }, [router]);
+
+    const handleDeleteClient = useCallback(async (client: Client) => {
         const confirmed = await confirm({
             title: "Delete Client",
             description: `Are you certain you wish to delete the record of ${client.firstName || client.fullName || 'this client'}? This action cannot be undone.`,
@@ -74,7 +78,7 @@ export default function ClientsPage() {
             const message = err instanceof Error ? err.message : 'Failed to delete client record. Please try again.';
             toast.error(message);
         }
-    };
+    }, [confirm, deleteClient, toast]);
 
     return (
         <div className="w-full space-y-6 animate-in fade-in duration-700 py-4 px-2 lg:px-4">
@@ -110,7 +114,7 @@ export default function ClientsPage() {
                         aria-label="Search clients"
                         icon={<Search className="w-5 h-5 text-gold-dark" />}
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => { setSearchQuery(e.target.value); setPagination(prev => ({ ...prev, page: 1 })); }}
                         className="bg-parchment border-antique text-ink placeholder:text-muted focus:border-gold-primary h-14 text-lg rounded-2xl"
                     />
                 </div>
@@ -134,38 +138,70 @@ export default function ClientsPage() {
             </div>
 
             {/* Client List */}
-            <div className="space-y-4" aria-busy={loading} aria-label="Client list">
+            <div className="space-y-4" aria-busy={loading} aria-live="polite" aria-label="Client list">
                 {loading ? (
                     <SkeletonTable rows={6} cols={5} />
                 ) : clients.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-4" role="list" aria-label={`${clients.length} clients`}>
+                    <ul className="grid grid-cols-1 gap-4 list-none p-0 m-0" aria-label={`${clients.length} clients`}>
                         {clients.map(client => (
-                            <ClientListRow
-                                key={client.id}
-                                client={client}
-                                onSelect={(c) => router.push(`/clients/${c.id}`)}
-                                onEdit={handleEditClient}
-                                onDelete={handleDeleteClient}
-                            />
+                            <li key={client.id}>
+                                <ClientListRow
+                                    client={client}
+                                    onSelect={handleSelectClient}
+                                    onEdit={handleEditClient}
+                                    onDelete={handleDeleteClient}
+                                />
+                            </li>
                         ))}
-                    </div>
+                    </ul>
                 ) : (
                     <div className="text-center py-16 rounded-2xl bg-softwhite border border-antique">
-                        <p className="font-serif text-2xl italic text-muted">
-                            No clients match your search.
-                        </p>
+                        {searchQuery ? (
+                            <p className="font-serif text-2xl italic text-muted">
+                                No clients match your search.
+                            </p>
+                        ) : (
+                            <>
+                                <p className="font-serif text-2xl italic text-muted mb-4">
+                                    No clients yet.
+                                </p>
+                                <Link href="/clients/new">
+                                    <Button variant="primary">+ Create First Client</Button>
+                                </Link>
+                            </>
+                        )}
                     </div>
                 )}
             </div>
 
-            {/* Pagination / Total Count Footer */}
-            <div className="pt-8 border-t border-divider text-center">
+            {/* Pagination Footer */}
+            <div className="pt-8 border-t border-divider flex items-center justify-between">
                 <span className="font-serif text-xs text-bronze font-black uppercase tracking-[0.3em]">
-                    {total} clients
-                    {totalPages > 1 && (
-                        <span className="ml-2">• Page {pagination.page} of {totalPages}</span>
-                    )}
+                    {total} client{total !== 1 ? 's' : ''}
                 </span>
+                {totalPages > 1 && (
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
+                            disabled={pagination.page <= 1}
+                            aria-label="Previous page"
+                            className="p-2.5 rounded-lg border border-antique hover:bg-parchment disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        >
+                            <ChevronLeft className="w-4 h-4 text-bronze" />
+                        </button>
+                        <span className="font-serif text-sm text-ink px-3">
+                            {pagination.page} / {totalPages}
+                        </span>
+                        <button
+                            onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
+                            disabled={pagination.page >= totalPages}
+                            aria-label="Next page"
+                            className="p-2.5 rounded-lg border border-antique hover:bg-parchment disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        >
+                            <ChevronRight className="w-4 h-4 text-bronze" />
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

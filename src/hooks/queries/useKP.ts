@@ -7,23 +7,7 @@ import type {
     KpSignificationsResponse,
     KpHoraryResponse,
 } from '@/types/kp.types';
-
-// =============================================================================
-// KP (KRISHNAMURTI PADDHATI) QUERY HOOKS
-// TanStack Query hooks for all KP endpoints
-// =============================================================================
-
-// Query key factory
-export const kpKeys = {
-    all: ['kp'] as const,
-    planetsCusps: (clientId: string) => [...kpKeys.all, 'planets-cusps', clientId] as const,
-    rulingPlanets: (clientId: string) => [...kpKeys.all, 'ruling-planets', clientId] as const,
-    bhavaDetails: (clientId: string) => [...kpKeys.all, 'bhava-details', clientId] as const,
-    significations: (clientId: string) => [...kpKeys.all, 'significations', clientId] as const,
-    houseSignifications: (clientId: string) => [...kpKeys.all, 'house-significations', clientId] as const,
-    planetSignificators: (clientId: string) => [...kpKeys.all, 'planet-significators', clientId] as const,
-    horary: (clientId: string, horaryNumber: number) => [...kpKeys.all, 'horary', clientId, horaryNumber] as const,
-};
+import { queryKeys } from '@/lib/query-keys';
 
 /**
  * Hook for fetching KP Planets and Cusps with sub-lords
@@ -34,7 +18,7 @@ export function useKpPlanetsCusps(
     options?: Omit<UseQueryOptions<KpPlanetsCuspsResponse, Error>, 'queryKey' | 'queryFn'>
 ) {
     return useQuery<KpPlanetsCuspsResponse, Error>({
-        queryKey: kpKeys.planetsCusps(clientId),
+        queryKey: queryKeys.kp.planetsCusps(clientId),
         queryFn: () => kpApi.getPlanetsCusps(clientId),
         enabled: !!clientId,
         staleTime: 10 * 60 * 1000, // 10 minutes - chart data is stable
@@ -52,7 +36,7 @@ export function useKpRulingPlanets(
     options?: Omit<UseQueryOptions<KpRulingPlanetsResponse, Error>, 'queryKey' | 'queryFn'>
 ) {
     return useQuery<KpRulingPlanetsResponse, Error>({
-        queryKey: kpKeys.rulingPlanets(clientId),
+        queryKey: queryKeys.kp.rulingPlanets(clientId),
         queryFn: () => kpApi.getRulingPlanets(clientId),
         enabled: !!clientId,
         staleTime: 5 * 60 * 1000, // 5 minutes - time-sensitive
@@ -70,7 +54,7 @@ export function useKpBhavaDetails(
     options?: Omit<UseQueryOptions<KpBhavaDetailsResponse, Error>, 'queryKey' | 'queryFn'>
 ) {
     return useQuery<KpBhavaDetailsResponse, Error>({
-        queryKey: kpKeys.bhavaDetails(clientId),
+        queryKey: queryKeys.kp.bhavaDetails(clientId),
         queryFn: () => kpApi.getBhavaDetails(clientId),
         enabled: !!clientId,
         staleTime: 10 * 60 * 1000,
@@ -88,7 +72,7 @@ export function useKpSignifications(
     options?: Omit<UseQueryOptions<KpSignificationsResponse, Error>, 'queryKey' | 'queryFn'>
 ) {
     return useQuery<KpSignificationsResponse, Error>({
-        queryKey: kpKeys.significations(clientId),
+        queryKey: queryKeys.kp.significations(clientId),
         queryFn: () => kpApi.getSignifications(clientId),
         enabled: !!clientId,
         staleTime: 10 * 60 * 1000,
@@ -105,7 +89,7 @@ export function useKpHouseSignifications(
     options?: Omit<UseQueryOptions<KpSignificationsResponse, Error>, 'queryKey' | 'queryFn'>
 ) {
     return useQuery<KpSignificationsResponse, Error>({
-        queryKey: kpKeys.houseSignifications(clientId),
+        queryKey: queryKeys.kp.houseSignifications(clientId),
         queryFn: () => kpApi.getHouseSignifications(clientId),
         enabled: !!clientId,
         staleTime: 10 * 60 * 1000,
@@ -122,7 +106,7 @@ export function useKpPlanetSignificators(
     options?: Omit<UseQueryOptions<KpSignificationsResponse, Error>, 'queryKey' | 'queryFn'>
 ) {
     return useQuery<KpSignificationsResponse, Error>({
-        queryKey: kpKeys.planetSignificators(clientId),
+        queryKey: queryKeys.kp.planetSignificators(clientId),
         queryFn: () => kpApi.getPlanetSignificators(clientId),
         enabled: !!clientId,
         staleTime: 10 * 60 * 1000,
@@ -139,7 +123,7 @@ export function useKpInterlinks(
     options?: Omit<UseQueryOptions<any, Error>, 'queryKey' | 'queryFn'>
 ) {
     return useQuery<any, Error>({
-        queryKey: [...kpKeys.all, 'interlinks', clientId],
+        queryKey: queryKeys.kp.interlinks(clientId),
         queryFn: () => kpApi.getInterlinks(clientId),
         enabled: !!clientId,
         staleTime: 10 * 60 * 1000,
@@ -155,7 +139,7 @@ export function useKpAdvancedInterlinks(
     options?: Omit<UseQueryOptions<any, Error>, 'queryKey' | 'queryFn'>
 ) {
     return useQuery<any, Error>({
-        queryKey: [...kpKeys.all, 'interlinks-advanced', clientId],
+        queryKey: queryKeys.kp.advancedInterlinks(clientId),
         queryFn: () => kpApi.getAdvancedInterlinks(clientId),
         enabled: !!clientId,
         staleTime: 10 * 60 * 1000,
@@ -171,7 +155,7 @@ export function useKpNakshatraNadi(
     options?: Omit<UseQueryOptions<any, Error>, 'queryKey' | 'queryFn'>
 ) {
     return useQuery<any, Error>({
-        queryKey: [...kpKeys.all, 'nakshatra-nadi', clientId],
+        queryKey: queryKeys.kp.nakshatraNadi(clientId),
         queryFn: () => kpApi.getNakshatraNadi(clientId),
         enabled: !!clientId,
         staleTime: 10 * 60 * 1000,
@@ -187,7 +171,7 @@ export function useKpFortuna(
     options?: Omit<UseQueryOptions<any, Error>, 'queryKey' | 'queryFn'>
 ) {
     return useQuery<any, Error>({
-        queryKey: [...kpKeys.all, 'fortuna', clientId],
+        queryKey: queryKeys.kp.fortuna(clientId),
         queryFn: () => kpApi.getFortuna(clientId),
         enabled: !!clientId,
         staleTime: 10 * 60 * 1000,

@@ -59,7 +59,7 @@ export function Toast({ toast, onDismiss }: { toast: ToastData; onDismiss: (id: 
             <p className="flex-1">{toast.message}</p>
             <button
                 onClick={() => onDismiss(toast.id)}
-                className="shrink-0 p-1 rounded-lg hover:bg-black/5 transition-colors"
+                className="shrink-0 p-2 rounded-lg hover:bg-black/5 transition-colors"
                 aria-label="Dismiss notification"
             >
                 <X className="w-4 h-4" />

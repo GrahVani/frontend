@@ -13,7 +13,7 @@ export default function ClientHeader({ client }: ClientHeaderProps) {
             {/* Subtle Gradient Glow */}
             <div className="absolute -left-20 -top-20 w-64 h-64 bg-header-border/10 rounded-full blur-3xl opacity-30 pointer-events-none" />
 
-            <div className="max-w-7xl mx-auto px-6 py-6 lg:py-8 relative z-10">
+            <div className="max-w-[1600px] mx-auto px-6 py-6 lg:py-8 relative z-10">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
 
                     {/* Header Left: Name & Birth Metadata */}

@@ -6,6 +6,7 @@ import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { ChevronDown, ChevronUp, Calendar, AlertCircle, Loader2 } from 'lucide-react';
 import { DashaNode, formatDateDisplay, standardizeDuration } from '@/lib/dasha-utils';
 import { PLANET_COLORS } from '@/lib/astrology-constants';
+import { captureException } from '@/lib/monitoring';
 
 interface AshtottariDashaProps {
     periods: DashaNode[];
@@ -35,7 +36,9 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
             try {
                 const subPeriods = await onFetchPratyantar(mahaLord, antarLord);
                 setPratyantarData(prev => ({ ...prev, [key]: subPeriods }));
-            } catch (err) { } finally {
+            } catch (err) {
+                captureException(err, { tags: { section: 'ashtottari-dasha', action: 'fetch-pratyantar' } });
+            } finally {
                 setLoadingPratyantar(null);
             }
         }
@@ -44,15 +47,15 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
     return (
         <div className="space-y-6 animate-in fade-in duration-700">
             {/* Table */}
-            <div className="">
-                <table className="w-full border-separate border-spacing-0">
-                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-white border-b border-header-border/20 sticky top-0 z-10 shadow-sm")}>
+            <div className="overflow-x-auto">
+                <table className="w-full">
+                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-ink/5 border-b border-header-border/10")}>
                         <tr>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">Planet</th>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">Start Date</th>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">End Date</th>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">Duration</th>
-                            <th className="px-3 py-2 text-center border-b border-header-border/10">Status</th>
+                            <th className="px-3 py-2 text-left">Planet</th>
+                            <th className="px-3 py-2 text-left">Start Date</th>
+                            <th className="px-3 py-2 text-left">End Date</th>
+                            <th className="px-3 py-2 text-left">Duration</th>
+                            <th className="px-3 py-2 text-center">Status</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-header-border/10 font-medium">
@@ -70,7 +73,7 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
                                         )}
                                         onClick={() => setExpandedMahadasha(isExpanded ? null : mahadasha.planet)}
                                     >
-                                        <td className="px-3 py-1.5">
+                                        <td className="px-3 py-2">
                                             <div className="flex items-center gap-2">
                                                 <span className={cn(
                                                     "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold border shadow-sm min-w-[60px] justify-center",
@@ -91,17 +94,17 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
                                                 )}
                                             </div>
                                         </td>
-                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>
                                             <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}>
                                                 <Calendar className="w-3 h-3 text-muted/40" />
                                                 {formatDateDisplay(mahadasha.startDate)}
                                             </div>
                                         </td>
-                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>{formatDateDisplay(mahadasha.endDate)}</td>
-                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{formatDateDisplay(mahadasha.endDate)}</td>
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>
                                             {standardizeDuration((mahadasha.raw?.duration_years as number) || (mahadasha.raw?.years as number) || 0)}
                                         </td>
-                                        <td className="px-3 py-1.5 text-center">
+                                        <td className="px-3 py-2 text-center">
                                             <div className="flex items-center justify-center gap-2">
                                                 {mahadasha.isCurrent ? (
                                                     <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm animate-pulse">ACTIVE</span>

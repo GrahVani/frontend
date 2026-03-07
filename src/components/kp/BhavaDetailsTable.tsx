@@ -42,7 +42,7 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
 
     return (
         <div className={cn("overflow-hidden w-full", className)}>
-            <div className="overflow-x-auto h-[450px] overflow-y-auto w-full">
+            <div className="overflow-x-auto min-h-[300px] max-h-[calc(100vh-280px)] overflow-y-auto w-full">
                 <table className="w-full h-full text-xs border-collapse font-sans text-primary">
                     <thead className="tracking-wide sticky top-0 z-10">
                         <tr className="bg-parchment/60 backdrop-blur-sm border-b border-antique">

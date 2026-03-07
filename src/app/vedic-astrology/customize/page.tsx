@@ -32,30 +32,32 @@ import SouthIndianChart from '@/components/astrology/SouthIndianChart';
 import VimshottariTreeGrid from '@/components/astrology/VimshottariTreeGrid';
 import BirthPanchanga from '@/components/astrology/BirthPanchanga';
 import PlanetaryTable from '@/components/astrology/PlanetaryTable';
-import YogaAnalysisView from '@/components/astrology/YogaAnalysis';
-import DoshaAnalysis from '@/components/astrology/DoshaAnalysis';
 import AshtakavargaMatrix from '@/components/astrology/AshtakavargaMatrix';
-import ShadbalaDashboard from '@/components/astrology/ShadbalaDashboard';
+import dynamic from 'next/dynamic';
 
-// KP Components
-import {
-    KpPlanetaryTable,
-    KpCuspalChart,
-    SignificationMatrix,
-    RulingPlanetsWidget,
-    BhavaDetailsTable
-} from '@/components/kp';
+const YogaAnalysisView = dynamic(() => import('@/components/astrology/YogaAnalysis'));
+const DoshaAnalysis = dynamic(() => import('@/components/astrology/DoshaAnalysis'));
+const ShadbalaDashboard = dynamic(() => import('@/components/astrology/ShadbalaDashboard'));
+
+// KP Components — lazy loaded (below fold)
+const KpPlanetaryTable = dynamic(() => import('@/components/kp').then(m => ({ default: m.KpPlanetaryTable })));
+const KpCuspalChart = dynamic(() => import('@/components/kp').then(m => ({ default: m.KpCuspalChart })), { ssr: false });
+const SignificationMatrix = dynamic(() => import('@/components/kp').then(m => ({ default: m.SignificationMatrix })));
+const RulingPlanetsWidget = dynamic(() => import('@/components/kp').then(m => ({ default: m.RulingPlanetsWidget })));
+const BhavaDetailsTable = dynamic(() => import('@/components/kp').then(m => ({ default: m.BhavaDetailsTable })));
 
 // Hooks
 import {
     useDasha,
     useAshtakavarga,
     useShadbala,
+} from '@/hooks/queries/useCalculations';
+import {
     useKpPlanetsCusps,
     useKpRulingPlanets,
     useKpBhavaDetails,
-    useKpSignifications
-} from '@/hooks/queries/useCalculations';
+    useKpSignifications,
+} from '@/hooks/queries/useKP';
 import { processDashaResponse, RawDashaPeriod } from '@/lib/dasha-utils';
 
 type SectionId =
@@ -378,8 +380,8 @@ export default function CustomizePage() {
                 return (
                     <section className="space-y-8 animate-in fade-in duration-500">
                         <SectionHeader title="Cuspal Foundation" subtitle="Planetary Positions & Sub-Lords" icon={<Target className="w-6 h-6" />} />
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                            <div className="lg:col-span-12 bg-white p-6 rounded-3xl border border-antique shadow-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+                            <div className="md:col-span-12 bg-white p-6 rounded-3xl border border-antique shadow-sm">
                                 <KpPlanetaryTable
                                     planets={Object.entries(kpPlanetsCusps?.data?.planets || {}).map(([name, p]) => ({
                                         name,
@@ -404,8 +406,8 @@ export default function CustomizePage() {
                 return (
                     <section className="space-y-8 animate-in fade-in duration-500">
                         <SectionHeader title="Cuspal Geometries" subtitle="North Indian KP Chart & Bhava Details" icon={<LayoutGrid className="w-6 h-6" />} />
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                            <div className="lg:col-span-5 flex justify-center">
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+                            <div className="md:col-span-5 flex justify-center">
                                 <div className="w-full max-w-md aspect-square bg-white border border-antique rounded-[2.5rem] p-10 shadow-xl overflow-hidden">
                                     <KpCuspalChart
                                         planets={Object.entries(kpPlanetsCusps?.data?.planets || {}).map(([name, p]) => ({
@@ -420,7 +422,7 @@ export default function CustomizePage() {
                                     />
                                 </div>
                             </div>
-                            <div className="lg:col-span-7 bg-white p-6 rounded-3xl border border-antique shadow-sm">
+                            <div className="md:col-span-7 bg-white p-6 rounded-3xl border border-antique shadow-sm">
                                 <BhavaDetailsTable bhavaDetails={kpBhavaDetails?.data?.bhava_details || {}} className="border-none shadow-none" />
                             </div>
                         </div>
@@ -585,7 +587,7 @@ function NavigationModal({ isOpen, onClose, sections, onSelect, activeId, ayanam
 
     return (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 animate-in fade-in duration-300">
-            <div className="absolute inset-0 bg-primary/40 backdrop-blur-md" onClick={onClose} />
+            <div className="absolute inset-0 bg-primary/40 backdrop-blur-md" onClick={onClose} aria-hidden="true" />
 
             <div className="relative w-full max-w-2xl bg-white border border-antique rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500">
                 {/* Modal Header */}

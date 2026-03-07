@@ -109,9 +109,9 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
                     <span className="text-primary flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>Debilitated</span>
                 </div>
             </div>
-            <div className="rounded-xl border border-border-warm w-full">
+            <div className="rounded-xl border border-border-warm w-full overflow-x-auto">
                 <table className="w-full border-collapse text-xs" role="table" aria-label="Shodasha Varga summary showing planetary signs across 16 divisional charts">
-                    <thead>
+                    <thead className="sticky top-0 z-10">
                         <tr className="bg-amber-50/30 border-b border-border-warm">
                             <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left border-r border-border-warm w-28")}>Varga</th>
                             <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-1 text-center border-r border-border-warm")}>Asc</th>

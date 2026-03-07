@@ -1,8 +1,9 @@
+"use client";
+
 import React from 'react';
-import { ChartWithPopup } from '../astrology/NorthIndianChart';
+import NorthIndianChart from '../astrology/NorthIndianChart/NorthIndianChart';
 import { cn } from "@/lib/utils";
-import { TYPOGRAPHY } from '@/design-tokens/typography';
-import { COLORS } from '@/design-tokens/colors';
+import { ZODIAC_SIGNS } from '@/lib/chart-geometry';
 
 interface PlanetaryPosition {
     sign: string;
@@ -22,7 +23,7 @@ interface ChartAlignmentPanelProps {
     planetaryAnalysis: Record<string, unknown>;
 }
 
-export default function ChartAlignmentPanel({ chartData }: ChartAlignmentPanelProps) {
+export default function ChartAlignmentPanel({ chartData, planetaryAnalysis }: ChartAlignmentPanelProps) {
     if (!chartData) return null;
 
     // Map planets for NorthIndianChart
@@ -53,68 +54,70 @@ export default function ChartAlignmentPanel({ chartData }: ChartAlignmentPanelPr
         .map(([house, _]) => `Significant ${getOrdinal(parseInt(house))} House Cluster`);
 
     return (
-        <div className={cn("flex flex-col border border-antique shrink-0 overflow-hidden rounded-3xl bg-white/20", COLORS.wbContainer)}>
-            {/* Standard Gochar-style Header */}
-            <div className={cn("flex items-center justify-between px-4 py-2 h-11 shrink-0", COLORS.wbSectionHeader)}>
-                <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Horoscope projection</h3>
-                <div className="px-2 py-0.5 bg-header-border/10 rounded border border-header-border/20">
-                    <span className={cn(TYPOGRAPHY.label, "text-primary !mb-0")}>Natal</span>
-                </div>
-            </div>
+        <div className={cn("p-6 h-full relative overflow-hidden group rounded-3xl", "bg-[rgba(254,250,234,0.6)] border border-antique backdrop-blur-md")}>
+            {/* Subtle Glow Effect - Adjusted for Light Theme */}
+            <div className="absolute -top-24 -left-24 w-48 h-48 bg-amber-500/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-amber-500/10 transition-all duration-700" />
 
-            <div className="p-6 flex flex-col gap-4">
-                <div className="relative aspect-square w-full max-w-[320px] mx-auto">
-                    {/* Subtle aura matches Gochar style */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 rounded-full blur-[80px] pointer-events-none bg-amber-400/5" />
+            <h3 className="text-sm font-semibold mb-6 flex items-center gap-2 text-ink">
+                <span className="w-4 h-4 rounded-full flex items-center justify-center border bg-gold-primary/10 border-gold-primary">
+                    <span className="w-1.5 h-1.5 rounded-full bg-gold-primary" />
+                </span>
+                Birth Chart & Planetary Alignments
+            </h3>
 
-                    <ChartWithPopup
-                        planets={planets}
-                        ascendantSign={ascendantSign}
-                        className="w-full h-full"
-                        showDegrees={true}
-                    />
-                </div>
-
-                <div className="space-y-3">
-                    {highlights.map((h, i) => (
-                        <div key={i} className="flex items-center gap-3 border border-gold-primary/30 rounded-xl p-3 bg-gold-primary/5">
-                            <div className="w-2 h-2 rounded-full bg-gold-primary" />
-                            <p className="text-[12px] font-bold text-ink">{h}</p>
-                        </div>
-                    ))}
-                    {clusters.map((c, i) => (
-                        <div key={i} className="flex items-center gap-3 border border-indigo-500/20 rounded-xl p-3 bg-indigo-500/5">
-                            <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
-                            <p className="text-[12px] font-bold text-ink">{c}</p>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="text-center pt-2">
-                    <p className="text-[9px] uppercase tracking-widest font-black text-amber-900/40">Karmic Focus Area</p>
-                    <p className="text-[11px] mt-1 text-ink font-semibold opacity-70">Synthesized planetary alignment reflecting life purpose.</p>
-                </div>
+            <div className="relative aspect-square w-full max-w-[320px] mx-auto">
+                <NorthIndianChart
+                    planets={planets}
+                    ascendantSign={ascendantSign}
+                    className="chart-parchment-theme"
+                    showDegrees={true}
+                />
             </div>
 
             <style jsx global>{`
-                svg g[stroke="var(--header-border)"] {
-                    stroke: #B45309; /* Amber 700 */
-                    stroke-opacity: 0.4;
-                    stroke-width: 1.2;
+                .chart-parchment-theme g[stroke="var(--header-border)"] {
+                    stroke: #3E2A1F; /* Ink */
+                    stroke-opacity: 0.8;
                 }
-                svg text {
-                    font-size: 16px !important;
-                    font-weight: 600 !important;
+                .chart-parchment-theme text {
+                    fill: #3E2A1F !important;
+                    font-weight: 600;
+                }
+                .chart-parchment-theme text[font-weight="700"] {
+                    fill: #5A3E2B !important;
+                }
+                /* Highlight certain signs/houses */
+                .chart-parchment-theme polygon[fill*="rgba(208, 140, 96"] {
+                    fill: rgba(201, 162, 77, 0.1) !important;
                 }
             `}</style>
+
+            <div className="mt-8 space-y-3">
+                {highlights.map((h, i) => (
+                    <div key={i} className="flex items-center gap-3 border border-gold-primary rounded-xl p-3 bg-gold-primary/5">
+                        <div className="w-2 h-2 rounded-full bg-gold-primary" />
+                        <span className="text-sm font-medium text-ink">{h}</span>
+                    </div>
+                ))}
+                {clusters.map((c, i) => (
+                    <div key={i} className="flex items-center gap-3 border border-indigo-500/20 rounded-xl p-3 bg-indigo-500/5">
+                        <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
+                        <span className="text-sm font-medium text-ink">{c}</span>
+                    </div>
+                ))}
+            </div>
+
+            <div className="mt-6 text-center">
+                <p className="text-[10px] uppercase tracking-widest font-bold text-muted">Karmic Focus Area</p>
+                <p className="text-xs mt-1 italic text-body">"The 5th house concentration indicates high creative and intelligence merit from past lives."</p>
+            </div>
         </div>
     );
 }
 
 // Helpers
 function getSignId(signName: string): number {
-    const signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
-    return signs.indexOf(signName) + 1;
+    return (ZODIAC_SIGNS as readonly string[]).indexOf(signName) + 1;
 }
 
 function getOrdinal(n: number): string {

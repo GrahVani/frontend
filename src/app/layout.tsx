@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter, Spectral } from "next/font/google";
 import "./globals.css";
 import GlobalHeader from "@/components/layout/GlobalHeader";
+import MonitoringInit from "@/components/MonitoringInit";
 import { VedicClientProvider } from "@/context/VedicClientContext";
 import { ToastProvider } from "@/context/ToastContext";
 
@@ -89,6 +90,7 @@ export default function RootLayout({
                 >
                   Skip to main content
                 </a>
+                <MonitoringInit />
                 <GlobalHeader />
                 <main id="main-content" className="flex-1">
                   {children}

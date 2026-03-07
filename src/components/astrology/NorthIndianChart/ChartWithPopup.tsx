@@ -2,10 +2,11 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import NorthIndianChart, { Planet } from './NorthIndianChart';
-import { X, Star, Orbit, Sparkles } from 'lucide-react';
+import { X, Sparkles } from 'lucide-react';
 import { getHouseDetails } from '@/data/house-data';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { HOUSE_CENTERS_MAP } from '@/lib/chart-geometry';
 
 interface ChartWithPopupProps {
     planets: Planet[];
@@ -28,26 +29,10 @@ export default function ChartWithPopup({ planets, ascendantSign, className = "",
         return () => setMounted(false);
     }, []);
 
-    // House center positions (matching NorthIndianChart houseCenters)
-    const houseCenters: Record<number, { x: number; y: number }> = {
-        1: { x: 200, y: 105 },
-        2: { x: 105, y: 45 },
-        3: { x: 45, y: 105 },
-        4: { x: 105, y: 200 },
-        5: { x: 45, y: 295 },
-        6: { x: 105, y: 355 },
-        7: { x: 200, y: 295 },
-        8: { x: 295, y: 355 },
-        9: { x: 355, y: 295 },
-        10: { x: 295, y: 200 },
-        11: { x: 355, y: 105 },
-        12: { x: 295, y: 45 },
-    };
-
     const handleHouseClick = (houseNum: number) => {
         if (containerRef.current) {
             const rect = containerRef.current.getBoundingClientRect();
-            const center = houseCenters[houseNum] || { x: 200, y: 200 };
+            const center = HOUSE_CENTERS_MAP[houseNum] || { x: 200, y: 200 };
 
             // Convert SVG coordinates (0-400) to viewport pixels
             const xPercent = center.x / 400;
@@ -146,8 +131,8 @@ export default function ChartWithPopup({ planets, ascendantSign, className = "",
                                 {selectedHouse}
                             </div>
                             <div className="min-w-0">
-                                <h3 id="chart-popup-house-title" className={cn("truncate", TYPOGRAPHY.sectionTitle)}>{houseDetails.name}</h3>
-                                <p className={cn("truncate", TYPOGRAPHY.label)}>
+                                <h3 id="chart-popup-house-title" className={cn("truncate", TYPOGRAPHY.sectionTitle)} title={houseDetails.name}>{houseDetails.name}</h3>
+                                <p className={cn("truncate", TYPOGRAPHY.label)} title={houseDetails.sign.name}>
                                     {houseDetails.sign.name}
                                 </p>
                             </div>

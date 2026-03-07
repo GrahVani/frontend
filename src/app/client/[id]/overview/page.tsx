@@ -34,7 +34,7 @@ export default function ClientOverviewPage() {
     };
 
     return (
-        <div className="space-y-6 max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
 
             {/* Top Workspace Header (Brief Summary) */}
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 bg-softwhite/5 border border-header-border/20 p-6 rounded-3xl backdrop-blur-md">

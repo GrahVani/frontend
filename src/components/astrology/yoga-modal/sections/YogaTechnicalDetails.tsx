@@ -17,7 +17,7 @@ export const YogaTechnicalDetails = memo(function YogaTechnicalDetails({ data }:
 
             {/* Critical Fixes */}
             {data.criticalFixes && data.criticalFixes.length > 0 && (
-                <div className="space-y-2 mb-4 max-h-[120px] overflow-y-auto pr-2 custom-scrollbar border-b border-border-warm/30 pb-4">
+                <div className="space-y-2 mb-4 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar border-b border-border-warm/30 pb-4">
                     {data.criticalFixes.map((fix, i) => (
                         <div key={i} className="flex gap-3 items-start group">
                             <span className="text-[9px] font-bold text-primary opacity-40 mt-0.5 shrink-0">0{i + 1}</span>

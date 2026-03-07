@@ -1,10 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { familyApi } from "@/lib/api";
 import { FamilyLinkPayload } from "@/types/client";
+import { queryKeys } from "@/lib/query-keys";
 
 export function useFamilyLinks(clientId: string) {
     return useQuery({
-        queryKey: ['familyLinks', clientId],
+        queryKey: queryKeys.family.links(clientId),
         queryFn: async () => {
             if (!clientId) return [];
             return await familyApi.getFamilyLinks(clientId);
@@ -20,7 +21,7 @@ export function useFamilyMutations() {
         mutationFn: ({ clientId, payload }: { clientId: string, payload: FamilyLinkPayload }) =>
             familyApi.linkFamily(clientId, payload),
         onSuccess: (_, variables) => {
-            queryClient.invalidateQueries({ queryKey: ['familyLinks', variables.clientId] });
+            queryClient.invalidateQueries({ queryKey: queryKeys.family.links(variables.clientId) });
         },
     });
 
@@ -28,7 +29,7 @@ export function useFamilyMutations() {
         mutationFn: ({ clientId, relatedClientId }: { clientId: string, relatedClientId: string }) =>
             familyApi.unlinkFamily(clientId, relatedClientId),
         onSuccess: (_, variables) => {
-            queryClient.invalidateQueries({ queryKey: ['familyLinks', variables.clientId] });
+            queryClient.invalidateQueries({ queryKey: queryKeys.family.links(variables.clientId) });
         },
     });
 

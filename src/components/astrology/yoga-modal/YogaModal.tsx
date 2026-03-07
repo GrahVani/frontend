@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { clientApi } from '@/lib/api';
 import { normalizeYogaData } from './utils/normalizer';
 import { YogaSectionRenderer } from './YogaSectionRenderer';
-import DebugConsole from '@/components/debug/DebugConsole';
+
 
 interface YogaModalProps {
     clientId: string;
@@ -86,7 +86,6 @@ export const YogaModal = memo(function YogaModal({
                         {error || 'Detailed analysis not currently available for this client'}
                     </p>
                 </div>
-                {error && <DebugConsole title={`Yoga Error: ${yogaType}`} data={{ error, yogaType, ayanamsa }} />}
             </div>
         );
     }
@@ -98,7 +97,6 @@ export const YogaModal = memo(function YogaModal({
                 {/* Still render section renderer â€” it will show header (with "Inactive" badge),
             meta, description, planets, etc. even for absent yogas */}
                 <YogaSectionRenderer data={normalized} />
-                <DebugConsole title={`Yoga (Inactive): ${yogaType}`} data={rawData} />
             </div>
         );
     }
@@ -106,7 +104,6 @@ export const YogaModal = memo(function YogaModal({
     return (
         <div className={cn('space-y-4 p-4 animate-in fade-in slide-in-from-bottom-2 duration-300', className)}>
             <YogaSectionRenderer data={normalized} />
-            <DebugConsole title={`Yoga: ${yogaType}`} data={rawData} />
         </div>
     );
 });

@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Lock, Mail } from "lucide-react";
-import { motion } from "framer-motion";
+import { Lock, Mail, Eye, EyeOff } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 import { authApi } from "@/lib/api";
 import PremiumButton from "@/components/GoldenButton";
 
@@ -13,19 +13,22 @@ import { useAuth } from "@/context/AuthContext";
 export default function LoginPage() {
     const router = useRouter();
     const { login } = useAuth();
+    const prefersReducedMotion = useReducedMotion();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
 
-    // Animation state
-    const [isUnfurled, setIsUnfurled] = useState(false);
+    // Animation state — skip unfurl delay when reduced motion is preferred
+    const [isUnfurled, setIsUnfurled] = useState(!!prefersReducedMotion);
 
     useEffect(() => {
-        // Start unfurling immediately for smoother percieved load
+        if (prefersReducedMotion) { setIsUnfurled(true); return; }
         const timer = setTimeout(() => setIsUnfurled(true), 300);
         return () => clearTimeout(timer);
-    }, []);
+    }, [prefersReducedMotion]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -106,7 +109,7 @@ export default function LoginPage() {
                             </div>
 
                             {/* Form */}
-                            <form onSubmit={handleSubmit} className="space-y-6 w-full">
+                            <form onSubmit={handleSubmit} className="space-y-6 w-full" aria-busy={loading || undefined}>
                                 <div className="space-y-5">
                                     {/* Inputs - Designed to look like lines on a ledger */}
                                     <div className="relative group">
@@ -135,35 +138,48 @@ export default function LoginPage() {
                                             <Lock className="absolute left-0 w-4 h-4 text-gold-primary" />
                                             <input
                                                 id="login-password"
-                                                type="password"
+                                                type={showPassword ? "text" : "password"}
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
-                                                className="w-full pl-8 pr-2 py-2 bg-transparent border-b-2 border-gold-primary/40 text-ink font-serif placeholder-muted focus:outline-none focus:border-gold-dark transition-colors"
+                                                className="w-full pl-8 pr-8 py-2 bg-transparent border-b-2 border-gold-primary/40 text-ink font-serif placeholder-muted focus:outline-none focus:border-gold-dark transition-colors"
                                                 placeholder="••••••••"
                                                 required
                                             />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute right-0 p-1 text-gold-primary/60 hover:text-gold-dark transition-colors"
+                                                aria-label={showPassword ? "Hide password" : "Show password"}
+                                                tabIndex={-1}
+                                            >
+                                                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="flex items-center justify-between pt-2">
                                     <label className="flex items-center gap-2 cursor-pointer">
-                                        <div className="w-3.5 h-3.5 border border-gold-dark rounded-[2px] flex items-center justify-center">
-                                            <div className="w-1.5 h-1.5 bg-gold-dark opacity-0" />
-                                        </div>
+                                        <input
+                                            type="checkbox"
+                                            checked={rememberMe}
+                                            onChange={(e) => setRememberMe(e.target.checked)}
+                                            className="w-3.5 h-3.5 rounded-sm border-gold-dark accent-gold-primary cursor-pointer focus-visible:ring-2 focus-visible:ring-gold-primary"
+                                        />
                                         <span className="text-xs font-serif text-body uppercase tracking-wide">Remember me</span>
                                     </label>
-                                    <a href="#" className="text-xs font-serif text-gold-dark font-bold uppercase tracking-wide hover:underline">
+                                    <Link href="/forgot-password" className="text-xs font-serif text-gold-dark font-bold uppercase tracking-wide hover:underline">
                                         Forgot Password?
-                                    </a>
+                                    </Link>
                                 </div>
 
                                 {/* Error Message */}
                                 {error && (
                                     <motion.div
-                                        initial={{ opacity: 0, x: -10 }}
-                                        animate={{ opacity: 1, x: [0, -10, 10, -5, 5, 0] }}
-                                        transition={{ duration: 0.4 }}
+                                        initial={{ opacity: 0, x: prefersReducedMotion ? 0 : -10 }}
+                                        animate={{ opacity: 1, x: prefersReducedMotion ? 0 : [0, -6, 6, -3, 3, 0] }}
+                                        transition={{ duration: prefersReducedMotion ? 0.01 : 0.4 }}
+                                        role="alert"
                                         className="text-red-900/80 text-xs font-serif bg-red-50/50 p-2 rounded border border-red-100/50 text-center mx-10 backdrop-blur-sm"
                                     >
                                         {(() => {

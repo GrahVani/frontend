@@ -1,8 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import { clientApi } from "@/lib/api";
-import { useClientCharts } from "@/hooks/queries/useClientCharts";
+import React, { createContext, useContext, useState, ReactNode, useEffect, useMemo, useCallback } from "react";
+import { useClientCharts, type ChartLookup } from "@/hooks/queries/useClientCharts";
 import { useGenerateProfile } from "@/hooks/mutations/useGenerateProfile";
 
 export interface VedicClientDetails {
@@ -29,7 +28,7 @@ interface VedicClientContextType {
     clearClientDetails: () => void;
     isClientSet: boolean;
     isGeneratingCharts: boolean;
-    processedCharts: Record<string, any>; // Lookups by "ChartType_System"
+    processedCharts: ChartLookup;
     isLoadingCharts: boolean; // True only if NO charts exist yet
     isRefreshingCharts: boolean; // True whenever a fetch is in progress
     refreshCharts: () => Promise<void>;
@@ -55,54 +54,66 @@ export function VedicClientProvider({ children }: { children: ReactNode }) {
     // This mimics the original behavior where isLoadingCharts was true only on initial empty fetch
     const isLoadingCharts = isQueryLoading && Object.keys(processedCharts).length === 0;
 
-    // Optional: Persist to sessionStorage so reload doesn't wipe it immediately
+    // Rehydrate from sessionStorage with validation (ST-003)
     useEffect(() => {
         const stored = sessionStorage.getItem("vedic_client_temp");
         if (stored) {
             try {
                 const parsed = JSON.parse(stored);
-                setClientDetails(parsed);
-                // Schema check or revalidation could happen here
-            } catch (e) {            }
+                // Validate required shape before trusting sessionStorage data
+                if (
+                    parsed &&
+                    typeof parsed === 'object' &&
+                    typeof parsed.name === 'string' &&
+                    typeof parsed.dateOfBirth === 'string' &&
+                    typeof parsed.timeOfBirth === 'string' &&
+                    parsed.placeOfBirth &&
+                    typeof parsed.placeOfBirth.city === 'string'
+                ) {
+                    setClientDetails(parsed as VedicClientDetails);
+                } else {
+                    // Invalid shape — clear corrupted data
+                    sessionStorage.removeItem("vedic_client_temp");
+                }
+            } catch {
+                // Corrupted JSON — clear it
+                sessionStorage.removeItem("vedic_client_temp");
+            }
         }
         setIsInitialized(true);
     }, []);
 
-    const updateClientDetails = (details: VedicClientDetails | null) => {
+    const updateClientDetails = useCallback((details: VedicClientDetails | null) => {
         setClientDetails(details);
         if (details) {
             sessionStorage.setItem("vedic_client_temp", JSON.stringify(details));
-            // Trigger auto-check for full profile generation
-            if (details.id) {
-                checkAndGenerateProfile(details.id);
-            }
         } else {
             sessionStorage.removeItem("vedic_client_temp");
         }
-    };
+    }, []);
 
-    const checkAndGenerateProfile = async (clientId: string) => {
-        // We rely on useGenerateProfile mutation if explicit generation is requested.
-        // Auto-generation logic is currently paused to rely on efficient Query caching.
-    };
+    const clearClientDetails = useCallback(() => updateClientDetails(null), [updateClientDetails]);
 
-    const clearClientDetails = () => updateClientDetails(null);
+    const handleRefreshCharts = useCallback(async () => {
+        await refreshCharts();
+    }, [refreshCharts]);
+
+    // Memoize context value to prevent unnecessary consumer re-renders
+    const value = useMemo<VedicClientContextType>(() => ({
+        clientDetails,
+        setClientDetails: updateClientDetails,
+        clearClientDetails,
+        isClientSet: !!clientDetails,
+        isGeneratingCharts,
+        processedCharts,
+        isLoadingCharts,
+        isRefreshingCharts,
+        refreshCharts: handleRefreshCharts,
+        isInitialized,
+    }), [clientDetails, isGeneratingCharts, processedCharts, isLoadingCharts, isRefreshingCharts, handleRefreshCharts, isInitialized, clearClientDetails]);
 
     return (
-        <VedicClientContext.Provider
-            value={{
-                clientDetails,
-                setClientDetails: updateClientDetails,
-                clearClientDetails,
-                isClientSet: !!clientDetails,
-                isGeneratingCharts,
-                processedCharts, // Now comes from useQuery
-                isLoadingCharts,
-                isRefreshingCharts,
-                refreshCharts: async () => { await refreshCharts(); },
-                isInitialized
-            }}
-        >
+        <VedicClientContext.Provider value={value}>
             {children}
         </VedicClientContext.Provider>
     );

@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import ChartComparison from '@/components/astrology/ChartComparison';
 import { Planet } from '@/components/astrology/NorthIndianChart/NorthIndianChart';

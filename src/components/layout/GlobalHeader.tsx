@@ -4,19 +4,19 @@ import React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Settings, Clock, User, ChevronDown, Menu } from "lucide-react";
+import { Settings, Clock, ChevronDown, Menu } from "lucide-react";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
-import Button from "@/components/ui/Button";
 import { useAstrologerStore } from "@/store/useAstrologerStore";
 import { useAuth } from "@/context/AuthContext";
-import { LogOut } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import MobileNav from "@/components/layout/MobileNav";
-import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import NavLink from "@/components/layout/NavLink";
+import GlobalSettingsModal from "@/components/layout/GlobalSettingsModal";
 
 export default function GlobalHeader() {
     const pathname = usePathname();
     const router = useRouter();
-    const { ayanamsa, chartStyle, recentClientIds, updateSettings } = useAstrologerStore();
+    const { ayanamsa, chartStyle, recentClientIds } = useAstrologerStore();
     const settings = { ayanamsa, chartStyle, recentClientIds };
     const { user, logout } = useAuth();
     const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
@@ -28,7 +28,7 @@ export default function GlobalHeader() {
         setMounted(true);
     }, []);
 
-    // Close dropdowns/modals on Escape
+    // Close dropdowns on Escape
     React.useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') {
@@ -53,20 +53,13 @@ export default function GlobalHeader() {
     };
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 h-14" role="banner">
-            {/* Main Header Container */}
-            <div
-                className="relative h-full w-full flex items-center justify-between px-4 lg:px-8 bg-header-gradient shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.1)]"
-            >
-                {/* Top Gold Border (Subtle) */}
+        <header className="fixed top-0 left-0 right-0 z-50 h-12" role="banner">
+            <div className="relative h-full w-full flex items-center justify-between px-4 lg:px-8 bg-header-gradient shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.1)]">
                 <div className="absolute top-0 left-0 right-0 h-[1px] bg-header-border opacity-30" />
-
-                {/* Bottom Gold Border (Ornamental) */}
                 <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-header-border to-transparent" />
 
-                {/* LEFT ZONE: Identity & Navigation */}
+                {/* LEFT: Brand + Navigation */}
                 <div className="flex items-center gap-4 md:gap-8">
-                    {/* Mobile Hamburger */}
                     <button
                         onClick={() => setIsMobileNavOpen(true)}
                         className="md:hidden text-white hover:text-active-glow transition-colors p-1"
@@ -76,7 +69,6 @@ export default function GlobalHeader() {
                         <Menu className="w-6 h-6" />
                     </button>
 
-                    {/* Brand Mark */}
                     <Link href="/dashboard" className="group">
                         <div className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-full border border-header-border flex items-center justify-center bg-ink-deep">
@@ -88,7 +80,6 @@ export default function GlobalHeader() {
                         </div>
                     </Link>
 
-                    {/* Desktop Navigation */}
                     <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="Main navigation">
                         <NavLink href="/dashboard" label="Dashboard" active={isActive("/dashboard")} />
                         <NavLink href="/clients" label="Clients" active={isActive("/clients")} />
@@ -99,9 +90,8 @@ export default function GlobalHeader() {
                     </nav>
                 </div>
 
-                {/* RIGHT ZONE: Utilities & Profile */}
+                {/* RIGHT: Utilities + Profile */}
                 <div className="flex items-center gap-4 lg:gap-6">
-                    {/* Time / Ayanamsa Display (Static) */}
                     <div className="hidden lg:flex flex-col items-end mr-2 text-right">
                         <span className={cn(TYPOGRAPHY.subValue, "!text-white tracking-wider !mt-0")}>{settings.ayanamsa} Ayanamsa</span>
                         <div className="flex items-center gap-1.5 text-white">
@@ -112,10 +102,8 @@ export default function GlobalHeader() {
                         </div>
                     </div>
 
-                    {/* Divider */}
                     <div className="hidden lg:block h-8 w-[1px] bg-header-border/30" />
 
-                    {/* System Icons */}
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setIsSettingsOpen(true)}
@@ -146,48 +134,31 @@ export default function GlobalHeader() {
                             <ChevronDown className={`w-4 h-4 text-header-border transition-transform duration-300 ${isProfileOpen ? 'rotate-180' : ''}`} />
                         </button>
 
-                        {/* Profile Dropdown Menu */}
                         {isProfileOpen && (
                             <>
-                                <div
-                                    className="fixed inset-0 z-40"
-                                    onClick={() => setIsProfileOpen(false)}
-                                />
-                                <div className="absolute right-0 mt-2 w-64 bg-surface-modal rounded-2xl shadow-2xl border border-header-border/20 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2" role="menu" aria-label="User menu">
+                                <div className="fixed inset-0 z-40" onClick={() => setIsProfileOpen(false)} aria-hidden="true" />
+                                <div className="absolute right-0 mt-2 w-64 max-w-[calc(100vw-2rem)] bg-surface-modal rounded-2xl shadow-2xl border border-header-border/20 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2" role="menu" aria-label="User menu">
                                     <div className="p-5 bg-gradient-to-br from-copper-dark to-mahogany text-white">
-                                        <p className={cn(TYPOGRAPHY.profileName, "!text-white !font-bold truncate")}>
+                                        <p className={cn(TYPOGRAPHY.profileName, "!text-white !font-bold truncate")} title={user?.name || user?.email || ''}>
                                             {user?.name || user?.email}
                                         </p>
-                                        <p className={cn(TYPOGRAPHY.profileDetail, "!text-active-glow/70 !tracking-wide mt-1 truncate")}>
+                                        <p className={cn(TYPOGRAPHY.profileDetail, "!text-active-glow/70 !tracking-wide mt-1 truncate")} title={`${user?.role || 'Astrologer'} • ${user?.email || ''}`}>
                                             {user?.role || 'Astrologer'} • {user?.email}
                                         </p>
                                     </div>
                                     <div className="p-2">
-                                        <Link
-                                            href="/profile"
-                                            role="menuitem"
-                                            className="flex items-center gap-3 px-4 py-3 text-sm text-ink hover:bg-bg-hover rounded-xl transition-colors font-medium"
-                                            onClick={() => setIsProfileOpen(false)}
-                                        >
+                                        <Link href="/profile" role="menuitem" className="flex items-center gap-3 px-4 py-3 text-sm text-ink hover:bg-bg-hover rounded-xl transition-colors font-medium" onClick={() => setIsProfileOpen(false)}>
                                             <User className="w-4 h-4 text-header-border" />
                                             <span>My Profile</span>
                                         </Link>
-                                        <Link
-                                            href="/settings"
-                                            role="menuitem"
-                                            className="flex items-center gap-3 px-4 py-3 text-sm text-ink hover:bg-bg-hover rounded-xl transition-colors font-medium"
-                                            onClick={() => setIsProfileOpen(false)}
-                                        >
+                                        <Link href="/settings" role="menuitem" className="flex items-center gap-3 px-4 py-3 text-sm text-ink hover:bg-bg-hover rounded-xl transition-colors font-medium" onClick={() => setIsProfileOpen(false)}>
                                             <Settings className="w-4 h-4 text-header-border" />
                                             <span>Settings</span>
                                         </Link>
                                         <div className="h-[1px] bg-header-border/10 my-2 mx-2" role="separator" />
                                         <button
                                             role="menuitem"
-                                            onClick={() => {
-                                                setIsProfileOpen(false);
-                                                logout();
-                                            }}
+                                            onClick={() => { setIsProfileOpen(false); logout(); }}
                                             className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-700 hover:bg-red-50 rounded-xl transition-colors font-bold"
                                         >
                                             <LogOut className="w-4 h-4" />
@@ -201,150 +172,13 @@ export default function GlobalHeader() {
                 </div>
             </div>
 
-            {/* Global Settings Modal */}
             {isSettingsOpen && (
                 <GlobalSettingsModal onClose={() => setIsSettingsOpen(false)} router={router} />
             )}
 
-            {/* Mobile Navigation Drawer */}
             {isMobileNavOpen && (
                 <MobileNav onClose={() => setIsMobileNavOpen(false)} />
             )}
         </header>
-    );
-}
-
-function NavLink({ href, label, active }: { href: string; label: string; active: boolean }) {
-    return (
-        <Link
-            href={href}
-            aria-current={active ? "page" : undefined}
-            className={cn(
-                TYPOGRAPHY.tableHeader,
-                "px-4 py-2 !font-semibold transition-all duration-300 relative",
-                active ? "text-active-glow text-shadow-glow" : "text-white hover:text-active-glow"
-            )}
-        >
-            {label}
-            {active && (
-                <>
-                    <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-active-glow to-transparent shadow-[0_0_10px_2px_rgba(255,210,125,0.5)]" />
-                    <span
-                        className="absolute inset-0 -z-10 rounded-lg opacity-20 blur-md pointer-events-none [background:radial-gradient(ellipse_at_center,var(--active-glow)_0%,transparent_70%)]"
-                    />
-                </>
-            )}
-        </Link>
-    );
-}
-
-function GlobalSettingsModal({ onClose, router }: { onClose: () => void; router: AppRouterInstance }) {
-    const { ayanamsa, chartStyle, recentClientIds, updateSettings } = useAstrologerStore();
-
-    const settings = React.useMemo(() => ({
-        ayanamsa,
-        chartStyle,
-        recentClientIds
-    }), [ayanamsa, chartStyle, recentClientIds]);
-
-    const [tempSettings, setTempSettings] = React.useState(settings);
-    const [isSaving, setIsSaving] = React.useState(false);
-
-    const settingsTitleId = React.useId();
-
-    const handleSave = () => {
-        setIsSaving(true);
-        setTimeout(() => {
-            const systemChanged = tempSettings.ayanamsa !== settings.ayanamsa;
-            updateSettings(tempSettings);
-            setIsSaving(false);
-            onClose();
-
-            if (systemChanged) {
-                router.push('/vedic-astrology/overview');
-            }
-        }, 600);
-    };
-
-    const AYANAMSAS = [
-        { id: 'Lahiri', label: 'Lahiri (Chitra Paksha)', desc: 'Most widely used in Vedic Astrology' },
-        { id: 'KP', label: 'KP (Krishnamurti)', desc: 'Preferred for Stellar/Nakshatra precision' },
-        { id: 'Raman', label: 'Raman', desc: 'BV Raman traditional ayanamsa' },
-        { id: 'Yukteswar', label: 'Sri Yukteswar', desc: 'Galactic Center based precision' },
-        { id: 'Bhasin', label: 'Bhasin', desc: 'J.N. Bhasin ayanamsa system' },
-        { id: 'Tropical', label: 'Tropical (Sayana)', desc: 'Western Zodiac aligned' },
-    ];
-
-    return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300" role="dialog" aria-modal="true" aria-labelledby={settingsTitleId}>
-            <div className="w-full max-w-2xl bg-surface-modal rounded-[2rem] shadow-2xl overflow-hidden border border-header-border/30 animate-in zoom-in-95 duration-500 flex flex-col max-h-[90vh]">
-
-                {/* Header */}
-                <div className="p-8 bg-gradient-to-r from-copper-dark to-mahogany flex items-center justify-between shrink-0">
-                    <div>
-                        <h2 id={settingsTitleId} className={cn(TYPOGRAPHY.sectionTitle, "text-2xl !text-white !font-bold !tracking-wide")}>Global Settings</h2>
-                        <p className={cn(TYPOGRAPHY.label, "!text-active-glow/80 !mb-0 mt-1")}>Default preferences for charts and calculations</p>
-                    </div>
-                    <button onClick={onClose} aria-label="Close settings" className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all">
-                        <ChevronDown className="w-6 h-6 rotate-90" />
-                    </button>
-                </div>
-
-                {/* Body */}
-                <div className="flex-1 overflow-y-auto p-10 space-y-10">
-                    <section>
-                        <h3 className={cn(TYPOGRAPHY.label, "!text-header-border !font-black !tracking-[0.3em] !mb-6 flex items-center gap-3")}>
-                            <span className="w-8 h-[1px] bg-header-border" />
-                            Ayanamsa System
-                            <span className="flex-1 h-[1px] bg-header-border/20" />
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4" role="radiogroup" aria-label="Ayanamsa system selection">
-                            {AYANAMSAS.map((a) => (
-                                <button
-                                    key={a.id}
-                                    role="radio"
-                                    aria-checked={tempSettings.ayanamsa === a.id}
-                                    onClick={() => setTempSettings(prev => ({ ...prev, ayanamsa: a.id as typeof prev.ayanamsa }))}
-                                    className={`relative p-5 rounded-2xl border text-left transition-all hover:scale-[1.02] group ${tempSettings.ayanamsa === a.id
-                                        ? 'bg-copper-dark border-copper-dark shadow-lg'
-                                        : 'bg-white border-header-border/20 hover:border-header-border hover:bg-bg-hover'
-                                        }`}
-                                >
-                                    <div className="flex justify-between items-start mb-2">
-                                        <span className={cn(
-                                            TYPOGRAPHY.value,
-                                            tempSettings.ayanamsa === a.id ? "!text-white" : "!text-ink"
-                                        )}>{a.label}</span>
-                                        {tempSettings.ayanamsa === a.id && (
-                                            <div className="w-4 h-4 rounded-full bg-active-glow flex items-center justify-center">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-copper-dark" />
-                                            </div>
-                                        )}
-                                    </div>
-                                    <p className={cn(
-                                        TYPOGRAPHY.subValue,
-                                        tempSettings.ayanamsa === a.id ? "!text-white/60" : "!text-bronze/60",
-                                        "!mt-0"
-                                    )}>{a.desc}</p>
-                                </button>
-                            ))}
-                        </div>
-                    </section>
-                </div>
-
-                {/* Footer */}
-                <div className="p-8 bg-softwhite border-t border-header-border/10 flex items-center justify-between shrink-0">
-                    <span className={cn(TYPOGRAPHY.subValue, "!text-bronze !font-medium")}>Changes reflect immediately across all open modules.</span>
-                    <div className="flex gap-4">
-                        <button onClick={onClose} aria-label="Cancel settings changes" className={cn(TYPOGRAPHY.label, "px-6 py-3 rounded-xl !text-bronze !mb-0 hover:bg-bronze/5 transition-colors")}>
-                            Cancel
-                        </button>
-                        <Button variant="primary" onClick={handleSave} disabled={isSaving} loading={isSaving}>
-                            Save Changes
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        </div>
     );
 }

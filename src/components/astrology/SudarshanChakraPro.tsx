@@ -43,7 +43,8 @@ export default function SudarshanChakraPro({ lagnaPlanets, moonPlanets, sunPlane
     return (
         <div className={cn("w-full h-full flex items-center justify-center p-4", className)}>
             <div className="w-full aspect-square relative flex items-center justify-center">
-                <svg viewBox="0 0 500 500" className="w-full h-full block overflow-visible">
+                <svg viewBox="0 0 500 500" className="w-full h-full block overflow-visible" role="img" aria-label="Sudarshan Chakra Pro — triple-layered birth, moon, and sun charts">
+                    <desc>Three concentric rings: inner is birth (Lagna), middle is Moon (Chandra), outer is Sun (Surya)</desc>
                     {/* Background Circle / Subtle Glow */}
                     <circle cx="250" cy="250" r="245" fill="none" stroke="#f8fafc" strokeWidth="0.5" />
 

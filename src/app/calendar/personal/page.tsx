@@ -8,6 +8,8 @@ import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import { SkeletonCard } from "@/components/ui/Skeleton";
 import { usePersonalEvents, useCreateEvent, useDeleteEvent } from "@/hooks/queries/useCalendar";
+import { useConfirmDialog } from "@/hooks/useConfirmDialog";
+import { useToast } from "@/context/ToastContext";
 import type { PersonalEvent } from "@/types/calendar.types";
 
 const CATEGORY_BADGE: Record<PersonalEvent["category"], { variant: "default" | "success" | "warning" | "info" | "error"; label: string }> = {
@@ -25,10 +27,33 @@ export default function PersonalEventsPage() {
     const { data: events, isLoading } = usePersonalEvents(now.getFullYear(), now.getMonth());
     const createEvent = useCreateEvent();
     const deleteEvent = useDeleteEvent();
+    const { confirm, dialog: confirmDialog } = useConfirmDialog();
+    const toast = useToast();
 
     const handleCreate = (event: Omit<PersonalEvent, "id">) => {
         createEvent.mutate(event, {
-            onSuccess: () => setShowForm(false),
+            onSuccess: () => {
+                setShowForm(false);
+                toast.success("Event created successfully.");
+            },
+            onError: () => {
+                toast.error("Failed to create event. Please try again.");
+            },
+        });
+    };
+
+    const handleDelete = async (event: PersonalEvent) => {
+        const confirmed = await confirm({
+            title: "Delete Event",
+            description: `Are you sure you want to delete "${event.title}"? This action cannot be undone.`,
+            confirmLabel: "Delete",
+            cancelLabel: "Keep",
+            variant: "danger",
+        });
+        if (!confirmed) return;
+        deleteEvent.mutate(event.id, {
+            onSuccess: () => toast.success("Event deleted."),
+            onError: () => toast.error("Failed to delete event. Please try again."),
         });
     };
 
@@ -64,7 +89,7 @@ export default function PersonalEventsPage() {
                             <div key={event.id} className="bg-softwhite border border-antique rounded-xl p-4 flex items-start gap-4">
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2 mb-1">
-                                        <h3 className="text-sm font-serif font-semibold text-ink truncate">{event.title}</h3>
+                                        <h3 className="text-sm font-serif font-semibold text-ink truncate" title={event.title}>{event.title}</h3>
                                         <Badge variant={badge.variant} size="sm">{badge.label}</Badge>
                                     </div>
                                     <div className="flex items-center gap-3 text-xs text-muted-refined">
@@ -86,8 +111,8 @@ export default function PersonalEventsPage() {
                                     )}
                                 </div>
                                 <button
-                                    onClick={() => deleteEvent.mutate(event.id)}
-                                    className="p-1.5 rounded-md hover:bg-status-error/10 transition-colors shrink-0"
+                                    onClick={() => handleDelete(event)}
+                                    className="p-2.5 rounded-md hover:bg-status-error/10 transition-colors shrink-0"
                                     aria-label={`Delete ${event.title}`}
                                 >
                                     <Trash2 className="w-4 h-4 text-muted-refined hover:text-status-error" />
@@ -108,6 +133,8 @@ export default function PersonalEventsPage() {
                     }
                 />
             )}
+
+            {confirmDialog}
         </div>
     );
 }

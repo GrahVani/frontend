@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useAuthTokenStore } from "@/store/useAuthTokenStore";
+import { queryKeys } from "@/lib/query-keys";
 
 export function useAuthMutations() {
     const queryClient = useQueryClient();
@@ -16,7 +17,7 @@ export function useAuthMutations() {
                     data.tokens.accessToken,
                     data.tokens.refreshToken || "",
                 );
-                queryClient.setQueryData(["userProfile"], data.user);
+                queryClient.setQueryData(queryKeys.userProfile, data.user);
                 router.push("/dashboard");
             }
         },
@@ -26,7 +27,7 @@ export function useAuthMutations() {
         mutationFn: () => authApi.logout(),
         onSettled: () => {
             useAuthTokenStore.getState().clearTokens();
-            queryClient.setQueryData(["userProfile"], null);
+            queryClient.setQueryData(queryKeys.userProfile, null);
             queryClient.clear();
             router.push("/login");
         },

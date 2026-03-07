@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { clientApi } from '@/lib/api';
 import { YogaAnalysis } from '@/types/astrology';
-import DebugConsole from '../debug/DebugConsole';
+
 
 interface YogaResponseData {
     yoga_present?: boolean;
@@ -121,7 +121,6 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
                     <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-sm text-amber-900")}>Yoga Detail Pending</h3>
                     <p className={cn(TYPOGRAPHY.subValue, "text-amber-600")}>{error || 'Detailed analysis not currently available for this client'}</p>
                 </div>
-                {error && <DebugConsole title={`Yoga Analysis Error: ${yogaType}`} data={{ error, yogaType, ayanamsa }} />}
             </div>
         );
     }
@@ -139,7 +138,6 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
                     <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg capitalize")}>{yogaType.replace('_', ' ')} Absent</h3>
                     <p className={cn(TYPOGRAPHY.subValue, "mt-1")}>Planetary conditions for this specific yoga are not fully met in the natal chart.</p>
                 </div>
-                <DebugConsole title={`Yoga Analysis (Absent): ${yogaType}`} data={data} />
             </div>
         );
     }
@@ -269,8 +267,6 @@ export default function YogaAnalysisView({ clientId, yogaType, ayanamsa = 'lahir
                 </div>
             </div>
 
-            {/* 5. Debug Console */}
-            <DebugConsole title={`Yoga Analysis: ${yogaType}`} data={data} />
         </div>
     );
 }
@@ -422,7 +418,7 @@ function GajaKesariView({ data, className, onClose }: { data: GajaKesariData, cl
                         <Activity className="w-3 h-3" /> Analysis Engine
                     </h3>
 
-                    <div className="flex-1 space-y-3 overflow-y-auto max-h-[140px] pr-2 custom-scrollbar">
+                    <div className="flex-1 space-y-3 overflow-y-auto max-h-[200px] pr-2 custom-scrollbar">
                         {(notes.critical_fixes?.length ?? 0) > 0 ? notes.critical_fixes!.map((fix: string, i: number) => (
                             <div key={i} className="flex gap-3 items-start group">
                                 <span className="text-[9px] font-mono text-zinc-500 mt-0.5">0{i + 1}</span>
@@ -477,10 +473,6 @@ function GajaKesariView({ data, className, onClose }: { data: GajaKesariData, cl
                 </div>
             </div>
 
-            {/* Hidden Debug */}
-            <div className="hidden">
-                <DebugConsole title="Gaja Kesari Compact Layout" data={data} />
-            </div>
         </div>
     );
 }

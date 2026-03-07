@@ -1,6 +1,18 @@
+"use client";
+
 import React, { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
+
+type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
+
+const sizeClasses: Record<ModalSize, string> = {
+    sm: 'max-w-md',
+    md: 'max-w-2xl',
+    lg: 'max-w-4xl',
+    xl: 'max-w-6xl',
+    full: 'max-w-[95vw]',
+};
 
 interface ModalProps {
     isOpen: boolean;
@@ -8,9 +20,10 @@ interface ModalProps {
     title: string;
     children: React.ReactNode;
     className?: string;
+    size?: ModalSize;
 }
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, className }) => {
+export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, className, size = 'md' }) => {
     const dialogRef = useRef<HTMLDivElement>(null);
     const titleId = React.useId();
 
@@ -56,7 +69,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
 
     return (
         <div className="fixed inset-0 z-[1000] bg-ink/70 backdrop-blur-md animate-in fade-in duration-300 overflow-y-auto">
-            <div className="flex min-h-full items-start justify-center p-4 md:p-8 pt-32 sm:pt-40 md:pt-56 lg:pt-30">
+            <div className="flex min-h-full items-center justify-center p-4 md:p-8">
                 <div
                     ref={dialogRef}
                     role="dialog"
@@ -64,7 +77,8 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
                     aria-labelledby={titleId}
                     tabIndex={-1}
                     className={cn(
-                        "relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-antique animate-in zoom-in-95 duration-200",
+                        "relative w-full bg-white rounded-2xl shadow-2xl border border-antique animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col",
+                        sizeClasses[size],
                         className
                     )}
                     onClick={(e) => e.stopPropagation()}
@@ -74,19 +88,19 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
 
                     <button
                         onClick={onClose}
-                        className="absolute right-4 top-4 p-2 bg-white text-secondary hover:text-primary hover:bg-gold-primary transition-all rounded-full border border-antique shadow-sm z-50 ring-1 ring-black/5"
+                        className="absolute right-4 top-4 p-2 bg-white text-secondary hover:text-primary hover:bg-gold-primary transition-all rounded-full border border-antique shadow-sm z-50 ring-1 ring-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary"
                         aria-label="Close"
                     >
-                        <X className="w-6 h-6" />
+                        <X className="w-5 h-5" />
                     </button>
 
-                    <div className="p-0">
+                    <div className="overflow-y-auto flex-1">
                         {children}
                     </div>
                 </div>
 
-                {/* Backdrop click to close */}
-                <div className="absolute inset-0 -z-10" onClick={onClose} />
+                {/* Backdrop click to close — keyboard users dismiss via Escape */}
+                <div className="absolute inset-0 -z-10" onClick={onClose} aria-hidden="true" />
             </div>
         </div>
     );

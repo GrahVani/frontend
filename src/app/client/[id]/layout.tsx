@@ -1,6 +1,8 @@
 import React from 'react';
 import ClientHeader from "@/components/clients/ClientHeader";
 import ClientSidebar from "@/components/clients/ClientSidebar";
+import PageContainer from '@/components/layout/PageContainer';
+import Breadcrumbs from '@/components/layout/Breadcrumbs';
 import { Client } from '@/types/client';
 
 // MOCK DATA FOR LAYOUT
@@ -37,22 +39,25 @@ export default async function ClientLayout({
             />
 
             {/* Content starts below header */}
-            <div className="pt-14 relative z-10 w-full min-h-screen">
+            <div className="pt-12 relative z-10 w-full min-h-screen">
 
                 {/* Sidebar - Fixed Position */}
-                <div className="hidden lg:block fixed left-0 top-14 bottom-0 w-64 overflow-y-auto z-20">
+                <div className="hidden md:block fixed left-0 top-12 bottom-0 md:w-16 lg:w-64 overflow-y-auto z-20">
                     <ClientSidebar basePath={`/client/${id}`} />
                 </div>
 
                 {/* Right Side: Header + Content */}
-                <div className="flex-1 flex flex-col w-full lg:pl-64">
+                <div className="flex-1 flex flex-col w-full md:pl-16 lg:pl-64">
 
                     {/* Client Context Header */}
                     <ClientHeader client={MOCK_CLIENT} />
 
                     {/* Main Content */}
                     <main className="flex-1 p-4 sm:p-6 lg:p-8">
-                        {children}
+                        <PageContainer>
+                            <Breadcrumbs />
+                            {children}
+                        </PageContainer>
                     </main>
                 </div>
 

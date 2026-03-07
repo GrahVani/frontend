@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Button from "@/components/ui/Button";
 import { RefreshCw } from "lucide-react";
+import { captureException } from "@/lib/monitoring";
 
 export default function CalendarError({
   error,
@@ -12,7 +13,10 @@ export default function CalendarError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Error logged by Next.js error boundary
+    captureException(error, {
+      tags: { boundary: 'route', section: 'calendar' },
+      extra: { digest: error.digest },
+    });
   }, [error]);
 
   return (

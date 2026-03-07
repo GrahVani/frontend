@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { clientApi } from "@/lib/api";
+import { queryKeys } from "@/lib/query-keys";
 
 export function useGenerateProfile() {
     const queryClient = useQueryClient();
@@ -7,8 +8,7 @@ export function useGenerateProfile() {
     return useMutation({
         mutationFn: (clientId: string) => clientApi.generateFullVedicProfile(clientId),
         onSuccess: (_, clientId) => {
-            // Invalidate charts cache to trigger refetch
-            queryClient.invalidateQueries({ queryKey: ['charts', clientId] });
+            queryClient.invalidateQueries({ queryKey: queryKeys.charts.byClient(clientId) });
         },
     });
 }

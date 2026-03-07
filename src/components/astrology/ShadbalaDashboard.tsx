@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { PLANET_COLORS } from '@/design-tokens/colors';
 
 // ============================================================================
 // Shadbala Types & Interfaces
@@ -46,15 +47,10 @@ export interface ShadbalaData {
     raw?: Record<string, unknown>;
 }
 
-const PLANET_THEMES: Record<string, { color: string, twText: string, twBg: string }> = {
-    'Sun': { color: '#F97316', twText: 'text-orange-500', twBg: 'bg-orange-500' },
-    'Moon': { color: '#64748B', twText: 'text-slate-500', twBg: 'bg-slate-500' },
-    'Mars': { color: '#EF4444', twText: 'text-red-500', twBg: 'bg-red-500' },
-    'Mercury': { color: '#10B981', twText: 'text-emerald-500', twBg: 'bg-emerald-500' },
-    'Jupiter': { color: '#EAB308', twText: 'text-yellow-500', twBg: 'bg-yellow-500' },
-    'Venus': { color: '#D946EF', twText: 'text-fuchsia-500', twBg: 'bg-fuchsia-500' },
-    'Saturn': { color: '#334155', twText: 'text-slate-800', twBg: 'bg-slate-800' }
-};
+// Planet themes derived from centralized design tokens
+const PLANET_THEMES: Record<string, { color: string, twText: string, twBg: string }> = Object.fromEntries(
+    Object.entries(PLANET_COLORS).map(([name, c]) => [name, { color: c.hex, twText: c.text, twBg: c.bg }])
+);
 
 const PLANET_SYMBOLS: Record<string, string> = {
     'Sun': 'Su', 'Moon': 'Mo', 'Mars': 'Ma', 'Mercury': 'Me',
@@ -145,7 +141,7 @@ export default function ShadbalaDashboard({ displayData }: { displayData: Shadba
     return (
         <div className="space-y-6 w-full max-w-4xl mx-auto">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="bg-white border border-header-border/10 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                <div className="bg-white border border-header-border/10 p-4 rounded-2xl shadow-sm flex items-center justify-between">
                     <div>
                         <div className="flex items-center gap-2 mb-1">
                             <TrendingUp className="w-4 h-4 text-emerald-500" />
@@ -159,7 +155,7 @@ export default function ShadbalaDashboard({ displayData }: { displayData: Shadba
                     </div>
                 </div>
 
-                <div className="bg-white border border-header-border/10 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                <div className="bg-white border border-header-border/10 p-4 rounded-2xl shadow-sm flex items-center justify-between">
                     <div>
                         <div className="flex items-center gap-2 mb-1">
                             <TrendingDown className="w-4 h-4 text-rose-500" />
@@ -174,7 +170,7 @@ export default function ShadbalaDashboard({ displayData }: { displayData: Shadba
                 </div>
             </div>
 
-            <div className="bg-white border border-header-border/10 rounded-3xl p-6 shadow-sm overflow-hidden">
+            <div className="bg-white border border-header-border/10 rounded-3xl p-4 shadow-sm overflow-hidden">
                 <div className="flex items-center gap-2 mb-6">
                     <BarChart2 className="w-5 h-5 text-header-border" />
                     <h3 className="text-sm font-black uppercase tracking-widest text-primary">Rupa Strength Overview</h3>

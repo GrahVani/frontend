@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { userApi } from "@/lib/api";
 import { useAuthTokenStore } from "@/store/useAuthTokenStore";
+import { queryKeys } from "@/lib/query-keys";
 
 export function useUserProfile() {
     return useQuery({
-        queryKey: ["userProfile"],
+        queryKey: queryKeys.userProfile,
         queryFn: async () => {
             // Check in-memory store first, then localStorage fallback
             const store = useAuthTokenStore.getState();

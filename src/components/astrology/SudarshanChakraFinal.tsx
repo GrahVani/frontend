@@ -78,7 +78,8 @@ export default function SudarshanChakraFinal({ data, className }: SudarshanChakr
     return (
         <div className={cn("w-full h-full flex flex-col items-center justify-center p-0", className)}>
             <div className="w-full aspect-square relative max-w-[550px]">
-                <svg viewBox="0 0 600 600" className="w-full h-full block overflow-visible">
+                <svg viewBox="0 0 600 600" className="w-full h-full block overflow-visible" role="img" aria-label="Sudarshan Chakra showing Lagna, Chandra, and Surya chart layers">
+                    <desc>Three concentric rings: inner ring is Lagna chart, middle ring is Chandra (Moon) chart, outer ring is Surya (Sun) chart</desc>
                     {/* Concentric Circles */}
                     {[70, 145, 220, 295].map(r => (
                         <circle key={r} cx="300" cy="300" r={r} fill="none" stroke="#000" strokeWidth="1.2" />

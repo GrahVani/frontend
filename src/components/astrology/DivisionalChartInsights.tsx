@@ -4,6 +4,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Planet } from '@/components/astrology/NorthIndianChart';
 import { Sparkles } from 'lucide-react';
+import { ZODIAC_SIGNS } from '@/lib/chart-geometry';
 
 interface DivisionalChartInsightsProps {
     chartType: string;
@@ -12,12 +13,9 @@ interface DivisionalChartInsightsProps {
     className?: string;
 }
 
-const SIGN_NAMES = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
-
-// Helper to safely get sign name
 const getSignName = (signId: number | undefined): string => {
     if (!signId || signId < 1 || signId > 12) return '-';
-    return SIGN_NAMES[signId - 1] || '-';
+    return ZODIAC_SIGNS[signId - 1] || '-';
 };
 
 // Get house number from signId and ascendant

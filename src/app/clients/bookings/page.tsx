@@ -106,10 +106,10 @@ export default function UpcomingBookingsPage() {
                             </div>
                             <div className="flex items-center gap-3">
                                 {getStatusBadge(booking.status)}
-                                <button className="p-2 rounded-lg hover:bg-parchment text-muted hover:text-ink transition-colors">
+                                <button className="p-2.5 rounded-lg hover:bg-parchment text-muted hover:text-ink transition-colors" aria-label="Call client">
                                     <Phone className="w-4 h-4" />
                                 </button>
-                                <button className="p-2 rounded-lg hover:bg-parchment text-muted hover:text-ink transition-colors">
+                                <button className="p-2.5 rounded-lg hover:bg-parchment text-muted hover:text-ink transition-colors" aria-label="More options">
                                     <MoreVertical className="w-4 h-4" />
                                 </button>
                             </div>

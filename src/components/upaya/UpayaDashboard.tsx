@@ -3,9 +3,9 @@ import { cn } from "@/lib/utils";
 import ChartAlignmentPanel from '@/components/upaya/ChartAlignmentPanel';
 import VigorTimelinePanel from '@/components/upaya/VigorTimelinePanel';
 import GemstoneAnalysisCard from '@/components/upaya/GemstoneAnalysisCard';
+
 import { Sparkles, ShieldAlert, BadgeCheck, User } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
-import styles from './UpayaDashboard.module.css';
 
 interface GemstoneEntry {
     planet: string;
@@ -43,73 +43,77 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
     const meta = data.meta || {};
 
     return (
-        <div className={cn("animate-in fade-in duration-700 flex flex-col h-full overflow-hidden", styles.dashboardContainer, className)}>
-            {/* Header Area */}
-            <div className="flex-shrink-0 px-4 pt-4 pb-2">
-                <div className="flex items-center justify-between border-b border-divider pb-3">
-                    <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] lg:text-[22px] font-bold tracking-tight")}>
-                        Gemstones : {String(meta.user || "Sadhaka")}
-                    </h2>
-                    <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.3)]" />
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-amber-900/40">Active analysis</span>
-                    </div>
-                </div>
-            </div>
+        <div className={cn("min-h-screen p-4 lg:p-6 space-y-8 animate-in fade-in duration-700 pb-20", className)}>
 
-            {/* Main Content Area - Full Width Scrolling */}
-            <div className="flex-1 overflow-y-auto min-h-0 px-4 py-6 space-y-8 no-scrollbar"
-                style={{
-                    scrollbarWidth: 'thin',
-                    scrollbarColor: 'rgba(180,83,9,0.2) transparent'
-                }}>
 
-                {/* Recommended Gemstones */}
-                <div className="space-y-6">
-                    <div className="flex items-center gap-3 px-2">
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-black")}>Recommended gemstones</h3>
-                    </div>
 
-                    {recommended.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {recommended.map((gem: GemstoneEntry, idx: number) => (
-                                <GemstoneAnalysisCard
-                                    key={gem.planet}
-                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
-                                    gemstone={gem as any}
-                                    isRecommended={true}
-                                    priority={idx + 1}
-                                />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="p-12 text-center bg-parchment/30 rounded-2xl border-2 border-dashed border-antique/50">
-                            <Sparkles className="w-12 h-12 text-gold-primary/30 mx-auto mb-4" />
-                            <p className="text-sm font-medium text-muted">No specific gemstones required for current karma.</p>
-                        </div>
-                    )}
+            {/* 2. Main High-Impact Recommendations Section */}
+            <div className="space-y-6">
+                <div className="flex items-center gap-3 px-2">
+                    <BadgeCheck className="w-6 h-6 text-emerald-600" />
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-black")}>Recommended gemstones</h3>
+                    <div className="h-px flex-1 bg-gradient-to-r from-emerald-100 to-transparent ml-4" />
                 </div>
 
-                {/* Cautionary Guidance (Not Recommended) */}
-                {notRecommended.length > 0 && (
-                    <div className="space-y-6 pt-6 border-t border-divider/50">
-                        <div className="flex items-center gap-3 px-2">
-                            <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-black")}>Caution: avoid these gemstones</h3>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
-                            {notRecommended.map((gem: GemstoneEntry) => (
-                                <GemstoneAnalysisCard
-                                    key={gem.planet}
-                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
-                                    gemstone={gem as any}
-                                    isRecommended={false}
-                                />
-                            ))}
-                        </div>
+                {recommended.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {recommended.map((gem: GemstoneEntry, idx: number) => (
+                            <GemstoneAnalysisCard
+                                key={gem.planet}
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+                                gemstone={gem as any}
+                                isRecommended={true}
+                                priority={idx + 1}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="p-12 text-center bg-parchment/30 rounded-2xl border-2 border-dashed border-antique/50">
+                        <Sparkles className="w-12 h-12 text-gold-primary/30 mx-auto mb-4" />
+                        <p className="text-sm font-medium text-muted italic">No specific gemstones required for current karma.</p>
                     </div>
                 )}
             </div>
+
+            {/* 3. Cautionary Guidance Section (Not Recommended) */}
+            {notRecommended.length > 0 && (
+                <div className="space-y-6 pt-6">
+                    <div className="flex items-center gap-3 px-2">
+                        <ShieldAlert className="w-6 h-6 text-red-600" />
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-black")}>Caution: avoid these gemstones</h3>
+                        <div className="h-px flex-1 bg-gradient-to-r from-red-100 to-transparent ml-4" />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
+                        {notRecommended.map((gem: GemstoneEntry) => (
+                            <GemstoneAnalysisCard
+                                key={gem.planet}
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+                                gemstone={gem as any}
+                                isRecommended={false}
+                            />
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* 4. Technical Insight Panels (Chart & Vigor) - Integrated if available */}
+            {(data.chart_details || data.planetary_strength_analysis) && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-8">
+                    <ChartAlignmentPanel
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+                        chartData={data.chart_details as any}
+                        planetaryAnalysis={data.planetary_strength_analysis as Record<string, unknown>}
+                    />
+                    <VigorTimelinePanel
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+                        strengthAnalysis={data.planetary_strength_analysis as any}
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
+                        dashaDetails={data.dasha_details as any}
+                    />
+                </div>
+            )}
+
         </div>
     );
 }

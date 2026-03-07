@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { PLANET_SVG_FILLS } from '@/design-tokens/colors';
+import { HOUSE_CENTERS, HOUSE_POLYGONS, SIGN_NUMBER_POSITIONS, ZODIAC_SIGNS } from '@/lib/chart-geometry';
 
 export interface Planet {
     name: string;
@@ -61,53 +63,9 @@ export default function NorthIndianChart({
         return { house: houseNum, sign: signNum };
     });
 
-    const houseCenters = [
-        { h: 1, x: 200, y: 105 }, // Top Diamond
-        { h: 2, x: 105, y: 45 },  // Top Left Triangle (Top-most)
-        { h: 3, x: 45, y: 105 },  // Top Left Triangle (Left-most)
-        { h: 4, x: 105, y: 200 }, // Left Diamond
-        { h: 5, x: 45, y: 295 },  // Bottom Left Triangle (Left-most)
-        { h: 6, x: 105, y: 355 }, // Bottom Left Triangle (Bottom-most)
-        { h: 7, x: 200, y: 295 }, // Bottom Diamond
-        { h: 8, x: 295, y: 355 }, // Bottom Right Triangle (Bottom-most)
-        { h: 9, x: 355, y: 295 }, // Bottom Right Triangle (Right-most)
-        { h: 10, x: 295, y: 200 },// Right Diamond
-        { h: 11, x: 355, y: 105 },// Top Right Triangle (Right-most)
-        { h: 12, x: 295, y: 45 }, // Top Right Triangle (Top-most)
-    ];
-
-    // Separate positions for sign numbers - placed at corners to avoid overlap with planets
-    const signNumberPositions: Record<number, { x: number; y: number }> = {
-        1: { x: 200, y: 170 },    // Top Diamond - bottom area
-        2: { x: 105, y: 85 },     // Top-left upper triangle - center-right
-        3: { x: 85, y: 105 },     // Top-left lower triangle - center-bottom
-        4: { x: 175, y: 195 },    // Left Diamond - upper area
-        5: { x: 90, y: 295 },     // Bottom-left upper triangle - center-top
-        6: { x: 105, y: 325 },    // Bottom-left lower triangle - center-left
-        7: { x: 200, y: 230 },    // Bottom Diamond - top area
-        8: { x: 295, y: 325 },    // Bottom-right lower triangle - center-right
-        9: { x: 315, y: 295 },    // Bottom-right upper triangle - center-bottom
-        10: { x: 235, y: 205 },   // Right Diamond - lower area
-        11: { x: 315, y: 105 },   // Top-right lower triangle - center-top
-        12: { x: 295, y: 85 },    // Top-right upper triangle - center-left
-    };
-
-    // Define clickable polygon regions for each house
-    // Houses are numbered 1-12 anti-clockwise starting from H1 (Top Diamond)
-    const housePolygons: Record<number, string> = {
-        1: "200,10 105,105 200,200 295,105",              // Top inner diamond
-        2: "10,10 200,10 105,105",                        // Top-left corner (upper)
-        3: "10,10 105,105 10,200",                       // Top-left corner (lower)
-        4: "10,200 105,105 200,200 105,295",             // Left inner diamond
-        5: "10,200 105,295 10,390",                      // Bottom-left corner (upper)
-        6: "10,390 105,295 200,390",                      // Bottom-left corner (lower)
-        7: "200,390 105,295 200,200 295,295",             // Bottom inner diamond
-        8: "200,390 295,295 390,390",                     // Bottom-right corner (lower)
-        9: "390,200 295,295 390,390",                     // Bottom-right corner (upper)
-        10: "390,200 295,105 200,200 295,295",             // Right inner diamond
-        11: "390,10 295,105 390,200",                      // Top-right corner (lower)
-        12: "200,10 390,10 295,105",                       // Top-right corner (upper)
-    };
+    const houseCenters = HOUSE_CENTERS;
+    const housePolygons = HOUSE_POLYGONS;
+    const signNumberPositions = SIGN_NUMBER_POSITIONS;
 
     const handleHouseClick = (houseNum: number) => {
         if (onHouseClick) {
@@ -116,7 +74,8 @@ export default function NorthIndianChart({
     };
 
     return (
-        <svg viewBox="-10 -10 420 420" preserveAspectRatio={preserveAspectRatio} className={cn("w-full h-full drop-shadow-2xl", className)} role="img" aria-label="North Indian birth chart">
+        <svg viewBox="-10 -10 420 420" preserveAspectRatio={preserveAspectRatio} className={cn("w-full h-full drop-shadow-2xl", className)} role="img" aria-label="North Indian birth chart showing planetary positions in 12 houses">
+            <desc>Diamond-shaped North Indian style horoscope chart with planets placed in houses</desc>
             <defs>
                 <linearGradient id="chartParchment" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="var(--surface-warm)" />
@@ -141,7 +100,6 @@ export default function NorthIndianChart({
             {/* Clickable Regions & Heatmap for Houses */}
             {houseCenters.map((pos) => {
                 const signId = ((ascendantSign + pos.h - 2) % 12) + 1;
-                const SIGN_NAMES_SHORT = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
                 return (
                     <polygon
                         key={`poly-${pos.h}`}
@@ -155,8 +113,21 @@ export default function NorthIndianChart({
                         onClick={() => handleHouseClick(pos.h)}
                         tabIndex={onHouseClick ? 0 : undefined}
                         role={onHouseClick ? "button" : undefined}
-                        aria-label={onHouseClick ? `House ${pos.h} - ${SIGN_NAMES_SHORT[signId - 1]}` : undefined}
-                        onKeyDown={onHouseClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleHouseClick(pos.h); } } : undefined}
+                        aria-label={onHouseClick ? `House ${pos.h} - ${ZODIAC_SIGNS[signId - 1]}` : undefined}
+                        onKeyDown={onHouseClick ? (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleHouseClick(pos.h); }
+                            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                                e.preventDefault();
+                                const next = pos.h === 12 ? 1 : pos.h + 1;
+                                (e.currentTarget.parentElement?.querySelector(`[data-house="${next}"]`) as HTMLElement)?.focus();
+                            }
+                            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                const prev = pos.h === 1 ? 12 : pos.h - 1;
+                                (e.currentTarget.parentElement?.querySelector(`[data-house="${prev}"]`) as HTMLElement)?.focus();
+                            }
+                        } : undefined}
+                        data-house={pos.h}
                     />
                 );
             })}
@@ -214,20 +185,7 @@ export default function NorthIndianChart({
                                     const spacing = boxPlanets.length > 5 ? 10 : 14;
                                     const yOffset = (i * spacing) - ((boxPlanets.length - 1) * (spacing / 2));
 
-                                    // Planet color mapping
-                                    const planetColors: Record<string, string> = {
-                                        'Su': '#D97706', 'Sun': '#D97706',       // Amber
-                                        'Mo': '#334155', 'Moon': '#334155',       // Slate 700 (Darker Gray)
-                                        'Ma': '#DC2626', 'Mars': '#DC2626',       // Red
-                                        'Me': '#059669', 'Mercury': '#059669',    // Green
-                                        'Ju': '#CA8A04', 'Jupiter': '#CA8A04',    // Yellow
-                                        'Ve': '#DB2777', 'Venus': '#DB2777',      // Pink
-                                        'Sa': '#4F46E5', 'Saturn': '#4F46E5',     // Indigo
-                                        'Ra': '#374151', 'Rahu': '#374151',       // Dark gray
-                                        'Ke': '#EA580C', 'Ketu': '#EA580C',       // Orange
-                                        'As': '#7C3AED', 'Asc': '#7C3AED',        // Purple
-                                    };
-                                    const planetColor = planetColors[p.name] || 'var(--ink)';
+                                    const planetColor = PLANET_SVG_FILLS[p.name] || 'var(--ink)';
 
                                     return (
                                         <g key={p.name} transform={`translate(0, ${yOffset})`}>

@@ -19,7 +19,7 @@ export default function SignificationMatrix({ significations, className }: Signi
 
     return (
         <div className={cn("w-full overflow-hidden", className)}>
-            <div className="overflow-x-auto h-[450px] overflow-y-auto w-full">
+            <div className="overflow-x-auto min-h-[300px] max-h-[calc(100vh-280px)] overflow-y-auto w-full">
                 <table className="w-full h-full text-xs text-left">
                     <thead className="bg-parchment/60 backdrop-blur-sm border-b border-antique tracking-wide sticky top-0 z-10">
                         <tr>

@@ -95,6 +95,7 @@ export interface CreateClientPayload {
     city?: string;
     state?: string;
     country?: string;
+    notes?: string;
     tags?: string[];
     metadata?: Record<string, unknown>;
 }
