@@ -1,5 +1,5 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { clientApi } from "@/lib/api";
+import { clientApi, kpApi } from "@/lib/api";
 import { useMemo } from 'react';
 
 export function useDasha(
@@ -84,7 +84,7 @@ export function useKpPlanetsCusps(clientId: string) {
         queryKey: ['kp-planets-cusps', clientId],
         queryFn: async () => {
             if (!clientId) throw new Error("Client ID required");
-            return await clientApi.kpApi.getPlanetsCusps(clientId);
+            return await kpApi.getPlanetsCusps(clientId);
         },
         enabled: !!clientId,
         staleTime: 1000 * 60 * 60,
@@ -96,7 +96,7 @@ export function useKpRulingPlanets(clientId: string) {
         queryKey: ['kp-ruling-planets', clientId],
         queryFn: async () => {
             if (!clientId) throw new Error("Client ID required");
-            return await clientApi.kpApi.getRulingPlanets(clientId);
+            return await kpApi.getRulingPlanets(clientId);
         },
         enabled: !!clientId,
         staleTime: 1000 * 60 * 5, // 5 mins (Ruling planets are time-sensitive)
@@ -108,7 +108,7 @@ export function useKpBhavaDetails(clientId: string) {
         queryKey: ['kp-bhava-details', clientId],
         queryFn: async () => {
             if (!clientId) throw new Error("Client ID required");
-            return await clientApi.kpApi.getBhavaDetails(clientId);
+            return await kpApi.getBhavaDetails(clientId);
         },
         enabled: !!clientId,
         staleTime: 1000 * 60 * 60,
@@ -120,7 +120,7 @@ export function useKpSignifications(clientId: string) {
         queryKey: ['kp-significations', clientId],
         queryFn: async () => {
             if (!clientId) throw new Error("Client ID required");
-            return await clientApi.kpApi.getSignifications(clientId);
+            return await kpApi.getSignifications(clientId);
         },
         enabled: !!clientId,
         staleTime: 1000 * 60 * 60,
