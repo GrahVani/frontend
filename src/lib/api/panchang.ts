@@ -67,4 +67,7 @@ export const panchangApi = {
 
     getMuhurat: (req?: Partial<PanchangRequest>): Promise<PanchangResponse> =>
         panchangFetch('/api/panchanga/muhurat', JSON.stringify(todayRequest(req))),
+
+    getLagnaTimes: (req?: Partial<PanchangRequest>): Promise<PanchangResponse> =>
+        panchangFetch('/api/panchanga/lagna', JSON.stringify(todayRequest(req))),
 };

@@ -1,8 +1,4 @@
 import {
-    LayoutDashboard,
-    Bell,
-    Activity,
-    Zap,
     Clock,
     Calendar,
     Home,
@@ -20,19 +16,12 @@ import {
     AlertCircle,
     Gem,
     Settings,
-    Palette,
+    Bell,
     Lock,
     Monitor,
     CreditCard as Billing,
 } from 'lucide-react';
 import { SidebarItem } from '@/components/layout/SectionSidebar';
-
-export const DASHBOARD_Sidebar: SidebarItem[] = [
-    { name: "Overview", path: "/dashboard", icon: LayoutDashboard },
-    { name: "Recent Activity", path: "/dashboard/activity", icon: Activity },
-    { name: "Notifications", path: "/dashboard/notifications", icon: Bell },
-    { name: "Quick Actions", path: "/dashboard/actions", icon: Zap },
-];
 
 export const CLIENTS_General_Sidebar: SidebarItem[] = [
     { name: "All Clients", path: "/clients", icon: Users },

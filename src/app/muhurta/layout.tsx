@@ -16,8 +16,8 @@ export default function MuhurtaLayout({ children }: { children: React.ReactNode 
                 className="absolute inset-0 opacity-15 pointer-events-none z-0 bg-[url('/textures/aged-paper.png')] [background-blend-mode:multiply]"
             />
 
-            <div className="pt-12 relative z-10 w-full min-h-screen">
-                <div className="hidden md:block fixed left-0 top-12 bottom-0 md:w-16 lg:w-64 overflow-y-auto z-20">
+            <div className="pt-14 relative z-10 w-full min-h-screen">
+                <div className="hidden md:block fixed left-0 top-14 bottom-0 md:w-16 lg:w-64 overflow-y-auto z-20">
                     <SectionSidebar title="Muhurta" basePath="/muhurta" items={MUHURTA_Sidebar} />
                 </div>
 

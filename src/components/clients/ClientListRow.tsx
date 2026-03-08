@@ -1,11 +1,10 @@
 "use client";
 
+import React, { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Edit2, Trash2, Calendar, MapPin, ChevronRight, Clock, Phone } from 'lucide-react';
-import { Client } from '@/types/client';
+import { Edit2, Trash2, MapPin, Calendar, Clock, ChevronRight } from 'lucide-react';
+import type { Client } from '@/types/client';
 import { useVedicClient } from '@/context/VedicClientContext';
-import { cn } from "@/lib/utils";
-import { TYPOGRAPHY } from "@/design-tokens/typography";
 
 interface ClientListRowProps {
     client: Client;
@@ -18,137 +17,130 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
     const router = useRouter();
     const { setClientDetails } = useVedicClient();
 
-    const handleSelectClient = () => {
+    const displayName = client.fullName || `${client.firstName || ''} ${client.lastName || ''}`.trim() || 'Unknown';
+    const initial = displayName[0]?.toUpperCase() || '?';
+    const birthDate = client.dateOfBirth || client.birthDate;
+    const birthPlace = client.placeOfBirth || client.birthPlace;
+    const birthTime = client.timeOfBirth || client.birthTime;
+    const phone = client.phone || client.phonePrimary;
+
+    const handleClick = useCallback(() => {
         if (onSelect) {
             onSelect(client);
             return;
         }
-
-        // Default legacy behavior (Vedic flow)
         setClientDetails({
             id: client.id,
-            name: client.fullName || `${client.firstName || ''} ${client.lastName || ''}`.trim(),
-            gender: client.gender || "male", // Fallback for mock
+            name: displayName,
+            gender: client.gender || "male",
             dateOfBirth: client.dateOfBirth || client.birthDate || '',
             timeOfBirth: client.timeOfBirth || client.birthTime || "12:00",
-            placeOfBirth: {
-                city: client.placeOfBirth || client.birthPlace || '',
-            },
-            rashi: client.rashi
+            placeOfBirth: { city: client.placeOfBirth || client.birthPlace || '' },
+            rashi: client.rashi,
         });
-
-        // Steer directly to the Vedic Overview first
-        router.push('/vedic-astrology/overview');
-    };
+        router.push(`/clients/${client.id}`);
+    }, [client, displayName, onSelect, router, setClientDetails]);
 
     return (
-        <div className="group relative">
-            <div
-                onClick={handleSelectClient}
-                role="button"
-                tabIndex={0}
-                aria-label={`Select client ${client.fullName || `${client.firstName || ''} ${client.lastName || ''}`.trim() || 'Unknown'}`}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSelectClient(); } }}
-                className="
-                    relative flex items-center p-4
-                    bg-softwhite border border-antique rounded-2xl
-                    transition-all duration-300
-                    hover:border-gold-primary hover:shadow-card
-                    cursor-pointer overflow-hidden
-                "
-            >
-                {/* Hover Glow via gradient */}
-                <div className="absolute inset-y-0 left-0 w-1 bg-gold-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div
+            onClick={handleClick}
+            role="button"
+            tabIndex={0}
+            aria-label={`Select client ${displayName}`}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(); } }}
+            className="group relative flex items-center gap-4 px-5 py-3.5 cursor-pointer transition-all duration-200 hover:bg-parchment/50"
+            style={{ borderLeft: '3px solid transparent' }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderLeftColor = 'rgba(201,162,77,0.60)'; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderLeftColor = 'transparent'; }}
+        >
+            {/* Avatar */}
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 text-[14px] font-serif font-bold text-gold-dark"
+                 style={{
+                     background: 'linear-gradient(135deg, rgba(201,162,77,0.18) 0%, rgba(139,90,43,0.10) 100%)',
+                     border: '1px solid rgba(201,162,77,0.25)',
+                     boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 6px rgba(139,90,43,0.06)',
+                 }}>
+                {client.avatar ? (
+                    <img src={client.avatar} alt={displayName} className="w-full h-full rounded-xl object-cover" />
+                ) : (
+                    initial
+                )}
+            </div>
 
-                {/* 1. Avatar / Photo with Gold Ring */}
-                <div className="relative mr-8">
-                    <div className="w-16 h-16 rounded-full border border-antique overflow-hidden shadow-sm bg-parchment flex items-center justify-center relative group-hover:border-gold-primary transition-colors">
-                        {client.avatar ? (
-                            <img src={client.avatar} alt={client.firstName} className="w-full h-full object-cover" />
-                        ) : (
-                            <span className={cn(TYPOGRAPHY.sectionTitle, "text-2xl !text-gold-dark !font-bold tracking-tight !mb-0")}>
-                                {(client.firstName || client.fullName || '?')[0]}
-                            </span>
-                        )}
-                    </div>
+            {/* Name + Meta Row */}
+            <div className="flex-1 min-w-0">
+                {/* Top line: Name + Rashi badge */}
+                <div className="flex items-center gap-2.5">
+                    <p className="text-[15px] font-semibold text-ink truncate leading-tight group-hover:text-gold-dark transition-colors">
+                        {displayName}
+                    </p>
+                    {client.rashi && (
+                        <span className="shrink-0 text-[10px] font-bold text-gold-dark/80 px-2 py-0.5 rounded-md uppercase tracking-wide"
+                              style={{
+                                  background: 'linear-gradient(135deg, rgba(201,162,77,0.10) 0%, rgba(201,162,77,0.05) 100%)',
+                                  border: '1px solid rgba(201,162,77,0.18)',
+                              }}>
+                            {client.rashi}
+                        </span>
+                    )}
                 </div>
 
-                {/* 2. Main Info */}
-                <div className="flex-1 relative z-10">
-                    <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                            <h3 className={cn(TYPOGRAPHY.value, "text-2xl !font-bold !text-brown-dark group-hover:!text-gold-dark transition-colors tracking-tight !mt-0")}>
-                                {client.fullName || `${client.firstName || ''} ${client.lastName || ''}`.trim() || 'Unknown'}
-                            </h3>
-                            <div className="flex items-center flex-wrap gap-4 xl:gap-6 mt-2">
-                                <div className={cn(TYPOGRAPHY.subValue, "flex items-center !text-brown-dark !text-xs !tracking-wider !font-bold !mt-0")}>
-                                    <MapPin className="w-3.5 h-3.5 mr-2 text-bronze" />
-                                    {client.placeOfBirth || client.birthPlace || 'Unknown'}
-                                </div>
-                                <div className={cn(TYPOGRAPHY.subValue, "flex items-center !text-brown-dark !text-xs !tracking-wider !font-bold !mt-0")}>
-                                    <Calendar className="w-3.5 h-3.5 mr-2 text-bronze" />
-                                    {(client.dateOfBirth || client.birthDate) ? new Date(client.dateOfBirth || client.birthDate || '').toLocaleDateString('en-US', {
-                                        day: 'numeric', month: 'long', year: 'numeric'
-                                    }) : 'Unknown'}
-                                </div>
-                                {(client.timeOfBirth || client.birthTime) && (
-                                    <div className={cn(TYPOGRAPHY.subValue, "hidden xl:flex items-center !text-brown-dark !text-xs !tracking-wider !font-bold !mt-0")}>
-                                        <Clock className="w-3.5 h-3.5 mr-2 text-bronze" />
-                                        {client.timeOfBirth || client.birthTime}
-                                    </div>
-                                )}
-                                {(client.phone || client.phonePrimary) && (
-                                    <div className={cn(TYPOGRAPHY.subValue, "hidden 2xl:flex items-center !text-brown-dark !text-xs !tracking-wider !font-bold !mt-0")}>
-                                        <Phone className="w-3.5 h-3.5 mr-2 text-bronze" />
-                                        {client.phone || client.phonePrimary}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* 3. Right Side: Indicators */}
-                        <div className="flex items-center gap-6">
-                            <div className="hidden md:block text-right">
-                                <span className={cn(TYPOGRAPHY.label, "block !text-[10px] !font-black uppercase tracking-[0.3em] !text-bronze-dark !mb-1")}>Moon Sign</span>
-                                <span className={cn(TYPOGRAPHY.value, "!text-xs !font-bold !text-brown-dark !mt-0")}>
-                                    {client.rashi}
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-2 px-4 py-2 bg-parchment rounded-full border border-antique group-hover:border-gold-primary/30 transition-all">
-                                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                                <span className="text-[10px] font-bold text-brown-dark uppercase tracking-widest leading-none">Active</span>
-                            </div>
-
-                            {/* Embedded Actions - Moved here for better alignment and visibility */}
-                            <div className="flex items-center gap-2 ml-4">
-                                <button
-                                    className="p-2.5 rounded-xl bg-white border border-antique text-muted hover:text-gold-dark hover:border-gold-primary shadow-sm transition-all"
-                                    title="Edit Record"
-                                    aria-label={`Edit ${client.fullName || client.firstName || 'client'}`}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onEdit?.(client);
-                                    }}
-                                >
-                                    <Edit2 className="w-3.5 h-3.5" />
-                                </button>
-                                <button
-                                    className="p-2.5 rounded-xl bg-white border border-antique text-muted hover:text-red-600 hover:border-red-200 shadow-sm transition-all"
-                                    title="Delete"
-                                    aria-label={`Delete ${client.fullName || client.firstName || 'client'}`}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onDelete?.(client);
-                                    }}
-                                >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                </button>
-                            </div>
-
-                            <ChevronRight className="w-5 h-5 text-muted group-hover:text-gold-dark group-hover:translate-x-1 transition-all" />
-                        </div>
-                    </div>
+                {/* Bottom line: Metadata chips */}
+                <div className="flex items-center gap-4 mt-1.5">
+                    {birthPlace && (
+                        <span className="flex items-center gap-1 text-[12px] text-ink/55 font-medium">
+                            <MapPin className="w-3 h-3 text-bronze-dark/45 shrink-0" />
+                            <span className="truncate max-w-[120px]">{birthPlace}</span>
+                        </span>
+                    )}
+                    {birthDate && (
+                        <span className="flex items-center gap-1 text-[12px] text-ink/55 font-medium">
+                            <Calendar className="w-3 h-3 text-bronze-dark/45 shrink-0" />
+                            {new Date(birthDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </span>
+                    )}
+                    {birthTime && (
+                        <span className="hidden md:flex items-center gap-1 text-[12px] text-ink/55 font-medium font-mono">
+                            <Clock className="w-3 h-3 text-bronze-dark/45 shrink-0" />
+                            {birthTime}
+                        </span>
+                    )}
+                    {!birthPlace && !birthDate && (
+                        <span className="text-[12px] text-ink/25 italic">No birth details</span>
+                    )}
                 </div>
+            </div>
+
+            {/* Right side: actions + chevron */}
+            <div className="flex items-center gap-2 shrink-0">
+                {/* Actions — visible on hover */}
+                <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <button
+                        className="p-2 rounded-lg transition-all hover:bg-parchment/70"
+                        style={{ border: '1px solid transparent' }}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(220,201,166,0.35)'; }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'transparent'; }}
+                        title="Edit Record"
+                        aria-label={`Edit ${displayName}`}
+                        onClick={(e) => { e.stopPropagation(); onEdit?.(client); }}
+                    >
+                        <Edit2 className="w-3.5 h-3.5 text-ink/35 hover:text-gold-dark transition-colors" />
+                    </button>
+                    <button
+                        className="p-2 rounded-lg transition-all hover:bg-red-50/60"
+                        style={{ border: '1px solid transparent' }}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(220,100,100,0.20)'; }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'transparent'; }}
+                        title="Delete"
+                        aria-label={`Delete ${displayName}`}
+                        onClick={(e) => { e.stopPropagation(); onDelete?.(client); }}
+                    >
+                        <Trash2 className="w-3.5 h-3.5 text-ink/35 hover:text-status-error transition-colors" />
+                    </button>
+                </div>
+
+                {/* Chevron */}
+                <ChevronRight className="w-4 h-4 text-ink/15 group-hover:text-gold-dark/50 group-hover:translate-x-0.5 transition-all duration-200" />
             </div>
         </div>
     );

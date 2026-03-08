@@ -8,6 +8,8 @@ export interface ClientQueryParams {
     search?: string;
     gender?: string;
     city?: string;
+    sortBy?: string;
+    sortOrder?: 'asc' | 'desc';
     myClientsOnly?: boolean;
 }
 

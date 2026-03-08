@@ -19,6 +19,8 @@ export const clientApi = {
         search?: string;
         gender?: string;
         city?: string;
+        sortBy?: string;
+        sortOrder?: 'asc' | 'desc';
         myClientsOnly?: boolean;
     }): Promise<ClientListResponse> => {
         const searchParams = new URLSearchParams();
@@ -27,6 +29,8 @@ export const clientApi = {
         if (params?.search) searchParams.set('search', params.search);
         if (params?.gender) searchParams.set('gender', params.gender);
         if (params?.city) searchParams.set('city', params.city);
+        if (params?.sortBy) searchParams.set('sortBy', params.sortBy);
+        if (params?.sortOrder) searchParams.set('sortOrder', params.sortOrder);
         if (params?.myClientsOnly) searchParams.set('myClientsOnly', 'true');
 
         const query = searchParams.toString();

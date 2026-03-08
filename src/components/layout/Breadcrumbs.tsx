@@ -2,9 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { ChevronRight, Home } from 'lucide-react';
 
 const SEGMENT_LABELS: Record<string, string> = {
     'dashboard': 'Dashboard',
@@ -47,7 +45,16 @@ export default function Breadcrumbs() {
     if (segments.length <= 1) return null;
 
     return (
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 py-2">
+        <nav aria-label="Breadcrumb"
+             className="flex items-center gap-2 py-3 mb-1">
+            {/* Home anchor */}
+            <Link href="/dashboard"
+                  className="p-1.5 rounded-md hover:bg-parchment/50 transition-colors shrink-0"
+                  aria-label="Home">
+                <Home className="w-4 h-4 text-ink/40 hover:text-gold-dark transition-colors" />
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5 text-ink/25 shrink-0" />
+
             {segments.map((segment, index) => {
                 const href = '/' + segments.slice(0, index + 1).join('/');
                 const isLast = index === segments.length - 1;
@@ -61,14 +68,17 @@ export default function Breadcrumbs() {
                     || segment.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
                 return (
-                    <span key={href} className="flex items-center gap-1.5">
-                        {index > 0 && <ChevronRight className="w-3 h-3 text-bronze/40 shrink-0" />}
+                    <span key={href} className="flex items-center gap-2">
+                        {index > 0 && <ChevronRight className="w-3.5 h-3.5 text-ink/25 shrink-0" />}
                         {isLast ? (
-                            <span className={cn(TYPOGRAPHY.breadcrumb, "text-ink font-bold")} aria-current="page">
+                            <span className="text-[14px] font-semibold text-ink px-2 py-1 rounded-md"
+                                  style={{ background: 'rgba(201,162,77,0.10)', border: '1px solid rgba(201,162,77,0.18)' }}
+                                  aria-current="page">
                                 {label}
                             </span>
                         ) : (
-                            <Link href={href} className={cn(TYPOGRAPHY.breadcrumb, "text-bronze/60 hover:text-bronze transition-colors")}>
+                            <Link href={href}
+                                  className="text-[14px] font-medium text-ink/60 hover:text-gold-dark px-2 py-1 rounded-md hover:bg-parchment/40 transition-all">
                                 {label}
                             </Link>
                         )}

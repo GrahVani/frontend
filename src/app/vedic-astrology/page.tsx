@@ -1,17 +1,32 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'; // Added useRouter import
+import { useRouter } from 'next/navigation';
 import { Search, Loader2 } from 'lucide-react';
 import ParchmentInput from "@/components/ui/ParchmentInput";
 import ClientListRow from "@/components/clients/ClientListRow";
-import { useClients } from "@/hooks/queries/useClients"; // Added useClients import
+import { useClients } from "@/hooks/queries/useClients";
+import { useVedicClient } from '@/context/VedicClientContext';
 import { Client } from "@/types/client";
 
 export default function VedicClientSelectionPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const router = useRouter();
+    const { setClientDetails } = useVedicClient();
+
+    const handleSelectForVedic = useCallback((client: Client) => {
+        setClientDetails({
+            id: client.id,
+            name: client.fullName || `${client.firstName || ''} ${client.lastName || ''}`.trim(),
+            gender: client.gender || "male",
+            dateOfBirth: client.dateOfBirth || client.birthDate || '',
+            timeOfBirth: client.timeOfBirth || client.birthTime || "12:00",
+            placeOfBirth: { city: client.placeOfBirth || client.birthPlace || '' },
+            rashi: client.rashi,
+        });
+        router.push('/vedic-astrology/overview');
+    }, [router, setClientDetails]);
 
     // Clients Query
     const { data: clientsData, isLoading: loading, error: clientsError } = useClients({
@@ -93,7 +108,7 @@ export default function VedicClientSelectionPage() {
                 {!loading && !error && filteredClients.length > 0 && (
                     <div className="grid grid-cols-1 gap-4">
                         {filteredClients.map(client => (
-                            <ClientListRow key={client.id} client={client} />
+                            <ClientListRow key={client.id} client={client} onSelect={handleSelectForVedic} />
                         ))}
                     </div>
                 )}

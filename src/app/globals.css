@@ -48,6 +48,73 @@
   --status-info: #2B6CB0;
 
   /* ============================================ */
+  /* SEMANTIC STATUS — Auspicious / Mixed / Bad   */
+  /* 3-color system for Panchang/Muhurta data     */
+  /* Olive green / Burnished gold / Terracotta    */
+  /* ============================================ */
+  --shubha-text: #4A6741;
+  --shubha-dot: #5B7A4A;
+  --shubha-surface: rgba(91, 122, 74, 0.08);
+  --shubha-border: #5B7A4A;
+
+  --mishra-text: #8B6914;
+  --mishra-dot: #B7891F;
+  --mishra-surface: rgba(183, 137, 31, 0.06);
+  --mishra-border: #B7891F;
+
+  --ashubha-text: #8B3A3A;
+  --ashubha-dot: #9B4A3A;
+  --ashubha-surface: rgba(155, 74, 58, 0.08);
+  --ashubha-border: #9B4A3A;
+
+  /* ============================================ */
+  /* TABLE SYSTEM                                 */
+  /* ============================================ */
+  --table-row-height: 40px;
+  --table-row-hover: #FFF4E6;
+  --table-row-active-bg: #FFF4E6;
+  --table-row-active-border: var(--gold-primary);
+  --table-header-color: #8B7355;
+  --table-divider: rgba(220, 201, 166, 0.5);
+
+  /* ============================================ */
+  /* DARK DASHBOARD THEME                         */
+  /* Warm charcoal with gold accents.             */
+  /* Scoped to dashboard layout only.             */
+  /* ============================================ */
+
+  /* --- Background Layers (dark → light) --- */
+  --dash-bg: #1A1210;
+  --dash-surface: #241C16;
+  --dash-elevated: #2E2620;
+  --dash-overlay: #382E26;
+
+  /* --- Text Hierarchy --- */
+  --dash-text-primary: #EDE5D8;
+  --dash-text-secondary: #B8A898;
+  --dash-text-muted: #7A6B5A;
+  --dash-text-accent: #D4A853;
+
+  /* --- Borders --- */
+  --dash-border: rgba(255, 210, 125, 0.06);
+  --dash-border-hover: rgba(255, 210, 125, 0.12);
+  --dash-border-active: rgba(201, 162, 77, 0.4);
+
+  /* --- Interactive --- */
+  --dash-hover: rgba(255, 255, 255, 0.03);
+  --dash-active-bg: rgba(201, 162, 77, 0.06);
+  --dash-divider: rgba(255, 255, 255, 0.06);
+  --dash-divider-strong: rgba(255, 255, 255, 0.1);
+
+  /* --- Semantic (dark-adapted) --- */
+  --dash-shubha: #6EBF7B;
+  --dash-mishra: #D4A853;
+  --dash-ashubha: #D97777;
+
+  /* --- Row System --- */
+  --dash-row-height: 48px;
+
+  /* ============================================ */
   /* EXTENDED PALETTE                             */
   /* ============================================ */
   --parchment-soft: #F2DCBC;
@@ -189,6 +256,31 @@
   --color-status-error: var(--status-error);
   --color-status-warning: var(--status-warning);
   --color-status-info: var(--status-info);
+
+  /* ============================================ */
+  /* SEMANTIC STATUS TOKENS                       */
+  /* ============================================ */
+  --color-shubha-text: var(--shubha-text);
+  --color-shubha-dot: var(--shubha-dot);
+  --color-mishra-text: var(--mishra-text);
+  --color-mishra-dot: var(--mishra-dot);
+  --color-ashubha-text: var(--ashubha-text);
+  --color-ashubha-dot: var(--ashubha-dot);
+
+  /* ============================================ */
+  /* DARK DASHBOARD TOKENS                        */
+  /* ============================================ */
+  --color-dash-bg: var(--dash-bg);
+  --color-dash-surface: var(--dash-surface);
+  --color-dash-elevated: var(--dash-elevated);
+  --color-dash-overlay: var(--dash-overlay);
+  --color-dash-text: var(--dash-text-primary);
+  --color-dash-secondary: var(--dash-text-secondary);
+  --color-dash-muted: var(--dash-text-muted);
+  --color-dash-accent: var(--dash-text-accent);
+  --color-dash-shubha: var(--dash-shubha);
+  --color-dash-mishra: var(--dash-mishra);
+  --color-dash-ashubha: var(--dash-ashubha);
 
   /* ============================================ */
   /* EXTENDED PALETTE                             */
@@ -356,6 +448,243 @@ body::before {
   box-shadow: var(--shadow-card);
 }
 
+/* ============================================ */
+/* PREMIUM CARD SYSTEM                         */
+/* Multi-layer shadows + gradient backgrounds  */
+/* ============================================ */
+/* ── Premium Card — Liquid Glass Morphism ───────────────
+   Frosted glass + inner refraction + ambient orb blur.
+   Semi-transparent bg lets backdrop-filter blur through.   */
+.prem-card {
+  background: linear-gradient(
+    165deg,
+    rgba(255, 253, 249, 0.72) 0%,
+    rgba(250, 245, 234, 0.52) 50%,
+    rgba(255, 253, 249, 0.62) 100%
+  );
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.15),
+    inset 1px 0 0 rgba(255, 255, 255, 0.25),
+    0 0 0 1px rgba(186, 164, 126, 0.06),
+    0 2px 4px rgba(62, 42, 31, 0.04),
+    0 8px 18px rgba(62, 42, 31, 0.06),
+    0 20px 40px rgba(62, 42, 31, 0.08);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+
+.prem-card:hover {
+  background: linear-gradient(
+    165deg,
+    rgba(255, 253, 249, 0.82) 0%,
+    rgba(250, 245, 234, 0.62) 50%,
+    rgba(255, 253, 249, 0.72) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.58);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+    inset 1px 0 0 rgba(255, 255, 255, 0.3),
+    0 0 0 1px rgba(186, 164, 126, 0.10),
+    0 2px 4px rgba(62, 42, 31, 0.04),
+    0 10px 24px rgba(62, 42, 31, 0.08),
+    0 24px 48px rgba(62, 42, 31, 0.10);
+}
+
+/* Premium Card with active/highlight gold accent (glass) */
+.prem-card-active {
+  border-color: rgba(201, 162, 77, 0.30);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.15),
+    0 0 0 1px rgba(201, 162, 77, 0.12),
+    0 0 20px rgba(201, 162, 77, 0.08),
+    0 2px 4px rgba(62, 42, 31, 0.04),
+    0 8px 18px rgba(62, 42, 31, 0.06),
+    0 20px 40px rgba(62, 42, 31, 0.08);
+}
+
+/* ============================================ */
+/* LIQUID GLASS MORPHISM — Ambient Orbs        */
+/* Slow-floating gradient blobs behind glass   */
+/* cards give backdrop-filter visual depth.    */
+/* ============================================ */
+
+@keyframes glass-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -25px) scale(1.05); }
+  66% { transform: translate(-20px, 15px) scale(0.95); }
+}
+
+@keyframes glass-float-alt {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-25px, 20px) scale(0.97); }
+  66% { transform: translate(15px, -30px) scale(1.04); }
+}
+
+@keyframes glass-float-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(20px, -20px) scale(1.02); }
+}
+
+.glass-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  will-change: transform;
+  z-index: 1;
+}
+
+.glass-orb-gold {
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(201, 162, 77, 0.14) 0%, rgba(201, 162, 77, 0.04) 40%, transparent 70%);
+  top: 5%;
+  left: 10%;
+  animation: glass-float 22s ease-in-out infinite;
+}
+
+.glass-orb-amber {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(184, 101, 10, 0.09) 0%, rgba(184, 101, 10, 0.03) 40%, transparent 70%);
+  top: 35%;
+  right: 8%;
+  animation: glass-float-alt 28s ease-in-out infinite;
+}
+
+.glass-orb-blue {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(74, 111, 165, 0.07) 0%, rgba(74, 111, 165, 0.02) 40%, transparent 70%);
+  bottom: 15%;
+  left: 25%;
+  animation: glass-float-slow 35s ease-in-out infinite;
+}
+
+/* Subtle light-sweep shimmer for active glass elements */
+@keyframes glass-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.glass-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 45%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.06) 55%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: glass-shimmer 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ── Premium active row — gold accent with framing ──────
+   4px gold border + gradient + inset glow + top/bottom
+   hairlines that "frame" the row as a distinct selection.  */
+.prem-row-active {
+  border-left: 4px solid var(--gold-primary);
+  background: linear-gradient(90deg, rgba(201, 162, 77, 0.13) 0%, rgba(201, 162, 77, 0.02) 100%);
+  box-shadow:
+    inset 5px 0 16px -4px rgba(201, 162, 77, 0.25),
+    inset 0 1px 0 rgba(201, 162, 77, 0.12),
+    inset 0 -1px 0 rgba(201, 162, 77, 0.12);
+}
+
+/* Dark Dashboard Card */
+.dash-card {
+  background-color: var(--dash-surface);
+  border: 1px solid var(--dash-border);
+  border-radius: 1rem;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+  transition: border-color 0.2s ease;
+}
+
+.dash-card:hover {
+  border-color: var(--dash-border-hover);
+}
+
+/* Dark Dashboard Hero Card */
+.dash-hero {
+  background: linear-gradient(180deg, var(--dash-elevated) 0%, var(--dash-surface) 100%);
+  border: 1px solid var(--dash-border);
+  border-radius: 1rem;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle radial glow behind hero */
+.dash-hero::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(ellipse at center, rgba(201, 162, 77, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Dark Dashboard Tab */
+.dash-tab {
+  color: var(--dash-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dash-tab:hover {
+  color: var(--dash-text-secondary);
+}
+
+.dash-tab-active {
+  color: var(--dash-text-accent);
+  border-bottom-color: var(--dash-text-accent);
+}
+
+/* Dark Dashboard Row */
+.dash-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  height: var(--dash-row-height);
+  border-left: 3px solid transparent;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.dash-row:hover {
+  background-color: var(--dash-hover);
+}
+
+.dash-row-active {
+  border-left-color: var(--gold-primary);
+  background-color: var(--dash-active-bg);
+  box-shadow: -4px 0 12px rgba(201, 162, 77, 0.15);
+}
+
 /* Navigation */
 .nav-link {
   color: var(--text-dark);
@@ -447,11 +776,46 @@ body::before {
 /* UNIFIED HEADER & SIDEBAR GRADIENT           */
 /* ============================================ */
 .bg-header-gradient {
-  background: linear-gradient(180deg, #98522F 0%, #763A1F 40%, #55250F 100%);
+  background: linear-gradient(180deg, rgba(152,82,47,0.92) 0%, rgba(118,58,31,0.95) 40%, rgba(85,37,15,0.97) 100%);
+  backdrop-filter: blur(24px) saturate(1.6);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
 }
 
 .text-shadow-glow {
-  text-shadow: 0 0 10px rgba(255, 210, 125, 0.5);
+  text-shadow: 0 0 12px rgba(255, 210, 125, 0.6), 0 0 30px rgba(255, 210, 125, 0.15);
+}
+
+/* Header glass nav pill — active link background */
+.nav-glass-pill {
+  background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,210,125,0.10) 50%, rgba(255,255,255,0.06) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,210,125,0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.20),
+    inset 0 -1px 0 rgba(255,255,255,0.05),
+    0 0 12px rgba(255,210,125,0.12);
+}
+
+/* Header utility icon button */
+.header-icon-btn {
+  position: relative;
+  padding: 8px;
+  border-radius: 10px;
+  color: rgba(255,255,255,0.65);
+  transition: all 0.25s ease;
+}
+.header-icon-btn:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.10);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 0 8px rgba(255,210,125,0.10);
+}
+
+/* Header divider — vertical glass separator */
+.header-divider {
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(180deg, transparent 0%, rgba(208,140,96,0.35) 30%, rgba(208,140,96,0.35) 70%, transparent 100%);
 }
 
 /* ============================================ */

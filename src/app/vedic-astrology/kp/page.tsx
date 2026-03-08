@@ -162,7 +162,7 @@ export default function KpDashboardPage() {
 
             {/* Tab Bar (KP-019: overflow-x-auto for 12+ buttons on narrow screens) */}
             {showHeader && (
-                <div className="flex gap-1.5 p-1 bg-parchment rounded-xl border border-antique sticky top-12 z-20 shadow-sm overflow-x-auto scrollbar-thin">
+                <div className="flex gap-1.5 p-1 bg-parchment rounded-xl border border-antique sticky top-14 z-20 shadow-sm overflow-x-auto scrollbar-thin">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}

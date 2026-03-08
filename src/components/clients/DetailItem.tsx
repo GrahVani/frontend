@@ -23,12 +23,13 @@ export default function DetailItem({
 }: DetailItemProps) {
     return (
         <div>
-            <p className="text-[10px] uppercase tracking-widest text-secondary font-bold mb-1 font-serif">{label}</p>
-            {isEditing ? (
+            <p className="text-[11px] uppercase tracking-[0.10em] text-bronze-dark/80 font-bold mb-1.5">{label}</p>
+            {isEditing && onChange ? (
                 type === 'select' ? (
                     <select
-                        onChange={(e) => onChange?.(e.target.value)}
-                        className="w-full text-base font-serif text-primary font-medium border border-antique rounded-lg px-3 py-2 bg-parchment focus:outline-none focus:border-gold-primary"
+                        onChange={(e) => onChange(e.target.value)}
+                        className="w-full text-[15px] font-serif text-ink font-medium rounded-lg px-3 py-2.5 bg-parchment/50 focus:outline-none focus:ring-2 focus:ring-gold-primary/40 transition-all"
+                        style={{ border: '1px solid rgba(220,201,166,0.40)' }}
                         defaultValue={value}
                         aria-label={label}
                     >
@@ -37,23 +38,25 @@ export default function DetailItem({
                 ) : type === 'date' ? (
                     <ParchmentDatePicker
                         date={value}
-                        setDate={(val) => onChange?.(val || '')}
+                        setDate={(val) => onChange(val || '')}
                     />
                 ) : type === 'time' ? (
                     <ParchmentTimePicker
                         value={value}
-                        onChange={(val) => onChange?.(val || '')}
+                        onChange={(val) => onChange(val || '')}
                     />
                 ) : (
                     <input
                         type={type}
                         value={value}
-                        onChange={(e) => onChange?.(e.target.value)}
-                        className="w-full text-base font-serif text-primary font-medium border border-antique rounded-lg px-3 py-2 bg-parchment focus:outline-none focus:border-gold-primary"
+                        onChange={(e) => onChange(e.target.value)}
+                        className="w-full text-[15px] font-serif text-ink font-medium rounded-lg px-3 py-2.5 bg-parchment/50 focus:outline-none focus:ring-2 focus:ring-gold-primary/40 transition-all"
+                        style={{ border: '1px solid rgba(220,201,166,0.40)' }}
                     />
                 )
             ) : (
-                <p className="text-base font-serif text-primary font-semibold border-b border-antique pb-2">
+                <p className="text-[15px] font-serif text-ink font-semibold pb-2"
+                   style={{ borderBottom: '1px solid rgba(220,201,166,0.30)' }}>
                     {type === 'select' ? (options.find(o => o.v === value)?.l || value) : value || 'N/A'}
                 </p>
             )}

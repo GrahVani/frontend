@@ -1,20 +1,20 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import Link from 'next/link';
-import { Search, AlertCircle, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, AlertCircle, RefreshCw, ChevronLeft, ChevronRight, UserPlus, Users } from 'lucide-react';
 import Button from "@/components/ui/Button";
-import { cn } from "@/lib/utils";
-import ParchmentInput from "@/components/ui/ParchmentInput";
+import ClientToolbar from "@/components/clients/ClientToolbar";
 import ClientListRow from "@/components/clients/ClientListRow";
+import ClientTableView from "@/components/clients/ClientTableView";
 import { Client } from "@/types/client";
 import { useRouter } from 'next/navigation';
 import { useClients } from "@/hooks/queries/useClients";
 import { useClientMutations } from "@/hooks/mutations/useClientMutations";
+import { useClientFilters } from "@/hooks/useClientFilters";
 import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 import { useToast } from "@/context/ToastContext";
 import { SkeletonTable } from "@/components/ui/Skeleton";
-import { TYPOGRAPHY } from "@/design-tokens/typography";
 
 const deriveNames = (client: Client): Client => {
     if (client.firstName && client.lastName) return client;
@@ -37,25 +37,23 @@ export default function ClientsPage() {
     const router = useRouter();
     const toast = useToast();
     const { confirm, dialog } = useConfirmDialog();
-    const [searchQuery, setSearchQuery] = useState('');
-    const [pagination, setPagination] = useState({ page: 1, limit: 20 });
+    const {
+        filters,
+        setFilter,
+        clearFilter,
+        clearAllFilters,
+        activeFilterChips,
+        activeFilterCount,
+        queryParams,
+    } = useClientFilters();
 
-    const { data, isLoading: loading, error: queryError, refetch } = useClients({
-        page: pagination.page,
-        limit: pagination.limit,
-        search: searchQuery || undefined,
-    });
-
+    const { data, isLoading: loading, error: queryError, refetch } = useClients(queryParams);
     const { deleteClient } = useClientMutations();
 
     const clients = useMemo(() => data?.clients?.map(deriveNames) || [], [data?.clients]);
     const total = data?.pagination?.total || 0;
     const totalPages = data?.pagination?.totalPages || 1;
     const error = queryError ? (queryError as Error).message : null;
-
-    const handleSelectClient = useCallback((c: Client) => {
-        router.push(`/clients/${c.id}`);
-    }, [router]);
 
     const handleEditClient = useCallback((client: Client) => {
         router.push(`/clients/${client.id}`);
@@ -68,7 +66,6 @@ export default function ClientsPage() {
             confirmLabel: "Delete",
             variant: "danger",
         });
-
         if (!confirmed) return;
 
         try {
@@ -81,128 +78,152 @@ export default function ClientsPage() {
     }, [confirm, deleteClient, toast]);
 
     return (
-        <div className="w-full space-y-6 animate-in fade-in duration-700 py-4 px-2 lg:px-4">
+        <div className="w-full space-y-3 animate-in fade-in duration-700 py-4">
             {dialog}
 
-            <div className={cn(TYPOGRAPHY.label, "!text-xs !tracking-widest !font-bold !text-bronze-dark !mb-0")}>
-                Client Almanac
-            </div>
-            {/* Page Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
-                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-3xl !font-bold !text-ink tracking-tight !mb-2")}>
-                        Client Registry
-                    </h1>
-                    <p className={cn(TYPOGRAPHY.label, "!text-muted italic !text-lg !mb-0")}>
-                        Client records and their astrological profiles.
-                    </p>
-                </div>
+            {/* Toolbar — search, filters, view toggle, add button */}
+            <ClientToolbar
+                filters={filters}
+                setFilter={setFilter}
+                clearFilter={clearFilter}
+                clearAllFilters={clearAllFilters}
+                activeFilterChips={activeFilterChips}
+                activeFilterCount={activeFilterCount}
+                total={total}
+            />
 
-                <div className="flex items-center gap-4">
-                    <Link href="/clients/new">
-                        <Button variant="primary">+ Add Client</Button>
-                    </Link>
-                </div>
-            </div>
-
-            {/* Search & Filter Bar */}
-            <div className="bg-softwhite backdrop-blur-md p-5 rounded-2xl border border-antique shadow-card relative overflow-hidden group">
-                <div className="absolute inset-0 bg-parchment opacity-50 pointer-events-none" />
-                <div className="relative z-10">
-                    <ParchmentInput
-                        placeholder="Search clients by name or city..."
-                        aria-label="Search clients"
-                        icon={<Search className="w-5 h-5 text-gold-dark" />}
-                        value={searchQuery}
-                        onChange={(e) => { setSearchQuery(e.target.value); setPagination(prev => ({ ...prev, page: 1 })); }}
-                        className="bg-parchment border-antique text-ink placeholder:text-muted focus:border-gold-primary h-14 text-lg rounded-2xl"
-                    />
-                </div>
-
-                {error && (
-                    <div className="mt-4 flex items-center justify-between p-3 bg-amber-50 border border-amber-200 rounded-lg" role="alert">
-                        <div className="flex items-center gap-2 text-amber-700 text-sm">
-                            <AlertCircle className="w-4 h-4" />
-                            <span>{error}</span>
-                        </div>
-                        <button
-                            onClick={() => refetch()}
-                            aria-label="Retry loading clients"
-                            className="flex items-center gap-1 text-amber-700 hover:text-amber-800 text-sm font-medium"
-                        >
-                            <RefreshCw className="w-4 h-4" />
-                            Retry
-                        </button>
+            {/* Error Banner */}
+            {error && (
+                <div className="prem-card p-3 flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-[13px] font-medium" style={{ color: '#8B6914' }}>
+                        <AlertCircle className="w-4 h-4" />
+                        <span>{error}</span>
                     </div>
-                )}
-            </div>
+                    <button
+                        onClick={() => refetch()}
+                        aria-label="Retry loading clients"
+                        className="flex items-center gap-1.5 text-[12px] font-bold hover:underline"
+                        style={{ color: '#8B6914' }}
+                    >
+                        <RefreshCw className="w-3.5 h-3.5" />
+                        Retry
+                    </button>
+                </div>
+            )}
 
             {/* Client List */}
-            <div className="space-y-4" aria-busy={loading} aria-live="polite" aria-label="Client list">
+            <div aria-busy={loading} aria-live="polite" aria-label="Client list">
                 {loading ? (
-                    <SkeletonTable rows={6} cols={5} />
+                    <div className="prem-card p-6">
+                        <SkeletonTable rows={8} cols={5} />
+                    </div>
                 ) : clients.length > 0 ? (
-                    <ul className="grid grid-cols-1 gap-4 list-none p-0 m-0" aria-label={`${clients.length} clients`}>
-                        {clients.map(client => (
-                            <li key={client.id}>
-                                <ClientListRow
-                                    client={client}
-                                    onSelect={handleSelectClient}
-                                    onEdit={handleEditClient}
-                                    onDelete={handleDeleteClient}
-                                />
-                            </li>
-                        ))}
-                    </ul>
+                    filters.viewMode === 'table' ? (
+                        <ClientTableView
+                            clients={clients}
+                            onEdit={handleEditClient}
+                            onDelete={handleDeleteClient}
+                        />
+                    ) : (
+                        <div className="prem-card glass-shimmer relative overflow-hidden">
+                            {clients.map((client, idx) => (
+                                <React.Fragment key={client.id}>
+                                    {idx > 0 && (
+                                        <div className="mx-5" style={{ height: 1, background: 'linear-gradient(90deg, transparent 0%, rgba(201,162,77,0.12) 20%, rgba(220,201,166,0.20) 50%, rgba(201,162,77,0.12) 80%, transparent 100%)' }} />
+                                    )}
+                                    <ClientListRow
+                                        client={client}
+                                        onEdit={handleEditClient}
+                                        onDelete={handleDeleteClient}
+                                    />
+                                </React.Fragment>
+                            ))}
+                        </div>
+                    )
                 ) : (
-                    <div className="text-center py-16 rounded-2xl bg-softwhite border border-antique">
-                        {searchQuery ? (
-                            <p className="font-serif text-2xl italic text-muted">
-                                No clients match your search.
-                            </p>
-                        ) : (
-                            <>
-                                <p className="font-serif text-2xl italic text-muted mb-4">
-                                    No clients yet.
+                    <div className="prem-card glass-shimmer relative overflow-hidden text-center py-20">
+                        {filters.search || activeFilterCount > 0 ? (
+                            <div>
+                                <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+                                     style={{
+                                         background: 'linear-gradient(135deg, rgba(201,162,77,0.10) 0%, rgba(139,90,43,0.05) 100%)',
+                                         border: '1px solid rgba(201,162,77,0.15)',
+                                     }}>
+                                    <Search className="w-6 h-6 text-gold-dark/30" />
+                                </div>
+                                <p className="font-serif text-[18px] text-ink/50 font-semibold">
+                                    No clients match your search
                                 </p>
+                                <p className="text-[13px] text-ink/35 mt-2 max-w-[300px] mx-auto">Try adjusting your filters or search terms.</p>
+                                {activeFilterCount > 0 && (
+                                    <button onClick={clearAllFilters}
+                                            className="mt-4 text-[13px] font-semibold text-gold-dark hover:underline underline-offset-2">
+                                        Clear All Filters
+                                    </button>
+                                )}
+                            </div>
+                        ) : (
+                            <div>
+                                <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+                                     style={{
+                                         background: 'linear-gradient(135deg, rgba(201,162,77,0.12) 0%, rgba(139,90,43,0.06) 100%)',
+                                         border: '1px solid rgba(201,162,77,0.18)',
+                                     }}>
+                                    <Users className="w-6 h-6 text-gold-dark/35" />
+                                </div>
+                                <p className="font-serif text-[18px] text-ink/50 font-semibold mb-1.5">
+                                    No clients yet
+                                </p>
+                                <p className="text-[13px] text-ink/35 mb-5">Begin by adding your first client record.</p>
                                 <Link href="/clients/new">
-                                    <Button variant="primary">+ Create First Client</Button>
+                                    <Button variant="golden" size="sm" icon={UserPlus}>Create First Client</Button>
                                 </Link>
-                            </>
+                            </div>
                         )}
                     </div>
                 )}
             </div>
 
             {/* Pagination Footer */}
-            <div className="pt-8 border-t border-divider flex items-center justify-between">
-                <span className="font-serif text-xs text-bronze font-black uppercase tracking-[0.3em]">
-                    {total} client{total !== 1 ? 's' : ''}
-                </span>
-                {totalPages > 1 && (
-                    <div className="flex items-center gap-2">
-                        <button
-                            onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
-                            disabled={pagination.page <= 1}
-                            aria-label="Previous page"
-                            className="p-2.5 rounded-lg border border-antique hover:bg-parchment disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                        >
-                            <ChevronLeft className="w-4 h-4 text-bronze" />
-                        </button>
-                        <span className="font-serif text-sm text-ink px-3">
-                            {pagination.page} / {totalPages}
+            {totalPages > 1 && (
+                <div className="prem-card px-5 py-3 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <span className="text-[12px] font-mono font-bold text-ink/40 tabular-nums tracking-wide">
+                            PAGE {filters.page}/{totalPages}
                         </span>
+                        <div className="w-px h-4" style={{ background: 'rgba(220,201,166,0.30)' }} />
+                        <span className="text-[12px] text-ink/35 font-medium">
+                            {total} client{total !== 1 ? 's' : ''} total
+                        </span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
                         <button
-                            onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
-                            disabled={pagination.page >= totalPages}
-                            aria-label="Next page"
-                            className="p-2.5 rounded-lg border border-antique hover:bg-parchment disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                            onClick={() => setFilter('page', filters.page - 1)}
+                            disabled={filters.page <= 1}
+                            aria-label="Previous page"
+                            className="p-2 rounded-xl transition-all disabled:opacity-25 disabled:cursor-not-allowed hover:bg-parchment/60"
+                            style={{
+                                border: '1px solid rgba(220,201,166,0.30)',
+                                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.4)',
+                            }}
                         >
-                            <ChevronRight className="w-4 h-4 text-bronze" />
+                            <ChevronLeft className="w-4 h-4 text-bronze-dark/70" />
+                        </button>
+                        <button
+                            onClick={() => setFilter('page', filters.page + 1)}
+                            disabled={filters.page >= totalPages}
+                            aria-label="Next page"
+                            className="p-2 rounded-xl transition-all disabled:opacity-25 disabled:cursor-not-allowed hover:bg-parchment/60"
+                            style={{
+                                border: '1px solid rgba(220,201,166,0.30)',
+                                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.4)',
+                            }}
+                        >
+                            <ChevronRight className="w-4 h-4 text-bronze-dark/70" />
                         </button>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </div>
     );
 }

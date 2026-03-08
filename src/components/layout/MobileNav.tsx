@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
 import { SidebarItem } from "@/components/layout/SectionSidebar";
 import {
-    DASHBOARD_Sidebar,
     CLIENTS_General_Sidebar,
     MUHURTA_Sidebar,
     MATCHMAKING_Sidebar,
@@ -24,7 +23,7 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, subItems: DASHBOARD_Sidebar },
+    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/clients", label: "Clients", icon: Users, subItems: CLIENTS_General_Sidebar },
     { href: "/vedic-astrology", label: "Vedic Astrology", icon: Star },
     { href: "/muhurta", label: "Muhurta", icon: Clock, subItems: MUHURTA_Sidebar },

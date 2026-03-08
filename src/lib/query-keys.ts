@@ -92,12 +92,13 @@ export const queryKeys = {
     panchang: {
         daily: (date: string) => ['panchang', date] as const,
         monthly: (year: number, month: number) => ['panchang', 'monthly', year, month] as const,
+        choghadiya: (date: string) => ['panchang', 'choghadiya', date] as const,
+        hora: (date: string) => ['panchang', 'hora', date] as const,
+        lagna: (date: string) => ['panchang', 'lagna', date] as const,
     },
 
     // Dashboard
     dashboard: {
-        activity: ['dashboard', 'activity'] as const,
-        notifications: ['dashboard', 'notifications'] as const,
         stats: ['dashboard', 'stats'] as const,
     },
 } as const;

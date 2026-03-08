@@ -17,7 +17,7 @@ export const TYPOGRAPHY = {
     dateAndDuration: "font-sans text-sm font-medium text-primary whitespace-nowrap leading-compact tracking-tight",
 
     // ===== Navigation =====
-    breadcrumb: "font-sans text-xs font-medium text-primary whitespace-nowrap",
+    breadcrumb: "font-sans text-sm font-semibold whitespace-nowrap",
 
     // ===== Panchanga & Profile Details =====
     label: "font-sans text-xs text-primary font-semibold tracking-wider mb-0.5",

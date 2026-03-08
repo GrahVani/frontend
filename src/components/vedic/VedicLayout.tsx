@@ -115,7 +115,7 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
     });
 
     return (
-        <div className="sticky top-12 left-0 right-0 z-40 h-12 bg-header-gradient flex items-center px-4 md:px-6 gap-4" role="navigation" aria-label="Vedic astrology sections">
+        <div className="sticky top-14 left-0 right-0 z-40 h-12 bg-header-gradient flex items-center px-4 md:px-6 gap-4" role="navigation" aria-label="Vedic astrology sections">
             {/* Top Border Indicator */}
             <div className="absolute top-0 left-0 right-0 h-[1px] bg-header-border opacity-10" />
 
@@ -273,7 +273,7 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
     }
 
     return (
-        <div className="flex flex-col min-h-screen pt-12 bg-luxury-radial relative">
+        <div className="flex flex-col min-h-screen pt-14 bg-luxury-radial relative">
             {/* Subtle Texture Overlay */}
             <div
                 className="absolute inset-0 opacity-15 pointer-events-none z-0 bg-[url('/textures/aged-paper.png')] bg-blend-multiply"
