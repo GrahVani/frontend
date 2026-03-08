@@ -50,7 +50,7 @@ export default function DwadashottariDasha({ periods }: DwadashottariDashaProps)
         <div className="space-y-4 animate-in fade-in duration-700">
             {/* Cycle Navigation */}
             <div className="flex flex-wrap gap-2 items-center px-4 pt-2">
-                <div className="flex bg-parchment-soft/40 rounded-lg p-0.5 gap-1 border border-header-border/10 backdrop-blur-sm overflow-x-auto scrollbar-hide">
+                <div className="flex bg-surface-warm-soft/40 rounded-lg p-0.5 gap-1 border border-gold-primary/10 backdrop-blur-sm overflow-x-auto scrollbar-hide">
                     {availableCycles.map((c: number) => {
                         const isActive = selectedCycle === c;
                         const cyclePeriods = cycles[c];
@@ -80,16 +80,16 @@ export default function DwadashottariDasha({ periods }: DwadashottariDashaProps)
             {/* Table */}
             <div className="">
                 <table className="w-full border-separate border-spacing-0">
-                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-white border-b border-header-border/20 sticky top-0 z-10 shadow-sm")}>
+                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-white border-b border-gold-primary/15 sticky top-0 z-10 shadow-sm")}>
                         <tr>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">Planet</th>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">Start Date</th>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">End Date</th>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">Duration</th>
-                            <th className="px-3 py-2 text-center border-b border-header-border/10">Status</th>
+                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">Planet</th>
+                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">Start Date</th>
+                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">End Date</th>
+                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">Duration</th>
+                            <th className="px-3 py-2 text-center border-b border-gold-primary/10">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-header-border/10 font-medium font-sans">
+                    <tbody className="divide-y divide-gold-primary/10 font-medium font-sans">
                         {currentCyclePeriods.map((mahadasha: DashaNode, mIdx: number) => {
                             const isExpanded = expandedMahadasha === mahadasha.planet;
                             const antardashas = mahadasha.sublevel || [];
@@ -99,15 +99,15 @@ export default function DwadashottariDasha({ periods }: DwadashottariDashaProps)
                                 <React.Fragment key={mIdx}>
                                     <tr
                                         className={cn(
-                                            "hover:bg-header-border/10 transition-colors group cursor-pointer",
-                                            mahadasha.isCurrent && "bg-header-border/5"
+                                            "hover:bg-gold-primary/10 transition-colors group cursor-pointer",
+                                            mahadasha.isCurrent && "bg-gold-primary/5"
                                         )}
                                         onClick={() => setExpandedMahadasha(isExpanded ? null : mahadasha.planet)}
                                     >
                                         <td className="px-3 py-1.5">
                                             <div className="flex items-center gap-2">
                                                 <span className={cn(
-                                                    "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold border shadow-sm min-w-[60px] justify-center",
+                                                    "inline-flex items-center px-2 py-0.5 rounded-md text-[12px] font-bold border shadow-sm min-w-[60px] justify-center",
                                                     PLANET_COLORS[mahadasha.planet || ''] || "bg-white"
                                                 )}>
                                                     {mahadasha.planet}
@@ -127,7 +127,7 @@ export default function DwadashottariDasha({ periods }: DwadashottariDashaProps)
                                         </td>
                                         <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
                                             <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}>
-                                                <Calendar className="w-3 h-3 text-bronze/40" />
+                                                <Calendar className="w-3 h-3 text-ink/30" />
                                                 {formatDateDisplay(mahadasha.startDate)}
                                             </div>
                                         </td>
@@ -140,9 +140,9 @@ export default function DwadashottariDasha({ periods }: DwadashottariDashaProps)
                                                 {mahadasha.isCurrent ? (
                                                     <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm animate-pulse">ACTIVE</span>
                                                 ) : antardashas.length > 0 ? (
-                                                    isExpanded ? <ChevronUp className="w-4 h-4 text-header-border" /> : <ChevronDown className="w-4 h-4 text-header-border" />
+                                                    isExpanded ? <ChevronUp className="w-4 h-4 text-gold-dark" /> : <ChevronDown className="w-4 h-4 text-gold-dark" />
                                                 ) : (
-                                                    <span className="text-header-border/40 text-xs">—</span>
+                                                    <span className="text-gold-dark/40 text-[12px]">—</span>
                                                 )}
                                             </div>
                                         </td>
@@ -152,11 +152,11 @@ export default function DwadashottariDasha({ periods }: DwadashottariDashaProps)
                                     {isExpanded && antardashas.length > 0 && (
                                         <tr>
                                             <td colSpan={5} className="bg-surface-pure/60 px-3 py-2">
-                                                <div className="text-2xs font-black text-bronze uppercase tracking-[0.2em] mb-2 pl-2">
+                                                <div className="text-2xs font-black text-gold-dark uppercase tracking-[0.2em] mb-2 pl-2">
                                                     Antardasha Sub-Periods
                                                 </div>
                                                 <table className="w-full">
-                                                    <tbody className="divide-y divide-header-border/10">
+                                                    <tbody className="divide-y divide-gold-primary/10">
                                                         {antardashas.map((antar: DashaNode, aIdx: number) => {
                                                             const isAntarBalance = (antar.raw?.antardasha_type as string)?.toLowerCase().includes('balance') || antar.raw?.is_balance === true;
 
@@ -168,7 +168,7 @@ export default function DwadashottariDasha({ periods }: DwadashottariDashaProps)
                                                                     <td className="px-3 py-2">
                                                                         <div className="flex items-center gap-2">
                                                                             <span className={cn(
-                                                                                "inline-flex items-center px-1.5 py-0.5 rounded text-xs font-bold border",
+                                                                                "inline-flex items-center px-1.5 py-0.5 rounded text-[12px] font-bold border",
                                                                                 PLANET_COLORS[antar.planet || ''] || "bg-white"
                                                                             )}>
                                                                                 {antar.planet}

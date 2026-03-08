@@ -39,14 +39,24 @@ export default function MatchmakingPage() {
 
     return (
         <div className="max-w-5xl mx-auto space-y-6">
-            <div className="bg-header-gradient rounded-xl p-6 border border-header-border/30">
-                <div className="flex items-center gap-2 mb-1">
-                    <Heart className="w-5 h-5 text-active-glow" />
-                    <h1 className="font-serif text-2xl font-bold text-softwhite">New Match Analysis</h1>
+            {/* Header */}
+            <div className="prem-card glass-shimmer relative overflow-hidden p-5">
+                <div className="flex items-center gap-3.5">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                         style={{
+                             background: 'linear-gradient(135deg, rgba(201,162,77,0.18) 0%, rgba(139,90,43,0.10) 100%)',
+                             border: '1px solid rgba(201,162,77,0.25)',
+                             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 6px rgba(139,90,43,0.08)',
+                         }}>
+                        <Heart className="w-5 h-5 text-gold-dark" />
+                    </div>
+                    <div>
+                        <h1 className="text-[18px] font-serif font-bold text-ink leading-tight">New Match Analysis</h1>
+                        <p className="text-[13px] text-ink/50 font-medium mt-0.5">
+                            Analyze compatibility using the Ashta Koota (36-point) method
+                        </p>
+                    </div>
                 </div>
-                <p className="text-softwhite/80 font-serif italic text-sm max-w-2xl">
-                    Analyze compatibility between prospective partners using the Ashta Koota (36-point) method.
-                </p>
             </div>
 
             <MatchInputForm onSubmit={handleAnalyze} loading={analysisMutation.isPending} />
@@ -62,7 +72,11 @@ export default function MatchmakingPage() {
                         <button
                             onClick={handleSave}
                             disabled={saveMutation.isPending}
-                            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-softwhite bg-gold-dark rounded-lg hover:bg-gold-primary transition-colors disabled:opacity-50"
+                            className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-bold text-white rounded-xl transition-all disabled:opacity-50"
+                            style={{
+                                background: 'linear-gradient(135deg, rgba(201,162,77,0.90) 0%, rgba(139,90,43,0.85) 100%)',
+                                boxShadow: '0 2px 8px rgba(139,90,43,0.25), inset 0 1px 0 rgba(255,255,255,0.15)',
+                            }}
                         >
                             {saveMutation.isPending ? (
                                 <Loader2 className="w-4 h-4 animate-spin" />

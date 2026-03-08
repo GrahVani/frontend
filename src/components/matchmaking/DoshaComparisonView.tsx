@@ -43,27 +43,27 @@ export default function DoshaComparisonView({ result, className }: DoshaComparis
     ];
 
     return (
-        <div className={cn("bg-softwhite border border-antique rounded-xl p-5", className)}>
-            <h3 className="text-xs font-bold text-header-border tracking-widest font-serif uppercase mb-4">
+        <div className={cn("prem-card p-5", className)}>
+            <h3 className="text-[12px] font-bold text-gold-dark tracking-widest font-serif uppercase mb-4">
                 Dosha Comparison
             </h3>
 
             <div className="overflow-x-auto">
                 <table className="w-full" role="table">
                     <thead>
-                        <tr className="border-b border-antique">
-                            <th className="text-left text-xs font-serif font-semibold text-ink py-2 pr-4">Dosha</th>
-                            <th className="text-center text-xs font-serif font-semibold text-ink py-2 px-4">{result.bride.name}</th>
-                            <th className="text-center text-xs font-serif font-semibold text-ink py-2 px-4">{result.groom.name}</th>
-                            <th className="text-center text-xs font-serif font-semibold text-ink py-2 pl-4">Status</th>
+                        <tr className="border-b border-gold-primary/15">
+                            <th className="text-left text-[12px] font-serif font-semibold text-ink py-2 pr-4">Dosha</th>
+                            <th className="text-center text-[12px] font-serif font-semibold text-ink py-2 px-4">{result.bride.name}</th>
+                            <th className="text-center text-[12px] font-serif font-semibold text-ink py-2 px-4">{result.groom.name}</th>
+                            <th className="text-center text-[12px] font-serif font-semibold text-ink py-2 pl-4">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         {doshas.map((dosha) => (
-                            <tr key={dosha.name} className="border-b border-antique/30">
+                            <tr key={dosha.name} className="border-b border-gold-primary/20">
                                 <td className="py-3 pr-4">
                                     <div className="flex items-center gap-2">
-                                        <span className="text-sm font-serif text-ink">{dosha.name}</span>
+                                        <span className="text-[14px] font-serif text-ink">{dosha.name}</span>
                                         {dosha.severity === "high" && (
                                             <span className="text-[10px] font-medium text-status-error bg-status-error/10 px-1.5 py-0.5 rounded">Critical</span>
                                         )}
@@ -85,11 +85,11 @@ export default function DoshaComparisonView({ result, className }: DoshaComparis
                                 </td>
                                 <td className="py-3 pl-4 text-center">
                                     {!dosha.brideStatus && !dosha.groomStatus ? (
-                                        <span className="text-xs font-medium text-status-success">Clear</span>
+                                        <span className="text-[12px] font-medium text-status-success">Clear</span>
                                     ) : dosha.cancelled ? (
-                                        <span className="text-xs font-medium text-gold-dark">Cancelled</span>
+                                        <span className="text-[12px] font-medium text-gold-dark">Cancelled</span>
                                     ) : (
-                                        <span className="text-xs font-medium text-status-error">Present</span>
+                                        <span className="text-[12px] font-medium text-status-error">Present</span>
                                     )}
                                 </td>
                             </tr>

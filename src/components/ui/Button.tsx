@@ -21,7 +21,7 @@ const variantClasses: Record<ButtonVariant, string> = {
     secondary:
         "bg-transparent text-gold-primary border border-gold-primary hover:bg-gold-primary hover:text-ink",
     ghost:
-        "bg-transparent text-secondary hover:bg-parchment border border-transparent",
+        "bg-transparent text-ink/55 hover:bg-surface-warm border border-transparent",
     danger:
         "bg-status-error text-white border border-status-error hover:bg-status-error/90",
     golden:
@@ -29,9 +29,9 @@ const variantClasses: Record<ButtonVariant, string> = {
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-    sm: "px-3 py-1.5 text-xs rounded-lg",
-    md: "px-4 py-2 text-sm rounded-xl",
-    lg: "px-6 py-3 text-base rounded-xl",
+    sm: "px-3 py-1.5 text-[12px] rounded-lg",
+    md: "px-4 py-2 text-[14px] rounded-xl",
+    lg: "px-6 py-3 text-[16px] rounded-xl",
 };
 
 const iconSizeClasses: Record<ButtonSize, string> = {

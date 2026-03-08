@@ -17,7 +17,7 @@ export default function TransitTimeline({ transits, className }: TransitTimeline
             {transits.map((transit, i) => (
                 <div
                     key={i}
-                    className="bg-softwhite border border-antique rounded-xl p-4 hover:shadow-sm transition-shadow"
+                    className="prem-card p-4 hover:shadow-sm transition-shadow"
                 >
                     <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-2">
@@ -33,7 +33,7 @@ export default function TransitTimeline({ transits, className }: TransitTimeline
                     </div>
 
                     <div className="flex items-center gap-2 mb-2">
-                        <span className={cn(TYPOGRAPHY.value, "bg-parchment/50 px-2 py-0.5 rounded")}>
+                        <span className={cn(TYPOGRAPHY.value, "bg-surface-warm/50 px-2 py-0.5 rounded")}>
                             {transit.fromSign}
                         </span>
                         <ArrowRight className="w-4 h-4 text-gold-primary" />

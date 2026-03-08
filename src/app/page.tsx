@@ -10,5 +10,5 @@ export default function Home() {
     router.push("/login");
   }, [router]);
 
-  return <div className="min-h-screen bg-parchment flex items-center justify-center text-ink font-serif">Loading...</div>;
+  return <div className="min-h-screen bg-surface-warm flex items-center justify-center text-ink font-serif">Loading...</div>;
 }

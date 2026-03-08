@@ -27,7 +27,7 @@ export const DoshaSeverity = memo(function DoshaSeverity({ data }: DoshaSeverity
             </div>
             <div>
                 <div className="flex items-center gap-2 mb-1">
-                    <h4 className={cn('text-sm font-serif font-bold', styles.text)}>
+                    <h4 className={cn('text-[14px] font-serif font-bold', styles.text)}>
                         Intensity Assessment
                     </h4>
                     <span className={cn(
@@ -38,7 +38,7 @@ export const DoshaSeverity = memo(function DoshaSeverity({ data }: DoshaSeverity
                     </span>
                 </div>
                 {data.description && (
-                    <p className={cn(TYPOGRAPHY.value, "text-xs leading-relaxed opacity-90")}>{data.description}</p>
+                    <p className={cn(TYPOGRAPHY.value, "text-[12px] leading-relaxed opacity-90")}>{data.description}</p>
                 )}
             </div>
         </div>

@@ -46,11 +46,11 @@ export default function NotesHistoryPage() {
                         <NotebookPen className="w-6 h-6 text-gold-primary" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-serif font-bold text-ink">Consultation History</h1>
-                        <p className="text-sm text-muted">Past sessions with {clientDetails.name}</p>
+                        <h1 className="text-[24px] font-serif font-bold text-ink">Consultation History</h1>
+                        <p className="text-[14px] text-ink/45">Past sessions with {clientDetails.name}</p>
                     </div>
                 </div>
-                <button className="px-4 py-2 bg-gold-primary text-ink rounded-lg text-sm font-semibold hover:bg-gold-soft transition-colors">
+                <button className="px-4 py-2 bg-gold-primary text-ink rounded-lg text-[14px] font-semibold hover:bg-gold-soft transition-colors">
                     + Add Note
                 </button>
             </div>
@@ -63,8 +63,8 @@ export default function NotesHistoryPage() {
             </div>
 
             {/* Summary */}
-            <div className="bg-softwhite border border-antique rounded-xl p-5 flex items-center justify-between">
-                <span className="text-sm text-muted">Total Consultations</span>
+            <div className="prem-card rounded-xl p-5 flex items-center justify-between">
+                <span className="text-[14px] text-ink/45">Total Consultations</span>
                 <span className="font-serif font-bold text-ink">{consultations.length}</span>
             </div>
         </div>
@@ -80,28 +80,28 @@ function ConsultationCard({ session }: { session: { id: number; date: string; to
     const statusColor = session.status === "verified" ? "text-green-600" : "text-gold-dark";
 
     return (
-        <div className="bg-softwhite border border-antique rounded-xl p-5 hover:border-gold-primary/50 transition-colors">
+        <div className="prem-card rounded-xl p-5 hover:border-gold-primary/50 transition-colors">
             <div className="flex items-start justify-between mb-3">
                 <div>
                     <h3 className="font-serif font-bold text-ink">{session.topic}</h3>
-                    <div className="flex items-center gap-2 text-xs text-muted mt-1">
+                    <div className="flex items-center gap-2 text-[12px] text-ink/45 mt-1">
                         <Calendar className="w-3 h-3" />
                         <span>{session.date}</span>
                     </div>
                 </div>
-                <div className={`flex items-center gap-1 text-xs font-semibold ${statusColor}`}>
+                <div className={`flex items-center gap-1 text-[12px] font-semibold ${statusColor}`}>
                     {statusIcon}
                     <span>{statusLabel}</span>
                 </div>
             </div>
 
-            <div className="space-y-2 text-sm">
+            <div className="space-y-2 text-[14px]">
                 <div>
-                    <span className="text-muted">Prediction:</span>
+                    <span className="text-ink/45">Prediction:</span>
                     <span className="text-body ml-2">{session.predictions}</span>
                 </div>
                 <div>
-                    <span className="text-muted">Remedies:</span>
+                    <span className="text-ink/45">Remedies:</span>
                     <span className="text-body ml-2">{session.remedies}</span>
                 </div>
             </div>

@@ -21,7 +21,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-parchment">
+            <div className="min-h-screen flex items-center justify-center bg-surface-warm">
                 <div className="text-center">
                     <Loader2 className="w-10 h-10 text-gold-primary animate-spin mx-auto mb-4" />
                     <p className="font-serif text-gold-dark font-medium">Authenticating Spirit...</p>

@@ -25,8 +25,8 @@ export default function PriorityAlert({ mahadasha = "Mercury", antardasha = "Sat
                 {/* Content Section */}
                 <div className="flex-1 px-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <span className="font-black uppercase tracking-tighter text-sm text-red-700">Priority Alert:</span>
-                        <div className="h-4 w-px mx-1 bg-antique" />
+                        <span className="font-black uppercase tracking-tighter text-[14px] text-red-700">Priority Alert:</span>
+                        <div className="h-4 w-px mx-1 bg-gold-primary/20" />
                         <span className="text-[13px] font-bold tracking-wide text-ink">
                             Current Dasha Influence | <span className="text-red-700">{mahadasha} Mahadasha</span> & <span className="text-orange-700">{antardasha} Antardasha</span>
                         </span>

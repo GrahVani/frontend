@@ -15,14 +15,24 @@ export default function CalendarPage() {
 
     return (
         <div className="max-w-5xl mx-auto space-y-6">
-            <div className="bg-header-gradient rounded-xl p-6 border border-header-border/30">
-                <div className="flex items-center gap-2 mb-1">
-                    <CalendarIcon className="w-5 h-5 text-active-glow" />
-                    <h1 className="font-serif text-2xl font-bold text-softwhite">Panchang Calendar</h1>
+            {/* Header */}
+            <div className="prem-card glass-shimmer relative overflow-hidden p-5">
+                <div className="flex items-center gap-3.5">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                         style={{
+                             background: 'linear-gradient(135deg, rgba(201,162,77,0.18) 0%, rgba(139,90,43,0.10) 100%)',
+                             border: '1px solid rgba(201,162,77,0.25)',
+                             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 6px rgba(139,90,43,0.08)',
+                         }}>
+                        <CalendarIcon className="w-5 h-5 text-gold-dark" />
+                    </div>
+                    <div>
+                        <h1 className="text-[18px] font-serif font-bold text-ink leading-tight">Panchang Calendar</h1>
+                        <p className="text-[13px] text-ink/50 font-medium mt-0.5">
+                            View daily tithi, nakshatra, yoga, and karana for each day
+                        </p>
+                    </div>
                 </div>
-                <p className="text-softwhite/80 font-serif italic text-sm max-w-2xl">
-                    View daily Panchang details — tithi, nakshatra, yoga, and karana for each day.
-                </p>
             </div>
 
             {isLoading ? (
@@ -43,11 +53,12 @@ export default function CalendarPage() {
                 />
             )}
 
-            <div className="bg-softwhite border border-antique rounded-xl p-5">
-                <h3 className="text-xs font-bold text-header-border tracking-widest font-serif uppercase mb-3">
+            {/* Guide Card */}
+            <div className="prem-card p-5">
+                <h3 className="text-[11px] font-bold text-gold-dark tracking-widest font-serif uppercase mb-3">
                     How to Read the Calendar
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-muted-refined">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[13px] text-ink/55 font-medium">
                     <div>
                         <p className="font-serif"><span className="font-semibold text-ink">Tithi:</span> Lunar day based on Sun-Moon angular distance</p>
                         <p className="font-serif mt-1"><span className="font-semibold text-ink">Nakshatra:</span> Lunar mansion the Moon occupies</p>

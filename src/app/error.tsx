@@ -19,10 +19,10 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-parchment-light px-4">
+    <div className="min-h-screen flex items-center justify-center bg-surface-warm-light px-4">
       <div className="max-w-md w-full text-center space-y-6" role="alert">
         <div className="text-6xl" aria-hidden="true">&#9788;</div>
-        <h1 className="text-2xl font-serif text-amber-900">
+        <h1 className="text-[24px] font-serif text-amber-900">
           Something went wrong
         </h1>
         <p className="text-amber-800/70">

@@ -46,13 +46,13 @@ export const PLANET_COLORS: Record<string, PlanetColorSet> = {
         element: 'Fire',
     },
     Moon: {
-        hex: '#64748B',
-        text: 'text-slate-500',
-        bg: 'bg-slate-500',
-        bgSoft: 'bg-slate-50',
-        textOnSoft: 'text-slate-700',
-        border: 'border-slate-200',
-        gradient: 'from-slate-300 to-slate-400',
+        hex: '#6B5F52',
+        text: 'text-ink/45',
+        bg: 'bg-ink/50',
+        bgSoft: 'bg-ink/5',
+        textOnSoft: 'text-ink/70',
+        border: 'border-ink/20',
+        gradient: 'from-ink/25 to-ink/35',
         symbol: '☽',
         element: 'Water',
     },
@@ -101,24 +101,24 @@ export const PLANET_COLORS: Record<string, PlanetColorSet> = {
         element: 'Water',
     },
     Saturn: {
-        hex: '#334155',
-        text: 'text-slate-800',
-        bg: 'bg-slate-800',
-        bgSoft: 'bg-gray-100',
-        textOnSoft: 'text-gray-800',
-        border: 'border-gray-300',
+        hex: '#3E2A1F',
+        text: 'text-ink',
+        bg: 'bg-ink/85',
+        bgSoft: 'bg-ink/8',
+        textOnSoft: 'text-ink',
+        border: 'border-ink/25',
         gradient: 'from-indigo-500 to-violet-600',
         symbol: '♄',
         element: 'Air',
     },
     Rahu: {
-        hex: '#475569',
-        text: 'text-slate-600',
-        bg: 'bg-slate-600',
-        bgSoft: 'bg-slate-50',
-        textOnSoft: 'text-slate-700',
-        border: 'border-slate-300',
-        gradient: 'from-slate-600 to-slate-700',
+        hex: '#5C3D26',
+        text: 'text-ink/70',
+        bg: 'bg-ink/70',
+        bgSoft: 'bg-ink/5',
+        textOnSoft: 'text-ink/80',
+        border: 'border-ink/25',
+        gradient: 'from-ink/60 to-ink/75',
         symbol: '☊',
         element: 'Shadow',
     },
@@ -158,13 +158,13 @@ export const PLANET_BADGE_CLASSES: Record<string, string> = Object.fromEntries(
  */
 export const PLANET_SVG_FILLS: Record<string, string> = {
     Su: '#D97706', Sun: '#D97706',
-    Mo: '#334155', Moon: '#334155',
+    Mo: '#6B5F52', Moon: '#6B5F52',
     Ma: '#DC2626', Mars: '#DC2626',
     Me: '#059669', Mercury: '#059669',
     Ju: '#CA8A04', Jupiter: '#CA8A04',
     Ve: '#DB2777', Venus: '#DB2777',
     Sa: '#4F46E5', Saturn: '#4F46E5',
-    Ra: '#374151', Rahu: '#374151',
+    Ra: '#5C3D26', Rahu: '#5C3D26',
     Ke: '#EA580C', Ketu: '#EA580C',
     As: '#7C3AED', Asc: '#7C3AED',
 } as const;
@@ -273,7 +273,7 @@ export const CHART_THEMES: Record<string, ChartThemePalette> = {
 
 export const COLORS = {
     // Premium Gradients
-    premiumGradient: "bg-gradient-to-r from-header-border to-amber-700",
+    premiumGradient: "bg-gradient-to-r from-gold-dark to-amber-700",
     premiumGradientHover: "hover:from-amber-600 hover:to-amber-800",
 
     // Content Containers & Surfaces
@@ -282,7 +282,7 @@ export const COLORS = {
     wbSectionHeader: "bg-parchment/30 border-b border-antique",
 
     // Workbench Specific
-    wbActiveTab: "bg-gradient-to-r from-header-border to-amber-700 !text-white shadow-lg",
+    wbActiveTab: "bg-gradient-to-r from-gold-dark to-amber-700 !text-white shadow-lg",
 
     // Status badges
     statusSuccess: "bg-emerald-50 text-emerald-700 border-emerald-200",

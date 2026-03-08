@@ -12,10 +12,10 @@ export default function NewClientPage() {
                 {/* Page Content */}
                 <div className="relative">
                     <div className="mb-4 text-center">
-                        <h1 className="text-2xl font-serif font-bold text-ink-deep mb-1">
+                        <h1 className="text-[24px] font-serif font-bold text-ink-deep mb-1">
                             New Client
                         </h1>
-                        <p className="text-body font-serif italic text-sm">
+                        <p className="text-body font-serif italic text-[14px]">
                             Accurately record the birth details for a precise birth chart.
                         </p>
                     </div>

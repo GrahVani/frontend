@@ -52,7 +52,7 @@ export default function ClientFamilySection({
                 action={
                     <button
                         onClick={() => setIsAddingRel(!isAddingRel)}
-                        className="px-4 py-2.5 rounded-lg text-[13px] font-semibold text-ink transition-all flex items-center gap-2 hover:bg-parchment/50"
+                        className="px-4 py-2.5 rounded-lg text-[13px] font-semibold text-ink transition-all flex items-center gap-2 hover:bg-surface-warm/50"
                         style={{ border: '1px solid rgba(220,201,166,0.40)' }}
                     >
                         <Plus className="w-4 h-4" /> Add Connection
@@ -67,7 +67,7 @@ export default function ClientFamilySection({
                         <h4 className="text-[14px] font-serif font-bold text-ink">Add Family Connection</h4>
                         <button
                             onClick={() => { setIsAddingRel(false); onSearchRelChange(''); }}
-                            className="p-1.5 rounded-lg hover:bg-parchment/50 transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-surface-warm/50 transition-colors"
                         >
                             <X className="w-4 h-4 text-ink/50" />
                         </button>
@@ -75,11 +75,11 @@ export default function ClientFamilySection({
 
                     {/* Relationship Type Selector */}
                     <div className="mb-4">
-                        <label className="block text-[11px] font-bold text-bronze-dark/80 uppercase tracking-[0.10em] mb-2">Relationship Type</label>
+                        <label className="block text-[11px] font-bold text-ink/35 uppercase tracking-[0.10em] mb-2">Relationship Type</label>
                         <select
                             value={selectedRelType}
                             onChange={(e) => setSelectedRelType(e.target.value as RelationshipType)}
-                            className="w-full rounded-lg py-2.5 px-4 text-ink text-[14px] font-medium bg-parchment/50 focus:outline-none focus:ring-2 focus:ring-gold-primary/40 transition-all"
+                            className="w-full rounded-lg py-2.5 px-4 text-ink text-[14px] font-medium bg-surface-warm/50 focus:outline-none focus:ring-2 focus:ring-gold-primary/40 transition-all"
                             style={{ border: '1px solid rgba(220,201,166,0.40)' }}
                         >
                             {RELATIONSHIP_OPTIONS.map(opt => (
@@ -96,7 +96,7 @@ export default function ClientFamilySection({
                             placeholder="Search clients..."
                             value={searchRel}
                             onChange={(e) => onSearchRelChange(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 bg-parchment/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-primary/40 text-[14px] text-ink transition-all"
+                            className="w-full pl-10 pr-4 py-2.5 bg-surface-warm/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-primary/40 text-[14px] text-ink transition-all"
                             style={{ border: '1px solid rgba(220,201,166,0.40)' }}
                         />
                     </div>
@@ -111,7 +111,7 @@ export default function ClientFamilySection({
                                     setIsAddingRel(false);
                                 }}
                                 disabled={addingFamily}
-                                className="w-full flex items-center gap-3 p-3 hover:bg-parchment/50 rounded-lg transition-colors text-left disabled:opacity-50"
+                                className="w-full flex items-center gap-3 p-3 hover:bg-surface-warm/50 rounded-lg transition-colors text-left disabled:opacity-50"
                             >
                                 <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
                                      style={{
@@ -175,7 +175,7 @@ export default function ClientFamilySection({
                             </div>
                             <div className="flex items-center gap-2.5 shrink-0">
                                 <Link href={`/clients/${link.relatedClientId}`}
-                                      className="px-4 py-2 rounded-lg text-[13px] font-semibold text-gold-dark hover:bg-parchment/50 transition-all"
+                                      className="px-4 py-2 rounded-lg text-[13px] font-semibold text-gold-dark hover:bg-surface-warm/50 transition-all"
                                       style={{ border: '1px solid rgba(220,201,166,0.40)' }}>
                                     View Chart
                                 </Link>

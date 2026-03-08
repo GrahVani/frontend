@@ -26,7 +26,7 @@ export const YogaDoshaSeverity = memo(function YogaDoshaSeverity({ data }: YogaD
             </div>
             <div>
                 <div className="flex items-center gap-2 mb-1">
-                    <h4 className={cn('text-sm font-serif font-bold', styles.text)}>
+                    <h4 className={cn('text-[14px] font-serif font-bold', styles.text)}>
                         Dosha Severity
                     </h4>
                     <span className={cn(
@@ -37,7 +37,7 @@ export const YogaDoshaSeverity = memo(function YogaDoshaSeverity({ data }: YogaD
                     </span>
                 </div>
                 {data.description && (
-                    <p className={cn(TYPOGRAPHY.value, "text-xs leading-relaxed")}>{data.description}</p>
+                    <p className={cn(TYPOGRAPHY.value, "text-[12px] leading-relaxed")}>{data.description}</p>
                 )}
             </div>
         </div>

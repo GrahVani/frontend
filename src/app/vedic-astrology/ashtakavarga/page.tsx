@@ -55,14 +55,14 @@ const AnalyzeCard = ({ icon, title, desc, color }: { icon: React.ReactNode; titl
     )}>
         <div className={cn(
             "w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-sm",
-            color === 'amber' ? "bg-amber-100 text-primary" :
+            color === 'amber' ? "bg-amber-100 text-ink" :
                 color === 'rose' ? "bg-rose-100 text-rose-600" :
-                    "bg-copper-100 text-primary"
+                    "bg-copper-100 text-ink"
         )}>
             {icon}
         </div>
-        <h4 className={cn(TYPOGRAPHY.value, "!text-sm mb-2 text-primary")}>{title}</h4>
-        <p className={cn(TYPOGRAPHY.subValue, "!text-[10px] leading-relaxed text-primary")}>{desc}</p>
+        <h4 className={cn(TYPOGRAPHY.value, "!text-[14px] mb-2 text-ink")}>{title}</h4>
+        <p className={cn(TYPOGRAPHY.subValue, "!text-[10px] leading-relaxed text-ink")}>{desc}</p>
     </div>
 );
 
@@ -120,9 +120,9 @@ export default function AshtakavargaPage() {
     if (!clientDetails) {
         return (
             <div className="flex flex-col items-center justify-center h-[60vh] text-center p-6 bg-copper-50/30 rounded-2xl border border-dashed border-copper-200">
-                <Shield className="w-16 h-16 text-primary mb-4 animate-pulse" />
-                <h2 className="text-lg font-serif text-primary mb-2">No Client Selected</h2>
-                <p className="text-xs text-primary max-w-md">Please select a client from the workbench to analyze their Ashtakavarga strengths.</p>
+                <Shield className="w-16 h-16 text-ink mb-4 animate-pulse" />
+                <h2 className="text-[18px] font-serif text-ink mb-2">No Client Selected</h2>
+                <p className="text-[12px] text-ink max-w-md">Please select a client from the workbench to analyze their Ashtakavarga strengths.</p>
             </div>
         );
     }
@@ -198,13 +198,13 @@ export default function AshtakavargaPage() {
         <div className="space-y-3 pt-2 px-1 sm:px-0">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div>
-                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-bold")}>
+                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] font-bold")}>
                         Ashtakavarga systems
                     </h1>
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <div className="flex bg-softwhite p-1 rounded-xl border border-antique overflow-x-auto">
+                    <div className="flex prem-card p-1 rounded-xl overflow-x-auto">
                         {(['sarva', 'bhinna', 'shodasha', 'temporal', 'karaka'] as const)
                             .filter(tab => {
                                 const capabilities = clientApi.getSystemCapabilities(ayanamsa);
@@ -220,10 +220,10 @@ export default function AshtakavargaPage() {
                                     className={cn(
                                         "px-3 py-1 rounded-lg transition-all whitespace-nowrap",
                                         TYPOGRAPHY.label,
-                                        "!text-sm !font-bold !mb-0",
+                                        "!text-[14px] !font-bold !mb-0",
                                         activeTab === tab
-                                            ? cn("text-primary shadow-sm scale-[1.02]", COLORS.wbActiveTab)
-                                            : "text-secondary hover:bg-gold-primary/10 hover:text-primary"
+                                            ? cn("text-ink shadow-sm scale-[1.02]", COLORS.wbActiveTab)
+                                            : "text-ink/55 hover:bg-gold-primary/10 hover:text-ink"
                                     )}
                                 >
                                     {tab === 'sarva' ? 'Sarvashtakavarga' :
@@ -241,8 +241,8 @@ export default function AshtakavargaPage() {
             {loading && !data?.[activeTab] ? (
                 <div className="flex items-center justify-center h-[50vh]">
                     <div className="text-center">
-                        <Loader2 className="w-12 h-12 text-primary animate-spin mx-auto mb-4" />
-                        <p className={cn(TYPOGRAPHY.sectionTitle, "text-base")}>Compiling bindu matrices...</p>
+                        <Loader2 className="w-12 h-12 text-ink animate-spin mx-auto mb-4" />
+                        <p className={cn(TYPOGRAPHY.sectionTitle, "text-[16px]")}>Compiling bindu matrices...</p>
                     </div>
                 </div>
             ) : (
@@ -250,13 +250,13 @@ export default function AshtakavargaPage() {
                     {activeTab === 'sarva' || activeTab === 'bhinna' ? (
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
                             <div className="lg:col-span-12 space-y-3">
-                                <div className="bg-softwhite rounded-xl border border-antique shadow-card overflow-hidden">
-                                    <div className="p-3 border-b border-antique flex flex-col md:flex-row md:items-center justify-between gap-3 bg-parchment/30">
+                                <div className="prem-card rounded-xl overflow-hidden">
+                                    <div className="p-3 border-b border-gold-primary/15 flex flex-col md:flex-row md:items-center justify-between gap-3">
                                         <div>
                                             <h2 className={TYPOGRAPHY.sectionTitle}>
                                                 {activeTab === 'sarva' ? 'Sarvashtakavarga (SAV)' : `Bhinnashtakavarga: ${selectedPlanet}`}
                                             </h2>
-                                            <p className="text-xs text-secondary font-sans mt-0.5">
+                                            <p className="text-[12px] text-ink/55 font-sans mt-0.5">
                                                 {activeTab === 'sarva'
                                                     ? 'The collective strength of all planets across the 12 signs/houses.'
                                                     : `Individual contributions to ${selectedPlanet}'s strength in each sign.`}
@@ -264,16 +264,16 @@ export default function AshtakavargaPage() {
                                         </div>
 
                                         {activeTab === 'bhinna' && (
-                                            <div className="flex gap-1.5 bg-parchment/50 p-1 rounded-xl border border-antique overflow-x-auto">
+                                            <div className="flex gap-1.5 p-1 rounded-xl prem-card overflow-x-auto">
                                                 {PLANETS.map(p => (
                                                     <button
                                                         key={p}
                                                         onClick={() => setSelectedPlanet(p)}
                                                         className={cn(
-                                                            "px-3 py-1 text-sm font-semibold font-sans rounded-lg transition-all whitespace-nowrap",
+                                                            "px-3 py-1 text-[14px] font-semibold font-sans rounded-lg transition-all whitespace-nowrap",
                                                             selectedPlanet === p
-                                                                ? cn("text-primary shadow-sm scale-105", COLORS.wbActiveTab)
-                                                                : "text-secondary hover:bg-gold-primary/10 hover:text-primary"
+                                                                ? cn("text-ink shadow-sm scale-105", COLORS.wbActiveTab)
+                                                                : "text-ink/55 hover:bg-gold-primary/10 hover:text-ink"
                                                         )}
                                                     >
                                                         {p}
@@ -285,7 +285,7 @@ export default function AshtakavargaPage() {
 
                                     <div className="p-4 grid grid-cols-1 lg:grid-cols-[5fr_12fr] gap-5 items-start">
                                         <div className="space-y-3">
-                                            <h3 className={cn(TYPOGRAPHY.label, "text-primary flex items-center gap-2")}>
+                                            <h3 className={cn(TYPOGRAPHY.label, "text-ink flex items-center gap-2")}>
                                                 <MapIcon className="w-3.5 h-3.5" /> House distribution
                                             </h3>
                                             <div className="flex justify-start w-full max-w-lg mx-auto lg:mx-0">
@@ -299,7 +299,7 @@ export default function AshtakavargaPage() {
                                         </div>
 
                                         <div className="space-y-4 w-full">
-                                            <h3 className={cn(TYPOGRAPHY.label, "text-primary flex items-center gap-2")}>
+                                            <h3 className={cn(TYPOGRAPHY.label, "text-ink flex items-center gap-2")}>
                                                 <Grid3X3 className="w-3.5 h-3.5" /> Bindu matrix
                                             </h3>
                                             <AshtakavargaMatrix
@@ -324,8 +324,8 @@ export default function AshtakavargaPage() {
                             {data?.temporal ? (
                                 <TemporalRelationshipTable data={data.temporal} />
                             ) : (
-                                <div className="flex flex-col items-center justify-center min-h-[300px] bg-softwhite rounded-3xl border border-antique border-dashed p-12 text-center">
-                                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-bold mb-4")}>No temporal relationship data</h3>
+                                <div className="flex flex-col items-center justify-center min-h-[300px] prem-card rounded-3xl border-dashed p-12 text-center">
+                                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-bold mb-4")}>No temporal relationship data</h3>
                                     <button
                                         onClick={() => clientApi.generateChart(clientDetails.id!, 'tatkalik_maitri_chakra', activeSystem).then(() => window.location.reload())}
                                         className={cn("px-8 py-3 text-ink rounded-2xl font-bold hover:shadow-xl transition-all", COLORS.premiumGradient)}
@@ -340,8 +340,8 @@ export default function AshtakavargaPage() {
                             {data?.karaka ? (
                                 <KarakaStrengthAnalysis data={data.karaka} />
                             ) : (
-                                <div className="flex flex-col items-center justify-center min-h-[300px] bg-softwhite rounded-3xl border border-antique border-dashed p-12 text-center">
-                                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-bold mb-4")}>No karaka strength data</h3>
+                                <div className="flex flex-col items-center justify-center min-h-[300px] prem-card rounded-3xl border-dashed p-12 text-center">
+                                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-bold mb-4")}>No karaka strength data</h3>
                                     <button
                                         onClick={() => clientApi.generateChart(clientDetails.id!, 'karaka_strength', activeSystem).then(() => window.location.reload())}
                                         className={cn("px-8 py-3 text-ink rounded-2xl font-bold hover:shadow-xl transition-all", COLORS.premiumGradient)}

@@ -44,7 +44,7 @@ export default function PlanetaryTable({ planets, className, rowClassName, varia
     return (
         <div className={cn("w-full", className)} role="table" aria-label="Planetary positions table">
             {/* Header */}
-            <div className={cn("flex py-1.5 px-3 border-b border-border-warm", colWidths.gap, TYPOGRAPHY.tableHeader)} role="row">
+            <div className={cn("flex py-1.5 px-3 border-b border-gold-primary/15", colWidths.gap, TYPOGRAPHY.tableHeader)} role="row">
                 <div className={cn(colWidths.planet, "shrink-0")} role="columnheader">Planet</div>
                 <div className={cn(colWidths.sign, "shrink-0")} role="columnheader">Sign</div>
                 <div className={cn(colWidths.degree, "shrink-0")} role="columnheader">Degree</div>
@@ -59,16 +59,16 @@ export default function PlanetaryTable({ planets, className, rowClassName, varia
                     <div
                         key={p.planet}
                         className={cn(
-                            "flex items-center px-3 font-sans text-base border-b border-border-warm/30 last:border-0 hover:bg-gold-primary/5 transition-colors leading-normal",
+                            "flex items-center px-3 font-sans text-[16px] border-b border-gold-primary/15 last:border-0 hover:bg-gold-primary/5 transition-colors leading-normal",
                             colWidths.gap,
                             rowClassName || "py-1.5",
-                            i % 2 === 0 ? "bg-transparent" : "bg-antique/5"
+                            i % 2 === 0 ? "bg-transparent" : "bg-gold-primary/5"
                         )}
                     >
                         {/* Planet Name */}
                         <div className={cn(colWidths.planet, "shrink-0 truncate", TYPOGRAPHY.planetName)} title={p.planet}>
                             {p.planet}
-                            {p.isRetro && <span className="ml-0.5 text-red-600 text-xs">(R)</span>}
+                            {p.isRetro && <span className="ml-0.5 text-red-600 text-[12px]">(R)</span>}
                         </div>
 
                         {/* Sign */}

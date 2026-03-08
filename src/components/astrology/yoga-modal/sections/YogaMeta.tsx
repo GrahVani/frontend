@@ -20,11 +20,11 @@ export const YogaMeta = memo(function YogaMeta({ data }: YogaMetaProps) {
     if (chips.length === 0) return null;
 
     return (
-        <div className="flex items-center gap-4 flex-wrap text-xs bg-parchment/30 px-4 py-2.5 rounded-xl border border-border-warm/50">
+        <div className="flex items-center gap-4 flex-wrap text-[12px] bg-surface-warm/30 px-4 py-2.5 rounded-xl border border-gold-primary/15">
             {chips.map((chip, i) => (
                 <React.Fragment key={chip.label}>
-                    {i > 0 && <div className="w-px h-3 bg-antique/50" />}
-                    <div className="flex items-center gap-1.5 text-primary">
+                    {i > 0 && <div className="w-px h-3 bg-gold-primary/15" />}
+                    <div className="flex items-center gap-1.5 text-ink">
                         <chip.icon className="w-3 h-3 opacity-70" />
                         <span className="font-medium">{chip.label}</span>
                     </div>

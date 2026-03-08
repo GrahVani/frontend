@@ -47,7 +47,7 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
                         <Zap className="w-6 h-6 text-purple-600" />
                         Planetary Vigor
                     </h3>
-                    <p className="text-[11px] mt-1 uppercase tracking-widest font-bold text-muted">Strength & Afflictions Analysis</p>
+                    <p className="text-[11px] mt-1 uppercase tracking-widest font-bold text-ink/45">Strength & Afflictions Analysis</p>
                 </div>
                 <div className="flex items-center gap-4 text-[11px] font-bold uppercase tracking-widest">
                     <div className="flex items-center gap-1.5">
@@ -89,12 +89,12 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
                             </div>
                             <div className="text-right">
                                 <span className="text-[22px] font-black leading-none text-ink">{data.strength_score}</span>
-                                <span className="text-[10px] block font-bold uppercase -mt-1 text-muted">Vigor</span>
+                                <span className="text-[10px] block font-bold uppercase -mt-1 text-ink/45">Vigor</span>
                             </div>
                         </div>
 
                         {/* Progress Bar */}
-                        <div className="h-1.5 w-full bg-slate-200/50 rounded-full overflow-hidden mb-3 border border-antique/20">
+                        <div className="h-1.5 w-full bg-gold-primary/10 rounded-full overflow-hidden mb-3 border border-gold-primary/15">
                             <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${data.strength_score}%` }}
@@ -122,7 +122,7 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
 
                         {/* Recommendation Trigger */}
                         {data.is_weak && (
-                            <div className="mt-3 pt-3 border-t border-antique/20 flex items-center justify-between">
+                            <div className="mt-3 pt-3 border-t border-gold-primary/15 flex items-center justify-between">
                                 <span className="text-[11px] text-purple-600 font-bold uppercase tracking-wider">Priority Mitigation</span>
                                 <Award className="w-4 h-4 text-purple-600 animate-pulse" />
                             </div>

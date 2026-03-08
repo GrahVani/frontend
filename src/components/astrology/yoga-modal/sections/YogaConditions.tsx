@@ -12,8 +12,8 @@ export const YogaConditions = memo(function YogaConditions({ data }: YogaConditi
     const { met, failed } = data;
 
     return (
-        <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
-            <h3 className="font-serif font-bold text-primary mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
+        <div className="prem-card p-5">
+            <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-[14px] uppercase tracking-wider">
                 <ListChecks className="w-4 h-4 text-gold-primary" /> Formation Conditions
             </h3>
 
@@ -27,7 +27,7 @@ export const YogaConditions = memo(function YogaConditions({ data }: YogaConditi
                         {met.map((condition, i) => (
                             <div key={i} className="flex items-start gap-2.5 group">
                                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
-                                <p className="text-[11px] text-primary leading-relaxed">
+                                <p className="text-[11px] text-ink leading-relaxed">
                                     {condition}
                                 </p>
                             </div>
@@ -44,7 +44,7 @@ export const YogaConditions = memo(function YogaConditions({ data }: YogaConditi
                         {failed.map((condition, i) => (
                             <div key={i} className="flex items-start gap-2.5 group">
                                 <XCircle className="w-3.5 h-3.5 text-red-400 mt-0.5 shrink-0" />
-                                <p className="text-[11px] text-primary opacity-50 leading-relaxed line-through decoration-red-200">
+                                <p className="text-[11px] text-ink opacity-50 leading-relaxed line-through decoration-red-200">
                                     {condition}
                                 </p>
                             </div>

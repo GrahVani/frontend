@@ -18,12 +18,12 @@ export default function SadhanaChartPanel({ chartData }: SadhanaChartPanelProps)
     if (planets.length === 0) return null;
 
     return (
-        <div className={cn("flex flex-col border border-antique shrink-0 overflow-hidden rounded-[2rem] bg-white/20", COLORS.wbContainer)}>
+        <div className={cn("flex flex-col border border-gold-primary/20 shrink-0 overflow-hidden rounded-[2rem] bg-white/20", COLORS.wbContainer)}>
             {/* Standard Gochar-style Header */}
             <div className={cn("flex items-center justify-between px-4 py-2 h-11 shrink-0", COLORS.wbSectionHeader)}>
                 <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Horoscope projection</h3>
-                <div className="px-2 py-0.5 bg-header-border/10 rounded border border-header-border/20">
-                    <span className={cn(TYPOGRAPHY.label, "text-primary !mb-0")}>Lahiri</span>
+                <div className="px-2 py-0.5 bg-gold-primary/10 rounded border border-gold-primary/15">
+                    <span className={cn(TYPOGRAPHY.label, "text-ink !mb-0")}>Lahiri</span>
                 </div>
             </div>
 

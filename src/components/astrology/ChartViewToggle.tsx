@@ -17,7 +17,7 @@ export default function ChartViewToggle({ chartView, tableView, className }: Cha
         <div className={cn("relative", className)}>
             <button
                 onClick={() => setShowTable(!showTable)}
-                className="absolute top-2 right-2 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded border border-antique bg-softwhite/90 text-muted-refined hover:text-gold-dark hover:border-gold-primary/50 transition-colors"
+                className="absolute top-2 right-2 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded border border-gold-primary/20 text-ink/45 hover:text-gold-dark hover:border-gold-primary/50 transition-colors"
                 aria-label={showTable ? "Switch to chart view" : "Switch to table view"}
                 title={showTable ? "View as chart" : "View as table"}
             >

@@ -51,7 +51,7 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
             <div className="space-y-6">
                 <div className="flex items-center gap-3 px-2">
                     <BadgeCheck className="w-6 h-6 text-emerald-600" />
-                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-black")}>Recommended gemstones</h3>
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-black")}>Recommended gemstones</h3>
                     <div className="h-px flex-1 bg-gradient-to-r from-emerald-100 to-transparent ml-4" />
                 </div>
 
@@ -68,9 +68,9 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
                         ))}
                     </div>
                 ) : (
-                    <div className="p-12 text-center bg-parchment/30 rounded-2xl border-2 border-dashed border-antique/50">
+                    <div className="p-12 text-center bg-surface-warm/30 rounded-2xl border-2 border-dashed border-gold-primary/15">
                         <Sparkles className="w-12 h-12 text-gold-primary/30 mx-auto mb-4" />
-                        <p className="text-sm font-medium text-muted italic">No specific gemstones required for current karma.</p>
+                        <p className="text-[14px] font-medium text-ink/45 italic">No specific gemstones required for current karma.</p>
                     </div>
                 )}
             </div>
@@ -80,7 +80,7 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
                 <div className="space-y-6 pt-6">
                     <div className="flex items-center gap-3 px-2">
                         <ShieldAlert className="w-6 h-6 text-red-600" />
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-black")}>Caution: avoid these gemstones</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-black")}>Caution: avoid these gemstones</h3>
                         <div className="h-px flex-1 bg-gradient-to-r from-red-100 to-transparent ml-4" />
                     </div>
 

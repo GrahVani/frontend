@@ -9,26 +9,26 @@
 export const TYPOGRAPHY = {
     // ===== Core Layout =====
     sectionTitle: "font-sans text-md font-semibold text-primary leading-tight tracking-wide",
-    pageTitle: "font-sans text-xl font-bold text-primary leading-tight",
+    pageTitle: "font-sans text-[20px] font-bold text-primary leading-tight",
 
     // ===== Data Tables =====
-    tableHeader: "font-sans text-sm font-medium text-primary capitalize tracking-wider leading-normal",
-    planetName: "font-sans text-base font-medium text-primary leading-tight",
-    dateAndDuration: "font-sans text-sm font-medium text-primary whitespace-nowrap leading-compact tracking-tight",
+    tableHeader: "font-sans text-[14px] font-medium text-primary capitalize tracking-wider leading-normal",
+    planetName: "font-sans text-[16px] font-medium text-primary leading-tight",
+    dateAndDuration: "font-sans text-[14px] font-medium text-primary whitespace-nowrap leading-compact tracking-tight",
 
     // ===== Navigation =====
-    breadcrumb: "font-sans text-sm font-semibold whitespace-nowrap",
+    breadcrumb: "font-sans text-[14px] font-semibold whitespace-nowrap",
 
     // ===== Panchanga & Profile Details =====
-    label: "font-sans text-xs text-primary font-semibold tracking-wider mb-0.5",
-    value: "font-sans text-sm font-bold text-primary leading-tight",
+    label: "font-sans text-[12px] text-primary font-semibold tracking-wider mb-0.5",
+    value: "font-sans text-[14px] font-bold text-primary leading-tight",
     subValue: "font-sans text-2xs text-primary leading-none mt-1 font-medium whitespace-nowrap",
 
     // ===== Profile Identity =====
-    profileName: "font-sans text-lg font-semibold text-primary leading-tight",
-    profileDetail: "font-sans text-sm font-medium text-primary leading-compact",
-    badgeLabel: "font-sans text-sm font-normal text-primary",
-    badgeValue: "font-sans text-sm font-bold text-primary",
+    profileName: "font-sans text-[18px] font-semibold text-primary leading-tight",
+    profileDetail: "font-sans text-[14px] font-medium text-primary leading-compact",
+    badgeLabel: "font-sans text-[14px] font-normal text-primary",
+    badgeValue: "font-sans text-[14px] font-bold text-primary",
 
     // ===== Data-Dense UI (badges, micro labels, status pills) =====
     microLabel: "font-sans text-3xs font-bold uppercase tracking-widest",

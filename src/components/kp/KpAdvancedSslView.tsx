@@ -74,7 +74,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
 
         // Determine promise level
         let promiseLevel = 'Neutral';
-        let promiseColor = 'text-primary';
+        let promiseColor = 'text-ink';
         if (positiveRatio >= 70) { promiseLevel = 'Very Strong'; promiseColor = 'text-emerald-600'; }
         else if (positiveRatio >= 50) { promiseLevel = 'Strong'; promiseColor = 'text-emerald-500'; }
         else if (positiveRatio >= 30) { promiseLevel = 'Moderate'; promiseColor = 'text-amber-500'; }
@@ -92,8 +92,8 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
     return (
         <div className={cn("space-y-6 animate-in fade-in duration-500", className)}>
             {/* Cusp Selector */}
-            <div className="flex items-center justify-center gap-1 p-2 bg-parchment rounded-xl border border-antique overflow-x-auto">
-                <button className="p-2 text-primary hover:text-primary transition-colors" onClick={() => setSelectedCusp(Math.max(1, selectedCusp - 1))}>
+            <div className="flex items-center justify-center gap-1 p-2 bg-surface-warm rounded-xl border border-gold-primary/20 overflow-x-auto">
+                <button className="p-2 text-ink hover:text-ink transition-colors" onClick={() => setSelectedCusp(Math.max(1, selectedCusp - 1))}>
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
                 </button>
                 {Array.from({ length: 12 }, (_, i) => i + 1).map(cusp => {
@@ -108,15 +108,15 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                                 "flex flex-col items-center justify-center min-w-[48px] h-14 rounded-lg transition-all duration-300 font-sans tracking-wide",
                                 isActive
                                     ? "bg-gradient-to-br from-gold-primary to-gold-dark text-white shadow-md scale-105 ring-1 ring-gold-primary/50"
-                                    : "bg-white text-primary hover:bg-parchment hover:text-primary hover:shadow-sm border border-antique shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+                                    : "bg-white text-ink hover:bg-surface-warm hover:text-ink hover:shadow-sm border border-gold-primary/20 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
                             )}
                         >
-                            <span className="text-lg mb-0.5">{ZODIAC_SYMBOLS[signIdx] || '♈'}</span>
+                            <span className="text-[18px] mb-0.5">{ZODIAC_SYMBOLS[signIdx] || '♈'}</span>
                             <span className="text-[10px] font-semibold">C{cusp}</span>
                         </button>
                     );
                 })}
-                <button className="p-2 text-primary hover:text-primary transition-colors" onClick={() => setSelectedCusp(Math.min(12, selectedCusp + 1))}>
+                <button className="p-2 text-ink hover:text-ink transition-colors" onClick={() => setSelectedCusp(Math.min(12, selectedCusp + 1))}>
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                 </button>
             </div>
@@ -124,28 +124,28 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
             {/* Main Content */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left Panel - SSL Chain Analysis */}
-                <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-antique shadow-sm">
+                <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-gold-primary/20 shadow-sm">
                     <div className="flex items-center justify-between mb-4">
                         <div>
                             <h3 className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-widest")}>Sub-sub lord analysis</h3>
                             <p className={cn(TYPOGRAPHY.subValue, "text-[10px] mt-1")}>Final confirmation of house promise</p>
                         </div>
-                        <span className={cn(TYPOGRAPHY.value, "px-3 py-1.5 bg-gradient-to-br from-parchment to-softwhite text-primary border border-antique rounded-lg text-xs font-bold tracking-wide shadow-sm")}>
+                        <span className={cn(TYPOGRAPHY.value, "px-3 py-1.5 bg-gradient-to-br from-surface-warm to-white/80 text-ink border border-gold-primary/20 rounded-lg text-[12px] font-bold tracking-wide shadow-sm")}>
                             {selectedCusp}{[1, 21, 31].includes(selectedCusp) ? 'st' : [2, 22].includes(selectedCusp) ? 'nd' : [3, 23].includes(selectedCusp) ? 'rd' : 'th'} House
                         </span>
                     </div>
 
                     {/* House Topic Banner */}
-                    <div className="mb-6 p-4 bg-parchment/50 rounded-xl border border-antique">
+                    <div className="mb-6 p-4 bg-surface-warm/50 rounded-xl border border-gold-primary/20">
                         <div className="flex items-start justify-between">
                             <div>
-                                <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-xl")}>{houseInfo?.topic}</h2>
-                                <p className={cn(TYPOGRAPHY.subValue, "text-3xl font-light mt-1")}>{signName} <span className="text-lg">{degreeDisplay}</span></p>
+                                <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px]")}>{houseInfo?.topic}</h2>
+                                <p className={cn(TYPOGRAPHY.subValue, "text-[30px] font-light mt-1")}>{signName} <span className="text-[18px]">{degreeDisplay}</span></p>
                             </div>
                             <div className="text-right">
                                 <div className="flex flex-wrap gap-1 justify-end">
                                     {houseInfo?.keywords.map(k => (
-                                        <span key={k} className="px-2 py-0.5 bg-white rounded text-[10px] text-primary border border-antique">{k}</span>
+                                        <span key={k} className="px-2 py-0.5 bg-white rounded text-[10px] text-ink border border-gold-primary/20">{k}</span>
                                     ))}
                                 </div>
                             </div>
@@ -157,37 +157,37 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                         <div className="relative">
                             <div className="flex items-center justify-between">
                                 {/* Sign Lord */}
-                                <div className="flex-1 text-center p-3 bg-parchment/30 rounded-lg border border-antique/50">
-                                    <span className="text-2xl text-primary block">{PLANET_SYMBOLS[currentPromise.chain.signLord.planet] || '☉'}</span>
+                                <div className="flex-1 text-center p-3 bg-surface-warm/30 rounded-lg border border-gold-primary/20">
+                                    <span className="text-[24px] text-ink block">{PLANET_SYMBOLS[currentPromise.chain.signLord.planet] || '☉'}</span>
                                     <span className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-wider block mt-1")}>Sign lord</span>
-                                    <span className={cn(TYPOGRAPHY.value, "text-sm text-primary")}>{currentPromise.chain.signLord.planet}</span>
+                                    <span className={cn(TYPOGRAPHY.value, "text-[14px] text-ink")}>{currentPromise.chain.signLord.planet}</span>
                                 </div>
 
-                                <div className="w-8 flex-shrink-0 flex items-center justify-center text-antique">→</div>
+                                <div className="w-8 flex-shrink-0 flex items-center justify-center text-gold-primary/40">→</div>
 
                                 {/* Star Lord */}
-                                <div className="flex-1 text-center p-3 bg-parchment/30 rounded-lg border border-antique/50">
-                                    <span className="text-2xl text-primary block">{PLANET_SYMBOLS[currentPromise.chain.starLord.planet] || '☉'}</span>
+                                <div className="flex-1 text-center p-3 bg-surface-warm/30 rounded-lg border border-gold-primary/20">
+                                    <span className="text-[24px] text-ink block">{PLANET_SYMBOLS[currentPromise.chain.starLord.planet] || '☉'}</span>
                                     <span className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-wider block mt-1")}>Star lord</span>
-                                    <span className={cn(TYPOGRAPHY.value, "text-sm text-primary")}>{currentPromise.chain.starLord.planet}</span>
+                                    <span className={cn(TYPOGRAPHY.value, "text-[14px] text-ink")}>{currentPromise.chain.starLord.planet}</span>
                                 </div>
 
-                                <div className="w-8 flex-shrink-0 flex items-center justify-center text-antique">→</div>
+                                <div className="w-8 flex-shrink-0 flex items-center justify-center text-gold-primary/40">→</div>
 
                                 {/* Sub Lord */}
                                 <div className="flex-1 text-center p-3 bg-gold-primary/10 rounded-lg border border-gold-primary/30">
-                                    <span className="text-2xl text-gold-dark block">{PLANET_SYMBOLS[currentPromise.chain.subLord.planet] || '☉'}</span>
+                                    <span className="text-[24px] text-gold-dark block">{PLANET_SYMBOLS[currentPromise.chain.subLord.planet] || '☉'}</span>
                                     <span className={cn(TYPOGRAPHY.label, "text-[10px] !text-gold-dark uppercase tracking-wider block mt-1")}>Sub lord</span>
-                                    <span className={cn(TYPOGRAPHY.value, "text-sm !text-gold-dark")}>{currentPromise.chain.subLord.planet}</span>
+                                    <span className={cn(TYPOGRAPHY.value, "text-[14px] !text-gold-dark")}>{currentPromise.chain.subLord.planet}</span>
                                 </div>
 
-                                <div className="w-8 flex-shrink-0 flex items-center justify-center text-primary font-bold">⟹</div>
+                                <div className="w-8 flex-shrink-0 flex items-center justify-center text-ink font-bold">⟹</div>
 
                                 {/* Sub-Sub Lord - HIGHLIGHTED */}
                                 <div className="flex-1 text-center p-4 bg-gradient-to-br from-gold-primary to-gold-dark rounded-xl shadow-md border border-gold-dark/30">
-                                    <span className="text-3xl text-white block mb-1">{PLANET_SYMBOLS[currentPromise.chain.subSubLord.planet] || '☉'}</span>
+                                    <span className="text-[30px] text-white block mb-1">{PLANET_SYMBOLS[currentPromise.chain.subSubLord.planet] || '☉'}</span>
                                     <span className={cn(TYPOGRAPHY.label, "text-[10px] !text-white/90 uppercase tracking-wider block mt-1")}>Sub-sub lord</span>
-                                    <span className={cn(TYPOGRAPHY.value, "text-lg !text-white tracking-wide font-bold")}>{currentPromise.chain.subSubLord.planet}</span>
+                                    <span className={cn(TYPOGRAPHY.value, "text-[18px] !text-white tracking-wide font-bold")}>{currentPromise.chain.subSubLord.planet}</span>
                                     <span className={cn(TYPOGRAPHY.subValue, "text-[10px] !text-white/80 block mt-1")}>Final confirmer</span>
                                 </div>
                             </div>
@@ -201,20 +201,20 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                             <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200">
                                 <div className="flex items-center gap-2 mb-3">
                                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                                    <h4 className={cn(TYPOGRAPHY.label, "text-xs !text-emerald-700 uppercase tracking-wider")}>Supporting houses</h4>
+                                    <h4 className={cn(TYPOGRAPHY.label, "text-[12px] !text-emerald-700 uppercase tracking-wider")}>Supporting houses</h4>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {(currentPromise.positiveHouses || []).length > 0 ? (
                                         currentPromise.positiveHouses.map((h: number) => (
                                             <div key={h} className="flex flex-col items-center">
-                                                <span className="w-10 h-10 flex items-center justify-center bg-emerald-500 text-white font-bold rounded-lg shadow-sm text-lg font-serif">
+                                                <span className="w-10 h-10 flex items-center justify-center bg-emerald-500 text-white font-bold rounded-lg shadow-sm text-[18px] font-serif">
                                                     {h}
                                                 </span>
                                                 <span className="text-[9px] text-emerald-600 mt-1">{HOUSE_SIGNIFICATIONS[h]?.topic.split(' ')[0]}</span>
                                             </div>
                                         ))
                                     ) : (
-                                        <span className="text-emerald-400 text-sm">None found</span>
+                                        <span className="text-emerald-400 text-[14px]">None found</span>
                                     )}
                                 </div>
                             </div>
@@ -223,20 +223,20 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                             <div className="p-4 bg-rose-50 rounded-xl border border-rose-200">
                                 <div className="flex items-center gap-2 mb-3">
                                     <XCircle className="w-4 h-4 text-rose-600" />
-                                    <h4 className={cn(TYPOGRAPHY.label, "text-xs !text-rose-700 uppercase tracking-wider")}>Opposing houses</h4>
+                                    <h4 className={cn(TYPOGRAPHY.label, "text-[12px] !text-rose-700 uppercase tracking-wider")}>Opposing houses</h4>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {(currentPromise.negativeHouses || []).length > 0 ? (
                                         currentPromise.negativeHouses.map((h: number) => (
                                             <div key={h} className="flex flex-col items-center">
-                                                <span className="w-10 h-10 flex items-center justify-center bg-rose-500 text-white font-bold rounded-lg shadow-sm text-lg font-serif">
+                                                <span className="w-10 h-10 flex items-center justify-center bg-rose-500 text-white font-bold rounded-lg shadow-sm text-[18px] font-serif">
                                                     {h}
                                                 </span>
                                                 <span className="text-[9px] text-rose-600 mt-1">{HOUSE_SIGNIFICATIONS[h]?.topic.split(' ')[0]}</span>
                                             </div>
                                         ))
                                     ) : (
-                                        <span className="text-rose-400 text-sm">None found</span>
+                                        <span className="text-rose-400 text-[14px]">None found</span>
                                     )}
                                 </div>
                             </div>
@@ -245,7 +245,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                 </div>
 
                 {/* Right Panel - Promise Meter & Verdict */}
-                <div className="bg-white rounded-2xl p-6 border border-antique shadow-sm">
+                <div className="bg-white rounded-2xl p-6 border border-gold-primary/20 shadow-sm">
                     <h3 className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-widest mb-6")}>Promise analysis</h3>
 
                     {analysis && currentPromise && (
@@ -254,7 +254,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                             <div className="text-center">
                                 <div className="relative w-32 h-32 mx-auto mb-4">
                                     <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                                        <circle cx="50" cy="50" r="40" className="fill-none stroke-parchment" strokeWidth="8" />
+                                        <circle cx="50" cy="50" r="40" className="fill-none stroke-surface-warm" strokeWidth="8" />
                                         <circle
                                             cx="50" cy="50" r="40"
                                             className={cn(
@@ -267,11 +267,11 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                                         />
                                     </svg>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                        <span className={cn(TYPOGRAPHY.sectionTitle, "text-2xl")}>{Math.round(analysis.positiveRatio)}%</span>
+                                        <span className={cn(TYPOGRAPHY.sectionTitle, "text-[24px]")}>{Math.round(analysis.positiveRatio)}%</span>
                                         <span className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60")}>Positive</span>
                                     </div>
                                 </div>
-                                <div className={cn(TYPOGRAPHY.value, "text-lg", analysis.promiseColor)}>
+                                <div className={cn(TYPOGRAPHY.value, "text-[18px]", analysis.promiseColor)}>
                                     {analysis.promiseLevel}
                                 </div>
                             </div>
@@ -280,33 +280,33 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="text-center p-3 bg-emerald-50/80 rounded-lg border border-emerald-200/50 shadow-sm">
                                     <TrendingUp className="w-5 h-5 text-emerald-600 mx-auto mb-1" />
-                                    <span className="text-xl font-bold text-emerald-700">{analysis.positiveCount}</span>
+                                    <span className="text-[20px] font-bold text-emerald-700">{analysis.positiveCount}</span>
                                     <span className="text-[10px] text-emerald-600 block font-semibold uppercase tracking-wider mt-0.5">Favorable</span>
                                 </div>
                                 <div className="text-center p-3 bg-rose-50/80 rounded-lg border border-rose-200/50 shadow-sm">
                                     <TrendingDown className="w-5 h-5 text-rose-600 mx-auto mb-1" />
-                                    <span className="text-xl font-bold text-rose-700">{analysis.negativeCount}</span>
+                                    <span className="text-[20px] font-bold text-rose-700">{analysis.negativeCount}</span>
                                     <span className="text-[10px] text-rose-600 block font-semibold uppercase tracking-wider mt-0.5">Adverse</span>
                                 </div>
                             </div>
 
                             {/* SSL Verdict */}
-                            <div className="p-4 bg-gradient-to-br from-parchment to-softwhite border border-antique rounded-xl text-center shadow-sm">
+                            <div className="p-4 bg-gradient-to-br from-surface-warm to-white/80 border border-gold-primary/20 rounded-xl text-center shadow-sm">
                                 <AlertCircle className="w-6 h-6 text-gold-dark mx-auto mb-2" />
-                                <h4 className="text-[10px] text-primary uppercase tracking-wider font-semibold font-sans">SSL verdict</h4>
-                                <p className="text-primary font-sans mt-2 text-sm leading-relaxed">
+                                <h4 className="text-[10px] text-ink uppercase tracking-wider font-semibold font-sans">SSL verdict</h4>
+                                <p className="text-ink font-sans mt-2 text-[14px] leading-relaxed">
                                     <span className="font-bold font-serif">{currentPromise.chain.subSubLord.planet}</span> as SSL
                                     {analysis.positiveRatio >= 50
                                         ? <span className="text-emerald-600 font-semibold"> confirms</span>
                                         : <span className="text-rose-600 font-semibold"> denies</span>
-                                    } the promise for <span className="font-semibold text-primary">{houseInfo?.topic.toLowerCase()}</span>.
+                                    } the promise for <span className="font-semibold text-ink">{houseInfo?.topic.toLowerCase()}</span>.
                                 </p>
                             </div>
                         </div>
                     )}
 
                     {!currentPromise && (
-                        <div className="text-center py-8 text-primary">
+                        <div className="text-center py-8 text-ink">
                             <Minus className="w-8 h-8 mx-auto mb-2 opacity-30" />
                             <p>No SSL data for House {selectedCusp}</p>
                         </div>
@@ -316,10 +316,10 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
 
             {/* Interpretation Footer */}
             {currentPromise && analysis && (
-                <div className="bg-parchment/50 rounded-xl p-4 border border-antique">
-                    <p className="text-sm text-primary text-center">
-                        <span className="font-bold font-serif text-primary">🔮 Astrological interpretation:</span>{' '}
-                        For <span className="font-medium">{houseInfo?.topic}</span>, the Sub-Sub Lord <span className="font-bold text-primary">{currentPromise.chain.subSubLord.planet}</span> signifies
+                <div className="bg-surface-warm/50 rounded-xl p-4 border border-gold-primary/20">
+                    <p className="text-[14px] text-ink text-center">
+                        <span className="font-bold font-serif text-ink">🔮 Astrological interpretation:</span>{' '}
+                        For <span className="font-medium">{houseInfo?.topic}</span>, the Sub-Sub Lord <span className="font-bold text-ink">{currentPromise.chain.subSubLord.planet}</span> signifies
                         {(currentPromise.positiveHouses || []).length > 0 && (
                             <> houses <span className="text-emerald-600 font-medium">{currentPromise.positiveHouses.join(', ')}</span> (supporting)</>
                         )}

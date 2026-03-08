@@ -58,9 +58,9 @@ export default function KpChartSummaryPanel({
     className,
 }: KpChartSummaryPanelProps) {
     return (
-        <div className={cn("bg-softwhite border border-antique rounded-2xl p-5", className)}>
-            <h3 className={cn(TYPOGRAPHY.value, "text-base mb-4 flex items-center gap-2 font-semibold")}>
-                <div className="p-1.5 bg-parchment rounded-lg border border-antique">
+        <div className={cn("prem-card p-5", className)}>
+            <h3 className={cn(TYPOGRAPHY.value, "text-[16px] mb-4 flex items-center gap-2 font-semibold")}>
+                <div className="p-1.5 bg-surface-warm rounded-lg border border-gold-primary/20">
                     <Compass className="w-3.5 h-3.5 text-gold-dark" />
                 </div>
                 Chart Summary
@@ -71,13 +71,13 @@ export default function KpChartSummaryPanel({
                 <DetailRow label="Birth Date" value={birthDate || '—'} />
                 <DetailRow label="Birth Time" value={birthTime || '—'} />
                 <DetailRow label="Birth Place" value={birthPlace || '—'} />
-                <div className="border-t border-antique/50 pt-2.5" />
+                <div className="border-t border-gold-primary/15 pt-2.5" />
                 <DetailRow label="Lagna" value={lagna || '—'} highlight />
                 <DetailRow label="Lagna Lord" value={lagnaLord || '—'} />
                 <DetailRow label="Moon Sign" value={moonSign || '—'} />
                 <DetailRow label="Moon Nakshatra" value={moonNakshatra || '—'} />
                 <DetailRow label="Moon Star Lord" value={moonStarLord || '—'} />
-                <div className="border-t border-antique/50 pt-2.5" />
+                <div className="border-t border-gold-primary/15 pt-2.5" />
                 <DetailRow label="Ayanamsa" value={`${ayanamsaType}${ayanamsaValue ? ` (${ayanamsaValue})` : ''}`} highlight />
                 <DetailRow label="House System" value="Placidus (KP)" />
                 <DetailRow label="Cusps" value={`${houseCuspCount} houses`} />
@@ -85,17 +85,17 @@ export default function KpChartSummaryPanel({
 
             {/* Planet Snapshot */}
             {planets.length > 0 && (
-                <div className="mt-4 pt-3 border-t border-antique/50">
+                <div className="mt-4 pt-3 border-t border-gold-primary/15">
                     <p className={cn(TYPOGRAPHY.label, "text-[9px] uppercase tracking-widest !font-bold mb-2")}>Planet Snapshot</p>
                     <div className="flex flex-wrap gap-1.5">
                         {planets.map((p) => (
                             <div
                                 key={p.name}
-                                className="flex items-center gap-1 px-2 py-1 bg-parchment border border-antique rounded text-xs"
+                                className="flex items-center gap-1 px-2 py-1 bg-surface-warm border border-gold-primary/20 rounded text-[12px]"
                                 title={`${p.name} in ${p.sign}${p.isRetrograde ? ' (R)' : ''}`}
                             >
-                                <span className="text-sm">{planetEmojis[p.name] || '●'}</span>
-                                <span className={cn(TYPOGRAPHY.value, "text-xs font-medium")}>
+                                <span className="text-[14px]">{planetEmojis[p.name] || '●'}</span>
+                                <span className={cn(TYPOGRAPHY.value, "text-[12px] font-medium")}>
                                     {signAbbreviations[p.sign] || p.sign?.slice(0, 3)}
                                 </span>
                                 {p.isRetrograde && (
@@ -116,8 +116,8 @@ function DetailRow({ label, value, highlight }: { label: string; value: string; 
             <span className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-widest !font-bold shrink-0")}>{label}</span>
             <span className={cn(
                 TYPOGRAPHY.value,
-                "text-sm font-medium text-right",
-                highlight ? "!text-gold-dark !font-bold" : "!text-primary"
+                "text-[14px] font-medium text-right",
+                highlight ? "!text-gold-dark !font-bold" : "!text-ink"
             )}>
                 {value}
             </span>

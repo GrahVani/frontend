@@ -21,17 +21,17 @@ export default function ClientsError({
     <div className="flex items-center justify-center min-h-[60vh] px-4">
       <div className="max-w-md w-full text-center space-y-6" role="alert">
         <div className="text-5xl" aria-hidden="true">&#128100;</div>
-        <h2 className="text-xl font-serif text-amber-900">
+        <h2 className="text-[20px] font-serif text-amber-900">
           Client Data Error
         </h2>
-        <p className="text-amber-800/70 text-sm">
+        <p className="text-amber-800/70 text-[14px]">
           Unable to load client information. Please check your connection and
           try again.
         </p>
         <button
           onClick={reset}
           aria-label="Retry loading clients"
-          className="px-5 py-2 bg-amber-700 text-white rounded-lg hover:bg-amber-800 transition-colors text-sm font-medium"
+          className="px-5 py-2 bg-amber-700 text-white rounded-lg hover:bg-amber-800 transition-colors text-[14px] font-medium"
         >
           Retry
         </button>

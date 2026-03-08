@@ -20,8 +20,8 @@ import type {
 function DynamicErrorFallback({ name }: { name: string }) {
     return (
         <div className="flex flex-col items-center justify-center py-12 text-center">
-            <p className="text-sm text-red-700 font-serif">Failed to load {name}</p>
-            <p className="text-xs text-muted mt-1">Try refreshing the page</p>
+            <p className="text-[14px] text-red-700 font-serif">Failed to load {name}</p>
+            <p className="text-[12px] text-ink/45 mt-1">Try refreshing the page</p>
         </div>
     );
 }
@@ -100,9 +100,9 @@ function TabSection({ title, subtitle, badge, children, noPadding }: {
     noPadding?: boolean;
 }) {
     return (
-        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
-            <div className="bg-border-warm px-3 py-1.5 border-b border-antique flex justify-between items-center">
-                <h3 className={cn(TYPOGRAPHY.value, "text-lg text-primary leading-tight tracking-wide")}>{title}</h3>
+        <div className="border border-gold-primary/20 rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
+            <div className="bg-gold-primary/10 px-3 py-1.5 border-b border-gold-primary/15 flex justify-between items-center">
+                <h3 className={cn(TYPOGRAPHY.value, "text-[18px] text-ink leading-tight tracking-wide")}>{title}</h3>
                 {subtitle && (
                     <span className={cn(TYPOGRAPHY.subValue, "text-[10px] hidden sm:inline-block")}>{subtitle}</span>
                 )}
@@ -128,7 +128,7 @@ function LoadingSpinner() {
 }
 
 function EmptyMessage({ text }: { text: string }) {
-    return <p className="text-primary text-center py-8">{text}</p>;
+    return <p className="text-ink text-center py-8">{text}</p>;
 }
 
 // ─── Main Component ──────────────────────────────────────────────────

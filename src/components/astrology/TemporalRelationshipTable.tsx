@@ -60,8 +60,8 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
         {
             key: 'label',
             header: '',
-            headerClassName: 'bg-parchment/50',
-            cellClassName: cn(TYPOGRAPHY.label, "bg-parchment/50 !mb-0"),
+            headerClassName: 'bg-surface-warm/50',
+            cellClassName: cn(TYPOGRAPHY.label, "bg-surface-warm/50 !mb-0"),
             width: 'w-24',
         },
         ...PLANETS.map(planetName => ({
@@ -77,7 +77,7 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
                         {list.map((name: string) => (
                             <span key={name}>{name}</span>
                         ))}
-                        {list.length === 0 && <span className="text-secondary/50">{'\u2014'}</span>}
+                        {list.length === 0 && <span className="text-ink/30">{'\u2014'}</span>}
                     </div>
                 );
             },
@@ -85,19 +85,19 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
     ];
 
     return (
-        <div className={cn("w-full bg-surface-warm border border-border-warm rounded-xl overflow-hidden shadow-sm", className)}>
-            <div className="bg-border-warm px-4 py-2 border-b border-border-warm">
+        <div className={cn("w-full bg-surface-warm border border-gold-primary/15 rounded-xl overflow-hidden shadow-sm", className)}>
+            <div className="bg-gold-primary/10 px-4 py-2 border-b border-gold-primary/15">
                 <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-center")}>
-                    Tatkalik maitri chakra <span className="text-sm font-normal text-secondary">(Temporal relationship)</span>
+                    Tatkalik maitri chakra <span className="text-[14px] font-normal text-ink/55">(Temporal relationship)</span>
                 </h3>
             </div>
             <DataGrid
                 columns={columns}
                 data={rows}
                 rowKey={(row) => row.label}
-                rowClassName={(_, idx) => idx === 1 ? 'bg-antique/5' : ''}
+                rowClassName={(_, idx) => idx === 1 ? 'bg-gold-primary/5' : ''}
                 cellPadding="p-2"
-                headerClassName="bg-parchment/30"
+                headerClassName="bg-surface-warm/30"
                 ariaLabel="Tatkalik Maitri Chakra temporal relationship table"
                 stickyHeader={false}
             />

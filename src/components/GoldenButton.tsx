@@ -37,7 +37,7 @@ export default function PremiumButton({
                     className="bg-header-gradient text-center min-w-[200px] px-7 py-2.5 [clip-path:polygon(12px_0,calc(100%-12px)_0,100%_50%,calc(100%-12px)_100%,12px_100%,0_50%)]"
                 >
                     {/* Top text */}
-                    <div className="font-serif text-xs font-bold tracking-[2px] uppercase text-white leading-tight [text-shadow:0_1px_2px_rgba(0,0,0,0.4)]"
+                    <div className="font-serif text-[12px] font-bold tracking-[2px] uppercase text-white leading-tight [text-shadow:0_1px_2px_rgba(0,0,0,0.4)]"
                     >
                         {topText}
                     </div>

@@ -21,39 +21,39 @@ export default function MuhurtaResultCard({ result, className }: MuhurtaResultCa
     const badge = QUALITY_BADGE[result.quality];
 
     return (
-        <div className={cn("bg-softwhite border border-antique rounded-xl p-5 hover:shadow-md transition-shadow", className)}>
+        <div className={cn("prem-card p-5 hover:shadow-md transition-shadow", className)}>
             <div className="flex items-start justify-between mb-3">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
-                        <h3 className="text-lg font-serif font-bold text-ink">{result.date}</h3>
+                        <h3 className="text-[18px] font-serif font-bold text-ink">{result.date}</h3>
                         <Badge variant={badge.variant} size="sm">{badge.label}</Badge>
                     </div>
-                    <p className="text-sm text-muted-refined">{result.dayOfWeek}</p>
+                    <p className="text-[14px] text-ink/45">{result.dayOfWeek}</p>
                 </div>
-                <div className="flex items-center gap-1.5 bg-parchment/50 px-3 py-1.5 rounded-lg">
+                <div className="flex items-center gap-1.5 bg-surface-warm/50 px-3 py-1.5 rounded-lg">
                     <Star className="w-4 h-4 text-gold-primary" />
-                    <span className="text-sm font-bold font-serif text-ink">{result.score}/100</span>
+                    <span className="text-[14px] font-bold font-serif text-ink">{result.score}/100</span>
                 </div>
             </div>
 
             <div className="grid grid-cols-3 gap-3 mb-3">
-                <div className="bg-parchment/40 rounded-lg p-2">
-                    <span className="text-xs text-muted-refined block">Tithi</span>
-                    <span className="text-sm font-serif font-semibold text-ink">{result.tithi}</span>
+                <div className="bg-surface-warm/40 rounded-lg p-2">
+                    <span className="text-[12px] text-ink/45 block">Tithi</span>
+                    <span className="text-[14px] font-serif font-semibold text-ink">{result.tithi}</span>
                 </div>
-                <div className="bg-parchment/40 rounded-lg p-2">
-                    <span className="text-xs text-muted-refined block">Nakshatra</span>
-                    <span className="text-sm font-serif font-semibold text-ink">{result.nakshatra}</span>
+                <div className="bg-surface-warm/40 rounded-lg p-2">
+                    <span className="text-[12px] text-ink/45 block">Nakshatra</span>
+                    <span className="text-[14px] font-serif font-semibold text-ink">{result.nakshatra}</span>
                 </div>
-                <div className="bg-parchment/40 rounded-lg p-2">
-                    <span className="text-xs text-muted-refined block">Yoga</span>
-                    <span className="text-sm font-serif font-semibold text-ink">{result.yoga}</span>
+                <div className="bg-surface-warm/40 rounded-lg p-2">
+                    <span className="text-[12px] text-ink/45 block">Yoga</span>
+                    <span className="text-[14px] font-serif font-semibold text-ink">{result.yoga}</span>
                 </div>
             </div>
 
             <div className="flex items-center gap-1.5 mb-3">
                 <Clock className="w-3.5 h-3.5 text-gold-dark" />
-                <span className="text-sm text-ink font-medium">Best window: {result.bestTimeWindow}</span>
+                <span className="text-[14px] text-ink font-medium">Best window: {result.bestTimeWindow}</span>
             </div>
 
             {result.reasons.length > 0 && (
@@ -61,7 +61,7 @@ export default function MuhurtaResultCard({ result, className }: MuhurtaResultCa
                     {result.reasons.map((reason, i) => (
                         <div key={i} className="flex items-start gap-1.5">
                             <CheckCircle className="w-3.5 h-3.5 text-status-success mt-0.5 shrink-0" />
-                            <span className="text-xs text-muted-refined">{reason}</span>
+                            <span className="text-[12px] text-ink/45">{reason}</span>
                         </div>
                     ))}
                 </div>
@@ -72,7 +72,7 @@ export default function MuhurtaResultCard({ result, className }: MuhurtaResultCa
                     {result.warnings.map((warning, i) => (
                         <div key={i} className="flex items-start gap-1.5">
                             <AlertTriangle className="w-3.5 h-3.5 text-status-warning mt-0.5 shrink-0" />
-                            <span className="text-xs text-muted-refined">{warning}</span>
+                            <span className="text-[12px] text-ink/45">{warning}</span>
                         </div>
                     ))}
                 </div>

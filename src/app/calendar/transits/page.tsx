@@ -21,12 +21,12 @@ export default function TransitsPage() {
 
     return (
         <div className="max-w-4xl mx-auto space-y-6">
-            <div className="bg-header-gradient rounded-xl p-6 border border-header-border/30">
+            <div className="bg-header-gradient rounded-xl p-6 border border-gold-primary/20">
                 <div className="flex items-center gap-2 mb-1">
                     <Moon className="w-5 h-5 text-active-glow" />
-                    <h1 className="font-serif text-2xl font-bold text-softwhite">Planetary Transits</h1>
+                    <h1 className="font-serif text-[24px] font-bold text-softwhite">Planetary Transits</h1>
                 </div>
-                <p className="text-softwhite/80 font-serif italic text-sm max-w-2xl">
+                <p className="text-softwhite/80 font-serif italic text-[14px] max-w-2xl">
                     Track planetary movements and sign changes for {monthName}.
                 </p>
             </div>
@@ -37,7 +37,7 @@ export default function TransitsPage() {
                 </div>
             ) : transits && transits.length > 0 ? (
                 <div>
-                    <h2 className="text-xs font-bold text-header-border tracking-widest font-serif uppercase mb-4">
+                    <h2 className="text-[12px] font-bold text-gold-dark tracking-widest font-serif uppercase mb-4">
                         {transits.length} Transit{transits.length !== 1 ? "s" : ""} This Month
                     </h2>
                     <TransitTimeline transits={transits} />
@@ -46,7 +46,7 @@ export default function TransitsPage() {
                 <div className="space-y-4">
                     <div className="bg-gold-primary/10 border border-gold-primary/30 rounded-xl p-4 flex items-center gap-3">
                         <Moon className="w-5 h-5 text-gold-dark shrink-0" />
-                        <p className="text-sm text-ink font-serif">
+                        <p className="text-[14px] text-ink font-serif">
                             <span className="font-semibold">Coming Soon</span> — Planetary transit data will be available once connected to the astro engine API.
                         </p>
                     </div>

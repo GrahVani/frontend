@@ -28,7 +28,7 @@ export const YogaHeader = memo(function YogaHeader({ data }: YogaHeaderProps) {
         .join(' ');
 
     return (
-        <div className="bg-white border border-border-warm rounded-2xl p-4 shadow-sm overflow-hidden relative">
+        <div className="bg-white border border-gold-primary/15 rounded-2xl p-4 shadow-sm overflow-hidden relative">
             <div className="absolute top-0 right-0 w-40 h-40 bg-gold-primary/5 rounded-full -mr-20 -mt-20 blur-3xl" />
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
@@ -43,7 +43,7 @@ export const YogaHeader = memo(function YogaHeader({ data }: YogaHeaderProps) {
                         <Trophy className="w-6 h-6" />
                     </div>
                     <div>
-                        <h2 className="text-xl font-serif font-bold text-primary leading-tight">
+                        <h2 className="text-[20px] font-serif font-bold text-ink leading-tight">
                             {title.trim().replace(/\s*yoga$/i, '').trim() || 'Yoga'} <span className="">Yoga</span>
                         </h2>
                         <div className="flex items-center gap-2 mt-1">
@@ -68,17 +68,17 @@ export const YogaHeader = memo(function YogaHeader({ data }: YogaHeaderProps) {
                 {(strength || strengthScore !== undefined) && isPresent && (
                     <div className="flex items-center gap-4">
                         <div className="text-right">
-                            <p className="text-[10px] uppercase tracking-widest text-primary opacity-70 font-bold mb-1">Strength</p>
+                            <p className="text-[10px] uppercase tracking-widest text-ink opacity-70 font-bold mb-1">Strength</p>
                             <span className={cn(
                                 "px-3 py-1 rounded-full text-[10px] font-bold border",
                                 barPercent >= 80 ? "bg-amber-600 text-white border-amber-700"
-                                    : barPercent >= 60 ? "bg-gold-primary text-primary border-gold-dark"
-                                        : "bg-parchment text-primary border-border-warm"
+                                    : barPercent >= 60 ? "bg-gold-primary text-ink border-gold-dark"
+                                        : "bg-surface-warm text-ink border-gold-primary/15"
                             )}>
                                 {strengthLabel ?? `${strengthScore} pts`}
                             </span>
                         </div>
-                        <div className="w-20 h-1.5 bg-parchment rounded-full overflow-hidden border border-border-warm/50">
+                        <div className="w-20 h-1.5 bg-surface-warm rounded-full overflow-hidden border border-gold-primary/15">
                             <div
                                 className={cn(
                                     "h-full transition-all duration-1000 rounded-full",
@@ -95,7 +95,7 @@ export const YogaHeader = memo(function YogaHeader({ data }: YogaHeaderProps) {
 
             {/* Subtitle / Reason */}
             {subtitle && (
-                <p className={cn(TYPOGRAPHY.value, "text-xs leading-relaxed border-t border-border-warm/30 pt-3")}>
+                <p className={cn(TYPOGRAPHY.value, "text-[12px] leading-relaxed border-t border-gold-primary/15 pt-3")}>
                     {subtitle}
                 </p>
             )}

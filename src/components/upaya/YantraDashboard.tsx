@@ -28,7 +28,7 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
         <div className={cn("animate-in fade-in duration-700 flex flex-col h-full overflow-hidden", styles.dashboardContainer, className)}>
             {/* Header Area */}
             <div className="flex-shrink-0 px-4 pt-4 pb-2">
-                <div className="flex items-center justify-between border-b border-divider pb-3">
+                <div className="flex items-center justify-between border-b border-gold-primary/10 pb-3">
                     <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] lg:text-[22px] font-bold tracking-tight")}>
                         Yantras : {String(data.user_name || "Sadhaka")}
                     </h2>
@@ -49,7 +49,7 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
                     />
 
                     {/* Legend / Subtle Footer */}
-                    <div className="bg-white/30 rounded-2xl px-3 py-2 border border-antique/20 flex items-center gap-4">
+                    <div className="bg-white/30 rounded-2xl px-3 py-2 border border-gold-primary/15 flex items-center gap-4">
                         <h4 className="text-[9px] font-medium uppercase tracking-[0.15em] text-amber-900/50 shrink-0">Insights</h4>
                         <div className="flex items-center gap-3">
                             <div className="flex items-center gap-1.5 text-[10px] font-medium text-ink">
@@ -75,7 +75,7 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
                         scrollbarColor: 'rgba(180,83,9,0.2) transparent'
                     }}>
 
-                    <div className="rounded-[2rem] bg-[rgba(254,250,234,0.6)] border border-antique shadow-xl backdrop-blur-md overflow-hidden flex flex-col p-4 space-y-4">
+                    <div className="rounded-[2rem] bg-[rgba(254,250,234,0.6)] border border-gold-primary/20 shadow-xl backdrop-blur-md overflow-hidden flex flex-col p-4 space-y-4">
                         <div className="flex items-center justify-between px-1">
                             <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[16px] font-bold tracking-tight")}>Today&apos;s yantra focus (priority)</h2>
                         </div>

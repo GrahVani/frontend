@@ -62,14 +62,14 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
             className={cn(
                 "group relative border rounded-2xl transition-all duration-300 overflow-hidden flex flex-col",
                 isRecommended
-                    ? "bg-white border-antique hover:border-gold-primary/50 shadow-sm hover:shadow-md"
+                    ? "bg-white border-gold-primary/20 hover:border-gold-primary/50 shadow-sm hover:shadow-md"
                     : "bg-white border-red-200/60 hover:border-red-300 shadow-sm hover:shadow-md"
             )}
         >
             {/* ── Header ── */}
             <div className={cn(
                 "px-4 py-3 flex items-center justify-between border-b",
-                isRecommended ? "bg-parchment/20 border-antique/60" : "bg-red-50/30 border-red-100/40"
+                isRecommended ? "bg-surface-warm/20 border-gold-primary/20" : "bg-red-50/30 border-red-100/40"
             )}>
                 <div className="flex items-center gap-2.5 min-w-0">
                     {/* Gem dot */}
@@ -118,14 +118,14 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
                 <div className={cn(
                     "p-2.5 rounded-xl border",
                     isRecommended
-                        ? "bg-parchment/30 border-antique/40"
+                        ? "bg-surface-warm/30 border-gold-primary/15"
                         : "bg-red-50/20 border-red-100/30"
                 )}>
                     <div className="flex items-center gap-1.5 mb-1.5">
                         <Info className={cn("w-3 h-3 shrink-0",
                             isRecommended ? "text-gold-dark" : "text-red-400"
                         )} />
-                        <span className="text-[8px] font-bold uppercase tracking-[0.12em] text-muted">
+                        <span className="text-[8px] font-bold uppercase tracking-[0.12em] text-ink/45">
                             Rationale
                         </span>
                     </div>
@@ -136,10 +136,10 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
 
                 {/* Metal & Finger + Placement */}
                 <div className="grid grid-cols-2 gap-2 mt-auto">
-                    <div className="p-2 rounded-xl bg-white border border-antique/30">
+                    <div className="p-2 rounded-xl bg-white border border-gold-primary/20">
                         <div className="flex items-center gap-1 mb-1">
                             <Hand className="w-2.5 h-2.5 text-gold-primary" />
-                            <p className="text-[8px] font-bold uppercase tracking-[0.1em] text-muted">
+                            <p className="text-[8px] font-bold uppercase tracking-[0.1em] text-ink/45">
                                 Metal & finger
                             </p>
                         </div>
@@ -147,10 +147,10 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
                             {gem_data.metal} — {gem_data.finger}
                         </p>
                     </div>
-                    <div className="p-2 rounded-xl bg-white border border-antique/30">
+                    <div className="p-2 rounded-xl bg-white border border-gold-primary/20">
                         <div className="flex items-center gap-1 mb-1">
                             <Home className="w-2.5 h-2.5 text-gold-primary" />
-                            <p className="text-[8px] font-bold uppercase tracking-[0.1em] text-muted">
+                            <p className="text-[8px] font-bold uppercase tracking-[0.1em] text-ink/45">
                                 Placement
                             </p>
                         </div>
@@ -165,7 +165,7 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
             {(rulerships.length > 0 || dasha_status.is_active) && (
                 <div className={cn(
                     "px-4 py-2 flex flex-wrap items-center gap-1.5 border-t",
-                    isRecommended ? "bg-parchment/10 border-antique/40" : "bg-red-50/10 border-red-100/30"
+                    isRecommended ? "bg-surface-warm/10 border-gold-primary/15" : "bg-red-50/10 border-red-100/30"
                 )}>
                     {rulerships.length > 0 && (
                         <div className="flex items-center gap-1 px-2 py-0.5 bg-sky-50 rounded-lg border border-sky-100/60">

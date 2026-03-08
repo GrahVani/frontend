@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Save } from "lucide-react";
+import { Save, Settings2 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { useToast } from "@/context/ToastContext";
 
@@ -46,7 +46,6 @@ export default function SettingsPage() {
     const [showRetro, setShowRetro] = useState(DEFAULTS.showRetro);
     const [showDegrees, setShowDegrees] = useState(DEFAULTS.showDegrees);
 
-    // Hydrate from localStorage after mount
     useEffect(() => {
         const prefs = loadPreferences();
         setAyanamsa(prefs.ayanamsa);
@@ -61,7 +60,6 @@ export default function SettingsPage() {
         const prefs: ChartPreferences = { ayanamsa, chartStyle, defaultOrb, showRetro, showDegrees };
         try {
             localStorage.setItem(SETTINGS_KEY, JSON.stringify(prefs));
-            // TODO: Also persist to user settings API when available
             toast.success("Chart preferences saved successfully.");
         } catch {
             toast.error("Failed to save preferences.");
@@ -70,14 +68,27 @@ export default function SettingsPage() {
 
     return (
         <div className="max-w-3xl mx-auto space-y-6">
-            <div>
-                <h1 className="text-3xl font-serif text-ink font-bold mb-1">Chart Preferences</h1>
-                <p className="text-muted-refined font-serif italic">Configure default ayanamsa, chart style, and display options</p>
+            {/* Header */}
+            <div className="prem-card glass-shimmer relative overflow-hidden p-5">
+                <div className="flex items-center gap-3.5">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                         style={{
+                             background: 'linear-gradient(135deg, rgba(201,162,77,0.18) 0%, rgba(139,90,43,0.10) 100%)',
+                             border: '1px solid rgba(201,162,77,0.25)',
+                             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 6px rgba(139,90,43,0.08)',
+                         }}>
+                        <Settings2 className="w-5 h-5 text-gold-dark" />
+                    </div>
+                    <div>
+                        <h1 className="text-[18px] font-serif font-bold text-ink leading-tight">Chart Preferences</h1>
+                        <p className="text-[13px] text-ink/50 font-medium mt-0.5">Configure default ayanamsa, chart style, and display options</p>
+                    </div>
+                </div>
             </div>
 
             {/* Ayanamsa */}
-            <div className="bg-softwhite border border-antique rounded-xl p-5">
-                <h3 className="text-sm font-bold text-header-border tracking-widest font-serif uppercase mb-4">
+            <div className="prem-card p-5">
+                <h3 className="text-[11px] font-bold text-gold-dark tracking-widest font-serif uppercase mb-4">
                     Ayanamsa System
                 </h3>
                 <div className="grid grid-cols-3 gap-3">
@@ -89,22 +100,29 @@ export default function SettingsPage() {
                         <button
                             key={option.value}
                             onClick={() => setAyanamsa(option.value)}
-                            className={`p-4 rounded-xl border text-left transition-all ${
-                                ayanamsa === option.value
-                                    ? "border-gold-primary bg-gold-primary/10 ring-1 ring-gold-primary"
-                                    : "border-antique hover:border-gold-primary/30"
-                            }`}
+                            className="p-4 rounded-xl text-left transition-all"
+                            style={{
+                                background: ayanamsa === option.value
+                                    ? 'linear-gradient(135deg, rgba(201,162,77,0.12) 0%, rgba(201,162,77,0.06) 100%)'
+                                    : 'rgba(255,253,249,0.60)',
+                                border: ayanamsa === option.value
+                                    ? '1.5px solid rgba(201,162,77,0.50)'
+                                    : '1px solid rgba(220,201,166,0.30)',
+                                boxShadow: ayanamsa === option.value
+                                    ? 'inset 0 1px 0 rgba(255,255,255,0.6), 0 2px 8px rgba(201,162,77,0.10)'
+                                    : 'none',
+                            }}
                         >
-                            <span className="text-sm font-serif font-semibold text-ink block">{option.label}</span>
-                            <span className="text-xs text-muted-refined">{option.desc}</span>
+                            <span className="text-[14px] font-serif font-semibold text-ink block">{option.label}</span>
+                            <span className="text-[12px] text-ink/45 font-medium">{option.desc}</span>
                         </button>
                     ))}
                 </div>
             </div>
 
             {/* Chart Style */}
-            <div className="bg-softwhite border border-antique rounded-xl p-5">
-                <h3 className="text-sm font-bold text-header-border tracking-widest font-serif uppercase mb-4">
+            <div className="prem-card p-5">
+                <h3 className="text-[11px] font-bold text-gold-dark tracking-widest font-serif uppercase mb-4">
                     Default Chart Style
                 </h3>
                 <div className="grid grid-cols-3 gap-3">
@@ -116,35 +134,47 @@ export default function SettingsPage() {
                         <button
                             key={option.value}
                             onClick={() => setChartStyle(option.value)}
-                            className={`p-4 rounded-xl border text-left transition-all ${
-                                chartStyle === option.value
-                                    ? "border-gold-primary bg-gold-primary/10 ring-1 ring-gold-primary"
-                                    : "border-antique hover:border-gold-primary/30"
-                            }`}
+                            className="p-4 rounded-xl text-left transition-all"
+                            style={{
+                                background: chartStyle === option.value
+                                    ? 'linear-gradient(135deg, rgba(201,162,77,0.12) 0%, rgba(201,162,77,0.06) 100%)'
+                                    : 'rgba(255,253,249,0.60)',
+                                border: chartStyle === option.value
+                                    ? '1.5px solid rgba(201,162,77,0.50)'
+                                    : '1px solid rgba(220,201,166,0.30)',
+                                boxShadow: chartStyle === option.value
+                                    ? 'inset 0 1px 0 rgba(255,255,255,0.6), 0 2px 8px rgba(201,162,77,0.10)'
+                                    : 'none',
+                            }}
                         >
-                            <span className="text-sm font-serif font-semibold text-ink block">{option.label}</span>
-                            <span className="text-xs text-muted-refined">{option.desc}</span>
+                            <span className="text-[14px] font-serif font-semibold text-ink block">{option.label}</span>
+                            <span className="text-[12px] text-ink/45 font-medium">{option.desc}</span>
                         </button>
                     ))}
                 </div>
             </div>
 
             {/* Display Options */}
-            <div className="bg-softwhite border border-antique rounded-xl p-5">
-                <h3 className="text-sm font-bold text-header-border tracking-widest font-serif uppercase mb-4">
+            <div className="prem-card p-5">
+                <h3 className="text-[11px] font-bold text-gold-dark tracking-widest font-serif uppercase mb-4">
                     Display Options
                 </h3>
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <span className="text-sm font-serif text-ink block">Default Orb (degrees)</span>
-                            <span className="text-xs text-muted-refined">Aspect orb for planetary aspects</span>
+                            <span className="text-[14px] font-serif text-ink block font-medium">Default Orb (degrees)</span>
+                            <span className="text-[12px] text-ink/45 font-medium">Aspect orb for planetary aspects</span>
                         </div>
                         <select
                             value={defaultOrb}
                             onChange={(e) => setDefaultOrb(e.target.value)}
-                            className="px-3 py-1.5 bg-parchment/50 border border-antique rounded-lg text-sm font-serif text-ink focus:outline-none focus:border-gold-primary"
+                            className="px-3 py-1.5 rounded-lg text-[13px] font-serif text-ink focus:outline-none transition-all"
                             aria-label="Default orb degrees"
+                            style={{
+                                background: 'rgba(250,245,234,0.50)',
+                                border: '1px solid rgba(220,201,166,0.35)',
+                                boxShadow: 'inset 0 1px 3px rgba(62,46,22,0.06)',
+                            }}
                         >
                             {[5, 6, 7, 8, 9, 10].map((n) => (
                                 <option key={n} value={n}>{n}</option>
@@ -152,37 +182,53 @@ export default function SettingsPage() {
                         </select>
                     </div>
 
+                    <div className="mx-0" style={{ height: 1, background: 'linear-gradient(90deg, transparent 0%, rgba(201,162,77,0.12) 20%, rgba(220,201,166,0.20) 50%, rgba(201,162,77,0.12) 80%, transparent 100%)' }} />
+
                     <div className="flex items-center justify-between">
                         <div>
-                            <span id="retro-label" className="text-sm font-serif text-ink block">Show Retrograde Markers</span>
-                            <span id="retro-desc" className="text-xs text-muted-refined">Display (R) next to retrograde planets</span>
+                            <span id="retro-label" className="text-[14px] font-serif text-ink block font-medium">Show Retrograde Markers</span>
+                            <span id="retro-desc" className="text-[12px] text-ink/45 font-medium">Display (R) next to retrograde planets</span>
                         </div>
                         <button
                             onClick={() => setShowRetro(!showRetro)}
-                            className={`w-11 h-6 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-2 ${showRetro ? "bg-gold-primary" : "bg-antique"}`}
+                            className="w-11 h-6 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-2"
                             role="switch"
                             aria-checked={showRetro}
                             aria-labelledby="retro-label"
                             aria-describedby="retro-desc"
+                            style={{
+                                background: showRetro
+                                    ? 'linear-gradient(135deg, rgba(201,162,77,1) 0%, rgba(180,140,60,1) 100%)'
+                                    : 'rgba(220,201,166,0.40)',
+                                boxShadow: showRetro ? '0 2px 6px rgba(201,162,77,0.30)' : 'inset 0 1px 3px rgba(0,0,0,0.08)',
+                            }}
                         >
-                            <div className={`w-5 h-5 rounded-full bg-softwhite shadow transition-transform ${showRetro ? "translate-x-5" : "translate-x-0.5"}`} />
+                            <div className={`w-5 h-5 rounded-full bg-white shadow transition-transform ${showRetro ? "translate-x-5" : "translate-x-0.5"}`} />
                         </button>
                     </div>
 
+                    <div className="mx-0" style={{ height: 1, background: 'linear-gradient(90deg, transparent 0%, rgba(201,162,77,0.12) 20%, rgba(220,201,166,0.20) 50%, rgba(201,162,77,0.12) 80%, transparent 100%)' }} />
+
                     <div className="flex items-center justify-between">
                         <div>
-                            <span id="degrees-label" className="text-sm font-serif text-ink block">Show Degrees in Chart</span>
-                            <span id="degrees-desc" className="text-xs text-muted-refined">Display exact degree positions of planets</span>
+                            <span id="degrees-label" className="text-[14px] font-serif text-ink block font-medium">Show Degrees in Chart</span>
+                            <span id="degrees-desc" className="text-[12px] text-ink/45 font-medium">Display exact degree positions of planets</span>
                         </div>
                         <button
                             onClick={() => setShowDegrees(!showDegrees)}
-                            className={`w-11 h-6 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-2 ${showDegrees ? "bg-gold-primary" : "bg-antique"}`}
+                            className="w-11 h-6 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-2"
                             role="switch"
                             aria-checked={showDegrees}
                             aria-labelledby="degrees-label"
                             aria-describedby="degrees-desc"
+                            style={{
+                                background: showDegrees
+                                    ? 'linear-gradient(135deg, rgba(201,162,77,1) 0%, rgba(180,140,60,1) 100%)'
+                                    : 'rgba(220,201,166,0.40)',
+                                boxShadow: showDegrees ? '0 2px 6px rgba(201,162,77,0.30)' : 'inset 0 1px 3px rgba(0,0,0,0.08)',
+                            }}
                         >
-                            <div className={`w-5 h-5 rounded-full bg-softwhite shadow transition-transform ${showDegrees ? "translate-x-5" : "translate-x-0.5"}`} />
+                            <div className={`w-5 h-5 rounded-full bg-white shadow transition-transform ${showDegrees ? "translate-x-5" : "translate-x-0.5"}`} />
                         </button>
                     </div>
                 </div>

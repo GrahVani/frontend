@@ -73,10 +73,10 @@ const AVAKHADA_ITEMS = [
     { key: 'rashi_lord', label: 'Rashi Lord', sanskrit: 'राशि स्वामी', icon: Sun, desc: 'Sign Ruler', color: 'from-orange-500/10 to-red-500/10', accent: 'text-orange-600' },
     { key: 'rashi', label: 'Rashi', sanskrit: 'राशि', icon: Moon, desc: 'Moon Sign', color: 'from-indigo-500/10 to-blue-500/10', accent: 'text-indigo-600' },
     { key: 'nakshatra', label: 'Nakshatra', sanskrit: 'नक्षत्र', icon: Star, desc: 'Birth Star', color: 'from-yellow-500/10 to-amber-500/10', accent: 'text-yellow-600' },
-    { key: 'pada', label: 'Pada', sanskrit: 'पाद', icon: Disc, desc: 'Quarter', color: 'from-slate-500/10 to-gray-500/10', accent: 'text-slate-600' },
+    { key: 'pada', label: 'Pada', sanskrit: 'पाद', icon: Disc, desc: 'Quarter', color: 'from-ink/10 to-ink/8', accent: 'text-ink/55' },
     { key: 'namakshar', label: 'Namakshar', sanskrit: 'नामाक्षर', icon: TypeIcon, desc: 'Sound / First Letter', color: 'from-cyan-500/10 to-sky-500/10', accent: 'text-cyan-600' },
     { key: 'paya_rashi', label: 'Paya (Rashi)', sanskrit: 'पाया (राशि)', icon: Disc, desc: 'Base Metal', color: 'from-stone-500/10 to-neutral-500/10', accent: 'text-stone-600' },
-    { key: 'paya_nakshatra', label: 'Paya (Nakshatra)', sanskrit: 'पाया (नक्षत्र)', icon: Disc, desc: 'Star Metal', color: 'from-zinc-500/10 to-gray-500/10', accent: 'text-zinc-600' },
+    { key: 'paya_nakshatra', label: 'Paya (Nakshatra)', sanskrit: 'पाया (नक्षत्र)', icon: Disc, desc: 'Star Metal', color: 'from-ink/8 to-ink/6', accent: 'text-zinc-600' },
 ];
 
 // Helper for formatting
@@ -176,32 +176,32 @@ export default function PanchangaOverviewPage() {
                                 <ArrowLeft className="w-3 h-3" />
                                 Kundali
                             </Link>
-                            <span className="text-primary">/</span>
+                            <span className="text-ink">/</span>
                             <span>Panchanga</span>
                         </div>
                     </div>
-                    <h1 className="text-2xl font-serif font-bold text-ink tracking-tight">Panchanga</h1>
+                    <h1 className="text-[24px] font-serif font-bold text-ink tracking-tight">Panchanga</h1>
                 </div>
             </div>
 
             {/* ═══════════════════════════════════════════════════════════ */}
             {/* SECTION 2: BIRTH PANCHANGA — Expanded Premium Layout       */}
             {/* ═══════════════════════════════════════════════════════════ */}
-            <div className="border border-antique rounded-2xl overflow-hidden shadow-sm bg-surface-warm">
-                <div className="bg-border-warm px-5 py-3 border-b border-antique flex items-center gap-3">
+            <div className="prem-card rounded-2xl overflow-hidden bg-surface-warm">
+                <div className="bg-gold-primary/10 px-5 py-3 border-b border-gold-primary/15 flex items-center gap-3">
                     <div className="p-1.5 bg-white/60 rounded-lg shadow-xs">
-                        <Sparkle className="w-4 h-4 text-header-border" />
+                        <Sparkle className="w-4 h-4 text-gold-dark" />
                     </div>
                     <div>
                         <h3 className={TYPOGRAPHY.sectionTitle}>Birth Panchanga</h3>
-                        <p className={cn(TYPOGRAPHY.subValue, "text-primary")}>Five-fold daily cosmic markers at the moment of birth</p>
+                        <p className={cn(TYPOGRAPHY.subValue, "text-ink")}>Five-fold daily cosmic markers at the moment of birth</p>
                     </div>
                 </div>
 
                 {!panchanga ? (
                     <div className="p-12 text-center">
                         <Loader2 className="w-6 h-6 text-gold-primary animate-spin mx-auto mb-3" />
-                        <p className="text-xs font-serif text-primary">Loading birth panchanga data...</p>
+                        <p className="text-[12px] font-serif text-ink">Loading birth panchanga data...</p>
                     </div>
                 ) : (
                     <div className="p-5">
@@ -296,16 +296,16 @@ export default function PanchangaOverviewPage() {
             {/* ═══════════════════════════════════════════════════════════ */}
             {/* SECTION 3: AVAKHADA CHAKRA — Full-Width Detailed Grid      */}
             {/* ═══════════════════════════════════════════════════════════ */}
-            <div className="border border-antique rounded-2xl overflow-hidden shadow-sm bg-surface-warm">
-                <div className="bg-border-warm px-5 py-3 border-b border-antique flex items-center gap-3">
+            <div className="prem-card rounded-2xl overflow-hidden bg-surface-warm">
+                <div className="bg-gold-primary/10 px-5 py-3 border-b border-gold-primary/15 flex items-center gap-3">
                     <div className="p-1.5 bg-white/60 rounded-lg shadow-xs">
-                        <Star className="w-4 h-4 text-header-border" />
+                        <Star className="w-4 h-4 text-gold-dark" />
                     </div>
                     <div>
                         <h3 className={TYPOGRAPHY.sectionTitle}>
                             Avakhada Chakra
                         </h3>
-                        <p className={cn(TYPOGRAPHY.subValue, "text-primary")}>
+                        <p className={cn(TYPOGRAPHY.subValue, "text-ink")}>
                             Foundational classification — compatibility & character attributes
                         </p>
                     </div>
@@ -314,7 +314,7 @@ export default function PanchangaOverviewPage() {
                 {avakhadaLoading ? (
                     <div className="p-12 text-center">
                         <Loader2 className="w-6 h-6 text-gold-primary animate-spin mx-auto mb-3" />
-                        <p className="text-xs font-serif text-primary italic">Consulting the Stars...</p>
+                        <p className="text-[12px] font-serif text-ink italic">Consulting the Stars...</p>
                     </div>
                 ) : avakhadaError || !avakhadaData ? (
                     <div className="p-8 text-center space-y-3">
@@ -417,7 +417,7 @@ export default function PanchangaOverviewPage() {
                                     label: "Paya (Rashi/Nakshatra)",
                                     description: "Refers to the \"footing\" or foundation on which the Moon arrived at birth. It predicts the general ease, wealth, and auspiciousness of the person's early life.",
                                     getInChart: (val: string) => (val?.toLowerCase().includes('silver') || val?.toLowerCase().includes('copper')) ? "Silver is considered highly auspicious and prosperous, while Copper is also very positive, indicating stability." : null,
-                                    icon: Disc, color: 'from-slate-500/10 to-gray-500/10', borderColor: 'border-slate-200/50', bgColor: 'bg-slate-100/50', textColor: 'text-slate-900', titleColor: 'text-slate-700'
+                                    icon: Disc, color: 'from-ink/10 to-ink/8', borderColor: 'border-gold-primary/15', bgColor: 'bg-gold-primary/8', textColor: 'text-ink', titleColor: 'text-ink/70'
                                 }
                             ].map((item, idx) => {
                                 let value = '';
@@ -449,16 +449,16 @@ export default function PanchangaOverviewPage() {
                                             </div>
                                             <span className={cn(TYPOGRAPHY.value, item.titleColor)}>{value}</span>
                                         </div>
-                                        <p className="text-sm font-medium text-primary leading-relaxed mb-5 flex-grow font-sans">
+                                        <p className="text-[14px] font-medium text-ink leading-relaxed mb-5 flex-grow font-sans">
                                             {item.description}
                                         </p>
                                         {inChart && (
                                             <div className={cn("mt-auto p-4 rounded-xl border border-white/20", item.bgColor)}>
                                                 <div className="flex items-center gap-1.5 mb-2">
-                                                    <Sparkle className={cn("w-4 h-4 text-accent-gold", item.titleColor)} />
-                                                    <span className={cn("font-bold text-xs tracking-wider font-sans", item.titleColor)}>In this chart</span>
+                                                    <Sparkle className={cn("w-4 h-4 text-gold-dark", item.titleColor)} />
+                                                    <span className={cn("font-bold text-[12px] tracking-wider font-sans", item.titleColor)}>In this chart</span>
                                                 </div>
-                                                <p className={cn("text-sm font-medium leading-relaxed font-sans", item.textColor)}>
+                                                <p className={cn("text-[14px] font-medium leading-relaxed font-sans", item.textColor)}>
                                                     {inChart}
                                                 </p>
                                             </div>
@@ -499,7 +499,7 @@ function PanchangaCard({
             <div className="flex items-start justify-between mb-3">
                 <div>
                     <p className={TYPOGRAPHY.label}>{label}</p>
-                    <p className={cn(TYPOGRAPHY.subValue, "text-primary mt-0.5")}>{sanskrit}</p>
+                    <p className={cn(TYPOGRAPHY.subValue, "text-ink mt-0.5")}>{sanskrit}</p>
                 </div>
                 <div className="p-1.5 bg-white/80 rounded-lg shadow-xs group-hover:shadow-sm transition-shadow">
                     <Icon className={cn("w-4 h-4", iconColor)} />
@@ -509,7 +509,7 @@ function PanchangaCard({
             {subValue && (
                 <p className={TYPOGRAPHY.subValue}>{subValue}</p>
             )}
-            <p className={cn(TYPOGRAPHY.subValue, "text-primary mt-2 whitespace-normal leading-snug")}>{description}</p>
+            <p className={cn(TYPOGRAPHY.subValue, "text-ink mt-2 whitespace-normal leading-snug")}>{description}</p>
         </div>
     );
 }

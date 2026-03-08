@@ -44,8 +44,8 @@ export default function EventForm({ onSubmit, loading, onCancel }: EventFormProp
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-softwhite border border-antique rounded-xl p-5 space-y-4">
-            <h3 className="text-xs font-bold text-header-border tracking-widest font-serif uppercase">
+        <form onSubmit={handleSubmit} className="prem-card p-5 space-y-4">
+            <h3 className="text-[12px] font-bold text-gold-dark tracking-widest font-serif uppercase">
                 New Event
             </h3>
             <ParchmentInput
@@ -72,7 +72,7 @@ export default function EventForm({ onSubmit, loading, onCancel }: EventFormProp
                 />
             </div>
             <div>
-                <label className="block text-xs font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
+                <label className="block text-[12px] font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
                     Category
                 </label>
                 <select

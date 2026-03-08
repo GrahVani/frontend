@@ -55,10 +55,10 @@ export default function ClientsNavigationSidebar({ activeClientName }: ClientsNa
     ];
 
     return (
-        <aside className="w-72 h-full flex flex-col bg-header-gradient border-r border-header-border/20 shadow-2xl" role="navigation" aria-label="Client management navigation">
+        <aside className="w-72 h-full flex flex-col bg-header-gradient border-r border-gold-primary/15 shadow-2xl" role="navigation" aria-label="Client management navigation">
             {/* Header */}
             <div className="p-6 pb-4">
-                <h2 className="text-header-border text-xs font-black uppercase tracking-[0.2em] mb-4">
+                <h2 className="text-gold-dark text-[12px] font-black uppercase tracking-[0.2em] mb-4">
                     Clients
                 </h2>
 
@@ -70,8 +70,8 @@ export default function ClientsNavigationSidebar({ activeClientName }: ClientsNa
                                 <User className="w-5 h-5 text-active-glow" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-header-border mb-0.5">Viewing Profile</p>
-                                <p className="text-white font-serif font-semibold text-sm truncate" title={activeClientName}>{activeClientName}</p>
+                                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-gold-dark mb-0.5">Viewing Profile</p>
+                                <p className="text-white font-serif font-semibold text-[14px] truncate" title={activeClientName}>{activeClientName}</p>
                             </div>
                         </div>
                     </div>
@@ -91,21 +91,21 @@ export default function ClientsNavigationSidebar({ activeClientName }: ClientsNa
                             className={cn(
                                 "w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 group text-left",
                                 isHighlighted
-                                    ? "bg-white/10 text-white border border-header-border/30"
+                                    ? "bg-white/10 text-white border border-gold-primary/20"
                                     : "text-white/70 hover:text-white hover:bg-white/5"
                             )}
                         >
                             <div className="flex items-center gap-3">
                                 <Icon className={cn(
                                     "w-5 h-5 transition-transform group-hover:scale-110",
-                                    isHighlighted ? "text-active-glow" : "text-header-border"
+                                    isHighlighted ? "text-active-glow" : "text-gold-dark"
                                 )} />
-                                <span className="font-serif text-sm tracking-wide font-medium">
+                                <span className="font-serif text-[14px] tracking-wide font-medium">
                                     {item.label}
                                 </span>
                             </div>
                             {isHighlighted && (
-                                <ChevronRight className="w-4 h-4 text-header-border" />
+                                <ChevronRight className="w-4 h-4 text-gold-dark" />
                             )}
                         </Link>
                     );

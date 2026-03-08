@@ -20,8 +20,8 @@ export default function SignificationMatrix({ significations, className }: Signi
     return (
         <div className={cn("w-full overflow-hidden", className)}>
             <div className="overflow-x-auto min-h-[300px] max-h-[calc(100vh-280px)] overflow-y-auto w-full">
-                <table className="w-full h-full text-xs text-left">
-                    <thead className="bg-parchment/60 backdrop-blur-sm border-b border-antique tracking-wide sticky top-0 z-10">
+                <table className="w-full h-full text-[12px] text-left">
+                    <thead className="bg-surface-warm/60 backdrop-blur-sm border-b border-gold-primary/15 tracking-wide sticky top-0 z-10">
                         <tr>
                             <th scope="col" className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5")}>
                                 Planet
@@ -44,23 +44,23 @@ export default function SignificationMatrix({ significations, className }: Signi
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-antique/50 font-sans">
+                    <tbody className="divide-y divide-gold-primary/15 font-sans">
                         {significations.map((row) => (
                             <tr key={row.planet} className="hover:bg-gold-primary/5 transition-colors bg-white">
-                                <th scope="row" className={cn(TYPOGRAPHY.value, "px-3 py-1 font-bold text-primary whitespace-nowrap")}>
+                                <th scope="row" className={cn(TYPOGRAPHY.value, "px-3 py-1 font-bold text-ink whitespace-nowrap")}>
                                     {row.planet}
                                 </th>
                                 <td className="px-3 py-1 text-center font-medium">
-                                    {row.levelA?.length ? <span className={cn(TYPOGRAPHY.label, "inline-block px-1.5 py-0 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded text-[11px] shadow-sm")}>{formatHouses(row.levelA)}</span> : <span className="text-primary opacity-30 text-[10px]">-</span>}
+                                    {row.levelA?.length ? <span className={cn(TYPOGRAPHY.label, "inline-block px-1.5 py-0 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded text-[11px] shadow-sm")}>{formatHouses(row.levelA)}</span> : <span className="text-ink opacity-30 text-[10px]">-</span>}
                                 </td>
                                 <td className="px-3 py-1 text-center font-medium">
-                                    {row.levelB?.length ? <span className={cn(TYPOGRAPHY.label, "inline-block px-1.5 py-0 bg-sky-50 text-sky-700 border border-sky-100 rounded text-[11px] shadow-sm")}>{formatHouses(row.levelB)}</span> : <span className="text-primary opacity-30 text-[10px]">-</span>}
+                                    {row.levelB?.length ? <span className={cn(TYPOGRAPHY.label, "inline-block px-1.5 py-0 bg-sky-50 text-sky-700 border border-sky-100 rounded text-[11px] shadow-sm")}>{formatHouses(row.levelB)}</span> : <span className="text-ink opacity-30 text-[10px]">-</span>}
                                 </td>
                                 <td className="px-3 py-1 text-center">
-                                    {row.levelC?.length ? <span className={cn(TYPOGRAPHY.label, "inline-block px-1.5 py-0 bg-parchment text-primary border border-antique rounded text-[11px] shadow-sm")}>{formatHouses(row.levelC)}</span> : <span className="text-primary opacity-30 text-[10px]">-</span>}
+                                    {row.levelC?.length ? <span className={cn(TYPOGRAPHY.label, "inline-block px-1.5 py-0 bg-surface-warm text-ink border border-gold-primary/20 rounded text-[11px] shadow-sm")}>{formatHouses(row.levelC)}</span> : <span className="text-ink opacity-30 text-[10px]">-</span>}
                                 </td>
                                 <td className="px-3 py-1 text-center">
-                                    {row.levelD?.length ? <span className={cn(TYPOGRAPHY.label, "inline-block px-1.5 py-0 bg-softwhite border border-antique/50 text-primary rounded text-[11px] shadow-sm")}>{formatHouses(row.levelD)}</span> : <span className="text-primary opacity-30 text-[10px]">-</span>}
+                                    {row.levelD?.length ? <span className={cn(TYPOGRAPHY.label, "inline-block px-1.5 py-0 bg-white/80 border border-gold-primary/15 text-ink rounded text-[11px] shadow-sm")}>{formatHouses(row.levelD)}</span> : <span className="text-ink opacity-30 text-[10px]">-</span>}
                                 </td>
                             </tr>
                         ))}

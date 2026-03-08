@@ -120,7 +120,7 @@ export const RamanChartRenderer: React.FC<RamanChartRendererProps> = ({ houses }
             ))}
 
             {/* Lagna Label in House 1 (Optional, redundant with 'As' point but standard) */}
-            <text x="50" y="10" textAnchor="middle" className="text-[3px] fill-slate-500">
+            <text x="50" y="10" textAnchor="middle" className="text-[3px] fill-ink/45">
                 Lagna
             </text>
         </svg>

@@ -134,7 +134,7 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
                                 </div>
                             </div>
                             <div>
-                                <h3 className="text-base font-bold tracking-tight leading-tight text-ink">{dosha.dosha_name}</h3>
+                                <h3 className="text-[16px] font-bold tracking-tight leading-tight text-ink">{dosha.dosha_name}</h3>
                                 <p className="text-[11px] mt-1 leading-normal text-body">{dosha.description}</p>
                             </div>
                         </div>
@@ -144,7 +144,7 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
                             <div>
                                 <div className="flex flex-wrap gap-1.5">
                                     {dosha.impact_areas.map((area, i) => (
-                                        <span key={i} className="text-[9px] px-2 py-0.5 bg-white/40 rounded-md border border-antique font-bold uppercase tracking-tight text-ink">
+                                        <span key={i} className="text-[9px] px-2 py-0.5 bg-white/40 rounded-md border border-gold-primary/20 font-bold uppercase tracking-tight text-ink">
                                             {area}
                                         </span>
                                     ))}
@@ -185,7 +185,7 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
                                     {dosha.remedies.map((remedy, i) => (
                                         <div key={i} className="flex items-center gap-2 px-2.5 py-1.5 bg-white/40 rounded-md border border-transparent hover:border-purple-100 hover:bg-white transition-all cursor-default">
                                             <div className="w-1 h-1 rounded-full bg-purple-400 shrink-0" />
-                                            <span className="text-xs font-medium text-ink">{remedy}</span>
+                                            <span className="text-[12px] font-medium text-ink">{remedy}</span>
                                         </div>
                                     ))}
                                 </div>

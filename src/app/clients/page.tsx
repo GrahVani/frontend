@@ -201,25 +201,25 @@ export default function ClientsPage() {
                             onClick={() => setFilter('page', filters.page - 1)}
                             disabled={filters.page <= 1}
                             aria-label="Previous page"
-                            className="p-2 rounded-xl transition-all disabled:opacity-25 disabled:cursor-not-allowed hover:bg-parchment/60"
+                            className="p-2 rounded-xl transition-all disabled:opacity-25 disabled:cursor-not-allowed hover:bg-surface-warm/60"
                             style={{
                                 border: '1px solid rgba(220,201,166,0.30)',
                                 boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.4)',
                             }}
                         >
-                            <ChevronLeft className="w-4 h-4 text-bronze-dark/70" />
+                            <ChevronLeft className="w-4 h-4 text-ink/30" />
                         </button>
                         <button
                             onClick={() => setFilter('page', filters.page + 1)}
                             disabled={filters.page >= totalPages}
                             aria-label="Next page"
-                            className="p-2 rounded-xl transition-all disabled:opacity-25 disabled:cursor-not-allowed hover:bg-parchment/60"
+                            className="p-2 rounded-xl transition-all disabled:opacity-25 disabled:cursor-not-allowed hover:bg-surface-warm/60"
                             style={{
                                 border: '1px solid rgba(220,201,166,0.30)',
                                 boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.4)',
                             }}
                         >
-                            <ChevronRight className="w-4 h-4 text-bronze-dark/70" />
+                            <ChevronRight className="w-4 h-4 text-ink/30" />
                         </button>
                     </div>
                 </div>

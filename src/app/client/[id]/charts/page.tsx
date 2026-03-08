@@ -64,7 +64,7 @@ export default function ChartsPage({ params }: ChartsPageProps) {
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-[calc(100vh-140px)]">
-                <div className="text-amber-900 animate-pulse font-serif text-xl">Consulting the Stars...</div>
+                <div className="text-amber-900 animate-pulse font-serif text-[20px]">Consulting the Stars...</div>
             </div>
         );
     }
@@ -72,12 +72,12 @@ export default function ChartsPage({ params }: ChartsPageProps) {
     return (
         <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-140px)]">
             {/* Left Sidebar: Controls */}
-            <div className="w-full lg:w-[280px] shrink-0 bg-softwhite border border-antique rounded p-4 overflow-y-auto custom-scrollbar">
+            <div className="w-full lg:w-[280px] shrink-0 prem-card rounded p-4 overflow-y-auto custom-scrollbar">
                 <ChartControls />
             </div>
 
             {/* Right Area: Chart Canvas & Data */}
-            <div className="flex-1 bg-softwhite border border-antique rounded p-6 shadow-inner overflow-y-auto custom-scrollbar relative">
+            <div className="flex-1 prem-card rounded p-6 overflow-y-auto custom-scrollbar relative">
 
                 {/* Decorative Background */}
                 <div
@@ -97,7 +97,7 @@ export default function ChartsPage({ params }: ChartsPageProps) {
                                 {currentChart ? (
                                     <>
                                         <div className="w-full max-w-[450px] aspect-square">
-                                            <h2 className="text-xl font-serif text-slate-800 mb-4 text-center">
+                                            <h2 className="text-[20px] font-serif text-ink mb-4 text-center">
                                                 {ayanamsa} Ayanamsa (D1 Chart)
                                             </h2>
                                             {processed && (
@@ -110,7 +110,7 @@ export default function ChartsPage({ params }: ChartsPageProps) {
                                         </div>
                                         {/* Planetary Table Section */}
                                         <div className="w-full">
-                                            <h3 className="font-serif text-gold-dark text-lg font-bold mb-4 flex items-center gap-2">
+                                            <h3 className="font-serif text-gold-dark text-[18px] font-bold mb-4 flex items-center gap-2">
                                                 <span className="w-8 h-[1px] bg-gold-dark/50"></span>
                                                 Planetary Details
                                                 <span className="w-8 h-[1px] bg-gold-dark/50"></span>
@@ -121,8 +121,8 @@ export default function ChartsPage({ params }: ChartsPageProps) {
                                 ) : (
                                     <div className="flex flex-col items-center justify-center p-20 text-center border-2 border-dashed border-amber-200 rounded-xl bg-amber-50/30">
                                         <div className="text-5xl mb-4">✨</div>
-                                        <h3 className="text-xl font-serif text-amber-900 mb-2">No Vedic Data Found</h3>
-                                        <p className="text-slate-600 mb-6 max-w-md">The astrological profile for this client hasn't been generated for the {ayanamsa} system yet.</p>
+                                        <h3 className="text-[20px] font-serif text-amber-900 mb-2">No Vedic Data Found</h3>
+                                        <p className="text-ink/55 mb-6 max-w-md">The astrological profile for this client hasn't been generated for the {ayanamsa} system yet.</p>
                                         <button
                                             onClick={handleGenerate}
                                             disabled={isGeneratingFull}

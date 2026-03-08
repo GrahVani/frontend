@@ -61,8 +61,8 @@ export default function PersonalEventsPage() {
         <div className="max-w-4xl mx-auto space-y-6">
             <div className="flex items-start justify-between">
                 <div>
-                    <h1 className="text-3xl font-serif text-ink font-bold mb-1">Personal Events</h1>
-                    <p className="text-muted-refined font-serif italic">Manage your consultations, follow-ups, and personal calendar</p>
+                    <h1 className="text-[30px] font-serif text-ink font-bold mb-1">Personal Events</h1>
+                    <p className="text-ink/45 font-serif italic">Manage your consultations, follow-ups, and personal calendar</p>
                 </div>
                 <Button onClick={() => setShowForm(!showForm)} icon={Plus} variant={showForm ? "ghost" : "primary"}>
                     {showForm ? "Cancel" : "New Event"}
@@ -86,13 +86,13 @@ export default function PersonalEventsPage() {
                     {events.map((event) => {
                         const badge = CATEGORY_BADGE[event.category];
                         return (
-                            <div key={event.id} className="bg-softwhite border border-antique rounded-xl p-4 flex items-start gap-4">
+                            <div key={event.id} className="prem-card rounded-xl p-4 flex items-start gap-4">
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2 mb-1">
-                                        <h3 className="text-sm font-serif font-semibold text-ink truncate" title={event.title}>{event.title}</h3>
+                                        <h3 className="text-[14px] font-serif font-semibold text-ink truncate" title={event.title}>{event.title}</h3>
                                         <Badge variant={badge.variant} size="sm">{badge.label}</Badge>
                                     </div>
-                                    <div className="flex items-center gap-3 text-xs text-muted-refined">
+                                    <div className="flex items-center gap-3 text-[12px] text-ink/45">
                                         <span className="inline-flex items-center gap-1">
                                             <Calendar className="w-3 h-3" />
                                             {new Date(event.date).toLocaleDateString("en-IN", { weekday: "short", month: "short", day: "numeric" })}
@@ -107,7 +107,7 @@ export default function PersonalEventsPage() {
                                         )}
                                     </div>
                                     {event.description && (
-                                        <p className="text-xs text-muted-refined mt-1">{event.description}</p>
+                                        <p className="text-[12px] text-ink/45 mt-1">{event.description}</p>
                                     )}
                                 </div>
                                 <button
@@ -115,7 +115,7 @@ export default function PersonalEventsPage() {
                                     className="p-2.5 rounded-md hover:bg-status-error/10 transition-colors shrink-0"
                                     aria-label={`Delete ${event.title}`}
                                 >
-                                    <Trash2 className="w-4 h-4 text-muted-refined hover:text-status-error" />
+                                    <Trash2 className="w-4 h-4 text-ink/45 hover:text-status-error" />
                                 </button>
                             </div>
                         );

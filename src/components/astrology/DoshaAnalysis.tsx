@@ -78,9 +78,9 @@ export default function DoshaAnalysis({ clientId, doshaType, ayanamsa = 'lahiri'
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center p-12 bg-parchment/30 rounded-2xl border border-border-warm">
+            <div className="flex flex-col items-center justify-center p-12 bg-surface-warm/30 rounded-2xl border border-gold-primary/15">
                 <Loader2 className="w-8 h-8 text-gold-primary animate-spin mb-4" />
-                <p className={cn(TYPOGRAPHY.subValue, "text-sm italic")}>Consulting Stellar records...</p>
+                <p className={cn(TYPOGRAPHY.subValue, "text-[14px] italic")}>Consulting Stellar records...</p>
             </div>
         );
     }
@@ -113,14 +113,14 @@ export default function DoshaAnalysis({ clientId, doshaType, ayanamsa = 'lahiri'
     // Fallback for types not yet fully implemented with custom views
     return (
         <div className="space-y-6 p-6">
-            <div className="bg-softwhite border border-border-warm rounded-2xl p-6">
+            <div className="prem-card p-6">
                 <div className="flex items-center gap-3 mb-4">
                     <div className="p-2 bg-gold-primary/10 rounded-lg">
-                        <Zap className="w-5 h-5 text-accent-gold" />
+                        <Zap className="w-5 h-5 text-gold-dark" />
                     </div>
-                    <h2 className="text-xl font-serif font-bold text-ink capitalize">{doshaType.replace('_', ' ')} Analysis</h2>
+                    <h2 className="text-[20px] font-serif font-bold text-ink capitalize">{doshaType.replace('_', ' ')} Analysis</h2>
                 </div>
-                <p className="text-sm text-secondary">Detailed report for {doshaType} is being prepared by the engine.</p>
+                <p className="text-[14px] text-ink/55">Detailed report for {doshaType} is being prepared by the engine.</p>
             </div>
         </div>
     );
@@ -135,7 +135,7 @@ function AngarakDoshaView({ data, className }: { data: AngarakDoshaData; classNa
             <div className="space-y-4 p-6">
                 <div className={cn("bg-green-50 border border-green-100 rounded-2xl p-6 text-center", className)}>
                     <CheckCircle2 className="w-10 h-10 text-green-500 mx-auto mb-3" />
-                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-green-900")}>Dosha Absent</h3>
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] text-green-900")}>Dosha Absent</h3>
                     <p className={cn(TYPOGRAPHY.value, "text-green-700 mt-1")}>Mars and Rahu are harmoniously placed. No Angarak Dosha signature found.</p>
                 </div>
             </div>
@@ -147,7 +147,7 @@ function AngarakDoshaView({ data, className }: { data: AngarakDoshaData; classNa
     return (
         <div className={cn("space-y-6 p-6", className)}>
             {/* 1. Header & Severity */}
-            <div className="bg-softwhite border border-border-warm rounded-2xl p-6 shadow-sm overflow-hidden relative">
+            <div className="prem-card p-6 overflow-hidden relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full -mr-16 -mt-16 blur-3xl" />
 
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -156,16 +156,16 @@ function AngarakDoshaView({ data, className }: { data: AngarakDoshaData; classNa
                             <Flame className="w-8 h-8" />
                         </div>
                         <div>
-                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl")}>Angarak Dosha</h2>
-                            <p className={cn(TYPOGRAPHY.value, "text-sm text-red-700")}>Mars-Rahu Conjunction in House {data.placement?.house}</p>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px]")}>Angarak Dosha</h2>
+                            <p className={cn(TYPOGRAPHY.value, "text-[14px] text-red-700")}>Mars-Rahu Conjunction in House {data.placement?.house}</p>
                         </div>
                     </div>
 
                     <div className="flex items-center gap-5">
                         <div className="text-right">
-                            <p className="text-[10px] uppercase tracking-widest text-muted-refined font-bold mb-1">Overall Severity</p>
+                            <p className="text-[10px] uppercase tracking-widest text-ink/45 font-bold mb-1">Overall Severity</p>
                             <span className={cn(
-                                "px-4 py-1.5 rounded-full text-xs font-bold border",
+                                "px-4 py-1.5 rounded-full text-[12px] font-bold border",
                                 overall_severity?.includes('Very High') ? "bg-red-500 text-white border-red-600" :
                                     overall_severity?.includes('High') ? "bg-orange-500 text-white border-orange-600" :
                                         "bg-amber-500 text-white border-amber-600"
@@ -179,25 +179,25 @@ function AngarakDoshaView({ data, className }: { data: AngarakDoshaData; classNa
 
             {/* 2. Impact Matrix */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
-                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-4 flex items-center gap-2 text-sm uppercase")}>
+                <div className="prem-card p-5">
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-4 flex items-center gap-2 text-[14px] uppercase")}>
                         <Target className="w-4 h-4 text-red-600" /> Focus Areas
                     </h3>
                     <div className="flex flex-wrap gap-2">
                         {house_effects?.areas?.map((area: string, i: number) => (
-                            <span key={i} className="px-3 py-1 bg-parchment border border-border-warm rounded-lg text-[10px] font-medium text-ink">
+                            <span key={i} className="px-3 py-1 bg-surface-warm border border-gold-primary/15 rounded-lg text-[10px] font-medium text-ink">
                                 {area}
                             </span>
                         ))}
                     </div>
                 </div>
-                <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
-                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-4 flex items-center gap-2 text-sm uppercase")}>
+                <div className="prem-card p-5">
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-4 flex items-center gap-2 text-[14px] uppercase")}>
                         <AlertTriangle className="w-4 h-4 text-orange-500" /> Specific Effects
                     </h3>
                     <ul className="space-y-2">
                         {house_effects?.effects?.map((effect: string, i: number) => (
-                            <li key={i} className="text-[11px] text-secondary flex items-start gap-2 leading-tight">
+                            <li key={i} className="text-[11px] text-ink/55 flex items-start gap-2 leading-tight">
                                 <div className="w-1 h-1 rounded-full bg-red-400 mt-1.5 shrink-0" />
                                 {effect}
                             </li>
@@ -209,7 +209,7 @@ function AngarakDoshaView({ data, className }: { data: AngarakDoshaData; classNa
             {/* 3. Remedies Card */}
             <div className="bg-ink text-parchment rounded-3xl p-6 shadow-xl relative overflow-hidden">
                 <div className="absolute bottom-0 right-0 w-48 h-48 bg-gold-primary/10 rounded-full -mb-24 -mr-24 blur-3xl" />
-                <h3 className="text-xl font-serif font-bold mb-6 flex items-center gap-3">
+                <h3 className="text-[20px] font-serif font-bold mb-6 flex items-center gap-3">
                     <Hammer className="w-6 h-6 text-gold-primary" /> Remedies
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -250,7 +250,7 @@ function SadeSatiView({ data, className }: { data: SadeSatiData; className?: str
             <div className="space-y-4 p-6">
                 <div className={cn("bg-blue-50 border border-blue-100 rounded-2xl p-6 text-center", className)}>
                     <CheckCircle2 className="w-10 h-10 text-blue-500 mx-auto mb-3" />
-                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-blue-900")}>Sade Sati Inactive</h3>
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] text-blue-900")}>Sade Sati Inactive</h3>
                     <p className={cn(TYPOGRAPHY.value, "text-blue-700 mt-1")}>Transiting Saturn is currently not in the 12th, 1st, or 2nd from your Natal Moon.</p>
                 </div>
             </div>
@@ -266,31 +266,31 @@ function SadeSatiView({ data, className }: { data: SadeSatiData; className?: str
                         <Moon className="w-8 h-8" />
                     </div>
                     <div>
-                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl text-white")}>Sade Sati Analysis</h2>
-                        <p className={cn(TYPOGRAPHY.value, "text-sm text-indigo-300")}>Saturn Transiting {data.phase}</p>
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] text-white")}>Sade Sati Analysis</h2>
+                        <p className={cn(TYPOGRAPHY.value, "text-[14px] text-indigo-300")}>Saturn Transiting {data.phase}</p>
                     </div>
                 </div>
                 <div className="mt-6 p-4 bg-white/5 border border-white/10 rounded-xl">
-                    <p className="text-xs font-serif italic text-indigo-100 leading-relaxed text-center">
+                    <p className="text-[12px] font-serif italic text-indigo-100 leading-relaxed text-center">
                         "{data.interpretation?.description}"
                     </p>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
-                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-4 flex items-center gap-2 text-sm uppercase")}>
+                <div className="prem-card p-5">
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-4 flex items-center gap-2 text-[14px] uppercase")}>
                         <Info className="w-4 h-4 text-indigo-600" /> Details
                     </h3>
-                    <p className="text-[11px] text-secondary leading-relaxed">{data.description}</p>
+                    <p className="text-[11px] text-ink/55 leading-relaxed">{data.description}</p>
                 </div>
-                <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
-                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-4 flex items-center gap-2 text-sm uppercase")}>
+                <div className="prem-card p-5">
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-4 flex items-center gap-2 text-[14px] uppercase")}>
                         <CheckCircle2 className="w-4 h-4 text-green-600" /> Recommendations
                     </h3>
                     <ul className="space-y-2">
                         {data.recommendations?.slice(0, 4).map((rec: string, i: number) => (
-                            <li key={i} className="text-[11px] text-secondary flex items-start gap-2 leading-tight">
+                            <li key={i} className="text-[11px] text-ink/55 flex items-start gap-2 leading-tight">
                                 <div className="w-1 h-1 rounded-full bg-indigo-400 mt-1.5 shrink-0" />
                                 {rec.replace(/[ðŸ•‰ï¸ðŸ™ðŸ“¿ðŸ’–ðŸª”ðŸ‘´â¸ï¸]/g, '')}
                             </li>
@@ -312,8 +312,8 @@ function DhaiyaView({ data, className }: { data: DhaiyaData; className?: string 
             <div className="space-y-4">
                 <div className={cn("bg-green-50 border border-green-100 rounded-2xl p-6 text-center", className)}>
                     <CheckCircle2 className="w-10 h-10 text-green-500 mx-auto mb-3" />
-                    <h3 className="text-green-900 font-serif font-bold text-lg">No Dhaiya</h3>
-                    <p className="text-sm text-green-700 mt-1">Saturn is not currently in the 4th or 8th house from your Natal Moon.</p>
+                    <h3 className="text-green-900 font-serif font-bold text-[18px]">No Dhaiya</h3>
+                    <p className="text-[14px] text-green-700 mt-1">Saturn is not currently in the 4th or 8th house from your Natal Moon.</p>
                 </div>
             </div>
         );
@@ -321,34 +321,34 @@ function DhaiyaView({ data, className }: { data: DhaiyaData; className?: string 
 
     return (
         <div className={cn("space-y-6", className)}>
-            <div className="bg-slate-900 text-white border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-slate-500/10 rounded-full -mr-32 -mt-32 blur-3xl opacity-50" />
+            <div className="bg-ink text-white border border-ink/90 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-ink/10 rounded-full -mr-32 -mt-32 blur-3xl opacity-50" />
                 <div className="flex items-center gap-4 relative z-10">
-                    <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-slate-300">
+                    <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-ink/25">
                         <Moon className="w-8 h-8" />
                     </div>
                     <div>
-                        <h2 className="text-2xl font-serif font-bold">Kantaka Shani (Dhaiya)</h2>
-                        <p className="text-sm text-slate-300 font-medium">{data.dhaiya_type} from Moon</p>
+                        <h2 className="text-[24px] font-serif font-bold">Kantaka Shani (Dhaiya)</h2>
+                        <p className="text-[14px] text-ink/25 font-medium">{data.dhaiya_type} from Moon</p>
                     </div>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
-                    <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-sm uppercase">
-                        <Info className="w-4 h-4 text-slate-600" /> Effects
+                <div className="prem-card p-5">
+                    <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-[14px] uppercase">
+                        <Info className="w-4 h-4 text-ink/55" /> Effects
                     </h3>
-                    <p className="text-[11px] text-muted leading-relaxed">{data.effects}</p>
+                    <p className="text-[11px] text-ink/45 leading-relaxed">{data.effects}</p>
                 </div>
-                <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
-                    <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-sm uppercase">
+                <div className="prem-card p-5">
+                    <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-[14px] uppercase">
                         <Hammer className="w-4 h-4 text-gold-primary" /> Remedies
                     </h3>
                     <ul className="space-y-2">
                         {data.remedies?.map((rec: string, i: number) => (
-                            <li key={i} className="text-[11px] text-muted flex items-start gap-2 leading-tight">
-                                <div className="w-1 h-1 rounded-full bg-slate-400 mt-1.5 shrink-0" />
+                            <li key={i} className="text-[11px] text-ink/45 flex items-start gap-2 leading-tight">
+                                <div className="w-1 h-1 rounded-full bg-ink/35 mt-1.5 shrink-0" />
                                 {rec}
                             </li>
                         ))}

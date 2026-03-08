@@ -63,18 +63,18 @@ export default function MuhurtaTimeSlot({ window: tw, isActive, className }: Muh
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                     <QualityIcon className={cn("w-4 h-4", config.color)} />
-                    <h3 className="text-sm font-serif font-bold text-ink">{tw.name}</h3>
+                    <h3 className="text-[14px] font-serif font-bold text-ink">{tw.name}</h3>
                 </div>
-                <span className={cn("text-xs font-medium px-2 py-0.5 rounded-full", config.bg, config.color)}>
+                <span className={cn("text-[12px] font-medium px-2 py-0.5 rounded-full", config.bg, config.color)}>
                     {config.label}
                 </span>
             </div>
             <div className="flex items-center gap-1.5 mb-2">
-                <Clock className="w-3.5 h-3.5 text-muted-refined" />
-                <span className="text-sm font-medium text-ink">{tw.startTime} — {tw.endTime}</span>
+                <Clock className="w-3.5 h-3.5 text-ink/45" />
+                <span className="text-[14px] font-medium text-ink">{tw.startTime} — {tw.endTime}</span>
             </div>
             {tw.description && (
-                <p className="text-xs text-muted-refined leading-relaxed">{tw.description}</p>
+                <p className="text-[12px] text-ink/45 leading-relaxed">{tw.description}</p>
             )}
         </div>
     );

@@ -120,7 +120,7 @@ export default function ShodashaDignity({ data, activeSystem, className }: Digni
         if (neecha[planet] === normalizedSign) return { label: 'Neecha', category: 'debilitated', color: 'text-rose-600 border-rose-200 bg-rose-50/50' };
         if (swakshetra[planet]?.includes(normalizedSign)) return { label: 'Swa', category: 'own', color: 'text-indigo-600 border-indigo-200 bg-indigo-50/50' };
 
-        return { label: normalizedSign.substring(0, 3), category: 'neutral', color: 'text-slate-500 border-slate-100 bg-slate-50/30' };
+        return { label: normalizedSign.substring(0, 3), category: 'neutral', color: 'text-ink/45 border-gold-primary/10 bg-surface-warm/30' };
     };
 
     // Robust Data Normalization
@@ -228,7 +228,7 @@ export default function ShodashaDignity({ data, activeSystem, className }: Digni
                             <Shield className="w-4 h-4 text-white" />
                         </div>
                         <div>
-                            <h3 className="text-lg font-serif text-copper-900 font-bold leading-tight">Dignity Matrix</h3>
+                            <h3 className="text-[18px] font-serif text-copper-900 font-bold leading-tight">Dignity Matrix</h3>
                             <p className="text-[10px] text-copper-500 font-medium">Planetary strength across 10 vargas</p>
                         </div>
                     </div>
@@ -257,8 +257,8 @@ export default function ShodashaDignity({ data, activeSystem, className }: Digni
                                             </TooltipTrigger>
                                             <TooltipContent className="p-3 bg-copper-900 text-white rounded-xl border-none shadow-2xl">
                                                 <div className="space-y-1">
-                                                    <p className="font-bold text-sm">{v.label} ({v.id})</p>
-                                                    <p className="text-xs text-copper-200 leading-relaxed max-w-[180px]">{v.description}</p>
+                                                    <p className="font-bold text-[14px]">{v.label} ({v.id})</p>
+                                                    <p className="text-[12px] text-copper-200 leading-relaxed max-w-[180px]">{v.description}</p>
                                                     <div className="flex items-center gap-2 mt-2 pt-2 border-t border-copper-800/50">
                                                         <Award className="w-3 h-3 text-amber-400" />
                                                         <span className="text-[10px] font-bold">Weightage: {v.weight}</span>
@@ -279,7 +279,7 @@ export default function ShodashaDignity({ data, activeSystem, className }: Digni
                                         <td className="p-3 font-bold text-copper-900 border-r border-copper-50/50 sticky left-0 bg-white/95 backdrop-blur z-10 group-hover:text-indigo-600 transition-colors">
                                             <div className="flex items-center gap-2">
                                                 <div className="w-1 h-1 rounded-full bg-copper-300 group-hover:bg-indigo-400 transition-colors" />
-                                                <span className="text-xs">{PLANET_MAP[p]?.full || p}</span>
+                                                <span className="text-[12px]">{PLANET_MAP[p]?.full || p}</span>
                                             </div>
                                         </td>
                                         {VARGAS.map(v => {

@@ -39,9 +39,9 @@ const MantraAnalysisDashboard: React.FC<MantraAnalysisDashboardProps> = ({ data 
         <div className={cn("min-h-screen p-4 lg:p-6 space-y-6 animate-in fade-in duration-700", styles.dashboardContainer)}>
             {/* Header Area */}
             <div className="flex flex-col gap-6">
-                <div className="flex items-center justify-between border-b border-antique pb-4">
+                <div className="flex items-center justify-between border-b border-gold-primary/20 pb-4">
                     <div className="flex items-center gap-3">
-                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-bold tracking-tight")}>
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-bold tracking-tight")}>
                             Mantras : {String(data.user_name || "Sadhaka")}
                         </h2>
                     </div>
@@ -63,9 +63,9 @@ const MantraAnalysisDashboard: React.FC<MantraAnalysisDashboardProps> = ({ data 
 
                 {/* Right Side: Main Panels (8/12) - Unified Light Glass Dashboard */}
                 <div className="lg:col-span-8">
-                    <div className="rounded-[2.5rem] bg-softwhite/95 border border-antique shadow-xl overflow-hidden flex flex-col p-6 space-y-4 h-fit">
+                    <div className="rounded-[2.5rem] bg-surface-warm/95 border border-gold-primary/20 shadow-xl overflow-hidden flex flex-col p-6 space-y-4 h-fit">
                         <div className="flex items-center justify-between px-2">
-                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-medium tracking-tight")}>Today's mantra focus (priority)</h2>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] font-medium tracking-tight")}>Today's mantra focus (priority)</h2>
                             <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.3)] animate-pulse" />
                         </div>
 
@@ -77,7 +77,7 @@ const MantraAnalysisDashboard: React.FC<MantraAnalysisDashboardProps> = ({ data 
                             {weakPlanets.length > 0 ? (
                                 <WeakPlanetSadhana weakPlanets={weakPlanets} />
                             ) : (
-                                <div className="p-8 text-center bg-white/40 rounded-[2rem] border border-antique/20">
+                                <div className="p-8 text-center bg-white/40 rounded-[2rem] border border-gold-primary/15">
                                     <Sparkles className="w-8 h-8 text-amber-300 mx-auto mb-3 opacity-50" />
                                     <p className="text-[12px] font-medium tracking-[0.05em] text-amber-900/40">Harmonic balance achieved</p>
                                 </div>
@@ -91,15 +91,15 @@ const MantraAnalysisDashboard: React.FC<MantraAnalysisDashboardProps> = ({ data 
                                     {recommendations.map((item: { category: string; action: string; note: string }, idx: number) => (
                                         <div
                                             key={idx}
-                                            className="flex items-start gap-4 p-4 rounded-2xl border bg-white/80 transition-all group cursor-pointer border-antique/20 hover:bg-white"
+                                            className="flex items-start gap-4 p-4 rounded-2xl border bg-white/80 transition-all group cursor-pointer border-gold-primary/15 hover:bg-white"
                                         >
-                                            <div className="flex-shrink-0 w-6 h-6 rounded-full border border-antique/30 flex items-center justify-center text-[12px] font-medium transition-all mt-0.5 bg-white group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 text-muted">
+                                            <div className="flex-shrink-0 w-6 h-6 rounded-full border border-gold-primary/20 flex items-center justify-center text-[12px] font-medium transition-all mt-0.5 bg-white group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 text-ink/45">
                                                 {idx + 1}
                                             </div>
                                             <div className="min-w-0">
                                                 <h3 className="text-[11px] font-medium tracking-widest mb-1 group-hover:text-indigo-600 transition-colors text-ink">{item.category}</h3>
-                                                <p className="text-sm font-medium leading-tight mb-2 text-ink/80">{item.action}</p>
-                                                <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/60 border border-antique/10 text-[10px] font-medium italic text-slate-500">
+                                                <p className="text-[14px] font-medium leading-tight mb-2 text-ink/80">{item.action}</p>
+                                                <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/60 border border-gold-primary/10 text-[10px] font-medium italic text-ink/45">
                                                     <span className="truncate" title={item.note}>{item.note}</span>
                                                 </div>
                                             </div>

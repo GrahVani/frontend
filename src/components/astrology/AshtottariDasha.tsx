@@ -49,7 +49,7 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
             {/* Table */}
             <div className="overflow-x-auto">
                 <table className="w-full">
-                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-ink/5 border-b border-header-border/10")}>
+                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-ink/5 border-b border-gold-primary/10")}>
                         <tr>
                             <th className="px-3 py-2 text-left">Planet</th>
                             <th className="px-3 py-2 text-left">Start Date</th>
@@ -58,7 +58,7 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
                             <th className="px-3 py-2 text-center">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-header-border/10 font-medium">
+                    <tbody className="divide-y divide-gold-primary/10 font-medium">
                         {periods.map((mahadasha, mIdx) => {
                             const isExpanded = expandedMahadasha === mahadasha.planet;
                             const antardashas = mahadasha.sublevel || [];
@@ -68,15 +68,15 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
                                 <React.Fragment key={mIdx}>
                                     <tr
                                         className={cn(
-                                            "hover:bg-accent-gold/10 transition-colors group cursor-pointer",
-                                            mahadasha.isCurrent && "bg-accent-gold/5"
+                                            "hover:bg-gold-primary/10 transition-colors group cursor-pointer",
+                                            mahadasha.isCurrent && "bg-gold-primary/5"
                                         )}
                                         onClick={() => setExpandedMahadasha(isExpanded ? null : mahadasha.planet)}
                                     >
                                         <td className="px-3 py-2">
                                             <div className="flex items-center gap-2">
                                                 <span className={cn(
-                                                    "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold border shadow-sm min-w-[60px] justify-center",
+                                                    "inline-flex items-center px-2 py-0.5 rounded-md text-[12px] font-bold border shadow-sm min-w-[60px] justify-center",
                                                     PLANET_COLORS[mahadasha.planet || ''] || "bg-white"
                                                 )}>
                                                     {mahadasha.planet}
@@ -96,7 +96,7 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
                                         </td>
                                         <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>
                                             <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}>
-                                                <Calendar className="w-3 h-3 text-muted/40" />
+                                                <Calendar className="w-3 h-3 text-ink/30" />
                                                 {formatDateDisplay(mahadasha.startDate)}
                                             </div>
                                         </td>
@@ -109,9 +109,9 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
                                                 {mahadasha.isCurrent ? (
                                                     <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm animate-pulse">ACTIVE</span>
                                                 ) : antardashas.length > 0 ? (
-                                                    isExpanded ? <ChevronUp className="w-4 h-4 text-accent-gold" /> : <ChevronDown className="w-4 h-4 text-accent-gold" />
+                                                    isExpanded ? <ChevronUp className="w-4 h-4 text-gold-dark" /> : <ChevronDown className="w-4 h-4 text-gold-dark" />
                                                 ) : (
-                                                    <span className="text-accent-gold/40 text-xs">—</span>
+                                                    <span className="text-gold-dark/40 text-[12px]">—</span>
                                                 )}
                                             </div>
                                         </td>
@@ -120,12 +120,12 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
                                     {/* Expanded Antardasha Row */}
                                     {isExpanded && antardashas.length > 0 && (
                                         <tr>
-                                            <td colSpan={5} className="bg-parchment/60/60 px-3 py-2">
-                                                <div className="text-2xs font-black text-muted uppercase tracking-[0.2em] mb-2 pl-2">
+                                            <td colSpan={5} className="bg-surface-warm/60/60 px-3 py-2">
+                                                <div className="text-2xs font-black text-ink/45 uppercase tracking-[0.2em] mb-2 pl-2">
                                                     Antardasha Sub-Periods (Ashtottari)
                                                 </div>
                                                 <table className="w-full">
-                                                    <tbody className="divide-y divide-header-border/10">
+                                                    <tbody className="divide-y divide-gold-primary/10">
                                                         {antardashas.map((antar, aIdx) => {
                                                             const antarKey = `${mahadasha.planet}:${antar.planet}`;
                                                             const isAntarExpanded = expandedAntardasha === antarKey;
@@ -145,7 +145,7 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
                                                                     >
                                                                         <td className="px-3 py-2">
                                                                             <span className={cn(
-                                                                                "inline-flex items-center px-1.5 py-0.5 rounded text-xs font-bold border",
+                                                                                "inline-flex items-center px-1.5 py-0.5 rounded text-[12px] font-bold border",
                                                                                 PLANET_COLORS[antar.planet || ''] || "bg-white"
                                                                             )}>
                                                                                 {antar.planet}
@@ -158,11 +158,11 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
                                                                         </td>
                                                                         <td className="px-3 py-2 text-center">
                                                                             {isLoading ? (
-                                                                                <Loader2 className="w-3 h-3 text-accent-gold animate-spin mx-auto" />
+                                                                                <Loader2 className="w-3 h-3 text-gold-dark animate-spin mx-auto" />
                                                                             ) : antar.isCurrent ? (
                                                                                 <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 animate-pulse">ACTIVE</span>
                                                                             ) : hasPratyantar ? (
-                                                                                isAntarExpanded ? <ChevronUp className="w-3.5 h-3.5 text-accent-gold mx-auto" /> : <ChevronDown className="w-3.5 h-3.5 text-accent-gold mx-auto" />
+                                                                                isAntarExpanded ? <ChevronUp className="w-3.5 h-3.5 text-gold-dark mx-auto" /> : <ChevronDown className="w-3.5 h-3.5 text-gold-dark mx-auto" />
                                                                             ) : null}
                                                                         </td>
                                                                     </tr>
@@ -171,11 +171,11 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
                                                                     {isAntarExpanded && pratyantarPeriods.length > 0 && (
                                                                         <tr>
                                                                             <td colSpan={5} className="bg-gold-soft/60 px-4 py-2">
-                                                                                <div className="text-2xs font-black text-accent-gold uppercase tracking-[0.2em] mb-1.5 pl-2">
+                                                                                <div className="text-2xs font-black text-gold-dark uppercase tracking-[0.2em] mb-1.5 pl-2">
                                                                                     Pratyantardasha ({mahadasha.planet} → {antar.planet})
                                                                                 </div>
                                                                                 <table className="w-full">
-                                                                                    <tbody className="divide-y divide-header-border/5">
+                                                                                    <tbody className="divide-y divide-gold-primary/5">
                                                                                         {pratyantarPeriods.map((pd, pIdx) => (
                                                                                             <tr key={pIdx} className={cn(
                                                                                                 "hover:bg-white/30 transition-colors",
@@ -189,9 +189,9 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
                                                                                                         {pd.planet}
                                                                                                     </span>
                                                                                                 </td>
-                                                                                                <td className="px-3 py-1.5 text-[10px] text-primary font-mono">{formatDateDisplay(pd.startDate)}</td>
-                                                                                                <td className="px-3 py-1.5 text-[10px] text-primary font-mono">{formatDateDisplay(pd.endDate)}</td>
-                                                                                                <td className="px-3 py-1.5 text-[10px] text-muted font-bold">
+                                                                                                <td className="px-3 py-1.5 text-[10px] text-ink font-mono">{formatDateDisplay(pd.startDate)}</td>
+                                                                                                <td className="px-3 py-1.5 text-[10px] text-ink font-mono">{formatDateDisplay(pd.endDate)}</td>
+                                                                                                <td className="px-3 py-1.5 text-[10px] text-ink/45 font-bold">
                                                                                                     {standardizeDuration((pd.raw?.duration_years as number) || 0, pd.raw?.duration_days as number)}
                                                                                                 </td>
                                                                                                 <td className="px-3 py-1.5 text-center">

@@ -39,16 +39,16 @@ export default function KpDebugInspector({
     queryDataByTab,
 }: KpDebugInspectorProps) {
     return (
-        <div className="mt-8 pt-8 border-t border-antique/20">
-            <details className="bg-slate-900 rounded-xl overflow-hidden shadow-2xl border border-white/5">
-                <summary className="p-4 text-white font-mono text-xs cursor-pointer hover:bg-slate-800 transition-colors flex items-center justify-between">
+        <div className="mt-8 pt-8 border-t border-gold-primary/15">
+            <details className="bg-ink rounded-xl overflow-hidden shadow-2xl border border-white/5">
+                <summary className="p-4 text-white font-mono text-[12px] cursor-pointer hover:bg-ink/90 transition-colors flex items-center justify-between">
                     <span className="flex items-center gap-2">
                         <Star className="w-3 h-3 text-gold-primary" />
                         KP Storage & Debug Inspector
                     </span>
                     <span className="text-[10px] opacity-50 uppercase tracking-widest">Click to Expand</span>
                 </summary>
-                <div className="p-6 bg-slate-950 space-y-6">
+                <div className="p-6 bg-ink space-y-6">
                     {/* Storage Status Grid */}
                     <div>
                         <h4 className="text-[10px] uppercase tracking-[0.2em] text-gold-primary mb-3 font-bold">Database Storage Status</h4>

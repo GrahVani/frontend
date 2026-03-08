@@ -55,7 +55,7 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
         return (
             <div className="flex flex-col items-center justify-center p-12 min-h-[300px]">
                 <Loader2 className="w-8 h-8 text-gold-primary animate-spin mb-4" />
-                <p className="text-sm font-serif text-muted italic">Consulting the Stars...</p>
+                <p className="text-[14px] font-serif text-ink/45 italic">Consulting the Stars...</p>
             </div>
         );
     }
@@ -66,10 +66,10 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
                 <div className="bg-red-50 p-4 rounded-xl inline-block mb-4">
                     <AlertTriangle className="w-8 h-8 text-red-500" />
                 </div>
-                <h3 className="text-lg font-serif font-bold text-red-900 mb-2">Unavailable</h3>
-                <p className="text-sm text-red-600 mb-6">{error || "Data not found"}</p>
+                <h3 className="text-[18px] font-serif font-bold text-red-900 mb-2">Unavailable</h3>
+                <p className="text-[14px] text-red-600 mb-6">{error || "Data not found"}</p>
 
-                <button onClick={onClose} className="px-4 py-2 bg-white border border-border-warm rounded-lg text-sm hover:bg-red-50 transition-colors mt-4">
+                <button onClick={onClose} className="px-4 py-2 bg-white border border-gold-primary/15 rounded-lg text-[14px] hover:bg-red-50 transition-colors mt-4">
                     Close
                 </button>
             </div>
@@ -103,10 +103,10 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
                         <Star className="w-5 h-5 text-gold-primary" />
                     </div>
                     <div>
-                        <h2 className="text-xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-active-glow to-header-border">
+                        <h2 className="text-[20px] font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-active-glow to-gold-primary">
                             Avakhada Chakra
                         </h2>
-                        <p className="text-xs text-parchment/60 font-sans tracking-wide uppercase">
+                        <p className="text-[12px] text-parchment/60 font-sans tracking-wide uppercase">
                             Foundational Classification
                         </p>
                     </div>
@@ -130,16 +130,16 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
                         if (!value) return null;
 
                         return (
-                            <div key={item.key} className="bg-white border border-border-warm/40 p-2.5 rounded-xl hover:border-gold-primary/40 hover:shadow-md transition-all group flex flex-col justify-between min-h-[85px]">
+                            <div key={item.key} className="bg-white border border-gold-primary/15 p-2.5 rounded-xl hover:border-gold-primary/40 hover:shadow-md transition-all group flex flex-col justify-between min-h-[85px]">
                                 <div className="flex justify-between items-start mb-0.5">
-                                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-refined/80">{item.label}</span>
-                                    <item.icon className="w-3 h-3 text-header-border/60 group-hover:text-header-border transition-colors" />
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-ink/35">{item.label}</span>
+                                    <item.icon className="w-3 h-3 text-gold-dark/60 group-hover:text-gold-dark transition-colors" />
                                 </div>
                                 <div>
-                                    <div className="font-serif text-sm font-semibold text-primary leading-tight line-clamp-1" title={value}>
+                                    <div className="font-serif text-[14px] font-semibold text-ink leading-tight line-clamp-1" title={value}>
                                         {value}
                                     </div>
-                                    <div className="text-[8px] text-muted-refined italic mt-0.5 truncate max-w-full opacity-60 group-hover:opacity-100 transition-opacity">
+                                    <div className="text-[8px] text-ink/45 italic mt-0.5 truncate max-w-full opacity-60 group-hover:opacity-100 transition-opacity">
                                         {item.desc}
                                     </div>
                                 </div>
@@ -149,12 +149,12 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
 
                     {/* Extra items like Hamsa Swara if present */}
                     {data.hamsa_swara && (
-                        <div className="bg-white border border-border-warm/40 p-2.5 rounded-xl hover:border-gold-primary/40 hover:shadow-md transition-all group flex flex-col justify-between min-h-[85px]">
+                        <div className="bg-white border border-gold-primary/15 p-2.5 rounded-xl hover:border-gold-primary/40 hover:shadow-md transition-all group flex flex-col justify-between min-h-[85px]">
                             <div className="flex justify-between items-start mb-0.5">
-                                <span className="text-[9px] font-bold uppercase tracking-wider text-muted-refined/80">Hamsa Swara</span>
-                                <Feather className="w-3 h-3 text-header-border/60" />
+                                <span className="text-[9px] font-bold uppercase tracking-wider text-ink/35">Hamsa Swara</span>
+                                <Feather className="w-3 h-3 text-gold-dark/60" />
                             </div>
-                            <div className="font-serif text-sm font-semibold text-primary leading-tight">
+                            <div className="font-serif text-[14px] font-semibold text-ink leading-tight">
                                 {data.hamsa_swara}
                             </div>
                         </div>
@@ -164,11 +164,11 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
             </div>
 
             {/* Footer Status Bar if needed, otherwise clean break */}
-            <div className="bg-softwhite border-t border-border-warm/20 px-6 py-3 flex justify-between items-center shrink-0">
-                <span className="text-[10px] text-muted-refined font-sans">
+            <div className="border-t border-gold-primary/10 px-6 py-3 flex justify-between items-center shrink-0">
+                <span className="text-[10px] text-ink/45 font-sans">
                     * Calculation based on Lahiri Ayanamsa
                 </span>
-                <button onClick={onClose} className="text-xs font-bold text-secondary hover:text-primary uppercase tracking-wider">
+                <button onClick={onClose} className="text-[12px] font-bold text-ink/55 hover:text-ink uppercase tracking-wider">
                     Close
                 </button>
             </div>

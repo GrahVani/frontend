@@ -5,10 +5,10 @@ export default function NotFound() {
     <div className="flex items-center justify-center min-h-[80vh] px-4">
       <div className="max-w-lg w-full text-center space-y-6 py-20">
         <div className="text-7xl font-serif text-gold-primary">404</div>
-        <h1 className="text-3xl font-serif font-bold text-ink">
+        <h1 className="text-[30px] font-serif font-bold text-ink">
           Page Not Found
         </h1>
-        <p className="text-secondary text-sm max-w-md mx-auto">
+        <p className="text-ink/45 text-[13px] font-medium max-w-md mx-auto">
           The page you are looking for does not exist or has been moved.
         </p>
         <Link

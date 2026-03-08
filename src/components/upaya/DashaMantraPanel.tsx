@@ -56,7 +56,7 @@ const DashaMantraPanel: React.FC<DashaMantraPanelProps> = ({ mantras }) => {
                                 "group relative overflow-hidden rounded-2xl border p-4 transition-all duration-300",
                                 isActive
                                     ? "bg-amber-500/5 border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.05)]"
-                                    : "bg-white/40 border-antique/20 hover:bg-white/60"
+                                    : "bg-white/40 border-gold-primary/15 hover:bg-white/60"
                             )}
                         >
                             <div className="flex items-center gap-4">
@@ -64,17 +64,17 @@ const DashaMantraPanel: React.FC<DashaMantraPanelProps> = ({ mantras }) => {
                                     "w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-sm border",
                                     isActive
                                         ? "bg-amber-500 text-white border-amber-600"
-                                        : "bg-white text-amber-600 border-antique/30"
+                                        : "bg-white text-amber-600 border-gold-primary/20"
                                 )} aria-label={`Play ${mantra.planet} ${mantra.type} mantra`}>
                                     <Play className={cn("w-5 h-5", isActive ? "fill-current" : "")} />
                                 </button>
 
                                 <div className="flex-1 min-w-0">
-                                    <h4 className="text-base font-medium text-ink tracking-tight">
+                                    <h4 className="text-[16px] font-medium text-ink tracking-tight">
                                         {mantra.planet} <span className="opacity-40 text-[12px]">({mantra.type})</span>
                                     </h4>
                                     <div className="flex items-baseline gap-2 overflow-hidden">
-                                        <p className="text-lg font-serif text-ink tracking-tight truncate" title={mantra.mantra.sanskrit}>
+                                        <p className="text-[18px] font-serif text-ink tracking-tight truncate" title={mantra.mantra.sanskrit}>
                                             {mantra.mantra.sanskrit}
                                         </p>
                                         <span className="text-[12px] font-medium text-amber-900/40 whitespace-nowrap">| Goal: {mantra.daily_count}</span>

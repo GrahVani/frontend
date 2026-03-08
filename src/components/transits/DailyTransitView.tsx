@@ -156,21 +156,21 @@ export default function DailyTransitView({ clientId }: { clientId: string }) {
     const insights = getTransitInsights(currentEntry, nextEntry);
 
     return (
-        <div className="flex flex-col h-[calc(100vh-180px)] bg-antique/30 rounded-2xl border border-antique overflow-hidden">
+        <div className="flex flex-col h-[calc(100vh-180px)] bg-gold-primary/5 rounded-2xl border border-gold-primary/20 overflow-hidden">
             {/* Header & Duration Selection */}
-            <div className="px-4 py-1.5 bg-white/80 border-b border-antique flex items-center justify-between gap-4 shrink-0 rounded-t-2xl">
+            <div className="px-4 py-1.5 bg-white/80 border-b border-gold-primary/20 flex items-center justify-between gap-4 shrink-0 rounded-t-2xl">
                 <div className="flex items-center gap-4 min-w-0">
-                    <div className="flex items-center gap-1 bg-antique/50 p-0.5 rounded-lg border border-antique/20 shrink-0">
+                    <div className="flex items-center gap-1 bg-gold-primary/10 p-0.5 rounded-lg border border-gold-primary/15 shrink-0">
                         {DURATION_TABS.map(tab => (
                             <button
                                 key={tab.key}
                                 onClick={() => setDurationTab(tab.key)}
                                 className={cn(
                                     TYPOGRAPHY.value,
-                                    "px-2.5 py-1 text-xs sm:text-[12px] rounded transition-all flex items-center gap-1",
+                                    "px-2.5 py-1 text-[12px] sm:text-[12px] rounded transition-all flex items-center gap-1",
                                     durationTab === tab.key
-                                        ? cn("text-white shadow-sm border border-header-border/20", COLORS.wbActiveTab)
-                                        : "text-primary hover:text-primary hover:bg-white/50"
+                                        ? cn("text-white shadow-sm border border-gold-primary/15", COLORS.wbActiveTab)
+                                        : "text-ink hover:text-ink hover:bg-white/50"
                                 )}
                             >
                                 {tab.icon}
@@ -197,7 +197,7 @@ export default function DailyTransitView({ clientId }: { clientId: string }) {
                 </div>
 
                 <div className="flex items-center gap-4 shrink-0">
-                    {loading && <Loader2 className="w-4 h-4 text-header-border animate-spin" />}
+                    {loading && <Loader2 className="w-4 h-4 text-gold-dark animate-spin" />}
                     <div className="text-right">
                         <p className={cn(TYPOGRAPHY.label, "leading-none")}>Status</p>
                         <p className={cn(TYPOGRAPHY.value, "mt-1")}>{loading ? "Calculating..." : "Live feed"}</p>
@@ -223,7 +223,7 @@ export default function DailyTransitView({ clientId }: { clientId: string }) {
 
             {/* Horizontal Date Slider */}
             {!loading && data.length > 0 && (
-                <div className="flex bg-white/40 border-b border-antique overflow-x-auto scrollbar-hide shrink-0 snap-x">
+                <div className="flex bg-white/40 border-b border-gold-primary/20 overflow-x-auto scrollbar-hide shrink-0 snap-x">
                     {data.map((entry, idx) => {
                         const dateStr = String(entry.date || entry.transit_date || '');
                         const { day, weekday, isToday } = formatDateLabel(dateStr);
@@ -234,20 +234,20 @@ export default function DailyTransitView({ clientId }: { clientId: string }) {
                                 key={idx}
                                 onClick={() => setActiveIndex(idx)}
                                 className={cn(
-                                    "flex flex-col items-center justify-center min-w-[44px] py-1 transition-all border-r border-antique/10 snap-start",
+                                    "flex flex-col items-center justify-center min-w-[44px] py-1 transition-all border-r border-gold-primary/10 snap-start",
                                     isSelected
-                                        ? "bg-white border-b-2 border-b-header-border"
+                                        ? "bg-white border-b-2 border-b-gold-primary"
                                         : "hover:bg-white/60 opacity-60 hover:opacity-100"
                                 )}
                             >
                                 <span className={cn(
                                     "text-[10px] font-medium mb-0.5 capitalize",
-                                    isToday && !isSelected ? "text-header-border" : "text-primary/70"
+                                    isToday && !isSelected ? "text-gold-dark" : "text-ink/70"
                                 )}>{weekday.toLowerCase()}</span>
                                 <span className={cn(
                                     TYPOGRAPHY.sectionTitle,
-                                    "text-sm",
-                                    isSelected ? "text-primary" : "text-primary"
+                                    "text-[14px]",
+                                    isSelected ? "text-ink" : "text-ink"
                                 )}>{day}</span>
                             </button>
                         );
@@ -259,17 +259,17 @@ export default function DailyTransitView({ clientId }: { clientId: string }) {
             <div className={cn("flex-1 flex flex-col lg:flex-row min-h-0", COLORS.wbContainer)}>
                 {loading ? (
                     <div className="flex-1 flex flex-col items-center justify-center py-20">
-                        <Loader2 className="w-12 h-12 text-header-border animate-spin mb-4" />
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl")}>Projecting Transits</h3>
-                        <p className={cn(TYPOGRAPHY.value, "text-sm mt-2")}>Calculating planetary motions for {durationTab}...</p>
+                        <Loader2 className="w-12 h-12 text-gold-dark animate-spin mb-4" />
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px]")}>Projecting Transits</h3>
+                        <p className={cn(TYPOGRAPHY.value, "text-[14px] mt-2")}>Calculating planetary motions for {durationTab}...</p>
                     </div>
                 ) : data.length > 0 ? (
                     <>
-                        <div className="lg:w-[420px] w-full border-r border-antique flex flex-col bg-transparent shrink-0">
+                        <div className="lg:w-[420px] w-full border-r border-gold-primary/20 flex flex-col bg-transparent shrink-0">
                             <div className={cn("flex items-center justify-between px-4 py-2 h-11 shrink-0", COLORS.wbSectionHeader)}>
                                 <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Gochar chart</h3>
-                                <div className="px-2 py-0.5 bg-header-border/10 rounded border border-header-border/20">
-                                    <span className={cn(TYPOGRAPHY.label, "text-primary !mb-0")}>Lahiri</span>
+                                <div className="px-2 py-0.5 bg-gold-primary/10 rounded border border-gold-primary/15">
+                                    <span className={cn(TYPOGRAPHY.label, "text-ink !mb-0")}>Lahiri</span>
                                 </div>
                             </div>
                             <div className="flex-1 flex flex-col items-center justify-start pt-0 bg-transparent">
@@ -303,12 +303,12 @@ export default function DailyTransitView({ clientId }: { clientId: string }) {
                                             <th className={cn(TYPOGRAPHY.tableHeader, "px-2 py-1.5 text-center")}>House</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-header-border/10">
+                                    <tbody className="divide-y divide-gold-primary/10">
                                         {currentEntry && getPlanetRows(currentEntry).map((row, idx) => (
                                             <tr key={idx} className="hover:bg-primary/5 transition-colors">
                                                 <td className="px-2 py-1.5">
                                                     <span className={cn(TYPOGRAPHY.planetName, "flex items-center gap-1")}>
-                                                        <span className="text-sm text-primary/70">{PLANET_SYMBOLS[row.name] || '\u25CF'}</span>
+                                                        <span className="text-[14px] text-ink/70">{PLANET_SYMBOLS[row.name] || '\u25CF'}</span>
                                                         {row.name}
                                                         {row.isRetro && (
                                                             <span className="text-[9px] font-bold text-red-500 bg-red-50 px-1 py-0.5 rounded">R</span>
@@ -328,17 +328,17 @@ export default function DailyTransitView({ clientId }: { clientId: string }) {
                         </div>
 
                         {/* Insights & Shifts */}
-                        <div className="flex-1 w-full border-l border-antique bg-transparent flex flex-col min-w-[280px]">
+                        <div className="flex-1 w-full border-l border-gold-primary/20 bg-transparent flex flex-col min-w-[280px]">
                             <div className={cn("px-4 py-2 h-11 flex items-center shrink-0", COLORS.wbSectionHeader)}>
                                 <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Daily insights</h3>
                             </div>
                             <div className="px-3 py-3 flex flex-col flex-1 min-h-0 overflow-hidden">
                                 {/* Lagna Box */}
                                 {currentEntry && (
-                                    <div className="bg-header-border/5 rounded-xl p-4 border border-header-border/10 mb-3 shrink-0">
-                                        <p className={cn(TYPOGRAPHY.label, "text-primary mb-1")}>Lagna (Ascendant)</p>
+                                    <div className="bg-gold-primary/5 rounded-xl p-4 border border-gold-primary/10 mb-3 shrink-0">
+                                        <p className={cn(TYPOGRAPHY.label, "text-ink mb-1")}>Lagna (Ascendant)</p>
                                         <div className="flex items-baseline gap-2">
-                                            <h4 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl")}>{String((currentEntry.ascendant as Record<string, unknown>)?.sign || '')}</h4>
+                                            <h4 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px]")}>{String((currentEntry.ascendant as Record<string, unknown>)?.sign || '')}</h4>
                                             <span className={cn(TYPOGRAPHY.dateAndDuration, "font-mono")}>{String((currentEntry.ascendant as Record<string, unknown>)?.degrees || '')}</span>
                                         </div>
                                         <p className={cn(TYPOGRAPHY.subValue, "mt-1 whitespace-normal")}>Starting point of planetary influence today.</p>
@@ -356,40 +356,40 @@ export default function DailyTransitView({ clientId }: { clientId: string }) {
 
                                     <div className="flex-1 overflow-y-auto overflow-x-hidden bg-white/30">
                                         <table className="w-full border-collapse table-fixed">
-                                            <thead className="sticky top-0 bg-parchment/80 backdrop-blur-sm z-10">
-                                                <tr className="border-b border-antique/20">
-                                                    <th className={cn(TYPOGRAPHY.tableHeader, "!text-[10px] px-3 py-2 text-left border-r border-antique/10 w-[70px]")}>Planet</th>
-                                                    <th className={cn(TYPOGRAPHY.tableHeader, "!text-[10px] px-3 py-2 text-left border-r border-antique/10 w-[65px]")}>Type</th>
+                                            <thead className="sticky top-0 bg-surface-warm/80 backdrop-blur-sm z-10">
+                                                <tr className="border-b border-gold-primary/15">
+                                                    <th className={cn(TYPOGRAPHY.tableHeader, "!text-[10px] px-3 py-2 text-left border-r border-gold-primary/10 w-[70px]")}>Planet</th>
+                                                    <th className={cn(TYPOGRAPHY.tableHeader, "!text-[10px] px-3 py-2 text-left border-r border-gold-primary/10 w-[65px]")}>Type</th>
                                                     <th className={cn(TYPOGRAPHY.tableHeader, "!text-[10px] px-3 py-2 text-left")}>Shift</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-antique/10">
+                                            <tbody className="divide-y divide-gold-primary/10">
                                                 {insights.length > 0 ? (
                                                     insights.map((event, k) => (
                                                         <tr key={k} className="hover:bg-white/50 transition-colors group">
-                                                            <td className="px-3 py-2 border-r border-antique/10">
+                                                            <td className="px-3 py-2 border-r border-gold-primary/10">
                                                                 <div className="flex items-center gap-1.5">
-                                                                    <span className="text-xs text-primary">{PLANET_SYMBOLS[event.planet]}</span>
-                                                                    <span className={cn(TYPOGRAPHY.value, "!text-xs")}>{event.planet}</span>
+                                                                    <span className="text-[12px] text-ink">{PLANET_SYMBOLS[event.planet]}</span>
+                                                                    <span className={cn(TYPOGRAPHY.value, "!text-[12px]")}>{event.planet}</span>
                                                                 </div>
                                                             </td>
-                                                            <td className="px-3 py-2 border-r border-antique/10">
+                                                            <td className="px-3 py-2 border-r border-gold-primary/10">
                                                                 <span className={cn(
                                                                     TYPOGRAPHY.label,
                                                                     "!text-[9px] px-1.5 py-0.5 rounded-md",
                                                                     event.type === 'sign' ? "bg-purple-100/50 text-purple-700" :
                                                                         event.type === 'house' ? "bg-blue-100/50 text-blue-700" :
                                                                             event.type === 'retro' ? "bg-red-100/50 text-red-700" :
-                                                                                "bg-gray-100/50 text-gray-600"
+                                                                                "bg-gold-primary/8 text-ink/50"
                                                                 )}>
                                                                     {event.type}
                                                                 </span>
                                                             </td>
                                                             <td className="px-3 py-2">
-                                                                <p className={cn(TYPOGRAPHY.value, "!text-xs !leading-snug whitespace-normal")}>{event.description}</p>
+                                                                <p className={cn(TYPOGRAPHY.value, "!text-[12px] !leading-snug whitespace-normal")}>{event.description}</p>
                                                                 <div className="flex items-center gap-1 mt-0.5">
                                                                     <span className={cn(TYPOGRAPHY.subValue, "uppercase tracking-tight")}>
-                                                                        {event.from} <span className="text-primary mx-0.5">{'\u2192'}</span> <span className="font-bold text-primary">{event.to}</span>
+                                                                        {event.from} <span className="text-ink mx-0.5">{'\u2192'}</span> <span className="font-bold text-ink">{event.to}</span>
                                                                     </span>
                                                                 </div>
                                                             </td>
@@ -399,8 +399,8 @@ export default function DailyTransitView({ clientId }: { clientId: string }) {
                                                     <tr>
                                                         <td colSpan={3} className="py-12 text-center">
                                                             <div className="flex flex-col items-center">
-                                                                <div className="w-10 h-10 rounded-full bg-antique/20 flex items-center justify-center mb-2">
-                                                                    <span className="text-lg opacity-40">{'\u2014'}</span>
+                                                                <div className="w-10 h-10 rounded-full bg-gold-primary/5 flex items-center justify-center mb-2">
+                                                                    <span className="text-[18px] opacity-40">{'\u2014'}</span>
                                                                 </div>
                                                                 <p className={cn(TYPOGRAPHY.label, "!text-[9px] uppercase tracking-widest opacity-40")}>No Transits</p>
                                                             </div>
@@ -416,8 +416,8 @@ export default function DailyTransitView({ clientId }: { clientId: string }) {
                     </>
                 ) : (
                     <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
-                        <Info className="w-16 h-16 text-primary mb-4" />
-                        <h4 className={cn(TYPOGRAPHY.sectionTitle, "text-xl !mb-0")}>Data feed interrupted</h4>
+                        <Info className="w-16 h-16 text-ink mb-4" />
+                        <h4 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] !mb-0")}>Data feed interrupted</h4>
                         <p className={cn(TYPOGRAPHY.subValue, "mt-2 max-w-md mx-6")}>
                             We couldn't retrieve the transit feed for this duration. Please try a different tab or check back later.
                         </p>

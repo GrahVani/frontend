@@ -19,7 +19,7 @@ export default function RahuKaalAlert({ isActive = true, recommendedAction = "Fo
                 </div>
                 <div className="flex items-center gap-1.5 whitespace-nowrap">
                     <span className="font-bold uppercase tracking-wider text-[11px] text-orange-700">Rahu Kaal Active.</span>
-                    <span className="text-xs text-orange-950">Recommended Action: {recommendedAction}</span>
+                    <span className="text-[12px] text-orange-950">Recommended Action: {recommendedAction}</span>
                 </div>
             </div>
 

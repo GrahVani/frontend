@@ -17,7 +17,7 @@ const PLANET_ABBR: Record<string, string> = {
 
 /** Accent coloring for key planets */
 const PLANET_STYLES: Record<string, string> = {
-    Jupiter: 'bg-gold-primary text-primary font-bold',
+    Jupiter: 'bg-gold-primary text-ink font-bold',
     Moon: 'bg-indigo-500 text-white',
     Sun: 'bg-amber-500 text-white',
     Mars: 'bg-red-500 text-white',
@@ -30,10 +30,10 @@ export const YogaPlanetsGrid = memo(function YogaPlanetsGrid({ data }: YogaPlane
     if (planetEntries.length === 0) return null;
 
     return (
-        <div className="bg-white border border-border-warm rounded-xl p-4">
+        <div className="bg-white border border-gold-primary/15 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3 px-1">
                 <LayoutGrid className="w-3.5 h-3.5 text-gold-primary" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-primary opacity-60">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-ink opacity-60">
                     Planetary Positions
                 </span>
             </div>
@@ -46,13 +46,13 @@ export const YogaPlanetsGrid = memo(function YogaPlanetsGrid({ data }: YogaPlane
                     >
                         <div className={cn(
                             "w-7 h-7 rounded flex items-center justify-center text-[9px] font-black shrink-0",
-                            PLANET_STYLES[planet] ?? 'bg-white border border-border-warm text-primary'
+                            PLANET_STYLES[planet] ?? 'bg-white border border-gold-primary/15 text-ink'
                         )}>
                             {PLANET_ABBR[planet] ?? planet.substring(0, 2).toUpperCase()}
                         </div>
                         <div className="flex flex-col leading-none min-w-0">
-                            <span className="text-[10px] font-bold text-primary truncate" title={details.sign}>{details.sign}</span>
-                            <span className="text-[9px] text-primary opacity-60 font-mono">
+                            <span className="text-[10px] font-bold text-ink truncate" title={details.sign}>{details.sign}</span>
+                            <span className="text-[9px] text-ink opacity-60 font-mono">
                                 H{details.house}
                                 {details.retrograde === 'R' && <span className="text-red-500 ml-0.5">R</span>}
                             </span>

@@ -55,14 +55,14 @@ export default function HoraryPanel({
     return (
         <div className={cn("space-y-6", className)}>
             {/* Input Form */}
-            <form onSubmit={handleSubmit} className="bg-softwhite border border-antique rounded-2xl p-6">
+            <form onSubmit={handleSubmit} className="prem-card p-6">
                 <div className="flex items-center gap-3 mb-6">
                     <div className="p-2 bg-indigo-100 rounded-xl">
                         <HelpCircle className="w-5 h-5 text-indigo-600" />
                     </div>
                     <div>
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg")}>KP Horary (Prashna)</h3>
-                        <p className={cn(TYPOGRAPHY.subValue, "text-xs")}>Enter a number between 1-249 and your question</p>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px]")}>KP Horary (Prashna)</h3>
+                        <p className={cn(TYPOGRAPHY.subValue, "text-[12px]")}>Enter a number between 1-249 and your question</p>
                     </div>
                 </div>
 
@@ -84,16 +84,16 @@ export default function HoraryPanel({
                                     setValidationError(null);
                                 }}
                                 placeholder="Enter 1-249"
-                                className="flex-1 px-4 py-3 border border-antique rounded-xl bg-white text-lg font-mono focus:outline-none focus:border-gold-primary focus:ring-2 focus:ring-gold-primary/20"
+                                className="flex-1 px-4 py-3 border border-gold-primary/20 rounded-xl bg-white text-[18px] font-mono focus:outline-none focus:border-gold-primary focus:ring-2 focus:ring-gold-primary/20"
                             />
                             <button
                                 type="button"
                                 onClick={generateRandom}
-                                className="px-4 py-3 bg-parchment border border-antique rounded-xl hover:bg-gold-primary/10 transition-colors flex items-center gap-2"
+                                className="px-4 py-3 bg-surface-warm border border-gold-primary/20 rounded-xl hover:bg-gold-primary/10 transition-colors flex items-center gap-2"
                                 title="Generate Random Number"
                             >
                                 <Shuffle className="w-5 h-5 text-gold-dark" />
-                                <span className={cn(TYPOGRAPHY.value, "text-sm font-semibold")}>Random</span>
+                                <span className={cn(TYPOGRAPHY.value, "text-[14px] font-semibold")}>Random</span>
                             </button>
                         </div>
                     </div>
@@ -111,13 +111,13 @@ export default function HoraryPanel({
                             }}
                             placeholder="E.g., Will I get the job at XYZ company?"
                             rows={3}
-                            className="w-full px-4 py-3 border border-antique rounded-xl bg-white resize-none focus:outline-none focus:border-gold-primary focus:ring-2 focus:ring-gold-primary/20"
+                            className="w-full px-4 py-3 border border-gold-primary/20 rounded-xl bg-white resize-none focus:outline-none focus:border-gold-primary focus:ring-2 focus:ring-gold-primary/20"
                         />
                     </div>
 
                     {/* Validation Error */}
                     {(validationError || error) && (
-                        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+                        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-[14px]">
                             {validationError || error}
                         </div>
                     )}
@@ -166,12 +166,12 @@ export default function HoraryPanel({
                             <div>
                                 <p className={cn(
                                     TYPOGRAPHY.sectionTitle,
-                                    "text-lg",
+                                    "text-[18px]",
                                     result.verdict.favorable ? "!text-green-700" : "!text-red-700"
                                 )}>
                                     {result.verdict.favorable ? 'FAVORABLE' : 'NOT FAVORABLE'}
                                 </p>
-                                <p className={cn(TYPOGRAPHY.subValue, "text-sm mt-1")}>{result.verdict.reason}</p>
+                                <p className={cn(TYPOGRAPHY.subValue, "text-[14px] mt-1")}>{result.verdict.reason}</p>
                             </div>
                         </div>
                     )}
@@ -179,7 +179,7 @@ export default function HoraryPanel({
                     {/* Question & Number */}
                     <div className="mb-4">
                         <p className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wider mb-1 opacity-70")}>Your Question</p>
-                        <p className={cn(TYPOGRAPHY.value, "text-base")}>{result.question}</p>
+                        <p className={cn(TYPOGRAPHY.value, "text-[16px]")}>{result.question}</p>
                         <span className={cn(TYPOGRAPHY.label, "inline-block mt-2 px-2 py-1 bg-gold-primary/10 !text-gold-dark text-[10px] font-mono rounded")}>
                             Horary #{result.horaryNumber}
                         </span>
@@ -187,12 +187,12 @@ export default function HoraryPanel({
 
                     {/* Ascendant Details */}
                     {result.ascendant && (
-                        <div className="p-4 bg-parchment rounded-xl mb-4">
+                        <div className="p-4 bg-surface-warm rounded-xl mb-4">
                             <p className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wider mb-2 opacity-70")}>Horary Ascendant</p>
                             <div className="flex items-center gap-4">
-                                <span className={cn(TYPOGRAPHY.value, "text-base")}>{result.ascendant.sign}</span>
-                                <span className={cn(TYPOGRAPHY.subValue, "text-xs")}>{result.ascendant.degree}°</span>
-                                <span className={cn(TYPOGRAPHY.subValue, "text-xs")}>{result.ascendant.nakshatra}</span>
+                                <span className={cn(TYPOGRAPHY.value, "text-[16px]")}>{result.ascendant.sign}</span>
+                                <span className={cn(TYPOGRAPHY.subValue, "text-[12px]")}>{result.ascendant.degree}°</span>
+                                <span className={cn(TYPOGRAPHY.subValue, "text-[12px]")}>{result.ascendant.nakshatra}</span>
                                 <span className={cn(TYPOGRAPHY.label, "px-2 py-0.5 bg-copper-100 !text-copper-700 rounded text-[10px] !font-bold")}>
                                     Sub: {result.ascendant.subLord}
                                 </span>
@@ -206,9 +206,9 @@ export default function HoraryPanel({
                             <p className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wider mb-2 opacity-70")}>House Significators</p>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                                 {result.significators.slice(0, 6).map((sig, idx) => (
-                                    <div key={idx} className="p-2 bg-softwhite border border-antique rounded-lg">
+                                    <div key={idx} className="p-2 bg-surface-warm border border-gold-primary/20 rounded-lg">
                                         <span className={cn(TYPOGRAPHY.label, "text-[10px] !font-bold")}>House {sig.house}: </span>
-                                        <span className={cn(TYPOGRAPHY.value, "text-xs")}>{sig.significatorPlanets.join(', ')}</span>
+                                        <span className={cn(TYPOGRAPHY.value, "text-[12px]")}>{sig.significatorPlanets.join(', ')}</span>
                                     </div>
                                 ))}
                             </div>

@@ -46,9 +46,9 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
         <div className={cn("min-h-screen p-4 lg:p-6 space-y-6 animate-in fade-in duration-700", styles.dashboardContainer)}>
             {/* Header Area */}
             <div className="flex flex-col gap-6">
-                <div className="flex items-center justify-between border-b border-divider pb-4">
+                <div className="flex items-center justify-between border-b border-gold-primary/10 pb-4">
                     <div className="flex items-center gap-3">
-                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-xl font-bold tracking-tight")}>
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-bold tracking-tight")}>
                             Vedic Remedies : {String(data.user_name || "User")}
                         </h2>
                     </div>
@@ -96,14 +96,14 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
             </div>
 
             {/* Footer / General Recommendations - Premium Styling */}
-            <div className="border-t border-antique pt-8 mt-12 bg-white/30 rounded-3xl p-6">
+            <div className="border-t border-gold-primary/20 pt-8 mt-12 bg-white/30 rounded-3xl p-6">
                 <div className="flex items-center gap-2 mb-6 px-2">
                     <Sparkles className="w-4 h-4 text-amber-500" />
                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em]">General daily alignment</h4>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {generalRecommendations.slice(0, 4).map((rec: string, idx: number) => (
-                        <div key={idx} className="flex items-start gap-3 text-[11px] p-4 rounded-2xl border border-antique bg-white/50 backdrop-blur-sm hover:border-purple-200 transition-all group text-body">
+                        <div key={idx} className="flex items-start gap-3 text-[11px] p-4 rounded-2xl border border-gold-primary/20 bg-white/50 backdrop-blur-sm hover:border-purple-200 transition-all group text-body">
                             <div className="w-5 h-5 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 border border-emerald-100 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
                                 <CheckCircle2 className="w-3 h-3" />
                             </div>

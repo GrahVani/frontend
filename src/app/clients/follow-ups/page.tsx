@@ -19,32 +19,32 @@ export default function FollowUpsPage() {
                     <AlertCircle className="w-6 h-6 text-gold-primary" />
                 </div>
                 <div>
-                    <h1 className="text-2xl font-serif font-bold text-ink">Follow-Ups Due</h1>
-                    <p className="text-sm text-muted">Clients requiring your attention</p>
+                    <h1 className="text-[24px] font-serif font-bold text-ink">Follow-Ups Due</h1>
+                    <p className="text-[14px] text-ink/45">Clients requiring your attention</p>
                 </div>
             </div>
 
             {/* Follow-up Cards */}
             <div className="space-y-3">
                 {followUps.map((item) => (
-                    <div key={item.id} className="bg-softwhite border border-antique rounded-xl p-5 hover:border-gold-primary/50 transition-colors flex items-center justify-between">
+                    <div key={item.id} className="prem-card rounded-xl p-5 hover:border-gold-primary/50 transition-colors flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <div className="w-10 h-10 rounded-lg bg-gold-primary/10 flex items-center justify-center font-serif font-bold text-gold-dark">
                                 {item.name.charAt(0)}
                             </div>
                             <div>
                                 <h3 className="font-serif font-bold text-ink">{item.name}</h3>
-                                <p className="text-sm text-muted">{item.reason}</p>
+                                <p className="text-[14px] text-ink/45">{item.reason}</p>
                             </div>
                         </div>
                         <div className="flex items-center gap-4">
-                            <div className={`px-3 py-1 rounded-lg text-xs font-semibold ${item.priority === "high" ? "bg-red-50 text-red-600 border border-red-200" :
+                            <div className={`px-3 py-1 rounded-lg text-[12px] font-semibold ${item.priority === "high" ? "bg-red-50 text-red-600 border border-red-200" :
                                     item.priority === "medium" ? "bg-orange-50 text-orange-600 border border-orange-200" :
                                         "bg-green-50 text-green-600 border border-green-200"
                                 }`}>
                                 {item.dueDate}
                             </div>
-                            <button className="p-2 rounded-lg bg-parchment hover:bg-gold-primary/20 text-muted hover:text-ink transition-colors">
+                            <button className="p-2 rounded-lg bg-surface-warm hover:bg-gold-primary/20 text-ink/45 hover:text-ink transition-colors">
                                 <Phone className="w-4 h-4" />
                             </button>
                         </div>
@@ -53,8 +53,8 @@ export default function FollowUpsPage() {
             </div>
 
             {/* Summary */}
-            <div className="bg-softwhite border border-antique rounded-xl p-5 flex items-center justify-between">
-                <span className="text-sm text-muted">Total pending follow-ups</span>
+            <div className="prem-card rounded-xl p-5 flex items-center justify-between">
+                <span className="text-[14px] text-ink/45">Total pending follow-ups</span>
                 <span className="font-serif font-bold text-ink">{followUps.length}</span>
             </div>
         </div>

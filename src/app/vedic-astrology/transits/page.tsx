@@ -96,7 +96,7 @@ export default function TransitsPage() {
     if (!clientDetails) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-                <p className="font-serif text-xl text-primary">Please select a client to view transit analysis</p>
+                <p className="font-serif text-[20px] text-ink">Please select a client to view transit analysis</p>
             </div>
         );
     }
@@ -106,7 +106,7 @@ export default function TransitsPage() {
             {/* Header with inline Tab Switcher */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-xl flex items-center gap-2")}>
+                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] flex items-center gap-2")}>
                         Transit impact analysis
                     </h1>
                     {(isGeneratingCharts || isLiveLoading || isRefreshingCharts) && (
@@ -128,17 +128,17 @@ export default function TransitsPage() {
                 </div>
 
                 {/* Compact Tab Switcher */}
-                <div className="inline-flex items-center gap-1 bg-surface-pure rounded-lg p-1 border border-antique shrink-0 mt-2 sm:mt-0 shadow-sm">
+                <div className="inline-flex items-center gap-1 bg-surface-pure rounded-lg p-1 prem-card shrink-0 mt-2 sm:mt-0 shadow-sm">
                     {isLahiri && (
                         <button
                             onClick={() => setActiveTab('daily_transit')}
                             className={cn(
                                 "px-3 py-1.5 rounded-md transition-all flex items-center justify-center gap-1.5 whitespace-nowrap",
                                 TYPOGRAPHY.value,
-                                "!text-xs",
+                                "!text-[12px]",
                                 activeTab === 'daily_transit'
                                     ? COLORS.wbActiveTab
-                                    : "text-primary hover:bg-black/5"
+                                    : "text-ink hover:bg-black/5"
                             )}
                         >
                             Daily transit
@@ -149,10 +149,10 @@ export default function TransitsPage() {
                         className={cn(
                             "px-3 py-1.5 rounded-md transition-all whitespace-nowrap",
                             TYPOGRAPHY.value,
-                            "!text-xs",
+                            "!text-[12px]",
                             activeTab === 'gochar'
                                 ? COLORS.wbActiveTab
-                                : "text-primary hover:bg-black/5"
+                                : "text-ink hover:bg-black/5"
                         )}
                     >
                         Gochar
@@ -165,19 +165,19 @@ export default function TransitsPage() {
                 <>
                     {(isLiveLoading || (isLoadingCharts && Object.keys(processedCharts).length === 0)) && (
                         <div className="flex flex-col items-center justify-center py-16">
-                            <Loader2 className="w-8 h-8 text-header-border animate-spin mb-3" />
-                            <p className="font-serif text-primary">Calculating transit positions...</p>
+                            <Loader2 className="w-8 h-8 text-gold-dark animate-spin mb-3" />
+                            <p className="font-serif text-ink">Calculating transit positions...</p>
                         </div>
                     )}
 
                     {!isLiveLoading && !isLoadingCharts && transitData.length === 0 && (
                         <div className="flex flex-col items-center justify-center py-16 text-center">
-                            <Info className="w-12 h-12 text-primary mb-3" />
-                            <p className="font-serif text-primary text-lg mb-2">Transit data unavailable</p>
-                            <p className="text-sm text-primary mb-4">Charts are being generated for this client</p>
+                            <Info className="w-12 h-12 text-ink mb-3" />
+                            <p className="font-serif text-ink text-[18px] mb-2">Transit data unavailable</p>
+                            <p className="text-[14px] text-ink mb-4">Charts are being generated for this client</p>
                             <button
                                 onClick={refreshCharts}
-                                className="px-4 py-2 bg-header-border text-white rounded-lg font-medium hover:bg-header-border/90"
+                                className="px-4 py-2 bg-gold-primary text-white rounded-lg font-medium hover:bg-gold-primary/90"
                             >
                                 Refresh
                             </button>
@@ -201,8 +201,8 @@ export default function TransitsPage() {
                                     </div>
                                 )}
 
-                                <div className="bg-header-border/10 border border-header-border/30 rounded-md p-3 flex items-start gap-3">
-                                    <div className="p-1.5 bg-header-border/20 rounded-lg text-primary">
+                                <div className="bg-gold-primary/10 border border-gold-primary/20 rounded-md p-3 flex items-start gap-3">
+                                    <div className="p-1.5 bg-gold-primary/15 rounded-lg text-ink">
                                         <ShieldAlert className="w-5 h-5" />
                                     </div>
                                     <div>
@@ -217,7 +217,7 @@ export default function TransitsPage() {
                             </div>
 
                             <div className={cn("flex flex-col lg:flex-row overflow-hidden", COLORS.wbContainer)}>
-                                <div className="lg:w-[440px] w-full flex flex-col border-r border-antique shrink-0 bg-white/20">
+                                <div className="lg:w-[440px] w-full flex flex-col border-r border-gold-primary/15 shrink-0 bg-white/20">
                                     <div className={cn("px-4 py-2 h-11 flex items-center shrink-0", COLORS.wbSectionHeader)}>
                                         <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Gochar chart</h3>
                                     </div>
@@ -230,7 +230,7 @@ export default function TransitsPage() {
                                                 showDegrees={false}
                                             />
                                         </div>
-                                        <p className={cn(TYPOGRAPHY.subValue, "text-center mt-2 font-medium text-primary")}>
+                                        <p className={cn(TYPOGRAPHY.subValue, "text-center mt-2 font-medium text-ink")}>
                                             Natal Ascendant: {signIdToName[natalAscendant]}
                                         </p>
                                     </div>
@@ -239,14 +239,14 @@ export default function TransitsPage() {
                                 <div className="flex-1 flex flex-col min-w-0">
                                     <div className={cn("px-4 py-2 h-11 flex justify-between items-center shrink-0", COLORS.wbSectionHeader)}>
                                         <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Transit positions</h3>
-                                        <div className={cn(TYPOGRAPHY.label, "flex items-center gap-1.5 text-primary !mb-0")}>
+                                        <div className={cn(TYPOGRAPHY.label, "flex items-center gap-1.5 text-ink !mb-0")}>
                                             <Calendar className="w-3.5 h-3.5" />
                                             {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                         </div>
                                     </div>
                                     <div className="flex-1 overflow-y-auto bg-white/40">
                                         <table className="w-full border-collapse">
-                                            <thead className="sticky top-0 bg-parchment/90 backdrop-blur-md z-10 border-b border-antique/20">
+                                            <thead className="sticky top-0 bg-surface-warm/90 backdrop-blur-md z-10 border-b border-gold-primary/10">
                                                 <tr>
                                                     <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-left")}>Planet</th>
                                                     <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-left")}>Sign</th>
@@ -255,12 +255,12 @@ export default function TransitsPage() {
                                                     <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-center")}>House</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-header-border/10">
+                                            <tbody className="divide-y divide-gold-primary/10">
                                                 {transitData.map((row, i) => (
-                                                    <tr key={i} className="hover:bg-primary/5 transition-colors border-b border-header-border/5 last:border-0">
+                                                    <tr key={i} className="hover:bg-primary/5 transition-colors border-b border-gold-primary/5 last:border-0">
                                                         <td className="px-3 py-2">
                                                             <span className={cn(TYPOGRAPHY.planetName, "flex items-center gap-2")}>
-                                                                <span className="text-base text-primary/70">{PLANET_SYMBOLS[row.planet] || '\u25CF'}</span>
+                                                                <span className="text-[16px] text-ink/70">{PLANET_SYMBOLS[row.planet] || '\u25CF'}</span>
                                                                 {row.planet}
                                                                 {row.isRetro && (
                                                                     <span className="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded ml-1">R</span>
@@ -268,9 +268,9 @@ export default function TransitsPage() {
                                                             </span>
                                                         </td>
                                                         <td className={cn(TYPOGRAPHY.value, "px-3 py-2")}>{row.sign}</td>
-                                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2 font-mono text-sm")}>{row.degree}</td>
+                                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2 font-mono text-[14px]")}>{row.degree}</td>
                                                         <td className={cn(TYPOGRAPHY.value, "px-3 py-2 font-medium")}>{row.nakshatra}</td>
-                                                        <td className={cn(TYPOGRAPHY.value, "px-3 py-2 text-center text-base")}>{row.house}</td>
+                                                        <td className={cn(TYPOGRAPHY.value, "px-3 py-2 text-center text-[16px]")}>{row.house}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -278,7 +278,7 @@ export default function TransitsPage() {
                                     </div>
 
                                     {/* Legend */}
-                                    <div className="mt-auto px-4 py-1.5 bg-parchment/30 border-t border-antique flex items-center justify-between shrink-0">
+                                    <div className="mt-auto px-4 py-1.5 bg-surface-warm/30 border-t border-gold-primary/15 flex items-center justify-between shrink-0">
                                         <div className="flex items-center gap-6">
                                             <div className="flex items-center gap-2">
                                                 <span className="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded border border-red-100">R</span>
@@ -289,7 +289,7 @@ export default function TransitsPage() {
                                                 <span className={cn(TYPOGRAPHY.label, "!mb-0 text-[11px]")}>Strong Influence</span>
                                             </div>
                                         </div>
-                                        <div className={cn(TYPOGRAPHY.label, "text-header-border text-[10px] font-mono italic")}>
+                                        <div className={cn(TYPOGRAPHY.label, "text-gold-dark text-[10px] font-mono italic")}>
                                             Refreshed: {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </div>
                                     </div>
@@ -306,8 +306,8 @@ export default function TransitsPage() {
                     {!isLahiri ? (
                         <div className="flex flex-col items-center justify-center py-16 text-center">
                             <Info className="w-12 h-12 text-amber-400 mb-3" />
-                            <p className={cn(TYPOGRAPHY.sectionTitle, "text-lg mb-2")}>Lahiri System Required</p>
-                            <p className={cn(TYPOGRAPHY.subValue, "text-sm whitespace-normal")}>
+                            <p className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] mb-2")}>Lahiri System Required</p>
+                            <p className={cn(TYPOGRAPHY.subValue, "text-[14px] whitespace-normal")}>
                                 Daily Transit is currently available only for the <strong>Lahiri</strong> ayanamsa system.
                                 <br />Switch to Lahiri in your settings to use this feature.
                             </p>
@@ -316,9 +316,9 @@ export default function TransitsPage() {
                         <DailyTransitView clientId={clientDetails.id} />
                     ) : (
                         <div className="flex flex-col items-center justify-center py-16 text-center">
-                            <Info className="w-12 h-12 text-primary mb-3" />
-                            <p className={cn(TYPOGRAPHY.sectionTitle, "text-lg")}>Client ID required</p>
-                            <p className={cn(TYPOGRAPHY.subValue, "text-sm mt-1")}>Please select a saved client to fetch daily transit data.</p>
+                            <Info className="w-12 h-12 text-ink mb-3" />
+                            <p className={cn(TYPOGRAPHY.sectionTitle, "text-[18px]")}>Client ID required</p>
+                            <p className={cn(TYPOGRAPHY.subValue, "text-[14px] mt-1")}>Please select a saved client to fetch daily transit data.</p>
                         </div>
                     )}
                 </>

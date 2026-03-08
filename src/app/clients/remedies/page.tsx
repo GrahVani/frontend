@@ -34,11 +34,11 @@ export default function PendingRemediesPage() {
 
     const getStatusBadge = (status: string) => {
         if (status === "in_progress") {
-            return <span className="flex items-center gap-1 text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-1 rounded-lg">
+            return <span className="flex items-center gap-1 text-[12px] font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-1 rounded-lg">
                 <Clock className="w-3 h-3" /> In Progress
             </span>;
         }
-        return <span className="flex items-center gap-1 text-xs font-semibold text-orange-600 bg-orange-50 border border-orange-200 px-2 py-1 rounded-lg">
+        return <span className="flex items-center gap-1 text-[12px] font-semibold text-orange-600 bg-orange-50 border border-orange-200 px-2 py-1 rounded-lg">
             <AlertCircle className="w-3 h-3" /> Awaiting Confirmation
         </span>;
     };
@@ -51,15 +51,15 @@ export default function PendingRemediesPage() {
                     <Gem className="w-6 h-6 text-gold-primary" />
                 </div>
                 <div>
-                    <h1 className="text-2xl font-serif font-bold text-ink">Pending Remedies</h1>
-                    <p className="text-sm text-muted">Track prescribed remedies awaiting completion</p>
+                    <h1 className="text-[24px] font-serif font-bold text-ink">Pending Remedies</h1>
+                    <p className="text-[14px] text-ink/45">Track prescribed remedies awaiting completion</p>
                 </div>
             </div>
 
             {/* Remedy Cards */}
             <div className="space-y-3">
                 {pendingRemedies.map((item) => (
-                    <div key={item.id} className="bg-softwhite border border-antique rounded-xl p-5 hover:border-gold-primary/50 transition-colors">
+                    <div key={item.id} className="prem-card rounded-xl p-5 hover:border-gold-primary/50 transition-colors">
                         <div className="flex items-start justify-between">
                             <div className="flex items-start gap-4">
                                 <div className="w-10 h-10 rounded-lg bg-gold-primary/10 flex items-center justify-center font-serif font-bold text-gold-dark">
@@ -67,13 +67,13 @@ export default function PendingRemediesPage() {
                                 </div>
                                 <div>
                                     <h3 className="font-serif font-bold text-ink">{item.name}</h3>
-                                    <p className="text-sm text-body font-medium">{item.remedy}</p>
-                                    <p className="text-xs text-muted mt-1">{item.type} • Prescribed {item.prescribed}</p>
+                                    <p className="text-[14px] text-body font-medium">{item.remedy}</p>
+                                    <p className="text-[12px] text-ink/45 mt-1">{item.type} • Prescribed {item.prescribed}</p>
                                 </div>
                             </div>
                             <div className="flex flex-col items-end gap-2">
                                 {getStatusBadge(item.status)}
-                                <button className="text-xs text-gold-dark hover:text-gold-primary font-medium flex items-center gap-1">
+                                <button className="text-[12px] text-gold-dark hover:text-gold-primary font-medium flex items-center gap-1">
                                     <CheckCircle2 className="w-3 h-3" />
                                     Mark Complete
                                 </button>
@@ -84,8 +84,8 @@ export default function PendingRemediesPage() {
             </div>
 
             {/* Summary */}
-            <div className="bg-softwhite border border-antique rounded-xl p-5 flex items-center justify-between">
-                <span className="text-sm text-muted">Total pending remedies</span>
+            <div className="prem-card rounded-xl p-5 flex items-center justify-between">
+                <span className="text-[14px] text-ink/45">Total pending remedies</span>
                 <span className="font-serif font-bold text-ink">{pendingRemedies.length}</span>
             </div>
         </div>

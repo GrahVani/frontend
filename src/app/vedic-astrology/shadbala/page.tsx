@@ -193,12 +193,12 @@ export default function ShadbalaPage() {
     if (ayanamsa !== 'Lahiri') {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-                <Orbit className="w-12 h-12 text-primary mb-4" />
-                <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-xl mb-2")}>Shadbala Analysis — Lahiri Only</h2>
+                <Orbit className="w-12 h-12 text-ink mb-4" />
+                <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] mb-2")}>Shadbala Analysis — Lahiri Only</h2>
                 <p className={cn(TYPOGRAPHY.profileDetail, "max-w-md")}>
                     Shadbala (Six-fold planetary strength) analysis is currently available exclusively with the <strong>Lahiri Ayanamsa</strong>.
                 </p>
-                <Link href="/vedic-astrology/overview" className="mt-6 text-sm font-medium text-gold-dark hover:text-gold-primary transition-colors flex items-center gap-1">
+                <Link href="/vedic-astrology/overview" className="mt-6 text-[14px] font-medium text-gold-dark hover:text-gold-primary transition-colors flex items-center gap-1">
                     <ArrowLeft className="w-4 h-4" /> Back to Kundali
                 </Link>
             </div>
@@ -212,7 +212,7 @@ export default function ShadbalaPage() {
             {/* Header Area */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl")}>Shadbala</h1>
+                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px]")}>Shadbala</h1>
                 </div>
                 <div className="flex items-center gap-4">
 
@@ -220,24 +220,24 @@ export default function ShadbalaPage() {
             </div>
 
             {loading ? (
-                <div className="flex flex-col items-center justify-center py-24 bg-parchment/30 rounded-3xl border border-antique">
+                <div className="flex flex-col items-center justify-center py-24 prem-card rounded-3xl">
                     <Loader2 className="w-10 h-10 text-gold-primary animate-spin mb-4" />
                     <p className={cn(TYPOGRAPHY.value, "italic tracking-wide")}>Calculating celestial potencies...</p>
                 </div>
             ) : error ? (
                 <div className="p-10 bg-red-50 border border-red-100 rounded-3xl text-center">
                     <AlertTriangle className="w-10 h-10 text-red-500 mx-auto mb-4" />
-                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 text-lg mb-2")}>Calculation Error</h3>
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 text-[18px] mb-2")}>Calculation Error</h3>
                     <p className={cn(TYPOGRAPHY.profileDetail, "text-red-600 max-w-md mx-auto mb-6")}>{error}</p>
-                    <button onClick={() => fetchShadbala(true)} className={cn(TYPOGRAPHY.label, "px-6 py-2.5 bg-red-100 text-red-700 rounded-xl !text-sm !font-bold hover:bg-red-200 transition-colors !mb-0")}>
+                    <button onClick={() => fetchShadbala(true)} className={cn(TYPOGRAPHY.label, "px-6 py-2.5 bg-red-100 text-red-700 rounded-xl !text-[14px] !font-bold hover:bg-red-200 transition-colors !mb-0")}>
                         Retry Calculation
                     </button>
                 </div>
             ) : data?.planets ? (
                 <ShadbalaDashboard displayData={data} rawResponse={rawResponse} />
             ) : (
-                <div className="p-10 bg-parchment/30 border border-antique rounded-2xl text-center lg:py-16">
-                    <Orbit className="w-10 h-10 text-primary mx-auto mb-4" />
+                <div className="p-10 prem-card rounded-2xl text-center lg:py-16">
+                    <Orbit className="w-10 h-10 text-ink mx-auto mb-4" />
                     <p className={cn(TYPOGRAPHY.profileDetail)}>No Shadbala data found for this chart.</p>
                 </div>
             )}
@@ -354,9 +354,9 @@ function RadialGauge({ planet, rupaBala, minRequired, isStrong, color, rank }: {
                 </svg>
             </div>
             <div className="mt-1 text-center">
-                <p className={cn(TYPOGRAPHY.value, "text-xs tracking-tight")}>{planet}</p>
+                <p className={cn(TYPOGRAPHY.value, "text-[12px] tracking-tight")}>{planet}</p>
                 <div className="flex items-center justify-center gap-1 mt-0.5">
-                    <span className={cn(TYPOGRAPHY.label, "text-[9px] text-slate-400 font-normal lowercase")}>#{rank}</span>
+                    <span className={cn(TYPOGRAPHY.label, "text-[9px] text-ink/35 font-normal lowercase")}>#{rank}</span>
                     <span className={cn(
                         TYPOGRAPHY.label,
                         "px-1.5 py-0.5 rounded-full tracking-wider text-[8px]",
@@ -445,7 +445,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="bg-white border border-antique p-5 rounded-2xl shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow"
+                    className="prem-card p-5 rounded-2xl shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow"
                 >
                     <div className="absolute top-0 right-0 w-24 h-24 rounded-bl-[60px] -mr-4 -mt-4 transition-all group-hover:scale-110"
                         style={{ background: `linear-gradient(135deg, ${strongestTheme.color}10, ${strongestTheme.color}05)` }}
@@ -457,8 +457,8 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                                 <h3 className={cn(TYPOGRAPHY.label, "tracking-[0.15em]")}>Strongest</h3>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className={cn(TYPOGRAPHY.profileName, "text-2xl", strongestTheme.twText)}>{PLANET_SYMBOLS[strongest.planet]}</span>
-                                <span className={cn(TYPOGRAPHY.sectionTitle, "text-xl")}>{strongest.planet}</span>
+                                <span className={cn(TYPOGRAPHY.profileName, "text-[24px]", strongestTheme.twText)}>{PLANET_SYMBOLS[strongest.planet]}</span>
+                                <span className={cn(TYPOGRAPHY.sectionTitle, "text-[20px]")}>{strongest.planet}</span>
                             </div>
                             <p className={cn(TYPOGRAPHY.label, "text-emerald-600 mt-1 lowercase")}>
                                 {strongest.rupaBala.toFixed(2)} Rupa · Rank #{strongest.rank}
@@ -472,7 +472,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.1 }}
-                    className="bg-white border border-antique p-5 rounded-2xl shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow"
+                    className="prem-card p-5 rounded-2xl shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow"
                 >
                     <div className="absolute top-0 right-0 w-24 h-24 rounded-bl-[60px] -mr-4 -mt-4 transition-all group-hover:scale-110"
                         style={{ background: `linear-gradient(135deg, ${weakestTheme.color}10, ${weakestTheme.color}05)` }}
@@ -484,8 +484,8 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                                 <h3 className={cn(TYPOGRAPHY.label, "tracking-[0.15em]")}>Weakest</h3>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className={cn(TYPOGRAPHY.profileName, "text-2xl", weakestTheme.twText)}>{PLANET_SYMBOLS[weakest.planet]}</span>
-                                <span className={cn(TYPOGRAPHY.sectionTitle, "text-xl")}>{weakest.planet}</span>
+                                <span className={cn(TYPOGRAPHY.profileName, "text-[24px]", weakestTheme.twText)}>{PLANET_SYMBOLS[weakest.planet]}</span>
+                                <span className={cn(TYPOGRAPHY.sectionTitle, "text-[20px]")}>{weakest.planet}</span>
                             </div>
                             <p className={cn(TYPOGRAPHY.label, "text-rose-500 mt-1 lowercase")}>
                                 {weakest.rupaBala.toFixed(2)} Rupa · Rank #{weakest.rank}
@@ -501,11 +501,11 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
             ═══════════════════════════════════════════════════════════════ */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                 {/* Small Multiples: One card per planet showing 6 bala bars */}
-                <div className="lg:col-span-8 bg-white border border-antique rounded-3xl shadow-sm overflow-hidden flex flex-col">
-                    <div className="p-4 border-b border-antique bg-parchment/10 flex items-center gap-2">
+                <div className="lg:col-span-8 prem-card rounded-3xl shadow-sm overflow-hidden flex flex-col">
+                    <div className="p-4 border-b border-gold-primary/15 flex items-center gap-2">
                         <Compass className="w-4 h-4 text-gold-primary" />
                         <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Six-Fold Strength Profile</h3>
-                        <span className={cn(TYPOGRAPHY.label, "ml-auto text-slate-400 font-normal lowercase tracking-wider")}>Strength across 6 dimensions</span>
+                        <span className={cn(TYPOGRAPHY.label, "ml-auto text-ink/35 font-normal lowercase tracking-wider")}>Strength across 6 dimensions</span>
                     </div>
                     <div className="p-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                         {sortedPlanets.map((p, idx) => {
@@ -530,11 +530,11 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                                     {/* Planet Header */}
                                     <div className="flex items-center justify-between mb-3">
                                         <div className="flex items-center gap-2">
-                                            <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center text-white text-sm font-bold shadow-sm", theme.twBg)}>
+                                            <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center text-white text-[14px] font-bold shadow-sm", theme.twBg)}>
                                                 {PLANET_SYMBOLS[p.planet]}
                                             </div>
                                             <div>
-                                                <h4 className={cn(TYPOGRAPHY.value, "text-sm")}>{p.planet}</h4>
+                                                <h4 className={cn(TYPOGRAPHY.value, "text-[14px]")}>{p.planet}</h4>
                                                 <p className={cn(TYPOGRAPHY.label, "text-[9px] lowercase opacity-80", theme.twText)}>
                                                     {p.rupaBala.toFixed(2)} Rupa · #{p.rank}
                                                 </p>
@@ -559,7 +559,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                                                     <span className={cn(TYPOGRAPHY.label, "w-[62px] shrink-0 text-right opacity-60 font-normal lowercase")}>
                                                         {bala.label}
                                                     </span>
-                                                    <div className="flex-1 h-[7px] bg-slate-100 rounded-full overflow-hidden">
+                                                    <div className="flex-1 h-[7px] bg-gold-primary/8 rounded-full overflow-hidden">
                                                         <motion.div
                                                             className="h-full rounded-full"
                                                             initial={{ width: 0 }}
@@ -574,7 +574,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                                                     <span className={cn(
                                                         TYPOGRAPHY.subValue,
                                                         "w-[32px] text-right tabular-nums",
-                                                        isNegative ? "text-rose-500" : "text-slate-600"
+                                                        isNegative ? "text-rose-500" : "text-ink/55"
                                                     )}>
                                                         {bala.value.toFixed(0)}
                                                     </span>
@@ -589,13 +589,13 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                 </div>
 
                 {/* Ishta & Kashta Phala - Refined */}
-                <div className="lg:col-span-4 bg-white border border-antique rounded-3xl shadow-sm overflow-hidden flex flex-col">
-                    <div className="p-4 border-b border-antique bg-parchment/10">
+                <div className="lg:col-span-4 prem-card rounded-3xl shadow-sm overflow-hidden flex flex-col">
+                    <div className="p-4 border-b border-gold-primary/15">
                         <div className="flex items-center gap-2">
                             <Activity className="w-4 h-4 text-emerald-600" />
                             <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Ishta & Kashta Phala</h3>
                         </div>
-                        <p className={cn(TYPOGRAPHY.label, "mt-1 text-slate-400 font-normal lowercase tracking-wider")}>Auspicious vs Inauspicious strength</p>
+                        <p className={cn(TYPOGRAPHY.label, "mt-1 text-ink/35 font-normal lowercase tracking-wider")}>Auspicious vs Inauspicious strength</p>
                     </div>
                     <div className="p-5 space-y-4 flex-1 flex flex-col justify-center">
                         {displayData.planets.map(p => {
@@ -610,7 +610,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                                 <div key={`phala-${p.planet}`} className="group">
                                     <div className="flex items-center gap-2.5 mb-1.5">
                                         {/* Planet Icon Circle */}
-                                        <div className={cn("w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-sm", theme.twBg)}>
+                                        <div className={cn("w-7 h-7 rounded-full flex items-center justify-center text-white text-[12px] font-bold shrink-0 shadow-sm", theme.twBg)}>
                                             {PLANET_SYMBOLS[p.planet]}
                                         </div>
                                         <div className="flex-1 min-w-0">
@@ -621,7 +621,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                                                     <span className="text-rose-500 font-bold">K:{kashtaVal.toFixed(1)}</span>
                                                 </div>
                                             </div>
-                                            <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden flex group-hover:scale-[1.02] transition-transform shadow-inner">
+                                            <div className="h-2.5 w-full bg-gold-primary/8 rounded-full overflow-hidden flex group-hover:scale-[1.02] transition-transform shadow-inner">
                                                 <motion.div
                                                     className="h-full rounded-l-full bg-gradient-to-r from-emerald-500 to-emerald-400"
                                                     initial={{ width: 0 }}
@@ -636,14 +636,14 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                             );
                         })}
                         {/* Legend */}
-                        <div className="flex items-center justify-center gap-6 pt-2 border-t border-antique/50 mt-2">
+                        <div className="flex items-center justify-center gap-6 pt-2 border-t border-gold-primary/20 mt-2">
                             <div className="flex items-center gap-1.5">
                                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                                <span className={cn(TYPOGRAPHY.label, "text-slate-500 font-normal lowercase")}>ISHTA</span>
+                                <span className={cn(TYPOGRAPHY.label, "text-ink/45 font-normal lowercase")}>ISHTA</span>
                             </div>
                             <div className="flex items-center gap-1.5">
                                 <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-                                <span className={cn(TYPOGRAPHY.label, "text-slate-500 font-normal lowercase")}>KASHTA</span>
+                                <span className={cn(TYPOGRAPHY.label, "text-ink/45 font-normal lowercase")}>KASHTA</span>
                             </div>
                         </div>
                     </div>
@@ -653,11 +653,11 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
             {/* ═══════════════════════════════════════════════════════════════
                 SECTION 3: Radial Gauge Meters
             ═══════════════════════════════════════════════════════════════ */}
-            <div className="bg-white border border-antique rounded-3xl shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-antique bg-parchment/10 flex items-center gap-2">
+            <div className="prem-card rounded-3xl shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-gold-primary/15 flex items-center gap-2">
                     <BarChart2 className="w-4 h-4 text-gold-primary" />
                     <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Rupa Strength Overview</h3>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-slate-400 font-normal lowercase tracking-wider")}>Red tick = min. required</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-ink/35 font-normal lowercase tracking-wider")}>Red tick = min. required</span>
                 </div>
                 <div className="p-6 flex flex-wrap items-center justify-center gap-4 md:gap-6">
                     {sortedPlanets.map((p) => {
@@ -681,11 +681,11 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
             {/* ═══════════════════════════════════════════════════════════════
                 SECTION 4: Heatmap Breakdown Table
             ═══════════════════════════════════════════════════════════════ */}
-            <div className="bg-white border border-antique rounded-3xl shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-antique bg-parchment/5 flex items-center gap-2">
+            <div className="prem-card rounded-3xl shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-gold-primary/15 bg-surface-warm/5 flex items-center gap-2">
                     <Layers className="w-4 h-4 text-indigo-500" />
                     <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Six-Fold Virupa Breakdown</h3>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-slate-400 font-normal lowercase tracking-wider")}>Cell color = relative strength</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-ink/35 font-normal lowercase tracking-wider")}>Cell color = relative strength</span>
                 </div>
                 <DataGrid
                     columns={[
@@ -697,8 +697,8 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                             render: (row: ShadbalaPlanet) => {
                                 const theme = PLANET_THEMES[row.planet];
                                 return (
-                                    <div className={cn(TYPOGRAPHY.value, "flex items-center gap-2 text-sm")}>
-                                        <span className={cn(TYPOGRAPHY.profileName, "text-base", theme.twText)}>{PLANET_SYMBOLS[row.planet]}</span>
+                                    <div className={cn(TYPOGRAPHY.value, "flex items-center gap-2 text-[14px]")}>
+                                        <span className={cn(TYPOGRAPHY.profileName, "text-[16px]", theme.twText)}>{PLANET_SYMBOLS[row.planet]}</span>
                                         {row.planet}
                                     </div>
                                 );
@@ -708,7 +708,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                             key: axis.key,
                             header: axis.shortLabel,
                             align: 'center' as const,
-                            cellClassName: cn(TYPOGRAPHY.value, "text-xs tabular-nums"),
+                            cellClassName: cn(TYPOGRAPHY.value, "text-[12px] tabular-nums"),
                             render: (row: ShadbalaPlanet) => {
                                 const val = (row as unknown as Record<string, number>)[axis.key] || 0;
                                 const { style, indicator } = getHeatmapStyle(val, tableMaxValues[axis.key]);
@@ -725,7 +725,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                             header: 'Total',
                             align: 'center' as const,
                             headerClassName: 'bg-gold-primary/5 text-gold-dark',
-                            cellClassName: cn(TYPOGRAPHY.value, "text-xs text-gold-dark bg-gold-primary/5 tabular-nums"),
+                            cellClassName: cn(TYPOGRAPHY.value, "text-[12px] text-gold-dark bg-gold-primary/5 tabular-nums"),
                             sortable: true,
                             render: (row: ShadbalaPlanet) => row.totalBala.toFixed(1),
                         },
@@ -733,7 +733,7 @@ function ShadbalaDashboard({ displayData, rawResponse }: { displayData: Shadbala
                     data={sortedPlanets}
                     rowKey={(row) => row.planet}
                     cellPadding="p-4"
-                    headerClassName="bg-slate-50/50 border-b border-antique"
+                    headerClassName="bg-surface-warm/50 border-b border-gold-primary/15"
                     ariaLabel="Shadbala six-fold strength breakdown"
                     scrollShadows={true}
                 />

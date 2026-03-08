@@ -62,7 +62,7 @@ const DIGNITY_STYLE: Record<string, string> = {
     exalted: 'text-emerald-700 font-bold',
     own: 'text-green-600 font-semibold',
     debilitated: 'text-red-500',
-    neutral: 'text-primary'
+    neutral: 'text-ink'
 };
 
 export default function ShodashaVargaTable({ data, className }: ShodashaVargaTableProps) {
@@ -99,24 +99,24 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
     const weakestPlanet = dignityScores.reduce((a, b) => a.score < b.score ? a : b);
 
     return (
-        <div className={cn("w-full bg-softwhite rounded-xl border border-border-warm shadow-card p-4", className)}>
+        <div className={cn("w-full bg-surface-warm rounded-xl border border-gold-primary/15 p-4", className)}>
             {/* Header with Legend */}
             <div className="flex items-center justify-between mb-0">
                 <h2 className={TYPOGRAPHY.sectionTitle}>Shodashavarga summary</h2>
-                <div className="flex gap-3 text-xs font-medium font-sans">
-                    <span className="text-primary flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-700"></span>Exalted</span>
-                    <span className="text-primary flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-green-600"></span>Own</span>
-                    <span className="text-primary flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>Debilitated</span>
+                <div className="flex gap-3 text-[12px] font-medium font-sans">
+                    <span className="text-ink flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-700"></span>Exalted</span>
+                    <span className="text-ink flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-green-600"></span>Own</span>
+                    <span className="text-ink flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>Debilitated</span>
                 </div>
             </div>
-            <div className="rounded-xl border border-border-warm w-full overflow-x-auto">
-                <table className="w-full border-collapse text-xs" role="table" aria-label="Shodasha Varga summary showing planetary signs across 16 divisional charts">
+            <div className="rounded-xl border border-gold-primary/15 w-full overflow-x-auto">
+                <table className="w-full border-collapse text-[12px]" role="table" aria-label="Shodasha Varga summary showing planetary signs across 16 divisional charts">
                     <thead className="sticky top-0 z-10">
-                        <tr className="bg-amber-50/30 border-b border-border-warm">
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left border-r border-border-warm w-28")}>Varga</th>
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-1 text-center border-r border-border-warm")}>Asc</th>
+                        <tr className="bg-amber-50/30 border-b border-gold-primary/15">
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left border-r border-gold-primary/15 w-28")}>Varga</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-1 text-center border-r border-gold-primary/15")}>Asc</th>
                             {PLANETS.map(p => (
-                                <th key={p} className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-1 text-center border-r border-border-warm")}>
+                                <th key={p} className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-1 text-center border-r border-gold-primary/15")}>
                                     {p.substring(0, 3)}
                                 </th>
                             ))}
@@ -124,12 +124,12 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
                     </thead>
                     <tbody>
                         {VARGA_ORDER.map((v, i) => (
-                            <tr key={v.key} className={cn("border-b border-border-warm", i % 2 === 1 && "bg-parchment/30")}>
-                                <td className={cn(TYPOGRAPHY.dateAndDuration, "py-1 px-3 border-r border-border-warm")}>
+                            <tr key={v.key} className={cn("border-b border-gold-primary/15", i % 2 === 1 && "bg-surface-warm/30")}>
+                                <td className={cn(TYPOGRAPHY.dateAndDuration, "py-1 px-3 border-r border-gold-primary/15")}>
                                     <span className="font-bold mr-1.5">{v.key}</span>
                                     <span>{v.name}</span>
                                 </td>
-                                <td className={cn(TYPOGRAPHY.dateAndDuration, "py-1 text-center border-r border-border-warm")}>
+                                <td className={cn(TYPOGRAPHY.dateAndDuration, "py-1 text-center border-r border-gold-primary/15")}>
                                     {SIGN_ABBR[getSign('Ascendant', v.key).charAt(0).toUpperCase() + getSign('Ascendant', v.key).slice(1).toLowerCase()] || getSign('Ascendant', v.key).substring(0, 2)}
                                 </td>
                                 {PLANETS.map(p => {
@@ -137,7 +137,7 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
                                     const abbr = SIGN_ABBR[sign.charAt(0).toUpperCase() + sign.slice(1).toLowerCase()] || sign.substring(0, 2);
                                     const dignity = getDignity(p, sign);
                                     return (
-                                        <td key={p} className={cn(TYPOGRAPHY.dateAndDuration, "py-1 text-center border-r border-border-warm")}>
+                                        <td key={p} className={cn(TYPOGRAPHY.dateAndDuration, "py-1 text-center border-r border-gold-primary/15")}>
                                             <span className={cn("font-medium", DIGNITY_STYLE[dignity])}>
                                                 {sign === '-' ? '-' : abbr}
                                             </span>

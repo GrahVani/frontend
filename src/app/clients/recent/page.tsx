@@ -22,8 +22,8 @@ export default function RecentSessionsPage() {
                         <History className="w-6 h-6 text-gold-primary" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-serif font-bold text-ink">Recent Sessions</h1>
-                        <p className="text-sm text-muted">Consultations from the last 7 days</p>
+                        <h1 className="text-[24px] font-serif font-bold text-ink">Recent Sessions</h1>
+                        <p className="text-[14px] text-ink/45">Consultations from the last 7 days</p>
                     </div>
                 </div>
             </div>
@@ -31,7 +31,7 @@ export default function RecentSessionsPage() {
             {/* Session Cards */}
             <div className="space-y-3">
                 {recentSessions.map((session) => (
-                    <div key={session.id} className="bg-softwhite border border-antique rounded-xl p-5 hover:border-gold-primary/50 transition-colors">
+                    <div key={session.id} className="prem-card rounded-xl p-5 hover:border-gold-primary/50 transition-colors">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <div className="w-10 h-10 rounded-lg bg-gold-primary/10 flex items-center justify-center font-serif font-bold text-gold-dark">
@@ -39,15 +39,15 @@ export default function RecentSessionsPage() {
                                 </div>
                                 <div>
                                     <h3 className="font-serif font-bold text-ink">{session.name}</h3>
-                                    <p className="text-sm text-muted">{session.topic}</p>
+                                    <p className="text-[14px] text-ink/45">{session.topic}</p>
                                 </div>
                             </div>
                             <div className="text-right">
-                                <div className="flex items-center gap-2 text-sm text-body">
-                                    <Calendar className="w-3.5 h-3.5 text-muted" />
+                                <div className="flex items-center gap-2 text-[14px] text-body">
+                                    <Calendar className="w-3.5 h-3.5 text-ink/45" />
                                     {session.date}
                                 </div>
-                                <div className="flex items-center gap-2 text-xs text-muted mt-1">
+                                <div className="flex items-center gap-2 text-[12px] text-ink/45 mt-1">
                                     <Clock className="w-3 h-3" />
                                     {session.time} • {session.duration}
                                 </div>
@@ -58,8 +58,8 @@ export default function RecentSessionsPage() {
             </div>
 
             {/* Summary */}
-            <div className="bg-softwhite border border-antique rounded-xl p-5 flex items-center justify-between">
-                <span className="text-sm text-muted">Sessions this week</span>
+            <div className="prem-card rounded-xl p-5 flex items-center justify-between">
+                <span className="text-[14px] text-ink/45">Sessions this week</span>
                 <span className="font-serif font-bold text-ink">{recentSessions.length}</span>
             </div>
         </div>

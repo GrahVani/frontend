@@ -18,8 +18,8 @@ export const YogaActivationPeriod = memo(function YogaActivationPeriod({ data }:
     ].filter(Boolean) as { label: string; value: string }[];
 
     return (
-        <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
-            <h3 className="font-serif font-bold text-primary mb-5 flex items-center gap-2 text-sm uppercase tracking-wider">
+        <div className="prem-card p-5">
+            <h3 className="font-serif font-bold text-ink mb-5 flex items-center gap-2 text-[14px] uppercase tracking-wider">
                 <Zap className="w-4 h-4 text-gold-primary" /> Activation Timeline
             </h3>
 
@@ -29,9 +29,9 @@ export const YogaActivationPeriod = memo(function YogaActivationPeriod({ data }:
                     <div className="space-y-4">
                         {timelineItems.map((item, i) => (
                             <div key={i} className="relative pl-5 border-l-2 border-gold-primary/20">
-                                <div className="absolute w-2.5 h-2.5 bg-gold-primary rounded-full -left-[6px] top-1 border-2 border-softwhite" style={{ opacity: 1 - i * 0.2 }} />
-                                <h4 className="text-[10px] font-bold text-primary opacity-60 uppercase mb-1">{item.label}</h4>
-                                <p className={cn(TYPOGRAPHY.value, "text-xs leading-relaxed")}>{item.value}</p>
+                                <div className="absolute w-2.5 h-2.5 bg-gold-primary rounded-full -left-[6px] top-1 border-2 border-surface-warm" style={{ opacity: 1 - i * 0.2 }} />
+                                <h4 className="text-[10px] font-bold text-ink opacity-60 uppercase mb-1">{item.label}</h4>
+                                <p className={cn(TYPOGRAPHY.value, "text-[12px] leading-relaxed")}>{item.value}</p>
                             </div>
                         ))}
                     </div>
@@ -40,8 +40,8 @@ export const YogaActivationPeriod = memo(function YogaActivationPeriod({ data }:
                 {/* Remedial Timing */}
                 {data.remedialTiming && (
                     <div className="p-4 bg-copper-900/5 rounded-xl border border-copper-900/10">
-                        <h4 className="text-xs font-serif font-bold text-primary mb-2">Golden Timing</h4>
-                        <p className="text-[11px] text-primary leading-relaxed italic opacity-80">
+                        <h4 className="text-[12px] font-serif font-bold text-ink mb-2">Golden Timing</h4>
+                        <p className="text-[11px] text-ink leading-relaxed italic opacity-80">
                             &ldquo;{data.remedialTiming}&rdquo;
                         </p>
                     </div>

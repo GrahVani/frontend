@@ -117,10 +117,10 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
     return (
         <div className="sticky top-14 left-0 right-0 z-40 h-12 bg-header-gradient flex items-center px-4 md:px-6 gap-4" role="navigation" aria-label="Vedic astrology sections">
             {/* Top Border Indicator */}
-            <div className="absolute top-0 left-0 right-0 h-[1px] bg-header-border opacity-10" />
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gold-primary opacity-10" />
 
             {/* Bottom Ornament */}
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-header-border to-transparent shadow-[0_1px_3px_rgba(0,0,0,0.3)]" />
+            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-gold-primary to-transparent shadow-[0_1px_3px_rgba(0,0,0,0.3)]" />
 
             {/* Navigation Items */}
             <nav className="flex-1 flex items-center gap-0.5 overflow-x-auto no-scrollbar h-full" aria-label="Vedic astrology sub-navigation">
@@ -153,7 +153,7 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                     return (
                         <React.Fragment key={item.name}>
                             {isGroupTransition && (
-                                <div className="w-[1px] h-6 bg-header-border/30 mx-1 shrink-0" aria-hidden="true" />
+                                <div className="w-[1px] h-6 bg-gold-primary/30 mx-1 shrink-0" aria-hidden="true" />
                             )}
                             <Link
                                 href={href}
@@ -204,7 +204,7 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                     </button>
 
                     {isMoreOpen && (
-                        <div role="menu" aria-label="Additional navigation" className="absolute top-full right-0 mt-0 w-48 bg-surface-warm border border-header-border/30 rounded-xl shadow-2xl overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                        <div role="menu" aria-label="Additional navigation" className="absolute top-full right-0 mt-0 w-48 bg-surface-warm border border-gold-primary/30 rounded-xl shadow-2xl overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
                             {filteredOverflowItems.map((item) => {
                                 const href = `/vedic-astrology${item.path}`;
                                 const isActive = pathname === href;
@@ -219,8 +219,8 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                                             TYPOGRAPHY.tableHeader,
                                             "flex items-center gap-3 px-4 py-3 transition-all !capitalize",
                                             isActive
-                                                ? "text-header-border bg-header-border/10 !font-bold"
-                                                : "text-primary hover:text-header-border hover:bg-header-border/5"
+                                                ? "text-gold-dark bg-gold-primary/10 !font-bold"
+                                                : "text-primary hover:text-gold-dark hover:bg-gold-primary/5"
                                         )}
                                     >
                                         {Icon && <Icon className="w-4 h-4" />}
@@ -235,7 +235,7 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
 
             {/* Client Profile Card (Right) */}
             {clientDetails && (
-                <div className="flex items-center gap-4 pl-6 border-l border-header-border/20 shrink-0 h-10 ml-4">
+                <div className="flex items-center gap-4 pl-6 border-l border-gold-primary/20 shrink-0 h-10 ml-4">
                     <div
                         className="flex items-center gap-3 cursor-pointer group"
                         onClick={() => router.push(`/vedic-astrology/overview`)}
@@ -243,7 +243,7 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                         <div className="hidden sm:block text-right">
                             <h2 className={cn(TYPOGRAPHY.profileName, "!text-white !text-md tracking-wide group-hover:!text-active-glow transition-colors")}>{clientDetails.name}</h2>
                         </div>
-                        <div className="w-9 h-9 rounded-full bg-ink-deep border border-header-border/30 flex items-center justify-center text-active-glow font-serif font-bold text-sm shadow-[0_0_15px_rgba(208,140,96,0.1)] group-hover:border-active-glow/50 transition-all">
+                        <div className="w-9 h-9 rounded-full bg-ink-deep border border-gold-primary/30 flex items-center justify-center text-active-glow font-serif font-bold text-[14px] shadow-[0_0_15px_rgba(208,140,96,0.1)] group-hover:border-active-glow/50 transition-all">
                             {clientDetails.name.charAt(0)}
                         </div>
                     </div>

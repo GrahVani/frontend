@@ -123,7 +123,7 @@ function RadialGauge({ planet, rupaBala, minRequired, isStrong, color, rank }: {
                 <text x={center} y={center - 4} textAnchor="middle" fontSize="18" fill={color} fontWeight="bold">{PLANET_SYMBOLS[planet]}</text>
                 <text x={center} y={center + 14} textAnchor="middle" fontSize="11" fill="#1e293b" fontWeight="bold">{rupaBala.toFixed(2)}</text>
             </svg>
-            <p className="text-[10px] font-bold text-slate-500 uppercase mt-1">#{rank} {isStrong ? 'Potent' : 'Weak'}</p>
+            <p className="text-[10px] font-bold text-ink/45 uppercase mt-1">#{rank} {isStrong ? 'Potent' : 'Weak'}</p>
         </div>
     );
 }
@@ -141,39 +141,39 @@ export default function ShadbalaDashboard({ displayData }: { displayData: Shadba
     return (
         <div className="space-y-6 w-full max-w-4xl mx-auto">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="bg-white border border-header-border/10 p-4 rounded-2xl shadow-sm flex items-center justify-between">
+                <div className="bg-white border border-gold-primary/10 p-4 rounded-2xl shadow-sm flex items-center justify-between">
                     <div>
                         <div className="flex items-center gap-2 mb-1">
                             <TrendingUp className="w-4 h-4 text-emerald-500" />
-                            <span className="text-[10px] font-black uppercase text-bronze/40 tracking-widest">Strongest</span>
+                            <span className="text-[10px] font-black uppercase text-ink/30 tracking-widest">Strongest</span>
                         </div>
-                        <h4 className="text-xl font-bold text-primary">{strongest.planet}</h4>
-                        <p className="text-xs text-emerald-600 font-bold">{strongest.rupaBala.toFixed(2)} Rupa</p>
+                        <h4 className="text-[20px] font-bold text-ink">{strongest.planet}</h4>
+                        <p className="text-[12px] text-emerald-600 font-bold">{strongest.rupaBala.toFixed(2)} Rupa</p>
                     </div>
-                    <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center text-white text-lg font-bold shadow-lg", strongestTheme.twBg)}>
+                    <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center text-white text-[18px] font-bold shadow-lg", strongestTheme.twBg)}>
                         {PLANET_SYMBOLS[strongest.planet]}
                     </div>
                 </div>
 
-                <div className="bg-white border border-header-border/10 p-4 rounded-2xl shadow-sm flex items-center justify-between">
+                <div className="bg-white border border-gold-primary/10 p-4 rounded-2xl shadow-sm flex items-center justify-between">
                     <div>
                         <div className="flex items-center gap-2 mb-1">
                             <TrendingDown className="w-4 h-4 text-rose-500" />
-                            <span className="text-[10px] font-black uppercase text-bronze/40 tracking-widest">Weakest</span>
+                            <span className="text-[10px] font-black uppercase text-ink/30 tracking-widest">Weakest</span>
                         </div>
-                        <h4 className="text-xl font-bold text-primary">{weakest.planet}</h4>
-                        <p className="text-xs text-rose-500 font-bold">{weakest.rupaBala.toFixed(2)} Rupa</p>
+                        <h4 className="text-[20px] font-bold text-ink">{weakest.planet}</h4>
+                        <p className="text-[12px] text-rose-500 font-bold">{weakest.rupaBala.toFixed(2)} Rupa</p>
                     </div>
-                    <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center text-white text-lg font-bold shadow-lg", weakestTheme.twBg)}>
+                    <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center text-white text-[18px] font-bold shadow-lg", weakestTheme.twBg)}>
                         {PLANET_SYMBOLS[weakest.planet]}
                     </div>
                 </div>
             </div>
 
-            <div className="bg-white border border-header-border/10 rounded-3xl p-4 shadow-sm overflow-hidden">
+            <div className="bg-white border border-gold-primary/10 rounded-3xl p-4 shadow-sm overflow-hidden">
                 <div className="flex items-center gap-2 mb-6">
-                    <BarChart2 className="w-5 h-5 text-header-border" />
-                    <h3 className="text-sm font-black uppercase tracking-widest text-primary">Rupa Strength Overview</h3>
+                    <BarChart2 className="w-5 h-5 text-gold-dark" />
+                    <h3 className="text-[14px] font-black uppercase tracking-widest text-ink">Rupa Strength Overview</h3>
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-8">
                     {sortedPlanets.map((p) => (
@@ -191,21 +191,21 @@ export default function ShadbalaDashboard({ displayData }: { displayData: Shadba
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white border border-header-border/10 rounded-3xl p-6 shadow-sm">
+                <div className="bg-white border border-gold-primary/10 rounded-3xl p-6 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
-                        <Compass className="w-5 h-5 text-header-border" />
-                        <h3 className="text-sm font-black uppercase tracking-widest text-primary">Strength Profile</h3>
+                        <Compass className="w-5 h-5 text-gold-dark" />
+                        <h3 className="text-[14px] font-black uppercase tracking-widest text-ink">Strength Profile</h3>
                     </div>
                     <div className="space-y-4">
                         {sortedPlanets.map(p => (
                             <div key={p.planet} className="flex flex-col gap-1">
                                 <div className="flex justify-between items-center text-[10px] font-bold">
-                                    <span className="text-primary">{p.planet}</span>
-                                    <span className="text-primary/60">{p.rupaBala.toFixed(2)} Rupa</span>
+                                    <span className="text-ink">{p.planet}</span>
+                                    <span className="text-ink/60">{p.rupaBala.toFixed(2)} Rupa</span>
                                 </div>
-                                <div className="h-1.5 w-full bg-parchment rounded-full overflow-hidden">
+                                <div className="h-1.5 w-full bg-surface-warm rounded-full overflow-hidden">
                                     <div
-                                        className="h-full bg-header-border transition-all duration-1000"
+                                        className="h-full bg-gold-primary transition-all duration-1000"
                                         style={{ width: `${(p.rupaBala / 12) * 100}%` }}
                                     />
                                 </div>
@@ -214,10 +214,10 @@ export default function ShadbalaDashboard({ displayData }: { displayData: Shadba
                     </div>
                 </div>
 
-                <div className="bg-white border border-header-border/10 rounded-3xl p-6 shadow-sm">
+                <div className="bg-white border border-gold-primary/10 rounded-3xl p-6 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                         <Activity className="w-5 h-5 text-emerald-500" />
-                        <h3 className="text-sm font-black uppercase tracking-widest text-primary">Ishta & Kashta Phala</h3>
+                        <h3 className="text-[14px] font-black uppercase tracking-widest text-ink">Ishta & Kashta Phala</h3>
                     </div>
                     <div className="space-y-4">
                         {sortedPlanets.map(p => {
@@ -227,13 +227,13 @@ export default function ShadbalaDashboard({ displayData }: { displayData: Shadba
                             return (
                                 <div key={p.planet} className="flex flex-col gap-1">
                                     <div className="flex justify-between items-center text-[10px] font-bold">
-                                        <span className="text-primary">{p.planet}</span>
+                                        <span className="text-ink">{p.planet}</span>
                                         <div className="flex gap-2">
                                             <span className="text-emerald-600">I:{p.ishtaKashta.ishta.toFixed(1)}</span>
                                             <span className="text-rose-500">K:{p.ishtaKashta.kashta.toFixed(1)}</span>
                                         </div>
                                     </div>
-                                    <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden flex">
+                                    <div className="h-1.5 w-full bg-gold-primary/8 rounded-full overflow-hidden flex">
                                         <div className="h-full bg-emerald-500" style={{ width: `${ishtaPct}%` }} />
                                         <div className="h-full bg-rose-500 flex-1" />
                                     </div>

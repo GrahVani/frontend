@@ -14,7 +14,7 @@ export default function ParchmentInput({ className = '', icon, label, id, error,
     return (
         <div className={`relative group ${className}`}>
             {label && (
-                <label htmlFor={inputId} className="block text-xs font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
+                <label htmlFor={inputId} className="block text-[12px] font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
                     {label}
                 </label>
             )}
@@ -27,7 +27,7 @@ export default function ParchmentInput({ className = '', icon, label, id, error,
                 {...props}
                 className={`
                     w-full h-full bg-transparent
-                    text-ink font-serif text-base tracking-wide
+                    text-ink font-serif text-[16px] tracking-wide
                     placeholder:text-gold-dark/80
                     focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-1
                     transition-colors duration-300
@@ -44,7 +44,7 @@ export default function ParchmentInput({ className = '', icon, label, id, error,
             )}
 
             {error && (
-                <span id={errorId} role="alert" className="block text-xs text-red-600 mt-1">
+                <span id={errorId} role="alert" className="block text-[12px] text-red-600 mt-1">
                     {error}
                 </span>
             )}

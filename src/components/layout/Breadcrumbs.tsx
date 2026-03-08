@@ -49,7 +49,7 @@ export default function Breadcrumbs() {
              className="flex items-center gap-2 py-3 mb-1">
             {/* Home anchor */}
             <Link href="/dashboard"
-                  className="p-1.5 rounded-md hover:bg-parchment/50 transition-colors shrink-0"
+                  className="p-1.5 rounded-md hover:bg-surface-warm/50 transition-colors shrink-0"
                   aria-label="Home">
                 <Home className="w-4 h-4 text-ink/40 hover:text-gold-dark transition-colors" />
             </Link>
@@ -78,7 +78,7 @@ export default function Breadcrumbs() {
                             </span>
                         ) : (
                             <Link href={href}
-                                  className="text-[14px] font-medium text-ink/60 hover:text-gold-dark px-2 py-1 rounded-md hover:bg-parchment/40 transition-all">
+                                  className="text-[14px] font-medium text-ink/60 hover:text-gold-dark px-2 py-1 rounded-md hover:bg-surface-warm/40 transition-all">
                                 {label}
                             </Link>
                         )}

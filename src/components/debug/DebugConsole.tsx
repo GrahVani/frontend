@@ -30,7 +30,7 @@ export default function DebugConsole({ title, data, className }: DebugConsolePro
             >
                 <div className="flex items-center gap-2">
                     <Terminal className="w-4 h-4 text-zinc-600" />
-                    <span className="text-xs font-mono font-bold text-zinc-700 uppercase tracking-tight">
+                    <span className="text-[12px] font-mono font-bold text-zinc-700 uppercase tracking-tight">
                         Debug: {title}
                     </span>
                 </div>

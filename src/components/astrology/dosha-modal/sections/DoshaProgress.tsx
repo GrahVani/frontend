@@ -15,7 +15,7 @@ interface DoshaProgressProps {
 
 export const DoshaProgress = memo(function DoshaProgress({ data }: DoshaProgressProps) {
     return (
-        <div className="bg-softwhite border border-red-100 rounded-2xl p-6">
+        <div className="bg-surface-warm border border-red-100 rounded-2xl p-6">
             <h3 className="font-serif font-bold text-ink mb-6 flex items-center gap-2 uppercase tracking-widest text-[10px]">
                 <Clock className="w-4 h-4 text-red-500" /> Transit Timeline & Phase
             </h3>
@@ -24,10 +24,10 @@ export const DoshaProgress = memo(function DoshaProgress({ data }: DoshaProgress
                 <div className="flex justify-between items-end mb-2">
                     <div>
                         <span className="text-[10px] font-black text-red-900/60 uppercase tracking-tighter block mb-1">Active Phase</span>
-                        <h4 className="text-sm font-serif font-bold text-ink">{data.label}</h4>
+                        <h4 className="text-[14px] font-serif font-bold text-ink">{data.label}</h4>
                     </div>
                     <div className="text-right">
-                        <span className="text-lg font-black text-red-600 leading-none">{data.percentage}%</span>
+                        <span className="text-[18px] font-black text-red-600 leading-none">{data.percentage}%</span>
                         <span className="text-[8px] block font-black text-red-900/40 uppercase">Completion</span>
                     </div>
                 </div>

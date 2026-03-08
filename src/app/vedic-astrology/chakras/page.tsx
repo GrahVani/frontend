@@ -60,9 +60,9 @@ export default function ChakrasPage() {
     if (!clientDetails) {
         return (
             <div className="flex flex-col items-center justify-center h-[60vh] text-center p-8 bg-copper-50/30 rounded-2xl border border-dashed border-copper-200">
-                <Compass className="w-16 h-16 text-primary mb-4 animate-spin-slow" />
-                <h2 className="text-lg font-serif text-primary mb-2">No Client Selected</h2>
-                <p className="text-xs text-primary max-w-md">Please select a client to view their Sudarshan Chakra and other esoteric diagrams.</p>
+                <Compass className="w-16 h-16 text-ink mb-4 animate-spin-slow" />
+                <h2 className="text-[18px] font-serif text-ink mb-2">No Client Selected</h2>
+                <p className="text-[12px] text-ink max-w-md">Please select a client to view their Sudarshan Chakra and other esoteric diagrams.</p>
             </div>
         );
     }
@@ -72,7 +72,7 @@ export default function ChakrasPage() {
             {/* Professional Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-2">
                 <div className="space-y-1">
-                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl font-bold")}>
+                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] font-bold")}>
                         Sudarshan Chakra
                     </h1>
                 </div>
@@ -95,12 +95,12 @@ export default function ChakrasPage() {
                         {loading ? (
                             <div className="flex flex-col items-center gap-6 relative z-10">
                                 <div className="relative">
-                                    <Loader2 className="w-16 h-16 text-primary animate-spin" />
-                                    <Compass className="w-8 h-8 text-primary absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse" />
+                                    <Loader2 className="w-16 h-16 text-ink animate-spin" />
+                                    <Compass className="w-8 h-8 text-ink absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse" />
                                 </div>
                                 <div className="text-center space-y-2">
-                                    <p className="text-primary font-serif text-sm font-bold animate-pulse">Generating chart...</p>
-                                    <p className="text-primary text-[10px] italic">Synchronizing Surya, Chandra, & Birth chart layers</p>
+                                    <p className="text-ink font-serif text-[14px] font-bold animate-pulse">Generating chart...</p>
+                                    <p className="text-ink text-[10px] italic">Synchronizing Surya, Chandra, & Birth chart layers</p>
                                 </div>
                             </div>
                         ) : (
@@ -125,7 +125,7 @@ export default function ChakrasPage() {
                                     key={idx}
                                     onClick={ctrl.onClick}
                                     title={ctrl.label}
-                                    className="p-4 bg-white/90 backdrop-blur text-primary rounded-2xl border border-copper-100 shadow-xl hover:bg-copper-950 hover:text-white transition-all transform hover:scale-110"
+                                    className="p-4 bg-white/90 backdrop-blur text-ink rounded-2xl border border-copper-100 shadow-xl hover:bg-copper-950 hover:text-white transition-all transform hover:scale-110"
                                 >
                                     <ctrl.icon className="w-5 h-5" />
                                 </button>
@@ -142,11 +142,11 @@ export default function ChakrasPage() {
 
                         <div className="flex items-center gap-3 border-b border-copper-100/50 pb-5">
                             <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center border border-primary/10">
-                                <Layers className="w-5 h-5 text-primary" />
+                                <Layers className="w-5 h-5 text-ink" />
                             </div>
                             <div>
-                                <h3 className={cn(TYPOGRAPHY.label, "mb-0 text-primary uppercase tracking-[0.2em] text-[10px]")}>Technical Layers</h3>
-                                <p className={cn(TYPOGRAPHY.sectionTitle, "text-lg")}>Chart Legend</p>
+                                <h3 className={cn(TYPOGRAPHY.label, "mb-0 text-ink uppercase tracking-[0.2em] text-[10px]")}>Technical Layers</h3>
+                                <p className={cn(TYPOGRAPHY.sectionTitle, "text-[18px]")}>Chart Legend</p>
                             </div>
                         </div>
 
@@ -201,17 +201,17 @@ export default function ChakrasPage() {
                                     </div>
                                     <div className="space-y-1">
                                         <div className="flex items-center gap-2">
-                                            <span className={cn(TYPOGRAPHY.value, "text-base font-semibold text-primary")}>{item.label}</span>
-                                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-copper-50 text-primary font-bold uppercase tracking-wider">{item.circle}</span>
+                                            <span className={cn(TYPOGRAPHY.value, "text-[16px] font-semibold text-ink")}>{item.label}</span>
+                                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-copper-50 text-ink font-bold uppercase tracking-wider">{item.circle}</span>
                                         </div>
-                                        <p className={cn(TYPOGRAPHY.subValue, "text-primary font-medium leading-relaxed")}>{item.desc}</p>
+                                        <p className={cn(TYPOGRAPHY.subValue, "text-ink font-medium leading-relaxed")}>{item.desc}</p>
                                     </div>
                                 </div>
                             ))}
                         </div>
 
                         <div className="pt-6 border-t border-copper-100/30">
-                            <div className="flex items-center gap-2 text-[11px] text-primary font-semibold">
+                            <div className="flex items-center gap-2 text-[11px] text-ink font-semibold">
                                 <Info className="w-3 h-3" />
                                 <span>Radial synchronization of three vital planes</span>
                             </div>

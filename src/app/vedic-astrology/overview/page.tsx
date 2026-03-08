@@ -30,7 +30,6 @@ import BirthPanchanga, { type BirthPanchangaData } from '@/components/astrology/
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { COLORS } from '@/design-tokens/colors';
 
-// Helper for formatting
 const formatDate = (dateStr: string) => {
     if (!dateStr) return "";
     try {
@@ -80,7 +79,6 @@ export default function VedicOverviewPage() {
     const [dashaData, setDashaData] = useState<DashaResponse | null>(null);
     const [analysisModal, setAnalysisModal] = useState<{ type: 'yoga' | 'dosha', subType: string, label: string } | null>(null);
 
-    // Escape key to close modals
     useEffect(() => {
         if (!zoomedChart && !analysisModal) return;
         const handleEscape = (e: KeyboardEvent) => {
@@ -95,7 +93,6 @@ export default function VedicOverviewPage() {
 
     const activeSystem = settings.ayanamsa.toLowerCase();
 
-    // Dasha Query
     const { data: dashaDataVal, isLoading: dashaLoading } = useDasha(
         clientDetails?.id || '',
         'mahadasha',
@@ -112,7 +109,6 @@ export default function VedicOverviewPage() {
         }
     }, [clientDetails?.id, settings.ayanamsa]);
 
-    // Memoize chart data transformations
     const d1Data = React.useMemo(() => parseChartData(processedCharts[`D1_${activeSystem}`]?.chartData), [processedCharts, activeSystem]);
     const d9Data = React.useMemo(() => parseChartData(processedCharts[`D9_${activeSystem}`]?.chartData), [processedCharts, activeSystem]);
     const d10Data = React.useMemo(() => parseChartData(processedCharts[`D10_${activeSystem}`]?.chartData), [processedCharts, activeSystem]);
@@ -124,7 +120,6 @@ export default function VedicOverviewPage() {
         return parseChartData(processedCharts[key]?.chartData);
     }, [zoomedChart, processedCharts, activeSystem]);
 
-    // Prepare Planetary Data for Table
     const planetaryTableData = React.useMemo(() => {
         return d1Data.planets.map(p => ({
             planet: fullPlanetNames[p.name] || p.name,
@@ -145,7 +140,6 @@ export default function VedicOverviewPage() {
             .map((c: Record<string, unknown>) => {
                 const chartType = c.chartType as string;
                 const isYoga = chartType.startsWith('yoga_');
-                // Normalize type for display and modal
                 let subType = chartType;
                 if (subType.startsWith('yoga_')) subType = subType.replace('yoga_', '');
                 if (subType.startsWith('dosha_')) subType = subType.replace('dosha_', '');
@@ -164,9 +158,12 @@ export default function VedicOverviewPage() {
 
     return (
         <div className="p-0 w-full min-h-screen animate-in fade-in duration-500">
-            {/* Header / Client Context - Removed and moved to Profile Card */}
             {isLoading && (
-                <div className={cn(TYPOGRAPHY.label, "absolute top-4 right-4 z-50 flex items-center gap-2 px-4 py-2 bg-gold-primary/90 !text-white rounded-full !text-xs !font-medium shadow-lg animate-in fade-in slide-in-from-top-2 !mb-0")}>
+                <div className="absolute top-4 right-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-bold text-white tracking-wide shadow-lg animate-in fade-in slide-in-from-top-2"
+                     style={{
+                         background: 'linear-gradient(135deg, rgba(201,162,77,0.95) 0%, rgba(180,140,60,0.95) 100%)',
+                         boxShadow: '0 4px 12px rgba(201,162,77,0.30)',
+                     }}>
                     <Loader2 className="w-3 h-3 animate-spin" />
                     Analyzing chart...
                 </div>
@@ -176,10 +173,14 @@ export default function VedicOverviewPage() {
                 {/* LEFT COLUMN: D1 & Planetary Details */}
                 <div className="md:col-span-5 flex flex-col gap-2">
                     {/* D1 Chart Window */}
-                    <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm">
-                        <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm flex justify-between items-center">
+                    <div className="prem-card overflow-hidden">
+                        <div className="px-3 py-1.5 flex justify-between items-center"
+                             style={{
+                                 background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
+                                 borderBottom: '1px solid rgba(220,201,166,0.25)',
+                             }}>
                             <h2 className={TYPOGRAPHY.sectionTitle}>Birth chart (D1)</h2>
-                            <button onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })} className="text-primary hover:text-accent-gold transition-colors"><Maximize2 className="w-3 h-3" /></button>
+                            <button onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })} className="text-ink/40 hover:text-gold-dark transition-colors"><Maximize2 className="w-3 h-3" /></button>
                         </div>
                         <div className="w-full min-h-[300px] h-[50vh] max-h-[500px] bg-surface-warm">
                             <ChartWithPopup
@@ -193,8 +194,12 @@ export default function VedicOverviewPage() {
                     </div>
 
                     {/* Planetary Details Window */}
-                    <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm">
-                        <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm">
+                    <div className="prem-card overflow-hidden">
+                        <div className="px-3 py-1.5"
+                             style={{
+                                 background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
+                                 borderBottom: '1px solid rgba(220,201,166,0.25)',
+                             }}>
                             <h2 className={TYPOGRAPHY.sectionTitle}>Birth planetary positions</h2>
                         </div>
                         <div className="bg-surface-warm">
@@ -212,23 +217,30 @@ export default function VedicOverviewPage() {
 
                     {/* Client Identity Bar */}
                     {clientDetails && (
-                        <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm bg-surface-warm">
-                            <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm">
+                        <div className="prem-card overflow-hidden">
+                            <div className="px-3 py-1.5"
+                                 style={{
+                                     background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
+                                     borderBottom: '1px solid rgba(220,201,166,0.25)',
+                                 }}>
                                 <h2 className={TYPOGRAPHY.sectionTitle}>Client profile</h2>
                             </div>
                             <div className="px-3 py-2 flex flex-wrap items-center gap-x-4 gap-y-2">
-                                {/* Name & Details */}
                                 <div className="flex items-center gap-4">
-                                    <div className={cn("w-12 h-12 rounded-lg bg-gold-primary flex items-center justify-center text-white shrink-0 shadow-sm", TYPOGRAPHY.value)}>
-                                        {clientDetails.name.charAt(0)}
+                                    <div className="w-12 h-12 rounded-lg flex items-center justify-center text-white shrink-0"
+                                         style={{
+                                             background: 'linear-gradient(135deg, rgba(201,162,77,0.90) 0%, rgba(139,90,43,0.85) 100%)',
+                                             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), 0 2px 6px rgba(139,90,43,0.15)',
+                                         }}>
+                                        <span className={TYPOGRAPHY.value}>{clientDetails.name.charAt(0)}</span>
                                     </div>
                                     <div className="min-w-0">
                                         <div className={TYPOGRAPHY.profileName}>{clientDetails.name}</div>
                                         <div className={cn(TYPOGRAPHY.profileDetail, "flex flex-wrap gap-x-2 mt-1 !font-serif")}>
                                             <span className="!font-serif">{formatDate(clientDetails.dateOfBirth)}</span>
-                                            <span className="text-primary opacity-60">•</span>
+                                            <span className="text-ink/30">•</span>
                                             <span className="!font-serif">{formatTime(clientDetails.timeOfBirth)}</span>
-                                            <span className="text-primary opacity-60">•</span>
+                                            <span className="text-ink/30">•</span>
                                             <span className="truncate max-w-[250px] !font-serif" title={clientDetails.placeOfBirth.city}>{clientDetails.placeOfBirth.city}</span>
                                         </div>
                                     </div>
@@ -236,26 +248,22 @@ export default function VedicOverviewPage() {
 
                                 {/* Lagna / Moon / Sun — inline chips */}
                                 <div className="flex items-center gap-1.5 ml-auto">
-                                    <div className="bg-softwhite px-2.5 py-1 rounded-lg border border-antique/30 shadow-sm group hover:border-gold-primary/30 transition-colors flex items-center gap-1.5">
-                                        <span className={TYPOGRAPHY.badgeLabel}>Lagna :</span>
-                                        <span className={cn(TYPOGRAPHY.badgeValue, "group-hover:text-accent-gold transition-colors")}>{signIdToName[(d1Data.ascendant || 1) as number]}</span>
-                                    </div>
-                                    <div className="bg-softwhite px-2.5 py-1 rounded-lg border border-antique/30 shadow-sm group hover:border-gold-primary/30 transition-colors flex items-center gap-1.5">
-                                        <span className={TYPOGRAPHY.badgeLabel}>Moon :</span>
-                                        <span className={cn(TYPOGRAPHY.badgeValue, "group-hover:text-accent-gold transition-colors")}>{
-                                            d1Data.planets.find(p => p.name === "Mo")
-                                                ? signIdToName[d1Data.planets.find(p => p.name === "Mo")!.signId]
-                                                : "-"
-                                        }</span>
-                                    </div>
-                                    <div className="bg-softwhite px-2.5 py-1 rounded-lg border border-antique/30 shadow-sm group hover:border-gold-primary/30 transition-colors flex items-center gap-1.5">
-                                        <span className={TYPOGRAPHY.badgeLabel}>Sun :</span>
-                                        <span className={cn(TYPOGRAPHY.badgeValue, "group-hover:text-accent-gold transition-colors")}>{
-                                            d1Data.planets.find(p => p.name === "Su")
-                                                ? signIdToName[d1Data.planets.find(p => p.name === "Su")!.signId]
-                                                : "-"
-                                        }</span>
-                                    </div>
+                                    {[
+                                        { label: 'Lagna', value: signIdToName[(d1Data.ascendant || 1) as number] },
+                                        { label: 'Moon', value: d1Data.planets.find(p => p.name === "Mo") ? signIdToName[d1Data.planets.find(p => p.name === "Mo")!.signId] : "-" },
+                                        { label: 'Sun', value: d1Data.planets.find(p => p.name === "Su") ? signIdToName[d1Data.planets.find(p => p.name === "Su")!.signId] : "-" },
+                                    ].map((chip) => (
+                                        <div key={chip.label}
+                                             className="px-2.5 py-1 rounded-lg group hover:border-gold-primary/30 transition-colors flex items-center gap-1.5"
+                                             style={{
+                                                 background: 'rgba(255,253,249,0.70)',
+                                                 border: '1px solid rgba(220,201,166,0.25)',
+                                                 boxShadow: '0 1px 3px rgba(62,46,22,0.04)',
+                                             }}>
+                                            <span className={TYPOGRAPHY.badgeLabel}>{chip.label} :</span>
+                                            <span className={cn(TYPOGRAPHY.badgeValue, "group-hover:text-gold-dark transition-colors")}>{chip.value}</span>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -264,12 +272,16 @@ export default function VedicOverviewPage() {
                     {/* Panchanga & Dasha side-by-side */}
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
                         {/* Birth Panchanga Card */}
-                        <div className="col-span-12 md:col-span-5 lg:col-span-4 border border-border-warm rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
-                            <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm flex items-center gap-1.5">
-                                <Sparkle className="w-3 h-3 text-accent-gold" />
+                        <div className="col-span-12 md:col-span-5 lg:col-span-4 prem-card overflow-hidden flex flex-col">
+                            <div className="px-3 py-1.5 flex items-center gap-1.5"
+                                 style={{
+                                     background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
+                                     borderBottom: '1px solid rgba(220,201,166,0.25)',
+                                 }}>
+                                <Sparkle className="w-3 h-3 text-gold-dark" />
                                 <h2 className={TYPOGRAPHY.sectionTitle}>Birth panchanga</h2>
                             </div>
-                            <div className="p-2.5 flex-1 flex flex-col justify-between gap-2">
+                            <div className="p-2.5 flex-1 flex flex-col justify-between gap-2 bg-surface-warm">
                                 <BirthPanchanga data={birthPanchangaData} />
                                 <Link
                                     href="/vedic-astrology/panchanga"
@@ -283,11 +295,15 @@ export default function VedicOverviewPage() {
                         </div>
 
                         {/* Vimshottari Dasha */}
-                        <div className="col-span-12 md:col-span-7 lg:col-span-8 border border-border-warm rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
-                            <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm">
+                        <div className="col-span-12 md:col-span-7 lg:col-span-8 prem-card overflow-hidden flex flex-col">
+                            <div className="px-3 py-1.5"
+                                 style={{
+                                     background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
+                                     borderBottom: '1px solid rgba(220,201,166,0.25)',
+                                 }}>
                                 <h2 className={TYPOGRAPHY.sectionTitle}>Vimshottari dasha</h2>
                             </div>
-                            <div className="p-0">
+                            <div className="p-0 bg-surface-warm">
                                 <VimshottariTreeGrid
                                     data={dashaData ? processDashaResponse(dashaData as unknown as RawDashaPeriod).slice(0, 9) : []}
                                     isLoading={dashaLoading}
@@ -300,28 +316,36 @@ export default function VedicOverviewPage() {
                     {/* Middle Row: D9 & D10 */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {/* D9 Navamsha */}
-                        <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm">
-                            <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm flex justify-between items-center">
+                        <div className="prem-card overflow-hidden">
+                            <div className="px-3 py-1.5 flex justify-between items-center"
+                                 style={{
+                                     background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
+                                     borderBottom: '1px solid rgba(220,201,166,0.25)',
+                                 }}>
                                 <h2 className={TYPOGRAPHY.sectionTitle}>Navamsha (D9)</h2>
-                                <button onClick={() => setZoomedChart({ varga: "D9", label: "Navamsha (D9)" })} className="p-1.5 text-primary hover:text-accent-gold transition-colors" aria-label="Zoom Navamsha D9 chart"><Maximize2 className="w-4 h-4" /></button>
+                                <button onClick={() => setZoomedChart({ varga: "D9", label: "Navamsha (D9)" })} className="p-1.5 text-ink/40 hover:text-gold-dark transition-colors" aria-label="Zoom Navamsha D9 chart"><Maximize2 className="w-4 h-4" /></button>
                             </div>
                             <div className="w-full min-h-[250px] h-[40vh] max-h-[400px] bg-surface-warm">
                                 {d9Data.planets.length > 0 ? (
                                     <ChartWithPopup ascendantSign={d9Data.ascendant} planets={d9Data.planets} className="bg-transparent border-none w-full h-full" preserveAspectRatio="none" showDegrees={false} />
-                                ) : <div className={cn(TYPOGRAPHY.subValue, "p-2 text-bronze/50 italic")}>No D9 chart data available</div>}
+                                ) : <div className={cn(TYPOGRAPHY.subValue, "p-2 text-ink/35 italic")}>No D9 chart data available</div>}
                             </div>
                         </div>
 
                         {/* D10 Dashamsha */}
-                        <div className="border border-border-warm rounded-lg overflow-hidden shadow-sm">
-                            <div className="bg-border-warm px-3 py-1.5 border-b border-border-warm flex justify-between items-center">
+                        <div className="prem-card overflow-hidden">
+                            <div className="px-3 py-1.5 flex justify-between items-center"
+                                 style={{
+                                     background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
+                                     borderBottom: '1px solid rgba(220,201,166,0.25)',
+                                 }}>
                                 <h2 className={TYPOGRAPHY.sectionTitle}>Dashamsha (D10)</h2>
-                                <button onClick={() => setZoomedChart({ varga: "D10", label: "Dashamsha (D10)" })} className="p-1.5 text-primary hover:text-accent-gold transition-colors" aria-label="Zoom Dashamsha D10 chart"><Maximize2 className="w-4 h-4" /></button>
+                                <button onClick={() => setZoomedChart({ varga: "D10", label: "Dashamsha (D10)" })} className="p-1.5 text-ink/40 hover:text-gold-dark transition-colors" aria-label="Zoom Dashamsha D10 chart"><Maximize2 className="w-4 h-4" /></button>
                             </div>
                             <div className="w-full min-h-[250px] h-[40vh] max-h-[400px] bg-surface-warm">
                                 {d10Data.planets.length > 0 ? (
                                     <ChartWithPopup ascendantSign={d10Data.ascendant} planets={d10Data.planets} className="bg-transparent border-none w-full h-full" preserveAspectRatio="none" showDegrees={false} />
-                                ) : <div className={cn(TYPOGRAPHY.subValue, "p-2 text-bronze/50 italic")}>No D10 chart data available</div>}
+                                ) : <div className={cn(TYPOGRAPHY.subValue, "p-2 text-ink/35 italic")}>No D10 chart data available</div>}
                             </div>
                         </div>
                     </div>
@@ -332,16 +356,28 @@ export default function VedicOverviewPage() {
 
             {/* Modal for Zoom */}
             {zoomedChart && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl bg-ink/40 animate-in fade-in zoom-in-95 duration-300" role="dialog" aria-modal="true" aria-label={zoomedChart.label}>
-                    <div className="bg-softwhite border border-antique rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl">
-                        <button onClick={() => setZoomedChart(null)} aria-label="Close zoomed chart" className="absolute top-4 right-4 p-2 rounded-xl bg-parchment text-primary hover:bg-gold-primary/20 hover:text-accent-gold transition-all">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-ink/50 backdrop-blur-sm animate-in fade-in zoom-in-95 duration-300" role="dialog" aria-modal="true" aria-label={zoomedChart.label}>
+                    <div className="max-w-2xl w-full relative rounded-3xl p-8"
+                         style={{
+                             background: 'linear-gradient(165deg, rgba(255,253,249,0.95) 0%, rgba(250,245,234,0.92) 50%, rgba(255,253,249,0.93) 100%)',
+                             border: '1px solid rgba(220,201,166,0.35)',
+                             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), 0 25px 60px rgba(62,46,22,0.20), 0 8px 24px rgba(62,46,22,0.10)',
+                             backdropFilter: 'blur(20px)',
+                         }}>
+                        <button onClick={() => setZoomedChart(null)} aria-label="Close zoomed chart"
+                                className="absolute top-4 right-4 p-2 rounded-xl text-ink/40 hover:text-gold-dark transition-all"
+                                style={{
+                                    background: 'rgba(250,245,234,0.60)',
+                                    border: '1px solid rgba(220,201,166,0.25)',
+                                }}>
                             <X className="w-5 h-5" />
                         </button>
                         <div className="mb-6 text-center">
-                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "!mb-0")}>{zoomedChart.label}</h2>
-                            <p className={cn(TYPOGRAPHY.label, "!mb-0")}>{zoomedChart.varga} divisional chart</p>
+                            <h2 className="text-[17px] font-serif font-bold text-ink">{zoomedChart.label}</h2>
+                            <p className="text-[12px] text-ink/45 font-medium mt-0.5">{zoomedChart.varga} divisional chart</p>
                         </div>
-                        <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6 border border-antique">
+                        <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6"
+                             style={{ border: '1px solid rgba(220,201,166,0.25)' }}>
                             <ChartWithPopup ascendantSign={zoomedData.ascendant} planets={zoomedData.planets} className="bg-transparent border-none" showDegrees={zoomedChart?.varga === 'D1'} />
                         </div>
                     </div>
@@ -350,13 +386,25 @@ export default function VedicOverviewPage() {
 
             {/* ANALYSIS MODAL */}
             {analysisModal && (
-                <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 backdrop-blur-xl bg-ink/60 animate-in fade-in zoom-in-95 duration-300" role="dialog" aria-modal="true" aria-label={analysisModal.label}>
-                    <div className="bg-parchment border border-antique rounded-[2.5rem] p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl custom-scrollbar border-b-8 border-gold-primary">
-                        <button onClick={() => setAnalysisModal(null)} aria-label="Close analysis" className="absolute top-6 right-6 p-2 rounded-2xl bg-white border border-antique text-primary hover:bg-red-50 hover:text-red-500 transition-all">
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-ink/60 backdrop-blur-sm animate-in fade-in zoom-in-95 duration-300" role="dialog" aria-modal="true" aria-label={analysisModal.label}>
+                    <div className="max-w-4xl w-full max-h-[90vh] overflow-y-auto relative rounded-3xl p-8 custom-scrollbar"
+                         style={{
+                             background: 'linear-gradient(165deg, rgba(255,253,249,0.95) 0%, rgba(250,245,234,0.92) 50%, rgba(255,253,249,0.93) 100%)',
+                             border: '1px solid rgba(220,201,166,0.35)',
+                             borderBottom: '4px solid rgba(201,162,77,0.60)',
+                             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), 0 25px 60px rgba(62,46,22,0.22), 0 8px 24px rgba(62,46,22,0.12)',
+                             backdropFilter: 'blur(20px)',
+                         }}>
+                        <button onClick={() => setAnalysisModal(null)} aria-label="Close analysis"
+                                className="absolute top-6 right-6 p-2 rounded-2xl text-ink/40 hover:text-status-error transition-all"
+                                style={{
+                                    background: 'rgba(255,253,249,0.80)',
+                                    border: '1px solid rgba(220,201,166,0.30)',
+                                }}>
                             <X className="w-6 h-6" />
                         </button>
                         <div className="mb-8">
-                            <h2 className={TYPOGRAPHY.sectionTitle}>{analysisModal.label}</h2>
+                            <h2 className="text-[18px] font-serif font-bold text-ink">{analysisModal.label}</h2>
                         </div>
                         {analysisModal.type === 'yoga' ? (
                             <YogaAnalysisView clientId={clientDetails?.id || ""} yogaType={analysisModal.subType} ayanamsa={settings.ayanamsa} />
@@ -389,10 +437,10 @@ function SmallChartCard({ varga, label, data, onZoom }: { varga: string, label: 
                 {data.planets.length > 0 ? (
                     <ChartWithPopup ascendantSign={data.ascendant} planets={data.planets} className="bg-transparent border-none scale-[0.8] origin-center" />
                 ) : (
-                    <div className={cn(TYPOGRAPHY.subValue, "italic")}>loading...</div>
+                    <div className={cn(TYPOGRAPHY.subValue, "italic text-ink/35")}>loading...</div>
                 )}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <Maximize2 className="w-4 h-4 text-primary" />
+                    <Maximize2 className="w-4 h-4 text-ink/50" />
                 </div>
             </div>
             <span className={cn(TYPOGRAPHY.value, "!mt-0")}>{varga}</span>
@@ -403,9 +451,17 @@ function SmallChartCard({ varga, label, data, onZoom }: { varga: string, label: 
 
 function ProfileItem({ label, value, sub, highlight }: { label: string, value: string, sub?: string, highlight?: boolean }) {
     return (
-        <div className={cn("p-3 rounded-xl border transition-colors", highlight ? "bg-gold-primary/5 border-gold-primary/30" : "bg-softwhite border-antique/50 hover:border-gold-primary/20 hidden-scrollbar")}>
+        <div className={cn("p-3 rounded-xl transition-colors", highlight ? "hidden-scrollbar" : "hover:border-gold-primary/20 hidden-scrollbar")}
+             style={{
+                 background: highlight
+                     ? 'linear-gradient(135deg, rgba(201,162,77,0.08) 0%, rgba(201,162,77,0.03) 100%)'
+                     : 'rgba(255,253,249,0.65)',
+                 border: highlight
+                     ? '1px solid rgba(201,162,77,0.30)'
+                     : '1px solid rgba(220,201,166,0.25)',
+             }}>
             <div className={TYPOGRAPHY.label}>{label}</div>
-            <div className={cn(TYPOGRAPHY.value, highlight ? "text-accent-gold" : "")}>{value}</div>
+            <div className={cn(TYPOGRAPHY.value, highlight ? "text-gold-dark" : "")}>{value}</div>
             {sub && <div className={cn(TYPOGRAPHY.subValue, "italic")}>{sub}</div>}
         </div>
     );
@@ -413,7 +469,15 @@ function ProfileItem({ label, value, sub, highlight }: { label: string, value: s
 
 const DashaRow = ({ planet, start, ends, duration, active }: { planet: string, start: string, ends: string, duration: string, active?: boolean }) => {
     return (
-        <div className={cn("grid grid-cols-4 gap-2 p-3 rounded-xl border items-center text-center", active ? "bg-gold-primary/10 border-gold-primary/30" : "bg-parchment border-antique/30")}>
+        <div className={cn("grid grid-cols-4 gap-2 p-3 rounded-xl items-center text-center")}
+             style={{
+                 background: active
+                     ? 'linear-gradient(135deg, rgba(201,162,77,0.12) 0%, rgba(201,162,77,0.06) 100%)'
+                     : 'rgba(250,245,234,0.50)',
+                 border: active
+                     ? '1px solid rgba(201,162,77,0.30)'
+                     : '1px solid rgba(220,201,166,0.20)',
+             }}>
             <span className={cn(TYPOGRAPHY.planetName, "text-left pl-2")}>{planet}</span>
             <span className={TYPOGRAPHY.dateAndDuration}>{start}</span>
             <span className={TYPOGRAPHY.dateAndDuration}>{ends}</span>
@@ -421,4 +485,3 @@ const DashaRow = ({ planet, start, ends, duration, active }: { planet: string, s
         </div>
     );
 };
-

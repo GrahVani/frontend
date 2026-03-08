@@ -57,7 +57,7 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
         <div className="space-y-3 animate-in fade-in duration-700">
             {/* Cycle/Era Navigation - Compact Tabs */}
             <div className="flex flex-wrap gap-2 items-center px-4 pt-2">
-                <div className="flex bg-gold-soft/40 rounded-lg p-0.5 gap-1 border border-header-border/10 backdrop-blur-sm overflow-x-auto scrollbar-hide">
+                <div className="flex bg-gold-soft/40 rounded-lg p-0.5 gap-1 border border-gold-primary/10 backdrop-blur-sm overflow-x-auto scrollbar-hide">
                     {availableCycles.map((c) => {
                         const isActive = selectedCycle === c;
                         const cyclePeriods = cycles[c];
@@ -72,7 +72,7 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
                                     "flex items-center gap-2 px-3 py-1.5 rounded-md transition-all duration-200 whitespace-nowrap",
                                     isActive
                                         ? "bg-primary text-active-glow shadow-sm font-semibold"
-                                        : "hover:bg-primary/5 text-primary/70 font-medium"
+                                        : "hover:bg-primary/5 text-ink/70 font-medium"
                                 )}
                             >
                                 <span className="text-[10px] uppercase tracking-wider">Cycle {c}</span>
@@ -84,16 +84,16 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
                 </div>
 
                 <div className="ml-auto hidden sm:flex items-center gap-2">
-                    <h3 className="text-[10px] font-bold text-secondary flex items-center gap-2 uppercase tracking-wider bg-gold-soft/30 px-2 py-1 rounded-md border border-header-border/10">
-                        <Milestone className="w-3 h-3 text-accent-gold" />
+                    <h3 className="text-[10px] font-bold text-ink/55 flex items-center gap-2 uppercase tracking-wider bg-gold-soft/30 px-2 py-1 rounded-md border border-gold-primary/10">
+                        <Milestone className="w-3 h-3 text-gold-dark" />
                         {ERA_NAMES[selectedCycle] || `Cycle ${selectedCycle}`}
                     </h3>
                 </div>
             </div>
 
             <div className="flex items-center justify-end sm:hidden px-4">
-                <h3 className="text-[10px] font-bold text-secondary flex items-center gap-2 uppercase tracking-wider">
-                    <Milestone className="w-3.5 h-3.5 text-accent-gold" />
+                <h3 className="text-[10px] font-bold text-ink/55 flex items-center gap-2 uppercase tracking-wider">
+                    <Milestone className="w-3.5 h-3.5 text-gold-dark" />
                     {ERA_NAMES[selectedCycle] || `Cycle ${selectedCycle}`}
                 </h3>
             </div>
@@ -101,16 +101,16 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
             {/* Table */}
             <div className="">
                 <table className="w-full border-separate border-spacing-0">
-                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-white border-b border-header-border/20 sticky top-0 z-10 shadow-sm")}>
+                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-white border-b border-gold-primary/15 sticky top-0 z-10 shadow-sm")}>
                         <tr>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">Planet</th>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">Start Date</th>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">End Date</th>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">Duration</th>
-                            <th className="px-3 py-2 text-center border-b border-header-border/10">Status</th>
+                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">Planet</th>
+                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">Start Date</th>
+                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">End Date</th>
+                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">Duration</th>
+                            <th className="px-3 py-2 text-center border-b border-gold-primary/10">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-header-border/10 font-medium">
+                    <tbody className="divide-y divide-gold-primary/10 font-medium">
                         {currentCyclePeriods.map((mahadasha, mIdx) => {
                             const isExpanded = expandedMahadasha === `${selectedCycle}-${mahadasha.planet}`;
                             const antardashas = mahadasha.sublevel || [];
@@ -119,15 +119,15 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
                                 <React.Fragment key={mIdx}>
                                     <tr
                                         className={cn(
-                                            "hover:bg-accent-gold/10 transition-colors group cursor-pointer",
-                                            mahadasha.isCurrent && "bg-accent-gold/5"
+                                            "hover:bg-gold-primary/10 transition-colors group cursor-pointer",
+                                            mahadasha.isCurrent && "bg-gold-primary/5"
                                         )}
                                         onClick={() => setExpandedMahadasha(isExpanded ? null : `${selectedCycle}-${mahadasha.planet}`)}
                                     >
                                         <td className="px-3 py-1.5">
                                             <div className="flex items-center gap-2">
                                                 <span className={cn(
-                                                    "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold border shadow-sm min-w-[60px] justify-center",
+                                                    "inline-flex items-center px-2 py-0.5 rounded-md text-[12px] font-bold border shadow-sm min-w-[60px] justify-center",
                                                     PLANET_COLORS[mahadasha.planet || ''] || "bg-white"
                                                 )}>
                                                     {mahadasha.planet}
@@ -141,7 +141,7 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
                                         </td>
                                         <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
                                             <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}>
-                                                <Calendar className="w-3 h-3 text-muted/40" />
+                                                <Calendar className="w-3 h-3 text-ink/30" />
                                                 {formatDateDisplay(mahadasha.startDate)}
                                             </div>
                                         </td>
@@ -154,9 +154,9 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
                                                 {mahadasha.isCurrent ? (
                                                     <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span>
                                                 ) : antardashas.length > 0 ? (
-                                                    isExpanded ? <ChevronUp className="w-3 h-3 text-accent-gold" /> : <ChevronDown className="w-3 h-3 text-accent-gold" />
+                                                    isExpanded ? <ChevronUp className="w-3 h-3 text-gold-dark" /> : <ChevronDown className="w-3 h-3 text-gold-dark" />
                                                 ) : (
-                                                    <span className="text-accent-gold/40 text-xs">—</span>
+                                                    <span className="text-gold-dark/40 text-[12px]">—</span>
                                                 )}
                                             </div>
                                         </td>
@@ -165,12 +165,12 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
                                     {/* Expanded Antardasha Row */}
                                     {isExpanded && antardashas.length > 0 && (
                                         <tr>
-                                            <td colSpan={5} className="bg-parchment/60/60 px-3 py-2">
-                                                <div className="text-[9px] font-black text-muted uppercase tracking-[0.2em] mb-2 pl-2 border-l-2 border-header-border/30 ml-1">
+                                            <td colSpan={5} className="bg-surface-warm/60/60 px-3 py-2">
+                                                <div className="text-[9px] font-black text-ink/45 uppercase tracking-[0.2em] mb-2 pl-2 border-l-2 border-gold-primary/20 ml-1">
                                                     Sub-Periods
                                                 </div>
                                                 <table className="w-full">
-                                                    <tbody className="divide-y divide-header-border/10">
+                                                    <tbody className="divide-y divide-gold-primary/10">
                                                         {antardashas.map((antar, aIdx) => (
                                                             <tr key={aIdx} className={cn(
                                                                 "hover:bg-white/50 transition-colors",
@@ -178,7 +178,7 @@ export default function TribhagiDasha({ periods }: TribhagiDashaProps) {
                                                             )}>
                                                                 <td className="px-3 py-1.5">
                                                                     <span className={cn(
-                                                                        "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold border opacity-90",
+                                                                        "inline-flex items-center px-2 py-0.5 rounded-md text-[12px] font-bold border opacity-90",
                                                                         PLANET_COLORS[antar.planet || ''] || "bg-white"
                                                                     )}>
                                                                         {antar.planet}

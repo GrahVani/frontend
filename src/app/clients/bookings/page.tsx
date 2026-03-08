@@ -40,9 +40,9 @@ export default function UpcomingBookingsPage() {
 
     const getStatusBadge = (status: string) => {
         if (status === "confirmed") {
-            return <span className="px-2.5 py-1 text-xs font-semibold text-green-700 bg-green-50 border border-green-200 rounded-lg">Confirmed</span>;
+            return <span className="px-2.5 py-1 text-[12px] font-semibold text-green-700 bg-green-50 border border-green-200 rounded-lg">Confirmed</span>;
         }
-        return <span className="px-2.5 py-1 text-xs font-semibold text-orange-600 bg-orange-50 border border-orange-200 rounded-lg">Pending</span>;
+        return <span className="px-2.5 py-1 text-[12px] font-semibold text-orange-600 bg-orange-50 border border-orange-200 rounded-lg">Pending</span>;
     };
 
     return (
@@ -54,11 +54,11 @@ export default function UpcomingBookingsPage() {
                         <Calendar className="w-6 h-6 text-gold-primary" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-serif font-bold text-ink">Upcoming Bookings</h1>
-                        <p className="text-sm text-muted">Scheduled consultations</p>
+                        <h1 className="text-[24px] font-serif font-bold text-ink">Upcoming Bookings</h1>
+                        <p className="text-[14px] text-ink/45">Scheduled consultations</p>
                     </div>
                 </div>
-                <button className="px-4 py-2.5 bg-gold-primary text-white rounded-lg font-semibold text-sm hover:bg-gold-dark transition-colors flex items-center gap-2">
+                <button className="px-4 py-2.5 bg-gold-primary text-white rounded-lg font-semibold text-[14px] hover:bg-gold-dark transition-colors flex items-center gap-2">
                     <Plus className="w-4 h-4" />
                     New Booking
                 </button>
@@ -66,24 +66,24 @@ export default function UpcomingBookingsPage() {
 
             {/* Today's Overview */}
             <div className="grid grid-cols-3 gap-4">
-                <div className="bg-softwhite border border-antique rounded-xl p-4">
-                    <p className="text-xs text-muted uppercase tracking-wider mb-1">Today</p>
-                    <p className="text-2xl font-serif font-bold text-ink">2</p>
+                <div className="prem-card rounded-xl p-4">
+                    <p className="text-[12px] text-ink/45 uppercase tracking-wider mb-1">Today</p>
+                    <p className="text-[24px] font-serif font-bold text-ink">2</p>
                 </div>
-                <div className="bg-softwhite border border-antique rounded-xl p-4">
-                    <p className="text-xs text-muted uppercase tracking-wider mb-1">This Week</p>
-                    <p className="text-2xl font-serif font-bold text-ink">5</p>
+                <div className="prem-card rounded-xl p-4">
+                    <p className="text-[12px] text-ink/45 uppercase tracking-wider mb-1">This Week</p>
+                    <p className="text-[24px] font-serif font-bold text-ink">5</p>
                 </div>
-                <div className="bg-softwhite border border-antique rounded-xl p-4">
-                    <p className="text-xs text-muted uppercase tracking-wider mb-1">Pending</p>
-                    <p className="text-2xl font-serif font-bold text-orange-600">1</p>
+                <div className="prem-card rounded-xl p-4">
+                    <p className="text-[12px] text-ink/45 uppercase tracking-wider mb-1">Pending</p>
+                    <p className="text-[24px] font-serif font-bold text-orange-600">1</p>
                 </div>
             </div>
 
             {/* Bookings List */}
             <div className="space-y-3">
                 {bookings.map((booking) => (
-                    <div key={booking.id} className="bg-softwhite border border-antique rounded-xl p-5 hover:border-gold-primary/50 transition-colors">
+                    <div key={booking.id} className="prem-card rounded-xl p-5 hover:border-gold-primary/50 transition-colors">
                         <div className="flex items-start justify-between">
                             <div className="flex items-start gap-4">
                                 <div className="w-11 h-11 rounded-lg bg-gold-primary/10 flex items-center justify-center font-serif font-bold text-gold-dark">
@@ -91,8 +91,8 @@ export default function UpcomingBookingsPage() {
                                 </div>
                                 <div>
                                     <h3 className="font-serif font-bold text-ink">{booking.clientName}</h3>
-                                    <p className="text-sm text-gold-dark font-medium">{booking.type}</p>
-                                    <div className="flex items-center gap-4 mt-2 text-xs text-muted">
+                                    <p className="text-[14px] text-gold-dark font-medium">{booking.type}</p>
+                                    <div className="flex items-center gap-4 mt-2 text-[12px] text-ink/45">
                                         <span className="flex items-center gap-1">
                                             <Calendar className="w-3 h-3" />
                                             {booking.date}
@@ -106,10 +106,10 @@ export default function UpcomingBookingsPage() {
                             </div>
                             <div className="flex items-center gap-3">
                                 {getStatusBadge(booking.status)}
-                                <button className="p-2.5 rounded-lg hover:bg-parchment text-muted hover:text-ink transition-colors" aria-label="Call client">
+                                <button className="p-2.5 rounded-lg hover:bg-surface-warm text-ink/45 hover:text-ink transition-colors" aria-label="Call client">
                                     <Phone className="w-4 h-4" />
                                 </button>
-                                <button className="p-2.5 rounded-lg hover:bg-parchment text-muted hover:text-ink transition-colors" aria-label="More options">
+                                <button className="p-2.5 rounded-lg hover:bg-surface-warm text-ink/45 hover:text-ink transition-colors" aria-label="More options">
                                     <MoreVertical className="w-4 h-4" />
                                 </button>
                             </div>

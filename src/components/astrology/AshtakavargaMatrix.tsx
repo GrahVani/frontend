@@ -30,7 +30,7 @@ const SIGN_NAMES = ZODIAC_SIGNS;
 // House Groups for astrological analysis
 const HOUSE_GROUPS = {
     dharma: { houses: [1, 5, 9], name: 'Dharma', desc: 'Purpose & luck', color: 'bg-purple-100 text-purple-800' },
-    artha: { houses: [2, 6, 10], name: 'Artha', desc: 'Wealth & career', color: 'bg-amber-100 text-primary' },
+    artha: { houses: [2, 6, 10], name: 'Artha', desc: 'Wealth & career', color: 'bg-amber-100 text-ink' },
     kama: { houses: [3, 7, 11], name: 'Kama', desc: 'Desires & gains', color: 'bg-pink-100 text-pink-800' },
     moksha: { houses: [4, 8, 12], name: 'Moksha', desc: 'Liberation', color: 'bg-blue-100 text-blue-800' }
 };
@@ -91,16 +91,16 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
 
                 {/* Table */}
                 <div className="overflow-x-auto">
-                <table className="w-full h-full border-collapse text-sm" role="table" aria-label={isSarva ? "Sarvashtakavarga matrix showing planetary bindus across signs" : `Bhinnashtakavarga matrix for ${planet || 'planet'}`}>
+                <table className="w-full h-full border-collapse text-[14px]" role="table" aria-label={isSarva ? "Sarvashtakavarga matrix showing planetary bindus across signs" : `Bhinnashtakavarga matrix for ${planet || 'planet'}`}>
                     <thead className="sticky top-0 z-10">
                         <tr className="bg-amber-50/30 border-b border-primary">
                             <th className={cn(TYPOGRAPHY.tableHeader, "py-3 px-2 text-left w-16 border-r border-primary")}>
                                 {isSarva ? 'Planet' : planet?.substring(0, 4)}
                             </th>
                             {SIGNS.map(s => (
-                                <th key={s} className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1 text-center w-8 border-r border-primary text-primary font-bold")}>{s}</th>
+                                <th key={s} className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1 text-center w-8 border-r border-primary text-ink font-bold")}>{s}</th>
                             ))}
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1.5 text-center bg-softwhite w-10")}>Tot</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1.5 text-center bg-surface-warm w-10")}>Tot</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -116,18 +116,18 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                             SIGNS.forEach(s => { rowTot += getVal(rd, s); });
 
                             return (
-                                <tr key={p} className={cn("border-b border-primary", idx % 2 === 1 && "bg-parchment/30")}>
+                                <tr key={p} className={cn("border-b border-primary", idx % 2 === 1 && "bg-surface-warm/30")}>
                                     <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-2 font-medium border-r border-primary")}>{p.substring(0, 3)}</td>
                                     {SIGNS.map(s => (
                                         <td key={s} className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1 text-center border-r border-primary")}>{getVal(rd, s)}</td>
                                     ))}
-                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1.5 text-center font-semibold bg-softwhite")}>{rowTot}</td>
+                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1.5 text-center font-semibold bg-surface-warm")}>{rowTot}</td>
                                 </tr>
                             );
                         })}
                     </tbody>
                     <tfoot>
-                        <tr className="bg-softwhite border-t border-primary">
+                        <tr className="bg-surface-warm border-t border-primary">
                             <td className={cn(TYPOGRAPHY.label, "py-3 px-2 border-r border-primary mb-0")}>SAV</td>
                             {SIGNS.map(s => {
                                 const v = sav[s];
@@ -152,15 +152,15 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
 
             {/* Quick Summary */}
             <div className="flex justify-between mt-3 px-1">
-                <span className={cn(TYPOGRAPHY.subValue, "text-primary")}>
-                    Strongest: <span className="text-primary font-black uppercase tracking-wider">{groupTotals.sort((a, b) => b.total - a.total)[0].name}</span>
+                <span className={cn(TYPOGRAPHY.subValue, "text-ink")}>
+                    Strongest: <span className="text-ink font-black uppercase tracking-wider">{groupTotals.sort((a, b) => b.total - a.total)[0].name}</span>
                 </span>
                 <div className="flex gap-6">
-                    <span className={cn(TYPOGRAPHY.subValue, "text-primary inline-flex items-center gap-1.5")}>
-                        â†‘ Best: Sign {SIGNS.find(s => sav[s] === maxS)} <span className="font-black text-primary">({maxS})</span>
+                    <span className={cn(TYPOGRAPHY.subValue, "text-ink inline-flex items-center gap-1.5")}>
+                        â†‘ Best: Sign {SIGNS.find(s => sav[s] === maxS)} <span className="font-black text-ink">({maxS})</span>
                     </span>
-                    <span className={cn(TYPOGRAPHY.subValue, "text-primary inline-flex items-center gap-1.5")}>
-                        â†“ Weak: Sign {SIGNS.find(s => sav[s] === minS)} <span className="font-black text-primary">({minS})</span>
+                    <span className={cn(TYPOGRAPHY.subValue, "text-ink inline-flex items-center gap-1.5")}>
+                        â†“ Weak: Sign {SIGNS.find(s => sav[s] === minS)} <span className="font-black text-ink">({minS})</span>
                     </span>
                 </div>
             </div>

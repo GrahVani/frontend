@@ -67,7 +67,7 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2 mx-4 mt-2">
                     <AlertCircle className="w-4 h-4 text-amber-500 mt-0.5" />
                     <div>
-                        <p className="text-xs font-bold text-amber-900">Not Highly Applicable</p>
+                        <p className="text-[12px] font-bold text-amber-900">Not Highly Applicable</p>
                         <p className="text-[10px] text-amber-700">This Śattriṁśat Samā (36-year) system is specifically for Daytime births with Moon in Lagna.</p>
                     </div>
                 </div>
@@ -76,7 +76,7 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
             {/* Cycle Toggle Navigation */}
             {availableCycles.length > 1 && (
                 <div className="px-4 pt-2">
-                    <div className="flex bg-gold-soft/40 rounded-lg p-0.5 gap-1 border border-header-border/10 backdrop-blur-sm overflow-x-auto scrollbar-hide w-fit max-w-full">
+                    <div className="flex bg-gold-soft/40 rounded-lg p-0.5 gap-1 border border-gold-primary/10 backdrop-blur-sm overflow-x-auto scrollbar-hide w-fit max-w-full">
                         {availableCycles.map((c) => {
                             const isActive = selectedCycle === c;
                             const cyclePeriods = cycles[c];
@@ -91,7 +91,7 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
                                         "flex items-center gap-2 px-3 py-1.5 rounded-md transition-all duration-200 whitespace-nowrap",
                                         isActive
                                             ? "bg-primary text-active-glow shadow-sm font-semibold"
-                                            : "hover:bg-primary/5 text-primary/70 font-medium"
+                                            : "hover:bg-primary/5 text-ink/70 font-medium"
                                     )}
                                 >
                                     <span className="text-[10px] uppercase tracking-wider">Cycle {c}</span>
@@ -107,16 +107,16 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
             {/* Table */}
             <div className="">
                 <table className="w-full border-separate border-spacing-0">
-                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-white border-b border-header-border/20 sticky top-0 z-10 shadow-sm")}>
+                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-white border-b border-gold-primary/15 sticky top-0 z-10 shadow-sm")}>
                         <tr>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">Planet</th>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">Start Date</th>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">End Date</th>
-                            <th className="px-3 py-2 text-left border-b border-header-border/10">Duration</th>
-                            <th className="px-3 py-2 text-center border-b border-header-border/10">Status</th>
+                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">Planet</th>
+                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">Start Date</th>
+                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">End Date</th>
+                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">Duration</th>
+                            <th className="px-3 py-2 text-center border-b border-gold-primary/10">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-header-border/10 font-medium font-sans">
+                    <tbody className="divide-y divide-gold-primary/10 font-medium font-sans">
                         {finalPeriods.map((mahadasha, mIdx) => {
                             const uniqueId = `shattrim-${mahadasha.planet}-${mIdx}`;
                             const isExpanded = expandedMahadasha === uniqueId;
@@ -128,15 +128,15 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
                                 <React.Fragment key={uniqueId}>
                                     <tr
                                         className={cn(
-                                            "hover:bg-accent-gold/10 transition-colors group cursor-pointer",
-                                            mahadasha.isCurrent && "bg-accent-gold/5"
+                                            "hover:bg-gold-primary/10 transition-colors group cursor-pointer",
+                                            mahadasha.isCurrent && "bg-gold-primary/5"
                                         )}
                                         onClick={() => setExpandedMahadasha(isExpanded ? null : uniqueId)}
                                     >
                                         <td className="px-3 py-1.5">
                                             <div className="flex items-center gap-2">
                                                 <span className={cn(
-                                                    "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold border shadow-sm min-w-[60px] justify-center",
+                                                    "inline-flex items-center px-2 py-0.5 rounded-md text-[12px] font-bold border shadow-sm min-w-[60px] justify-center",
                                                     PLANET_COLORS[mahadasha.planet || ''] || "bg-white"
                                                 )}>
                                                     {mahadasha.planet}
@@ -156,7 +156,7 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
                                         </td>
                                         <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
                                             <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}>
-                                                <Calendar className="w-3 h-3 text-muted/40" />
+                                                <Calendar className="w-3 h-3 text-ink/30" />
                                                 {formatDateDisplay(mahadasha.startDate)}
                                             </div>
                                         </td>
@@ -165,7 +165,7 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
                                             <div className="flex flex-col">
                                                 <span>{calculateDuration(mahadasha.startDate, mahadasha.endDate)}</span>
                                                 {fixedYears && (
-                                                    <span className="text-[9px] text-accent-gold leading-none mt-0.5">{fixedYears} Years Fixed</span>
+                                                    <span className="text-[9px] text-gold-dark leading-none mt-0.5">{fixedYears} Years Fixed</span>
                                                 )}
                                             </div>
                                         </td>
@@ -174,9 +174,9 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
                                                 {mahadasha.isCurrent ? (
                                                     <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span>
                                                 ) : antardashas.length > 0 ? (
-                                                    isExpanded ? <ChevronUp className="w-3 h-3 text-accent-gold" /> : <ChevronDown className="w-3 h-3 text-accent-gold" />
+                                                    isExpanded ? <ChevronUp className="w-3 h-3 text-gold-dark" /> : <ChevronDown className="w-3 h-3 text-gold-dark" />
                                                 ) : (
-                                                    <span className="text-accent-gold/40 text-xs">—</span>
+                                                    <span className="text-gold-dark/40 text-[12px]">—</span>
                                                 )}
                                             </div>
                                         </td>
@@ -185,12 +185,12 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
                                     {/* Expanded Antardasha Row */}
                                     {isExpanded && antardashas.length > 0 && (
                                         <tr>
-                                            <td colSpan={5} className="bg-parchment/60/60 px-3 py-2">
-                                                <div className="text-[9px] font-black text-muted uppercase tracking-[0.2em] mb-2 pl-2 border-l-2 border-header-border/30 ml-1">
+                                            <td colSpan={5} className="bg-surface-warm/60/60 px-3 py-2">
+                                                <div className="text-[9px] font-black text-ink/45 uppercase tracking-[0.2em] mb-2 pl-2 border-l-2 border-gold-primary/20 ml-1">
                                                     Sub-Periods
                                                 </div>
                                                 <table className="w-full">
-                                                    <tbody className="divide-y divide-header-border/10">
+                                                    <tbody className="divide-y divide-gold-primary/10">
                                                         {antardashas.map((antar, aIdx) => (
                                                             <tr key={aIdx} className={cn(
                                                                 "hover:bg-white/50 transition-colors",
@@ -198,7 +198,7 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
                                                             )}>
                                                                 <td className="px-3 py-1.5">
                                                                     <span className={cn(
-                                                                        "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold border opacity-90",
+                                                                        "inline-flex items-center px-2 py-0.5 rounded-md text-[12px] font-bold border opacity-90",
                                                                         PLANET_COLORS[antar.planet || ''] || "bg-white"
                                                                     )}>
                                                                         {antar.planet}
@@ -230,7 +230,7 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
 
             {/* Shastra Timeline Footer */}
             <div className="text-center pt-2">
-                <p className="text-xs font-semibold text-gray-300 uppercase tracking-[0.2em] flex items-center justify-center gap-2">
+                <p className="text-[12px] font-semibold text-ink/25 uppercase tracking-[0.2em] flex items-center justify-center gap-2">
                     <Info className="w-3 h-3" />
                     Shastra Timeline End (36 Years)
                 </p>

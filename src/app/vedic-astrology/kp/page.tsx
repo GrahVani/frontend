@@ -106,7 +106,7 @@ export default function KpDashboardPage() {
     if (ayanamsa !== 'KP') {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-                <Star className="w-12 h-12 text-muted mb-4" />
+                <Star className="w-12 h-12 text-ink/45 mb-4" />
                 <h2 className={cn(TYPOGRAPHY.sectionTitle, "mb-2")}>KP system not selected</h2>
                 <p className={cn(TYPOGRAPHY.subValue, "max-w-md")}>
                     Please select <strong className="text-ink">KP (Krishnamurti)</strong> from the Ayanamsa dropdown in the header to access KP features.
@@ -162,7 +162,7 @@ export default function KpDashboardPage() {
 
             {/* Tab Bar (KP-019: overflow-x-auto for 12+ buttons on narrow screens) */}
             {showHeader && (
-                <div className="flex gap-1.5 p-1 bg-parchment rounded-xl border border-antique sticky top-14 z-20 shadow-sm overflow-x-auto scrollbar-thin">
+                <div className="flex gap-1.5 p-1 prem-card rounded-xl sticky top-14 z-20 shadow-sm overflow-x-auto scrollbar-thin">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
@@ -170,10 +170,10 @@ export default function KpDashboardPage() {
                             className={cn(
                                 "flex items-center gap-1.5 px-3 py-2 rounded-lg transition-all whitespace-nowrap shrink-0",
                                 TYPOGRAPHY.value,
-                                "text-xs font-semibold",
+                                "text-[12px] font-semibold",
                                 activeTab === tab.id
                                     ? cn("text-white shadow-md border-transparent", COLORS.wbActiveTab)
-                                    : "text-primary hover:text-ink hover:bg-white/50 border-transparent"
+                                    : "text-ink hover:text-ink hover:bg-white/50 border-transparent"
                             )}
                         >
                             {tab.icon}
@@ -188,9 +188,9 @@ export default function KpDashboardPage() {
                 {/* Left: Persistent Cuspal Chart */}
                 {activeTab !== 'ashtakavarga' && (
                     <div className="xl:col-span-4 sticky top-[6.5rem]">
-                        <div className="border border-antique rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
-                            <div className="bg-border-warm px-3 py-1.5 border-b border-antique">
-                                <h3 className={cn(TYPOGRAPHY.value, "text-lg text-primary leading-tight tracking-wide")}>Cuspal chart</h3>
+                        <div className="prem-card rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
+                            <div className="bg-gold-primary/10 px-3 py-1.5 border-b border-gold-primary/15">
+                                <h3 className={cn(TYPOGRAPHY.value, "text-[18px] text-ink leading-tight tracking-wide")}>Cuspal chart</h3>
                             </div>
                             <div className="w-full">
                                 {planetsCuspsQuery.isLoading && !transformed.cuspData.length ? (
@@ -206,7 +206,7 @@ export default function KpDashboardPage() {
                                         />
                                     </div>
                                 ) : (
-                                    <p className="text-primary text-center py-8">No cusp data available</p>
+                                    <p className="text-ink text-center py-8">No cusp data available</p>
                                 )}
                             </div>
                         </div>

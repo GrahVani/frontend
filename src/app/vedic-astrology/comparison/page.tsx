@@ -39,7 +39,7 @@ export default function VedicComparisonPage() {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-3xl !mb-1 flex items-center gap-3")}>
+                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-[30px] !mb-1 flex items-center gap-3")}>
                         <Heart className="w-8 h-8 text-rose-500 fill-rose-500/20" />
                         Vedic Compatibility
                     </h1>
@@ -52,32 +52,32 @@ export default function VedicComparisonPage() {
                 {/* Connector */}
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden md:block">
                     <div className="w-12 h-12 bg-white rounded-full border-4 border-surface-warm shadow-lg flex items-center justify-center">
-                        <GitCompare className="w-6 h-6 text-header-border" />
+                        <GitCompare className="w-6 h-6 text-gold-dark" />
                     </div>
                 </div>
 
                 {/* Boy / Client */}
-                <div className="bg-softwhite border border-header-border/30 rounded-3xl p-6 text-center shadow-sm">
+                <div className="prem-card rounded-3xl p-6 text-center">
                     <div className="w-16 h-16 mx-auto bg-ink/5 rounded-full flex items-center justify-center mb-3">
                         <Users className="w-8 h-8 text-ink" />
                     </div>
-                    <h2 className={cn(TYPOGRAPHY.profileName, "text-xl !mb-0")}>{clientDetails.name}</h2>
+                    <h2 className={cn(TYPOGRAPHY.profileName, "text-[20px] !mb-0")}>{clientDetails.name}</h2>
                     <p className={cn(TYPOGRAPHY.label, "!text-[10px] tracking-widest !mb-4 uppercase")}>Primary Chart</p>
-                    <div className="flex justify-center gap-2 text-sm">
+                    <div className="flex justify-center gap-2 text-[14px]">
                         <span className="px-2 py-1 bg-ink/5 rounded">Ashlesha (2)</span>
                         <span className="px-2 py-1 bg-ink/5 rounded">Cancer</span>
                     </div>
                 </div>
 
                 {/* Girl / Partner */}
-                <div className="bg-softwhite border border-dashed border-header-border/40 rounded-3xl p-6 text-center hover:bg-header-border/5 transition-colors cursor-pointer group relative">
-                    <div className="absolute top-4 right-4 text-header-border opacity-50 text-xs font-bold uppercase tracking-widest group-hover:opacity-100">Change</div>
+                <div className="prem-card border border-dashed border-gold-primary/30 rounded-3xl p-6 text-center hover:bg-gold-primary/5 transition-colors cursor-pointer group relative">
+                    <div className="absolute top-4 right-4 text-gold-dark opacity-50 text-[12px] font-bold uppercase tracking-widest group-hover:opacity-100">Change</div>
                     <div className="w-16 h-16 mx-auto bg-rose-500/10 rounded-full flex items-center justify-center mb-3">
                         <Heart className="w-8 h-8 text-rose-500" />
                     </div>
-                    <h2 className={cn(TYPOGRAPHY.profileName, "text-xl !mb-0")}>{partnerName}</h2>
+                    <h2 className={cn(TYPOGRAPHY.profileName, "text-[20px] !mb-0")}>{partnerName}</h2>
                     <p className={cn(TYPOGRAPHY.label, "!text-[10px] tracking-widest !mb-4 uppercase")}>Partner Chart</p>
-                    <div className="flex justify-center gap-2 text-sm">
+                    <div className="flex justify-center gap-2 text-[14px]">
                         <span className="px-2 py-1 bg-rose-500/5 rounded text-rose-800">Magha (1)</span>
                         <span className="px-2 py-1 bg-rose-500/5 rounded text-rose-800">Leo</span>
                     </div>
@@ -85,12 +85,12 @@ export default function VedicComparisonPage() {
             </div>
 
             {/* ASHTAKOOTA TABLE */}
-            <div className="bg-softwhite border border-header-border/20 rounded-2xl overflow-hidden shadow-sm">
-                <div className="p-4 bg-header-border/10 flex justify-between items-center">
+            <div className="prem-card rounded-2xl overflow-hidden">
+                <div className="p-4 bg-gold-primary/10 flex justify-between items-center">
                     <h3 className={cn(TYPOGRAPHY.label, "!mb-0 !font-bold")}>Ashtakoota Scorecard</h3>
-                    <div className="px-4 py-1.5 bg-white rounded-lg shadow-sm border border-header-border/20">
+                    <div className="px-4 py-1.5 bg-white rounded-lg shadow-sm border border-gold-primary/15">
                         <span className={cn(TYPOGRAPHY.label, "!text-[10px] tracking-widest !mb-0 mr-2 uppercase")}>Total Score</span>
-                        <span className={cn(TYPOGRAPHY.sectionTitle, "text-lg !mb-0", TOTAL_SCORE > 18 ? "text-green-600" : "text-red-600")}>
+                        <span className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] !mb-0", TOTAL_SCORE > 18 ? "text-green-600" : "text-red-600")}>
                             {TOTAL_SCORE} / 36
                         </span>
                     </div>
@@ -100,13 +100,13 @@ export default function VedicComparisonPage() {
                         {
                             key: 'name',
                             header: 'Koota (Area)',
-                            cellClassName: cn(TYPOGRAPHY.value, "!text-sm"),
+                            cellClassName: cn(TYPOGRAPHY.value, "!text-[14px]"),
                         },
                         {
                             key: 'desc',
                             header: 'Description',
                             render: (row) => (
-                                <span className={cn(TYPOGRAPHY.subValue, "!text-xs")}>
+                                <span className={cn(TYPOGRAPHY.subValue, "!text-[12px]")}>
                                     {row.desc}
                                     {row.obtained === 0 && <span className={cn(TYPOGRAPHY.label, "!text-[10px] !mb-0 !font-black text-red-600 bg-red-100 px-1 py-0.5 rounded border border-red-200 ml-2")}>DOSHA</span>}
                                 </span>

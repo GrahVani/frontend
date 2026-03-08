@@ -40,7 +40,7 @@ export default function VimshottariTreeGrid({ data, isLoading, className }: Vims
         return (
             <div className="flex flex-col items-center justify-center py-6">
                 <Loader2 className="w-5 h-5 text-gold-primary animate-spin mb-1" />
-                <p className="font-sans text-xs text-muted-refined italic leading-compact">Processing dasha...</p>
+                <p className="font-sans text-[12px] text-ink/45 italic leading-compact">Processing dasha...</p>
             </div>
         );
     }
@@ -72,25 +72,25 @@ export default function VimshottariTreeGrid({ data, isLoading, className }: Vims
     };
 
     return (
-        <div className={cn("w-full flex flex-col overflow-hidden rounded-lg border border-border-warm/20 bg-white shadow-sm", className)}>
+        <div className={cn("w-full flex flex-col overflow-hidden rounded-lg border border-gold-primary/15 bg-white shadow-sm", className)}>
             {/* Navigation Header / Breadcrumbs */}
             {navPath.length > 0 && (
-                <div className="bg-parchment/30 border-b border-border-warm/10 p-1.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                <div className="bg-surface-warm/30 border-b border-gold-primary/10 p-1.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
                     <button
                         onClick={handleReset}
-                        className={cn("px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors leading-compact text-primary/60", TYPOGRAPHY.breadcrumb)}
+                        className={cn("px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors leading-compact text-ink/60", TYPOGRAPHY.breadcrumb)}
                     >
                         Home
                     </button>
-                    <ChevronRight className="w-2.5 h-2.5 text-primary flex-shrink-0" />
+                    <ChevronRight className="w-2.5 h-2.5 text-ink flex-shrink-0" />
                     {navPath.map((node, i) => (
                         <React.Fragment key={i}>
-                            {i > 0 && <ChevronRight className="w-2.5 h-2.5 text-primary flex-shrink-0" />}
+                            {i > 0 && <ChevronRight className="w-2.5 h-2.5 text-ink flex-shrink-0" />}
                             <button
                                 onClick={() => setNavPath(navPath.slice(0, i + 1))}
                                 className={cn(
                                     "px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors leading-compact",
-                                    i === navPath.length - 1 ? "font-bold text-primary" : "text-primary/70",
+                                    i === navPath.length - 1 ? "font-bold text-ink" : "text-ink/70",
                                     TYPOGRAPHY.breadcrumb
                                 )}
                             >
@@ -103,15 +103,15 @@ export default function VimshottariTreeGrid({ data, isLoading, className }: Vims
 
             <div className="flex-1 overflow-x-auto scrollbar-hidden">
                 <table className="w-full border-collapse table-fixed">
-                    <thead className="sticky top-0 z-20 bg-parchment/95 backdrop-blur-sm shadow-sm">
-                        <tr className={cn("border-b border-border-warm/10", TYPOGRAPHY.tableHeader)}>
+                    <thead className="sticky top-0 z-20 bg-surface-warm/95 backdrop-blur-sm shadow-sm">
+                        <tr className={cn("border-b border-gold-primary/10", TYPOGRAPHY.tableHeader)}>
                             <th className="px-0.5 py-0.5 text-left w-[30%]">{currentLevelName}</th>
                             <th className="px-0.5 py-0.5 text-left w-[25%]">Start</th>
                             <th className="px-0.5 py-0.5 text-left w-[25%]">End</th>
                             <th className="px-0.5 py-0.5 text-left w-[20%]">Dur</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-antique/5">
+                    <tbody className="divide-y divide-gold-primary/10">
                         {currentNodes.length > 0 ? (
                             currentNodes.map((node, idx) => (
                                 <DashaDrillRow
@@ -123,7 +123,7 @@ export default function VimshottariTreeGrid({ data, isLoading, className }: Vims
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={4} className="py-4 text-center font-sans text-xs text-muted-refined italic leading-compact">No sub-periods found</td>
+                                <td colSpan={4} className="py-4 text-center font-sans text-[12px] text-ink/45 italic leading-compact">No sub-periods found</td>
                             </tr>
                         )}
                     </tbody>
@@ -159,7 +159,7 @@ function DashaDrillRow({ node, depth, onDrill }: { node: DashaNode; depth: numbe
         <tr
             onClick={isDrillable ? onDrill : undefined}
             className={cn(
-                "transition-colors group border-b border-border-warm/5",
+                "transition-colors group border-b border-gold-primary/10",
                 isActive ? "bg-gold-primary/10 font-bold" : "hover:bg-gold-primary/5 text-ink",
                 isDrillable ? "cursor-pointer" : "cursor-default",
                 depth > 0 ? "text-[10px]" : "text-[11px]"
@@ -169,7 +169,7 @@ function DashaDrillRow({ node, depth, onDrill }: { node: DashaNode; depth: numbe
                 <div className="flex flex-col gap-0.5 w-full">
                     <div className="flex items-center gap-1.5">
                         {isDrillable ? (
-                            <ChevronRight className="w-2.5 h-2.5 text-primary/70 group-hover:text-accent-gold transition-colors flex-shrink-0" />
+                            <ChevronRight className="w-2.5 h-2.5 text-ink/70 group-hover:text-gold-dark transition-colors flex-shrink-0" />
                         ) : (
                             // Spacer for alignment if no chevron
                             <span className="w-2.5 inline-block" />

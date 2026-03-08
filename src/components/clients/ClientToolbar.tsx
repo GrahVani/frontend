@@ -80,7 +80,7 @@ export default function ClientToolbar({
                     />
                     {filters.search && (
                         <button onClick={() => setFilter('search', '')}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md hover:bg-parchment/60 transition-colors">
+                                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md hover:bg-surface-warm/60 transition-colors">
                             <X className="w-3.5 h-3.5 text-ink/40" />
                         </button>
                     )}
@@ -159,7 +159,7 @@ export default function ClientToolbar({
                      style={{ borderTop: '1px solid rgba(220,201,166,0.18)' }}>
                     {/* Gender */}
                     <div className="flex items-center gap-2">
-                        <label className="text-[11px] font-bold text-bronze-dark/70 uppercase tracking-wider">Gender</label>
+                        <label className="text-[11px] font-bold text-ink/30 uppercase tracking-wider">Gender</label>
                         <select
                             value={filters.gender || ''}
                             onChange={(e) => setFilter('gender', e.target.value || null)}
@@ -179,7 +179,7 @@ export default function ClientToolbar({
 
                     {/* City */}
                     <div className="flex items-center gap-2">
-                        <label className="text-[11px] font-bold text-bronze-dark/70 uppercase tracking-wider">City</label>
+                        <label className="text-[11px] font-bold text-ink/30 uppercase tracking-wider">City</label>
                         <input
                             type="text"
                             placeholder="Any"
@@ -196,7 +196,7 @@ export default function ClientToolbar({
 
                     {/* Sort */}
                     <div className="flex items-center gap-2">
-                        <label className="text-[11px] font-bold text-bronze-dark/70 uppercase tracking-wider">Sort</label>
+                        <label className="text-[11px] font-bold text-ink/30 uppercase tracking-wider">Sort</label>
                         <select
                             value={filters.sortBy}
                             onChange={(e) => setFilter('sortBy', e.target.value as SortField)}

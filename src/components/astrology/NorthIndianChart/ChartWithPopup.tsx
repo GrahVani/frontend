@@ -126,7 +126,7 @@ export default function ChartWithPopup({ planets, ascendantSign, className = "",
                         </button>
 
                         {/* Header: House Number & Name */}
-                        <div className="flex items-center gap-3 mb-3 pb-2 border-b border-border-warm/40">
+                        <div className="flex items-center gap-3 mb-3 pb-2 border-b border-gold-primary/15">
                             <div className={cn("w-8 h-8 rounded-lg bg-gold-primary flex items-center justify-center text-white shadow-sm shrink-0", TYPOGRAPHY.value)}>
                                 {selectedHouse}
                             </div>
@@ -139,9 +139,9 @@ export default function ChartWithPopup({ planets, ascendantSign, className = "",
                         </div>
 
                         {/* Sign Info - Compact Row */}
-                        <div className="flex items-center justify-between bg-parchment/40 rounded-lg p-2 mb-3 border border-border-warm/30">
+                        <div className="flex items-center justify-between bg-surface-warm/40 rounded-lg p-2 mb-3 border border-gold-primary/15">
                             <div className="flex items-center gap-2">
-                                <div className="text-xl leading-none">{houseDetails.sign.symbol}</div>
+                                <div className="text-[20px] leading-none">{houseDetails.sign.symbol}</div>
                                 <div>
                                     <div className={cn("leading-tight", TYPOGRAPHY.value)} style={{ fontSize: '10px' }}>{houseDetails.sign.rulingPlanet}</div>
                                     <div className={cn("leading-tight", TYPOGRAPHY.label)} style={{ fontSize: '8px' }}>Ruler</div>
@@ -172,7 +172,7 @@ export default function ChartWithPopup({ planets, ascendantSign, className = "",
                                 </div>
                             </div>
                         ) : (
-                            <div className="py-2 text-center text-[10px] text-muted italic bg-slate-50 rounded-lg border border-slate-100">
+                            <div className="py-2 text-center text-[10px] text-ink/45 italic bg-surface-warm rounded-lg border border-gold-primary/10">
                                 Empty House
                             </div>
                         )}

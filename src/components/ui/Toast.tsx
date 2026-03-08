@@ -51,7 +51,7 @@ export function Toast({ toast, onDismiss }: { toast: ToastData; onDismiss: (id: 
             className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-xl border shadow-lg backdrop-blur-sm",
                 "animate-in slide-in-from-right-full fade-in duration-300",
-                "font-sans text-sm font-medium max-w-md",
+                "font-sans text-[14px] font-medium max-w-md",
                 config.className
             )}
         >

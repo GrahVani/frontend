@@ -15,12 +15,12 @@ interface ChartComparisonProps {
 
 export default function ChartComparison({ chart1, chart2 }: ChartComparisonProps) {
     return (
-        <div className="space-y-8 p-4 bg-parchment-light rounded-lg border border-divider">
+        <div className="space-y-8 p-4 bg-surface-warm-light rounded-lg border border-gold-primary/10">
 
             {/* Header / Title could go here */}
-            <div className="flex items-center justify-between border-b border-divider pb-4">
-                <h2 className="text-xl font-serif font-bold text-ink">Chart Comparison</h2>
-                <div className="text-sm text-muted font-serif italic">
+            <div className="flex items-center justify-between border-b border-gold-primary/10 pb-4">
+                <h2 className="text-[20px] font-serif font-bold text-ink">Chart Comparison</h2>
+                <div className="text-[14px] text-ink/45 font-serif italic">
                     Comparing {chart1.name} w/ {chart2.name}
                 </div>
             </div>

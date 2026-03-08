@@ -42,7 +42,7 @@ const TooltipContent = React.forwardRef<
         className={cn(
             "absolute z-[100] scale-0 group-hover:scale-100 transition-all duration-200 origin-bottom mb-2 bottom-full left-1/2 -translate-x-1/2",
             "p-3 bg-copper-900 text-white rounded-xl border-none shadow-[0_10px_30px_rgba(0,0,0,0.3)]",
-            "text-xs whitespace-normal min-w-[200px] pointer-events-none",
+            "text-[12px] whitespace-normal min-w-[200px] pointer-events-none",
             className
         )}
         {...props}

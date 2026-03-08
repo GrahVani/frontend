@@ -22,13 +22,18 @@ export default function ErrorState({
 }: ErrorStateProps) {
     if (compact) {
         return (
-            <div className={cn("flex items-center gap-3 bg-status-error/10 border border-status-error/30 rounded-lg px-4 py-3", className)} role="alert">
+            <div className={cn("flex items-center gap-3 rounded-xl px-4 py-3", className)}
+                 style={{
+                     background: 'rgba(220,38,38,0.06)',
+                     border: '1px solid rgba(220,38,38,0.18)',
+                 }}
+                 role="alert">
                 <AlertTriangle className="w-4 h-4 text-status-error shrink-0" />
-                <p className="text-sm text-ink flex-1">{message}</p>
+                <p className="text-[13px] text-ink/80 flex-1 font-medium">{message}</p>
                 {onRetry && (
                     <button
                         onClick={onRetry}
-                        className="text-xs font-medium text-gold-dark hover:text-gold-primary transition-colors flex items-center gap-1"
+                        className="text-[12px] font-semibold text-gold-dark hover:text-gold-primary transition-colors flex items-center gap-1"
                     >
                         <RefreshCw className="w-3 h-3" />
                         {retryLabel}
@@ -39,14 +44,25 @@ export default function ErrorState({
     }
 
     return (
-        <div className={cn("bg-status-error/5 border border-status-error/20 rounded-xl p-8 text-center", className)} role="alert">
-            <AlertTriangle className="w-8 h-8 text-status-error mx-auto mb-3" />
-            <h3 className="text-lg font-serif font-semibold text-ink mb-1">{title}</h3>
-            <p className="text-sm text-muted-refined mb-4 max-w-md mx-auto">{message}</p>
+        <div className={cn("prem-card p-8 text-center", className)} role="alert">
+            <div className="w-12 h-12 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+                 style={{
+                     background: 'rgba(220,38,38,0.08)',
+                     border: '1px solid rgba(220,38,38,0.15)',
+                 }}>
+                <AlertTriangle className="w-5 h-5 text-status-error" />
+            </div>
+            <h3 className="text-[17px] font-serif font-bold text-ink mb-1.5">{title}</h3>
+            <p className="text-[13px] text-ink/45 mb-5 max-w-md mx-auto font-medium">{message}</p>
             {onRetry && (
                 <button
                     onClick={onRetry}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg border border-antique text-ink hover:border-gold-primary/50 hover:text-gold-dark transition-colors"
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 text-[13px] font-semibold rounded-xl text-ink/70 hover:text-gold-dark transition-all"
+                    style={{
+                        background: 'rgba(250,245,234,0.50)',
+                        border: '1px solid rgba(220,201,166,0.35)',
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.4)',
+                    }}
                 >
                     <RefreshCw className="w-3.5 h-3.5" />
                     {retryLabel}

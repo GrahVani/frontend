@@ -25,9 +25,9 @@ export default function MatchScoreCard({ result, className }: MatchScoreCardProp
     const verdict = VERDICT_CONFIG[result.overallVerdict];
 
     return (
-        <div className={cn("bg-softwhite border border-antique rounded-xl p-5", className)}>
+        <div className={cn("prem-card p-5", className)}>
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xs font-bold text-header-border tracking-widest font-serif uppercase">
+                <h3 className="text-[12px] font-bold text-gold-dark tracking-widest font-serif uppercase">
                     Match Summary
                 </h3>
                 <Badge variant={verdict.variant}>{verdict.label}</Badge>
@@ -47,14 +47,14 @@ export default function MatchScoreCard({ result, className }: MatchScoreCardProp
                         />
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-lg font-serif font-bold text-ink">{result.totalScore}</span>
+                        <span className="text-[18px] font-serif font-bold text-ink">{result.totalScore}</span>
                     </div>
                 </div>
                 <div>
-                    <p className="text-sm text-ink font-serif">
+                    <p className="text-[14px] text-ink font-serif">
                         <span className="font-semibold">{result.bride.name}</span> &amp; <span className="font-semibold">{result.groom.name}</span>
                     </p>
-                    <p className="text-xs text-muted-refined mt-0.5">Score: {result.totalScore} out of 36 points</p>
+                    <p className="text-[12px] text-ink/45 mt-0.5">Score: {result.totalScore} out of 36 points</p>
                 </div>
             </div>
 
@@ -65,18 +65,18 @@ export default function MatchScoreCard({ result, className }: MatchScoreCardProp
                         result.manglikStatus.cancelled ? (
                             <>
                                 <CheckCircle className="w-4 h-4 text-status-success" />
-                                <span className="text-sm text-ink">Manglik Dosha — Cancelled</span>
+                                <span className="text-[14px] text-ink">Manglik Dosha — Cancelled</span>
                             </>
                         ) : (
                             <>
                                 <AlertTriangle className="w-4 h-4 text-status-warning" />
-                                <span className="text-sm text-ink">Manglik Dosha Present</span>
+                                <span className="text-[14px] text-ink">Manglik Dosha Present</span>
                             </>
                         )
                     ) : (
                         <>
                             <CheckCircle className="w-4 h-4 text-status-success" />
-                            <span className="text-sm text-ink">No Manglik Dosha</span>
+                            <span className="text-[14px] text-ink">No Manglik Dosha</span>
                         </>
                     )}
                 </div>
@@ -84,12 +84,12 @@ export default function MatchScoreCard({ result, className }: MatchScoreCardProp
                     {result.naadiDosha ? (
                         <>
                             <XCircle className="w-4 h-4 text-status-error" />
-                            <span className="text-sm text-ink">Naadi Dosha Present</span>
+                            <span className="text-[14px] text-ink">Naadi Dosha Present</span>
                         </>
                     ) : (
                         <>
                             <CheckCircle className="w-4 h-4 text-status-success" />
-                            <span className="text-sm text-ink">No Naadi Dosha</span>
+                            <span className="text-[14px] text-ink">No Naadi Dosha</span>
                         </>
                     )}
                 </div>
@@ -97,12 +97,12 @@ export default function MatchScoreCard({ result, className }: MatchScoreCardProp
                     {result.bhakootDosha ? (
                         <>
                             <XCircle className="w-4 h-4 text-status-error" />
-                            <span className="text-sm text-ink">Bhakoot Dosha Present</span>
+                            <span className="text-[14px] text-ink">Bhakoot Dosha Present</span>
                         </>
                     ) : (
                         <>
                             <CheckCircle className="w-4 h-4 text-status-success" />
-                            <span className="text-sm text-ink">No Bhakoot Dosha</span>
+                            <span className="text-[14px] text-ink">No Bhakoot Dosha</span>
                         </>
                     )}
                 </div>
@@ -110,15 +110,15 @@ export default function MatchScoreCard({ result, className }: MatchScoreCardProp
 
             {/* Recommendations */}
             {result.recommendations.length > 0 && (
-                <div className="border-t border-antique/50 pt-3">
-                    <h4 className="text-xs font-bold text-header-border tracking-widest font-serif uppercase mb-2">
+                <div className="border-t border-gold-primary/15 pt-3">
+                    <h4 className="text-[12px] font-bold text-gold-dark tracking-widest font-serif uppercase mb-2">
                         Recommendations
                     </h4>
                     <ul className="space-y-1">
                         {result.recommendations.map((rec, i) => (
                             <li key={i} className="flex items-start gap-1.5">
                                 <Star className="w-3.5 h-3.5 text-gold-primary mt-0.5 shrink-0" />
-                                <span className="text-xs text-muted-refined">{rec}</span>
+                                <span className="text-[12px] text-ink/45">{rec}</span>
                             </li>
                         ))}
                     </ul>

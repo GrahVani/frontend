@@ -66,7 +66,7 @@ export default function KpDashboardSidebar({
 }: KpDashboardSidebarProps) {
     return (
         <div className={cn(
-            "w-48 shrink-0 bg-softwhite border border-antique rounded-2xl p-3 h-fit sticky top-32",
+            "w-48 shrink-0 prem-card p-3 h-fit sticky top-32",
             className
         )}>
             <div className="mb-3 px-2">
@@ -81,15 +81,15 @@ export default function KpDashboardSidebar({
                             key={item.id}
                             onClick={() => onSectionChange(item.id)}
                             className={cn(
-                                "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all text-left",
+                                "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[14px] font-medium transition-all text-left",
                                 isActive
                                     ? "bg-gold-primary/15 text-gold-dark border border-gold-primary/30 font-semibold"
-                                    : "text-primary hover:text-primary hover:bg-parchment"
+                                    : "text-ink hover:text-ink hover:bg-surface-warm"
                             )}
                         >
                             <Icon className={cn(
                                 "w-4 h-4 shrink-0",
-                                isActive ? "text-gold-dark" : "text-primary"
+                                isActive ? "text-gold-dark" : "text-ink"
                             )} />
                             <span className={cn(TYPOGRAPHY.value, "text-[13px] font-semibold")}>{item.label}</span>
                         </button>

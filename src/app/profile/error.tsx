@@ -23,8 +23,8 @@ export default function ProfileError({
     <div className="flex items-center justify-center min-h-[60vh] px-4">
       <div className="max-w-md w-full text-center space-y-6" role="alert">
         <div className="text-5xl" aria-hidden="true">&#128100;</div>
-        <h2 className="text-xl font-serif text-ink">Profile Error</h2>
-        <p className="text-secondary text-sm">
+        <h2 className="text-[20px] font-serif text-ink">Profile Error</h2>
+        <p className="text-ink/45 text-[13px] font-medium">
           Unable to load profile data. Please try again.
         </p>
         <Button onClick={reset} icon={RefreshCw}>Retry</Button>

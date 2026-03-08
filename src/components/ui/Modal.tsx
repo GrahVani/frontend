@@ -34,7 +34,6 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
             if (e.key === 'Escape') onClose();
         };
 
-        // Focus trap
         const handleTab = (e: KeyboardEvent) => {
             if (e.key !== 'Tab' || !dialogRef.current) return;
             const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
@@ -54,8 +53,6 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
         document.addEventListener('keydown', handleEscape);
         document.addEventListener('keydown', handleTab);
         document.body.style.overflow = 'hidden';
-
-        // Focus the dialog
         dialogRef.current?.focus();
 
         return () => {
@@ -68,7 +65,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[1000] bg-ink/70 backdrop-blur-md animate-in fade-in duration-300 overflow-y-auto">
+        <div className="fixed inset-0 z-[1000] bg-ink/60 backdrop-blur-md animate-in fade-in duration-300 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 md:p-8">
                 <div
                     ref={dialogRef}
@@ -77,21 +74,30 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
                     aria-labelledby={titleId}
                     tabIndex={-1}
                     className={cn(
-                        "relative w-full bg-white rounded-2xl shadow-2xl border border-antique animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col",
+                        "relative w-full rounded-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col",
                         sizeClasses[size],
                         className
                     )}
+                    style={{
+                        background: 'linear-gradient(165deg, rgba(255,253,249,0.92) 0%, rgba(250,245,234,0.88) 50%, rgba(255,253,249,0.90) 100%)',
+                        border: '1px solid rgba(220,201,166,0.35)',
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), 0 25px 60px rgba(62,46,22,0.20), 0 8px 24px rgba(62,46,22,0.10)',
+                        backdropFilter: 'blur(20px)',
+                    }}
                     onClick={(e) => e.stopPropagation()}
                 >
-                    {/* Screen-reader-only title */}
                     <span id={titleId} className="sr-only">{title}</span>
 
                     <button
                         onClick={onClose}
-                        className="absolute right-4 top-4 p-2 bg-white text-secondary hover:text-primary hover:bg-gold-primary transition-all rounded-full border border-antique shadow-sm z-50 ring-1 ring-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary"
+                        className="absolute right-4 top-4 p-2 rounded-xl text-ink/40 hover:text-gold-dark transition-all z-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary/40"
+                        style={{
+                            background: 'rgba(250,245,234,0.60)',
+                            border: '1px solid rgba(220,201,166,0.30)',
+                        }}
                         aria-label="Close"
                     >
-                        <X className="w-5 h-5" />
+                        <X className="w-4.5 h-4.5" />
                     </button>
 
                     <div className="overflow-y-auto flex-1">
@@ -99,7 +105,6 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
                     </div>
                 </div>
 
-                {/* Backdrop click to close — keyboard users dismiss via Escape */}
                 <div className="absolute inset-0 -z-10" onClick={onClose} aria-hidden="true" />
             </div>
         </div>

@@ -94,7 +94,7 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
         return (
             <div className="p-6 text-center">
                 <AlertTriangle className="w-8 h-8 text-amber-500 mx-auto mb-3" />
-                <p className="text-sm text-primary">No remedy data available for this type.</p>
+                <p className="text-[14px] text-ink">No remedy data available for this type.</p>
             </div>
         );
     }
@@ -136,7 +136,7 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
                     if (['ayanamsa', 'system', 'cached', 'chart_type', 'birth_details'].includes(key)) return null;
 
                     return (
-                        <div key={key} className="bg-white border border-antique rounded-2xl p-5 hover:shadow-md transition-shadow">
+                        <div key={key} className="prem-card rounded-2xl p-5 hover:shadow-md transition-shadow">
                             <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-3 flex items-center gap-2")}>
                                 <Sparkles className="w-4 h-4 text-gold-primary" />
                                 {key.replace(/_/g, ' ').toLowerCase().replace(/^\w/, (c) => c.toUpperCase())}
@@ -147,13 +147,13 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
                                 <div className="space-y-2">
                                     {Array.isArray(value) ? (
                                         value.map((item: unknown, i: number) => (
-                                            <div key={i} className="bg-parchment/50 rounded-xl p-4 border border-antique/50">
+                                            <div key={i} className="prem-card rounded-xl p-4">
                                                 {typeof item === 'string' ? (
                                                     <p className={TYPOGRAPHY.value}>{item}</p>
                                                 ) : (typeof item === 'object' && item !== null) ? (
                                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                                         {Object.entries(item as Record<string, unknown>).map(([k, v]) => (
-                                                            <div key={k} className="text-sm">
+                                                            <div key={k} className="text-[14px]">
                                                                 <span className={TYPOGRAPHY.label}>{k.replace(/_/g, ' ')}: </span>
                                                                 <span className={TYPOGRAPHY.value}>{String(v)}</span>
                                                             </div>
@@ -166,7 +166,7 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
                                         ))
                                     ) : (
                                         Object.entries(value).map(([k, v]) => (
-                                            <div key={k} className="flex items-start gap-2 text-sm bg-parchment/30 rounded-lg p-3">
+                                            <div key={k} className="flex items-start gap-2 text-[14px] bg-surface-warm rounded-lg p-3">
                                                 <span className={cn(TYPOGRAPHY.label, "min-w-[120px]")}>{k.replace(/_/g, ' ')}</span>
                                                 <span className={TYPOGRAPHY.value}>{typeof v === 'object' ? JSON.stringify(v, null, 2) : String(v)}</span>
                                             </div>
@@ -188,13 +188,13 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
         return (
             <div className="space-y-3">
                 {remedyContent.map((item: unknown, i: number) => (
-                    <div key={i} className="bg-white border border-antique rounded-2xl p-5">
+                    <div key={i} className="prem-card rounded-2xl p-5">
                         {typeof item === 'string' ? (
                             <p className={TYPOGRAPHY.value}>{item}</p>
                         ) : (typeof item === 'object' && item !== null) ? (
                             <div className="space-y-2">
                                 {Object.entries(item as Record<string, unknown>).map(([k, v]) => (
-                                    <div key={k} className="flex items-start gap-2 text-sm">
+                                    <div key={k} className="flex items-start gap-2 text-[14px]">
                                         <span className={cn(TYPOGRAPHY.label, "min-w-[120px]")}>{k.replace(/_/g, ' ')}</span>
                                         <span className={TYPOGRAPHY.value}>{String(v)}</span>
                                     </div>
@@ -209,8 +209,8 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
 
     // Fallback: render as formatted JSON
     return (
-        <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-            <pre className="text-xs text-slate-700 whitespace-pre-wrap overflow-auto max-h-96">
+        <div className="bg-surface-warm rounded-xl p-6 border border-gold-primary/15">
+            <pre className="text-[12px] text-ink/70 whitespace-pre-wrap overflow-auto max-h-96">
                 {JSON.stringify(remedyContent, null, 2)}
             </pre>
         </div>
@@ -321,7 +321,7 @@ export default function RemediesPage() {
     if (ayanamsa !== 'Lahiri') {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-                <Gem className="w-12 h-12 text-primary mb-4" />
+                <Gem className="w-12 h-12 text-ink mb-4" />
                 <h2 className={cn(TYPOGRAPHY.sectionTitle, "mb-2")}>Upaya — Lahiri only</h2>
                 <p className={cn(TYPOGRAPHY.value, "max-w-md")}>
                     Remedial prescriptions are currently available exclusively with the <strong>Lahiri Ayanamsa</strong>.
@@ -337,7 +337,7 @@ export default function RemediesPage() {
         <div className="space-y-6 animate-in fade-in duration-500 pb-10">
 
             {/* Remedy Type Tabs */}
-            <div className="flex flex-wrap gap-2 p-1 bg-parchment rounded-xl border border-antique">
+            <div className="flex flex-wrap gap-2 p-1 prem-card rounded-xl">
                 {REMEDY_TABS.map((tab) => (
                     <button
                         key={tab.id}
@@ -348,7 +348,7 @@ export default function RemediesPage() {
                             "!font-bold !mb-0",
                             activeTab === tab.id
                                 ? cn("text-white shadow-md", COLORS.wbActiveTab)
-                                : "text-primary hover:text-primary hover:bg-white/50"
+                                : "text-ink hover:text-ink hover:bg-white/50"
                         )}
                     >
                         {tab.icon}
@@ -359,13 +359,13 @@ export default function RemediesPage() {
 
             {/* Lal Kitab Specific Inputs */}
             {activeTab === 'lal_kitab' && (
-                <div className="flex flex-wrap gap-4 p-4 bg-white/50 rounded-xl border border-antique shadow-sm animate-in slide-in-from-top-2">
+                <div className="flex flex-wrap gap-4 p-4 prem-card rounded-xl shadow-sm animate-in slide-in-from-top-2">
                     <div className="flex flex-col gap-1.5">
                         <label className={cn(TYPOGRAPHY.label, "mb-0")}>Select planet</label>
                         <select
                             value={selectedPlanet}
                             onChange={(e) => setSelectedPlanet(e.target.value)}
-                            className="px-3 py-2 rounded-lg border border-antique bg-white text-sm text-primary focus:outline-none focus:ring-2 focus:ring-gold-primary/20 min-w-[150px]"
+                            className="px-3 py-2 rounded-lg border border-gold-primary/20 bg-white text-[14px] text-ink focus:outline-none focus:ring-2 focus:ring-gold-primary/20 min-w-[150px]"
                         >
                             <option value="">-- All / General --</option>
                             {PLANETS.map(p => (
@@ -379,7 +379,7 @@ export default function RemediesPage() {
                         <select
                             value={selectedHouse}
                             onChange={(e) => setSelectedHouse(e.target.value)}
-                            className="px-3 py-2 rounded-lg border border-antique bg-white text-sm text-primary focus:outline-none focus:ring-2 focus:ring-gold-primary/20 min-w-[150px]"
+                            className="px-3 py-2 rounded-lg border border-gold-primary/20 bg-white text-[14px] text-ink focus:outline-none focus:ring-2 focus:ring-gold-primary/20 min-w-[150px]"
                         >
                             <option value="">-- All / General --</option>
                             {HOUSES.map(h => (
@@ -391,7 +391,7 @@ export default function RemediesPage() {
                     <div className="flex items-end">
                         <button
                             onClick={handleRefresh}
-                            className="px-4 py-2 bg-gold-primary text-white text-sm font-medium rounded-lg hover:bg-gold-dark transition-colors flex items-center gap-2 shadow-sm"
+                            className="px-4 py-2 bg-gold-primary text-white text-[14px] font-medium rounded-lg hover:bg-gold-dark transition-colors flex items-center gap-2 shadow-sm"
                         >
                             <RefreshCw className="w-4 h-4" />
                             Get remedies
@@ -403,7 +403,7 @@ export default function RemediesPage() {
             {/* Content Area */}
             <div className="min-h-[300px]">
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center py-16 bg-parchment/30 rounded-2xl border border-antique">
+                    <div className="flex flex-col items-center justify-center py-16 prem-card rounded-2xl">
                         <Loader2 className="w-8 h-8 text-gold-primary animate-spin mb-4" />
                         <p className={cn(TYPOGRAPHY.subValue, "italic")}>Consulting planetary prescriptions...</p>
                     </div>
@@ -411,10 +411,10 @@ export default function RemediesPage() {
                     <div className="p-6 bg-red-50 border border-red-100 rounded-2xl text-center">
                         <AlertTriangle className="w-8 h-8 text-red-500 mx-auto mb-3" />
                         <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 mb-1")}>Prescription unavailable</h3>
-                        <p className={cn(TYPOGRAPHY.subValue, "text-red-600 max-w-md mx-auto !text-xs")}>{error}</p>
+                        <p className={cn(TYPOGRAPHY.subValue, "text-red-600 max-w-md mx-auto !text-[12px]")}>{error}</p>
                         <button
                             onClick={handleRefresh}
-                            className={cn(TYPOGRAPHY.label, "mt-4 px-4 py-2 bg-red-100 text-red-700 rounded-lg !text-xs !font-bold hover:bg-red-200 transition-colors !mb-0")}
+                            className={cn(TYPOGRAPHY.label, "mt-4 px-4 py-2 bg-red-100 text-red-700 rounded-lg !text-[12px] !font-bold hover:bg-red-200 transition-colors !mb-0")}
                         >
                             Try again
                         </button>
@@ -422,16 +422,16 @@ export default function RemediesPage() {
                 ) : remedyData[activeTab] ? (
                     <RemedyDataView data={remedyData[activeTab]} type={activeTab} />
                 ) : activeTab === 'lal_kitab' ? (
-                    <div className="flex flex-col items-center justify-center py-16 bg-parchment/30 rounded-2xl border border-antique animate-in fade-in">
+                    <div className="flex flex-col items-center justify-center py-16 prem-card rounded-2xl animate-in fade-in">
                         <Scroll className="w-10 h-10 text-gold-primary mb-4 opacity-70" />
                         <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-2")}>Lal Kitab remedies</h3>
-                        <p className={cn(TYPOGRAPHY.value, "max-w-md text-center mb-6 text-primary/70")}>
+                        <p className={cn(TYPOGRAPHY.value, "max-w-md text-center mb-6 text-ink/70")}>
                             Lal Kitab remedies are highly specific. Please select a Planet and a House above to view the precise remedial measures.
                         </p>
                     </div>
                 ) : (
-                    <div className="flex flex-col items-center justify-center py-16 bg-parchment/30 rounded-2xl border border-antique">
-                        <Gem className="w-8 h-8 text-primary mb-3" />
+                    <div className="flex flex-col items-center justify-center py-16 prem-card rounded-2xl">
+                        <Gem className="w-8 h-8 text-ink mb-3" />
                         <p className={TYPOGRAPHY.value}>Select a remedy type to view prescriptions</p>
                     </div>
                 )}

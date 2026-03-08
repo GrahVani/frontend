@@ -52,7 +52,7 @@ export default function ParchmentDatePicker({
             {label && (
                 <label className={cn(
                     "font-serif uppercase tracking-widest pl-1",
-                    isInline ? "text-[10px] sm:text-[11px] pr-1.5 border-r border-gold-primary/20 leading-none text-primary font-bold" : "block text-[11px] font-bold text-muted-refined"
+                    isInline ? "text-[10px] sm:text-[11px] pr-1.5 border-r border-gold-primary/20 leading-none text-ink font-bold" : "block text-[11px] font-bold text-ink/45"
                 )}>
                     {label}
                 </label>

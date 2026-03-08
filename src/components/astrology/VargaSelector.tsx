@@ -36,9 +36,9 @@ interface VargaSelectorProps {
 export default function VargaSelector({ activeVarga, onSelect }: VargaSelectorProps) {
     return (
         <div className="flex items-center gap-2 overflow-x-auto pb-4 no-scrollbar">
-            <div className="flex items-center gap-2 bg-ink/5 border border-header-border/10 p-1 rounded-2xl backdrop-blur-sm shadow-inner">
-                <div className="px-4 py-2 flex items-center gap-2 border-r border-header-border/10 mr-1">
-                    <Layers className="w-4 h-4 text-header-border" />
+            <div className="flex items-center gap-2 bg-ink/5 border border-gold-primary/10 p-1 rounded-2xl backdrop-blur-sm shadow-inner">
+                <div className="px-4 py-2 flex items-center gap-2 border-r border-gold-primary/10 mr-1">
+                    <Layers className="w-4 h-4 text-gold-dark" />
                     <span className="text-[10px] font-black uppercase tracking-widest text-body/60">Varga</span>
                 </div>
                 {VARGAS.map((varga) => {
@@ -50,11 +50,11 @@ export default function VargaSelector({ activeVarga, onSelect }: VargaSelectorPr
                             className={cn(
                                 "relative px-4 py-2 rounded-xl transition-all duration-300 group whitespace-nowrap",
                                 isActive
-                                    ? "bg-header-border text-white shadow-md relative z-10"
+                                    ? "bg-gold-primary text-white shadow-md relative z-10"
                                     : "text-body/50 hover:text-ink hover:bg-ink/5"
                             )}
                         >
-                            <span className="text-xs font-serif font-black tracking-tight">{varga.id}</span>
+                            <span className="text-[12px] font-serif font-black tracking-tight">{varga.id}</span>
                             <div className={cn(
                                 "absolute -bottom-10 left-1/2 -translate-x-1/2 px-2 py-1 bg-ink text-active-glow text-[8px] font-black uppercase tracking-tighter rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none border border-active-glow/20 shadow-xl",
                                 isActive && "group-hover:opacity-0"

@@ -62,9 +62,9 @@ export default function MuhurtaFilters({ category, onSearch, loading }: MuhurtaF
         : 0;
 
     return (
-        <form onSubmit={handleSubmit} className="bg-softwhite border border-antique rounded-xl p-5">
+        <form onSubmit={handleSubmit} className="prem-card p-5">
             <fieldset className="border-0 p-0 m-0">
-                <legend className="text-xs font-bold text-header-border tracking-widest font-serif uppercase mb-4">
+                <legend className="text-[12px] font-bold text-gold-dark tracking-widest font-serif uppercase mb-4">
                     Search Parameters
                 </legend>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
@@ -93,7 +93,7 @@ export default function MuhurtaFilters({ category, onSearch, loading }: MuhurtaF
             </div>
 
             {error && (
-                <div className="flex items-center gap-2 text-xs text-status-error mb-3" role="alert">
+                <div className="flex items-center gap-2 text-[12px] text-status-error mb-3" role="alert">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{error}</span>
                 </div>
@@ -101,7 +101,7 @@ export default function MuhurtaFilters({ category, onSearch, loading }: MuhurtaF
 
             <div className="flex items-center justify-between">
                 {dayCount > 0 && (
-                    <span className="text-xs text-muted-refined">
+                    <span className="text-[12px] text-ink/45">
                         Searching {dayCount} day{dayCount !== 1 ? 's' : ''}
                     </span>
                 )}

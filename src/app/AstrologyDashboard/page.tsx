@@ -96,22 +96,22 @@ const DASHA_LIST = [
 
 export default function AstrologyDashboard() {
     return (
-        <div className="min-h-screen bg-surface-warm text-slate-900 font-sans selection:bg-orange-100 pt-[64px]">
+        <div className="min-h-screen bg-surface-warm text-ink font-sans selection:bg-orange-100 pt-[64px]">
             {/* 1. TOP HEADER: Very compact, "Parashara" style data density */}
-            <header className="bg-slate-900 text-amber-50 px-4 py-1.5 border-b border-slate-700 flex justify-between items-center text-xs shadow-md">
+            <header className="bg-ink text-amber-50 px-4 py-1.5 border-b border-ink/80 flex justify-between items-center text-[12px] shadow-md">
                 <div className="flex items-center gap-6">
-                    <div className="font-bold text-amber-400 text-sm tracking-wide uppercase">{CLIENT_DETAILS.name}</div>
+                    <div className="font-bold text-amber-400 text-[14px] tracking-wide uppercase">{CLIENT_DETAILS.name}</div>
                     <div className="flex items-center gap-3 opacity-90">
                         <span>{CLIENT_DETAILS.gender}</span>
-                        <span className="text-slate-500">|</span>
+                        <span className="text-ink/45">|</span>
                         <span>{CLIENT_DETAILS.dob}</span>
-                        <span className="text-slate-500">|</span>
+                        <span className="text-ink/45">|</span>
                         <span>{CLIENT_DETAILS.tob}</span>
-                        <span className="text-slate-500">|</span>
+                        <span className="text-ink/45">|</span>
                         <span>{CLIENT_DETAILS.pob}</span>
                     </div>
                 </div>
-                <div className="flex items-center gap-4 text-[10px] uppercase font-medium tracking-wider text-slate-400">
+                <div className="flex items-center gap-4 text-[10px] uppercase font-medium tracking-wider text-ink/35">
                     <span>Lat: {CLIENT_DETAILS.latitude}</span>
                     <span>Long: {CLIENT_DETAILS.longitude}</span>
                     <span>Ayanamsa: {CLIENT_DETAILS.ayanamsa}</span>
@@ -119,7 +119,7 @@ export default function AstrologyDashboard() {
             </header>
 
             {/* 1.5. SETTINGS TOOLBAR (New) */}
-            <div className="bg-slate-800 text-slate-300 px-4 py-1 border-b border-slate-700 flex justify-between items-center text-[10px] shadow-inner select-none">
+            <div className="bg-ink/90 text-ink/25 px-4 py-1 border-b border-ink/80 flex justify-between items-center text-[10px] shadow-inner select-none">
                 {/* Left: Global Settings */}
                 <div className="flex items-center gap-6">
                     <div className="flex items-center gap-1.5 hover:text-white cursor-pointer transition-colors group">
@@ -137,7 +137,7 @@ export default function AstrologyDashboard() {
                         <span className="font-semibold text-amber-400">English</span>
                         <span className="text-[8px] opacity-50">▼</span>
                     </div>
-                    <div className="h-3 w-[1px] bg-slate-600 mx-2"></div>
+                    <div className="h-3 w-[1px] bg-ink/70 mx-2"></div>
                     <div className="flex items-center gap-3">
                         <button className="hover:text-amber-300 transition-colors flex items-center gap-1" title="Print">
                             <span>🖨️</span> <span className="hidden xl:inline">Print</span>
@@ -165,7 +165,7 @@ export default function AstrologyDashboard() {
             </div>
 
             {/* 2. PANCHANG STRIP */}
-            <div className="bg-white border-b border-orange-100 px-4 py-2 flex justify-between items-center shadow-sm text-xs">
+            <div className="bg-white border-b border-orange-100 px-4 py-2 flex justify-between items-center shadow-sm text-[12px]">
                 <div className="flex items-center gap-8">
                     <PanchangItem label="Tithi" value={PANCHANG.tithi} />
                     <PanchangItem label="Nakshatra" value={PANCHANG.nakshatra} />
@@ -173,7 +173,7 @@ export default function AstrologyDashboard() {
                     <PanchangItem label="Karana" value={PANCHANG.karana} />
                     <PanchangItem label="Paksha" value={PANCHANG.paksha} />
                 </div>
-                <div className="flex items-center gap-4 text-slate-500">
+                <div className="flex items-center gap-4 text-ink/45">
                     <div><span className="text-orange-600 font-semibold">Sunrise:</span> {CLIENT_DETAILS.sunrise}</div>
                     <div><span className="text-indigo-600 font-semibold">Sunset:</span> {CLIENT_DETAILS.sunset}</div>
                 </div>
@@ -211,39 +211,39 @@ export default function AstrologyDashboard() {
                     </div>
 
                     {/* PLANETARY DETAILS TABLE (Bottom Left) */}
-                    <div className="h-[280px] bg-white border border-slate-200 rounded-sm shadow-sm overflow-hidden flex flex-col">
-                        <div className="bg-slate-100 px-3 py-1.5 border-b border-slate-200 flex justify-between items-center">
-                            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide">Planetary Positions</h3>
+                    <div className="h-[280px] bg-white border border-gold-primary/15 rounded-sm shadow-sm overflow-hidden flex flex-col">
+                        <div className="bg-gold-primary/8 px-3 py-1.5 border-b border-gold-primary/15 flex justify-between items-center">
+                            <h3 className="text-[12px] font-bold text-ink/70 uppercase tracking-wide">Planetary Positions</h3>
                             <button className="text-[10px] text-blue-600 hover:underline">View Detailed Specs</button>
                         </div>
                         <div className="flex-1 overflow-auto">
-                            <table className="w-full text-xs text-left border-collapse">
-                                <thead className="bg-surface-modal sticky top-0 z-10 text-slate-600">
+                            <table className="w-full text-[12px] text-left border-collapse">
+                                <thead className="bg-surface-modal sticky top-0 z-10 text-ink/55">
                                     <tr>
-                                        <th className="py-1 px-2 border-r border-b border-slate-200 font-semibold w-16">Planet</th>
-                                        <th className="py-1 px-2 border-r border-b border-slate-200 font-semibold w-8">R/C</th>
-                                        <th className="py-1 px-2 border-r border-b border-slate-200 font-semibold">Sign</th>
-                                        <th className="py-1 px-2 border-r border-b border-slate-200 font-semibold">Degree</th>
-                                        <th className="py-1 px-2 border-r border-b border-slate-200 font-semibold">Nakshatra</th>
-                                        <th className="py-1 px-2 border-r border-b border-slate-200 font-semibold w-8">Pad</th>
-                                        <th className="py-1 px-2 border-r border-b border-slate-200 font-semibold">Lord</th>
-                                        <th className="py-1 px-2 border-r border-b border-slate-200 font-semibold">Sub</th>
-                                        <th className="py-1 px-2 border-b border-slate-200 font-semibold">Status</th>
+                                        <th className="py-1 px-2 border-r border-b border-gold-primary/15 font-semibold w-16">Planet</th>
+                                        <th className="py-1 px-2 border-r border-b border-gold-primary/15 font-semibold w-8">R/C</th>
+                                        <th className="py-1 px-2 border-r border-b border-gold-primary/15 font-semibold">Sign</th>
+                                        <th className="py-1 px-2 border-r border-b border-gold-primary/15 font-semibold">Degree</th>
+                                        <th className="py-1 px-2 border-r border-b border-gold-primary/15 font-semibold">Nakshatra</th>
+                                        <th className="py-1 px-2 border-r border-b border-gold-primary/15 font-semibold w-8">Pad</th>
+                                        <th className="py-1 px-2 border-r border-b border-gold-primary/15 font-semibold">Lord</th>
+                                        <th className="py-1 px-2 border-r border-b border-gold-primary/15 font-semibold">Sub</th>
+                                        <th className="py-1 px-2 border-b border-gold-primary/15 font-semibold">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {PLANETARY_DETAILS.map((p, i) => (
                                         <tr key={p.name} className={`hover:bg-blue-50/50 ${i % 2 === 0 ? 'bg-white' : 'bg-zinc-50'}`}>
-                                            <td className="py-1 px-2 border-r border-slate-200 font-medium text-slate-800">{p.name}</td>
-                                            <td className="py-1 px-2 border-r border-slate-200 text-center text-red-600 font-bold">{p.r}</td>
-                                            <td className="py-1 px-2 border-r border-slate-200 text-slate-600">{p.sign}</td>
-                                            <td className="py-1 px-2 border-r border-slate-200 text-slate-800 font-mono tracking-tighter">{p.deg}</td>
-                                            <td className="py-1 px-2 border-r border-slate-200 text-slate-600">{p.nak}</td>
-                                            <td className="py-1 px-2 border-r border-slate-200 text-center text-slate-500">{p.pada}</td>
-                                            <td className="py-1 px-2 border-r border-slate-200 text-slate-600">{p.lord}</td>
-                                            <td className="py-1 px-2 border-r border-slate-200 text-slate-600">{p.sub}</td>
-                                            <td className={`py-1 px-2 border-slate-200 text-[10px] font-bold ${p.status === 'Own' || p.status === 'Exalted' ? 'text-green-600' :
-                                                p.status === 'Debilitated' || p.status === 'Enemy' ? 'text-red-500' : 'text-slate-500'
+                                            <td className="py-1 px-2 border-r border-gold-primary/15 font-medium text-ink">{p.name}</td>
+                                            <td className="py-1 px-2 border-r border-gold-primary/15 text-center text-red-600 font-bold">{p.r}</td>
+                                            <td className="py-1 px-2 border-r border-gold-primary/15 text-ink/55">{p.sign}</td>
+                                            <td className="py-1 px-2 border-r border-gold-primary/15 text-ink font-mono tracking-tighter">{p.deg}</td>
+                                            <td className="py-1 px-2 border-r border-gold-primary/15 text-ink/55">{p.nak}</td>
+                                            <td className="py-1 px-2 border-r border-gold-primary/15 text-center text-ink/45">{p.pada}</td>
+                                            <td className="py-1 px-2 border-r border-gold-primary/15 text-ink/55">{p.lord}</td>
+                                            <td className="py-1 px-2 border-r border-gold-primary/15 text-ink/55">{p.sub}</td>
+                                            <td className={`py-1 px-2 border-gold-primary/15 text-[10px] font-bold ${p.status === 'Own' || p.status === 'Exalted' ? 'text-green-600' :
+                                                p.status === 'Debilitated' || p.status === 'Enemy' ? 'text-red-500' : 'text-ink/45'
                                                 }`}>{p.status}</td>
                                         </tr>
                                     ))}
@@ -257,39 +257,39 @@ export default function AstrologyDashboard() {
                 <div className="col-span-4 flex flex-col gap-3">
 
                     {/* CURRENT DASHA BLOCK */}
-                    <div className="bg-white border border-slate-200 rounded-sm shadow-sm p-0 overflow-hidden">
+                    <div className="bg-white border border-gold-primary/15 rounded-sm shadow-sm p-0 overflow-hidden">
                         <div className="bg-indigo-900 px-3 py-1.5 border-b border-indigo-800 flex justify-between items-center text-white">
-                            <h3 className="text-xs font-bold uppercase tracking-wide">Vimshottari Dasha</h3>
+                            <h3 className="text-[12px] font-bold uppercase tracking-wide">Vimshottari Dasha</h3>
                             <span className="text-[10px] bg-indigo-800 px-1.5 py-0.5 rounded text-indigo-200">Current</span>
                         </div>
                         <div className="p-3 bg-indigo-50/30">
                             {/* Dasha Chain */}
                             <div className="flex items-center justify-between gap-1 mb-4">
                                 <DashaNode level="Maha" planet={DASHA_CURRENT.maha} end={DASHA_CURRENT.mahaEnd} color="bg-orange-500" />
-                                <div className="h-[1px] w-3 bg-slate-300"></div>
+                                <div className="h-[1px] w-3 bg-ink/25"></div>
                                 <DashaNode level="Antar" planet={DASHA_CURRENT.antar} end={DASHA_CURRENT.antarEnd} color="bg-yellow-500" />
-                                <div className="h-[1px] w-3 bg-slate-300"></div>
+                                <div className="h-[1px] w-3 bg-ink/25"></div>
                                 <DashaNode level="Prat" planet={DASHA_CURRENT.prat} end={DASHA_CURRENT.pratEnd} color="bg-blue-500" />
-                                <div className="h-[1px] w-3 bg-slate-300"></div>
+                                <div className="h-[1px] w-3 bg-ink/25"></div>
                                 <DashaNode level="Sook" planet={DASHA_CURRENT.sook} end={DASHA_CURRENT.sookEnd} color="bg-green-500" />
                             </div>
 
                             {/* Dasha Table */}
-                            <div className="border border-slate-200 rounded bg-white">
-                                <table className="w-full text-xs text-left">
-                                    <thead className="bg-slate-50">
+                            <div className="border border-gold-primary/15 rounded bg-white">
+                                <table className="w-full text-[12px] text-left">
+                                    <thead className="bg-surface-warm">
                                         <tr>
-                                            <th className="px-2 py-1 text-slate-500 font-medium">MD Planet</th>
-                                            <th className="px-2 py-1 text-slate-500 font-medium">Start</th>
-                                            <th className="px-2 py-1 text-slate-500 font-medium">End</th>
+                                            <th className="px-2 py-1 text-ink/45 font-medium">MD Planet</th>
+                                            <th className="px-2 py-1 text-ink/45 font-medium">Start</th>
+                                            <th className="px-2 py-1 text-ink/45 font-medium">End</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-slate-100">
+                                    <tbody className="divide-y divide-ink/10">
                                         {DASHA_LIST.map((d) => (
                                             <tr key={d.planet} className={d.planet === "Jupiter" ? "bg-indigo-50 font-semibold" : ""}>
                                                 <td className="px-2 py-1">{d.planet}</td>
-                                                <td className="px-2 py-1 text-slate-500">{d.start}</td>
-                                                <td className="px-2 py-1 text-slate-500">{d.end}</td>
+                                                <td className="px-2 py-1 text-ink/45">{d.start}</td>
+                                                <td className="px-2 py-1 text-ink/45">{d.end}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -299,11 +299,11 @@ export default function AstrologyDashboard() {
                     </div>
 
                     {/* QUICK TOOLS / SNAPSHOTS */}
-                    <div className="flex-1 bg-white border border-slate-200 rounded-sm shadow-sm overflow-hidden flex flex-col">
-                        <div className="bg-slate-100 px-3 py-1.5 border-b border-slate-200">
-                            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide">Yogas & Avamakh</h3>
+                    <div className="flex-1 bg-white border border-gold-primary/15 rounded-sm shadow-sm overflow-hidden flex flex-col">
+                        <div className="bg-gold-primary/8 px-3 py-1.5 border-b border-gold-primary/15">
+                            <h3 className="text-[12px] font-bold text-ink/70 uppercase tracking-wide">Yogas & Avamakh</h3>
                         </div>
-                        <div className="p-3 grid grid-cols-2 gap-2 text-xs">
+                        <div className="p-3 grid grid-cols-2 gap-2 text-[12px]">
                             <div className="border border-green-200 bg-green-50 p-2 rounded">
                                 <div className="font-bold text-green-800 mb-1">Gaja Kesari Yoga</div>
                                 <div className="text-green-700 opacity-80 leading-tight">Jupiter in Kendra from Moon. Wealth & fame.</div>
@@ -332,20 +332,20 @@ export default function AstrologyDashboard() {
 function PanchangItem({ label, value }: { label: string; value: string }) {
     return (
         <div className="flex flex-col">
-            <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">{label}</span>
-            <span className="font-bold text-slate-700">{value}</span>
+            <span className="text-[10px] text-ink/35 font-semibold uppercase tracking-wider">{label}</span>
+            <span className="font-bold text-ink/70">{value}</span>
         </div>
     );
 }
 
 function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
     return (
-        <div className="bg-white border border-slate-200 rounded-sm shadow-sm flex flex-col h-full overflow-hidden">
-            <div className="bg-gray-50 px-3 py-1.5 border-b border-slate-200 flex justify-between items-center">
-                <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide">{title}</h3>
+        <div className="bg-white border border-gold-primary/15 rounded-sm shadow-sm flex flex-col h-full overflow-hidden">
+            <div className="bg-surface-warm px-3 py-1.5 border-b border-gold-primary/15 flex justify-between items-center">
+                <h3 className="text-[12px] font-bold text-ink/70 uppercase tracking-wide">{title}</h3>
                 <div className="flex gap-1.5">
                     <div className="w-2 h-2 rounded-full bg-red-400" title="Retrograde"></div>
-                    <div className="w-2 h-2 rounded-full bg-slate-300"></div>
+                    <div className="w-2 h-2 rounded-full bg-ink/25"></div>
                 </div>
             </div>
             <div className="flex-1 relative min-h-0">
@@ -358,11 +358,11 @@ function ChartCard({ title, children }: { title: string; children: React.ReactNo
 function DashaNode({ level, planet, end, color }: { level: string; planet: string; end: string; color: string }) {
     return (
         <div className="flex flex-col items-center">
-            <span className="text-[10px] text-slate-400 mb-0.5 uppercase">{level}</span>
-            <div className={`w-10 h-10 rounded-full ${color} text-white flex items-center justify-center font-bold shadow-sm text-sm border-2 border-white ring-1 ring-slate-100`}>
+            <span className="text-[10px] text-ink/35 mb-0.5 uppercase">{level}</span>
+            <div className={`w-10 h-10 rounded-full ${color} text-white flex items-center justify-center font-bold shadow-sm text-[14px] border-2 border-white ring-1 ring-ink/10`}>
                 {planet.substring(0, 2)}
             </div>
-            <span className="text-[10px] font-medium text-slate-600 mt-1">{end}</span>
+            <span className="text-[10px] font-medium text-ink/55 mt-1">{end}</span>
         </div>
     );
 }

@@ -48,7 +48,7 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
             tabIndex={0}
             aria-label={`Select client ${displayName}`}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(); } }}
-            className="group relative flex items-center gap-4 px-5 py-3.5 cursor-pointer transition-all duration-200 hover:bg-parchment/50"
+            className="group relative flex items-center gap-4 px-5 py-3.5 cursor-pointer transition-all duration-200 hover:bg-surface-warm/50"
             style={{ borderLeft: '3px solid transparent' }}
             onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderLeftColor = 'rgba(201,162,77,0.60)'; }}
             onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderLeftColor = 'transparent'; }}
@@ -89,19 +89,19 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
                 <div className="flex items-center gap-4 mt-1.5">
                     {birthPlace && (
                         <span className="flex items-center gap-1 text-[12px] text-ink/55 font-medium">
-                            <MapPin className="w-3 h-3 text-bronze-dark/45 shrink-0" />
+                            <MapPin className="w-3 h-3 text-ink/30 shrink-0" />
                             <span className="truncate max-w-[120px]">{birthPlace}</span>
                         </span>
                     )}
                     {birthDate && (
                         <span className="flex items-center gap-1 text-[12px] text-ink/55 font-medium">
-                            <Calendar className="w-3 h-3 text-bronze-dark/45 shrink-0" />
+                            <Calendar className="w-3 h-3 text-ink/30 shrink-0" />
                             {new Date(birthDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </span>
                     )}
                     {birthTime && (
                         <span className="hidden md:flex items-center gap-1 text-[12px] text-ink/55 font-medium font-mono">
-                            <Clock className="w-3 h-3 text-bronze-dark/45 shrink-0" />
+                            <Clock className="w-3 h-3 text-ink/30 shrink-0" />
                             {birthTime}
                         </span>
                     )}
@@ -116,7 +116,7 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
                 {/* Actions — visible on hover */}
                 <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <button
-                        className="p-2 rounded-lg transition-all hover:bg-parchment/70"
+                        className="p-2 rounded-lg transition-all hover:bg-surface-warm/70"
                         style={{ border: '1px solid transparent' }}
                         onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(220,201,166,0.35)'; }}
                         onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'transparent'; }}

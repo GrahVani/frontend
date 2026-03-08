@@ -72,10 +72,10 @@ export default function StrengtheningPanel({ planetaryStrengths }: Strengthening
                         <div key={name} className="flex items-center gap-3 px-2 py-1">
                             <CircularProgress percentage={percentage} color={isIndigo ? "indigo" : "amber"} />
                             <div className="min-w-0">
-                                <h4 className="text-base font-medium text-ink truncate tracking-tight" title={`${name} (${data.strength_category})`}>
-                                    {name} <span className="text-slate-400 text-[11px]">({data.strength_category})</span>
+                                <h4 className="text-[16px] font-medium text-ink truncate tracking-tight" title={`${name} (${data.strength_category})`}>
+                                    {name} <span className="text-ink/35 text-[11px]">({data.strength_category})</span>
                                 </h4>
-                                <p className="text-[12px] text-slate-500 font-medium tracking-tighter">
+                                <p className="text-[12px] text-ink/45 font-medium tracking-tighter">
                                     Target: {getTargetCount(name).toLocaleString()}
                                 </p>
                             </div>

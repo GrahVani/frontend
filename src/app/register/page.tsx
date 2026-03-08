@@ -235,7 +235,7 @@ export default function RegisterPage() {
                                                     {strengthLabel}
                                                 </span>
                                             </div>
-                                            <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[8px] font-serif text-muted-refined">
+                                            <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[8px] font-serif text-ink/45">
                                                 <span className={passwordChecks.length ? "text-status-success" : ""}>8+ chars</span>
                                                 <span className={passwordChecks.upper ? "text-status-success" : ""}>Uppercase</span>
                                                 <span className={passwordChecks.lower ? "text-status-success" : ""}>Lowercase</span>

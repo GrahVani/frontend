@@ -39,12 +39,12 @@ export default function ActiveDoshasLayout({
     const activeDosha = allDoshas.find(d => d.id === selectedDoshaId);
 
     return (
-        <div className={cn("flex flex-col lg:flex-row gap-4 p-4 bg-parchment min-h-screen font-sans", className)}>
+        <div className={cn("flex flex-col lg:flex-row gap-4 p-4 bg-surface-warm min-h-screen font-sans", className)}>
             {/* LEFT: Birth Chart - Fixed Width */}
             <div className="flex flex-col gap-2 min-h-[360px] h-[60vh] max-h-[600px] w-full lg:w-[440px] shrink-0">
                 <div className="border border-red-200 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm max-w-[440px]">
                     <div className="bg-red-50 px-3 py-1.5 border-b border-red-100 flex justify-between items-center shrink-0">
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-red-900 leading-tight tracking-wide")}>Birth chart (D1)</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] text-red-900 leading-tight tracking-wide")}>Birth chart (D1)</h3>
                         <button
                             onClick={() => setZoomedChart({ varga: "D1", label: "Birth chart (D1)" })}
                             className="text-red-900 hover:text-red-600 transition-colors"
@@ -69,7 +69,7 @@ export default function ActiveDoshasLayout({
             <div className="flex-1 flex flex-col gap-2 min-h-[360px] h-[60vh] max-h-[600px] min-w-0">
                 <div className="border border-red-200 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm">
                     <div className="bg-red-50 px-4 py-2 border-b border-red-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg text-red-900 leading-tight tracking-wide whitespace-nowrap")}>Dosha analysis</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] text-red-900 leading-tight tracking-wide whitespace-nowrap")}>Dosha analysis</h3>
 
                         {/* Integrated Header Dropdown */}
                         <div className="relative group w-full sm:w-64 shrink-0">
@@ -142,19 +142,19 @@ export default function ActiveDoshasLayout({
             {/* Modal for Zoom */}
             {zoomedChart && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl bg-ink/40 animate-in fade-in zoom-in-95 duration-300" role="dialog" aria-modal="true" aria-label={zoomedChart.label}>
-                    <div className="bg-softwhite border border-border-warm rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl">
+                    <div className="bg-surface-warm border border-gold-primary/15 rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl">
                         <button
                             onClick={() => setZoomedChart(null)}
                             aria-label="Close zoomed chart"
-                            className="absolute top-4 right-4 p-2 rounded-xl bg-parchment text-primary hover:bg-gold-primary/20 hover:text-accent-gold transition-all"
+                            className="absolute top-4 right-4 p-2 rounded-xl bg-surface-warm text-ink hover:bg-gold-primary/20 hover:text-gold-dark transition-all"
                         >
                             <X className="w-5 h-5" />
                         </button>
                         <div className="mb-6 text-center">
-                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-xl")}>{zoomedChart.label}</h2>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px]")}>{zoomedChart.label}</h2>
                             <p className={cn(TYPOGRAPHY.label, "mt-2")}>{zoomedChart.varga} divisional chart</p>
                         </div>
-                        <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6 border border-border-warm">
+                        <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6 border border-gold-primary/15">
                             <ChartWithPopup
                                 ascendantSign={ascendantSign}
                                 planets={planets}

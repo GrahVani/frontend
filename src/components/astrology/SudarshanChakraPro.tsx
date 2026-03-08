@@ -92,7 +92,7 @@ export default function SudarshanChakraPro({ lagnaPlanets, moonPlanets, sunPlane
                                                 y={signCoord.y}
                                                 textAnchor="middle"
                                                 dominantBaseline="middle"
-                                                className="text-[16px] font-bold fill-slate-900 font-sans"
+                                                className="text-[16px] font-bold fill-ink font-sans"
                                             >
                                                 {signId}
                                             </text>

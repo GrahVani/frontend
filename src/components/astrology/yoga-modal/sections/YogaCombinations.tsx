@@ -13,8 +13,8 @@ export const YogaCombinations = memo(function YogaCombinations({ data }: YogaCom
     if (data.length === 0) return null;
 
     return (
-        <div className="bg-softwhite border border-border-warm rounded-2xl p-5">
-            <h3 className="font-serif font-bold text-primary mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
+        <div className="prem-card p-5">
+            <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-[14px] uppercase tracking-wider">
                 <Layers className="w-4 h-4 text-gold-primary" /> Yoga Combinations
             </h3>
 
@@ -37,12 +37,12 @@ export const YogaCombinations = memo(function YogaCombinations({ data }: YogaCom
                                 ) : (
                                     <XCircle className="w-3.5 h-3.5 text-zinc-400" />
                                 )}
-                                <span className="text-xs font-bold text-primary capitalize">
+                                <span className="text-[12px] font-bold text-ink capitalize">
                                     {combo.type.replace(/_/g, ' ')}
                                 </span>
                             </div>
                             {combo.strengthScore !== undefined && (
-                                <span className="text-[10px] font-bold text-primary bg-gold-primary/10 px-2 py-0.5 rounded-full border border-gold-primary/20">
+                                <span className="text-[10px] font-bold text-ink bg-gold-primary/10 px-2 py-0.5 rounded-full border border-gold-primary/20">
                                     {combo.strengthScore} pts
                                 </span>
                             )}
@@ -51,22 +51,22 @@ export const YogaCombinations = memo(function YogaCombinations({ data }: YogaCom
                         {/* Detail Chips */}
                         <div className="flex flex-wrap gap-1.5 mb-2">
                             {combo.sign && (
-                                <span className="px-2 py-0.5 bg-parchment text-primary border border-border-warm rounded text-[9px] font-bold">
+                                <span className="px-2 py-0.5 bg-surface-warm text-ink border border-gold-primary/15 rounded text-[9px] font-bold">
                                     {combo.sign}
                                 </span>
                             )}
                             {combo.house !== undefined && (
-                                <span className="px-2 py-0.5 bg-parchment text-primary border border-border-warm rounded text-[9px] font-bold">
+                                <span className="px-2 py-0.5 bg-surface-warm text-ink border border-gold-primary/15 rounded text-[9px] font-bold">
                                     House {combo.house}
                                 </span>
                             )}
                             {combo.houseCategory && (
-                                <span className="px-2 py-0.5 bg-parchment text-primary border border-border-warm rounded text-[9px] font-bold capitalize">
+                                <span className="px-2 py-0.5 bg-surface-warm text-ink border border-gold-primary/15 rounded text-[9px] font-bold capitalize">
                                     {combo.houseCategory}
                                 </span>
                             )}
                             {combo.orbDegrees !== undefined && (
-                                <span className="px-2 py-0.5 bg-parchment text-primary border border-border-warm rounded text-[9px] font-bold">
+                                <span className="px-2 py-0.5 bg-surface-warm text-ink border border-gold-primary/15 rounded text-[9px] font-bold">
                                     Orb: {combo.orbDegrees}Â°
                                 </span>
                             )}

@@ -43,21 +43,21 @@ export default function KpDashboardHeader({
     className,
 }: KpDashboardHeaderProps) {
     return (
-        <div className={cn("bg-softwhite border border-antique rounded-2xl p-4", className)}>
+        <div className={cn("prem-card p-4", className)}>
             <div className="flex items-center justify-between gap-4 flex-wrap">
                 {/* Left: Client Info */}
                 <div className="flex items-center gap-4">
                     {/* Avatar */}
                     <div className="w-11 h-11 rounded-xl bg-gold-primary/10 border border-gold-primary/30 flex items-center justify-center shrink-0">
-                        <span className="text-lg font-serif font-bold text-gold-dark">
+                        <span className="text-[18px] font-serif font-bold text-gold-dark">
                             {clientName[0]}
                         </span>
                     </div>
                     <div>
-                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-lg leading-tight")}>
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] leading-tight")}>
                             {clientName}
                         </h2>
-                        <div className={cn(TYPOGRAPHY.subValue, "flex items-center gap-3 mt-0.5 text-xs flex-wrap")}>
+                        <div className={cn(TYPOGRAPHY.subValue, "flex items-center gap-3 mt-0.5 text-[12px] flex-wrap")}>
                             {birthDate && (
                                 <span className="flex items-center gap-1">
                                     <Calendar className="w-3 h-3" />
@@ -83,27 +83,27 @@ export default function KpDashboardHeader({
                 {/* Center: Key KP Indicators */}
                 <div className="flex items-center gap-3 flex-wrap">
                     {lagna && (
-                        <div className="px-3 py-1.5 bg-parchment border border-antique rounded-lg text-center">
+                        <div className="px-3 py-1.5 bg-surface-warm border border-gold-primary/20 rounded-lg text-center">
                             <p className={cn(TYPOGRAPHY.label, "text-[9px] tracking-widest")}>Lagna</p>
-                            <p className={cn(TYPOGRAPHY.value, "text-sm text-primary")}>{lagna}</p>
+                            <p className={cn(TYPOGRAPHY.value, "text-[14px] text-ink")}>{lagna}</p>
                         </div>
                     )}
                     {moonSign && (
-                        <div className="px-3 py-1.5 bg-parchment border border-antique rounded-lg text-center">
+                        <div className="px-3 py-1.5 bg-surface-warm border border-gold-primary/20 rounded-lg text-center">
                             <p className={cn(TYPOGRAPHY.label, "text-[9px] tracking-widest")}>Moon sign</p>
-                            <p className={cn(TYPOGRAPHY.value, "text-sm text-primary")}>{moonSign}</p>
+                            <p className={cn(TYPOGRAPHY.value, "text-[14px] text-ink")}>{moonSign}</p>
                         </div>
                     )}
                     {moonNakshatra && (
-                        <div className="px-3 py-1.5 bg-parchment border border-antique rounded-lg text-center">
+                        <div className="px-3 py-1.5 bg-surface-warm border border-gold-primary/20 rounded-lg text-center">
                             <p className={cn(TYPOGRAPHY.label, "text-[9px] tracking-widest")}>Nakshatra</p>
-                            <p className={cn(TYPOGRAPHY.value, "text-sm text-primary")}>{moonNakshatra}</p>
+                            <p className={cn(TYPOGRAPHY.value, "text-[14px] text-ink")}>{moonNakshatra}</p>
                         </div>
                     )}
                     {ayanamsaValue && (
                         <div className="px-3 py-1.5 bg-gold-primary/10 border border-gold-primary/30 rounded-lg text-center">
                             <p className={cn(TYPOGRAPHY.label, "text-[9px] tracking-widest !text-gold-dark")}>KP ayanamsa</p>
-                            <p className={cn(TYPOGRAPHY.value, "text-sm !text-gold-dark font-sans")}>{ayanamsaValue}</p>
+                            <p className={cn(TYPOGRAPHY.value, "text-[14px] !text-gold-dark font-sans")}>{ayanamsaValue}</p>
                         </div>
                     )}
                 </div>
@@ -116,7 +116,7 @@ export default function KpDashboardHeader({
                             className={cn(
                                 "px-3 py-2 bg-gold-primary text-white rounded-lg transition-colors flex items-center gap-1.5",
                                 TYPOGRAPHY.value,
-                                "text-xs font-semibold"
+                                "text-[12px] font-semibold"
                             )}
                         >
                             <Sparkles className="w-3.5 h-3.5" />
@@ -127,9 +127,9 @@ export default function KpDashboardHeader({
                         <button
                             onClick={onRunHorary}
                             className={cn(
-                                "px-3 py-2 bg-softwhite border border-antique text-primary rounded-lg transition-colors flex items-center gap-1.5",
+                                "px-3 py-2 bg-surface-warm border border-gold-primary/20 text-ink rounded-lg transition-colors flex items-center gap-1.5",
                                 TYPOGRAPHY.value,
-                                "text-xs font-semibold hover:bg-gold-primary/10 hover:border-gold-primary/50"
+                                "text-[12px] font-semibold hover:bg-gold-primary/10 hover:border-gold-primary/50"
                             )}
                         >
                             <HelpCircle className="w-3.5 h-3.5" />
@@ -140,9 +140,9 @@ export default function KpDashboardHeader({
                         <button
                             onClick={onExportReport}
                             className={cn(
-                                "px-3 py-2 bg-softwhite border border-antique text-primary rounded-lg transition-colors flex items-center gap-1.5",
+                                "px-3 py-2 bg-surface-warm border border-gold-primary/20 text-ink rounded-lg transition-colors flex items-center gap-1.5",
                                 TYPOGRAPHY.value,
-                                "text-xs font-semibold hover:bg-gold-primary/10 hover:border-gold-primary/50"
+                                "text-[12px] font-semibold hover:bg-gold-primary/10 hover:border-gold-primary/50"
                             )}
                         >
                             <FileDown className="w-3.5 h-3.5" />
@@ -153,9 +153,9 @@ export default function KpDashboardHeader({
                         <button
                             onClick={onCompareCharts}
                             className={cn(
-                                "px-3 py-2 bg-softwhite border border-antique text-primary rounded-lg transition-colors flex items-center gap-1.5",
+                                "px-3 py-2 bg-surface-warm border border-gold-primary/20 text-ink rounded-lg transition-colors flex items-center gap-1.5",
                                 TYPOGRAPHY.value,
-                                "text-xs font-semibold hover:bg-gold-primary/10 hover:border-gold-primary/50"
+                                "text-[12px] font-semibold hover:bg-gold-primary/10 hover:border-gold-primary/50"
                             )}
                         >
                             <GitCompare className="w-3.5 h-3.5" />

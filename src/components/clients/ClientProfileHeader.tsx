@@ -44,7 +44,7 @@ export default function ClientProfileHeader({
                                  border: '1px solid rgba(201,162,77,0.30)',
                                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.4), 0 2px 8px rgba(139,90,43,0.10)',
                              }}>
-                            <span className="text-2xl font-serif font-bold text-gold-dark">{initial}</span>
+                            <span className="text-[24px] font-serif font-bold text-gold-dark">{initial}</span>
                         </div>
 
                         {/* Name & Meta */}
@@ -54,7 +54,7 @@ export default function ClientProfileHeader({
                                 <span className="text-[12px] font-mono font-semibold text-ink/50">#{client.id.slice(0, 8)}</span>
                                 {client.rashi && (
                                     <>
-                                        <span className="w-1 h-1 rounded-full bg-border-divider" />
+                                        <span className="w-1 h-1 rounded-full bg-gold-primary/10" />
                                         <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-gold-dark">
                                             <Star className="w-3.5 h-3.5" /> {client.rashi} Rashi
                                         </span>
@@ -62,9 +62,9 @@ export default function ClientProfileHeader({
                                 )}
                                 {client.birthPlace && (
                                     <>
-                                        <span className="w-1 h-1 rounded-full bg-border-divider" />
+                                        <span className="w-1 h-1 rounded-full bg-gold-primary/10" />
                                         <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-ink/70">
-                                            <MapPin className="w-3.5 h-3.5 text-bronze-dark/60" /> {client.birthPlace}
+                                            <MapPin className="w-3.5 h-3.5 text-ink/30" /> {client.birthPlace}
                                         </span>
                                     </>
                                 )}
@@ -78,7 +78,7 @@ export default function ClientProfileHeader({
                             <>
                                 <button
                                     onClick={onCancel}
-                                    className="px-5 py-2.5 rounded-lg text-[13px] font-semibold text-ink/70 transition-colors hover:bg-parchment/50"
+                                    className="px-5 py-2.5 rounded-lg text-[13px] font-semibold text-ink/70 transition-colors hover:bg-surface-warm/50"
                                     style={{ border: '1px solid rgba(220,201,166,0.35)' }}
                                 >
                                     Cancel
@@ -95,7 +95,7 @@ export default function ClientProfileHeader({
                         ) : (
                             <button
                                 onClick={onEdit}
-                                className="px-5 py-2.5 rounded-lg text-[13px] font-semibold text-ink transition-all flex items-center gap-2 hover:bg-parchment/50"
+                                className="px-5 py-2.5 rounded-lg text-[13px] font-semibold text-ink transition-all flex items-center gap-2 hover:bg-surface-warm/50"
                                 style={{ border: '1px solid rgba(220,201,166,0.35)' }}
                             >
                                 <Edit2 className="w-4 h-4" />

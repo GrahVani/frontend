@@ -57,9 +57,9 @@ export const DoshaModal = memo(function DoshaModal({
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center p-8 bg-parchment/30 rounded-2xl border border-border-warm" role="status" aria-label="Loading dosha analysis" aria-busy="true">
+            <div className="flex flex-col items-center justify-center p-8 bg-surface-warm/30 rounded-2xl border border-gold-primary/15" role="status" aria-label="Loading dosha analysis" aria-busy="true">
                 <Loader2 className="w-6 h-6 text-red-500 animate-spin mb-3" aria-hidden="true" />
-                <p className="text-xs font-serif text-secondary italic">Mapping karmic patterns...</p>
+                <p className="text-[12px] font-serif text-ink/55 italic">Mapping karmic patterns...</p>
             </div>
         );
     }
@@ -69,7 +69,7 @@ export const DoshaModal = memo(function DoshaModal({
             <div className="space-y-4">
                 <div className="p-4 bg-red-50 border border-red-100 rounded-2xl text-center" role="alert">
                     <Info className="w-6 h-6 text-red-500 mx-auto mb-2" aria-hidden="true" />
-                    <h3 className="text-red-900 font-bold font-serif text-sm">Dosha Analysis Pending</h3>
+                    <h3 className="text-red-900 font-bold font-serif text-[14px]">Dosha Analysis Pending</h3>
                     <p className="text-[10px] text-red-600">
                         {error || 'Detailed analysis not currently available for this client'}
                     </p>

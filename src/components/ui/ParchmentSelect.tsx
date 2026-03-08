@@ -15,7 +15,7 @@ export default function ParchmentSelect({ className = '', label, options, id, er
     return (
         <div className={`relative group ${className}`}>
             {label && (
-                <label htmlFor={selectId} className="block text-xs font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
+                <label htmlFor={selectId} className="block text-[12px] font-bold font-serif text-gold-dark uppercase tracking-widest mb-1">
                     {label}
                 </label>
             )}
@@ -31,7 +31,7 @@ export default function ParchmentSelect({ className = '', label, options, id, er
                     className={`
                         w-full appearance-none bg-transparent
                         border border-gold-primary/30 rounded-xl
-                        text-ink font-serif text-base tracking-wide
+                        text-ink font-serif text-[16px] tracking-wide
                         focus:outline-none focus:border-gold-dark focus-visible:ring-2 focus-visible:ring-gold-primary focus-visible:ring-offset-1
                         transition-colors duration-300
                         py-2 ps-3 pe-8 cursor-pointer
@@ -49,7 +49,7 @@ export default function ParchmentSelect({ className = '', label, options, id, er
             </div>
 
             {error && (
-                <span id={errorId} role="alert" className="block text-xs text-red-600 mt-1">
+                <span id={errorId} role="alert" className="block text-[12px] text-red-600 mt-1">
                     {error}
                 </span>
             )}

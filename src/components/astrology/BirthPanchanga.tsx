@@ -28,7 +28,7 @@ interface PanchangaItemProps {
 
 function PanchangaItem({ label, value, subValue, icon: Icon, color }: PanchangaItemProps) {
     return (
-        <div className="bg-white/50 p-2.5 rounded-xl border border-antique/20 flex items-center gap-3 shadow-sm group hover:border-gold-primary/30 transition-all">
+        <div className="bg-white/50 p-2.5 rounded-xl border border-gold-primary/15 flex items-center gap-3 shadow-sm group hover:border-gold-primary/30 transition-all">
             <div className={cn("p-1.5 rounded-lg bg-white shrink-0 shadow-xs group-hover:bg-gold-primary/5 transition-colors", color)}>
                 <Icon className="w-3.5 h-3.5" />
             </div>
@@ -66,7 +66,7 @@ export interface BirthPanchangaData {
 export default function BirthPanchanga({ data }: { data: BirthPanchangaData | null }) {
     if (!data || !data.panchanga) {
         return (
-            <div className="p-4 text-center border border-antique/30 rounded-xl bg-softwhite/50 text-primary text-[10px] font-sans tracking-wide">
+            <div className="p-4 text-center border border-gold-primary/20 rounded-xl bg-surface-warm/50 text-ink text-[10px] font-sans tracking-wide">
                 Panchanga data loading...
             </div>
         );
@@ -107,14 +107,14 @@ export default function BirthPanchanga({ data }: { data: BirthPanchangaData | nu
             </div>
 
             <div className="grid grid-cols-2 gap-2">
-                <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white/50 border border-antique/20 shadow-sm">
-                    <Sunrise className="w-4 h-4 text-accent-gold" />
+                <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white/50 border border-gold-primary/15 shadow-sm">
+                    <Sunrise className="w-4 h-4 text-gold-dark" />
                     <div className="min-w-0">
                         <p className={TYPOGRAPHY.label}>Sunrise</p>
                         <p className={TYPOGRAPHY.value}>{times.sunrise.time}</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white/50 border border-antique/20 shadow-sm">
+                <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white/50 border border-gold-primary/15 shadow-sm">
                     <Sunset className="w-4 h-4 text-indigo-400" />
                     <div className="min-w-0">
                         <p className={TYPOGRAPHY.label}>Sunset</p>
@@ -124,7 +124,7 @@ export default function BirthPanchanga({ data }: { data: BirthPanchangaData | nu
             </div>
 
             <div className="pt-1">
-                <div className="text-center bg-softwhite/40 py-1.5 rounded-lg border border-antique/10">
+                <div className="text-center bg-surface-warm/40 py-1.5 rounded-lg border border-gold-primary/10">
                     <span className={cn(TYPOGRAPHY.label, "mb-0 mr-2")}>Birth vara :</span>
                     <span className={TYPOGRAPHY.value}>{vara.name}</span>
                 </div>

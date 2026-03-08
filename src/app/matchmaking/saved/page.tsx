@@ -35,8 +35,8 @@ export default function SavedMatchesPage() {
     return (
         <div className="max-w-5xl mx-auto space-y-6">
             <div>
-                <h1 className="text-3xl font-serif text-ink font-bold mb-1">Saved Matches</h1>
-                <p className="text-muted-refined font-serif italic">Previously analyzed match results</p>
+                <h1 className="text-[30px] font-serif text-ink font-bold mb-1">Saved Matches</h1>
+                <p className="text-ink/45 font-serif italic">Previously analyzed match results</p>
             </div>
 
             {isLoading ? (
@@ -49,34 +49,34 @@ export default function SavedMatchesPage() {
                         const badge = VERDICT_BADGE[match.result.overallVerdict] ?? VERDICT_BADGE.average;
                         const isConfirming = confirmDeleteId === match.id;
                         return (
-                            <div key={match.id} className="bg-softwhite border border-antique rounded-xl p-5 hover:shadow-md transition-shadow">
+                            <div key={match.id} className="prem-card rounded-xl p-5 hover:shadow-md transition-shadow">
                                 <div className="flex items-start justify-between mb-3">
                                     <div>
-                                        <p className="text-sm font-serif font-semibold text-ink">
+                                        <p className="text-[14px] font-serif font-semibold text-ink">
                                             {match.result.bride.name} &amp; {match.result.groom.name}
                                         </p>
-                                        <p className="text-xs text-muted-refined mt-0.5">
+                                        <p className="text-[12px] text-ink/45 mt-0.5">
                                             Saved {new Date(match.savedAt).toLocaleDateString("en-IN")}
                                         </p>
                                     </div>
                                     <Badge variant={badge.variant} size="sm">{badge.label}</Badge>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-lg font-serif font-bold text-ink">{match.result.totalScore}/36</span>
+                                    <span className="text-[18px] font-serif font-bold text-ink">{match.result.totalScore}/36</span>
                                     <div className="flex items-center gap-3">
                                         {isConfirming ? (
                                             <div className="flex items-center gap-2">
-                                                <span className="text-xs text-status-error">Delete?</span>
+                                                <span className="text-[12px] text-status-error">Delete?</span>
                                                 <button
                                                     onClick={() => handleDelete(match.id)}
                                                     disabled={deleteMutation.isPending}
-                                                    className="text-xs font-medium text-status-error hover:text-red-700 transition-colors"
+                                                    className="text-[12px] font-medium text-status-error hover:text-red-700 transition-colors"
                                                 >
                                                     Yes
                                                 </button>
                                                 <button
                                                     onClick={() => setConfirmDeleteId(null)}
-                                                    className="text-xs font-medium text-muted-refined hover:text-ink transition-colors"
+                                                    className="text-[12px] font-medium text-ink/45 hover:text-ink transition-colors"
                                                 >
                                                     No
                                                 </button>
@@ -84,7 +84,7 @@ export default function SavedMatchesPage() {
                                         ) : (
                                             <button
                                                 onClick={() => setConfirmDeleteId(match.id)}
-                                                className="text-muted-refined hover:text-status-error transition-colors"
+                                                className="text-ink/45 hover:text-status-error transition-colors"
                                                 aria-label={`Delete match between ${match.result.bride.name} and ${match.result.groom.name}`}
                                             >
                                                 <Trash2 className="w-4 h-4" />
@@ -92,7 +92,7 @@ export default function SavedMatchesPage() {
                                         )}
                                         <Link
                                             href={`/matchmaking/gun-milan?id=${match.id}`}
-                                            className="inline-flex items-center gap-1 text-xs font-medium text-gold-primary hover:text-gold-dark transition-colors"
+                                            className="inline-flex items-center gap-1 text-[12px] font-medium text-gold-primary hover:text-gold-dark transition-colors"
                                         >
                                             View details <ArrowRight className="w-3 h-3" />
                                         </Link>
@@ -110,7 +110,7 @@ export default function SavedMatchesPage() {
                     action={
                         <Link
                             href="/matchmaking"
-                            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-softwhite bg-gold-dark rounded-lg hover:bg-gold-primary transition-colors"
+                            className="inline-flex items-center gap-1.5 px-4 py-2 text-[14px] font-medium text-softwhite bg-gold-dark rounded-lg hover:bg-gold-primary transition-colors"
                         >
                             New Match Analysis <ArrowRight className="w-4 h-4" />
                         </Link>

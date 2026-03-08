@@ -34,8 +34,8 @@ function BirthDetailsForm({ label, details, errors, onChange }: {
     onChange: (d: Omit<BirthDetails, "gender">) => void;
 }) {
     return (
-        <div className="bg-softwhite border border-antique rounded-xl p-5">
-            <h3 className="text-xs font-bold text-header-border tracking-widest font-serif uppercase mb-4">
+        <div className="prem-card p-5">
+            <h3 className="text-[12px] font-bold text-gold-dark tracking-widest font-serif uppercase mb-4">
                 {label}
             </h3>
             <div className="space-y-4">
@@ -49,7 +49,7 @@ function BirthDetailsForm({ label, details, errors, onChange }: {
                         onChange={(e) => onChange({ ...details, name: e.target.value })}
                         required
                     />
-                    {errors.name && <p className="text-xs text-status-error mt-1">{errors.name}</p>}
+                    {errors.name && <p className="text-[12px] text-status-error mt-1">{errors.name}</p>}
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -60,7 +60,7 @@ function BirthDetailsForm({ label, details, errors, onChange }: {
                             onChange={(e) => onChange({ ...details, dateOfBirth: e.target.value })}
                             required
                         />
-                        {errors.dateOfBirth && <p className="text-xs text-status-error mt-1">{errors.dateOfBirth}</p>}
+                        {errors.dateOfBirth && <p className="text-[12px] text-status-error mt-1">{errors.dateOfBirth}</p>}
                     </div>
                     <div>
                         <ParchmentInput
@@ -70,7 +70,7 @@ function BirthDetailsForm({ label, details, errors, onChange }: {
                             onChange={(e) => onChange({ ...details, timeOfBirth: e.target.value })}
                             required
                         />
-                        {errors.timeOfBirth && <p className="text-xs text-status-error mt-1">{errors.timeOfBirth}</p>}
+                        {errors.timeOfBirth && <p className="text-[12px] text-status-error mt-1">{errors.timeOfBirth}</p>}
                     </div>
                 </div>
                 <div>
@@ -83,7 +83,7 @@ function BirthDetailsForm({ label, details, errors, onChange }: {
                         onChange={(e) => onChange({ ...details, placeOfBirth: e.target.value })}
                         required
                     />
-                    {errors.placeOfBirth && <p className="text-xs text-status-error mt-1">{errors.placeOfBirth}</p>}
+                    {errors.placeOfBirth && <p className="text-[12px] text-status-error mt-1">{errors.placeOfBirth}</p>}
                 </div>
             </div>
         </div>

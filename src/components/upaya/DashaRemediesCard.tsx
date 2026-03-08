@@ -59,7 +59,7 @@ const DashaRemediesCard: React.FC<DashaRemediesCardProps> = ({ dashaData }) => {
             case 'high': return 'text-orange-600 bg-orange-100 border-orange-200';
             case 'medium': return 'text-indigo-600 bg-indigo-100 border-indigo-200';
             case 'low': return 'text-emerald-600 bg-emerald-100 border-emerald-200';
-            default: return 'text-slate-600 bg-slate-100 border-slate-200';
+            default: return 'text-ink/55 bg-gold-primary/8 border-gold-primary/15';
         }
     };
 
@@ -84,7 +84,7 @@ const DashaRemediesCard: React.FC<DashaRemediesCardProps> = ({ dashaData }) => {
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 text-ink">Current mahadasha phase</h3>
                     <div className="flex items-baseline gap-2">
                         <h2 className="text-4xl font-black tracking-tighter text-ink">{current_dasha_lord}</h2>
-                        <span className="text-sm font-bold uppercase tracking-widest">Protocol</span>
+                        <span className="text-[14px] font-bold uppercase tracking-widest">Protocol</span>
                     </div>
                 </div>
 
@@ -94,7 +94,7 @@ const DashaRemediesCard: React.FC<DashaRemediesCardProps> = ({ dashaData }) => {
                         <span>{Math.round(progress)}% Complete</span>
                         <span>{new Date(period.end_date).getFullYear()}</span>
                     </div>
-                    <div className="h-1.5 w-full rounded-full overflow-hidden border border-antique/30 bg-black/5 relative">
+                    <div className="h-1.5 w-full rounded-full overflow-hidden border border-gold-primary/20 bg-black/5 relative">
                         <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${progress}%` }}
@@ -112,7 +112,7 @@ const DashaRemediesCard: React.FC<DashaRemediesCardProps> = ({ dashaData }) => {
                 {remedies.map((remedy, idx) => (
                     <motion.div
                         key={idx}
-                        className="border border-divider/20 p-3 md:p-4 rounded-2xl flex flex-col gap-1.5 transition-all group overflow-hidden relative bg-white/30"
+                        className="border border-gold-primary/15 p-3 md:p-4 rounded-2xl flex flex-col gap-1.5 transition-all group overflow-hidden relative bg-white/30"
                     >
                         <div className="flex items-center justify-between mb-0.5">
                             <div className="flex items-center gap-2">
@@ -148,7 +148,7 @@ const DashaRemediesCard: React.FC<DashaRemediesCardProps> = ({ dashaData }) => {
                             )}
                         </div>
 
-                        <div className="mt-1.5 pt-1.5 border-t flex items-center justify-between border-antique/20">
+                        <div className="mt-1.5 pt-1.5 border-t flex items-center justify-between border-gold-primary/15">
                             <span className="text-[9px] font-black uppercase tracking-widest">
                                 {remedy.deity || (remedy.count ? `${remedy.count.toLocaleString()} Chants` : '') || (remedy.color ? `Color: ${remedy.color}` : 'Standard')}
                             </span>

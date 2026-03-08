@@ -64,19 +64,19 @@ function WheelColumn({
 
     return (
         <div className="flex flex-col items-center select-none">
-            <span className="text-[10px] text-muted-refined font-black uppercase mb-3 tracking-[0.2em] opacity-80 font-serif">
+            <span className="text-[10px] text-ink/45 font-black uppercase mb-3 tracking-[0.2em] opacity-80 font-serif">
                 {label}
             </span>
             <div className="relative h-[216px] w-14 group">
                 {/* Selection highlight bar - Enhanced with glow */}
-                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-10 bg-gradient-to-r from-header-border/10 via-header-border/25 to-header-border/10 border-y border-header-border/30 pointer-events-none z-10 rounded-sm shadow-[0_0_15px_rgba(208,140,96,0.1)]" />
+                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-10 bg-gradient-to-r from-gold-primary/10 via-gold-primary/25 to-gold-primary/10 border-y border-gold-primary/30 pointer-events-none z-10 rounded-sm shadow-[0_0_15px_rgba(208,140,96,0.1)]" />
 
                 {/* Depth/Curvature Goggles */}
                 <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-parchment-light via-parchment-light/90 to-transparent pointer-events-none z-20" />
                 <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-parchment-light via-parchment-light/90 to-transparent pointer-events-none z-20" />
 
                 {/* Outer shadow for "rolling inward" effect */}
-                <div className="absolute inset-0 border-x border-header-border/5 pointer-events-none z-30" />
+                <div className="absolute inset-0 border-x border-gold-primary/5 pointer-events-none z-30" />
 
                 {/* Scrollable wheel */}
                 <div
@@ -99,8 +99,8 @@ function WheelColumn({
                                 className={cn(
                                     "w-full flex items-center justify-center font-serif transition-colors duration-200 h-[36px] snap-center",
                                     isSelected
-                                        ? "text-ink font-black text-xl scale-110"
-                                        : "text-gold-dark/40 text-base hover:text-gold-dark/70"
+                                        ? "text-ink font-black text-[20px] scale-110"
+                                        : "text-gold-dark/40 text-[16px] hover:text-gold-dark/70"
                                 )}
                             >
                                 {val.toString().padStart(2, "0")}
@@ -168,7 +168,7 @@ export default function ParchmentTimePicker({
     return (
         <div className={cn("flex flex-col gap-1", className)}>
             {label && (
-                <label className="block text-[11px] font-bold font-serif text-muted-refined uppercase tracking-widest pl-1">
+                <label className="block text-[11px] font-bold font-serif text-ink/45 uppercase tracking-widest pl-1">
                     {label}
                 </label>
             )}
@@ -197,7 +197,7 @@ export default function ParchmentTimePicker({
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: -8, scale: 0.96 }}
                                 transition={{ duration: 0.2, ease: "easeOut" }}
-                                className="bg-parchment-light border border-divider rounded-lg shadow-lg p-4"
+                                className="bg-surface-warm-light border border-gold-primary/10 rounded-lg shadow-lg p-4"
                             >
                                 {/* Wheel picker columns */}
                                 <div className="flex gap-4">
@@ -207,7 +207,7 @@ export default function ParchmentTimePicker({
                                         onSelect={(val) => handleTimeChange("hour", val)}
                                         label="Hour"
                                     />
-                                    <div className="flex items-center justify-center text-gold-dark font-bold text-xl pt-6">
+                                    <div className="flex items-center justify-center text-gold-dark font-bold text-[20px] pt-6">
                                         :
                                     </div>
                                     <WheelColumn
@@ -216,7 +216,7 @@ export default function ParchmentTimePicker({
                                         onSelect={(val) => handleTimeChange("minute", val)}
                                         label="Min"
                                     />
-                                    <div className="flex items-center justify-center text-gold-dark font-bold text-xl pt-6">
+                                    <div className="flex items-center justify-center text-gold-dark font-bold text-[20px] pt-6">
                                         :
                                     </div>
                                     <WheelColumn
@@ -228,12 +228,12 @@ export default function ParchmentTimePicker({
                                 </div>
 
                                 {/* Quick actions */}
-                                <div className="flex justify-between items-center mt-4 pt-3 border-t border-divider">
+                                <div className="flex justify-between items-center mt-4 pt-3 border-t border-gold-primary/10">
                                     <button
                                         type="button"
                                         onClick={setNow}
                                         aria-label="Set current time"
-                                        className="text-sm font-serif text-gold-dark hover:text-mahogany transition-colors px-3 py-1.5 rounded hover:bg-header-border/10"
+                                        className="text-[14px] font-serif text-gold-dark hover:text-mahogany transition-colors px-3 py-1.5 rounded hover:bg-gold-primary/10"
                                     >
                                         Now
                                     </button>
@@ -241,7 +241,7 @@ export default function ParchmentTimePicker({
                                         type="button"
                                         onClick={() => setOpen(false)}
                                         aria-label="Confirm time selection"
-                                        className="text-sm font-serif bg-header-border text-white px-4 py-1.5 rounded hover:bg-copper-dark transition-colors font-medium"
+                                        className="text-[14px] font-serif bg-gold-primary text-white px-4 py-1.5 rounded hover:bg-copper-dark transition-colors font-medium"
                                     >
                                         Done
                                     </button>

@@ -244,7 +244,7 @@ export default function ClientProfilePage() {
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="text-center">
                     <Loader2 className="w-8 h-8 text-gold-primary mx-auto mb-4 animate-spin" />
-                    <p className="font-serif text-xl text-ink/60">Loading client...</p>
+                    <p className="font-serif text-[20px] text-ink/60">Loading client...</p>
                 </div>
             </div>
         );
@@ -254,7 +254,7 @@ export default function ClientProfilePage() {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="text-center">
-                    <p className="font-serif text-xl text-status-error mb-4">{error || 'Client not found'}</p>
+                    <p className="font-serif text-[20px] text-status-error mb-4">{error || 'Client not found'}</p>
                     <button onClick={() => router.push('/clients')} className="text-gold-dark hover:underline font-serif text-[15px]">
                         Return to Registry
                     </button>
@@ -324,7 +324,7 @@ export default function ClientProfilePage() {
                         value={notes}
                         onChange={e => setNotes(e.target.value)}
                         placeholder="Write your observations, notes, and reminders for this client..."
-                        className="w-full h-[320px] bg-parchment/30 rounded-lg p-4 resize-none focus:outline-none focus:ring-2 focus:ring-gold-primary/30 font-serif text-[15px] text-ink leading-relaxed placeholder:text-ink/30 transition-all"
+                        className="w-full h-[320px] bg-surface-warm/30 rounded-lg p-4 resize-none focus:outline-none focus:ring-2 focus:ring-gold-primary/30 font-serif text-[15px] text-ink leading-relaxed placeholder:text-ink/30 transition-all"
                         style={{ border: '1px solid rgba(220,201,166,0.30)' }}
                         aria-label="Client notes"
                     />
@@ -352,7 +352,7 @@ export default function ClientProfilePage() {
                                         <Clock className="w-3.5 h-3.5" /> {session.date} &#8226; {session.duration}
                                     </p>
                                 </div>
-                                <button className="text-[13px] text-gold-dark font-semibold hover:underline underline-offset-2 px-3 py-1.5 rounded-lg hover:bg-parchment/40 transition-all">
+                                <button className="text-[13px] text-gold-dark font-semibold hover:underline underline-offset-2 px-3 py-1.5 rounded-lg hover:bg-surface-warm/40 transition-all">
                                     View Full
                                 </button>
                             </div>
@@ -369,7 +369,7 @@ export default function ClientProfilePage() {
                     title="Predictions Made"
                     description="Track prediction accuracy over time"
                     action={
-                        <button className="px-4 py-2.5 rounded-lg text-[13px] font-semibold text-ink transition-all flex items-center gap-2 hover:bg-parchment/50"
+                        <button className="px-4 py-2.5 rounded-lg text-[13px] font-semibold text-ink transition-all flex items-center gap-2 hover:bg-surface-warm/50"
                                 style={{ border: '1px solid rgba(220,201,166,0.40)' }}>
                             <Plus className="w-4 h-4" /> Add Prediction
                         </button>
@@ -407,7 +407,7 @@ export default function ClientProfilePage() {
                     title="Remedies Given"
                     description="Prescribed remedies and their progress"
                     action={
-                        <button className="px-4 py-2.5 rounded-lg text-[13px] font-semibold text-ink transition-all flex items-center gap-2 hover:bg-parchment/50"
+                        <button className="px-4 py-2.5 rounded-lg text-[13px] font-semibold text-ink transition-all flex items-center gap-2 hover:bg-surface-warm/50"
                                 style={{ border: '1px solid rgba(220,201,166,0.40)' }}>
                             <Plus className="w-4 h-4" /> Add Remedy
                         </button>
@@ -446,7 +446,7 @@ export default function ClientProfilePage() {
                     title="Documents"
                     description="Charts, reports, and client documents"
                     action={
-                        <button className="px-4 py-2.5 rounded-lg text-[13px] font-semibold text-ink transition-all flex items-center gap-2 hover:bg-parchment/50"
+                        <button className="px-4 py-2.5 rounded-lg text-[13px] font-semibold text-ink transition-all flex items-center gap-2 hover:bg-surface-warm/50"
                                 style={{ border: '1px solid rgba(220,201,166,0.40)' }}>
                             <Plus className="w-4 h-4" /> Upload Document
                         </button>
@@ -493,15 +493,15 @@ export default function ClientProfilePage() {
                 {/* Summary Cards */}
                 <div className="grid grid-cols-3 gap-3 mb-5">
                     <div className="prem-card p-5">
-                        <p className="text-[11px] text-bronze-dark/80 uppercase tracking-[0.10em] font-bold mb-2">Total Paid</p>
+                        <p className="text-[11px] text-ink/35 uppercase tracking-[0.10em] font-bold mb-2">Total Paid</p>
                         <p className="text-[22px] font-serif font-bold text-ink">&#8377;8,500</p>
                     </div>
                     <div className="prem-card p-5">
-                        <p className="text-[11px] text-bronze-dark/80 uppercase tracking-[0.10em] font-bold mb-2">Pending</p>
+                        <p className="text-[11px] text-ink/35 uppercase tracking-[0.10em] font-bold mb-2">Pending</p>
                         <p className="text-[22px] font-serif font-bold text-gold-dark">&#8377;0</p>
                     </div>
                     <div className="prem-card p-5">
-                        <p className="text-[11px] text-bronze-dark/80 uppercase tracking-[0.10em] font-bold mb-2">Sessions</p>
+                        <p className="text-[11px] text-ink/35 uppercase tracking-[0.10em] font-bold mb-2">Sessions</p>
                         <p className="text-[22px] font-serif font-bold text-ink">5</p>
                     </div>
                 </div>

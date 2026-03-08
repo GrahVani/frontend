@@ -64,7 +64,7 @@ export default function ClientTableView({ clients, onEdit, onDelete }: ClientTab
                 if (!place) return <span className="text-ink/20">\u2014</span>;
                 return (
                     <span className="flex items-center gap-1.5 text-[13px] text-ink/70 font-medium">
-                        <MapPin className="w-3 h-3 text-bronze-dark/40 shrink-0" />
+                        <MapPin className="w-3 h-3 text-ink/30 shrink-0" />
                         {place}
                     </span>
                 );
@@ -81,7 +81,7 @@ export default function ClientTableView({ clients, onEdit, onDelete }: ClientTab
                 try {
                     return (
                         <span className="flex items-center gap-1.5 text-[13px] text-ink/70 font-medium">
-                            <Calendar className="w-3 h-3 text-bronze-dark/40 shrink-0" />
+                            <Calendar className="w-3 h-3 text-ink/30 shrink-0" />
                             {new Date(date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </span>
                     );
@@ -97,7 +97,7 @@ export default function ClientTableView({ clients, onEdit, onDelete }: ClientTab
                 if (!time) return <span className="text-ink/20">\u2014</span>;
                 return (
                     <span className="flex items-center gap-1.5 text-[13px] text-ink/60 font-mono">
-                        <Clock className="w-3 h-3 text-bronze-dark/35 shrink-0" />
+                        <Clock className="w-3 h-3 text-ink/25 shrink-0" />
                         {time}
                     </span>
                 );
@@ -141,7 +141,7 @@ export default function ClientTableView({ clients, onEdit, onDelete }: ClientTab
             render: (row) => (
                 <div className="flex items-center gap-0.5 justify-end">
                     <button
-                        className="p-1.5 rounded-lg hover:bg-parchment/60 transition-all"
+                        className="p-1.5 rounded-lg hover:bg-surface-warm/60 transition-all"
                         style={{ border: '1px solid transparent' }}
                         title="Edit"
                         aria-label={`Edit ${row.fullName || row.firstName}`}

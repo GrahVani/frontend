@@ -46,8 +46,8 @@ export default function PlanetComparisonTable({
         return (
             <span className="flex items-center gap-2">
                 <span>{ZODIAC_SIGNS[planet.signId - 1]}</span>
-                <span className="text-xs">({planet.degree})</span>
-                {planet.isRetro && <span className="text-xs text-red-600 font-bold">(R)</span>}
+                <span className="text-[12px]">({planet.degree})</span>
+                {planet.isRetro && <span className="text-[12px] text-red-600 font-bold">(R)</span>}
             </span>
         );
     };
@@ -73,13 +73,13 @@ export default function PlanetComparisonTable({
     ];
 
     return (
-        <div className="w-full border border-divider rounded-md overflow-hidden bg-softwhite">
+        <div className="w-full border border-gold-primary/10 rounded-md overflow-hidden bg-surface-warm">
             <DataGrid
                 columns={columns}
                 data={rows}
                 rowKey={(row) => row.name}
                 cellPadding="py-2 px-4"
-                headerClassName="border-b border-divider bg-header-gradient"
+                headerClassName="border-b border-gold-primary/10 bg-header-gradient"
                 ariaLabel="Planet comparison between two charts"
                 scrollShadows={true}
             />

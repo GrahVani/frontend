@@ -221,9 +221,9 @@ export default function CustomizePage() {
 
     if (!clientDetails) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-12 bg-white/50 backdrop-blur-md rounded-[2rem] border border-antique shadow-inner mx-4 my-8">
-                <Shield className="w-16 h-16 text-antique mb-6 opacity-30" />
-                <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-primary")}>Select a Profile</h2>
+            <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-12 bg-white/50 backdrop-blur-md rounded-[2rem] prem-card mx-4 my-8">
+                <Shield className="w-16 h-16 text-gold-dark mb-6 opacity-30" />
+                <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-ink")}>Select a Profile</h2>
                 <p className={cn(TYPOGRAPHY.label, "max-w-xs mx-auto")}>Choose a client from the global explorer to begin comprehensive celestial analysis.</p>
             </div>
         );
@@ -236,7 +236,7 @@ export default function CustomizePage() {
                 return (
                     <section className="space-y-8 animate-in fade-in duration-500">
                         <SectionHeader title="Chronological Cycles" subtitle="Vimshottari Dasha Hierarchy" icon={<History className="w-6 h-6" />} />
-                        <div className="bg-white p-8 rounded-[2.5rem] border border-antique shadow-sm max-w-4xl mx-auto">
+                        <div className="bg-white p-8 rounded-[2.5rem] prem-card max-w-4xl mx-auto">
                             <VimshottariTreeGrid
                                 data={dashaResponse ? processDashaResponse(dashaResponse as unknown as RawDashaPeriod).slice(0, 9) : []}
                                 isLoading={dashaLoading}
@@ -259,8 +259,8 @@ export default function CustomizePage() {
                                 </AnalysisPanel>
                             </div>
                             {ashtakavargaData && (
-                                <div className="bg-white p-8 rounded-[2.5rem] border border-antique shadow-sm">
-                                    <h4 className={cn(TYPOGRAPHY.value, "text-center mb-6 text-xl")}>Sarvashtakavarga Matrix</h4>
+                                <div className="bg-white p-8 rounded-[2.5rem] prem-card">
+                                    <h4 className={cn(TYPOGRAPHY.value, "text-center mb-6 text-[20px]")}>Sarvashtakavarga Matrix</h4>
                                     <AshtakavargaMatrix type="sarva" data={ashtakavargaData as any} />
                                 </div>
                             )}
@@ -272,8 +272,8 @@ export default function CustomizePage() {
                 return (
                     <section className="space-y-8 animate-in fade-in duration-500">
                         <SectionHeader title="Planetary Potencies" subtitle="Shadbala Strength Analysis" icon={<BarChart2 className="w-6 h-6" />} />
-                        <div className="bg-white p-6 rounded-[2.5rem] border border-antique shadow-sm">
-                            {shadbalaLoading ? <Loader2 className="w-10 h-10 animate-spin mx-auto text-antique" /> :
+                        <div className="bg-white p-6 rounded-[2.5rem] prem-card">
+                            {shadbalaLoading ? <Loader2 className="w-10 h-10 animate-spin mx-auto text-gold-dark" /> :
                                 normalizedShadbala ? <ShadbalaDashboard displayData={normalizedShadbala} /> :
                                     <p className="text-center opacity-40 py-12">Shadbala data unavailable.</p>
                             }
@@ -300,14 +300,14 @@ export default function CustomizePage() {
                 // Empty state prompting selection
                 return (
                     <div className="flex flex-col items-center justify-center min-h-[40vh] text-center p-12">
-                        <div className="w-20 h-20 bg-parchment/50 rounded-[2rem] flex items-center justify-center mb-8 border border-antique shadow-inner">
-                            <LayoutGrid className="w-8 h-8 text-antique opacity-50" />
+                        <div className="w-20 h-20 bg-surface-warm/50 rounded-[2rem] flex items-center justify-center mb-8 prem-card">
+                            <LayoutGrid className="w-8 h-8 text-gold-dark opacity-50" />
                         </div>
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl text-primary mb-2")}>Select a Chart</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] text-ink mb-2")}>Select a Chart</h3>
                         <p className={cn(TYPOGRAPHY.label, "max-w-md mx-auto opacity-60")}>Open the Celestial Navigator above to choose a specific divisional chart or astrological component for deep analysis.</p>
                         <button
                             onClick={() => setIsNavModalOpen(true)}
-                            className="mt-8 px-8 py-4 bg-primary text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] shadow-xl hover:bg-black transition-all active:scale-95 flex items-center gap-3"
+                            className="mt-8 px-8 py-4 bg-primary text-white rounded-2xl text-[12px] font-black uppercase tracking-[0.2em] shadow-xl hover:bg-black transition-all active:scale-95 flex items-center gap-3"
                         >
                             <LayoutGrid className="w-4 h-4" />
                             Open Navigator
@@ -320,7 +320,7 @@ export default function CustomizePage() {
     {/* Dasha Section */ }
     <section id="vedic-dashas" className="space-y-8">
         <SectionHeader title="Chronological Cycles" subtitle="Vimshottari Dasha Hierarchy" icon={<History className="w-6 h-6" />} />
-        <div className="bg-white p-8 rounded-[2.5rem] border border-antique shadow-sm max-w-4xl mx-auto">
+        <div className="bg-white p-8 rounded-[2.5rem] prem-card max-w-4xl mx-auto">
             <VimshottariTreeGrid
                 data={dashaResponse ? processDashaResponse(dashaResponse as unknown as RawDashaPeriod).slice(0, 9) : []}
                 isLoading={dashaLoading}
@@ -342,8 +342,8 @@ export default function CustomizePage() {
                 </AnalysisPanel>
             </div>
             {ashtakavargaData && (
-                <div className="bg-white p-8 rounded-[2.5rem] border border-antique shadow-sm">
-                    <h4 className={cn(TYPOGRAPHY.value, "text-center mb-6 text-xl")}>Sarvashtakavarga Matrix</h4>
+                <div className="bg-white p-8 rounded-[2.5rem] prem-card">
+                    <h4 className={cn(TYPOGRAPHY.value, "text-center mb-6 text-[20px]")}>Sarvashtakavarga Matrix</h4>
                     <AshtakavargaMatrix type="sarva" data={ashtakavargaData as any} />
                 </div>
             )}
@@ -355,8 +355,8 @@ export default function CustomizePage() {
         ayanamsa === 'Lahiri' && (
             <section id="vedic-strength" className="space-y-8">
                 <SectionHeader title="Planetary Potencies" subtitle="Shadbala Strength Analysis" icon={<BarChart2 className="w-6 h-6" />} />
-                <div className="bg-white p-6 rounded-[2.5rem] border border-antique shadow-sm">
-                    {shadbalaLoading ? <Loader2 className="w-10 h-10 animate-spin mx-auto text-antique" /> :
+                <div className="bg-white p-6 rounded-[2.5rem] prem-card">
+                    {shadbalaLoading ? <Loader2 className="w-10 h-10 animate-spin mx-auto text-gold-dark" /> :
                         normalizedShadbala ? <ShadbalaDashboard displayData={normalizedShadbala} /> :
                             <p className="text-center opacity-40 py-12">Shadbala data unavailable.</p>
                     }
@@ -372,7 +372,7 @@ export default function CustomizePage() {
                     <section className="space-y-8 animate-in fade-in duration-500">
                         <SectionHeader title="Ruling Forces" subtitle="Stellar Time-Dynamics (RP)" icon={<Sparkles className="w-6 h-6" />} />
                         <div className="max-w-4xl mx-auto">
-                            <RulingPlanetsWidget data={kpRulingPlanets?.data || null} isLoading={kpRulingLoading} className="shadow-2xl border-antique !bg-white/80" />
+                            <RulingPlanetsWidget data={kpRulingPlanets?.data || null} isLoading={kpRulingLoading} className="shadow-2xl border-gold-primary/20 !bg-white/80" />
                         </div>
                     </section>
                 );
@@ -381,7 +381,7 @@ export default function CustomizePage() {
                     <section className="space-y-8 animate-in fade-in duration-500">
                         <SectionHeader title="Cuspal Foundation" subtitle="Planetary Positions & Sub-Lords" icon={<Target className="w-6 h-6" />} />
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-                            <div className="md:col-span-12 bg-white p-6 rounded-3xl border border-antique shadow-sm">
+                            <div className="md:col-span-12 bg-white p-6 rounded-3xl prem-card">
                                 <KpPlanetaryTable
                                     planets={Object.entries(kpPlanetsCusps?.data?.planets || {}).map(([name, p]) => ({
                                         name,
@@ -408,7 +408,7 @@ export default function CustomizePage() {
                         <SectionHeader title="Cuspal Geometries" subtitle="North Indian KP Chart & Bhava Details" icon={<LayoutGrid className="w-6 h-6" />} />
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
                             <div className="md:col-span-5 flex justify-center">
-                                <div className="w-full max-w-md aspect-square bg-white border border-antique rounded-[2.5rem] p-10 shadow-xl overflow-hidden">
+                                <div className="w-full max-w-md aspect-square bg-white prem-card rounded-[2.5rem] p-10 shadow-xl overflow-hidden">
                                     <KpCuspalChart
                                         planets={Object.entries(kpPlanetsCusps?.data?.planets || {}).map(([name, p]) => ({
                                             name: name.substring(0, 2),
@@ -422,7 +422,7 @@ export default function CustomizePage() {
                                     />
                                 </div>
                             </div>
-                            <div className="md:col-span-7 bg-white p-6 rounded-3xl border border-antique shadow-sm">
+                            <div className="md:col-span-7 bg-white p-6 rounded-3xl prem-card">
                                 <BhavaDetailsTable bhavaDetails={kpBhavaDetails?.data?.bhava_details || {}} className="border-none shadow-none" />
                             </div>
                         </div>
@@ -432,7 +432,7 @@ export default function CustomizePage() {
                 return (
                     <section className="space-y-8 animate-in fade-in duration-500">
                         <SectionHeader title="Thematic Matrices" subtitle="Planetary & House Significations" icon={<Zap className="w-6 h-6" />} />
-                        <div className="bg-white p-8 rounded-[2.5rem] border border-antique shadow-sm">
+                        <div className="bg-white p-8 rounded-[2.5rem] prem-card">
                             <SignificationMatrix significations={kpSignifications?.data?.significations || []} />
                         </div>
                     </section>
@@ -440,14 +440,14 @@ export default function CustomizePage() {
             default:
                 return (
                     <div className="flex flex-col items-center justify-center min-h-[40vh] text-center p-12">
-                        <div className="w-20 h-20 bg-parchment/50 rounded-[2rem] flex items-center justify-center mb-8 border border-antique shadow-inner">
-                            <Zap className="w-8 h-8 text-antique opacity-50" />
+                        <div className="w-20 h-20 bg-surface-warm/50 rounded-[2rem] flex items-center justify-center mb-8 prem-card">
+                            <Zap className="w-8 h-8 text-gold-dark opacity-50" />
                         </div>
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-2xl text-primary mb-2")}>Select KP Analysis</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] text-ink mb-2")}>Select KP Analysis</h3>
                         <p className={cn(TYPOGRAPHY.label, "max-w-md mx-auto opacity-60")}>Open the Celestial Navigator above to choose a KP module for deep exploration.</p>
                         <button
                             onClick={() => setIsNavModalOpen(true)}
-                            className="mt-8 px-8 py-4 bg-primary text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] shadow-xl hover:bg-black transition-all active:scale-95 flex items-center gap-3"
+                            className="mt-8 px-8 py-4 bg-primary text-white rounded-2xl text-[12px] font-black uppercase tracking-[0.2em] shadow-xl hover:bg-black transition-all active:scale-95 flex items-center gap-3"
                         >
                             <LayoutGrid className="w-4 h-4" />
                             Open Navigator
@@ -458,17 +458,17 @@ export default function CustomizePage() {
     };
 
     return (
-        <div className="flex flex-col gap-8 p-6 min-h-screen bg-softwhite/50 animate-in fade-in duration-700">
+        <div className="flex flex-col gap-8 p-6 min-h-screen bg-surface-warm/50 animate-in fade-in duration-700">
             {/* STICKY TOP NAVIGATION BAR */}
             <div className="sticky top-0 z-50 w-full">
-                <div className="bg-white/80 backdrop-blur-xl border border-antique rounded-[2.5rem] p-4 lg:p-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="bg-white/80 backdrop-blur-xl prem-card rounded-[2.5rem] p-4 lg:p-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
                         <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg">
                             <Settings2 className="w-5 h-5" />
                         </div>
                         <div className="hidden sm:block">
-                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "!mb-0 !text-lg text-primary font-black")}>AstraLab</h2>
-                            <p className="text-[9px] text-accent-gold uppercase font-bold tracking-[0.2em]">{ayanamsa} Explorer</p>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "!mb-0 !text-[18px] text-ink font-black")}>AstraLab</h2>
+                            <p className="text-[9px] text-gold-dark uppercase font-bold tracking-[0.2em]">{ayanamsa} Explorer</p>
                         </div>
                     </div>
 
@@ -477,19 +477,19 @@ export default function CustomizePage() {
                             <p className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-widest opacity-50 mb-1 absolute -top-5 left-2")}>Navigate Section</p>
                             <button
                                 onClick={() => setIsNavModalOpen(true)}
-                                className="w-full pl-5 pr-12 py-3.5 bg-parchment/40 border border-antique rounded-2xl text-xs font-bold text-primary flex items-center justify-between hover:bg-antique/10 transition-all shadow-sm group"
+                                className="w-full pl-5 pr-12 py-3.5 bg-surface-warm/40 border border-gold-primary/20 rounded-2xl text-[12px] font-bold text-ink flex items-center justify-between hover:bg-gold-primary/10 transition-all shadow-sm group"
                             >
                                 <span>{sections.find(s => s.id === activeSection)?.name || "Explore Lahiri..."}</span>
-                                <div className="p-1 px-2.5 bg-primary/5 rounded-lg text-[10px] text-accent-gold border border-antique group-hover:bg-primary group-hover:text-white transition-all uppercase tracking-tighter font-black">Open Navigator</div>
+                                <div className="p-1 px-2.5 bg-primary/5 rounded-lg text-[10px] text-gold-dark border border-gold-primary/20 group-hover:bg-primary group-hover:text-white transition-all uppercase tracking-tighter font-black">Open Navigator</div>
                             </button>
                         </div>
 
                         <div className="relative w-full md:w-64">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-antique" />
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gold-dark" />
                             <input
                                 type="text"
                                 placeholder="Filter insights..."
-                                className="w-full pl-11 pr-4 py-3.5 bg-parchment/40 border border-antique rounded-2xl text-[11px] focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                                className="w-full pl-11 pr-4 py-3.5 bg-surface-warm/40 border border-gold-primary/20 rounded-2xl text-[11px] focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
@@ -535,14 +535,14 @@ export default function CustomizePage() {
 function SectionHeader({ title, subtitle, icon }: { title: string, subtitle: string, icon: React.ReactNode }) {
     return (
         <div className="flex flex-col items-center text-center space-y-4 mb-12">
-            <div className="w-14 h-14 rounded-2xl bg-parchment border border-antique flex items-center justify-center text-accent-gold shadow-md">
+            <div className="w-14 h-14 rounded-2xl bg-surface-warm border border-gold-primary/20 flex items-center justify-center text-gold-dark shadow-md">
                 {icon}
             </div>
             <div className="space-y-1">
-                <h3 className="text-2xl font-black text-primary tracking-tight uppercase leading-none">{title}</h3>
-                <p className={cn(TYPOGRAPHY.label, "text-xs tracking-[0.2em] font-bold opacity-60")}>{subtitle}</p>
+                <h3 className="text-[24px] font-black text-ink tracking-tight uppercase leading-none">{title}</h3>
+                <p className={cn(TYPOGRAPHY.label, "text-[12px] tracking-[0.2em] font-bold opacity-60")}>{subtitle}</p>
             </div>
-            <div className="w-12 h-1 bg-antique rounded-full" />
+            <div className="w-12 h-1 bg-gold-primary rounded-full" />
         </div>
     );
 }
@@ -550,8 +550,8 @@ function SectionHeader({ title, subtitle, icon }: { title: string, subtitle: str
 function ChartBox({ title, chartId, chartProps, theme, style }: any) {
     const { planets, ascendant } = chartProps;
     return (
-        <div className="w-full max-w-md bg-white border border-antique rounded-[2.5rem] p-8 shadow-xl relative group hover:shadow-2xl transition-all duration-500">
-            <h4 className={cn(TYPOGRAPHY.value, "text-center mb-6 text-sm opacity-60 uppercase tracking-widest")}>{title}</h4>
+        <div className="w-full max-w-md bg-white prem-card rounded-[2.5rem] p-8 shadow-xl relative group hover:shadow-2xl transition-all duration-500">
+            <h4 className={cn(TYPOGRAPHY.value, "text-center mb-6 text-[14px] opacity-60 uppercase tracking-widest")}>{title}</h4>
             <div className="aspect-square relative">
                 {style === 'South Indian' ? (
                     <SouthIndianChart ascendantSign={ascendant} planets={planets} colorMode="color" colorTheme={theme} />
@@ -559,8 +559,8 @@ function ChartBox({ title, chartId, chartProps, theme, style }: any) {
                     <ChartWithPopup ascendantSign={ascendant} planets={planets} className="bg-transparent border-none w-full h-full" showDegrees={chartId === 'D1'} />
                 )}
             </div>
-            <div className="absolute top-6 right-6 p-2.5 rounded-xl bg-parchment border border-antique opacity-0 group-hover:opacity-100 transition-all cursor-pointer shadow-sm">
-                <Maximize2 className="w-4 h-4 text-primary" />
+            <div className="absolute top-6 right-6 p-2.5 rounded-xl bg-surface-warm border border-gold-primary/20 opacity-0 group-hover:opacity-100 transition-all cursor-pointer shadow-sm">
+                <Maximize2 className="w-4 h-4 text-ink" />
             </div>
         </div>
     );
@@ -568,8 +568,8 @@ function ChartBox({ title, chartId, chartProps, theme, style }: any) {
 
 function AnalysisPanel({ title, children }: { title: string, children: React.ReactNode }) {
     return (
-        <div className="bg-white p-6 rounded-3xl border border-antique shadow-sm h-full flex flex-col">
-            <h4 className={cn(TYPOGRAPHY.value, "mb-4 text-sm font-black uppercase tracking-tight text-primary/40 border-b border-antique pb-3")}>{title}</h4>
+        <div className="bg-white p-6 rounded-3xl prem-card h-full flex flex-col">
+            <h4 className={cn(TYPOGRAPHY.value, "mb-4 text-[14px] font-black uppercase tracking-tight text-ink/40 border-b border-gold-primary/20 pb-3")}>{title}</h4>
             <div className="flex-1">
                 {children}
             </div>
@@ -589,21 +589,21 @@ function NavigationModal({ isOpen, onClose, sections, onSelect, activeId, ayanam
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 animate-in fade-in duration-300">
             <div className="absolute inset-0 bg-primary/40 backdrop-blur-md" onClick={onClose} aria-hidden="true" />
 
-            <div className="relative w-full max-w-2xl bg-white border border-antique rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500">
+            <div className="relative w-full max-w-2xl bg-white prem-card rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500">
                 {/* Modal Header */}
-                <div className="p-8 border-b border-antique flex items-center justify-between bg-softwhite">
+                <div className="p-8 border-b border-gold-primary/20 flex items-center justify-between bg-surface-warm">
                     <div className="flex items-center gap-5">
                         <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center text-white shadow-xl">
                             <LayoutGrid className="w-7 h-7" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-black text-primary tracking-tight uppercase leading-none mb-1">Celestial Navigator</h2>
-                            <p className="text-[10px] text-accent-gold uppercase font-bold tracking-[0.2em]">{ayanamsa} Optimization Hub</p>
+                            <h2 className="text-[24px] font-black text-ink tracking-tight uppercase leading-none mb-1">Celestial Navigator</h2>
+                            <p className="text-[10px] text-gold-dark uppercase font-bold tracking-[0.2em]">{ayanamsa} Optimization Hub</p>
                         </div>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-3 hover:bg-antique/20 rounded-xl transition-all text-primary/40 hover:text-primary"
+                        className="p-3 hover:bg-gold-primary/20 rounded-xl transition-all text-ink/40 hover:text-ink"
                     >
                         <RefreshCw className="w-5 h-5 rotate-45" />
                     </button>
@@ -619,25 +619,25 @@ function NavigationModal({ isOpen, onClose, sections, onSelect, activeId, ayanam
                                 "flex items-start gap-4 p-5 rounded-[1.5rem] border transition-all text-left group",
                                 activeId === section.id
                                     ? "bg-primary border-primary shadow-xl ring-2 ring-primary/20"
-                                    : "bg-parchment/30 border-antique hover:border-primary/40 hover:bg-white"
+                                    : "bg-surface-warm/30 border-gold-primary/20 hover:border-primary/40 hover:bg-white"
                             )}
                         >
                             <div className={cn(
                                 "p-3 rounded-xl transition-all",
-                                activeId === section.id ? "bg-accent-gold text-white" : "bg-white text-antique group-hover:text-primary shadow-sm"
+                                activeId === section.id ? "bg-gold-primary text-white" : "bg-white text-gold-dark group-hover:text-ink shadow-sm"
                             )}>
                                 <section.icon className="w-5 h-5" />
                             </div>
                             <div className="flex-1">
                                 <p className={cn(
-                                    "text-xs font-black uppercase tracking-tight mb-1",
-                                    activeId === section.id ? "text-white" : "text-primary"
+                                    "text-[12px] font-black uppercase tracking-tight mb-1",
+                                    activeId === section.id ? "text-white" : "text-ink"
                                 )}>
                                     {section.name}
                                 </p>
                                 <p className={cn(
                                     "text-[10px] leading-snug font-medium line-clamp-1",
-                                    activeId === section.id ? "text-white/60" : "text-primary/40"
+                                    activeId === section.id ? "text-white/60" : "text-ink/40"
                                 )}>
                                     {section.desc}
                                 </p>
@@ -647,8 +647,8 @@ function NavigationModal({ isOpen, onClose, sections, onSelect, activeId, ayanam
                 </div>
 
                 {/* Modal Footer */}
-                <div className="p-6 bg-parchment/20 text-center border-t border-antique">
-                    <p className="text-[9px] text-bronze uppercase font-black tracking-widest opacity-50">Select a cosmic alignment to recalibrate your view</p>
+                <div className="p-6 bg-surface-warm/20 text-center border-t border-gold-primary/20">
+                    <p className="text-[9px] text-gold-dark uppercase font-black tracking-widest opacity-50">Select a cosmic alignment to recalibrate your view</p>
                 </div>
             </div>
         </div>

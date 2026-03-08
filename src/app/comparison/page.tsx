@@ -47,11 +47,11 @@ export default function ComparisonPage() {
     };
 
     return (
-        <div className="min-h-screen bg-softwhite p-8">
+        <div className="min-h-screen p-8">
             <div className="max-w-6xl mx-auto space-y-6">
                 <header>
-                    <h1 className="text-3xl font-serif text-ink font-bold">Astrology Tools</h1>
-                    <p className="text-muted">Advanced Chart Comparison Module</p>
+                    <h1 className="text-[30px] font-serif text-ink font-bold">Astrology Tools</h1>
+                    <p className="text-ink/45 text-[14px] font-medium">Advanced Chart Comparison Module</p>
                 </header>
 
                 <main>

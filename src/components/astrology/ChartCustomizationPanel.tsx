@@ -150,7 +150,7 @@ export default function ChartCustomizationPanel({ isOpen, onClose, selectedChart
                 <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-ink to-[#5C4033]">
                     <div className="flex items-center gap-3">
                         <Sparkles className="w-5 h-5 text-amber-300" />
-                        <h2 className="text-lg font-serif font-bold text-white">
+                        <h2 className="text-[18px] font-serif font-bold text-white">
                             {selectedChart ? `${selectedChart} Settings` : 'Chart Customization'}
                         </h2>
                     </div>
@@ -164,8 +164,8 @@ export default function ChartCustomizationPanel({ isOpen, onClose, selectedChart
                     <button
                         onClick={() => setActiveTab('style')}
                         className={cn(
-                            "flex-1 py-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors",
-                            activeTab === 'style' ? "text-header-border border-b-2 border-header-border bg-surface-pure" : "text-bronze hover:bg-surface-pure"
+                            "flex-1 py-3 text-[14px] font-medium flex items-center justify-center gap-2 transition-colors",
+                            activeTab === 'style' ? "text-gold-dark border-b-2 border-gold-primary bg-surface-pure" : "text-gold-dark hover:bg-surface-pure"
                         )}
                     >
                         <Layout className="w-4 h-4" /> Chart Style
@@ -173,8 +173,8 @@ export default function ChartCustomizationPanel({ isOpen, onClose, selectedChart
                     <button
                         onClick={() => setActiveTab('colors')}
                         className={cn(
-                            "flex-1 py-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors",
-                            activeTab === 'colors' ? "text-header-border border-b-2 border-header-border bg-surface-pure" : "text-bronze hover:bg-surface-pure"
+                            "flex-1 py-3 text-[14px] font-medium flex items-center justify-center gap-2 transition-colors",
+                            activeTab === 'colors' ? "text-gold-dark border-b-2 border-gold-primary bg-surface-pure" : "text-gold-dark hover:bg-surface-pure"
                         )}
                     >
                         <Palette className="w-4 h-4" /> Colors
@@ -183,8 +183,8 @@ export default function ChartCustomizationPanel({ isOpen, onClose, selectedChart
                         <button
                             onClick={() => setActiveTab('learn')}
                             className={cn(
-                                "flex-1 py-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors",
-                                activeTab === 'learn' ? "text-header-border border-b-2 border-header-border bg-surface-pure" : "text-bronze hover:bg-surface-pure"
+                                "flex-1 py-3 text-[14px] font-medium flex items-center justify-center gap-2 transition-colors",
+                                activeTab === 'learn' ? "text-gold-dark border-b-2 border-gold-primary bg-surface-pure" : "text-gold-dark hover:bg-surface-pure"
                             )}
                         >
                             <BookOpen className="w-4 h-4" /> Learn
@@ -196,7 +196,7 @@ export default function ChartCustomizationPanel({ isOpen, onClose, selectedChart
                 <div className="p-5 max-h-[400px] overflow-y-auto">
                     {activeTab === 'style' && (
                         <div className="space-y-4">
-                            <p className="text-sm text-bronze">Select your preferred chart layout style:</p>
+                            <p className="text-[14px] text-gold-dark">Select your preferred chart layout style:</p>
 
                             <div className="grid grid-cols-2 gap-3">
                                 {(['North Indian', 'South Indian'] as ChartStyle[]).map(style => (
@@ -206,15 +206,15 @@ export default function ChartCustomizationPanel({ isOpen, onClose, selectedChart
                                         className={cn(
                                             "p-4 rounded-xl border-2 transition-all text-left",
                                             chartStyle === style
-                                                ? "border-header-border bg-header-border/10"
-                                                : "border-cream-light hover:border-header-border/50"
+                                                ? "border-gold-primary bg-gold-primary/10"
+                                                : "border-cream-light hover:border-gold-primary/35"
                                         )}
                                     >
                                         <div className="flex items-center gap-2 mb-2">
-                                            {chartStyle === style && <Star className="w-4 h-4 text-header-border fill-header-border" />}
+                                            {chartStyle === style && <Star className="w-4 h-4 text-gold-dark fill-gold-dark" />}
                                             <span className="font-bold text-ink">{style}</span>
                                         </div>
-                                        <p className="text-xs text-bronze">
+                                        <p className="text-[12px] text-gold-dark">
                                             {style === 'North Indian'
                                                 ? 'Diamond shape with fixed houses. Ascendant always at top.'
                                                 : 'Square grid where signs are fixed. Widely used in South India.'}
@@ -227,7 +227,7 @@ export default function ChartCustomizationPanel({ isOpen, onClose, selectedChart
 
                     {activeTab === 'colors' && (
                         <div className="space-y-4">
-                            <p className="text-sm text-bronze">Choose a color theme for your charts:</p>
+                            <p className="text-[14px] text-gold-dark">Choose a color theme for your charts:</p>
 
                             <div className="grid grid-cols-1 gap-2">
                                 {(Object.entries(CHART_COLOR_THEMES) as [ChartColorTheme, typeof CHART_COLOR_THEMES['classic']][]).map(([key, theme]) => (
@@ -237,12 +237,12 @@ export default function ChartCustomizationPanel({ isOpen, onClose, selectedChart
                                         className={cn(
                                             "p-3 rounded-xl border-2 transition-all flex items-center justify-between",
                                             chartColorTheme === key
-                                                ? "border-header-border bg-header-border/10"
-                                                : "border-cream-light hover:border-header-border/50"
+                                                ? "border-gold-primary bg-gold-primary/10"
+                                                : "border-cream-light hover:border-gold-primary/35"
                                         )}
                                     >
                                         <div className="flex items-center gap-3">
-                                            {chartColorTheme === key && <Star className="w-4 h-4 text-header-border fill-header-border" />}
+                                            {chartColorTheme === key && <Star className="w-4 h-4 text-gold-dark fill-gold-dark" />}
                                             <span className="font-bold text-ink">{theme.name}</span>
                                         </div>
                                         <div className="flex gap-1">
@@ -264,28 +264,28 @@ export default function ChartCustomizationPanel({ isOpen, onClose, selectedChart
                         <div className="space-y-4">
                             <div className="p-4 bg-gradient-to-br from-surface-pure to-[#F5EDE3] rounded-xl border border-cream-light">
                                 <h3 className="font-bold text-ink mb-2 flex items-center gap-2">
-                                    <BookOpen className="w-4 h-4 text-header-border" />
+                                    <BookOpen className="w-4 h-4 text-gold-dark" />
                                     Purpose of {selectedChart}
                                 </h3>
-                                <p className="text-sm text-[#5C4033]">{education.purpose}</p>
+                                <p className="text-[14px] text-[#5C4033]">{education.purpose}</p>
                             </div>
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="p-3 bg-blue-50 rounded-xl border border-blue-200">
-                                    <h4 className="text-xs font-bold text-blue-800 uppercase mb-1">Key Planets</h4>
-                                    <p className="text-sm text-blue-700">{education.keyPlanets.join(', ')}</p>
+                                    <h4 className="text-[12px] font-bold text-blue-800 uppercase mb-1">Key Planets</h4>
+                                    <p className="text-[14px] text-blue-700">{education.keyPlanets.join(', ')}</p>
                                 </div>
                                 <div className="p-3 bg-purple-50 rounded-xl border border-purple-200">
-                                    <h4 className="text-xs font-bold text-purple-800 uppercase mb-1">Significance</h4>
-                                    <p className="text-sm text-purple-700">{education.significance}</p>
+                                    <h4 className="text-[12px] font-bold text-purple-800 uppercase mb-1">Significance</h4>
+                                    <p className="text-[14px] text-purple-700">{education.significance}</p>
                                 </div>
                             </div>
 
                             <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 flex items-start gap-2">
                                 <HelpCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
                                 <div>
-                                    <h4 className="text-xs font-bold text-amber-800 uppercase">Pro Tip</h4>
-                                    <p className="text-sm text-amber-700">{education.tip}</p>
+                                    <h4 className="text-[12px] font-bold text-amber-800 uppercase">Pro Tip</h4>
+                                    <p className="text-[14px] text-amber-700">{education.tip}</p>
                                 </div>
                             </div>
                         </div>
@@ -296,7 +296,7 @@ export default function ChartCustomizationPanel({ isOpen, onClose, selectedChart
                 <div className="px-5 py-3 bg-surface-pure border-t border-cream-light flex justify-end">
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 bg-header-border text-white rounded-lg text-sm font-medium hover:bg-[#C07A50] transition-colors"
+                        className="px-4 py-2 bg-gold-primary text-white rounded-lg text-[14px] font-medium hover:bg-bronze-dark transition-colors"
                     >
                         Done
                     </button>

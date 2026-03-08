@@ -169,7 +169,7 @@ export default function NorthIndianChart({
                                 fontSize="34"
                                 fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
                                 fontWeight="600"
-                                fill={houseValues[pos.h] < 20 ? "var(--status-error)" : houseValues[pos.h] >= 30 ? "var(--status-success)" : "var(--text-primary)"}
+                                fill={houseValues[pos.h] < 20 ? "var(--status-error)" : houseValues[pos.h] >= 30 ? "var(--status-success)" : "var(--text-ink)"}
                                 textAnchor="middle"
                                 dominantBaseline="central"
                                 className="select-none pointer-events-none"

@@ -145,10 +145,10 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
     const renderBreadcrumbs = () => {
         if (compact) return null;
         return (
-            <div className="flex items-center gap-2 mb-6 text-sm overflow-x-auto">
+            <div className="flex items-center gap-2 mb-6 text-[14px] overflow-x-auto">
                 <button
                     onClick={() => setExpanded([])}
-                    className={cn("hover:text-header-border transition-colors font-semibold uppercase tracking-widest text-xs", expanded.length === 0 ? "text-header-border" : "text-ink/60")}
+                    className={cn("hover:text-gold-dark transition-colors font-semibold uppercase tracking-widest text-[12px]", expanded.length === 0 ? "text-gold-dark" : "text-ink/60")}
                 >
                     Mahadasha
                 </button>
@@ -156,8 +156,8 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
                     const label = id.split('-').pop();
                     return (
                         <React.Fragment key={id}>
-                            <ChevronRight className="w-3 h-3 text-header-border/40" />
-                            <span className="font-semibold uppercase tracking-widest text-xs text-header-border whitespace-nowrap">
+                            <ChevronRight className="w-3 h-3 text-gold-dark/40" />
+                            <span className="font-semibold uppercase tracking-widest text-[12px] text-gold-dark whitespace-nowrap">
                                 {label}
                             </span>
                         </React.Fragment>
@@ -170,29 +170,29 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
     if (loading && !dashaData.length) {
         return (
             <div className={cn(
-                "bg-white border border-header-border/20 rounded-[2.5rem] p-4 backdrop-blur-3xl h-full flex items-center justify-center shadow-xl",
+                "bg-white border border-gold-primary/15 rounded-[2.5rem] p-4 backdrop-blur-3xl h-full flex items-center justify-center shadow-xl",
                 compact && "p-3 rounded-[2rem] shadow-2xl"
             )}>
-                <Loader2 className="w-8 h-8 text-header-border animate-spin" role="status" aria-label="Loading dasha data" />
+                <Loader2 className="w-8 h-8 text-gold-dark animate-spin" role="status" aria-label="Loading dasha data" />
             </div>
         );
     }
 
     return (
         <div className={cn(
-            "bg-white border border-header-border/20 rounded-[2.5rem] p-4 backdrop-blur-3xl h-full overflow-hidden flex flex-col shadow-xl",
+            "bg-white border border-gold-primary/15 rounded-[2.5rem] p-4 backdrop-blur-3xl h-full overflow-hidden flex flex-col shadow-xl",
             compact && "p-3 rounded-[2rem] bg-white shadow-2xl"
         )}>
             <div className="flex items-center justify-between mb-4">
                 <div>
                     {!compact ? (
                         <>
-                            <h3 className="text-xs font-semibold text-header-border uppercase tracking-[0.3em] mb-1">Vimshottari System</h3>
-                            <h2 className="text-2xl font-serif text-ink font-bold tracking-tight italic">Temporal Matrix</h2>
+                            <h3 className="text-[12px] font-semibold text-gold-dark uppercase tracking-[0.3em] mb-1">Vimshottari System</h3>
+                            <h2 className="text-[24px] font-serif text-ink font-bold tracking-tight italic">Temporal Matrix</h2>
                         </>
                     ) : (
                         <div>
-                            <h2 className="text-lg font-serif text-ink font-bold tracking-tight">{currentMaha} Mahadasha</h2>
+                            <h2 className="text-[18px] font-serif text-ink font-bold tracking-tight">{currentMaha} Mahadasha</h2>
                             <p className="text-2xs text-copper-dark uppercase tracking-[0.3em] font-semibold mt-1">Time Lord Sequence</p>
                         </div>
                     )}
@@ -248,20 +248,20 @@ function DashaItem({ level, depth, expanded, onToggle, compact = false, path }: 
                 onClick={() => !compact && canExpand && onToggle(uniqueId, level, depth, path)}
                 className={cn(
                     "flex items-center justify-between p-4 rounded-2xl transition-all cursor-pointer border group",
-                    depth === 0 ? "bg-surface-modal border-header-border/10 hover:bg-softwhite shadow-sm" : "bg-transparent border-transparent hover:bg-surface-modal/50",
-                    isExpanded && depth === 0 && !compact && "bg-softwhite border-header-border/30",
+                    depth === 0 ? "bg-surface-modal border-gold-primary/10 hover:bg-surface-warm shadow-sm" : "bg-transparent border-transparent hover:bg-surface-modal/50",
+                    isExpanded && depth === 0 && !compact && "bg-surface-warm border-gold-primary/20",
                     isActive && depth > 0 && "bg-active-glow/20 border-active-glow/40",
                     compact && "p-3 cursor-default"
                 )}
             >
                 <div className="flex items-center gap-4">
                     {!compact && canExpand && (
-                        <ChevronRight className={cn("w-4 h-4 text-header-border transition-transform duration-300", isExpanded && "rotate-90")} />
+                        <ChevronRight className={cn("w-4 h-4 text-gold-dark transition-transform duration-300", isExpanded && "rotate-90")} />
                     )}
                     {!compact && !canExpand && <div className="w-4" />}
 
                     <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-all",
-                        depth === 0 ? "bg-header-border/10 text-header-border" : "bg-header-border/5 text-header-border/40",
+                        depth === 0 ? "bg-gold-primary/10 text-gold-dark" : "bg-gold-primary/5 text-gold-dark/40",
                         compact && "w-8 h-8 rounded-lg",
                         isActive && "bg-active-glow text-ink shadow-lg"
                     )}>
@@ -270,15 +270,15 @@ function DashaItem({ level, depth, expanded, onToggle, compact = false, path }: 
 
                     <div>
                         <h4 className={cn("font-serif font-bold tracking-tight flex items-center gap-2",
-                            depth === 0 ? "text-lg text-ink" : "text-md text-body",
-                            compact && (depth === 0 ? "text-md" : "text-sm")
+                            depth === 0 ? "text-[18px] text-ink" : "text-md text-body",
+                            compact && (depth === 0 ? "text-md" : "text-[14px]")
                         )}>
                             {level.planet}
                             {isActive && <span className="text-[9px] bg-ink text-active-glow px-1.5 py-0.5 rounded uppercase tracking-wider">Current</span>}
                         </h4>
                         <div className="flex items-center gap-2 mt-0.5">
-                            <Calendar className="w-3 h-3 text-header-border/60" />
-                            <span className="text-2xs font-semibold text-bronze/40 uppercase tracking-widest">{formatDate(level.start)} — {formatDate(level.end)}</span>
+                            <Calendar className="w-3 h-3 text-gold-dark/60" />
+                            <span className="text-2xs font-semibold text-gold-dark/40 uppercase tracking-widest">{formatDate(level.start)} — {formatDate(level.end)}</span>
                         </div>
                     </div>
                 </div>
@@ -286,7 +286,7 @@ function DashaItem({ level, depth, expanded, onToggle, compact = false, path }: 
 
             {isExpanded && (
                 <div className={cn(
-                    "ml-10 border-l border-header-border/20 pl-4 space-y-2 animate-in slide-in-from-left-2 duration-300",
+                    "ml-10 border-l border-gold-primary/15 pl-4 space-y-2 animate-in slide-in-from-left-2 duration-300",
                     compact && "ml-4 pl-3"
                 )}>
                     {level.sublevels && level.sublevels.length > 0 ? (
@@ -303,8 +303,8 @@ function DashaItem({ level, depth, expanded, onToggle, compact = false, path }: 
                         ))
                     ) : (
                         <div className="flex items-center gap-2 p-2" role="status" aria-label="Loading sub-periods">
-                            <Loader2 className="w-4 h-4 text-header-border animate-spin" />
-                            <span className="text-xs text-header-border">Loading sub-periods...</span>
+                            <Loader2 className="w-4 h-4 text-gold-dark animate-spin" />
+                            <span className="text-[12px] text-gold-dark">Loading sub-periods...</span>
                         </div>
                     )}
                 </div>

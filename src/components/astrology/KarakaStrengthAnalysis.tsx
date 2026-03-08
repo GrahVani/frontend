@@ -65,26 +65,26 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
                 />
             </div>
 
-            <div className="bg-surface-warm border border-border-warm rounded-xl overflow-hidden shadow-sm w-full xl:flex-1 order-2 xl:order-1">
-                <div className="bg-border-warm px-4 py-2 border-b border-border-warm">
+            <div className="bg-surface-warm border border-gold-primary/15 rounded-xl overflow-hidden shadow-sm w-full xl:flex-1 order-2 xl:order-1">
+                <div className="bg-gold-primary/10 px-4 py-2 border-b border-gold-primary/15">
                     <h3 className={TYPOGRAPHY.sectionTitle}>Karaka strength analysis</h3>
                 </div>
                 <div className="w-full">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-parchment/30">
-                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-border-warm/30")}>Planet</th>
-                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-border-warm/30")}>Abbr</th>
-                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-border-warm/30")}>Chara karaka</th>
-                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-border-warm/30")}>Sign/house</th>
-                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-border-warm/30 text-right")}>Degrees</th>
+                            <tr className="bg-surface-warm/30">
+                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-gold-primary/15")}>Planet</th>
+                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-gold-primary/15")}>Abbr</th>
+                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-gold-primary/15")}>Chara karaka</th>
+                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-gold-primary/15")}>Sign/house</th>
+                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-gold-primary/15 text-right")}>Degrees</th>
                             </tr>
                         </thead>
-                        <tbody className="text-sm">
+                        <tbody className="text-[14px]">
                             {karakas.map((k: KarakaEntry, idx: number) => (
                                 <tr key={k.planet} className={cn(
-                                    "hover:bg-parchment/50 transition-colors border-b border-border-warm/20 last:border-0",
-                                    idx % 2 === 1 ? "bg-antique/5" : "bg-transparent",
+                                    "hover:bg-surface-warm/50 transition-colors border-b border-gold-primary/15 last:border-0",
+                                    idx % 2 === 1 ? "bg-gold-primary/5" : "bg-transparent",
                                     k.is_highest_degree && "bg-amber-50/30"
                                 )}>
                                     <td className="px-4 py-1.5">
@@ -102,12 +102,12 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
                                             <span className={cn(TYPOGRAPHY.subValue, "italic")}>{k.karaka_desc}</span>
                                         </div>
                                     </td>
-                                    <td className="px-4 py-1.5 text-primary">
+                                    <td className="px-4 py-1.5 text-ink">
                                         <span className={TYPOGRAPHY.value}>S{k.sign_index}</span>
                                     </td>
                                     <td className="px-4 py-1.5 text-right">
                                         <div className="flex items-center justify-end gap-2">
-                                            <div className="w-24 h-1.5 bg-antique/20 rounded-full overflow-hidden hidden sm:block">
+                                            <div className="w-24 h-1.5 bg-gold-primary/15 rounded-full overflow-hidden hidden sm:block">
                                                 <div
                                                     className="h-full bg-gold-primary rounded-full"
                                                     style={{ width: `${(k.degrees_in_sign / 30) * 100}%` }}
@@ -132,15 +132,15 @@ function StatCard({ title, value, icon, color }: { title: string; value: string;
     return (
         <div className={cn(
             "p-3.5 sm:p-5 rounded-[24px] flex items-center gap-4 transition-all w-full",
-            color === 'amber' ? "bg-[#F5ECD2]" :
-                color === 'rose' ? "bg-[#F5E2E2]" :
-                    "bg-[#DECFC4] border border-[#3E342B]" // copper border
+            color === 'amber' ? "bg-surface-warm" :
+                color === 'rose' ? "bg-status-error/10" :
+                    "bg-surface-warm border border-[#3E342B]" // copper border
         )}>
             <div className={cn(
                 "w-11 h-11 shrink-0 rounded-[16px] flex items-center justify-center shadow-sm",
-                color === 'amber' ? "bg-[#FDF4D4] text-[#D87100]" :
-                    color === 'rose' ? "bg-[#FFEAF0] text-[#E30A40]" :
-                        "bg-[#EBE2D8] text-[#3E342B]" // copper icon
+                color === 'amber' ? "bg-gold-primary/10 text-[#D87100]" :
+                    color === 'rose' ? "bg-status-error/8 text-[#E30A40]" :
+                        "bg-surface-warm text-[#3E342B]" // copper icon
             )}>
                 {icon}
             </div>

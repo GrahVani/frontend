@@ -31,14 +31,14 @@ export default function RemedyCard({
         const lowerRemedy = remedyText.toLowerCase();
         const lowerPlanet = planet.toLowerCase();
 
-        if (lowerRemedy.includes('dog')) return <Dog className="w-10 h-10 text-slate-400" />;
-        if (lowerRemedy.includes('crow') || lowerRemedy.includes('bird')) return <Bird className="w-10 h-10 text-slate-400" />;
-        if (lowerRemedy.includes('silver') || lowerRemedy.includes('wear')) return <User className="w-10 h-10 text-slate-400" />;
-        if (lowerRemedy.includes('tilak') || lowerRemedy.includes('forehead')) return <Hand className="w-10 h-10 text-slate-400" />;
+        if (lowerRemedy.includes('dog')) return <Dog className="w-10 h-10 text-ink/35" />;
+        if (lowerRemedy.includes('crow') || lowerRemedy.includes('bird')) return <Bird className="w-10 h-10 text-ink/35" />;
+        if (lowerRemedy.includes('silver') || lowerRemedy.includes('wear')) return <User className="w-10 h-10 text-ink/35" />;
+        if (lowerRemedy.includes('tilak') || lowerRemedy.includes('forehead')) return <Hand className="w-10 h-10 text-ink/35" />;
 
         // Default planet icons
-        if (lowerPlanet === 'ketu') return <EyeOff className="w-10 h-10 text-slate-400" />;
-        return <Sparkles className="w-10 h-10 text-slate-400" />;
+        if (lowerPlanet === 'ketu') return <EyeOff className="w-10 h-10 text-ink/35" />;
+        return <Sparkles className="w-10 h-10 text-ink/35" />;
     };
 
     const isKetu = planet.toLowerCase() === 'ketu';
@@ -51,7 +51,7 @@ export default function RemedyCard({
         )}>
             {/* Header / Title bar */}
             <div className={cn(
-                "px-4 py-2 flex items-center justify-between text-white font-bold text-xs",
+                "px-4 py-2 flex items-center justify-between text-white font-bold text-[12px]",
                 isJupiter ? "bg-amber-600" : "bg-blue-700"
             )}>
                 <span>{planet} | {focusType}</span>
@@ -60,7 +60,7 @@ export default function RemedyCard({
             {/* Main Content Area */}
             <div className="p-5 flex gap-5">
                 {/* Visual Icon Section */}
-                <div className="flex-shrink-0 w-24 h-24 bg-slate-50 rounded-[1.5rem] border border-slate-100 flex items-center justify-center relative group-hover:bg-white transition-colors">
+                <div className="flex-shrink-0 w-24 h-24 bg-surface-warm rounded-[1.5rem] border border-gold-primary/10 flex items-center justify-center relative group-hover:bg-white transition-colors">
                     {getIcon()}
                     {/* Tiny info pulse */}
                     <div className="absolute top-1 right-1 w-2 h-2 rounded-full bg-blue-500/20" />
@@ -71,31 +71,31 @@ export default function RemedyCard({
                     <div className="grid grid-cols-1 gap-2">
                         {/* Diagnosis */}
                         <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase text-slate-600 tracking-tighter">Diagnosis:</span>
-                            <span className="text-[11px] font-bold text-slate-700 leading-tight">{diagnosis}</span>
+                            <span className="text-[10px] font-black uppercase text-ink/55 tracking-tighter">Diagnosis:</span>
+                            <span className="text-[11px] font-bold text-ink/70 leading-tight">{diagnosis}</span>
                         </div>
 
                         {/* Remedy */}
                         <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase text-slate-600 tracking-tighter">Remedy:</span>
+                            <span className="text-[10px] font-black uppercase text-ink/55 tracking-tighter">Remedy:</span>
                             <span className="text-[11px] font-bold text-blue-900 leading-tight">{remedyText}</span>
                         </div>
 
                         {/* Metadata Grid */}
                         <div className="grid grid-cols-2 gap-4 mt-1">
                             <div className="flex flex-col">
-                                <span className="text-[9px] font-black uppercase text-slate-600 tracking-tighter">Time:</span>
-                                <span className="text-[10px] font-bold text-slate-600">{time}</span>
+                                <span className="text-[9px] font-black uppercase text-ink/55 tracking-tighter">Time:</span>
+                                <span className="text-[10px] font-bold text-ink/55">{time}</span>
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-[9px] font-black uppercase text-slate-600 tracking-tighter">Constraint:</span>
-                                <span className="text-[10px] font-bold text-slate-600">{constraint}</span>
+                                <span className="text-[9px] font-black uppercase text-ink/55 tracking-tighter">Constraint:</span>
+                                <span className="text-[10px] font-bold text-ink/55">{constraint}</span>
                             </div>
                         </div>
 
                         {/* Status bar */}
-                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100">
-                            <span className="text-[9px] font-black uppercase text-slate-600 tracking-tighter">Status: {status}</span>
+                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-gold-primary/10">
+                            <span className="text-[9px] font-black uppercase text-ink/55 tracking-tighter">Status: {status}</span>
                             {status === 'Recommended' ? (
                                 <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white shadow-sm">
                                     <Check className="w-3.5 h-3.5 stroke-[4]" />
@@ -109,8 +109,8 @@ export default function RemedyCard({
                                     <span className="absolute inset-0 flex items-center justify-center text-[7px] font-bold text-blue-600">{progress}%</span>
                                 </div>
                             ) : (
-                                <div className="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-slate-400">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                                <div className="w-5 h-5 rounded-full bg-gold-primary/10 flex items-center justify-center text-ink/35">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-ink/35" />
                                 </div>
                             )}
                         </div>

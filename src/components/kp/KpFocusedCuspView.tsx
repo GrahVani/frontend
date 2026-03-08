@@ -79,8 +79,8 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
     return (
         <div className={cn("space-y-6 animate-in fade-in duration-500", className)}>
             {/* Cusp Selector */}
-            <div className="flex items-center justify-center gap-1 p-2 bg-parchment rounded-xl border border-antique overflow-x-auto">
-                <button className="p-2 text-primary hover:text-primary transition-colors" onClick={() => setSelectedCusp(Math.max(1, selectedCusp - 1))}>
+            <div className="flex items-center justify-center gap-1 p-2 bg-surface-warm rounded-xl border border-gold-primary/20 overflow-x-auto">
+                <button className="p-2 text-ink hover:text-ink transition-colors" onClick={() => setSelectedCusp(Math.max(1, selectedCusp - 1))}>
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
                 </button>
                 {Array.from({ length: 12 }, (_, i) => i + 1).map(cusp => {
@@ -96,15 +96,15 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                                 TYPOGRAPHY.value,
                                 isActive
                                     ? "bg-gradient-to-r from-gold-primary to-gold-dark text-white shadow-md scale-105"
-                                    : "bg-white/50 text-primary hover:bg-white hover:shadow-sm border border-antique/30"
+                                    : "bg-white/50 text-ink hover:bg-white hover:shadow-sm border border-gold-primary/20"
                             )}
                         >
-                            <span className="text-lg">{ZODIAC_SYMBOLS[signIdx] || '♈'}</span>
+                            <span className="text-[18px]">{ZODIAC_SYMBOLS[signIdx] || '♈'}</span>
                             <span className={cn(TYPOGRAPHY.label, "text-[10px] tracking-wide")}>C{cusp}</span>
                         </button>
                     );
                 })}
-                <button className="p-2 text-primary hover:text-primary transition-colors" onClick={() => setSelectedCusp(Math.min(12, selectedCusp + 1))}>
+                <button className="p-2 text-ink hover:text-ink transition-colors" onClick={() => setSelectedCusp(Math.min(12, selectedCusp + 1))}>
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                 </button>
             </div>
@@ -112,18 +112,18 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
             {/* Main Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Left Panel - Focused Cusp Script */}
-                <div className="bg-white rounded-2xl p-6 border border-antique shadow-sm">
+                <div className="bg-white rounded-2xl p-6 border border-gold-primary/20 shadow-sm">
                     <div className="flex items-center justify-between mb-6">
                         <h3 className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wide")}>Focused Cusp Script</h3>
-                        <span className={cn(TYPOGRAPHY.value, "px-2 py-1 bg-parchment rounded border border-antique text-[10px] text-primary uppercase tracking-wide")}>
+                        <span className={cn(TYPOGRAPHY.value, "px-2 py-1 bg-surface-warm rounded border border-gold-primary/20 text-[10px] text-ink uppercase tracking-wide")}>
                             {selectedCusp}{selectedCusp === 1 ? 'st' : selectedCusp === 2 ? 'nd' : selectedCusp === 3 ? 'rd' : 'th'} House ({HOUSE_TOPICS[selectedCusp]})
                         </span>
                     </div>
 
                     {/* Cusp Position */}
                     <div className="mb-8">
-                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-3xl tracking-tight")}>
-                            {signName} <span className={cn(TYPOGRAPHY.value, "text-2xl font-normal ml-1")}>{degreeDisplay}</span>
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[30px] tracking-tight")}>
+                            {signName} <span className={cn(TYPOGRAPHY.value, "text-[24px] font-normal ml-1")}>{degreeDisplay}</span>
                         </h2>
                     </div>
 
@@ -131,27 +131,27 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                     {currentPromise && (
                         <div className="relative pl-8 font-sans">
                             {/* Vertical Line */}
-                            <div className="absolute left-3 top-2 bottom-2 w-px bg-gradient-to-b from-separator to-transparent border-l border-dashed border-antique/50" />
+                            <div className="absolute left-3 top-2 bottom-2 w-px bg-gradient-to-b from-separator to-transparent border-l border-dashed border-gold-primary/15" />
 
                             {/* Sign Lord */}
                             <div className="relative flex items-center gap-3 py-3">
-                                <div className="absolute left-[-20px] w-3 h-3 rounded-full bg-parchment border border-antique" />
-                                <span className="text-xl text-primary">{PLANET_SYMBOLS[currentPromise.chain.signLord.planet] || '☉'}</span>
+                                <div className="absolute left-[-20px] w-3 h-3 rounded-full bg-surface-warm border border-gold-primary/20" />
+                                <span className="text-[20px] text-ink">{PLANET_SYMBOLS[currentPromise.chain.signLord.planet] || '☉'}</span>
                                 <div>
                                     <span className={cn(TYPOGRAPHY.label, "text-[10px] block opacity-70 uppercase tracking-wide")}>Sign Lord</span>
-                                    <span className={cn(TYPOGRAPHY.value, "text-base")}>{currentPromise.chain.signLord.planet}</span>
-                                    {currentPromise.chain.signLord.isRetro && <span className="text-rose-600 ml-1 text-xs font-medium">(R)</span>}
+                                    <span className={cn(TYPOGRAPHY.value, "text-[16px]")}>{currentPromise.chain.signLord.planet}</span>
+                                    {currentPromise.chain.signLord.isRetro && <span className="text-rose-600 ml-1 text-[12px] font-medium">(R)</span>}
                                 </div>
                             </div>
 
                             {/* Star Lord */}
                             <div className="relative flex items-center gap-3 py-3">
-                                <div className="absolute left-[-20px] w-3 h-3 rounded-full bg-parchment border border-antique" />
-                                <span className="text-xl text-primary">{PLANET_SYMBOLS[currentPromise.chain.starLord.planet] || '☉'}</span>
+                                <div className="absolute left-[-20px] w-3 h-3 rounded-full bg-surface-warm border border-gold-primary/20" />
+                                <span className="text-[20px] text-ink">{PLANET_SYMBOLS[currentPromise.chain.starLord.planet] || '☉'}</span>
                                 <div>
                                     <span className={cn(TYPOGRAPHY.label, "text-[10px] block opacity-70 uppercase tracking-wide")}>Star Lord</span>
-                                    <span className={cn(TYPOGRAPHY.value, "text-base")}>{currentPromise.chain.starLord.planet}</span>
-                                    {currentPromise.chain.starLord.isRetro && <span className="text-rose-600 ml-1 text-xs font-medium">(R)</span>}
+                                    <span className={cn(TYPOGRAPHY.value, "text-[16px]")}>{currentPromise.chain.starLord.planet}</span>
+                                    {currentPromise.chain.starLord.isRetro && <span className="text-rose-600 ml-1 text-[12px] font-medium">(R)</span>}
                                 </div>
                             </div>
 
@@ -159,40 +159,40 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                             <div className="relative flex items-center gap-3 py-3 my-2">
                                 <div className="absolute left-[-20px] w-3 h-3 rounded-full bg-gold-primary border-2 border-gold-dark shadow-sm" />
                                 <div className="flex items-center gap-3 px-5 py-2.5 bg-gradient-to-r from-gold-primary to-gold-dark rounded-xl shadow-md border border-gold-dark/30 text-white">
-                                    <span className="text-2xl">{PLANET_SYMBOLS[currentPromise.chain.subLord.planet] || '☉'}</span>
+                                    <span className="text-[24px]">{PLANET_SYMBOLS[currentPromise.chain.subLord.planet] || '☉'}</span>
                                     <div>
                                         <span className={cn(TYPOGRAPHY.label, "text-[10px] !text-white/90 block uppercase tracking-widest !font-bold")}>Sub Lord</span>
-                                        <span className={cn(TYPOGRAPHY.value, "text-lg !text-white font-bold")}>{currentPromise.chain.subLord.planet}</span>
-                                        {currentPromise.chain.subLord.isRetro && <span className="text-rose-200 ml-1 text-xs font-medium">(R)</span>}
+                                        <span className={cn(TYPOGRAPHY.value, "text-[18px] !text-white font-bold")}>{currentPromise.chain.subLord.planet}</span>
+                                        {currentPromise.chain.subLord.isRetro && <span className="text-rose-200 ml-1 text-[12px] font-medium">(R)</span>}
                                     </div>
                                 </div>
                             </div>
 
                             {/* Sub-Sub Lord */}
                             <div className="relative flex items-center gap-3 py-3">
-                                <div className="absolute left-[-20px] w-3 h-3 rounded-full bg-parchment border border-antique" />
-                                <span className="text-xl text-primary">{PLANET_SYMBOLS[currentPromise.chain.subSubLord.planet] || '☉'}</span>
+                                <div className="absolute left-[-20px] w-3 h-3 rounded-full bg-surface-warm border border-gold-primary/20" />
+                                <span className="text-[20px] text-ink">{PLANET_SYMBOLS[currentPromise.chain.subSubLord.planet] || '☉'}</span>
                                 <div>
                                     <span className={cn(TYPOGRAPHY.label, "text-[10px] block opacity-70 uppercase tracking-wide")}>Sub-Sub Lord</span>
-                                    <span className={cn(TYPOGRAPHY.value, "text-base")}>{currentPromise.chain.subSubLord.planet}</span>
-                                    {currentPromise.chain.subSubLord.isRetro && <span className="text-rose-600 ml-1 text-xs font-medium">(R)</span>}
+                                    <span className={cn(TYPOGRAPHY.value, "text-[16px]")}>{currentPromise.chain.subSubLord.planet}</span>
+                                    {currentPromise.chain.subSubLord.isRetro && <span className="text-rose-600 ml-1 text-[12px] font-medium">(R)</span>}
                                 </div>
                             </div>
                         </div>
                     )}
 
                     {!currentPromise && (
-                        <div className="text-center py-8 text-primary font-sans text-sm">
+                        <div className="text-center py-8 text-ink font-sans text-[14px]">
                             <p>No interlink data for House {selectedCusp}</p>
                         </div>
                     )}
                 </div>
 
                 {/* Right Panel - Cuspal Interlinks Promise */}
-                <div className="bg-white rounded-2xl p-6 border border-antique shadow-sm">
+                <div className="bg-white rounded-2xl p-6 border border-gold-primary/20 shadow-sm">
                     <div className="flex items-center justify-between mb-6">
                         <h3 className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wide")}>Cuspal Interlinks Promise</h3>
-                        <span className={cn(TYPOGRAPHY.value, "px-2 py-1 bg-parchment rounded border border-antique text-[10px] text-primary uppercase tracking-wide")}>
+                        <span className={cn(TYPOGRAPHY.value, "px-2 py-1 bg-surface-warm rounded border border-gold-primary/20 text-[10px] text-ink uppercase tracking-wide")}>
                             (CIL View)
                         </span>
                     </div>
@@ -206,12 +206,12 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                             <div className="flex flex-wrap gap-2">
                                 {(currentPromise?.positiveHouses || []).length > 0 ? (
                                     currentPromise?.positiveHouses.map((h: number) => (
-                                        <span key={h} className={cn(TYPOGRAPHY.value, "flex items-center justify-center w-9 h-9 bg-emerald-100 text-emerald-800 font-bold rounded-lg shadow-sm text-sm border border-emerald-200")}>
+                                        <span key={h} className={cn(TYPOGRAPHY.value, "flex items-center justify-center w-9 h-9 bg-emerald-100 text-emerald-800 font-bold rounded-lg shadow-sm text-[14px] border border-emerald-200")}>
                                             {h}
                                         </span>
                                     ))
                                 ) : (
-                                    <span className="text-emerald-400 text-sm">None</span>
+                                    <span className="text-emerald-400 text-[14px]">None</span>
                                 )}
                             </div>
                         </div>
@@ -224,30 +224,30 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                             <div className="flex flex-wrap gap-2">
                                 {(currentPromise?.negativeHouses || []).length > 0 ? (
                                     currentPromise?.negativeHouses.map((h: number) => (
-                                        <span key={h} className={cn(TYPOGRAPHY.value, "flex items-center justify-center w-9 h-9 bg-rose-100 text-rose-800 font-bold rounded-lg shadow-sm text-sm border border-rose-200")}>
+                                        <span key={h} className={cn(TYPOGRAPHY.value, "flex items-center justify-center w-9 h-9 bg-rose-100 text-rose-800 font-bold rounded-lg shadow-sm text-[14px] border border-rose-200")}>
                                             {h}
                                         </span>
                                     ))
                                 ) : (
-                                    <span className="text-rose-400 text-sm">None</span>
+                                    <span className="text-rose-400 text-[14px]">None</span>
                                 )}
                             </div>
                         </div>
 
                         {/* Neutral/Supporting */}
-                        <div className="p-4 bg-softwhite border border-antique/50 rounded-xl">
+                        <div className="p-4 bg-surface-warm border border-gold-primary/20 rounded-xl">
                             <h4 className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wide mb-3")}>
                                 Neutral/Supporting
                             </h4>
                             <div className="flex flex-wrap gap-2">
                                 {neutralHouses.length > 0 ? (
                                     neutralHouses.map(h => (
-                                        <span key={h} className={cn(TYPOGRAPHY.value, "flex items-center justify-center w-9 h-9 bg-white text-primary rounded-lg border border-antique shadow-sm text-sm")}>
+                                        <span key={h} className={cn(TYPOGRAPHY.value, "flex items-center justify-center w-9 h-9 bg-white text-ink rounded-lg border border-gold-primary/20 shadow-sm text-[14px]")}>
                                             {h}
                                         </span>
                                     ))
                                 ) : (
-                                    <span className="text-primary text-sm">None</span>
+                                    <span className="text-ink text-[14px]">None</span>
                                 )}
                             </div>
                         </div>
@@ -257,9 +257,9 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
 
             {/* Interpretation Footer */}
             {currentPromise && (
-                <div className="bg-softwhite rounded-xl p-5 border border-antique shadow-sm mx-auto max-w-4xl">
+                <div className="bg-surface-warm rounded-xl p-5 border border-gold-primary/20 shadow-sm mx-auto max-w-4xl">
                     <p className={cn(TYPOGRAPHY.subValue, "text-[15px] leading-relaxed")}>
-                        <span className={cn(TYPOGRAPHY.label, "text-xs !text-accent-gold !font-bold uppercase tracking-wide mr-2 border border-gold-soft bg-gold-soft/10 px-2 py-0.5 rounded-md")}>Interpretation Focus</span>
+                        <span className={cn(TYPOGRAPHY.label, "text-[12px] !text-gold-dark !font-bold uppercase tracking-wide mr-2 border border-gold-soft bg-gold-soft/10 px-2 py-0.5 rounded-md")}>Interpretation Focus</span>
                         The <strong className="font-bold text-ink">{selectedCusp}{selectedCusp === 1 ? 'st' : selectedCusp === 2 ? 'nd' : selectedCusp === 3 ? 'rd' : 'th'} Cusp Sub Lord</strong> ({currentPromise.chain.subLord.planet})
                         {currentPromise.positiveHouses.length > 0 && (
                             <> strongly links to <span className="text-emerald-700 font-bold px-1.5 py-0.5 rounded bg-emerald-50 border border-emerald-100 mx-1">{currentPromise.positiveHouses.join(', ')}</span>, indicating <span className="text-emerald-700 font-bold">positive promise</span> for {HOUSE_TOPICS[selectedCusp]?.toLocaleLowerCase()} matters</>
@@ -270,7 +270,7 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                             <><span className="text-rose-700 font-bold px-1.5 py-0.5 rounded bg-rose-50 border border-rose-100 mx-1">{currentPromise.negativeHouses.join(', ')}</span> indicating <span className="text-rose-700 font-bold">challenges</span></>
                         )}
                         {currentPromise.positiveHouses.length === 0 && currentPromise.negativeHouses.length === 0 && (
-                            <> has a <span className="text-primary font-medium">neutral influence</span> on {HOUSE_TOPICS[selectedCusp]?.toLocaleLowerCase()} matters</>
+                            <> has a <span className="text-ink font-medium">neutral influence</span> on {HOUSE_TOPICS[selectedCusp]?.toLocaleLowerCase()} matters</>
                         )}
                         .
                     </p>

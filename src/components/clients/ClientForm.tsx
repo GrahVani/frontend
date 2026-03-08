@@ -59,9 +59,9 @@ interface ClientFormProps {
 // Section header for each form group
 function SectionHeader({ icon: Icon, title }: { icon: React.ElementType; title: string }) {
     return (
-        <div className="flex items-center gap-2 mb-4 pb-2 border-b border-divider">
+        <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gold-primary/10">
             <Icon className="w-5 h-5 text-gold-burnished" />
-            <h2 className={cn(TYPOGRAPHY.sectionTitle, "!text-lg !font-bold !text-ink-deep !mb-0")}>{title}</h2>
+            <h2 className={cn(TYPOGRAPHY.sectionTitle, "!text-[18px] !font-bold !text-ink-deep !mb-0")}>{title}</h2>
         </div>
     );
 }
@@ -242,12 +242,12 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
         >
             {/* Draft restored notice */}
             {hasDraft && mode === 'create' && (
-                <div className="mb-4 p-3 bg-gold-primary/10 border border-gold-primary/30 rounded-lg text-sm text-gold-dark font-serif flex items-center justify-between">
+                <div className="mb-4 p-3 bg-gold-primary/10 border border-gold-primary/30 rounded-lg text-[14px] text-gold-dark font-serif flex items-center justify-between">
                     <span>A previously saved draft has been restored.</span>
                     <button
                         type="button"
                         onClick={() => { clearDraft(); form.reset(defaultValues); }}
-                        className="text-xs font-bold text-gold-dark hover:text-red-600 transition-colors underline"
+                        className="text-[12px] font-bold text-gold-dark hover:text-red-600 transition-colors underline"
                     >
                         Discard
                     </button>
@@ -256,7 +256,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
 
             {/* Error Display */}
             {submitError && (
-                <div role="alert" className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                <div role="alert" className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-[14px]">
                     {submitError}
                 </div>
             )}
@@ -373,7 +373,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                 required
                             />
                             {errors.dateOfBirth && (
-                                <span role="alert" className="block text-xs text-red-600 mt-1">{errors.dateOfBirth.message}</span>
+                                <span role="alert" className="block text-[12px] text-red-600 mt-1">{errors.dateOfBirth.message}</span>
                             )}
                         </div>
                         <div>
@@ -386,7 +386,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                 required
                             />
                             {errors.timeOfBirth && (
-                                <span role="alert" className="block text-xs text-red-600 mt-1">{errors.timeOfBirth.message}</span>
+                                <span role="alert" className="block text-[12px] text-red-600 mt-1">{errors.timeOfBirth.message}</span>
                             )}
                         </div>
                     </div>
@@ -461,7 +461,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                 <div
                                     role="listbox"
                                     aria-label="Location suggestions"
-                                    className="absolute top-full left-0 right-0 mt-1 bg-white border border-divider rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
+                                    className="absolute top-full left-0 right-0 mt-1 bg-white border border-gold-primary/10 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
                                 >
                                     {location.suggestions.map((suggestion, index) => (
                                         <button
@@ -472,14 +472,14 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                             aria-selected={index === location.activeIndex}
                                             onClick={() => onLocationSelect(suggestion)}
                                             className={cn(
-                                                "w-full px-4 py-3 text-left border-b border-divider/30 last:border-0 transition-colors",
+                                                "w-full px-4 py-3 text-left border-b border-gold-primary/10 last:border-0 transition-colors",
                                                 index === location.activeIndex
                                                     ? "bg-gold-primary/10"
-                                                    : "hover:bg-softwhite",
+                                                    : "hover:bg-surface-warm",
                                             )}
                                         >
-                                            <p className="text-ink font-medium text-sm">{suggestion.formatted}</p>
-                                            <p className="text-gold-dark text-xs mt-1">
+                                            <p className="text-ink font-medium text-[14px]">{suggestion.formatted}</p>
+                                            <p className="text-gold-dark text-[12px] mt-1">
                                                 {suggestion.latitude.toFixed(4)} N, {suggestion.longitude.toFixed(4)} E — {suggestion.timezone}
                                             </p>
                                         </button>
@@ -488,7 +488,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                             )}
                         </div>
                         {errors.birthPlace && (
-                            <span role="alert" className="block text-xs text-red-600 mt-1">{errors.birthPlace.message}</span>
+                            <span role="alert" className="block text-[12px] text-red-600 mt-1">{errors.birthPlace.message}</span>
                         )}
                     </div>
 
@@ -508,14 +508,14 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                             }}
                             className="w-4 h-4 accent-gold-dark cursor-pointer"
                         />
-                        <label htmlFor="manualCoords" className="text-sm text-ink font-serif cursor-pointer">
+                        <label htmlFor="manualCoords" className="text-[14px] text-ink font-serif cursor-pointer">
                             Enter coordinates manually (for precise calculations)
                         </label>
                     </div>
 
                     {/* Coordinates & Timezone (C-014: timezone picker) */}
                     {showCoordinates && (
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-softwhite rounded-xl border border-divider shadow-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-surface-warm rounded-xl border border-gold-primary/10 shadow-sm">
                             <div className="space-y-2">
                                 <FieldLabel required>Latitude</FieldLabel>
                                 <input
@@ -523,13 +523,13 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                     step="0.0001"
                                     value={watch('birthLatitude') ?? ''}
                                     onChange={(e) => setValue('birthLatitude', parseFloat(e.target.value) || 0, { shouldValidate: true })}
-                                    className={cn(TYPOGRAPHY.value, "w-full bg-transparent border-b border-divider focus:border-gold-dark focus:outline-none py-1 !text-ink !mt-0")}
+                                    className={cn(TYPOGRAPHY.value, "w-full bg-transparent border-b border-gold-primary/10 focus:border-gold-dark focus:outline-none py-1 !text-ink !mt-0")}
                                     aria-required="true"
                                     aria-invalid={!!errors.birthLatitude}
                                     aria-label="Birth latitude"
                                 />
                                 {errors.birthLatitude && (
-                                    <span role="alert" className="block text-xs text-red-600">{errors.birthLatitude.message}</span>
+                                    <span role="alert" className="block text-[12px] text-red-600">{errors.birthLatitude.message}</span>
                                 )}
                             </div>
                             <div className="space-y-2">
@@ -539,13 +539,13 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                     step="0.0001"
                                     value={watch('birthLongitude') ?? ''}
                                     onChange={(e) => setValue('birthLongitude', parseFloat(e.target.value) || 0, { shouldValidate: true })}
-                                    className={cn(TYPOGRAPHY.value, "w-full bg-transparent border-b border-divider focus:border-gold-dark focus:outline-none py-1 !text-ink !font-serif !mt-0")}
+                                    className={cn(TYPOGRAPHY.value, "w-full bg-transparent border-b border-gold-primary/10 focus:border-gold-dark focus:outline-none py-1 !text-ink !font-serif !mt-0")}
                                     aria-required="true"
                                     aria-invalid={!!errors.birthLongitude}
                                     aria-label="Birth longitude"
                                 />
                                 {errors.birthLongitude && (
-                                    <span role="alert" className="block text-xs text-red-600">{errors.birthLongitude.message}</span>
+                                    <span role="alert" className="block text-[12px] text-red-600">{errors.birthLongitude.message}</span>
                                 )}
                             </div>
                             {/* C-014: Timezone picker instead of free text */}
@@ -562,7 +562,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                     error={errors.birthTimezone?.message}
                                 />
                             </div>
-                            <div className="md:col-span-3 text-xs text-gold-dark/70 italic">
+                            <div className="md:col-span-3 text-[12px] text-gold-dark/70 italic">
                                 Latitude: -90 to 90 (e.g., 27.1833 for Agra) | Longitude: -180 to 180 (e.g., 78.0167)
                             </div>
                         </div>
@@ -623,9 +623,9 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                             )}
                         />
                         {errors.notes && (
-                            <span role="alert" className="block text-xs text-red-600 mt-1">{errors.notes.message}</span>
+                            <span role="alert" className="block text-[12px] text-red-600 mt-1">{errors.notes.message}</span>
                         )}
-                        <p className="text-xs text-muted mt-1 text-right">
+                        <p className="text-[12px] text-ink/45 mt-1 text-right">
                             {(watch('notes') || '').length} / 5000
                         </p>
                     </div>
@@ -633,14 +633,14 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
             )}
 
             {/* ─── Navigation & Submit (C-016: sticky submit bar) ─── */}
-            <div className="sticky bottom-0 bg-parchment/95 backdrop-blur-sm border-t border-divider pt-4 pb-4 mt-8 -mx-1 px-1 z-10">
+            <div className="sticky bottom-0 bg-surface-warm/95 backdrop-blur-sm border-t border-gold-primary/10 pt-4 pb-4 mt-8 -mx-1 px-1 z-10">
                 <div className="flex items-center justify-between gap-4">
                     {/* Back button */}
                     {step > 0 ? (
                         <button
                             type="button"
                             onClick={goPrev}
-                            className="px-5 py-2.5 rounded-lg border border-antique text-ink font-serif text-sm font-medium hover:bg-softwhite transition-colors flex items-center gap-2"
+                            className="px-5 py-2.5 rounded-lg border border-gold-primary/20 text-ink font-serif text-[14px] font-medium hover:bg-surface-warm transition-colors flex items-center gap-2"
                         >
                             <ChevronLeft className="w-4 h-4" />
                             Back
@@ -654,7 +654,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                         <button
                             type="button"
                             onClick={goNext}
-                            className="px-6 py-2.5 bg-gold-primary text-white rounded-lg font-serif font-semibold text-sm hover:bg-gold-dark transition-colors flex items-center gap-2"
+                            className="px-6 py-2.5 bg-gold-primary text-white rounded-lg font-serif font-semibold text-[14px] hover:bg-gold-dark transition-colors flex items-center gap-2"
                         >
                             Next
                             <ChevronRight className="w-4 h-4" />

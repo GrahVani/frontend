@@ -79,7 +79,7 @@ export default function DataGrid<T extends object>({
     onRowClick,
     rowClassName,
     highlightRow,
-    highlightClassName = 'bg-header-border/5',
+    highlightClassName = 'bg-gold-primary/5',
     striped = false,
     stickyHeader = true,
     maxHeight,
@@ -182,7 +182,7 @@ export default function DataGrid<T extends object>({
                         stickyHeader && 'sticky top-0 z-10',
                     )}>
                         <tr className={cn(
-                            'bg-ink/5 border-b border-header-border/20',
+                            'bg-ink/5 border-b border-gold-primary/15',
                             headerClassName,
                         )}>
                             {columns.map(col => {
@@ -205,8 +205,8 @@ export default function DataGrid<T extends object>({
                                             {col.header}
                                             {col.sortable && (
                                                 <span className="inline-flex flex-col -space-y-1">
-                                                    <ChevronUp className={cn('w-3 h-3', isSorted && sortDir === 'asc' ? 'text-header-border' : 'text-primary/20')} />
-                                                    <ChevronDown className={cn('w-3 h-3', isSorted && sortDir === 'desc' ? 'text-header-border' : 'text-primary/20')} />
+                                                    <ChevronUp className={cn('w-3 h-3', isSorted && sortDir === 'asc' ? 'text-gold-dark' : 'text-ink/20')} />
+                                                    <ChevronDown className={cn('w-3 h-3', isSorted && sortDir === 'desc' ? 'text-gold-dark' : 'text-ink/20')} />
                                                 </span>
                                             )}
                                         </span>
@@ -216,7 +216,7 @@ export default function DataGrid<T extends object>({
                         </tr>
                     </thead>
 
-                    <tbody className="divide-y divide-header-border/10">
+                    <tbody className="divide-y divide-gold-primary/10">
                         {sortedData.length === 0 ? (
                             <tr>
                                 <td colSpan={columns.length} className="py-12 text-center">
@@ -236,7 +236,7 @@ export default function DataGrid<T extends object>({
                                         key={key}
                                         className={cn(
                                             'hover:bg-ink/5 transition-colors',
-                                            striped && idx % 2 === 1 && 'bg-parchment/30',
+                                            striped && idx % 2 === 1 && 'bg-surface-warm/30',
                                             isHighlighted && highlightClassName,
                                             onRowClick && 'cursor-pointer',
                                             rowCls,

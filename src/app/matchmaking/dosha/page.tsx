@@ -67,12 +67,12 @@ const DOSHAS: DoshaInfo[] = [
 export default function DoshaAnalysisPage() {
     return (
         <div className="max-w-4xl mx-auto space-y-6">
-            <div className="bg-header-gradient rounded-xl p-6 border border-header-border/30">
+            <div className="bg-header-gradient rounded-xl p-6 border border-gold-primary/30">
                 <div className="flex items-center gap-2 mb-1">
                     <Search className="w-5 h-5 text-active-glow" />
-                    <h1 className="font-serif text-2xl font-bold text-softwhite">Dosha Analysis</h1>
+                    <h1 className="font-serif text-[24px] font-bold text-softwhite">Dosha Analysis</h1>
                 </div>
-                <p className="text-softwhite/80 font-serif italic text-sm max-w-2xl">
+                <p className="text-softwhite/80 font-serif italic text-[14px] max-w-2xl">
                     Understanding compatibility doshas and their remedies in Vedic matchmaking.
                 </p>
             </div>
@@ -80,10 +80,10 @@ export default function DoshaAnalysisPage() {
             {/* Dosha Reference Cards */}
             <div className="space-y-4">
                 {DOSHAS.map((dosha) => (
-                    <div key={dosha.name} className="bg-softwhite border border-antique rounded-xl p-5">
+                    <div key={dosha.name} className="prem-card rounded-xl p-5">
                         <div className="flex items-center gap-2 mb-3">
                             <AlertTriangle className={`w-5 h-5 ${dosha.severity === "critical" ? "text-status-error" : "text-status-warning"}`} />
-                            <h3 className="text-lg font-serif font-bold text-ink">{dosha.name}</h3>
+                            <h3 className="text-[18px] font-serif font-bold text-ink">{dosha.name}</h3>
                             <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
                                 dosha.severity === "critical"
                                     ? "bg-status-error/10 text-status-error"
@@ -93,31 +93,31 @@ export default function DoshaAnalysisPage() {
                             </span>
                         </div>
 
-                        <p className="text-sm text-muted-refined mb-4">{dosha.description}</p>
+                        <p className="text-[14px] text-ink/45 mb-4">{dosha.description}</p>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <h4 className="text-xs font-bold text-header-border tracking-widest font-serif uppercase mb-2">
+                                <h4 className="text-[12px] font-bold text-gold-dark tracking-widest font-serif uppercase mb-2">
                                     Effects
                                 </h4>
                                 <ul className="space-y-1.5">
                                     {dosha.effects.map((effect, i) => (
                                         <li key={i} className="flex items-start gap-1.5">
                                             <XCircle className="w-3.5 h-3.5 text-status-error mt-0.5 shrink-0" />
-                                            <span className="text-xs text-muted-refined">{effect}</span>
+                                            <span className="text-[12px] text-ink/45">{effect}</span>
                                         </li>
                                     ))}
                                 </ul>
                             </div>
                             <div>
-                                <h4 className="text-xs font-bold text-header-border tracking-widest font-serif uppercase mb-2">
+                                <h4 className="text-[12px] font-bold text-gold-dark tracking-widest font-serif uppercase mb-2">
                                     Remedies
                                 </h4>
                                 <ul className="space-y-1.5">
                                     {dosha.remedies.map((remedy, i) => (
                                         <li key={i} className="flex items-start gap-1.5">
                                             <CheckCircle className="w-3.5 h-3.5 text-status-success mt-0.5 shrink-0" />
-                                            <span className="text-xs text-muted-refined">{remedy}</span>
+                                            <span className="text-[12px] text-ink/45">{remedy}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -128,18 +128,18 @@ export default function DoshaAnalysisPage() {
             </div>
 
             {/* CTA to matchmaking — personalized dosha results will appear here once API is connected (Sprint 25) */}
-            <div className="bg-softwhite border border-antique rounded-xl p-5 flex items-start gap-4">
+            <div className="prem-card rounded-xl p-5 flex items-start gap-4">
                 <div className="w-10 h-10 bg-gold-primary/10 rounded-full flex items-center justify-center shrink-0">
                     <Search className="w-5 h-5 text-gold-dark" />
                 </div>
                 <div>
-                    <h3 className="text-sm font-serif font-semibold text-ink mb-1">Personalized Dosha Analysis</h3>
-                    <p className="text-xs text-muted-refined mb-3">
+                    <h3 className="text-[14px] font-serif font-semibold text-ink mb-1">Personalized Dosha Analysis</h3>
+                    <p className="text-[12px] text-ink/45 mb-3">
                         Run a match analysis to detect doshas specific to a bride and groom pair. Personalized results will show here once the API is connected.
                     </p>
                     <Link
                         href="/matchmaking"
-                        className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-softwhite bg-gold-dark rounded-lg hover:bg-gold-primary transition-colors"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 text-[14px] font-medium text-softwhite bg-gold-dark rounded-lg hover:bg-gold-primary transition-colors"
                     >
                         New Match Analysis <ArrowRight className="w-4 h-4" />
                     </Link>

@@ -26,7 +26,11 @@ export default function TabNavigation({ basePath }: TabNavigationProps) {
     ];
 
     return (
-        <div className="w-full border-b border-divider bg-softwhite/50 backdrop-blur-md sticky top-14 z-30">
+        <div className="w-full sticky top-14 z-30 backdrop-blur-md"
+             style={{
+                 background: 'rgba(255,253,249,0.60)',
+                 borderBottom: '1px solid rgba(220,201,166,0.25)',
+             }}>
             <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
                 <nav className="flex items-center gap-8 -mb-[1px]" role="tablist" aria-label="Client detail sections">
                     {tabs.map((tab) => {
@@ -43,10 +47,10 @@ export default function TabNavigation({ basePath }: TabNavigationProps) {
                                 aria-selected={isActive}
                                 aria-current={isActive ? "page" : undefined}
                                 className={`
-                                    py-4 px-2 font-serif text-lg tracking-wide border-b-2 transition-all duration-300
+                                    py-4 px-2 font-serif text-[18px] tracking-wide border-b-2 transition-all duration-300
                                     ${isActive
                                         ? 'border-gold-primary text-ink font-bold'
-                                        : 'border-transparent text-muted hover:text-gold-dark hover:border-antique'
+                                        : 'border-transparent text-ink/45 hover:text-gold-dark hover:border-gold-primary/20'
                                     }
                                 `}
                             >

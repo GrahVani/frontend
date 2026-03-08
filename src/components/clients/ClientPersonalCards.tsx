@@ -71,7 +71,7 @@ export default function ClientPersonalCards({
                     <SectionHeader icon={MapPin} title="Birth Location" compact />
                     <div className="space-y-4">
                         <div className="relative">
-                            <p className="text-[11px] uppercase tracking-[0.10em] text-bronze-dark/80 font-bold mb-1.5">Place of Birth</p>
+                            <p className="text-[11px] uppercase tracking-[0.10em] text-ink/35 font-bold mb-1.5">Place of Birth</p>
                             {isEditing ? (
                                 <>
                                     <div className="relative">
@@ -79,7 +79,7 @@ export default function ClientPersonalCards({
                                             type="text"
                                             value={editData.birthPlace || ''}
                                             onChange={(e) => onLocationSearch(e.target.value)}
-                                            className="w-full text-[15px] font-serif text-ink font-medium rounded-lg px-3 py-2.5 bg-parchment/50 focus:outline-none focus:ring-2 focus:ring-gold-primary/40 transition-all"
+                                            className="w-full text-[15px] font-serif text-ink font-medium rounded-lg px-3 py-2.5 bg-surface-warm/50 focus:outline-none focus:ring-2 focus:ring-gold-primary/40 transition-all"
                                             style={{ border: '1px solid rgba(220,201,166,0.40)' }}
                                             placeholder="Search birth city..."
                                         />
@@ -99,13 +99,13 @@ export default function ClientPersonalCards({
                                                 <button
                                                     key={idx}
                                                     onClick={() => onLocationSelect(s)}
-                                                    className="w-full text-left px-3.5 py-2.5 hover:bg-parchment/50 transition-colors flex items-center gap-2.5"
+                                                    className="w-full text-left px-3.5 py-2.5 hover:bg-surface-warm/50 transition-colors flex items-center gap-2.5"
                                                     style={{ borderBottom: '1px solid rgba(220,201,166,0.15)' }}
                                                 >
                                                     <MapPin className="w-3.5 h-3.5 text-gold-dark shrink-0" />
                                                     <div>
                                                         <p className="text-[13px] font-medium text-ink">{s.formatted}</p>
-                                                        <p className="text-[10px] text-bronze-dark/60 font-bold uppercase tracking-wider">
+                                                        <p className="text-[10px] text-ink/30 font-bold uppercase tracking-wider">
                                                             {s.latitude.toFixed(4)}&deg;, {s.longitude.toFixed(4)}&deg;
                                                         </p>
                                                     </div>
