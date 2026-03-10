@@ -101,4 +101,12 @@ export const queryKeys = {
     dashboard: {
         stats: ['dashboard', 'stats'] as const,
     },
+
+    // Numerology
+    numerology: {
+        service: (category: string, slug: string, inputHash: string) =>
+            ['numerology', category, slug, inputHash] as const,
+        raw: (slug: string, inputHash: string) =>
+            ['numerology', 'raw', slug, inputHash] as const,
+    },
 } as const;

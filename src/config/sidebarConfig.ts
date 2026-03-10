@@ -20,6 +20,8 @@ import {
     Lock,
     Monitor,
     CreditCard as Billing,
+    Hash,
+    LayoutGrid,
 } from 'lucide-react';
 import { SidebarItem } from '@/components/layout/SectionSidebar';
 
@@ -61,4 +63,10 @@ export const SETTINGS_Sidebar: SidebarItem[] = [
     { name: "Notifications", path: "/settings/notifications", icon: Bell },
     { name: "Security", path: "/settings/security", icon: Lock },
     { name: "Subscription", path: "/settings/subscription", icon: Billing },
+];
+
+export const NUMEROLOGY_SYSTEMS: SidebarItem[] = [
+    { name: "Chaldean System", path: "/numerology/chaldean", icon: Hash },
+    { name: "Vedic Numerology", path: "/numerology/vedic", icon: Star },
+    { name: "Lo Shu Grid", path: "/numerology/lo-shu", icon: LayoutGrid },
 ];

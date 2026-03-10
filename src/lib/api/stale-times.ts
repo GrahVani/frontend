@@ -43,4 +43,10 @@ export const STALE_TIMES = {
 
     /** System capabilities — essentially static */
     CAPABILITIES: 24 * 60 * 60 * 1000, // 24 hours
+
+    /** Numerology service — deterministic math + AI narrative varies */
+    NUMEROLOGY: 60 * 60 * 1000, // 1 hour
+
+    /** Numerology raw calculators — pure math, fully deterministic */
+    NUMEROLOGY_RAW: 24 * 60 * 60 * 1000, // 24 hours
 } as const;

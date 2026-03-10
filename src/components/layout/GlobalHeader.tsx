@@ -11,9 +11,15 @@ import { LogOut, User } from "lucide-react";
 import MobileNav from "@/components/layout/MobileNav";
 import NavLink, { type NavSubItem } from "@/components/layout/NavLink";
 import GlobalSettingsModal from "@/components/layout/GlobalSettingsModal";
-import { CLIENTS_General_Sidebar } from "@/config/sidebarConfig";
+import { CLIENTS_General_Sidebar, NUMEROLOGY_SYSTEMS } from "@/config/sidebarConfig";
 
 const CLIENT_SUB_ITEMS: NavSubItem[] = CLIENTS_General_Sidebar.map((s) => ({
+    name: s.name,
+    path: s.path,
+    icon: s.icon,
+}));
+
+const NUMEROLOGY_SUB_ITEMS: NavSubItem[] = NUMEROLOGY_SYSTEMS.map((s) => ({
     name: s.name,
     path: s.path,
     icon: s.icon,
@@ -103,6 +109,7 @@ export default function GlobalHeader() {
                         <NavLink href="/vedic-astrology" label="Vedic Astrology" active={isActive("/vedic-astrology")} />
                         <NavLink href="/muhurta" label="Muhurta" active={isActive("/muhurta")} />
                         <NavLink href="/matchmaking" label="Matchmaking" active={isActive("/matchmaking")} />
+                        <NavLink href="/numerology" label="Numerology" active={isActive("/numerology")} subItems={NUMEROLOGY_SUB_ITEMS} />
                         <NavLink href="/calendar" label="Calendar" active={isActive("/calendar")} />
                     </nav>
                 </div>

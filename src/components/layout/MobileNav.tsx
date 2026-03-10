@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X, LayoutDashboard, Users, Star, Clock, Heart, Calendar, ChevronDown, Settings } from "lucide-react";
+import { X, LayoutDashboard, Users, Star, Clock, Heart, Calendar, ChevronDown, Settings, Hash } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
 import { SidebarItem } from "@/components/layout/SectionSidebar";
@@ -13,6 +13,7 @@ import {
     MATCHMAKING_Sidebar,
     CALENDAR_Sidebar,
     SETTINGS_Sidebar,
+    NUMEROLOGY_SYSTEMS,
 } from "@/config/sidebarConfig";
 
 interface NavItem {
@@ -27,6 +28,7 @@ const NAV_ITEMS: NavItem[] = [
     { href: "/clients", label: "Clients", icon: Users, subItems: CLIENTS_General_Sidebar },
     { href: "/vedic-astrology", label: "Vedic Astrology", icon: Star },
     { href: "/muhurta", label: "Muhurta", icon: Clock, subItems: MUHURTA_Sidebar },
+    { href: "/numerology", label: "Numerology", icon: Hash, subItems: NUMEROLOGY_SYSTEMS },
     { href: "/matchmaking", label: "Matchmaking", icon: Heart, subItems: MATCHMAKING_Sidebar },
     { href: "/calendar", label: "Calendar", icon: Calendar, subItems: CALENDAR_Sidebar },
     { href: "/settings", label: "Settings", icon: Settings, subItems: SETTINGS_Sidebar },
