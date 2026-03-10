@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip, KnowledgeBatchProvider } from '@/components/knowledge';
 
 interface PanchangaItemProps {
     label: string;
@@ -24,9 +25,10 @@ interface PanchangaItemProps {
     progress?: number;
     icon: React.ElementType;
     color: string;
+    termKey?: string;
 }
 
-function PanchangaItem({ label, value, subValue, icon: Icon, color }: PanchangaItemProps) {
+function PanchangaItem({ label, value, subValue, icon: Icon, color, termKey }: PanchangaItemProps) {
     return (
         <div className="bg-white/50 p-2.5 rounded-xl border border-gold-primary/15 flex items-center gap-3 shadow-sm group hover:border-gold-primary/30 transition-all">
             <div className={cn("p-1.5 rounded-lg bg-white shrink-0 shadow-xs group-hover:bg-gold-primary/5 transition-colors", color)}>
@@ -34,7 +36,7 @@ function PanchangaItem({ label, value, subValue, icon: Icon, color }: PanchangaI
             </div>
             <div className="min-w-0 flex-1">
                 <p className={TYPOGRAPHY.label}>
-                    {label}
+                    {termKey ? <KnowledgeTooltip term={termKey}>{label}</KnowledgeTooltip> : label}
                 </p>
                 <p className={TYPOGRAPHY.value}>
                     {value}
@@ -76,6 +78,7 @@ export default function BirthPanchanga({ data }: { data: BirthPanchangaData | nu
     const { tithi, nakshatra, yoga, karana, vara } = panchanga;
 
     return (
+        <KnowledgeBatchProvider>
         <div className="space-y-2">
             <div className="grid grid-cols-2 gap-2">
                 <PanchangaItem
@@ -84,6 +87,7 @@ export default function BirthPanchanga({ data }: { data: BirthPanchangaData | nu
                     subValue={tithi.paksha}
                     icon={Moon}
                     color="text-indigo-400"
+                    termKey="tithi"
                 />
                 <PanchangaItem
                     label="Nakshatra"
@@ -91,18 +95,21 @@ export default function BirthPanchanga({ data }: { data: BirthPanchangaData | nu
                     subValue={`Pada ${nakshatra.pada}`}
                     icon={Zap}
                     color="text-amber-400"
+                    termKey="nakshatra"
                 />
                 <PanchangaItem
                     label="Yoga"
                     value={yoga.name}
                     icon={RefreshCcw}
                     color="text-teal-400"
+                    termKey="yoga_panchanga"
                 />
                 <PanchangaItem
                     label="Karana"
                     value={karana.name}
                     icon={CalendarDays}
                     color="text-rose-400"
+                    termKey="karana"
                 />
             </div>
 
@@ -125,11 +132,14 @@ export default function BirthPanchanga({ data }: { data: BirthPanchangaData | nu
 
             <div className="pt-1">
                 <div className="text-center bg-surface-warm/40 py-1.5 rounded-lg border border-gold-primary/10">
-                    <span className={cn(TYPOGRAPHY.label, "mb-0 mr-2")}>Birth vara :</span>
+                    <span className={cn(TYPOGRAPHY.label, "mb-0 mr-2")}>
+                        <KnowledgeTooltip term="vara">Birth vara</KnowledgeTooltip> :
+                    </span>
                     <span className={TYPOGRAPHY.value}>{vara.name}</span>
                 </div>
             </div>
         </div>
+        </KnowledgeBatchProvider>
     );
 }
 

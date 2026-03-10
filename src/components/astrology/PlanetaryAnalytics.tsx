@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { Shield, Zap, TrendingDown, Anchor } from 'lucide-react';
 import DataGrid, { type DataGridColumn } from '@/components/ui/DataGrid';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 export interface DetailedPlanetInfo {
     planet: string;
@@ -54,7 +55,7 @@ function DignityBadge({ dignity }: { dignity?: DetailedPlanetInfo['dignity'] }) 
 const COLUMNS: DataGridColumn<DetailedPlanetInfo>[] = [
     {
         key: 'planet',
-        header: 'Graha',
+        header: <KnowledgeTooltip term="graha_overview" unstyled>Graha</KnowledgeTooltip>,
         sortable: true,
         cellClassName: 'px-6',
         headerClassName: 'px-6',
@@ -93,7 +94,7 @@ const COLUMNS: DataGridColumn<DetailedPlanetInfo>[] = [
     },
     {
         key: 'nakshatra',
-        header: 'Nakshatra',
+        header: <KnowledgeTooltip term="nakshatra" unstyled>Nakshatra</KnowledgeTooltip>,
         cellClassName: 'px-6',
         headerClassName: 'px-6',
         render: (row) => (
@@ -105,7 +106,7 @@ const COLUMNS: DataGridColumn<DetailedPlanetInfo>[] = [
     },
     {
         key: 'shadbala',
-        header: 'Shadbala',
+        header: <KnowledgeTooltip term="shadbala_system" unstyled>Shadbala</KnowledgeTooltip>,
         sortable: true,
         sortFn: (a, b) => (a.shadbala || 0) - (b.shadbala || 0),
         cellClassName: 'px-6',
@@ -143,7 +144,7 @@ const COLUMNS: DataGridColumn<DetailedPlanetInfo>[] = [
     },
     {
         key: 'karaka',
-        header: 'Karaka',
+        header: <KnowledgeTooltip term="karaka_system" unstyled>Karaka</KnowledgeTooltip>,
         cellClassName: 'px-6',
         headerClassName: 'px-6',
         render: (row) => row.karaka ? (

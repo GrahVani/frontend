@@ -42,6 +42,7 @@ export { panchangApi } from './panchang';
 export { matchmakingApi } from './matchmaking';
 export { fetchDailyMuhurta, searchCategoryMuhurta } from './muhurta';
 export { numerologyApi } from './numerology';
+export { knowledgeApi } from './knowledge';
 
 // Error mapping & stale times
 export { mapApiError } from './error-codes';

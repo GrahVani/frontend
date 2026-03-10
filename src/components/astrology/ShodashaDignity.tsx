@@ -9,6 +9,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface ChartEntry {
     chartType: string;
@@ -236,7 +237,7 @@ export default function ShodashaDignity({ data, activeSystem, className }: Digni
                     <div className="flex items-center gap-3">
                         <div className="px-3 py-1.5 bg-copper-900 border border-copper-800 text-copper-50 rounded-xl text-[10px] font-bold shadow-md flex items-center gap-2 hover:scale-105 transition-transform cursor-default group">
                             <Zap className="w-3 h-3 text-amber-400 group-hover:rotate-12 transition-transform" />
-                            <span>Vimsopaka Scale</span>
+                            <span><KnowledgeTooltip term="shadbala_system" unstyled>Vimsopaka</KnowledgeTooltip> Scale</span>
                         </div>
                     </div>
                 </div>
@@ -339,21 +340,21 @@ export default function ShodashaDignity({ data, activeSystem, className }: Digni
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-sm" />
-                            <span className="text-[9px] text-copper-600 font-black uppercase tracking-widest">Ucha</span>
+                            <span className="text-[9px] text-copper-600 font-black uppercase tracking-widest"><KnowledgeTooltip term="dignity_exalted" unstyled>Ucha</KnowledgeTooltip></span>
                         </div>
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-sm" />
-                            <span className="text-[9px] text-copper-600 font-black uppercase tracking-widest">Swa</span>
+                            <span className="text-[9px] text-copper-600 font-black uppercase tracking-widest"><KnowledgeTooltip term="dignity_own" unstyled>Swa</KnowledgeTooltip></span>
                         </div>
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-rose-500 shadow-sm" />
-                            <span className="text-[9px] text-copper-600 font-black uppercase tracking-widest">Neecha</span>
+                            <span className="text-[9px] text-copper-600 font-black uppercase tracking-widest"><KnowledgeTooltip term="dignity_debilitated" unstyled>Neecha</KnowledgeTooltip></span>
                         </div>
                     </div>
 
                     <div className="flex items-center gap-1.5 text-[9px] text-copper-400 font-bold uppercase tracking-tight">
                         <Info className="w-3 h-3" />
-                        <span>Vimsopaka Analysis</span>
+                        <span><KnowledgeTooltip term="shadbala_system" unstyled>Vimsopaka</KnowledgeTooltip> Analysis</span>
                     </div>
                 </div>
             </div>

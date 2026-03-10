@@ -7,6 +7,7 @@ import { getHouseDetails } from '@/data/house-data';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { HOUSE_CENTERS_MAP } from '@/lib/chart-geometry';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface ChartWithPopupProps {
     planets: Planet[];
@@ -144,7 +145,7 @@ export default function ChartWithPopup({ planets, ascendantSign, className = "",
                                 <div className="text-[20px] leading-none">{houseDetails.sign.symbol}</div>
                                 <div>
                                     <div className={cn("leading-tight", TYPOGRAPHY.value)} style={{ fontSize: '10px' }}>{houseDetails.sign.rulingPlanet}</div>
-                                    <div className={cn("leading-tight", TYPOGRAPHY.label)} style={{ fontSize: '8px' }}>Ruler</div>
+                                    <div className={cn("leading-tight", TYPOGRAPHY.label)} style={{ fontSize: '8px' }}><KnowledgeTooltip term="ruling_planet" unstyled>Ruler</KnowledgeTooltip></div>
                                 </div>
                             </div>
                             <div className="text-right">
@@ -158,7 +159,7 @@ export default function ChartWithPopup({ planets, ascendantSign, className = "",
                             <div className="">
                                 <div className="flex items-center gap-1.5 mb-1.5">
                                     <Sparkles className="w-3 h-3 text-gold-primary" />
-                                    <span className={TYPOGRAPHY.label}>Planets Here</span>
+                                    <span className={TYPOGRAPHY.label}><KnowledgeTooltip term="planets_in_house" unstyled>Planets Here</KnowledgeTooltip></span>
                                 </div>
                                 <div className="space-y-1">
                                     {planetsInHouse.map((p, i) => (
@@ -173,7 +174,7 @@ export default function ChartWithPopup({ planets, ascendantSign, className = "",
                             </div>
                         ) : (
                             <div className="py-2 text-center text-[10px] text-ink/45 italic bg-surface-warm rounded-lg border border-gold-primary/10">
-                                Empty House
+                                <KnowledgeTooltip term="empty_house" unstyled>Empty House</KnowledgeTooltip>
                             </div>
                         )}
                     </div>

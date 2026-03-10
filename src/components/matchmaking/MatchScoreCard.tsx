@@ -3,6 +3,7 @@
 import { Star, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Badge from "@/components/ui/Badge";
+import { KnowledgeTooltip } from "@/components/knowledge";
 import type { MatchResult } from "@/types/matchmaking.types";
 
 interface MatchScoreCardProps {
@@ -65,18 +66,18 @@ export default function MatchScoreCard({ result, className }: MatchScoreCardProp
                         result.manglikStatus.cancelled ? (
                             <>
                                 <CheckCircle className="w-4 h-4 text-status-success" />
-                                <span className="text-[14px] text-ink">Manglik Dosha — Cancelled</span>
+                                <span className="text-[14px] text-ink"><KnowledgeTooltip term="manglik_dosha">Manglik Dosha</KnowledgeTooltip> — Cancelled</span>
                             </>
                         ) : (
                             <>
                                 <AlertTriangle className="w-4 h-4 text-status-warning" />
-                                <span className="text-[14px] text-ink">Manglik Dosha Present</span>
+                                <span className="text-[14px] text-ink"><KnowledgeTooltip term="manglik_dosha">Manglik Dosha</KnowledgeTooltip> Present</span>
                             </>
                         )
                     ) : (
                         <>
                             <CheckCircle className="w-4 h-4 text-status-success" />
-                            <span className="text-[14px] text-ink">No Manglik Dosha</span>
+                            <span className="text-[14px] text-ink">No <KnowledgeTooltip term="manglik_dosha">Manglik Dosha</KnowledgeTooltip></span>
                         </>
                     )}
                 </div>
@@ -84,12 +85,12 @@ export default function MatchScoreCard({ result, className }: MatchScoreCardProp
                     {result.naadiDosha ? (
                         <>
                             <XCircle className="w-4 h-4 text-status-error" />
-                            <span className="text-[14px] text-ink">Naadi Dosha Present</span>
+                            <span className="text-[14px] text-ink"><KnowledgeTooltip term="naadi_dosha">Naadi Dosha</KnowledgeTooltip> Present</span>
                         </>
                     ) : (
                         <>
                             <CheckCircle className="w-4 h-4 text-status-success" />
-                            <span className="text-[14px] text-ink">No Naadi Dosha</span>
+                            <span className="text-[14px] text-ink">No <KnowledgeTooltip term="naadi_dosha">Naadi Dosha</KnowledgeTooltip></span>
                         </>
                     )}
                 </div>
@@ -97,12 +98,12 @@ export default function MatchScoreCard({ result, className }: MatchScoreCardProp
                     {result.bhakootDosha ? (
                         <>
                             <XCircle className="w-4 h-4 text-status-error" />
-                            <span className="text-[14px] text-ink">Bhakoot Dosha Present</span>
+                            <span className="text-[14px] text-ink"><KnowledgeTooltip term="bhakoot_dosha">Bhakoot Dosha</KnowledgeTooltip> Present</span>
                         </>
                     ) : (
                         <>
                             <CheckCircle className="w-4 h-4 text-status-success" />
-                            <span className="text-[14px] text-ink">No Bhakoot Dosha</span>
+                            <span className="text-[14px] text-ink">No <KnowledgeTooltip term="bhakoot_dosha">Bhakoot Dosha</KnowledgeTooltip></span>
                         </>
                     )}
                 </div>

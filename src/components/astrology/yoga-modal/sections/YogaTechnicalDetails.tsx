@@ -3,6 +3,7 @@
 import React, { memo } from 'react';
 import { Activity } from 'lucide-react';
 import type { NormalizedTechnical } from '@/types/yoga.types';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface YogaTechnicalDetailsProps {
     data: NormalizedTechnical;
@@ -31,7 +32,7 @@ export const YogaTechnicalDetails = memo(function YogaTechnicalDetails({ data }:
             <div className="grid grid-cols-2 gap-2">
                 {data.ayanamsaValue && (
                     <div className="bg-surface-warm/50 border border-gold-primary/15 rounded-lg p-2">
-                        <span className="block text-[8px] font-bold text-ink opacity-50 uppercase tracking-tighter">Ayanamsa</span>
+                        <span className="block text-[8px] font-bold text-ink opacity-50 uppercase tracking-tighter"><KnowledgeTooltip term="ayanamsa" unstyled>Ayanamsa</KnowledgeTooltip></span>
                         <span className="text-[10px] font-serif font-bold text-ink">{data.ayanamsaValue}</span>
                     </div>
                 )}

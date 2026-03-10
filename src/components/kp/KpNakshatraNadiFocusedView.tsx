@@ -5,6 +5,7 @@ import { KpNakshatraNadiResponse } from '@/types/kp.types';
 import { Sparkles, Compass, Star, Moon, Sun, CircleDot } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { PLANET_COLORS } from '@/design-tokens/colors';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 // Planet data derived from centralized tokens
 const PLANET_DATA: Record<string, { symbol: string; color: string; element: string }> = Object.fromEntries(
@@ -132,6 +133,7 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
             <div className="flex items-center border-b border-gold-primary/15 bg-surface-warm/60 rounded-t-xl overflow-hidden">
                 <TabButton id="planets" label="Planetary nadi" icon={Sparkles} />
                 <TabButton id="cusps" label="Cuspal nadi (bhavas)" icon={Compass} />
+                {/* KnowledgeTooltips applied on detail panel labels below */}
             </div>
 
             {/* Main Content */}
@@ -213,7 +215,7 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                         <div className="bg-surface-warm/40 rounded-xl p-4 text-center border border-gold-primary/20 border-b-4 shadow-sm flex flex-col items-center justify-center">
                             <Star className="w-6 h-6 text-gold-dark/80 mb-2" />
                             <span className={cn(TYPOGRAPHY.sectionTitle, "text-[30px] leading-none mb-1")}>27</span>
-                            <span className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-widest")}>Nakshatras</span>
+                            <span className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-widest")}><KnowledgeTooltip term="nakshatra">Nakshatras</KnowledgeTooltip></span>
                         </div>
                     </div>
                 </div>
@@ -261,7 +263,7 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
 
                             {/* Nakshatra Details */}
                             <div className="bg-white rounded-xl p-4 border border-gold-primary/20 shadow-sm">
-                                <h4 className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wider mb-3")}>Nakshatra (Star)</h4>
+                                <h4 className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wider mb-3")}><KnowledgeTooltip term="nakshatra">Nakshatra</KnowledgeTooltip> (Star)</h4>
                                 <div className="flex items-center gap-3">
                                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center shadow-md">
                                         <Star className="w-6 h-6 text-white" />
@@ -280,7 +282,7 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
 
                             {/* Sub Lord - Highlighted */}
                             <div className="bg-gradient-to-br from-gold-primary to-gold-dark rounded-xl p-4 text-white shadow-md border border-gold-dark/30">
-                                <h4 className={cn(TYPOGRAPHY.label, "text-[10px] !text-white/90 uppercase tracking-widest mb-2")}>Sub lord (key signifier)</h4>
+                                <h4 className={cn(TYPOGRAPHY.label, "text-[10px] !text-white/90 uppercase tracking-widest mb-2")}><KnowledgeTooltip term="sub_lord" unstyled>Sub lord</KnowledgeTooltip> (key signifier)</h4>
                                 <div className="flex items-center gap-3">
                                     <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-[24px] shadow-inner text-white">
                                         {PLANET_DATA[normalize(selectedDetails.subLord)]?.symbol || '☉'}
@@ -303,12 +305,12 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                                     <span className="text-gold-primary/40">→</span>
                                     <div className="flex-1">
                                         <span className="text-[18px]">{PLANET_DATA[normalize(selectedDetails.nakshatraLord)]?.symbol || '☉'}</span>
-                                        <span className={cn(TYPOGRAPHY.label, "block text-[10px] opacity-60")}>Star lord</span>
+                                        <span className={cn(TYPOGRAPHY.label, "block text-[10px] opacity-60")}><KnowledgeTooltip term="star_lord">Star lord</KnowledgeTooltip></span>
                                     </div>
                                     <span className="text-gold-primary/40">→</span>
                                     <div className="flex-1 bg-gold-primary/10 rounded-lg py-1">
                                         <span className="text-[18px]">{PLANET_DATA[normalize(selectedDetails.subLord)]?.symbol || '☉'}</span>
-                                        <span className={cn(TYPOGRAPHY.label, "block text-[10px] !text-gold-dark !font-bold")}>Sub lord</span>
+                                        <span className={cn(TYPOGRAPHY.label, "block text-[10px] !text-gold-dark !font-bold")}><KnowledgeTooltip term="sub_lord" unstyled>Sub lord</KnowledgeTooltip></span>
                                     </div>
                                 </div>
                             </div>
@@ -326,7 +328,7 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
             {/* Footer */}
             <div className="bg-surface-warm/30 p-3 text-center border-t border-gold-primary/10 text-[12px] text-ink rounded-b-xl">
                 <Star className="w-3 h-3 inline-block mr-1 text-gold-dark" />
-                <strong className="font-serif">Nakshatra nadi system</strong>: Star lords reveal the source, Sub lords determine the result.
+                <strong className="font-serif"><KnowledgeTooltip term="kp_nakshatra_nadi">Nakshatra nadi</KnowledgeTooltip> system</strong>: <KnowledgeTooltip term="star_lord">Star lords</KnowledgeTooltip> reveal the source, <KnowledgeTooltip term="sub_lord">Sub lords</KnowledgeTooltip> determine the result.
             </div>
         </div >
     );

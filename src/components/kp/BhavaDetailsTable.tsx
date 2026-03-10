@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import type { KpBhavaRaw } from '@/types/kp.types';
 import { Sparkles } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface BhavaDetailsTableProps {
     bhavaDetails: Record<string, KpBhavaRaw>;
@@ -50,10 +51,10 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
                             <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Sign & degree</th>
                             <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Nakshatra</th>
                             <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center w-12")}>Pada</th>
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center w-12")} title="Rashi Lord">RL</th>
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center w-12")} title="Nakshatra Lord">NL</th>
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center !text-gold-dark w-12")} title="Sub Lord">SL</th>
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center w-12")} title="Sub-Sub Lord">SS</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center w-12")}><KnowledgeTooltip term="sign_lord">RL</KnowledgeTooltip></th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center w-12")}><KnowledgeTooltip term="star_lord">NL</KnowledgeTooltip></th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center !text-gold-dark w-12")}><KnowledgeTooltip term="sub_lord">SL</KnowledgeTooltip></th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center w-12")}><KnowledgeTooltip term="sub_sub_lord">SS</KnowledgeTooltip></th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gold-primary/15">
@@ -123,19 +124,19 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
             <div className="mt-4 flex justify-end gap-5 text-[10px] text-ink font-sans">
                 <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-primary"></span>
-                    <span className="uppercase tracking-wider font-semibold">RL: Rashi lord</span>
+                    <span className="uppercase tracking-wider font-semibold">RL: <KnowledgeTooltip term="sign_lord">Rashi lord</KnowledgeTooltip></span>
                 </div>
                 <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-primary"></span>
-                    <span className="uppercase tracking-wider font-semibold">NL: Nakshatra lord</span>
+                    <span className="uppercase tracking-wider font-semibold">NL: <KnowledgeTooltip term="star_lord">Nakshatra lord</KnowledgeTooltip></span>
                 </div>
                 <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-gold-primary shadow-[0_0_4px_rgba(201,162,77,0.5)]"></span>
-                    <span className="uppercase tracking-wider font-bold text-gold-dark">SL: Sub lord</span>
+                    <span className="uppercase tracking-wider font-bold text-gold-dark">SL: <KnowledgeTooltip term="sub_lord">Sub lord</KnowledgeTooltip></span>
                 </div>
                 <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-primary"></span>
-                    <span className="uppercase tracking-wider font-semibold">SS: Sub-sub lord</span>
+                    <span className="uppercase tracking-wider font-semibold">SS: <KnowledgeTooltip term="sub_sub_lord">Sub-sub lord</KnowledgeTooltip></span>
                 </div>
             </div>
         </div>

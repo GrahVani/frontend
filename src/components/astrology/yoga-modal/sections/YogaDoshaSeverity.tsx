@@ -5,6 +5,7 @@ import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import type { NormalizedDoshaSeverity } from '@/types/yoga.types';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface YogaDoshaSeverityProps {
     data: NormalizedDoshaSeverity;
@@ -27,7 +28,7 @@ export const YogaDoshaSeverity = memo(function YogaDoshaSeverity({ data }: YogaD
             <div>
                 <div className="flex items-center gap-2 mb-1">
                     <h4 className={cn('text-[14px] font-serif font-bold', styles.text)}>
-                        Dosha Severity
+                        <KnowledgeTooltip term="dosha_overview" unstyled>Dosha</KnowledgeTooltip> Severity
                     </h4>
                     <span className={cn(
                         'px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider',

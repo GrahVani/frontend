@@ -13,6 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { PLANET_COLORS } from '@/design-tokens/colors';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 // ============================================================================
 // Shadbala Types & Interfaces
@@ -173,7 +174,7 @@ export default function ShadbalaDashboard({ displayData }: { displayData: Shadba
             <div className="bg-white border border-gold-primary/10 rounded-3xl p-4 shadow-sm overflow-hidden">
                 <div className="flex items-center gap-2 mb-6">
                     <BarChart2 className="w-5 h-5 text-gold-dark" />
-                    <h3 className="text-[14px] font-black uppercase tracking-widest text-ink">Rupa Strength Overview</h3>
+                    <h3 className="text-[14px] font-black uppercase tracking-widest text-ink"><KnowledgeTooltip term="shadbala_system">Rupa Strength</KnowledgeTooltip> Overview</h3>
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-8">
                     {sortedPlanets.map((p) => (
@@ -217,7 +218,7 @@ export default function ShadbalaDashboard({ displayData }: { displayData: Shadba
                 <div className="bg-white border border-gold-primary/10 rounded-3xl p-6 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                         <Activity className="w-5 h-5 text-emerald-500" />
-                        <h3 className="text-[14px] font-black uppercase tracking-widest text-ink">Ishta & Kashta Phala</h3>
+                        <h3 className="text-[14px] font-black uppercase tracking-widest text-ink"><KnowledgeTooltip term="ishta_kashta_phala">Ishta & Kashta Phala</KnowledgeTooltip></h3>
                     </div>
                     <div className="space-y-4">
                         {sortedPlanets.map(p => {

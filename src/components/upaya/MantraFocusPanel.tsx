@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface YantraRecommendation {
     planet: string;
@@ -35,7 +36,7 @@ export default function MantraFocusPanel({ currentDasha, yantras }: MantraFocusP
     return (
         <div className="space-y-4">
             <div className="space-y-3">
-                <h3 className="text-[13px] font-medium tracking-[0.05em] text-amber-900/60 px-2">1. High Priority: Dasha Period Mantras</h3>
+                <h3 className="text-[13px] font-medium tracking-[0.05em] text-amber-900/60 px-2">1. High Priority: <KnowledgeTooltip term="dasha_system">Dasha</KnowledgeTooltip> Period <KnowledgeTooltip term="general_mantra">Mantras</KnowledgeTooltip></h3>
 
                 {/* Mahadasha Item */}
                 <motion.div
@@ -50,7 +51,7 @@ export default function MantraFocusPanel({ currentDasha, yantras }: MantraFocusP
 
                         <div className="flex-1 min-w-0">
                             <h4 className="text-[16px] font-medium text-ink tracking-tight">
-                                {currentDasha} <span className="opacity-40 text-[12px]">(Mahadasha)</span>
+                                {currentDasha} <span className="opacity-40 text-[12px]">(<KnowledgeTooltip term="dasha_mahadasha">Mahadasha</KnowledgeTooltip>)</span>
                             </h4>
                             <div className="flex items-baseline gap-2 overflow-hidden">
                                 <p className="text-[18px] font-serif text-ink tracking-tight truncate">
@@ -90,7 +91,7 @@ export default function MantraFocusPanel({ currentDasha, yantras }: MantraFocusP
                                     </p>
                                     <span className="text-[12px] font-medium text-amber-900/40 whitespace-nowrap">| Goal: 108</span>
                                 </div>
-                                <p className="text-[11px] text-amber-600 mt-0.5 font-medium tracking-wide italic">*Best during Rahu Kaal*</p>
+                                <p className="text-[11px] text-amber-600 mt-0.5 font-medium tracking-wide italic">*Best during <KnowledgeTooltip term="rahu_kaal">Rahu Kaal</KnowledgeTooltip>*</p>
                             </div>
 
                             <div className="hidden sm:block">

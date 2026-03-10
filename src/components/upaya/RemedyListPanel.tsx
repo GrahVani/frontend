@@ -3,6 +3,7 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface RemedyRecommendation {
     priority: number;
@@ -31,7 +32,7 @@ export default function RemedyListPanel({ recommendations }: RemedyListPanelProp
                 <span className="w-4 h-4 rounded-full flex items-center justify-center border bg-gold-primary/20 border-gold-primary/30">
                     <span className="w-1.5 h-1.5 bg-amber-500 rounded-full" />
                 </span>
-                Prioritized Remedial Recommendations
+                Prioritized <KnowledgeTooltip term="general_upaya">Remedial</KnowledgeTooltip> Recommendations
             </h3>
 
             <div className="space-y-4">
@@ -87,7 +88,7 @@ export default function RemedyListPanel({ recommendations }: RemedyListPanelProp
                         <div className="mt-4 pt-4 border-t border-gold-primary/10 hidden group-hover:block animate-in fade-in slide-in-from-top-2 duration-300">
                             <div className="grid grid-cols-2 gap-3 mb-3">
                                 <div>
-                                    <p className="text-[9px] uppercase tracking-widest font-bold mb-1 text-ink">Mantra</p>
+                                    <p className="text-[9px] uppercase tracking-widest font-bold mb-1 text-ink"><KnowledgeTooltip term="general_mantra">Mantra</KnowledgeTooltip></p>
                                     <p className="text-[10px] italic leading-tight line-clamp-2 text-ink">"{rec.gemstone_info.mantra.split('(')[0]}"</p>
                                 </div>
                                 <div>

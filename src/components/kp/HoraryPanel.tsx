@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import type { KpHoraryResponse } from '@/types/kp.types';
 import { HelpCircle, Shuffle, Send, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface HoraryPanelProps {
     onSubmit: (horaryNumber: number, question: string) => void;
@@ -61,7 +62,7 @@ export default function HoraryPanel({
                         <HelpCircle className="w-5 h-5 text-indigo-600" />
                     </div>
                     <div>
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px]")}>KP Horary (Prashna)</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px]")}>KP <KnowledgeTooltip term="kp_horary">Horary</KnowledgeTooltip> (Prashna)</h3>
                         <p className={cn(TYPOGRAPHY.subValue, "text-[12px]")}>Enter a number between 1-249 and your question</p>
                     </div>
                 </div>
@@ -70,7 +71,7 @@ export default function HoraryPanel({
                     {/* Horary Number */}
                     <div>
                         <label className={cn(TYPOGRAPHY.label, "block text-[10px] uppercase tracking-wider mb-2")}>
-                            Horary Number (1-249)
+                            <KnowledgeTooltip term="kp_horary">Horary</KnowledgeTooltip> Number (1-249)
                         </label>
                         <div className="flex gap-2">
                             <input
@@ -188,13 +189,13 @@ export default function HoraryPanel({
                     {/* Ascendant Details */}
                     {result.ascendant && (
                         <div className="p-4 bg-surface-warm rounded-xl mb-4">
-                            <p className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wider mb-2 opacity-70")}>Horary Ascendant</p>
+                            <p className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wider mb-2 opacity-70")}><KnowledgeTooltip term="kp_horary">Horary</KnowledgeTooltip> Ascendant</p>
                             <div className="flex items-center gap-4">
                                 <span className={cn(TYPOGRAPHY.value, "text-[16px]")}>{result.ascendant.sign}</span>
                                 <span className={cn(TYPOGRAPHY.subValue, "text-[12px]")}>{result.ascendant.degree}°</span>
                                 <span className={cn(TYPOGRAPHY.subValue, "text-[12px]")}>{result.ascendant.nakshatra}</span>
                                 <span className={cn(TYPOGRAPHY.label, "px-2 py-0.5 bg-copper-100 !text-copper-700 rounded text-[10px] !font-bold")}>
-                                    Sub: {result.ascendant.subLord}
+                                    <KnowledgeTooltip term="sub_lord" unstyled>Sub</KnowledgeTooltip>: {result.ascendant.subLord}
                                 </span>
                             </div>
                         </div>
@@ -203,7 +204,7 @@ export default function HoraryPanel({
                     {/* Significators Summary */}
                     {result.significators && result.significators.length > 0 && (
                         <div>
-                            <p className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wider mb-2 opacity-70")}>House Significators</p>
+                            <p className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wider mb-2 opacity-70")}>House <KnowledgeTooltip term="kp_significator">Significators</KnowledgeTooltip></p>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                                 {result.significators.slice(0, 6).map((sig, idx) => (
                                     <div key={idx} className="p-2 bg-surface-warm border border-gold-primary/20 rounded-lg">

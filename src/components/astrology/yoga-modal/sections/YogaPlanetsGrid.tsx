@@ -4,6 +4,7 @@ import React, { memo } from 'react';
 import { LayoutGrid } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { PlanetPosition } from '@/types/yoga.types';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface YogaPlanetsGridProps {
     data: Record<string, PlanetPosition>;
@@ -34,7 +35,7 @@ export const YogaPlanetsGrid = memo(function YogaPlanetsGrid({ data }: YogaPlane
             <div className="flex items-center gap-2 mb-3 px-1">
                 <LayoutGrid className="w-3.5 h-3.5 text-gold-primary" />
                 <span className="text-[10px] font-bold uppercase tracking-wider text-ink opacity-60">
-                    Planetary Positions
+                    <KnowledgeTooltip term="graha_overview" unstyled>Planetary</KnowledgeTooltip> Positions
                 </span>
             </div>
 

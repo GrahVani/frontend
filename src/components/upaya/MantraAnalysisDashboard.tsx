@@ -11,6 +11,7 @@ import WeakPlanetSadhana from '@/components/upaya/WeakPlanetSadhana';
 import SadhanaChartPanel from '@/components/upaya/SadhanaChartPanel';
 import { useVedicClient } from '@/context/VedicClientContext';
 import styles from './RemedialShared.module.css';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 
@@ -42,7 +43,7 @@ const MantraAnalysisDashboard: React.FC<MantraAnalysisDashboardProps> = ({ data 
                 <div className="flex items-center justify-between border-b border-gold-primary/20 pb-4">
                     <div className="flex items-center gap-3">
                         <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-bold tracking-tight")}>
-                            Mantras : {String(data.user_name || "Sadhaka")}
+                            <KnowledgeTooltip term="general_mantra">Mantras</KnowledgeTooltip> : {String(data.user_name || "Sadhaka")}
                         </h2>
                     </div>
                 </div>
@@ -65,7 +66,7 @@ const MantraAnalysisDashboard: React.FC<MantraAnalysisDashboardProps> = ({ data 
                 <div className="lg:col-span-8">
                     <div className="rounded-[2.5rem] bg-surface-warm/95 border border-gold-primary/20 shadow-xl overflow-hidden flex flex-col p-6 space-y-4 h-fit">
                         <div className="flex items-center justify-between px-2">
-                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] font-medium tracking-tight")}>Today's mantra focus (priority)</h2>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] font-medium tracking-tight")}>Today&apos;s <KnowledgeTooltip term="general_mantra">mantra</KnowledgeTooltip> focus (priority)</h2>
                             <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.3)] animate-pulse" />
                         </div>
 

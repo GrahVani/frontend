@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { COLORS } from '@/design-tokens/colors';
 import { parseChartData } from '@/lib/chart-helpers';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface SadhanaChartPanelProps {
     chartData: Record<string, unknown>;
@@ -23,7 +24,7 @@ export default function SadhanaChartPanel({ chartData }: SadhanaChartPanelProps)
             <div className={cn("flex items-center justify-between px-4 py-2 h-11 shrink-0", COLORS.wbSectionHeader)}>
                 <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Horoscope projection</h3>
                 <div className="px-2 py-0.5 bg-gold-primary/10 rounded border border-gold-primary/15">
-                    <span className={cn(TYPOGRAPHY.label, "text-ink !mb-0")}>Lahiri</span>
+                    <span className={cn(TYPOGRAPHY.label, "text-ink !mb-0")}><KnowledgeTooltip term="ayanamsa_lahiri" unstyled>Lahiri</KnowledgeTooltip></span>
                 </div>
             </div>
 

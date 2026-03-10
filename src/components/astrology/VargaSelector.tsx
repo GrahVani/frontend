@@ -3,6 +3,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Layers } from 'lucide-react';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface Varga {
     id: string;
@@ -39,7 +40,7 @@ export default function VargaSelector({ activeVarga, onSelect }: VargaSelectorPr
             <div className="flex items-center gap-2 bg-ink/5 border border-gold-primary/10 p-1 rounded-2xl backdrop-blur-sm shadow-inner">
                 <div className="px-4 py-2 flex items-center gap-2 border-r border-gold-primary/10 mr-1">
                     <Layers className="w-4 h-4 text-gold-dark" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-body/60">Varga</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-body/60"><KnowledgeTooltip term="varga_chart" unstyled>Varga</KnowledgeTooltip></span>
                 </div>
                 {VARGAS.map((varga) => {
                     const isActive = activeVarga === varga.id;

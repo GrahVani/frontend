@@ -9,6 +9,7 @@ import { ChartWithPopup } from "@/components/astrology/NorthIndianChart";
 import { Modal } from '@/components/ui/Modal';
 import { YogaModal } from '@/components/astrology/yoga-modal/index';
 import { YogaItem } from '@/types/yoga-ui.types';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface Yoga {
     id: string;
@@ -73,7 +74,7 @@ export default function ActiveYogasLayout({
             <div className="flex flex-col gap-2 min-h-[360px] h-[60vh] max-h-[600px] w-full lg:w-[440px] shrink-0">
                 <div className="border border-gold-primary/15 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm max-w-[440px]">
                     <div className="bg-gold-primary/10 px-3 py-1.5 border-b border-gold-primary/15 flex justify-between items-center shrink-0">
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "leading-tight tracking-wide")}>Birth chart (D1)</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "leading-tight tracking-wide")}><KnowledgeTooltip term="chart_birth" unstyled>Birth chart</KnowledgeTooltip> (D1)</h3>
                         <button
                             onClick={() => setZoomedChart({ varga: "D1", label: "Birth chart (D1)" })}
                             className="text-ink hover:text-gold-dark transition-colors"
@@ -98,7 +99,7 @@ export default function ActiveYogasLayout({
             <div className="flex-1 flex flex-col gap-2 min-h-[360px] h-[60vh] max-h-[600px] min-w-0">
                 <div className="border border-gold-primary/15 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm">
                     <div className="bg-gold-primary/10 px-4 py-2 border-b border-gold-primary/15 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "leading-tight tracking-wide whitespace-nowrap")}>Yoga & combinations</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "leading-tight tracking-wide whitespace-nowrap")}><KnowledgeTooltip term="yoga_system" unstyled>Yoga</KnowledgeTooltip> & combinations</h3>
 
                         {/* Integrated Header Dropdown */}
                         <div className="relative group w-full sm:w-48 shrink-0">

@@ -9,6 +9,7 @@ import { clientApi } from '@/lib/api'; // Keep for now if we do manual expansion
 import { useAstrologerStore } from '@/store/useAstrologerStore';
 import { useDasha } from '@/hooks/queries/useCalculations';
 import { captureException } from '@/lib/monitoring';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface DashaLevel {
     planet: string;
@@ -150,7 +151,7 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
                     onClick={() => setExpanded([])}
                     className={cn("hover:text-gold-dark transition-colors font-semibold uppercase tracking-widest text-[12px]", expanded.length === 0 ? "text-gold-dark" : "text-ink/60")}
                 >
-                    Mahadasha
+                    <KnowledgeTooltip term="dasha_mahadasha">Mahadasha</KnowledgeTooltip>
                 </button>
                 {expanded.map((id, idx) => {
                     const label = id.split('-').pop();
@@ -187,7 +188,7 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
                 <div>
                     {!compact ? (
                         <>
-                            <h3 className="text-[12px] font-semibold text-gold-dark uppercase tracking-[0.3em] mb-1">Vimshottari System</h3>
+                            <h3 className="text-[12px] font-semibold text-gold-dark uppercase tracking-[0.3em] mb-1"><KnowledgeTooltip term="dasha_vimshottari">Vimshottari System</KnowledgeTooltip></h3>
                             <h2 className="text-[24px] font-serif text-ink font-bold tracking-tight italic">Temporal Matrix</h2>
                         </>
                     ) : (

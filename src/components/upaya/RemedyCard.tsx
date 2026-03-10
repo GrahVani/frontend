@@ -3,6 +3,7 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
 import { Check, Info, AlertTriangle, Dog, Bird, User, Hand, EyeOff, Sparkles } from 'lucide-react';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface RemedyCardProps {
     planet: string;
@@ -77,7 +78,7 @@ export default function RemedyCard({
 
                         {/* Remedy */}
                         <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase text-ink/55 tracking-tighter">Remedy:</span>
+                            <span className="text-[10px] font-black uppercase text-ink/55 tracking-tighter"><KnowledgeTooltip term="general_upaya">Remedy</KnowledgeTooltip>:</span>
                             <span className="text-[11px] font-bold text-blue-900 leading-tight">{remedyText}</span>
                         </div>
 

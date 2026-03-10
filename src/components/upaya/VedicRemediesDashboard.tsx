@@ -19,6 +19,7 @@ import VedicStrengthPanel from '@/components/upaya/VedicStrengthPanel';
 import SadhanaChartPanel from '@/components/upaya/SadhanaChartPanel';
 import styles from './RemedialShared.module.css';
 import { useVedicClient } from '@/context/VedicClientContext';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 
 interface VedicRemediesDashboardProps {
@@ -49,7 +50,7 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
                 <div className="flex items-center justify-between border-b border-gold-primary/10 pb-4">
                     <div className="flex items-center gap-3">
                         <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-bold tracking-tight")}>
-                            Vedic Remedies : {String(data.user_name || "User")}
+                            Vedic <KnowledgeTooltip term="general_upaya">Remedies</KnowledgeTooltip> : {String(data.user_name || "User")}
                         </h2>
                     </div>
                 </div>
@@ -83,7 +84,7 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
                                 <ScrollText className="w-4 h-4 text-purple-600" />
                             </div>
                             <div>
-                                <h3 className={cn(TYPOGRAPHY.label, "mb-0 text-ink tracking-[0.2em]")}>Active dosha analysis</h3>
+                                <h3 className={cn(TYPOGRAPHY.label, "mb-0 text-ink tracking-[0.2em]")}>Active <KnowledgeTooltip term="dosha_system">dosha</KnowledgeTooltip> analysis</h3>
                                 <p className={cn(TYPOGRAPHY.subValue, "uppercase tracking-wider text-[10px] font-bold")}>Karmic afflictions & remedial directives</p>
                             </div>
                         </div>

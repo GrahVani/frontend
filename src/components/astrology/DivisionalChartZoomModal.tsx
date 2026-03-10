@@ -5,6 +5,7 @@ import { X, Sun, Home, Sparkles, Star, Crown, AlertTriangle, Shield, Moon } from
 import NorthIndianChart, { Planet } from '@/components/astrology/NorthIndianChart/NorthIndianChart';
 import { getPlanetColor } from '@/design-tokens/colors';
 import { ZODIAC_SIGNS } from '@/lib/chart-geometry';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 const ZODIAC_SYMBOLS: Record<number, string> = {
     1: '♈', 2: '♉', 3: '♊', 4: '♋', 5: '♌', 6: '♍',
@@ -294,7 +295,7 @@ export default function DivisionalChartZoomModal({
                             {ZODIAC_SYMBOLS[ascendantSign]}
                         </div>
                         <div className="min-w-0 flex-1">
-                            <span className="text-[8px] text-purple-600 uppercase tracking-wider font-bold">Lagna</span>
+                            <span className="text-[8px] text-purple-600 uppercase tracking-wider font-bold"><KnowledgeTooltip term="graha_overview" unstyled>Lagna</KnowledgeTooltip></span>
                             <h3 className="text-[14px] font-serif font-bold text-purple-900">{ZODIAC_SIGNS[ascendantSign - 1]}</h3>
                         </div>
                         <div className="flex gap-3 shrink-0">
@@ -312,7 +313,7 @@ export default function DivisionalChartZoomModal({
                     {/* Planet List with Dignities & Nakshatra */}
                     <div className="flex-1 overflow-y-auto p-3">
                         <h4 className="text-[10px] font-bold text-ink/30 uppercase tracking-wider mb-2 flex items-center gap-1.5 px-1">
-                            <Star className="w-3.5 h-3.5" /> Planet Positions
+                            <Star className="w-3.5 h-3.5" /> <KnowledgeTooltip term="graha_overview" unstyled>Planet Positions</KnowledgeTooltip>
                         </h4>
                         <div className="space-y-1.5">
                             {filteredPlanets.map((planet, idx) => {

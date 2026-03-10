@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { getHouseDetails } from '@/data/house-data';
 import { Planet } from '../NorthIndianChart/NorthIndianChart';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface HouseModalProps {
     houseNumber: number;
@@ -82,7 +83,7 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
                                 </div>
                                 <div className="flex-1">
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold-dark mb-3">
-                                        Zodiac Sign
+                                        <KnowledgeTooltip term="zodiac_sign" unstyled>Zodiac Sign</KnowledgeTooltip>
                                     </h3>
                                     <div className="space-y-3">
                                         <div className="flex items-baseline gap-3">
@@ -100,7 +101,7 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
                                         <div className="flex items-center gap-2 bg-ink/5 px-4 py-2 rounded-xl w-fit">
                                             <Orbit className="w-4 h-4 text-gold-dark" />
                                             <span className="text-[12px] font-black text-ink">
-                                                Ruler: {houseDetails.sign.rulingPlanet}
+                                                <KnowledgeTooltip term="ruling_planet" unstyled>Ruler</KnowledgeTooltip>: {houseDetails.sign.rulingPlanet}
                                             </span>
                                         </div>
                                     </div>
@@ -116,7 +117,7 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
                                 </div>
                                 <div className="flex-1">
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold-dark mb-3">
-                                        House Signification
+                                        <KnowledgeTooltip term="house_signification" unstyled>House Signification</KnowledgeTooltip>
                                     </h3>
                                     <p className="text-[20px] font-serif text-gold-dark font-bold mb-3">
                                         {houseDetails.signification}
@@ -140,7 +141,7 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
                                     {/* Life Areas */}
                                     <div>
                                         <p className="text-[9px] font-black uppercase tracking-[0.2em] text-body/60 mb-2">
-                                            Life Areas Governed
+                                            <KnowledgeTooltip term="house_life_areas" unstyled>Life Areas Governed</KnowledgeTooltip>
                                         </p>
                                         <div className="grid grid-cols-2 gap-2">
                                             {houseDetails.areas.map((area, idx) => (
@@ -163,7 +164,7 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
                                 </div>
                                 <div className="flex-1">
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold-dark mb-4">
-                                        Planets Positioned
+                                        <KnowledgeTooltip term="planets_in_house" unstyled>Planets Positioned</KnowledgeTooltip>
                                     </h3>
                                     {planetsInHouse.length > 0 ? (
                                         <div className="space-y-3">
@@ -180,7 +181,7 @@ export default function HouseModal({ houseNumber, ascendantSign, planets, onClos
                                                             <p className="font-bold text-ink">{planet.name}</p>
                                                             {planet.isRetro && (
                                                                 <span className="text-[9px] text-gold-dark uppercase tracking-wider font-black">
-                                                                    Retrograde
+                                                                    <KnowledgeTooltip term="retrograde_motion" unstyled>Retrograde</KnowledgeTooltip>
                                                                 </span>
                                                             )}
                                                         </div>

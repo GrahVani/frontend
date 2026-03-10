@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo, memo } from 'react';
 import { Loader2, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { clientApi } from '@/lib/api';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import { normalizeYogaData } from './utils/normalizer';
 import { YogaSectionRenderer } from './YogaSectionRenderer';
 
@@ -81,7 +82,7 @@ export const YogaModal = memo(function YogaModal({
             <div className="space-y-4">
                 <div className="p-4 bg-amber-50 border border-amber-100 rounded-2xl text-center" role="alert">
                     <Info className="w-6 h-6 text-amber-500 mx-auto mb-2" aria-hidden="true" />
-                    <h3 className="text-amber-900 font-bold font-serif text-[14px]">Yoga Detail Pending</h3>
+                    <h3 className="text-amber-900 font-bold font-serif text-[14px]"><KnowledgeTooltip term="yoga_system" unstyled>Yoga</KnowledgeTooltip> Detail Pending</h3>
                     <p className="text-[10px] text-amber-600">
                         {error || 'Detailed analysis not currently available for this client'}
                     </p>

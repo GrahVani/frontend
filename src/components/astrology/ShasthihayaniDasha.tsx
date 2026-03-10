@@ -6,6 +6,7 @@ import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { ChevronDown, ChevronUp, Calendar, AlertCircle } from 'lucide-react';
 import { DashaNode, formatDateDisplay, calculateDuration } from '@/lib/dasha-utils';
 import { PLANET_COLORS } from '@/lib/astrology-constants';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface ShasthihayaniDashaProps {
     periods: DashaNode[];
@@ -136,7 +137,7 @@ export default function ShasthihayaniDasha({ periods, isApplicable = true }: Sha
                                         <tr>
                                             <td colSpan={5} className="bg-surface-pure/60 px-3 py-2">
                                                 <div className="text-2xs font-black text-gold-dark uppercase tracking-[0.2em] mb-2 pl-2">
-                                                    Antardasha Sub-Periods
+                                                    <KnowledgeTooltip term="dasha_antardasha">Antardasha</KnowledgeTooltip> Sub-Periods
                                                 </div>
                                                 <table className="w-full">
                                                     <tbody className="divide-y divide-gold-primary/10">

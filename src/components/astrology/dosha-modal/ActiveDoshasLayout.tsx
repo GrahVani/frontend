@@ -7,6 +7,7 @@ import { TYPOGRAPHY } from '@/design-tokens/typography';
 import NorthIndianChart, { Planet } from '@/components/astrology/NorthIndianChart/NorthIndianChart';
 import { ChartWithPopup } from "@/components/astrology/NorthIndianChart";
 import { DoshaModal } from '@/components/astrology/dosha-modal/DoshaModal';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import { DoshaItem } from '@/types/yoga-ui.types';
 
 interface ActiveDoshasLayoutProps {
@@ -69,7 +70,7 @@ export default function ActiveDoshasLayout({
             <div className="flex-1 flex flex-col gap-2 min-h-[360px] h-[60vh] max-h-[600px] min-w-0">
                 <div className="border border-red-200 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm">
                     <div className="bg-red-50 px-4 py-2 border-b border-red-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] text-red-900 leading-tight tracking-wide whitespace-nowrap")}>Dosha analysis</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] text-red-900 leading-tight tracking-wide whitespace-nowrap")}><KnowledgeTooltip term="dosha_system" unstyled>Dosha</KnowledgeTooltip> analysis</h3>
 
                         {/* Integrated Header Dropdown */}
                         <div className="relative group w-full sm:w-64 shrink-0">
@@ -129,7 +130,7 @@ export default function ActiveDoshasLayout({
                                             Clear selection
                                         </button>
                                         <div className="flex items-center gap-2 text-red-900/40 text-[8px] font-bold uppercase tracking-[0.1em]">
-                                            <Shield className="w-2.5 h-2.5" /> Specialized dosha rendering engine
+                                            <Shield className="w-2.5 h-2.5" /> Specialized <KnowledgeTooltip term="dosha_system" unstyled>dosha</KnowledgeTooltip> rendering engine
                                         </div>
                                     </div>
                                 </div>

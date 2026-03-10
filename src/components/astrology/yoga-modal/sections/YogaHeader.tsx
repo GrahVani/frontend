@@ -4,6 +4,7 @@ import React, { memo } from 'react';
 import { Trophy, CheckCircle2, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { NormalizedHeader } from '@/types/yoga.types';
 
 interface YogaHeaderProps {
@@ -44,7 +45,7 @@ export const YogaHeader = memo(function YogaHeader({ data }: YogaHeaderProps) {
                     </div>
                     <div>
                         <h2 className="text-[20px] font-serif font-bold text-ink leading-tight">
-                            {title.trim().replace(/\s*yoga$/i, '').trim() || 'Yoga'} <span className="">Yoga</span>
+                            {title.trim().replace(/\s*yoga$/i, '').trim() || 'Yoga'} <KnowledgeTooltip term="yoga_system" unstyled>Yoga</KnowledgeTooltip>
                         </h2>
                         <div className="flex items-center gap-2 mt-1">
                             <span className={cn(

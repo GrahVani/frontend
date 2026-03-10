@@ -3,6 +3,7 @@
 import React, { memo } from 'react';
 import { Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { NormalizedDoshaTechnical } from '@/types/dosha.types';
 
 interface DoshaTechnicalProps {
@@ -35,11 +36,11 @@ export const DoshaTechnical = memo(function DoshaTechnical({ data }: DoshaTechni
             {/* Grid Stats */}
             <div className="pt-3 border-t border-white/5 grid grid-cols-2 gap-2">
                 <div className="bg-white/5 rounded-lg p-2.5 border border-white/5">
-                    <span className="block text-[8px] text-zinc-500 uppercase font-black tracking-tighter mb-0.5">Ayanamsa</span>
+                    <span className="block text-[8px] text-zinc-500 uppercase font-black tracking-tighter mb-0.5"><KnowledgeTooltip term="calc_ayanamsa" unstyled>Ayanamsa</KnowledgeTooltip></span>
                     <span className="text-[10px] font-mono text-red-400 font-bold">{data.ayanamsa}</span>
                 </div>
                 <div className="bg-white/5 rounded-lg p-2.5 border border-white/5">
-                    <span className="block text-[8px] text-zinc-500 uppercase font-black tracking-tighter mb-0.5">House System</span>
+                    <span className="block text-[8px] text-zinc-500 uppercase font-black tracking-tighter mb-0.5"><KnowledgeTooltip term="calc_house_system" unstyled>House System</KnowledgeTooltip></span>
                     <span className="text-[10px] font-serif text-white">{data.houseSystem}</span>
                 </div>
             </div>

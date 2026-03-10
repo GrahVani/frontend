@@ -3,6 +3,7 @@
 import { CheckCircle, AlertTriangle, Clock, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Badge from "@/components/ui/Badge";
+import { KnowledgeTooltip } from "@/components/knowledge";
 import type { MuhurtaResult as MuhurtaResultType, MuhurtaQuality } from "@/types/muhurta.types";
 
 const QUALITY_BADGE: Record<MuhurtaQuality, { variant: "success" | "default" | "warning" | "error"; label: string }> = {
@@ -38,15 +39,15 @@ export default function MuhurtaResultCard({ result, className }: MuhurtaResultCa
 
             <div className="grid grid-cols-3 gap-3 mb-3">
                 <div className="bg-surface-warm/40 rounded-lg p-2">
-                    <span className="text-[12px] text-ink/45 block">Tithi</span>
+                    <span className="text-[12px] text-ink/45 block"><KnowledgeTooltip term="muhurta_tithi">Tithi</KnowledgeTooltip></span>
                     <span className="text-[14px] font-serif font-semibold text-ink">{result.tithi}</span>
                 </div>
                 <div className="bg-surface-warm/40 rounded-lg p-2">
-                    <span className="text-[12px] text-ink/45 block">Nakshatra</span>
+                    <span className="text-[12px] text-ink/45 block"><KnowledgeTooltip term="muhurta_nakshatra">Nakshatra</KnowledgeTooltip></span>
                     <span className="text-[14px] font-serif font-semibold text-ink">{result.nakshatra}</span>
                 </div>
                 <div className="bg-surface-warm/40 rounded-lg p-2">
-                    <span className="text-[12px] text-ink/45 block">Yoga</span>
+                    <span className="text-[12px] text-ink/45 block"><KnowledgeTooltip term="muhurta_yoga_day">Yoga</KnowledgeTooltip></span>
                     <span className="text-[14px] font-serif font-semibold text-ink">{result.yoga}</span>
                 </div>
             </div>

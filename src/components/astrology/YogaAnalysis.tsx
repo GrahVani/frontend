@@ -25,6 +25,7 @@ import {
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { clientApi } from '@/lib/api';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import { YogaAnalysis } from '@/types/astrology';
 
 
@@ -303,7 +304,7 @@ function GajaKesariView({ data, className, onClose }: { data: GajaKesariData, cl
                         <Sparkles className="w-5 h-5" />
                     </div>
                     <div>
-                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] leading-none")}>Gaja Kesari <span className="text-ink/55 font-normal">Yoga</span></h2>
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] leading-none")}><KnowledgeTooltip term="yoga_gaja_kesari">Gaja Kesari</KnowledgeTooltip> <span className="text-ink/55 font-normal">Yoga</span></h2>
                         <div className="flex items-center gap-2 mt-1">
                             <span className={cn(
                                 TYPOGRAPHY.label,

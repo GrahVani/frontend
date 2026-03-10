@@ -49,4 +49,7 @@ export const STALE_TIMES = {
 
     /** Numerology raw calculators — pure math, fully deterministic */
     NUMEROLOGY_RAW: 24 * 60 * 60 * 1000, // 24 hours
+
+    /** Knowledge base — static educational reference content, rarely changes */
+    KNOWLEDGE: 24 * 60 * 60 * 1000, // 24 hours
 } as const;

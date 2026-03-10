@@ -11,6 +11,7 @@ import {
     Sparkles
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface TimingData {
     hora: {
@@ -81,7 +82,7 @@ const MantraTimingCard: React.FC<MantraTimingCardProps> = ({ timing }) => {
                         <div className={cn("p-1 rounded border", isRahuKaalActive ? "bg-rose-100 text-rose-600 border-rose-200" : "bg-surface-warm text-ink/35 border-gold-primary/15")}>
                             <AlertOctagon className="w-2.5 h-2.5" />
                         </div>
-                        <span className="text-[9px] font-black uppercase tracking-widest text-amber-900/40">Rahu Kaal</span>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-amber-900/40"><KnowledgeTooltip term="rahu_kaal">Rahu Kaal</KnowledgeTooltip></span>
                         {isRahuKaalActive && <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse ml-auto" />}
                     </div>
                     <p className="text-[12px] font-bold text-ink leading-none mb-1">{rahu_kaal.duration_minutes} Min</p>

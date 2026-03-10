@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface LalKitabDashboardProps {
     data: Record<string, unknown>;
@@ -53,7 +54,7 @@ export default function LalKitabDashboard({ data, className }: LalKitabDashboard
                         </div>
                         <div>
                             <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] font-black tracking-tight flex items-center gap-3")}>
-                                Lal kitab remedial plan
+                                <KnowledgeTooltip term="general_lal_kitab">Lal Kitab</KnowledgeTooltip> remedial plan
                             </h2>
                             <p className={cn(TYPOGRAPHY.label, "mt-0.5 text-ink/45")}>
                                 Accurate prescription for <span className="text-gold-dark font-bold">{String(data.user_name || "Sadhaka")}</span>
@@ -251,7 +252,7 @@ function RemedyAnalysisCard({ title, focus, diagnosis, remedy, time, constraint,
                             <p className="text-[12px] text-text-tertiary font-bold leading-snug mt-0.5">{diagnosis}</p>
                         </div>
                         <div>
-                            <p className="text-[10px] font-black text-gold-dark uppercase tracking-wider">Remedy</p>
+                            <p className="text-[10px] font-black text-gold-dark uppercase tracking-wider"><KnowledgeTooltip term="general_upaya">Remedy</KnowledgeTooltip></p>
                             <p className="text-[12px] text-text-tertiary font-medium leading-relaxed mt-0.5">{remedy}</p>
                         </div>
                     </div>

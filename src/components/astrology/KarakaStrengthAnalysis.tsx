@@ -4,6 +4,7 @@ import React from 'react';
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { Shield, Activity, Target, Zap } from 'lucide-react';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface KarakaEntry {
     planet: string;
@@ -40,7 +41,7 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
         <div className={cn("flex flex-col xl:flex-row gap-6 w-full items-start", className)}>
             <div className="flex flex-col gap-4 w-full xl:w-72 shrink-0 order-1 xl:order-2">
                 <StatCard
-                    title="Ayanamsa"
+                    title={<KnowledgeTooltip term="ayanamsa_system" unstyled>Ayanamsa</KnowledgeTooltip>}
                     value={calculationMethod.ayanamsa || 'Standard'}
                     icon={<Shield className="w-4 h-4" />}
                     color="amber"
@@ -58,7 +59,7 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
                     color="copper"
                 />
                 <StatCard
-                    title="Atmakaraka"
+                    title={<KnowledgeTooltip term="karaka_atmakaraka" unstyled>Atmakaraka</KnowledgeTooltip>}
                     value={atmakaraka?.planet || 'N/A'}
                     icon={<Target className="w-4 h-4" />}
                     color="amber"
@@ -67,7 +68,7 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
 
             <div className="bg-surface-warm border border-gold-primary/15 rounded-xl overflow-hidden shadow-sm w-full xl:flex-1 order-2 xl:order-1">
                 <div className="bg-gold-primary/10 px-4 py-2 border-b border-gold-primary/15">
-                    <h3 className={TYPOGRAPHY.sectionTitle}>Karaka strength analysis</h3>
+                    <h3 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="karaka_system" unstyled>Karaka</KnowledgeTooltip> strength analysis</h3>
                 </div>
                 <div className="w-full">
                     <table className="w-full text-left border-collapse">
@@ -75,7 +76,7 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
                             <tr className="bg-surface-warm/30">
                                 <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-gold-primary/15")}>Planet</th>
                                 <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-gold-primary/15")}>Abbr</th>
-                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-gold-primary/15")}>Chara karaka</th>
+                                <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-gold-primary/15")}><KnowledgeTooltip term="karaka_chara" unstyled>Chara karaka</KnowledgeTooltip></th>
                                 <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-gold-primary/15")}>Sign/house</th>
                                 <th className={cn(TYPOGRAPHY.tableHeader, "px-4 py-1.5 border-b border-gold-primary/15 text-right")}>Degrees</th>
                             </tr>
@@ -128,7 +129,7 @@ export default function KarakaStrengthAnalysis({ data, className }: KarakaStreng
     );
 }
 
-function StatCard({ title, value, icon, color }: { title: string; value: string; icon: React.ReactNode; color: 'amber' | 'rose' | 'copper' }) {
+function StatCard({ title, value, icon, color }: { title: React.ReactNode; value: string; icon: React.ReactNode; color: 'amber' | 'rose' | 'copper' }) {
     return (
         <div className={cn(
             "p-3.5 sm:p-5 rounded-[24px] flex items-center gap-4 transition-all w-full",

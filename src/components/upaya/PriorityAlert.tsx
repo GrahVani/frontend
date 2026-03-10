@@ -4,6 +4,7 @@ import React from 'react';
 import { Clock } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import styles from './RemedialShared.module.css';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface PriorityAlertProps {
     mahadasha?: string;
@@ -28,7 +29,7 @@ export default function PriorityAlert({ mahadasha = "Mercury", antardasha = "Sat
                         <span className="font-black uppercase tracking-tighter text-[14px] text-red-700">Priority Alert:</span>
                         <div className="h-4 w-px mx-1 bg-gold-primary/20" />
                         <span className="text-[13px] font-bold tracking-wide text-ink">
-                            Current Dasha Influence | <span className="text-red-700">{mahadasha} Mahadasha</span> & <span className="text-orange-700">{antardasha} Antardasha</span>
+                            Current <KnowledgeTooltip term="dasha_system">Dasha</KnowledgeTooltip> Influence | <span className="text-red-700">{mahadasha} <KnowledgeTooltip term="dasha_mahadasha" unstyled>Mahadasha</KnowledgeTooltip></span> & <span className="text-orange-700">{antardasha} <KnowledgeTooltip term="dasha_antardasha" unstyled>Antardasha</KnowledgeTooltip></span>
                         </span>
                     </div>
 

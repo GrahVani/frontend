@@ -3,6 +3,7 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface PlanetStrength {
     strength_percentage: number;
@@ -61,7 +62,7 @@ export default function VigorTimelinePanel({ strengthAnalysis, dashaDetails }: V
                 Planetary Vigor & Temporal Cycles
             </h3>
 
-            {/* Shadbala Strengths Grid */}
+            {/* Shadbala Strengths Grid - planetary vigor gauges */}
             <div className="grid grid-cols-2 gap-6 mb-12">
                 {displayPlanets.map((p) => {
                     const stats = strengthAnalysis[p.key];
@@ -112,8 +113,8 @@ export default function VigorTimelinePanel({ strengthAnalysis, dashaDetails }: V
             <div className="space-y-6">
                 <div className="flex justify-between items-end">
                     <div className="flex-1">
-                        <p className="text-[10px] uppercase tracking-widest font-black mb-1 text-ink">Current Mahadasha</p>
-                        <h4 className="text-[18px] font-bold mb-1 text-ink">{currentMaha.planet} Dasha</h4>
+                        <p className="text-[10px] uppercase tracking-widest font-black mb-1 text-ink">Current <KnowledgeTooltip term="dasha_mahadasha">Mahadasha</KnowledgeTooltip></p>
+                        <h4 className="text-[18px] font-bold mb-1 text-ink">{currentMaha.planet} <KnowledgeTooltip term="dasha_system">Dasha</KnowledgeTooltip></h4>
                     </div>
                     <div className="text-right">
                         <p className="text-[10px] uppercase tracking-widest font-black mb-1 text-ink">Ends On</p>
@@ -146,7 +147,7 @@ export default function VigorTimelinePanel({ strengthAnalysis, dashaDetails }: V
                         </div>
                         <div>
                             <p className="text-[10px] uppercase tracking-widest font-black text-ink">Next Cycle</p>
-                            <p className="text-[12px] font-semibold text-ink">{nextDasha?.planet || 'Future'} Dasha</p>
+                            <p className="text-[12px] font-semibold text-ink">{nextDasha?.planet || 'Future'} <KnowledgeTooltip term="dasha_system">Dasha</KnowledgeTooltip></p>
                         </div>
                     </div>
                     <div className="px-3 py-1 rounded-full border bg-indigo-600/10 border-indigo-600/20">

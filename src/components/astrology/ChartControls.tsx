@@ -8,6 +8,7 @@ import GoldenButton from "@/components/GoldenButton";
 import { useAstrologerStore, type Ayanamsa } from "@/store/useAstrologerStore";
 import { ChevronDown, Info } from 'lucide-react';
 import { clientApi, CHART_METADATA } from '@/lib/api';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 
 export default function ChartControls() {
@@ -51,7 +52,7 @@ export default function ChartControls() {
                         <Info className="w-4 h-4 text-gold-dark" />
                     </div>
                     <div>
-                        <p className="text-[9px] text-ink/45 uppercase tracking-widest font-bold">Current Ayanamsa</p>
+                        <p className="text-[9px] text-ink/45 uppercase tracking-widest font-bold">Current <KnowledgeTooltip term="ayanamsa_system" unstyled>Ayanamsa</KnowledgeTooltip></p>
                         <p className="text-[12px] font-serif text-ink font-bold">{settings.ayanamsa} (Default)</p>
                     </div>
                 </div>
@@ -86,7 +87,7 @@ export default function ChartControls() {
                         <span className="font-bold uppercase">Available Features:</span>
                         <div className="mt-1 flex flex-wrap gap-1">
                             {systemCapabilities.hasDivisional && <span className="px-1.5 py-0.5 bg-green-100 text-green-700 rounded">Divisional</span>}
-                            {systemCapabilities.hasAshtakavarga && <span className="px-1.5 py-0.5 bg-green-100 text-green-700 rounded">Ashtakavarga</span>}
+                            {systemCapabilities.hasAshtakavarga && <span className="px-1.5 py-0.5 bg-green-100 text-green-700 rounded"><KnowledgeTooltip term="ashtakavarga_system" unstyled>Ashtakavarga</KnowledgeTooltip></span>}
                             {systemCapabilities.hasNumerology && <span className="px-1.5 py-0.5 bg-green-100 text-green-700 rounded">Numerology</span>}
                             {systemCapabilities.hasHorary && <span className="px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded">Horary</span>}
                             {!systemCapabilities.hasDivisional && <span className="px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded">D1 Only</span>}

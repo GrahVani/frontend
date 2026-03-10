@@ -3,6 +3,7 @@
 import React, { memo } from 'react';
 import { Layers, CheckCircle2, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { NormalizedCombination } from '@/types/yoga.types';
 
 interface YogaCombinationsProps {
@@ -15,7 +16,7 @@ export const YogaCombinations = memo(function YogaCombinations({ data }: YogaCom
     return (
         <div className="prem-card p-5">
             <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-[14px] uppercase tracking-wider">
-                <Layers className="w-4 h-4 text-gold-primary" /> Yoga Combinations
+                <Layers className="w-4 h-4 text-gold-primary" /> <KnowledgeTooltip term="yoga_system">Yoga</KnowledgeTooltip> Combinations
             </h3>
 
             <div className="space-y-3">
@@ -84,7 +85,7 @@ export const YogaCombinations = memo(function YogaCombinations({ data }: YogaCom
                             )}
                             {combo.nakshatraNumber !== undefined && (
                                 <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded text-[9px] font-bold">
-                                    Nakshatra #{combo.nakshatraNumber}
+                                    <KnowledgeTooltip term="nakshatra" unstyled>Nakshatra</KnowledgeTooltip> #{combo.nakshatraNumber}
                                 </span>
                             )}
                         </div>

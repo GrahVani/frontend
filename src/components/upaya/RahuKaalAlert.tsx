@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { AlertCircle, ArrowRight } from 'lucide-react';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface RahuKaalAlertProps {
     isActive?: boolean;
@@ -18,7 +19,7 @@ export default function RahuKaalAlert({ isActive = true, recommendedAction = "Fo
                     <AlertCircle className="w-3.5 h-3.5" />
                 </div>
                 <div className="flex items-center gap-1.5 whitespace-nowrap">
-                    <span className="font-bold uppercase tracking-wider text-[11px] text-orange-700">Rahu Kaal Active.</span>
+                    <span className="font-bold uppercase tracking-wider text-[11px] text-orange-700"><KnowledgeTooltip term="rahu_kaal">Rahu Kaal</KnowledgeTooltip> Active.</span>
                     <span className="text-[12px] text-orange-950">Recommended Action: {recommendedAction}</span>
                 </div>
             </div>

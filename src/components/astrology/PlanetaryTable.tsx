@@ -1,5 +1,6 @@
 ﻿import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 export interface PlanetaryInfo {
     planet: string;
@@ -48,7 +49,7 @@ export default function PlanetaryTable({ planets, className, rowClassName, varia
                 <div className={cn(colWidths.planet, "shrink-0")} role="columnheader">Planet</div>
                 <div className={cn(colWidths.sign, "shrink-0")} role="columnheader">Sign</div>
                 <div className={cn(colWidths.degree, "shrink-0")} role="columnheader">Degree</div>
-                <div className={cn(colWidths.nakshatra)} role="columnheader">Nakshatra</div>
+                <div className={cn(colWidths.nakshatra)} role="columnheader"><KnowledgeTooltip term="nakshatra">Nakshatra</KnowledgeTooltip></div>
                 <div className={cn(colWidths.pada, "text-center shrink-0")} role="columnheader">Pada</div>
                 <div className={cn(colWidths.house, "text-center shrink-0")} role="columnheader">House</div>
             </div>

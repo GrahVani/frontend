@@ -4,6 +4,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { FileDown, GitCompare, Sparkles, HelpCircle, Clock, MapPin, Calendar } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface KpDashboardHeaderProps {
     clientName?: string;
@@ -96,13 +97,13 @@ export default function KpDashboardHeader({
                     )}
                     {moonNakshatra && (
                         <div className="px-3 py-1.5 bg-surface-warm border border-gold-primary/20 rounded-lg text-center">
-                            <p className={cn(TYPOGRAPHY.label, "text-[9px] tracking-widest")}>Nakshatra</p>
+                            <p className={cn(TYPOGRAPHY.label, "text-[9px] tracking-widest")}><KnowledgeTooltip term="nakshatra">Nakshatra</KnowledgeTooltip></p>
                             <p className={cn(TYPOGRAPHY.value, "text-[14px] text-ink")}>{moonNakshatra}</p>
                         </div>
                     )}
                     {ayanamsaValue && (
                         <div className="px-3 py-1.5 bg-gold-primary/10 border border-gold-primary/30 rounded-lg text-center">
-                            <p className={cn(TYPOGRAPHY.label, "text-[9px] tracking-widest !text-gold-dark")}>KP ayanamsa</p>
+                            <p className={cn(TYPOGRAPHY.label, "text-[9px] tracking-widest !text-gold-dark")}><KnowledgeTooltip term="kp_ayanamsa" unstyled>KP ayanamsa</KnowledgeTooltip></p>
                             <p className={cn(TYPOGRAPHY.value, "text-[14px] !text-gold-dark font-sans")}>{ayanamsaValue}</p>
                         </div>
                     )}

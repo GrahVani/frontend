@@ -4,6 +4,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Compass } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 const planetEmojis: Record<string, string> = {
     'Sun': '☉', 'Moon': '☽', 'Mars': '♂', 'Mercury': '☿',
@@ -75,12 +76,12 @@ export default function KpChartSummaryPanel({
                 <DetailRow label="Lagna" value={lagna || '—'} highlight />
                 <DetailRow label="Lagna Lord" value={lagnaLord || '—'} />
                 <DetailRow label="Moon Sign" value={moonSign || '—'} />
-                <DetailRow label="Moon Nakshatra" value={moonNakshatra || '—'} />
-                <DetailRow label="Moon Star Lord" value={moonStarLord || '—'} />
+                <DetailRow label={<>Moon <KnowledgeTooltip term="nakshatra">Nakshatra</KnowledgeTooltip></>} value={moonNakshatra || '—'} />
+                <DetailRow label={<>Moon <KnowledgeTooltip term="star_lord">Star Lord</KnowledgeTooltip></>} value={moonStarLord || '—'} />
                 <div className="border-t border-gold-primary/15 pt-2.5" />
-                <DetailRow label="Ayanamsa" value={`${ayanamsaType}${ayanamsaValue ? ` (${ayanamsaValue})` : ''}`} highlight />
+                <DetailRow label={<KnowledgeTooltip term="kp_ayanamsa">Ayanamsa</KnowledgeTooltip>} value={`${ayanamsaType}${ayanamsaValue ? ` (${ayanamsaValue})` : ''}`} highlight />
                 <DetailRow label="House System" value="Placidus (KP)" />
-                <DetailRow label="Cusps" value={`${houseCuspCount} houses`} />
+                <DetailRow label={<KnowledgeTooltip term="kp_cusp">Cusps</KnowledgeTooltip>} value={`${houseCuspCount} houses`} />
             </div>
 
             {/* Planet Snapshot */}
@@ -110,7 +111,7 @@ export default function KpChartSummaryPanel({
     );
 }
 
-function DetailRow({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+function DetailRow({ label, value, highlight }: { label: React.ReactNode; value: string; highlight?: boolean }) {
     return (
         <div className="flex items-center justify-between gap-2">
             <span className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-widest !font-bold shrink-0")}>{label}</span>

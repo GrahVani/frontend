@@ -5,6 +5,7 @@ import { KpPromise } from '@/types/kp.types';
 import { CheckCircle2, XCircle, AlertCircle, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { ZODIAC_SIGNS } from '@/lib/chart-geometry';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 const ZODIAC_SYMBOLS = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
 const ZODIAC_NAMES = ZODIAC_SIGNS;
@@ -127,7 +128,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                 <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-gold-primary/20 shadow-sm">
                     <div className="flex items-center justify-between mb-4">
                         <div>
-                            <h3 className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-widest")}>Sub-sub lord analysis</h3>
+                            <h3 className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-widest")}><KnowledgeTooltip term="sub_sub_lord">Sub-sub lord</KnowledgeTooltip> analysis</h3>
                             <p className={cn(TYPOGRAPHY.subValue, "text-[10px] mt-1")}>Final confirmation of house promise</p>
                         </div>
                         <span className={cn(TYPOGRAPHY.value, "px-3 py-1.5 bg-gradient-to-br from-surface-warm to-white/80 text-ink border border-gold-primary/20 rounded-lg text-[12px] font-bold tracking-wide shadow-sm")}>
@@ -159,7 +160,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                                 {/* Sign Lord */}
                                 <div className="flex-1 text-center p-3 bg-surface-warm/30 rounded-lg border border-gold-primary/20">
                                     <span className="text-[24px] text-ink block">{PLANET_SYMBOLS[currentPromise.chain.signLord.planet] || '☉'}</span>
-                                    <span className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-wider block mt-1")}>Sign lord</span>
+                                    <span className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-wider block mt-1")}><KnowledgeTooltip term="sign_lord">Sign lord</KnowledgeTooltip></span>
                                     <span className={cn(TYPOGRAPHY.value, "text-[14px] text-ink")}>{currentPromise.chain.signLord.planet}</span>
                                 </div>
 
@@ -168,7 +169,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                                 {/* Star Lord */}
                                 <div className="flex-1 text-center p-3 bg-surface-warm/30 rounded-lg border border-gold-primary/20">
                                     <span className="text-[24px] text-ink block">{PLANET_SYMBOLS[currentPromise.chain.starLord.planet] || '☉'}</span>
-                                    <span className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-wider block mt-1")}>Star lord</span>
+                                    <span className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-wider block mt-1")}><KnowledgeTooltip term="star_lord">Star lord</KnowledgeTooltip></span>
                                     <span className={cn(TYPOGRAPHY.value, "text-[14px] text-ink")}>{currentPromise.chain.starLord.planet}</span>
                                 </div>
 
@@ -177,7 +178,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                                 {/* Sub Lord */}
                                 <div className="flex-1 text-center p-3 bg-gold-primary/10 rounded-lg border border-gold-primary/30">
                                     <span className="text-[24px] text-gold-dark block">{PLANET_SYMBOLS[currentPromise.chain.subLord.planet] || '☉'}</span>
-                                    <span className={cn(TYPOGRAPHY.label, "text-[10px] !text-gold-dark uppercase tracking-wider block mt-1")}>Sub lord</span>
+                                    <span className={cn(TYPOGRAPHY.label, "text-[10px] !text-gold-dark uppercase tracking-wider block mt-1")}><KnowledgeTooltip term="sub_lord" unstyled>Sub lord</KnowledgeTooltip></span>
                                     <span className={cn(TYPOGRAPHY.value, "text-[14px] !text-gold-dark")}>{currentPromise.chain.subLord.planet}</span>
                                 </div>
 
@@ -186,7 +187,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                                 {/* Sub-Sub Lord - HIGHLIGHTED */}
                                 <div className="flex-1 text-center p-4 bg-gradient-to-br from-gold-primary to-gold-dark rounded-xl shadow-md border border-gold-dark/30">
                                     <span className="text-[30px] text-white block mb-1">{PLANET_SYMBOLS[currentPromise.chain.subSubLord.planet] || '☉'}</span>
-                                    <span className={cn(TYPOGRAPHY.label, "text-[10px] !text-white/90 uppercase tracking-wider block mt-1")}>Sub-sub lord</span>
+                                    <span className={cn(TYPOGRAPHY.label, "text-[10px] !text-white/90 uppercase tracking-wider block mt-1")}><KnowledgeTooltip term="sub_sub_lord" unstyled>Sub-sub lord</KnowledgeTooltip></span>
                                     <span className={cn(TYPOGRAPHY.value, "text-[18px] !text-white tracking-wide font-bold")}>{currentPromise.chain.subSubLord.planet}</span>
                                     <span className={cn(TYPOGRAPHY.subValue, "text-[10px] !text-white/80 block mt-1")}>Final confirmer</span>
                                 </div>
@@ -293,7 +294,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                             {/* SSL Verdict */}
                             <div className="p-4 bg-gradient-to-br from-surface-warm to-white/80 border border-gold-primary/20 rounded-xl text-center shadow-sm">
                                 <AlertCircle className="w-6 h-6 text-gold-dark mx-auto mb-2" />
-                                <h4 className="text-[10px] text-ink uppercase tracking-wider font-semibold font-sans">SSL verdict</h4>
+                                <h4 className="text-[10px] text-ink uppercase tracking-wider font-semibold font-sans"><KnowledgeTooltip term="sub_sub_lord">SSL</KnowledgeTooltip> verdict</h4>
                                 <p className="text-ink font-sans mt-2 text-[14px] leading-relaxed">
                                     <span className="font-bold font-serif">{currentPromise.chain.subSubLord.planet}</span> as SSL
                                     {analysis.positiveRatio >= 50
@@ -319,7 +320,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                 <div className="bg-surface-warm/50 rounded-xl p-4 border border-gold-primary/20">
                     <p className="text-[14px] text-ink text-center">
                         <span className="font-bold font-serif text-ink">🔮 Astrological interpretation:</span>{' '}
-                        For <span className="font-medium">{houseInfo?.topic}</span>, the Sub-Sub Lord <span className="font-bold text-ink">{currentPromise.chain.subSubLord.planet}</span> signifies
+                        For <span className="font-medium">{houseInfo?.topic}</span>, the <KnowledgeTooltip term="sub_sub_lord">Sub-Sub Lord</KnowledgeTooltip> <span className="font-bold text-ink">{currentPromise.chain.subSubLord.planet}</span> signifies
                         {(currentPromise.positiveHouses || []).length > 0 && (
                             <> houses <span className="text-emerald-600 font-medium">{currentPromise.positiveHouses.join(', ')}</span> (supporting)</>
                         )}

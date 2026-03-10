@@ -8,6 +8,7 @@ import StrengtheningPanel from '@/components/upaya/StrengtheningPanel';
 import styles from './RemedialShared.module.css';
 import { useVedicClient } from '@/context/VedicClientContext';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface YantraDashboardProps {
     data: Record<string, unknown>;
@@ -30,7 +31,7 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
             <div className="flex-shrink-0 px-4 pt-4 pb-2">
                 <div className="flex items-center justify-between border-b border-gold-primary/10 pb-3">
                     <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] lg:text-[22px] font-bold tracking-tight")}>
-                        Yantras : {String(data.user_name || "Sadhaka")}
+                        <KnowledgeTooltip term="general_yantra">Yantras</KnowledgeTooltip> : {String(data.user_name || "Sadhaka")}
                     </h2>
                     <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.3)]" />
@@ -58,7 +59,7 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
                             </div>
                             <div className="flex items-center gap-1.5 text-[10px] font-medium text-ink">
                                 <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
-                                Dasha
+                                <KnowledgeTooltip term="dasha_system">Dasha</KnowledgeTooltip>
                             </div>
                             <div className="flex items-center gap-1.5 text-[10px] font-medium text-ink">
                                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -77,7 +78,7 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
 
                     <div className="rounded-[2rem] bg-[rgba(254,250,234,0.6)] border border-gold-primary/20 shadow-xl backdrop-blur-md overflow-hidden flex flex-col p-4 space-y-4">
                         <div className="flex items-center justify-between px-1">
-                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[16px] font-bold tracking-tight")}>Today&apos;s yantra focus (priority)</h2>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[16px] font-bold tracking-tight")}>Today&apos;s <KnowledgeTooltip term="general_yantra">yantra</KnowledgeTooltip> focus (priority)</h2>
                         </div>
 
                         <div className="space-y-4">

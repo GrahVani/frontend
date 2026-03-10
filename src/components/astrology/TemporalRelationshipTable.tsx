@@ -4,6 +4,7 @@ import React from 'react';
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import DataGrid, { type DataGridColumn } from '@/components/ui/DataGrid';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface TemporalRelationEntry {
     planet: string;
@@ -88,7 +89,7 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
         <div className={cn("w-full bg-surface-warm border border-gold-primary/15 rounded-xl overflow-hidden shadow-sm", className)}>
             <div className="bg-gold-primary/10 px-4 py-2 border-b border-gold-primary/15">
                 <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-center")}>
-                    Tatkalik maitri chakra <span className="text-[14px] font-normal text-ink/55">(Temporal relationship)</span>
+                    <KnowledgeTooltip term="graha_overview" unstyled>Tatkalik maitri chakra</KnowledgeTooltip> <span className="text-[14px] font-normal text-ink/55">(Temporal relationship)</span>
                 </h3>
             </div>
             <DataGrid

@@ -2,7 +2,14 @@
 
 import { CheckCircle, XCircle, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from "@/components/knowledge";
 import type { MatchResult } from "@/types/matchmaking.types";
+
+const DOSHA_TERM_MAP: Record<string, string> = {
+    'Manglik Dosha': 'manglik_dosha',
+    'Naadi Dosha': 'naadi_dosha',
+    'Bhakoot Dosha': 'bhakoot_dosha',
+};
 
 interface DoshaComparisonViewProps {
     result: MatchResult;
@@ -63,7 +70,11 @@ export default function DoshaComparisonView({ result, className }: DoshaComparis
                             <tr key={dosha.name} className="border-b border-gold-primary/20">
                                 <td className="py-3 pr-4">
                                     <div className="flex items-center gap-2">
-                                        <span className="text-[14px] font-serif text-ink">{dosha.name}</span>
+                                        <span className="text-[14px] font-serif text-ink">
+                                            {DOSHA_TERM_MAP[dosha.name]
+                                                ? <KnowledgeTooltip term={DOSHA_TERM_MAP[dosha.name]}>{dosha.name}</KnowledgeTooltip>
+                                                : dosha.name}
+                                        </span>
                                         {dosha.severity === "high" && (
                                             <span className="text-[10px] font-medium text-status-error bg-status-error/10 px-1.5 py-0.5 rounded">Critical</span>
                                         )}

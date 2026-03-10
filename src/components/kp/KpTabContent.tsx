@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { KpHouseSignification, KpBhavaRaw, KpRulingPlanetsResponse, KpHoraryResponse } from '@/types/kp.types';
 import type {
     KpCuspItem,
@@ -93,7 +94,7 @@ interface KpTabContentProps {
 // ─── Shared Section Wrapper ──────────────────────────────────────────
 
 function TabSection({ title, subtitle, badge, children, noPadding }: {
-    title: string;
+    title: React.ReactNode;
     subtitle?: string;
     badge?: string;
     children: React.ReactNode;
@@ -153,7 +154,7 @@ export default function KpTabContent(props: KpTabContentProps) {
         case 'significations':
             return (
                 <TabSection
-                    title="House significations"
+                    title={<>House <KnowledgeTooltip term="kp_significator">significations</KnowledgeTooltip></>}
                     subtitle="Planets that signify specific houses based on their stellar positions"
                 >
                     {props.houseSignificationsLoading && !props.houseSignificators.length ? (
@@ -169,7 +170,7 @@ export default function KpTabContent(props: KpTabContentProps) {
         case 'planetary-significators':
             return (
                 <TabSection
-                    title="Planetary significators"
+                    title={<>Planetary <KnowledgeTooltip term="kp_significator">significators</KnowledgeTooltip></>}
                     subtitle="Which houses are signified by each planet - the core of KP prediction"
                 >
                     {props.planetSignificatorsLoading && !props.significationData.length ? (
@@ -219,7 +220,7 @@ export default function KpTabContent(props: KpTabContentProps) {
 
         case 'interlinks':
             return (
-                <TabSection title="Cuspal Interlinks">
+                <TabSection title={<><KnowledgeTooltip term="kp_cusp">Cuspal</KnowledgeTooltip> Interlinks</>}>
                     <div className="p-6">
                         {props.interlinksLoading ? (
                             <LoadingSpinner />
@@ -234,7 +235,7 @@ export default function KpTabContent(props: KpTabContentProps) {
 
         case 'advanced-ssl':
             return (
-                <TabSection title="Advanced Sub-Sub Lord View">
+                <TabSection title={<>Advanced <KnowledgeTooltip term="sub_sub_lord">Sub-Sub Lord</KnowledgeTooltip> View</>}>
                     <div className="p-6">
                         {props.advancedSslLoading ? (
                             <LoadingSpinner />
@@ -249,7 +250,7 @@ export default function KpTabContent(props: KpTabContentProps) {
 
         case 'nakshatra-nadi':
             return (
-                <TabSection title="Nakshatra Nadi Coordinates">
+                <TabSection title={<><KnowledgeTooltip term="kp_nakshatra_nadi">Nakshatra Nadi</KnowledgeTooltip> Coordinates</>}>
                     <div className="p-6">
                         {props.nakshatraNadiLoading ? (
                             <LoadingSpinner />
@@ -264,7 +265,7 @@ export default function KpTabContent(props: KpTabContentProps) {
 
         case 'fortuna':
             return (
-                <TabSection title="Pars Fortuna">
+                <TabSection title={<><KnowledgeTooltip term="kp_fortuna">Pars Fortuna</KnowledgeTooltip></>}>
                     <div className="p-6">
                         {props.fortunaLoading ? (
                             <LoadingSpinner />

@@ -3,6 +3,7 @@
 import React, { memo } from 'react';
 import { Crown, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { RajYogasData } from '@/types/yoga.types';
 
 interface YogaRajYogasProps {
@@ -21,7 +22,7 @@ export const YogaRajYogas = memo(function YogaRajYogas({ data }: YogaRajYogasPro
     return (
         <div className="prem-card p-5">
             <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-[14px] uppercase tracking-wider">
-                <Crown className="w-4 h-4 text-gold-primary" /> Raj Yogas Found
+                <Crown className="w-4 h-4 text-gold-primary" /> <KnowledgeTooltip term="yoga_raja">Raj Yogas</KnowledgeTooltip> Found
             </h3>
 
             {/* Summary Strip */}

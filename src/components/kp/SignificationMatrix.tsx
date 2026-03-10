@@ -4,6 +4,7 @@ import React from 'react';
 import type { KpSignification } from '@/types/kp.types';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface SignificationMatrixProps {
     significations: KpSignification[];
@@ -28,19 +29,19 @@ export default function SignificationMatrix({ significations, className }: Signi
                             </th>
                             <th scope="col" className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-center")}>
                                 <span className="block font-bold">Very strong</span>
-                                <span className="text-[9px] font-normal lowercase opacity-70">significator</span>
+                                <span className="text-[9px] font-normal lowercase opacity-70"><KnowledgeTooltip term="kp_significator">significator</KnowledgeTooltip></span>
                             </th>
                             <th scope="col" className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-center")}>
                                 <span className="block font-bold">Strong</span>
-                                <span className="text-[9px] font-normal lowercase opacity-70">significator</span>
+                                <span className="text-[9px] font-normal lowercase opacity-70"><KnowledgeTooltip term="kp_significator">significator</KnowledgeTooltip></span>
                             </th>
                             <th scope="col" className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-center")}>
                                 <span className="block font-bold">Normal</span>
-                                <span className="text-[9px] font-normal lowercase opacity-70">significator</span>
+                                <span className="text-[9px] font-normal lowercase opacity-70"><KnowledgeTooltip term="kp_significator">significator</KnowledgeTooltip></span>
                             </th>
                             <th scope="col" className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-center")}>
                                 <span className="block font-bold">Weak</span>
-                                <span className="text-[9px] font-normal lowercase opacity-70">significator</span>
+                                <span className="text-[9px] font-normal lowercase opacity-70"><KnowledgeTooltip term="kp_significator">significator</KnowledgeTooltip></span>
                             </th>
                         </tr>
                     </thead>

@@ -15,6 +15,7 @@ import {
     Compass,
 } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 export type KpSection =
     | 'dashboard'
@@ -38,20 +39,20 @@ interface KpDashboardSidebarProps {
     className?: string;
 }
 
-const SIDEBAR_ITEMS: { id: KpSection; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+const SIDEBAR_ITEMS: { id: KpSection; label: React.ReactNode; icon: React.ComponentType<{ className?: string }> }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'kp-analysis', label: 'Planets', icon: FlaskConical },
-    { id: 'cusps', label: 'Cusps', icon: Compass },
-    { id: 'significators', label: 'Significators', icon: Grid3x3 },
-    { id: 'ruling-planets', label: 'Ruling Planets', icon: Layers },
+    { id: 'cusps', label: <KnowledgeTooltip term="kp_cusp">Cusps</KnowledgeTooltip>, icon: Compass },
+    { id: 'significators', label: <KnowledgeTooltip term="kp_significator">Significators</KnowledgeTooltip>, icon: Grid3x3 },
+    { id: 'ruling-planets', label: <KnowledgeTooltip term="ruling_planets">Ruling Planets</KnowledgeTooltip>, icon: Layers },
     { id: 'bhava-details', label: 'Bhava Details', icon: History },
     { id: 'interlinks', label: 'Interlinks', icon: LayoutDashboard },
-    { id: 'advanced-ssl', label: 'Advanced SSL', icon: FlaskConical },
-    { id: 'nakshatra-nadi', label: 'Nakshatra Nadi', icon: Compass },
-    { id: 'fortuna', label: 'Pars Fortuna', icon: Clock },
+    { id: 'advanced-ssl', label: <>Advanced <KnowledgeTooltip term="sub_sub_lord">SSL</KnowledgeTooltip></>, icon: FlaskConical },
+    { id: 'nakshatra-nadi', label: <KnowledgeTooltip term="kp_nakshatra_nadi">Nakshatra Nadi</KnowledgeTooltip>, icon: Compass },
+    { id: 'fortuna', label: <KnowledgeTooltip term="kp_fortuna">Pars Fortuna</KnowledgeTooltip>, icon: Clock },
     { id: 'dashas', label: 'Dashas', icon: History },
     { id: 'transit', label: 'Transit', icon: Globe },
-    { id: 'events', label: 'Horary', icon: HelpCircle },
+    { id: 'events', label: <KnowledgeTooltip term="kp_horary">Horary</KnowledgeTooltip>, icon: HelpCircle },
     { id: 'reports', label: 'Notes', icon: FileText },
 ];
 

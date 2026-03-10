@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { KpPromise } from '@/types/kp.types';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { ZODIAC_SIGNS } from '@/lib/chart-geometry';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 const ZODIAC_SYMBOLS = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
 const ZODIAC_NAMES = ZODIAC_SIGNS;
@@ -138,7 +139,7 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                                 <div className="absolute left-[-20px] w-3 h-3 rounded-full bg-surface-warm border border-gold-primary/20" />
                                 <span className="text-[20px] text-ink">{PLANET_SYMBOLS[currentPromise.chain.signLord.planet] || '☉'}</span>
                                 <div>
-                                    <span className={cn(TYPOGRAPHY.label, "text-[10px] block opacity-70 uppercase tracking-wide")}>Sign Lord</span>
+                                    <span className={cn(TYPOGRAPHY.label, "text-[10px] block opacity-70 uppercase tracking-wide")}><KnowledgeTooltip term="sign_lord">Sign Lord</KnowledgeTooltip></span>
                                     <span className={cn(TYPOGRAPHY.value, "text-[16px]")}>{currentPromise.chain.signLord.planet}</span>
                                     {currentPromise.chain.signLord.isRetro && <span className="text-rose-600 ml-1 text-[12px] font-medium">(R)</span>}
                                 </div>
@@ -149,7 +150,7 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                                 <div className="absolute left-[-20px] w-3 h-3 rounded-full bg-surface-warm border border-gold-primary/20" />
                                 <span className="text-[20px] text-ink">{PLANET_SYMBOLS[currentPromise.chain.starLord.planet] || '☉'}</span>
                                 <div>
-                                    <span className={cn(TYPOGRAPHY.label, "text-[10px] block opacity-70 uppercase tracking-wide")}>Star Lord</span>
+                                    <span className={cn(TYPOGRAPHY.label, "text-[10px] block opacity-70 uppercase tracking-wide")}><KnowledgeTooltip term="star_lord">Star Lord</KnowledgeTooltip></span>
                                     <span className={cn(TYPOGRAPHY.value, "text-[16px]")}>{currentPromise.chain.starLord.planet}</span>
                                     {currentPromise.chain.starLord.isRetro && <span className="text-rose-600 ml-1 text-[12px] font-medium">(R)</span>}
                                 </div>
@@ -161,7 +162,7 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                                 <div className="flex items-center gap-3 px-5 py-2.5 bg-gradient-to-r from-gold-primary to-gold-dark rounded-xl shadow-md border border-gold-dark/30 text-white">
                                     <span className="text-[24px]">{PLANET_SYMBOLS[currentPromise.chain.subLord.planet] || '☉'}</span>
                                     <div>
-                                        <span className={cn(TYPOGRAPHY.label, "text-[10px] !text-white/90 block uppercase tracking-widest !font-bold")}>Sub Lord</span>
+                                        <span className={cn(TYPOGRAPHY.label, "text-[10px] !text-white/90 block uppercase tracking-widest !font-bold")}><KnowledgeTooltip term="sub_lord" unstyled>Sub Lord</KnowledgeTooltip></span>
                                         <span className={cn(TYPOGRAPHY.value, "text-[18px] !text-white font-bold")}>{currentPromise.chain.subLord.planet}</span>
                                         {currentPromise.chain.subLord.isRetro && <span className="text-rose-200 ml-1 text-[12px] font-medium">(R)</span>}
                                     </div>
@@ -173,7 +174,7 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                                 <div className="absolute left-[-20px] w-3 h-3 rounded-full bg-surface-warm border border-gold-primary/20" />
                                 <span className="text-[20px] text-ink">{PLANET_SYMBOLS[currentPromise.chain.subSubLord.planet] || '☉'}</span>
                                 <div>
-                                    <span className={cn(TYPOGRAPHY.label, "text-[10px] block opacity-70 uppercase tracking-wide")}>Sub-Sub Lord</span>
+                                    <span className={cn(TYPOGRAPHY.label, "text-[10px] block opacity-70 uppercase tracking-wide")}><KnowledgeTooltip term="sub_sub_lord">Sub-Sub Lord</KnowledgeTooltip></span>
                                     <span className={cn(TYPOGRAPHY.value, "text-[16px]")}>{currentPromise.chain.subSubLord.planet}</span>
                                     {currentPromise.chain.subSubLord.isRetro && <span className="text-rose-600 ml-1 text-[12px] font-medium">(R)</span>}
                                 </div>
@@ -260,7 +261,7 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                 <div className="bg-surface-warm rounded-xl p-5 border border-gold-primary/20 shadow-sm mx-auto max-w-4xl">
                     <p className={cn(TYPOGRAPHY.subValue, "text-[15px] leading-relaxed")}>
                         <span className={cn(TYPOGRAPHY.label, "text-[12px] !text-gold-dark !font-bold uppercase tracking-wide mr-2 border border-gold-soft bg-gold-soft/10 px-2 py-0.5 rounded-md")}>Interpretation Focus</span>
-                        The <strong className="font-bold text-ink">{selectedCusp}{selectedCusp === 1 ? 'st' : selectedCusp === 2 ? 'nd' : selectedCusp === 3 ? 'rd' : 'th'} Cusp Sub Lord</strong> ({currentPromise.chain.subLord.planet})
+                        The <strong className="font-bold text-ink">{selectedCusp}{selectedCusp === 1 ? 'st' : selectedCusp === 2 ? 'nd' : selectedCusp === 3 ? 'rd' : 'th'} <KnowledgeTooltip term="kp_cusp">Cusp</KnowledgeTooltip> <KnowledgeTooltip term="sub_lord">Sub Lord</KnowledgeTooltip></strong> ({currentPromise.chain.subLord.planet})
                         {currentPromise.positiveHouses.length > 0 && (
                             <> strongly links to <span className="text-emerald-700 font-bold px-1.5 py-0.5 rounded bg-emerald-50 border border-emerald-100 mx-1">{currentPromise.positiveHouses.join(', ')}</span>, indicating <span className="text-emerald-700 font-bold">positive promise</span> for {HOUSE_TOPICS[selectedCusp]?.toLocaleLowerCase()} matters</>
                         )}

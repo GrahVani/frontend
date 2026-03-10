@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import type { KpPlanet } from '@/types/kp.types';
 import { ArrowDown } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface KpPlanetaryTableProps {
     planets: KpPlanet[];
@@ -47,8 +48,8 @@ export default function KpPlanetaryTable({ planets, className }: KpPlanetaryTabl
                         <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Degree</th>
                         <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>House</th>
                         <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Nakshatra</th>
-                        <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Star lord</th>
-                        <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left !text-gold-dark")}>Sub lord</th>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}><KnowledgeTooltip term="star_lord">Star lord</KnowledgeTooltip></th>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left !text-gold-dark")}><KnowledgeTooltip term="sub_lord">Sub lord</KnowledgeTooltip></th>
                     </tr>
                 </thead>
                 <tbody>

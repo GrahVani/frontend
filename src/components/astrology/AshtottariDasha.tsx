@@ -7,6 +7,7 @@ import { ChevronDown, ChevronUp, Calendar, AlertCircle, Loader2 } from 'lucide-r
 import { DashaNode, formatDateDisplay, standardizeDuration } from '@/lib/dasha-utils';
 import { PLANET_COLORS } from '@/lib/astrology-constants';
 import { captureException } from '@/lib/monitoring';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface AshtottariDashaProps {
     periods: DashaNode[];
@@ -122,7 +123,7 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
                                         <tr>
                                             <td colSpan={5} className="bg-surface-warm/60/60 px-3 py-2">
                                                 <div className="text-2xs font-black text-ink/45 uppercase tracking-[0.2em] mb-2 pl-2">
-                                                    Antardasha Sub-Periods (Ashtottari)
+                                                    <KnowledgeTooltip term="dasha_antardasha">Antardasha</KnowledgeTooltip> Sub-Periods (Ashtottari)
                                                 </div>
                                                 <table className="w-full">
                                                     <tbody className="divide-y divide-gold-primary/10">
@@ -172,7 +173,7 @@ export default function AshtottariDasha({ periods, onFetchPratyantar }: Ashtotta
                                                                         <tr>
                                                                             <td colSpan={5} className="bg-gold-soft/60 px-4 py-2">
                                                                                 <div className="text-2xs font-black text-gold-dark uppercase tracking-[0.2em] mb-1.5 pl-2">
-                                                                                    Pratyantardasha ({mahadasha.planet} → {antar.planet})
+                                                                                    <KnowledgeTooltip term="dasha_pratyantardasha">Pratyantardasha</KnowledgeTooltip> ({mahadasha.planet} → {antar.planet})
                                                                                 </div>
                                                                                 <table className="w-full">
                                                                                     <tbody className="divide-y divide-gold-primary/5">

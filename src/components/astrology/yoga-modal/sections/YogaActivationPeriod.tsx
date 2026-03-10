@@ -4,6 +4,7 @@ import React, { memo } from 'react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { Zap } from 'lucide-react';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { NormalizedTiming } from '@/types/yoga.types';
 
 interface YogaActivationPeriodProps {
@@ -12,10 +13,10 @@ interface YogaActivationPeriodProps {
 
 export const YogaActivationPeriod = memo(function YogaActivationPeriod({ data }: YogaActivationPeriodProps) {
     const timelineItems = [
-        data.bestPeriods && { label: 'Primary Dasha Periods', value: data.bestPeriods },
+        data.bestPeriods && { label: 'Mahadasha', suffix: ' Periods', value: data.bestPeriods, termKey: 'dasha_mahadasha' },
         data.activationTransits && { label: 'Transit Triggers', value: data.activationTransits },
         data.peakEffects && { label: 'Peak Effects', value: data.peakEffects },
-    ].filter(Boolean) as { label: string; value: string }[];
+    ].filter(Boolean) as { label: string; suffix?: string; value: string; termKey?: string }[];
 
     return (
         <div className="prem-card p-5">
@@ -30,7 +31,13 @@ export const YogaActivationPeriod = memo(function YogaActivationPeriod({ data }:
                         {timelineItems.map((item, i) => (
                             <div key={i} className="relative pl-5 border-l-2 border-gold-primary/20">
                                 <div className="absolute w-2.5 h-2.5 bg-gold-primary rounded-full -left-[6px] top-1 border-2 border-surface-warm" style={{ opacity: 1 - i * 0.2 }} />
-                                <h4 className="text-[10px] font-bold text-ink opacity-60 uppercase mb-1">{item.label}</h4>
+                                <h4 className="text-[10px] font-bold text-ink opacity-60 uppercase mb-1">
+                                    {item.termKey ? (
+                                        <><KnowledgeTooltip term={item.termKey} unstyled>{item.label}</KnowledgeTooltip>{item.suffix}</>
+                                    ) : (
+                                        item.label
+                                    )}
+                                </h4>
                                 <p className={cn(TYPOGRAPHY.value, "text-[12px] leading-relaxed")}>{item.value}</p>
                             </div>
                         ))}

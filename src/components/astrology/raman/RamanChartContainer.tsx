@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRamanNatalChart } from '@/hooks/queries/useRaman';
 import { RamanChartRenderer } from './RamanChartRenderer';
 import { mapRamanResponseToNorthIndian } from '@/utils/astrology/ramanMapping';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface RamanChartContainerProps {
     clientId: string;
@@ -30,7 +31,7 @@ export const RamanChartContainer: React.FC<RamanChartContainerProps> = ({ client
     return (
         <div className="w-full flex flex-col items-center gap-6">
             <div className="w-full flex justify-between items-center px-4">
-                <h2 className="text-[20px] font-serif text-ink">Raman Ayanamsa (North Indian Layout)</h2>
+                <h2 className="text-[20px] font-serif text-ink"><KnowledgeTooltip term="ayanamsa_raman" unstyled>Raman Ayanamsa</KnowledgeTooltip> (<KnowledgeTooltip term="chart_north_indian" unstyled>North Indian Layout</KnowledgeTooltip>)</h2>
                 <button
                     onClick={() => setShowDebug(!showDebug)}
                     className="text-[12px] text-gold-dark underline font-bold"
@@ -44,8 +45,8 @@ export const RamanChartContainer: React.FC<RamanChartContainerProps> = ({ client
             </div>
 
             <div className="text-[14px] text-ink/55 text-center">
-                <p>Chart calculated using Raman Ayanamsa.</p>
-                <p>Lagna: {data.data.ascendant.sign} ({data.data.ascendant.degrees})</p>
+                <p>Chart calculated using <KnowledgeTooltip term="ayanamsa_raman">Raman Ayanamsa</KnowledgeTooltip>.</p>
+                <p><KnowledgeTooltip term="ascendant_lagna">Lagna</KnowledgeTooltip>: {data.data.ascendant.sign} ({data.data.ascendant.degrees})</p>
             </div>
 
             {showDebug && (

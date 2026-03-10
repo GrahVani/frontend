@@ -5,6 +5,7 @@ import { Loader2, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { clientApi } from '@/lib/api';
 import { normalizeDoshaData } from './utils/dosha-normalizer';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import { DoshaSectionRenderer } from '@/components/astrology/dosha-modal/DoshaSectionRenderer';
 
 
@@ -69,7 +70,7 @@ export const DoshaModal = memo(function DoshaModal({
             <div className="space-y-4">
                 <div className="p-4 bg-red-50 border border-red-100 rounded-2xl text-center" role="alert">
                     <Info className="w-6 h-6 text-red-500 mx-auto mb-2" aria-hidden="true" />
-                    <h3 className="text-red-900 font-bold font-serif text-[14px]">Dosha Analysis Pending</h3>
+                    <h3 className="text-red-900 font-bold font-serif text-[14px]"><KnowledgeTooltip term="dosha_system" unstyled>Dosha</KnowledgeTooltip> Analysis Pending</h3>
                     <p className="text-[10px] text-red-600">
                         {error || 'Detailed analysis not currently available for this client'}
                     </p>

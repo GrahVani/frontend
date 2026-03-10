@@ -3,6 +3,7 @@
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { ZODIAC_SIGNS } from '@/lib/chart-geometry';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface ContributorEntry {
     contributor: string;
@@ -29,10 +30,10 @@ const SIGN_NAMES = ZODIAC_SIGNS;
 
 // House Groups for astrological analysis
 const HOUSE_GROUPS = {
-    dharma: { houses: [1, 5, 9], name: 'Dharma', desc: 'Purpose & luck', color: 'bg-purple-100 text-purple-800' },
-    artha: { houses: [2, 6, 10], name: 'Artha', desc: 'Wealth & career', color: 'bg-amber-100 text-ink' },
-    kama: { houses: [3, 7, 11], name: 'Kama', desc: 'Desires & gains', color: 'bg-pink-100 text-pink-800' },
-    moksha: { houses: [4, 8, 12], name: 'Moksha', desc: 'Liberation', color: 'bg-blue-100 text-blue-800' }
+    dharma: { houses: [1, 5, 9], name: 'dharma', displayName: 'Dharma', desc: 'Purpose & luck', color: 'bg-purple-100 text-purple-800', termKey: 'house_dharma' },
+    artha: { houses: [2, 6, 10], name: 'artha', displayName: 'Artha', desc: 'Wealth & career', color: 'bg-amber-100 text-ink', termKey: 'house_artha' },
+    kama: { houses: [3, 7, 11], name: 'kama', displayName: 'Kama', desc: 'Desires & gains', color: 'bg-pink-100 text-pink-800', termKey: 'house_kama' },
+    moksha: { houses: [4, 8, 12], name: 'moksha', displayName: 'Moksha', desc: 'Liberation', color: 'bg-blue-100 text-blue-800', termKey: 'house_moksha' }
 };
 
 // Minimal badge indicator for SAV values only (no colored text)
@@ -128,7 +129,7 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                     </tbody>
                     <tfoot>
                         <tr className="bg-surface-warm border-t border-primary">
-                            <td className={cn(TYPOGRAPHY.label, "py-3 px-2 border-r border-primary mb-0")}>SAV</td>
+                            <td className={cn(TYPOGRAPHY.label, "py-3 px-2 border-r border-primary mb-0")}><KnowledgeTooltip term="ashtakavarga_sav" unstyled>SAV</KnowledgeTooltip></td>
                             {SIGNS.map(s => {
                                 const v = sav[s];
                                 return (
@@ -153,7 +154,7 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
             {/* Quick Summary */}
             <div className="flex justify-between mt-3 px-1">
                 <span className={cn(TYPOGRAPHY.subValue, "text-ink")}>
-                    Strongest: <span className="text-ink font-black uppercase tracking-wider">{groupTotals.sort((a, b) => b.total - a.total)[0].name}</span>
+                    Strongest: <span className="text-ink font-black uppercase tracking-wider">{groupTotals.sort((a, b) => b.total - a.total)[0].displayName}</span>
                 </span>
                 <div className="flex gap-6">
                     <span className={cn(TYPOGRAPHY.subValue, "text-ink inline-flex items-center gap-1.5")}>

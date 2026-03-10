@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import type { KpRulingPlanetsResponse } from '@/types/kp.types';
 import { RefreshCw, Clock } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface RulingPlanetsWidgetProps {
     data: KpRulingPlanetsResponse['data'] | null;
@@ -87,7 +88,7 @@ export default function RulingPlanetsWidget({
             <div className="bg-gold-primary/10 px-4 py-2.5 border-b border-gold-primary/20 flex justify-between items-center">
                 <div className="flex items-center gap-2">
                     <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] leading-tight")}>
-                        Ruling planets (RP)
+                        <KnowledgeTooltip term="ruling_planets">Ruling planets</KnowledgeTooltip> (RP)
                     </h3>
                 </div>
                 <div className="flex items-center gap-3">
@@ -142,9 +143,9 @@ export default function RulingPlanetsWidget({
                                 <div className="space-y-2 bg-white/40 p-3 rounded-xl border border-gold-primary/15">
                                     <h5 className={cn(TYPOGRAPHY.label, "text-[9px] !text-gold-dark uppercase tracking-wider")}>Lagna (ascendant)</h5>
                                     <div className="flex flex-col space-y-1.5">
-                                        <ComponentRow label="Sign Lord" value={components?.["2_lagna_sign_lord"]} />
-                                        <ComponentRow label="Star Lord" value={components?.["3_lagna_star_lord"]} />
-                                        <ComponentRow label="Sub Lord" value={components?.["4_lagna_sub_lord"]} highlight />
+                                        <ComponentRow label="Sign Lord" value={components?.["2_lagna_sign_lord"]} termKey="sign_lord" />
+                                        <ComponentRow label="Star Lord" value={components?.["3_lagna_star_lord"]} termKey="star_lord" />
+                                        <ComponentRow label="Sub Lord" value={components?.["4_lagna_sub_lord"]} termKey="sub_lord" highlight />
                                     </div>
                                 </div>
 
@@ -152,9 +153,9 @@ export default function RulingPlanetsWidget({
                                 <div className="space-y-2 bg-white/40 p-3 rounded-xl border border-gold-primary/15">
                                     <h5 className={cn(TYPOGRAPHY.label, "text-[9px] !text-gold-dark uppercase tracking-wider")}>Moon (mind)</h5>
                                     <div className="flex flex-col space-y-1.5">
-                                        <ComponentRow label="Sign Lord" value={components?.["5_moon_sign_lord"]} />
-                                        <ComponentRow label="Star Lord" value={components?.["6_moon_star_lord"]} />
-                                        <ComponentRow label="Sub Lord" value={components?.["7_moon_sub_lord"]} />
+                                        <ComponentRow label="Sign Lord" value={components?.["5_moon_sign_lord"]} termKey="sign_lord" />
+                                        <ComponentRow label="Star Lord" value={components?.["6_moon_star_lord"]} termKey="star_lord" />
+                                        <ComponentRow label="Sub Lord" value={components?.["7_moon_sub_lord"]} termKey="sub_lord" />
                                     </div>
                                 </div>
 
@@ -162,7 +163,7 @@ export default function RulingPlanetsWidget({
                                 <div className="space-y-2 bg-white/40 p-3 rounded-xl border border-gold-primary/15">
                                     <h5 className={cn(TYPOGRAPHY.label, "text-[9px] !text-gold-dark uppercase tracking-wider")}>Time (day)</h5>
                                     <div className="flex flex-col space-y-1.5">
-                                        <ComponentRow label="Day Lord" value={components?.["1_day_lord"]} />
+                                        <ComponentRow label="Day Lord" value={components?.["1_day_lord"]} termKey="ruling_planets" />
                                     </div>
                                 </div>
                             </div>
@@ -201,8 +202,8 @@ export default function RulingPlanetsWidget({
 
                                 {/* Calculation Stats Footer */}
                                 <div className="mt-5 pt-4 border-t border-gold-primary/20 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    {fortunaStr && <CalcBadge icon={<span className="text-[12px]">⊗</span>} label="Pars fortuna" value={fortunaStr} />}
-                                    {data?.ayanamsa && <CalcBadge icon={<Clock className="w-3 h-3" />} label="KP ayanamsa" value={toAngleDMS(data.ayanamsa.value)} mono />}
+                                    {fortunaStr && <CalcBadge icon={<span className="text-[12px]">⊗</span>} label="Pars fortuna" value={fortunaStr} termKey="kp_fortuna" />}
+                                    {data?.ayanamsa && <CalcBadge icon={<Clock className="w-3 h-3" />} label="KP ayanamsa" value={toAngleDMS(data.ayanamsa.value)} mono termKey="kp_ayanamsa" />}
                                 </div>
                             </div>
                         </div>
@@ -214,13 +215,13 @@ export default function RulingPlanetsWidget({
 }
 
 // Sub-components for cleaner code
-function ComponentRow({ label, value, highlight = false }: { label: string, value: string | undefined, highlight?: boolean }) {
+function ComponentRow({ label, value, highlight = false, termKey }: { label: string, value: string | undefined, highlight?: boolean, termKey?: string }) {
     return (
         <div className={cn(
             "grid grid-cols-[100px_1fr] items-center py-1 px-3 rounded-lg transition-colors",
             highlight ? "bg-gold-primary/10 border border-gold-primary/20 shadow-sm" : "hover:bg-white/60"
         )}>
-            <span className={cn(TYPOGRAPHY.label, "text-[9px] opacity-60 uppercase tracking-wider")}>{label}</span>
+            <span className={cn(TYPOGRAPHY.label, "text-[9px] opacity-60 uppercase tracking-wider")}>{termKey ? <KnowledgeTooltip term={termKey}>{label}</KnowledgeTooltip> : label}</span>
             <div className="flex items-center gap-2">
                 <span className={cn(TYPOGRAPHY.value, "text-[14px] font-bold")}>{value || '-'}</span>
                 {highlight && <span className={cn(TYPOGRAPHY.label, "text-[8px] bg-gold-primary !text-white px-1.5 py-0.5 rounded-full uppercase !font-bold tracking-tighter shadow-sm")}>Strong</span>}
@@ -229,14 +230,14 @@ function ComponentRow({ label, value, highlight = false }: { label: string, valu
     );
 }
 
-function CalcBadge({ icon, label, value, mono = false }: { icon: React.ReactNode, label: string, value: string, mono?: boolean }) {
+function CalcBadge({ icon, label, value, mono = false, termKey }: { icon: React.ReactNode, label: string, value: string, mono?: boolean, termKey?: string }) {
     return (
         <div className="flex items-center gap-3 p-2 bg-white rounded-lg border border-gold-primary/15 shadow-sm">
             <div className="w-8 h-8 rounded bg-surface-warm flex items-center justify-center text-gold-dark border border-gold-primary/20">
                 {icon}
             </div>
             <div className="flex flex-col">
-                <span className={cn(TYPOGRAPHY.label, "text-[9px] opacity-50 uppercase tracking-widest")}>{label}</span>
+                <span className={cn(TYPOGRAPHY.label, "text-[9px] opacity-50 uppercase tracking-widest")}>{termKey ? <KnowledgeTooltip term={termKey}>{label}</KnowledgeTooltip> : label}</span>
                 <span className={cn(TYPOGRAPHY.value, "text-[12px] font-semibold", mono && "font-mono")}>{value}</span>
             </div>
         </div>

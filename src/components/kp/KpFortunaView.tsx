@@ -3,6 +3,7 @@ import { KpFortunaResponse } from '@/types/kp.types';
 import { cn } from '@/lib/utils';
 import { Calculator, ArrowRight } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface KpFortunaViewPropsNew {
     data: KpFortunaResponse;
@@ -22,7 +23,7 @@ export const KpFortunaView: React.FC<KpFortunaViewPropsNew> = ({ data }) => {
                 <div className="bg-surface-warm/60 p-4 border-b border-gold-primary/15 flex items-center justify-between">
                     <h3 className={cn(TYPOGRAPHY.value, "text-[18px] text-ink flex items-center gap-2")}>
                         <Calculator className="w-5 h-5 text-gold-dark" />
-                        Mathematical derivation
+                        Mathematical derivation (<KnowledgeTooltip term="kp_fortuna">Pars Fortuna</KnowledgeTooltip>)
                     </h3>
                     <span className={cn(TYPOGRAPHY.label, "text-[10px] opacity-70")}>Formula: ascendant + moon - sun</span>
                 </div>
@@ -69,12 +70,12 @@ export const KpFortunaView: React.FC<KpFortunaViewPropsNew> = ({ data }) => {
                 <div className="p-6 rounded-2xl bg-emerald-50/50 border border-emerald-200/60 shadow-sm">
                     <h4 className={cn(TYPOGRAPHY.value, "text-emerald-800 mb-2 flex items-center gap-2")}>
                         <ArrowRight className="w-4 h-4 text-emerald-600" />
-                        Fortuna placement
+                        <KnowledgeTooltip term="kp_fortuna" unstyled>Fortuna</KnowledgeTooltip> placement
                     </h4>
                     {fortunaHouse ? (
                         <>
                             <p className={cn(TYPOGRAPHY.subValue, "text-emerald-900 leading-relaxed font-sans")}>
-                                Fortuna is located in <strong className="font-bold text-ink">{fortunaHouse.sign}</strong>
+                                <KnowledgeTooltip term="kp_fortuna">Fortuna</KnowledgeTooltip> is located in <strong className="font-bold text-ink">{fortunaHouse.sign}</strong>
                                 in the <strong className="font-bold text-ink">House {fortunaHouse.houseNumber}</strong>.
                             </p>
                             <p className={cn(TYPOGRAPHY.label, "text-[10px] text-emerald-700/70 mt-3 font-mono")}>

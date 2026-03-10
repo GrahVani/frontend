@@ -4,6 +4,7 @@ import React from 'react';
 import type { KpHouseSignification } from '@/types/kp.types';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface HouseSignificatorsTableProps {
     data: KpHouseSignification[];
@@ -39,10 +40,10 @@ export default function HouseSignificatorsTable({ data, className }: HouseSignif
                                 Occupants
                             </th>
                             <th scope="col" className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5")}>
-                                Planets in nak. of cusp sign lord
+                                Planets in nak. of cusp <KnowledgeTooltip term="sign_lord">sign lord</KnowledgeTooltip>
                             </th>
                             <th scope="col" className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5")}>
-                                Cusp sign lord
+                                <KnowledgeTooltip term="kp_cusp">Cusp</KnowledgeTooltip> <KnowledgeTooltip term="sign_lord">sign lord</KnowledgeTooltip>
                             </th>
                         </tr>
                     </thead>

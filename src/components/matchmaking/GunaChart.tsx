@@ -2,6 +2,20 @@
 
 import { cn } from "@/lib/utils";
 import type { KootaScore } from "@/types/matchmaking.types";
+import { KnowledgeTooltip } from "@/components/knowledge";
+
+/** Map koota display names → knowledge termKeys */
+const KOOTA_TERM_MAP: Record<string, string> = {
+    'Varna': 'koota_varna',
+    'Vashya': 'koota_vashya',
+    'Tara': 'koota_tara',
+    'Yoni': 'koota_yoni',
+    'Graha Maitri': 'koota_graha_maitri',
+    'Gana': 'koota_gana',
+    'Bhakoot': 'koota_bhakoot',
+    'Nadi': 'koota_nadi',
+    'Naadikoota': 'koota_nadi',
+};
 
 interface GunaChartProps {
     kootas: KootaScore[];
@@ -30,7 +44,7 @@ export default function GunaChart({ kootas, totalScore, className }: GunaChartPr
         <div className={cn("prem-card p-5", className)}>
             <div className="flex items-center justify-between mb-5">
                 <h3 className="text-[12px] font-bold text-gold-dark tracking-widest font-serif uppercase">
-                    Ashta Koota Score
+                    <KnowledgeTooltip term="koota_system">Ashta Koota</KnowledgeTooltip> Score
                 </h3>
                 <div className="flex items-center gap-2">
                     <span className="text-[24px] font-serif font-bold text-ink">{totalScore}</span>
@@ -42,7 +56,11 @@ export default function GunaChart({ kootas, totalScore, className }: GunaChartPr
                 {kootas.map((koota) => (
                     <div key={koota.name}>
                         <div className="flex items-center justify-between mb-1">
-                            <span className="text-[14px] font-serif font-medium text-ink">{koota.name}</span>
+                            <span className="text-[14px] font-serif font-medium text-ink">
+                                {KOOTA_TERM_MAP[koota.name]
+                                    ? <KnowledgeTooltip term={KOOTA_TERM_MAP[koota.name]}>{koota.name}</KnowledgeTooltip>
+                                    : koota.name}
+                            </span>
                             <span className="text-[12px] font-medium text-ink/45">
                                 {koota.obtainedScore} / {koota.maxScore}
                             </span>

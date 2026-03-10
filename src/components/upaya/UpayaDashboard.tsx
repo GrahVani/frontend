@@ -6,6 +6,7 @@ import GemstoneAnalysisCard from '@/components/upaya/GemstoneAnalysisCard';
 
 import { Sparkles, ShieldAlert, BadgeCheck, User } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface GemstoneEntry {
     planet: string;
@@ -51,7 +52,7 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
             <div className="space-y-6">
                 <div className="flex items-center gap-3 px-2">
                     <BadgeCheck className="w-6 h-6 text-emerald-600" />
-                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-black")}>Recommended gemstones</h3>
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-black")}>Recommended <KnowledgeTooltip term="general_gemstone">gemstones</KnowledgeTooltip></h3>
                     <div className="h-px flex-1 bg-gradient-to-r from-emerald-100 to-transparent ml-4" />
                 </div>
 
@@ -80,7 +81,7 @@ export default function UpayaDashboard({ data, className }: UpayaDashboardProps)
                 <div className="space-y-6 pt-6">
                     <div className="flex items-center gap-3 px-2">
                         <ShieldAlert className="w-6 h-6 text-red-600" />
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-black")}>Caution: avoid these gemstones</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-black")}>Caution: avoid these <KnowledgeTooltip term="general_gemstone">gemstones</KnowledgeTooltip></h3>
                         <div className="h-px flex-1 bg-gradient-to-r from-red-100 to-transparent ml-4" />
                     </div>
 

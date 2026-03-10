@@ -17,6 +17,7 @@ import {
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { clientApi } from '@/lib/api';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 
 interface AngarakDoshaData {
@@ -156,7 +157,7 @@ function AngarakDoshaView({ data, className }: { data: AngarakDoshaData; classNa
                             <Flame className="w-8 h-8" />
                         </div>
                         <div>
-                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px]")}>Angarak Dosha</h2>
+                            <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px]")}><KnowledgeTooltip term="dosha_angarak">Angarak Dosha</KnowledgeTooltip></h2>
                             <p className={cn(TYPOGRAPHY.value, "text-[14px] text-red-700")}>Mars-Rahu Conjunction in House {data.placement?.house}</p>
                         </div>
                     </div>
@@ -266,7 +267,7 @@ function SadeSatiView({ data, className }: { data: SadeSatiData; className?: str
                         <Moon className="w-8 h-8" />
                     </div>
                     <div>
-                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] text-white")}>Sade Sati Analysis</h2>
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] text-white")}><KnowledgeTooltip term="dosha_sade_sati" unstyled>Sade Sati</KnowledgeTooltip> Analysis</h2>
                         <p className={cn(TYPOGRAPHY.value, "text-[14px] text-indigo-300")}>Saturn Transiting {data.phase}</p>
                     </div>
                 </div>

@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface MantraInfo {
     sanskrit: string;
@@ -40,7 +41,7 @@ const Waveform = ({ color = "amber" }: { color?: "amber" | "indigo" }) => (
 const DashaMantraPanel: React.FC<DashaMantraPanelProps> = ({ mantras }) => {
     return (
         <div className="space-y-3">
-            <h3 className="text-[13px] font-medium tracking-[0.05em] text-amber-900/60 px-2">1. High Priority: Dasha Period Mantras</h3>
+            <h3 className="text-[13px] font-medium tracking-[0.05em] text-amber-900/60 px-2">1. High Priority: <KnowledgeTooltip term="dasha_system">Dasha</KnowledgeTooltip> Period <KnowledgeTooltip term="general_mantra">Mantras</KnowledgeTooltip></h3>
             <div className="space-y-2">
                 {mantras.slice(0, 2).map((mantra, idx) => {
                     const isActive = idx === 1; // Example active state from the reference image
@@ -80,7 +81,7 @@ const DashaMantraPanel: React.FC<DashaMantraPanelProps> = ({ mantras }) => {
                                         <span className="text-[12px] font-medium text-amber-900/40 whitespace-nowrap">| Goal: {mantra.daily_count}</span>
                                     </div>
                                     {isActive && (
-                                        <p className="text-[11px] text-amber-600 mt-0.5 font-medium tracking-wide italic">*Best during Rahu Kaal*</p>
+                                        <p className="text-[11px] text-amber-600 mt-0.5 font-medium tracking-wide italic">*Best during <KnowledgeTooltip term="rahu_kaal">Rahu Kaal</KnowledgeTooltip>*</p>
                                     )}
                                 </div>
 

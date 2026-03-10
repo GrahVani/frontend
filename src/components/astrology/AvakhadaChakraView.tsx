@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { clientApi } from '@/lib/api';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 
 interface AvakhadaChakraViewProps {
@@ -78,20 +79,20 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
 
     // Map data fields to icons and labels
     const items = [
-        { key: 'varna', label: 'Varna', icon: Shield, desc: 'Class / Temperament' },
-        { key: 'vashya', label: 'Vashya', icon: Anchor, desc: 'Control / Nature' },
-        { key: 'tara', label: 'Tara', icon: Star, desc: 'Birth Star Group' },
-        { key: 'yoni', label: 'Yoni', icon: Hexagon, desc: 'Instinct' },
-        { key: 'gana', label: 'Gana', icon: UsersIcon, desc: 'Nature' },
-        { key: 'nadi', label: 'Nadi', icon: Activity, desc: 'Health' },
-        { key: 'symbol_tatva', label: 'Tatva', icon: Feather, desc: 'Element' },
-        { key: 'rashi_lord', label: 'Rashi Lord', icon: Sun, desc: 'Sign Ruler' },
-        { key: 'rashi', label: 'Rashi', icon: Moon, desc: 'Moon Sign' },
-        { key: 'nakshatra', label: 'Nakshatra', icon: Star, desc: 'Birth Star' },
-        { key: 'pada', label: 'Pada', icon: Disc, desc: 'Quarter' },
-        { key: 'namakshar', label: 'Namakshar', icon: TypeIcon, desc: 'Sound' },
-        { key: 'paya_rashi', label: 'Paya (Rashi)', icon: Disc, desc: 'Base' },
-        { key: 'paya_nakshatra', label: 'Paya (Nakshatra)', icon: Disc, desc: 'Metal' },
+        { key: 'varna', label: 'Varna', icon: Shield, desc: 'Class / Temperament', termKey: 'avakhada_varna' },
+        { key: 'vashya', label: 'Vashya', icon: Anchor, desc: 'Control / Nature', termKey: 'avakhada_vashya' },
+        { key: 'tara', label: 'Tara', icon: Star, desc: 'Birth Star Group', termKey: 'avakhada_tara' },
+        { key: 'yoni', label: 'Yoni', icon: Hexagon, desc: 'Instinct', termKey: 'avakhada_yoni' },
+        { key: 'gana', label: 'Gana', icon: UsersIcon, desc: 'Nature', termKey: 'avakhada_gana' },
+        { key: 'nadi', label: 'Nadi', icon: Activity, desc: 'Health', termKey: 'avakhada_nadi' },
+        { key: 'symbol_tatva', label: 'Tatva', icon: Feather, desc: 'Element', termKey: 'avakhada_tatva' },
+        { key: 'rashi_lord', label: 'Rashi Lord', icon: Sun, desc: 'Sign Ruler', termKey: 'avakhada_rashi_lord' },
+        { key: 'rashi', label: 'Rashi', icon: Moon, desc: 'Moon Sign', termKey: 'avakhada_rashi' },
+        { key: 'nakshatra', label: 'Nakshatra', icon: Star, desc: 'Birth Star', termKey: 'avakhada_nakshatra' },
+        { key: 'pada', label: 'Pada', icon: Disc, desc: 'Quarter', termKey: 'avakhada_pada' },
+        { key: 'namakshar', label: 'Namakshar', icon: TypeIcon, desc: 'Sound', termKey: 'avakhada_namakshar' },
+        { key: 'paya_rashi', label: 'Paya (Rashi)', icon: Disc, desc: 'Base', termKey: 'avakhada_paya' },
+        { key: 'paya_nakshatra', label: 'Paya (Nakshatra)', icon: Disc, desc: 'Metal', termKey: 'avakhada_paya' },
     ];
 
     return (
@@ -104,7 +105,7 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
                     </div>
                     <div>
                         <h2 className="text-[20px] font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-active-glow to-gold-primary">
-                            Avakhada Chakra
+                            <KnowledgeTooltip term="avakhada_chakra" unstyled>Avakhada Chakra</KnowledgeTooltip>
                         </h2>
                         <p className="text-[12px] text-parchment/60 font-sans tracking-wide uppercase">
                             Foundational Classification
@@ -132,7 +133,7 @@ export default function AvakhadaChakraView({ clientId, onClose }: AvakhadaChakra
                         return (
                             <div key={item.key} className="bg-white border border-gold-primary/15 p-2.5 rounded-xl hover:border-gold-primary/40 hover:shadow-md transition-all group flex flex-col justify-between min-h-[85px]">
                                 <div className="flex justify-between items-start mb-0.5">
-                                    <span className="text-[9px] font-bold uppercase tracking-wider text-ink/35">{item.label}</span>
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-ink/35"><KnowledgeTooltip term={item.termKey}>{item.label}</KnowledgeTooltip></span>
                                     <item.icon className="w-3 h-3 text-gold-dark/60 group-hover:text-gold-dark transition-colors" />
                                 </div>
                                 <div>

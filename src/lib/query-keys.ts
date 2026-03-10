@@ -109,4 +109,13 @@ export const queryKeys = {
         raw: (slug: string, inputHash: string) =>
             ['numerology', 'raw', slug, inputHash] as const,
     },
+
+    // Knowledge (educational tooltips)
+    knowledge: {
+        all: ['knowledge'] as const,
+        term: (termKey: string) => ['knowledge', 'term', termKey] as const,
+        batch: (keys: string[]) => ['knowledge', 'batch', keys.sort().join(',')] as const,
+        search: (q: string, domain?: string) => ['knowledge', 'search', q, domain] as const,
+        stats: ['knowledge', 'stats'] as const,
+    },
 } as const;
