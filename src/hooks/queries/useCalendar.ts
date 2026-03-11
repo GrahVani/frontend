@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { PanchangDay, PlanetaryTransit, Festival, PersonalEvent } from "@/types/calendar.types";
 import { queryKeys } from "@/lib/query-keys";
 import { panchangApi } from "@/lib/api/panchang";
+import { festivalApi } from "@/lib/api/festival";
 import { STALE_TIMES } from "@/lib/api/stale-times";
 
 function extractDayFields(data: Record<string, unknown>, dateStr: string): PanchangDay {
@@ -85,16 +86,83 @@ export function usePlanetaryTransits(year: number, month: number) {
     });
 }
 
-export function useFestivals(year: number) {
+export type FestivalFilterType = 'ALL' | 'MAJOR' | 'EKADASHI' | 'SANKRANTI' | 'HOLIDAY' | 'REGIONAL' | string;
+
+export function useFestivals(year: number, filter: FestivalFilterType = 'ALL', region?: string) {
     return useQuery<Festival[]>({
-        queryKey: queryKeys.calendar.festivals(year),
+        queryKey: [...queryKeys.calendar.festivals(year), filter, region],
         queryFn: async () => {
-            // Festival data requires a dedicated database or API.
-            // The panchang calculation engine doesn't provide festival lists.
-            // This will be wired when a festival data source is available.
-            return [];
+            try {
+                let res;
+                const isRecurringCategory = ['PRADOSH', 'RECURRING', 'AMAVASYA', 'PURNIMA'].includes(filter);
+
+                switch (filter) {
+                    case 'MAJOR':
+                        res = await festivalApi.getMajorFestivals({ year }); break;
+                    case 'EKADASHI':
+                        res = await festivalApi.getEkadashis({ year }); break;
+                    case 'SANKRANTI':
+                        res = await festivalApi.getSankrantis({ year }); break;
+                    case 'HOLIDAY':
+                        res = await festivalApi.getHolidays({ year }); break;
+                    case 'REGIONAL':
+                        res = await festivalApi.getRegionalFestivals({ year, region: region || 'DL' }); break;
+                    case 'ALL':
+                        res = await festivalApi.getCalendar({ year }); break;
+                    default:
+                        // For dynamic categories like "PRADOSH" or "VRAT"
+                        res = await festivalApi.getCalendar({ 
+                            year, 
+                            categories: [filter],
+                            include_recurring: isRecurringCategory
+                        }); break;
+                }
+                
+                // Extract festivals or holidays array from response
+                let data: Festival[] = [];
+                if (res.success && res.data) {
+                    if (res.data.festivals) data = res.data.festivals;
+                    else if (res.data.holidays) data = res.data.holidays;
+                    else if (Array.isArray(res.data)) data = res.data;
+                }
+
+                // If we used a standard endpoint that doesn't support category filtering (like regional/holidays), 
+                // or if it was the 'ALL' case, we might need a local fallback.
+                // But for default (dynamic categories), we already filtered at the API level.
+                const standardFilters = ['ALL', 'MAJOR', 'EKADASHI', 'SANKRANTI', 'HOLIDAY', 'REGIONAL'];
+                if (filter && standardFilters.includes(filter)) {
+                    return data;
+                }
+                
+                // For dynamic categories, the API already filtered, but we do a safe check
+                return data.filter(f => f.category === filter || !filter || filter === 'ALL');
+            } catch (error) {
+                console.error(`Failed to fetch festivals (${filter}):`, error);
+                return [];
+            }
         },
-        staleTime: 1000 * 60 * 60 * 24 * 7,
+        staleTime: 5 * 60 * 1000, // 5 minutes cache
+    });
+}
+
+export function useFestivalsByMonth(year: number, month: number) {
+    return useQuery<Festival[]>({
+        queryKey: [...queryKeys.calendar.festivals(year), 'MONTH', month],
+        queryFn: async () => {
+            try {
+                const res = await festivalApi.getFestivalsByMonth({ year, month });
+                if (res.success && res.data) {
+                    if (res.data.festivals) return res.data.festivals;
+                    if (Array.isArray(res.data)) return res.data;
+                }
+                return [];
+            } catch (error) {
+                console.error(`Failed to fetch festivals for ${year}-${month}:`, error);
+                return [];
+            }
+        },
+        staleTime: 5 * 60 * 1000,
+        enabled: !!year && !!month,
     });
 }
 
@@ -107,6 +175,62 @@ export function usePersonalEvents(year: number, month: number) {
             return [];
         },
         staleTime: 1000 * 60 * 2,
+    });
+}
+
+export function useUpcomingFestivals(dateStr: string, limit: number = 10) {
+    return useQuery<Festival[]>({
+        queryKey: [...queryKeys.calendar.festivals(new Date(dateStr).getFullYear()), 'UPCOMING', dateStr, limit],
+        queryFn: async () => {
+            if (!dateStr) return [];
+            try {
+                const res = await festivalApi.getUpcomingFestivals({ date: dateStr, limit });
+                if (res.success && res.data) {
+                    if (res.data.festivals) return res.data.festivals;
+                    if (Array.isArray(res.data)) return res.data;
+                }
+                return [];
+            } catch (error) {
+                console.error("Failed to fetch upcoming festivals:", error);
+                return [];
+            }
+        },
+        staleTime: 5 * 60 * 1000,
+        enabled: !!dateStr,
+    });
+}
+
+
+export function useLunarMonths(year: number) {
+    return useQuery<any>({
+        queryKey: [...queryKeys.calendar.festivals(year), 'LUNAR_MONTHS'],
+        queryFn: async () => {
+            try {
+                const res = await festivalApi.getLunarMonths({ year });
+                return res.success && res.data ? res.data : null;
+            } catch (error) {
+                console.error("Failed to fetch lunar months:", error);
+                return null;
+            }
+        },
+        staleTime: 60 * 60 * 1000, // 1 hour
+    });
+}
+
+export function useFestivalCategories() {
+    return useQuery<string[]>({
+        queryKey: [...queryKeys.calendar.festivals(2026), 'CATEGORIES'],
+        queryFn: async () => {
+            try {
+                const res = await festivalApi.getCategories();
+                if (res.success && res.data && res.data.categories) {
+                    return res.data.categories.map((c: any) => c.id);
+                }
+                return [];
+            } catch (error) {
+                return [];
+            }
+        },
     });
 }
 

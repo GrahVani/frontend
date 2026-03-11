@@ -24,10 +24,31 @@ export interface PlanetaryTransit {
 export interface Festival {
     id: string;
     name: string;
+    name_hi?: string;
     date: string;
+    date_end?: string;
     description: string;
-    significance: string;
-    type: "hindu" | "vedic" | "regional";
+    determination?: string;
+    deity?: string;
+    scope?: string;
+    regions?: string[];
+    regional_names?: string[];
+    category: "MAJOR" | "EKADASHI" | "SANKRANTI" | "PURNIMA" | "AMAVASYA" | "PRADOSH" | "RECURRING" | "REGIONAL" | "VRAT" | string;
+    is_government_holiday?: boolean;
+    is_restricted_holiday?: boolean;
+    sunrise?: string;
+    sunset?: string;
+    lunar_info?: {
+        month_amanta: string;
+        month_purnimanta: string;
+        paksha: string;
+        is_adhik_maas: boolean;
+    };
+    tithi_details?: {
+       tithi: string;
+       start_time?: string;
+       end_time?: string;
+    };
 }
 
 export interface PersonalEvent {
