@@ -1,68 +1,59 @@
-import { useQuery } from "@tanstack/react-query";
-import { queryKeys } from "@/lib/query-keys";
-import { knowledgeApi } from "@/lib/api/knowledge";
-import { STALE_TIMES } from "@/lib/api/stale-times";
-import type { KnowledgeEntry } from "@/types/knowledge.types";
+import { useMemo } from "react";
+import { getStaticKnowledgeEntry, getStaticKnowledgeBatch } from "@/lib/knowledge-static-data";
+
+// Re-export the static entry type for consumers
+type StaticEntry = NonNullable<ReturnType<typeof getStaticKnowledgeEntry>>;
 
 /**
- * Fetch a single knowledge entry by termKey.
- * Returns null (not error) for missing terms — graceful degradation.
+ * Get a single knowledge entry by termKey.
+ * Reads from the embedded static data (217 entries) — no API call needed.
+ * Returns { data, isLoading: false } to match the previous useQuery interface.
  */
 export function useKnowledgeTerm(termKey: string | undefined) {
-    return useQuery<KnowledgeEntry | null>({
-        queryKey: queryKeys.knowledge.term(termKey ?? ''),
-        queryFn: async () => {
-            if (!termKey) return null;
-            try {
-                const response = await knowledgeApi.getByTermKey(termKey);
-                return response.data;
-            } catch (err: unknown) {
-                // 404 = term doesn't exist in knowledge base — return null, don't throw
-                if (err instanceof Error && err.message.includes('404')) {
-                    return null;
-                }
-                throw err;
-            }
-        },
-        staleTime: STALE_TIMES.KNOWLEDGE,
-        enabled: !!termKey,
-        retry: 1,
-    });
+    const data = useMemo(() => {
+        if (!termKey) return null;
+        return getStaticKnowledgeEntry(termKey) ?? null;
+    }, [termKey]);
+
+    return { data, isLoading: false, isError: false, error: null };
 }
 
 /**
- * Fetch multiple knowledge entries in a single batch request.
- * Returns a map of termKey → KnowledgeEntry for easy lookup.
- * Automatically deduplicates and caps at 50 keys.
+ * Get multiple knowledge entries by termKeys.
+ * Returns a map of termKey → entry from embedded static data.
  */
 export function useKnowledgeBatch(keys: string[]) {
-    const uniqueKeys = [...new Set(keys)].slice(0, 50);
+    const data = useMemo(() => {
+        if (keys.length === 0) return {} as Record<string, StaticEntry>;
+        return getStaticKnowledgeBatch(keys);
+    }, [keys]);
 
-    return useQuery<Record<string, KnowledgeEntry>>({
-        queryKey: queryKeys.knowledge.batch(uniqueKeys),
-        queryFn: async () => {
-            if (uniqueKeys.length === 0) return {};
-            const response = await knowledgeApi.getBatch(uniqueKeys);
-            return response.data;
-        },
-        staleTime: STALE_TIMES.KNOWLEDGE,
-        enabled: uniqueKeys.length > 0,
-        retry: 1,
-    });
+    return { data, isLoading: false, isError: false, error: null };
 }
 
 /**
  * Search knowledge entries by query text.
+ * Simple client-side filter over static data.
  */
-export function useKnowledgeSearch(q: string, domain?: string, limit?: number) {
-    return useQuery({
-        queryKey: queryKeys.knowledge.search(q, domain),
-        queryFn: async () => {
-            const response = await knowledgeApi.search(q, domain, limit);
-            return response.data;
-        },
-        staleTime: STALE_TIMES.KNOWLEDGE,
-        enabled: q.length >= 2,
-        retry: 1,
-    });
+export function useKnowledgeSearch(q: string, _domain?: string, limit?: number) {
+    const data = useMemo(() => {
+        if (q.length < 2) return [];
+        const lowerQ = q.toLowerCase();
+        const { KNOWLEDGE_MAP } = require("@/lib/knowledge-static-data");
+        const results: StaticEntry[] = [];
+        for (const entry of KNOWLEDGE_MAP.values()) {
+            if (
+                entry.title.toLowerCase().includes(lowerQ) ||
+                entry.summary.toLowerCase().includes(lowerQ) ||
+                entry.termKey.toLowerCase().includes(lowerQ) ||
+                entry.tags?.some((t: string) => t.toLowerCase().includes(lowerQ))
+            ) {
+                results.push(entry);
+                if (limit && results.length >= limit) break;
+            }
+        }
+        return results;
+    }, [q, _domain, limit]);
+
+    return { data, isLoading: false, isError: false, error: null };
 }

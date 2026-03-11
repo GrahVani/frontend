@@ -6,8 +6,6 @@ import { useKnowledgeTerm } from "@/hooks/queries/useKnowledge";
 import { useKnowledgeBatchContext } from "./KnowledgeBatchProvider";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
-import type { KnowledgeEntry } from "@/types/knowledge.types";
-
 interface KnowledgeTooltipProps {
     /** The termKey to look up (e.g., "tithi", "sub_lord", "koota_nadi") */
     term: string;
@@ -54,13 +52,13 @@ export function KnowledgeTooltip({
         batchCtx?.register(term);
     }, [term, batchCtx]);
 
-    // Individual fetch — only enabled when no batch provider AND popover is open
+    // Static lookup — always resolve (data is embedded, no API call)
     const individualQuery = useKnowledgeTerm(
-        !batchCtx && isOpen ? term : undefined
+        !batchCtx ? term : undefined
     );
 
     // Resolve the entry from batch context or individual query
-    const entry: KnowledgeEntry | undefined | null = batchCtx
+    const entry = batchCtx
         ? batchCtx.getEntry(term)
         : individualQuery.data;
 
@@ -73,11 +71,13 @@ export function KnowledgeTooltip({
             <PopoverTrigger asChild>
                 <span
                     className={cn(
+                        "cursor-help inline-flex items-center gap-0.5 transition-colors duration-200",
                         !unstyled && [
-                            "cursor-help",
-                            "border-b border-dotted border-gold-primary/40",
-                            "hover:border-gold-primary/70 hover:text-gold-primary",
-                            "transition-colors duration-200",
+                            "border-b-2 border-dotted border-gold-dark/50",
+                            "hover:border-gold-dark hover:text-gold-dark",
+                        ],
+                        unstyled && [
+                            "hover:opacity-80",
                         ],
                         className
                     )}
@@ -86,6 +86,10 @@ export function KnowledgeTooltip({
                     aria-label={`Learn about ${term.replace(/_/g, ' ')}`}
                 >
                     {children}
+                    <svg className="inline-block w-3 h-3 opacity-40 hover:opacity-70 shrink-0 ml-px" viewBox="0 0 16 16" fill="currentColor">
+                        <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.5" />
+                        <text x="8" y="12" textAnchor="middle" fontSize="10" fontWeight="bold" opacity="0.6">i</text>
+                    </svg>
                 </span>
             </PopoverTrigger>
 
@@ -129,7 +133,7 @@ function TooltipEmpty({ term }: { term: string }) {
     );
 }
 
-function TooltipContent({ entry }: { entry: KnowledgeEntry }) {
+function TooltipContent({ entry }: { entry: { title: string; sanskrit?: string | null; summary: string; description: string; howToRead?: string | null; significance?: string | null; examples: { title: string; content: string }[]; relatedTerms: string[] } }) {
     const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
     const toggle = (section: string) =>

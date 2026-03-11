@@ -2,13 +2,15 @@
 
 import React, { createContext, useCallback, useContext, useRef, useState } from "react";
 import { useKnowledgeBatch } from "@/hooks/queries/useKnowledge";
-import type { KnowledgeEntry } from "@/types/knowledge.types";
+import { getStaticKnowledgeEntry } from "@/lib/knowledge-static-data";
+
+type StaticEntry = NonNullable<ReturnType<typeof getStaticKnowledgeEntry>>;
 
 interface KnowledgeBatchContextValue {
     /** Register a termKey for batch fetching. Returns void. */
     register: (termKey: string) => void;
     /** Get a cached entry from the batch result. Returns undefined if not yet loaded. */
-    getEntry: (termKey: string) => KnowledgeEntry | undefined;
+    getEntry: (termKey: string) => StaticEntry | undefined;
     /** Whether the batch query is currently loading */
     isLoading: boolean;
 }
@@ -41,7 +43,7 @@ export function KnowledgeBatchProvider({ children }: { children: React.ReactNode
     const { data: batchData, isLoading } = useKnowledgeBatch(keys);
 
     const getEntry = useCallback(
-        (termKey: string): KnowledgeEntry | undefined => {
+        (termKey: string): StaticEntry | undefined => {
             return batchData?.[termKey];
         },
         [batchData]
