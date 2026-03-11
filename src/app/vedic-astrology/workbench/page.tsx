@@ -128,9 +128,9 @@ export default function AnalyticalWorkbenchPage() {
     if (!clientDetails) return <div className="flex flex-col items-center justify-center min-h-[400px] text-center"><p className="font-serif text-[20px] text-ink">Please select a client to begin analysis</p></div>;
 
     return (
-        <div className="space-y-6 animate-in fade-in duration-500">
+        <div className="h-[calc(100vh-140px)] flex flex-col overflow-hidden animate-in fade-in duration-500 gap-3 relative -mt-1">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-4">
                     <div>
                         <h1 className="text-[24px] font-serif font-bold text-ink">Analytical workbench</h1>
@@ -150,7 +150,7 @@ export default function AnalyticalWorkbenchPage() {
             </div>
 
             {/* View Tabs */}
-            <div className="flex bg-white/50 p-1 rounded-2xl prem-card w-fit">
+            <div className="flex bg-white/50 p-1 rounded-2xl prem-card w-fit shrink-0">
                 {(['chart', 'dignity', 'lagna'] as const).map(tab => (
                     <button key={tab} onClick={() => { setActiveTab(tab); if (tab === 'lagna') setSelectedChartType('arudha_lagna'); else if (tab === 'chart') setSelectedChartType('D1'); }} className={cn("px-6 py-2 rounded-xl text-[12px] font-bold transition-all", activeTab === tab ? COLORS.wbActiveTab : "text-ink hover:bg-surface-warm")}>
                         {tab === 'lagna' ? 'Lagna analysis' : tab === 'dignity' ? 'Dignity matrix' : 'Interactive chart'}
@@ -160,18 +160,19 @@ export default function AnalyticalWorkbenchPage() {
 
             {/* Error Banner */}
             {generateError && (
-                <div className="flex items-center justify-between bg-red-50 border border-red-200 text-red-800 text-[14px] rounded-lg px-4 py-2">
+                <div className="flex items-center justify-between bg-red-50 border border-red-200 text-red-800 text-[14px] rounded-lg px-4 py-2 shrink-0">
                     <span className="font-serif">{generateError}</span>
                     <button onClick={() => setGenerateError(null)} className="ml-2 text-red-600 hover:text-red-800 font-bold">✕</button>
                 </div>
             )}
 
             {/* Content Area */}
-            <div className={cn("grid grid-cols-1 gap-3", activeTab === 'dignity' ? "md:grid-cols-1" : "md:grid-cols-12")}>
-                <div className={cn("space-y-6", activeTab === 'dignity' ? "md:col-span-1" : "md:col-span-5")}>
+            <div className={cn("flex-1 min-h-0 flex flex-col md:flex-row gap-4", activeTab === 'dignity' ? "overflow-y-auto pr-2" : "overflow-hidden")}>
+                {/* Left Panel (Chart or Dignity) */}
+                <div className={cn("flex flex-col min-h-0 h-full", activeTab === 'dignity' ? "w-full" : "w-full md:w-[40%] shrink-0")}>
                     {activeTab === 'chart' || activeTab === 'lagna' ? (
-                        <div className="prem-card rounded-lg overflow-hidden shadow-sm bg-surface-warm">
-                            <div className="bg-gold-primary/10 px-3 py-1.5 border-b border-gold-primary/15 flex justify-between items-center">
+                        <div className="prem-card rounded-lg overflow-hidden shadow-sm bg-surface-warm flex flex-col h-full">
+                            <div className="bg-gold-primary/10 px-3 py-1.5 border-b border-gold-primary/15 flex justify-between items-center shrink-0">
                                 <h3 className="font-serif text-[18px] font-semibold text-ink leading-tight tracking-wide">
                                     {activeTab === 'lagna' ? 'Lagna manifestation' : 'Interactive visualization'}
                                 </h3>
@@ -193,7 +194,7 @@ export default function AnalyticalWorkbenchPage() {
                                     )}
                                 </select>
                             </div>
-                            <div className="w-full min-h-[300px] h-[50vh] max-h-[500px] bg-surface-warm">
+                            <div className="flex-1 min-h-0 w-full bg-surface-warm">
                                 {isLoadingCharts && Object.keys(processedCharts).length === 0 ? (
                                     <div className="flex items-center justify-center h-full"><Loader2 className="w-8 h-8 text-gold-primary animate-spin" /></div>
                                 ) : displayPlanets.length > 0 ? (
@@ -248,9 +249,9 @@ export default function AnalyticalWorkbenchPage() {
                     )}
                 </div>
 
-                {/* Right Panel */}
+                {/* Right Panel (Planetary Table) */}
                 {activeTab !== 'dignity' && (
-                    <div className="space-y-4 h-full md:col-span-7">
+                    <div className="w-full md:w-[60%] flex flex-col min-h-0 h-full">
                         <div className="prem-card rounded-lg overflow-hidden shadow-sm bg-surface-warm flex flex-col h-full">
                             <div className="bg-gold-primary/10 px-4 py-2 border-b border-gold-primary/15 shrink-0">
                                 <h3 className="font-serif text-[18px] font-semibold text-ink leading-tight tracking-wide">Birth planetary positions</h3>

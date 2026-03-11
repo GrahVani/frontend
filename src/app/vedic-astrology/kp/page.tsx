@@ -138,11 +138,11 @@ export default function KpDashboardPage() {
     // ── Render ───────────────────────────────────────────────────────
 
     return (
-        <div className="h-[calc(100vh-6.5rem)] flex flex-col space-y-2 animate-in fade-in duration-500 pt-0 overflow-hidden">
+        <div className="h-[calc(100vh-150px)] flex flex-col overflow-hidden animate-in fade-in duration-500 gap-5 relative -mt-1">
             {/* Header & Tab Bar (Consolidated for vertical space) */}
             {showHeader && (
-                <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-2 bg-background/90 backdrop-blur-md pb-1 -mx-2 px-2 md:-mx-4 md:px-4 pt-1 shrink-0">
-                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "shrink-0 mb-0 opacity-80 text-[14px]")}>KP dashboard</h1>
+                <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-2 shrink-0 pb-5">
+                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "shrink-0 mb-0 opacity-80 text-[18px]")}>KP dashboard</h1>
 
                     <div className="flex gap-1 p-0.5 prem-card rounded-lg shadow-sm overflow-x-auto scrollbar-thin max-w-full">
                         {tabs.map((tab) => (
@@ -166,16 +166,16 @@ export default function KpDashboardPage() {
                 </div>
             )}
 
-            {/* Content Grid: Chart + Tab Content */}
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch flex-1 min-h-0 overflow-hidden">
-                {/* Left: Persistent Cuspal Chart */}
+            {/* Content Flex Layout: Chart + Tab Content */}
+            <div className={cn("flex-1 min-h-0 flex flex-col xl:flex-row gap-4", activeTab === 'ashtakavarga' ? "overflow-y-auto" : "overflow-hidden")}>
+                {/* Left: Persistent Cuspal Chart (30%) */}
                 {activeTab !== 'ashtakavarga' && (
-                    <div className="xl:col-span-4 h-full relative">
+                    <div className="w-full xl:w-[30%] shrink-0 flex flex-col min-h-0 h-full">
                         <div className="prem-card rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm h-full max-h-full">
-                            <div className="bg-gold-primary/10 px-3 py-1 border-b border-gold-primary/15 shrink-0">
-                                <h3 className={cn(TYPOGRAPHY.value, "text-[16px] text-ink leading-tight tracking-wide")}>Cuspal chart</h3>
+                            <div className="bg-gold-primary/10 px-3 py-1.5 border-b border-gold-primary/15 shrink-0 flex justify-between items-center">
+                                <h3 className={cn(TYPOGRAPHY.value, "text-[16px] text-ink font-semibold leading-tight tracking-wide !mb-0")}>Cuspal chart</h3>
                             </div>
-                            <div className="flex-1 min-h-0 bg-transparent">
+                            <div className="flex-1 min-h-0 bg-surface-warm w-full">
                                 {planetsCuspsQuery.isLoading && !transformed.cuspData.length ? (
                                     <div className="flex items-center justify-center py-6">
                                         <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
@@ -185,7 +185,8 @@ export default function KpDashboardPage() {
                                         <KpCuspalChart
                                             planets={transformed.d1Data.planets}
                                             houseSigns={transformed.cuspData.map(c => c.signId)}
-                                            className="w-full h-full max-w-full max-h-full aspect-square bg-transparent border-none"
+                                            className="w-full h-full bg-transparent border-none"
+                                            preserveAspectRatio="none"
                                         />
                                     </div>
                                 ) : (
@@ -196,9 +197,9 @@ export default function KpDashboardPage() {
                     </div>
                 )}
 
-                {/* Right: Tab Content */}
-                <div className={cn("flex-1 min-h-0 flex flex-col h-full overflow-hidden", activeTab === 'ashtakavarga' ? "xl:col-span-12" : "xl:col-span-8")}>
-                    <div className="flex-1 min-h-0">
+                {/* Right: Tab Content (70%) */}
+                <div className={cn("w-full flex flex-col min-h-0 h-full", activeTab === 'ashtakavarga' ? "xl:w-full" : "xl:w-[70%]")}>
+                    <div className="flex-1 min-h-0 h-full flex flex-col">
                         <KpTabContent
                             activeTab={activeTab}
                             planetaryData={transformed.planetaryData}

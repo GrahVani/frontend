@@ -3,12 +3,7 @@
 import React from 'react';
 import {
     Sparkles,
-    BookOpen,
-    Heart,
-    Flower2,
-    Compass,
     CheckCircle2,
-    Crown,
     ScrollText
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
@@ -44,73 +39,74 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
     const d1Chart = analysis?.chart || processedCharts["D1_lahiri"]?.chartData;
 
     return (
-        <div className={cn("min-h-screen p-4 lg:p-6 space-y-6 animate-in fade-in duration-700", styles.dashboardContainer)}>
+        <div className={cn("h-full overflow-hidden flex flex-col", styles.dashboardContainer)} style={{ margin: 0, borderRadius: '1rem' }}>
             {/* Header Area */}
-            <div className="flex flex-col gap-6">
-                <div className="flex items-center justify-between border-b border-gold-primary/10 pb-4">
-                    <div className="flex items-center gap-3">
-                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-bold tracking-tight")}>
-                            Vedic <KnowledgeTooltip term="general_upaya">Remedies</KnowledgeTooltip> : {String(data.user_name || "User")}
-                        </h2>
-                    </div>
+            <div className="flex items-center justify-between border-b border-gold-primary/20 px-5 py-2.5 shrink-0 bg-surface-warm/50">
+                <div className="flex items-center gap-3">
+                    <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-bold tracking-tight !mb-0")}>
+                        Vedic <KnowledgeTooltip term="general_upaya">Remedies</KnowledgeTooltip> : {String(data.user_name || "User")}
+                    </h2>
                 </div>
             </div>
 
-            {/* Main Dashboard Layout */}
-            {/* Main Dashboard Layout - Rebalanced for more horizontal room */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+            {/* Main Split Layout: 30% Chart | 70% Data */}
+            <div className="flex-1 flex overflow-hidden min-h-0">
 
-                {/* TOP ROW: Snapshot & Primary Remedies */}
-                <div className="md:col-span-4 h-full">
+                {/* LEFT SIDE: Only Chart — Fixed, No Scroll, 30% */}
+                <div className="w-[30%] shrink-0 flex flex-col overflow-hidden border-r border-gold-primary/15">
                     <SadhanaChartPanel
                         chartData={d1Chart}
                         doshaStatus={analysis?.doshas || {}}
                     />
                 </div>
 
-                <div className="md:col-span-8 h-full">
-                    <DashaRemediesCard dashaData={dashaRemedies} />
-                </div>
+                {/* RIGHT SIDE: Scrollable Content, 70% */}
+                <div className="w-[70%] overflow-y-auto overflow-x-hidden min-h-0" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(180,83,9,0.2) transparent' }}>
+                    <div className="p-4 space-y-3">
 
-                {/* BOTTOM ROW: Technical Vigor & Expanded Doshas */}
-                <div className="lg:col-span-4">
-                    <VedicStrengthPanel planetaryStrength={planetaryStrength} />
-                </div>
+                        {/* Section 1: Dasha Remedies */}
+                        <DashaRemediesCard dashaData={dashaRemedies} />
 
-                <div className="md:col-span-8">
-                    <div className="relative">
-                        <div className="flex items-center gap-3 mb-6 px-4">
-                            <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-                                <ScrollText className="w-4 h-4 text-purple-600" />
+                        {/* Section 2: Planetary Strength */}
+                        <VedicStrengthPanel planetaryStrength={planetaryStrength} />
+
+                        {/* Section 3: Dosha Remedies */}
+                        <div className="rounded-2xl bg-white/60 border border-gold-primary/15 p-4">
+                            <div className="flex items-center gap-3 mb-4 px-1">
+                                <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
+                                    <ScrollText className="w-4 h-4 text-purple-600" />
+                                </div>
+                                <div>
+                                    <h3 className={cn(TYPOGRAPHY.label, "mb-0 text-ink tracking-[0.2em]")}>Active <KnowledgeTooltip term="dosha_system">dosha</KnowledgeTooltip> analysis</h3>
+                                    <p className={cn(TYPOGRAPHY.subValue, "uppercase tracking-wider text-[10px] font-bold")}>Karmic afflictions & remedial directives</p>
+                                </div>
                             </div>
-                            <div>
-                                <h3 className={cn(TYPOGRAPHY.label, "mb-0 text-ink tracking-[0.2em]")}>Active <KnowledgeTooltip term="dosha_system">dosha</KnowledgeTooltip> analysis</h3>
-                                <p className={cn(TYPOGRAPHY.subValue, "uppercase tracking-wider text-[10px] font-bold")}>Karmic afflictions & remedial directives</p>
-                            </div>
+                            <DoshaRemedyGrid
+                                doshaRemedies={doshaRemedies}
+                                doshaAnalysis={analysis?.doshas || {}}
+                            />
                         </div>
-                        <DoshaRemedyGrid
-                            doshaRemedies={doshaRemedies}
-                            doshaAnalysis={analysis?.doshas || {}}
-                        />
+
+                        {/* Section 4: General Recommendations */}
+                        {generalRecommendations.length > 0 && (
+                            <div className="rounded-2xl bg-white/60 border border-gold-primary/15 p-4">
+                                <div className="flex items-center gap-2 mb-3 px-1">
+                                    <Sparkles className="w-4 h-4 text-amber-500" />
+                                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-ink/60">General daily alignment</h4>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    {generalRecommendations.map((rec: string, idx: number) => (
+                                        <div key={idx} className="flex items-start gap-3 text-[11px] p-3 rounded-xl border border-gold-primary/15 bg-white/50 hover:bg-white transition-all group">
+                                            <div className="w-5 h-5 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 border border-emerald-100 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                                                <CheckCircle2 className="w-3 h-3" />
+                                            </div>
+                                            <span className="font-semibold leading-relaxed">{rec}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
-                </div>
-            </div>
-
-            {/* Footer / General Recommendations - Premium Styling */}
-            <div className="border-t border-gold-primary/20 pt-8 mt-12 bg-white/30 rounded-3xl p-6">
-                <div className="flex items-center gap-2 mb-6 px-2">
-                    <Sparkles className="w-4 h-4 text-amber-500" />
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em]">General daily alignment</h4>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {generalRecommendations.slice(0, 4).map((rec: string, idx: number) => (
-                        <div key={idx} className="flex items-start gap-3 text-[11px] p-4 rounded-2xl border border-gold-primary/20 bg-white/50 backdrop-blur-sm hover:border-purple-200 transition-all group text-body">
-                            <div className="w-5 h-5 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 border border-emerald-100 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
-                                <CheckCircle2 className="w-3 h-3" />
-                            </div>
-                            <span className="font-semibold leading-relaxed">{rec}</span>
-                        </div>
-                    ))}
                 </div>
             </div>
         </div>
