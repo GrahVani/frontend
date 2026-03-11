@@ -70,12 +70,12 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
                                         isAngular ? "bg-surface-warm/50" : "bg-transparent"
                                     )}
                                 >
-                                    <td className="py-0.5 px-3">
+                                    <td className="py-1 px-3">
                                         <span className={cn(TYPOGRAPHY.value, "text-ink text-[14px]")}>
                                             {key}<sup className="text-[10px] ml-0.2">H</sup>
                                         </span>
                                     </td>
-                                    <td className="py-0.5 px-3">
+                                    <td className="py-1 px-3">
                                         <div className="flex items-center gap-1.5">
                                             <span
                                                 className="w-6 h-6 flex items-center justify-center rounded-full bg-surface-warm border border-gold-primary/20 text-[16px] text-ink font-serif"
@@ -91,10 +91,10 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="py-0.5 px-3 text-ink font-medium">
+                                    <td className="py-1 px-3 text-ink font-medium">
                                         <span className={cn(TYPOGRAPHY.value, "text-[11px]")}>{bhava.nakshatra}</span>
                                     </td>
-                                    <td className="py-0.5 px-3 text-center">
+                                    <td className="py-1 px-3 text-center">
                                         <span className={cn(
                                             TYPOGRAPHY.label,
                                             "inline-flex items-center justify-center w-5 h-5 rounded-full bg-white border border-gold-primary/20 text-[10px] text-ink"
@@ -103,7 +103,7 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
                                         </span>
                                     </td>
                                     {['RL', 'NL', 'SL', 'SS'].map((lordType) => (
-                                        <td key={lordType} className="py-0.5 px-3 text-center">
+                                        <td key={lordType} className="py-1 px-3 text-center">
                                             <span className={cn(
                                                 TYPOGRAPHY.label,
                                                 "text-[10px] rounded px-1.5 py-0",
@@ -121,7 +121,7 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
                 </table>
             </div>
 
-            <div className="mt-4 flex justify-end gap-5 text-[10px] text-ink font-sans">
+            <div className="pt-3 pb-2 mt-auto shrink-0 flex justify-end gap-5 text-[10px] text-ink font-sans border-t border-gold-primary/10">
                 <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-primary"></span>
                     <span className="uppercase tracking-wider font-semibold">RL: <KnowledgeTooltip term="sign_lord">Rashi lord</KnowledgeTooltip></span>

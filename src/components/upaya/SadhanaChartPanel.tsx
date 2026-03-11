@@ -8,53 +8,37 @@ import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface SadhanaChartPanelProps {
     chartData: Record<string, unknown>;
-    doshaStatus?: Record<string, boolean>; // Still accepting but not rendering badge for UI parity
+    doshaStatus?: Record<string, boolean>;
 }
 
 export default function SadhanaChartPanel({ chartData }: SadhanaChartPanelProps) {
     const parsed = parseChartData(chartData);
     const { planets, ascendant: ascendantSign } = parsed;
 
-    // Only return null if we absolutely have no planetary data
     if (planets.length === 0) return null;
 
     return (
-        <div className={cn("flex flex-col border border-gold-primary/20 shrink-0 overflow-hidden rounded-[2rem] bg-white/20", COLORS.wbContainer)}>
-            {/* Standard Gochar-style Header */}
-            <div className={cn("flex items-center justify-between px-4 py-2 h-11 shrink-0", COLORS.wbSectionHeader)}>
-                <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Horoscope projection</h3>
+        <div className={cn("flex flex-col h-full w-full overflow-hidden rounded-lg border border-gold-primary/20 bg-surface-warm", COLORS.wbContainer)}>
+            {/* Header - Matching workbench style */}
+            <div className="bg-gold-primary/10 px-3 py-1.5 border-b border-gold-primary/15 flex justify-between items-center shrink-0">
+                <h3 className="font-serif text-[16px] font-semibold text-ink leading-tight tracking-wide">
+                    Horoscope projection
+                </h3>
                 <div className="px-2 py-0.5 bg-gold-primary/10 rounded border border-gold-primary/15">
                     <span className={cn(TYPOGRAPHY.label, "text-ink !mb-0")}><KnowledgeTooltip term="ayanamsa_lahiri" unstyled>Lahiri</KnowledgeTooltip></span>
                 </div>
             </div>
 
-            {/* Chart Area with Gochar background logic */}
-            <div className="flex-1 flex flex-col items-center justify-start pt-0">
-                <div className="w-full aspect-square -mt-3 relative">
-                    {/* Subtle aura matches Gochar style */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 rounded-full blur-[80px] pointer-events-none bg-amber-400/5" />
-
-                    <ChartWithPopup
-                        planets={planets}
-                        ascendantSign={ascendantSign}
-                        className="w-full h-full"
-                        showDegrees={false} // Match image style - cleaner labels
-                    />
-                </div>
+            {/* Chart Area — Full space, no whitespace, matching workbench */}
+            <div className="flex-1 min-h-0 w-full bg-surface-warm">
+                <ChartWithPopup
+                    planets={planets}
+                    ascendantSign={ascendantSign}
+                    className="bg-transparent border-none w-full h-full"
+                    preserveAspectRatio="none"
+                    showDegrees={true}
+                />
             </div>
-
-            <style jsx global>{`
-                .sadhana-chart g[stroke="var(--header-border)"],
-                svg g[stroke="var(--header-border)"] {
-                    stroke: #B45309; /* Amber 700 */
-                    stroke-opacity: 0.4;
-                    stroke-width: 1.2;
-                }
-                svg text {
-                    font-size: 16px !important;
-                    font-weight: 600 !important;
-                }
-            `}</style>
         </div>
     );
 }

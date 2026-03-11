@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Planet } from '../astrology/NorthIndianChart/NorthIndianChart';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { PLANET_SVG_FILLS } from '@/design-tokens/colors';
 import { HOUSE_CENTERS, HOUSE_POLYGONS } from '@/lib/chart-geometry';
 
 export interface KpCuspalChartProps {
     planets: Planet[]; // Planets mapped to houses
     houseSigns: number[]; // Array of 12 sign IDs, one for each house (1-12)
     className?: string;
+    preserveAspectRatio?: string;
     onHouseClick?: (houseNumber: number) => void;
 }
 
@@ -23,6 +25,7 @@ export default function KpCuspalChart({
     planets,
     houseSigns,
     className = "",
+    preserveAspectRatio,
     onHouseClick,
 }: KpCuspalChartProps) {
     const [hoveredHouse, setHoveredHouse] = useState<number | null>(null);
@@ -37,7 +40,7 @@ export default function KpCuspalChart({
     };
 
     return (
-        <svg viewBox="-10 -10 420 420" className={cn("w-full h-full", className)} role="img" aria-label="KP Cuspal birth chart showing planetary positions in houses">
+        <svg viewBox="-10 -10 420 420" preserveAspectRatio={preserveAspectRatio} className={cn("w-full h-full", className)} role="img" aria-label="KP Cuspal birth chart showing planetary positions in houses">
             <desc>KP System cuspal chart with unequal house signs and planetary placements</desc>
             <defs>
                 <linearGradient id="kpChartBg" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -91,31 +94,13 @@ export default function KpCuspalChart({
 
                 return (
                     <g key={pos.h} className={cn("transition-all duration-300", isHovered && "opacity-100")}>
-                        {/* Sign Number - REMOVED as per user request */}
-                        {/* 
-                        <text
-                            x={pos.x}
-                            y={pos.y + (pos.h === 1 || pos.h === 4 || pos.h === 7 || pos.h === 10 ? 35 : pos.h % 2 === 0 ? 30 : -30)}
-                            fontSize="22"
-                            fontFamily="serif"
-                            fontWeight="900"
-                            fill="var(--ink)"
-                            fillOpacity="0.5"
-                            textAnchor="middle"
-                            dominantBaseline="central"
-                            className="select-none pointer-events-none"
-                        >
-                            {signId}
-                        </text> 
-                        */}
-
                         {/* Planets List */}
                         <g transform={`translate(${pos.x}, ${pos.y})`}>
                             {
                                 boxPlanets.map((p, i) => {
                                     const spacing = boxPlanets.length > 5 ? 10 : 14;
                                     const yOffset = (i * spacing) - ((boxPlanets.length - 1) * (spacing / 2));
-                                    const displayName = p.isRetro ? `${p.name}℞` : p.name;
+                                    const planetColor = PLANET_SVG_FILLS[p.name] || 'var(--ink)';
 
                                     return (
                                         <g key={p.name} transform={`translate(0, ${yOffset})`}>
@@ -123,12 +108,15 @@ export default function KpCuspalChart({
                                                 fontSize={TYPOGRAPHY.svgPlanetName.fontSize}
                                                 fontFamily={TYPOGRAPHY.svgPlanetName.fontFamily}
                                                 fontWeight={isHovered ? "800" : TYPOGRAPHY.svgPlanetName.fontWeight}
-                                                fill="var(--ink)"
+                                                fill={planetColor}
                                                 textAnchor="middle"
                                                 dominantBaseline="central"
                                                 className="select-none transition-all duration-300"
                                             >
-                                                {displayName}
+                                                {p.name}
+                                                {p.isRetro && (
+                                                    <tspan fontSize="12" fontWeight="bold" fill="var(--status-error)" dx="1">R</tspan>
+                                                )}
                                                 <tspan
                                                     fontSize={TYPOGRAPHY.svgDegree.fontSize}
                                                     fontWeight={TYPOGRAPHY.svgDegree.fontWeight}

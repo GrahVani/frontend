@@ -333,8 +333,10 @@ export default function RemediesPage() {
 
     if (!clientDetails) return null;
 
+    const isFixedLayoutTab = ['mantra', 'yantra', 'vedic_remedies', 'lal_kitab'].includes(activeTab);
+
     return (
-        <div className="space-y-6 animate-in fade-in duration-500 pb-10">
+        <div className={cn("animate-in fade-in duration-500", isFixedLayoutTab ? "h-[calc(100vh-140px)] overflow-hidden flex flex-col gap-2" : "space-y-6 pb-10")}>
 
             {/* Remedy Type Tabs */}
             <div className="flex flex-wrap gap-2 p-1 prem-card rounded-xl">
@@ -401,7 +403,7 @@ export default function RemediesPage() {
             )}
 
             {/* Content Area */}
-            <div className="min-h-[300px]">
+            <div className={cn(isFixedLayoutTab ? "flex-1 min-h-0 overflow-hidden" : "min-h-[300px]")}>
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-16 prem-card rounded-2xl">
                         <Loader2 className="w-8 h-8 text-gold-primary animate-spin mb-4" />
