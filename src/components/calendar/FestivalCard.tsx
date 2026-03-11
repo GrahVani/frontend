@@ -1,8 +1,9 @@
 "use client";
 
-import { Star, Calendar } from "lucide-react";
+import { Star, Calendar, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Badge from "@/components/ui/Badge";
+import Link from "next/link";
 import type { Festival } from "@/types/calendar.types";
 
 interface FestivalCardProps {
@@ -10,37 +11,46 @@ interface FestivalCardProps {
     className?: string;
 }
 
-const TYPE_BADGE: Record<Festival["type"], { variant: "default" | "success" | "info"; label: string }> = {
-    hindu: { variant: "default", label: "Hindu" },
-    vedic: { variant: "success", label: "Vedic" },
-    regional: { variant: "info", label: "Regional" },
+const getFestivalBadge = (festival: Festival): { variant: "default" | "success" | "info" | "warning"; label: string } => {
+    if (festival.is_government_holiday) return { variant: "warning", label: "Holiday" };
+    if (festival.category === "MAJOR") return { variant: "success", label: "Major" };
+    if (festival.category === "EKADASHI") return { variant: "info", label: "Ekadashi" };
+    if (festival.category === "SANKRANTI") return { variant: "info", label: "Sankranti" };
+    if (festival.category === "REGIONAL") return { variant: "info", label: "Regional" };
+    return { variant: "default", label: festival.category || "Hindu" };
 };
 
 export default function FestivalCard({ festival, className }: FestivalCardProps) {
-    const badge = TYPE_BADGE[festival.type];
+    const badge = getFestivalBadge(festival);
 
     return (
-        <div className={cn("prem-card p-4 hover:shadow-sm transition-shadow", className)}>
-            <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
-                    <Star className="w-4 h-4 text-gold-primary" />
-                    <h3 className="text-[14px] font-serif font-bold text-ink">{festival.name}</h3>
+        <Link href={`/calendar/festivals/${festival.date}`} className="block group">
+            <div className={cn("prem-card p-4 hover:shadow-md transition-all border border-transparent hover:border-gold-primary/30 relative overflow-hidden", className)}>
+                <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                        <Star className={cn("w-4 h-4", festival.category === 'MAJOR' ? "text-gold-primary" : "text-gold-primary/50")} />
+                        <h3 className="text-[14px] font-serif font-bold text-ink group-hover:text-gold-dark transition-colors">
+                            {festival.name} {festival.name_hi && <span className="text-[12px] text-ink/50 ml-1 font-normal">({festival.name_hi})</span>}
+                        </h3>
+                    </div>
+                    {badge && <Badge variant={badge.variant as any} size="sm">{badge.label}</Badge>}
                 </div>
-                <Badge variant={badge.variant} size="sm">{badge.label}</Badge>
+                <div className="flex items-center gap-1.5 mb-2">
+                    <Calendar className="w-3.5 h-3.5 text-ink/45" />
+                    <span className="text-[12px] text-ink/45 font-medium">
+                        {new Date(festival.date).toLocaleDateString("en-IN", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                        })}
+                    </span>
+                </div>
+                <p className="text-[12px] text-ink/60 mb-1 leading-relaxed line-clamp-2">{festival.description}</p>
+                <div className="mt-3 text-[11px] font-bold text-gold-dark uppercase flex flex-col items-end opacity-0 group-hover:opacity-100 transition-opacity absolute right-4 bottom-4">
+                    <ArrowRight className="w-3.5 h-3.5" />
+                </div>
             </div>
-            <div className="flex items-center gap-1.5 mb-2">
-                <Calendar className="w-3.5 h-3.5 text-ink/45" />
-                <span className="text-[12px] text-ink/45">
-                    {new Date(festival.date).toLocaleDateString("en-IN", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                    })}
-                </span>
-            </div>
-            <p className="text-[12px] text-ink/45 mb-1">{festival.description}</p>
-            <p className="text-[12px] text-gold-dark font-serif italic">{festival.significance}</p>
-        </div>
+        </Link>
     );
 }

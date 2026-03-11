@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import type { PanchangDay } from "@/types/calendar.types";
+import { useFestivalsByMonth } from "@/hooks/queries/useCalendar";
 
 interface PanchangCalendarProps {
     days: PanchangDay[];
@@ -24,7 +26,8 @@ export default function PanchangCalendar({
     onDayClick,
     className,
 }: PanchangCalendarProps) {
-    const [selectedDate, setSelectedDate] = useState<string | null>(null);
+    const router = useRouter();
+    const { data: festivals = [] } = useFestivalsByMonth(year, month + 1);
 
     const monthName = new Date(year, month).toLocaleDateString("en-IN", {
         month: "long",
@@ -44,11 +47,8 @@ export default function PanchangCalendar({
         else onMonthChange(year, month + 1);
     };
 
-    const handleDayClick = (dateNum: number) => {
-        const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(dateNum).padStart(2, "0")}`;
-        setSelectedDate(dateStr);
-        const dayData = days.find((d) => d.date === dateStr);
-        if (dayData && onDayClick) onDayClick(dayData);
+    const handleDayClick = (dateStr: string) => {
+        router.push("/calendar/festivals/" + dateStr);
     };
 
     return (
@@ -85,67 +85,66 @@ export default function PanchangCalendar({
                     const dateNum = i + 1;
                     const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(dateNum).padStart(2, "0")}`;
                     const dayData = days.find((d) => d.date === dateStr);
-                    const isSelected = selectedDate === dateStr;
                     const isToday = dateStr === new Date().toISOString().slice(0, 10);
-                    const hasFestival = dayData?.festivals && dayData.festivals.length > 0;
+                    // Match the fetched live festivals with the current date
+                    const dayFestivals = festivals.filter(f => f.date === dateStr);
+                    const hasFestival = dayFestivals.length > 0;
 
                     return (
                         <button
                             key={dateNum}
-                            onClick={() => handleDayClick(dateNum)}
+                            onClick={() => handleDayClick(dateStr)}
                             className={cn(
-                                "aspect-square rounded-lg flex flex-col items-center justify-center text-[14px] font-serif border transition-all p-0.5",
-                                isSelected
-                                    ? "bg-gold-primary/20 border-gold-primary text-ink ring-1 ring-gold-primary"
-                                    : isToday
-                                        ? "bg-gold-primary/10 border-gold-primary/40 text-ink"
+                                "min-h-[100px] sm:min-h-[120px] rounded-lg flex flex-col items-start justify-start text-[14px] font-serif border transition-all p-2 relative group",
+                                isToday
+                                        ? "bg-gold-primary/5 border-gold-primary/30 text-ink"
                                         : dayData?.isAuspicious
-                                            ? "bg-status-success/10 border-status-success/20 text-ink"
-                                            : "bg-surface-warm/20 border-transparent text-ink hover:border-gold-primary/20",
+                                            ? "bg-status-success/5 border-status-success/20 text-ink"
+                                            : "bg-surface-warm/10 border-gold-primary/10 text-ink hover:border-gold-primary/30",
                                 "cursor-pointer hover:shadow-sm"
                             )}
                         >
-                            <span className="font-semibold text-[14px]">{dateNum}</span>
+                            <div className="flex w-full justify-between items-start mb-1">
+                                <span className={cn(
+                                    "font-semibold text-[14px]", 
+                                    isToday ? "bg-gold-primary text-white w-6 h-6 flex items-center justify-center rounded-full" : ""
+                                )}>
+                                    {dateNum}
+                                </span>
+                                <ChevronRight className="w-3 h-3 text-gold-dark/0 group-hover:text-gold-dark/50 transition-colors" />
+                            </div>
+
                             {dayData && (
-                                <span className="text-[8px] leading-tight text-ink/45 truncate max-w-full">
+                                <span className="text-[10px] leading-tight text-ink/45 truncate max-w-full mb-1">
                                     {dayData.tithi.split(" ")[0]}
                                 </span>
                             )}
-                            {hasFestival && (
-                                <div className="w-1.5 h-1.5 rounded-full bg-gold-primary mt-0.5" />
-                            )}
+                            
+                            <div className="flex flex-col gap-1 w-full mt-auto">
+                                {dayFestivals.slice(0, 2).map((f) => (
+                                    <div 
+                                        key={f.id} 
+                                        className={cn(
+                                            "text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded truncate w-full text-left font-sans font-medium",
+                                            f.is_government_holiday 
+                                                ? "bg-red-500/10 text-red-700" 
+                                                : "bg-gold-primary/15 text-gold-dark"
+                                        )}
+                                        title={f.name}
+                                    >
+                                        {f.name}
+                                    </div>
+                                ))}
+                                {dayFestivals.length > 2 && (
+                                    <div className="text-[10px] text-ink/60 font-sans font-medium pl-1 text-left">
+                                        +{dayFestivals.length - 2} more
+                                    </div>
+                                )}
+                            </div>
                         </button>
                     );
                 })}
             </div>
-
-            {/* Selected Day Detail */}
-            {selectedDate && (() => {
-                const dayData = days.find((d) => d.date === selectedDate);
-                if (!dayData) return null;
-                return (
-                    <div className="mt-3 pt-3 border-t border-gold-primary/15">
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                            <div className="bg-surface-warm/40 rounded-lg p-3">
-                                <span className="text-[12px] text-ink/45 block">Tithi</span>
-                                <span className="text-[14px] font-serif font-semibold text-ink">{dayData.tithi}</span>
-                            </div>
-                            <div className="bg-surface-warm/40 rounded-lg p-3">
-                                <span className="text-[12px] text-ink/45 block">Nakshatra</span>
-                                <span className="text-[14px] font-serif font-semibold text-ink">{dayData.nakshatra}</span>
-                            </div>
-                            <div className="bg-surface-warm/40 rounded-lg p-3">
-                                <span className="text-[12px] text-ink/45 block">Yoga</span>
-                                <span className="text-[14px] font-serif font-semibold text-ink">{dayData.yoga}</span>
-                            </div>
-                            <div className="bg-surface-warm/40 rounded-lg p-3">
-                                <span className="text-[12px] text-ink/45 block">Karana</span>
-                                <span className="text-[14px] font-serif font-semibold text-ink">{dayData.karana}</span>
-                            </div>
-                        </div>
-                    </div>
-                );
-            })()}
         </div>
     );
 }
