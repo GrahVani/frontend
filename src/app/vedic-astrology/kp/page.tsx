@@ -27,11 +27,10 @@ import { COLORS } from '@/design-tokens/colors';
 import { Loader2, LayoutGrid, Grid3x3, Home, Clock, HelpCircle, Star } from 'lucide-react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 
-// Lazy-load the chart and debug inspector (only one visible at a time)
+// Lazy-load the chart
 const KpCuspalChart = dynamic(() => import('@/components/kp/KpCuspalChart'), {
     loading: () => <div className="flex items-center justify-center py-12"><Loader2 className="w-6 h-6 text-gold-primary animate-spin" /></div>,
 });
-const KpDebugInspector = dynamic(() => import('@/components/kp/KpDebugInspector'), { ssr: false });
 
 // ─── Tab Definitions ─────────────────────────────────────────────────
 
@@ -134,79 +133,63 @@ export default function KpDashboardPage() {
 
     const showHeader = activeTab !== 'ashtakavarga' && activeTab !== 'horary';
 
-    // ── Query data map for debug inspector ───────────────────────────
 
-    const queryDataByTab: Record<string, unknown> = {
-        'planets-cusps': planetsCuspsQuery.data,
-        'significations': houseSignificationsQuery.data,
-        'planetary-significators': planetSignificatorsQuery.data,
-        'bhava-details': bhavaDetailsQuery.data,
-        'ruling-planets': rulingPlanetsQuery.data,
-        'interlinks': interlinksQuery.data,
-        'advanced-ssl': advancedSslQuery.data,
-        'nakshatra-nadi': nakshatraNadiQuery.data,
-        'fortuna': fortunaQuery.data,
-        'ashtakavarga': ashtakavargaQuery.data,
-    };
 
     // ── Render ───────────────────────────────────────────────────────
 
     return (
-        <div className="space-y-6 animate-in fade-in duration-500 pt-4">
-            {/* Page Title */}
+        <div className="h-[calc(100vh-6.5rem)] flex flex-col space-y-2 animate-in fade-in duration-500 pt-0 overflow-hidden">
+            {/* Header & Tab Bar (Consolidated for vertical space) */}
             {showHeader && (
-                <div className="flex items-center justify-between">
-                    <h1 className={TYPOGRAPHY.sectionTitle}>KP dashboard</h1>
-                </div>
-            )}
+                <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-2 bg-background/90 backdrop-blur-md pb-1 -mx-2 px-2 md:-mx-4 md:px-4 pt-1 shrink-0">
+                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "shrink-0 mb-0 opacity-80 text-[14px]")}>KP dashboard</h1>
 
-            {/* Tab Bar (KP-019: overflow-x-auto for 12+ buttons on narrow screens) */}
-            {showHeader && (
-                <div className="flex gap-1.5 p-1 prem-card rounded-xl sticky top-14 z-20 shadow-sm overflow-x-auto scrollbar-thin">
-                    {tabs.map((tab) => (
-                        <button
-                            key={tab.id}
-                            onClick={() => handleTabChange(tab.id)}
-                            className={cn(
-                                "flex items-center gap-1.5 px-3 py-2 rounded-lg transition-all whitespace-nowrap shrink-0",
-                                TYPOGRAPHY.value,
-                                "text-[12px] font-semibold",
-                                activeTab === tab.id
-                                    ? cn("text-white shadow-md border-transparent", COLORS.wbActiveTab)
-                                    : "text-ink hover:text-ink hover:bg-white/50 border-transparent"
-                            )}
-                        >
-                            {tab.icon}
-                            <span className="hidden sm:inline">{tab.label}</span>
-                        </button>
-                    ))}
+                    <div className="flex gap-1 p-0.5 prem-card rounded-lg shadow-sm overflow-x-auto scrollbar-thin max-w-full">
+                        {tabs.map((tab) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => handleTabChange(tab.id)}
+                                className={cn(
+                                    "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md transition-all whitespace-nowrap shrink-0",
+                                    TYPOGRAPHY.value,
+                                    "text-[11px] font-semibold",
+                                    activeTab === tab.id
+                                        ? cn("text-white shadow-md border-transparent", COLORS.wbActiveTab)
+                                        : "text-ink hover:text-ink hover:bg-white/50 border-transparent"
+                                )}
+                            >
+                                {tab.icon}
+                                <span className="hidden sm:inline">{tab.label}</span>
+                            </button>
+                        ))}
+                    </div>
                 </div>
             )}
 
             {/* Content Grid: Chart + Tab Content */}
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch flex-1 min-h-0 overflow-hidden">
                 {/* Left: Persistent Cuspal Chart */}
                 {activeTab !== 'ashtakavarga' && (
-                    <div className="xl:col-span-4 sticky top-[6.5rem]">
-                        <div className="prem-card rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
-                            <div className="bg-gold-primary/10 px-3 py-1.5 border-b border-gold-primary/15">
-                                <h3 className={cn(TYPOGRAPHY.value, "text-[18px] text-ink leading-tight tracking-wide")}>Cuspal chart</h3>
+                    <div className="xl:col-span-4 h-full relative">
+                        <div className="prem-card rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm h-full max-h-full">
+                            <div className="bg-gold-primary/10 px-3 py-1 border-b border-gold-primary/15 shrink-0">
+                                <h3 className={cn(TYPOGRAPHY.value, "text-[16px] text-ink leading-tight tracking-wide")}>Cuspal chart</h3>
                             </div>
-                            <div className="w-full">
+                            <div className="flex-1 min-h-0 bg-transparent">
                                 {planetsCuspsQuery.isLoading && !transformed.cuspData.length ? (
-                                    <div className="flex items-center justify-center py-12">
+                                    <div className="flex items-center justify-center py-6">
                                         <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
                                     </div>
                                 ) : transformed.cuspData.length > 0 ? (
-                                    <div className="w-full min-h-[300px] h-[50vh] max-h-[500px]">
+                                    <div className="w-full h-full p-2 flex items-center justify-center">
                                         <KpCuspalChart
                                             planets={transformed.d1Data.planets}
                                             houseSigns={transformed.cuspData.map(c => c.signId)}
-                                            className="w-full h-full bg-transparent border-none"
+                                            className="w-full h-full max-w-full max-h-full aspect-square bg-transparent border-none"
                                         />
                                     </div>
                                 ) : (
-                                    <p className="text-ink text-center py-8">No cusp data available</p>
+                                    <p className="text-ink text-center py-4 text-[12px]">No cusp data available</p>
                                 )}
                             </div>
                         </div>
@@ -214,8 +197,8 @@ export default function KpDashboardPage() {
                 )}
 
                 {/* Right: Tab Content */}
-                <div className={cn(activeTab === 'ashtakavarga' ? "xl:col-span-12" : "xl:col-span-8")}>
-                    <div className="min-h-[400px]">
+                <div className={cn("flex-1 min-h-0 flex flex-col h-full overflow-hidden", activeTab === 'ashtakavarga' ? "xl:col-span-12" : "xl:col-span-8")}>
+                    <div className="flex-1 min-h-0">
                         <KpTabContent
                             activeTab={activeTab}
                             planetaryData={transformed.planetaryData}
@@ -254,14 +237,7 @@ export default function KpDashboardPage() {
                         />
                     </div>
 
-                    {/* Debug Inspector */}
-                    <KpDebugInspector
-                        activeTab={activeTab}
-                        ayanamsa={ayanamsa}
-                        clientId={clientId}
-                        processedCharts={processedCharts}
-                        queryDataByTab={queryDataByTab}
-                    />
+
                 </div>
             </div>
         </div>

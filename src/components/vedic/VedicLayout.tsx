@@ -64,6 +64,7 @@ const VEDIC_NAV_ITEMS: NavItem[] = [
     { name: "Horary", path: "/kp?tab=horary", icon: HelpCircle, systemFilter: ['KP'] },
     { name: "Compatibility", path: "/comparison", icon: Heart, isOverflow: true },
     { name: "Pushkara Navamsha", path: "/pushkara-navamsha", icon: Sparkles, isOverflow: true, systemFilter: ['Lahiri'] },
+    { name: "Chara Karakas", path: "/chara-karakas", icon: Shield, isOverflow: true, systemFilter: ['Lahiri'] },
     { name: "Phala Jyotish", path: "/reports", icon: FileText, isOverflow: true },
     { name: "Notes", path: "/notes", icon: NotebookPen, isOverflow: true },
 ];

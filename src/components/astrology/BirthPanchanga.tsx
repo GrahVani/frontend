@@ -30,7 +30,7 @@ interface PanchangaItemProps {
 
 function PanchangaItem({ label, value, subValue, icon: Icon, color, termKey }: PanchangaItemProps) {
     return (
-        <div className="bg-white/50 p-2.5 rounded-xl border border-gold-primary/15 flex items-center gap-3 shadow-sm group hover:border-gold-primary/30 transition-all">
+        <div className="bg-white/50 p-2 rounded-xl border border-gold-primary/15 flex items-center gap-2 shadow-sm group hover:border-gold-primary/30 transition-all">
             <div className={cn("p-1.5 rounded-lg bg-white shrink-0 shadow-xs group-hover:bg-gold-primary/5 transition-colors", color)}>
                 <Icon className="w-3.5 h-3.5" />
             </div>

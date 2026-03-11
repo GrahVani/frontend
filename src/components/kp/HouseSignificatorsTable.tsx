@@ -25,8 +25,8 @@ export default function HouseSignificatorsTable({ data, className }: HouseSignif
     };
 
     return (
-        <div className={cn("w-full overflow-hidden", className)}>
-            <div className="overflow-x-auto min-h-[300px] max-h-[calc(100vh-280px)] overflow-y-auto w-full">
+        <div className={cn("w-full overflow-hidden flex flex-col h-full", className)}>
+            <div className="flex-1 overflow-auto w-full scrollbar-thin">
                 <table className="w-full h-full text-[12px] text-left">
                     <thead className="bg-surface-warm/60 backdrop-blur-sm border-b border-gold-primary/15 tracking-wide sticky top-0 z-10">
                         <tr>

@@ -199,7 +199,7 @@ function PanchangCard({ detail, label, icon, accent }: {
     return (
         <div className="prem-card overflow-hidden relative" style={{ borderTop: `3px solid ${accent}` }}>
             <div className="absolute inset-0 pointer-events-none"
-                 style={{ background: `linear-gradient(180deg, ${accent}30 0%, ${accent}08 50%, transparent 100%)` }} />
+                style={{ background: `linear-gradient(180deg, ${accent}30 0%, ${accent}08 50%, transparent 100%)` }} />
             <div className="relative p-5">
                 <div className="flex items-center gap-2.5 mb-3">
                     <span className="text-[24px] leading-none" style={{ color: accent }}>{icon}</span>
@@ -208,7 +208,7 @@ function PanchangCard({ detail, label, icon, accent }: {
                     </span>
                     {typeof detail.number === 'number' && (
                         <span className="text-[10px] font-mono font-bold ml-auto px-1.5 py-0.5 rounded"
-                              style={{ color: accent, backgroundColor: `${accent}15` }}>
+                            style={{ color: accent, backgroundColor: `${accent}15` }}>
                             #{detail.number}
                         </span>
                     )}
@@ -241,7 +241,7 @@ function PanchangCard({ detail, label, icon, accent }: {
                         )}
                         {detail.gana && (
                             <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full"
-                                  style={{ color: accent, backgroundColor: `${accent}15` }}>
+                                style={{ color: accent, backgroundColor: `${accent}15` }}>
                                 {detail.gana}
                             </span>
                         )}
@@ -309,11 +309,11 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
 
     return (
         <div className="prem-card glass-shimmer relative overflow-hidden"
-             style={{
-                 borderLeft: '4px solid var(--gold-primary)',
-                 background: 'linear-gradient(135deg, rgba(201,162,77,0.10) 0%, rgba(255,253,249,0.45) 30%, rgba(250,245,234,0.35) 100%)',
-                 boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -1px 0 rgba(255,255,255,0.15), 0 4px 16px rgba(62,42,31,0.06)',
-             }}>
+            style={{
+                borderLeft: '4px solid var(--gold-primary)',
+                background: 'linear-gradient(135deg, rgba(201,162,77,0.10) 0%, rgba(255,253,249,0.45) 30%, rgba(250,245,234,0.35) 100%)',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -1px 0 rgba(255,255,255,0.15), 0 4px 16px rgba(62,42,31,0.06)',
+            }}>
             <div className="px-6 pt-4 pb-1 flex items-center gap-2">
                 <NowBadge />
                 <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-gold-dark/80">Live Cosmic Pulse</span>
@@ -321,7 +321,7 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
 
             {warnings.length > 0 && (
                 <div className="mx-6 mt-2 px-4 py-2.5 rounded-lg flex items-center gap-3"
-                     style={{ background: 'rgba(155,74,58,0.12)', border: '1px solid rgba(155,74,58,0.25)' }}>
+                    style={{ background: 'rgba(155,74,58,0.12)', border: '1px solid rgba(155,74,58,0.25)' }}>
                     <AlertTriangle className="w-4 h-4 text-[#9B4A3A] shrink-0" />
                     <div className="text-[11px] font-bold text-[#8B3A3A]">
                         {warnings.map((w, i) => (
@@ -335,7 +335,7 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
             )}
             {blessings.length > 0 && (
                 <div className="mx-6 mt-2 px-4 py-2.5 rounded-lg flex items-center gap-3"
-                     style={{ background: 'rgba(91,122,74,0.12)', border: '1px solid rgba(91,122,74,0.25)' }}>
+                    style={{ background: 'rgba(91,122,74,0.12)', border: '1px solid rgba(91,122,74,0.25)' }}>
                     <Star className="w-4 h-4 text-[#5B7A4A] shrink-0" />
                     <div className="text-[11px] font-bold text-[#4A6741]">
                         {blessings.map((b, i) => (
@@ -355,7 +355,7 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
                     const rem = calcRemaining(chog.start, chog.end);
                     return (
                         <div className="flex items-center gap-4 rounded-xl p-3.5"
-                             style={{ background: nc.light, border: `1px solid ${nc.solid}40` }}>
+                            style={{ background: nc.light, border: `1px solid ${nc.solid}40` }}>
                             <div className="relative shrink-0">
                                 <ProgressRing progress={prog} color={nc.solid} />
                                 <span className="absolute inset-0 flex items-center justify-center text-[20px]">⏳</span>
@@ -364,7 +364,7 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
                                 <div className="text-[9px] font-bold tracking-[0.1em] uppercase text-ink/30">Choghadiya</div>
                                 <div className="text-[18px] font-serif font-bold text-ink leading-tight">{chog.type}</div>
                                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full inline-block mt-0.5"
-                                      style={{ color: nc.text, backgroundColor: `${nc.solid}15` }}>
+                                    style={{ color: nc.text, backgroundColor: `${nc.solid}15` }}>
                                     {chog.nature}
                                 </span>
                                 <div className="text-[11px] font-mono text-ink/40 mt-1.5">
@@ -384,11 +384,11 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
                     const rem = calcRemaining(hora.start, hora.end);
                     return (
                         <div className="flex items-center gap-4 rounded-xl p-3.5"
-                             style={{ background: hbg, border: `1px solid ${hc}40` }}>
+                            style={{ background: hbg, border: `1px solid ${hc}40` }}>
                             <div className="relative shrink-0">
                                 <ProgressRing progress={prog} color={hc} />
                                 <span className="absolute inset-0 flex items-center justify-center text-[20px]"
-                                      style={{ color: hc }}>
+                                    style={{ color: hc }}>
                                     {PLANET_SYM[hora.planet] || '·'}
                                 </span>
                             </div>
@@ -397,7 +397,7 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
                                 <div className="text-[18px] font-serif font-bold text-ink leading-tight">{hora.planet}</div>
                                 {hora.nature && hora.nature !== '-' && (
                                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full inline-block mt-0.5"
-                                          style={{ color: hc, backgroundColor: `${hc}15` }}>
+                                        style={{ color: hc, backgroundColor: `${hc}15` }}>
                                         {hora.nature}
                                     </span>
                                 )}
@@ -419,11 +419,11 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
                     const rem = calcRemaining(lagna.start, lagna.end);
                     return (
                         <div className="flex items-center gap-4 rounded-xl p-3.5"
-                             style={{ background: ebg, border: `1px solid ${ec}40` }}>
+                            style={{ background: ebg, border: `1px solid ${ec}40` }}>
                             <div className="relative shrink-0">
                                 <ProgressRing progress={prog} color={ec} />
                                 <span className="absolute inset-0 flex items-center justify-center text-[20px]"
-                                      style={{ color: ec }}>
+                                    style={{ color: ec }}>
                                     {ZODIAC_SYM[lagna.lagnaName] || '★'}
                                 </span>
                             </div>
@@ -431,7 +431,7 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
                                 <div className="text-[9px] font-bold tracking-[0.1em] uppercase text-ink/30">Rising Sign</div>
                                 <div className="text-[18px] font-serif font-bold text-ink leading-tight">{lagna.lagnaName}</div>
                                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full inline-block mt-0.5"
-                                      style={{ color: ec, backgroundColor: `${ec}18` }}>
+                                    style={{ color: ec, backgroundColor: `${ec}18` }}>
                                     {elem}
                                 </span>
                                 <div className="text-[11px] font-mono text-ink/40 mt-1.5">
@@ -480,7 +480,7 @@ function MuhurtaWindow({ name, start, end, variant, icon, quality, description }
                         <span className="text-[11px] font-bold uppercase tracking-[0.08em]" style={{ color: V.text }}>{name}</span>
                     </div>
                     <span className="text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
-                          style={{ color: V.text, backgroundColor: `${V.border}15`, border: `1px solid ${V.border}25` }}>
+                        style={{ color: V.text, backgroundColor: `${V.border}15`, border: `1px solid ${V.border}25` }}>
                         {V.badge}
                     </span>
                 </div>
@@ -501,7 +501,7 @@ function MuhurtaWindow({ name, start, end, variant, icon, quality, description }
                     </span>
                     {isActive ? (
                         <span className="inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
-                              style={{ color: '#fff', backgroundColor: V.border }}>
+                            style={{ color: '#fff', backgroundColor: V.border }}>
                             <span className="relative flex h-1.5 w-1.5">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-60" />
                                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
@@ -518,7 +518,7 @@ function MuhurtaWindow({ name, start, end, variant, icon, quality, description }
 
                 {description && description !== '-' && (
                     <p className="text-[10px] text-ink/85 mt-2.5 pt-2.5 leading-relaxed line-clamp-2"
-                       style={{ borderTop: `1px solid ${V.border}18` }}>
+                        style={{ borderTop: `1px solid ${V.border}18` }}>
                         {description}
                     </p>
                 )}
@@ -577,8 +577,8 @@ function MuhurtaSection({ muhurta, panchang }: {
             {windows.length > 0 && (
                 <div className={cn("grid gap-4",
                     windows.length <= 3 ? "grid-cols-1 sm:grid-cols-3" :
-                    windows.length === 4 ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" :
-                    "grid-cols-1 sm:grid-cols-2 lg:grid-cols-5"
+                        windows.length === 4 ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" :
+                            "grid-cols-1 sm:grid-cols-2 lg:grid-cols-5"
                 )}>
                     {windows.map((w, i) => <MuhurtaWindow key={i} {...w} />)}
                 </div>
@@ -588,7 +588,7 @@ function MuhurtaSection({ muhurta, panchang }: {
                 <div className="flex flex-wrap gap-2.5 mt-4 pt-4" style={{ borderTop: '1px solid rgba(186,164,126,0.20)' }}>
                     {muhurta.durMuhurats.map((d, i) => (
                         <span key={i} className="text-[11px] inline-flex items-center gap-1.5 rounded-lg px-3 py-2"
-                              style={{ color: '#8B3A3A', backgroundColor: 'rgba(155,74,58,0.08)', border: '1px solid rgba(155,74,58,0.18)' }}>
+                            style={{ color: '#8B3A3A', backgroundColor: 'rgba(155,74,58,0.08)', border: '1px solid rgba(155,74,58,0.18)' }}>
                             <AlertTriangle className="w-3 h-3" />
                             {d.name}: {shortTime(d.start)} &ndash; {shortTime(d.end)}
                         </span>
@@ -640,12 +640,12 @@ function TimelineBar({ segments, phase, startTime, endTime }: {
         <div className="mt-5">
             {/* Atmospheric phase header */}
             <div className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg mb-3"
-                 style={{
-                     background: isDay
-                         ? 'linear-gradient(90deg, rgba(212,136,15,0.08) 0%, rgba(201,162,77,0.04) 40%, transparent 80%)'
-                         : 'linear-gradient(90deg, rgba(74,111,165,0.08) 0%, rgba(90,123,165,0.04) 40%, transparent 80%)',
-                     borderLeft: `3px solid ${isDay ? 'rgba(212,136,15,0.40)' : 'rgba(74,111,165,0.35)'}`,
-                 }}>
+                style={{
+                    background: isDay
+                        ? 'linear-gradient(90deg, rgba(212,136,15,0.08) 0%, rgba(201,162,77,0.04) 40%, transparent 80%)'
+                        : 'linear-gradient(90deg, rgba(74,111,165,0.08) 0%, rgba(90,123,165,0.04) 40%, transparent 80%)',
+                    borderLeft: `3px solid ${isDay ? 'rgba(212,136,15,0.40)' : 'rgba(74,111,165,0.35)'}`,
+                }}>
                 {isDay
                     ? <Sun className="w-4 h-4 text-[#D4880F]" />
                     : <Moon className="w-4 h-4 text-[#4A6FA5]" />}
@@ -667,7 +667,7 @@ function TimelineBar({ segments, phase, startTime, endTime }: {
             {/* Timeline bar with now marker */}
             <div className="relative">
                 <div className="flex h-[46px] rounded-xl overflow-hidden"
-                     style={{ border: '1px solid rgba(186,164,126,0.30)' }}>
+                    style={{ border: '1px solid rgba(186,164,126,0.30)' }}>
                     {segments.map((seg, i) => {
                         const pct = (seg.duration / total) * 100;
                         return (
@@ -689,7 +689,7 @@ function TimelineBar({ segments, phase, startTime, endTime }: {
                             >
                                 {pct > 6 && (
                                     <span className="text-[12px] font-bold truncate px-1"
-                                          style={{ color: seg.isCurrent ? '#FFFDF9' : seg.textColor }}>
+                                        style={{ color: seg.isCurrent ? '#FFFDF9' : seg.textColor }}>
                                         {seg.label}
                                     </span>
                                 )}
@@ -699,11 +699,11 @@ function TimelineBar({ segments, phase, startTime, endTime }: {
                 </div>
                 {showNow && (
                     <div className="absolute top-0 bottom-0 z-10 pointer-events-none"
-                         style={{ left: `${nowPct}%` }}>
+                        style={{ left: `${nowPct}%` }}>
                         <div className="w-[3px] h-full rounded-full"
-                             style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, var(--gold-primary) 40%, rgba(255,255,255,0.95) 100%)' }} />
+                            style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, var(--gold-primary) 40%, rgba(255,255,255,0.95) 100%)' }} />
                         <div className="w-2.5 h-2.5 rounded-full border-2 border-white absolute -top-1 -left-[4px]"
-                             style={{ backgroundColor: 'var(--gold-primary)', boxShadow: '0 0 8px rgba(201,162,77,0.5)' }} />
+                            style={{ backgroundColor: 'var(--gold-primary)', boxShadow: '0 0 8px rgba(201,162,77,0.5)' }} />
                     </div>
                 )}
             </div>
@@ -721,19 +721,19 @@ function CurrentCallout({ children, borderColor, bgColor, progress, remaining }:
 }) {
     return (
         <div className="rounded-xl p-4 mt-4 flex gap-4"
-             style={{
-                 background: `linear-gradient(135deg, ${bgColor} 0%, rgba(255,253,249,0.30) 60%, transparent 100%)`,
-                 backdropFilter: 'blur(12px) saturate(1.2)',
-                 WebkitBackdropFilter: 'blur(12px) saturate(1.2)',
-                 borderLeft: `4px solid ${borderColor}`,
-                 boxShadow: `inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -1px 0 rgba(255,255,255,0.1), 0 0 0 1px ${borderColor}25, 0 4px 16px ${borderColor}18`,
-             }}>
+            style={{
+                background: `linear-gradient(135deg, ${bgColor} 0%, rgba(255,253,249,0.30) 60%, transparent 100%)`,
+                backdropFilter: 'blur(12px) saturate(1.2)',
+                WebkitBackdropFilter: 'blur(12px) saturate(1.2)',
+                borderLeft: `4px solid ${borderColor}`,
+                boxShadow: `inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -1px 0 rgba(255,255,255,0.1), 0 0 0 1px ${borderColor}25, 0 4px 16px ${borderColor}18`,
+            }}>
             {typeof progress === 'number' && (
                 <div className="flex flex-col items-center justify-center shrink-0">
                     <div className="relative">
                         <ProgressRing progress={progress} color={borderColor} size={56} strokeWidth={3.5} />
                         <span className="absolute inset-0 flex items-center justify-center text-[12px] font-bold font-mono"
-                              style={{ color: borderColor }}>
+                            style={{ color: borderColor }}>
                             {Math.round(progress)}%
                         </span>
                     </div>
@@ -782,12 +782,12 @@ function ChoghadiyaTimeline({ periods, current }: {
                     const dur = p.durationMinutes || durFromTimes(p.start, p.end);
                     return (
                         <div key={j} className="rounded-lg overflow-hidden relative transition-opacity"
-                             style={{
-                                 backgroundColor: p.isCurrent ? `${pnc.solid}30` : pnc.light,
-                                 borderLeft: `${p.isCurrent ? 4 : 3}px solid ${pnc.solid}`,
-                                 ...(p.isCurrent ? { boxShadow: `0 0 0 2px ${pnc.solid}, 0 0 18px ${pnc.solid}30, 0 0 40px ${pnc.solid}15` } : {}),
-                                 ...(getWindowStatus(p.start, p.end) === 'passed' && !p.isCurrent ? { opacity: 0.4 } : {}),
-                             }}>
+                            style={{
+                                backgroundColor: p.isCurrent ? `${pnc.solid}30` : pnc.light,
+                                borderLeft: `${p.isCurrent ? 4 : 3}px solid ${pnc.solid}`,
+                                ...(p.isCurrent ? { boxShadow: `0 0 0 2px ${pnc.solid}, 0 0 18px ${pnc.solid}30, 0 0 40px ${pnc.solid}15` } : {}),
+                                ...(getWindowStatus(p.start, p.end) === 'passed' && !p.isCurrent ? { opacity: 0.4 } : {}),
+                            }}>
                             {p.isCurrent && (
                                 <span className="absolute top-2 right-2 flex h-2 w-2">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ backgroundColor: pnc.solid }} />
@@ -798,7 +798,7 @@ function ChoghadiyaTimeline({ periods, current }: {
                                 <div className="flex items-center justify-between">
                                     <span className="text-[13px] font-bold" style={{ color: pnc.text }}>{p.type}</span>
                                     <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
-                                          style={{ color: pnc.text, backgroundColor: `${pnc.solid}18`, border: `1px solid ${pnc.solid}30` }}>
+                                        style={{ color: pnc.text, backgroundColor: `${pnc.solid}18`, border: `1px solid ${pnc.solid}30` }}>
                                         {p.nature}
                                     </span>
                                 </div>
@@ -936,12 +936,12 @@ function HoraTimeline({ periods, current }: {
                     const dur = durFromTimes(h.start, h.end);
                     return (
                         <div key={j} className="rounded-lg overflow-hidden relative transition-opacity"
-                             style={{
-                                 backgroundColor: h.isCurrent ? `${hpc}30` : hpbg,
-                                 borderLeft: `${h.isCurrent ? 4 : 3}px solid ${hpc}`,
-                                 ...(h.isCurrent ? { boxShadow: `0 0 0 2px ${hpc}, 0 0 18px ${hpc}30, 0 0 40px ${hpc}15` } : {}),
-                                 ...(getWindowStatus(h.start, h.end) === 'passed' && !h.isCurrent ? { opacity: 0.4 } : {}),
-                             }}>
+                            style={{
+                                backgroundColor: h.isCurrent ? `${hpc}30` : hpbg,
+                                borderLeft: `${h.isCurrent ? 4 : 3}px solid ${hpc}`,
+                                ...(h.isCurrent ? { boxShadow: `0 0 0 2px ${hpc}, 0 0 18px ${hpc}30, 0 0 40px ${hpc}15` } : {}),
+                                ...(getWindowStatus(h.start, h.end) === 'passed' && !h.isCurrent ? { opacity: 0.4 } : {}),
+                            }}>
                             {h.isCurrent && (
                                 <span className="absolute top-2 right-2 flex h-2 w-2">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ backgroundColor: hpc }} />
@@ -1101,7 +1101,7 @@ function LagnaJourney({ schedule, current }: {
                             {PLANET_SYM[current.lord] || ''} {current.lord}
                         </span>
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                              style={{ color: curColor, backgroundColor: `${curColor}18`, border: `1px solid ${curColor}30` }}>
+                            style={{ color: curColor, backgroundColor: `${curColor}18`, border: `1px solid ${curColor}30` }}>
                             {curElem}
                         </span>
                         {current.quality && current.quality !== '-' && (
@@ -1148,10 +1148,10 @@ function LagnaJourney({ schedule, current }: {
                 return (
                     <div className="mt-5">
                         <div className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg mb-3"
-                             style={{
-                                 background: 'linear-gradient(90deg, rgba(201,162,77,0.08) 0%, rgba(201,162,77,0.03) 40%, transparent 80%)',
-                                 borderLeft: '3px solid rgba(201,162,77,0.35)',
-                             }}>
+                            style={{
+                                background: 'linear-gradient(90deg, rgba(201,162,77,0.08) 0%, rgba(201,162,77,0.03) 40%, transparent 80%)',
+                                borderLeft: '3px solid rgba(201,162,77,0.35)',
+                            }}>
                             <span className="text-[11px] font-bold tracking-[0.08em] uppercase text-[#9C7A2F]">24-Hour Transit</span>
                             <span className="text-[10px] text-ink/30">· {schedule.length} signs</span>
                             <span className="text-[10px] font-mono text-ink/30 ml-auto">
@@ -1162,7 +1162,7 @@ function LagnaJourney({ schedule, current }: {
 
                         <div className="relative">
                             <div className="flex h-[46px] rounded-xl overflow-hidden"
-                                 style={{ border: '1px solid rgba(186,164,126,0.30)' }}>
+                                style={{ border: '1px solid rgba(186,164,126,0.30)' }}>
                                 {schedule.map((l, i) => {
                                     const elem = SIGN_ELEMENT[l.lagnaName] || '';
                                     const eColor = ELEMENT_CLR[elem] || '#C9A24D';
@@ -1187,13 +1187,13 @@ function LagnaJourney({ schedule, current }: {
                                         >
                                             {pct > 5 && (
                                                 <span className="text-[14px] leading-none"
-                                                      style={{ color: l.isCurrent ? '#FFFDF9' : eColor }}>
+                                                    style={{ color: l.isCurrent ? '#FFFDF9' : eColor }}>
                                                     {ZODIAC_SYM[l.lagnaName] || '·'}
                                                 </span>
                                             )}
                                             {pct > 9 && (
                                                 <span className="text-[10px] font-bold"
-                                                      style={{ color: l.isCurrent ? 'rgba(255,255,255,0.8)' : eColor }}>
+                                                    style={{ color: l.isCurrent ? 'rgba(255,255,255,0.8)' : eColor }}>
                                                     {l.lagnaName.slice(0, 3)}
                                                 </span>
                                             )}
@@ -1203,11 +1203,11 @@ function LagnaJourney({ schedule, current }: {
                             </div>
                             {lShowNow && (
                                 <div className="absolute top-0 bottom-0 z-10 pointer-events-none"
-                                     style={{ left: `${lNowPct}%` }}>
+                                    style={{ left: `${lNowPct}%` }}>
                                     <div className="w-[3px] h-full rounded-full"
-                                         style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, var(--gold-primary) 40%, rgba(255,255,255,0.95) 100%)' }} />
+                                        style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, var(--gold-primary) 40%, rgba(255,255,255,0.95) 100%)' }} />
                                     <div className="w-2.5 h-2.5 rounded-full border-2 border-white absolute -top-1 -left-[4px]"
-                                         style={{ backgroundColor: 'var(--gold-primary)', boxShadow: '0 0 8px rgba(201,162,77,0.5)' }} />
+                                        style={{ backgroundColor: 'var(--gold-primary)', boxShadow: '0 0 8px rgba(201,162,77,0.5)' }} />
                                 </div>
                             )}
                         </div>
@@ -1223,12 +1223,12 @@ function LagnaJourney({ schedule, current }: {
                     const eBg = ELEMENT_BG[elem] || 'rgba(201,162,77,0.12)';
                     return (
                         <div key={i} className="rounded-lg overflow-hidden relative transition-opacity"
-                             style={{
-                                 backgroundColor: l.isCurrent ? `${eColor}30` : eBg,
-                                 borderLeft: `${l.isCurrent ? 4 : 3}px solid ${eColor}`,
-                                 ...(l.isCurrent ? { boxShadow: `0 0 0 2px ${eColor}, 0 0 18px ${eColor}30, 0 0 40px ${eColor}15` } : {}),
-                                 ...(getWindowStatus(l.start, l.end) === 'passed' && !l.isCurrent ? { opacity: 0.4 } : {}),
-                             }}>
+                            style={{
+                                backgroundColor: l.isCurrent ? `${eColor}30` : eBg,
+                                borderLeft: `${l.isCurrent ? 4 : 3}px solid ${eColor}`,
+                                ...(l.isCurrent ? { boxShadow: `0 0 0 2px ${eColor}, 0 0 18px ${eColor}30, 0 0 40px ${eColor}15` } : {}),
+                                ...(getWindowStatus(l.start, l.end) === 'passed' && !l.isCurrent ? { opacity: 0.4 } : {}),
+                            }}>
                             {l.isCurrent && (
                                 <span className="absolute top-2 right-2 flex h-2 w-2">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ backgroundColor: eColor }} />
@@ -1248,7 +1248,7 @@ function LagnaJourney({ schedule, current }: {
                                         {PLANET_SYM[l.lord] || ''} {l.lord}
                                     </span>
                                     <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
-                                          style={{ color: eColor, backgroundColor: `${eColor}18`, border: `1px solid ${eColor}30` }}>
+                                        style={{ color: eColor, backgroundColor: `${eColor}18`, border: `1px solid ${eColor}30` }}>
                                         {elem}
                                     </span>
                                 </div>
@@ -1291,7 +1291,7 @@ function RecentClientsCard() {
     return (
         <div className="prem-card overflow-hidden">
             <div className="flex items-center justify-between px-5 py-4"
-                 style={{ borderBottom: '1px solid rgba(186,164,126,0.25)', background: 'linear-gradient(180deg, rgba(201,162,77,0.04) 0%, transparent 100%)' }}>
+                style={{ borderBottom: '1px solid rgba(186,164,126,0.25)', background: 'linear-gradient(180deg, rgba(201,162,77,0.04) 0%, transparent 100%)' }}>
                 <div className="flex items-center gap-2">
                     <Users className="w-4 h-4 text-gold-dark/85" />
                     <h3 className="text-[13px] font-bold tracking-[0.06em] uppercase text-ink">Recent Clients</h3>
@@ -1344,7 +1344,7 @@ function QuickActionsCard() {
     return (
         <div className="prem-card overflow-hidden">
             <div className="flex items-center gap-2 px-5 py-4"
-                 style={{ borderBottom: '1px solid rgba(186,164,126,0.25)', background: 'linear-gradient(180deg, rgba(201,162,77,0.04) 0%, transparent 100%)' }}>
+                style={{ borderBottom: '1px solid rgba(186,164,126,0.25)', background: 'linear-gradient(180deg, rgba(201,162,77,0.04) 0%, transparent 100%)' }}>
                 <Sparkles className="w-4 h-4 text-gold-dark/85" />
                 <h3 className="text-[13px] font-bold tracking-[0.06em] uppercase text-ink">Quick Actions</h3>
             </div>

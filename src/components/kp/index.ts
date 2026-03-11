@@ -19,5 +19,4 @@ export { default as KpDashboardSidebar } from './KpDashboardSidebar';
 // KP Page Decomposition Components
 export { default as KpTabContent } from './KpTabContent';
 export type { KpTab } from './KpTabContent';
-export { default as KpDebugInspector } from './KpDebugInspector';
 

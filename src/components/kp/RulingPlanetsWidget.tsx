@@ -105,7 +105,7 @@ export default function RulingPlanetsWidget({
                 </div>
             </div>
 
-            <div className="p-4 space-y-5">
+            <div className="flex-1 overflow-y-auto scrollbar-thin p-4 space-y-5">
                 {isLoading ? (
                     <div className="py-12 flex flex-col items-center justify-center space-y-3">
                         <RefreshCw className="w-6 h-6 text-gold-primary animate-spin" />
