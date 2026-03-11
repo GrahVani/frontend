@@ -1,9 +1,6 @@
-import axios from 'axios';
-import type { Festival } from '@/types/calendar.types';
-
-const FESTIVAL_API_URL = process.env.NEXT_PUBLIC_ASTRO_ENGINE_URL 
+const FESTIVAL_API_URL = process.env.NEXT_PUBLIC_ASTRO_ENGINE_URL
   ? `${process.env.NEXT_PUBLIC_ASTRO_ENGINE_URL}/festival`
-  : 'http://localhost:3014/api/festival'; // Fallback to local astro-engine proxy
+  : 'http://localhost:3014/api/festival';
 
 export interface FestivalQueryParams {
   year?: number;
@@ -21,87 +18,60 @@ export interface FestivalQueryParams {
 
 export interface FestivalResponse {
   success: boolean;
-  data: any; // More flexible to handle different structures from Python API
+  data: any;
   error?: string;
 }
 
-const festivalClient = axios.create({
-  baseURL: FESTIVAL_API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+async function festivalFetch<T = FestivalResponse>(path: string, body?: unknown): Promise<T> {
+  const isGet = !body;
+  const response = await fetch(`${FESTIVAL_API_URL}${path}`, {
+    method: isGet ? 'GET' : 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => null);
+    throw new Error(err?.error || `Festival API error: ${response.status}`);
+  }
+
+  return response.json();
+}
 
 export const festivalApi = {
-  // 1. Full Festival Calendar
-  getCalendar: async (params: FestivalQueryParams): Promise<FestivalResponse> => {
-    const { data } = await festivalClient.post('/calendar', params);
-    return data;
-  },
+  getCalendar: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/calendar', params),
 
-  // 2. Festival by ID
-  getFestivalById: async (params: FestivalQueryParams & { festival_id: string }): Promise<FestivalResponse> => {
-    const { data } = await festivalClient.post('/by-id', params);
-    return data;
-  },
+  getFestivalById: (params: FestivalQueryParams & { festival_id: string }): Promise<FestivalResponse> =>
+    festivalFetch('/by-id', params),
 
-  // 3. Festivals by Date
-  getFestivalsByDate: async (params: FestivalQueryParams & { date: string }): Promise<FestivalResponse> => {
-    const { data } = await festivalClient.post('/by-date', params);
-    return data;
-  },
+  getFestivalsByDate: (params: FestivalQueryParams & { date: string }): Promise<FestivalResponse> =>
+    festivalFetch('/by-date', params),
 
-  // 4. Festivals by Month
-  getFestivalsByMonth: async (params: FestivalQueryParams): Promise<FestivalResponse> => {
-    const { data } = await festivalClient.post('/by-month', params);
-    return data;
-  },
+  getFestivalsByMonth: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/by-month', params),
 
-  // 5. Government Holidays
-  getHolidays: async (params: FestivalQueryParams): Promise<FestivalResponse> => {
-    const { data } = await festivalClient.post('/holidays', params);
-    return data;
-  },
+  getHolidays: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/holidays', params),
 
-  // 6. Lunar Month Mapping
-  getLunarMonths: async (params: Omit<FestivalQueryParams, 'month' | 'date'>): Promise<FestivalResponse> => {
-    const { data } = await festivalClient.post('/lunar-months', params);
-    return data;
-  },
+  getLunarMonths: (params: Omit<FestivalQueryParams, 'month' | 'date'>): Promise<FestivalResponse> =>
+    festivalFetch('/lunar-months', params),
 
-  // 7. All Ekadashis
-  getEkadashis: async (params: FestivalQueryParams): Promise<FestivalResponse> => {
-    const { data } = await festivalClient.post('/ekadashis', params);
-    return data;
-  },
+  getEkadashis: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/ekadashis', params),
 
-  // 8. All Sankrantis
-  getSankrantis: async (params: FestivalQueryParams): Promise<FestivalResponse> => {
-    const { data } = await festivalClient.post('/sankrantis', params);
-    return data;
-  },
+  getSankrantis: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/sankrantis', params),
 
-  // 9. Major Festivals
-  getMajorFestivals: async (params: FestivalQueryParams): Promise<FestivalResponse> => {
-    const { data } = await festivalClient.post('/major', params);
-    return data;
-  },
+  getMajorFestivals: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/major', params),
 
-  // 10. Regional Festivals
-  getRegionalFestivals: async (params: FestivalQueryParams & { region: string }): Promise<FestivalResponse> => {
-    const { data } = await festivalClient.post('/regional', params);
-    return data;
-  },
+  getRegionalFestivals: (params: FestivalQueryParams & { region: string }): Promise<FestivalResponse> =>
+    festivalFetch('/regional', params),
 
-  // 11. Upcoming Festivals
-  getUpcomingFestivals: async (params: FestivalQueryParams): Promise<FestivalResponse> => {
-    const { data } = await festivalClient.post('/upcoming', params);
-    return data;
-  },
+  getUpcomingFestivals: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/upcoming', params),
 
-  // 12. Available Categories
-  getCategories: async (): Promise<{ success: boolean; data: { categories: Array<{ id: string; label: string; description: string }> } }> => {
-    const { data } = await festivalClient.get('/categories');
-    return data;
-  }
+  getCategories: (): Promise<{ success: boolean; data: { categories: Array<{ id: string; label: string; description: string }> } }> =>
+    festivalFetch('/categories'),
 };
