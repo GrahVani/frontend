@@ -27,7 +27,6 @@ import dynamic from 'next/dynamic';
 
 const ShodashaVargaTable = dynamic(() => import('@/components/astrology/ShodashaVargaTable'));
 const TemporalRelationshipTable = dynamic(() => import('@/components/astrology/TemporalRelationshipTable'));
-const KarakaStrengthAnalysis = dynamic(() => import('@/components/astrology/KarakaStrengthAnalysis'));
 
 const SIGN_MAP: Record<string, number> = {
     'Aries': 1, 'Taurus': 2, 'Gemini': 3, 'Cancer': 4, 'Leo': 5, 'Virgo': 6,
@@ -39,7 +38,6 @@ interface AshtakavargaData {
     bhinna?: Record<string, unknown>;
     shodasha?: Record<string, unknown>;
     temporal?: Record<string, unknown>;
-    karaka?: Record<string, unknown>;
     ascendant?: number;
 }
 
@@ -73,7 +71,7 @@ export default function AshtakavargaPage() {
     const { clientDetails, processedCharts, isLoadingCharts } = useVedicClient();
     const { ayanamsa, chartStyle, recentClientIds } = useAstrologerStore();
     const settings = { ayanamsa, chartStyle, recentClientIds };
-    const [activeTab, setActiveTab] = useState<'sarva' | 'bhinna' | 'shodasha' | 'temporal' | 'karaka'>('sarva');
+    const [activeTab, setActiveTab] = useState<'sarva' | 'bhinna' | 'shodasha' | 'temporal'>('sarva');
     const [selectedPlanet, setSelectedPlanet] = useState<string>('Lagna');
 
     const activeSystem = settings.ayanamsa.toLowerCase();
@@ -90,7 +88,6 @@ export default function AshtakavargaPage() {
         const bhinnaRaw = processedCharts[bhinnaKey]?.chartData;
         const shodashaRaw = processedCharts[shodashaKey]?.chartData || processedCharts[shodashaKpKey]?.chartData;
         const temporalRaw = processedCharts[`tatkalik_maitri_chakra_${activeSystem}`]?.chartData;
-        const karakaRaw = processedCharts[`karaka_strength_${activeSystem}`]?.chartData;
         const d1Raw = processedCharts[d1Key]?.chartData;
 
         // Still loading if context is empty and client is active
@@ -109,7 +106,6 @@ export default function AshtakavargaPage() {
                 bhinna: (bhinnaRaw?.data || bhinnaRaw) as any,
                 shodasha: (shodashaRaw?.data || shodashaRaw) as any,
                 temporal: (temporalRaw?.data || temporalRaw) as any,
-                karaka: (karakaRaw?.data || karakaRaw) as any,
                 ascendant
             }
         };
@@ -205,11 +201,10 @@ export default function AshtakavargaPage() {
 
                 <div className="flex items-center gap-3">
                     <div className="flex prem-card p-1 rounded-xl overflow-x-auto">
-                        {(['sarva', 'bhinna', 'shodasha', 'temporal', 'karaka'] as const)
+                        {(['sarva', 'bhinna', 'shodasha', 'temporal'] as const)
                             .filter(tab => {
                                 const capabilities = clientApi.getSystemCapabilities(ayanamsa);
                                 if (tab === 'temporal') return capabilities.features.ashtakavarga.includes('temporal_maitri');
-                                if (tab === 'karaka') return capabilities.features.ashtakavarga.includes('karaka_strength');
                                 if (tab === 'shodasha') return capabilities.features.ashtakavarga.includes('shodasha_summary') || capabilities.features.ashtakavarga.includes('shodasha_varga');
                                 return true;
                             })
@@ -228,8 +223,7 @@ export default function AshtakavargaPage() {
                                 >
                                     {tab === 'sarva' ? 'Sarvashtakavarga' :
                                         tab === 'bhinna' ? 'Bhinnashtakavarga' :
-                                            tab === 'shodasha' ? 'Shodasha' :
-                                                tab === 'temporal' ? 'Tatkalik maitri' : 'Karaka strength'}
+                                            tab === 'shodasha' ? 'Shodasha' : 'Tatkalik maitri'}
                                 </button>
                             ))}
                     </div>
@@ -319,7 +313,7 @@ export default function AshtakavargaPage() {
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 min-h-[calc(100vh-220px)]">
                             <ShodashaVargaTable data={data?.shodasha} className="h-full" />
                         </div>
-                    ) : activeTab === 'temporal' ? (
+                    ) : (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
                             {data?.temporal ? (
                                 <TemporalRelationshipTable data={data.temporal} />
@@ -331,22 +325,6 @@ export default function AshtakavargaPage() {
                                         className={cn("px-8 py-3 text-ink rounded-2xl font-bold hover:shadow-xl transition-all", COLORS.premiumGradient)}
                                     >
                                         Generate tatkalik maitri
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    ) : (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-                            {data?.karaka ? (
-                                <KarakaStrengthAnalysis data={data.karaka} />
-                            ) : (
-                                <div className="flex flex-col items-center justify-center min-h-[300px] prem-card rounded-3xl border-dashed p-12 text-center">
-                                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-bold mb-4")}>No karaka strength data</h3>
-                                    <button
-                                        onClick={() => clientApi.generateChart(clientDetails.id!, 'karaka_strength', activeSystem).then(() => window.location.reload())}
-                                        className={cn("px-8 py-3 text-ink rounded-2xl font-bold hover:shadow-xl transition-all", COLORS.premiumGradient)}
-                                    >
-                                        Generate karaka strength
                                     </button>
                                 </div>
                             )}

@@ -101,9 +101,9 @@ function TabSection({ title, subtitle, badge, children, noPadding }: {
     noPadding?: boolean;
 }) {
     return (
-        <div className="border border-gold-primary/20 rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm">
-            <div className="bg-gold-primary/10 px-3 py-1.5 border-b border-gold-primary/15 flex justify-between items-center">
-                <h3 className={cn(TYPOGRAPHY.value, "text-[18px] text-ink leading-tight tracking-wide")}>{title}</h3>
+        <div className="border border-gold-primary/20 rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm h-full outline-none">
+            <div className="bg-gold-primary/10 px-3 py-1 border-b border-gold-primary/15 flex justify-between items-center shrink-0">
+                <h3 className={cn(TYPOGRAPHY.value, "text-[16px] text-ink leading-tight tracking-wide")}>{title}</h3>
                 {subtitle && (
                     <span className={cn(TYPOGRAPHY.subValue, "text-[10px] hidden sm:inline-block")}>{subtitle}</span>
                 )}
@@ -113,7 +113,7 @@ function TabSection({ title, subtitle, badge, children, noPadding }: {
                     </div>
                 )}
             </div>
-            <div className={cn("w-full", noPadding ? "" : "")}>
+            <div className={cn("w-full flex-1 overflow-hidden flex flex-col", noPadding ? "" : "")}>
                 {children}
             </div>
         </div>
@@ -196,19 +196,20 @@ export default function KpTabContent(props: KpTabContentProps) {
 
         case 'ruling-planets':
             return (
-                <div className="w-full">
+                <div className="w-full h-full">
                     <RulingPlanetsWidget
                         data={props.rulingPlanetsData || null}
                         isLoading={props.rulingPlanetsLoading}
                         onRefresh={props.rulingPlanetsRefetch}
                         calculatedAt={props.rulingPlanetsCalculatedAt}
+                        className="h-full"
                     />
                 </div>
             );
 
         case 'horary':
             return (
-                <div className="max-w-2xl mx-auto">
+                <div className="max-w-2xl mx-auto h-full flex flex-col w-full">
                     <HoraryPanel
                         onSubmit={props.onHorarySubmit}
                         result={props.horaryResult}
@@ -221,7 +222,7 @@ export default function KpTabContent(props: KpTabContentProps) {
         case 'interlinks':
             return (
                 <TabSection title={<><KnowledgeTooltip term="kp_cusp">Cuspal</KnowledgeTooltip> Interlinks</>}>
-                    <div className="p-6">
+                    <div className="flex-1 overflow-y-auto scrollbar-thin p-4 sm:p-6">
                         {props.interlinksLoading ? (
                             <LoadingSpinner />
                         ) : props.interlinksHasData ? (
@@ -236,7 +237,7 @@ export default function KpTabContent(props: KpTabContentProps) {
         case 'advanced-ssl':
             return (
                 <TabSection title={<>Advanced <KnowledgeTooltip term="sub_sub_lord">Sub-Sub Lord</KnowledgeTooltip> View</>}>
-                    <div className="p-6">
+                    <div className="flex-1 overflow-y-auto scrollbar-thin p-4 sm:p-6">
                         {props.advancedSslLoading ? (
                             <LoadingSpinner />
                         ) : props.advancedSslHasData ? (
@@ -251,7 +252,7 @@ export default function KpTabContent(props: KpTabContentProps) {
         case 'nakshatra-nadi':
             return (
                 <TabSection title={<><KnowledgeTooltip term="kp_nakshatra_nadi">Nakshatra Nadi</KnowledgeTooltip> Coordinates</>}>
-                    <div className="p-6">
+                    <div className="flex-1 overflow-y-auto scrollbar-thin p-4 sm:p-6">
                         {props.nakshatraNadiLoading ? (
                             <LoadingSpinner />
                         ) : props.nakshatraNadiHasData && props.nadiData ? (
@@ -266,7 +267,7 @@ export default function KpTabContent(props: KpTabContentProps) {
         case 'fortuna':
             return (
                 <TabSection title={<><KnowledgeTooltip term="kp_fortuna">Pars Fortuna</KnowledgeTooltip></>}>
-                    <div className="p-6">
+                    <div className="flex-1 overflow-y-auto scrollbar-thin p-4 sm:p-6">
                         {props.fortunaLoading ? (
                             <LoadingSpinner />
                         ) : props.fortunaHasData && props.fortunaData ? (
@@ -281,7 +282,7 @@ export default function KpTabContent(props: KpTabContentProps) {
         case 'ashtakavarga':
             return (
                 <TabSection title="Ashtakavarga Matrix">
-                    <div className="p-6">
+                    <div className="flex-1 overflow-y-auto scrollbar-thin p-4">
                         {props.ashtakavargaLoading ? (
                             <LoadingSpinner />
                         ) : props.ashtakavargaData ? (

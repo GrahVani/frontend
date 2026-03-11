@@ -42,9 +42,9 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
     const sortedKeys = Object.keys(bhavaDetails).sort((a, b) => parseInt(a) - parseInt(b));
 
     return (
-        <div className={cn("overflow-hidden w-full", className)}>
-            <div className="overflow-x-auto min-h-[300px] max-h-[calc(100vh-280px)] overflow-y-auto w-full">
-                <table className="w-full h-full text-[12px] border-collapse font-sans text-ink">
+        <div className={cn("w-full overflow-hidden flex flex-col h-full", className)}>
+            <div className="flex-1 overflow-auto w-full scrollbar-thin rounded-b-lg">
+                <table className="w-full text-[12px] border-collapse font-sans text-ink">
                     <thead className="tracking-wide sticky top-0 z-10">
                         <tr className="bg-surface-warm/60 backdrop-blur-sm border-b border-gold-primary/15">
                             <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left w-24")}>House</th>

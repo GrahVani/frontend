@@ -22,7 +22,7 @@ export const TYPOGRAPHY = {
     // ===== Panchanga & Profile Details =====
     label: "font-sans text-[12px] text-primary font-semibold tracking-wider mb-0.5",
     value: "font-sans text-[14px] font-bold text-primary leading-tight",
-    subValue: "font-sans text-2xs text-primary leading-none mt-1 font-medium whitespace-nowrap",
+    subValue: "font-sans text-2xs text-primary leading-none mt-1 font-medium",
 
     // ===== Profile Identity =====
     profileName: "font-sans text-[18px] font-semibold text-primary leading-tight",

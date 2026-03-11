@@ -192,6 +192,15 @@ export const clientApi = {
         });
     },
 
+    getCharaKarakas: (clientId: string): Promise<ChartGenerateResponse> => {
+        return apiFetch<ChartGenerateResponse>(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
+            method: 'POST',
+            body: JSON.stringify({ chartType: 'chara_karakas', ayanamsa: 'lahiri' }),
+        }).then(res => {
+            return res;
+        });
+    },
+
     getAvakhadaChakra: (clientId: string): Promise<ChartGenerateResponse> =>
         apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
             method: 'POST',
@@ -209,7 +218,7 @@ export const clientApi = {
                 },
                 features: {
                     dasha: ['mahadasha', 'antardasha', 'pratyantardasha', 'sookshma', 'prana'],
-                    ashtakavarga: ['bhinna', 'sarva', 'shodasha_summary', 'temporal_maitri', 'karaka_strength'],
+                    ashtakavarga: ['bhinna', 'sarva', 'shodasha_summary', 'temporal_maitri'],
                     shadbala: ['shadbala'],
                     compatibility: ['synastry', 'composite', 'progressed'],
                     numerology: ['chaldean', 'lo_shu']
