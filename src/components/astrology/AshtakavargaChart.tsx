@@ -21,14 +21,7 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
     });
 
     // Color logic from North Indian Chart
-    const getValueColor = (val: number) => {
-        if (type === 'sarva') {
-            if (val >= 30) return "var(--status-success)";
-            if (val < 22) return "var(--status-error)";
-        } else {
-            if (val >= 5) return "var(--status-success)";
-            if (val < 4) return "var(--status-error)";
-        }
+    const getValueColor = () => {
         return "var(--text-primary)";
     };
 
@@ -91,7 +84,7 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
                     const v = houseValues[houseNum] || 0;
                     const isMax = houseNum === maxH;
                     const isMin = houseNum === minH;
-                    const vColor = getValueColor(v);
+                    const vColor = getValueColor();
 
                     return (
                         <g key={houseNum}>
@@ -125,15 +118,6 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
                                 {v}
                             </text>
 
-                            {/* Indicator dot - subtle and synced with color */}
-                            {(isMax || isMin) && (
-                                <circle
-                                    cx={vP.x + 15}
-                                    cy={vP.y - 10}
-                                    r="2.2"
-                                    fill={isMax ? 'var(--status-success)' : 'var(--status-error)'}
-                                />
-                            )}
 
                             {/* Sign Number */}
                             <text
@@ -153,31 +137,7 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
                 })}
             </svg>
 
-            {/* Legend */}
-            <div className="mt-4 flex flex-col gap-2 text-center">
-                <div className="flex items-center justify-center gap-5 tracking-tight">
-                    <span className={cn(TYPOGRAPHY.subValue, "flex items-center gap-1.5")}>
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                        {type === 'sarva' ? '30+ strong' : '5+ strong'}
-                    </span>
-                    <span className={cn(TYPOGRAPHY.subValue, "flex items-center gap-1.5")}>
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500/50" />
-                        {type === 'sarva' ? '22-29' : '4 avg'}
-                    </span>
-                    <span className={cn(TYPOGRAPHY.subValue, "flex items-center gap-1.5")}>
-                        <span className="w-1.5 h-1.5 rounded-full bg-rose-600" />
-                        {type === 'sarva' ? '<22 weak' : '<4 weak'}
-                    </span>
-                </div>
-                <div className="flex items-center justify-center gap-5">
-                    <span className={cn(TYPOGRAPHY.value, "inline-flex items-center gap-1.5")}>
-                        Best house: <span className="text-emerald-500 font-black">H{maxH} ({maxV})</span>
-                    </span>
-                    <span className={cn(TYPOGRAPHY.value, "inline-flex items-center gap-1.5")}>
-                        Weak house: <span className="text-rose-600 font-black">H{minH} ({minV})</span>
-                    </span>
-                </div>
-            </div>
+
         </div>
     );
 }

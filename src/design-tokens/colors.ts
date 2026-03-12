@@ -133,6 +133,39 @@ export const PLANET_COLORS: Record<string, PlanetColorSet> = {
         symbol: '☋',
         element: 'Shadow',
     },
+    Uranus: {
+        hex: '#06B6D4',
+        text: 'text-cyan-500',
+        bg: 'bg-cyan-500',
+        bgSoft: 'bg-cyan-50',
+        textOnSoft: 'text-cyan-700',
+        border: 'border-cyan-200',
+        gradient: 'from-cyan-400 to-sky-500',
+        symbol: '♅',
+        element: 'Air',
+    },
+    Neptune: {
+        hex: '#6366F1',
+        text: 'text-indigo-500',
+        bg: 'bg-indigo-500',
+        bgSoft: 'bg-indigo-50',
+        textOnSoft: 'text-indigo-700',
+        border: 'border-indigo-200',
+        gradient: 'from-indigo-400 to-blue-500',
+        symbol: '♆',
+        element: 'Water',
+    },
+    Pluto: {
+        hex: '#64748B',
+        text: 'text-slate-500',
+        bg: 'bg-slate-500',
+        bgSoft: 'bg-slate-50',
+        textOnSoft: 'text-slate-700',
+        border: 'border-slate-200',
+        gradient: 'from-slate-400 to-zinc-500',
+        symbol: '♇',
+        element: 'Fire',
+    },
 } as const;
 
 /** Helper to get planet color with fallback for unknown planet names */
@@ -167,6 +200,9 @@ export const PLANET_SVG_FILLS: Record<string, string> = {
     Ra: '#5C3D26', Rahu: '#5C3D26',
     Ke: '#EA580C', Ketu: '#EA580C',
     As: '#7C3AED', Asc: '#7C3AED',
+    Ur: '#0891B2', Uranus: '#0891B2',
+    Ne: '#4338CA', Neptune: '#4338CA',
+    Pl: '#4B5563', Pluto: '#4B5563',
 } as const;
 
 // =============================================================================

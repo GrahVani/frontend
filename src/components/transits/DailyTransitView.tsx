@@ -47,6 +47,10 @@ function getTransitInsights(
     const nextPlanets = (nextEntry as any).planetary_positions || {};
 
     Object.keys(currPlanets).forEach(pName => {
+        // As an astrologer: Rahu and Ketu are slow-moving and almost always retrograde.
+        // Their daily status shifts are often noise rather than meaningful "daily insights".
+        if (['Rahu', 'Ketu'].includes(pName)) return;
+
         const curr = currPlanets[pName];
         const next = nextPlanets[pName];
         if (!curr || !next) return;

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
@@ -51,7 +51,7 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
     const contribs = data.contributors;
 
     let rows = isSarva ? PLANETS : (contribs ? contribs.map((c: ContributorEntry) => c.contributor) : [planet || 'Sun']);
-    rows = rows.filter((p: string) => !['Lagna', 'Ascendant', 'lagna', 'ascendant'].includes(p));
+    // Removed filtering of Lagna/Ascendant to ensure it shows in BAV as a contributor
 
     const getVal = (rd: Record<string | number, number> | number[], s: number): number => {
         if (!rd) return 0;
@@ -116,15 +116,20 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                             let rowTot = 0;
                             SIGNS.forEach(s => { rowTot += getVal(rd, s); });
 
-                            return (
-                                <tr key={p} className={cn("border-b border-primary", idx % 2 === 1 && "bg-surface-warm/30")}>
-                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-2 font-medium border-r border-primary")}>{p.substring(0, 3)}</td>
-                                    {SIGNS.map(s => (
-                                        <td key={s} className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1 text-center border-r border-primary")}>{getVal(rd, s)}</td>
-                                    ))}
-                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1.5 text-center font-semibold bg-surface-warm")}>{rowTot}</td>
-                                </tr>
-                            );
+                                    return (
+                                        <tr key={p} className={cn("border-b border-primary", idx % 2 === 1 && "bg-surface-warm/30")}>
+                                            <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-2 font-medium border-r border-primary")}>{p.substring(0, 3)}</td>
+                                            {SIGNS.map(s => {
+                                                const val = getVal(rd, s);
+                                                return (
+                                                    <td key={s} className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1 text-center border-r border-primary font-bold")}>
+                                                        {val}
+                                                    </td>
+                                                );
+                                            })}
+                                            <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1.5 text-center font-semibold bg-surface-warm")}>{rowTot}</td>
+                                        </tr>
+                                    );
                         })}
                     </tbody>
                     <tfoot>
@@ -135,34 +140,17 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                                 return (
                                     <td key={s} className="py-3 px-1 text-center border-r border-primary">
                                         <div className="flex flex-col items-center justify-center leading-none">
-                                            <span className={cn(TYPOGRAPHY.value, "leading-none")}>{v}</span>
+                                            <span className={cn(TYPOGRAPHY.value, "leading-none font-bold")}>{v}</span>
                                         </div>
                                     </td>
                                 );
                             })}
-                            <td className={cn(TYPOGRAPHY.value, "py-3 px-1.5 text-center bg-amber-50/50")}>
+                            <td className={cn(TYPOGRAPHY.value, "py-3 px-1.5 text-center bg-amber-50/50 font-bold")}>
                                 {Object.values(sav).reduce((a, b) => a + b, 0)}
                             </td>
                         </tr>
                     </tfoot>
                 </table>
-                </div>
-            </div>
-
-
-
-            {/* Quick Summary */}
-            <div className="flex justify-between mt-3 px-1">
-                <span className={cn(TYPOGRAPHY.subValue, "text-ink")}>
-                    Strongest: <span className="text-ink font-black uppercase tracking-wider">{groupTotals.sort((a, b) => b.total - a.total)[0].displayName}</span>
-                </span>
-                <div className="flex gap-6">
-                    <span className={cn(TYPOGRAPHY.subValue, "text-ink inline-flex items-center gap-1.5")}>
-                        â†‘ Best: Sign {SIGNS.find(s => sav[s] === maxS)} <span className="font-black text-ink">({maxS})</span>
-                    </span>
-                    <span className={cn(TYPOGRAPHY.subValue, "text-ink inline-flex items-center gap-1.5")}>
-                        â†“ Weak: Sign {SIGNS.find(s => sav[s] === minS)} <span className="font-black text-ink">({minS})</span>
-                    </span>
                 </div>
             </div>
         </div>
