@@ -175,7 +175,6 @@ export function useKpTransformedData(input: KpTransformedDataInput) {
             const visualPlanets: KpVisualPlanet[] = [];
             if (planets && !Array.isArray(planets)) {
                 Object.entries(planets).forEach(([name, p]: [string, any]) => {
-                    if (['Uranus', 'Neptune', 'Pluto'].includes(name)) return;
                     const normalizedSign = p.sign.charAt(0).toUpperCase() + p.sign.slice(1).toLowerCase();
                     visualPlanets.push({
                         name: name.substring(0, 2),
@@ -183,6 +182,10 @@ export function useKpTransformedData(input: KpTransformedDataInput) {
                         degree: p.longitude?.split('°')[0] + '°' || "0°",
                         isRetro: p.is_retro || false,
                         house: p.house,
+                        // @ts-ignore - extending Planet interface for KP display
+                        starLord: p.star_lord || p.nakshatra_lord || '',
+                        // @ts-ignore
+                        subLord: p.sub_lord || '',
                     });
                 });
             }
@@ -193,6 +196,10 @@ export function useKpTransformedData(input: KpTransformedDataInput) {
                 degree: ascendant?.longitude?.split('°')[0] + '°' || "0°",
                 isRetro: false,
                 house: 1,
+                // @ts-ignore
+                starLord: ascendant?.star_lord || ascendant?.nakshatra_lord || '',
+                // @ts-ignore
+                subLord: ascendant?.sub_lord || '',
             });
 
             return { planets: visualPlanets, ascendant: ascSignId };

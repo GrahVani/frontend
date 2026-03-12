@@ -71,7 +71,6 @@ interface ShadbalaPlanet {
     cheshtaBala: number;  // Motional
     naisargikaBala: number; // Natural
     drikBala: number;     // Aspectual
-    yuddhaBala: number;   // Planetary War
     totalBala: number;    // Total in Virupas
     rupaBala: number;     // Total in Rupas (total/60)
     minBalaRequired: number;
@@ -175,7 +174,6 @@ export default function ShadbalaPage() {
                 cheshtaBala: details['Chesta Bala'] || 0,
                 naisargikaBala: details['Naisargika Bala'] || 0,
                 drikBala: details['Drik Bala'] || 0,
-                yuddhaBala: details['Yuddha Bala'] || 0,
                 totalBala: virupas,
                 rupaBala: rupas,
                 minBalaRequired: minRequired * 60,
@@ -236,7 +234,7 @@ export default function ShadbalaPage() {
     if (ayanamsa !== 'Lahiri') {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-                <Orbit className="w-12 h-12 text-ink mb-4" />
+                <Orbit className="w-12 h-12 text-primary mb-4" />
                 <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] mb-2")}>Shadbala Analysis — Lahiri Only</h2>
                 <p className={cn(TYPOGRAPHY.profileDetail, "max-w-md")}>
                     Shadbala (Six-fold planetary strength) analysis is currently available exclusively with the <strong>Lahiri Ayanamsa</strong>.
@@ -280,7 +278,7 @@ export default function ShadbalaPage() {
                 <ShadbalaDashboard displayData={data} />
             ) : (
                 <div className="p-10 prem-card rounded-2xl text-center lg:py-16">
-                    <Orbit className="w-10 h-10 text-ink mx-auto mb-4" />
+                    <Orbit className="w-10 h-10 text-primary mx-auto mb-4" />
                     <p className={cn(TYPOGRAPHY.profileDetail)}>No Shadbala data found for this chart.</p>
                 </div>
             )}
@@ -422,11 +420,11 @@ function RadialGauge({ planet, rupaBala, minRequired, isStrong, color, rank }: {
                         {PLANET_SYMBOLS[planet]}
                     </text>
                     <text x={center} y={center + 18} textAnchor="middle" dominantBaseline="central"
-                        fontSize="13" fill="var(--ink)" fontWeight="800">
+                        fontSize="13" fill="var(--text-primary)" fontWeight="800">
                         {rupaBala.toFixed(2)}
                     </text>
                     <text x={center} y={center + 32} textAnchor="middle" dominantBaseline="central"
-                        fontSize="8" fill="var(--muted)" fontWeight="700" letterSpacing="1.5">
+                        fontSize="8" fill="var(--text-primary)" fontWeight="700" letterSpacing="1.5">
                         RUPA
                     </text>
                 </svg>
@@ -434,7 +432,7 @@ function RadialGauge({ planet, rupaBala, minRequired, isStrong, color, rank }: {
             <div className="mt-1 text-center">
                 <p className={cn(TYPOGRAPHY.value, "text-[12px] tracking-tight")}>{planet}</p>
                 <div className="flex items-center justify-center gap-1 mt-0.5">
-                    <span className={cn(TYPOGRAPHY.label, "text-[9px] text-ink/35 font-normal lowercase")}>#{rank}</span>
+                    <span className={cn(TYPOGRAPHY.label, "text-[9px] text-primary font-normal lowercase")}>#{rank}</span>
                     <span className={cn(
                         TYPOGRAPHY.label,
                         "px-1.5 py-0.5 rounded-full tracking-wider text-[8px]",
@@ -479,14 +477,14 @@ function SubBalaBreakdownCard({ planet, axes, values, theme, idx }: {
                     const isNegative = val < 0;
                     return (
                         <div key={axis.key} className="flex items-center gap-2">
-                            <span className={cn(TYPOGRAPHY.label, "w-[70px] shrink-0 text-right opacity-60 font-normal lowercase text-[9px]")}>
+                            <span className={cn(TYPOGRAPHY.label, "w-[70px] shrink-0 text-right font-normal lowercase text-[9px]")}>
                                 {axis.label}
                             </span>
                             <AnimatedBar value={val} maxVal={localMax} color={theme.color} isNegative={isNegative} />
                             <span className={cn(
                                 TYPOGRAPHY.subValue,
                                 "w-[36px] text-right tabular-nums text-[9px]",
-                                isNegative ? "text-rose-500" : "text-ink/55"
+                                isNegative ? "text-rose-500" : "text-primary"
                             )}>
                                 {val.toFixed(1)}
                             </span>
@@ -556,7 +554,7 @@ function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }) {
                 />
                 <text x="28" y="28" textAnchor="middle" dominantBaseline="central"
                     fontSize="11" fontWeight="800" fill={color}>
-                    {value.toFixed(1)}
+                    {value.toFixed(2)}×
                 </text>
             </svg>
         );
@@ -597,10 +595,10 @@ function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }) {
                                 <span className={cn(TYPOGRAPHY.sectionTitle, "text-[20px]")}>{strongest.planet}</span>
                             </div>
                             <p className={cn(TYPOGRAPHY.label, "text-emerald-600 mt-1 lowercase")}>
-                                {strongest.rupaBala.toFixed(2)} Rupa · Rank #{strongest.rank}
+                                {strongest.percentOfRequired.toFixed(2)}× Strength · Rank #{strongest.rank}
                             </p>
                         </div>
-                        <MiniRing value={strongest.rupaBala} max={12} color={strongestTheme.color} />
+                        <MiniRing value={strongest.percentOfRequired} max={2} color={strongestTheme.color} />
                     </div>
                 </motion.div>
 
@@ -624,311 +622,22 @@ function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }) {
                                 <span className={cn(TYPOGRAPHY.sectionTitle, "text-[20px]")}>{weakest.planet}</span>
                             </div>
                             <p className={cn(TYPOGRAPHY.label, "text-rose-500 mt-1 lowercase")}>
-                                {weakest.rupaBala.toFixed(2)} Rupa · Rank #{weakest.rank}
+                                {weakest.percentOfRequired.toFixed(2)}× Strength · Rank #{weakest.rank}
                             </p>
                         </div>
-                        <MiniRing value={weakest.rupaBala} max={12} color={weakestTheme.color} />
+                        <MiniRing value={weakest.percentOfRequired} max={2} color={weakestTheme.color} />
                     </div>
                 </motion.div>
             </div>
 
             {/* ═══════════════════════════════════════════════════════════════
-                SECTION 2: Ishta & Kashta Phala (Prominent)
-            ═══════════════════════════════════════════════════════════════ */}
-            <div className="prem-card rounded-3xl shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-gold-primary/15 flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-emerald-600" />
-                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Ishta & Kashta Phala</h3>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-ink/35 font-normal lowercase tracking-wider")}>Auspicious vs Inauspicious strength</span>
-                </div>
-                <div className="p-5">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-4">
-                        {sortedPlanets.map((p, idx) => {
-                            const theme = PLANET_THEMES[p.planet];
-                            const ishtaVal = p.ishtaKashta.ishta;
-                            const kashtaVal = p.ishtaKashta.kashta;
-                            const total = Math.max(ishtaVal + kashtaVal, 1);
-                            const ishtaWidth = (ishtaVal / total) * 100;
-                            const isIshtaDominant = ishtaVal > kashtaVal;
-
-                            return (
-                                <motion.div
-                                    key={`phala-${p.planet}`}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.4, delay: idx * 0.05 }}
-                                    className="flex flex-col items-center group"
-                                >
-                                    {/* Planet badge */}
-                                    <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center text-white text-[14px] font-bold shadow-sm mb-2", theme.twBg)}>
-                                        {PLANET_SYMBOLS[p.planet]}
-                                    </div>
-                                    <span className={cn(TYPOGRAPHY.value, "text-[11px] mb-1")}>{p.planet}</span>
-
-                                    {/* Vertical stacked bar */}
-                                    <div className="w-full h-28 flex flex-col rounded-xl overflow-hidden shadow-inner border border-gold-primary/10">
-                                        <motion.div
-                                            className="w-full bg-gradient-to-b from-emerald-400 to-emerald-500 flex items-center justify-center"
-                                            initial={{ height: 0 }}
-                                            animate={{ height: `${ishtaWidth}%` }}
-                                            transition={{ duration: 0.8, ease: 'easeOut' }}
-                                        >
-                                            <span className="text-white text-[10px] font-bold drop-shadow">{ishtaVal.toFixed(1)}</span>
-                                        </motion.div>
-                                        <div className="w-full flex-1 bg-gradient-to-b from-rose-400 to-red-500 flex items-center justify-center">
-                                            <span className="text-white text-[10px] font-bold drop-shadow">{kashtaVal.toFixed(1)}</span>
-                                        </div>
-                                    </div>
-
-                                    {/* Verdict */}
-                                    <div className={cn(
-                                        "mt-1.5 px-2 py-0.5 rounded-full text-[8px] font-bold tracking-wider",
-                                        isIshtaDominant ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                                    )}>
-                                        {isIshtaDominant ? "BENEFIC" : "MALEFIC"}
-                                    </div>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
-                    {/* Legend */}
-                    <div className="flex items-center justify-center gap-6 pt-4 border-t border-gold-primary/10 mt-4">
-                        <div className="flex items-center gap-1.5">
-                            <div className="w-3 h-3 rounded-sm bg-gradient-to-b from-emerald-400 to-emerald-500" />
-                            <span className={cn(TYPOGRAPHY.label, "text-ink/50 font-normal lowercase")}>Ishta (Auspicious)</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                            <div className="w-3 h-3 rounded-sm bg-gradient-to-b from-rose-400 to-red-500" />
-                            <span className={cn(TYPOGRAPHY.label, "text-ink/50 font-normal lowercase")}>Kashta (Inauspicious)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* ═══════════════════════════════════════════════════════════════
-                SECTION 3: Six-Fold Strength Profile (Per Planet Cards)
-            ═══════════════════════════════════════════════════════════════ */}
-            <div className="prem-card rounded-3xl shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-gold-primary/15 flex items-center gap-2">
-                    <Compass className="w-4 h-4 text-gold-primary" />
-                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Six-Fold Strength Profile</h3>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-ink/35 font-normal lowercase tracking-wider")}>Sthana · Dig · Kala · Cheshta · Naisargik · Drik</span>
-                </div>
-                <div className="p-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {sortedPlanets.map((p, idx) => {
-                        const theme = PLANET_THEMES[p.planet];
-                        const balas = BALA_AXES.map(axis => ({
-                            label: axis.shortLabel,
-                            value: (p as unknown as Record<string, number>)[axis.key] || 0,
-                        }));
-                        const localMax = Math.max(...balas.map(b => Math.abs(b.value)), 1);
-
-                        return (
-                            <motion.div
-                                key={`profile-${p.planet}`}
-                                initial={{ opacity: 0, y: 12 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.4, delay: idx * 0.06 }}
-                                className="rounded-2xl border p-4 transition-all hover:shadow-md"
-                                style={{ borderColor: `${theme.color}30`, background: `linear-gradient(135deg, ${theme.color}04, transparent)` }}
-                            >
-                                {/* Planet Header */}
-                                <div className="flex items-center justify-between mb-3">
-                                    <div className="flex items-center gap-2">
-                                        <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center text-white text-[14px] font-bold shadow-sm", theme.twBg)}>
-                                            {PLANET_SYMBOLS[p.planet]}
-                                        </div>
-                                        <div>
-                                            <h4 className={cn(TYPOGRAPHY.value, "text-[14px]")}>{p.planet}</h4>
-                                            <p className={cn(TYPOGRAPHY.label, "text-[9px] lowercase opacity-80", theme.twText)}>
-                                                {p.rupaBala.toFixed(2)} Rupa · #{p.rank}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <span className={cn(
-                                        TYPOGRAPHY.label,
-                                        "px-1.5 py-0.5 rounded-full text-[8px]",
-                                        p.isStrong ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                                    )}>
-                                        {p.isStrong ? "STRONG" : "WEAK"}
-                                    </span>
-                                </div>
-
-                                {/* 6 Bala Bars */}
-                                <div className="space-y-2">
-                                    {balas.map((bala) => {
-                                        const isNegative = bala.value < 0;
-                                        return (
-                                            <div key={bala.label} className="flex items-center gap-2">
-                                                <span className={cn(TYPOGRAPHY.label, "w-[62px] shrink-0 text-right opacity-60 font-normal lowercase")}>
-                                                    {bala.label}
-                                                </span>
-                                                <AnimatedBar value={bala.value} maxVal={localMax} color={theme.color} isNegative={isNegative} />
-                                                <span className={cn(
-                                                    TYPOGRAPHY.subValue,
-                                                    "w-[32px] text-right tabular-nums",
-                                                    isNegative ? "text-rose-500" : "text-ink/55"
-                                                )}>
-                                                    {bala.value.toFixed(0)}
-                                                </span>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </motion.div>
-                        );
-                    })}
-                </div>
-            </div>
-
-            {/* ═══════════════════════════════════════════════════════════════
-                SECTION 4: Sthana Bala Breakdown
-            ═══════════════════════════════════════════════════════════════ */}
-            <div className="prem-card rounded-3xl shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-gold-primary/15 flex items-center gap-2">
-                    <Shield className="w-4 h-4 text-amber-600" />
-                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Sthana Bala Breakdown</h3>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-ink/35 font-normal lowercase tracking-wider")}>Positional strength sub-components</span>
-                </div>
-                <div className="p-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-                    {sortedPlanets.map((p, idx) => (
-                        <SubBalaBreakdownCard
-                            key={`sthana-${p.planet}`}
-                            planet={p}
-                            axes={STHANA_SUB_AXES}
-                            values={p.sthanaSubBalas as unknown as Record<string, number>}
-                            theme={PLANET_THEMES[p.planet]}
-                            idx={idx}
-                        />
-                    ))}
-                </div>
-            </div>
-
-            {/* ═══════════════════════════════════════════════════════════════
-                SECTION 5: Kala Bala Breakdown
-            ═══════════════════════════════════════════════════════════════ */}
-            <div className="prem-card rounded-3xl shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-gold-primary/15 flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-indigo-500" />
-                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Kala Bala Breakdown</h3>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-ink/35 font-normal lowercase tracking-wider")}>Temporal strength sub-components</span>
-                </div>
-                <div className="p-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-                    {sortedPlanets.map((p, idx) => (
-                        <SubBalaBreakdownCard
-                            key={`kala-${p.planet}`}
-                            planet={p}
-                            axes={KALA_SUB_AXES}
-                            values={p.kalaSubBalas as unknown as Record<string, number>}
-                            theme={PLANET_THEMES[p.planet]}
-                            idx={idx}
-                        />
-                    ))}
-                </div>
-            </div>
-
-            {/* ═══════════════════════════════════════════════════════════════
-                SECTION 6: Percentage of Required Strength
-            ═══════════════════════════════════════════════════════════════ */}
-            <div className="prem-card rounded-3xl shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-gold-primary/15 flex items-center gap-2">
-                    <Target className="w-4 h-4 text-blue-600" />
-                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Percentage of Required Strength</h3>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-ink/35 font-normal lowercase tracking-wider")}>Ratio ≥ 1.0 = meets minimum</span>
-                </div>
-                <div className="p-5 space-y-3">
-                    {sortedPlanets.map((p, idx) => {
-                        const theme = PLANET_THEMES[p.planet];
-                        const pct = p.percentOfRequired;
-                        const meetsMin = pct >= 1.0;
-                        // Scale bar to maxPctReq for visual consistency
-                        const barWidth = Math.min((pct / maxPctReq) * 100, 100);
-                        // Position of 1.0x threshold line
-                        const thresholdPos = Math.min((1.0 / maxPctReq) * 100, 100);
-
-                        return (
-                            <motion.div
-                                key={`pct-${p.planet}`}
-                                initial={{ opacity: 0, x: -10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.4, delay: idx * 0.05 }}
-                                className="flex items-center gap-3"
-                            >
-                                <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center text-white text-[12px] font-bold shrink-0 shadow-sm", theme.twBg)}>
-                                    {PLANET_SYMBOLS[p.planet]}
-                                </div>
-                                <span className={cn(TYPOGRAPHY.value, "w-[60px] shrink-0 text-[12px]")}>{p.planet}</span>
-                                <div className="flex-1 relative">
-                                    <div className="h-4 w-full bg-gold-primary/8 rounded-full overflow-hidden">
-                                        <motion.div
-                                            className="h-full rounded-full"
-                                            initial={{ width: 0 }}
-                                            animate={{ width: `${barWidth}%` }}
-                                            transition={{ duration: 0.8, ease: 'easeOut' }}
-                                            style={{
-                                                background: meetsMin
-                                                    ? `linear-gradient(90deg, ${theme.color}cc, ${theme.color})`
-                                                    : `linear-gradient(90deg, #f59e0bcc, #ef4444)`,
-                                            }}
-                                        />
-                                    </div>
-                                    {/* 1.0x threshold line */}
-                                    <div
-                                        className="absolute top-0 bottom-0 w-0.5 bg-ink/60"
-                                        style={{ left: `${thresholdPos}%` }}
-                                    >
-                                        <span className="absolute -top-4 -translate-x-1/2 text-[8px] font-bold text-ink/40">1.0×</span>
-                                    </div>
-                                </div>
-                                <span className={cn(
-                                    TYPOGRAPHY.value,
-                                    "w-[40px] text-right tabular-nums text-[12px]",
-                                    meetsMin ? "text-emerald-600" : "text-rose-500"
-                                )}>
-                                    {pct.toFixed(2)}×
-                                </span>
-                            </motion.div>
-                        );
-                    })}
-                </div>
-            </div>
-
-            {/* ═══════════════════════════════════════════════════════════════
-                SECTION 7: Radial Gauge Meters
-            ═══════════════════════════════════════════════════════════════ */}
-            <div className="prem-card rounded-3xl shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-gold-primary/15 flex items-center gap-2">
-                    <BarChart2 className="w-4 h-4 text-gold-primary" />
-                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Rupa Strength Overview</h3>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-ink/35 font-normal lowercase tracking-wider")}>Red tick = min. required</span>
-                </div>
-                <div className="p-6 flex flex-wrap items-center justify-center gap-4 md:gap-6">
-                    {sortedPlanets.map((p) => {
-                        const theme = PLANET_THEMES[p.planet];
-                        const minRequiredRupa = p.minBalaRequired / 60;
-                        return (
-                            <RadialGauge
-                                key={`gauge-${p.planet}`}
-                                planet={p.planet}
-                                rupaBala={p.rupaBala}
-                                minRequired={minRequiredRupa}
-                                isStrong={p.isStrong}
-                                color={theme.color}
-                                rank={p.rank}
-                            />
-                        );
-                    })}
-                </div>
-            </div>
-
-            {/* ═══════════════════════════════════════════════════════════════
-                SECTION 8: Summary Table
+                SECTION 2: Summary Table (Moved Up)
             ═══════════════════════════════════════════════════════════════ */}
             <div className="prem-card rounded-3xl shadow-sm overflow-hidden">
                 <div className="p-4 border-b border-gold-primary/15 bg-surface-warm/5 flex items-center gap-2">
                     <Table2 className="w-4 h-4 text-indigo-500" />
                     <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Shadbala Summary</h3>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-ink/35 font-normal lowercase tracking-wider")}>Complete planetary strength overview</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-primary font-normal lowercase tracking-wider")}>Complete planetary strength overview</span>
                 </div>
                 <DataGrid
                     columns={[
@@ -1001,21 +710,6 @@ function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }) {
                             },
                         },
                         {
-                            key: 'yuddhaBala',
-                            header: 'Yuddha',
-                            align: 'center' as const,
-                            cellClassName: cn(TYPOGRAPHY.value, "text-[12px] tabular-nums"),
-                            render: (row: ShadbalaPlanet) => {
-                                return row.yuddhaBala !== 0 ? (
-                                    <span className={row.yuddhaBala > 0 ? "text-emerald-600" : "text-rose-500"}>
-                                        {row.yuddhaBala.toFixed(1)}
-                                    </span>
-                                ) : (
-                                    <span className="text-ink/25">—</span>
-                                );
-                            },
-                        },
-                        {
                             key: 'isStrong',
                             header: 'Status',
                             align: 'center' as const,
@@ -1038,6 +732,291 @@ function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }) {
                     scrollShadows={true}
                 />
             </div>
+
+
+            {/* ═══════════════════════════════════════════════════════════════
+                SECTION 3: Ishta & Kashta Phala (Prominent)
+            ═══════════════════════════════════════════════════════════════ */}
+            <div className="prem-card rounded-3xl shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-gold-primary/15 flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-emerald-600" />
+                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Ishta & Kashta Phala</h3>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-primary font-normal lowercase tracking-wider")}>Auspicious vs Inauspicious strength</span>
+                </div>
+                <div className="p-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-4">
+                        {sortedPlanets.map((p, idx) => {
+                            const theme = PLANET_THEMES[p.planet];
+                            const ishtaVal = p.ishtaKashta.ishta;
+                            const kashtaVal = p.ishtaKashta.kashta;
+                            const total = Math.max(ishtaVal + kashtaVal, 1);
+                            const ishtaWidth = (ishtaVal / total) * 100;
+                            const isIshtaDominant = ishtaVal > kashtaVal;
+
+                            return (
+                                <motion.div
+                                    key={`phala-${p.planet}`}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.4, delay: idx * 0.05 }}
+                                    className="flex flex-col items-center group"
+                                >
+                                    {/* Planet badge */}
+                                    <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center text-white text-[14px] font-bold shadow-sm mb-2", theme.twBg)}>
+                                        {PLANET_SYMBOLS[p.planet]}
+                                    </div>
+                                    <span className={cn(TYPOGRAPHY.value, "text-[11px] mb-1")}>{p.planet}</span>
+
+                                    {/* Vertical stacked bar */}
+                                    <div className="w-full h-28 flex flex-col rounded-xl overflow-hidden shadow-inner border border-gold-primary/10">
+                                        <motion.div
+                                            className="w-full bg-gradient-to-b from-emerald-400 to-emerald-500 flex items-center justify-center"
+                                            initial={{ height: 0 }}
+                                            animate={{ height: `${ishtaWidth}%` }}
+                                            transition={{ duration: 0.8, ease: 'easeOut' }}
+                                        >
+                                            <span className="text-white text-[10px] font-bold drop-shadow">{ishtaVal.toFixed(1)}</span>
+                                        </motion.div>
+                                        <div className="w-full flex-1 bg-gradient-to-b from-rose-400 to-red-500 flex items-center justify-center">
+                                            <span className="text-white text-[10px] font-bold drop-shadow">{kashtaVal.toFixed(1)}</span>
+                                        </div>
+                                    </div>
+
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+                    {/* Legend */}
+                    <div className="flex items-center justify-center gap-6 pt-4 border-t border-gold-primary/10 mt-4">
+                        <div className="flex items-center gap-1.5">
+                            <div className="w-3 h-3 rounded-sm bg-gradient-to-b from-emerald-400 to-emerald-500" />
+                            <span className={cn(TYPOGRAPHY.label, "text-primary font-normal lowercase")}>Ishta (Auspicious)</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <div className="w-3 h-3 rounded-sm bg-gradient-to-b from-rose-400 to-red-500" />
+                            <span className={cn(TYPOGRAPHY.label, "text-primary font-normal lowercase")}>Kashta (Inauspicious)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* ═══════════════════════════════════════════════════════════════
+                SECTION 4: Six-Fold Strength Profile (Per Planet Cards)
+            ═══════════════════════════════════════════════════════════════ */}
+            <div className="prem-card rounded-3xl shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-gold-primary/15 flex items-center gap-2">
+                    <Compass className="w-4 h-4 text-gold-primary" />
+                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Six-Fold Strength Profile</h3>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-primary font-normal lowercase tracking-wider")}>Sthana · Dig · Kala · Cheshta · Naisargik · Drik</span>
+                </div>
+                <div className="p-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                    {sortedPlanets.map((p, idx) => {
+                        const theme = PLANET_THEMES[p.planet];
+                        const balas = BALA_AXES.map(axis => ({
+                            label: axis.shortLabel,
+                            value: (p as unknown as Record<string, number>)[axis.key] || 0,
+                        }));
+                        const localMax = Math.max(...balas.map(b => Math.abs(b.value)), 1);
+
+                        return (
+                            <motion.div
+                                key={`profile-${p.planet}`}
+                                initial={{ opacity: 0, y: 12 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4, delay: idx * 0.06 }}
+                                className="rounded-2xl border p-4 transition-all hover:shadow-md"
+                                style={{ borderColor: `${theme.color}30`, background: `linear-gradient(135deg, ${theme.color}04, transparent)` }}
+                            >
+                                {/* Planet Header */}
+                                <div className="flex items-center justify-between mb-3">
+                                    <div className="flex items-center gap-2">
+                                        <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center text-white text-[14px] font-bold shadow-sm", theme.twBg)}>
+                                            {PLANET_SYMBOLS[p.planet]}
+                                        </div>
+                                        <div>
+                                            <h4 className={cn(TYPOGRAPHY.value, "text-[14px]")}>{p.planet}</h4>
+                                            <p className={cn(TYPOGRAPHY.label, "text-[9px] lowercase", theme.twText)}>
+                                                {p.rupaBala.toFixed(2)} Rupa · #{p.rank}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <span className={cn(
+                                        TYPOGRAPHY.label,
+                                        "px-1.5 py-0.5 rounded-full text-[8px]",
+                                        p.isStrong ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                                    )}>
+                                        {p.isStrong ? "STRONG" : "WEAK"}
+                                    </span>
+                                </div>
+
+                                {/* 6 Bala Bars */}
+                                <div className="space-y-2">
+                                    {balas.map((bala) => {
+                                        const isNegative = bala.value < 0;
+                                        return (
+                                            <div key={bala.label} className="flex items-center gap-2">
+                                                <span className={cn(TYPOGRAPHY.label, "w-[62px] shrink-0 text-right font-normal lowercase")}>
+                                                    {bala.label}
+                                                </span>
+                                                <AnimatedBar value={bala.value} maxVal={localMax} color={theme.color} isNegative={isNegative} />
+                                                <span className={cn(
+                                                    TYPOGRAPHY.subValue,
+                                                    "w-[32px] text-right tabular-nums",
+                                                    isNegative ? "text-rose-500" : "text-primary"
+                                                )}>
+                                                    {bala.value.toFixed(0)}
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </motion.div>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* ═══════════════════════════════════════════════════════════════
+                SECTION 5: Sthana Bala Breakdown
+            ═══════════════════════════════════════════════════════════════ */}
+            <div className="prem-card rounded-3xl shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-gold-primary/15 flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-amber-600" />
+                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Sthana Bala Breakdown</h3>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-primary font-normal lowercase tracking-wider")}>Positional strength sub-components</span>
+                </div>
+                <div className="p-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+                    {sortedPlanets.map((p, idx) => (
+                        <SubBalaBreakdownCard
+                            key={`sthana-${p.planet}`}
+                            planet={p}
+                            axes={STHANA_SUB_AXES}
+                            values={p.sthanaSubBalas as unknown as Record<string, number>}
+                            theme={PLANET_THEMES[p.planet]}
+                            idx={idx}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            {/* ═══════════════════════════════════════════════════════════════
+                SECTION 6: Kala Bala Breakdown
+            ═══════════════════════════════════════════════════════════════ */}
+            <div className="prem-card rounded-3xl shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-gold-primary/15 flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-indigo-500" />
+                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Kala Bala Breakdown</h3>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-primary font-normal lowercase tracking-wider")}>Temporal strength sub-components</span>
+                </div>
+                <div className="p-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+                    {sortedPlanets.map((p, idx) => (
+                        <SubBalaBreakdownCard
+                            key={`kala-${p.planet}`}
+                            planet={p}
+                            axes={KALA_SUB_AXES}
+                            values={p.kalaSubBalas as unknown as Record<string, number>}
+                            theme={PLANET_THEMES[p.planet]}
+                            idx={idx}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            {/* ═══════════════════════════════════════════════════════════════
+                SECTION 7: Percentage of Required Strength
+            ═══════════════════════════════════════════════════════════════ */}
+            <div className="prem-card rounded-3xl shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-gold-primary/15 flex items-center gap-2">
+                    <Target className="w-4 h-4 text-blue-600" />
+                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Percentage of Required Strength</h3>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-primary font-normal lowercase tracking-wider")}>Ratio ≥ 1.0 = meets minimum</span>
+                </div>
+                <div className="p-5 space-y-3">
+                    {sortedPlanets.map((p, idx) => {
+                        const theme = PLANET_THEMES[p.planet];
+                        const pct = p.percentOfRequired;
+                        const meetsMin = pct >= 1.0;
+                        // Scale bar to maxPctReq for visual consistency
+                        const barWidth = Math.min((pct / maxPctReq) * 100, 100);
+                        // Position of 1.0x threshold line
+                        const thresholdPos = Math.min((1.0 / maxPctReq) * 100, 100);
+
+                        return (
+                            <motion.div
+                                key={`pct-${p.planet}`}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.4, delay: idx * 0.05 }}
+                                className="flex items-center gap-3"
+                            >
+                                <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center text-white text-[12px] font-bold shrink-0 shadow-sm", theme.twBg)}>
+                                    {PLANET_SYMBOLS[p.planet]}
+                                </div>
+                                <span className={cn(TYPOGRAPHY.value, "w-[60px] shrink-0 text-[12px]")}>{p.planet}</span>
+                                <div className="flex-1 relative">
+                                    <div className="h-4 w-full bg-gold-primary/8 rounded-full overflow-hidden">
+                                        <motion.div
+                                            className="h-full rounded-full"
+                                            initial={{ width: 0 }}
+                                            animate={{ width: `${barWidth}%` }}
+                                            transition={{ duration: 0.8, ease: 'easeOut' }}
+                                            style={{
+                                                background: meetsMin
+                                                    ? `linear-gradient(90deg, ${theme.color}cc, ${theme.color})`
+                                                    : `linear-gradient(90deg, #f59e0bcc, #ef4444)`,
+                                            }}
+                                        />
+                                    </div>
+                                    {/* 1.0x threshold line */}
+                                    <div
+                                        className="absolute top-0 bottom-0 w-0.5 bg-primary"
+                                        style={{ left: `${thresholdPos}%` }}
+                                    >
+                                        <span className="absolute -top-4 -translate-x-1/2 text-[8px] font-bold text-primary">1.0×</span>
+                                    </div>
+                                </div>
+                                <span className={cn(
+                                    TYPOGRAPHY.value,
+                                    "w-[40px] text-right tabular-nums text-[12px]",
+                                    meetsMin ? "text-emerald-600" : "text-rose-500"
+                                )}>
+                                    {pct.toFixed(2)}×
+                                </span>
+                            </motion.div>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* ═══════════════════════════════════════════════════════════════
+                SECTION 8: Radial Gauge Meters
+            ═══════════════════════════════════════════════════════════════ */}
+            <div className="prem-card rounded-3xl shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-gold-primary/15 flex items-center gap-2">
+                    <BarChart2 className="w-4 h-4 text-gold-primary" />
+                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[11px] leading-none")}>Rupa Strength Overview</h3>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-primary font-normal lowercase tracking-wider")}>Red tick = min. required</span>
+                </div>
+                <div className="p-6 flex flex-wrap items-center justify-center gap-4 md:gap-6">
+                    {sortedPlanets.map((p) => {
+                        const theme = PLANET_THEMES[p.planet];
+                        const minRequiredRupa = p.minBalaRequired / 60;
+                        return (
+                            <RadialGauge
+                                key={`gauge-${p.planet}`}
+                                planet={p.planet}
+                                rupaBala={p.rupaBala}
+                                minRequired={minRequiredRupa}
+                                isStrong={p.isStrong}
+                                color={theme.color}
+                                rank={p.rank}
+                            />
+                        );
+                    })}
+                </div>
+            </div>
+
+
         </div>
     );
 }
