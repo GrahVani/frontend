@@ -83,7 +83,7 @@ export default function PanchangCalendar({
             <div className="grid grid-cols-7 gap-1">
                 {/* Empty cells for days before the first */}
                 {Array.from({ length: firstDay }).map((_, i) => (
-                    <div key={`empty-${i}`} className="aspect-square" />
+                    <div key={`empty-${i}`} className="min-h-[78px] sm:min-h-[85px] rounded-lg border border-gold-primary/5 bg-surface-warm/5 opacity-40" />
                 ))}
 
                 {/* Day cells */}
@@ -101,20 +101,20 @@ export default function PanchangCalendar({
                             key={dateNum}
                             onClick={() => handleDayClick(dateStr)}
                             className={cn(
-                                "min-h-[85px] sm:min-h-[95px] rounded-lg flex flex-col items-start justify-start text-[13px] font-serif border transition-all p-1.5 relative group",
+                                "min-h-[78px] sm:min-h-[85px] rounded-lg flex flex-col items-start justify-start text-[13px] font-serif border transition-all p-1.5 relative group shadow-sm",
                                 isToday
-                                        ? "bg-gold-primary/5 border-gold-primary/30 text-primary"
-                                        : dateStr === selectedDate
-                                            ? "bg-gold-primary/10 border-gold-primary/40 shadow-sm"
-                                            : dayData?.isAuspicious
-                                                ? "bg-status-success/5 border-status-success/20 text-primary"
-                                                : "bg-surface-warm/10 border-gold-primary/10 text-primary hover:border-gold-primary/30",
+                                    ? "bg-gold-primary/10 border-gold-primary/50 text-primary ring-1 ring-gold-primary/20"
+                                    : dateStr === selectedDate
+                                        ? "bg-gold-primary/15 border-gold-primary/60 shadow-md ring-1 ring-gold-primary/30"
+                                        : dayData?.isAuspicious
+                                            ? "bg-status-success/5 border-status-success/40 text-primary"
+                                            : "bg-white/50 border-gold-primary/30 text-primary hover:border-gold-primary/50 hover:bg-white/80",
                                 "cursor-pointer hover:shadow-sm"
                             )}
                         >
                             <div className="flex w-full justify-between items-start mb-1">
                                 <span className={cn(
-                                    "font-semibold text-[14px]", 
+                                    "font-semibold text-[14px]",
                                     isToday ? "bg-gold-primary text-white w-6 h-6 flex items-center justify-center rounded-full" : ""
                                 )}>
                                     {dateNum}
@@ -127,15 +127,15 @@ export default function PanchangCalendar({
                                     {dayData.tithi.split(" ")[0]}
                                 </span>
                             )}
-                            
+
                             <div className="flex flex-col gap-1 w-full mt-auto">
                                 {dayFestivals.slice(0, 1).map((f) => (
-                                    <div 
-                                        key={f.id} 
+                                    <div
+                                        key={f.id}
                                         className={cn(
                                             "text-[9px] px-1 py-0.5 rounded truncate w-full text-left font-sans font-medium",
-                                            f.is_government_holiday 
-                                                ? "bg-red-500/10 text-red-700" 
+                                            f.is_government_holiday
+                                                ? "bg-red-500/10 text-red-700"
                                                 : "bg-gold-primary/15 text-gold-dark"
                                         )}
                                         title={f.name}

@@ -74,4 +74,40 @@ export const festivalApi = {
 
   getCategories: (): Promise<{ success: boolean; data: { categories: Array<{ id: string; label: string; description: string }> } }> =>
     festivalFetch('/categories'),
+
+  // 13. Vrat Calendar - Consolidated fasting calendar
+  getVratCalendar: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/vrat-calendar', params),
+
+  // 14. Eclipses - Solar & lunar eclipse dates (Grahan)
+  getEclipses: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/eclipses', params),
+
+  // 15. Month View - Calendar grid with daily Panchang
+  getMonthView: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/month-view', params),
+
+  // 16. Today - Home screen combined data
+  getTodayData: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/today', params),
+
+  // 17. Samvatsara - 60-year Jovian cycle metadata
+  getSamvatsara: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/samvatsara', params),
+
+  // 18. Ritu - 6 Hindu seasons with date ranges
+  getRitu: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/ritu', params),
+
+  // 19. Amrit Siddhi Yoga - Universally auspicious dates
+  getAmritSiddhiYoga: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/amrit-siddhi-yoga', params),
+
+  // 20. Nakshatra Transit - Moon's daily nakshatra position
+  getNakshatraTransit: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/nakshatra-transit', params),
+
+  // 21. Planetary Transit - Planet sign changes (Gochar)
+  getPlanetaryTransit: (params: FestivalQueryParams): Promise<FestivalResponse> =>
+    festivalFetch('/planetary-transit', params),
 };

@@ -261,3 +261,169 @@ export function useDeleteEvent() {
         },
     });
 }
+
+// ============================================================================
+// NEW CALENDAR FEATURES (Endpoints 13-21)
+// ============================================================================
+
+// 13. Vrat Calendar - Consolidated fasting calendar
+export function useVratCalendar(year: number) {
+    return useQuery<any>({
+        queryKey: [...queryKeys.calendar.festivals(year), 'VRAT_CALENDAR'],
+        queryFn: async () => {
+            try {
+                const res = await festivalApi.getVratCalendar({ year });
+                return res.success && res.data ? res.data : null;
+            } catch (error) {
+                console.error("Failed to fetch vrat calendar:", error);
+                return null;
+            }
+        },
+        staleTime: 60 * 60 * 1000, // 1 hour
+        enabled: !!year,
+    });
+}
+
+// 14. Eclipses - Solar & lunar eclipse dates (Grahan)
+export function useEclipses(year: number) {
+    return useQuery<any>({
+        queryKey: [...queryKeys.calendar.festivals(year), 'ECLIPSES'],
+        queryFn: async () => {
+            try {
+                const res = await festivalApi.getEclipses({ year });
+                return res.success && res.data ? res.data : null;
+            } catch (error) {
+                console.error("Failed to fetch eclipses:", error);
+                return null;
+            }
+        },
+        staleTime: 60 * 60 * 1000, // 1 hour
+        enabled: !!year,
+    });
+}
+
+// 15. Month View - Calendar grid with daily Panchang (optimized batch endpoint)
+export function useMonthPanchangView(year: number, month: number) {
+    return useQuery<any>({
+        queryKey: [...queryKeys.calendar.monthly(year, month), 'MONTH_VIEW'],
+        queryFn: async () => {
+            try {
+                const res = await festivalApi.getMonthView({ year, month });
+                return res.success && res.data ? res.data : null;
+            } catch (error) {
+                console.error("Failed to fetch month view:", error);
+                return null;
+            }
+        },
+        staleTime: STALE_TIMES.CALENDAR,
+        enabled: !!year && !!month,
+    });
+}
+
+// 16. Today - Home screen combined data
+export function useTodayData(dateStr: string) {
+    return useQuery<any>({
+        queryKey: [...queryKeys.calendar.festivals(new Date(dateStr).getFullYear()), 'TODAY', dateStr],
+        queryFn: async () => {
+            try {
+                const res = await festivalApi.getTodayData({ date: dateStr });
+                return res.success && res.data ? res.data : null;
+            } catch (error) {
+                console.error("Failed to fetch today data:", error);
+                return null;
+            }
+        },
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        enabled: !!dateStr,
+    });
+}
+
+// 17. Samvatsara - 60-year Jovian cycle metadata
+export function useSamvatsara(year: number) {
+    return useQuery<any>({
+        queryKey: [...queryKeys.calendar.festivals(year), 'SAMVATSARA'],
+        queryFn: async () => {
+            try {
+                const res = await festivalApi.getSamvatsara({ year });
+                return res.success && res.data ? res.data : null;
+            } catch (error) {
+                console.error("Failed to fetch samvatsara:", error);
+                return null;
+            }
+        },
+        staleTime: 24 * 60 * 60 * 1000, // 24 hours
+        enabled: !!year,
+    });
+}
+
+// 18. Ritu - 6 Hindu seasons with date ranges
+export function useRitu(year: number) {
+    return useQuery<any>({
+        queryKey: [...queryKeys.calendar.festivals(year), 'RITU'],
+        queryFn: async () => {
+            try {
+                const res = await festivalApi.getRitu({ year });
+                return res.success && res.data ? res.data : null;
+            } catch (error) {
+                console.error("Failed to fetch ritu:", error);
+                return null;
+            }
+        },
+        staleTime: 24 * 60 * 60 * 1000, // 24 hours
+        enabled: !!year,
+    });
+}
+
+// 19. Amrit Siddhi Yoga - Universally auspicious dates
+export function useAmritSiddhiYoga(year: number) {
+    return useQuery<any>({
+        queryKey: [...queryKeys.calendar.festivals(year), 'AMRIT_SIDDHI_YOGA'],
+        queryFn: async () => {
+            try {
+                const res = await festivalApi.getAmritSiddhiYoga({ year });
+                return res.success && res.data ? res.data : null;
+            } catch (error) {
+                console.error("Failed to fetch amrit siddhi yoga:", error);
+                return null;
+            }
+        },
+        staleTime: 60 * 60 * 1000, // 1 hour
+        enabled: !!year,
+    });
+}
+
+// 20. Nakshatra Transit - Moon's daily nakshatra position
+export function useNakshatraTransit(year: number, month: number) {
+    return useQuery<any>({
+        queryKey: [...queryKeys.calendar.festivals(year), 'NAKSHATRA_TRANSIT', month],
+        queryFn: async () => {
+            try {
+                const res = await festivalApi.getNakshatraTransit({ year, month });
+                return res.success && res.data ? res.data : null;
+            } catch (error) {
+                console.error("Failed to fetch nakshatra transit:", error);
+                return null;
+            }
+        },
+        staleTime: 60 * 60 * 1000, // 1 hour
+        enabled: !!year && !!month,
+    });
+}
+
+// 21. Planetary Transit - Planet sign changes (Gochar)
+export function usePlanetaryTransitsData(year: number) {
+    return useQuery<any>({
+        queryKey: [...queryKeys.calendar.festivals(year), 'PLANETARY_TRANSITS'],
+        queryFn: async () => {
+            try {
+                const res = await festivalApi.getPlanetaryTransit({ year });
+                return res.success && res.data ? res.data : null;
+            } catch (error) {
+                console.error("Failed to fetch planetary transits:", error);
+                return null;
+            }
+        },
+        staleTime: 60 * 60 * 1000, // 1 hour
+        enabled: !!year,
+    });
+}

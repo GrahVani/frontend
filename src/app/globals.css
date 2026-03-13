@@ -126,6 +126,8 @@
 
   /* Extended Surface & Text */
   --surface-warm: #FFFCF6;
+  --surface-warm-light: #FFFDF9;
+  --surface-warm-soft: #F9F4E8;
   --surface-pure: #FAF7F2;
   --parchment-light: #FAF5E6;
   --border-warm: #EAD8B1;
@@ -295,6 +297,8 @@
 
   /* Extended Surface & Text */
   --color-surface-warm: var(--surface-warm);
+  --color-surface-warm-light: var(--surface-warm-light);
+  --color-surface-warm-soft: var(--surface-warm-soft);
   --color-surface-pure: var(--surface-pure);
   --color-parchment-light: var(--parchment-light);
   --color-border-warm: var(--border-warm);

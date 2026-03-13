@@ -33,6 +33,9 @@ export const CHART_METADATA: Record<string, { name: string; desc: string; catego
     'shadbala': { name: 'Shadbala', desc: 'Six-fold Planetary Strength Analysis', category: 'special' },
     'mandi': { name: 'Mandi', desc: 'Son of Saturn - Karmic Obstacles', category: 'lagna' },
     'gulika': { name: 'Gulika', desc: 'Son of Saturn - Instant Karma', category: 'lagna' },
+    'upapada_lagna': { name: 'Upapada Lagna', desc: 'Spouse & Marriage Analysis', category: 'lagna' },
+    'swamsha': { name: 'Swamsha', desc: 'Navamsha Lagna in D1 Analysis', category: 'lagna' },
+    'panchadha_maitri': { name: 'Panchadha Maitri', desc: 'Compound Relationship Analysis', category: 'special' },
 };
 
 // Dasha system metadata for display

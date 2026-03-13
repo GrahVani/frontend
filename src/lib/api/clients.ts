@@ -65,7 +65,7 @@ export const clientApi = {
         apiFetch(`${CLIENT_URL}/clients/${clientId}/charts`),
 
     generateChart: (clientId: string, chartType: string = 'D1', ayanamsa: string = 'lahiri', options: Record<string, unknown> = {}): Promise<ChartGenerateResponse> => {
-        const LAGNA_CHARTS = ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart', 'mandi', 'gulika'];
+        const LAGNA_CHARTS = ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart', 'mandi', 'gulika', 'upapada_lagna', 'swamsha', 'pada_chart'];
         let targetAyanamsa = ayanamsa;
 
         if (ayanamsa.toLowerCase() === 'kp' && (
@@ -214,11 +214,11 @@ export const clientApi = {
                 charts: {
                     divisional: ['D1', 'D2', 'D3', 'D4', 'D7', 'D9', 'D10', 'D12', 'D16', 'D20', 'D24', 'D27', 'D30', 'D40', 'D45', 'D60'],
                     special: ['sudarshana', 'transit', 'shodasha_varga_signs'],
-                    lagna: ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart', 'mandi', 'gulika']
+                    lagna: ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart', 'mandi', 'gulika', 'upapada_lagna', 'swamsha', 'pada_chart']
                 },
                 features: {
                     dasha: ['mahadasha', 'antardasha', 'pratyantardasha', 'sookshma', 'prana'],
-                    ashtakavarga: ['bhinna', 'sarva', 'shodasha_summary', 'temporal_maitri'],
+                    ashtakavarga: ['bhinna', 'sarva', 'shodasha_summary', 'temporal_maitri', 'panchadha_maitri'],
                     shadbala: ['shadbala'],
                     compatibility: ['synastry', 'composite', 'progressed'],
                     numerology: ['chaldean', 'lo_shu']

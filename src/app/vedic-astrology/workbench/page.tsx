@@ -69,6 +69,9 @@ const CHART_NAMES: Record<string, string> = {
     'transit': 'Transit (Gochar)',
     'mandi': 'Mandi (Karmic obstacles)',
     'gulika': 'Gulika (Instant karma)',
+    'upapada_lagna': 'Upapada lagna (Marriage)',
+    'swamsha': 'Swamsha (Navamsha lagna)',
+    'pada_chart': 'Pada chart (Arudha pada)',
 };
 
 export default function AnalyticalWorkbenchPage() {

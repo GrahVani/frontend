@@ -1,10 +1,8 @@
 "use client";
 
 import React from 'react';
-import SectionSidebar from '@/components/layout/SectionSidebar';
 import PageContainer from '@/components/layout/PageContainer';
 import Breadcrumbs from '@/components/layout/Breadcrumbs';
-import { CALENDAR_Sidebar } from '@/config/sidebarConfig';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
 export default function CalendarLayout({ children }: { children: React.ReactNode }) {
@@ -15,10 +13,7 @@ export default function CalendarLayout({ children }: { children: React.ReactNode
                     className="absolute inset-0 opacity-15 pointer-events-none z-0 bg-[url('/textures/aged-paper.png')] bg-blend-multiply"
                 />
                 <div className="pt-14 relative z-10 w-full min-h-screen">
-                    <div className="hidden md:block fixed left-0 top-14 bottom-0 md:w-16 lg:w-64 overflow-y-auto z-20">
-                        <SectionSidebar title="Calendar" basePath="/calendar" items={CALENDAR_Sidebar} />
-                    </div>
-                    <div className="flex-1 flex flex-col w-full md:pl-16 lg:pl-64">
+                    <div className="flex-1 flex flex-col w-full">
                         <main className="flex-1 p-2 sm:p-3 lg:p-4">
                             <PageContainer>
                                 <Breadcrumbs />
