@@ -78,12 +78,13 @@ export default function ParchmentDatePicker({
                         <CalendarIcon className={cn("text-gold-dark group-hover:text-gold-burnished transition-colors", isInline ? "w-3 h-3" : "w-4 h-4")} />
                     </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align={isInline ? "end" : "start"}>
+                <PopoverContent className="w-auto p-0 border-gold-primary/20 shadow-2xl" align="start" sideOffset={8}>
                     <Calendar
                         mode="single"
                         selected={selectedDate}
                         onSelect={handleSelect}
                         initialFocus
+                        className="bg-surface-modal"
                     />
                 </PopoverContent>
             </Popover>

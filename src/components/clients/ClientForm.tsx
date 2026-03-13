@@ -135,11 +135,12 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
     const onLocationSelect = useCallback((suggestion: LocationSuggestion) => {
         location.handleSelect(suggestion);
         setValue('birthPlace', suggestion.formatted, { shouldValidate: true });
-        setValue('birthLatitude', suggestion.latitude);
-        setValue('birthLongitude', suggestion.longitude);
-        setValue('birthTimezone', suggestion.timezone);
+        setValue('birthLatitude', suggestion.latitude, { shouldValidate: true });
+        setValue('birthLongitude', suggestion.longitude, { shouldValidate: true });
+        setValue('birthTimezone', suggestion.timezone, { shouldValidate: true });
         setValue('city', suggestion.city || '');
         setValue('country', suggestion.country || '');
+        setManualCoordinates(true);
     }, [location, setValue]);
 
     // C-013: Handle keyboard in location input — select on Enter
@@ -199,8 +200,8 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                 birthDate: data.dateOfBirth || undefined,
                 birthTime: data.timeOfBirth || undefined,
                 birthPlace: data.birthPlace || undefined,
-                birthLatitude: data.birthLatitude,
-                birthLongitude: data.birthLongitude,
+                birthLatitude: data.birthLatitude !== undefined && data.birthLatitude !== null ? Number(data.birthLatitude) : undefined,
+                birthLongitude: data.birthLongitude !== undefined && data.birthLongitude !== null ? Number(data.birthLongitude) : undefined,
                 birthTimezone: data.birthTimezone || undefined,
                 birthTimeAccuracy: data.birthTimeAccuracy,
                 gender: data.gender,
@@ -434,13 +435,6 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                     onFocus={location.handleFocus}
                                     onBlur={() => {
                                         location.handleBlur();
-                                        // If typed but no suggestion selected, enable manual coords
-                                        if (location.query.trim().length > 0 && birthLat === undefined && !manualCoordinates) {
-                                            setManualCoordinates(true);
-                                            setValue('birthLatitude', 0);
-                                            setValue('birthLongitude', 0);
-                                            setValue('birthTimezone', 'Asia/Kolkata');
-                                        }
                                     }}
                                     onKeyDown={onLocationKeyDown}
                                     className={cn(
@@ -470,7 +464,10 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                             type="button"
                                             role="option"
                                             aria-selected={index === location.activeIndex}
-                                            onClick={() => onLocationSelect(suggestion)}
+                                            onMouseDown={(e) => {
+                                                e.preventDefault();
+                                                onLocationSelect(suggestion);
+                                            }}
                                             className={cn(
                                                 "w-full px-4 py-3 text-left border-b border-gold-primary/10 last:border-0 transition-colors",
                                                 index === location.activeIndex
@@ -520,9 +517,9 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                 <FieldLabel required>Latitude</FieldLabel>
                                 <input
                                     type="number"
-                                    step="0.0001"
-                                    value={watch('birthLatitude') ?? ''}
-                                    onChange={(e) => setValue('birthLatitude', parseFloat(e.target.value) || 0, { shouldValidate: true })}
+                                    step="any"
+                                    {...register('birthLatitude', { valueAsNumber: true })}
+                                    defaultValue={watch('birthLatitude')}
                                     className={cn(TYPOGRAPHY.value, "w-full bg-transparent border-b border-gold-primary/10 focus:border-gold-dark focus:outline-none py-1 !text-ink !mt-0")}
                                     aria-required="true"
                                     aria-invalid={!!errors.birthLatitude}
@@ -536,9 +533,9 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                 <FieldLabel required>Longitude</FieldLabel>
                                 <input
                                     type="number"
-                                    step="0.0001"
-                                    value={watch('birthLongitude') ?? ''}
-                                    onChange={(e) => setValue('birthLongitude', parseFloat(e.target.value) || 0, { shouldValidate: true })}
+                                    step="any"
+                                    {...register('birthLongitude', { valueAsNumber: true })}
+                                    defaultValue={watch('birthLongitude')}
                                     className={cn(TYPOGRAPHY.value, "w-full bg-transparent border-b border-gold-primary/10 focus:border-gold-dark focus:outline-none py-1 !text-ink !font-serif !mt-0")}
                                     aria-required="true"
                                     aria-invalid={!!errors.birthLongitude}
@@ -633,7 +630,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
             )}
 
             {/* ─── Navigation & Submit (C-016: sticky submit bar) ─── */}
-            <div className="sticky bottom-0 bg-surface-warm/95 backdrop-blur-sm border-t border-gold-primary/10 pt-4 pb-4 mt-8 -mx-1 px-1 z-10">
+            <div className="sticky bottom-0  backdrop-blur-md border-t border-gold-primary/20 pt-4 pb-4 mt-8 -mx-4 px-4 sm:-mx-6 sm:px-6 z-10">
                 <div className="flex items-center justify-between gap-4">
                     {/* Back button */}
                     {step > 0 ? (

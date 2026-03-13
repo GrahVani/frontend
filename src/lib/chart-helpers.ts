@@ -42,9 +42,11 @@ export function parseChartData(chartData: unknown): ProcessedChartData {
     let positions = data.transit_positions ||
         data.planetary_positions ||
         data.planets ||
+        data.pada_chart ||
         data.data?.transit_positions ||
         data.data?.planetary_positions ||
         data.data?.planets ||
+        data.data?.pada_chart ||
         (data['Sun'] || data['Moon'] ? data : null);
 
     // Deep fallback: Duck-typing for direct map without known keys
@@ -89,15 +91,16 @@ export function parseChartData(chartData: unknown): ProcessedChartData {
             const v = value as any;
 
             // Extract planet name
-            const rawName = v?.name || v?.planet_name || v?.planet || v?.label || v?.id || key || "??";
+            const rawName = v?.label || v?.name || v?.planet_name || v?.planet || v?.id || key || "??";
 
             // Normalize for lookup (Capitalize first letter, rest lowercase)
             const rawNameStr = String(rawName);
             const lookupKey = rawNameStr.charAt(0).toUpperCase() + rawNameStr.slice(1).toLowerCase();
-            const name = planetMap[lookupKey] || (rawNameStr.length > 3 ? rawNameStr.substring(0, 2) : rawNameStr);
+            const name = planetMap[lookupKey] || (rawNameStr.length >= 2 && rawNameStr.length <= 3 ? rawNameStr : (rawNameStr.length > 3 ? rawNameStr.substring(0, 2) : rawNameStr));
 
             const sign = String(v?.sign || v?.sign_name || "");
             const normalizedSign = sign.charAt(0).toUpperCase() + sign.slice(1).toLowerCase();
+            const signId = v?.sign_num || signNameToId[normalizedSign] || 1;
             const rawDegree = v?.degrees || v?.longitude || v?.degree;
             // Parse house if available
             const house = v?.house ? parseInt(String(v.house)) : undefined;
@@ -108,7 +111,7 @@ export function parseChartData(chartData: unknown): ProcessedChartData {
 
             return {
                 name,
-                signId: signNameToId[normalizedSign] || 1,
+                signId,
                 degree: formatPlanetDegree(rawDegree as number | string | null | undefined),
                 isRetro: isRahuKetu ? false : hasRetrograde,
                 house,
@@ -119,7 +122,7 @@ export function parseChartData(chartData: unknown): ProcessedChartData {
     }
 
     // Process Ascendant
-    let ascendant = 1; // Default Aries
+    let ascendant = data.sidereal_lagna_sign || data.data?.sidereal_lagna_sign || 1;
     const asc = data.ascendant || data.data?.natal_ascendant || data.data?.ascendant;
 
     if (asc) {
@@ -137,6 +140,15 @@ export function parseChartData(chartData: unknown): ProcessedChartData {
             house: 1,
             nakshatra: asc.nakshatra || asc.nakshatra_name,
             pada: asc.pada || asc.nakshatra_pada
+        });
+    } else if (data.sidereal_lagna_sign || data.data?.sidereal_lagna_sign) {
+        // Fallback for Pada Chart where only sign is provided
+        planets.push({
+            name: 'As',
+            signId: ascendant,
+            degree: "",
+            isRetro: false,
+            house: 1
         });
     }
 

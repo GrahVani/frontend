@@ -23,10 +23,10 @@ function Calendar({
                 month: "space-y-4",
                 caption: "flex justify-center pt-1 relative items-center mb-4", // Added mb-4 for spacing
                 caption_label: "hidden", // Hide reference text as we use dropdowns
-                caption_dropdowns: "flex justify-center gap-3 items-center", // Container for dropdowns
-                dropdown: "bg-surface-warm-light border border-gold-primary/10 text-ink-deep font-serif text-[14px] p-1 rounded-sm cursor-pointer outline-none focus:border-gold-primary hover:bg-surface-warm-soft",
-                dropdown_month: "lowercase", // Optional specific styling
-                dropdown_year: "",
+                caption_dropdowns: "flex justify-center gap-2 items-center px-8", // Container for dropdowns
+                dropdown: "bg-white/80 border border-gold-primary/20 text-ink-deep font-serif text-[14px] px-2 py-1 rounded-md cursor-pointer outline-none focus:border-gold-primary hover:bg-gold-primary/5 transition-colors min-w-[80px]",
+                dropdown_month: "font-medium capitalize", 
+                dropdown_year: "font-medium",
                 dropdown_icon: "hidden", // Hide default check icon/chevron inside select if any (usually native select don't have this, but RDPC might add custom UI)
                 nav: "space-x-1 flex items-center",
                 nav_button: cn(

@@ -27,6 +27,8 @@ import dynamic from 'next/dynamic';
 
 const ShodashaVargaTable = dynamic(() => import('@/components/astrology/ShodashaVargaTable'));
 const TemporalRelationshipTable = dynamic(() => import('@/components/astrology/TemporalRelationshipTable'));
+const PanchadhaMaitriTable = dynamic(() => import('@/components/astrology/PanchadhaMaitriTable'));
+const NaisargikMaitriTable = dynamic(() => import('@/components/astrology/NaisargikMaitriTable'));
 
 const SIGN_MAP: Record<string, number> = {
     'Aries': 1, 'Taurus': 2, 'Gemini': 3, 'Cancer': 4, 'Leo': 5, 'Virgo': 6,
@@ -38,6 +40,7 @@ interface AshtakavargaData {
     bhinna?: Record<string, unknown>;
     shodasha?: Record<string, unknown>;
     temporal?: Record<string, unknown>;
+    panchadha?: Record<string, unknown>;
     ascendant?: number;
 }
 
@@ -88,6 +91,7 @@ export default function AshtakavargaPage() {
         const bhinnaRaw = processedCharts[bhinnaKey]?.chartData;
         const shodashaRaw = processedCharts[shodashaKey]?.chartData || processedCharts[shodashaKpKey]?.chartData;
         const temporalRaw = processedCharts[`tatkalik_maitri_chakra_${activeSystem}`]?.chartData;
+        const panchadhaRaw = processedCharts[`panchadha_maitri_${activeSystem}`]?.chartData;
         const d1Raw = processedCharts[d1Key]?.chartData;
 
         // Still loading if context is empty and client is active
@@ -106,6 +110,7 @@ export default function AshtakavargaPage() {
                 bhinna: (bhinnaRaw?.data || bhinnaRaw) as any,
                 shodasha: (shodashaRaw?.data || shodashaRaw) as any,
                 temporal: (temporalRaw?.data || temporalRaw) as any,
+                panchadha: (panchadhaRaw?.data || panchadhaRaw) as any,
                 ascendant
             }
         };
@@ -315,16 +320,28 @@ export default function AshtakavargaPage() {
                         </div>
                     ) : (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-                            {data?.temporal ? (
+                            <div className="mb-8">
+                                <NaisargikMaitriTable />
+                            </div>
+                            {data?.temporal && (
                                 <TemporalRelationshipTable data={data.temporal} />
-                            ) : (
+                            )}
+                            {data?.panchadha && (
+                                <div className="mt-8">
+                                    <PanchadhaMaitriTable data={data.panchadha} />
+                                </div>
+                            )}
+                            {!data?.temporal && !data?.panchadha && (
                                 <div className="flex flex-col items-center justify-center min-h-[300px] prem-card rounded-3xl border-dashed p-12 text-center">
                                     <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-bold mb-4")}>No temporal relationship data</h3>
                                     <button
-                                        onClick={() => clientApi.generateChart(clientDetails.id!, 'tatkalik_maitri_chakra', activeSystem).then(() => window.location.reload())}
+                                        onClick={() => {
+                                            clientApi.generateChart(clientDetails.id!, 'tatkalik_maitri_chakra', activeSystem);
+                                            clientApi.generateChart(clientDetails.id!, 'panchadha_maitri', activeSystem).then(() => window.location.reload());
+                                        }}
                                         className={cn("px-8 py-3 text-ink rounded-2xl font-bold hover:shadow-xl transition-all", COLORS.premiumGradient)}
                                     >
-                                        Generate tatkalik maitri
+                                        Generate maitri systems
                                     </button>
                                 </div>
                             )}

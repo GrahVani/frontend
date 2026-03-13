@@ -99,8 +99,8 @@ function WheelColumn({
                                 className={cn(
                                     "w-full flex items-center justify-center font-serif transition-colors duration-200 h-[36px] snap-center",
                                     isSelected
-                                        ? "text-ink font-black text-[20px] scale-110"
-                                        : "text-gold-dark/40 text-[16px] hover:text-gold-dark/70"
+                                        ? "text-ink font-black text-[18px] scale-105"
+                                        : "text-gold-dark/40 text-[14px] hover:text-gold-dark/70"
                                 )}
                             >
                                 {val.toString().padStart(2, "0")}
@@ -181,33 +181,38 @@ export default function ParchmentTimePicker({
                         aria-haspopup="dialog"
                         aria-expanded={open}
                         className={cn(
-                            "w-full bg-transparent border-b border-gold-primary/50 px-2 py-2 font-serif text-ink-deep focus:outline-none focus:border-gold-dark transition-colors flex items-center justify-between group hover:border-gold-dark text-left",
+                            "w-full bg-transparent border border-gold-primary/30 rounded-xl px-3 py-2 font-serif text-ink-deep focus:outline-none focus:border-gold-dark transition-colors flex items-center justify-between group hover:border-gold-dark text-left",
                             !value && "text-gold-burnished"
                         )}
                     >
                         <span>{getDisplayTime() || placeholder}</span>
-                        <Clock className="w-4 h-4 text-divider group-hover:text-gold-dark transition-colors" />
+                        <Clock className="w-4 h-4 text-gold-dark group-hover:text-gold-burnished transition-colors" />
                     </button>
                 </PopoverTrigger>
                 <AnimatePresence>
                     {open && (
-                        <PopoverContent className="w-auto p-0" align="start" asChild>
+                        <PopoverContent 
+                            className="p-0 border-gold-primary/20 shadow-2xl relative overflow-hidden" 
+                            align="start" 
+                            side="top"
+                            sideOffset={8}
+                        >
                             <motion.div
-                                initial={{ opacity: 0, y: -8, scale: 0.96 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: -8, scale: 0.96 }}
-                                transition={{ duration: 0.2, ease: "easeOut" }}
-                                className="bg-surface-warm-light border border-gold-primary/10 rounded-lg shadow-lg p-4"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.15 }}
+                                className="p-4 bg-surface-modal"
                             >
                                 {/* Wheel picker columns */}
-                                <div className="flex gap-4">
+                                <div className="flex gap-2 sm:gap-4 justify-center items-start">
                                     <WheelColumn
                                         values={hours}
                                         selectedValue={parsedTime.h}
                                         onSelect={(val) => handleTimeChange("hour", val)}
                                         label="Hour"
                                     />
-                                    <div className="flex items-center justify-center text-gold-dark font-bold text-[20px] pt-6">
+                                    <div className="flex items-center justify-center text-gold-dark font-bold text-[20px] pt-8">
                                         :
                                     </div>
                                     <WheelColumn
@@ -216,7 +221,7 @@ export default function ParchmentTimePicker({
                                         onSelect={(val) => handleTimeChange("minute", val)}
                                         label="Min"
                                     />
-                                    <div className="flex items-center justify-center text-gold-dark font-bold text-[20px] pt-6">
+                                    <div className="flex items-center justify-center text-gold-dark font-bold text-[20px] pt-8">
                                         :
                                     </div>
                                     <WheelColumn
@@ -232,16 +237,14 @@ export default function ParchmentTimePicker({
                                     <button
                                         type="button"
                                         onClick={setNow}
-                                        aria-label="Set current time"
-                                        className="text-[14px] font-serif text-gold-dark hover:text-mahogany transition-colors px-3 py-1.5 rounded hover:bg-gold-primary/10"
+                                        className="text-[12px] font-bold uppercase tracking-wider text-gold-dark hover:text-mahogany transition-colors px-3 py-1.5 rounded hover:bg-gold-primary/10"
                                     >
                                         Now
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => setOpen(false)}
-                                        aria-label="Confirm time selection"
-                                        className="text-[14px] font-serif bg-gold-primary text-white px-4 py-1.5 rounded hover:bg-copper-dark transition-colors font-medium"
+                                        className="text-[12px] font-bold uppercase tracking-wider bg-gold-primary text-white px-5 py-1.5 rounded-lg hover:bg-gold-dark transition-all shadow-sm hover:shadow-md"
                                     >
                                         Done
                                     </button>

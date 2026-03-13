@@ -116,7 +116,7 @@ export default function CalendarDateDetails({ dateStr, className }: CalendarDate
                                     <h3 className="font-serif text-[16px] font-bold text-primary leading-tight">
                                         {formattedDate}
                                     </h3>
-                                    <p className="text-primary/80 font-serif italic text-[13px] mt-0.5">
+                                    <p className="text-primary font-serif italic text-[13px] mt-0.5">
                                         {panchang?.panchanga?.tithi ? safeString(panchang.panchanga.tithi) : 'Vedic Panchang'}
                                     </p>
                                 </div>
