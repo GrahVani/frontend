@@ -73,9 +73,17 @@ export default function CalendarDateDetails({ dateStr, className }: CalendarDate
 
     return (
         <div className={cn("flex flex-col h-full", className)}>
-            <div className="flex items-center justify-between mb-3 px-1">
-                <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[15px] text-primary")}>Date Details</h2>
-                <div className="flex items-center gap-1.5 text-primary text-[10px] font-medium uppercase tracking-wider">
+            <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gold-primary/15 to-gold-primary/5 border border-gold-primary/20 flex items-center justify-center">
+                        <CalendarIcon className="w-4 h-4 text-gold-dark" />
+                    </div>
+                    <div>
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle)}>Date Details</h2>
+                        <p className="text-[10px] text-primary font-medium">Daily Panchang</p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-1.5 text-primary/70 text-[10px] font-medium uppercase tracking-wider px-2 py-1 rounded-lg bg-surface-base/50 border border-gold-primary/60">
                     <MapPin className="w-3 h-3" />
                     <span>New Delhi</span>
                 </div>
@@ -88,10 +96,10 @@ export default function CalendarDateDetails({ dateStr, className }: CalendarDate
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         key="loading"
-                        className="flex-1 flex flex-col items-center justify-center py-12 prem-card border-none bg-surface-base/30"
+                        className="flex-1 flex flex-col items-center justify-center py-12"
                     >
                         <Loader2 className="w-8 h-8 text-gold-primary animate-spin mb-3" />
-                        <p className="text-primary font-serif text-[13px] italic">Consulting the stars...</p>
+                        <p className="text-primary/60 font-serif text-[13px] italic">Consulting the stars...</p>
                     </motion.div>
                 ) : (
                     <motion.div 
@@ -101,30 +109,30 @@ export default function CalendarDateDetails({ dateStr, className }: CalendarDate
                         key={dateStr}
                         className="flex-1 space-y-4 overflow-y-auto pr-1 custom-scrollbar"
                     >
-                        {/* Title Section - Light Elegant Theme */}
-                        <div className="prem-card p-4 border-gold-primary/30 bg-surface-base relative overflow-hidden shadow-sm group hover:shadow-md transition-all duration-300">
-                            {/* Accent background element */}
-                            <div className="absolute top-0 right-0 w-24 h-24 bg-gold-primary/5 rounded-full -mr-10 -mt-10 blur-xl group-hover:bg-gold-primary/10 transition-colors" />
-                            
-                            <div className="relative z-10 flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-xl bg-gold-primary/10 border border-gold-primary/20 flex items-center justify-center shrink-0 shadow-inner">
-                                    <span className="font-serif text-[22px] font-bold text-primary">
+                        {/* Title Section - Clean styling */}
+                        <div className="bg-white border border-gold-primary/60 rounded-xl p-4">
+                            <div className="flex items-center gap-4">
+                                <div className="w-14 h-14 rounded-2xl bg-gold-primary/10 border border-gold-primary/60 flex flex-col items-center justify-center shrink-0">
+                                    <span className="font-serif text-[10px] text-gold-dark uppercase tracking-wider font-semibold">
+                                        {new Date(dateStr).toLocaleDateString('en-IN', { month: 'short' })}
+                                    </span>
+                                    <span className="font-serif text-[22px] font-bold text-primary leading-none">
                                         {new Date(dateStr).getDate()}
                                     </span>
                                 </div>
-                                <div>
+                                <div className="flex-1 min-w-0">
                                     <h3 className="font-serif text-[16px] font-bold text-primary leading-tight">
                                         {formattedDate}
                                     </h3>
-                                    <p className="text-primary font-serif italic text-[13px] mt-0.5">
+                                    <p className="text-primary font-serif italic text-[13px] mt-1 truncate">
                                         {panchang?.panchanga?.tithi ? safeString(panchang.panchanga.tithi) : 'Vedic Panchang'}
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Panchanga Attributes */}
-                        <div className="grid grid-cols-1 gap-2">
+                        {/* Panchanga Attributes - Clean white cards */}
+                        <div className="grid grid-cols-2 gap-2">
                             <AttributeItem 
                                 icon={<Sun className="w-4 h-4 text-gold-dark" />}
                                 label="Tithi" 
@@ -147,8 +155,8 @@ export default function CalendarDateDetails({ dateStr, className }: CalendarDate
                             />
                         </div>
 
-                        {/* Sun Times */}
-                        <div className="grid grid-cols-2 gap-2.5">
+                        {/* Sun Times - Clean white cards */}
+                        <div className="grid grid-cols-2 gap-2">
                             <TimeWidget 
                                 label="Sunrise" 
                                 value={panchang?.times?.sunrise} 
@@ -161,39 +169,40 @@ export default function CalendarDateDetails({ dateStr, className }: CalendarDate
                             />
                         </div>
 
-                        {/* Festivals */}
+                        {/* Festivals - Clean white cards */}
                         <div className="pt-1">
-                            <h4 className="text-[14px] font-serif font-bold text-primary flex items-center gap-2 mb-2 border-b border-primary pb-1">
+                            <h4 className="text-[13px] font-bold text-primary flex items-center gap-2 mb-3 pb-2 border-b border-gold-primary/60">
                                 <Star className="w-4 h-4 text-gold-primary" />
                                 Festivals & Events
                             </h4>
                             
                             {festivals.length > 0 ? (
-                                <div className="space-y-3">
+                                <div className="space-y-2">
                                     {festivals.map(festival => (
-                                        <div key={festival.id} className="prem-card p-2.5 border-none bg-surface-base/40 relative overflow-hidden">
+                                        <div key={festival.id} className="bg-white border border-gold-primary/60 rounded-xl p-3 relative">
                                             {festival.is_government_holiday && (
-                                                <div className="absolute top-0 left-0 w-1 h-full bg-red-500/60" />
+                                                <div className="absolute top-0 left-0 w-1 h-full bg-red-400 rounded-l-xl" />
                                             )}
-                                            <div className="flex gap-2 items-start justify-between">
-                                                <h5 className="font-serif font-bold text-primary text-[13px] leading-tight">
+                                            <div className={cn("flex gap-2 items-start justify-between", festival.is_government_holiday && "pl-2")}>
+                                                <h5 className="font-serif font-bold text-primary text-[14px] leading-tight">
                                                     {festival.name}
                                                 </h5>
                                                 {festival.is_government_holiday && (
-                                                    <span className="text-[8px] bg-red-500/10 text-red-600 px-1.5 py-0.5 rounded font-black uppercase tracking-wider shrink-0">
+                                                    <span className="text-[9px] bg-red-50 text-red-600 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider shrink-0 border border-red-100">
                                                         Holiday
                                                     </span>
                                                 )}
                                             </div>
-                                            <p className="text-[12px] text-primary leading-normal line-clamp-3">
+                                            <p className="text-[12px] text-primary/90 leading-relaxed line-clamp-2 mt-1 font-medium">
                                                 {festival.description}
                                             </p>
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <div className="bg-surface-base/20 border border-primary/5 rounded-xl p-6 text-center italic">
-                                    <p className="text-[12px] text-primary font-medium font-serif">Quiet celestial alignment</p>
+                                <div className="bg-white border border-gold-primary/60 rounded-xl p-6 text-center">
+                                    <Star className="w-6 h-6 text-gold-primary/30 mx-auto mb-2" />
+                                    <p className="text-[12px] text-primary/50">No festivals on this date</p>
                                 </div>
                             )}
                         </div>
@@ -213,15 +222,15 @@ function AttributeItem({ label, value, icon }: { label: string, value: any, icon
     };
     
     return (
-        <div className="flex items-center gap-2.5 p-2 prem-card border-none bg-surface-base/30 group hover:bg-surface-base/50 transition-colors">
-            <div className="w-7 h-7 rounded-lg bg-surface-modal flex items-center justify-center shrink-0 shadow-sm border border-primary/5">
+        <div className="flex items-center gap-3 p-3 bg-white border border-gold-primary/60 rounded-xl">
+            <div className="w-9 h-9 rounded-lg bg-surface-base/50 flex items-center justify-center shrink-0">
                 {icon}
             </div>
             <div className="flex-1 min-w-0">
-                <span className="text-[10px] text-primary uppercase tracking-widest font-bold block mb-0.5">
+                <span className="text-[10px] text-primary/90 uppercase tracking-wider font-bold block">
                     {label}
                 </span>
-                <span className="text-[13px] font-serif font-bold text-primary truncate block leading-tight">
+                <span className="text-[13px] font-serif font-bold text-primary truncate block">
                     {displayValue()}
                 </span>
             </div>
@@ -238,10 +247,12 @@ function TimeWidget({ label, value, icon }: { label: string, value: any, icon: R
     };
 
     return (
-        <div className="prem-card p-2 border-none bg-surface-base/30 text-center flex flex-col items-center">
-            <div className="mb-1">{icon}</div>
-            <div className="text-[8px] text-primary mb-0.5 uppercase tracking-wider font-bold">{label}</div>
-            <div className="font-serif text-[13px] text-primary font-bold">
+        <div className="bg-white border border-gold-primary/60 rounded-xl p-3 text-center flex flex-col items-center">
+            <div className="w-9 h-9 rounded-full bg-surface-base/50 flex items-center justify-center mb-2">
+                {icon}
+            </div>
+            <div className="text-[10px] text-primary/90 uppercase tracking-wider font-bold">{label}</div>
+            <div className="font-serif text-[15px] text-primary font-bold mt-0.5">
                 {displayValue()}
             </div>
         </div>

@@ -18,6 +18,7 @@ interface PanchangCalendarProps {
 }
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEKDAY_FULL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 export default function PanchangCalendar({
     days,
@@ -58,32 +59,50 @@ export default function PanchangCalendar({
     };
 
     return (
-        <div className={cn("prem-card p-3 px-4", className)}>
-            {/* Month Navigation */}
-            <div className="flex items-center justify-between mb-2">
-                <button onClick={handlePrev} className="p-2 rounded-md hover:bg-surface-warm transition-colors" aria-label="Previous month">
-                    <ChevronLeft className="w-5 h-5 text-primary" />
+        <div className={cn("prem-card p-4", className)}>
+            {/* Month Navigation - Enhanced */}
+            <div className="flex items-center justify-between mb-4">
+                <button 
+                    onClick={handlePrev} 
+                    className="p-2.5 rounded-xl hover:bg-gold-primary/10 border border-transparent hover:border-gold-primary/20 transition-all duration-200 group" 
+                    aria-label="Previous month"
+                >
+                    <ChevronLeft className="w-5 h-5 text-primary group-hover:text-gold-dark transition-colors" />
                 </button>
-                <h3 className="text-[16px] font-serif font-bold text-primary">{monthName}</h3>
-                <button onClick={handleNext} className="p-2 rounded-md hover:bg-surface-warm transition-colors" aria-label="Next month">
-                    <ChevronRight className="w-5 h-5 text-primary" />
+                <div className="text-center">
+                    <h3 className="text-[18px] font-serif font-bold text-primary">{monthName}</h3>
+                    <p className="text-[11px] text-primary mt-0.5">Vikram Samvat</p>
+                </div>
+                <button 
+                    onClick={handleNext} 
+                    className="p-2.5 rounded-xl hover:bg-gold-primary/10 border border-transparent hover:border-gold-primary/20 transition-all duration-200 group" 
+                    aria-label="Next month"
+                >
+                    <ChevronRight className="w-5 h-5 text-primary group-hover:text-gold-dark transition-colors" />
                 </button>
             </div>
 
-            {/* Weekday Headers */}
-            <div className="grid grid-cols-7 gap-1 mb-1">
-                {WEEKDAYS.map((day) => (
-                    <div key={day} className="text-center text-[12px] font-medium text-primary py-2">
+            {/* Weekday Headers - Enhanced with visual distinction */}
+            <div className="grid grid-cols-7 gap-2 mb-2">
+                {WEEKDAYS.map((day, index) => (
+                    <div 
+                        key={day} 
+                        className={cn(
+                            "text-center text-[11px] font-semibold py-2.5 rounded-xl bg-white/50 border border-gold-primary/60",
+                            index === 0 ? "text-red-600 bg-red-50/50 border-red-400" : "text-primary"
+                        )}
+                        title={WEEKDAY_FULL[index]}
+                    >
                         {day}
                     </div>
                 ))}
             </div>
 
-            {/* Calendar Grid */}
-            <div className="grid grid-cols-7 gap-1">
+            {/* Calendar Grid - Enhanced spacing and visual feedback */}
+            <div className="grid grid-cols-7 gap-2">
                 {/* Empty cells for days before the first */}
                 {Array.from({ length: firstDay }).map((_, i) => (
-                    <div key={`empty-${i}`} className="min-h-[78px] sm:min-h-[85px] rounded-lg border border-gold-primary/5 bg-surface-warm/5 opacity-40" />
+                    <div key={`empty-${i}`} className="min-h-[78px] sm:min-h-[90px] rounded-xl border border-gold-primary/60 bg-surface-base/30" />
                 ))}
 
                 {/* Day cells */}
@@ -96,34 +115,47 @@ export default function PanchangCalendar({
                     const dayFestivals = festivals.filter(f => f.date === dateStr);
                     const hasFestival = dayFestivals.length > 0;
 
+                    const isSunday = new Date(year, month, dateNum).getDay() === 0;
+                    
                     return (
                         <button
                             key={dateNum}
                             onClick={() => handleDayClick(dateStr)}
                             className={cn(
-                                "min-h-[78px] sm:min-h-[85px] rounded-lg flex flex-col items-start justify-start text-[13px] font-serif border transition-all p-1.5 relative group shadow-sm",
+                                "min-h-[78px] sm:min-h-[90px] rounded-xl flex flex-col items-start justify-start text-[13px] font-serif transition-all duration-200 p-2.5 relative group",
                                 isToday
-                                    ? "bg-gold-primary/10 border-gold-primary/50 text-primary ring-1 ring-gold-primary/20"
+                                    ? "bg-gold-primary/10 border-2 border-gold-dark/60 shadow-sm"
                                     : dateStr === selectedDate
-                                        ? "bg-gold-primary/15 border-gold-primary/60 shadow-md ring-1 ring-gold-primary/30"
+                                        ? "bg-gold-primary/5 border-2 border-gold-dark/50 shadow-sm scale-[1.02] z-10"
                                         : dayData?.isAuspicious
-                                            ? "bg-status-success/5 border-status-success/40 text-primary"
-                                            : "bg-white/50 border-gold-primary/30 text-primary hover:border-gold-primary/50 hover:bg-white/80",
-                                "cursor-pointer hover:shadow-sm"
+                                            ? "bg-emerald-50/50 border border-emerald-500 hover:border-emerald-600"
+                                            : isSunday
+                                                ? "bg-red-50/30 border border-red-400 hover:border-red-500"
+                                                : "bg-white border border-gold-primary/80 hover:border-gold-primary",
+                                "cursor-pointer"
                             )}
                         >
-                            <div className="flex w-full justify-between items-start mb-1">
+                            <div className="flex w-full justify-between items-start mb-1.5">
                                 <span className={cn(
-                                    "font-semibold text-[14px]",
-                                    isToday ? "bg-gold-primary text-white w-6 h-6 flex items-center justify-center rounded-full" : ""
+                                    "font-bold text-[15px] w-7 h-7 flex items-center justify-center rounded-full transition-all",
+                                    isToday 
+                                        ? "bg-gold-primary text-white shadow-sm" 
+                                        : dateStr === selectedDate
+                                            ? "bg-gold-dark text-white shadow-sm"
+                                            : isSunday
+                                                ? "text-red-600"
+                                                : "text-primary group-hover:bg-gold-primary/10"
                                 )}>
                                     {dateNum}
                                 </span>
-                                <ChevronRight className="w-3 h-3 text-gold-dark/0 group-hover:text-gold-dark/50 transition-colors" />
+                                <ChevronRight className={cn(
+                                    "w-3.5 h-3.5 transition-all duration-200",
+                                    dateStr === selectedDate || isToday ? "text-gold-dark" : "text-gold-dark/0 group-hover:text-gold-dark/70"
+                                )} />
                             </div>
 
                             {dayData && (
-                                <span className="text-[10px] leading-tight text-primary truncate max-w-full mb-1">
+                                <span className="text-[10px] leading-tight text-primary truncate max-w-full mb-1 font-semibold">
                                     {dayData.tithi.split(" ")[0]}
                                 </span>
                             )}
@@ -133,10 +165,10 @@ export default function PanchangCalendar({
                                     <div
                                         key={f.id}
                                         className={cn(
-                                            "text-[9px] px-1 py-0.5 rounded truncate w-full text-left font-sans font-medium",
+                                            "text-[9px] px-1.5 py-0.5 rounded truncate w-full text-left font-sans font-medium",
                                             f.is_government_holiday
-                                                ? "bg-red-500/10 text-red-700"
-                                                : "bg-gold-primary/15 text-gold-dark"
+                                                ? "bg-red-50 text-red-600"
+                                                : "bg-amber-50 text-amber-700"
                                         )}
                                         title={f.name}
                                     >
@@ -144,7 +176,7 @@ export default function PanchangCalendar({
                                     </div>
                                 ))}
                                 {dayFestivals.length > 1 && (
-                                    <div className="text-[8px] text-primary font-sans font-medium pl-1 text-left">
+                                    <div className="text-[9px] text-gold-dark font-sans font-semibold pl-0.5 text-left">
                                         +{dayFestivals.length - 1} more
                                     </div>
                                 )}

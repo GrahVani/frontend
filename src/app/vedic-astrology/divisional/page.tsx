@@ -66,8 +66,14 @@ function getHouseDistribution(chartData: Record<string, unknown> | null, ascenda
 }
 
 // Optimized version using parsed planets
-function getHouseDistributionFromPlanets(planets: Planet[], ascendantSign: number): Record<number, { planets: string[], signName: string }> {
-    const houses: Record<number, { planets: string[], signName: string }> = {};
+interface HousePlanet {
+    name: string;
+    degree: string;
+    isRetro: boolean;
+}
+
+function getHouseDistributionFromPlanets(planets: Planet[], ascendantSign: number): Record<number, { planets: HousePlanet[], signName: string }> {
+    const houses: Record<number, { planets: HousePlanet[], signName: string }> = {};
 
     for (let i = 1; i <= 12; i++) {
         const signId = ((ascendantSign + i - 2) % 12) + 1;
@@ -75,10 +81,13 @@ function getHouseDistributionFromPlanets(planets: Planet[], ascendantSign: numbe
     }
 
     planets.forEach(p => {
-        if (p.name === 'As') return; // Skip Ascendant in the list of planets in house
+        if (p.name === 'As') return; // Skip Ascendant
         const houseNum = ((p.signId - ascendantSign + 12) % 12) + 1;
-        const retroStr = p.isRetro ? ' (R)' : '';
-        houses[houseNum].planets.push(`${p.name}${p.degree ? ' ' + p.degree : ''}${retroStr}`);
+        houses[houseNum].planets.push({
+            name: p.name,
+            degree: p.degree || '',
+            isRetro: p.isRetro || false
+        });
     });
 
     return houses;
@@ -520,23 +529,36 @@ export default function VedicDivisionalPage() {
                                     )}
                                 </div>
 
-                                {/* House Details Panel - Stays open independently for each chart */}
                                 {isHouseDetailsOpen && chartData && (
-                                    <div className="mt-3 pt-3 border-t border-gold-primary/10 space-y-1">
-                                        <div className={TYPOGRAPHY.label}>House-wise Positions</div>
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-1 text-[9px]">
+                                    <div className="mt-3 pt-3 border-t border-gold-primary/10">
+                                        <div className={cn(TYPOGRAPHY.label, "mb-2 text-ink/70 font-bold uppercase tracking-wider text-[10px]")}>House-wise Positions</div>
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
                                             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(h => (
                                                 <div key={h} className={cn(
-                                                    "px-1.5 py-1 rounded",
-                                                    houseData[h]?.planets.length ? "bg-gold-primary/10" : "bg-surface-warm"
+                                                    "overflow-hidden rounded-lg border border-gold-primary/10 transition-all",
+                                                    houseData[h]?.planets.length ? "bg-white shadow-sm ring-1 ring-gold-primary/5" : "bg-gold-primary/5 opacity-60"
                                                 )}>
-                                                    <span className="font-bold text-ink">H{h}</span>
-                                                    <span className="ml-1 text-ink">{houseData[h]?.signName?.substring(0, 3)}</span>
-                                                    {houseData[h]?.planets.length > 0 && (
-                                                        <div className="text-[10px] text-ink mt-0.5 font-sans">
-                                                            {houseData[h].planets.join(', ')}
-                                                        </div>
-                                                    )}
+                                                    <div className={cn(
+                                                        "px-2 py-1 flex items-center justify-between border-b border-gold-primary/5",
+                                                        houseData[h]?.planets.length ? "bg-gold-primary/5" : "bg-transparent"
+                                                    )}>
+                                                        <span className="font-bold text-ink text-[11px]">H{h}</span>
+                                                        <span className="text-[10px] font-medium text-gold-dark">{houseData[h]?.signName?.substring(0, 3)}</span>
+                                                    </div>
+                                                    <div className="p-1 px-1.5 min-h-[24px] flex flex-col gap-0.5">
+                                                        {houseData[h]?.planets.length > 0 ? (
+                                                            houseData[h].planets.map((p, pIdx) => (
+                                                                <div key={pIdx} className="flex items-center justify-between gap-1 text-[10px] leading-tight group/planet">
+                                                                    <span className="font-bold text-ink group-hover/planet:text-gold-dark transition-colors">{p.name}</span>
+                                                                    <span className="text-ink/60 font-sans text-[9px] tabular-nums">
+                                                                        {p.degree}{p.isRetro && <span className="text-rose-500 font-bold ml-0.5">(R)</span>}
+                                                                    </span>
+                                                                </div>
+                                                            ))
+                                                        ) : (
+                                                            <div className="text-[9px] text-ink/30 italic py-1">Empty</div>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>

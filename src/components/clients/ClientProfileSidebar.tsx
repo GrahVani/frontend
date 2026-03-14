@@ -77,7 +77,7 @@ export default function ClientProfileSidebar({ client, activeTab, onTabChange }:
                                 "w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 group relative overflow-hidden text-left",
                                 isActive
                                     ? "bg-gradient-to-r from-gold-dark/20 to-transparent text-active-glow border-l-2 border-gold-primary"
-                                    : "text-white/50 hover:text-white hover:bg-white/5"
+                                    : "text-white/90 hover:text-white hover:bg-white/5"
                             )}
                         >
                             <item.icon className={cn("w-4 h-4 transition-transform group-hover:scale-110", isActive ? "text-active-glow" : "text-gold-dark")} />
@@ -89,7 +89,7 @@ export default function ClientProfileSidebar({ client, activeTab, onTabChange }:
 
             {/* Footer / Meta */}
             <div className="px-6 py-4 border-t border-gold-primary/10 text-center">
-                <p className="text-[9px] text-white/20 uppercase tracking-widest">Grahvani v2.0</p>
+                <p className="text-[9px] text-white/60 uppercase tracking-widest">Grahvani v2.0</p>
             </div>
         </aside >
     );

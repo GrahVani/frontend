@@ -39,16 +39,16 @@ export default function EclipsesWidget({ year, className }: EclipsesWidgetProps)
     return (
         <div className={cn("prem-card p-4", className)}>
             <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500/10 to-purple-500/10 flex items-center justify-center">
+                <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500/15 to-purple-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
                         <Eclipse className="w-4 h-4 text-indigo-600" />
                     </div>
                     <div>
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[14px]")}>Grahan (Eclipses)</h3>
-                        <p className="text-[11px] text-primary">{year} Celestial Events</p>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Grahan (Eclipses)</h3>
+                        <p className="text-[11px] text-primary font-medium">{year} Celestial Events</p>
                     </div>
                 </div>
-                <span className="text-[11px] font-medium px-2 py-1 bg-gold-primary/10 text-gold-dark rounded-full">
+                <span className="text-[10px] font-bold px-2.5 py-1 bg-gradient-to-r from-gold-primary/15 to-gold-primary/5 text-gold-dark rounded-full border border-gold-primary/20">
                     {totalCount} Events
                 </span>
             </div>
@@ -111,8 +111,8 @@ export default function EclipsesWidget({ year, className }: EclipsesWidgetProps)
                             
                             {eclipse.sutak && (
                                 <div className="mt-2 ml-10 p-2 rounded bg-red-500/5 border border-red-500/10">
-                                    <p className="text-[10px] text-red-600/80">
-                                        <span className="font-medium">Sutak:</span> {String(eclipse.sutak.start || '').split('T')[1]?.split('+')[0] || eclipse.sutak.start} - {String(eclipse.sutak.end || '').split('T')[1]?.split('+')[0] || eclipse.sutak.end}
+                                    <p className="text-[10px] text-red-600 font-medium">
+                                        <span className="font-bold">Sutak:</span> {String(eclipse.sutak.start || '').split('T')[1]?.split('+')[0] || eclipse.sutak.start} - {String(eclipse.sutak.end || '').split('T')[1]?.split('+')[0] || eclipse.sutak.end}
                                     </p>
                                 </div>
                             )}

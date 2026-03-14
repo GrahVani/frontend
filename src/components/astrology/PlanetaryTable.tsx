@@ -1,4 +1,4 @@
-﻿import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { KnowledgeTooltip } from '@/components/knowledge';
 

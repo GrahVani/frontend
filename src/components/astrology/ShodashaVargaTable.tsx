@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
@@ -100,9 +100,9 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
     const weakestPlanet = dignityScores.reduce((a, b) => a.score < b.score ? a : b);
 
     return (
-        <div className={cn("w-full bg-surface-warm rounded-xl border border-gold-primary/15 p-4", className)}>
+        <div className={cn("w-full bg-surface-warm rounded-xl border border-gold-primary/15 p-2", className)}>
             {/* Header with Legend */}
-            <div className="flex items-center justify-between mb-0">
+            <div className="flex items-center justify-between mb-0.5">
                 <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="varga_chart">Shodashavarga</KnowledgeTooltip> summary</h2>
                 <div className="flex gap-3 text-[12px] font-medium font-sans">
                     <span className="text-ink flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-700"></span><KnowledgeTooltip term="dignity_exalted">Exalted</KnowledgeTooltip></span>
@@ -114,10 +114,10 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
                 <table className="w-full border-collapse text-[12px]" role="table" aria-label="Shodasha Varga summary showing planetary signs across 16 divisional charts">
                     <thead className="sticky top-0 z-10">
                         <tr className="bg-amber-50/30 border-b border-gold-primary/15">
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left border-r border-gold-primary/15 w-28")}>Varga</th>
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-1 text-center border-r border-gold-primary/15")}>Asc</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1 px-2 text-left border-r border-gold-primary/15 w-28")}>Varga</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1 px-1 text-center border-r border-gold-primary/15")}>Asc</th>
                             {PLANETS.map(p => (
-                                <th key={p} className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-1 text-center border-r border-gold-primary/15")}>
+                                <th key={p} className={cn(TYPOGRAPHY.tableHeader, "py-1 px-1 text-center border-r border-gold-primary/15")}>
                                     {p.substring(0, 3)}
                                 </th>
                             ))}
@@ -126,11 +126,11 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
                     <tbody>
                         {VARGA_ORDER.map((v, i) => (
                             <tr key={v.key} className={cn("border-b border-gold-primary/15", i % 2 === 1 && "bg-surface-warm/30")}>
-                                <td className={cn(TYPOGRAPHY.dateAndDuration, "py-1 px-3 border-r border-gold-primary/15")}>
+                                <td className={cn(TYPOGRAPHY.dateAndDuration, "py-0.5 px-2 border-r border-gold-primary/15")}>
                                     <span className="font-bold mr-1.5">{v.key}</span>
                                     <span><KnowledgeTooltip term={v.termKey}>{v.name}</KnowledgeTooltip></span>
                                 </td>
-                                <td className={cn(TYPOGRAPHY.dateAndDuration, "py-1 text-center border-r border-gold-primary/15")}>
+                                <td className={cn(TYPOGRAPHY.dateAndDuration, "py-0.5 text-center border-r border-gold-primary/15")}>
                                     {SIGN_ABBR[getSign('Ascendant', v.key).charAt(0).toUpperCase() + getSign('Ascendant', v.key).slice(1).toLowerCase()] || getSign('Ascendant', v.key).substring(0, 2)}
                                 </td>
                                 {PLANETS.map(p => {
@@ -138,7 +138,7 @@ export default function ShodashaVargaTable({ data, className }: ShodashaVargaTab
                                     const abbr = SIGN_ABBR[sign.charAt(0).toUpperCase() + sign.slice(1).toLowerCase()] || sign.substring(0, 2);
                                     const dignity = getDignity(p, sign);
                                     return (
-                                        <td key={p} className={cn(TYPOGRAPHY.dateAndDuration, "py-1 text-center border-r border-gold-primary/15")}>
+                                        <td key={p} className={cn(TYPOGRAPHY.dateAndDuration, "py-0.5 text-center border-r border-gold-primary/15")}>
                                             <span className={cn("font-medium", DIGNITY_STYLE[dignity])}>
                                                 {sign === '-' ? '-' : abbr}
                                             </span>

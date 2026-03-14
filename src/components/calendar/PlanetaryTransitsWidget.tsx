@@ -57,16 +57,16 @@ export default function PlanetaryTransitsWidget({ year, className }: PlanetaryTr
     return (
         <div className={cn("prem-card p-4", className)}>
             <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500/10 to-purple-500/10 flex items-center justify-center">
+                <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500/15 to-purple-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
                         <Orbit className="w-4 h-4 text-indigo-600" />
                     </div>
                     <div>
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[14px]")}>Planetary Transits</h3>
-                        <p className="text-[11px] text-primary">Gochar ({transitYear})</p>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Planetary Transits</h3>
+                        <p className="text-[11px] text-primary font-medium">Gochar ({transitYear})</p>
                     </div>
                 </div>
-                <Sparkles className="w-4 h-4 text-gold-primary/40" />
+                <Sparkles className="w-4 h-4 text-gold-primary/60" />
             </div>
 
             <div className="space-y-2.5">

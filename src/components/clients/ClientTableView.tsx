@@ -63,8 +63,8 @@ export default function ClientTableView({ clients, onEdit, onDelete }: ClientTab
                 const place = row.placeOfBirth || row.birthPlace;
                 if (!place) return <span className="text-ink/20">\u2014</span>;
                 return (
-                    <span className="flex items-center gap-1.5 text-[13px] text-ink/70 font-medium">
-                        <MapPin className="w-3 h-3 text-ink/30 shrink-0" />
+                    <span className="flex items-center gap-1.5 text-[13px] text-ink font-bold">
+                        <MapPin className="w-3 h-3 text-gold-dark shrink-0" />
                         {place}
                     </span>
                 );
@@ -80,8 +80,8 @@ export default function ClientTableView({ clients, onEdit, onDelete }: ClientTab
                 if (!date) return <span className="text-ink/20">\u2014</span>;
                 try {
                     return (
-                        <span className="flex items-center gap-1.5 text-[13px] text-ink/70 font-medium">
-                            <Calendar className="w-3 h-3 text-ink/30 shrink-0" />
+                        <span className="flex items-center gap-1.5 text-[13px] text-ink font-bold">
+                            <Calendar className="w-3 h-3 text-gold-dark shrink-0" />
                             {new Date(date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </span>
                     );
@@ -96,8 +96,8 @@ export default function ClientTableView({ clients, onEdit, onDelete }: ClientTab
                 const time = row.timeOfBirth || row.birthTime;
                 if (!time) return <span className="text-ink/20">\u2014</span>;
                 return (
-                    <span className="flex items-center gap-1.5 text-[13px] text-ink/60 font-mono">
-                        <Clock className="w-3 h-3 text-ink/25 shrink-0" />
+                    <span className="flex items-center gap-1.5 text-[13px] text-ink font-bold font-mono">
+                        <Clock className="w-3 h-3 text-gold-dark shrink-0" />
                         {time}
                     </span>
                 );
@@ -111,10 +111,10 @@ export default function ClientTableView({ clients, onEdit, onDelete }: ClientTab
             render: (row) => {
                 if (!row.rashi) return <span className="text-ink/20">\u2014</span>;
                 return (
-                    <span className="inline-flex text-[11px] font-bold text-gold-dark/80 px-2 py-0.5 rounded-md uppercase tracking-wide"
+                    <span className="inline-flex text-[11px] font-bold text-gold-dark px-2 py-0.5 rounded-md uppercase tracking-wide"
                           style={{
-                              background: 'linear-gradient(135deg, rgba(201,162,77,0.10) 0%, rgba(201,162,77,0.05) 100%)',
-                              border: '1px solid rgba(201,162,77,0.18)',
+                              background: 'linear-gradient(135deg, rgba(201,162,77,0.15) 0%, rgba(201,162,77,0.10) 100%)',
+                              border: '1px solid rgba(201,162,77,0.30)',
                           }}>
                         {row.rashi}
                     </span>
@@ -129,7 +129,7 @@ export default function ClientTableView({ clients, onEdit, onDelete }: ClientTab
                 const phone = row.phone || row.phonePrimary;
                 if (!phone) return <span className="text-ink/20">\u2014</span>;
                 return (
-                    <span className="text-[13px] text-ink/60 font-medium">{phone}</span>
+                    <span className="text-[13px] text-ink font-bold">{phone}</span>
                 );
             },
         },
@@ -147,7 +147,7 @@ export default function ClientTableView({ clients, onEdit, onDelete }: ClientTab
                         aria-label={`Edit ${row.fullName || row.firstName}`}
                         onClick={(e) => { e.stopPropagation(); onEdit?.(row); }}
                     >
-                        <Edit2 className="w-3.5 h-3.5 text-ink/30 hover:text-gold-dark transition-colors" />
+                        <Edit2 className="w-3.5 h-3.5 text-ink hover:text-gold-dark transition-colors" />
                     </button>
                     <button
                         className="p-1.5 rounded-lg hover:bg-red-50/50 transition-all"
@@ -178,7 +178,7 @@ export default function ClientTableView({ clients, onEdit, onDelete }: ClientTab
                 cellPadding="px-4 py-3"
                 emptyState={
                     <div className="py-14 text-center">
-                        <p className="text-ink/35 font-serif text-[15px]">No clients found</p>
+                        <p className="text-ink font-bold font-serif text-[15px]">No clients found</p>
                     </div>
                 }
             />

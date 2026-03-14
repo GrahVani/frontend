@@ -92,65 +92,65 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
 
                 {/* Table */}
                 <div className="overflow-x-auto">
-                <table className="w-full h-full border-collapse text-[14px]" role="table" aria-label={isSarva ? "Sarvashtakavarga matrix showing planetary bindus across signs" : `Bhinnashtakavarga matrix for ${planet || 'planet'}`}>
-                    <thead className="sticky top-0 z-10">
-                        <tr className="bg-amber-50/30 border-b border-primary">
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-3 px-2 text-left w-16 border-r border-primary")}>
-                                {isSarva ? 'Planet' : planet?.substring(0, 4)}
-                            </th>
-                            {SIGNS.map(s => (
-                                <th key={s} className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1 text-center w-8 border-r border-primary text-ink font-bold")}>{s}</th>
-                            ))}
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1.5 text-center bg-surface-warm w-10")}>Tot</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows.map((p: string, idx: number) => {
-                            let rd: Record<string | number, number> | number[] = {};
-                            if (contribs) {
-                                const c = contribs.find((x: ContributorEntry) => x.contributor === p);
-                                if (c?.bindus) c.bindus.forEach((v: number, i: number) => { rd[i + 1] = v; });
-                            } else {
-                                rd = payload[p] || payload[p.toLowerCase()] || {};
-                            }
-                            let rowTot = 0;
-                            SIGNS.forEach(s => { rowTot += getVal(rd, s); });
+                    <table className="w-full h-full border-collapse text-[14px]" role="table" aria-label={isSarva ? "Sarvashtakavarga matrix showing planetary bindus across signs" : `Bhinnashtakavarga matrix for ${planet || 'planet'}`}>
+                        <thead className="sticky top-0 z-10">
+                            <tr className="bg-amber-50/30 border-b border-primary">
+                                <th className={cn(TYPOGRAPHY.tableHeader, "py-3 px-2 text-left w-16 border-r border-primary")}>
+                                    {isSarva ? 'Planet' : planet?.substring(0, 4)}
+                                </th>
+                                {SIGNS.map(s => (
+                                    <th key={s} className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1 text-center w-8 border-r border-primary text-ink font-bold")}>{s}</th>
+                                ))}
+                                <th className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1.5 text-center bg-surface-warm w-10")}>Tot</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {rows.map((p: string, idx: number) => {
+                                let rd: Record<string | number, number> | number[] = {};
+                                if (contribs) {
+                                    const c = contribs.find((x: ContributorEntry) => x.contributor === p);
+                                    if (c?.bindus) c.bindus.forEach((v: number, i: number) => { rd[i + 1] = v; });
+                                } else {
+                                    rd = payload[p] || payload[p.toLowerCase()] || {};
+                                }
+                                let rowTot = 0;
+                                SIGNS.forEach(s => { rowTot += getVal(rd, s); });
 
-                                    return (
-                                        <tr key={p} className={cn("border-b border-primary", idx % 2 === 1 && "bg-surface-warm/30")}>
-                                            <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-2 font-medium border-r border-primary")}>{p.substring(0, 3)}</td>
-                                            {SIGNS.map(s => {
-                                                const val = getVal(rd, s);
-                                                return (
-                                                    <td key={s} className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1 text-center border-r border-primary font-bold")}>
-                                                        {val}
-                                                    </td>
-                                                );
-                                            })}
-                                            <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1.5 text-center font-semibold bg-surface-warm")}>{rowTot}</td>
-                                        </tr>
-                                    );
-                        })}
-                    </tbody>
-                    <tfoot>
-                        <tr className="bg-surface-warm border-t border-primary">
-                            <td className={cn(TYPOGRAPHY.label, "py-3 px-2 border-r border-primary mb-0")}><KnowledgeTooltip term="ashtakavarga_sav" unstyled>SAV</KnowledgeTooltip></td>
-                            {SIGNS.map(s => {
-                                const v = sav[s];
                                 return (
-                                    <td key={s} className="py-3 px-1 text-center border-r border-primary">
-                                        <div className="flex flex-col items-center justify-center leading-none">
-                                            <span className={cn(TYPOGRAPHY.value, "leading-none font-bold")}>{v}</span>
-                                        </div>
-                                    </td>
+                                    <tr key={p} className={cn("border-b border-primary", idx % 2 === 1 && "bg-surface-warm/30")}>
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-2 font-medium border-r border-primary")}>{p.substring(0, 3)}</td>
+                                        {SIGNS.map(s => {
+                                            const val = getVal(rd, s);
+                                            return (
+                                                <td key={s} className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1 text-center border-r border-primary font-bold")}>
+                                                    {val}
+                                                </td>
+                                            );
+                                        })}
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1.5 text-center font-semibold bg-surface-warm")}>{rowTot}</td>
+                                    </tr>
                                 );
                             })}
-                            <td className={cn(TYPOGRAPHY.value, "py-3 px-1.5 text-center bg-amber-50/50 font-bold")}>
-                                {Object.values(sav).reduce((a, b) => a + b, 0)}
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </tbody>
+                        <tfoot>
+                            <tr className="bg-surface-warm border-t border-primary">
+                                <td className={cn(TYPOGRAPHY.label, "py-3 px-2 border-r border-primary mb-0")}><KnowledgeTooltip term="ashtakavarga_sav" unstyled>SAV</KnowledgeTooltip></td>
+                                {SIGNS.map(s => {
+                                    const v = sav[s];
+                                    return (
+                                        <td key={s} className="py-3 px-1 text-center border-r border-primary">
+                                            <div className="flex flex-col items-center justify-center leading-none">
+                                                <span className={cn(TYPOGRAPHY.value, "leading-none font-bold")}>{v}</span>
+                                            </div>
+                                        </td>
+                                    );
+                                })}
+                                <td className={cn(TYPOGRAPHY.value, "py-3 px-1.5 text-center bg-amber-50/50 font-bold")}>
+                                    {Object.values(sav).reduce((a, b) => a + b, 0)}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
             </div>
         </div>

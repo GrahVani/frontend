@@ -32,13 +32,13 @@ export default function NakshatraTransitWidget({ year, month, className }: Naksh
 
     return (
         <div className={cn("prem-card p-4", className)}>
-            <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500/10 to-blue-500/10 flex items-center justify-center">
+            <div className="flex items-center gap-3 mb-4">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500/15 to-blue-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
                     <Moon className="w-4 h-4 text-indigo-600" />
                 </div>
                 <div>
-                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[14px]")}>Nakshatra Transits</h3>
-                    <p className="text-[11px] text-primary">Moon's Daily Journey</p>
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Nakshatra Transits</h3>
+                    <p className="text-[11px] text-primary font-medium">Moon's Daily Journey</p>
                 </div>
             </div>
 

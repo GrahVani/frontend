@@ -23,7 +23,7 @@ export default function DetailItem({
 }: DetailItemProps) {
     return (
         <div>
-            <p className="text-[11px] uppercase tracking-[0.10em] text-ink/35 font-bold mb-1.5">{label}</p>
+            <p className="text-[11px] uppercase tracking-[0.10em] text-ink font-bold mb-1.5">{label}</p>
             {isEditing && onChange ? (
                 type === 'select' ? (
                     <select
