@@ -117,13 +117,18 @@ export default function AnalyticalWorkbenchPage() {
 
     // Prepare Planetary Data for Table
     const planetaryTableData = React.useMemo(() => {
-        return displayPlanets.map(p => ({
+        // Put Ascendant (Lagna) at the top for better ritual/analytical flow
+        const asc = displayPlanets.find(p => p.name === 'As' || p.name === 'Ascendant');
+        const others = displayPlanets.filter(p => p.name !== 'As' && p.name !== 'Ascendant');
+        const sortedPlanets = asc ? [asc, ...others] : others;
+
+        return sortedPlanets.map(p => ({
             planet: fullPlanetNames[p.name] || p.name,
             sign: signIdToName[p.signId] || '-',
-            degree: p.degree,
+            degree: p.degree || '-',
             nakshatra: p.nakshatra || '-',
             nakshatraPart: p.pada ? (typeof p.pada === 'number' ? p.pada : parseInt(String(p.pada).replace('Pada ', ''))) : undefined,
-            house: p.house || 0,
+            house: p.house || 1, // Fallback to 1 if not calculated (e.g. for Lagna itself)
             isRetro: p.isRetro
         }));
     }, [displayPlanets]);
@@ -264,7 +269,7 @@ export default function AnalyticalWorkbenchPage() {
                                 <PlanetaryTable
                                     planets={planetaryTableData}
                                     variant="expanded"
-                                    rowClassName="py-2.5"
+                                    rowClassName="py-2"
                                 />
                             </div>
                         </div>

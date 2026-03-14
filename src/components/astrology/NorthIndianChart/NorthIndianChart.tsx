@@ -205,7 +205,7 @@ export default function NorthIndianChart({
                                                 {p.isRetro && (
                                                     <tspan fontSize="12" fontWeight="bold" fill="var(--status-error)" dx="1">R</tspan>
                                                 )}
-                                                {showDegrees && (
+                                                {(showDegrees || p.name === 'As' || p.name === 'Asc') && p.degree && p.degree !== '-' && (
                                                     <tspan
                                                         fontSize={TYPOGRAPHY.svgDegree.fontSize}
                                                         fontWeight={TYPOGRAPHY.svgDegree.fontWeight}
