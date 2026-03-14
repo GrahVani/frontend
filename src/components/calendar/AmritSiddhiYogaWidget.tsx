@@ -33,18 +33,18 @@ export default function AmritSiddhiYogaWidget({ year, className }: AmritSiddhiYo
     return (
         <div className={cn("prem-card p-4 relative overflow-hidden", className)}>
             {/* Decorative sparkles */}
-            <div className="absolute top-2 right-2 opacity-20">
+            <div className="absolute top-2 right-2 opacity-15">
                 <Sparkles className="w-16 h-16 text-gold-primary" />
             </div>
             
             <div className="relative">
-                <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400/20 to-yellow-500/20 flex items-center justify-center">
-                        <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                <div className="flex items-center gap-3 mb-4">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400/20 to-yellow-500/15 border border-amber-400/25 flex items-center justify-center shrink-0">
+                        <Star className="w-4 h-4 text-amber-600 fill-amber-500" />
                     </div>
                     <div>
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[14px]")}>Amrit Siddhi Yoga</h3>
-                        <p className="text-[11px] text-primary">Auspicious Timings</p>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Amrit Siddhi Yoga</h3>
+                        <p className="text-[11px] text-primary font-medium">Auspicious Timings</p>
                     </div>
                 </div>
 

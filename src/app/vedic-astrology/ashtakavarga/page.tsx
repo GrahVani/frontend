@@ -196,7 +196,7 @@ export default function AshtakavargaPage() {
     }
 
     return (
-        <div className="space-y-3 pt-2 px-1 sm:px-0">
+        <div className="space-y-2 pt-0 px-1 sm:px-0">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div>
                     <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] font-bold")}>
@@ -250,7 +250,7 @@ export default function AshtakavargaPage() {
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
                             <div className="lg:col-span-12 space-y-3">
                                 <div className="prem-card rounded-xl overflow-hidden">
-                                    <div className="p-3 border-b border-gold-primary/15 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                                    <div className="py-2 px-3 border-b border-gold-primary/15 flex flex-col md:flex-row md:items-center justify-between gap-3">
                                         <div>
                                             <h2 className={TYPOGRAPHY.sectionTitle}>
                                                 {activeTab === 'sarva' ? 'Sarvashtakavarga (SAV)' : `Bhinnashtakavarga: ${selectedPlanet}`}
@@ -282,8 +282,8 @@ export default function AshtakavargaPage() {
                                         )}
                                     </div>
 
-                                    <div className="p-4 grid grid-cols-1 lg:grid-cols-[5fr_12fr] gap-5 items-start">
-                                        <div className="space-y-3">
+                                    <div className="p-3 grid grid-cols-1 lg:grid-cols-[5fr_12fr] gap-5 items-start">
+                                        <div className="space-y-1.5">
                                             <h3 className={cn(TYPOGRAPHY.label, "text-ink flex items-center gap-2")}>
                                                 <MapIcon className="w-3.5 h-3.5" /> House distribution
                                             </h3>
@@ -297,7 +297,7 @@ export default function AshtakavargaPage() {
                                             </div>
                                         </div>
 
-                                        <div className="space-y-4 w-full">
+                                        <div className="space-y-1.5 w-full">
                                             <h3 className={cn(TYPOGRAPHY.label, "text-ink flex items-center gap-2")}>
                                                 <Grid3X3 className="w-3.5 h-3.5" /> Bindu matrix
                                             </h3>
@@ -315,7 +315,7 @@ export default function AshtakavargaPage() {
                             </div>
                         </div>
                     ) : activeTab === 'shodasha' ? (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 min-h-[calc(100vh-220px)]">
+                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
                             <ShodashaVargaTable data={data?.shodasha} className="h-full" />
                         </div>
                     ) : (

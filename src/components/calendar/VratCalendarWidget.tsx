@@ -51,11 +51,19 @@ export default function VratCalendarWidget({ year, month, className }: VratCalen
     if (monthVrats.length === 0) {
         return (
             <div className={cn("prem-card p-4", className)}>
-                <div className="flex items-center gap-2 mb-3">
-                    <Utensils className="w-4 h-4 text-gold-dark" />
-                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[14px]")}>Upcoming Vrats</h3>
+                <div className="flex items-center gap-3 mb-4">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500/15 to-red-500/10 border border-orange-500/20 flex items-center justify-center shrink-0">
+                        <Utensils className="w-4 h-4 text-orange-600" />
+                    </div>
+                    <div>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Upcoming Vrats</h3>
+                        <p className="text-[11px] text-primary font-medium">Fasting Days</p>
+                    </div>
                 </div>
-                <p className="text-[12px] text-primary text-center py-4">No major vrats this month</p>
+                <div className="bg-surface-base/30 border border-gold-primary/10 rounded-xl p-6 text-center">
+                    <Utensils className="w-6 h-6 text-gold-primary/30 mx-auto mb-2" />
+                    <p className="text-[12px] text-primary font-medium">No major vrats this month</p>
+                </div>
             </div>
         );
     }
@@ -63,13 +71,13 @@ export default function VratCalendarWidget({ year, month, className }: VratCalen
     return (
         <div className={cn("prem-card p-4", className)}>
             <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500/10 to-red-500/10 flex items-center justify-center">
+                <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500/15 to-red-500/10 border border-orange-500/20 flex items-center justify-center shrink-0">
                         <Utensils className="w-4 h-4 text-orange-600" />
                     </div>
                     <div>
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[14px]")}>Vrat Calendar</h3>
-                        <p className="text-[11px] text-primary">Fasting Days</p>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Vrat Calendar</h3>
+                        <p className="text-[11px] text-primary font-medium">Fasting Days</p>
                     </div>
                 </div>
                 <Link 

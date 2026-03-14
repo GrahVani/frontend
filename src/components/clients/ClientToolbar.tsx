@@ -50,7 +50,7 @@ export default function ClientToolbar({
                     </div>
                     <div>
                         <h1 className="text-[18px] font-serif font-bold text-ink leading-tight tracking-tight">Client Registry</h1>
-                        <p className="text-[11px] font-semibold text-ink/40 mt-0.5 tracking-wide uppercase">Manage your clients</p>
+                        <p className="text-[11px] font-bold text-ink mt-0.5 tracking-wide uppercase">Manage your clients</p>
                     </div>
                     <span className="text-[13px] font-mono font-bold text-gold-dark px-2.5 py-1 rounded-lg ml-1"
                           style={{
@@ -70,7 +70,7 @@ export default function ClientToolbar({
                         placeholder="Search by name, city, or phone..."
                         value={filters.search}
                         onChange={(e) => setFilter('search', e.target.value)}
-                        className="w-full pl-11 pr-4 py-2.5 rounded-xl text-[14px] text-ink font-medium focus:outline-none focus:ring-2 focus:ring-gold-primary/25 transition-all placeholder:text-ink/30"
+                        className="w-full pl-11 pr-4 py-2.5 rounded-xl text-[14px] text-ink font-semibold focus:outline-none focus:ring-2 focus:ring-gold-primary/25 transition-all placeholder:text-ink/60"
                         style={{
                             background: 'rgba(250,245,234,0.50)',
                             border: '1px solid rgba(220,201,166,0.35)',
@@ -81,7 +81,7 @@ export default function ClientToolbar({
                     {filters.search && (
                         <button onClick={() => setFilter('search', '')}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md hover:bg-surface-warm/60 transition-colors">
-                            <X className="w-3.5 h-3.5 text-ink/40" />
+                            <X className="w-3.5 h-3.5 text-ink/70" />
                         </button>
                     )}
                 </div>
@@ -89,7 +89,7 @@ export default function ClientToolbar({
                 {/* Filter Toggle */}
                 <button
                     onClick={() => setFiltersOpen(!filtersOpen)}
-                    className={`px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all flex items-center gap-2 shrink-0 ${filtersOpen ? 'text-gold-dark' : 'text-ink/60 hover:text-ink/80'}`}
+                    className={`px-3.5 py-2.5 rounded-xl text-[13px] font-bold transition-all flex items-center gap-2 shrink-0 ${filtersOpen ? 'text-gold-dark' : 'text-ink'}`}
                     style={{
                         background: filtersOpen ? 'linear-gradient(135deg, rgba(201,162,77,0.12) 0%, rgba(201,162,77,0.06) 100%)' : 'rgba(250,245,234,0.40)',
                         border: `1px solid ${filtersOpen ? 'rgba(201,162,77,0.30)' : 'rgba(220,201,166,0.35)'}`,
@@ -118,7 +118,7 @@ export default function ClientToolbar({
                      }}>
                     <button
                         onClick={() => setFilter('viewMode', 'card' as ViewMode)}
-                        className={`p-2.5 transition-all ${filters.viewMode === 'card' ? 'text-gold-dark' : 'text-ink/35 hover:text-ink/60'}`}
+                        className={`p-2.5 transition-all ${filters.viewMode === 'card' ? 'text-gold-dark' : 'text-ink/60 hover:text-ink'}`}
                         style={{
                             background: filters.viewMode === 'card'
                                 ? 'linear-gradient(135deg, rgba(201,162,77,0.14) 0%, rgba(201,162,77,0.06) 100%)'
@@ -132,7 +132,7 @@ export default function ClientToolbar({
                     <div style={{ width: 1, height: 22, background: 'rgba(220,201,166,0.30)' }} />
                     <button
                         onClick={() => setFilter('viewMode', 'table' as ViewMode)}
-                        className={`p-2.5 transition-all ${filters.viewMode === 'table' ? 'text-gold-dark' : 'text-ink/35 hover:text-ink/60'}`}
+                        className={`p-2.5 transition-all ${filters.viewMode === 'table' ? 'text-gold-dark' : 'text-ink/60 hover:text-ink'}`}
                         style={{
                             background: filters.viewMode === 'table'
                                 ? 'linear-gradient(135deg, rgba(201,162,77,0.14) 0%, rgba(201,162,77,0.06) 100%)'
@@ -159,7 +159,7 @@ export default function ClientToolbar({
                      style={{ borderTop: '1px solid rgba(220,201,166,0.18)' }}>
                     {/* Gender */}
                     <div className="flex items-center gap-2">
-                        <label className="text-[11px] font-bold text-ink/30 uppercase tracking-wider">Gender</label>
+                        <label className="text-[11px] font-bold text-ink font-bold uppercase tracking-wider">Gender</label>
                         <select
                             value={filters.gender || ''}
                             onChange={(e) => setFilter('gender', e.target.value || null)}
@@ -179,7 +179,7 @@ export default function ClientToolbar({
 
                     {/* City */}
                     <div className="flex items-center gap-2">
-                        <label className="text-[11px] font-bold text-ink/30 uppercase tracking-wider">City</label>
+                        <label className="text-[11px] font-bold text-ink font-bold uppercase tracking-wider">City</label>
                         <input
                             type="text"
                             placeholder="Any"
@@ -196,7 +196,7 @@ export default function ClientToolbar({
 
                     {/* Sort */}
                     <div className="flex items-center gap-2">
-                        <label className="text-[11px] font-bold text-ink/30 uppercase tracking-wider">Sort</label>
+                        <label className="text-[11px] font-bold text-ink font-bold uppercase tracking-wider">Sort</label>
                         <select
                             value={filters.sortBy}
                             onChange={(e) => setFilter('sortBy', e.target.value as SortField)}

@@ -30,7 +30,7 @@ export default function ClientHeader({ client }: ClientHeaderProps) {
                                     Primary record
                                 </div>
                             </div>
-                            <div className={cn(TYPOGRAPHY.label, "flex flex-wrap items-center gap-3 !text-white/60 !text-[11px] tracking-widest !font-bold !mt-0")}>
+                            <div className={cn(TYPOGRAPHY.label, "flex flex-wrap items-center gap-3 !text-white !text-[11px] tracking-widest !font-bold !mt-0")}>
                                 <span>{(client.dateOfBirth || client.birthDate) ? new Date(client.dateOfBirth || client.birthDate || '').toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Unknown'}</span>
                                 <span className="w-1.5 h-1.5 rounded-full bg-gold-primary/30" />
                                 <span>{client.timeOfBirth || client.birthTime || 'Unknown'} IST</span>
@@ -47,7 +47,7 @@ export default function ClientHeader({ client }: ClientHeaderProps) {
                             <MetadataTag icon={Star} label="Rashi" value={client.rashi || "Unknown"} orange />
                             <MetadataTag icon={Zap} label="Dasha" value="Jup-Sat" />
                         </div>
-                        <button className="ml-2 p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white/60 hover:text-active-glow transition-all" title="Edit Client">
+                        <button className="ml-2 p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white hover:text-active-glow transition-all" title="Edit Client">
                             <Pencil className="w-4 h-4" />
                         </button>
                     </div>
@@ -63,8 +63,8 @@ function MetadataTag({ icon: Icon, label, value, orange = false }: { icon: React
             "px-4 py-2 rounded-xl border flex flex-col min-w-[90px] transition-all",
             orange ? "bg-gold-primary/10 border-gold-primary/30" : "bg-white/5 border-white/10"
         )}>
-            <span className={cn(TYPOGRAPHY.label, "text-[8px] !font-black tracking-tighter !text-white/60 !mb-0.5")}>{label}</span>
-            <span className={cn(TYPOGRAPHY.value, "text-[12px] !font-bold tracking-wide !mt-0", orange ? "text-active-glow" : "!text-white/80")}>{value}</span>
+            <span className={cn(TYPOGRAPHY.label, "text-[8px] !font-black tracking-tighter !text-white !mb-0.5")}>{label}</span>
+            <span className={cn(TYPOGRAPHY.value, "text-[12px] !font-bold tracking-wide !mt-0", orange ? "text-active-glow" : "!text-white")}>{value}</span>
         </div>
     );
 }

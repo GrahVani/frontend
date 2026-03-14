@@ -75,10 +75,10 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
                         {displayName}
                     </p>
                     {client.rashi && (
-                        <span className="shrink-0 text-[10px] font-bold text-gold-dark/80 px-2 py-0.5 rounded-md uppercase tracking-wide"
+                        <span className="shrink-0 text-[10px] font-bold text-gold-dark px-2 py-0.5 rounded-md uppercase tracking-wide"
                               style={{
                                   background: 'linear-gradient(135deg, rgba(201,162,77,0.10) 0%, rgba(201,162,77,0.05) 100%)',
-                                  border: '1px solid rgba(201,162,77,0.18)',
+                                  border: '1px solid rgba(201,162,77,0.35)',
                               }}>
                             {client.rashi}
                         </span>
@@ -88,25 +88,25 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
                 {/* Bottom line: Metadata chips */}
                 <div className="flex items-center gap-4 mt-1.5">
                     {birthPlace && (
-                        <span className="flex items-center gap-1 text-[12px] text-ink/55 font-medium">
-                            <MapPin className="w-3 h-3 text-ink/30 shrink-0" />
+                        <span className="flex items-center gap-1 text-[12px] text-ink font-bold">
+                            <MapPin className="w-3 h-3 text-gold-dark shrink-0" />
                             <span className="truncate max-w-[120px]">{birthPlace}</span>
                         </span>
                     )}
                     {birthDate && (
-                        <span className="flex items-center gap-1 text-[12px] text-ink/55 font-medium">
-                            <Calendar className="w-3 h-3 text-ink/30 shrink-0" />
+                        <span className="flex items-center gap-1 text-[12px] text-ink font-bold">
+                            <Calendar className="w-3 h-3 text-gold-dark shrink-0" />
                             {new Date(birthDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </span>
                     )}
                     {birthTime && (
-                        <span className="hidden md:flex items-center gap-1 text-[12px] text-ink/55 font-medium font-mono">
-                            <Clock className="w-3 h-3 text-ink/30 shrink-0" />
+                        <span className="hidden md:flex items-center gap-1 text-[12px] text-ink font-bold font-mono">
+                            <Clock className="w-3 h-3 text-gold-dark shrink-0" />
                             {birthTime}
                         </span>
                     )}
                     {!birthPlace && !birthDate && (
-                        <span className="text-[12px] text-ink/25 italic">No birth details</span>
+                        <span className="text-[12px] text-ink font-bold italic">No birth details</span>
                     )}
                 </div>
             </div>
@@ -124,7 +124,7 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
                         aria-label={`Edit ${displayName}`}
                         onClick={(e) => { e.stopPropagation(); onEdit?.(client); }}
                     >
-                        <Edit2 className="w-3.5 h-3.5 text-ink/35 hover:text-gold-dark transition-colors" />
+                        <Edit2 className="w-3.5 h-3.5 text-ink hover:text-gold-dark transition-colors" />
                     </button>
                     <button
                         className="p-2 rounded-lg transition-all hover:bg-red-50/60"
@@ -135,12 +135,12 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
                         aria-label={`Delete ${displayName}`}
                         onClick={(e) => { e.stopPropagation(); onDelete?.(client); }}
                     >
-                        <Trash2 className="w-3.5 h-3.5 text-ink/35 hover:text-status-error transition-colors" />
+                        <Trash2 className="w-3.5 h-3.5 text-ink hover:text-status-error transition-colors" />
                     </button>
                 </div>
 
                 {/* Chevron */}
-                <ChevronRight className="w-4 h-4 text-ink/15 group-hover:text-gold-dark/50 group-hover:translate-x-0.5 transition-all duration-200" />
+                <ChevronRight className="w-4 h-4 text-gold-dark group-hover:text-gold-dark group-hover:translate-x-0.5 transition-all duration-200" />
             </div>
         </div>
     );

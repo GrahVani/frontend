@@ -51,11 +51,11 @@ export default function ClientProfileHeader({
                         <div>
                             <h1 className="text-[26px] font-serif text-ink font-bold leading-tight">{displayName}</h1>
                             <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
-                                <span className="text-[12px] font-mono font-semibold text-ink/50">#{client.id.slice(0, 8)}</span>
+                                <span className="text-[12px] font-mono font-bold text-ink">#{client.id.slice(0, 8)}</span>
                                 {client.rashi && (
                                     <>
                                         <span className="w-1 h-1 rounded-full bg-gold-primary/10" />
-                                        <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-gold-dark">
+                                        <span className="inline-flex items-center gap-1 text-[13px] font-bold text-gold-dark">
                                             <Star className="w-3.5 h-3.5" /> {client.rashi} Rashi
                                         </span>
                                     </>
@@ -63,8 +63,8 @@ export default function ClientProfileHeader({
                                 {client.birthPlace && (
                                     <>
                                         <span className="w-1 h-1 rounded-full bg-gold-primary/10" />
-                                        <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-ink/70">
-                                            <MapPin className="w-3.5 h-3.5 text-ink/30" /> {client.birthPlace}
+                                        <span className="inline-flex items-center gap-1.5 text-[13px] font-bold text-ink">
+                                            <MapPin className="w-3.5 h-3.5 text-gold-dark" /> {client.birthPlace}
                                         </span>
                                     </>
                                 )}
@@ -115,7 +115,7 @@ export default function ClientProfileHeader({
                         <p className="text-[14px] font-medium text-status-error">{error}</p>
                     </div>
                     <button onClick={onClearError} className="p-1.5 hover:bg-red-50 rounded-lg transition-colors" aria-label="Dismiss error">
-                        <X className="w-3.5 h-3.5 text-status-error/60" />
+                        <X className="w-3.5 h-3.5 text-status-error" />
                     </button>
                 </div>
             )}

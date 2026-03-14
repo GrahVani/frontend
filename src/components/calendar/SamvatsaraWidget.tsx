@@ -55,18 +55,18 @@ export default function SamvatsaraWidget({ year, className }: SamvatsaraWidgetPr
     const shakaSamvat = samvatsaraData.year_shaka_samvat;
 
     return (
-        <div className={cn("prem-card p-3 relative overflow-hidden", className)}>
+        <div className={cn("prem-card p-4 relative overflow-hidden", className)}>
             {/* Decorative background */}
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-gold-primary/10 to-transparent rounded-bl-full" />
+            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-gold-primary/10 to-transparent rounded-bl-full" />
             
             <div className="relative">
-                <div className="flex items-center gap-2 mb-3">
-                    <div className="w-7 h-7 rounded-lg bg-gold-primary/10 flex items-center justify-center">
-                        <History className="w-3.5 h-3.5 text-gold-dark" />
+                <div className="flex items-center gap-3 mb-4">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-gold-primary/15 to-gold-primary/5 border border-gold-primary/20 flex items-center justify-center shrink-0">
+                        <History className="w-4 h-4 text-gold-dark" />
                     </div>
                     <div>
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[13px]")}>Samvatsara</h3>
-                        <p className="text-[10px] text-primary">60-Year Jovian Cycle</p>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Samvatsara</h3>
+                        <p className="text-[11px] text-primary font-medium">60-Year Jovian Cycle</p>
                     </div>
                 </div>
 
@@ -104,7 +104,7 @@ export default function SamvatsaraWidget({ year, className }: SamvatsaraWidgetPr
                     <div className="grid grid-cols-2 gap-2">
                         {prevName && (
                             <div className="flex items-center gap-1.5 p-1.5 bg-surface-base/50 rounded-lg border border-surface-border/50">
-                                <Info className="w-3 h-3 text-gold-primary/60 shrink-0" />
+                                <Info className="w-3 h-3 text-gold-primary shrink-0" />
                                 <div className="min-w-0">
                                     <p className="text-[9px] text-primary">Previous ({year - 1})</p>
                                     <p className="text-[11px] font-medium text-primary truncate">{prevName}</p>
@@ -113,7 +113,7 @@ export default function SamvatsaraWidget({ year, className }: SamvatsaraWidgetPr
                         )}
                         {nextName && (
                             <div className="flex items-center gap-1.5 p-1.5 bg-surface-base/50 rounded-lg border border-surface-border/50">
-                                <Info className="w-3 h-3 text-gold-primary/60 shrink-0" />
+                                <Info className="w-3 h-3 text-gold-primary shrink-0" />
                                 <div className="min-w-0">
                                     <p className="text-[9px] text-primary">Next ({year + 1})</p>
                                     <p className="text-[11px] font-medium text-primary truncate">{nextName}</p>

@@ -217,25 +217,25 @@ function PanchangCard({ detail, label, icon, accent }: {
 
                 {/* Primary metadata: paksha, pada, lord, type */}
                 <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 mt-2.5">
-                    {detail.paksha && <span className="text-[12px] font-semibold" style={{ color: accent }}>{detail.paksha}</span>}
+                    {detail.paksha && <span className="text-[12px] font-bold" style={{ color: accent }}>{detail.paksha}</span>}
                     {detail.pada && (
-                        <span className="text-[11px] text-ink">
+                        <span className="text-[11px] text-ink font-bold">
                             Pada <span className="font-bold" style={{ color: accent }}>{detail.pada}</span>
                         </span>
                     )}
                     {detail.lord && (
-                        <span className="text-[11px] font-medium" style={{ color: PLANET_CLR[detail.lord] || accent }}>
+                        <span className="text-[11px] font-bold" style={{ color: PLANET_CLR[detail.lord] || accent }}>
                             {PLANET_SYM[detail.lord] || ''} {detail.lord}
                         </span>
                     )}
-                    {detail.type && <span className="text-[11px] text-ink/45 capitalize">{detail.type}</span>}
+                    {detail.type && <span className="text-[11px] text-ink font-bold capitalize">{detail.type}</span>}
                 </div>
 
                 {/* Extended metadata: deity, gana, symbol */}
                 {(detail.deity || detail.gana || detail.symbol) && (
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1.5">
                         {detail.deity && (
-                            <span className="text-[10px] text-ink/90">
+                            <span className="text-[10px] text-ink font-bold">
                                 <span className="font-bold" style={{ color: accent }}>Deity:</span> {detail.deity}
                             </span>
                         )}
@@ -246,14 +246,14 @@ function PanchangCard({ detail, label, icon, accent }: {
                             </span>
                         )}
                         {detail.symbol && (
-                            <span className="text-[10px] text-ink/45 italic">{detail.symbol}</span>
+                            <span className="text-[10px] text-ink font-bold italic">{detail.symbol}</span>
                         )}
                     </div>
                 )}
 
                 {/* Meaning / significance */}
                 {detail.meaning && (
-                    <p className="text-[10px] text-ink/85 mt-1.5 italic leading-relaxed line-clamp-2">{detail.meaning}</p>
+                    <p className="text-[10px] text-ink font-bold mt-1.5 italic leading-relaxed line-clamp-2">{detail.meaning}</p>
                 )}
                 {detail.special && (
                     <p className="text-[10px] font-bold mt-1.5 leading-relaxed" style={{ color: accent }}>
@@ -264,9 +264,9 @@ function PanchangCard({ detail, label, icon, accent }: {
                 {((detail.endTime && detail.endTime !== '-') || pct !== null) && (
                     <div className="flex items-center gap-3 mt-3 pt-3" style={{ borderTop: `1px solid ${accent}25` }}>
                         {detail.endTime && detail.endTime !== '-' && (
-                            <div className="flex items-center gap-1.5 text-[11px] text-ink/45">
-                                <Clock className="w-3 h-3" style={{ color: `${accent}80` }} />
-                                Ends <span className="font-mono font-semibold text-ink">{shortTime(detail.endTime)}</span>
+                            <div className="flex items-center gap-1.5 text-[11px] text-ink font-bold">
+                                <Clock className="w-3 h-3" style={{ color: accent }} />
+                                Ends <span className="font-mono font-bold text-ink">{shortTime(detail.endTime)}</span>
                             </div>
                         )}
                         {pct !== null && (
@@ -316,7 +316,7 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
             }}>
             <div className="px-6 pt-4 pb-1 flex items-center gap-2">
                 <NowBadge />
-                <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-gold-dark/80">Live Cosmic Pulse</span>
+                <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-gold-dark">Live Cosmic Pulse</span>
             </div>
 
             {warnings.length > 0 && (
@@ -361,13 +361,13 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
                                 <span className="absolute inset-0 flex items-center justify-center text-[20px]">⏳</span>
                             </div>
                             <div className="min-w-0">
-                                <div className="text-[9px] font-bold tracking-[0.1em] uppercase text-ink/30">Choghadiya</div>
+                                <div className="text-[9px] font-bold tracking-[0.1em] uppercase text-ink">Choghadiya</div>
                                 <div className="text-[18px] font-serif font-bold text-ink leading-tight">{chog.type}</div>
                                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full inline-block mt-0.5"
                                     style={{ color: nc.text, backgroundColor: `${nc.solid}15` }}>
                                     {chog.nature}
                                 </span>
-                                <div className="text-[11px] font-mono text-ink/40 mt-1.5">
+                                <div className="text-[11px] font-mono font-bold text-ink mt-1.5">
                                     {shortTime(chog.start)} → {shortTime(chog.end)}
                                 </div>
                                 {rem && rem !== 'ended' && (
@@ -393,7 +393,7 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
                                 </span>
                             </div>
                             <div className="min-w-0">
-                                <div className="text-[9px] font-bold tracking-[0.1em] uppercase text-ink/30">Planetary Hora</div>
+                                <div className="text-[9px] font-bold tracking-[0.1em] uppercase text-ink">Planetary Hora</div>
                                 <div className="text-[18px] font-serif font-bold text-ink leading-tight">{hora.planet}</div>
                                 {hora.nature && hora.nature !== '-' && (
                                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full inline-block mt-0.5"
@@ -401,7 +401,7 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
                                         {hora.nature}
                                     </span>
                                 )}
-                                <div className="text-[11px] font-mono text-ink/40 mt-1.5">
+                                <div className="text-[11px] font-mono font-bold text-ink mt-1.5">
                                     {shortTime(hora.start)} → {shortTime(hora.end)}
                                 </div>
                                 {rem && rem !== 'ended' && (
@@ -428,13 +428,13 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
                                 </span>
                             </div>
                             <div className="min-w-0">
-                                <div className="text-[9px] font-bold tracking-[0.1em] uppercase text-ink/30">Rising Sign</div>
+                                <div className="text-[9px] font-bold tracking-[0.1em] uppercase text-ink">Rising Sign</div>
                                 <div className="text-[18px] font-serif font-bold text-ink leading-tight">{lagna.lagnaName}</div>
                                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full inline-block mt-0.5"
                                     style={{ color: ec, backgroundColor: `${ec}18` }}>
                                     {elem}
                                 </span>
-                                <div className="text-[11px] font-mono text-ink/40 mt-1.5">
+                                <div className="text-[11px] font-mono font-bold text-ink mt-1.5">
                                     {shortTime(lagna.start)} → {shortTime(lagna.end)}
                                 </div>
                                 {rem && rem !== 'ended' && (
@@ -491,12 +491,12 @@ function MuhurtaWindow({ name, start, end, variant, icon, quality, description }
 
                 <div className="text-[24px] font-mono font-bold text-ink tracking-tight">
                     {shortTime(start)}
-                    <span className="text-ink/25 mx-2.5 text-[16px] font-normal">&rarr;</span>
+                    <span className="text-ink/60 mx-2.5 text-[16px] font-normal">&rarr;</span>
                     {shortTime(end)}
                 </div>
 
                 <div className="flex items-center justify-between mt-3">
-                    <span className="text-[11px] font-medium text-ink/45">
+                    <span className="text-[11px] font-bold text-ink">
                         {hrs > 0 ? `${hrs}h ` : ''}{mins}m duration
                     </span>
                     {isActive ? (
@@ -510,14 +510,14 @@ function MuhurtaWindow({ name, start, end, variant, icon, quality, description }
                         </span>
                     ) : (
                         <span className={cn("text-[10px] font-bold uppercase tracking-wider",
-                            status === 'upcoming' ? 'text-gold-dark/70' : 'text-ink/30')}>
+                            status === 'upcoming' ? 'text-gold-dark' : 'text-ink/80')}>
                             {status === 'upcoming' ? 'Upcoming' : 'Passed'}
                         </span>
                     )}
                 </div>
 
                 {description && description !== '-' && (
-                    <p className="text-[10px] text-ink/85 mt-2.5 pt-2.5 leading-relaxed line-clamp-2"
+                    <p className="text-[10px] text-ink font-medium mt-2.5 pt-2.5 leading-relaxed line-clamp-2"
                         style={{ borderTop: `1px solid ${V.border}18` }}>
                         {description}
                     </p>
@@ -552,12 +552,12 @@ function MuhurtaSection({ muhurta, panchang }: {
                 <div className="flex items-center gap-4 text-[12px]">
                     <div className="flex items-center gap-1.5">
                         <Sun className="w-4 h-4 text-[#D4880F]" />
-                        <span className="text-[10px] text-ink/35 hidden sm:inline">Rise</span>
+                        <span className="text-[10px] text-ink font-bold hidden sm:inline">Rise</span>
                         <span className="font-mono font-bold text-ink">{shortTime(sunrise)}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                         <Sun className="w-4 h-4 text-[#C97A2F]/60" />
-                        <span className="text-[10px] text-ink/35 hidden sm:inline">Set</span>
+                        <span className="text-[10px] text-ink font-bold hidden sm:inline">Set</span>
                         <span className="font-mono font-bold text-ink">{shortTime(sunset)}</span>
                     </div>
                     {panchang?.moonrise && panchang.moonrise !== '-' && (
@@ -567,7 +567,7 @@ function MuhurtaSection({ muhurta, panchang }: {
                         </div>
                     )}
                     {muhurta.dayDuration && (
-                        <span className="text-[10px] text-ink/35 font-mono hidden lg:inline">
+                        <span className="text-[10px] text-ink font-bold font-mono hidden lg:inline">
                             Day: {muhurta.dayDuration}
                         </span>
                     )}
@@ -587,8 +587,8 @@ function MuhurtaSection({ muhurta, panchang }: {
             {muhurta.durMuhurats.length > 0 && (
                 <div className="flex flex-wrap gap-2.5 mt-4 pt-4" style={{ borderTop: '1px solid rgba(186,164,126,0.20)' }}>
                     {muhurta.durMuhurats.map((d, i) => (
-                        <span key={i} className="text-[11px] inline-flex items-center gap-1.5 rounded-lg px-3 py-2"
-                            style={{ color: '#8B3A3A', backgroundColor: 'rgba(155,74,58,0.08)', border: '1px solid rgba(155,74,58,0.18)' }}>
+                        <span key={i} className="text-[11px] font-bold inline-flex items-center gap-1.5 rounded-lg px-3 py-2"
+                            style={{ color: '#8B3A3A', backgroundColor: 'rgba(155,74,58,0.12)', border: '1px solid rgba(155,74,58,0.35)' }}>
                             <AlertTriangle className="w-3 h-3" />
                             {d.name}: {shortTime(d.start)} &ndash; {shortTime(d.end)}
                         </span>
@@ -806,24 +806,24 @@ function ChoghadiyaTimeline({ periods, current }: {
                                     <div className="text-[10px] font-semibold mt-1" style={{ color: pnc.text }}>{p.quality}</div>
                                 )}
                                 <div className="flex items-center justify-between mt-1.5">
-                                    <span className="text-[11px] font-mono font-semibold text-ink">
+                                    <span className="text-[11px] font-mono font-bold text-ink">
                                         {shortTime(p.start)} – {shortTime(p.end)}
                                     </span>
-                                    <span className="text-[10px] font-medium text-ink/45">{dur}m</span>
+                                    <span className="text-[10px] font-bold text-ink">{dur}m</span>
                                 </div>
                                 {p.deity && p.deity !== '-' && (
-                                    <div className="text-[10px] text-ink/90 mt-1.5">
+                                    <div className="text-[10px] text-ink font-bold mt-1.5">
                                         <span className="font-bold" style={{ color: pnc.text }}>Deity:</span> {p.deity}
                                     </div>
                                 )}
                                 {p.bestFor && p.bestFor !== '-' && (
-                                    <p className="text-[10px] text-ink/40 mt-1.5 line-clamp-2 leading-relaxed">
+                                    <p className="text-[10px] text-ink font-bold mt-1.5 line-clamp-2 leading-relaxed">
                                         <span className="font-bold uppercase tracking-wider" style={{ color: '#5B7A4A' }}>Best: </span>
                                         {p.bestFor}
                                     </p>
                                 )}
                                 {p.avoid && p.avoid !== '-' && (
-                                    <p className="text-[10px] text-ink/40 mt-1 line-clamp-1 leading-relaxed">
+                                    <p className="text-[10px] text-ink font-bold mt-1 line-clamp-1 leading-relaxed">
                                         <span className="font-bold uppercase tracking-wider" style={{ color: '#9B4A3A' }}>Avoid: </span>
                                         {p.avoid}
                                     </p>
@@ -855,22 +855,22 @@ function ChoghadiyaTimeline({ periods, current }: {
                                 <span className="text-[11px] ml-2" style={{ color: nc.text }}>&middot; {current.quality}</span>
                             )}
                         </div>
-                        <span className="text-[12px] font-medium text-ink/90">{current.deity}</span>
-                        <span className="text-[13px] font-mono font-semibold text-ink ml-auto">
+                        <span className="text-[12px] font-bold text-ink">{current.deity}</span>
+                        <span className="text-[13px] font-mono font-bold text-ink ml-auto">
                             {shortTime(current.start)} &ndash; {shortTime(current.end)}
                         </span>
                     </div>
                     {current.description && current.description !== '-' && (
-                        <p className="text-[11px] text-ink/85 mt-1.5 leading-relaxed">{current.description}</p>
+                        <p className="text-[11px] text-ink font-medium mt-1.5 leading-relaxed">{current.description}</p>
                     )}
                     {current.bestFor && current.bestFor !== '-' && (
-                        <p className="text-[11px] text-ink/40 mt-1.5 leading-relaxed">
+                        <p className="text-[11px] text-ink font-bold mt-1.5 leading-relaxed">
                             <span className="font-bold uppercase text-[9px] tracking-wider mr-1" style={{ color: '#5B7A4A' }}>Best for:</span>
                             {current.bestFor}
                         </p>
                     )}
                     {current.avoid && current.avoid !== '-' && (
-                        <p className="text-[11px] text-ink/40 mt-1 leading-relaxed">
+                        <p className="text-[11px] text-ink font-bold mt-1 leading-relaxed">
                             <span className="font-bold uppercase text-[9px] tracking-wider mr-1" style={{ color: '#9B4A3A' }}>Avoid:</span>
                             {current.avoid}
                         </p>
@@ -953,34 +953,34 @@ function HoraTimeline({ periods, current }: {
                                     <span className="text-[18px] leading-none" style={{ color: hpc }}>{PLANET_SYM[h.planet] || '·'}</span>
                                     <span className="text-[13px] font-bold text-ink">{h.planet}</span>
                                     {h.sanskritName && h.sanskritName !== '-' && (
-                                        <span className="text-[9px] italic text-ink/45 ml-auto">{h.sanskritName.split('/')[0]}</span>
+                                        <span className="text-[9px] italic font-bold text-ink ml-auto">{h.sanskritName.split('/')[0]}</span>
                                     )}
                                 </div>
                                 <div className="flex items-center justify-between mt-1.5">
-                                    <span className="text-[11px] font-mono font-semibold text-ink">
+                                    <span className="text-[11px] font-mono font-bold text-ink">
                                         {shortTime(h.start)} – {shortTime(h.end)}
                                     </span>
-                                    <span className="text-[10px] font-medium text-ink/45">{dur}m</span>
+                                    <span className="text-[10px] font-bold text-ink">{dur}m</span>
                                 </div>
                                 <div className="flex items-center gap-2 mt-1.5">
                                     {h.nature && h.nature !== '-' && (
-                                        <span className="text-[10px] font-semibold" style={{ color: hpc }}>{h.nature}</span>
+                                        <span className="text-[10px] font-bold" style={{ color: hpc }}>{h.nature}</span>
                                     )}
                                     {h.quality && h.quality !== '-' && (
-                                        <span className="text-[10px] text-ink/85">{h.quality}</span>
+                                        <span className="text-[10px] text-ink font-bold">{h.quality}</span>
                                     )}
                                     {h.rank < 99 && (
                                         <span className="text-[10px] ml-auto" style={{ color: hpc }}>{rankStars(h.rank)}</span>
                                     )}
                                 </div>
                                 {h.bestFor && h.bestFor !== '-' && (
-                                    <p className="text-[10px] text-ink/40 mt-1.5 line-clamp-2 leading-relaxed">
+                                    <p className="text-[10px] text-ink font-bold mt-1.5 line-clamp-2 leading-relaxed">
                                         <span className="font-bold uppercase tracking-wider" style={{ color: '#5B7A4A' }}>Best: </span>
                                         {h.bestFor}
                                     </p>
                                 )}
                                 {h.avoid && h.avoid !== '-' && (
-                                    <p className="text-[10px] text-ink/40 mt-1 line-clamp-1 leading-relaxed">
+                                    <p className="text-[10px] text-ink font-bold mt-1 line-clamp-1 leading-relaxed">
                                         <span className="font-bold uppercase tracking-wider" style={{ color: '#9B4A3A' }}>Avoid: </span>
                                         {h.avoid}
                                     </p>
@@ -1089,15 +1089,15 @@ function LagnaJourney({ schedule, current }: {
                             <span className="text-[24px]" style={{ color: curColor }}>{ZODIAC_SYM[current.lagnaName] || '·'}</span>
                             <span className="text-[18px] font-serif font-bold text-ink">{current.lagnaName}</span>
                             {current.sanskritName && current.sanskritName !== '-' && (
-                                <span className="text-[12px] text-ink/45 italic">{current.sanskritName}</span>
+                                <span className="text-[12px] text-ink font-bold italic">{current.sanskritName}</span>
                             )}
                         </div>
-                        <span className="text-[13px] font-mono font-semibold text-ink ml-auto">
+                        <span className="text-[13px] font-mono font-bold text-ink ml-auto">
                             {shortTime(current.start)} &ndash; {shortTime(current.end)}
                         </span>
                     </div>
                     <div className="flex items-center gap-3 mt-1.5 flex-wrap">
-                        <span className="text-[11px] font-medium text-ink/90">
+                        <span className="text-[11px] font-bold text-ink">
                             {PLANET_SYM[current.lord] || ''} {current.lord}
                         </span>
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
@@ -1105,21 +1105,21 @@ function LagnaJourney({ schedule, current }: {
                             {curElem}
                         </span>
                         {current.quality && current.quality !== '-' && (
-                            <span className="text-[11px] text-ink/45">{current.quality}</span>
+                            <span className="text-[11px] font-bold text-ink">{current.quality}</span>
                         )}
-                        <span className="text-[11px] text-ink/45 ml-auto">{current.durationMinutes}m</span>
+                        <span className="text-[11px] font-bold text-ink ml-auto">{current.durationMinutes}m</span>
                     </div>
                     {current.characteristics && current.characteristics !== '-' && (
-                        <p className="text-[11px] text-ink/85 mt-1.5 leading-relaxed">{current.characteristics}</p>
+                        <p className="text-[11px] text-ink font-medium mt-1.5 leading-relaxed">{current.characteristics}</p>
                     )}
                     {current.bestFor && current.bestFor !== '-' && (
-                        <p className="text-[11px] text-ink/40 mt-1 leading-relaxed">
+                        <p className="text-[11px] text-ink font-bold mt-1 leading-relaxed">
                             <span className="font-bold uppercase text-[9px] tracking-wider mr-1" style={{ color: '#5B7A4A' }}>Best for:</span>
                             {current.bestFor}
                         </p>
                     )}
                     {current.avoidFor && current.avoidFor !== '-' && (
-                        <p className="text-[11px] text-ink/40 mt-1 leading-relaxed">
+                        <p className="text-[11px] text-ink font-bold mt-1 leading-relaxed">
                             <span className="font-bold uppercase text-[9px] tracking-wider mr-1" style={{ color: '#9B4A3A' }}>Avoid:</span>
                             {current.avoidFor}
                         </p>
@@ -1149,15 +1149,15 @@ function LagnaJourney({ schedule, current }: {
                     <div className="mt-5">
                         <div className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg mb-3"
                             style={{
-                                background: 'linear-gradient(90deg, rgba(201,162,77,0.08) 0%, rgba(201,162,77,0.03) 40%, transparent 80%)',
-                                borderLeft: '3px solid rgba(201,162,77,0.35)',
+                                background: 'linear-gradient(90deg, rgba(201,162,77,0.12) 0%, rgba(201,162,77,0.06) 40%, transparent 80%)',
+                                borderLeft: '3px solid rgba(201,162,77,0.45)',
                             }}>
                             <span className="text-[11px] font-bold tracking-[0.08em] uppercase text-[#9C7A2F]">24-Hour Transit</span>
-                            <span className="text-[10px] text-ink/30">· {schedule.length} signs</span>
-                            <span className="text-[10px] font-mono text-ink/30 ml-auto">
+                            <span className="text-[10px] text-ink font-bold">· {schedule.length} signs</span>
+                            <span className="text-[10px] font-mono font-bold text-ink ml-auto">
                                 {shortTime(tStart)} → {shortTime(tEnd)}
                             </span>
-                            <span className="text-[10px] font-mono text-ink/30 ml-2">{tHrs}h {tMins}m</span>
+                            <span className="text-[10px] font-mono font-bold text-ink ml-2">{tHrs}h {tMins}m</span>
                         </div>
 
                         <div className="relative">
@@ -1240,11 +1240,11 @@ function LagnaJourney({ schedule, current }: {
                                     <span className="text-[18px] leading-none" style={{ color: eColor }}>{ZODIAC_SYM[l.lagnaName] || '·'}</span>
                                     <span className="text-[13px] font-bold text-ink">{l.lagnaName}</span>
                                     {l.sanskritName && l.sanskritName !== '-' && (
-                                        <span className="text-[9px] italic text-ink/45 ml-auto">{l.sanskritName}</span>
+                                        <span className="text-[9px] italic font-bold text-ink ml-auto">{l.sanskritName}</span>
                                     )}
                                 </div>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-[10px] font-medium text-ink/90">
+                                    <span className="text-[10px] font-bold text-ink">
                                         {PLANET_SYM[l.lord] || ''} {l.lord}
                                     </span>
                                     <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
@@ -1253,22 +1253,22 @@ function LagnaJourney({ schedule, current }: {
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between mt-1.5">
-                                    <span className="text-[11px] font-mono font-semibold text-ink">
+                                    <span className="text-[11px] font-mono font-bold text-ink">
                                         {shortTime(l.start)} – {shortTime(l.end)}
                                     </span>
-                                    <span className="text-[10px] font-medium text-ink/45">{l.durationMinutes}m</span>
+                                    <span className="text-[10px] font-bold text-ink">{l.durationMinutes}m</span>
                                 </div>
                                 {l.quality && l.quality !== '-' && (
-                                    <div className="text-[10px] text-ink/85 mt-1">{l.quality}</div>
+                                    <div className="text-[10px] text-ink font-bold mt-1">{l.quality}</div>
                                 )}
                                 {l.bestFor && l.bestFor !== '-' && (
-                                    <p className="text-[10px] text-ink/40 mt-1.5 line-clamp-2 leading-relaxed">
+                                    <p className="text-[10px] text-ink font-bold mt-1.5 line-clamp-2 leading-relaxed">
                                         <span className="font-bold uppercase tracking-wider" style={{ color: '#5B7A4A' }}>Best: </span>
                                         {l.bestFor}
                                     </p>
                                 )}
                                 {l.characteristics && l.characteristics !== '-' && (
-                                    <p className="text-[10px] text-ink/40 mt-1 line-clamp-1">{l.characteristics}</p>
+                                    <p className="text-[10px] text-ink font-bold mt-1 line-clamp-1">{l.characteristics}</p>
                                 )}
                             </div>
                         </div>
@@ -1307,7 +1307,7 @@ function RecentClientsCard() {
                     ))
                 ) : clients.length === 0 ? (
                     <div className="text-center py-8 px-4">
-                        <p className="text-[12px] text-ink/45">No clients yet</p>
+                        <p className="text-[12px] text-ink font-bold">No clients yet</p>
                         <Link href="/clients/new" className="inline-flex items-center gap-1 mt-2 text-[12px] font-bold text-gold-primary">
                             <UserPlus className="w-3.5 h-3.5" /> Add first client
                         </Link>
@@ -1320,7 +1320,7 @@ function RecentClientsCard() {
                             {getInitials(c.fullName)}
                         </div>
                         <span className="text-[14px] font-medium text-ink truncate flex-1">{c.fullName}</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-ink/45/45 group-hover:text-gold-primary shrink-0" />
+                        <ChevronRight className="w-3.5 h-3.5 text-ink/80 group-hover:text-gold-primary shrink-0" />
                     </Link>
                 ))}
             </div>
@@ -1356,7 +1356,7 @@ function QuickActionsCard() {
                         <Icon className="w-3.5 h-3.5 text-gold-dark" />
                     </div>
                     <span className="text-[14px] font-medium text-ink">{title}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-ink/45/45 ml-auto group-hover:text-gold-primary" />
+                    <ArrowRight className="w-3.5 h-3.5 text-ink/80 ml-auto group-hover:text-gold-primary" />
                 </Link>
             ))}
         </div>
@@ -1418,7 +1418,7 @@ export default function Dashboard() {
                     <h1 className="text-[30px] font-serif text-ink font-bold leading-tight tracking-tight">
                         {getGreeting()}, {firstName}
                     </h1>
-                    <p className="text-[14px] text-ink/45 font-serif italic mt-1.5">
+                    <p className="text-[14px] text-ink font-serif font-bold italic mt-1.5">
                         {todayDate()}
                         {panchang?.vara?.name && panchang.vara.name !== '-' && (
                             <span className="not-italic font-bold ml-2" style={{ color: PANCH_ACCENT.Vara }}>
@@ -1432,14 +1432,14 @@ export default function Dashboard() {
                         <Users className="w-5 h-5 text-gold-dark" />
                         <div className="text-right">
                             <div className="text-[20px] font-serif font-bold text-ink leading-none">{stats?.totalClients ?? '—'}</div>
-                            <div className="text-[9px] text-ink/35 uppercase tracking-widest mt-0.5">Clients</div>
+                            <div className="text-[9px] text-ink font-bold uppercase tracking-widest mt-0.5">Clients</div>
                         </div>
                     </Link>
                     <div className="prem-card flex items-center gap-3 px-5 py-3">
                         <BarChart3 className="w-5 h-5 text-gold-dark" />
                         <div className="text-right">
                             <div className="text-[20px] font-serif font-bold text-ink leading-none">{stats?.chartsGenerated ?? 0}</div>
-                            <div className="text-[9px] text-ink/35 uppercase tracking-widest mt-0.5">Charts</div>
+                            <div className="text-[9px] text-ink font-bold uppercase tracking-widest mt-0.5">Charts</div>
                         </div>
                     </div>
                 </div>
@@ -1451,7 +1451,7 @@ export default function Dashboard() {
             {/* ── Panchang Cards (5 in a row) ── */}
             {pLoading ? <PanchangSkeleton /> : pError ? (
                 <div className="prem-card text-center py-8">
-                    <p className="text-[12px] text-ink/45">Panchang data unavailable</p>
+                    <p className="text-[12px] text-ink font-bold">Panchang data unavailable</p>
                 </div>
             ) : panchang ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5">

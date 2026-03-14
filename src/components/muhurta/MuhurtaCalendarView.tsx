@@ -60,7 +60,7 @@ export default function MuhurtaCalendarView({
                             day.isCurrentMonth
                                 ? day.quality
                                     ? QUALITY_COLORS[day.quality]
-                                    : "bg-surface-warm/30 text-ink border-transparent hover:border-gold-primary/20"
+                                    : "bg-surface-warm/30 text-ink border-gold-primary/20 hover:border-gold-primary/40"
                                 : "text-ink/30 border-transparent cursor-default",
                             day.isCurrentMonth && onDayClick && "cursor-pointer hover:shadow-sm"
                         )}
