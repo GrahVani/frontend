@@ -1,9 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { ChartWithPopup } from "@/components/astrology/NorthIndianChart";
 import { cn } from "@/lib/utils";
 import { useDasha } from "@/hooks/queries/useCalculations";
+import { CHART_METADATA } from '@/lib/api';
+const DivisionalChartZoomModal = dynamic(() => import('@/components/astrology/DivisionalChartZoomModal'));
 import {
     Maximize2,
     TrendingUp,
@@ -354,34 +357,18 @@ export default function VedicOverviewPage() {
                 </div>
             </div>
 
-            {/* Modal for Zoom */}
+            {/* Modal for Zoom - Advanced Version */}
             {zoomedChart && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-ink/50 backdrop-blur-sm animate-in fade-in zoom-in-95 duration-300" role="dialog" aria-modal="true" aria-label={zoomedChart.label}>
-                    <div className="max-w-2xl w-full relative rounded-3xl p-8"
-                        style={{
-                            background: 'linear-gradient(165deg, rgba(255,253,249,0.95) 0%, rgba(250,245,234,0.92) 50%, rgba(255,253,249,0.93) 100%)',
-                            border: '1px solid rgba(220,201,166,0.35)',
-                            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), 0 25px 60px rgba(62,46,22,0.20), 0 8px 24px rgba(62,46,22,0.10)',
-                            backdropFilter: 'blur(20px)',
-                        }}>
-                        <button onClick={() => setZoomedChart(null)} aria-label="Close zoomed chart"
-                            className="absolute top-4 right-4 p-2 rounded-xl text-ink/40 hover:text-gold-dark transition-all"
-                            style={{
-                                background: 'rgba(250,245,234,0.60)',
-                                border: '1px solid rgba(220,201,166,0.25)',
-                            }}>
-                            <X className="w-5 h-5" />
-                        </button>
-                        <div className="mb-6 text-center">
-                            <h2 className="text-[17px] font-serif font-bold text-ink">{zoomedChart.label}</h2>
-                            <p className="text-[12px] text-ink/45 font-medium mt-0.5">{zoomedChart.varga} divisional chart</p>
-                        </div>
-                        <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6"
-                            style={{ border: '1px solid rgba(220,201,166,0.25)' }}>
-                            <ChartWithPopup ascendantSign={zoomedData.ascendant} planets={zoomedData.planets} className="bg-transparent border-none" showDegrees={zoomedChart?.varga === 'D1'} />
-                        </div>
-                    </div>
-                </div>
+                <DivisionalChartZoomModal
+                    isOpen={!!zoomedChart}
+                    onClose={() => setZoomedChart(null)}
+                    chartType={zoomedChart.varga}
+                    chartName={zoomedChart.label || CHART_METADATA[zoomedChart.varga]?.name || 'Chart'}
+                    chartDesc={CHART_METADATA[zoomedChart.varga]?.desc || 'Divisional Chart'}
+                    planets={zoomedData.planets}
+                    ascendantSign={zoomedData.ascendant}
+                    chartData={processedCharts[`${zoomedChart.varga}_${activeSystem}`]?.chartData || undefined}
+                />
             )}
 
             {/* ANALYSIS MODAL */}

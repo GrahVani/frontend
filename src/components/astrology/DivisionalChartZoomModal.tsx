@@ -248,25 +248,25 @@ export default function DivisionalChartZoomModal({
                 aria-modal="true"
                 aria-labelledby="divisional-chart-title"
                 tabIndex={-1}
-                className="bg-surface-warm rounded-xl shadow-2xl overflow-hidden flex flex-col lg:flex-row w-full max-w-6xl border-2 border-gold-primary/30 outline-none"
+                className="bg-surface-warm rounded-xl shadow-2xl overflow-hidden flex flex-col lg:flex-row w-full max-w-4xl border-2 border-gold-primary/30 outline-none"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* LEFT - Chart Section */}
                 <div className="flex-1 flex flex-col min-w-0">
                     {/* Header */}
-                    <div className="px-4 py-3 bg-gradient-to-r from-gold-dark to-bronze text-white flex items-center justify-between gap-3">
+                    <div className="px-5 py-4 bg-[#8B5A2B] text-white flex items-center justify-between gap-3 shrink-0">
                         <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center text-[18px] font-bold shrink-0">
+                            <div className="w-12 h-12 rounded-xl bg-white/15 flex items-center justify-center text-[20px] font-bold shrink-0 border border-white/10">
                                 {chartType}
                             </div>
                             <div className="min-w-0">
-                                <h2 id="divisional-chart-title" className="text-[18px] font-serif font-bold truncate" title={chartName}>{chartName}</h2>
-                                <p className="text-white/70 text-[12px] truncate" title={chartDesc}>{chartDesc}</p>
+                                <h2 id="divisional-chart-title" className="text-[22px] font-serif font-bold truncate leading-tight" title={chartName}>{chartName}</h2>
+                                <p className="text-white text-[13px] truncate font-sans" title={chartDesc}>{chartDesc}</p>
                             </div>
                         </div>
                         <button
                             onClick={onClose}
-                            className="w-9 h-9 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors shrink-0"
+                            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors shrink-0 border border-white/5"
                             title="Close (ESC)"
                             aria-label="Close chart details"
                         >
@@ -276,7 +276,7 @@ export default function DivisionalChartZoomModal({
 
                     {/* Chart Area */}
                     <div className="flex-1 flex items-center justify-center p-4 bg-surface-warm">
-                        <div className="w-full max-w-[450px] aspect-square bg-white rounded-xl border border-gold-primary/15 p-4 shadow-lg">
+                        <div className="w-full max-w-[400px] aspect-square bg-white rounded-xl border border-gold-primary/15 p-4 shadow-lg">
                             <NorthIndianChart
                                 ascendantSign={ascendantSign}
                                 planets={planets}
@@ -288,7 +288,7 @@ export default function DivisionalChartZoomModal({
                 </div>
 
                 {/* RIGHT - Planet Details */}
-                <div className="w-full lg:w-[400px] bg-white border-t lg:border-t-0 lg:border-l border-gold-primary/15 flex flex-col max-h-[500px] lg:max-h-[600px]">
+                <div className="w-full lg:w-[320px] bg-white border-t lg:border-t-0 lg:border-l border-gold-primary/15 flex flex-col max-h-[500px] lg:max-h-[600px]">
                     {/* Ascendant + Stats */}
                     <div className="p-3 border-b border-gold-primary/10 flex items-center gap-3 bg-gradient-to-r from-purple-50/50 to-transparent">
                         <div className="w-9 h-9 rounded-lg bg-purple-100 border border-purple-200 flex items-center justify-center text-[18px] shrink-0">
@@ -312,7 +312,7 @@ export default function DivisionalChartZoomModal({
 
                     {/* Planet List with Dignities & Nakshatra */}
                     <div className="flex-1 overflow-y-auto p-3">
-                        <h4 className="text-[10px] font-bold text-ink/30 uppercase tracking-wider mb-2 flex items-center gap-1.5 px-1">
+                        <h4 className="text-[10px] font-bold text-ink uppercase tracking-wider mb-2 flex items-center gap-1.5 px-1">
                             <Star className="w-3.5 h-3.5" /> <KnowledgeTooltip term="graha_overview" unstyled>Planet Positions</KnowledgeTooltip>
                         </h4>
                         <div className="space-y-1.5">
@@ -326,39 +326,44 @@ export default function DivisionalChartZoomModal({
                                     <div
                                         key={`${planet.name}-${idx}`}
                                         className={cn(
-                                            "flex items-center gap-2 px-3 py-2 rounded-lg border",
+                                            "flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all hover:shadow-md",
                                             colors.bg, colors.border
                                         )}
                                     >
                                         <div className={cn(
-                                            "w-8 h-8 rounded-lg flex items-center justify-center font-bold text-[14px] shrink-0",
-                                            colors.text, "bg-white/50"
+                                            "w-10 h-10 rounded-full flex items-center justify-center font-bold text-[16px] shrink-0 border shadow-sm",
+                                            colors.text, "bg-white/70"
                                         )}>
                                             {planet.name.substring(0, 2)}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-1.5 flex-wrap">
-                                                <span className={cn("font-bold text-[14px]", colors.text)}>{planet.name}</span>
+                                            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                                                <span className={cn("font-bold text-[16px] tracking-tight", colors.text)}>{planet.name}</span>
                                                 {planet.isRetro && (
-                                                    <span className="text-[7px] bg-rose-100 text-rose-700 px-1 py-0.5 rounded font-bold">R</span>
+                                                    <span className="text-[9px] bg-rose-500 text-white px-1.5 py-0.5 rounded font-black shadow-sm">R</span>
                                                 )}
                                                 {dignity && (
-                                                    <span className={cn("text-[7px] px-1.5 py-0.5 rounded border font-bold flex items-center gap-0.5", dignity.color)}>
+                                                    <span className={cn("text-[9px] px-2 py-0.5 rounded-full border shadow-sm font-bold flex items-center gap-1", dignity.color)}>
                                                         {dignity.icon}
                                                         {dignity.type}
                                                     </span>
                                                 )}
                                             </div>
-                                            <div className="text-[9px] text-ink/35">
-                                                {ZODIAC_SYMBOLS[planet.signId]} {ZODIAC_SIGNS[planet.signId - 1]} · {planet.degree}
+                                            <div className="text-[11px] text-ink font-semibold flex items-center gap-1.5">
+                                                <span className="inline-block">{ZODIAC_SYMBOLS[planet.signId]}</span>
+                                                <span>{ZODIAC_SIGNS[planet.signId - 1]}</span>
+                                                <span className="opacity-20">·</span>
+                                                <span className="font-sans tabular-nums">{planet.degree}</span>
                                             </div>
-                                            <div className="text-[8px] text-ink/30 flex items-center gap-1">
-                                                <Moon className="w-2.5 h-2.5" />
-                                                {nakshatra.name} P{nakshatra.pada} · Lord: {nakshatra.lord}
+                                            <div className="text-[10px] text-ink font-bold flex items-center gap-1.5 mt-0.5 font-sans">
+                                                <Moon className="w-3 h-3 text-gold-dark" />
+                                                <span>{nakshatra.name} P{nakshatra.pada}</span>
+                                                <span className="opacity-20">·</span>
+                                                <span>Lord: {nakshatra.lord}</span>
                                             </div>
                                         </div>
-                                        <div className="text-right shrink-0 bg-white/60 px-2 py-1 rounded">
-                                            <span className="text-[14px] font-bold text-ink">H{house}</span>
+                                        <div className="text-right shrink-0 bg-white/40 px-3 py-1.5 rounded-lg border border-gold-primary/10 shadow-sm min-w-[50px]">
+                                            <span className="text-[16px] font-black text-ink">H{house}</span>
                                         </div>
                                     </div>
                                 );
@@ -368,7 +373,7 @@ export default function DivisionalChartZoomModal({
 
                     {/* Interactive House Grid */}
                     <div className="p-3 border-t border-gold-primary/10 bg-surface-warm/50">
-                        <h4 className="text-[9px] font-bold text-ink/30 uppercase tracking-wider mb-2 flex items-center gap-1">
+                        <h4 className="text-[9px] font-bold text-ink uppercase tracking-wider mb-2 flex items-center gap-1">
                             <Home className="w-3 h-3" /> Click House for Details
                         </h4>
                         <div className="grid grid-cols-6 gap-1">
@@ -410,7 +415,7 @@ export default function DivisionalChartZoomModal({
                                 <div className="flex items-center justify-between mb-2">
                                     <div>
                                         <span className="text-[18px] font-bold text-ink">House {selectedHouse}</span>
-                                        <span className="text-[12px] text-ink/30 ml-2">
+                                        <span className="text-[12px] text-ink ml-2 font-bold">
                                             {ZODIAC_SYMBOLS[((ascendantSign + selectedHouse - 2) % 12) + 1]} {ZODIAC_SIGNS[((ascendantSign + selectedHouse - 2) % 12)]}
                                         </span>
                                     </div>
@@ -425,8 +430,8 @@ export default function DivisionalChartZoomModal({
 
                                 <div className="text-[10px] text-gold-dark mb-2">
                                     <span className="font-bold">{HOUSE_SIGNIFICATIONS[selectedHouse]?.name}</span>
-                                    <span className="mx-1">·</span>
-                                    <span className="text-ink/30">Lord: {getHouseLord(selectedHouse)}</span>
+                                    <span className="mx-1 text-gold-dark">·</span>
+                                    <span className="text-ink font-bold">Lord: {getHouseLord(selectedHouse)}</span>
                                 </div>
 
                                 <div className="flex flex-wrap gap-1 mb-2">
@@ -445,7 +450,7 @@ export default function DivisionalChartZoomModal({
                                             return (
                                                 <div key={i} className="flex items-center gap-2 text-[10px] bg-surface-warm px-2 py-1 rounded">
                                                     <span className="font-bold">{p.name}</span>
-                                                    <span className="text-ink/30">{p.degree}</span>
+                                                    <span className="text-ink font-bold">{p.degree}</span>
                                                     {p.isRetro && <span className="text-rose-600 font-bold">℞</span>}
                                                     {dignity && <span className={cn("text-[7px] px-1 rounded", dignity.color)}>{dignity.type}</span>}
                                                 </div>

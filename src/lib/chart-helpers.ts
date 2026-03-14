@@ -38,7 +38,7 @@ export function parseChartData(chartData: unknown): ProcessedChartData {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Polymorphic Astro Engine API: duck-typing across many response shapes
     const data = chartData as any;
 
-    // 1. Identify where the planet list is
+    // List of potential keys for planetary positions
     let positions = data.transit_positions ||
         data.planetary_positions ||
         data.planets ||
@@ -49,30 +49,25 @@ export function parseChartData(chartData: unknown): ProcessedChartData {
         data.data?.pada_chart ||
         (data['Sun'] || data['Moon'] ? data : null);
 
-    // Deep fallback: Duck-typing for direct map without known keys
+    // Deep fallback: Search for planet-like structures
     if (!positions) {
-        // Search first level values for something that looks like a planet map
         const potentialKey = Object.keys(data).find(key => {
             const val = data[key] as any;
-            // Check if value is object and has planet-like properties (Sun/Moon are universal)
             return val && typeof val === 'object' && !Array.isArray(val) && (
-                (val.Sun && val.Moon) ||
-                (val['Sun'] && val['Moon']) ||
-                (val[0]?.name === 'Sun')
+                (val.Sun && val.Moon) || (val['Sun'] && val['Moon']) || (val[0]?.name === 'Sun')
             );
         });
+        if (potentialKey) positions = data[potentialKey];
+    }
 
-        if (potentialKey) {
-            positions = data[potentialKey];
-        } else {
-            // Check standard planet names in keys
-            const isPlanetMap = Object.keys(data).some(k =>
-                ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'].includes(k)
-            );
-            if (isPlanetMap) {
-                positions = data;
-            }
-        }
+    // Process Ascendant first so we can use it for house locations
+    let ascendant = data.sidereal_lagna_sign || data.data?.sidereal_lagna_sign || 1;
+    const asc = data.ascendant || data.data?.natal_ascendant || data.data?.ascendant;
+
+    if (asc) {
+        const sign = asc.sign || asc.sign_name || "Aries";
+        const normalizedSign = sign.charAt(0).toUpperCase() + sign.slice(1).toLowerCase();
+        ascendant = signNameToId[normalizedSign] || ascendant;
     }
 
     let planets: Planet[] = [];
@@ -80,32 +75,29 @@ export function parseChartData(chartData: unknown): ProcessedChartData {
     if (positions) {
         // Handle both Array and Object formats
         const entries: [string, Record<string, unknown>][] = Array.isArray(positions)
-            ? positions.map((p: Record<string, unknown>) => [String(p.name || p.planet_name || "??"), p])
+            ? positions.map((p: Record<string, unknown>) => [String(p.name || p.planet_name || p.label || "??"), p])
             : Object.entries(positions);
 
         planets = entries.map(([key, value]) => {
-            // Skip non-planet keys if mixed object (e.g. "ayanamsa" or "meta" keys)
             if (!value || typeof value !== 'object') return null;
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- dynamic planet record from polymorphic API
             const v = value as any;
 
             // Extract planet name
             const rawName = v?.label || v?.name || v?.planet_name || v?.planet || v?.id || key || "??";
-
-            // Normalize for lookup (Capitalize first letter, rest lowercase)
             const rawNameStr = String(rawName);
             const lookupKey = rawNameStr.charAt(0).toUpperCase() + rawNameStr.slice(1).toLowerCase();
-            const name = planetMap[lookupKey] || (rawNameStr.length >= 2 && rawNameStr.length <= 3 ? rawNameStr : (rawNameStr.length > 3 ? rawNameStr.substring(0, 2) : rawNameStr));
+            const name = planetMap[lookupKey] || (rawNameStr.length >= 2 && rawNameStr.length <= 4 ? rawNameStr : (rawNameStr.length > 4 ? rawNameStr.substring(0, 3) : rawNameStr));
 
             const sign = String(v?.sign || v?.sign_name || "");
             const normalizedSign = sign.charAt(0).toUpperCase() + sign.slice(1).toLowerCase();
             const signId = v?.sign_num || signNameToId[normalizedSign] || 1;
-            const rawDegree = v?.degrees || v?.longitude || v?.degree;
-            // Parse house if available
-            const house = v?.house ? parseInt(String(v.house)) : undefined;
+            const rawDegree = v?.degrees || v?.longitude || v?.degree || "";
+            
+            // House Position: use explicit house if available, or calculate relative to Lagna
+            const house = (v?.house || v?.house_id) 
+                ? parseInt(String(v?.house || v?.house_id)) 
+                : (((signId - ascendant + 12) % 12) + 1);
 
-            // Rahu and Ketu are always retrograde - don't show marker (Vedic convention)
             const isRahuKetu = name === 'Ra' || name === 'Ke';
             const hasRetrograde = v?.retrograde === 'R' || v?.retrograde === true || v?.is_retro === true;
 
@@ -115,41 +107,37 @@ export function parseChartData(chartData: unknown): ProcessedChartData {
                 degree: formatPlanetDegree(rawDegree as number | string | null | undefined),
                 isRetro: isRahuKetu ? false : hasRetrograde,
                 house,
-                nakshatra: v?.nakshatra || v?.nakshatra_name,
+                nakshatra: v?.nakshatra || v?.nakshatra_name || "-",
                 pada: v?.pada || v?.nakshatra_pada
             };
         }).filter(Boolean) as Planet[];
     }
 
-    // Process Ascendant
-    let ascendant = data.sidereal_lagna_sign || data.data?.sidereal_lagna_sign || 1;
-    const asc = data.ascendant || data.data?.natal_ascendant || data.data?.ascendant;
-
+    // Add Ascendant to planets list
     if (asc) {
-        const sign = asc.sign || asc.sign_name || "Aries";
-        const normalizedSign = sign.charAt(0).toUpperCase() + sign.slice(1).toLowerCase();
-        ascendant = signNameToId[normalizedSign] || 1;
-
-        // Add Ascendant to planets list so it renders as a point "As"
         const rawDegree = asc.degrees || asc.longitude || asc.degree;
-        planets.push({
-            name: 'As',
-            signId: ascendant,
-            degree: formatPlanetDegree(rawDegree),
-            isRetro: false,
-            house: 1,
-            nakshatra: asc.nakshatra || asc.nakshatra_name,
-            pada: asc.pada || asc.nakshatra_pada
-        });
+        if (!planets.some(p => p.name === 'As' || p.name === 'Ascendant')) {
+            planets.push({
+                name: 'As',
+                signId: ascendant,
+                degree: formatPlanetDegree(rawDegree),
+                isRetro: false,
+                house: 1,
+                nakshatra: asc.nakshatra || asc.nakshatra_name || "-",
+                pada: asc.pada || asc.nakshatra_pada
+            });
+        }
     } else if (data.sidereal_lagna_sign || data.data?.sidereal_lagna_sign) {
-        // Fallback for Pada Chart where only sign is provided
-        planets.push({
-            name: 'As',
-            signId: ascendant,
-            degree: "",
-            isRetro: false,
-            house: 1
-        });
+        if (!planets.some(p => p.name === 'As' || p.name === 'Ascendant')) {
+            planets.push({
+                name: 'As',
+                signId: ascendant,
+                degree: "",
+                isRetro: false,
+                house: 1,
+                nakshatra: "-"
+            });
+        }
     }
 
     return { planets, ascendant };
