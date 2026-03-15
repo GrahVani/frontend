@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { Search, MapPin, Calendar, Sparkles, AlertCircle, Loader2, Users } from "lucide-react";
+import { Search, MapPin, Calendar, Sparkles, AlertCircle, Loader2, Users, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { KnowledgeTooltip } from "@/components/knowledge";
 import TraditionSelector from "./TraditionSelector";
 import EventTypeSelector from "./EventTypeSelector";
 import PersonInputForm from "./PersonInputForm";
 import { useTraditionStore } from "@/store/useTraditionStore";
+import { useLocationAutocomplete } from "@/hooks/useLocationAutocomplete";
+import type { LocationSuggestion } from "@/types/client";
 // useEventTypes is consumed by EventTypeSelector internally
 import type {
   FindMuhuratParams,
@@ -275,47 +277,18 @@ export default function MuhuratSearchForm({
         )}
       </div>
 
-      {/* ─── Row 3: Location ─── */}
-      <div className="mb-5">
-        <div className={sectionHeadingClasses}>
-          <MapPin className="w-3.5 h-3.5" />
-          <span>Location</span>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div>
-            <label className={labelClasses}>Latitude</label>
-            <input
-              type="number"
-              step="any"
-              value={latitude}
-              onChange={(e) => setLatitude(Number(e.target.value))}
-              placeholder="28.6139"
-              className={inputClasses}
-            />
-          </div>
-          <div>
-            <label className={labelClasses}>Longitude</label>
-            <input
-              type="number"
-              step="any"
-              value={longitude}
-              onChange={(e) => setLongitude(Number(e.target.value))}
-              placeholder="77.2090"
-              className={inputClasses}
-            />
-          </div>
-          <div>
-            <label className={labelClasses}>Timezone</label>
-            <input
-              type="text"
-              value={timezone}
-              onChange={(e) => setTimezone(e.target.value)}
-              placeholder="Asia/Kolkata"
-              className={inputClasses}
-            />
-          </div>
-        </div>
-      </div>
+      {/* ─── Row 3: Event Location ─── */}
+      <LocationSearchSection
+        latitude={latitude}
+        longitude={longitude}
+        timezone={timezone}
+        onLatChange={setLatitude}
+        onLngChange={setLongitude}
+        onTzChange={setTimezone}
+        sectionHeadingClasses={sectionHeadingClasses}
+        labelClasses={labelClasses}
+        inputClasses={inputClasses}
+      />
 
       {/* ─── Person(s) Section ─── */}
       <div className="mb-5">
@@ -436,5 +409,119 @@ export default function MuhuratSearchForm({
         {isLoading ? "Searching..." : "Find Auspicious Dates"}
       </button>
     </form>
+  );
+}
+
+// ─── Location Search Sub-Component ──────────────────────
+
+function LocationSearchSection({
+  latitude, longitude, timezone,
+  onLatChange, onLngChange, onTzChange,
+  sectionHeadingClasses, labelClasses, inputClasses,
+}: {
+  latitude: number; longitude: number; timezone: string;
+  onLatChange: (v: number) => void; onLngChange: (v: number) => void; onTzChange: (v: string) => void;
+  sectionHeadingClasses: string; labelClasses: string; inputClasses: string;
+}) {
+  const location = useLocationAutocomplete();
+  const [showManual, setShowManual] = useState(false);
+
+  const onSelect = useCallback((suggestion: LocationSuggestion) => {
+    location.handleSelect(suggestion);
+    onLatChange(suggestion.latitude);
+    onLngChange(suggestion.longitude);
+    if (suggestion.timezone) onTzChange(suggestion.timezone);
+  }, [location, onLatChange, onLngChange, onTzChange]);
+
+  const onKeyDown = useCallback((e: React.KeyboardEvent) => {
+    const selected = location.handleKeyDown(e);
+    if (selected) onSelect(selected);
+  }, [location, onSelect]);
+
+  const coordSummary = `${latitude.toFixed(4)}°, ${longitude.toFixed(4)}° · ${timezone}`;
+
+  return (
+    <div className="mb-5">
+      <div className={sectionHeadingClasses}>
+        <MapPin className="w-3.5 h-3.5" />
+        <span>Event Location</span>
+      </div>
+
+      {/* Search input */}
+      <div className="relative mb-2">
+        <input
+          type="text"
+          value={location.query}
+          onChange={(e) => location.handleInputChange(e.target.value)}
+          onKeyDown={onKeyDown}
+          onBlur={location.handleBlur}
+          onFocus={location.handleFocus}
+          placeholder="Type city name (e.g., Delhi, Mumbai, Chennai)..."
+          className={cn(inputClasses, "pr-8")}
+          role="combobox"
+          aria-expanded={location.isOpen}
+          aria-autocomplete="list"
+        />
+        {location.isLoading && (
+          <Loader2 className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gold-primary animate-spin" />
+        )}
+
+        {/* Dropdown */}
+        {location.isOpen && location.suggestions.length > 0 && (
+          <div className="absolute z-50 w-full mt-1 bg-softwhite border border-antique rounded-lg shadow-lg overflow-hidden">
+            {location.suggestions.map((s, idx) => (
+              <button
+                key={`${s.formatted}-${idx}`}
+                type="button"
+                className={cn(
+                  "w-full text-left px-3 py-2 text-sm transition-colors",
+                  idx === location.activeIndex
+                    ? "bg-gold-primary/10 text-gold-dark"
+                    : "text-ink hover:bg-parchment/50"
+                )}
+                onMouseDown={() => onSelect(s)}
+              >
+                <span className="font-medium">{s.formatted}</span>
+                {s.timezone && <span className="text-ink/40 text-[11px] ml-2">({s.timezone})</span>}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Coordinates summary */}
+      <div className="flex items-center justify-between">
+        <p className="text-[11px] text-ink/40 flex items-center gap-1">
+          <MapPin className="w-3 h-3" />
+          {coordSummary}
+        </p>
+        <button
+          type="button"
+          onClick={() => setShowManual(!showManual)}
+          className="flex items-center gap-1 text-[11px] font-medium text-ink/40 hover:text-gold-dark transition-colors"
+        >
+          {showManual ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+          Manual
+        </button>
+      </div>
+
+      {/* Manual fields (collapsible) */}
+      {showManual && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2 animate-in slide-in-from-top-1 duration-200">
+          <div>
+            <label className={labelClasses}>Latitude</label>
+            <input type="number" step="any" value={latitude} onChange={(e) => onLatChange(Number(e.target.value))} placeholder="28.6139" className={inputClasses} />
+          </div>
+          <div>
+            <label className={labelClasses}>Longitude</label>
+            <input type="number" step="any" value={longitude} onChange={(e) => onLngChange(Number(e.target.value))} placeholder="77.2090" className={inputClasses} />
+          </div>
+          <div>
+            <label className={labelClasses}>Timezone</label>
+            <input type="text" value={timezone} onChange={(e) => onTzChange(e.target.value)} placeholder="Asia/Kolkata" className={inputClasses} />
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

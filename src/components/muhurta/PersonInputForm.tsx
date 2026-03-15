@@ -1,8 +1,10 @@
 "use client";
 
-import React from "react";
-import { User } from "lucide-react";
+import React, { useState, useCallback } from "react";
+import { User, MapPin, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLocationAutocomplete } from "@/hooks/useLocationAutocomplete";
+import type { LocationSuggestion } from "@/types/client";
 import type { PersonInput } from "@/types/muhurta.types";
 
 interface PersonInputFormProps {
@@ -24,11 +26,36 @@ export default function PersonInputForm({
   onChange,
   className,
 }: PersonInputFormProps) {
+  const [showManual, setShowManual] = useState(false);
+  const location = useLocationAutocomplete();
+
   const update = (field: keyof PersonInput, raw: string) => {
     const numericFields: (keyof PersonInput)[] = ["latitude", "longitude"];
     const val = numericFields.includes(field) ? (raw === "" ? undefined : Number(raw)) : raw;
     onChange({ ...value, [field]: val });
   };
+
+  const onLocationSelect = useCallback((suggestion: LocationSuggestion) => {
+    location.handleSelect(suggestion);
+    onChange({
+      ...value,
+      latitude: suggestion.latitude,
+      longitude: suggestion.longitude,
+      timezone: suggestion.timezone || "Asia/Kolkata",
+    });
+  }, [location, onChange, value]);
+
+  const onLocationKeyDown = useCallback((e: React.KeyboardEvent) => {
+    const selected = location.handleKeyDown(e);
+    if (selected) {
+      onLocationSelect(selected);
+    }
+  }, [location, onLocationSelect]);
+
+  const hasCoordinates = value.latitude !== undefined && value.longitude !== undefined;
+  const locationSummary = hasCoordinates
+    ? `${Number(value.latitude).toFixed(4)}°, ${Number(value.longitude).toFixed(4)}° · ${value.timezone || "Asia/Kolkata"}`
+    : null;
 
   return (
     <fieldset className={cn("border-0 p-0 m-0", className)}>
@@ -70,41 +97,111 @@ export default function PersonInputForm({
         </div>
       </div>
 
-      {/* Row 2: Latitude + Longitude + Timezone (3 columns) */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div>
-          <label className={labelClasses}>Latitude</label>
-          <input
-            type="number"
-            step="any"
-            value={value.latitude ?? 28.6139}
-            onChange={(e) => update("latitude", e.target.value)}
-            placeholder="28.6139"
-            className={inputClasses}
-          />
-        </div>
-        <div>
-          <label className={labelClasses}>Longitude</label>
-          <input
-            type="number"
-            step="any"
-            value={value.longitude ?? 77.209}
-            onChange={(e) => update("longitude", e.target.value)}
-            placeholder="77.2090"
-            className={inputClasses}
-          />
-        </div>
-        <div>
-          <label className={labelClasses}>Timezone</label>
+      {/* Row 2: Location search (autocomplete) */}
+      <div className="mb-3 relative">
+        <label className={labelClasses}>
+          <MapPin className="w-3 h-3 inline-block mr-1 -mt-0.5" />
+          Birth Place
+        </label>
+        <div className="relative">
           <input
             type="text"
-            value={value.timezone ?? "Asia/Kolkata"}
-            onChange={(e) => update("timezone", e.target.value)}
-            placeholder="Asia/Kolkata"
-            className={inputClasses}
+            value={location.query}
+            onChange={(e) => location.handleInputChange(e.target.value)}
+            onKeyDown={onLocationKeyDown}
+            onBlur={location.handleBlur}
+            onFocus={location.handleFocus}
+            placeholder="Type city name (e.g., Delhi, Mumbai, Chennai)..."
+            className={cn(inputClasses, "pr-8")}
+            role="combobox"
+            aria-expanded={location.isOpen}
+            aria-autocomplete="list"
           />
+          {location.isLoading && (
+            <Loader2 className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gold-primary animate-spin" />
+          )}
         </div>
+
+        {/* Autocomplete dropdown */}
+        {location.isOpen && location.suggestions.length > 0 && (
+          <div className="absolute z-50 w-full mt-1 bg-softwhite border border-antique rounded-lg shadow-lg overflow-hidden">
+            {location.suggestions.map((suggestion, idx) => (
+              <button
+                key={`${suggestion.formatted}-${idx}`}
+                type="button"
+                className={cn(
+                  "w-full text-left px-3 py-2 text-sm transition-colors",
+                  idx === location.activeIndex
+                    ? "bg-gold-primary/10 text-gold-dark"
+                    : "text-ink hover:bg-parchment/50"
+                )}
+                onMouseDown={() => onLocationSelect(suggestion)}
+              >
+                <span className="font-medium">{suggestion.formatted}</span>
+                {suggestion.timezone && (
+                  <span className="text-ink/40 text-[11px] ml-2">({suggestion.timezone})</span>
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Coordinates summary after selection */}
+        {locationSummary && (
+          <p className="text-[11px] text-gold-dark/70 mt-1 flex items-center gap-1">
+            <MapPin className="w-3 h-3" />
+            {locationSummary}
+          </p>
+        )}
       </div>
+
+      {/* Manual coordinates toggle */}
+      <button
+        type="button"
+        onClick={() => setShowManual(!showManual)}
+        className="flex items-center gap-1.5 text-[11px] font-medium text-ink/40 hover:text-gold-dark transition-colors mb-2"
+      >
+        {showManual ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+        {showManual ? "Hide" : "Enter"} coordinates manually
+      </button>
+
+      {/* Row 3: Manual Lat + Lng + Timezone (collapsible) */}
+      {showManual && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 animate-in slide-in-from-top-1 duration-200">
+          <div>
+            <label className={labelClasses}>Latitude</label>
+            <input
+              type="number"
+              step="any"
+              value={value.latitude ?? 28.6139}
+              onChange={(e) => update("latitude", e.target.value)}
+              placeholder="28.6139"
+              className={inputClasses}
+            />
+          </div>
+          <div>
+            <label className={labelClasses}>Longitude</label>
+            <input
+              type="number"
+              step="any"
+              value={value.longitude ?? 77.209}
+              onChange={(e) => update("longitude", e.target.value)}
+              placeholder="77.2090"
+              className={inputClasses}
+            />
+          </div>
+          <div>
+            <label className={labelClasses}>Timezone</label>
+            <input
+              type="text"
+              value={value.timezone ?? "Asia/Kolkata"}
+              onChange={(e) => update("timezone", e.target.value)}
+              placeholder="Asia/Kolkata"
+              className={inputClasses}
+            />
+          </div>
+        </div>
+      )}
     </fieldset>
   );
 }
