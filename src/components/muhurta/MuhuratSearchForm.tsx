@@ -10,6 +10,7 @@ import PersonInputForm from "./PersonInputForm";
 import { useTraditionStore } from "@/store/useTraditionStore";
 import { useLocationAutocomplete } from "@/hooks/useLocationAutocomplete";
 import type { LocationSuggestion } from "@/types/client";
+import { formatLocationDisplay } from "./PersonInputForm";
 // useEventTypes is consumed by EventTypeSelector internally
 import type {
   FindMuhuratParams,
@@ -481,8 +482,15 @@ function LocationSearchSection({
                 )}
                 onMouseDown={() => onSelect(s)}
               >
-                <span className="font-medium">{s.formatted}</span>
-                {s.timezone && <span className="text-ink/40 text-[11px] ml-2">({s.timezone})</span>}
+                {(() => {
+                  const display = formatLocationDisplay(s);
+                  return (
+                    <div>
+                      <span className="font-semibold text-ink">{display.primary}</span>
+                      <span className="block text-[11px] text-ink/50 mt-0.5">{display.secondary}</span>
+                    </div>
+                  );
+                })()}
               </button>
             ))}
           </div>

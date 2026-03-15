@@ -20,6 +20,35 @@ const inputClasses =
 const labelClasses =
   "block text-[11px] font-bold font-serif text-ink/55 uppercase tracking-widest mb-1";
 
+/** Build a rich display string from LocationSuggestion fields for disambiguation */
+export function formatLocationDisplay(s: LocationSuggestion): { primary: string; secondary: string } {
+  // Build primary: city/town name
+  const primary = s.city || s.formatted.split(",")[0]?.trim() || s.formatted;
+
+  // Build secondary: state, country, coordinates for disambiguation
+  const parts: string[] = [];
+  if (s.state) parts.push(s.state);
+  if (s.country && s.country !== s.state) parts.push(s.country);
+
+  // If formatted has more detail than city+country (like district, pincode), include it
+  const formattedParts = s.formatted.split(",").map((p) => p.trim());
+  if (formattedParts.length > 2) {
+    // Include middle parts (district, state) that aren't already covered
+    const middleParts = formattedParts.slice(1, -1).filter(
+      (p) => p !== s.state && p !== s.country && !p.match(/^\d/)
+    );
+    if (middleParts.length > 0 && !parts.includes(middleParts[0])) {
+      parts.unshift(...middleParts);
+    }
+  }
+
+  // Add coordinates for final disambiguation (different Atmakurs have different coords)
+  const coords = `${s.latitude.toFixed(2)}°N, ${s.longitude.toFixed(2)}°E`;
+  const secondary = parts.length > 0 ? `${parts.join(", ")} · ${coords}` : coords;
+
+  return { primary, secondary };
+}
+
 export default function PersonInputForm({
   label,
   value,
@@ -137,10 +166,15 @@ export default function PersonInputForm({
                 )}
                 onMouseDown={() => onLocationSelect(suggestion)}
               >
-                <span className="font-medium">{suggestion.formatted}</span>
-                {suggestion.timezone && (
-                  <span className="text-ink/40 text-[11px] ml-2">({suggestion.timezone})</span>
-                )}
+                {(() => {
+                  const display = formatLocationDisplay(suggestion);
+                  return (
+                    <div>
+                      <span className="font-semibold text-ink">{display.primary}</span>
+                      <span className="block text-[11px] text-ink/50 mt-0.5">{display.secondary}</span>
+                    </div>
+                  );
+                })()}
               </button>
             ))}
           </div>
