@@ -3,6 +3,7 @@
 import React, { useState, useCallback } from "react";
 import { Search, MapPin, Calendar, Sparkles, AlertCircle, Loader2, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from "@/components/knowledge";
 import TraditionSelector from "./TraditionSelector";
 import EventTypeSelector from "./EventTypeSelector";
 import PersonInputForm from "./PersonInputForm";
@@ -400,7 +401,7 @@ export default function MuhuratSearchForm({
               </div>
               <div>
                 <span className="text-sm font-serif text-ink font-medium">
-                  Include AI Interpretation
+                  Include <KnowledgeTooltip term="muhurta_ai_interpretation" unstyled>AI Interpretation</KnowledgeTooltip>
                 </span>
                 <span className="block text-[11px] text-ink/40">
                   Gemini-powered insights for each muhurat

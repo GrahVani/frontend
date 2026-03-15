@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from "@/components/knowledge";
 import type { DateVerdict } from "@/types/muhurta.types";
 
 // ─── Props ──────────────────────────────────────────────────
@@ -63,7 +64,9 @@ export default function DateVerdictCard({ verdict, className }: DateVerdictCardP
             is_suitable ? "text-status-success" : "text-status-error",
           )}
         >
-          {is_suitable ? "Suitable" : "Not Suitable"}
+          <KnowledgeTooltip term="muhurta" unstyled>
+            {is_suitable ? "Suitable" : "Not Suitable"}
+          </KnowledgeTooltip>
         </h2>
       </div>
 

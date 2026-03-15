@@ -2,7 +2,22 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from "@/components/knowledge";
 import type { RejectionSummary as RejectionSummaryType } from "@/types/muhurta.types";
+
+// ─── Knowledge tooltip terms for known rejection reasons ────
+
+const REJECTION_KNOWLEDGE_TERMS: Record<string, string> = {
+  shukra_asta: "shukra_asta",
+  chaturmas: "chaturmas",
+  gandanta: "gandanta",
+  krishna_paksha: "paksha",
+  adhik_maas: "adhik_maas",
+  guru_asta: "guru_asta",
+  solar_eclipse: "grahan",
+  lunar_eclipse: "grahan",
+  rahu_kaal: "rahu_kaal",
+};
 
 // ─── Props ──────────────────────────────────────────────────
 
@@ -118,7 +133,13 @@ export default function RejectionSummary({ summary, className }: RejectionSummar
                         <line x1="3" y1="10" x2="21" y2="10" />
                       </svg>
                       <span className="text-[13px] font-medium text-ink">
-                        {formatReasonLabel(reason)}
+                        {REJECTION_KNOWLEDGE_TERMS[reason] ? (
+                          <KnowledgeTooltip term={REJECTION_KNOWLEDGE_TERMS[reason]} unstyled>
+                            {formatReasonLabel(reason)}
+                          </KnowledgeTooltip>
+                        ) : (
+                          formatReasonLabel(reason)
+                        )}
                       </span>
                     </div>
                     <span className="text-[14px] font-serif font-bold text-status-warning tabular-nums">
@@ -157,7 +178,13 @@ export default function RejectionSummary({ summary, className }: RejectionSummar
                     )}
                   >
                     <span className="flex-1 text-[13px] text-ink font-medium">
-                      {formatReasonLabel(reason)}
+                      {REJECTION_KNOWLEDGE_TERMS[reason] ? (
+                        <KnowledgeTooltip term={REJECTION_KNOWLEDGE_TERMS[reason]} unstyled>
+                          {formatReasonLabel(reason)}
+                        </KnowledgeTooltip>
+                      ) : (
+                        formatReasonLabel(reason)
+                      )}
                     </span>
                     <span className="text-[13px] font-serif font-bold text-ink/70 w-20 text-right tabular-nums">
                       {count}

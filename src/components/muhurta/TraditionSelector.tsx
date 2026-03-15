@@ -3,6 +3,7 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from "@/components/knowledge";
 import { useTraditions } from "@/hooks/queries/useMuhurta";
 import { useTraditionStore } from "@/store/useTraditionStore";
 import type { TraditionCode, TraditionInfo } from "@/types/muhurta.types";
@@ -58,7 +59,7 @@ export default function TraditionSelector({
           htmlFor={selectId}
           className="block text-[12px] font-bold font-serif text-gold-dark uppercase tracking-widest mb-1"
         >
-          {label}
+          <KnowledgeTooltip term="muhurta_tradition" unstyled>{label}</KnowledgeTooltip>
         </label>
       )}
 

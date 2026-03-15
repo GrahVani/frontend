@@ -199,7 +199,13 @@ export default function DailyPanchangWidget({ className }: DailyPanchangWidgetPr
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-[11px] text-ink/40 uppercase tracking-wider">
-                    Current {seg.system}
+                    Current{" "}
+                    <KnowledgeTooltip
+                      term={seg.system.includes("Gowri") ? "gowri_panchangam" : "choghadiya"}
+                      unstyled
+                    >
+                      {seg.system}
+                    </KnowledgeTooltip>
                   </span>
                   <span className="text-[14px] font-serif font-bold text-ink">{seg.name}</span>
                 </div>
@@ -227,7 +233,9 @@ export default function DailyPanchangWidget({ className }: DailyPanchangWidgetPr
                   <circle cx="12" cy="12" r="10" />
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
-                <span className="text-[11px] text-ink/40 uppercase tracking-wider">Rahu Kaal</span>
+                <KnowledgeTooltip term="rahu_kaal" unstyled>
+                  <span className="text-[11px] text-ink/40 uppercase tracking-wider">Rahu Kaal</span>
+                </KnowledgeTooltip>
                 <span className="text-[13px] font-medium text-ink tabular-nums">
                   {inauspicious.inauspicious_periods.rahu_kaal.start_time}
                   {" — "}

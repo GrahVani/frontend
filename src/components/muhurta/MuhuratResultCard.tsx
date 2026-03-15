@@ -146,7 +146,9 @@ export default function MuhuratResultCard({ result, className }: MuhuratResultCa
                 GRADE_STYLES[result.grade],
               )}
             >
-              {result.grade}
+              <KnowledgeTooltip term={`${result.grade.toLowerCase()}_grade`} unstyled>
+                {result.grade}
+              </KnowledgeTooltip>
             </span>
           </div>
         </div>
@@ -231,7 +233,14 @@ export default function MuhuratResultCard({ result, className }: MuhuratResultCa
             <AlertTriangle className="w-3.5 h-3.5" />
           )}
           <span className="text-[12px] font-semibold">{tqSummary.name}</span>
-          <span className="text-[10px] opacity-60">({tqSummary.system})</span>
+          <span className="text-[10px] opacity-60">
+            (<KnowledgeTooltip
+              term={tqSummary.system.includes("Gowri") ? "gowri_panchangam" : "choghadiya"}
+              unstyled
+            >
+              {tqSummary.system}
+            </KnowledgeTooltip>)
+          </span>
         </div>
       </div>
 
@@ -302,7 +311,7 @@ export default function MuhuratResultCard({ result, className }: MuhuratResultCa
           {/* Classical References */}
           {result.classical_references.length > 0 && (
             <div className="px-5 pb-4">
-              <DetailSectionHeader label="Classical References" />
+              <DetailSectionHeader label="Classical References" knowledgeTerm="muhurta_classical_references" />
               <div className="space-y-1.5 mt-2">
                 {result.classical_references.map((ref, i) => (
                   <div key={i} className="flex items-start gap-2">
@@ -369,11 +378,15 @@ function PanchangCell({
 
 // ─── Detail Section Header ──────────────────────────────
 
-function DetailSectionHeader({ label }: { label: string }) {
+function DetailSectionHeader({ label, knowledgeTerm }: { label: string; knowledgeTerm?: string }) {
   return (
     <div className="flex items-center gap-2">
       <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-gold-dark">
-        {label}
+        {knowledgeTerm ? (
+          <KnowledgeTooltip term={knowledgeTerm} unstyled>{label}</KnowledgeTooltip>
+        ) : (
+          label
+        )}
       </span>
       <div className="flex-1 h-px bg-gradient-to-r from-gold-primary/20 to-transparent" />
     </div>

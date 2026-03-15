@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from "@/components/knowledge";
 import { Sparkles, ChevronDown, ChevronUp, Globe } from "lucide-react";
 import { useInterpretation } from "@/hooks/queries/useMuhurta";
 import type { InterpretLanguage } from "@/types/muhurta.types";
@@ -78,7 +79,11 @@ export default function AIInterpretation({
           <Sparkles className="w-3.5 h-3.5 text-white" />
         </div>
         <span className="text-[13px] font-semibold text-gold-dark tracking-wide flex-1 text-left">
-          {expanded ? "AI Interpretation" : "Get AI Interpretation"}
+          {expanded ? (
+            <>AI <KnowledgeTooltip term="muhurta" unstyled>Muhurat</KnowledgeTooltip> Interpretation</>
+          ) : (
+            <>Get AI <KnowledgeTooltip term="muhurta" unstyled>Muhurat</KnowledgeTooltip> Interpretation</>
+          )}
         </span>
         {expanded ? (
           <ChevronUp className="w-4 h-4 text-gold-dark" />

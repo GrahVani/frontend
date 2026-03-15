@@ -36,7 +36,7 @@ export default function AshtakootChart({ data, className }: AshtakootChartProps)
       {/* Header */}
       <div className="flex items-center gap-2 mb-1">
         <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-gold-dark">
-          Ashtakoot Gun Milan
+          <KnowledgeTooltip term="ashtakoot_system" unstyled>Ashtakoot Gun Milan</KnowledgeTooltip>
         </span>
         <div className="flex-1 h-px bg-gradient-to-r from-gold-primary/20 to-transparent" />
       </div>
@@ -116,7 +116,9 @@ export default function AshtakootChart({ data, className }: AshtakootChartProps)
                 : "bg-red-100 text-red-700 border-red-300",
             )}
           >
-            {data.nadi_dosha_cancelled ? "Nadi Dosha Cancelled" : "Nadi Dosha"}
+            <KnowledgeTooltip term="nadi_dosha_match" unstyled>
+              {data.nadi_dosha_cancelled ? "Nadi Dosha Cancelled" : "Nadi Dosha"}
+            </KnowledgeTooltip>
           </span>
           <span
             className={cn(

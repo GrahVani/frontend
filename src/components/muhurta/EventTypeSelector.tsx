@@ -3,6 +3,7 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from "@/components/knowledge";
 import { useEventTypes } from "@/hooks/queries/useMuhurta";
 import type { EventTypeCode, EventTypeInfo } from "@/types/muhurta.types";
 
@@ -66,7 +67,7 @@ export default function EventTypeSelector({
         htmlFor={selectId}
         className="block text-[12px] font-bold font-serif text-gold-dark uppercase tracking-widest mb-1"
       >
-        Event Type
+        <KnowledgeTooltip term="muhurta_event_type" unstyled>Event Type</KnowledgeTooltip>
       </label>
 
       <div className="relative">

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from "@/components/knowledge";
 import AshtakootChart from "./AshtakootChart";
 import DashaPoruthamChart from "./DashaPoruthamChart";
 import { BookOpen, AlertTriangle, Check } from "lucide-react";
@@ -118,7 +119,12 @@ export default function CompatibilityResult({ data, className }: CompatibilityRe
         <div className="px-5 pb-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-gold-dark">
-              {data.chevvai_dosham ? "Chevvai Dosham" : "Manglik Status"}
+              <KnowledgeTooltip
+                term={data.chevvai_dosham ? "chevvai_dosham" : "manglik_dosha_match"}
+                unstyled
+              >
+                {data.chevvai_dosham ? "Chevvai Dosham" : "Manglik Status"}
+              </KnowledgeTooltip>
             </span>
             <div className="flex-1 h-px bg-gradient-to-r from-gold-primary/20 to-transparent" />
           </div>
@@ -161,7 +167,7 @@ export default function CompatibilityResult({ data, className }: CompatibilityRe
         <div className="px-5 pb-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-gold-dark">
-              Yoni Animals
+              <KnowledgeTooltip term="koota_yoni" unstyled>Yoni Animals</KnowledgeTooltip>
             </span>
             <div className="flex-1 h-px bg-gradient-to-r from-gold-primary/20 to-transparent" />
           </div>
@@ -176,7 +182,7 @@ export default function CompatibilityResult({ data, className }: CompatibilityRe
         <div className="px-5 pb-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-gold-dark">
-              Gana Match
+              <KnowledgeTooltip term="koota_gana" unstyled>Gana Match</KnowledgeTooltip>
             </span>
             <div className="flex-1 h-px bg-gradient-to-r from-gold-primary/20 to-transparent" />
           </div>

@@ -9,6 +9,18 @@ import type {
   BothQuality,
 } from "@/types/muhurta.types";
 
+// ─── Segment Knowledge Term Mapping ─────────────────────────
+
+const SEGMENT_KNOWLEDGE_TERMS: Record<string, string> = {
+  Amrit: "choghadiya_amrit",
+  Shubh: "choghadiya_shubh",
+  Labh: "choghadiya_labh",
+  Kaal: "choghadiya_kaal",
+  Rog: "choghadiya_rog",
+  Udveg: "choghadiya_udveg",
+  Char: "choghadiya_char",
+};
+
 // ─── Auspicious / Inauspicious classification ──────────────
 
 const CHOGHADIYA_AUSPICIOUS = new Set(["Amrit", "Shubh", "Labh"]);
@@ -121,6 +133,7 @@ function SingleTimeline({
         {segments.map((name, i) => {
           const nature = classify(name);
           const isActive = i === activeIndex;
+          const segTerm = SEGMENT_KNOWLEDGE_TERMS[name];
           return (
             <div key={`label-${name}-${i}`} className="flex-1 text-center">
               <span
@@ -131,7 +144,11 @@ function SingleTimeline({
                     : "text-ink/40 font-medium",
                 )}
               >
-                {name}
+                {segTerm ? (
+                  <KnowledgeTooltip term={segTerm} unstyled>{name}</KnowledgeTooltip>
+                ) : (
+                  name
+                )}
               </span>
             </div>
           );

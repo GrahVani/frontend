@@ -40,7 +40,7 @@ const SCORING_LAYERS: ScoringLayer[] = [
   {
     key: "personalization",
     label: "Personalization",
-    knowledgeTerm: null,
+    knowledgeTerm: "tara_bala",
     max: 20,
     color: "bg-purple-500",
     trackColor: "bg-purple-100",
@@ -58,7 +58,7 @@ const SCORING_LAYERS: ScoringLayer[] = [
   {
     key: "compatibility",
     label: "Compatibility",
-    knowledgeTerm: null,
+    knowledgeTerm: "ashtakoot_system",
     max: 15,
     color: "bg-pink-500",
     trackColor: "bg-pink-100",
@@ -67,7 +67,7 @@ const SCORING_LAYERS: ScoringLayer[] = [
   {
     key: "auspicious_bonus",
     label: "Auspicious Bonus",
-    knowledgeTerm: null,
+    knowledgeTerm: "amrit_kaal",
     max: 10,
     color: "bg-gold-primary",
     trackColor: "bg-gold-primary/15",
@@ -76,7 +76,7 @@ const SCORING_LAYERS: ScoringLayer[] = [
   {
     key: "yoga_matrix",
     label: "Yoga Matrix",
-    knowledgeTerm: "panchanga_yoga",
+    knowledgeTerm: "yoga_panchanga",
     max: 15,
     color: "bg-emerald-500",
     trackColor: "bg-emerald-100",
@@ -85,7 +85,7 @@ const SCORING_LAYERS: ScoringLayer[] = [
   {
     key: "time_window_penalties",
     label: "Time Penalties",
-    knowledgeTerm: null,
+    knowledgeTerm: "rahu_kaal",
     max: 15,
     color: "bg-red-500",
     trackColor: "bg-red-100",
@@ -94,7 +94,7 @@ const SCORING_LAYERS: ScoringLayer[] = [
   {
     key: "mahadosha",
     label: "Mahadosha Gate",
-    knowledgeTerm: "mahadosha",
+    knowledgeTerm: "mahadosha_gate",
     type: "gate",
   },
 ];

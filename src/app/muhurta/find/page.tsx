@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Search, Clock, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from "@/components/knowledge";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
 import MuhuratSearchForm from "@/components/muhurta/MuhuratSearchForm";
 import MuhuratResultCard from "@/components/muhurta/MuhuratResultCard";
@@ -21,7 +22,7 @@ export default function FindMuhuratPage() {
             <div>
                 <h1 className={cn(TYPOGRAPHY.pageTitle, "flex items-center gap-3")}>
                     <Search className="w-6 h-6 text-gold-dark" />
-                    Find Auspicious Muhurat
+                    Find Auspicious <KnowledgeTooltip term="muhurta" unstyled>Muhurat</KnowledgeTooltip>
                 </h1>
                 <p className="text-ink/60 text-sm mt-1">
                     Search for the best auspicious date-time windows for any ceremony

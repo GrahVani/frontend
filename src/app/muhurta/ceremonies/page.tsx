@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from "@/components/knowledge";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
 import { useEventTypes } from "@/hooks/queries/useMuhurta";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -11,6 +12,17 @@ import {
     Shovel, Store, FileText, Gem, Heart, Users,
 } from "lucide-react";
 import type { EventTypeCode } from "@/types/muhurta.types";
+
+const EVENT_KNOWLEDGE_TERMS: Record<string, string> = {
+    VIVAH: "vivah_muhurta",
+    SAGAI: "sagai_muhurta",
+    GRIHA_PRAVESH: "griha_pravesh",
+    BHOOMI_PUJAN: "bhoomi_pujan",
+    UPANAYANA: "upanayana",
+    NAAMKARAN: "naamkaran",
+    ANNAPRASHAN: "annaprashan",
+    VIDYAARAMBH: "vidyaarambh",
+};
 
 const EVENT_ICONS: Record<string, React.ReactNode> = {
     VIVAH: <Heart className="w-6 h-6" />,
@@ -84,7 +96,13 @@ export default function CeremoniesPage() {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <h3 className="font-semibold text-ink text-[15px] group-hover:text-gold-dark transition-colors">
-                                        {event.name}
+                                        {EVENT_KNOWLEDGE_TERMS[event.code] ? (
+                                            <KnowledgeTooltip term={EVENT_KNOWLEDGE_TERMS[event.code]} unstyled>
+                                                {event.name}
+                                            </KnowledgeTooltip>
+                                        ) : (
+                                            event.name
+                                        )}
                                     </h3>
                                     <p className="text-ink/60 text-[12.5px] mt-0.5 leading-relaxed">
                                         {event.description}

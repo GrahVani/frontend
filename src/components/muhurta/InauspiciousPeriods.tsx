@@ -9,10 +9,11 @@ import type { InauspiciousWindowsResponse, InauspiciousPeriod } from "@/types/mu
 
 const PERIOD_KNOWLEDGE_TERMS: Record<string, string> = {
   rahu_kaal: "rahu_kaal",
-  yamaganda_kaal: "yamaghanta",
+  yamaganda_kaal: "yamagandam",
   gulika_kaal: "gulika_kaal",
   abhijit_muhurat: "abhijit_muhurta",
   pradosh_kaal: "pradosh_kaal",
+  varjyam: "varjyam",
 };
 
 // ─── Props ──────────────────────────────────────────────────
@@ -101,7 +102,7 @@ function DurMuhuratRow({
     <div className="flex items-center justify-between py-2 px-3 border-l-[3px] border-l-status-error rounded-r-lg">
       <div className="flex items-center gap-2">
         <span className="text-[14px] font-serif font-semibold text-ink">
-          Dur Muhurat {index + 1}
+          <KnowledgeTooltip term="durmuhurta" unstyled>Dur Muhurat</KnowledgeTooltip> {index + 1}
         </span>
         {isMandatoryAvoid && (
           <Badge variant="error" size="sm">MUST AVOID</Badge>
@@ -224,7 +225,7 @@ export default function InauspiciousPeriods({ data, className }: InauspiciousPer
           />
           <PeriodRow
             label="Yamaganda Kaal"
-            knowledgeTerm="yamaghanta"
+            knowledgeTerm="yamagandam"
             period={inauspicious_periods.yamaganda_kaal}
             accent="red"
             isMandatoryAvoid={mandatorySet.has("yamaganda_kaal")}

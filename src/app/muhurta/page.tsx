@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { Clock, Search, CalendarCheck, Heart, Sparkles, AlertTriangle, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from "@/components/knowledge";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
 import DailyPanchangWidget from "@/components/muhurta/DailyPanchangWidget";
 import TimeQualityTimeline from "@/components/muhurta/TimeQualityTimeline";
@@ -53,7 +54,7 @@ export default function MuhurtaDashboardPage() {
                 <div>
                     <h1 className={cn(TYPOGRAPHY.pageTitle, "flex items-center gap-3")}>
                         <Clock className="w-6 h-6 text-gold-dark" />
-                        Muhurat Dashboard
+                        <KnowledgeTooltip term="muhurta" unstyled>Muhurat</KnowledgeTooltip> Dashboard
                     </h1>
                     <p className="text-ink/60 text-sm mt-1 font-serif">{dateStr}</p>
                 </div>

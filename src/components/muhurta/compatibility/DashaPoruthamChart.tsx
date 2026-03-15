@@ -2,6 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from "@/components/knowledge";
 import { Check, X, AlertTriangle } from "lucide-react";
 import type { DashaPoruthamData } from "@/types/muhurta.types";
 
@@ -11,17 +12,17 @@ interface DashaPoruthamChartProps {
 }
 
 // Canonical order of 10 Poruthams
-const PORUTHAM_CONFIG: { key: string; label: string }[] = [
-  { key: "dina", label: "Dina" },
-  { key: "gana", label: "Gana" },
-  { key: "mahendram", label: "Mahendram" },
-  { key: "stree_deergham", label: "Stree Deergham" },
-  { key: "yoni", label: "Yoni" },
-  { key: "rashi", label: "Rashi" },
-  { key: "rasiyathipathi", label: "Rasiyathipathi" },
-  { key: "rajju", label: "Rajju" },
-  { key: "vedhai", label: "Vedhai" },
-  { key: "vasya", label: "Vasya" },
+const PORUTHAM_CONFIG: { key: string; label: string; term?: string }[] = [
+  { key: "dina", label: "Dina", term: "dina_porutham" },
+  { key: "gana", label: "Gana", term: "koota_gana" },
+  { key: "mahendram", label: "Mahendram", term: "mahendram_porutham" },
+  { key: "stree_deergham", label: "Stree Deergham", term: "stree_deergham_porutham" },
+  { key: "yoni", label: "Yoni", term: "koota_yoni" },
+  { key: "rashi", label: "Rashi", term: "rashi_porutham" },
+  { key: "rasiyathipathi", label: "Rasiyathipathi", term: "rasiyathipathi_porutham" },
+  { key: "rajju", label: "Rajju", term: "rajju_porutham" },
+  { key: "vedhai", label: "Vedhai", term: "vedhai_porutham" },
+  { key: "vasya", label: "Vasya", term: "vasya_porutham" },
 ];
 
 export default function DashaPoruthamChart({ data, className }: DashaPoruthamChartProps) {
@@ -30,7 +31,7 @@ export default function DashaPoruthamChart({ data, className }: DashaPoruthamCha
       {/* Header */}
       <div className="flex items-center gap-2 mb-1">
         <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-gold-dark">
-          Dasha Porutham
+          <KnowledgeTooltip term="dasha_porutham" unstyled>Dasha Porutham</KnowledgeTooltip>
         </span>
         <div className="flex-1 h-px bg-gradient-to-r from-gold-primary/20 to-transparent" />
       </div>
@@ -65,7 +66,13 @@ export default function DashaPoruthamChart({ data, className }: DashaPoruthamCha
             >
               {/* Left: Name + mandatory badge */}
               <div className="flex items-center gap-2.5">
-                <span className="text-[13px] font-medium text-ink">{p.label}</span>
+                <span className="text-[13px] font-medium text-ink">
+                  {p.term ? (
+                    <KnowledgeTooltip term={p.term} unstyled>{p.label}</KnowledgeTooltip>
+                  ) : (
+                    p.label
+                  )}
+                </span>
                 {isMandatory && (
                   <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700 border border-amber-200/60">
                     Mandatory
