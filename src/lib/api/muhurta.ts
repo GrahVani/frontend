@@ -1,4 +1,4 @@
-// Muhurat Engine API — proxied through astro-engine service
+// Muhurat Engine API — calls engine directly until backend proxy is deployed
 // 9 endpoints covering find, evaluate, compatibility, panchang, inauspicious, time-quality, interpret
 
 import type {
@@ -19,8 +19,10 @@ import type {
   TimeQualityResponse,
 } from "@/types/muhurta.types";
 
-const ASTRO_ENGINE_URL = process.env.NEXT_PUBLIC_ASTRO_ENGINE_URL || "https://api-astro.grahvani.in";
-const BASE = `${ASTRO_ENGINE_URL}/api/muhurat`;
+// Direct engine URL until backend proxy (api-astro.grahvani.in) is deployed with muhurat routes
+// Once deployed, switch to: `${process.env.NEXT_PUBLIC_ASTRO_ENGINE_URL}/api/muhurat`
+const MUHURAT_ENGINE_URL = process.env.NEXT_PUBLIC_MUHURAT_ENGINE_URL || "https://astroengine.astrocorp.in";
+const BASE = `${MUHURAT_ENGINE_URL}/muhurat`;
 
 interface ApiResult<T> {
   success: boolean;
