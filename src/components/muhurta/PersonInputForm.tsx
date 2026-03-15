@@ -22,29 +22,20 @@ const labelClasses =
 
 /** Build a rich display string from LocationSuggestion fields for disambiguation */
 export function formatLocationDisplay(s: LocationSuggestion): { primary: string; secondary: string } {
-  // Build primary: city/town name
-  const primary = s.city || s.formatted.split(",")[0]?.trim() || s.formatted;
+  // Show the FULL formatted string — it includes district, pincode, state when available
+  // This is far better than extracting pieces, because OpenCage already builds a good address
+  const primary = s.formatted;
 
-  // Build secondary: state, country, coordinates for disambiguation
-  const parts: string[] = [];
-  if (s.state) parts.push(s.state);
-  if (s.country && s.country !== s.state) parts.push(s.country);
+  // Second line: coordinates for final disambiguation (two places can have same name + state)
+  const coords = `${s.latitude.toFixed(4)}°N, ${s.longitude.toFixed(4)}°E`;
 
-  // If formatted has more detail than city+country (like district, pincode), include it
-  const formattedParts = s.formatted.split(",").map((p) => p.trim());
-  if (formattedParts.length > 2) {
-    // Include middle parts (district, state) that aren't already covered
-    const middleParts = formattedParts.slice(1, -1).filter(
-      (p) => p !== s.state && p !== s.country && !p.match(/^\d/)
-    );
-    if (middleParts.length > 0 && !parts.includes(middleParts[0])) {
-      parts.unshift(...middleParts);
-    }
-  }
+  // If state/country not already in formatted, append them
+  const extras: string[] = [];
+  if (s.state && !s.formatted.includes(s.state)) extras.push(s.state);
+  if (s.country && !s.formatted.includes(s.country)) extras.push(s.country);
+  const extraStr = extras.length > 0 ? ` — ${extras.join(", ")}` : "";
 
-  // Add coordinates for final disambiguation (different Atmakurs have different coords)
-  const coords = `${s.latitude.toFixed(2)}°N, ${s.longitude.toFixed(2)}°E`;
-  const secondary = parts.length > 0 ? `${parts.join(", ")} · ${coords}` : coords;
+  const secondary = `${coords}${extraStr}${s.timezone ? ` · ${s.timezone}` : ""}`;
 
   return { primary, secondary };
 }
