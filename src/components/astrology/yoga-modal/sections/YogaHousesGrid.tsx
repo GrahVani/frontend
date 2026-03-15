@@ -2,6 +2,7 @@
 
 import React, { memo } from 'react';
 import { MapPin } from 'lucide-react';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { NormalizedHouse } from '@/types/yoga.types';
 
 interface YogaHousesGridProps {
@@ -14,7 +15,7 @@ export const YogaHousesGrid = memo(function YogaHousesGrid({ data }: YogaHousesG
     return (
         <div className="prem-card p-5">
             <h3 className="font-serif font-bold text-ink mb-3 flex items-center gap-2 text-[14px] uppercase tracking-wider">
-                <MapPin className="w-4 h-4 text-gold-primary" /> House Placements
+                <MapPin className="w-4 h-4 text-gold-primary" /> <KnowledgeTooltip term="bhava" unstyled>House Placements</KnowledgeTooltip>
             </h3>
 
             <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">

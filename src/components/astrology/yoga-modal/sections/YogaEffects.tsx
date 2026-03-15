@@ -4,6 +4,7 @@ import React, { memo } from 'react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { Target } from 'lucide-react';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { NormalizedEffects } from '@/types/yoga.types';
 
 interface YogaEffectsProps {

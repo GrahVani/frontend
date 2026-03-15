@@ -16,6 +16,7 @@ import {
     Compass
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface DoshaRemedy {
     dosha_name: string;
@@ -179,7 +180,7 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
                             <div className="border-t border-black/[0.03] pt-3">
                                 <div className="flex items-center gap-1.5 mb-2">
                                     <HandHeart className={cn("w-2.5 h-2.5", lightStyles.accent)} />
-                                    <span className="text-[9px] font-black uppercase tracking-widest text-ink">Prescribed Action</span>
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-ink"><KnowledgeTooltip term="upaya">Prescribed Action</KnowledgeTooltip></span>
                                 </div>
                                 <div className="grid grid-cols-1 gap-1.5">
                                     {dosha.remedies.map((remedy, i) => (

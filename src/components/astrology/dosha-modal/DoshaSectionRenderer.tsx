@@ -1,6 +1,7 @@
 'use client';
 
 import React, { memo } from 'react';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import { NormalizedDoshaData } from '@/types/dosha.types';
 import {
     DoshaHeader,

@@ -4,6 +4,7 @@ import React, { memo } from 'react';
 import { Target, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { NormalizedDoshaImpact } from '@/types/dosha.types';
 
 interface DoshaImpactProps {

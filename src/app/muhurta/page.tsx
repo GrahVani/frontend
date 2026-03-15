@@ -1,10 +1,16 @@
 "use client";
 
-import { Clock, Sun, Moon, AlertTriangle, Sparkles, Copy, Check } from "lucide-react";
-import { useState } from "react";
-import MuhurtaTimeSlot from "@/components/muhurta/MuhurtaTimeSlot";
-import { SkeletonCard } from "@/components/ui/Skeleton";
-import { useTodayMuhurta } from "@/hooks/queries/useMuhurta";
+import React from "react";
+import Link from "next/link";
+import { Clock, Search, CalendarCheck, Heart, Sparkles, AlertTriangle, ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/design-tokens/typography";
+import DailyPanchangWidget from "@/components/muhurta/DailyPanchangWidget";
+import TimeQualityTimeline from "@/components/muhurta/TimeQualityTimeline";
+import InauspiciousPeriods from "@/components/muhurta/InauspiciousPeriods";
+import { useCurrentTimeQuality, useTodayInauspicious } from "@/hooks/queries/useMuhurta";
+import { useTraditionStore } from "@/store/useTraditionStore";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 function CurrentTimeIndicator() {
     const now = new Date();
@@ -22,155 +28,91 @@ function CurrentTimeIndicator() {
     );
 }
 
-export default function MuhurtaPage() {
-    const { data: muhurta, isLoading, error } = useTodayMuhurta();
-    const [copied, setCopied] = useState(false);
+const QUICK_LINKS = [
+    { href: "/muhurta/find", icon: Search, label: "Find Muhurat", desc: "Search for auspicious dates" },
+    { href: "/muhurta/check", icon: CalendarCheck, label: "Check Date", desc: "Evaluate a specific date" },
+    { href: "/muhurta/marriage", icon: Heart, label: "Marriage", desc: "Compatibility + wedding dates" },
+    { href: "/muhurta/ceremonies", icon: Sparkles, label: "Ceremonies", desc: "All 11 ceremony types" },
+    { href: "/muhurta/inauspicious", icon: AlertTriangle, label: "Inauspicious Times", desc: "Rahu Kaal & more" },
+];
+
+export default function MuhurtaDashboardPage() {
+    const tradition = useTraditionStore((s) => s.tradition);
+    const timeQuality = useCurrentTimeQuality(tradition);
+    const inauspicious = useTodayInauspicious(tradition);
 
     const today = new Date();
     const dateStr = today.toLocaleDateString("en-IN", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+        weekday: "long", year: "numeric", month: "long", day: "numeric",
     });
 
-    const handleCopy = () => {
-        if (!muhurta) return;
-        const text = [
-            `Muhurta for ${dateStr}`,
-            ``,
-            `Abhijit Muhurta: ${muhurta.abhijitMuhurta.startTime} - ${muhurta.abhijitMuhurta.endTime}`,
-            `Brahma Muhurta: ${muhurta.brahmaMuhurta.startTime} - ${muhurta.brahmaMuhurta.endTime}`,
-            ``,
-            `Rahu Kaal: ${muhurta.rahuKaal.startTime} - ${muhurta.rahuKaal.endTime}`,
-            `Gulika Kaal: ${muhurta.gulikaKaal.startTime} - ${muhurta.gulikaKaal.endTime}`,
-            `Yamagandam: ${muhurta.yamagandam.startTime} - ${muhurta.yamagandam.endTime}`,
-            muhurta.sunrise ? `\nSunrise: ${muhurta.sunrise}` : '',
-            muhurta.sunset ? `Sunset: ${muhurta.sunset}` : '',
-        ].filter(Boolean).join('\n');
-
-        navigator.clipboard.writeText(text).then(() => {
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        });
-    };
-
     return (
-        <div className="max-w-5xl mx-auto space-y-6">
+        <div className="space-y-6 pb-12">
             {/* Header */}
-            <div className="prem-card glass-shimmer relative overflow-hidden p-5">
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                    <div className="flex items-center gap-3.5">
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                             style={{
-                                 background: 'linear-gradient(135deg, rgba(201,162,77,0.18) 0%, rgba(139,90,43,0.10) 100%)',
-                                 border: '1px solid rgba(201,162,77,0.25)',
-                                 boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 6px rgba(139,90,43,0.08)',
-                             }}>
-                            <Clock className="w-5 h-5 text-gold-dark" />
-                        </div>
-                        <div>
-                            <h1 className="text-[18px] font-serif font-bold text-ink leading-tight">Today&apos;s Muhurta</h1>
-                            <p className="text-[13px] text-ink/50 font-medium mt-0.5">{dateStr}</p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        {muhurta && (
-                            <button
-                                onClick={handleCopy}
-                                className="flex items-center gap-1.5 text-[12px] font-medium text-ink/45 hover:text-gold-dark transition-colors"
-                                title="Copy today's muhurta timings"
-                            >
-                                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                                {copied ? 'Copied' : 'Copy'}
-                            </button>
-                        )}
-                        <CurrentTimeIndicator />
-                    </div>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h1 className={cn(TYPOGRAPHY.pageTitle, "flex items-center gap-3")}>
+                        <Clock className="w-6 h-6 text-gold-dark" />
+                        Muhurat Dashboard
+                    </h1>
+                    <p className="text-ink/60 text-sm mt-1 font-serif">{dateStr}</p>
                 </div>
+                <CurrentTimeIndicator />
             </div>
 
-            {isLoading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                        <SkeletonCard key={i} />
+            {/* Today's Panchang Widget */}
+            <DailyPanchangWidget />
+
+            {/* Time Quality Timeline */}
+            {timeQuality.isLoading && (
+                <div className="prem-card p-5">
+                    <Skeleton className="h-20 w-full" />
+                </div>
+            )}
+            {timeQuality.data && (
+                <TimeQualityTimeline
+                    timeQuality={timeQuality.data.time_quality}
+                    sunrise={timeQuality.data.sunrise}
+                    sunset={timeQuality.data.sunset}
+                />
+            )}
+
+            {/* Inauspicious Windows */}
+            {inauspicious.isLoading && (
+                <div className="prem-card p-6 space-y-3">
+                    <Skeleton className="h-5 w-1/3" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-4/5" />
+                </div>
+            )}
+            {inauspicious.data && (
+                <InauspiciousPeriods data={inauspicious.data} />
+            )}
+
+            {/* Quick Links */}
+            <div>
+                <h2 className={cn(TYPOGRAPHY.sectionTitle, "mb-3")}>Quick Actions</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {QUICK_LINKS.map(({ href, icon: Icon, label, desc }) => (
+                        <Link
+                            key={href}
+                            href={href}
+                            className="prem-card p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all group flex items-center gap-3"
+                        >
+                            <div className="w-9 h-9 rounded-full bg-gold-primary/10 flex items-center justify-center text-gold-dark shrink-0 group-hover:bg-gold-primary/20 transition-colors">
+                                <Icon className="w-4.5 h-4.5" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="font-semibold text-ink text-[13px] group-hover:text-gold-dark transition-colors">
+                                    {label}
+                                </p>
+                                <p className="text-ink/50 text-[11px]">{desc}</p>
+                            </div>
+                            <ArrowRight className="w-4 h-4 text-ink/20 group-hover:text-gold-dark transition-colors shrink-0" />
+                        </Link>
                     ))}
                 </div>
-            ) : error ? (
-                <div className="rounded-xl p-6 text-center" role="alert"
-                     style={{
-                         background: 'rgba(220,38,38,0.06)',
-                         border: '1px solid rgba(220,38,38,0.18)',
-                     }}>
-                    <AlertTriangle className="w-8 h-8 text-status-error mx-auto mb-2" />
-                    <p className="text-[13px] text-ink font-serif font-medium">Failed to load muhurta data. Please try again.</p>
-                </div>
-            ) : muhurta ? (
-                <>
-                    {/* Auspicious Windows */}
-                    <div>
-                        <h2 className="text-[11px] font-bold text-gold-dark tracking-widest font-serif uppercase mb-4 flex items-center gap-2">
-                            <Sparkles className="w-4 h-4" /> Auspicious Windows
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <MuhurtaTimeSlot window={muhurta.abhijitMuhurta} />
-                            <MuhurtaTimeSlot window={muhurta.brahmaMuhurta} />
-                            {muhurta.generalWindows.map((w, i) => (
-                                <MuhurtaTimeSlot key={i} window={w} />
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Inauspicious Periods */}
-                    <div>
-                        <h2 className="text-[11px] font-bold text-gold-dark tracking-widest font-serif uppercase mb-4 flex items-center gap-2">
-                            <AlertTriangle className="w-4 h-4" /> Inauspicious Periods
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <MuhurtaTimeSlot window={muhurta.rahuKaal} />
-                            <MuhurtaTimeSlot window={muhurta.gulikaKaal} />
-                            <MuhurtaTimeSlot window={muhurta.yamagandam} />
-                        </div>
-                    </div>
-
-                    {/* Sun/Moon Summary */}
-                    <div className="prem-card p-5">
-                        <h2 className="text-[11px] font-bold text-gold-dark tracking-widest font-serif uppercase mb-4">
-                            Solar & Lunar Positions
-                        </h2>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                            <div className="flex items-center gap-2">
-                                <Sun className="w-5 h-5 text-gold-primary" />
-                                <div>
-                                    <span className="text-[11px] text-ink/45 block font-medium">Sunrise</span>
-                                    <span className="text-[14px] font-serif font-semibold text-ink">{muhurta.sunrise || '-'}</span>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Sun className="w-5 h-5 text-gold-dark" />
-                                <div>
-                                    <span className="text-[11px] text-ink/45 block font-medium">Sunset</span>
-                                    <span className="text-[14px] font-serif font-semibold text-ink">{muhurta.sunset || '-'}</span>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Moon className="w-5 h-5 text-gold-primary" />
-                                <div>
-                                    <span className="text-[11px] text-ink/45 block font-medium">Abhijit Start</span>
-                                    <span className="text-[14px] font-serif font-semibold text-ink">{muhurta.abhijitMuhurta.startTime}</span>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Moon className="w-5 h-5 text-gold-dark" />
-                                <div>
-                                    <span className="text-[11px] text-ink/45 block font-medium">Abhijit End</span>
-                                    <span className="text-[14px] font-serif font-semibold text-ink">{muhurta.abhijitMuhurta.endTime}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            ) : null}
+            </div>
         </div>
     );
 }

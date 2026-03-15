@@ -3,6 +3,7 @@
 import { Clock, CheckCircle, AlertTriangle, XCircle, MinusCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { MuhurtaQuality, MuhurtaTimeWindow } from "@/types/muhurta.types";
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 const QUALITY_CONFIG: Record<MuhurtaQuality, {
     icon: React.ElementType;

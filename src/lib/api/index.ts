@@ -40,7 +40,7 @@ export { geocodeApi } from './geocode';
 export { ramanApi } from './raman';
 export { panchangApi } from './panchang';
 export { matchmakingApi } from './matchmaking';
-export { fetchDailyMuhurta, searchCategoryMuhurta } from './muhurta';
+export { muhuratApi, fetchDailyMuhurta, searchCategoryMuhurta } from './muhurta';
 export { numerologyApi } from './numerology';
 export { knowledgeApi } from './knowledge';
 

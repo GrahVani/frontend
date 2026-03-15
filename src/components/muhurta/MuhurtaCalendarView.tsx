@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import type { MuhurtaQuality } from "@/types/muhurta.types";
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface CalendarDay {
     date: number;

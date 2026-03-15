@@ -4,6 +4,7 @@ import React, { memo } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { NormalizedDoshaSeverity } from '@/types/dosha.types';
 
 interface DoshaSeverityProps {
@@ -28,7 +29,7 @@ export const DoshaSeverity = memo(function DoshaSeverity({ data }: DoshaSeverity
             <div>
                 <div className="flex items-center gap-2 mb-1">
                     <h4 className={cn('text-[14px] font-serif font-bold', styles.text)}>
-                        Intensity Assessment
+                        <KnowledgeTooltip term="dosha" unstyled>Intensity Assessment</KnowledgeTooltip>
                     </h4>
                     <span className={cn(
                         'px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider',

@@ -3,6 +3,7 @@
 import React, { memo } from 'react';
 import { Stars, CheckCircle2, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { NormalizedDoshaRemedy } from '@/types/dosha.types';
 
 interface DoshaRemediesProps {
@@ -25,7 +26,7 @@ export const DoshaRemedies = memo(function DoshaRemedies({ data }: DoshaRemedies
             </div>
 
             <h3 className="text-[18px] font-serif font-black text-ink mb-6 flex items-center gap-2">
-                Empowering Measures <span className="text-ink/55">& Remedies</span>
+                <KnowledgeTooltip term="upaya" unstyled>Empowering Measures <span className="text-ink/55">& Remedies</span></KnowledgeTooltip>
             </h3>
 
             <div className="space-y-6">

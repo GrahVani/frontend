@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface HouseData {
     planets: string[];
@@ -55,7 +56,7 @@ export default function SudarshanChakraFinal({ data, className }: SudarshanChakr
 
     if (!surya || !chandra || !lagna) return (
         <div className="flex items-center justify-center p-8 border border-dashed border-copper-200 rounded-3xl text-copper-400 italic">
-            Insufficient data for Sudarshan Chakra
+            Insufficient data for <KnowledgeTooltip term="sudarshan_chakra">Sudarshan Chakra</KnowledgeTooltip>
         </div>
     );
 

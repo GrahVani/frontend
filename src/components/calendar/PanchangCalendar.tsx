@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import type { PanchangDay } from "@/types/calendar.types";
 import { useFestivalsByMonth } from "@/hooks/queries/useCalendar";
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface PanchangCalendarProps {
     days: PanchangDay[];

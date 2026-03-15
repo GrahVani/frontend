@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { Planet } from '@/components/astrology/NorthIndianChart';
 import { Sparkles } from 'lucide-react';
 import { ZODIAC_SIGNS } from '@/lib/chart-geometry';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface DivisionalChartInsightsProps {
     chartType: string;

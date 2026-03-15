@@ -5,6 +5,7 @@ import { Search, MapPin, AlertCircle } from "lucide-react";
 import Button from "@/components/ui/Button";
 import ParchmentInput from "@/components/ui/ParchmentInput";
 import type { MuhurtaFiltersState, MuhurtaCategory } from "@/types/muhurta.types";
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface MuhurtaFiltersProps {
     category: MuhurtaCategory;

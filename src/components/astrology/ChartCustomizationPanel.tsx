@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { useAstrologerStore, ChartStyle, ChartColorTheme } from '@/store/useAstrologerStore';
 import { Palette, Layout, HelpCircle, X, ChevronDown, BookOpen, Star, Sparkles } from 'lucide-react';
 import { CHART_THEMES } from '@/design-tokens/colors';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 // Re-export for backward compatibility with any file importing from here
 export const CHART_COLOR_THEMES: Record<ChartColorTheme, {

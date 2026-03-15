@@ -13,6 +13,7 @@ import {
 import { useRecentClients, useDashboardStats } from "@/hooks/queries/useDashboard";
 import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { Client } from "@/types/client";
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -192,8 +193,8 @@ function ProgressRing({ progress, color, size = 68, strokeWidth = 4 }: {
    PANCHANG CARD — Rich, accented individual card
    ═══════════════════════════════════════════════════════════════════ */
 
-function PanchangCard({ detail, label, icon, accent }: {
-    detail: PanchangDetail; label: string; icon: string; accent: string;
+function PanchangCard({ detail, label, icon, accent, term }: {
+    detail: PanchangDetail; label: string; icon: string; accent: string; term?: string;
 }) {
     const pct = typeof detail.progress === 'number' ? Math.min(100, detail.progress) : null;
     return (
@@ -204,7 +205,7 @@ function PanchangCard({ detail, label, icon, accent }: {
                 <div className="flex items-center gap-2.5 mb-3">
                     <span className="text-[24px] leading-none" style={{ color: accent }}>{icon}</span>
                     <span className="text-[10px] font-bold tracking-[0.12em] uppercase" style={{ color: accent }}>
-                        {label}
+                        {term ? <KnowledgeTooltip term={term} unstyled>{label}</KnowledgeTooltip> : label}
                     </span>
                     {typeof detail.number === 'number' && (
                         <span className="text-[10px] font-mono font-bold ml-auto px-1.5 py-0.5 rounded"
@@ -327,7 +328,7 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
                         {warnings.map((w, i) => (
                             <span key={i}>
                                 {i > 0 && <span className="text-[#9B4A3A]/30 mx-1.5">·</span>}
-                                {w.icon} {w.name} active until {shortTime(w.end)}
+                                {w.icon} {MUHURTA_TERM[w.name] ? <KnowledgeTooltip term={MUHURTA_TERM[w.name]} unstyled>{w.name}</KnowledgeTooltip> : w.name} active until {shortTime(w.end)}
                             </span>
                         ))}
                     </div>
@@ -341,7 +342,7 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
                         {blessings.map((b, i) => (
                             <span key={i}>
                                 {i > 0 && <span className="text-[#5B7A4A]/30 mx-1.5">·</span>}
-                                ★ {b.name} active until {shortTime(b.end)}
+                                ★ {MUHURTA_TERM[b.name] ? <KnowledgeTooltip term={MUHURTA_TERM[b.name]} unstyled>{b.name}</KnowledgeTooltip> : b.name} active until {shortTime(b.end)}
                             </span>
                         ))}
                     </div>
@@ -361,7 +362,7 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
                                 <span className="absolute inset-0 flex items-center justify-center text-[20px]">⏳</span>
                             </div>
                             <div className="min-w-0">
-                                <div className="text-[9px] font-bold tracking-[0.1em] uppercase text-ink">Choghadiya</div>
+                                <div className="text-[9px] font-bold tracking-[0.1em] uppercase text-ink"><KnowledgeTooltip term="choghadiya" unstyled>Choghadiya</KnowledgeTooltip></div>
                                 <div className="text-[18px] font-serif font-bold text-ink leading-tight">{chog.type}</div>
                                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full inline-block mt-0.5"
                                     style={{ color: nc.text, backgroundColor: `${nc.solid}15` }}>
@@ -393,7 +394,7 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
                                 </span>
                             </div>
                             <div className="min-w-0">
-                                <div className="text-[9px] font-bold tracking-[0.1em] uppercase text-ink">Planetary Hora</div>
+                                <div className="text-[9px] font-bold tracking-[0.1em] uppercase text-ink">Planetary <KnowledgeTooltip term="hora" unstyled>Hora</KnowledgeTooltip></div>
                                 <div className="text-[18px] font-serif font-bold text-ink leading-tight">{hora.planet}</div>
                                 {hora.nature && hora.nature !== '-' && (
                                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full inline-block mt-0.5"
@@ -428,7 +429,7 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
                                 </span>
                             </div>
                             <div className="min-w-0">
-                                <div className="text-[9px] font-bold tracking-[0.1em] uppercase text-ink">Rising Sign</div>
+                                <div className="text-[9px] font-bold tracking-[0.1em] uppercase text-ink">Rising Sign (<KnowledgeTooltip term="lagna" unstyled>Lagna</KnowledgeTooltip>)</div>
                                 <div className="text-[18px] font-serif font-bold text-ink leading-tight">{lagna.lagnaName}</div>
                                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full inline-block mt-0.5"
                                     style={{ color: ec, backgroundColor: `${ec}18` }}>
@@ -453,6 +454,11 @@ function NowStrip({ hora, chog, lagna, muhurta }: {
    MUHURTA WINDOW — Single prominent timing card
    ═══════════════════════════════════════════════════════════════════ */
 
+const MUHURTA_TERM: Record<string, string> = {
+    'Rahu Kaal': 'rahu_kaal', 'Gulika Kaal': 'gulika_kaal',
+    'Yamaganda': 'yamaghanta', 'Abhijit Muhurat': 'abhijit_muhurta',
+};
+
 function MuhurtaWindow({ name, start, end, variant, icon, quality, description }: {
     name: string; start: string; end: string;
     variant: 'auspicious' | 'inauspicious' | 'mixed'; icon: string;
@@ -463,6 +469,7 @@ function MuhurtaWindow({ name, start, end, variant, icon, quality, description }
     const dur = durFromTimes(start, end);
     const hrs = Math.floor(dur / 60);
     const mins = dur % 60;
+    const muhurtaTerm = MUHURTA_TERM[name];
 
     const V = {
         auspicious: { border: '#5B7A4A', text: '#4A6741', bg: 'rgba(91,122,74,0.06)', activeBg: 'rgba(91,122,74,0.14)', badge: 'Auspicious' },
@@ -477,7 +484,7 @@ function MuhurtaWindow({ name, start, end, variant, icon, quality, description }
                 <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                         <span className="text-[18px]" style={{ color: V.text }}>{icon}</span>
-                        <span className="text-[11px] font-bold uppercase tracking-[0.08em]" style={{ color: V.text }}>{name}</span>
+                        <span className="text-[11px] font-bold uppercase tracking-[0.08em]" style={{ color: V.text }}>{muhurtaTerm ? <KnowledgeTooltip term={muhurtaTerm} unstyled>{name}</KnowledgeTooltip> : name}</span>
                     </div>
                     <span className="text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
                         style={{ color: V.text, backgroundColor: `${V.border}15`, border: `1px solid ${V.border}25` }}>
@@ -548,7 +555,7 @@ function MuhurtaSection({ muhurta, panchang }: {
     return (
         <div className="prem-card p-6">
             <div className="flex items-center justify-between mb-5">
-                <h3 className="text-[16px] font-serif font-bold text-ink">Muhurta Windows</h3>
+                <h3 className="text-[16px] font-serif font-bold text-ink"><KnowledgeTooltip term="muhurta">Muhurta</KnowledgeTooltip> Windows</h3>
                 <div className="flex items-center gap-4 text-[12px]">
                     <div className="flex items-center gap-1.5">
                         <Sun className="w-4 h-4 text-[#D4880F]" />
@@ -839,7 +846,7 @@ function ChoghadiyaTimeline({ periods, current }: {
     return (
         <div className="prem-card p-6">
             <div className="flex items-center justify-between">
-                <h3 className="text-[16px] font-serif font-bold text-ink">Choghadiya</h3>
+                <h3 className="text-[16px] font-serif font-bold text-ink"><KnowledgeTooltip term="choghadiya">Choghadiya</KnowledgeTooltip></h3>
                 {current && <NowBadge />}
             </div>
 
@@ -996,7 +1003,7 @@ function HoraTimeline({ periods, current }: {
     return (
         <div className="prem-card p-6">
             <div className="flex items-center justify-between">
-                <h3 className="text-[16px] font-serif font-bold text-ink">Planetary Hora</h3>
+                <h3 className="text-[16px] font-serif font-bold text-ink">Planetary <KnowledgeTooltip term="hora">Hora</KnowledgeTooltip></h3>
                 {current && <NowBadge />}
             </div>
 
@@ -1076,7 +1083,7 @@ function LagnaJourney({ schedule, current }: {
     return (
         <div className="prem-card p-6">
             <div className="flex items-center justify-between">
-                <h3 className="text-[16px] font-serif font-bold text-ink">Lagna Journey</h3>
+                <h3 className="text-[16px] font-serif font-bold text-ink"><KnowledgeTooltip term="lagna">Lagna</KnowledgeTooltip> Journey</h3>
                 {current && <NowBadge />}
             </div>
 
@@ -1451,15 +1458,15 @@ export default function Dashboard() {
             {/* ── Panchang Cards (5 in a row) ── */}
             {pLoading ? <PanchangSkeleton /> : pError ? (
                 <div className="prem-card text-center py-8">
-                    <p className="text-[12px] text-ink font-bold">Panchang data unavailable</p>
+                    <p className="text-[12px] text-ink font-bold"><KnowledgeTooltip term="panchanga">Panchang</KnowledgeTooltip> data unavailable</p>
                 </div>
             ) : panchang ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5">
-                    <PanchangCard detail={panchang.tithi} label="Tithi" icon="☾" accent={PANCH_ACCENT.Tithi} />
-                    <PanchangCard detail={panchang.nakshatra} label="Nakshatra" icon="✦" accent={PANCH_ACCENT.Nakshatra} />
-                    <PanchangCard detail={panchang.yoga} label="Yoga" icon="⊕" accent={PANCH_ACCENT.Yoga} />
-                    <PanchangCard detail={panchang.karana} label="Karana" icon="◈" accent={PANCH_ACCENT.Karana} />
-                    <PanchangCard detail={panchang.vara} label="Vara" icon="☉" accent={PANCH_ACCENT.Vara} />
+                    <PanchangCard detail={panchang.tithi} label="Tithi" icon="☾" accent={PANCH_ACCENT.Tithi} term="tithi" />
+                    <PanchangCard detail={panchang.nakshatra} label="Nakshatra" icon="✦" accent={PANCH_ACCENT.Nakshatra} term="nakshatra" />
+                    <PanchangCard detail={panchang.yoga} label="Yoga" icon="⊕" accent={PANCH_ACCENT.Yoga} term="panchanga_yoga" />
+                    <PanchangCard detail={panchang.karana} label="Karana" icon="◈" accent={PANCH_ACCENT.Karana} term="karana" />
+                    <PanchangCard detail={panchang.vara} label="Vara" icon="☉" accent={PANCH_ACCENT.Vara} term="vara" />
                 </div>
             ) : null}
 

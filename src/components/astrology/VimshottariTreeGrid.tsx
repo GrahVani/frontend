@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ChevronRight, Loader2 } from 'lucide-react';
 import { DashaNode, calculateDuration, generateVimshottariSubperiods, parseApiDate } from '@/lib/dasha-utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface VimshottariTreeGridProps {
     data: DashaNode[];
@@ -18,6 +19,12 @@ const PLANET_SYMBOLS: Record<string, string> = {
 };
 
 const LEVEL_LABELS = ["MAHA", "ANTAR", "PRATYANTAR", "SOOKSHMA", "PRANA"];
+
+const LEVEL_TOOLTIP_TERMS: Record<string, string> = {
+    'MAHA': 'dasha_mahadasha',
+    'ANTAR': 'dasha_antardasha',
+    'PRATYANTAR': 'dasha_pratyantardasha',
+};
 
 const formatDate = (dateStr?: string) => {
     if (!dateStr) return 'â€”';
@@ -105,7 +112,11 @@ export default function VimshottariTreeGrid({ data, isLoading, className }: Vims
                 <table className="w-full border-collapse table-fixed">
                     <thead className="sticky top-0 z-20 bg-surface-warm/95 backdrop-blur-sm shadow-sm">
                         <tr className={cn("border-b border-gold-primary/10", TYPOGRAPHY.tableHeader)}>
-                            <th className="px-0.5 py-0.5 text-left w-[30%]">{currentLevelName}</th>
+                            <th className="px-0.5 py-0.5 text-left w-[30%]">
+                                {LEVEL_TOOLTIP_TERMS[currentLevelName] ? (
+                                    <KnowledgeTooltip term={LEVEL_TOOLTIP_TERMS[currentLevelName]} unstyled>{currentLevelName}</KnowledgeTooltip>
+                                ) : currentLevelName}
+                            </th>
                             <th className="px-0.5 py-0.5 text-left w-[25%]">Start</th>
                             <th className="px-0.5 py-0.5 text-left w-[25%]">End</th>
                             <th className="px-0.5 py-0.5 text-left w-[20%]">Dur</th>

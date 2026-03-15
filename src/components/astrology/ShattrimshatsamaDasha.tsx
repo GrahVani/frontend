@@ -6,6 +6,7 @@ import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { ChevronDown, ChevronUp, Calendar, Info, Milestone, AlertCircle } from 'lucide-react';
 import { DashaNode, formatDateDisplay, calculateDuration } from '@/lib/dasha-utils';
 import { PLANET_COLORS } from '@/lib/astrology-constants';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface ShattrimshatsamaDashaProps {
     periods: DashaNode[];
@@ -187,7 +188,7 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true }: 
                                         <tr>
                                             <td colSpan={5} className="bg-surface-warm/60/60 px-3 py-2">
                                                 <div className="text-[9px] font-black text-ink/45 uppercase tracking-[0.2em] mb-2 pl-2 border-l-2 border-gold-primary/20 ml-1">
-                                                    Sub-Periods
+                                                    <KnowledgeTooltip term="dasha_antardasha" unstyled>Antardasha</KnowledgeTooltip> Sub-Periods
                                                 </div>
                                                 <table className="w-full">
                                                     <tbody className="divide-y divide-gold-primary/10">

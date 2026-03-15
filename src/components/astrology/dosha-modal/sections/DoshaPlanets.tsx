@@ -3,6 +3,7 @@
 import React, { memo } from 'react';
 import { LayoutGrid } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { NormalizedDoshaPlanet } from '@/types/dosha.types';
 
 interface DoshaPlanetsProps {
@@ -15,7 +16,7 @@ export const DoshaPlanets = memo(function DoshaPlanets({ data }: DoshaPlanetsPro
     return (
         <div className="bg-white border border-gold-primary/15 rounded-2xl p-5 shadow-sm">
             <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-[10px] uppercase tracking-widest transition-colors">
-                <LayoutGrid className="w-3.5 h-3.5 text-red-500" /> Chart Foundations
+                <LayoutGrid className="w-3.5 h-3.5 text-red-500" /> <KnowledgeTooltip term="graha" unstyled>Chart Foundations</KnowledgeTooltip>
             </h3>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-2">

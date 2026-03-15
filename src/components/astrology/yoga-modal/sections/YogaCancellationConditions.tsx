@@ -3,6 +3,7 @@
 import React, { memo } from 'react';
 import { ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { CancellationFactor } from '@/types/yoga.types';
 
 interface YogaCancellationConditionsProps {
@@ -15,7 +16,7 @@ export const YogaCancellationConditions = memo(function YogaCancellationConditio
     return (
         <div className="prem-card p-5">
             <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-[14px] uppercase tracking-wider">
-                <ShieldCheck className="w-4 h-4 text-gold-primary" /> Cancellation Factors
+                <ShieldCheck className="w-4 h-4 text-gold-primary" /> <KnowledgeTooltip term="yoga" unstyled>Cancellation Factors</KnowledgeTooltip>
             </h3>
 
             <div className="space-y-2.5">

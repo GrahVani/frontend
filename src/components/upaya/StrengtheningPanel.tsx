@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface PlanetStrengthData {
     is_weak: boolean;
@@ -61,7 +62,7 @@ export default function StrengtheningPanel({ planetaryStrengths }: Strengthening
 
     return (
         <div className="space-y-4">
-            <h3 className="text-[13px] font-medium tracking-[0.05em] text-amber-900/60 px-2">2. Long-Term Strengthening (Weak Planets)</h3>
+            <h3 className="text-[13px] font-medium tracking-[0.05em] text-amber-900/60 px-2">2. Long-Term <KnowledgeTooltip term="upaya" unstyled>Strengthening</KnowledgeTooltip> (Weak Planets)</h3>
 
             <div className="grid grid-cols-2 gap-4">
                 {weakPlanets.map(([name, data]: [string, PlanetStrengthData], idx) => {

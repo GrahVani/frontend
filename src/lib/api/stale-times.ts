@@ -52,4 +52,16 @@ export const STALE_TIMES = {
 
     /** Knowledge base — static educational reference content, rarely changes */
     KNOWLEDGE: 24 * 60 * 60 * 1000, // 24 hours
+
+    /** Muhurat Engine — search results (find, evaluate, panchang, inauspicious) */
+    MUHURAT_SEARCH: 15 * 60 * 1000, // 15 minutes
+
+    /** Muhurat Engine — static endpoints (event types, traditions) */
+    MUHURAT_STATIC: 24 * 60 * 60 * 1000, // 24 hours
+
+    /** Muhurat Engine — time quality (near-real-time, Choghadiya/Gowri segment) */
+    MUHURAT_TIME_QUALITY: 5 * 60 * 1000, // 5 minutes
+
+    /** Muhurat Engine — compatibility (marriage matching, stable for same persons) */
+    MUHURAT_COMPATIBILITY: 60 * 60 * 1000, // 1 hour
 } as const;

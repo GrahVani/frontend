@@ -36,11 +36,13 @@ export const CLIENTS_General_Sidebar: SidebarItem[] = [
 ];
 
 export const MUHURTA_Sidebar: SidebarItem[] = [
-    { name: "Today's Muhurta", path: "/muhurta", icon: Clock },
-    { name: "Wedding Dates", path: "/muhurta/wedding", icon: Heart },
-    { name: "Property Purchase", path: "/muhurta/property", icon: Home },
-    { name: "Vehicle Purchase", path: "/muhurta/vehicle", icon: Car },
-    { name: "Travel Timing", path: "/muhurta/travel", icon: Plane },
+    { name: "Dashboard", path: "/muhurta", icon: Clock },
+    { name: "Find Muhurat", path: "/muhurta/find", icon: Search },
+    { name: "Check Date", path: "/muhurta/check", icon: Calendar },
+    { name: "Marriage", path: "/muhurta/marriage", icon: Heart },
+    { name: "Ceremonies", path: "/muhurta/ceremonies", icon: Star },
+    { name: "Compatibility", path: "/muhurta/compatibility", icon: Users },
+    { name: "Inauspicious Times", path: "/muhurta/inauspicious", icon: AlertCircle },
 ];
 
 export const MATCHMAKING_Sidebar: SidebarItem[] = [

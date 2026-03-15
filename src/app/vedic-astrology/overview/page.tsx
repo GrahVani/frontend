@@ -32,6 +32,7 @@ import { processDashaResponse, RawDashaPeriod } from '@/lib/dasha-utils';
 import BirthPanchanga, { type BirthPanchangaData } from '@/components/astrology/BirthPanchanga';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { COLORS } from '@/design-tokens/colors';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 const formatDate = (dateStr: string) => {
     if (!dateStr) return "";
@@ -182,7 +183,7 @@ export default function VedicOverviewPage() {
                                 background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
                                 borderBottom: '1px solid rgba(220,201,166,0.25)',
                             }}>
-                            <h2 className={TYPOGRAPHY.sectionTitle}>Birth chart (D1)</h2>
+                            <h2 className={TYPOGRAPHY.sectionTitle}>Birth chart (<KnowledgeTooltip term="varga_d1_rashi" unstyled>D1</KnowledgeTooltip>)</h2>
                             <button onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })} className="text-ink/40 hover:text-gold-dark transition-colors"><Maximize2 className="w-3 h-3" /></button>
                         </div>
                         <div className="w-full h-[435px] bg-surface-warm">
@@ -203,7 +204,7 @@ export default function VedicOverviewPage() {
                                 background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
                                 borderBottom: '1px solid rgba(220,201,166,0.25)',
                             }}>
-                            <h2 className={TYPOGRAPHY.sectionTitle}>Birth planetary positions</h2>
+                            <h2 className={TYPOGRAPHY.sectionTitle}>Birth <KnowledgeTooltip term="planetary_positions" unstyled>planetary positions</KnowledgeTooltip></h2>
                         </div>
                         <div className="bg-surface-warm">
                             <PlanetaryTable
@@ -252,11 +253,11 @@ export default function VedicOverviewPage() {
                                 {/* Lagna / Moon / Sun — inline chips */}
                                 <div className="flex items-center gap-1.5 ml-auto">
                                     {[
-                                        { label: 'Lagna', value: signIdToName[(d1Data.ascendant || 1) as number] },
-                                        { label: 'Moon', value: d1Data.planets.find(p => p.name === "Mo") ? signIdToName[d1Data.planets.find(p => p.name === "Mo")!.signId] : "-" },
-                                        { label: 'Sun', value: d1Data.planets.find(p => p.name === "Su") ? signIdToName[d1Data.planets.find(p => p.name === "Su")!.signId] : "-" },
+                                        { key: 'lagna', label: <KnowledgeTooltip term="lagna" unstyled>Lagna</KnowledgeTooltip> as React.ReactNode, value: signIdToName[(d1Data.ascendant || 1) as number] },
+                                        { key: 'moon', label: 'Moon' as React.ReactNode, value: d1Data.planets.find(p => p.name === "Mo") ? signIdToName[d1Data.planets.find(p => p.name === "Mo")!.signId] : "-" },
+                                        { key: 'sun', label: 'Sun' as React.ReactNode, value: d1Data.planets.find(p => p.name === "Su") ? signIdToName[d1Data.planets.find(p => p.name === "Su")!.signId] : "-" },
                                     ].map((chip) => (
-                                        <div key={chip.label}
+                                        <div key={chip.key}
                                             className="px-2.5 py-1 rounded-lg group hover:border-gold-primary/30 transition-colors flex items-center gap-1.5"
                                             style={{
                                                 background: 'rgba(255,253,249,0.70)',
@@ -282,7 +283,7 @@ export default function VedicOverviewPage() {
                                     borderBottom: '1px solid rgba(220,201,166,0.25)',
                                 }}>
                                 <Sparkle className="w-3 h-3 text-gold-dark" />
-                                <h2 className={TYPOGRAPHY.sectionTitle}>Birth panchanga</h2>
+                                <h2 className={TYPOGRAPHY.sectionTitle}>Birth <KnowledgeTooltip term="panchanga" unstyled>panchanga</KnowledgeTooltip></h2>
                             </div>
                             <div className="p-2.5 flex-1 flex flex-col justify-between gap-2 bg-surface-warm">
                                 <BirthPanchanga data={birthPanchangaData} />
@@ -304,7 +305,7 @@ export default function VedicOverviewPage() {
                                     background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
                                     borderBottom: '1px solid rgba(220,201,166,0.25)',
                                 }}>
-                                <h2 className={TYPOGRAPHY.sectionTitle}>Vimshottari dasha</h2>
+                                <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="dasha_vimshottari" unstyled>Vimshottari</KnowledgeTooltip> dasha</h2>
                             </div>
                             <div className="p-0 bg-surface-warm">
                                 <VimshottariTreeGrid
@@ -325,7 +326,7 @@ export default function VedicOverviewPage() {
                                     background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
                                     borderBottom: '1px solid rgba(220,201,166,0.25)',
                                 }}>
-                                <h2 className={TYPOGRAPHY.sectionTitle}>Navamsha (D9)</h2>
+                                <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="varga_d9_navamsha" unstyled>Navamsha</KnowledgeTooltip> (D9)</h2>
                                 <button onClick={() => setZoomedChart({ varga: "D9", label: "Navamsha (D9)" })} className="p-1.5 text-ink/40 hover:text-gold-dark transition-colors" aria-label="Zoom Navamsha D9 chart"><Maximize2 className="w-4 h-4" /></button>
                             </div>
                             <div className="w-full h-[320px] bg-surface-warm">
@@ -342,7 +343,7 @@ export default function VedicOverviewPage() {
                                     background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
                                     borderBottom: '1px solid rgba(220,201,166,0.25)',
                                 }}>
-                                <h2 className={TYPOGRAPHY.sectionTitle}>Dashamsha (D10)</h2>
+                                <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="varga_d10_dashamsha" unstyled>Dashamsha</KnowledgeTooltip> (D10)</h2>
                                 <button onClick={() => setZoomedChart({ varga: "D10", label: "Dashamsha (D10)" })} className="p-1.5 text-ink/40 hover:text-gold-dark transition-colors" aria-label="Zoom Dashamsha D10 chart"><Maximize2 className="w-4 h-4" /></button>
                             </div>
                             <div className="w-full h-[320px] bg-surface-warm">

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Badge from "@/components/ui/Badge";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
 import type { PlanetaryTransit } from "@/types/calendar.types";
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface TransitTimelineProps {
     transits: PlanetaryTransit[];

@@ -4,6 +4,7 @@ import React, { memo } from 'react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { CheckCircle2, Stars, ChevronDown } from 'lucide-react';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { NormalizedRemedyCategory } from '@/types/yoga.types';
 
 type RemedyData = string[] | NormalizedRemedyCategory[];
@@ -36,7 +37,7 @@ export const YogaRemedies = memo(function YogaRemedies({ data }: YogaRemediesPro
                     <Stars className="w-14 h-14 text-gold-primary" />
                 </div>
 
-                <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[14px] mb-4")}>Empowering Remedies</h3>
+                <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[14px] mb-4")}><KnowledgeTooltip term="upaya" unstyled>Empowering Remedies</KnowledgeTooltip></h3>
 
                 <div className="space-y-4">
                     {data.map((cat, ci) => (
@@ -72,7 +73,7 @@ export const YogaRemedies = memo(function YogaRemedies({ data }: YogaRemediesPro
                 <Stars className="w-14 h-14 text-gold-primary" />
             </div>
 
-            <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[14px] mb-3")}>Empowering Remedies</h3>
+            <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[14px] mb-3")}><KnowledgeTooltip term="upaya" unstyled>Empowering Remedies</KnowledgeTooltip></h3>
 
             <div className="flex flex-wrap gap-2">
                 {flatData.map((remedy, i) => (

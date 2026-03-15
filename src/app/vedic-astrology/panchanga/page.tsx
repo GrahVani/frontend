@@ -35,6 +35,7 @@ import {
 
 
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 // ============================================================================
 // PANCHANGA OVERVIEW PAGE — Full-page view with 3 sections
@@ -180,7 +181,7 @@ export default function PanchangaOverviewPage() {
                             <span>Panchanga</span>
                         </div>
                     </div>
-                    <h1 className="text-[24px] font-serif font-bold text-ink tracking-tight">Panchanga</h1>
+                    <h1 className="text-[24px] font-serif font-bold text-ink tracking-tight"><KnowledgeTooltip term="panchanga" unstyled>Panchanga</KnowledgeTooltip></h1>
                 </div>
             </div>
 
@@ -193,7 +194,7 @@ export default function PanchangaOverviewPage() {
                         <Sparkle className="w-4 h-4 text-gold-dark" />
                     </div>
                     <div>
-                        <h3 className={TYPOGRAPHY.sectionTitle}>Birth Panchanga</h3>
+                        <h3 className={TYPOGRAPHY.sectionTitle}>Birth <KnowledgeTooltip term="panchanga" unstyled>Panchanga</KnowledgeTooltip></h3>
                         <p className={cn(TYPOGRAPHY.subValue, "text-ink")}>Five-fold daily cosmic markers at the moment of birth</p>
                     </div>
                 </div>
@@ -209,7 +210,7 @@ export default function PanchangaOverviewPage() {
                         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-5">
                             {/* Tithi */}
                             <PanchangaCard
-                                label="Tithi"
+                                label={<KnowledgeTooltip term="tithi" unstyled>Tithi</KnowledgeTooltip>}
                                 sanskrit="तिथि"
                                 value={panchanga.tithi?.name || '—'}
                                 subValue={panchanga.tithi?.paksha}
@@ -221,7 +222,7 @@ export default function PanchangaOverviewPage() {
                             />
                             {/* Nakshatra */}
                             <PanchangaCard
-                                label="Nakshatra"
+                                label={<KnowledgeTooltip term="nakshatra" unstyled>Nakshatra</KnowledgeTooltip>}
                                 sanskrit="नक्षत्र"
                                 value={panchanga.nakshatra?.name || '—'}
                                 subValue={panchanga.nakshatra?.pada ? `Pada ${panchanga.nakshatra.pada}` : undefined}
@@ -233,7 +234,7 @@ export default function PanchangaOverviewPage() {
                             />
                             {/* Yoga */}
                             <PanchangaCard
-                                label="Yoga"
+                                label={<KnowledgeTooltip term="panchanga_yoga" unstyled>Yoga</KnowledgeTooltip>}
                                 sanskrit="योग"
                                 value={panchanga.yoga?.name || '—'}
                                 description="Luni-solar combination — Sun & Moon angular distance"
@@ -244,7 +245,7 @@ export default function PanchangaOverviewPage() {
                             />
                             {/* Karana */}
                             <PanchangaCard
-                                label="Karana"
+                                label={<KnowledgeTooltip term="karana" unstyled>Karana</KnowledgeTooltip>}
                                 sanskrit="करण"
                                 value={panchanga.karana?.name || '—'}
                                 description="Half-tithi — sub-division of the lunar day"
@@ -255,7 +256,7 @@ export default function PanchangaOverviewPage() {
                             />
                             {/* Vara */}
                             <PanchangaCard
-                                label="Vara"
+                                label={<KnowledgeTooltip term="vara" unstyled>Vara</KnowledgeTooltip>}
                                 sanskrit="वार"
                                 value={panchanga.vara?.name || '—'}
                                 description="Weekday — planetary ruler of the birth day"
@@ -303,7 +304,7 @@ export default function PanchangaOverviewPage() {
                     </div>
                     <div>
                         <h3 className={TYPOGRAPHY.sectionTitle}>
-                            Avakhada Chakra
+                            <KnowledgeTooltip term="avakhada_chakra" unstyled>Avakhada Chakra</KnowledgeTooltip>
                         </h3>
                         <p className={cn(TYPOGRAPHY.subValue, "text-ink")}>
                             Foundational classification — compatibility & character attributes
@@ -445,7 +446,19 @@ export default function PanchangaOverviewPage() {
                                                 <div className={cn("p-2 rounded-xl bg-white/80 shadow-sm", item.titleColor)}>
                                                     <item.icon className="w-5 h-5" />
                                                 </div>
-                                                <h4 className={TYPOGRAPHY.planetName}>{item.label}</h4>
+                                                <h4 className={TYPOGRAPHY.planetName}>{
+                                                    ({
+                                                        varna: <KnowledgeTooltip term="koota_varna" unstyled>{item.label}</KnowledgeTooltip>,
+                                                        vashya: <KnowledgeTooltip term="koota_vashya" unstyled>{item.label}</KnowledgeTooltip>,
+                                                        yoni: <KnowledgeTooltip term="koota_yoni" unstyled>{item.label}</KnowledgeTooltip>,
+                                                        gana: <KnowledgeTooltip term="koota_gana" unstyled>{item.label}</KnowledgeTooltip>,
+                                                        nadi: <KnowledgeTooltip term="koota_nadi" unstyled>{item.label}</KnowledgeTooltip>,
+                                                        rashi: <KnowledgeTooltip term="rashi" unstyled>{item.label}</KnowledgeTooltip>,
+                                                        nakshatra_pada: <KnowledgeTooltip term="nakshatra" unstyled>{item.label}</KnowledgeTooltip>,
+                                                        namakshar: <KnowledgeTooltip term="namakshar" unstyled>{item.label}</KnowledgeTooltip>,
+                                                        paya: <KnowledgeTooltip term="paya" unstyled>{item.label}</KnowledgeTooltip>,
+                                                    } as Record<string, React.ReactNode>)[item.key] || item.label
+                                                }</h4>
                                             </div>
                                             <span className={cn(TYPOGRAPHY.value, item.titleColor)}>{value}</span>
                                         </div>
@@ -481,7 +494,7 @@ export default function PanchangaOverviewPage() {
 function PanchangaCard({
     label, sanskrit, value, subValue, description, icon: Icon, gradient, iconColor, borderColor
 }: {
-    label: string;
+    label: React.ReactNode;
     sanskrit: string;
     value: string;
     subValue?: string;

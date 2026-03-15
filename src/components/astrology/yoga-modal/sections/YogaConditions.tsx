@@ -2,6 +2,7 @@
 
 import React, { memo } from 'react';
 import { CheckCircle2, XCircle, ListChecks } from 'lucide-react';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { NormalizedConditions } from '@/types/yoga.types';
 
 interface YogaConditionsProps {
@@ -14,7 +15,7 @@ export const YogaConditions = memo(function YogaConditions({ data }: YogaConditi
     return (
         <div className="prem-card p-5">
             <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-[14px] uppercase tracking-wider">
-                <ListChecks className="w-4 h-4 text-gold-primary" /> Formation Conditions
+                <ListChecks className="w-4 h-4 text-gold-primary" /> <KnowledgeTooltip term="yoga" unstyled>Formation Conditions</KnowledgeTooltip>
             </h3>
 
             <div className="space-y-4">

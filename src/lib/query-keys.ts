@@ -81,8 +81,18 @@ export const queryKeys = {
         detail: (id: string) => ['matchmaking', 'detail', id] as const,
     },
 
-    // Muhurta
+    // Muhurta Engine (9 endpoints)
     muhurta: {
+        find: (params: unknown) => ['muhurta', 'find', params] as const,
+        evaluate: (params: unknown) => ['muhurta', 'evaluate', params] as const,
+        compatibility: (params: unknown) => ['muhurta', 'compatibility', params] as const,
+        eventTypes: ['muhurta', 'event-types'] as const,
+        traditions: ['muhurta', 'traditions'] as const,
+        panchang: (params: unknown) => ['muhurta', 'panchang', params] as const,
+        inauspicious: (params: unknown) => ['muhurta', 'inauspicious', params] as const,
+        timeQuality: (params: unknown) => ['muhurta', 'time-quality', params] as const,
+        interpret: (params: unknown) => ['muhurta', 'interpret', params] as const,
+        // Legacy keys (used by old dashboard until Sprint 3 rewrites it)
         daily: (date: string) => ['muhurta', 'daily', date] as const,
         search: (filters: unknown) => ['muhurta', 'search', filters] as const,
         category: (category: string, startDate?: string, endDate?: string) => ['muhurta', category, startDate, endDate] as const,

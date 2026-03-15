@@ -1,6 +1,7 @@
 'use client';
 
 import React, { memo } from 'react';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import { SECTION_REGISTRY } from './config/section-registry';
 import type { NormalizedYogaData } from '@/types/yoga.types';
 

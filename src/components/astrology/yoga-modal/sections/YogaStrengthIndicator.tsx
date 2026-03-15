@@ -4,6 +4,7 @@ import React, { memo } from 'react';
 import { Activity, ShieldCheck, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { NormalizedStrength } from '@/types/yoga.types';
 
 interface YogaStrengthIndicatorProps {
@@ -21,7 +22,7 @@ export const YogaStrengthIndicator = memo(function YogaStrengthIndicator({ data 
     return (
         <div className="prem-card p-5">
             <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-[14px] uppercase tracking-wider">
-                <Activity className="w-4 h-4 text-gold-primary" /> Strength Assessment
+                <Activity className="w-4 h-4 text-gold-primary" /> <KnowledgeTooltip term="shadbala" unstyled>Strength Assessment</KnowledgeTooltip>
             </h3>
 
             {/* Score Metrics */}

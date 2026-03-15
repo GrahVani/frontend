@@ -3,6 +3,7 @@
 import React, { memo } from 'react';
 import { Shield, Calendar, User, Compass } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import type { NormalizedDoshaHeader, NormalizedDoshaMeta } from '@/types/dosha.types';
 
 interface DoshaHeaderProps {

@@ -8,6 +8,7 @@ import { COLORS } from '@/design-tokens/colors';
 import { ChartWithPopup } from '@/components/astrology/NorthIndianChart';
 import { clientApi } from '@/lib/api';
 import ParchmentDatePicker from '@/components/ui/ParchmentDatePicker';
+import { KnowledgeTooltip } from '@/components/knowledge';
 import { parseChartData } from '@/lib/chart-helpers';
 import {
     type DurationTab,
@@ -264,16 +265,16 @@ export default function DailyTransitView({ clientId }: { clientId: string }) {
                 {loading ? (
                     <div className="flex-1 flex flex-col items-center justify-center py-20">
                         <Loader2 className="w-12 h-12 text-gold-dark animate-spin mb-4" />
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px]")}>Projecting Transits</h3>
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px]")}>Projecting <KnowledgeTooltip term="transit">Transits</KnowledgeTooltip></h3>
                         <p className={cn(TYPOGRAPHY.value, "text-[14px] mt-2")}>Calculating planetary motions for {durationTab}...</p>
                     </div>
                 ) : data.length > 0 ? (
                     <>
                         <div className="lg:w-[420px] w-full border-r border-gold-primary/20 flex flex-col bg-transparent shrink-0">
                             <div className={cn("flex items-center justify-between px-4 py-2 h-11 shrink-0", COLORS.wbSectionHeader)}>
-                                <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Gochar chart</h3>
+                                <h3 className={cn(TYPOGRAPHY.sectionTitle)}><KnowledgeTooltip term="transit">Gochar</KnowledgeTooltip> chart</h3>
                                 <div className="px-2 py-0.5 bg-gold-primary/10 rounded border border-gold-primary/15">
-                                    <span className={cn(TYPOGRAPHY.label, "text-ink !mb-0")}>Lahiri</span>
+                                    <span className={cn(TYPOGRAPHY.label, "text-ink !mb-0")}><KnowledgeTooltip term="ayanamsa">Lahiri</KnowledgeTooltip></span>
                                 </div>
                             </div>
                             <div className="flex-1 flex flex-col items-center justify-start pt-0 bg-transparent">
@@ -302,7 +303,7 @@ export default function DailyTransitView({ clientId }: { clientId: string }) {
                                             <th className={cn(TYPOGRAPHY.tableHeader, "px-2 py-1.5 text-left")}>Planet</th>
                                             <th className={cn(TYPOGRAPHY.tableHeader, "px-2 py-1.5 text-left")}>Sign</th>
                                             <th className={cn(TYPOGRAPHY.tableHeader, "px-2 py-1.5 text-left")}>Degree</th>
-                                            <th className={cn(TYPOGRAPHY.tableHeader, "px-2 py-1.5 text-left")}>Nakshatra</th>
+                                            <th className={cn(TYPOGRAPHY.tableHeader, "px-2 py-1.5 text-left")}><KnowledgeTooltip term="nakshatra">Nakshatra</KnowledgeTooltip></th>
                                             <th className={cn(TYPOGRAPHY.tableHeader, "px-2 py-1.5 text-center")}>Pada</th>
                                             <th className={cn(TYPOGRAPHY.tableHeader, "px-2 py-1.5 text-center")}>House</th>
                                         </tr>
@@ -406,7 +407,7 @@ export default function DailyTransitView({ clientId }: { clientId: string }) {
                                                                 <div className="w-10 h-10 rounded-full bg-gold-primary/5 flex items-center justify-center mb-2">
                                                                     <span className="text-[18px] opacity-40">{'\u2014'}</span>
                                                                 </div>
-                                                                <p className={cn(TYPOGRAPHY.label, "!text-[9px] uppercase tracking-widest opacity-40")}>No Transits</p>
+                                                                <p className={cn(TYPOGRAPHY.label, "!text-[9px] uppercase tracking-widest opacity-40")}>No <KnowledgeTooltip term="transit">Transits</KnowledgeTooltip></p>
                                                             </div>
                                                         </td>
                                                     </tr>

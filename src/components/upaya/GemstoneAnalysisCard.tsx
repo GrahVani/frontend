@@ -4,6 +4,7 @@ import React from 'react';
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Info, AlertCircle, ShieldCheck, MapPin, Zap, Gem, Hand, Home } from 'lucide-react';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 // ============================================================================
 // Planet-to-Gemstone Color Map (matches app PLANET_THEMES aesthetic)

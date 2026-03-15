@@ -4,6 +4,7 @@ import React, { memo } from 'react';
 import { Zap, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
+import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface DoshaProgressProps {
     data: {
