@@ -1374,19 +1374,6 @@ function QuickActionsCard() {
    SKELETONS
    ═══════════════════════════════════════════════════════════════════ */
 
-function PanchangSkeleton() {
-    return (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {[1, 2, 3, 4, 5].map(i => (
-                <div key={i} className="prem-card p-5 space-y-3">
-                    <div className="h-3 w-16 bg-surface-warm/40 rounded animate-pulse" />
-                    <div className="h-6 w-24 bg-surface-warm/50 rounded animate-pulse" />
-                    <div className="h-3 w-20 bg-surface-warm/30 rounded animate-pulse" />
-                </div>
-            ))}
-        </div>
-    );
-}
 
 function TimelineSkeleton() {
     return (
@@ -1454,21 +1441,6 @@ export default function Dashboard() {
 
             {/* ── NOW Status Strip ── */}
             <NowStrip chog={chogData?.current} hora={horaData?.current} lagna={lagnaData?.current} muhurta={muhurta} />
-
-            {/* ── Panchang Cards (5 in a row) ── */}
-            {pLoading ? <PanchangSkeleton /> : pError ? (
-                <div className="prem-card text-center py-8">
-                    <p className="text-[12px] text-ink font-bold"><KnowledgeTooltip term="panchanga">Panchang</KnowledgeTooltip> data unavailable</p>
-                </div>
-            ) : panchang ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5">
-                    <PanchangCard detail={panchang.tithi} label="Tithi" icon="☾" accent={PANCH_ACCENT.Tithi} term="tithi" />
-                    <PanchangCard detail={panchang.nakshatra} label="Nakshatra" icon="✦" accent={PANCH_ACCENT.Nakshatra} term="nakshatra" />
-                    <PanchangCard detail={panchang.yoga} label="Yoga" icon="⊕" accent={PANCH_ACCENT.Yoga} term="panchanga_yoga" />
-                    <PanchangCard detail={panchang.karana} label="Karana" icon="◈" accent={PANCH_ACCENT.Karana} term="karana" />
-                    <PanchangCard detail={panchang.vara} label="Vara" icon="☉" accent={PANCH_ACCENT.Vara} term="vara" />
-                </div>
-            ) : null}
 
             {/* ── Muhurta Windows (dramatic section) ── */}
             {mLoading ? <TimelineSkeleton /> : muhurta && (
