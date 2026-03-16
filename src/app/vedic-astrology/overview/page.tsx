@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { ChartWithPopup } from "@/components/astrology/NorthIndianChart";
 import { cn } from "@/lib/utils";
 import { useDasha } from "@/hooks/queries/useCalculations";
@@ -10,19 +11,34 @@ const DivisionalChartZoomModal = dynamic(() => import('@/components/astrology/Di
 import {
     Maximize2,
     TrendingUp,
-    ArrowRight,
     Loader2,
     Calendar,
     Clock,
     MapPin,
     Sparkle,
     X,
-    LayoutDashboard
+    LayoutDashboard,
+    Star,
+    Moon,
+    Sun,
+    Activity,
+    Hexagon,
+    Shield,
+    Anchor,
+    Feather,
+    Disc,
+    Zap,
+    RefreshCcw,
+    CalendarDays,
+    Sunrise,
+    Sunset,
+    AlertTriangle,
+    LayoutTemplate
 } from 'lucide-react';
 import Link from 'next/link';
 import { useVedicClient } from '@/context/VedicClientContext';
 import { useAstrologerStore } from '@/store/useAstrologerStore';
-import { DashaResponse } from '@/lib/api';
+import { DashaResponse, clientApi } from '@/lib/api';
 import DoshaAnalysis from '@/components/astrology/DoshaAnalysis';
 import YogaAnalysisView from '@/components/astrology/YogaAnalysis';
 import PlanetaryTable from '@/components/astrology/PlanetaryTable';
@@ -74,6 +90,28 @@ const formatTime = (timeStr: string) => {
         return timeStr;
     }
 };
+
+// Icon components for Avakhada items
+function UsersIcon(props: React.SVGProps<SVGSVGElement>) {
+    return (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+    );
+}
+
+function TypeIcon(props: React.SVGProps<SVGSVGElement>) {
+    return (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="4 7 4 4 20 4 20 7" />
+            <line x1="9" x2="15" y1="20" y2="20" />
+            <line x1="12" x2="12" y1="4" y2="20" />
+        </svg>
+    );
+}
 
 export default function VedicOverviewPage() {
     const { clientDetails, processedCharts, isLoadingCharts, isRefreshingCharts, refreshCharts, isGeneratingCharts } = useVedicClient();
@@ -173,190 +211,17 @@ export default function VedicOverviewPage() {
                 </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
-                {/* LEFT COLUMN: D1 & Planetary Details */}
-                <div className="md:col-span-5 flex flex-col gap-2">
-                    {/* D1 Chart Window */}
-                    <div className="prem-card overflow-hidden">
-                        <div className="px-3 py-1.5 flex justify-between items-center"
-                            style={{
-                                background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
-                                borderBottom: '1px solid rgba(220,201,166,0.25)',
-                            }}>
-                            <h2 className={TYPOGRAPHY.sectionTitle}>Birth chart (<KnowledgeTooltip term="varga_d1_rashi" unstyled>D1</KnowledgeTooltip>)</h2>
-                            <button onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })} className="text-ink/40 hover:text-gold-dark transition-colors"><Maximize2 className="w-3 h-3" /></button>
-                        </div>
-                        <div className="w-full h-[435px] bg-surface-warm">
-                            <ChartWithPopup
-                                ascendantSign={d1Data.ascendant}
-                                planets={d1Data.planets}
-                                className="bg-transparent border-none w-full h-full"
-                                preserveAspectRatio="none"
-                                showDegrees={true}
-                            />
-                        </div>
-                    </div>
-
-                    {/* Planetary Details Window */}
-                    <div className="prem-card overflow-hidden">
-                        <div className="px-3 py-1.5"
-                            style={{
-                                background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
-                                borderBottom: '1px solid rgba(220,201,166,0.25)',
-                            }}>
-                            <h2 className={TYPOGRAPHY.sectionTitle}>Birth <KnowledgeTooltip term="planetary_positions" unstyled>planetary positions</KnowledgeTooltip></h2>
-                        </div>
-                        <div className="bg-surface-warm">
-                            <PlanetaryTable
-                                planets={planetaryTableData}
-                                variant="compact"
-                                rowClassName="py-1"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/* RIGHT COLUMN: Divisional Charts, Dasha, Profile */}
-                <div className="md:col-span-7 flex flex-col gap-2">
-
-                    {/* Client Identity Bar */}
-                    {clientDetails && (
-                        <div className="prem-card overflow-hidden">
-                            <div className="px-3 py-1.5"
-                                style={{
-                                    background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
-                                    borderBottom: '1px solid rgba(220,201,166,0.25)',
-                                }}>
-                                <h2 className={TYPOGRAPHY.sectionTitle}>Client profile</h2>
-                            </div>
-                            <div className="px-3 py-2 flex flex-wrap items-center gap-x-4 gap-y-2">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-lg flex items-center justify-center text-white shrink-0"
-                                        style={{
-                                            background: 'linear-gradient(135deg, rgba(201,162,77,0.90) 0%, rgba(139,90,43,0.85) 100%)',
-                                            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), 0 2px 6px rgba(139,90,43,0.15)',
-                                        }}>
-                                        <span className={TYPOGRAPHY.value}>{clientDetails.name.charAt(0)}</span>
-                                    </div>
-                                    <div className="min-w-0">
-                                        <div className={TYPOGRAPHY.profileName}>{clientDetails.name}</div>
-                                        <div className={cn(TYPOGRAPHY.profileDetail, "flex flex-wrap gap-x-2 mt-1 !font-serif")}>
-                                            <span className="!font-serif">{formatDate(clientDetails.dateOfBirth)}</span>
-                                            <span className="text-ink/30">•</span>
-                                            <span className="!font-serif">{formatTime(clientDetails.timeOfBirth)}</span>
-                                            <span className="text-ink/30">•</span>
-                                            <span className="truncate max-w-[250px] !font-serif" title={clientDetails.placeOfBirth.city}>{clientDetails.placeOfBirth.city}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Lagna / Moon / Sun — inline chips */}
-                                <div className="flex items-center gap-1.5 ml-auto">
-                                    {[
-                                        { key: 'lagna', label: <KnowledgeTooltip term="lagna" unstyled>Lagna</KnowledgeTooltip> as React.ReactNode, value: signIdToName[(d1Data.ascendant || 1) as number] },
-                                        { key: 'moon', label: 'Moon' as React.ReactNode, value: d1Data.planets.find(p => p.name === "Mo") ? signIdToName[d1Data.planets.find(p => p.name === "Mo")!.signId] : "-" },
-                                        { key: 'sun', label: 'Sun' as React.ReactNode, value: d1Data.planets.find(p => p.name === "Su") ? signIdToName[d1Data.planets.find(p => p.name === "Su")!.signId] : "-" },
-                                    ].map((chip) => (
-                                        <div key={chip.key}
-                                            className="px-2.5 py-1 rounded-lg group hover:border-gold-primary/30 transition-colors flex items-center gap-1.5"
-                                            style={{
-                                                background: 'rgba(255,253,249,0.70)',
-                                                border: '1px solid rgba(220,201,166,0.25)',
-                                                boxShadow: '0 1px 3px rgba(62,46,22,0.04)',
-                                            }}>
-                                            <span className={TYPOGRAPHY.badgeLabel}>{chip.label} :</span>
-                                            <span className={cn(TYPOGRAPHY.badgeValue, "group-hover:text-gold-dark transition-colors")}>{chip.value}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Panchanga & Dasha side-by-side */}
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
-                        {/* Birth Panchanga Card */}
-                        <div className="col-span-12 md:col-span-5 lg:col-span-4 prem-card overflow-hidden flex flex-col">
-                            <div className="px-3 py-1.5 flex items-center gap-1.5"
-                                style={{
-                                    background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
-                                    borderBottom: '1px solid rgba(220,201,166,0.25)',
-                                }}>
-                                <Sparkle className="w-3 h-3 text-gold-dark" />
-                                <h2 className={TYPOGRAPHY.sectionTitle}>Birth <KnowledgeTooltip term="panchanga" unstyled>panchanga</KnowledgeTooltip></h2>
-                            </div>
-                            <div className="p-2.5 flex-1 flex flex-col justify-between gap-2 bg-surface-warm">
-                                <BirthPanchanga data={birthPanchangaData} />
-                                <Link
-                                    href="/vedic-astrology/panchanga"
-                                    className={cn(TYPOGRAPHY.label, "w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl !text-white !text-[11px] !font-bold tracking-wide shadow-md active:scale-[0.98] transition-all !mb-0", COLORS.premiumGradient, COLORS.premiumGradientHover)}
-                                >
-                                    <Sparkle className="w-3 h-3" />
-                                    View full panchanga
-                                    <ArrowRight className="w-3 h-3" />
-                                </Link>
-                            </div>
-                        </div>
-
-                        {/* Vimshottari Dasha */}
-                        <div className="col-span-12 md:col-span-7 lg:col-span-8 prem-card overflow-hidden flex flex-col">
-                            <div className="px-3 py-1.5"
-                                style={{
-                                    background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
-                                    borderBottom: '1px solid rgba(220,201,166,0.25)',
-                                }}>
-                                <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="dasha_vimshottari" unstyled>Vimshottari</KnowledgeTooltip> dasha</h2>
-                            </div>
-                            <div className="p-0 bg-surface-warm">
-                                <VimshottariTreeGrid
-                                    data={dashaData ? processDashaResponse(dashaData as unknown as RawDashaPeriod).slice(0, 9) : []}
-                                    isLoading={dashaLoading}
-                                    className="border-none shadow-none rounded-none bg-transparent"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Middle Row: D9 & D10 */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {/* D9 Navamsha */}
-                        <div className="prem-card overflow-hidden">
-                            <div className="px-3 py-1.5 flex justify-between items-center"
-                                style={{
-                                    background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
-                                    borderBottom: '1px solid rgba(220,201,166,0.25)',
-                                }}>
-                                <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="varga_d9_navamsha" unstyled>Navamsha</KnowledgeTooltip> (D9)</h2>
-                                <button onClick={() => setZoomedChart({ varga: "D9", label: "Navamsha (D9)" })} className="p-1.5 text-ink/40 hover:text-gold-dark transition-colors" aria-label="Zoom Navamsha D9 chart"><Maximize2 className="w-4 h-4" /></button>
-                            </div>
-                            <div className="w-full h-[320px] bg-surface-warm">
-                                {d9Data.planets.length > 0 ? (
-                                    <ChartWithPopup ascendantSign={d9Data.ascendant} planets={d9Data.planets} className="bg-transparent border-none w-full h-full" preserveAspectRatio="none" showDegrees={false} />
-                                ) : <div className={cn(TYPOGRAPHY.subValue, "p-2 text-ink/35 italic")}>No D9 chart data available</div>}
-                            </div>
-                        </div>
-
-                        {/* D10 Dashamsha */}
-                        <div className="prem-card overflow-hidden">
-                            <div className="px-3 py-1.5 flex justify-between items-center"
-                                style={{
-                                    background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
-                                    borderBottom: '1px solid rgba(220,201,166,0.25)',
-                                }}>
-                                <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="varga_d10_dashamsha" unstyled>Dashamsha</KnowledgeTooltip> (D10)</h2>
-                                <button onClick={() => setZoomedChart({ varga: "D10", label: "Dashamsha (D10)" })} className="p-1.5 text-ink/40 hover:text-gold-dark transition-colors" aria-label="Zoom Dashamsha D10 chart"><Maximize2 className="w-4 h-4" /></button>
-                            </div>
-                            <div className="w-full h-[320px] bg-surface-warm">
-                                {d10Data.planets.length > 0 ? (
-                                    <ChartWithPopup ascendantSign={d10Data.ascendant} planets={d10Data.planets} className="bg-transparent border-none w-full h-full" preserveAspectRatio="none" showDegrees={false} />
-                                ) : <div className={cn(TYPOGRAPHY.subValue, "p-2 text-ink/35 italic")}>No D10 chart data available</div>}
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
-            </div>
+            <KundaliContent 
+                clientDetails={clientDetails}
+                d1Data={d1Data}
+                d9Data={d9Data}
+                d10Data={d10Data}
+                planetaryTableData={planetaryTableData}
+                birthPanchangaData={birthPanchangaData}
+                dashaData={dashaData}
+                dashaLoading={dashaLoading}
+                setZoomedChart={setZoomedChart}
+            />
 
             {/* Modal for Zoom - Advanced Version */}
             {zoomedChart && (
@@ -402,9 +267,208 @@ export default function VedicOverviewPage() {
                     </div>
                 </div>
             )}
+        </div>
+    );
+}
 
+// Kundali Tab Content
+function KundaliContent({ 
+    clientDetails, 
+    d1Data, 
+    d9Data, 
+    d10Data, 
+    planetaryTableData, 
+    birthPanchangaData,
+    dashaData,
+    dashaLoading,
+    setZoomedChart 
+}: { 
+    clientDetails: any;
+    d1Data: any;
+    d9Data: any;
+    d10Data: any;
+    planetaryTableData: any[];
+    birthPanchangaData: BirthPanchangaData | null;
+    dashaData: DashaResponse | null;
+    dashaLoading: boolean;
+    setZoomedChart: (chart: { varga: string, label: string } | null) => void;
+}) {
+    const { ayanamsa } = useAstrologerStore();
+    const activeSystem = ayanamsa.toLowerCase();
 
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
+            {/* LEFT COLUMN: D1 & Planetary Details */}
+            <div className="md:col-span-5 flex flex-col gap-2">
+                {/* D1 Chart Window */}
+                <div className="prem-card overflow-hidden">
+                    <div className="px-3 py-1.5 flex justify-between items-center"
+                        style={{
+                            background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
+                            borderBottom: '1px solid rgba(220,201,166,0.25)',
+                        }}>
+                        <h2 className={TYPOGRAPHY.sectionTitle}>Birth chart (<KnowledgeTooltip term="varga_d1_rashi" unstyled>D1</KnowledgeTooltip>)</h2>
+                        <button onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })} className="text-ink/40 hover:text-gold-dark transition-colors"><Maximize2 className="w-3 h-3" /></button>
+                    </div>
+                    <div className="w-full h-[435px] bg-surface-warm">
+                        <ChartWithPopup
+                            ascendantSign={d1Data.ascendant}
+                            planets={d1Data.planets}
+                            className="bg-transparent border-none w-full h-full"
+                            preserveAspectRatio="none"
+                            showDegrees={true}
+                        />
+                    </div>
+                </div>
 
+                {/* Planetary Details Window */}
+                <div className="prem-card overflow-hidden">
+                    <div className="px-3 py-1.5"
+                        style={{
+                            background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
+                            borderBottom: '1px solid rgba(220,201,166,0.25)',
+                        }}>
+                        <h2 className={TYPOGRAPHY.sectionTitle}>Birth <KnowledgeTooltip term="planetary_positions" unstyled>planetary positions</KnowledgeTooltip></h2>
+                    </div>
+                    <div className="bg-surface-warm">
+                        <PlanetaryTable
+                            planets={planetaryTableData}
+                            variant="compact"
+                            rowClassName="py-1"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* RIGHT COLUMN: Divisional Charts, Dasha, Profile */}
+            <div className="md:col-span-7 flex flex-col gap-2">
+                {/* Client Identity Bar */}
+                {clientDetails && (
+                    <div className="prem-card overflow-hidden">
+                        <div className="px-3 py-1.5"
+                            style={{
+                                background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
+                                borderBottom: '1px solid rgba(220,201,166,0.25)',
+                            }}>
+                            <h2 className={TYPOGRAPHY.sectionTitle}>Client profile</h2>
+                        </div>
+                        <div className="px-3 py-2 flex flex-wrap items-center gap-x-4 gap-y-2">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-lg flex items-center justify-center text-white shrink-0"
+                                    style={{
+                                        background: 'linear-gradient(135deg, rgba(201,162,77,0.90) 0%, rgba(139,90,43,0.85) 100%)',
+                                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), 0 2px 6px rgba(139,90,43,0.15)',
+                                    }}>
+                                    <span className={TYPOGRAPHY.value}>{clientDetails.name.charAt(0)}</span>
+                                </div>
+                                <div className="min-w-0">
+                                    <div className={TYPOGRAPHY.profileName}>{clientDetails.name}</div>
+                                    <div className={cn(TYPOGRAPHY.profileDetail, "flex flex-wrap gap-x-2 mt-1 !font-serif")}>
+                                        <span className="!font-serif">{formatDate(clientDetails.dateOfBirth)}</span>
+                                        <span className="text-ink/30">•</span>
+                                        <span className="!font-serif">{formatTime(clientDetails.timeOfBirth)}</span>
+                                        <span className="text-ink/30">•</span>
+                                        <span className="truncate max-w-[250px] !font-serif" title={clientDetails.placeOfBirth.city}>{clientDetails.placeOfBirth.city}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Lagna / Moon / Sun — inline chips */}
+                            <div className="flex items-center gap-1.5 ml-auto">
+                                {[
+                                    { key: 'lagna', label: <KnowledgeTooltip term="lagna" unstyled>Lagna</KnowledgeTooltip> as React.ReactNode, value: signIdToName[(d1Data.ascendant || 1) as number] },
+                                    { key: 'moon', label: 'Moon' as React.ReactNode, value: d1Data.planets.find((p: any) => p.name === "Mo") ? signIdToName[d1Data.planets.find((p: any) => p.name === "Mo")!.signId] : "-" },
+                                    { key: 'sun', label: 'Sun' as React.ReactNode, value: d1Data.planets.find((p: any) => p.name === "Su") ? signIdToName[d1Data.planets.find((p: any) => p.name === "Su")!.signId] : "-" },
+                                ].map((chip) => (
+                                    <div key={chip.key}
+                                        className="px-2.5 py-1 rounded-lg group hover:border-gold-primary/30 transition-colors flex items-center gap-1.5"
+                                        style={{
+                                            background: 'rgba(255,253,249,0.70)',
+                                            border: '1px solid rgba(220,201,166,0.25)',
+                                            boxShadow: '0 1px 3px rgba(62,46,22,0.04)',
+                                        }}>
+                                        <span className={TYPOGRAPHY.badgeLabel}>{chip.label} :</span>
+                                        <span className={cn(TYPOGRAPHY.badgeValue, "group-hover:text-gold-dark transition-colors")}>{chip.value}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Panchanga & Dasha side-by-side */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
+                    {/* Birth Panchanga Card */}
+                    <div className="col-span-12 md:col-span-5 lg:col-span-4 prem-card overflow-hidden flex flex-col">
+                        <div className="px-3 py-1.5 flex items-center gap-1.5"
+                            style={{
+                                background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
+                                borderBottom: '1px solid rgba(220,201,166,0.25)',
+                            }}>
+                            <Sparkle className="w-3 h-3 text-gold-dark" />
+                            <h2 className={TYPOGRAPHY.sectionTitle}>Birth <KnowledgeTooltip term="panchanga" unstyled>panchanga</KnowledgeTooltip></h2>
+                        </div>
+                        <div className="p-2.5 flex-1 flex flex-col justify-between gap-2 bg-surface-warm">
+                            <BirthPanchanga data={birthPanchangaData} />
+                        </div>
+                    </div>
+
+                    {/* Vimshottari Dasha */}
+                    <div className="col-span-12 md:col-span-7 lg:col-span-8 prem-card overflow-hidden flex flex-col">
+                        <div className="px-3 py-1.5"
+                            style={{
+                                background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
+                                borderBottom: '1px solid rgba(220,201,166,0.25)',
+                            }}>
+                            <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="dasha_vimshottari" unstyled>Vimshottari</KnowledgeTooltip> dasha</h2>
+                        </div>
+                        <div className="p-0 bg-surface-warm">
+                            <VimshottariTreeGrid
+                                data={dashaData ? processDashaResponse(dashaData as unknown as RawDashaPeriod).slice(0, 9) : []}
+                                isLoading={dashaLoading}
+                                className="border-none shadow-none rounded-none bg-transparent"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Middle Row: D9 & D10 */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {/* D9 Navamsha */}
+                    <div className="prem-card overflow-hidden">
+                        <div className="px-3 py-1.5 flex justify-between items-center"
+                            style={{
+                                background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
+                                borderBottom: '1px solid rgba(220,201,166,0.25)',
+                            }}>
+                            <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="varga_d9_navamsha" unstyled>Navamsha</KnowledgeTooltip> (D9)</h2>
+                            <button onClick={() => setZoomedChart({ varga: "D9", label: "Navamsha (D9)" })} className="p-1.5 text-ink/40 hover:text-gold-dark transition-colors" aria-label="Zoom Navamsha D9 chart"><Maximize2 className="w-4 h-4" /></button>
+                        </div>
+                        <div className="w-full h-[320px] bg-surface-warm">
+                            {d9Data.planets.length > 0 ? (
+                                <ChartWithPopup ascendantSign={d9Data.ascendant} planets={d9Data.planets} className="bg-transparent border-none w-full h-full" preserveAspectRatio="none" showDegrees={false} />
+                            ) : <div className={cn(TYPOGRAPHY.subValue, "p-2 text-ink/35 italic")}>No D9 chart data available</div>}
+                        </div>
+                    </div>
+
+                    {/* D10 Dashamsha */}
+                    <div className="prem-card overflow-hidden">
+                        <div className="px-3 py-1.5 flex justify-between items-center"
+                            style={{
+                                background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
+                                borderBottom: '1px solid rgba(220,201,166,0.25)',
+                            }}>
+                            <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="varga_d10_dashamsha" unstyled>Dashamsha</KnowledgeTooltip> (D10)</h2>
+                            <button onClick={() => setZoomedChart({ varga: "D10", label: "Dashamsha (D10)" })} className="p-1.5 text-ink/40 hover:text-gold-dark transition-colors" aria-label="Zoom Dashamsha D10 chart"><Maximize2 className="w-4 h-4" /></button>
+                        </div>
+                        <div className="w-full h-[320px] bg-surface-warm">
+                            {d10Data.planets.length > 0 ? (
+                                <ChartWithPopup ascendantSign={d10Data.ascendant} planets={d10Data.planets} className="bg-transparent border-none w-full h-full" preserveAspectRatio="none" showDegrees={false} />
+                            ) : <div className={cn(TYPOGRAPHY.subValue, "p-2 text-ink/35 italic")}>No D10 chart data available</div>}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

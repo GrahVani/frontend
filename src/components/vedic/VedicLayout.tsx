@@ -35,7 +35,8 @@ import {
     HelpCircle,
     Settings2,
     LayoutGrid,
-    Moon
+    Moon,
+    Calendar
 } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/Popover";
 import { CHART_METADATA, DASHA_TYPES } from "@/lib/api";

@@ -2,8 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { X, LayoutDashboard, Users, Star, Clock, Heart, Calendar, ChevronDown, Settings, Hash } from "lucide-react";
+import { X, LayoutDashboard, Users, Star, Clock, Heart, Calendar, ChevronDown, Settings, Hash, Sparkle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
 import { SidebarItem } from "@/components/layout/SectionSidebar";
@@ -27,6 +28,7 @@ const NAV_ITEMS: NavItem[] = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/clients", label: "Clients", icon: Users, subItems: CLIENTS_General_Sidebar },
     { href: "/vedic-astrology", label: "Vedic Astrology", icon: Star },
+    { href: "/vedic-astrology/panchanga", label: "Panchang", icon: Sparkle },
     { href: "/muhurta", label: "Muhurta", icon: Clock, subItems: MUHURTA_Sidebar },
     { href: "/numerology", label: "Numerology", icon: Hash, subItems: NUMEROLOGY_SYSTEMS },
     { href: "/matchmaking", label: "Matchmaking", icon: Heart, subItems: MATCHMAKING_Sidebar },
@@ -69,7 +71,27 @@ export default function MobileNav({ onClose }: { onClose: () => void }) {
             >
                 {/* Header */}
                 <div className="flex items-center justify-between p-5 border-b border-header-border/30">
-                    <span className={cn(TYPOGRAPHY.sectionTitle, "text-xl !font-bold !text-white !mb-0 tracking-wide")}>Grahvani</span>
+                    <div className="flex items-center gap-3">
+                        <Image
+                            src="/Logo.png"
+                            alt="Grahvani Logo"
+                            width={32}
+                            height={32}
+                            className="object-contain mix-blend-multiply"
+                            unoptimized
+                        />
+                        <span
+                            className={cn(TYPOGRAPHY.sectionTitle, "text-lg !font-bold !mb-0 tracking-[0.15em] uppercase font-serif")}
+                            style={{
+                                background: 'linear-gradient(to bottom, #fffb4f 0%, #ffe14a 25%, #e2b226 50%, #c18c19 75%, #b67c00 100%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.4))',
+                            }}
+                        >
+                            GRAHVANI
+                        </span>
+                    </div>
                     <button
                         onClick={onClose}
                         className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
