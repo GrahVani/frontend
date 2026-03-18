@@ -128,4 +128,17 @@ export const queryKeys = {
         search: (q: string, domain?: string) => ['knowledge', 'search', q, domain] as const,
         stats: ['knowledge', 'stats'] as const,
     },
+    // Grantha Report Engine
+    grantha: {
+        blueprints: {
+            all: ['grantha', 'blueprints'] as const,
+            detail: (id: string) => ['grantha', 'blueprints', id] as const,
+            estimate: (id: string) => ['grantha', 'blueprints', id, 'estimate'] as const,
+        },
+        reports: {
+            all: ['grantha', 'reports'] as const,
+            list: (params?: Record<string, unknown>) => ['grantha', 'reports', params] as const,
+            detail: (id: string) => ['grantha', 'reports', id] as const,
+        },
+    },
 } as const;

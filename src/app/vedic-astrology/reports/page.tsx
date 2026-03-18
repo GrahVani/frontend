@@ -1,35 +1,73 @@
 "use client";
 
-import React, { useState } from 'react';
-import {
-    FileText,
-    Download,
-    Star,
-    Sparkles,
-    Cpu,
-    Printer,
-    CheckCircle2,
-    XCircle
-} from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Cpu, Sparkles, Loader2 } from 'lucide-react';
 import { useVedicClient } from '@/context/VedicClientContext';
-import { cn } from "@/lib/utils";
+import { useBlueprints } from '@/hooks/queries/useGrantha';
+import { useReports } from '@/hooks/queries/useGrantha';
+import BlueprintCard from '@/components/grantha/BlueprintCard';
+import ReportHistoryTable from '@/components/grantha/ReportHistoryTable';
+import ClientSelectorModal from '@/components/grantha/ClientSelectorModal';
+import ReportGenerationModal from '@/components/grantha/ReportGenerationModal';
+import type { Blueprint } from '@/types/grantha';
+import type { Client } from '@/types/client';
 
-// Mock Yoga Data
-const IDENTIFIED_YOGAS = [
-    { name: "Gaja Kesari Yoga", type: "Raja Yoga", strength: 85, desc: "Moon & Jupiter in Kendra. Grants fame and wisdom.", active: true },
-    { name: "Budhaditya Yoga", type: "Raja Yoga", strength: 92, desc: "Sun & Mercury conjunction using high intelligence.", active: true },
-    { name: "Kemadruma Yoga", type: "Dosha", strength: 0, desc: "No planets flanking Moon. CANCELLED due to Jupiter aspect.", active: false },
-    { name: "Panch Mahapurusha", type: "Raja Yoga", strength: 78, desc: "Mars in Own Sign (Ruchaka Yoga).", active: true },
-];
+// Build a blueprintId → name map for display in the history table
+function buildBlueprintNameMap(blueprints: Blueprint[]): Record<string, string> {
+    const map: Record<string, string> = {};
+    for (const bp of blueprints) map[bp.id] = bp.name;
+    return map;
+}
 
 export default function VedicReportsPage() {
     const { clientDetails } = useVedicClient();
-    const [generating, setGenerating] = useState(false);
+    const { data: blueprints, isLoading: loadingBlueprints } = useBlueprints();
+    const { data: reportsData, isLoading: loadingReports } = useReports({ pageSize: 20 });
 
-    if (!clientDetails) return null;
+    // Modal state
+    const [selectedBlueprint, setSelectedBlueprint] = useState<Blueprint | null>(null);
+    const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+    const [showClientSelector, setShowClientSelector] = useState(false);
+    const [showGenerationModal, setShowGenerationModal] = useState(false);
+
+    const blueprintNames = useMemo(
+        () => buildBlueprintNameMap(blueprints || []),
+        [blueprints],
+    );
+
+    // Handle "Generate" click on a blueprint card
+    const handleGenerateClick = (blueprint: Blueprint) => {
+        setSelectedBlueprint(blueprint);
+
+        // If we have a client from the vedic context, map it to Client shape
+        if (clientDetails) {
+            const mapped: Client = {
+                id: clientDetails.id || '',
+                fullName: clientDetails.name,
+                gender: clientDetails.gender,
+                birthDate: clientDetails.dateOfBirth,
+                birthTime: clientDetails.timeOfBirth,
+                birthPlace: clientDetails.placeOfBirth?.city,
+                birthLatitude: clientDetails.placeOfBirth?.latitude,
+                birthLongitude: clientDetails.placeOfBirth?.longitude,
+            };
+            setSelectedClient(mapped);
+            setShowGenerationModal(true);
+        } else {
+            // Open client selector first
+            setShowClientSelector(true);
+        }
+    };
+
+    // Client selected from modal
+    const handleClientSelected = (client: Client) => {
+        setSelectedClient(client);
+        setShowClientSelector(false);
+        setShowGenerationModal(true);
+    };
 
     return (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-10">
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-10">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
@@ -37,116 +75,69 @@ export default function VedicReportsPage() {
                         <Cpu className="w-8 h-8 text-gold-dark" />
                         Report Lab
                     </h1>
-                    <p className="text-gold-dark font-serif text-[14px]">Automated Yoga identification and document synthesis.</p>
-                </div>
-                <div className="flex gap-3">
-                    <button className="flex items-center gap-2 px-4 py-2 bg-ink text-white rounded-lg shadow-lg hover:bg-body transition-colors">
-                        <Printer className="w-4 h-4" />
-                        <span className="text-[12px] font-bold uppercase tracking-widest">Print Chart</span>
-                    </button>
+                    <p className="text-gold-dark font-serif text-[14px]">
+                        AI-powered astrological report generation via Grantha Engine.
+                    </p>
                 </div>
             </div>
 
-            {/* YOGA DETECTOR */}
-            <div className="prem-card rounded-2xl overflow-hidden shadow-sm">
-                <div className="p-4 bg-gold-primary/10 border-b border-gold-primary/15 flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                        <Sparkles className="w-5 h-5 text-gold-dark" />
-                        <h3 className="font-serif font-bold text-ink">Cosmic Signatures (Yogas)</h3>
-                    </div>
-                    <span className="text-[10px] font-bold uppercase text-gold-dark/60 tracking-widest">AI Scan Complete</span>
+            {/* Blueprint Grid */}
+            {loadingBlueprints ? (
+                <div className="flex items-center justify-center py-16">
+                    <Loader2 className="w-6 h-6 text-gold-primary animate-spin mr-3" />
+                    <span className="font-serif text-ink/50 text-[15px]">Loading blueprints...</span>
                 </div>
-
-                <table className="w-full text-left text-[14px]">
-                    <thead className="bg-surface-warm text-body/70 font-black uppercase text-[10px] tracking-widest border-b border-gold-primary/10">
-                        <tr>
-                            <th className="px-6 py-3">Yoga Name</th>
-                            <th className="px-6 py-3">Category</th>
-                            <th className="px-6 py-3">Strength</th>
-                            <th className="px-6 py-3">Description</th>
-                            <th className="px-6 py-3 text-right">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gold-primary/5">
-                        {IDENTIFIED_YOGAS.map((yoga, i) => (
-                            <tr key={i} className={cn("hover:bg-ink/5 transition-colors", !yoga.active && "opacity-60 bg-surface-warm")}>
-                                <td className="px-6 py-4 font-bold text-ink font-serif flex items-center gap-2">
-                                    <Star className={cn("w-3 h-3", yoga.active ? "text-gold-dark fill-gold-dark" : "text-ink/30")} />
-                                    {yoga.name}
-                                </td>
-                                <td className="px-6 py-4 text-body text-[12px] uppercase tracking-wider font-bold">{yoga.type}</td>
-                                <td className="px-6 py-4">
-                                    {yoga.active ? (
-                                        <div className="flex items-center gap-2">
-                                            <div className="h-1.5 w-16 bg-gold-primary/15 rounded-full overflow-hidden">
-                                                <div className="h-full bg-gold-primary" style={{ width: `${yoga.strength}%` }} />
-                                            </div>
-                                            <span className="text-[12px] font-mono text-gold-dark font-bold">{yoga.strength}%</span>
-                                        </div>
-                                    ) : (
-                                        <span className="text-[12px] text-ink/30 font-mono">—</span>
-                                    )}
-                                </td>
-                                <td className="px-6 py-4 text-body text-[12px] leading-relaxed max-w-xs">{yoga.desc}</td>
-                                <td className="px-6 py-4 text-right">
-                                    {yoga.active ? (
-                                        <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-black uppercase tracking-wider">
-                                            <CheckCircle2 className="w-3 h-3" /> Active
-                                        </span>
-                                    ) : (
-                                        <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-gold-primary/10 text-ink/40 rounded text-[10px] font-black uppercase tracking-wider">
-                                            <XCircle className="w-3 h-3" /> Cancelled
-                                        </span>
-                                    )}
-                                </td>
-                            </tr>
+            ) : blueprints && blueprints.length > 0 ? (
+                <div>
+                    <div className="flex items-center gap-2 mb-4">
+                        <Sparkles className="w-4 h-4 text-gold-dark" />
+                        <h3 className="font-serif font-bold text-ink text-[18px]">
+                            Available Blueprints
+                        </h3>
+                        <span className="text-[11px] text-ink/30 font-bold uppercase tracking-widest ml-2">
+                            {blueprints.length} {blueprints.length === 1 ? 'type' : 'types'}
+                        </span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {blueprints.map((blueprint) => (
+                            <BlueprintCard
+                                key={blueprint.id}
+                                blueprint={blueprint}
+                                onGenerate={handleGenerateClick}
+                            />
                         ))}
-                    </tbody>
-                </table>
-            </div>
-
-            {/* DOWNLOAD GRID */}
-            <div>
-                <h3 className="font-serif font-bold text-ink mb-4 text-[18px]">Available Reports</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {/* Report Card 1 */}
-                    <div className="prem-card rounded-2xl p-6 hover:shadow-lg transition-all group">
-                        <div className="w-12 h-12 bg-ink/5 rounded-xl flex items-center justify-center text-ink mb-4 group-hover:bg-gold-primary group-hover:text-white transition-colors">
-                            <FileText className="w-6 h-6" />
-                        </div>
-                        <h4 className="font-bold text-ink font-serif text-[18px] mb-2">Detailed Horoscope</h4>
-                        <p className="text-[14px] text-gold-dark mb-6 min-h-[40px]">Full 50-page PDF covering Lagna, Divisional Charts, and Dashas.</p>
-                        <button className="w-full py-3 border border-gold-primary/20 rounded-lg text-gold-dark font-bold text-[12px] uppercase tracking-widest hover:bg-gold-primary hover:text-white transition-all flex items-center justify-center gap-2">
-                            <Download className="w-4 h-4" /> Download PDF
-                        </button>
-                    </div>
-
-                    {/* Report Card 2 */}
-                    <div className="prem-card rounded-2xl p-6 hover:shadow-lg transition-all group relative overflow-hidden">
-                        <div className="absolute right-0 top-0 px-3 py-1 bg-gold-primary text-white text-[9px] font-black uppercase rounded-bl-xl">Premium</div>
-                        <div className="w-12 h-12 bg-ink/5 rounded-xl flex items-center justify-center text-ink mb-4 group-hover:bg-gold-primary group-hover:text-white transition-colors">
-                            <Sparkles className="w-6 h-6" />
-                        </div>
-                        <h4 className="font-bold text-ink font-serif text-[18px] mb-2">Yearly Progression</h4>
-                        <p className="text-[14px] text-gold-dark mb-6 min-h-[40px]">Varshaphal analysis for the upcoming solar return year.</p>
-                        <button className="w-full py-3 bg-ink text-white rounded-lg shadow-md hover:bg-body transition-all flex items-center justify-center gap-2 font-bold text-[12px] uppercase tracking-widest">
-                            <Cpu className="w-4 h-4" /> Generate AI Report
-                        </button>
-                    </div>
-
-                    {/* Report Card 3 */}
-                    <div className="prem-card rounded-2xl p-6 hover:shadow-lg transition-all group">
-                        <div className="w-12 h-12 bg-ink/5 rounded-xl flex items-center justify-center text-ink mb-4 group-hover:bg-gold-primary group-hover:text-white transition-colors">
-                            <Star className="w-6 h-6" />
-                        </div>
-                        <h4 className="font-bold text-ink font-serif text-[18px] mb-2">Gemstone Guide</h4>
-                        <p className="text-[14px] text-gold-dark mb-6 min-h-[40px]">Detailed certification of suitable gemstones and wearing protocols.</p>
-                        <button className="w-full py-3 border border-gold-primary/20 rounded-lg text-gold-dark font-bold text-[12px] uppercase tracking-widest hover:bg-gold-primary hover:text-white transition-all flex items-center justify-center gap-2">
-                            <Download className="w-4 h-4" /> Download PDF
-                        </button>
                     </div>
                 </div>
+            ) : (
+                <div className="prem-card rounded-2xl p-10 text-center">
+                    <p className="text-[14px] text-ink/40 font-serif">No blueprints available. Check Grantha connection.</p>
+                </div>
+            )}
+
+            {/* Recent Reports */}
+            <div>
+                <h3 className="font-serif font-bold text-ink text-[18px] mb-4">Recent Reports</h3>
+                <ReportHistoryTable
+                    reports={reportsData?.data || []}
+                    isLoading={loadingReports}
+                    blueprintNames={blueprintNames}
+                />
             </div>
+
+            {/* Client Selector Modal */}
+            <ClientSelectorModal
+                open={showClientSelector}
+                onClose={() => setShowClientSelector(false)}
+                onSelect={handleClientSelected}
+            />
+
+            {/* Report Generation Modal */}
+            <ReportGenerationModal
+                open={showGenerationModal}
+                onClose={() => setShowGenerationModal(false)}
+                blueprint={selectedBlueprint}
+                client={selectedClient}
+            />
         </div>
     );
 }

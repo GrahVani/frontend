@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Calendar, Plus, Save, Loader2, StickyNote, CreditCard, TrendingUp, Shield, FileText, Clock } from 'lucide-react';
+import { Calendar, Plus, Save, Loader2, StickyNote, CreditCard, TrendingUp, Shield, FileText, Clock, Sparkles } from 'lucide-react';
 import type { Client, FamilyLinkPayload, RelationshipType } from '@/types/client';
 import { useClientMutations } from "@/hooks/mutations/useClientMutations";
 import { useFamilyLinks, useFamilyMutations } from "@/hooks/queries/useFamily";
@@ -15,6 +15,10 @@ import ClientProfileHeader from '@/components/clients/ClientProfileHeader';
 import ClientPersonalCards from '@/components/clients/ClientPersonalCards';
 import ClientFamilySection from '@/components/clients/ClientFamilySection';
 import SectionHeader from '@/components/clients/SectionHeader';
+import ReportHistoryTable from '@/components/grantha/ReportHistoryTable';
+import ReportGenerationModal from '@/components/grantha/ReportGenerationModal';
+import { useReports, useBlueprints } from '@/hooks/queries/useGrantha';
+import type { Blueprint } from '@/types/grantha';
 
 // ─── Status Badge ───────────────────────────────────────────────────
 
@@ -85,6 +89,23 @@ export default function ClientProfilePage() {
     const { updateClient } = useClientMutations();
     const { confirm, dialog: confirmDialog } = useConfirmDialog();
     const toast = useToast();
+
+    // Grantha report generation
+    const { data: reportsData, isLoading: loadingReports } = useReports();
+    const { data: blueprints } = useBlueprints();
+    const [showReportModal, setShowReportModal] = useState(false);
+    const [selectedBlueprint, setSelectedBlueprint] = useState<Blueprint | null>(null);
+
+    const blueprintNames = useMemo(() => {
+        const map: Record<string, string> = {};
+        if (blueprints) for (const bp of blueprints) map[bp.id] = bp.name;
+        return map;
+    }, [blueprints]);
+
+    const handleQuickGenerate = (bp: Blueprint) => {
+        setSelectedBlueprint(bp);
+        setShowReportModal(true);
+    };
     const [localError, setLocalError] = useState<string | null>(null);
     const error = localError || (queryError ? (queryError as Error).message : updateClient.error?.message) || null;
     const setError = (msg: string | null) => setLocalError(msg);
@@ -439,6 +460,50 @@ export default function ClientProfilePage() {
                 </div>
             </div>
 
+            {/* ── Reports (Grantha Engine) ──────────────────────────── */}
+            <div className="mt-8">
+                <SectionHeader
+                    icon={Sparkles}
+                    title="Reports"
+                    description="Generate a new report or view recent reports"
+                    action={
+                        <button
+                            onClick={() => {
+                                const defaultBp = blueprints?.[0] || null;
+                                setSelectedBlueprint(defaultBp);
+                                setShowReportModal(true);
+                            }}
+                            className="px-5 py-2.5 bg-gold-primary text-white rounded-lg text-[13px] font-semibold hover:bg-gold-dark transition-colors flex items-center gap-2"
+                        >
+                            <Sparkles className="w-4 h-4" />
+                            Generate Report
+                        </button>
+                    }
+                />
+
+                {/* Quick-generate buttons */}
+                {blueprints && blueprints.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        {blueprints.slice(0, 4).map((bp) => (
+                            <button
+                                key={bp.id}
+                                onClick={() => handleQuickGenerate(bp)}
+                                className="px-3 py-1.5 rounded-lg text-[12px] font-semibold text-gold-dark hover:bg-gold-primary/10 transition-all"
+                                style={{ border: '1px solid rgba(201,162,77,0.25)' }}
+                            >
+                                {bp.name}
+                            </button>
+                        ))}
+                    </div>
+                )}
+
+                <ReportHistoryTable
+                    reports={reportsData?.data || []}
+                    isLoading={loadingReports}
+                    blueprintNames={blueprintNames}
+                />
+            </div>
+
             {/* ── Documents ──────────────────────────────────────────── */}
             <div className="mt-8">
                 <SectionHeader
@@ -526,6 +591,14 @@ export default function ClientProfilePage() {
                     ))}
                 </div>
             </div>
+
+            {/* Grantha Report Generation Modal */}
+            <ReportGenerationModal
+                open={showReportModal}
+                onClose={() => setShowReportModal(false)}
+                blueprint={selectedBlueprint}
+                client={client}
+            />
 
             {confirmDialog}
         </div>
