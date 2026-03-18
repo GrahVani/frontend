@@ -465,7 +465,7 @@ export default function ClientProfilePage() {
                 <SectionHeader
                     icon={Sparkles}
                     title="Reports"
-                    description="Generate a new report or view recent reports"
+                    description="Generate a new report for this client. Showing all recent reports across clients."
                     action={
                         <button
                             onClick={() => {

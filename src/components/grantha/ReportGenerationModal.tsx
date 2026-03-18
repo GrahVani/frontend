@@ -121,9 +121,9 @@ export default function ReportGenerationModal({
                 es.close();
                 setStep('complete');
                 setProgress(100);
-                setDownloadUrl(data.downloadUrl);
-                setPageCount(data.pageCount);
-                setTotalCost(data.totalCost);
+                setDownloadUrl(data.downloadUrl ?? null);
+                setPageCount(data.pageCount ?? null);
+                setTotalCost(data.totalCost ?? 0);
                 if (startTimeRef.current) {
                     setGenerationTime(Math.round((Date.now() - startTimeRef.current) / 1000));
                 }
