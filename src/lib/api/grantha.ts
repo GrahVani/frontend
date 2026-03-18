@@ -32,8 +32,8 @@ export function clientToGranthaBirthData(client: Client): GranthaBirthData {
         name: client.fullName,
         dob: client.birthDate.slice(0, 10),
         tob: client.birthTime.slice(0, 5),
-        lat: client.birthLatitude ?? 0,
-        lng: client.birthLongitude ?? 0,
+        lat: Number(client.birthLatitude) || 0,
+        lng: Number(client.birthLongitude) || 0,
         gender: client.gender || 'other',
     };
 }
