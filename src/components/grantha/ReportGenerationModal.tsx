@@ -212,8 +212,9 @@ export default function ReportGenerationModal({
 
     if (!open || !blueprint) return null;
 
-    // Validate birth data availability
-    const hasBirthData = client?.birthDate && client?.birthTime && client?.birthLatitude != null && client?.birthLongitude != null;
+    // Validate minimum birth data — date + time is required, coordinates are desirable
+    // but the client may have them stored in the DB even if the context object doesn't include them
+    const hasBirthData = !!(client?.birthDate && client?.birthTime);
 
     return (
         <div className="fixed inset-0 z-[150] flex items-center justify-center">

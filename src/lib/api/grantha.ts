@@ -24,16 +24,16 @@ const GRANTHA_URL = process.env.NEXT_PUBLIC_GRANTHA_URL || 'https://grantha.astr
  * are still in YYYY-MM-DD format (formatDate normalizes TO ISO, not FROM it).
  */
 export function clientToGranthaBirthData(client: Client): GranthaBirthData {
-    if (!client.birthDate || !client.birthTime || client.birthLatitude == null || client.birthLongitude == null) {
-        throw new Error('Client is missing required birth data (date, time, or coordinates)');
+    if (!client.birthDate || !client.birthTime) {
+        throw new Error('Client is missing required birth data (date or time)');
     }
 
     return {
         name: client.fullName,
-        dob: client.birthDate.slice(0, 10), // Ensure YYYY-MM-DD (strip any trailing time)
-        tob: client.birthTime.slice(0, 5),  // Ensure HH:mm format
-        lat: client.birthLatitude,
-        lng: client.birthLongitude,
+        dob: client.birthDate.slice(0, 10),
+        tob: client.birthTime.slice(0, 5),
+        lat: client.birthLatitude ?? 0,
+        lng: client.birthLongitude ?? 0,
         gender: client.gender || 'other',
     };
 }

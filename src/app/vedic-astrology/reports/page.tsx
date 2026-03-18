@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Cpu, Sparkles, Loader2 } from 'lucide-react';
 import { useVedicClient } from '@/context/VedicClientContext';
-import { useBlueprints } from '@/hooks/queries/useGrantha';
-import { useReports } from '@/hooks/queries/useGrantha';
+import { useClient } from '@/hooks/queries/useClients';
+import { useBlueprints, useReports } from '@/hooks/queries/useGrantha';
 import BlueprintCard from '@/components/grantha/BlueprintCard';
 import ReportHistoryTable from '@/components/grantha/ReportHistoryTable';
 import ClientSelectorModal from '@/components/grantha/ClientSelectorModal';
@@ -12,7 +12,6 @@ import ReportGenerationModal from '@/components/grantha/ReportGenerationModal';
 import type { Blueprint } from '@/types/grantha';
 import type { Client } from '@/types/client';
 
-// Build a blueprintId → name map for display in the history table
 function buildBlueprintNameMap(blueprints: Blueprint[]): Record<string, string> {
     const map: Record<string, string> = {};
     for (const bp of blueprints) map[bp.id] = bp.name;
@@ -23,6 +22,9 @@ export default function VedicReportsPage() {
     const { clientDetails } = useVedicClient();
     const { data: blueprints, isLoading: loadingBlueprints } = useBlueprints();
     const { data: reportsData, isLoading: loadingReports } = useReports({ pageSize: 20 });
+
+    // Fetch full client record from API (includes coordinates, all birth data)
+    const { data: fullClient } = useClient(clientDetails?.id);
 
     // Modal state
     const [selectedBlueprint, setSelectedBlueprint] = useState<Blueprint | null>(null);
@@ -39,8 +41,12 @@ export default function VedicReportsPage() {
     const handleGenerateClick = (blueprint: Blueprint) => {
         setSelectedBlueprint(blueprint);
 
-        // If we have a client from the vedic context, map it to Client shape
-        if (clientDetails) {
+        // Use full client from API (has coordinates), fall back to context mapping
+        if (fullClient) {
+            setSelectedClient(fullClient);
+            setShowGenerationModal(true);
+        } else if (clientDetails) {
+            // Fallback: map VedicClientDetails (may lack coordinates)
             const mapped: Client = {
                 id: clientDetails.id || '',
                 fullName: clientDetails.name,
@@ -54,12 +60,11 @@ export default function VedicReportsPage() {
             setSelectedClient(mapped);
             setShowGenerationModal(true);
         } else {
-            // Open client selector first
             setShowClientSelector(true);
         }
     };
 
-    // Client selected from modal
+    // Client selected from search modal
     const handleClientSelected = (client: Client) => {
         setSelectedClient(client);
         setShowClientSelector(false);
