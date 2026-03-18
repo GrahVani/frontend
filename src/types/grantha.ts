@@ -9,8 +9,8 @@ export interface Blueprint {
     name: string;
     slug: string;
     description: string | null;
-    estimatedPages: number | null;   // Flat number (NOT {min,max})
-    estimatedCost: number | null;    // Flat number in USD (NOT {min,max})
+    estimatedPages: { min: number; max: number } | null;
+    estimatedCost: { min: number; max: number; currency: string } | null;
     isSystem: boolean;
     version?: number;
     // Only present on GET /blueprints/:id (detail)

@@ -35,13 +35,13 @@ export default function BlueprintCard({ blueprint, onGenerate }: BlueprintCardPr
                 {blueprint.estimatedPages != null && (
                     <span className="flex items-center gap-1">
                         <Layers className="w-3.5 h-3.5" />
-                        ~{blueprint.estimatedPages} pages
+                        {blueprint.estimatedPages.min}–{blueprint.estimatedPages.max} pages
                     </span>
                 )}
             </div>
 
             {/* Cost badge */}
-            {blueprint.estimatedCost != null && blueprint.estimatedCost > 0 && (
+            {blueprint.estimatedCost != null && blueprint.estimatedCost.max > 0 && (
                 <div className="mb-4">
                     <span
                         className="px-3 py-1 text-[11px] font-bold text-gold-dark uppercase tracking-wider rounded-full"
@@ -50,7 +50,7 @@ export default function BlueprintCard({ blueprint, onGenerate }: BlueprintCardPr
                             border: '1px solid rgba(201,162,77,0.28)',
                         }}
                     >
-                        ~${blueprint.estimatedCost.toFixed(2)}
+                        {blueprint.estimatedCost.currency === 'INR' ? '₹' : '$'}{blueprint.estimatedCost.min}–{blueprint.estimatedCost.max}
                     </span>
                 </div>
             )}

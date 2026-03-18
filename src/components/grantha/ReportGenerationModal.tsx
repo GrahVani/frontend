@@ -251,8 +251,8 @@ export default function ReportGenerationModal({
                                 <div>
                                     <p className="font-bold text-ink text-[15px]">{blueprint.name}</p>
                                     <p className="text-[12px] text-ink/55">
-                                        {blueprint.estimatedPages != null ? `~${blueprint.estimatedPages} pages` : 'Pages vary'}
-                                        {blueprint.estimatedCost != null && blueprint.estimatedCost > 0 && ` · ~$${blueprint.estimatedCost.toFixed(2)}`}
+                                        {blueprint.estimatedPages != null ? `${blueprint.estimatedPages.min}–${blueprint.estimatedPages.max} pages` : 'Pages vary'}
+                                        {blueprint.estimatedCost != null && blueprint.estimatedCost.max > 0 && ` · ${blueprint.estimatedCost.currency === 'INR' ? '₹' : '$'}${blueprint.estimatedCost.min}–${blueprint.estimatedCost.max}`}
                                     </p>
                                 </div>
                             </div>
