@@ -12,7 +12,7 @@ export default function ReportDetailPage() {
     const router = useRouter();
     const reportId = params.id as string;
 
-    const { data: report, isLoading } = useReportStatus(reportId);
+    const { data: report, isLoading, isError } = useReportStatus(reportId);
 
     if (isLoading) {
         return (
@@ -22,11 +22,12 @@ export default function ReportDetailPage() {
         );
     }
 
-    if (!report) {
+    if (isError || !report) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="text-center">
-                    <p className="font-serif text-[20px] text-status-error mb-4">Report not found</p>
+                    <p className="font-serif text-[20px] text-ink mb-2">{isError ? 'Unable to load report' : 'Report not found'}</p>
+                    <p className="text-[13px] text-ink/50 mb-4">{isError ? 'Please try again or check Report Lab.' : ''}</p>
                     <button onClick={() => router.push('/vedic-astrology/reports')} className="text-gold-dark hover:underline font-serif">
                         Back to Report Lab
                     </button>

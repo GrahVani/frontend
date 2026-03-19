@@ -41,6 +41,8 @@ export function useReportStatus(id: string | undefined) {
         queryKey: queryKeys.grantha.reports.detail(id ?? ''),
         queryFn: () => granthaApi.getReport(id!),
         enabled: !!id,
+        throwOnError: false,
+        retry: 2,
         refetchInterval: (query) => {
             const status = query.state.data?.status;
             if (!status) return 3000;
