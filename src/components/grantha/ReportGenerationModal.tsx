@@ -196,9 +196,10 @@ export default function ReportGenerationModal({
             setReportId(result.id);
             connectSSE(result.id);
         } catch (err) {
-            isSubmittingRef.current = false;
             setErrorMessage(err instanceof Error ? err.message : 'Failed to start report generation');
             setStep('error');
+        } finally {
+            isSubmittingRef.current = false;
         }
     };
 
