@@ -112,7 +112,7 @@ export default function ReportDetailPage() {
 
                         <div className="flex items-center gap-2 text-[13px]">
                             <DollarSign className="w-4 h-4 text-ink/30" />
-                            <span className="text-ink/70">Cost: <strong className="text-ink">{report.totalCost != null && report.totalCost > 0 ? `$${report.totalCost.toFixed(2)}` : '—'}</strong></span>
+                            <span className="text-ink/70">Cost: <strong className="text-ink">{report.totalCost != null && report.totalCost > 0 ? `₹${report.totalCost.toFixed(2)}` : '—'}</strong></span>
                         </div>
 
                         <div className="flex items-center gap-2 text-[13px]">

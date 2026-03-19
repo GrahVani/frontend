@@ -46,6 +46,7 @@ export default function ReportGenerationModal({
 
     const eventSourceRef = useRef<EventSource | null>(null);
     const startTimeRef = useRef<number | null>(null);
+    const isSubmittingRef = useRef(false);
 
     const { generateReport, cancelReport } = useGranthaMutations();
     const toast = useToast();
@@ -72,6 +73,7 @@ export default function ReportGenerationModal({
         return () => {
             eventSourceRef.current?.close();
             eventSourceRef.current = null;
+            isSubmittingRef.current = false;
         };
     }, [open]);
 
@@ -176,6 +178,8 @@ export default function ReportGenerationModal({
     // Handle "Generate" click
     const handleGenerate = async () => {
         if (!blueprint || !client) return;
+        if (isSubmittingRef.current) return;
+        isSubmittingRef.current = true;
 
         try {
             const birthData = clientToGranthaBirthData(client);
@@ -192,6 +196,7 @@ export default function ReportGenerationModal({
             setReportId(result.id);
             connectSSE(result.id);
         } catch (err) {
+            isSubmittingRef.current = false;
             setErrorMessage(err instanceof Error ? err.message : 'Failed to start report generation');
             setStep('error');
         }
@@ -458,7 +463,7 @@ export default function ReportGenerationModal({
                             {totalCost > 0 && (
                                 <div className="prem-card p-3 text-center rounded-xl">
                                     <p className="text-[10px] text-ink/35 uppercase tracking-widest font-bold mb-1">Cost</p>
-                                    <p className="text-[18px] font-serif font-bold text-ink">${totalCost.toFixed(2)}</p>
+                                    <p className="text-[18px] font-serif font-bold text-ink">₹{totalCost.toFixed(2)}</p>
                                 </div>
                             )}
                             {generationTime != null && (

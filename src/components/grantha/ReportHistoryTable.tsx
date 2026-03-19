@@ -101,7 +101,7 @@ export default function ReportHistoryTable({ reports, isLoading, blueprintNames 
                                 {report.pageCount ?? '—'}
                             </td>
                             <td className="px-5 py-4 font-mono text-[13px] text-ink/60">
-                                {report.totalCost != null && report.totalCost > 0 ? `$${report.totalCost.toFixed(2)}` : '—'}
+                                {report.totalCost != null && report.totalCost > 0 ? `₹${report.totalCost.toFixed(2)}` : '—'}
                             </td>
                             <td className="px-5 py-4">
                                 <ReportStatusBadge status={report.status} />
