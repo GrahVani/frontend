@@ -41,12 +41,10 @@ export default function VedicReportsPage() {
     const handleGenerateClick = (blueprint: Blueprint) => {
         setSelectedBlueprint(blueprint);
 
-        // Use full client from API (has coordinates), fall back to context mapping
-        if (fullClient) {
-            setSelectedClient(fullClient);
-            setShowGenerationModal(true);
-        } else if (clientDetails) {
-            // Fallback: map VedicClientDetails (may lack coordinates)
+        // Always use VedicClientDetails as the source of truth for identity (name, DOB, etc.)
+        // since it reflects what the user sees in the UI. Pull coordinates from fullClient API
+        // data only as a supplement.
+        if (clientDetails) {
             const mapped: Client = {
                 id: clientDetails.id || '',
                 fullName: clientDetails.name,
@@ -54,8 +52,9 @@ export default function VedicReportsPage() {
                 birthDate: clientDetails.dateOfBirth,
                 birthTime: clientDetails.timeOfBirth,
                 birthPlace: clientDetails.placeOfBirth?.city,
-                birthLatitude: clientDetails.placeOfBirth?.latitude,
-                birthLongitude: clientDetails.placeOfBirth?.longitude,
+                // Prefer coordinates from full client API (more reliable), fallback to context
+                birthLatitude: fullClient?.birthLatitude ?? clientDetails.placeOfBirth?.latitude,
+                birthLongitude: fullClient?.birthLongitude ?? clientDetails.placeOfBirth?.longitude,
             };
             setSelectedClient(mapped);
             setShowGenerationModal(true);
