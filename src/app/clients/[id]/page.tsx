@@ -15,9 +15,8 @@ import ClientProfileHeader from '@/components/clients/ClientProfileHeader';
 import ClientPersonalCards from '@/components/clients/ClientPersonalCards';
 import ClientFamilySection from '@/components/clients/ClientFamilySection';
 import SectionHeader from '@/components/clients/SectionHeader';
-import ReportHistoryTable from '@/components/grantha/ReportHistoryTable';
 import ReportGenerationModal from '@/components/grantha/ReportGenerationModal';
-import { useReports, useBlueprints } from '@/hooks/queries/useGrantha';
+import { useBlueprints } from '@/hooks/queries/useGrantha';
 import type { Blueprint } from '@/types/grantha';
 
 // ─── Status Badge ───────────────────────────────────────────────────
@@ -91,16 +90,9 @@ export default function ClientProfilePage() {
     const toast = useToast();
 
     // Grantha report generation
-    const { data: reportsData, isLoading: loadingReports } = useReports();
     const { data: blueprints } = useBlueprints();
     const [showReportModal, setShowReportModal] = useState(false);
     const [selectedBlueprint, setSelectedBlueprint] = useState<Blueprint | null>(null);
-
-    const blueprintNames = useMemo(() => {
-        const map: Record<string, string> = {};
-        if (blueprints) for (const bp of blueprints) map[bp.id] = bp.name;
-        return map;
-    }, [blueprints]);
 
     const handleQuickGenerate = (bp: Blueprint) => {
         setSelectedBlueprint(bp);
@@ -465,7 +457,7 @@ export default function ClientProfilePage() {
                 <SectionHeader
                     icon={Sparkles}
                     title="Reports"
-                    description="Generate a new report for this client. Showing all recent reports across clients."
+                    description="Generate an AI-powered astrological report for this client"
                     action={
                         <button
                             onClick={() => {
@@ -497,11 +489,6 @@ export default function ClientProfilePage() {
                     </div>
                 )}
 
-                <ReportHistoryTable
-                    reports={reportsData?.data || []}
-                    isLoading={loadingReports}
-                    blueprintNames={blueprintNames}
-                />
             </div>
 
             {/* ── Documents ──────────────────────────────────────────── */}

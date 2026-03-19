@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Download, Loader2, Clock, Layers, DollarSign } from 'lucide-react';
+import { ArrowLeft, Download, Loader2, Clock, Layers, DollarSign, XCircle } from 'lucide-react';
 import { useReportStatus } from '@/hooks/queries/useGrantha';
 import PdfViewer from '@/components/grantha/PdfViewer';
 import { REPORT_STEP_NAMES } from '@/types/grantha';
@@ -79,6 +79,16 @@ export default function ReportDetailPage() {
                 <div className="flex-1 prem-card rounded-2xl overflow-hidden">
                     {isComplete && downloadUrl ? (
                         <PdfViewer url={downloadUrl} className="rounded-2xl" />
+                    ) : ['FAILED', 'CANCELLED', 'EXPIRED'].includes(report.status) ? (
+                        <div className="flex flex-col items-center justify-center py-24 text-ink/40">
+                            <XCircle className="w-10 h-10 mb-4 text-status-error" />
+                            <p className="font-serif text-[18px] font-bold text-ink mb-2">{report.status}</p>
+                            {report.error && (
+                                <p className="text-[13px] text-ink/50 text-center max-w-sm">
+                                    {typeof report.error === 'string' ? report.error : 'Report generation failed'}
+                                </p>
+                            )}
+                        </div>
                     ) : (
                         <div className="flex flex-col items-center justify-center py-24 text-ink/30">
                             <Loader2 className="w-8 h-8 animate-spin mb-4" />

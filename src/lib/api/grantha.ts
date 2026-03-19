@@ -27,13 +27,16 @@ export function clientToGranthaBirthData(client: Client): GranthaBirthData {
     if (!client.birthDate || !client.birthTime) {
         throw new Error('Client is missing required birth data (date or time)');
     }
+    if (client.birthLatitude == null || client.birthLongitude == null) {
+        throw new Error('Client is missing birth coordinates. Please set a birth location before generating.');
+    }
 
     return {
         name: client.fullName,
         dob: client.birthDate.slice(0, 10),
         tob: client.birthTime.slice(0, 5),
-        lat: Number(client.birthLatitude) || 0,
-        lng: Number(client.birthLongitude) || 0,
+        lat: Number(client.birthLatitude),
+        lng: Number(client.birthLongitude),
         gender: client.gender || 'other',
     };
 }
