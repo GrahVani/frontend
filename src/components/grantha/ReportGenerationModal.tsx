@@ -296,22 +296,33 @@ export default function ReportGenerationModal({
                             <label className="text-[11px] font-bold uppercase tracking-widest text-ink/40 mb-2 block">
                                 Language
                             </label>
-                            <div className="flex gap-2">
+                            <div className="flex flex-wrap gap-2">
                                 {[
                                     { code: 'en', label: 'English' },
-                                    { code: 'hi', label: 'Hindi' },
+                                    { code: 'hi', label: 'हिन्दी' },
+                                    { code: 'bn', label: 'বাংলা' },
+                                    { code: 'te', label: 'తెలుగు' },
+                                    { code: 'ta', label: 'தமிழ்' },
+                                    { code: 'mr', label: 'मराठी' },
+                                    { code: 'gu', label: 'ગુજરાતી' },
+                                    { code: 'kn', label: 'ಕನ್ನಡ' },
+                                    { code: 'ml', label: 'മലയാളം' },
+                                    { code: 'pa', label: 'ਪੰਜਾਬੀ' },
+                                    { code: 'or', label: 'ଓଡ଼ିଆ' },
+                                    { code: 'sa', label: 'संस्कृत' },
+                                    { code: 'ur', label: 'اردو' },
+                                    { code: 'ne', label: 'नेपाली' },
                                 ].map((lang) => (
                                     <button
                                         key={lang.code}
                                         onClick={() => setLanguage(lang.code)}
                                         className={cn(
-                                            "flex items-center gap-2 px-4 py-2.5 rounded-lg text-[13px] font-semibold transition-all",
+                                            "px-3 py-2 rounded-lg text-[12px] font-semibold transition-all",
                                             language === lang.code
                                                 ? "bg-gold-primary text-white"
                                                 : "bg-ink/5 text-ink/70 hover:bg-ink/10"
                                         )}
                                     >
-                                        <Globe className="w-3.5 h-3.5" />
                                         {lang.label}
                                     </button>
                                 ))}
