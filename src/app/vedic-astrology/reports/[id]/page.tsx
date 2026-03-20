@@ -63,15 +63,28 @@ export default function ReportDetailPage() {
                 </div>
 
                 {downloadUrl && (
-                    <a
-                        href={downloadUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <button
+                        onClick={async () => {
+                            try {
+                                const res = await fetch(downloadUrl);
+                                const blob = await res.blob();
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `report-${reportId}.pdf`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
+                            } catch {
+                                window.open(downloadUrl, '_blank');
+                            }
+                        }}
                         className="px-5 py-2.5 bg-gold-primary text-white rounded-lg text-[13px] font-semibold hover:bg-gold-dark transition-colors flex items-center gap-2"
                     >
                         <Download className="w-4 h-4" />
                         Download PDF
-                    </a>
+                    </button>
                 )}
             </div>
 

@@ -500,15 +500,29 @@ export default function ReportGenerationModal({
                         {/* Action buttons */}
                         <div className="flex gap-3">
                             {downloadUrl && (
-                                <a
-                                    href={downloadUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                <button
+                                    onClick={async () => {
+                                        try {
+                                            const res = await fetch(downloadUrl);
+                                            const blob = await res.blob();
+                                            const url = URL.createObjectURL(blob);
+                                            const a = document.createElement('a');
+                                            a.href = url;
+                                            a.download = `report-${reportId}.pdf`;
+                                            document.body.appendChild(a);
+                                            a.click();
+                                            document.body.removeChild(a);
+                                            URL.revokeObjectURL(url);
+                                        } catch {
+                                            // Fallback: open in new tab
+                                            window.open(downloadUrl, '_blank');
+                                        }
+                                    }}
                                     className="flex-1 py-3 bg-gold-primary text-white rounded-lg font-bold text-[12px] uppercase tracking-widest hover:bg-gold-dark transition-all flex items-center justify-center gap-2"
                                 >
                                     <Download className="w-4 h-4" />
                                     Download PDF
-                                </a>
+                                </button>
                             )}
                             {reportId && (
                                 <a
