@@ -503,19 +503,24 @@ export default function ReportGenerationModal({
                                 <button
                                     onClick={async () => {
                                         try {
-                                            const res = await fetch(downloadUrl);
-                                            const blob = await res.blob();
-                                            const url = URL.createObjectURL(blob);
-                                            const a = document.createElement('a');
-                                            a.href = url;
-                                            a.download = `report-${reportId}.pdf`;
-                                            document.body.appendChild(a);
-                                            a.click();
-                                            document.body.removeChild(a);
-                                            URL.revokeObjectURL(url);
+                                            const res = await fetch(downloadUrl, { mode: 'cors' });
+                                            if (!res.ok) throw new Error('Download failed');
+                                            const blob = new Blob([await res.arrayBuffer()], { type: 'application/pdf' });
+                                            const blobUrl = URL.createObjectURL(blob);
+                                            const link = document.createElement('a');
+                                            link.href = blobUrl;
+                                            link.download = `report-${reportId}.pdf`;
+                                            link.style.display = 'none';
+                                            document.body.appendChild(link);
+                                            link.click();
+                                            // Delay revoke to let Chrome finish the download
+                                            setTimeout(() => {
+                                                document.body.removeChild(link);
+                                                URL.revokeObjectURL(blobUrl);
+                                            }, 1000);
                                         } catch {
-                                            // Fallback: open in new tab
-                                            window.open(downloadUrl, '_blank');
+                                            // Fallback: direct navigation (forces download via Content-Disposition)
+                                            window.location.href = downloadUrl;
                                         }
                                     }}
                                     className="flex-1 py-3 bg-gold-primary text-white rounded-lg font-bold text-[12px] uppercase tracking-widest hover:bg-gold-dark transition-all flex items-center justify-center gap-2"

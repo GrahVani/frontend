@@ -66,18 +66,22 @@ export default function ReportDetailPage() {
                     <button
                         onClick={async () => {
                             try {
-                                const res = await fetch(downloadUrl);
-                                const blob = await res.blob();
-                                const url = URL.createObjectURL(blob);
-                                const a = document.createElement('a');
-                                a.href = url;
-                                a.download = `report-${reportId}.pdf`;
-                                document.body.appendChild(a);
-                                a.click();
-                                document.body.removeChild(a);
-                                URL.revokeObjectURL(url);
+                                const res = await fetch(downloadUrl, { mode: 'cors' });
+                                if (!res.ok) throw new Error('Download failed');
+                                const blob = new Blob([await res.arrayBuffer()], { type: 'application/pdf' });
+                                const blobUrl = URL.createObjectURL(blob);
+                                const link = document.createElement('a');
+                                link.href = blobUrl;
+                                link.download = `report-${reportId}.pdf`;
+                                link.style.display = 'none';
+                                document.body.appendChild(link);
+                                link.click();
+                                setTimeout(() => {
+                                    document.body.removeChild(link);
+                                    URL.revokeObjectURL(blobUrl);
+                                }, 1000);
                             } catch {
-                                window.open(downloadUrl, '_blank');
+                                window.location.href = downloadUrl;
                             }
                         }}
                         className="px-5 py-2.5 bg-gold-primary text-white rounded-lg text-[13px] font-semibold hover:bg-gold-dark transition-colors flex items-center gap-2"
