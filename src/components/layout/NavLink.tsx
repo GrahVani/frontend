@@ -46,7 +46,7 @@ export default function NavLink({ href, label, active, subItems }: NavLinkProps)
         "px-4 py-1.5 rounded-lg font-semibold text-[13px] tracking-wide transition-all duration-300 relative inline-flex items-center gap-1",
         active
             ? "nav-glass-pill text-active-glow text-shadow-glow"
-            : "text-white/75 hover:text-white hover:bg-white/[0.06]"
+            : "text-white hover:text-white hover:bg-white/[0.06]"
     );
 
     // Simple link (no dropdown)
@@ -81,7 +81,7 @@ export default function NavLink({ href, label, active, subItems }: NavLinkProps)
                 </Link>
                 <ChevronDown className={cn(
                     "w-3.5 h-3.5 transition-transform duration-200 shrink-0",
-                    active ? "text-active-glow/80" : "text-white/60",
+                    active ? "text-active-glow" : "text-white",
                     open && "rotate-180"
                 )} />
                 {active && (

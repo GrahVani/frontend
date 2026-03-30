@@ -72,6 +72,24 @@ const CHART_NAMES: Record<string, string> = {
     'upapada_lagna': 'Upapada lagna (Marriage)',
     'swamsha': 'Swamsha (Navamsha lagna)',
     'pada_chart': 'Pada chart (Arudha pada)',
+
+    // Rare Shodash Varga (Lahiri only)
+    'd2_iyer': 'D2 Iyer (Wealth - Iyer)',
+    'd2_somanatha': 'D2 Somanatha (Wealth - Somanatha)',
+    'd2_kashinatha': 'D2 Kashinatha (Wealth - Kashinatha)',
+    'd4_vedamsha': 'D4 Vedamsha (Fortune - Vedamsha)',
+    'd5': 'D5 Panchamsha (Power & Authority)',
+    'd6_kaulaka': 'D6 Kaulaka (Health - Kaulaka)',
+    'd8_chart': 'D8 Ashtamsha (Unexpected Troubles)',
+    'd9_nadhi': 'D9 Nadhi (Spouse - Nadhi)',
+    'd9_pada_special': 'D9 Pada (Spouse - Special)',
+    'd9_somanatha': 'D9 Somanatha (Spouse - Somanatha)',
+    'd11': 'D11 Ekadasamsha (Gains)',
+    'd24_parasidamsha': 'D24 Parasidamsha (Education - Parasidamsha)',
+    'd24_siddhamsha': 'D24 Siddhamsha (Education - Siddhamsha)',
+    'd30_venkatesha': 'D30 Venkatesha (Misfortunes - Venkatesha)',
+    'd108_nd': 'D108 ND (Past karma - ND)',
+    'd108_dn': 'D108 DN (Past karma - DN)',
 };
 
 export default function AnalyticalWorkbenchPage() {
@@ -81,7 +99,7 @@ export default function AnalyticalWorkbenchPage() {
     const { generateChart } = useChartMutations();
 
     const [selectedChartType, setSelectedChartType] = useState('D1');
-    const [activeTab, setActiveTab] = useState<'chart' | 'dignity' | 'lagna'>('chart');
+    const [activeTab, setActiveTab] = useState<'chart' | 'dignity' | 'lagna' | 'rare_shodash'>('chart');
     const [isGeneratingLocal, setIsGeneratingLocal] = useState(false);
     const [generateError, setGenerateError] = useState<string | null>(null);
 
@@ -164,6 +182,18 @@ export default function AnalyticalWorkbenchPage() {
                         {tab === 'lagna' ? 'Lagna analysis' : tab === 'dignity' ? 'Dignity matrix' : 'Interactive chart'}
                     </button>
                 ))}
+                {/* Rare Shodash Varga tab - Lahiri only */}
+                {activeSystem === 'lahiri' && (
+                    <button 
+                        onClick={() => { 
+                            setActiveTab('rare_shodash'); 
+                            setSelectedChartType('d2_somanatha'); 
+                        }} 
+                        className={cn("px-6 py-2 rounded-xl text-[12px] font-bold transition-all", activeTab === 'rare_shodash' ? COLORS.wbActiveTab : "text-ink hover:bg-surface-warm")}
+                    >
+                        Rare Shodash Varga
+                    </button>
+                )}
             </div>
 
             {/* Error Banner */}
@@ -178,11 +208,11 @@ export default function AnalyticalWorkbenchPage() {
             <div className={cn("flex-1 min-h-0 flex flex-col md:flex-row gap-4", activeTab === 'dignity' ? "overflow-y-auto pr-2" : "overflow-hidden")}>
                 {/* Left Panel (Chart or Dignity) */}
                 <div className={cn("flex flex-col min-h-0 h-full", activeTab === 'dignity' ? "w-full" : "w-full md:w-[40%] shrink-0")}>
-                    {activeTab === 'chart' || activeTab === 'lagna' ? (
+                    {activeTab === 'chart' || activeTab === 'lagna' || activeTab === 'rare_shodash' ? (
                         <div className="prem-card rounded-lg overflow-hidden shadow-sm bg-surface-warm flex flex-col h-full">
                             <div className="bg-gold-primary/10 px-3 py-1.5 border-b border-gold-primary/15 flex justify-between items-center shrink-0">
                                 <h3 className="font-serif text-[18px] font-semibold text-ink leading-tight tracking-wide">
-                                    {activeTab === 'lagna' ? 'Lagna manifestation' : 'Interactive visualization'}
+                                    {activeTab === 'lagna' ? 'Lagna manifestation' : activeTab === 'rare_shodash' ? 'Rare Shodash Varga' : 'Interactive visualization'}
                                 </h3>
                                 <select
                                     className="text-[12px] bg-white/50 border border-gold-primary/20 rounded-lg px-2 py-0.5 focus:outline-none focus:border-gold-primary font-bold"
@@ -195,9 +225,28 @@ export default function AnalyticalWorkbenchPage() {
                                                 {divisionalCharts.map(c => <option key={c} value={c}>{c} - {CHART_NAMES[c] || c}</option>)}
                                             </optgroup>
                                         </>
-                                    ) : (
+                                    ) : activeTab === 'lagna' ? (
                                         <optgroup label="Lagna analysis">
                                             {lagnaCharts.map(c => <option key={c} value={c}>{CHART_NAMES[c] || c.toUpperCase() + ' analysis'}</option>)}
+                                        </optgroup>
+                                    ) : (
+                                            <optgroup label="Rare Shodash Varga (Lahiri only)">
+                                            <option value="d2_iyer">D2 Iyer</option>
+                                            <option value="d2_somanatha">D2 Somanatha</option>
+                                            <option value="d2_kashinatha">D2 Kashinatha</option>
+                                            <option value="d4_vedamsha">D4 Vedamsha</option>
+                                            <option value="d5">D5 Panchamsha</option>
+                                            <option value="d6_kaulaka">D6 Kaulaka</option>
+                                            <option value="d8_chart">D8 Ashtamsha</option>
+                                            <option value="d9_nadhi">D9 Nadhi</option>
+                                            <option value="d9_pada_special">D9 Pada</option>
+                                            <option value="d9_somanatha">D9 Somanatha</option>
+                                            <option value="d11">D11 Ekadasamsha</option>
+                                            <option value="d24_parasidamsha">D24 Parasidamsha</option>
+                                            <option value="d24_siddhamsha">D24 Siddhamsha</option>
+                                            <option value="d30_venkatesha">D30 Venkatesha</option>
+                                            <option value="d108_nd">D108 ND</option>
+                                            <option value="d108_dn">D108 DN</option>
                                         </optgroup>
                                     )}
                                 </select>

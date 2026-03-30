@@ -214,7 +214,8 @@ export const clientApi = {
                 charts: {
                     divisional: ['D1', 'D2', 'D3', 'D4', 'D7', 'D9', 'D10', 'D12', 'D16', 'D20', 'D24', 'D27', 'D30', 'D40', 'D45', 'D60'],
                     special: ['sudarshana', 'transit', 'shodasha_varga_signs'],
-                    lagna: ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart', 'mandi', 'gulika', 'upapada_lagna', 'swamsha', 'pada_chart']
+                    lagna: ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart', 'mandi', 'gulika', 'upapada_lagna', 'swamsha', 'pada_chart'],
+                    rare_shodash: ['d2_somanatha', 'd2_kashinatha', 'd4_vedamsha', 'd6_kaulaka', 'd9_nadhi', 'd9_pada_special', 'd9_somanatha', 'd24_parasidamsha', 'd24_siddhamsha', 'd30_venkatesha', 'd108_nd', 'd108_dn']
                 },
                 features: {
                     dasha: ['mahadasha', 'antardasha', 'pratyantardasha', 'sookshma', 'prana'],
