@@ -68,6 +68,7 @@ const VEDIC_NAV_ITEMS: NavItem[] = [
     { name: "Chara Karakas", path: "/chara-karakas", icon: Shield, isOverflow: true, systemFilter: ['Lahiri'] },
     { name: "Report Lab", path: "/reports", icon: FileText },
     { name: "Notes", path: "/notes", icon: NotebookPen, isOverflow: true },
+    { name: "Customize", path: "/customize", icon: Settings2, isOverflow: true },
 ];
 
 // ============================================================================

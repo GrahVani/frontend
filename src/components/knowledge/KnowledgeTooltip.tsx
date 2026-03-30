@@ -87,11 +87,11 @@ export function KnowledgeTooltip({
                     <span
                         className={cn(
                             "inline-flex items-center justify-center shrink-0",
-                            "w-[15px] h-[15px] rounded-full",
-                            "bg-gradient-to-br from-gold-primary to-gold-dark",
-                            "text-white text-[9px] font-black leading-none",
+                            "w-[18px] h-[18px] rounded-full",
+                            "bg-white border border-gold-dark",
+                            "text-gold-dark text-[11px] font-black leading-none",
                             "shadow-[0_1px_3px_rgba(156,122,47,0.4)]",
-                            "group-hover/kt:from-gold-soft group-hover/kt:to-gold-primary",
+                            "group-hover/kt:bg-gold-soft/20 group-hover/kt:border-gold-primary",
                             "group-hover/kt:shadow-[0_1px_6px_rgba(201,162,77,0.5)]",
                             "transition-all duration-200",
                         )}

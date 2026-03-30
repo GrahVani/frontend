@@ -165,6 +165,7 @@ export interface SystemCapabilities {
         divisional: string[];
         special: string[];
         lagna: string[];
+        rare_shodash?: string[];
     };
     features: {
         dasha: string[];

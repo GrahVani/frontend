@@ -94,7 +94,7 @@ export default function GlobalHeader() {
                         aria-label="Open navigation menu"
                         aria-expanded={isMobileNavOpen}
                     >
-                        <Menu className="w-5 h-5" />
+                        <Menu className="w-5 h-5 text-white" />
                     </button>
 
                     <Link href="/dashboard" className="group flex items-center gap-1 -ml-3">
@@ -147,11 +147,11 @@ export default function GlobalHeader() {
                             background: 'rgba(255,255,255,0.06)',
                             border: '1px solid rgba(208,140,96,0.18)',
                         }}>
-                        <span className="text-[11px] font-semibold tracking-wider text-white/85">{settings.ayanamsa}</span>
+                        <span className="text-[11px] font-semibold tracking-wider text-white">{settings.ayanamsa}</span>
                         <div className="w-[1px] h-3.5 bg-white/15" />
                         <div className="flex items-center gap-1.5">
-                            <Clock className="w-3 h-3 text-active-glow/70" />
-                            <span className="text-[11px] font-mono font-semibold text-active-glow/90 tracking-wide" suppressHydrationWarning>
+                            <Clock className="w-3 h-3 text-white" />
+                            <span className="text-[11px] font-mono font-semibold text-white tracking-wide" suppressHydrationWarning>
                                 {mounted ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "--:--"}
                             </span>
                         </div>
@@ -166,7 +166,7 @@ export default function GlobalHeader() {
                             aria-label="Notifications"
                             title="Notifications"
                         >
-                            <Bell className="w-[18px] h-[18px]" />
+                            <Bell className="w-[18px] h-[18px] text-white" />
                         </button>
                         <button
                             onClick={() => setIsSettingsOpen(true)}
@@ -174,7 +174,7 @@ export default function GlobalHeader() {
                             aria-label="Ayanamsa & chart settings"
                             title="Ayanamsa & chart settings"
                         >
-                            <Settings className="w-[18px] h-[18px] group-hover:rotate-45 transition-transform duration-500" />
+                            <Settings className="w-[18px] h-[18px] text-white group-hover:rotate-45 transition-transform duration-500" />
                         </button>
                     </div>
 
@@ -203,7 +203,7 @@ export default function GlobalHeader() {
                                 )}
                             </div>
                             <ChevronDown className={cn(
-                                "w-3.5 h-3.5 text-white/50 transition-all duration-300 group-hover:text-white/80",
+                                "w-3.5 h-3.5 text-white transition-all duration-300 group-hover:text-white",
                                 isProfileOpen && "rotate-180"
                             )} />
                         </button>

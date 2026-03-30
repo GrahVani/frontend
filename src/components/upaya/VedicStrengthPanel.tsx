@@ -83,7 +83,7 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
                                         "text-[11px] font-bold uppercase tracking-tight",
                                         data.is_weak ? "text-rose-600" : "text-emerald-600"
                                     )}>
-                                        {data.is_weak ? 'Needs Vigor' : 'Stable'}
+                                        {data.is_weak ? 'Weak' : data.severity}
                                     </span>
                                 </div>
                             </div>
@@ -106,18 +106,18 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
                             />
                         </div>
 
-                        {/* Factors - More Compact */}
+                        {/* Factors - Show all factors if they exist */}
                         <div className="flex flex-wrap gap-1">
-                            {data.afflictions.length > 0 && (
-                                <span className="text-[10px] px-1.5 py-0.5 bg-rose-500/5 text-rose-600 border border-rose-500/10 rounded font-medium flex items-center gap-1">
-                                    <ShieldAlert className="w-3 h-3" /> {data.afflictions[0].substring(0, 15)}...
+                            {data.afflictions.map((aff, i) => (
+                                <span key={i} className="text-[10px] px-1.5 py-0.5 bg-rose-500/5 text-rose-600 border border-rose-500/10 rounded font-medium flex items-center gap-1">
+                                    <ShieldAlert className="w-3 h-3 shrink-0" /> {aff}
                                 </span>
-                            )}
-                            {data.benefic_factors.length > 0 && (
-                                <span className="text-[10px] px-1.5 py-0.5 bg-emerald-500/5 text-emerald-600 border border-emerald-500/10 rounded font-medium flex items-center gap-1">
-                                    <ShieldCheck className="w-3 h-3" /> {data.benefic_factors[0].substring(0, 15)}...
+                            ))}
+                            {data.benefic_factors.map((ben, i) => (
+                                <span key={i} className="text-[10px] px-1.5 py-0.5 bg-emerald-500/5 text-emerald-600 border border-emerald-500/10 rounded font-medium flex items-center gap-1">
+                                    <ShieldCheck className="w-3 h-3 shrink-0" /> {ben}
                                 </span>
-                            )}
+                            ))}
                         </div>
 
                         {/* Recommendation Trigger */}
