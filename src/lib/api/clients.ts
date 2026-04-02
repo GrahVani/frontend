@@ -257,13 +257,13 @@ export const clientApi = {
                 },
                 features: {
                     dasha: ['mahadasha', 'antardasha', 'pratyantardasha', 'sookshma', 'prana'],
-                    ashtakavarga: ['shodasha_varga'],
+                    ashtakavarga: ['bhinna', 'sarva', 'shodasha_summary'],
                     shadbala: [],
                     compatibility: [],
                     numerology: []
                 },
                 hasDivisional: true,
-                hasAshtakavarga: false,
+                hasAshtakavarga: true,
                 hasNumerology: false,
                 hasCompatibility: false,
                 hasHorary: true,

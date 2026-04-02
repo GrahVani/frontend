@@ -35,23 +35,49 @@ export const RamanChartRenderer: React.FC<RamanChartRendererProps> = ({ houses }
         { x: 75, y: 12 }, // H12
     ];
 
-    // Helper to render points in a house
+    // Helper to render points in a house - Grid layout: max 2 per row
     const renderPoints = (points: ChartPoint[], houseIndex: number) => {
         const center = houseCenters[houseIndex];
         if (!center) return null;
 
-        // Simple stacking logic
-        return points.map((p, i) => (
-            <text
-                key={p.name}
-                x={center.x}
-                y={center.y + (i * 6) - ((points.length - 1) * 3)} // Stack vertically centered
-                textAnchor="middle"
-                className={`text-[0.25rem] font-medium fill-black ${p.isRetro ? 'fill-red-800' : ''}`}
-            >
-                {p.name}{p.isRetro ? '(R)' : ''} {Math.floor(parseFloat(p.longitude))}°
-            </text>
-        ));
+        const pointCount = points.length;
+        const cols = 2; // Max 2 planets per row
+        const rows = Math.ceil(pointCount / cols);
+        const hSpacing = 7; // Horizontal spacing
+        const vSpacing = pointCount > 2 ? 5 : 4; // Vertical spacing between rows
+        const nameFontSize = pointCount > 4 ? 'text-[0.18rem]' : 'text-[0.22rem]';
+        const degreeFontSize = pointCount > 4 ? 'text-[0.15rem]' : 'text-[0.18rem]';
+
+        // Grid layout: 2 per row, multiple rows if needed
+        return points.map((p, i) => {
+            const row = Math.floor(i / cols);
+            const col = i % cols;
+            
+            const pointsInThisRow = Math.min(cols, pointCount - row * cols);
+            const rowWidth = (pointsInThisRow - 1) * hSpacing;
+            const xOffset = (col * hSpacing) - (rowWidth / 2);
+            const yOffset = (row * vSpacing) - ((rows - 1) * vSpacing / 2);
+            
+            return (
+                <g key={p.name} transform={`translate(${center.x + xOffset}, ${center.y + yOffset})`}>
+                    {/* Planet name on first line */}
+                    <text
+                        textAnchor="middle"
+                        className={`${nameFontSize} font-medium fill-black ${p.isRetro ? 'fill-red-800' : ''}`}
+                    >
+                        {p.name}{p.isRetro ? '(R)' : ''}
+                    </text>
+                    {/* Degree on separate line below */}
+                    <text
+                        y={3}
+                        textAnchor="middle"
+                        className={`${degreeFontSize} font-medium fill-black`}
+                    >
+                        {Math.floor(parseFloat(p.longitude))}°
+                    </text>
+                </g>
+            );
+        });
     };
 
     // Helper to render Sign Number in corner of house

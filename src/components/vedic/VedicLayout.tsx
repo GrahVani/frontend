@@ -61,7 +61,7 @@ const VEDIC_NAV_ITEMS: NavItem[] = [
     { name: "Upaya", path: "/remedies", icon: Gem, systemFilter: ['Lahiri'] },
     { name: "Sudarshan Chakra", path: "/chakras", icon: Layers },
     { name: "KP System", path: "/kp", icon: FlaskConical, systemFilter: ['KP'] },
-    { name: "Ashtakavarga", path: "/kp?tab=ashtakavarga", icon: Shield, systemFilter: ['KP'] },
+    { name: "Ashtakavarga", path: "/ashtakavarga", icon: Shield, systemFilter: ['KP'] },
     { name: "Horary", path: "/kp?tab=horary", icon: HelpCircle, systemFilter: ['KP'] },
     { name: "Compatibility", path: "/comparison", icon: Heart, isOverflow: true },
     { name: "Pushkara Navamsha", path: "/pushkara-navamsha", icon: Sparkles, isOverflow: true, systemFilter: ['Lahiri'] },

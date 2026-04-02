@@ -178,47 +178,73 @@ export default function NorthIndianChart({
                             </text>
                         )}
 
-                        {/* Planets List - Clustered in centers with color coding */}
-                        <g transform={`translate(${pos.x}, ${pos.y + (houseValues ? 25 : -(boxPlanets.length > 3 ? 10 : 0))})`}>
+                        {/* Planets List - Grid layout: max 2 per row */}
+                        <g transform={`translate(${pos.x}, ${pos.y + (houseValues ? 20 : -5)})`}>
                             {
-                                boxPlanets.map((p, i) => {
-                                    const spacing = boxPlanets.length > 5 ? 10 : 14;
-                                    const yOffset = (i * spacing) - ((boxPlanets.length - 1) * (spacing / 2));
+                                (() => {
+                                    const planetCount = boxPlanets.length;
+                                    const cols = 2; // Max 2 planets per row
+                                    const rows = Math.ceil(planetCount / cols);
+                                    const hSpacing = 38; // Horizontal spacing between planets
+                                    const vSpacing = planetCount > 2 ? 22 : 18; // Vertical spacing between rows
+                                    
+                                    // Adjust font size for crowded houses
+                                    const planetFontSize = planetCount > 4 ? 11 : TYPOGRAPHY.svgPlanetName.fontSize;
+                                    const degreeFontSize = planetCount > 4 ? 8 : TYPOGRAPHY.svgDegree.fontSize;
+                                    const retroFontSize = planetCount > 4 ? 9 : 11;
+                                    
+                                    return boxPlanets.map((p, i) => {
+                                        const row = Math.floor(i / cols);
+                                        const col = i % cols;
+                                        
+                                        // Calculate position in grid
+                                        const planetsInThisRow = Math.min(cols, planetCount - row * cols);
+                                        const rowWidth = (planetsInThisRow - 1) * hSpacing;
+                                        const xOffset = (col * hSpacing) - (rowWidth / 2);
+                                        const yOffset = (row * vSpacing) - ((rows - 1) * vSpacing / 2);
+                                        
+                                        const planetColor = PLANET_SVG_FILLS[p.name] || 'var(--ink)';
+                                        const hasDegree = (showDegrees || p.name === 'As' || p.name === 'Asc') && p.degree && p.degree !== '-';
 
-                                    const planetColor = PLANET_SVG_FILLS[p.name] || 'var(--ink)';
-
-                                    return (
-                                        <g key={p.name} transform={`translate(0, ${yOffset})`}>
-                                            <text
-                                                fontSize={TYPOGRAPHY.svgPlanetName.fontSize}
-                                                fontFamily={TYPOGRAPHY.svgPlanetName.fontFamily}
-                                                fontWeight={TYPOGRAPHY.svgPlanetName.fontWeight}
-                                                fill={planetColor}
-                                                textAnchor="middle"
-                                                dominantBaseline="central"
-                                                className={cn(
-                                                    "select-none transition-all duration-300",
-                                                    isHovered && "font-black"
-                                                )}
-                                            >
-                                                {p.name}
-                                                {p.isRetro && (
-                                                    <tspan fontSize="12" fontWeight="bold" fill="var(--status-error)" dx="1">R</tspan>
-                                                )}
-                                                {(showDegrees || p.name === 'As' || p.name === 'Asc') && p.degree && p.degree !== '-' && (
-                                                    <tspan
-                                                        fontSize={TYPOGRAPHY.svgDegree.fontSize}
+                                        return (
+                                            <g key={p.name} transform={`translate(${xOffset}, ${yOffset})`}>
+                                                {/* Planet name and retro on first line */}
+                                                <text
+                                                    fontSize={planetFontSize}
+                                                    fontFamily={TYPOGRAPHY.svgPlanetName.fontFamily}
+                                                    fontWeight={TYPOGRAPHY.svgPlanetName.fontWeight}
+                                                    fill={planetColor}
+                                                    textAnchor="middle"
+                                                    dominantBaseline="central"
+                                                    className={cn(
+                                                        "select-none transition-all duration-300",
+                                                        isHovered && "font-black"
+                                                    )}
+                                                >
+                                                    {p.name}
+                                                    {p.isRetro && (
+                                                        <tspan fontSize={retroFontSize} fontWeight="bold" fill="var(--status-error)" dx="1">R</tspan>
+                                                    )}
+                                                </text>
+                                                {/* Degree on separate line below */}
+                                                {hasDegree && (
+                                                    <text
+                                                        y={12}
+                                                        fontSize={degreeFontSize}
+                                                        fontFamily={TYPOGRAPHY.svgPlanetName.fontFamily}
                                                         fontWeight={TYPOGRAPHY.svgDegree.fontWeight}
                                                         fill={TYPOGRAPHY.svgDegree.fill}
-                                                        dx="2"
+                                                        textAnchor="middle"
+                                                        dominantBaseline="central"
+                                                        className="select-none"
                                                     >
                                                         {p.degree}
-                                                    </tspan>
+                                                    </text>
                                                 )}
-                                            </text>
-                                        </g>
-                                    );
-                                })
+                                            </g>
+                                        );
+                                    });
+                                })()
                             }
                         </g>
                     </g>
