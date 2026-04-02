@@ -27,7 +27,7 @@ import { TYPOGRAPHY } from "@/design-tokens/typography";
 // Types
 // ============================================================================
 
-interface PushkaraInfo {
+export interface PushkaraInfo {
     is_pushkara: boolean;
     is_pushkara_bhaga: boolean;
     is_vargottama: boolean;
@@ -35,7 +35,7 @@ interface PushkaraInfo {
     ruling_navamsha: string | null;
 }
 
-interface PlanetData {
+export interface PlanetData {
     name: string;
     degree_formatted: string;
     degree_in_sign: number;
@@ -48,7 +48,7 @@ interface PlanetData {
     sign_number: number;
 }
 
-interface PushkaraSummary {
+export interface PushkaraSummary {
     ascendant_in_pushkara: boolean;
     planets_in_pushkara: string[];
     planets_in_pushkara_bhaga: string[];
@@ -57,7 +57,7 @@ interface PushkaraSummary {
     vargottama_pushkaras: string[];
 }
 
-interface PushkaraData {
+export interface PushkaraData {
     ascendant: PlanetData;
     planets: Record<string, PlanetData>;
     pushkara_summary: PushkaraSummary;
@@ -194,7 +194,7 @@ export default function PushkaraNavamshaPage() {
 // Dashboard Component
 // ============================================================================
 
-function PushkaraDashboard({ data }: { data: PushkaraData }) {
+export function PushkaraDashboard({ data }: { data: PushkaraData }) {
     const summary = data.pushkara_summary;
 
     // Sort planets: pushkara first, then rest

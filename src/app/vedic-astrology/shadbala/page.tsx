@@ -63,7 +63,7 @@ interface KalaSubBalas {
     varsha: number;
 }
 
-interface ShadbalaPlanet {
+export interface ShadbalaPlanet {
     planet: string;
     sthalaBala: number;   // Positional (STHANA TOTAL)
     digBala: number;      // Directional
@@ -83,7 +83,7 @@ interface ShadbalaPlanet {
     kalaSubBalas: KalaSubBalas;
 }
 
-interface ShadbalaData {
+export interface ShadbalaData {
     planets: ShadbalaPlanet[];
     ayanamsa: string;
     system: string;
@@ -518,7 +518,7 @@ function getHeatmapStyle(value: number, maxVal: number): { style: React.CSSPrope
 // Enhanced Dashboard Sub-component
 // ============================================================================
 
-function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }) {
+export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }) {
     const sortedPlanets = [...displayData.planets].sort((a, b) => a.rank - b.rank);
     const strongest = sortedPlanets[0];
     const weakest = sortedPlanets[sortedPlanets.length - 1];

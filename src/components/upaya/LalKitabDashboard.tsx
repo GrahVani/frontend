@@ -70,8 +70,8 @@ export default function LalKitabDashboard({ data, className }: LalKitabDashboard
                 <div className="w-[30%] shrink-0 flex flex-col overflow-hidden border-r border-gold-primary/15">
                     {d1Chart ? (
                         <SadhanaChartPanel
-                            chartData={d1Chart}
-                            doshaStatus={{}}
+                            chartData={d1Chart as Record<string, unknown>}
+                            doshaStatus={{} as Record<string, boolean>}
                         />
                     ) : (
                         <div className="flex-1 flex items-center justify-center bg-surface-warm/30">

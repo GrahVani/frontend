@@ -23,7 +23,7 @@ import { TYPOGRAPHY } from "@/design-tokens/typography";
 // Types
 // ============================================================================
 
-interface KarakaData {
+export interface KarakaData {
     planet: string;
     karaka_full: string;
     karaka_short: string;
@@ -31,7 +31,7 @@ interface KarakaData {
     sign: string;
 }
 
-interface CharaKarakasResponse {
+export interface CharaKarakasResponse {
     karakas: KarakaData[];
     all_planet_positions?: Record<string, any>;
 }
@@ -193,7 +193,7 @@ export default function CharaKarakasPage() {
 // Dashboard Component
 // ============================================================================
 
-function KarakaDashboard({ data }: { data: CharaKarakasResponse }) {
+export function KarakaDashboard({ data }: { data: CharaKarakasResponse }) {
     const karakas = data.karakas || [];
 
     return (
