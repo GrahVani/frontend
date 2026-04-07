@@ -6,7 +6,7 @@ import { useClientCharts, type ChartLookup } from "@/hooks/queries/useClientChar
 import { useGenerateProfile } from "@/hooks/mutations/useGenerateProfile";
 
 /** Pages that consume chart data — only fetch charts when on these routes */
-const CHART_ROUTES = ['/vedic-astrology', '/client/', '/comparison', '/matchmaking'];
+const CHART_ROUTES = ['/vedic-astrology/customize', '/vedic-astrology', '/client/', '/comparison', '/matchmaking'];
 
 export interface VedicClientDetails {
     id?: string;

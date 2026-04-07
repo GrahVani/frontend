@@ -36,15 +36,17 @@ import { clientApi } from '@/lib/api';
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
 import { parseChartData } from '@/lib/chart-helpers';
-import { useCustomizeCharts, type CustomizeChartItem, type WidgetSize, type SelectedItemDetail } from '@/hooks/useCustomizeCharts';
+import { useCustomizeCharts, type CustomizeChartItem, type WidgetSize, type SelectedItemDetail, CHART_CATALOG } from '@/hooks/useCustomizeCharts';
 import { renderWidget, getWidgetSizeClasses } from './WidgetBoxes';
 
 // Components
-import { ChartWithPopup, Planet } from '@/components/astrology/NorthIndianChart';
+import { ChartWithPopup, CompactChartWithPopup, Planet } from '@/components/astrology/NorthIndianChart';
 import SouthIndianChart, { ChartColorMode } from '@/components/astrology/SouthIndianChart';
 import VimshottariTreeGrid from '@/components/astrology/VimshottariTreeGrid';
 import AshtakavargaMatrix from '@/components/astrology/AshtakavargaMatrix';
 import OtherDashaTable from '@/components/astrology/OtherDashaTable';
+import IntegratedDashaViewer from '@/components/astrology/IntegratedDashaViewer';
+import { AYANAMSA_HIERARCHY, AYANAMSA_CONFIGS, AYANAMSA_SYSTEMS, type AyanamsaSystem, isChartCompatible } from './ayana-types';
 import dynamic from 'next/dynamic';
 
 const YogaAnalysisView = dynamic(() => import('@/components/astrology/YogaAnalysis'));
@@ -73,7 +75,8 @@ import {
     useKpPlanetsCusps,
     useKpRulingPlanets,
     useKpBhavaDetails,
-    useKpSignifications,
+    useKpHouseSignifications,
+    useKpPlanetSignificators,
 } from '@/hooks/queries/useKP';
 import { processDashaResponse, RawDashaPeriod } from '@/lib/dasha-utils';
 
@@ -82,8 +85,18 @@ type SectionId =
     | 'kp-foundation' | 'kp-structures' | 'kp-insights' | 'kp-ruling';
 
 export default function CustomizePage() {
-    const { clientDetails, processedCharts, isGeneratingCharts, refreshCharts } = useVedicClient();
-    const { ayanamsa, chartStyle, chartColorTheme } = useAstrologerStore();
+    const { clientDetails, processedCharts, isGeneratingCharts, isLoadingCharts, refreshCharts } = useVedicClient();
+    const { ayanamsa: globalAyanamsa, chartStyle, chartColorTheme } = useAstrologerStore();
+    const [localAyanamsa, setLocalAyanamsa] = useState<string>(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('grahvani_customize_ayanamsa') || globalAyanamsa;
+        }
+        return 'Lahiri';
+    });
+
+    useEffect(() => {
+        localStorage.setItem('grahvani_customize_ayanamsa', localAyanamsa);
+    }, [localAyanamsa]);
     const {
         selectedItems,
         selectedChartDetails,
@@ -96,18 +109,21 @@ export default function CustomizePage() {
         reorderItems,
         resetToDefaults,
         generateMissingChart,
-        isLahiri
+        isLahiri,
+        updateChartAyanamsa
     } = useCustomizeCharts();
 
+    const activeSystem = localAyanamsa.toLowerCase();
+    const activeIsKp = activeSystem.includes('kp');
+    const isKpSystem = activeIsKp; // Page-local system indicator
+    const clientId = clientDetails?.id || '';
+
     // State
-    const [searchQuery, setSearchQuery] = useState('');
-    const [activeSection, setActiveSection] = useState<string>('customize-charts');
-    const [isNavModalOpen, setIsNavModalOpen] = useState(false);
     const [isChartSelectorOpen, setIsChartSelectorOpen] = useState(false);
     const [generatingCharts, setGeneratingCharts] = useState<Set<string>>(new Set());
     const [draggedInstanceId, setDraggedInstanceId] = useState<string | null>(null);
     const draggedIdRef = useRef<string | null>(null);
-    
+
     // Divisional Charts Features (from divisional page)
     const [openHouseDetails, setOpenHouseDetails] = useState<Set<string>>(new Set());
     const [chartColorModes, setChartColorModes] = useState<Record<string, ChartColorMode>>({});
@@ -120,15 +136,16 @@ export default function CustomizePage() {
         ascendant: number;
         chartData: Record<string, unknown> | null;
     } | null>(null);
-    const [maximizedChart, setMaximizedChart] = useState<string | null>(null);
     const [customizationPanel, setCustomizationPanel] = useState<{ isOpen: boolean; selectedChart?: string }>({ isOpen: false });
-    
+
     // Column count for grid layout (like divisional charts)
     const [columnCount, setColumnCount] = useState<1 | 2 | 3 | 4 | 5>(3);
 
-    const activeSystem = ayanamsa.toLowerCase();
-    const isKpSystem = activeSystem.includes('kp');
-    const clientId = clientDetails?.id || '';
+    // --- KP DATA (FORCED DISABLED IN DASHBOARD - DB ONLY) ---
+    // We only need the presence of data for 'ready' indicators if needed, 
+    // but we'll stick to database-only lookups in components.
+    const kpPlanetsCuspsRaw = processedCharts[`kp_planets_cusps_kp`]?.chartData;
+    const kpPlanetsCusps = kpPlanetsCuspsRaw ? (kpPlanetsCuspsRaw.data || kpPlanetsCuspsRaw) : null;
 
     // Shodasha varga data for analysis section
     const shodashaData = useMemo(() => {
@@ -138,12 +155,15 @@ export default function CustomizePage() {
         return raw ? (raw.data || raw) : null;
     }, [processedCharts, activeSystem]);
 
-    // --- VEDIC DATA ---
-    const { data: dashaResponse, isLoading: dashaLoading } = useDasha(
-        !isKpSystem ? clientId : '',
-        'mahadasha',
-        activeSystem
-    );
+    // --- VEDIC DATA (Database-first lookup) ---
+    const { dashaResponse, dashaLoading } = useMemo(() => {
+        const dashaKey = `vimshottari_${activeSystem}`;
+        const raw = processedCharts[dashaKey]?.chartData;
+        return {
+            dashaResponse: raw ? { data: raw } : null,
+            dashaLoading: !raw && isLoadingCharts
+        };
+    }, [processedCharts, activeSystem, isLoadingCharts]);
 
     const ashtakavargaRaw = processedCharts[`ashtakavarga_sarva_${activeSystem}`]?.chartData;
     const ashtakavargaData = useMemo(() => {
@@ -151,17 +171,15 @@ export default function CustomizePage() {
     }, [ashtakavargaRaw]);
     const ashtakavargaLoading = !ashtakavargaData && isGeneratingCharts;
 
-    const { data: shadbalaResult, isLoading: shadbalaLoading } = useShadbala(
-        (!isKpSystem && ayanamsa === 'Lahiri') ? clientId : ''
-    );
+    const { shadbalaResult, shadbalaLoading } = useMemo(() => {
+        const raw = processedCharts[`shadbala_lahiri`]?.chartData;
+        return {
+            shadbalaResult: raw ? { data: raw } : null,
+            shadbalaLoading: !raw && isLoadingCharts
+        };
+    }, [processedCharts, isLoadingCharts]);
 
-    // --- KP DATA ---
-    const { data: kpPlanetsCusps, isLoading: kpPlanetsLoading } = useKpPlanetsCusps(isKpSystem ? clientId : '');
-    const { data: kpRulingPlanets, isLoading: kpRulingLoading } = useKpRulingPlanets(isKpSystem ? clientId : '');
-    const { data: kpBhavaDetails, isLoading: kpBhavaLoading } = useKpBhavaDetails(isKpSystem ? clientId : '');
-    const { data: kpSignifications, isLoading: kpSignificationsLoading } = useKpSignifications(isKpSystem ? clientId : '');
-
-    // Normalize Shadbala Data
+    // Normalized Shadbala Data
     const normalizedShadbala = useMemo(() => {
         const raw = (shadbalaResult?.data?.data || shadbalaResult?.data || shadbalaResult) as any;
         if (!raw || !raw.shadbala_virupas) return null;
@@ -196,51 +214,43 @@ export default function CustomizePage() {
         return { planets, ayanamsa: 'Lahiri', system: 'Chitrapaksha', raw };
     }, [shadbalaResult]);
 
-    // Sidebar navigation items
-    const sections = useMemo(() => {
-        if (isKpSystem) {
-            return [
-                { id: 'kp-ruling', name: 'Ruling Planets', icon: Sparkles, desc: 'Real-time stellar forces governing the moment' },
-                { id: 'kp-foundation', name: 'Planets & Cusps', icon: Target, desc: 'Detailed planetary positions and sub-lord analysis' },
-                { id: 'kp-structures', name: 'Cuspal Chart', icon: LayoutGrid, desc: 'KP house geometries and bhava details' },
-                { id: 'kp-insights', name: 'Significations', icon: Zap, desc: 'Planetary and house thematic significations' },
-            ];
-        }
-
-        return [
-            { id: 'customize-charts', name: 'Customize Charts', icon: LayoutGrid, desc: 'Add, remove and arrange your charts' },
-            { id: 'vedic-dashas', name: 'Time Cycles', icon: History, desc: 'Vimshottari Dasha chronological mapping' },
-            { id: 'vedic-analysis', name: 'Yoga & Dosha', icon: Sparkles, desc: 'Special planetary combinations and status' },
-            ...(ayanamsa === 'Lahiri' ? [{ id: 'vedic-strength', name: 'Shadbala', icon: BarChart2, desc: 'Mathematical strength of planets' }] : [])
-        ];
-    }, [isKpSystem, ayanamsa]);
-
-    const handleSectionSelect = (id: string) => {
-        setActiveSection(id);
-        setIsNavModalOpen(false);
-    };
+    const sections = useMemo(() => [
+        { id: 'customize-charts', name: 'Customize Charts', icon: LayoutGrid, desc: 'Add, remove and arrange your charts' },
+    ], []);
 
     // Handle adding a chart
-    const handleAddChart = async (chartId: string) => {
-        addChart(chartId);
+    const handleAddChart = async (chartId: string, customSystem?: string) => {
+        // Find the catalog entry to check for required systems
+        const chartCatalog = CHART_CATALOG.find((c: CustomizeChartItem) => c.id === chartId);
+        const requiredSystem = chartCatalog?.requiredSystem;
+        const targetAyanamsa = customSystem || requiredSystem || activeSystem;
+
+        addChart(chartId, targetAyanamsa);
         setIsChartSelectorOpen(false);
 
         // Check if this is a widget (widgets don't need chart generation)
-        const chartCatalog = availableCharts.find(c => c.id === chartId);
-        const isWidget = chartCatalog?.category.startsWith('widget_');
+        const category = chartCatalog?.category || '';
+        const isWidget = category.startsWith('widget_') ||
+            category === 'kp_module';
 
-        // Check if chart exists, if not generate it (skip for widgets)
-        const chartKey = `${chartId}_${activeSystem}`;
+        // Check if chart exists, if not generate it (skip for widgets/dashas)
+        /* 
+        const chartKey = `${chartId}_${targetAyanamsa}`;
         if (!isWidget && !processedCharts[chartKey] && clientId) {
             setGeneratingCharts(prev => new Set(prev).add(chartId));
-            await generateMissingChart(clientId, chartId);
-            await refreshCharts();
+            try {
+                await generateMissingChart(clientId, chartId, targetAyanamsa);
+                await refreshCharts();
+            } catch (err: any) {
+                console.warn(`Feature generation skipped for ${chartId}: ${err.message || err}`);
+            }
             setGeneratingCharts(prev => {
                 const next = new Set(prev);
                 next.delete(chartId);
                 return next;
             });
         }
+        */
     };
 
     // Handle removing a chart
@@ -348,14 +358,19 @@ export default function CustomizePage() {
     }, [selectedItems, reorderItems]);
 
     // Chart Parsing Helpers
-    const getChartProps = (id: string) => {
-        const chartData = processedCharts[`${id}_${activeSystem}`]?.chartData || null;
+    const getChartProps = (id: string, itemAyanamsa?: string) => {
+        const targetSystem = (itemAyanamsa || activeSystem).toLowerCase();
+        const chartData = processedCharts[`${id}_${targetSystem}`]?.chartData || null;
         return parseChartData(chartData);
     };
 
     // Check if a chart is available
-    const isChartAvailable = (chartId: string) => {
-        return !!processedCharts[`${chartId}_${activeSystem}`];
+    const isChartAvailable = (chartId: string, itemAyanamsa?: string) => {
+        const targetSystem = (itemAyanamsa || activeSystem).toLowerCase();
+        if (targetSystem === 'kp') {
+            if (chartId === 'kp_planets') return !!kpPlanetsCusps;
+        }
+        return !!processedCharts[`${chartId}_${targetSystem}`];
     };
 
     // Toggle house details for a specific chart
@@ -416,372 +431,257 @@ export default function CustomizePage() {
     }
 
     // Aggregate Section Renderer
-    const renderVedicSections = () => {
-        switch (activeSection) {
-            case 'vedic-dashas':
-                return (
-                    <section className="space-y-8 animate-in fade-in duration-500">
-                        <SectionHeader title="Chronological Cycles" subtitle="Vimshottari Dasha Hierarchy" icon={<History className="w-6 h-6" />} />
-                        <div className="bg-white p-8 rounded-[2.5rem] prem-card max-w-4xl mx-auto">
-                            <VimshottariTreeGrid
-                                data={dashaResponse ? processDashaResponse(dashaResponse as unknown as RawDashaPeriod).slice(0, 9) : []}
-                                isLoading={dashaLoading}
-                                className="border-none shadow-none"
-                            />
-                        </div>
-                    </section>
-                );
-            case 'vedic-analysis':
-                return (
-                    <section className="space-y-8 animate-in fade-in duration-500">
-                        <SectionHeader title="Stellar Insights" subtitle="Yoga, Dosha, Ashtakavarga & Shodashvarga" icon={<Sparkles className="w-6 h-6" />} />
-                        <div className="space-y-12">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <AnalysisPanel title="Gaja Kesari Analysis">
-                                    <YogaAnalysisView clientId={clientId} yogaType="gaja_kesari" ayanamsa={activeSystem} />
-                                </AnalysisPanel>
-                                <AnalysisPanel title="Sade Sati Status">
-                                    <DoshaAnalysis clientId={clientId} doshaType="sade_sati" ayanamsa={activeSystem} />
-                                </AnalysisPanel>
+    const renderWorkbench = () => {
+        return (
+            <section className="flex-1 flex flex-col min-h-0 animate-in fade-in duration-500">
+                {/* Workbench Toolbar — matching mockup */}
+                <div
+                    className="flex items-center gap-4 px-6 py-2 bg-surface-warm/95 backdrop-blur-sm border-b border-gold-primary/20 sticky top-0 z-30 shadow-sm w-full"
+                >
+                    {/* Left: Brand + Actions */}
+                    <span
+                        className="font-serif font-bold text-[16px] tracking-[0.12em] uppercase select-none shrink-0"
+                        style={{
+                            background: 'linear-gradient(to bottom, #D4AD5A 0%, #C9A24D 40%, #9C7A2F 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                        }}
+                    >
+                        Grahvani
+                    </span>
+
+                    <button
+                        onClick={() => setIsChartSelectorOpen(true)}
+                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider shrink-0 active:scale-95 transition-all hover:brightness-110 shadow-sm"
+                        style={{
+                            background: 'linear-gradient(180deg, #E6C97A 0%, #C9A24D 50%, #9C7A2F 100%)',
+                            border: '1px solid #9C7A2F',
+                            color: '#3E2A1F',
+                        }}
+                    >
+                        <Plus className="w-3.5 h-3.5" />
+                        Add Widget
+                    </button>
+
+                    {selectedItems.length > 0 && (
+                        <button
+                            onClick={resetToDefaults}
+                            className="text-[11px] font-black uppercase tracking-widest text-ink hover:text-red-700 transition-all shrink-0 bg-red-50/50 px-2 py-0.5 rounded-md border border-red-200/30"
+                        >
+                            Clear All
+                        </button>
+                    )}
+
+                    <div className="flex-1" />
+
+                    {/* Right: Column Selection + Widget Count */}
+                    {selectedItems.length > 0 && (
+                        <div className="flex items-center gap-3 shrink-0">
+                            <span className="text-[10px] font-black uppercase tracking-[0.15em] text-ink/80 hidden md:inline">
+                                Column Selection
+                            </span>
+                            <div className="flex items-center gap-0.5" role="group" aria-label="Grid column count">
+                                {([1, 2, 3, 4, 5] as const).map((col) => (
+                                    <button
+                                        key={col}
+                                        onClick={() => setColumnCount(col)}
+                                        className={cn(
+                                            "w-7 h-7 rounded-md flex items-center justify-center text-[12px] font-bold transition-all",
+                                            columnCount === col
+                                                ? "text-white shadow-md font-black scale-110"
+                                                : "text-gold-dark/80 hover:text-gold-dark hover:bg-gold-primary/10 font-bold"
+                                        )}
+                                        style={columnCount === col ? {
+                                            background: 'linear-gradient(180deg, #D4AD5A 0%, #C9A24D 50%, #9C7A2F 100%)',
+                                            boxShadow: '0 1px 3px rgba(156,122,47,0.4)',
+                                        } : undefined}
+                                        aria-label={`${col} column${col > 1 ? 's' : ''}`}
+                                        aria-pressed={columnCount === col}
+                                    >
+                                        {col}
+                                    </button>
+                                ))}
                             </div>
-                            {ashtakavargaData && (
-                                <div className="bg-white p-8 rounded-[2.5rem] prem-card">
-                                    <h4 className={cn(TYPOGRAPHY.value, "text-center mb-6 text-[20px]")}>Sarvashtakavarga Matrix</h4>
-                                    <AshtakavargaMatrix type="sarva" data={(ashtakavargaData as any)?.data || ashtakavargaData} />
-                                </div>
-                            )}
-                            {shodashaData && (
-                                <div className="bg-white p-8 rounded-[2.5rem] prem-card">
-                                    <h4 className={cn(TYPOGRAPHY.value, "text-center mb-6 text-[20px]")}>Shodashavarga Summary</h4>
-                                    <ShodashaVargaTable data={shodashaData as Record<string, unknown>} />
-                                </div>
-                            )}
-                        </div>
-                    </section>
-                );
-            case 'vedic-strength':
-                if (ayanamsa !== 'Lahiri') return null;
-                return (
-                    <section className="space-y-8 animate-in fade-in duration-500">
-                        <SectionHeader title="Planetary Potencies" subtitle="Shadbala Strength Analysis" icon={<BarChart2 className="w-6 h-6" />} />
-                        <div className="bg-white p-6 rounded-[2.5rem] prem-card">
-                            {shadbalaLoading ? <Loader2 className="w-10 h-10 animate-spin mx-auto text-gold-dark" /> :
-                                normalizedShadbala ? <ShadbalaDashboard displayData={normalizedShadbala.raw} /> :
-                                    <p className="text-center opacity-40 py-12">Shadbala data unavailable.</p>
-                            }
-                        </div>
-                    </section>
-                );
-            default:
-            case 'customize-charts':
-                return (
-                    <section className="space-y-6 animate-in fade-in duration-500">
-                        {/* Controls Bar */}
-                        <div className="flex flex-wrap items-center gap-3 mb-6">
-                            <button
-                                onClick={() => setIsChartSelectorOpen(true)}
-                                className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-[12px] font-bold hover:bg-black transition-all shadow-lg active:scale-95"
-                            >
-                                <Plus className="w-4 h-4" />
-                                Add Widget
-                            </button>
-                            {selectedItems.length > 0 && (
-                                <button
-                                    onClick={resetToDefaults}
-                                    className="flex items-center gap-2 px-4 py-2.5 bg-surface-warm border border-gold-primary/20 text-ink rounded-xl text-[12px] font-bold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all"
-                                >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                    Clear All
-                                </button>
-                            )}
 
-                            <div className="flex-1" />
+                            <div className="w-px h-5 bg-gold-primary/20" />
 
-                            {/* Column Count Selector - Like Divisional Charts */}
-                            {selectedItems.length > 0 && (
-                                <div className="flex items-center gap-1 bg-white border border-gold-primary/20 rounded-lg p-1" role="group" aria-label="Grid column count">
-                                    {([1, 2, 3, 4, 5] as const).map((col) => (
-                                        <button
-                                            key={col}
-                                            onClick={() => setColumnCount(col)}
-                                            className={cn(
-                                                "w-8 h-8 rounded-md flex items-center justify-center text-[12px] font-bold transition-all",
-                                                columnCount === col
-                                                    ? "bg-gold-primary text-white shadow-sm"
-                                                    : "text-gold-dark hover:bg-gold-primary/10"
-                                            )}
-                                            title={`${col} column${col > 1 ? 's' : ''}`}
-                                            aria-label={`${col} column${col > 1 ? 's' : ''}`}
-                                            aria-pressed={columnCount === col}
-                                        >
-                                            {col}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-
-                            {selectedItems.length > 0 && (
-                                <span className="text-[11px] text-ink/50 font-medium">
-                                    {selectedItems.length} widget{selectedItems.length !== 1 ? 's' : ''} selected
+                            <div className="flex items-center gap-1.5">
+                                <LayoutGrid className="w-3.5 h-3.5 text-gold-dark/50" />
+                                <span className="text-[11px] font-black uppercase tracking-wider text-gold-dark/70">
+                                    {selectedItems.length} Active Widget{selectedItems.length !== 1 ? 's' : ''}
                                 </span>
-                            )}
+                            </div>
                         </div>
+                    )}
+                </div>
 
-                        {/* Charts Grid */}
-                        {selectedItems.length === 0 ? (
-                            <EmptyChartsState
-                                onAddClick={() => setIsChartSelectorOpen(true)}
-                            />
-                        ) : (
-                            <div className={cn(
-                                "grid gap-6",
-                                columnCount === 1 && "grid-cols-1",
-                                columnCount === 2 && "grid-cols-1 md:grid-cols-2",
-                                columnCount === 3 && "grid-cols-1 md:grid-cols-2 xl:grid-cols-3",
-                                columnCount === 4 && "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
-                                columnCount === 5 && "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
-                            )}>
-                                {/* Render All Items in Order */}
-                                {selectedChartDetails.map((item) => {
-                                    const isWidget = item.category.startsWith('widget_');
-                                    const colSpan = getWidgetSizeClasses(item.size);
-                                    const commonProps = {
-                                        size: item.size,
-                                        collapsed: item.collapsed,
-                                        onSizeChange: (s: WidgetSize) => handleSizeChange(item.instanceId, s),
-                                        onDuplicate: () => handleDuplicate(item.instanceId),
-                                        onCollapseToggle: () => handleCollapseToggle(item.instanceId),
-                                    };
+                {/* Charts Grid */}
+                {selectedItems.length === 0 ? (
+                    <EmptyChartsState
+                        onAddClick={() => setIsChartSelectorOpen(true)}
+                    />
+                ) : (
+                    <div className={cn(
+                        "grid gap-0",
+                        columnCount === 1 && "grid-cols-1",
+                        columnCount === 2 && "grid-cols-2",
+                        columnCount === 3 && "grid-cols-3",
+                        columnCount === 4 && "grid-cols-4",
+                        columnCount === 5 && "grid-cols-5"
+                    )} style={{ gridTemplateRows: 'repeat(auto-fill, minmax(280px, 1fr))', maxHeight: 'calc(100vh - 145px)', overflow: 'auto' }}>
+                        {/* Render All Items in Order */}
+                        {selectedChartDetails.map((item) => {
+                            const isWidget = item.category.startsWith('widget_') || item.category === 'kp_module';
+                            const colSpan = getWidgetSizeClasses(item.size);
+                            const commonProps = {
+                                size: item.size,
+                                collapsed: item.collapsed,
+                                onSizeChange: (s: WidgetSize) => handleSizeChange(item.instanceId, s),
+                                onDuplicate: () => handleDuplicate(item.instanceId),
+                                onCollapseToggle: () => handleCollapseToggle(item.instanceId),
+                            };
 
-                                    return (
-                                        <div
-                                            key={item.instanceId}
-                                            draggable
-                                            onDragStart={(e) => handleDragStart(e, item.instanceId)}
-                                            onDragOver={(e) => handleDragOver(e, item.instanceId)}
-                                            onDragLeave={handleDragLeave}
-                                            onDragEnd={handleDragEnd}
-                                            onDrop={(e) => handleDrop(e, item.instanceId)}
-                                            className={cn(
-                                                colSpan,
-                                                "cursor-move transition-all duration-200",
-                                                draggedInstanceId === item.instanceId && "opacity-40 scale-[0.97]",
-                                                dragOverInstanceId === item.instanceId && draggedInstanceId !== item.instanceId && "ring-2 ring-primary/50 ring-offset-2 rounded-[2.5rem] scale-[1.02]"
-                                            )}
-                                        >
-                                            {isWidget ? (
-                                                renderWidget({
-                                                    ...item,
-                                                    ...commonProps,
-                                                    onRemove: () => handleRemoveChart(item.instanceId),
-                                                }, clientId, activeSystem)
-                                            ) : item.category === 'dasha' ? (
-                                                <DashaBox
-                                                    dasha={item}
-                                                    clientId={clientId}
-                                                    activeSystem={activeSystem}
-                                                    onRemove={() => handleRemoveChart(item.instanceId)}
-                                                    {...commonProps}
-                                                />
-                                            ) : item.category === 'ashtakavarga' ? (
-                                                <AshtakavargaBox
-                                                    ashtakavarga={item}
-                                                    clientId={clientId}
-                                                    activeSystem={activeSystem}
-                                                    onRemove={() => handleRemoveChart(item.instanceId)}
-                                                    {...commonProps}
-                                                />
-                                            ) : (
-                                                <DraggableChartBox
-                                                    chart={item}
-                                                    chartProps={getChartProps(item.id)}
-                                                    isAvailable={isChartAvailable(item.id)}
-                                                    isGenerating={generatingCharts.has(item.id)}
-                                                    theme={chartColorTheme}
-                                                    style={chartStyle}
-                                                    onRemove={() => handleRemoveChart(item.instanceId)}
-                                                    {...commonProps}
-                                                    clientId={clientId}
-                                                    activeSystem={activeSystem}
-                                                    refreshCharts={refreshCharts}
-                                                    // Divisional charts features
-                                                    isHouseDetailsOpen={openHouseDetails.has(item.instanceId)}
-                                                    onToggleHouseDetails={() => toggleHouseDetails(item.instanceId)}
-                                                    colorMode={chartColorModes[item.instanceId]}
-                                                    onToggleColorMode={() => toggleChartColorMode(item.instanceId)}
-                                                    onZoom={() => {
-                                                        const props = getChartProps(item.id);
-                                                        setZoomModalData({
-                                                            isOpen: true,
-                                                            chartType: item.id,
-                                                            chartName: item.name,
-                                                            chartDesc: item.description,
-                                                            planets: props.planets,
-                                                            ascendant: props.ascendant,
-                                                            chartData: processedCharts[`${item.id}_${activeSystem}`]?.chartData || null
-                                                        });
-                                                    }}
-                                                    onLearn={() => setCustomizationPanel({ isOpen: true, selectedChart: item.id })}
-                                                    houseData={getHouseDistributionFromPlanets(getChartProps(item.id).planets, getChartProps(item.id).ascendant)}
-                                                />
-                                            )}
-                                        </div>
-                                    );
-                                })}
-
-                                {/* Ghost Add Card — also a drop target */}
+                            return (
                                 <div
-                                    onClick={() => !draggedIdRef.current && setIsChartSelectorOpen(true)}
-                                    onDragOver={(e) => handleDragOver(e, '__ghost__')}
+                                    key={item.instanceId}
+                                    draggable
+                                    onDragStart={(e) => handleDragStart(e, item.instanceId)}
+                                    onDragOver={(e) => handleDragOver(e, item.instanceId)}
                                     onDragLeave={handleDragLeave}
-                                    onDrop={handleGhostDrop}
+                                    onDragEnd={handleDragEnd}
+                                    onDrop={(e) => handleDrop(e, item.instanceId)}
                                     className={cn(
-                                        "border-2 border-dashed rounded-[2.5rem] p-6 flex flex-col items-center justify-center min-h-[220px] cursor-pointer transition-all duration-200",
-                                        dragOverInstanceId === '__ghost__'
-                                            ? "border-primary/60 bg-primary/5 ring-2 ring-primary/40 ring-offset-2 scale-[1.02]"
-                                            : "border-gold-primary/30 hover:border-gold-primary/60 hover:bg-white/40 bg-white/20"
+                                        colSpan,
+                                        "cursor-move transition-all duration-200",
+                                        draggedInstanceId === item.instanceId && "opacity-40 scale-[0.97]",
+                                        dragOverInstanceId === item.instanceId && draggedInstanceId !== item.instanceId && "ring-2 ring-primary/50 ring-offset-2 rounded-[2.5rem] scale-[1.02]"
                                     )}
                                 >
-                                    <Plus className={cn(
-                                        "w-10 h-10 mb-3 transition-colors pointer-events-none",
-                                        dragOverInstanceId === '__ghost__' ? "text-primary/60" : "text-gold-primary/40"
-                                    )} />
-                                    <span className={cn(
-                                        "text-[13px] font-bold transition-colors pointer-events-none",
-                                        dragOverInstanceId === '__ghost__' ? "text-primary/70" : "text-ink/50"
-                                    )}>
-                                        {dragOverInstanceId === '__ghost__' ? 'Drop Here' : 'Add Widget'}
-                                    </span>
+                                    {isWidget ? (
+                                        renderWidget({
+                                            ...item,
+                                            ...commonProps,
+                                            onRemove: () => handleRemoveChart(item.instanceId),
+                                            onAyanamsaChange: (a) => updateChartAyanamsa(item.instanceId, a),
+                                        }, clientId, item.ayanamsa || activeSystem)
+                                    ) : item.category === 'dasha' ? (
+                                        <DashaBox
+                                            dasha={item}
+                                            clientId={clientId}
+                                            activeSystem={item.ayanamsa || activeSystem}
+                                            onRemove={() => handleRemoveChart(item.instanceId)}
+                                            onAyanamsaChange={(a) => updateChartAyanamsa(item.instanceId, a)}
+                                            {...commonProps}
+                                        />
+                                    ) : item.category === 'ashtakavarga' ? (
+                                        <AshtakavargaBox
+                                            ashtakavarga={item}
+                                            clientId={clientId}
+                                            activeSystem={item.ayanamsa || activeSystem}
+                                            onRemove={() => handleRemoveChart(item.instanceId)}
+                                            onAyanamsaChange={(a) => updateChartAyanamsa(item.instanceId, a)}
+                                            {...commonProps}
+                                        />
+                                    ) : (
+                                        <DraggableChartBox
+                                            chart={item}
+                                            chartProps={getChartProps(item.id, item.ayanamsa)}
+                                            isAvailable={isChartAvailable(item.id, item.ayanamsa)}
+                                            isGenerating={generatingCharts.has(item.id)}
+                                            theme={chartColorTheme}
+                                            style={chartStyle}
+                                            onRemove={() => handleRemoveChart(item.instanceId)}
+                                            onAyanamsaChange={(a) => updateChartAyanamsa(item.instanceId, a)}
+                                            {...commonProps}
+                                            clientId={clientId}
+                                            activeSystem={item.ayanamsa || activeSystem}
+                                            refreshCharts={refreshCharts}
+                                            isKpSystem={isKpSystem}
+                                            // Divisional charts features
+                                            isHouseDetailsOpen={openHouseDetails.has(item.instanceId)}
+                                            onToggleHouseDetails={() => toggleHouseDetails(item.instanceId)}
+                                            colorMode={chartColorModes[item.instanceId]}
+                                            onToggleColorMode={() => toggleChartColorMode(item.instanceId)}
+                                            onZoom={() => {
+                                                const zoomProps = getChartProps(item.id, item.ayanamsa);
+                                                setZoomModalData({
+                                                    isOpen: true,
+                                                    chartType: item.id,
+                                                    chartName: item.name,
+                                                    chartDesc: item.description,
+                                                    planets: zoomProps.planets,
+                                                    ascendant: zoomProps.ascendant,
+                                                    chartData: processedCharts[`${item.id}_${item.ayanamsa || activeSystem}`]?.chartData || null
+                                                });
+                                            }}
+                                            onLearn={() => setCustomizationPanel({ isOpen: true, selectedChart: item.id })}
+                                            houseData={(() => {
+                                                const hProps = getChartProps(item.id, item.ayanamsa);
+                                                return getHouseDistributionFromPlanets(hProps.planets, hProps.ascendant);
+                                            })()}
+                                        />
+                                    )}
                                 </div>
+                            );
+                        })}
+
+                        {/* Ghost Add Card — only visible if space permits or as a fallback */}
+                        {selectedItems.length < 6 && (
+                            <div
+                                onClick={() => !draggedIdRef.current && setIsChartSelectorOpen(true)}
+                                onDragOver={(e) => handleDragOver(e, '__ghost__')}
+                                onDragLeave={handleDragLeave}
+                                onDrop={handleGhostDrop}
+                                className={cn(
+                                    "border border-dashed rounded-xl flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 min-h-[280px] h-full",
+                                    dragOverInstanceId === '__ghost__'
+                                        ? "border-primary/60 bg-primary/5 ring-1 ring-primary/30"
+                                        : "border-gold-primary/60 hover:border-gold-primary/80 hover:bg-white/30 bg-white/10 shadow-sm"
+                                )}
+                            >
+                                <Plus className={cn(
+                                    "w-4 h-4 transition-colors pointer-events-none",
+                                    dragOverInstanceId === '__ghost__' ? "text-primary/60" : "text-gold-primary/70"
+                                )} />
+                                <span className={cn(
+                                    "text-[10px] font-bold transition-colors pointer-events-none",
+                                    dragOverInstanceId === '__ghost__' ? "text-primary/70" : "text-ink/60"
+                                )}>
+                                    {dragOverInstanceId === '__ghost__' ? 'Drop' : '+ Add'}
+                                </span>
                             </div>
                         )}
-                    </section>
-                );
-        }
+                    </div>
+                )}
+            </section>
+        );
     };
 
-    const renderKpSections = () => {
-        switch (activeSection) {
-            case 'kp-ruling':
-                return (
-                    <section className="space-y-8 animate-in fade-in duration-500">
-                        <SectionHeader title="Ruling Forces" subtitle="Stellar Time-Dynamics (RP)" icon={<Sparkles className="w-6 h-6" />} />
-                        <div className="max-w-4xl mx-auto">
-                            <RulingPlanetsWidget data={kpRulingPlanets?.data || null} isLoading={kpRulingLoading} className="shadow-2xl border-gold-primary/20 !bg-white/80" />
-                        </div>
-                    </section>
-                );
-            case 'kp-foundation':
-                return (
-                    <section className="space-y-8 animate-in fade-in duration-500">
-                        <SectionHeader title="Cuspal Foundation" subtitle="Planetary Positions & Sub-Lords" icon={<Target className="w-6 h-6" />} />
-                        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-                            <div className="md:col-span-12 bg-white p-6 rounded-3xl prem-card">
-                                <KpPlanetaryTable
-                                    planets={Object.entries(kpPlanetsCusps?.data?.planets || {}).map(([name, p]) => ({
-                                        name,
-                                        fullName: name,
-                                        sign: p.sign,
-                                        signId: 1,
-                                        degree: parseFloat(p.longitude.split(' ')[1] || '0'),
-                                        degreeFormatted: p.longitude,
-                                        house: p.house,
-                                        nakshatra: p.nakshatra,
-                                        nakshatraLord: p.star_lord,
-                                        subLord: p.sub_lord,
-                                        isRetrograde: p.is_retro
-                                    }))}
-                                    className="border-none"
-                                />
-                            </div>
-                        </div>
-                    </section>
-                );
-            case 'kp-structures':
-                return (
-                    <section className="space-y-8 animate-in fade-in duration-500">
-                        <SectionHeader title="Cuspal Geometries" subtitle="North Indian KP Chart & Bhava Details" icon={<LayoutGrid className="w-6 h-6" />} />
-                        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-                            <div className="md:col-span-5 flex justify-center">
-                                <div className="w-full max-w-md aspect-square bg-white prem-card rounded-[2.5rem] p-10 shadow-xl overflow-hidden">
-                                    <KpCuspalChart
-                                        planets={Object.entries(kpPlanetsCusps?.data?.planets || {}).map(([name, p]) => ({
-                                            name: name.substring(0, 2),
-                                            degree: p.longitude.split(' ')[1] || p.longitude,
-                                            house: p.house,
-                                            signId: 1,
-                                            isRetro: p.is_retro
-                                        }))}
-                                        houseSigns={Object.values(kpPlanetsCusps?.data?.house_cusps || {}).map(c => 1) || Array(12).fill(1)}
-                                        className="h-full w-full"
-                                    />
-                                </div>
-                            </div>
-                            <div className="md:col-span-7 bg-white p-6 rounded-3xl prem-card">
-                                <BhavaDetailsTable bhavaDetails={kpBhavaDetails?.data?.bhava_details || {}} className="border-none shadow-none" />
-                            </div>
-                        </div>
-                    </section>
-                );
-            case 'kp-insights':
-                return (
-                    <section className="space-y-8 animate-in fade-in duration-500">
-                        <SectionHeader title="Thematic Matrices" subtitle="Planetary & House Significations" icon={<Zap className="w-6 h-6" />} />
-                        <div className="bg-white p-8 rounded-[2.5rem] prem-card">
-                            <SignificationMatrix significations={kpSignifications?.data?.significations || []} />
-                        </div>
-                    </section>
-                );
-            default:
-                return (
-                    <div className="flex flex-col items-center justify-center min-h-[40vh] text-center p-12">
-                        <div className="w-20 h-20 bg-surface-warm/50 rounded-[2rem] flex items-center justify-center mb-8 prem-card">
-                            <Zap className="w-8 h-8 text-gold-dark opacity-50" />
-                        </div>
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] text-ink mb-2")}>Select KP Analysis</h3>
-                        <p className={cn(TYPOGRAPHY.label, "max-w-md mx-auto opacity-60")}>Open the Celestial Navigator above to choose a KP module for deep exploration.</p>
-                        <button
-                            onClick={() => setIsNavModalOpen(true)}
-                            className="mt-8 px-8 py-4 bg-primary text-white rounded-2xl text-[12px] font-black uppercase tracking-[0.2em] shadow-xl hover:bg-black transition-all active:scale-95 flex items-center gap-3"
-                        >
-                            <LayoutGrid className="w-4 h-4" />
-                            Open Navigator
-                        </button>
-                    </div>
-                );
-        }
+
+
+    const renderPageContent = () => {
+        return renderWorkbench();
     };
 
     return (
-        <div className="flex flex-col gap-8 p-6 min-h-screen animate-in fade-in duration-700">
-            <div className="flex-1">
-                <main className="space-y-12">
-                    {/* Dynamic Sections */}
-                    <div className="animate-in fade-in slide-in-from-bottom-6 duration-1000 fill-mode-both">
-                        {isKpSystem ? renderKpSections() : renderVedicSections()}
+        <div className="flex flex-col gap-0 animate-in fade-in duration-700 w-[calc(100%+2rem)] -mx-4 -mt-4" style={{ height: 'calc(100vh - 104px)' }}>
+            <div className="flex-1 flex flex-col min-h-0">
+                <main className="flex-1 flex flex-col min-h-0">
+                    <div className="flex-1 flex flex-col min-h-0">
+                        {renderPageContent()}
                     </div>
                 </main>
             </div>
-
-            {/* NAVIGATION MODAL */}
-            <NavigationModal
-                isOpen={isNavModalOpen}
-                onClose={() => setIsNavModalOpen(false)}
-                sections={sections}
-                onSelect={handleSectionSelect}
-                activeId={activeSection}
-                ayanamsa={ayanamsa}
-            />
 
             {/* CHART SELECTOR MODAL */}
             <ChartSelectorModal
                 isOpen={isChartSelectorOpen}
                 onClose={() => setIsChartSelectorOpen(false)}
                 availableCharts={availableCharts}
-                selectedCharts={selectedItems.map(i => i.id)}
+                selectedCharts={selectedChartDetails.map(i => `${i.id}_${(i.ayanamsa || activeSystem).toLowerCase()}`)}
                 onSelect={handleAddChart}
-                currentAyanamsa={ayanamsa}
-                activeSection={activeSection}
+                currentAyanamsa={localAyanamsa}
+                onAyanamsaChange={setLocalAyanamsa}
             />
 
             {/* ZOOM MODAL */}
@@ -798,7 +698,7 @@ export default function CustomizePage() {
                 />
             )}
 
-            {/* CUSTOMIZATION PANEL (Learn/Educational Content) */}
+            {/* CUSTOMIZATION PANEL */}
             <ChartCustomizationPanel
                 isOpen={customizationPanel.isOpen}
                 onClose={() => setCustomizationPanel({ isOpen: false })}
@@ -864,23 +764,79 @@ interface DashboardCardProps {
     onDuplicate?: () => void;
     onCollapseToggle?: () => void;
     onSizeChange?: (s: WidgetSize) => void;
+    ayanamsa?: string;
+    onAyanamsaChange?: (a: string) => void;
 }
 
-function DashboardCard({ title, description, badge, size, collapsed, children, onRemove, onDuplicate, onCollapseToggle, onSizeChange }: DashboardCardProps) {
+function DashboardCard({ title, description, badge, size, collapsed, children, onRemove, onDuplicate, onCollapseToggle, onSizeChange, ayanamsa, onAyanamsaChange }: DashboardCardProps) {
     return (
-        <div className="bg-white prem-card rounded-[2.5rem] p-6 shadow-xl relative group hover:shadow-2xl transition-all duration-300 flex flex-col h-full">
-            <div className="flex items-start justify-between mb-4 shrink-0 gap-3">
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">{badge}</div>
-                    <h4 className={cn(TYPOGRAPHY.value, "mt-2 text-[14px] font-black text-ink truncate")}>{title}</h4>
-                    <p className="text-[10px] text-ink/50 line-clamp-1">{description}</p>
+        <div className="bg-[#FDFBF7] border border-[#E6D5B8]/40 rounded p-1 shadow-sm relative group hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden" style={{ height: 'calc((100vh - 200px) / 2)', minHeight: '240px' }}>
+            <div className="flex items-center justify-between mb-1 shrink-0 px-0.5 pt-0">
+                <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                    <div className="flex items-center gap-1 flex-wrap shrink-0">{badge}</div>
+                    <h4 className="text-[10px] font-black text-ink uppercase tracking-tight truncate max-w-[120px]">
+                        {title}
+                    </h4>
+                    {onAyanamsaChange && (
+                        <div className="flex items-center gap-1 ml-auto mr-2">
+                            <Globe className="w-2.5 h-2.5 text-gold-dark/40" />
+                            <select
+                                value={ayanamsa}
+                                onChange={(e) => onAyanamsaChange(e.target.value)}
+                                className="bg-transparent border-none text-[9px] font-black uppercase text-gold-dark/60 focus:ring-0 cursor-pointer p-0 pr-4 hover:text-gold-dark transition-colors appearance-none"
+                                style={{
+                                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23C9A24D' stroke-width='4'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`,
+                                    backgroundRepeat: 'no-repeat',
+                                    backgroundPosition: 'right center',
+                                    backgroundSize: '8px'
+                                }}
+                            >
+                                {AYANAMSA_SYSTEMS.map(sys => (
+                                    <option key={sys} value={sys} className="bg-white text-ink font-bold">{sys}</option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
                 </div>
-                <div className="flex items-center gap-1 shrink-0">
-                    <SizeToggle size={size} onChange={onSizeChange} />
-                    <button onClick={onRemove} className="p-1.5 rounded-lg text-ink/30 hover:text-red-500 hover:bg-red-50 transition-all" title="Remove"><X className="w-3.5 h-3.5" /></button>
+
+                <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-1.5 text-[9px] font-black text-ink/30 mr-1 uppercase">
+                        {(['S', 'M', 'L', 'F'] as const).map((s) => (
+                            <button
+                                key={s}
+                                onClick={() => {
+                                    if (!onSizeChange) return;
+                                    const map: Record<string, WidgetSize> = { S: 'small', M: 'medium', L: 'large', F: 'full' };
+                                    onSizeChange(map[s]);
+                                }}
+                                className={cn(
+                                    "hover:text-gold-dark transition-colors",
+                                    (size === 'small' && s === 'S') ||
+                                        (size === 'medium' && s === 'M') ||
+                                        (size === 'large' && s === 'L') ||
+                                        (size === 'full' && s === 'F')
+                                        ? "text-gold-dark font-black"
+                                        : ""
+                                )}
+                            >
+                                {s}
+                            </button>
+                        ))}
+                    </div>
+                    <button
+                        onClick={onRemove}
+                        className="text-ink/20 hover:text-red-500 transition-colors"
+                        title="Remove"
+                    >
+                        <X className="w-3.5 h-3.5" />
+                    </button>
                 </div>
             </div>
-            {!collapsed && <div className="flex-1 relative bg-surface-warm/30 rounded-3xl overflow-hidden min-h-[220px]">{children}</div>}
+            {!collapsed && (
+                <div className="flex-1 relative bg-transparent rounded overflow-hidden min-h-0">
+                    {children}
+                </div>
+            )}
         </div>
     );
 }
@@ -921,6 +877,7 @@ interface DraggableChartBoxProps {
     onDuplicate?: () => void;
     onCollapseToggle?: () => void;
     onCustomize?: () => void;
+    onAyanamsaChange?: (a: string) => void;
     // Divisional charts features
     isHouseDetailsOpen?: boolean;
     onToggleHouseDetails?: () => void;
@@ -929,6 +886,7 @@ interface DraggableChartBoxProps {
     onZoom?: () => void;
     onLearn?: () => void;
     houseData?: Record<number, { planets: { name: string; degree: string; isRetro: boolean }[]; signName: string }>;
+    isKpSystem?: boolean;
 }
 
 function DraggableChartBox({
@@ -947,195 +905,198 @@ function DraggableChartBox({
     onSizeChange,
     onDuplicate,
     onCollapseToggle,
-    onCustomize,
     isHouseDetailsOpen,
     onToggleHouseDetails,
     colorMode,
     onToggleColorMode,
     onZoom,
     onLearn,
-    houseData
+    houseData,
+    isKpSystem,
+    onAyanamsaChange
 }: DraggableChartBoxProps) {
     const [isGeneratingLocal, setIsGeneratingLocal] = useState(false);
 
     const handleGenerate = async () => {
         if (!clientId) return;
         setIsGeneratingLocal(true);
+        const targetAyanamsa = chart.ayanamsa || activeSystem;
         try {
-            await clientApi.generateChart(clientId, chart.id, activeSystem);
+            await clientApi.generateChart(clientId, chart.id, targetAyanamsa);
             await refreshCharts();
         } catch (error) {
-            console.error(`Failed to generate ${chart.id}:`, error);
+            console.error(`Failed to generate ${chart.id} (${targetAyanamsa}):`, error);
         } finally {
             setIsGeneratingLocal(false);
         }
     };
 
-    const badge = (
-        <>
-            <span className={cn(
-                "px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider",
-                chart.category === 'rare_shodash' ? "bg-amber-100 text-amber-700" :
-                    chart.category === 'lagna' ? "bg-blue-100 text-blue-700" :
-                        chart.category === 'dasha' ? "bg-purple-100 text-purple-700" :
-                            chart.category === 'ashtakavarga' ? "bg-emerald-100 text-emerald-700" :
-                                "bg-gold-primary/10 text-gold-dark"
-            )}>
-                {chart.category === 'rare_shodash' ? 'Rare' : chart.category}
-            </span>
-            {chart.category === 'rare_shodash' && (
-                <span className="text-[9px] font-bold text-amber-600 uppercase tracking-wider">Lahiri Only</span>
-            )}
-        </>
-    );
-
-    // Sign names for house details
-    const signIdToName = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+    const chartAyanamsa = chart.ayanamsa || activeSystem;
 
     return (
-        <div className="bg-white prem-card rounded-[2.5rem] p-6 shadow-xl relative group hover:shadow-2xl transition-all duration-300 flex flex-col h-full">
-            {/* Header with all controls */}
-            <div className="flex items-start justify-between mb-4 shrink-0 gap-3">
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">{badge}</div>
-                    <h4 className={cn(TYPOGRAPHY.value, "mt-2 text-[14px] font-black text-ink truncate")}>{chart.name}</h4>
-                    <p className="text-[10px] text-ink/50 line-clamp-1">{chart.description}</p>
+        <DashboardCard
+            title={`${chart.name} (${chartAyanamsa})`}
+            description={chart.description}
+            badge={
+                <span className={cn(
+                    "px-2 py-0.5 rounded-full text-[9px] font-medium capitalize tracking-wide",
+                    chart.category === 'rare_shodash' ? "bg-amber-100 text-amber-700" :
+                        chart.category === 'lagna' ? "bg-blue-100 text-blue-700" :
+                            "bg-gold-primary/10 text-gold-dark"
+                )}>
+                    {chart.category === 'rare_shodash' ? 'Rare' : chart.category}
+                </span>
+            }
+            size={size}
+            collapsed={collapsed}
+            onRemove={onRemove}
+            onDuplicate={onDuplicate}
+            onCollapseToggle={onCollapseToggle}
+            onSizeChange={onSizeChange}
+            ayanamsa={chartAyanamsa}
+            onAyanamsaChange={onAyanamsaChange}
+        >
+            {!isAvailable ? (
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                    {!isChartCompatible(chart.id, chartAyanamsa) ? (
+                        <>
+                            <Shield className="w-8 h-8 text-gold-dark/40 mb-3" />
+                            <p className="text-[10px] font-black uppercase text-gold-dark/60 tracking-wider mb-1 leading-tight px-4">
+                                {chart.name}
+                            </p>
+                            <p className="text-[9px] font-bold text-ink/40 uppercase tracking-widest px-2">
+                                Not compatible with {chartAyanamsa}
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <AlertCircle className="w-8 h-8 text-gold-dark/30 mb-3" />
+                            <p className="text-[11px] text-ink/50 mb-4">{chart.name} not generated</p>
+                            <button
+                                onClick={handleGenerate}
+                                disabled={isGenerating || isGeneratingLocal}
+                                className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-[10px] font-bold transition-all disabled:opacity-50"
+                            >
+                                {(isGenerating || isGeneratingLocal) ? (
+                                    <div className="flex items-center gap-2">
+                                        <Loader2 className="w-3 h-3 animate-spin" />
+                                        Generating...
+                                    </div>
+                                ) : 'Generate Now'}
+                            </button>
+                        </>
+                    )}
+                    {isKpSystem && isChartCompatible(chart.id, chartAyanamsa) && (
+                        <div className="mt-4 text-[9px] text-gold-dark/60 font-medium px-4">
+                            Fetch from main KP dashboard
+                        </div>
+                    )}
                 </div>
-                <div className="flex items-center gap-1 shrink-0">
-                    {/* House Details Toggle */}
-                    {isAvailable && onToggleHouseDetails && (
-                        <button
-                            onClick={onToggleHouseDetails}
-                            className={cn(
-                                "p-1.5 rounded-lg transition-colors",
-                                isHouseDetailsOpen ? "bg-gold-primary/20 text-gold-dark" : "text-ink/30 hover:text-gold-dark hover:bg-gold-primary/10"
-                            )}
-                            title="House Details"
-                        >
-                            <House className="w-3.5 h-3.5" />
-                        </button>
-                    )}
-                    
-                    {/* Learn Button */}
-                    {isAvailable && onLearn && (
-                        <button
-                            onClick={onLearn}
-                            className="p-1.5 rounded-lg text-ink/30 hover:text-purple-600 hover:bg-purple-50 transition-all"
-                            title="Learn about this chart"
-                        >
-                            <BookOpen className="w-3.5 h-3.5" />
-                        </button>
-                    )}
-                    
-                    {/* Color Mode Toggle */}
-                    {isAvailable && onToggleColorMode && style === 'South Indian' && (
-                        <button
-                            onClick={onToggleColorMode}
-                            className={cn(
-                                "p-1.5 rounded-lg transition-colors",
-                                colorMode === 'blackwhite' ? "bg-gold-primary/20 text-ink/60" : "text-ink/30 hover:text-gold-dark hover:bg-gold-primary/10"
-                            )}
-                            title={colorMode === 'blackwhite' ? "Switch to Color" : "Switch to B&W"}
-                        >
-                            {colorMode === 'blackwhite' ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                        </button>
-                    )}
-                    
-                    {/* Zoom Button */}
-                    {isAvailable && onZoom && (
-                        <button
-                            onClick={onZoom}
-                            className="p-1.5 rounded-lg text-ink/30 hover:text-gold-dark hover:bg-gold-primary/10 transition-all"
-                            title="Zoom"
-                        >
-                            <Maximize2 className="w-3.5 h-3.5" />
-                        </button>
-                    )}
-                    
-                    <SizeToggle size={size} onChange={onSizeChange} />
-                    
-                    {/* Customize Button */}
-                    {onCustomize && (
-                        <button 
-                            onClick={onCustomize} 
-                            className="p-1.5 rounded-lg text-ink/30 hover:text-gold-dark hover:bg-gold-primary/10 transition-all" 
-                            title="Customize"
-                        >
-                            <Settings2 className="w-3.5 h-3.5" />
-                        </button>
-                    )}
-                    
-                    <button onClick={onRemove} className="p-1.5 rounded-lg text-ink/30 hover:text-red-500 hover:bg-red-50 transition-all" title="Remove">
-                        <X className="w-3.5 h-3.5" />
-                    </button>
-                </div>
-            </div>
-            
-            {!collapsed && (
-                <div className="flex-1 flex flex-col gap-3 min-h-[220px]">
-                    {/* Chart Display */}
-                    <div className="flex-1 bg-surface-warm/30 rounded-3xl overflow-hidden relative">
-                        {!isAvailable ? (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                                <AlertCircle className="w-8 h-8 text-gold-dark/30 mb-3" />
-                                <p className="text-[11px] text-ink/50 mb-4">Chart not generated yet</p>
-                                <button
-                                    onClick={handleGenerate}
-                                    disabled={isGeneratingLocal || isGenerating}
-                                    className="px-4 py-2 bg-primary text-white rounded-xl text-[11px] font-bold hover:bg-black transition-all disabled:opacity-50 flex items-center gap-2"
-                                >
-                                    {isGeneratingLocal || isGenerating ? (
-                                        <><Loader2 className="w-3 h-3 animate-spin" /> Generating...</>
-                                    ) : (
-                                        <><Sparkles className="w-3 h-3" /> Generate</>
-                                    )}
-                                </button>
-                            </div>
-                        ) : (
-                            <>
-                                {style === 'South Indian' ? (
-                                    <SouthIndianChart
-                                        ascendantSign={chartProps.ascendant}
-                                        planets={chartProps.planets}
-                                        colorMode={colorMode || 'color'}
-                                        colorTheme={theme}
-                                        className="w-full h-full"
-                                    />
-                                ) : (
-                                    <ChartWithPopup
-                                        ascendantSign={chartProps.ascendant}
-                                        planets={chartProps.planets}
-                                        className="bg-transparent border-none w-full h-full p-4"
-                                        showDegrees={chart.id === 'D1'}
-                                    />
+            ) : (
+                <div className="h-full flex flex-col p-1">
+                    {/* Actions Toolbar */}
+                    <div className="flex items-center gap-1 mb-1 shrink-0 overflow-x-auto no-scrollbar">
+                        {onToggleHouseDetails && (
+                            <button
+                                onClick={onToggleHouseDetails}
+                                className={cn(
+                                    "flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium transition-all border",
+                                    isHouseDetailsOpen
+                                        ? "bg-gold-primary border-gold-dark text-white shadow-sm font-bold"
+                                        : "bg-white border-[#E6D5B8]/40 text-primary hover:border-gold-primary hover:text-gold-dark"
                                 )}
-                            </>
+                            >
+                                <House className="w-2.5 h-2.5" />
+                                Houses
+                            </button>
+                        )}
+
+                        {onLearn && (
+                            <button
+                                onClick={onLearn}
+                                className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium bg-white border border-[#E6D5B8]/40 text-ink hover:border-purple-300 hover:text-purple-600 transition-all text-xs"
+                            >
+                                <BookOpen className="w-2.5 h-2.5" />
+                                Learn
+                            </button>
+                        )}
+
+                        {onToggleColorMode && style === 'South Indian' && (
+                            <button
+                                onClick={onToggleColorMode}
+                                className={cn(
+                                    "flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium transition-all border",
+                                    colorMode === 'blackwhite'
+                                        ? "bg-zinc-800 border-zinc-900 text-white"
+                                        : "bg-white border-[#E6D5B8]/40 text-primary hover:border-blue-300 hover:text-blue-600"
+                                )}
+                            >
+                                <Sparkles className="w-2.5 h-2.5" />
+                                Color
+                            </button>
+                        )}
+
+                        {onZoom && (
+                            <button
+                                onClick={onZoom}
+                                className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium bg-white border border-[#E6D5B8]/40 text-ink hover:border-gold-primary hover:text-gold-dark transition-all ml-auto"
+                            >
+                                <Maximize2 className="w-2.5 h-2.5" />
+                                Zoom
+                            </button>
                         )}
                     </div>
-                    
+
+                    <div className="flex-1 min-h-0 relative">
+                        {isGenerating ? (
+                            <div className="absolute inset-0 z-10 bg-white/60 backdrop-blur-[1px] flex items-center justify-center">
+                                <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                            </div>
+                        ) : null}
+
+                        <div className="w-full h-full p-0">
+                            {style === 'South Indian' ? (
+                                <SouthIndianChart
+                                    ascendantSign={chartProps.ascendant}
+                                    planets={chartProps.planets}
+                                    colorMode={colorMode || 'color'}
+                                    colorTheme={theme}
+                                    className="w-full h-full"
+                                />
+                            ) : (
+                                <CompactChartWithPopup
+                                    ascendantSign={chartProps.ascendant}
+                                    planets={chartProps.planets}
+                                    className="w-full h-full"
+                                    showDegrees={chart.id === 'D1'}
+                                />
+                            )}
+                        </div>
+                    </div>
+
                     {/* House Details Panel */}
-                    {isHouseDetailsOpen && isAvailable && houseData && (
-                        <div className="bg-white rounded-2xl border border-gold-primary/10 p-3 overflow-hidden">
-                            <div className={cn(TYPOGRAPHY.label, "mb-2 text-ink/70 font-bold uppercase tracking-wider text-[10px]")}>House-wise Positions</div>
-                            <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5 max-h-40 overflow-y-auto">
+                    {isHouseDetailsOpen && houseData && (
+                        <div className="bg-white rounded-lg border border-gold-primary/10 p-1.5 overflow-hidden">
+                            <div className={cn(TYPOGRAPHY.label, "mb-1 text-ink/70 font-bold uppercase tracking-wider text-[9px]")}>House-wise Positions</div>
+                            <div className="grid grid-cols-4 gap-1 max-h-24 overflow-y-auto">
                                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(h => (
                                     <div key={h} className={cn(
-                                        "overflow-hidden rounded-lg border border-gold-primary/10 transition-all",
+                                        "overflow-hidden rounded border border-gold-primary/10 transition-all",
                                         houseData[h]?.planets.length ? "bg-white shadow-sm" : "bg-gold-primary/5 opacity-60"
                                     )}>
                                         <div className={cn(
-                                            "px-2 py-1 flex items-center justify-between border-b border-gold-primary/5",
+                                            "px-1.5 py-0.5 flex items-center justify-between border-b border-gold-primary/5",
                                             houseData[h]?.planets.length ? "bg-gold-primary/5" : "bg-transparent"
                                         )}>
-                                            <span className="font-bold text-ink text-[11px]">H{h}</span>
-                                            <span className="text-[10px] font-medium text-gold-dark">{houseData[h]?.signName?.substring(0, 3)}</span>
+                                            <span className="font-bold text-ink text-[9px]">H{h}</span>
+                                            <span className="text-[8px] font-medium text-gold-dark">{houseData[h]?.signName?.substring(0, 3)}</span>
                                         </div>
-                                        <div className="p-1 px-1.5 min-h-[20px] flex flex-col gap-0.5">
+                                        <div className="p-0.5 px-1 min-h-[16px] flex flex-col gap-0">
                                             {houseData[h]?.planets.length > 0 ? (
                                                 houseData[h].planets.map((p, pIdx) => (
-                                                    <div key={pIdx} className="flex items-center justify-between gap-1 text-[10px] leading-tight">
+                                                    <div key={pIdx} className="flex items-center justify-between gap-1 text-[8px] leading-tight">
                                                         <span className="font-bold text-ink">{p.name}</span>
-                                                        <span className="text-ink/60 font-sans text-[9px]">
+                                                        <span className="text-ink/60 font-sans text-[7px]">
                                                             {p.degree}{p.isRetro && <span className="text-rose-500 font-bold ml-0.5">(R)</span>}
                                                         </span>
                                                     </div>
@@ -1149,30 +1110,9 @@ function DraggableChartBox({
                             </div>
                         </div>
                     )}
-                    
-                    {/* Quick Stats */}
-                    {isAvailable && !isHouseDetailsOpen && (
-                        <div className={cn(TYPOGRAPHY.subValue, "flex items-center justify-between px-1")}>
-                            <span>Asc: <strong className="text-ink">{signIdToName[chartProps.ascendant - 1] || 'Aries'}</strong></span>
-                            <span className="text-ink/70">
-                                {chartProps.planets.filter((p: any) => p.isRetro).length > 0 
-                                    ? `${chartProps.planets.filter((p: any) => p.isRetro).length} Retro` 
-                                    : 'No Retro'}
-                            </span>
-                        </div>
-                    )}
-                    
-                    {/* Chart Insights */}
-                    {isAvailable && !isHouseDetailsOpen && (
-                        <DivisionalChartInsights
-                            chartType={chart.id}
-                            planets={chartProps.planets}
-                            ascendant={chartProps.ascendant}
-                        />
-                    )}
                 </div>
             )}
-        </div>
+        </DashboardCard>
     );
 }
 
@@ -1187,30 +1127,35 @@ interface DashaBoxProps {
     onSizeChange?: (s: WidgetSize) => void;
     onDuplicate?: () => void;
     onCollapseToggle?: () => void;
+    onAyanamsaChange?: (a: string) => void;
 }
 
-function DashaBox({ dasha, clientId, activeSystem, onRemove, size, collapsed, onSizeChange, onDuplicate, onCollapseToggle }: DashaBoxProps) {
+function DashaBox({ dasha, clientId, activeSystem, onRemove, size, collapsed, onSizeChange, onDuplicate, onCollapseToggle, onAyanamsaChange }: DashaBoxProps) {
+    const { processedCharts } = useVedicClient();
+    const dashaKey = `${dasha.id}_${activeSystem}`;
+    const cachedData = processedCharts[dashaKey]?.chartData;
+
     // Use vimshottari hook for vimshottari and tribhagi (tribhagi is a variation of vimshottari)
     const isVimshottari = dasha.id === 'vimshottari' || dasha.id === 'tribhagi';
     const { data: vimshottariData, isLoading: isVimshottariLoading } = useDasha(
-        isVimshottari ? clientId : '',
+        isVimshottari && !cachedData ? clientId : '',
         'mahadasha',
         activeSystem
     );
     // Use other dasha hook for non-vimshottari dashas
     const { data: otherDashaData, isLoading: isOtherDashaLoading } = useOtherDasha(
-        !isVimshottari ? clientId : '',
+        !isVimshottari && !cachedData ? clientId : '',
         dasha.id,
         activeSystem,
         'mahadasha'
     );
-    const dashaData = isVimshottari ? vimshottariData : otherDashaData;
-    const isDashaLoading = isVimshottari ? isVimshottariLoading : isOtherDashaLoading;
-    const hasData = !!dashaData && !isDashaLoading;
+    const dashaData = cachedData || (isVimshottari ? vimshottariData : otherDashaData);
+    const isDashaLoading = !dashaData && (isVimshottari ? isVimshottariLoading : isOtherDashaLoading);
+    const hasData = !!dashaData;
 
     return (
         <DashboardCard
-            title={dasha.name}
+            title={`${dasha.name} (${activeSystem})`}
             description={dasha.description}
             badge={<span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-purple-100 text-purple-700">Dasha</span>}
             size={size}
@@ -1219,29 +1164,39 @@ function DashaBox({ dasha, clientId, activeSystem, onRemove, size, collapsed, on
             onDuplicate={onDuplicate}
             onCollapseToggle={onCollapseToggle}
             onSizeChange={onSizeChange}
+            ayanamsa={activeSystem}
+            onAyanamsaChange={onAyanamsaChange}
         >
             {!hasData ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                    <AlertCircle className="w-8 h-8 text-purple-300 mb-3" />
-                    <p className="text-[11px] text-ink/50 mb-4">Dasha data loading...</p>
-                    <Loader2 className="w-5 h-5 animate-spin text-purple-500" />
+                    {!isChartCompatible(dasha.id, activeSystem) ? (
+                        <>
+                            <Shield className="w-8 h-8 text-purple-300/40 mb-3" />
+                            <p className="text-[10px] font-black uppercase text-purple-700/60 tracking-wider mb-1 px-4">
+                                {dasha.name}
+                            </p>
+                            <p className="text-[9px] font-bold text-ink/40 uppercase tracking-widest px-2">
+                                Not compatible with {activeSystem}
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <AlertCircle className="w-8 h-8 text-purple-300 mb-3" />
+                            <p className="text-[11px] text-ink/50 mb-4">Dasha data loading...</p>
+                            <Loader2 className="w-5 h-5 animate-spin text-purple-500" />
+                        </>
+                    )}
                 </div>
             ) : (
-                <div className="h-full overflow-auto p-2">
-                    {isVimshottari ? (
-                        <VimshottariTreeGrid
-                            data={processDashaResponse(dashaData as unknown as RawDashaPeriod)}
-                            isLoading={false}
-                            className="border-none shadow-none"
-                        />
-                    ) : (
-                        <OtherDashaTable
-                            data={dashaData?.data || dashaData}
-                            dashaName={dasha.name}
-                            isLoading={false}
-                            className="border-none shadow-none"
-                        />
-                    )}
+                <div className="h-full overflow-hidden flex flex-col">
+                    <IntegratedDashaViewer
+                        dashaType={dasha.id}
+                        clientId={clientId}
+                        ayanamsa={activeSystem}
+                        dashaData={dashaData}
+                        isLoading={isDashaLoading}
+                        compact
+                    />
                 </div>
             )}
         </DashboardCard>
@@ -1259,112 +1214,157 @@ interface AshtakavargaBoxProps {
     onSizeChange?: (s: WidgetSize) => void;
     onDuplicate?: () => void;
     onCollapseToggle?: () => void;
+    onAyanamsaChange?: (a: string) => void;
 }
 
-function AshtakavargaBox({ ashtakavarga, clientId, activeSystem, onRemove, size, collapsed, onSizeChange, onDuplicate, onCollapseToggle }: AshtakavargaBoxProps) {
+import PremiumAshtakavargaMatrix from '@/components/astrology/PremiumAshtakavargaMatrix';
+
+function AshtakavargaBox({
+    ashtakavarga,
+    activeSystem,
+    clientId,
+    size,
+    collapsed,
+    onRemove,
+    onDuplicate,
+    onCollapseToggle,
+    onSizeChange,
+    onAyanamsaChange,
+}: {
+    ashtakavarga: CustomizeChartItem;
+    activeSystem: string;
+    clientId: string;
+    size: WidgetSize;
+    collapsed: boolean;
+    onRemove: () => void;
+    onDuplicate: () => void;
+    onCollapseToggle: () => void;
+    onSizeChange: (s: WidgetSize) => void;
+    onAyanamsaChange: (a: string) => void;
+}) {
+    const ashtakaKey = `${ashtakavarga.id}_${activeSystem}`;
     const { processedCharts, isGeneratingCharts } = useVedicClient();
-    const isBhinna = ashtakavarga.id === 'ashtakavarga_bhinna';
-    const ashtakaType: 'sarva' | 'bhinna' = isBhinna ? 'bhinna' : 'sarva';
-
-    const rawData = processedCharts[`${ashtakavarga.id}_${activeSystem}`]?.chartData;
+    const rawData = processedCharts[ashtakaKey]?.chartData;
     const isAshtakaLoading = !rawData && isGeneratingCharts;
+    const isBhinna = ashtakavarga.id === 'ashtakavarga_bhinna';
+    const ashtakaType = ashtakavarga.id === 'ashtakavarga_sarva' ? 'sarva' : 'bhinna';
 
-    const ashtakaData = React.useMemo(() => {
+    const ashtakaData = useMemo(() => {
         if (!rawData) return null;
         const apiData = (rawData.data || rawData) as any;
-        
-        console.log('[AshtakavargaBox] isBhinna:', isBhinna, 'apiData keys:', Object.keys(apiData));
-        
-        // Handle Bhinna Ashtakavarga (BAV) - individual planetary contributions
-        if (isBhinna && apiData.ashtakvarga) {
-            const ashtakvarga = apiData.ashtakvarga;
-            if (ashtakvarga.tables && Array.isArray(ashtakvarga.tables)) {
-                const contributors = ashtakvarga.tables.map((t: any) => ({
-                    contributor: t.planet || t.name || 'Unknown',
-                    bindus: t.bindus || []
-                }));
-                return { ...apiData, bhinnashtakavarga: ashtakvarga, contributors };
-            }
-            const planets = Object.keys(ashtakvarga).filter(k =>
-                ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Lagna', 'Ascendant'].includes(k)
-            );
-            if (planets.length > 0) {
-                const contributors = planets.map(planet => ({
-                    contributor: planet,
-                    bindus: Array.isArray(ashtakvarga[planet]) ? ashtakvarga[planet] : []
-                }));
-                return { ...apiData, bhinnashtakavarga: ashtakvarga, contributors };
-            }
+        const SIGN_MAP: Record<string, number> = {
+            'Aries': 1, 'Taurus': 2, 'Gemini': 3, 'Cancer': 4, 'Leo': 5, 'Virgo': 6,
+            'Libra': 7, 'Scorpio': 8, 'Sagittarius': 9, 'Capricorn': 10, 'Aquarius': 11, 'Pisces': 12,
+            'ARI': 1, 'TAU': 2, 'GEM': 3, 'CAN': 4, 'LEO': 5, 'VIR': 6, 'LIB': 7, 'SCO': 8, 'SAG': 9, 'CAP': 10, 'AQU': 11, 'PIS': 12
+        };
+
+        // Standardized lookup roots
+        const sarvaRoot = apiData.sarvashtakavarga || apiData.ashtakvarga?.sarvashtakavarga || apiData.ashtakvarga || apiData.summary || apiData;
+        const bhinnaRoot = apiData.bhinnashtakavarga || apiData.ashtakvarga?.bhinnashtakavarga || apiData.ashtakvarga || apiData;
+
+        // 1. Process Sarvashtakavarga Matrix (Total bindus per sign)
+        let sarvaMatrix: Record<number, number> = {};
+        const sSigns = sarvaRoot.signs || sarvaRoot.houses_matrix || sarvaRoot.houses || sarvaRoot.sarvashtakavarga_summary || {};
+        const houseMatrix = sarvaRoot.house_strength_matrix || apiData.house_strength_matrix;
+
+        if (Array.isArray(houseMatrix)) {
+            houseMatrix.forEach((h: any) => {
+                const signId = SIGN_MAP[h.sign_name?.toString().charAt(0).toUpperCase() + h.sign_name?.toString().slice(1)] || h.house_number as number;
+                if (signId && signId >= 1 && signId <= 12) sarvaMatrix[signId] = (h.total_points as number) || 0;
+            });
+        } else {
+            Object.entries(sSigns).forEach(([s, v]) => {
+                const signId = SIGN_MAP[s] || SIGN_MAP[s.toUpperCase()] || parseInt(s);
+                if (signId && signId >= 1 && signId <= 12) sarvaMatrix[signId] = v as number;
+            });
         }
-        
-        // Handle Sarvashtakavarga (SAV) - combined totals
-        // The API returns sarvashtakavarga as: { signs, houses, matrix_table, total_bindus }
-        // The matrix_table contains the planet data
-        if (!isBhinna) {
-            const sarvaData = apiData.sarvashtakavarga || apiData.ashtakvarga?.sarvashtakavarga;
-            
-            if (sarvaData) {
-                console.log('[AshtakavargaBox] Found sarvashtakavarga:', Object.keys(sarvaData));
-                
-                // Extract planet data from matrix_table if it exists
-                // matrix_table format: [{ planet: 'Sun', bindus: [1,2,3...] }, ...]
-                if (sarvaData.matrix_table && Array.isArray(sarvaData.matrix_table)) {
-                    const planetData: Record<string, number[]> = {};
-                    sarvaData.matrix_table.forEach((row: any) => {
-                        if (row.planet && Array.isArray(row.bindus)) {
-                            planetData[row.planet] = row.bindus;
-                        }
-                    });
-                    console.log('[AshtakavargaBox] Extracted planets from matrix_table:', Object.keys(planetData));
-                    return { 
-                        ...apiData, 
-                        sarvashtakavarga: sarvaData,
-                        bhinnashtakavarga: planetData 
-                    };
+
+        // 2. Process Bhinnashtakavarga Tables (All planets simultaneously)
+        const bhinnaTables: Record<string, any> = {};
+        const planetKeys = ['Lagna', 'Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
+        const aliases: Record<string, string[]> = {
+            'Lagna': ['Lagna', 'Ascendant', 'Asc', 'As'],
+            'Sun': ['Sun', 'Su'],
+            'Moon': ['Moon', 'Moo', 'Mo'],
+            'Mars': ['Mars', 'Mar', 'Ma'],
+            'Mercury': ['Mercury', 'Mer', 'Me'],
+            'Jupiter': ['Jupiter', 'Jup', 'Ju'],
+            'Venus': ['Venus', 'Ven', 'Ve'],
+            'Saturn': ['Saturn', 'Sat', 'Sa']
+        };
+
+        // Strategy A: Nested tables array (Common in Bhinna responses)
+        // KP/Raman often return an array directly for 'ashtakvarga'
+        const tables = Array.isArray(bhinnaRoot) ? bhinnaRoot : (bhinnaRoot.tables || bhinnaRoot.matrix_table || []);
+        if (Array.isArray(tables)) {
+            tables.forEach((t: any) => {
+                const pName = t.planet || t.name;
+                if (pName) {
+                    const stdKey = planetKeys.find(pk => [pk, ...aliases[pk]].some(a => a.toLowerCase() === pName.toLowerCase()));
+                    if (stdKey) bhinnaTables[stdKey] = t;
                 }
-                
-                // Fallback: if sarvaData has planet arrays directly
-                const hasPlanetArrays = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'].some(
-                    p => Array.isArray(sarvaData[p]) && sarvaData[p].length === 12
-                );
-                if (hasPlanetArrays) {
-                    return { 
-                        ...apiData, 
-                        sarvashtakavarga: sarvaData,
-                        bhinnashtakavarga: sarvaData 
-                    };
-                }
-            }
+            });
         }
-        
-        // Fallback: return apiData as-is if it has the right structure
-        console.log('[AshtakavargaBox] Fallback, apiData keys:', Object.keys(apiData));
-        return apiData;
-    }, [rawData, isBhinna]);
+
+        // Strategy B: Direct planet keys (Common in Sarva responses that include individual binnas)
+        planetKeys.forEach(pk => {
+            if (bhinnaTables[pk]) return; 
+            const foundAlias = [pk, ...aliases[pk]].find(a => bhinnaRoot[a] !== undefined || (typeof bhinnaRoot === 'object' && bhinnaRoot[a.toLowerCase()] !== undefined));
+            if (foundAlias) {
+                const raw = bhinnaRoot[foundAlias] || bhinnaRoot[foundAlias.toLowerCase()];
+                bhinnaTables[pk] = raw;
+            }
+        });
+
+        return { 
+            ...apiData, 
+            sarvashtakavarga: sarvaMatrix, 
+            bhinnashtakavarga: bhinnaTables 
+        };
+    }, [rawData]);
 
     const hasData = !!ashtakaData && !isAshtakaLoading;
 
+    const d1Raw = processedCharts['D1_lahiri']?.chartData as any;
+    const ascendantSign = d1Raw?.ascendant?.sign || d1Raw?.ascendant?.sign_number || ((rawData?.data || rawData) as any)?.ascendant_sign;
+
     return (
         <DashboardCard
-            title={ashtakavarga.name}
+            title={`${ashtakavarga.name} (${activeSystem})`}
             description={ashtakavarga.description}
-            badge={<span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-700">Ashtakavarga</span>}
+            badge={<span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-100/50 text-emerald-800 border border-emerald-500/10">Ashtakavarga</span>}
             size={size}
             collapsed={collapsed}
             onRemove={onRemove}
             onDuplicate={onDuplicate}
             onCollapseToggle={onCollapseToggle}
             onSizeChange={onSizeChange}
+            ayanamsa={activeSystem}
+            onAyanamsaChange={onAyanamsaChange}
         >
             {!hasData ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                    <AlertCircle className="w-8 h-8 text-emerald-300 mb-3" />
-                    <p className="text-[11px] text-ink/50 mb-4">Ashtakavarga data loading...</p>
-                    <Loader2 className="w-5 h-5 animate-spin text-emerald-500" />
+                    {!isChartCompatible(ashtakavarga.id, activeSystem) ? (
+                        <>
+                            <Shield className="w-8 h-8 text-emerald-300/40 mb-3" />
+                            <p className="text-[10px] font-black uppercase text-emerald-700/60 tracking-wider mb-1 px-4">
+                                {ashtakavarga.name}
+                            </p>
+                            <p className="text-[9px] font-bold text-ink/40 uppercase tracking-widest px-2">
+                                Not compatible with {activeSystem}
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <AlertCircle className="w-8 h-8 text-emerald-300 mb-3" />
+                            <p className="text-[11px] text-ink/50 mb-4">Ashtakavarga data loading...</p>
+                            <Loader2 className="w-5 h-5 animate-spin text-emerald-500" />
+                        </>
+                    )}
                 </div>
             ) : (
-                <div className="h-full overflow-auto p-2">
-                    <AshtakavargaMatrix type={ashtakaType} data={ashtakaData} />
+                <div className="h-full overflow-auto">
+                    <PremiumAshtakavargaMatrix type={ashtakaType} data={ashtakaData} lagnaSign={ascendantSign} />
                 </div>
             )}
         </DashboardCard>
@@ -1425,8 +1425,12 @@ function NavigationModal({ isOpen, onClose, sections, onSelect, activeId, ayanam
                             <LayoutGrid className="w-7 h-7" />
                         </div>
                         <div>
-                            <h2 className="text-[24px] font-black text-ink tracking-tight uppercase leading-none mb-1">Celestial Navigator</h2>
-                            <p className="text-[10px] text-gold-dark uppercase font-bold tracking-[0.2em]">{ayanamsa} Optimization Hub</p>
+                            <h2 className="text-[24px] font-black text-ink tracking-tight uppercase leading-none mb-1">
+                                {AYANAMSA_CONFIGS[ayanamsa as AyanamsaSystem]?.title || 'Celestial Navigator'}
+                            </h2>
+                            <p className="text-[10px] text-gold-dark uppercase font-bold tracking-[0.2em]">
+                                {AYANAMSA_CONFIGS[ayanamsa as AyanamsaSystem]?.subtitle || 'Lahiri Optimization Hub'}
+                            </p>
                         </div>
                     </div>
                     <button
@@ -1488,19 +1492,12 @@ interface ChartSelectorModalProps {
     isOpen: boolean;
     onClose: () => void;
     availableCharts: CustomizeChartItem[];
-    selectedCharts: string[];
-    onSelect: (chartId: string) => void;
+    selectedCharts: string[]; // now expects format: `${chartId}_${ayanamsa}`
+    onSelect: (chartId: string, system?: string) => void;
     currentAyanamsa: string;
+    onAyanamsaChange: (ayanamsa: string) => void;
     activeSection?: string;
 }
-
-const AYANAMSA_OPTIONS = [
-    { id: 'lahiri', name: 'Lahiri', label: 'Chitrapaksha (Lahiri)' },
-    { id: 'raman', name: 'Raman', label: 'B.V. Raman' },
-    { id: 'kp', name: 'KP', label: 'Krishnamurti (KP)' },
-    { id: 'yukteswar', name: 'Yukteswar', label: 'Swami Sri Yukteswar' },
-    { id: 'bhasin', name: 'Bhasin', label: 'Bhasin' },
-];
 
 function ChartSelectorModal({
     isOpen,
@@ -1509,210 +1506,76 @@ function ChartSelectorModal({
     selectedCharts,
     onSelect,
     currentAyanamsa,
+    onAyanamsaChange,
     activeSection
 }: ChartSelectorModalProps) {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeCategory, setActiveCategory] = useState<string>('all');
-    const [selectedAyanamsa, setSelectedAyanamsa] = useState<string>(currentAyanamsa.toLowerCase());
 
-    // Filter charts based on selected ayanamsa
-    const chartsForAyanamsa = useMemo(() => {
-        const isLahiri = selectedAyanamsa === 'lahiri';
-        return availableCharts.filter(chart => {
-            // Rare shodash and Lahiri-only widgets are only available for Lahiri
-            if (chart.category === 'rare_shodash' || chart.lahiriOnly) {
-                return isLahiri;
-            }
-            return true;
-        });
-    }, [availableCharts, selectedAyanamsa]);
+    const selectedAyanamsa = currentAyanamsa.toLowerCase();
 
-    // Reset category when ayanamsa or section changes
+    const activeHierarchy = AYANAMSA_HIERARCHY.find(
+        h => h.value.toLowerCase() === selectedAyanamsa
+    );
+    const dynamicCategories = activeHierarchy ? activeHierarchy.categories : [];
+
+    // Default category fallback
     useEffect(() => {
-        setActiveCategory('all');
-    }, [selectedAyanamsa, activeSection]);
+        if (activeCategory !== 'all' && !dynamicCategories.find(c => c.id === activeCategory)) {
+            setActiveCategory('all');
+        }
+    }, [activeHierarchy, activeCategory, dynamicCategories]);
+
+    const categories = [{ id: 'all', name: 'All Items' }, ...dynamicCategories].map(cat => {
+        let count = 0;
+        if (cat.id === 'all') {
+            count = activeHierarchy?.categories.reduce((acc, c) => {
+                return acc + c.widgets.filter(w => {
+                    const exists = availableCharts.find(ac => ac.id === w.id);
+                    return exists && !selectedCharts.includes(`${w.id}_${selectedAyanamsa}`);
+                }).length;
+            }, 0) || 0;
+        } else {
+            const hCat = dynamicCategories.find(c => c.id === cat.id);
+            if (hCat) {
+                count = hCat.widgets.filter(w => {
+                    const exists = availableCharts.find(ac => ac.id === w.id);
+                    return exists && !selectedCharts.includes(`${w.id}_${selectedAyanamsa}`);
+                }).length;
+            }
+        }
+        return { ...cat, count };
+    }).filter(c => c.count > 0 || c.id === 'all');
+
+    const filteredCharts = useMemo(() => {
+        if (!activeHierarchy) return [];
+        let widgetsInCat: { id: string }[] = [];
+
+        if (activeCategory === 'all') {
+            activeHierarchy.categories.forEach(cat => {
+                widgetsInCat = [...widgetsInCat, ...cat.widgets];
+            });
+        } else {
+            const cat = activeHierarchy.categories.find(c => c.id === activeCategory);
+            if (cat) widgetsInCat = cat.widgets;
+        }
+
+        return widgetsInCat
+            .map(w => availableCharts.find(ac => ac.id === w.id))
+            .filter((c): c is CustomizeChartItem => !!c)
+            .filter(chart => {
+                const matchesSearch = chart.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    chart.description.toLowerCase().includes(searchQuery.toLowerCase());
+                const notSelected = !selectedCharts.includes(`${chart.id}_${selectedAyanamsa}`);
+                return matchesSearch && notSelected;
+            });
+    }, [activeHierarchy, activeCategory, availableCharts, searchQuery, selectedCharts, selectedAyanamsa]);
 
     if (!isOpen) return null;
-
-    const isLahiri = selectedAyanamsa === 'lahiri';
-    const isKp = selectedAyanamsa === 'kp';
-
-    // Categories based on selected ayanamsa (matching subheader sections exactly)
-    const getSectionCategories = () => {
-        if (isKp) {
-            return [
-                { id: 'all', name: 'All Items', count: chartsForAyanamsa.length },
-                {
-                    id: 'kp-ruling',
-                    name: 'Ruling Planets',
-                    count: chartsForAyanamsa.filter(c => c.id === 'kp_ruling_planets' || c.id === 'kp_pars_fortuna').length
-                },
-                {
-                    id: 'kp-foundation',
-                    name: 'Planets & Cusps',
-                    count: chartsForAyanamsa.filter(c => c.id === 'kp_planets_cusps').length
-                },
-                {
-                    id: 'kp-structures',
-                    name: 'Cuspal Chart',
-                    count: chartsForAyanamsa.filter(c => c.id === 'kp_bhava_details').length
-                },
-                {
-                    id: 'kp-insights',
-                    name: 'Significations',
-                    count: chartsForAyanamsa.filter(c =>
-                        c.id === 'kp_house_significations' ||
-                        c.id === 'kp_planetary_significators' ||
-                        c.id === 'kp_interlinks' ||
-                        c.id === 'kp_advanced_ssl' ||
-                        c.id === 'kp_nakshatra_nadi'
-                    ).length
-                },
-            ].filter(cat => cat.count > 0 || cat.id === 'all');
-        }
-
-        const capabilities = clientApi.getSystemCapabilities(selectedAyanamsa);
-        const categories: { id: string; name: string; count: number }[] = [
-            { id: 'all', name: 'All Items', count: chartsForAyanamsa.length },
-        ];
-
-        // Divisional Charts
-        if (capabilities.hasDivisional) {
-            categories.push({
-                id: 'customize-charts',
-                name: 'Divisional Charts',
-                count: chartsForAyanamsa.filter(c => c.category === 'divisional' || c.category === 'lagna' || c.category === 'rare_shodash').length
-            });
-        }
-
-        // Dashas - always available for vedic systems
-        categories.push({
-            id: 'vedic-dashas',
-            name: 'Dashas',
-            count: chartsForAyanamsa.filter(c => c.category === 'dasha').length
-        });
-
-        // Yogas & Doshas - Lahiri only (matches subheader systemFilter)
-        if (['lahiri'].includes(selectedAyanamsa)) {
-            categories.push({
-                id: 'vedic-analysis',
-                name: 'Yogas & Doshas',
-                count: chartsForAyanamsa.filter(c => c.category === 'widget_yoga' || c.category === 'widget_dosha').length
-            });
-        }
-
-        // Ashtakavargas
-        if (capabilities.hasAshtakavarga) {
-            categories.push({
-                id: 'vedic-ashtakavarga',
-                name: 'Ashtakavargas',
-                count: chartsForAyanamsa.filter(c => c.category === 'ashtakavarga' || c.category === 'widget_shodasha').length
-            });
-        }
-
-        // Shadbala - Lahiri only
-        if (capabilities.features.shadbala.length > 0) {
-            categories.push({
-                id: 'vedic-strength',
-                name: 'Shadbala',
-                count: chartsForAyanamsa.filter(c => c.id === 'widget_shadbala').length
-            });
-        }
-
-        // Gochar - Lahiri, Yukteswar, Bhasin only (matches subheader systemFilter)
-        if (capabilities.charts.special.includes('transit') && ['lahiri', 'yukteswar', 'bhasin'].includes(selectedAyanamsa)) {
-            categories.push({
-                id: 'vedic-gochar',
-                name: 'Gochar',
-                count: chartsForAyanamsa.filter(c => c.id === 'widget_transit').length
-            });
-        }
-
-        // Upaya - Lahiri only
-        if (['lahiri'].includes(selectedAyanamsa)) {
-            categories.push({
-                id: 'vedic-upaya',
-                name: 'Upaya',
-                count: chartsForAyanamsa.filter(c => c.category === 'widget_remedy').length
-            });
-        }
-
-        // Sudarshan Chakra
-        if (capabilities.charts.special.includes('sudarshana')) {
-            categories.push({
-                id: 'vedic-chakra',
-                name: 'Sudarshan Chakra',
-                count: chartsForAyanamsa.filter(c => c.id === 'widget_chakra').length
-            });
-        }
-
-        return categories.filter(cat => cat.count > 0 || cat.id === 'all');
-    };
-
-    const categories = getSectionCategories();
-
-    const filteredCharts = chartsForAyanamsa.filter(chart => {
-        const matchesSearch = chart.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            chart.description.toLowerCase().includes(searchQuery.toLowerCase());
-        
-        let matchesCategory = activeCategory === 'all';
-        if (!matchesCategory) {
-            // Map category (section) to chart types - matching subheader section IDs
-            switch (activeCategory) {
-                case 'customize-charts':
-                    matchesCategory = chart.category === 'divisional' || chart.category === 'lagna' || chart.category === 'rare_shodash';
-                    break;
-                case 'vedic-dashas':
-                    matchesCategory = chart.category === 'dasha';
-                    break;
-                case 'vedic-analysis':
-                    matchesCategory = chart.category === 'widget_yoga' || chart.category === 'widget_dosha';
-                    break;
-                case 'vedic-ashtakavarga':
-                    matchesCategory = chart.category === 'ashtakavarga' || chart.category === 'widget_shodasha';
-                    break;
-                case 'vedic-strength':
-                    matchesCategory = chart.id === 'widget_shadbala';
-                    break;
-                case 'vedic-gochar':
-                    matchesCategory = chart.id === 'widget_transit';
-                    break;
-                case 'vedic-upaya':
-                    matchesCategory = chart.category === 'widget_remedy';
-                    break;
-                case 'vedic-chakra':
-                    matchesCategory = chart.id === 'widget_chakra';
-                    break;
-                case 'kp-ruling':
-                    matchesCategory = chart.id === 'kp_ruling_planets' || chart.id === 'kp_pars_fortuna';
-                    break;
-                case 'kp-foundation':
-                    matchesCategory = chart.id === 'kp_planets_cusps';
-                    break;
-                case 'kp-structures':
-                    matchesCategory = chart.id === 'kp_bhava_details';
-                    break;
-                case 'kp-insights':
-                    matchesCategory =
-                        chart.id === 'kp_house_significations' ||
-                        chart.id === 'kp_planetary_significators' ||
-                        chart.id === 'kp_interlinks' ||
-                        chart.id === 'kp_advanced_ssl' ||
-                        chart.id === 'kp_nakshatra_nadi';
-                    break;
-                default:
-                    matchesCategory = chart.category === activeCategory;
-            }
-        }
-        
-        const notSelected = !selectedCharts.includes(chart.id);
-        return matchesSearch && matchesCategory && notSelected;
-    });
 
     return (
         <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 animate-in fade-in duration-300">
             <div className="absolute inset-0 bg-primary/50 backdrop-blur-md" onClick={onClose} aria-hidden="true" />
-
             <div className="relative w-full max-w-3xl bg-white prem-card rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500">
                 {/* Modal Header */}
                 <div className="p-6 border-b border-gold-primary/20 bg-surface-warm">
@@ -1721,9 +1584,13 @@ function ChartSelectorModal({
                             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg">
                                 <Plus className="w-5 h-5" />
                             </div>
-                            <div>
-                                <h2 className="text-[18px] font-black text-ink tracking-tight uppercase leading-none">Add Widgets</h2>
-                                <p className="text-[10px] text-gold-dark uppercase font-bold tracking-[0.15em] mt-1">Select charts, widgets & tools</p>
+                            <div className="flex items-center gap-2.5">
+                                <div>
+                                    <h2 className="text-[18px] font-black text-ink tracking-tight uppercase leading-none inline-flex items-center gap-3">
+                                        Add Widgets
+                                    </h2>
+                                    <p className="text-[10px] text-gold-dark uppercase font-bold tracking-[0.12em] mt-1.5 opacity-80">Select charts, widgets & tools</p>
+                                </div>
                             </div>
                         </div>
                         <button
@@ -1744,12 +1611,12 @@ function ChartSelectorModal({
                             <div className="relative">
                                 <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gold-dark pointer-events-none" />
                                 <select
-                                    value={selectedAyanamsa}
-                                    onChange={(e) => setSelectedAyanamsa(e.target.value)}
+                                    value={currentAyanamsa}
+                                    onChange={(e) => onAyanamsaChange(e.target.value)}
                                     className="w-full appearance-none pl-10 pr-10 py-3 bg-white border border-gold-primary/20 rounded-xl text-[13px] font-bold text-ink focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all cursor-pointer hover:border-gold-primary/40"
                                 >
-                                    {AYANAMSA_OPTIONS.map(opt => (
-                                        <option key={opt.id} value={opt.id}>{opt.name}</option>
+                                    {AYANAMSA_HIERARCHY.map(opt => (
+                                        <option key={opt.value} value={opt.value}>{opt.label}</option>
                                     ))}
                                 </select>
                                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gold-dark pointer-events-none" />
@@ -1784,7 +1651,7 @@ function ChartSelectorModal({
                                 <select
                                     onChange={(e) => {
                                         if (e.target.value) {
-                                            onSelect(e.target.value);
+                                            onSelect(e.target.value, selectedAyanamsa);
                                             e.target.value = "";
                                         }
                                     }}

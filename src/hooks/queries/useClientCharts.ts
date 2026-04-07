@@ -37,7 +37,14 @@ export function useClientCharts(clientId?: string) {
             data.forEach((c: any) => {
                 // Prioritize ayanamsa field, fallback to system for backward compatibility with DB records
                 const ayanamsa = (c.ayanamsa || c.chartConfig?.ayanamsa || c.system || c.chartConfig?.system || 'lahiri').toLowerCase();
-                const key = `${c.chartType}_${ayanamsa}`;
+                
+                // Map "dasha_vimshottari" to "vimshottari" so that catalog IDs match processedCharts exactly
+                let lookupType = c.chartType;
+                if (lookupType.toLowerCase().startsWith('dasha_')) {
+                    lookupType = lookupType.replace(/^dasha_/i, '');
+                }
+
+                const key = `${lookupType}_${ayanamsa}`;
                 lookup[key] = c;
 
                 if (ayanamsa === 'lahiri' && (c.chartType.match(/^D\d+$/i) || c.chartType.toLowerCase() === 'natal' || LAGNA_CHARTS.includes(c.chartType.toLowerCase()))) {

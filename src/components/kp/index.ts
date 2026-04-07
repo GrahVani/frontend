@@ -8,6 +8,8 @@ export { default as BhavaDetailsTable } from './BhavaDetailsTable';
 export { default as HouseSignificatorsTable } from './HouseSignificatorsTable';
 export { KpFortunaView } from './KpFortunaView';
 export { KpFocusedCuspView } from './KpFocusedCuspView';
+export { default as KpPlanetaryWidget } from './KpPlanetaryWidget';
+export { default as KpCuspsWidget } from './KpCuspsWidget';
 export { KpAdvancedSslView } from './KpAdvancedSslView';
 export { KpNakshatraNadiFocusedView } from './KpNakshatraNadiFocusedView';
 

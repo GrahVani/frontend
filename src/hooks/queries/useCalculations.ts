@@ -52,14 +52,14 @@ export function useSudarshanChakra(clientId: string, ayanamsa: string) {
     });
 }
 
-export function useAshtakavarga(clientId: string, ayanamsa: string, type: string = 'bhinna') {
+export function useAshtakavarga(clientId: string, ayanamsa: string, type: string = 'bhinna', options: { enabled?: boolean } = {}) {
     return useQuery({
         queryKey: queryKeys.ashtakavarga(clientId, ayanamsa, type),
         queryFn: async () => {
             if (!clientId) throw new Error("Client ID required");
             return await clientApi.generateAshtakavarga(clientId, ayanamsa, type);
         },
-        enabled: !!clientId,
+        enabled: (options.enabled !== undefined ? options.enabled : true) && !!clientId,
         staleTime: 1000 * 60 * 60, // 1 hour
     });
 }
