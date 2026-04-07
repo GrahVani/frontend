@@ -258,6 +258,7 @@ export default function VedicDashasPage() {
                     'ashtottari',
                     settings.ayanamsa.toLowerCase(),
                     'pratyantardasha',
+                    false,
                     { mahaLord, antarLord }
                 );
 
@@ -585,7 +586,7 @@ export default function VedicDashasPage() {
                                             onFetchPratyantar={async (mahaLord, antarLord) => {
                                                 if (!clientDetails?.id) return [];
                                                 try {
-                                                    const result = await clientApi.generateOtherDasha(clientDetails.id, 'ashtottari', settings.ayanamsa.toLowerCase(), 'pratyantardasha', { mahaLord, antarLord });
+                                                    const result = await clientApi.generateOtherDasha(clientDetails.id, 'ashtottari', settings.ayanamsa.toLowerCase(), 'pratyantardasha', false, { mahaLord, antarLord });
                                                     const rawPeriods = extractPeriodsArray(result?.data);
                                                     if (rawPeriods.length > 0 && !getSublevels(rawPeriods[0])) return standardizeDashaLevels(rawPeriods);
                                                     // eslint-disable-next-line @typescript-eslint/no-explicit-any

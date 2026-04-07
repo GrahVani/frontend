@@ -222,19 +222,75 @@ export default function CompactNorthIndianChart({
                             </text>
                         )}
 
-                        {/* Planets List - Grid layout: max 2 per row */}
+                        {/* Planets List - Smart Grid Layout based on planet count */}
                         <g transform={`translate(${pos.x}, ${pos.y + (houseValues ? 20 : -5)})`}>
                             {
                                 (() => {
                                     const planetCount = boxPlanets.length;
-                                    const cols = 2;
+                                    
+                                    // Smart layout algorithm based on planet count
+                                    let cols: number;
+                                    let hSpacing: number;
+                                    let vSpacing: number;
+                                    let planetFontSize: number;
+                                    let degreeFontSize: number;
+                                    let retroFontSize: number;
+                                    let degreeYOffset: number;
+                                    
+                                    if (planetCount === 1) {
+                                        cols = 1;
+                                        hSpacing = 0;
+                                        vSpacing = 0;
+                                        planetFontSize = 22; // Larger planet name
+                                        degreeFontSize = 14;  // Smaller degree
+                                        retroFontSize = 17;
+                                        degreeYOffset = 16;
+                                    } else if (planetCount === 2) {
+                                        cols = 2;
+                                        hSpacing = 52;
+                                        vSpacing = 0;
+                                        planetFontSize = 20;
+                                        degreeFontSize = 13;
+                                        retroFontSize = 16;
+                                        degreeYOffset = 15;
+                                    } else if (planetCount === 3) {
+                                        cols = 3;
+                                        hSpacing = 40;
+                                        vSpacing = 0;
+                                        planetFontSize = 17;
+                                        degreeFontSize = 11;
+                                        retroFontSize = 14;
+                                        degreeYOffset = 13;
+                                    } else if (planetCount === 4) {
+                                        // 2x2 grid for 4 planets (optimal)
+                                        cols = 2;
+                                        hSpacing = 46;
+                                        vSpacing = 38; // More vertical space for 2 rows
+                                        planetFontSize = 19; // Increased planet name
+                                        degreeFontSize = 10; // Decreased degree
+                                        retroFontSize = 15;
+                                        degreeYOffset = 14;
+                                    } else if (planetCount === 5 || planetCount === 6) {
+                                        cols = 3;
+                                        hSpacing = 36;
+                                        vSpacing = 34;
+                                        planetFontSize = 15;
+                                        degreeFontSize = 10;
+                                        retroFontSize = 13;
+                                        degreeYOffset = 12;
+                                    } else {
+                                        // 7+ planets - compact mode
+                                        cols = 4;
+                                        hSpacing = 30;
+                                        vSpacing = 30;
+                                        planetFontSize = 14;
+                                        degreeFontSize = 9;
+                                        retroFontSize = 12;
+                                        degreeYOffset = 11;
+                                    }
+                                    
                                     const rows = Math.ceil(planetCount / cols);
-                                    const hSpacing = 48;
-                                    const vSpacing = planetCount > 2 ? 34 : 30;
-                                    const planetFontSize = planetCount > 4 ? 18 : 20;
-                                    const degreeFontSize = planetCount > 4 ? 14 : 16;
-                                    const retroFontSize = planetCount > 4 ? 15 : 17;
-
+                                    
                                     return boxPlanets.map((p, i) => {
                                         const row = Math.floor(i / cols);
                                         const col = i % cols;
@@ -244,6 +300,8 @@ export default function CompactNorthIndianChart({
                                         const yOffset = (row * vSpacing) - ((rows - 1) * vSpacing / 2);
                                         const planetColor = PLANET_SVG_FILLS[p.name] || 'var(--ink)';
                                         const hasDegree = (showDegrees || p.name === 'As' || p.name === 'Asc') && p.degree && p.degree !== '-';
+                                        
+
 
                                         return (
                                             <g key={p.name} transform={`translate(${xOffset}, ${yOffset})`}>
@@ -258,16 +316,21 @@ export default function CompactNorthIndianChart({
                                                 >
                                                     {p.name}
                                                     {p.isRetro && (
-                                                        <tspan fontSize={retroFontSize} fontWeight="400" fill="var(--status-error)" dx="1">R</tspan>
+                                                        <tspan 
+                                                            fontSize={retroFontSize} 
+                                                            fontWeight="400" 
+                                                            fill="var(--status-error)" 
+                                                            dx="1"
+                                                        >R</tspan>
                                                     )}
                                                 </text>
                                                 {hasDegree && (
                                                     <text
-                                                        y={12}
+                                                        y={degreeYOffset}
                                                         fontSize={degreeFontSize}
                                                         fontFamily={TYPOGRAPHY.svgPlanetName.fontFamily}
-                                                        fontWeight="400"
-                                                        fill={TYPOGRAPHY.svgDegree.fill}
+                                                        fontWeight="600"
+                                                        fill="var(--text-primary)"
                                                         textAnchor="middle"
                                                         dominantBaseline="central"
                                                         className="select-none"

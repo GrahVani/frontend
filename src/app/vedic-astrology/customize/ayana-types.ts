@@ -15,6 +15,18 @@ import {
 export const AYANAMSA_SYSTEMS = ['Lahiri', 'KP', 'Raman', 'Yukteswar', 'Bhasin'] as const;
 export type AyanamsaSystem = typeof AYANAMSA_SYSTEMS[number];
 
+/**
+ * Simple options array for dropdown components
+ * Uses short labels optimized for compact widget headers
+ */
+export const AYANAMSA_OPTIONS: { value: AyanamsaSystem; label: string; color: string }[] = [
+    { value: 'Lahiri', label: 'Lahiri', color: '#C9A24D' },
+    { value: 'KP', label: 'KP', color: '#E6C97A' },
+    { value: 'Raman', label: 'Raman', color: '#D17C4D' },
+    { value: 'Yukteswar', label: 'Yukteswar', color: '#7C4DFF' },
+    { value: 'Bhasin', label: 'Bhasin', color: '#4CAF50' }
+];
+
 export interface WidgetRef {
     id: string;
 }
