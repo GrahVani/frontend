@@ -99,19 +99,19 @@ export default function OtherDashaTable({ data, dashaName, isLoading, className 
     // Split periods into two cycles based on the total period length
     const { cycle1, cycle2 } = useMemo(() => {
         if (periods.length === 0) return { cycle1: [], cycle2: [] };
-        
+
         // For dashas with cycles, typically cycle 1 is the first complete set
         // We'll split based on whether the period extends beyond ~70 years from birth
         // or simply split in half if we can't determine
         const midPoint = Math.ceil(periods.length / 2);
-        
+
         // Check if there's a clear year-based split (cycle 1: ~0-70 years, cycle 2: ~70+ years)
         const firstPeriodStart = periods[0]?.start_date || periods[0]?.startDate;
         if (firstPeriodStart) {
             const startYear = new Date(firstPeriodStart).getFullYear();
             const cycle1End: DashaPeriod[] = [];
             const cycle2Items: DashaPeriod[] = [];
-            
+
             periods.forEach((period) => {
                 const periodStart = period.start_date || period.startDate;
                 if (periodStart) {
@@ -126,12 +126,12 @@ export default function OtherDashaTable({ data, dashaName, isLoading, className 
                     cycle1End.push(period);
                 }
             });
-            
+
             if (cycle2Items.length > 0) {
                 return { cycle1: cycle1End, cycle2: cycle2Items };
             }
         }
-        
+
         // Fallback: split in half
         return {
             cycle1: periods.slice(0, midPoint),

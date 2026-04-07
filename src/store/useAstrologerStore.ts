@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-export type Ayanamsa = "Lahiri" | "Raman" | "KP" | "Tropical" | "Yukteswar" | "Bhasin";
+export type Ayanamsa = "Lahiri" | "Raman" | "KP" | "Yukteswar" | "Bhasin";
 export type ChartStyle = "North Indian" | "South Indian";
 export type ChartColorTheme = "classic" | "modern" | "royal" | "earth" | "ocean";
 

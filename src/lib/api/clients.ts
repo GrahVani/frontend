@@ -126,11 +126,12 @@ export const clientApi = {
         type: string,
         ayanamsa: string = 'lahiri',
         level: string = 'mahadasha',
+        save: boolean = false,
         context: { mahaLord?: string; antarLord?: string; pratyantarLord?: string } = {}
     ): Promise<DashaResponse> => {
         return apiFetch<Record<string, unknown>>(`${CLIENT_URL}/clients/${clientId}/dasha/${type}`, {
             method: 'POST',
-            body: JSON.stringify({ ayanamsa, level, save: false, ...context }),
+            body: JSON.stringify({ ayanamsa, level, save, ...context }),
         }).then((response: Record<string, unknown>) => {
             const res = response as Record<string, unknown>;
             const normalizedData: DashaResponse = {

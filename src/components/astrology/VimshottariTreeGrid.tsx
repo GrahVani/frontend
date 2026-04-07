@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useMemo, useState } from 'react';
 import { cn } from "@/lib/utils";
@@ -16,6 +16,11 @@ interface VimshottariTreeGridProps {
 const PLANET_SYMBOLS: Record<string, string> = {
     'Sun': 'â˜‰', 'Moon': 'â˜½', 'Mars': 'â™‚', 'Mercury': 'â˜¿', 'Jupiter': 'â™ƒ',
     'Venus': 'â™€', 'Saturn': 'â™„', 'Rahu': 'â˜Š', 'Ketu': 'â˜‹',
+};
+
+const PLANET_ABBREVIATIONS: Record<string, string> = {
+    'Sun': 'Su', 'Moon': 'Mo', 'Mars': 'Ma', 'Mercury': 'Me', 'Jupiter': 'Ju',
+    'Venus': 'Ve', 'Saturn': 'Sa', 'Rahu': 'Ra', 'Ketu': 'Ke',
 };
 
 const LEVEL_LABELS = ["MAHA", "ANTAR", "PRATYANTAR", "SOOKSHMA", "PRANA"];
@@ -42,6 +47,10 @@ const formatDate = (dateStr?: string) => {
 export default function VimshottariTreeGrid({ data, isLoading, className }: VimshottariTreeGridProps) {
     // State to track the navigation path (array of selected nodes)
     const [navPath, setNavPath] = useState<DashaNode[]>([]);
+
+    const pathPrefix = useMemo(() => {
+        return navPath.map(n => PLANET_ABBREVIATIONS[n.planet] || n.planet.substring(0, 2)).join('-') + (navPath.length > 0 ? '-' : '');
+    }, [navPath]);
 
     if (isLoading) {
         return (
@@ -129,6 +138,7 @@ export default function VimshottariTreeGrid({ data, isLoading, className }: Vims
                                     key={node.planet + idx}
                                     node={node}
                                     depth={navPath.length}
+                                    pathPrefix={pathPrefix}
                                     onDrill={() => handleDrillDown(node)}
                                 />
                             ))
@@ -145,7 +155,7 @@ export default function VimshottariTreeGrid({ data, isLoading, className }: Vims
     );
 }
 
-function DashaDrillRow({ node, depth, onDrill }: { node: DashaNode; depth: number; onDrill: () => void }) {
+function DashaDrillRow({ node, depth, pathPrefix, onDrill }: { node: DashaNode; depth: number; pathPrefix: string; onDrill: () => void }) {
     const isActive = node.isCurrent;
     const hasData = node.sublevel && node.sublevel.length > 0;
     // Allow drilling if we have data OR if we are not yet at the deepest level (Prana = depth 4)
@@ -184,6 +194,9 @@ function DashaDrillRow({ node, depth, onDrill }: { node: DashaNode; depth: numbe
                         ) : (
                             // Spacer for alignment if no chevron
                             <span className="w-2.5 inline-block" />
+                        )}
+                        {depth > 0 && (
+                            <span className="text-ink/40 font-normal shrink-0 tracking-tighter mr-0.5">{pathPrefix}</span>
                         )}
                         <span className={TYPOGRAPHY.planetName}>
                             {node.planet}

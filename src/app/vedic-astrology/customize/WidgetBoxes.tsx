@@ -11,7 +11,12 @@ import type { CustomizeChartItem, WidgetSize } from '@/hooks/useCustomizeCharts'
 import type { ShadbalaData } from '@/app/vedic-astrology/shadbala/page';
 import type { PushkaraData } from '@/app/vedic-astrology/pushkara-navamsha/page';
 import type { CharaKarakasResponse } from '@/app/vedic-astrology/chara-karakas/page';
+import SudarshanChakraFinal from '@/components/astrology/SudarshanChakraFinal';
+import ShodashaVargaTable from '@/components/astrology/ShodashaVargaTable';
+import { isChartCompatible } from './ayana-types';
+
 import { useVedicClient } from '@/context/VedicClientContext';
+import { useShadbala, useAshtakavarga, useDasha, useOtherDasha } from '@/hooks/queries/useCalculations';
 import dynamic from 'next/dynamic';
 
 // Lazy load the heavy dashboard components
@@ -22,8 +27,35 @@ const YogaAnalysisView = dynamic(() => import('@/components/astrology/YogaAnalys
 const DoshaAnalysis = dynamic(() => import('@/components/astrology/DoshaAnalysis'));
 const DailyTransitView = dynamic(() => import('@/components/transits/DailyTransitView'));
 const UpayaDashboard = dynamic(() => import('@/components/upaya/UpayaDashboard'));
-const SudarshanChakraFinal = dynamic(() => import('@/components/astrology/SudarshanChakraFinal'));
-const ShodashaVargaTable = dynamic(() => import('@/components/astrology/ShodashaVargaTable'));
+
+// KP Hooks
+import {
+    useKpPlanetsCusps,
+    useKpRulingPlanets,
+    useKpBhavaDetails,
+    useKpHouseSignifications,
+    useKpPlanetSignificators,
+    useKpInterlinks,
+    useKpAdvancedInterlinks,
+    useKpNakshatraNadi,
+    useKpFortuna
+} from '@/hooks/queries/useKP';
+import { useKpTransformedData } from '@/hooks/useKpTransformedData';
+
+// KP Components
+const KpPlanetaryTable = dynamic(() => import('@/components/kp').then(m => ({ default: m.KpPlanetaryTable })));
+const KpPlanetaryWidget = dynamic(() => import('@/components/kp').then(m => ({ default: m.KpPlanetaryWidget })));
+const KpCuspsWidget = dynamic(() => import('@/components/kp').then(m => ({ default: m.KpCuspsWidget })));
+const KpCuspalChart = dynamic(() => import('@/components/kp/KpCuspalChart'), { ssr: false });
+const SignificationMatrix = dynamic(() => import('@/components/kp').then(m => ({ default: m.SignificationMatrix })));
+const HouseSignificatorsTable = dynamic(() => import('@/components/kp').then(m => ({ default: m.HouseSignificatorsTable })));
+const RulingPlanetsWidget = dynamic(() => import('@/components/kp').then(m => ({ default: m.RulingPlanetsWidget })));
+const BhavaDetailsTable = dynamic(() => import('@/components/kp').then(m => ({ default: m.BhavaDetailsTable })));
+const KpFortunaView = dynamic(() => import('@/components/kp').then(m => ({ default: m.KpFortunaView })));
+const KpAdvancedSslView = dynamic(() => import('@/components/kp').then(m => ({ default: m.KpAdvancedSslView })));
+const KpNakshatraNadiFocusedView = dynamic(() => import('@/components/kp').then(m => ({ default: m.KpNakshatraNadiFocusedView })));
+const KpFocusedCuspView = dynamic(() => import('@/components/kp').then(m => ({ default: m.KpFocusedCuspView })));
+const PremiumAshtakavargaMatrix = dynamic(() => import('@/components/astrology/PremiumAshtakavargaMatrix'));
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // WIDGET BOX COMPONENTS
@@ -39,6 +71,7 @@ interface WidgetBoxProps {
     onSizeChange?: (size: WidgetSize) => void;
     onDuplicate?: () => void;
     onCollapseToggle?: () => void;
+    onAyanamsaChange?: (ayanamsa: string) => void;
 }
 
 const SIZE_OPTIONS: { key: WidgetSize; label: string }[] = [
@@ -70,7 +103,6 @@ function SizeToggle({ size, onChange }: { size: WidgetSize; onChange?: (s: Widge
     );
 }
 
-// Helper for widget card shell
 function WidgetCard({
     widget,
     onRemove,
@@ -79,8 +111,9 @@ function WidgetCard({
     size = 'medium',
     collapsed = false,
     onSizeChange,
-    onDuplicate,
     onCollapseToggle,
+    activeSystem,
+    onAyanamsaChange,
 }: {
     widget: CustomizeChartItem;
     onRemove: () => void;
@@ -91,6 +124,8 @@ function WidgetCard({
     onSizeChange?: (s: WidgetSize) => void;
     onDuplicate?: () => void;
     onCollapseToggle?: () => void;
+    activeSystem?: string;
+    onAyanamsaChange?: (a: string) => void;
 }) {
     const getCategoryColor = () => {
         switch (widget.category) {
@@ -103,6 +138,7 @@ function WidgetCard({
             case 'widget_dosha': return 'bg-rose-100 text-rose-700';
             case 'widget_transit': return 'bg-cyan-100 text-cyan-700';
             case 'widget_remedy': return 'bg-gold-primary/10 text-gold-dark';
+            case 'kp_module': return 'bg-orange-100 text-orange-700';
             default: return 'bg-surface-warm text-ink';
         }
     };
@@ -118,48 +154,104 @@ function WidgetCard({
             case 'widget_dosha': return 'Dosha';
             case 'widget_transit': return 'Transit';
             case 'widget_remedy': return 'Remedy';
+            case 'kp_module': return 'KP System';
             default: return 'Widget';
         }
     };
 
+    const isCompatible = isChartCompatible(widget.id, activeSystem || 'Lahiri');
+
     return (
         <div className={cn(
-            "bg-white prem-card rounded-[2.5rem] p-6 shadow-xl relative group hover:shadow-2xl transition-all duration-300 flex flex-col",
+            "bg-[#FDFBF7] border border-[#E6D5B8]/40 rounded p-1 shadow-sm relative group hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden",
             className
-        )}>
-            {/* Header */}
-            <div className="flex items-start justify-between mb-4 shrink-0 gap-3">
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                        <span className={cn("px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider", getCategoryColor())}>
-                            {getCategoryLabel()}
-                        </span>
-                        {widget.lahiriOnly && (
-                            <span className="text-[9px] font-bold text-amber-600 uppercase tracking-wider">Lahiri Only</span>
-                        )}
-                    </div>
-                    <h4 className={cn(TYPOGRAPHY.value, "mt-2 text-[14px] font-black text-ink truncate")}>{widget.name}</h4>
-                    <p className="text-[10px] text-ink/50 line-clamp-1">{widget.description}</p>
+        )} style={{ height: 'calc((100vh - 200px) / 2)', minHeight: '240px' }}>
+            {/* High-Density Header */}
+            <div className="flex items-center justify-between mb-0.5 shrink-0 px-0.5">
+                <div className="flex items-center gap-1 min-w-0">
+                    <span className={cn(
+                        "px-1 py-0 rounded text-[7px] font-black uppercase tracking-wider shrink-0",
+                        getCategoryColor()
+                    )}>
+                        {getCategoryLabel()}
+                    </span>
+                    <h4 className="text-[9px] font-black text-ink uppercase tracking-tight truncate max-w-[100px]">
+                        {widget.name}
+                    </h4>
+                    {onAyanamsaChange && (
+                        <div className="flex items-center gap-1 ml-auto mr-2">
+                            <Globe className="w-2.5 h-2.5 text-gold-dark/40" />
+                            <select
+                                value={activeSystem}
+                                onChange={(e) => onAyanamsaChange(e.target.value)}
+                                className="bg-transparent border-none text-[8px] font-black uppercase text-gold-dark/60 focus:ring-0 cursor-pointer p-0 pr-3 hover:text-gold-dark transition-colors appearance-none"
+                                style={{ 
+                                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23C9A24D' stroke-width='4'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`,
+                                    backgroundRepeat: 'no-repeat',
+                                    backgroundPosition: 'right center',
+                                    backgroundSize: '6px'
+                                }}
+                            >
+                                {['Lahiri', 'KP', 'Raman', 'Yukteswar', 'Bhasin'].map(sys => (
+                                    <option key={sys} value={sys} className="bg-white text-ink font-bold">{sys}</option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
                 </div>
-                <div className="flex items-center gap-1 shrink-0">
-                    <SizeToggle size={size} onChange={onSizeChange} />
+
+                <div className="flex items-center gap-2 shrink-0">
+                    {/* Size Selector Mockup Style: S M L F X */}
+                    <div className="flex items-center gap-1.5 text-[9px] font-black text-ink/30 mr-1 uppercase">
+                        {(['S', 'M', 'L', 'F'] as const).map((s) => (
+                            <button
+                                key={s}
+                                onClick={() => {
+                                    if (!onSizeChange) return;
+                                    const map: Record<string, WidgetSize> = { S: 'small', M: 'medium', L: 'large', F: 'full' };
+                                    onSizeChange(map[s]);
+                                }}
+                                className={cn(
+                                    "hover:text-gold-dark transition-colors",
+                                    (size === 'small' && s === 'S') ||
+                                        (size === 'medium' && s === 'M') ||
+                                        (size === 'large' && s === 'L') ||
+                                        (size === 'full' && s === 'F')
+                                        ? "text-gold-dark font-black"
+                                        : ""
+                                )}
+                            >
+                                {s}
+                            </button>
+                        ))}
+                    </div>
                     <button
                         onClick={onRemove}
-                        className="p-1.5 rounded-lg text-ink/30 hover:text-red-500 hover:bg-red-50 transition-all"
-                        title="Remove widget"
+                        className="text-ink/20 hover:text-red-500 transition-colors"
+                        title="Remove"
                     >
                         <X className="w-3.5 h-3.5" />
                     </button>
                 </div>
             </div>
 
-            {/* Content */}
+            {/* Content Area - Filling available space */}
             {!collapsed && (
                 <div className={cn(
-                    "flex-1 relative bg-surface-warm/30 rounded-3xl min-h-[220px]",
+                    "flex-1 relative bg-transparent rounded overflow-hidden min-h-0 flex flex-col",
                     widget.category === 'widget_chakra' ? 'overflow-visible' : 'overflow-hidden'
                 )}>
-                    {children}
+                    {!isCompatible ? (
+                        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center bg-[#FDFBF7]/60 backdrop-blur-[1px]">
+                            <Shield className="w-8 h-8 text-gold-dark/40 mb-3" />
+                            <p className="text-[10px] font-black uppercase text-gold-dark/60 tracking-wider mb-1 leading-tight px-4">
+                                {widget.name}
+                            </p>
+                            <p className="text-[8px] font-bold text-ink/40 uppercase tracking-[0.15em] px-2">
+                                Not compatible with {activeSystem}
+                            </p>
+                        </div>
+                    ) : children}
                 </div>
             )}
         </div>
@@ -170,83 +262,79 @@ function WidgetCard({
 // SHADBALA WIDGET
 // ═══════════════════════════════════════════════════════════════════════════════
 export function ShadbalaWidget(props: WidgetBoxProps) {
-    const { widget, onRemove, clientId, size, collapsed, onSizeChange, onDuplicate, onCollapseToggle } = props;
-    const [data, setData] = useState<ShadbalaData | null>(null);
-    const [loading, setLoading] = useState(true);
+    const { widget, onRemove, clientId, activeSystem } = props;
+    const { data: shadbalaResult, isLoading: loading } = useShadbala(
+        (activeSystem === 'lahiri' && clientId) ? clientId : ''
+    );
 
-    useEffect(() => {
-        if (!clientId) return;
-        setLoading(true);
-        clientApi.getShadbala(clientId)
-            .then((res: any) => {
-                const rawData = res.data?.data || res.chartData?.data || res.data || res.chartData || res;
-                if (rawData && rawData.shadbala_virupas) {
-                    const planets: any[] = [];
-                    const planetKeys = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
-                    planetKeys.forEach(p => {
-                        const details = rawData[`${p}_details`] || {};
-                        const virupas = rawData.shadbala_virupas?.[p] || 0;
-                        const rupas = rawData.shadbala_rupas?.[p] || 0;
-                        const rank = rawData.relative_rank?.[p] || 0;
-                        const strength = rawData.strength_summary?.[p] || 'Weak';
-                        const ishKas = rawData.ishta_kashta_phala?.[p] || { Ishta: 0, Kashta: 0 };
-                        const pctReq = rawData.percentage_of_required?.[p] || 0;
+    const data = useMemo(() => {
+        const rawBody = shadbalaResult?.data?.data || shadbalaResult?.data || shadbalaResult;
+        const rawData = rawBody as any;
+        if (!rawData || !rawData.shadbala_virupas) return null;
 
-                        planets.push({
-                            planet: p,
-                            sthalaBala: details['STHANA TOTAL'] || 0,
-                            digBala: details['Dig Bala'] || 0,
-                            kalaBala: Object.values({
-                                ayana: details['Ayana Bala'] || 0,
-                                natonnata: details['Natonnata Bala'] || 0,
-                                paksha: details['Paksha Bala'] || 0,
-                                triBhaga: details['Tri-Bhaga Bala'] || 0,
-                                kaalaDina: details['Kaala_Dina_Bala'] || 0,
-                                hora: details['Hora_Bala'] || 0,
-                                maasa: details['Maasa_Bala'] || 0,
-                                varsha: details['Varsha_Bala'] || 0
-                            }).reduce((a: number, b: number) => a + b, 0),
-                            cheshtaBala: details['Chesta Bala'] || 0,
-                            naisargikaBala: details['Naisargika Bala'] || 0,
-                            drikBala: details['Drik Bala'] || 0,
-                            totalBala: virupas,
-                            rupaBala: rupas,
-                            minBalaRequired: ({'Sun': 6.5, 'Moon': 6.0, 'Mars': 5.0, 'Mercury': 7.0, 'Jupiter': 6.5, 'Venus': 7.5, 'Saturn': 5.0}[p] || 6.0) * 60,
-                            ratio: rupas / ({'Sun': 6.5, 'Moon': 6.0, 'Mars': 5.0, 'Mercury': 7.0, 'Jupiter': 6.5, 'Venus': 7.5, 'Saturn': 5.0}[p] || 6.0),
-                            rank,
-                            isStrong: strength === 'Strong',
-                            percentOfRequired: pctReq,
-                            ishtaKashta: { ishta: ishKas.Ishta || 0, kashta: ishKas.Kashta || 0 },
-                            sthanaSubBalas: {
-                                uchcha: details['Uchcha Bala'] || 0,
-                                saptavarga: details['Saptavarga Bala'] || 0,
-                                ojayugma: details['Ojayugma Bala'] || 0,
-                                kendra: details['Kendra Bala'] || 0,
-                                drekkana: details['Drekkana Bala'] || 0
-                            },
-                            kalaSubBalas: {
-                                ayana: details['Ayana Bala'] || 0,
-                                natonnata: details['Natonnata Bala'] || 0,
-                                paksha: details['Paksha Bala'] || 0,
-                                triBhaga: details['Tri-Bhaga Bala'] || 0,
-                                kaalaDina: details['Kaala_Dina_Bala'] || 0,
-                                hora: details['Hora_Bala'] || 0,
-                                maasa: details['Maasa_Bala'] || 0,
-                                varsha: details['Varsha_Bala'] || 0
-                            }
-                        });
-                    });
-                    setData({
-                        planets,
-                        ayanamsa: 'Lahiri',
-                        system: 'Chitrapaksha',
-                        userName: '',
-                        raw: rawData
-                    });
+        const planets: any[] = [];
+        const planetKeys = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
+        planetKeys.forEach(p => {
+            const details = rawData[`${p}_details`] || {};
+            const virupas = rawData.shadbala_virupas?.[p] || 0;
+            const rupas = rawData.shadbala_rupas?.[p] || 0;
+            const rank = rawData.relative_rank?.[p] || 0;
+            const strength = rawData.strength_summary?.[p] || 'Weak';
+            const ishKas = rawData.ishta_kashta_phala?.[p] || { Ishta: 0, Kashta: 0 };
+            const pctReq = rawData.percentage_of_required?.[p] || 0;
+
+            planets.push({
+                planet: p,
+                sthalaBala: details['STHANA TOTAL'] || 0,
+                digBala: details['Dig Bala'] || 0,
+                kalaBala: Object.values({
+                    ayana: details['Ayana Bala'] || 0,
+                    natonnata: details['Natonnata Bala'] || 0,
+                    paksha: details['Paksha Bala'] || 0,
+                    triBhaga: details['Tri-Bhaga Bala'] || 0,
+                    kaalaDina: details['Kaala_Dina_Bala'] || 0,
+                    hora: details['Hora_Bala'] || 0,
+                    maasa: details['Maasa_Bala'] || 0,
+                    varsha: details['Varsha_Bala'] || 0
+                }).reduce((a: number, b: number) => a + b, 0),
+                cheshtaBala: details['Chesta Bala'] || 0,
+                naisargikaBala: details['Naisargika Bala'] || 0,
+                drikBala: details['Drik Bala'] || 0,
+                totalBala: virupas,
+                rupaBala: rupas,
+                minBalaRequired: ({ 'Sun': 6.5, 'Moon': 6.0, 'Mars': 5.0, 'Mercury': 7.0, 'Jupiter': 6.5, 'Venus': 7.5, 'Saturn': 5.0 }[p] || 6.0) * 60,
+                ratio: rupas / ({ 'Sun': 6.5, 'Moon': 6.0, 'Mars': 5.0, 'Mercury': 7.0, 'Jupiter': 6.5, 'Venus': 7.5, 'Saturn': 5.0 }[p] || 6.0),
+                rank,
+                isStrong: strength === 'Strong',
+                percentOfRequired: pctReq,
+                ishtaKashta: { ishta: ishKas.Ishta || 0, kashta: ishKas.Kashta || 0 },
+                sthanaSubBalas: {
+                    uchcha: details['Uchcha Bala'] || 0,
+                    saptavarga: details['Saptavarga Bala'] || 0,
+                    ojayugma: details['Ojayugma Bala'] || 0,
+                    kendra: details['Kendra Bala'] || 0,
+                    drekkana: details['Drekkana Bala'] || 0
+                },
+                kalaSubBalas: {
+                    ayana: details['Ayana Bala'] || 0,
+                    natonnata: details['Natonnata Bala'] || 0,
+                    paksha: details['Paksha Bala'] || 0,
+                    triBhaga: details['Tri-Bhaga Bala'] || 0,
+                    kaalaDina: details['Kaala_Dina_Bala'] || 0,
+                    hora: details['Hora_Bala'] || 0,
+                    maasa: details['Maasa_Bala'] || 0,
+                    varsha: details['Varsha_Bala'] || 0
                 }
-            })
-            .finally(() => setLoading(false));
-    }, [clientId]);
+            });
+        });
+        return {
+            planets,
+            ayanamsa: 'Lahiri',
+            system: 'Chitrapaksha',
+            userName: '',
+            raw: rawData
+        };
+    }, [shadbalaResult]);
 
     return (
         <WidgetCard {...props}>
@@ -536,6 +624,145 @@ export function RemedyWidget(props: WidgetBoxProps) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// KP MODULE WIDGET
+// ═══════════════════════════════════════════════════════════════════════════════
+export function KpModuleWidget(props: WidgetBoxProps) {
+    const { widget, clientId, activeSystem } = props;
+    const { processedCharts } = useVedicClient();
+
+    // Database Check
+    const hasPlanetsCusps = !!processedCharts['kp_planets_cusps_kp'];
+    const hasHouseSignificators = !!processedCharts['kp_house_significations_kp'];
+    const hasPlanetSignificators = !!processedCharts['kp_planetary_significators_kp'];
+    const hasBhavaDetails = !!processedCharts['kp_bhava_details_kp'];
+
+    // Use transformed data hook
+    const transformed = useKpTransformedData({
+        processedCharts,
+        planetsCuspsQuery: { data: null, isLoading: false } as any,
+        houseSignificationsQuery: { data: null, isLoading: false } as any,
+        planetSignificatorsQuery: { data: null, isLoading: false } as any,
+        bhavaDetailsQuery: { data: null, isLoading: false } as any,
+        rulingPlanetsQuery: { data: null, isLoading: false } as any,
+        interlinksQuery: { data: null, isLoading: false } as any,
+        advancedSslQuery: { data: null, isLoading: false } as any,
+        nakshatraNadiQuery: { data: null, isLoading: false } as any,
+        fortunaQuery: { data: null, isLoading: false } as any,
+    });
+
+    const renderContent = () => {
+
+        switch (widget.id) {
+            case 'kp_planets':
+                return <KpPlanetaryWidget planets={transformed.planetaryData} className="h-full border-none" />;
+
+            case 'kp_cusps':
+                return <KpCuspsWidget cusps={transformed.cuspData} className="h-full border-none" />;
+
+            case 'kp_house_significations':
+                return (
+                    <div className="h-full overflow-auto p-2">
+                        <HouseSignificatorsTable data={transformed.houseSignificators} className="border-none shadow-none" />
+                    </div>
+                );
+
+            case 'kp_planetary_significators':
+                return (
+                    <div className="h-full overflow-auto p-2">
+                        <SignificationMatrix
+                            significations={transformed.significationData}
+                            className="border-none"
+                        />
+                    </div>
+                );
+
+            case 'kp_bhava_details':
+                return (
+                    <div className="h-full overflow-auto p-2">
+                        <BhavaDetailsTable bhavaDetails={transformed.bhavaDetails} className="border-none shadow-none" />
+                    </div>
+                );
+
+            case 'kp_interlinks':
+                return (
+                    <div className="h-full overflow-auto p-4 shrink-0">
+                        <KpFocusedCuspView promises={transformed.interlinksData} cusps={transformed.cuspData} />
+                    </div>
+                );
+
+            case 'kp_advanced_ssl':
+                return (
+                    <div className="h-full overflow-auto p-4 flex-1">
+                        <KpAdvancedSslView promises={transformed.sslData} cusps={transformed.cuspData} />
+                    </div>
+                );
+
+            case 'kp_nakshatra_nadi':
+                if (!transformed.nadiData) return (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                        <AlertCircle className="w-8 h-8 text-orange-200 mb-3" />
+                        <p className="text-[11px] text-ink/50">Nakshatra Nadi data pending</p>
+                    </div>
+                );
+                return (
+                    <div className="h-full overflow-auto p-4">
+                        <KpNakshatraNadiFocusedView data={transformed.nadiData as any} />
+                    </div>
+                );
+
+            case 'kp_fortuna':
+                if (!transformed.fortunaData) return (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                        <AlertCircle className="w-8 h-8 text-orange-200 mb-3" />
+                        <p className="text-[11px] text-ink/50">Fortuna data pending</p>
+                    </div>
+                );
+                return (
+                    <div className="h-full overflow-auto p-4">
+                        <KpFortunaView data={transformed.fortunaData as any} />
+                    </div>
+                );
+
+            case 'kp_ruling_planets':
+                const rpRaw = processedCharts['kp_ruling_planets_kp']?.chartData;
+                const rpData = (rpRaw && typeof rpRaw === 'object' && Object.keys(rpRaw).length > 0) ? (rpRaw.data || rpRaw) : null;
+                return (
+                    <div className="h-full p-2">
+                        <RulingPlanetsWidget data={rpData as any} isLoading={false} className="h-full shadow-none border-none !bg-transparent" />
+                    </div>
+                );
+
+            case 'kp_ashtakavarga':
+                const avRaw = processedCharts['kp_ashtakavarga_shodasha_kp']?.chartData || processedCharts['ashtakavarga_shodasha_kp']?.chartData;
+                const avData = avRaw?.data || avRaw || null;
+                return (
+                    <div className="h-full p-2 overflow-auto">
+                        <div className="text-[10px] text-orange-600 font-bold mb-2 uppercase tracking-widest text-center">KP Ashtakavarga Matrix</div>
+                        <PremiumAshtakavargaMatrix
+                            data={avData as any}
+                            type="sarva"
+                        />
+                    </div>
+                );
+
+            default:
+                return (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                        <AlertCircle className="w-8 h-8 text-orange-200 mb-3" />
+                        <p className="text-[11px] text-ink/50">KP Module visualization pending</p>
+                    </div>
+                );
+        }
+    };
+
+    return (
+        <WidgetCard {...props}>
+            {renderContent()}
+        </WidgetCard>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // RENDERER HELPER
 // ═══════════════════════════════════════════════════════════════════════════════
 export function renderWidget(
@@ -547,6 +774,7 @@ export function renderWidget(
         onSizeChange?: (s: WidgetSize) => void;
         onDuplicate?: () => void;
         onCollapseToggle?: () => void;
+        onAyanamsaChange?: (a: string) => void;
     },
     clientId: string,
     activeSystem: string
@@ -561,6 +789,7 @@ export function renderWidget(
         onSizeChange: item.onSizeChange,
         onDuplicate: item.onDuplicate,
         onCollapseToggle: item.onCollapseToggle,
+        onAyanamsaChange: item.onAyanamsaChange,
     };
 
     switch (item.category) {
@@ -573,6 +802,7 @@ export function renderWidget(
         case 'widget_dosha': return <DoshaWidget key={item.instanceId} {...props} />;
         case 'widget_transit': return <TransitWidget key={item.instanceId} {...props} />;
         case 'widget_remedy': return <RemedyWidget key={item.instanceId} {...props} />;
+        case 'kp_module': return <KpModuleWidget key={item.instanceId} {...props} />;
         default: return null;
     }
 }

@@ -29,6 +29,7 @@ export interface CustomizeChartItem {
         | 'kp_module';
     size?: WidgetSize;
     lahiriOnly?: boolean;
+    requiredSystem?: string;
 }
 
 export interface ChartInstance {
@@ -36,12 +37,14 @@ export interface ChartInstance {
     id: string;
     size: WidgetSize;
     collapsed: boolean;
+    ayanamsa?: string;
 }
 
 export interface SelectedItemDetail extends CustomizeChartItem {
     instanceId: string;
     size: WidgetSize;
     collapsed: boolean;
+    ayanamsa?: string;
 }
 
 interface CustomizeChartsState {
@@ -88,7 +91,7 @@ export const CHART_CATALOG: CustomizeChartItem[] = [
     { id: 'D16', name: 'D16 - Shodashamsha', description: 'Vehicles and comforts', category: 'divisional', size: 'medium' },
     { id: 'D20', name: 'D20 - Vimshamsha', description: 'Spiritual progress and devotion', category: 'divisional', size: 'medium' },
     { id: 'D24', name: 'D24 - Chaturvimshamsha', description: 'Learning and knowledge', category: 'divisional', size: 'medium' },
-    { id: 'D27', name: 'D27 - Saptavimshamsha', description: 'General strength and vitality', category: 'divisional', size: 'medium' },
+    { id: 'D27', name: 'D27 - Bhamsha', description: 'General strength and vitality', category: 'divisional', size: 'medium' },
     { id: 'D30', name: 'D30 - Trimshamsha', description: 'Evils and misfortunes', category: 'divisional', size: 'medium' },
     { id: 'D40', name: 'D40 - Khavedamsha', description: 'Auspicious/Inauspicious effects', category: 'divisional', size: 'medium' },
     { id: 'D45', name: 'D45 - Akshavedamsha', description: 'General character and fruits', category: 'divisional', size: 'medium' },
@@ -123,6 +126,12 @@ export const CHART_CATALOG: CustomizeChartItem[] = [
     { id: 'upapada_lagna', name: 'Upapada Lagna', description: 'Marriage and partnerships', category: 'lagna', size: 'medium' },
     { id: 'swamsha', name: 'Swamsha', description: 'Navamsha lagna chart', category: 'lagna', size: 'medium' },
     { id: 'pada_chart', name: 'Pada Chart', description: 'Arudha pada analysis', category: 'lagna', size: 'medium' },
+    { id: 'sripathi_bhava', name: 'Sripathi bhava', description: 'House analysis (Sripathi)', category: 'lagna', size: 'medium' },
+    { id: 'kp_bhava_lagna', name: 'KP bhava', description: 'Stellar system (KP Bhava)', category: 'lagna', size: 'medium' },
+    { id: 'equal_bhava', name: 'Equal bhava', description: 'Equal house division', category: 'lagna', size: 'medium' },
+    { id: 'gati_kalagna', name: 'Gati kalagna', description: 'GL chart analysis', category: 'lagna', size: 'medium' },
+    { id: 'mandi_chart', name: 'Mandi', description: 'Karmic obstacles analysis', category: 'lagna', size: 'medium' },
+    { id: 'gulika_chart', name: 'Gulika', description: 'Instant karma analysis', category: 'lagna', size: 'medium' },
 
     // Dasha Systems
     { id: 'vimshottari', name: 'Vimshottari Dasha', description: 'Universal Moon-nakshatra based dasha (120 years)', category: 'dasha', size: 'medium' },
@@ -218,77 +227,94 @@ export const CHART_CATALOG: CustomizeChartItem[] = [
     },
 
     // KP SYSTEM MODULES
+    // KP SYSTEM MODULES
     {
-        id: 'kp_planets_cusps',
-        name: 'Planets & Cusps',
-        description: 'Detailed planetary positions and sub-lord analysis',
+        id: 'kp_planets',
+        name: 'Planets',
+        description: 'Planetary positions with stellar star and sub lords',
         category: 'kp_module',
         size: 'wide',
-        lahiriOnly: false
+        requiredSystem: 'kp'
+    },
+    {
+        id: 'kp_cusps',
+        name: 'House Cusps',
+        description: 'Technical positions of the 12 house starting points (Cusps)',
+        category: 'kp_module',
+        size: 'wide',
+        requiredSystem: 'kp'
     },
     {
         id: 'kp_house_significations',
         name: 'House Significations',
-        description: 'Thematic significations of houses in KP system',
+        description: 'Thematic significations of houses in KP system (Tabular)',
         category: 'kp_module',
         size: 'wide',
-        lahiriOnly: false
+        requiredSystem: 'kp'
     },
     {
         id: 'kp_planetary_significators',
         name: 'Planetary Significators',
-        description: 'Planetary significator analysis in KP',
+        description: 'Mapping of planets to the houses they signify',
         category: 'kp_module',
         size: 'wide',
-        lahiriOnly: false
+        requiredSystem: 'kp'
     },
     {
         id: 'kp_bhava_details',
         name: 'Bhava Details',
-        description: 'Detailed bhava (house) analysis in KP',
+        description: 'Technical bhava analysis including signs and sub-lords',
         category: 'kp_module',
         size: 'wide',
-        lahiriOnly: false
+        requiredSystem: 'kp'
     },
     {
         id: 'kp_interlinks',
         name: 'Interlinks',
-        description: 'Planetary interlinks and connections',
+        description: 'Planetary interlink analysis and connection chains',
         category: 'kp_module',
         size: 'wide',
-        lahiriOnly: false
+        requiredSystem: 'kp'
     },
     {
         id: 'kp_advanced_ssl',
         name: 'Advanced SSL',
-        description: 'Advanced sub-sub-lord analysis',
+        description: 'Advanced SSL connection analysis and strength',
         category: 'kp_module',
         size: 'wide',
-        lahiriOnly: false
+        requiredSystem: 'kp'
     },
     {
         id: 'kp_nakshatra_nadi',
         name: 'Nakshatra Nadi',
-        description: 'Nakshatra-based Nadi analysis',
+        description: 'Detailed Nadi coordinates for planets and houses',
         category: 'kp_module',
         size: 'wide',
-        lahiriOnly: false
+        requiredSystem: 'kp'
     },
     {
-        id: 'kp_pars_fortuna',
+        id: 'kp_fortuna',
         name: 'Pars Fortuna',
-        description: 'Part of Fortune calculation in KP',
+        description: 'Part of Fortune calculation for success points',
         category: 'kp_module',
-        size: 'medium',
-        lahiriOnly: false
+        size: 'small',
+        requiredSystem: 'kp'
     },
     {
         id: 'kp_ruling_planets',
         name: 'Ruling Planets',
-        description: 'Real-time ruling planets for the moment',
+        description: 'Real-time strong planets for the current moment',
+        category: 'kp_module',
+        size: 'small',
+        requiredSystem: 'kp'
+    },
+    {
+        id: 'kp_ashtakavarga',
+        name: 'Ashtakavarga (KP)',
+        description: 'Ashtakavarga calculation within the KP system framework',
         category: 'kp_module',
         size: 'medium',
-        lahiriOnly: false
+        requiredSystem: 'kp',
     },
 ];
 
@@ -300,73 +326,52 @@ export function useCustomizeCharts() {
     const { ayanamsa } = useAstrologerStore();
     const activeSystem = ayanamsa.toLowerCase();
     const isLahiri = activeSystem === 'lahiri';
+    
+    // Unified storage key for multi-system mixing
+    const STORAGE_KEY_UNIFIED = 'grahvani_customize_unified_v1';
 
     const [state, setState] = useState<CustomizeChartsState>({
         selectedItems: [],
         isLoading: true,
     });
 
-    // Load from localStorage on mount (with v1 migration)
+    // Load from localStorage on mount
     useEffect(() => {
-        const migrateV1 = (): ChartInstance[] | null => {
-            const oldStored = localStorage.getItem(STORAGE_KEY_V1);
-            if (!oldStored) return null;
-            try {
-                const oldParsed = JSON.parse(oldStored) as Record<string, string[]>;
-                const chartIds = oldParsed[activeSystem] ?? [];
-                if (chartIds.length === 0) return null;
-                return chartIds.map(id => {
-                    const catalog = CHART_CATALOG.find(c => c.id === id);
-                    return {
-                        instanceId: generateInstanceId(),
-                        id,
-                        size: catalog?.size || 'medium',
-                        collapsed: false,
-                    };
-                });
-            } catch {
-                return null;
-            }
-        };
-
-        const stored = localStorage.getItem(STORAGE_KEY_V2);
+        const stored = localStorage.getItem(STORAGE_KEY_UNIFIED);
         if (stored) {
             try {
-                const parsed = JSON.parse(stored) as Record<string, ChartInstance[]>;
-                if (parsed && typeof parsed === 'object') {
-                    const itemsForSystem = parsed[activeSystem] ?? [];
-                    if (itemsForSystem.length === 0) {
-                        const migrated = migrateV1();
-                        setState({ selectedItems: migrated || [], isLoading: false });
-                        return;
-                    }
-                    setState({ selectedItems: itemsForSystem, isLoading: false });
+                const items = JSON.parse(stored) as ChartInstance[];
+                if (Array.isArray(items)) {
+                    setState({ selectedItems: items, isLoading: false });
                     return;
                 }
             } catch {
                 // fall through
             }
         }
-        const migrated = migrateV1();
-        setState({ selectedItems: migrated || [], isLoading: false });
-    }, [activeSystem]);
+        
+        // Fallback to migrating from system-specific storage if unified doesn't exist
+        const oldStored = localStorage.getItem(STORAGE_KEY_V2);
+        if (oldStored) {
+            try {
+                const parsed = JSON.parse(oldStored) as Record<string, ChartInstance[]>;
+                const allItems = Object.values(parsed).flat();
+                if (allItems.length > 0) {
+                    setState({ selectedItems: allItems, isLoading: false });
+                    return;
+                }
+            } catch { /* ignore */ }
+        }
+        
+        setState({ selectedItems: [], isLoading: false });
+    }, []);
 
     // Save to localStorage when selection changes
     const saveToStorage = useCallback((items: ChartInstance[]) => {
-        const stored = localStorage.getItem(STORAGE_KEY_V2);
-        let allSystems: Record<string, ChartInstance[]> = {};
-        if (stored) {
-            try {
-                allSystems = JSON.parse(stored);
-            } catch {
-                // Invalid, start fresh
-            }
-        }
-        allSystems[activeSystem] = items;
-        localStorage.setItem(STORAGE_KEY_V2, JSON.stringify(allSystems));
-    }, [activeSystem]);
+        localStorage.setItem(STORAGE_KEY_UNIFIED, JSON.stringify(items));
+    }, []);
 
-    const addChart = useCallback((chartId: string) => {
+    const addChart = useCallback((chartId: string, system?: string) => {
         setState(prev => {
             const catalog = CHART_CATALOG.find(c => c.id === chartId);
             const newItem: ChartInstance = {
@@ -374,12 +379,13 @@ export function useCustomizeCharts() {
                 id: chartId,
                 size: catalog?.size || 'medium',
                 collapsed: false,
+                ayanamsa: catalog?.requiredSystem || system || activeSystem,
             };
             const newItems = [...prev.selectedItems, newItem];
             saveToStorage(newItems);
             return { ...prev, selectedItems: newItems };
         });
-    }, [saveToStorage]);
+    }, [activeSystem, saveToStorage]);
 
     const removeChart = useCallback((instanceId: string) => {
         setState(prev => {
@@ -399,6 +405,7 @@ export function useCustomizeCharts() {
                 id: source.id,
                 size: source.size,
                 collapsed: false,
+                ayanamsa: source.ayanamsa,
             };
             const newItems = [...prev.selectedItems];
             newItems.splice(idx + 1, 0, newItem);
@@ -427,6 +434,16 @@ export function useCustomizeCharts() {
         });
     }, [saveToStorage]);
 
+    const updateChartAyanamsa = useCallback((instanceId: string, ayanamsa: string) => {
+        setState(prev => {
+            const newItems = prev.selectedItems.map(i =>
+                i.instanceId === instanceId ? { ...i, ayanamsa } : i
+            );
+            saveToStorage(newItems);
+            return { ...prev, selectedItems: newItems };
+        });
+    }, [saveToStorage]);
+
     const reorderItems = useCallback((newOrder: ChartInstance[]) => {
         setState(prev => {
             saveToStorage(newOrder);
@@ -448,7 +465,7 @@ export function useCustomizeCharts() {
         const presetIds = LAYOUT_PRESETS[activeSystem]?.[presetName] || [];
         if (presetIds.length === 0) return;
         const newItems: ChartInstance[] = presetIds.map(id => {
-            const catalog = CHART_CATALOG.find(c => c.id === id);
+            const catalog = CHART_CATALOG.find(c => id === id);
             return {
                 instanceId: generateInstanceId(),
                 id,
@@ -490,15 +507,23 @@ export function useCustomizeCharts() {
                     instanceId: instance.instanceId,
                     size: instance.size,
                     collapsed: instance.collapsed,
+                    ayanamsa: instance.ayanamsa || catalog.requiredSystem || activeSystem,
                 };
             })
             .filter(Boolean) as SelectedItemDetail[];
-    }, [state.selectedItems]);
+    }, [state.selectedItems, activeSystem]);
 
     // Generate a missing chart
-    const generateMissingChart = useCallback(async (clientId: string, chartId: string) => {
+    const generateMissingChart = useCallback(async (clientId: string, chartId: string, system?: string) => {
         try {
-            await clientApi.generateChart(clientId, chartId, activeSystem);
+            const catalogItem = CHART_CATALOG.find(c => c.id === chartId);
+            if (chartId === 'vimshottari') {
+                await clientApi.generateDasha(clientId, 'mahadasha', system || activeSystem, true);
+            } else if (catalogItem?.category === 'dasha') {
+                await clientApi.generateOtherDasha(clientId, chartId, system || activeSystem, 'mahadasha', true);
+            } else {
+                await clientApi.generateChart(clientId, chartId, system || activeSystem);
+            }
             return true;
         } catch (error) {
             console.error(`Failed to generate chart ${chartId}:`, error);
@@ -528,5 +553,6 @@ export function useCustomizeCharts() {
         loadPreset,
         presetNames,
         isLahiri,
+        updateChartAyanamsa,
     };
 }

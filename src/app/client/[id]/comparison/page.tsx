@@ -77,8 +77,7 @@ export default function ClientComparisonPage() {
                         options={[
                             { value: "Lahiri", label: "Lahiri (Chitra Paksha)" },
                             { value: "Raman", label: "BV Raman" },
-                            { value: "KP", label: "Krishnamurti Paddhati" },
-                            { value: "Tropical", label: "Tropical" }
+                            { value: "KP", label: "Krishnamurti Paddhati" }
                         ]}
                     />
 
