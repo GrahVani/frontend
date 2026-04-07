@@ -523,16 +523,16 @@ export default function CustomizePage() {
                     />
                 ) : (
                     <div className={cn(
-                        "grid gap-0",
-                        columnCount === 1 && "grid-cols-1 auto-rows-min",
+                        "flex-1 grid gap-0 min-h-0",
+                        columnCount === 1 && "grid-cols-1",
                         columnCount === 2 && "grid-cols-2",
                         columnCount === 3 && "grid-cols-3",
                         columnCount === 4 && "grid-cols-4",
                         columnCount === 5 && "grid-cols-5"
                     )} style={{ 
-                        gridTemplateRows: columnCount === 1 ? 'auto' : 'repeat(auto-fill, minmax(280px, 1fr))', 
-                        maxHeight: 'calc(100vh - 145px)', 
-                        overflow: 'auto' 
+                        gridTemplateRows: columnCount === 1 ? 'minmax(0, 1fr)' : 'repeat(auto-fill, minmax(280px, 1fr))', 
+                        maxHeight: columnCount === 1 ? '100%' : 'calc(100vh - 145px)', 
+                        overflow: columnCount === 1 ? 'hidden' : 'auto' 
                     }}>
                         {/* Render All Items in Order */}
                         {selectedChartDetails.map((item) => {
@@ -780,16 +780,16 @@ function DashboardCard({ title, description, badge, size, collapsed, children, o
     const scaleConfig = WIDGET_SCALE_CONFIG[size] || WIDGET_SCALE_CONFIG.medium;
     const effectiveZoom = disableContentZoom ? 1 : scaleConfig.zoom;
     
-    // Special height handling for 1-column layout (charts need more space)
+    // Special height handling for 1-column layout (charts fill the viewport)
     const isSingleColumn = columnCount === 1;
-    const cardHeight = isSingleColumn ? 'auto' : 'calc((100vh - 200px) / 2)';
-    const cardMinHeight = isSingleColumn ? '400px' : scaleConfig.minHeight;
+    const cardHeight = isSingleColumn ? '100%' : 'calc((100vh - 200px) / 2)';
+    const cardMinHeight = isSingleColumn ? '0' : scaleConfig.minHeight;
 
     return (
         <div
             className={cn(
                 "bg-[#FDFBF7] border border-[#E6D5B8]/40 rounded p-1 shadow-sm relative group hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden",
-                isSingleColumn && "min-h-[450px]"
+                isSingleColumn && "h-full"
             )}
             style={{ height: cardHeight, minHeight: cardMinHeight }}
             data-widget-size={size}
@@ -1082,8 +1082,8 @@ function DraggableChartBox({
                         ) : null}
 
                         <div className={cn(
-                            "w-full p-0",
-                            columnCount === 1 ? "h-auto aspect-square max-w-[600px] mx-auto" : "h-full"
+                            "w-full p-0 flex items-center justify-center overflow-hidden",
+                            columnCount === 1 ? "h-full" : "h-full"
                         )}>
                             {style === 'South Indian' ? (
                                 <SouthIndianChart
@@ -1094,14 +1094,18 @@ function DraggableChartBox({
                                     className="w-full h-full"
                                 />
                             ) : columnCount === 1 ? (
-                                // Full-width square chart for 1-column layout
-                                <ChartWithPopup
-                                    ascendantSign={chartProps.ascendant}
-                                    planets={chartProps.planets}
-                                    className="w-full h-full"
-                                    showDegrees={chart.id === 'D1'}
-                                    preserveAspectRatio="xMidYMid meet"
-                                />
+                                // Full-width chart for 1-column layout - constrained to fit viewport
+                                <div className="w-full h-full flex items-center justify-center">
+                                    <div className="relative w-full h-full max-w-[min(100%,calc(100vh-220px))] max-h-[min(100%,calc(100vh-220px))] aspect-square">
+                                        <ChartWithPopup
+                                            ascendantSign={chartProps.ascendant}
+                                            planets={chartProps.planets}
+                                            className="absolute inset-0 w-full h-full"
+                                            showDegrees={chart.id === 'D1'}
+                                            preserveAspectRatio="xMidYMid meet"
+                                        />
+                                    </div>
+                                </div>
                             ) : (
                                 <CompactChartWithPopup
                                     ascendantSign={chartProps.ascendant}
