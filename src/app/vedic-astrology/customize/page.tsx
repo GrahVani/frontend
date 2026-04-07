@@ -524,12 +524,16 @@ export default function CustomizePage() {
                 ) : (
                     <div className={cn(
                         "grid gap-0",
-                        columnCount === 1 && "grid-cols-1",
+                        columnCount === 1 && "grid-cols-1 auto-rows-min",
                         columnCount === 2 && "grid-cols-2",
                         columnCount === 3 && "grid-cols-3",
                         columnCount === 4 && "grid-cols-4",
                         columnCount === 5 && "grid-cols-5"
-                    )} style={{ gridTemplateRows: 'repeat(auto-fill, minmax(280px, 1fr))', maxHeight: 'calc(100vh - 145px)', overflow: 'auto' }}>
+                    )} style={{ 
+                        gridTemplateRows: columnCount === 1 ? 'auto' : 'repeat(auto-fill, minmax(280px, 1fr))', 
+                        maxHeight: 'calc(100vh - 145px)', 
+                        overflow: 'auto' 
+                    }}>
                         {/* Render All Items in Order */}
                         {selectedChartDetails.map((item) => {
                             const isWidget = item.category.startsWith('widget_') || item.category === 'kp_module';
@@ -598,6 +602,7 @@ export default function CustomizePage() {
                                             activeSystem={item.ayanamsa || activeSystem}
                                             refreshCharts={refreshCharts}
                                             isKpSystem={isKpSystem}
+                                            columnCount={columnCount}
                                             // Divisional charts features
                                             isHouseDetailsOpen={openHouseDetails.has(item.instanceId)}
                                             onToggleHouseDetails={() => toggleHouseDetails(item.instanceId)}
@@ -768,16 +773,25 @@ interface DashboardCardProps {
     ayanamsa?: string;
     onAyanamsaChange?: (a: AyanamsaSystem) => void;
     disableContentZoom?: boolean;
+    columnCount?: number;
 }
 
-function DashboardCard({ title, description, badge, size, collapsed, children, onRemove, onDuplicate, onCollapseToggle, onSizeChange, ayanamsa, onAyanamsaChange, disableContentZoom }: DashboardCardProps) {
+function DashboardCard({ title, description, badge, size, collapsed, children, onRemove, onDuplicate, onCollapseToggle, onSizeChange, ayanamsa, onAyanamsaChange, disableContentZoom, columnCount = 3 }: DashboardCardProps) {
     const scaleConfig = WIDGET_SCALE_CONFIG[size] || WIDGET_SCALE_CONFIG.medium;
     const effectiveZoom = disableContentZoom ? 1 : scaleConfig.zoom;
+    
+    // Special height handling for 1-column layout (charts need more space)
+    const isSingleColumn = columnCount === 1;
+    const cardHeight = isSingleColumn ? 'auto' : 'calc((100vh - 200px) / 2)';
+    const cardMinHeight = isSingleColumn ? '400px' : scaleConfig.minHeight;
 
     return (
         <div
-            className="bg-[#FDFBF7] border border-[#E6D5B8]/40 rounded p-1 shadow-sm relative group hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden"
-            style={{ height: 'calc((100vh - 200px) / 2)', minHeight: scaleConfig.minHeight }}
+            className={cn(
+                "bg-[#FDFBF7] border border-[#E6D5B8]/40 rounded p-1 shadow-sm relative group hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden",
+                isSingleColumn && "min-h-[450px]"
+            )}
+            style={{ height: cardHeight, minHeight: cardMinHeight }}
             data-widget-size={size}
         >
             <div className="flex items-center justify-between mb-1 shrink-0 px-0.5 pt-0">
@@ -895,6 +909,8 @@ interface DraggableChartBoxProps {
     onLearn?: () => void;
     houseData?: Record<number, { planets: { name: string; degree: string; isRetro: boolean }[]; signName: string }>;
     isKpSystem?: boolean;
+    // Column layout for responsive sizing
+    columnCount?: number;
 }
 
 function DraggableChartBox({
@@ -921,7 +937,8 @@ function DraggableChartBox({
     onLearn,
     houseData,
     isKpSystem,
-    onAyanamsaChange
+    onAyanamsaChange,
+    columnCount = 3
 }: DraggableChartBoxProps) {
     const [isGeneratingLocal, setIsGeneratingLocal] = useState(false);
 
@@ -964,6 +981,7 @@ function DraggableChartBox({
             ayanamsa={chartAyanamsa}
             onAyanamsaChange={onAyanamsaChange}
             disableContentZoom
+            columnCount={columnCount}
         >
             {!isAvailable ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
@@ -1063,7 +1081,10 @@ function DraggableChartBox({
                             </div>
                         ) : null}
 
-                        <div className="w-full h-full p-0">
+                        <div className={cn(
+                            "w-full p-0",
+                            columnCount === 1 ? "h-auto aspect-square max-w-[600px] mx-auto" : "h-full"
+                        )}>
                             {style === 'South Indian' ? (
                                 <SouthIndianChart
                                     ascendantSign={chartProps.ascendant}
@@ -1071,6 +1092,15 @@ function DraggableChartBox({
                                     colorMode={colorMode || 'color'}
                                     colorTheme={theme}
                                     className="w-full h-full"
+                                />
+                            ) : columnCount === 1 ? (
+                                // Full-width square chart for 1-column layout
+                                <ChartWithPopup
+                                    ascendantSign={chartProps.ascendant}
+                                    planets={chartProps.planets}
+                                    className="w-full h-full"
+                                    showDegrees={chart.id === 'D1'}
+                                    preserveAspectRatio="xMidYMid meet"
                                 />
                             ) : (
                                 <CompactChartWithPopup
