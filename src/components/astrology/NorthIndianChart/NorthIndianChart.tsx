@@ -178,26 +178,84 @@ export default function NorthIndianChart({
                             </text>
                         )}
 
-                        {/* Planets List - Grid layout: max 2 per row */}
+                        {/* Planets List - Smart Grid Layout based on planet count */}
                         <g transform={`translate(${pos.x}, ${pos.y + (houseValues ? 20 : -5)})`}>
                             {
                                 (() => {
                                     const planetCount = boxPlanets.length;
-                                    const cols = 2; // Max 2 planets per row
-                                    const rows = Math.ceil(planetCount / cols);
-                                    const hSpacing = 38; // Horizontal spacing between planets
-                                    const vSpacing = planetCount > 2 ? 22 : 18; // Vertical spacing between rows
                                     
-                                    // Adjust font size for crowded houses
-                                    const planetFontSize = planetCount > 4 ? 11 : TYPOGRAPHY.svgPlanetName.fontSize;
-                                    const degreeFontSize = planetCount > 4 ? 8 : TYPOGRAPHY.svgDegree.fontSize;
-                                    const retroFontSize = planetCount > 4 ? 9 : 11;
+                                    // Smart layout algorithm based on planet count
+                                    let cols: number;
+                                    let hSpacing: number;
+                                    let vSpacing: number;
+                                    let planetFontSize: number;
+                                    let degreeFontSize: number;
+                                    let retroFontSize: number;
+                                    let degreeYOffset: number;
+                                    
+                                    if (planetCount === 1) {
+                                        // Single planet - comfortable spacing
+                                        cols = 1;
+                                        hSpacing = 0;
+                                        vSpacing = 0;
+                                        planetFontSize = 16; // Larger planet name
+                                        degreeFontSize = 9;  // Smaller degree
+                                        retroFontSize = 12;
+                                        degreeYOffset = 13;
+                                    } else if (planetCount === 2) {
+                                        // Two planets - side by side
+                                        cols = 2;
+                                        hSpacing = 42;
+                                        vSpacing = 0;
+                                        planetFontSize = 15;
+                                        degreeFontSize = 9;
+                                        retroFontSize = 11;
+                                        degreeYOffset = 13;
+                                    } else if (planetCount === 3) {
+                                        // Three planets - 3-column layout
+                                        cols = 3;
+                                        hSpacing = 32;
+                                        vSpacing = 0;
+                                        planetFontSize = 13;
+                                        degreeFontSize = 8;
+                                        retroFontSize = 10;
+                                        degreeYOffset = 12;
+                                    } else if (planetCount === 4) {
+                                        // Four planets - 2x2 grid (optimal for 4)
+                                        cols = 2;
+                                        hSpacing = 36;
+                                        vSpacing = 26; // More vertical space for 2 rows
+                                        planetFontSize = 14; // Increased from 11
+                                        degreeFontSize = 7;  // Decreased significantly
+                                        retroFontSize = 10;
+                                        degreeYOffset = 11;
+                                    } else if (planetCount === 5 || planetCount === 6) {
+                                        // 5-6 planets - 3x2 grid
+                                        cols = 3;
+                                        hSpacing = 28;
+                                        vSpacing = 24;
+                                        planetFontSize = 12;
+                                        degreeFontSize = 7;
+                                        retroFontSize = 9;
+                                        degreeYOffset = 10;
+                                    } else {
+                                        // 7+ planets - compact mode
+                                        cols = 4;
+                                        hSpacing = 24;
+                                        vSpacing = 22;
+                                        planetFontSize = 11;
+                                        degreeFontSize = 6;
+                                        retroFontSize = 8;
+                                        degreeYOffset = 9;
+                                    }
+                                    
+                                    const rows = Math.ceil(planetCount / cols);
                                     
                                     return boxPlanets.map((p, i) => {
                                         const row = Math.floor(i / cols);
                                         const col = i % cols;
                                         
-                                        // Calculate position in grid
+                                        // Calculate position in grid with proper centering
                                         const planetsInThisRow = Math.min(cols, planetCount - row * cols);
                                         const rowWidth = (planetsInThisRow - 1) * hSpacing;
                                         const xOffset = (col * hSpacing) - (rowWidth / 2);
@@ -205,6 +263,8 @@ export default function NorthIndianChart({
                                         
                                         const planetColor = PLANET_SVG_FILLS[p.name] || 'var(--ink)';
                                         const hasDegree = (showDegrees || p.name === 'As' || p.name === 'Asc') && p.degree && p.degree !== '-';
+                                        
+
 
                                         return (
                                             <g key={p.name} transform={`translate(${xOffset}, ${yOffset})`}>
@@ -223,17 +283,22 @@ export default function NorthIndianChart({
                                                 >
                                                     {p.name}
                                                     {p.isRetro && (
-                                                        <tspan fontSize={retroFontSize} fontWeight="bold" fill="var(--status-error)" dx="1">R</tspan>
+                                                        <tspan 
+                                                            fontSize={retroFontSize} 
+                                                            fontWeight="bold" 
+                                                            fill="var(--status-error)" 
+                                                            dx="1"
+                                                        >R</tspan>
                                                     )}
                                                 </text>
-                                                {/* Degree on separate line below */}
+                                                {/* Degree on separate line below - smaller and compact format */}
                                                 {hasDegree && (
                                                     <text
-                                                        y={12}
+                                                        y={degreeYOffset}
                                                         fontSize={degreeFontSize}
                                                         fontFamily={TYPOGRAPHY.svgPlanetName.fontFamily}
-                                                        fontWeight={TYPOGRAPHY.svgDegree.fontWeight}
-                                                        fill={TYPOGRAPHY.svgDegree.fill}
+                                                        fontWeight="600"
+                                                        fill="var(--text-primary)"
                                                         textAnchor="middle"
                                                         dominantBaseline="central"
                                                         className="select-none"

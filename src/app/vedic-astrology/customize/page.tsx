@@ -37,7 +37,7 @@ import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
 import { parseChartData } from '@/lib/chart-helpers';
 import { useCustomizeCharts, type CustomizeChartItem, type WidgetSize, type SelectedItemDetail, CHART_CATALOG } from '@/hooks/useCustomizeCharts';
-import { renderWidget, getWidgetSizeClasses } from './WidgetBoxes';
+import { renderWidget, getWidgetSizeClasses, WIDGET_SCALE_CONFIG } from './WidgetBoxes';
 
 // Components
 import { ChartWithPopup, CompactChartWithPopup, Planet } from '@/components/astrology/NorthIndianChart';
@@ -47,6 +47,7 @@ import AshtakavargaMatrix from '@/components/astrology/AshtakavargaMatrix';
 import OtherDashaTable from '@/components/astrology/OtherDashaTable';
 import IntegratedDashaViewer from '@/components/astrology/IntegratedDashaViewer';
 import { AYANAMSA_HIERARCHY, AYANAMSA_CONFIGS, AYANAMSA_SYSTEMS, type AyanamsaSystem, isChartCompatible } from './ayana-types';
+import AyanamsaSelect from './AyanamsaSelect';
 import dynamic from 'next/dynamic';
 
 const YogaAnalysisView = dynamic(() => import('@/components/astrology/YogaAnalysis'));
@@ -765,42 +766,42 @@ interface DashboardCardProps {
     onCollapseToggle?: () => void;
     onSizeChange?: (s: WidgetSize) => void;
     ayanamsa?: string;
-    onAyanamsaChange?: (a: string) => void;
+    onAyanamsaChange?: (a: AyanamsaSystem) => void;
+    disableContentZoom?: boolean;
 }
 
-function DashboardCard({ title, description, badge, size, collapsed, children, onRemove, onDuplicate, onCollapseToggle, onSizeChange, ayanamsa, onAyanamsaChange }: DashboardCardProps) {
+function DashboardCard({ title, description, badge, size, collapsed, children, onRemove, onDuplicate, onCollapseToggle, onSizeChange, ayanamsa, onAyanamsaChange, disableContentZoom }: DashboardCardProps) {
+    const scaleConfig = WIDGET_SCALE_CONFIG[size] || WIDGET_SCALE_CONFIG.medium;
+    const effectiveZoom = disableContentZoom ? 1 : scaleConfig.zoom;
+
     return (
-        <div className="bg-[#FDFBF7] border border-[#E6D5B8]/40 rounded p-1 shadow-sm relative group hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden" style={{ height: 'calc((100vh - 200px) / 2)', minHeight: '240px' }}>
+        <div
+            className="bg-[#FDFBF7] border border-[#E6D5B8]/40 rounded p-1 shadow-sm relative group hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden"
+            style={{ height: 'calc((100vh - 200px) / 2)', minHeight: scaleConfig.minHeight }}
+            data-widget-size={size}
+        >
             <div className="flex items-center justify-between mb-1 shrink-0 px-0.5 pt-0">
                 <div className="flex items-center gap-1.5 min-w-0 flex-1">
                     <div className="flex items-center gap-1 flex-wrap shrink-0">{badge}</div>
-                    <h4 className="text-[10px] font-black text-ink uppercase tracking-tight truncate max-w-[120px]">
+                    <h4 className={cn(
+                        "font-black text-ink uppercase tracking-tight truncate",
+                        scaleConfig.titleMaxW
+                    )} style={{ fontSize: `max(9px, ${10 * scaleConfig.zoom}px)` }}>
                         {title}
                     </h4>
                     {onAyanamsaChange && (
-                        <div className="flex items-center gap-1 ml-auto mr-2">
-                            <Globe className="w-2.5 h-2.5 text-gold-dark/40" />
-                            <select
-                                value={ayanamsa}
-                                onChange={(e) => onAyanamsaChange(e.target.value)}
-                                className="bg-transparent border-none text-[9px] font-black uppercase text-gold-dark/60 focus:ring-0 cursor-pointer p-0 pr-4 hover:text-gold-dark transition-colors appearance-none"
-                                style={{
-                                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23C9A24D' stroke-width='4'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`,
-                                    backgroundRepeat: 'no-repeat',
-                                    backgroundPosition: 'right center',
-                                    backgroundSize: '8px'
-                                }}
-                            >
-                                {AYANAMSA_SYSTEMS.map(sys => (
-                                    <option key={sys} value={sys} className="bg-white text-ink font-bold">{sys}</option>
-                                ))}
-                            </select>
+                        <div className="ml-auto mr-2">
+                            <AyanamsaSelect
+                                value={ayanamsa || 'Lahiri'}
+                                onChange={onAyanamsaChange}
+                                compact
+                            />
                         </div>
                     )}
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
-                    <div className="flex items-center gap-1.5 text-[9px] font-black text-ink/30 mr-1 uppercase">
+                    <div className={cn("flex items-center gap-1.5 font-black text-ink/30 mr-1 uppercase", scaleConfig.headerText)}>
                         {(['S', 'M', 'L', 'F'] as const).map((s) => (
                             <button
                                 key={s}
@@ -833,8 +834,15 @@ function DashboardCard({ title, description, badge, size, collapsed, children, o
                 </div>
             </div>
             {!collapsed && (
-                <div className="flex-1 relative bg-transparent rounded overflow-hidden min-h-0">
-                    {children}
+                <div className={cn(
+                    "flex-1 relative bg-transparent rounded min-h-0",
+                    disableContentZoom ? "overflow-hidden" : "overflow-auto"
+                )}>
+                    {disableContentZoom ? children : (
+                        <div style={{ zoom: effectiveZoom, minHeight: '100%' }}>
+                            {children}
+                        </div>
+                    )}
                 </div>
             )}
         </div>
@@ -955,6 +963,7 @@ function DraggableChartBox({
             onSizeChange={onSizeChange}
             ayanamsa={chartAyanamsa}
             onAyanamsaChange={onAyanamsaChange}
+            disableContentZoom
         >
             {!isAvailable ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">

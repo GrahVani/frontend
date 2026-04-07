@@ -29,17 +29,17 @@ interface PremiumMatrixProps {
 const PLANETS = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
 const SIGNS = Array.from({ length: 12 }, (_, i) => i + 1);
 
-// Planet Icons/Abbreviations
-const PLANET_METADATA: Record<string, { label: string; icon: any; color: string }> = {
-    Sun: { label: 'SU', icon: () => <span>☀️</span>, color: 'text-orange-500' },
-    Moon: { label: 'MO', icon: () => <span>🌙</span>, color: 'text-blue-400' },
-    Mars: { label: 'MA', icon: () => <span>♂️</span>, color: 'text-red-500' },
-    Mercury: { label: 'ME', icon: () => <span>☿️</span>, color: 'text-emerald-500' },
-    Jupiter: { label: 'JU', icon: () => <span>♃</span>, color: 'text-amber-500' },
-    Venus: { label: 'VE', icon: () => <span>♀️</span>, color: 'text-pink-500' },
-    Saturn: { label: 'SA', icon: () => <span>♄</span>, color: 'text-indigo-500' },
-    Lagna: { label: 'AS', icon: () => <span>⤒</span>, color: 'text-slate-500' },
-    Ascendant: { label: 'AS', icon: () => <span>⤒</span>, color: 'text-slate-500' },
+// Planet Two-Letter Abbreviations Only
+const PLANET_METADATA: Record<string, { label: string; color: string }> = {
+    Sun: { label: 'SU', color: 'text-orange-600' },
+    Moon: { label: 'MO', color: 'text-blue-600' },
+    Mars: { label: 'MA', color: 'text-red-600' },
+    Mercury: { label: 'ME', color: 'text-emerald-600' },
+    Jupiter: { label: 'JU', color: 'text-amber-600' },
+    Venus: { label: 'VE', color: 'text-pink-600' },
+    Saturn: { label: 'SA', color: 'text-indigo-600' },
+    Lagna: { label: 'LG', color: 'text-slate-600' },
+    Ascendant: { label: 'LG', color: 'text-slate-600' },
 };
 
 /**
@@ -264,7 +264,7 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
     }
 
     return (
-        <div className={cn(className, "h-full flex flex-col gap-2 p-1 overflow-hidden")}>
+        <div className={cn(className, "h-full flex flex-col gap-1 overflow-hidden")}>
             {!isSarva && availablePlanets.length > 0 && (
                 <div className="flex items-center gap-1 overflow-x-auto custom-scrollbar-slim pb-1 px-1 shrink-0">
                     {availablePlanets.map(p => (
@@ -284,75 +284,63 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
                 </div>
             )}
 
-            <div className="flex-1 overflow-auto custom-scrollbar-slim rounded border border-ink/5 bg-white/30">
-                <table className="w-full border-separate border-spacing-[1px]">
-                    <thead className="sticky top-0 z-20 bg-[#FDFBF7]">
-                        <tr>
-                            <th className="w-10 p-1 text-[8px] font-black uppercase text-gold-dark text-left bg-surface-warm/50 rounded-tl-sm">Sign</th>
-                            {SIGNS.map(s => {
-                                const isLagna = lagnaSign === s;
-                                return (
-                                    <th key={s} className={cn("w-8 p-1 text-center bg-surface-warm/20", isLagna && "bg-gold-primary/10")}>
-                                        <div className="flex flex-col items-center relative gap-0.5">
-                                            {isLagna && <div className="absolute -top-1.5 px-0.5 bg-gold-primary text-white text-[6px] font-black rounded-sm shadow-sm">L</div>}
-                                            <span className={cn("text-[8px] font-black", isLagna ? "text-gold-dark" : "text-ink/80")}>{s}</span>
-                                            <span className="text-[6px] font-bold opacity-30 uppercase tracking-tighter">{ZODIAC_SIGNS[s-1].slice(0,3)}</span>
-                                        </div>
-                                    </th>
-                                );
-                            })}
-                            <th className="w-10 p-1 text-[8px] font-black uppercase text-gold-dark bg-surface-warm/50 rounded-tr-sm">Tot</th>
+            <div className="flex-1 overflow-auto custom-scrollbar-slim">
+                <table className="w-full border-collapse border border-ink/20">
+                    <thead className="sticky top-0 z-20">
+                        <tr className="border-b border-ink/20">
+                            <th className="w-10 p-1 text-[9px] font-black uppercase text-ink text-left border-r border-ink/20">PL</th>
+                            {SIGNS.map(s => (
+                                <th key={s} className="w-7 p-1 text-center border-r border-ink/20 last:border-r-0">
+                                    <span className="text-[9px] font-black text-ink">{s}</span>
+                                </th>
+                            ))}
+                            <th className="w-8 p-1 text-[9px] font-black uppercase text-ink text-center">T</th>
                         </tr>
                     </thead>
                     <tbody>
                         {rows.map((rowName) => {
                             const rowData = matrix[rowName] || {};
                             let rowTot = SIGNS.reduce((acc, s) => acc + (rowData[s] || 0), 0);
-                            const meta = PLANET_METADATA[rowName] || { label: rowName.substring(0,2).toUpperCase(), icon: () => <span>•</span>, color: 'text-ink' };
+                            const meta = PLANET_METADATA[rowName] || { label: rowName.substring(0,2).toUpperCase(), color: 'text-ink' };
 
                             return (
-                                <tr key={rowName} className="group hover:bg-gold-primary/5 transition-colors">
-                                    <td className="p-1 px-1.5 min-w-[40px] bg-surface-warm/10 rounded-l-sm border-r border-ink/5">
-                                        <div className="flex items-center gap-1.5">
-                                            <span className={cn("text-[9px]", meta.color)}>{meta.icon()}</span>
-                                            <span className="text-[9px] font-black text-ink/60 uppercase tracking-tighter">{meta.label}</span>
-                                        </div>
+                                <tr key={rowName} className="border-b border-ink/10 last:border-b-0">
+                                    <td className="p-1 px-1.5 min-w-[40px] border-r border-ink/20">
+                                        <span className={cn("text-[10px] font-bold", meta.color)}>{meta.label}</span>
                                     </td>
                                     {SIGNS.map(s => {
                                         const v = rowData[s] || 0;
                                         return (
-                                            <td key={s} className={cn("p-1 text-center transition-all duration-300", getCellIntensity(v))}>
-                                                <span className="text-[9px] font-black tracking-tight">{v}</span>
+                                            <td key={s} className="p-1 text-center border-r border-ink/10 last:border-r-0">
+                                                <span className="text-[9px] font-bold text-ink">{v}</span>
                                             </td>
                                         );
                                     })}
-                                    <td className="p-1 text-center bg-surface-warm/20 rounded-r-sm font-black text-[9px] text-ink">
+                                    <td className="p-1 text-center font-bold text-[9px] text-ink">
                                         {rowTot}
                                     </td>
                                 </tr>
                             );
                         })}
                     </tbody>
-                    <tfoot className="sticky bottom-0 z-10">
-                        <tr className="bg-surface-warm/60 backdrop-blur-md border-t border-ink/10">
-                            <td className="p-1.5 rounded-bl-sm">
-                                <span className="text-[9px] font-black uppercase text-gold-dark tracking-widest pl-1 leading-none">{isSarva ? 'SAV' : 'TOT'}</span>
+                    <tfoot className="sticky bottom-0 z-10 border-t border-ink/20">
+                        <tr>
+                            <td className="p-1 px-1.5 border-r border-ink/20">
+                                <span className="text-[9px] font-black uppercase text-ink">TT</span>
                             </td>
                             {SIGNS.map(s => {
                                 const tot = columnTotals[s];
                                 return (
-                                    <td key={s} className={cn(
-                                        "p-1.5 text-center",
-                                        isSarva && tot >= 30 ? "text-emerald-700 font-black" : isSarva && tot < 22 ? "text-red-600 font-black" : "text-ink font-bold"
-                                    )}>
-                                        <div className="flex flex-col items-center leading-none">
-                                            <span className="text-[10px]">{tot}</span>
-                                        </div>
+                                    <td key={s} className="p-1 text-center border-r border-ink/10 last:border-r-0">
+                                        <span className={cn(
+                                            "text-[9px] font-bold",
+                                            isSarva && tot >= 30 ? "text-emerald-700" : isSarva && tot < 22 ? "text-red-600" : "text-ink"
+                                        )}>{tot}</span>
                                     </td>
                                 )
                             })}
-                            <td className="p-1.5 text-center bg-gold-primary/20 rounded-br-sm">
-                                <span className="text-[10px] font-black text-gold-dark">
+                            <td className="p-1 text-center">
+                                <span className="text-[9px] font-black text-gold-dark">
                                     {Object.values(columnTotals).reduce((a, b) => a + b, 0)}
                                 </span>
                             </td>
@@ -361,20 +349,9 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
                 </table>
             </div>
 
-            {/* Micro Legenda */}
-            <div className="flex items-center justify-between px-1 shrink-0 pt-0.5 border-t border-ink/5">
-                <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-1">
-                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" />
-                        <span className="text-[7px] font-bold uppercase text-ink/40 tracking-widest">Selected Row Bindus</span>
-                    </div>
-                </div>
-                <div className="flex items-center gap-1 opacity-20">
-                    <Info className="w-2 h-2 text-ink" />
-                    <span className="text-[7px] font-bold uppercase text-ink tracking-tight">
-                        {isSarva ? "Sum of all planetary bindus" : `Contributors to ${selectedPlanet}`}
-                    </span>
-                </div>
+            {/* Compact Legend */}
+            <div className="flex items-center justify-between px-1 shrink-0 pt-0.5">
+                <span className="text-[7px] font-bold uppercase text-ink/40 tracking-wider">Ashtakavarga Bindus</span>
             </div>
         </div>
     );

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-    X, Loader2, AlertCircle, Sparkles, Layers, Shield, Globe, Gem, Star
+    X, Loader2, AlertCircle, Sparkles, Layers, Shield, Gem, Star
 } from 'lucide-react';
 import { clientApi } from '@/lib/api';
 import { cn } from "@/lib/utils";
@@ -13,7 +13,8 @@ import type { PushkaraData } from '@/app/vedic-astrology/pushkara-navamsha/page'
 import type { CharaKarakasResponse } from '@/app/vedic-astrology/chara-karakas/page';
 import SudarshanChakraFinal from '@/components/astrology/SudarshanChakraFinal';
 import ShodashaVargaTable from '@/components/astrology/ShodashaVargaTable';
-import { isChartCompatible } from './ayana-types';
+import { isChartCompatible, type AyanamsaSystem } from './ayana-types';
+import AyanamsaSelect from './AyanamsaSelect';
 
 import { useVedicClient } from '@/context/VedicClientContext';
 import { useShadbala, useAshtakavarga, useDasha, useOtherDasha } from '@/hooks/queries/useCalculations';
@@ -71,7 +72,7 @@ interface WidgetBoxProps {
     onSizeChange?: (size: WidgetSize) => void;
     onDuplicate?: () => void;
     onCollapseToggle?: () => void;
-    onAyanamsaChange?: (ayanamsa: string) => void;
+    onAyanamsaChange?: (ayanamsa: AyanamsaSystem) => void;
 }
 
 const SIZE_OPTIONS: { key: WidgetSize; label: string }[] = [
@@ -80,6 +81,17 @@ const SIZE_OPTIONS: { key: WidgetSize; label: string }[] = [
     { key: 'large', label: 'L' },
     { key: 'full', label: 'F' },
 ];
+
+// ── Widget Scale Configuration ──────────────────────────────────────────────
+// Controls how content (fonts, tables, spacing) scales with S/M/L/F sizes.
+// Uses CSS zoom for automatic proportional scaling of ALL child content.
+export const WIDGET_SCALE_CONFIG: Record<WidgetSize, { zoom: number; minHeight: string; headerText: string; titleMaxW: string }> = {
+    small:  { zoom: 0.85, minHeight: '220px', headerText: 'text-[8px]',  titleMaxW: 'max-w-[90px]' },
+    medium: { zoom: 1.0,  minHeight: '240px', headerText: 'text-[9px]',  titleMaxW: 'max-w-[100px]' },
+    large:  { zoom: 1.2,  minHeight: '300px', headerText: 'text-[11px]', titleMaxW: 'max-w-[180px]' },
+    wide:   { zoom: 1.15, minHeight: '280px', headerText: 'text-[10px]', titleMaxW: 'max-w-[160px]' },
+    full:   { zoom: 1.4,  minHeight: '360px', headerText: 'text-[12px]', titleMaxW: 'max-w-[240px]' },
+};
 
 function SizeToggle({ size, onChange }: { size: WidgetSize; onChange?: (s: WidgetSize) => void }) {
     return (
@@ -125,7 +137,7 @@ function WidgetCard({
     onDuplicate?: () => void;
     onCollapseToggle?: () => void;
     activeSystem?: string;
-    onAyanamsaChange?: (a: string) => void;
+    onAyanamsaChange?: (a: AyanamsaSystem) => void;
 }) {
     const getCategoryColor = () => {
         switch (widget.category) {
@@ -161,48 +173,45 @@ function WidgetCard({
 
     const isCompatible = isChartCompatible(widget.id, activeSystem || 'Lahiri');
 
+    const scaleConfig = WIDGET_SCALE_CONFIG[size] || WIDGET_SCALE_CONFIG.medium;
+
     return (
         <div className={cn(
             "bg-[#FDFBF7] border border-[#E6D5B8]/40 rounded p-1 shadow-sm relative group hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden",
             className
-        )} style={{ height: 'calc((100vh - 200px) / 2)', minHeight: '240px' }}>
+        )} style={{ height: 'calc((100vh - 200px) / 2)', minHeight: scaleConfig.minHeight }}
+           data-widget-size={size}
+        >
             {/* High-Density Header */}
             <div className="flex items-center justify-between mb-0.5 shrink-0 px-0.5">
                 <div className="flex items-center gap-1 min-w-0">
                     <span className={cn(
-                        "px-1 py-0 rounded text-[7px] font-black uppercase tracking-wider shrink-0",
+                        "px-1 py-0 rounded font-black uppercase tracking-wider shrink-0",
+                        scaleConfig.headerText,
                         getCategoryColor()
-                    )}>
+                    )} style={{ fontSize: `max(7px, ${7 * scaleConfig.zoom}px)` }}>
                         {getCategoryLabel()}
                     </span>
-                    <h4 className="text-[9px] font-black text-ink uppercase tracking-tight truncate max-w-[100px]">
+                    <h4 className={cn(
+                        "font-black text-ink uppercase tracking-tight truncate",
+                        scaleConfig.titleMaxW
+                    )} style={{ fontSize: `max(9px, ${9 * scaleConfig.zoom}px)` }}>
                         {widget.name}
                     </h4>
                     {onAyanamsaChange && (
-                        <div className="flex items-center gap-1 ml-auto mr-2">
-                            <Globe className="w-2.5 h-2.5 text-gold-dark/40" />
-                            <select
-                                value={activeSystem}
-                                onChange={(e) => onAyanamsaChange(e.target.value)}
-                                className="bg-transparent border-none text-[8px] font-black uppercase text-gold-dark/60 focus:ring-0 cursor-pointer p-0 pr-3 hover:text-gold-dark transition-colors appearance-none"
-                                style={{ 
-                                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23C9A24D' stroke-width='4'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`,
-                                    backgroundRepeat: 'no-repeat',
-                                    backgroundPosition: 'right center',
-                                    backgroundSize: '6px'
-                                }}
-                            >
-                                {['Lahiri', 'KP', 'Raman', 'Yukteswar', 'Bhasin'].map(sys => (
-                                    <option key={sys} value={sys} className="bg-white text-ink font-bold">{sys}</option>
-                                ))}
-                            </select>
+                        <div className="ml-auto mr-2">
+                            <AyanamsaSelect
+                                value={activeSystem || 'Lahiri'}
+                                onChange={onAyanamsaChange}
+                                compact
+                            />
                         </div>
                     )}
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
                     {/* Size Selector Mockup Style: S M L F X */}
-                    <div className="flex items-center gap-1.5 text-[9px] font-black text-ink/30 mr-1 uppercase">
+                    <div className={cn("flex items-center gap-1.5 font-black text-ink/30 mr-1 uppercase", scaleConfig.headerText)}>
                         {(['S', 'M', 'L', 'F'] as const).map((s) => (
                             <button
                                 key={s}
@@ -235,23 +244,27 @@ function WidgetCard({
                 </div>
             </div>
 
-            {/* Content Area - Filling available space */}
+            {/* Content Area - flex-1 handles layout, inner div applies zoom for content scaling */}
             {!collapsed && (
-                <div className={cn(
-                    "flex-1 relative bg-transparent rounded overflow-hidden min-h-0 flex flex-col",
-                    widget.category === 'widget_chakra' ? 'overflow-visible' : 'overflow-hidden'
-                )}>
-                    {!isCompatible ? (
-                        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center bg-[#FDFBF7]/60 backdrop-blur-[1px]">
-                            <Shield className="w-8 h-8 text-gold-dark/40 mb-3" />
-                            <p className="text-[10px] font-black uppercase text-gold-dark/60 tracking-wider mb-1 leading-tight px-4">
-                                {widget.name}
-                            </p>
-                            <p className="text-[8px] font-bold text-ink/40 uppercase tracking-[0.15em] px-2">
-                                Not compatible with {activeSystem}
-                            </p>
-                        </div>
-                    ) : children}
+                <div
+                    className={cn(
+                        "flex-1 relative bg-transparent rounded min-h-0",
+                        widget.category === 'widget_chakra' ? 'overflow-visible' : 'overflow-auto'
+                    )}
+                >
+                    <div style={{ zoom: scaleConfig.zoom, minHeight: '100%' }}>
+                        {!isCompatible ? (
+                            <div className="flex flex-col items-center justify-center p-6 text-center" style={{ minHeight: `${100 / scaleConfig.zoom}%` }}>
+                                <Shield className="w-8 h-8 text-gold-dark/40 mb-3" />
+                                <p className="text-[10px] font-black uppercase text-gold-dark/60 tracking-wider mb-1 leading-tight px-4">
+                                    {widget.name}
+                                </p>
+                                <p className="text-[8px] font-bold text-ink/40 uppercase tracking-[0.15em] px-2">
+                                    Not compatible with {activeSystem}
+                                </p>
+                            </div>
+                        ) : children}
+                    </div>
                 </div>
             )}
         </div>
@@ -807,10 +820,11 @@ export function renderWidget(
     }
 }
 
-// Export size class helper
+// Export size class helper — controls grid column span
 export function getWidgetSizeClasses(size?: WidgetSize) {
     switch (size) {
         case 'small':
+            return '';
         case 'medium':
             return '';
         case 'large':

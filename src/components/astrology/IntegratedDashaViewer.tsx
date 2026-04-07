@@ -137,10 +137,10 @@ export default function IntegratedDashaViewer({
                     if (isAntarLevel) {
                         const mahaLord = selectedPath[0].planet;
                         const antarLord = period.planet;
-                        result = await clientApi.generateOtherDasha(clientId, 'ashtottari', ayanamsa, 'pratyantardasha', { mahaLord, antarLord });
+                        result = await clientApi.generateOtherDasha(clientId, 'ashtottari', ayanamsa, 'pratyantardasha', false, { mahaLord, antarLord });
                     }
                 } else if (isMahaLevel && !isVimshottari) {
-                    result = await clientApi.generateOtherDasha(clientId, dashaType, ayanamsa, 'antardasha', { mahaLord: period.planet });
+                    result = await clientApi.generateOtherDasha(clientId, dashaType, ayanamsa, 'antardasha', false, { mahaLord: period.planet });
                 }
 
                 if (result?.data) {
@@ -264,7 +264,7 @@ export default function IntegratedDashaViewer({
                                                 <span className={cn("!font-medium !text-ink !text-[12px]")}>{pName}</span>
                                             </div>
                                             {period.isCurrent && (
-                                                <span className="ml-auto px-1.5 py-0.5 bg-green-500/20 border border-green-500/30 rounded-full leading-none text-green-700 font-bold text-[9px] shrink-0">
+                                                <span className="ml-1 px-1.5 py-0.5 bg-green-500/20 border border-green-500/30 rounded-full leading-none text-green-700 font-bold text-[9px] shrink-0">
                                                     A
                                                 </span>
                                             )}

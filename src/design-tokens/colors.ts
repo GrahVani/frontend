@@ -191,7 +191,7 @@ export const PLANET_BADGE_CLASSES: Record<string, string> = Object.fromEntries(
  */
 export const PLANET_SVG_FILLS: Record<string, string> = {
     Su: '#D97706', Sun: '#D97706',
-    Mo: '#6B5F52', Moon: '#6B5F52',
+    Mo: '#334155', Moon: '#334155',
     Ma: '#DC2626', Mars: '#DC2626',
     Me: '#059669', Mercury: '#059669',
     Ju: '#CA8A04', Jupiter: '#CA8A04',

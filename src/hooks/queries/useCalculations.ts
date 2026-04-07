@@ -32,7 +32,7 @@ export function useOtherDasha(
         queryKey: queryKeys.dasha.other(clientId, type, ayanamsa, level, context),
         queryFn: async () => {
             if (!clientId) throw new Error("Client ID required");
-            return await clientApi.generateOtherDasha(clientId, type, ayanamsa, level, context);
+            return await clientApi.generateOtherDasha(clientId, type, ayanamsa, level, false, context);
         },
         enabled: !!clientId && type !== 'vimshottari',
         staleTime: 1000 * 60 * 60, // 1 hour
