@@ -79,6 +79,27 @@ export default function AshtakavargaPage() {
 
     const activeSystem = settings.ayanamsa.toLowerCase();
 
+    // Auto-switch to valid tab when ayanamsa changes
+    useEffect(() => {
+        const capabilities = clientApi.getSystemCapabilities(ayanamsa);
+        const hasSarva = capabilities.features.ashtakavarga.includes('sarva');
+        const hasBhinna = capabilities.features.ashtakavarga.includes('bhinna');
+        const hasShodasha = capabilities.features.ashtakavarga.includes('shodasha_summary') || 
+                           capabilities.features.ashtakavarga.includes('shodasha_varga');
+        
+        // If current tab is not available, switch to first available
+        if (activeTab === 'sarva' && !hasSarva) {
+            if (hasBhinna) setActiveTab('bhinna');
+            else if (hasShodasha) setActiveTab('shodasha');
+        } else if (activeTab === 'bhinna' && !hasBhinna) {
+            if (hasSarva) setActiveTab('sarva');
+            else if (hasShodasha) setActiveTab('shodasha');
+        } else if (activeTab === 'shodasha' && !hasShodasha) {
+            if (hasSarva) setActiveTab('sarva');
+            else if (hasBhinna) setActiveTab('bhinna');
+        }
+    }, [ayanamsa, activeTab]);
+
     // Replaced slow useAshtakavarga hooks with instant pre-fetched data from context
     const { data, loading } = React.useMemo(() => {
         const sarvaKey = `ashtakavarga_sarva_${activeSystem}`;
@@ -211,6 +232,8 @@ export default function AshtakavargaPage() {
                                 const capabilities = clientApi.getSystemCapabilities(ayanamsa);
                                 if (tab === 'temporal') return capabilities.features.ashtakavarga.includes('temporal_maitri');
                                 if (tab === 'shodasha') return capabilities.features.ashtakavarga.includes('shodasha_summary') || capabilities.features.ashtakavarga.includes('shodasha_varga');
+                                if (tab === 'sarva') return capabilities.features.ashtakavarga.includes('sarva');
+                                if (tab === 'bhinna') return capabilities.features.ashtakavarga.includes('bhinna');
                                 return true;
                             })
                             .map((tab) => (
