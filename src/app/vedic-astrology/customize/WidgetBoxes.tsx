@@ -86,11 +86,11 @@ const SIZE_OPTIONS: { key: WidgetSize; label: string }[] = [
 // Controls how content (fonts, tables, spacing) scales with S/M/L/F sizes.
 // Uses CSS zoom for automatic proportional scaling of ALL child content.
 export const WIDGET_SCALE_CONFIG: Record<WidgetSize, { zoom: number; minHeight: string; headerText: string; titleMaxW: string }> = {
-    small:  { zoom: 0.85, minHeight: '220px', headerText: 'text-[8px]',  titleMaxW: 'max-w-[90px]' },
-    medium: { zoom: 1.0,  minHeight: '240px', headerText: 'text-[9px]',  titleMaxW: 'max-w-[100px]' },
-    large:  { zoom: 1.2,  minHeight: '300px', headerText: 'text-[11px]', titleMaxW: 'max-w-[180px]' },
-    wide:   { zoom: 1.15, minHeight: '280px', headerText: 'text-[10px]', titleMaxW: 'max-w-[160px]' },
-    full:   { zoom: 1.4,  minHeight: '360px', headerText: 'text-[12px]', titleMaxW: 'max-w-[240px]' },
+    small: { zoom: 0.85, minHeight: '220px', headerText: 'text-[8px]', titleMaxW: 'max-w-[90px]' },
+    medium: { zoom: 1.0, minHeight: '240px', headerText: 'text-[9px]', titleMaxW: 'max-w-[100px]' },
+    large: { zoom: 1.2, minHeight: '300px', headerText: 'text-[11px]', titleMaxW: 'max-w-[180px]' },
+    wide: { zoom: 1.15, minHeight: '280px', headerText: 'text-[10px]', titleMaxW: 'max-w-[160px]' },
+    full: { zoom: 1.4, minHeight: '360px', headerText: 'text-[12px]', titleMaxW: 'max-w-[240px]' },
 };
 
 function SizeToggle({ size, onChange }: { size: WidgetSize; onChange?: (s: WidgetSize) => void }) {
@@ -180,7 +180,7 @@ function WidgetCard({
             "bg-[#FDFBF7] border border-[#E6D5B8]/40 rounded p-1 shadow-sm relative group hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden",
             className
         )} style={{ height: 'calc((100vh - 200px) / 2)', minHeight: scaleConfig.minHeight }}
-           data-widget-size={size}
+            data-widget-size={size}
         >
             {/* High-Density Header */}
             <div className="flex items-center justify-between mb-0.5 shrink-0 px-0.5">

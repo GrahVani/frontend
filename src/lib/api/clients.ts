@@ -258,7 +258,7 @@ export const clientApi = {
                 },
                 features: {
                     dasha: ['mahadasha', 'antardasha', 'pratyantardasha', 'sookshma', 'prana'],
-                    ashtakavarga: ['bhinna', 'sarva', 'shodasha_summary'],
+                    ashtakavarga: ['shodasha_summary'],
                     shadbala: [],
                     compatibility: [],
                     numerology: []
@@ -291,12 +291,12 @@ export const clientApi = {
             bhasin: {
                 charts: {
                     divisional: ['D1', 'D2', 'D3', 'D4', 'D7', 'D9', 'D10', 'D12', 'D16', 'D20', 'D24', 'D27', 'D30', 'D40', 'D45', 'D60'],
-                    special: ['sudarshana', 'transit', 'shodasha_varga_signs'],
+                    special: ['sudarshana', 'transit'],
                     lagna: ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart']
                 },
                 features: {
                     dasha: ['mahadasha', 'antardasha', 'pratyantardasha', 'sookshma', 'prana', 'ashtottari'],
-                    ashtakavarga: ['bhinna', 'sarva', 'shodasha_summary'],
+                    ashtakavarga: ['bhinna', 'sarva'],
                     shadbala: [],
                     compatibility: [],
                     numerology: []

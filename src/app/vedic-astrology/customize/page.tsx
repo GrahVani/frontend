@@ -35,13 +35,14 @@ import { useAstrologerStore, type ChartColorTheme } from '@/store/useAstrologerS
 import { clientApi } from '@/lib/api';
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
-import { parseChartData } from '@/lib/chart-helpers';
+import { parseChartData, fullPlanetNames, signIdToName } from '@/lib/chart-helpers';
 import { useCustomizeCharts, type CustomizeChartItem, type WidgetSize, type SelectedItemDetail, CHART_CATALOG } from '@/hooks/useCustomizeCharts';
 import { renderWidget, getWidgetSizeClasses, WIDGET_SCALE_CONFIG } from './WidgetBoxes';
 
 // Components
 import { ChartWithPopup, CompactChartWithPopup, Planet } from '@/components/astrology/NorthIndianChart';
 import SouthIndianChart, { ChartColorMode } from '@/components/astrology/SouthIndianChart';
+import PlanetaryTable from '@/components/astrology/PlanetaryTable';
 import VimshottariTreeGrid from '@/components/astrology/VimshottariTreeGrid';
 import AshtakavargaMatrix from '@/components/astrology/AshtakavargaMatrix';
 import OtherDashaTable from '@/components/astrology/OtherDashaTable';
@@ -523,13 +524,19 @@ export default function CustomizePage() {
                     />
                 ) : (
                     <div className={cn(
-                        "grid gap-0",
+                        "flex-1 grid gap-0 min-h-0",
                         columnCount === 1 && "grid-cols-1",
                         columnCount === 2 && "grid-cols-2",
                         columnCount === 3 && "grid-cols-3",
                         columnCount === 4 && "grid-cols-4",
                         columnCount === 5 && "grid-cols-5"
-                    )} style={{ gridTemplateRows: 'repeat(auto-fill, minmax(280px, 1fr))', maxHeight: 'calc(100vh - 145px)', overflow: 'auto' }}>
+                    )} style={{ 
+                        gridTemplateRows: columnCount === 1 ? 'auto' : 'repeat(auto-fill, minmax(280px, 1fr))', 
+                        maxHeight: 'calc(100vh - 145px)', 
+                        overflow: 'auto',
+                        gap: columnCount === 1 ? '1rem' : '0',
+                        paddingBottom: columnCount === 1 ? '1rem' : '0'
+                    }}>
                         {/* Render All Items in Order */}
                         {selectedChartDetails.map((item) => {
                             const isWidget = item.category.startsWith('widget_') || item.category === 'kp_module';
@@ -598,6 +605,7 @@ export default function CustomizePage() {
                                             activeSystem={item.ayanamsa || activeSystem}
                                             refreshCharts={refreshCharts}
                                             isKpSystem={isKpSystem}
+                                            columnCount={columnCount}
                                             // Divisional charts features
                                             isHouseDetailsOpen={openHouseDetails.has(item.instanceId)}
                                             onToggleHouseDetails={() => toggleHouseDetails(item.instanceId)}
@@ -768,16 +776,25 @@ interface DashboardCardProps {
     ayanamsa?: string;
     onAyanamsaChange?: (a: AyanamsaSystem) => void;
     disableContentZoom?: boolean;
+    columnCount?: number;
 }
 
-function DashboardCard({ title, description, badge, size, collapsed, children, onRemove, onDuplicate, onCollapseToggle, onSizeChange, ayanamsa, onAyanamsaChange, disableContentZoom }: DashboardCardProps) {
+function DashboardCard({ title, description, badge, size, collapsed, children, onRemove, onDuplicate, onCollapseToggle, onSizeChange, ayanamsa, onAyanamsaChange, disableContentZoom, columnCount = 3 }: DashboardCardProps) {
     const scaleConfig = WIDGET_SCALE_CONFIG[size] || WIDGET_SCALE_CONFIG.medium;
     const effectiveZoom = disableContentZoom ? 1 : scaleConfig.zoom;
+    
+    // Special height handling for 1-column layout (allow larger minimum height)
+    const isSingleColumn = columnCount === 1;
+    const cardHeight = isSingleColumn ? 'max(600px, calc(100vh - 180px))' : 'calc((100vh - 200px) / 2)';
+    const cardMinHeight = isSingleColumn ? '600px' : scaleConfig.minHeight;
 
     return (
         <div
-            className="bg-[#FDFBF7] border border-[#E6D5B8]/40 rounded p-1 shadow-sm relative group hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden"
-            style={{ height: 'calc((100vh - 200px) / 2)', minHeight: scaleConfig.minHeight }}
+            className={cn(
+                "bg-[#FDFBF7] border border-[#E6D5B8]/40 rounded p-1 shadow-sm relative group hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden",
+                isSingleColumn && "w-full"
+            )}
+            style={{ height: cardHeight, minHeight: cardMinHeight }}
             data-widget-size={size}
         >
             <div className="flex items-center justify-between mb-1 shrink-0 px-0.5 pt-0">
@@ -868,6 +885,199 @@ function ChartBox({ title, chartId, chartProps, theme, style }: any) {
     );
 }
 
+// Props for single column chart layout
+interface SingleColumnChartLayoutProps {
+    chart: SelectedItemDetail;
+    chartProps: { planets: any[]; ascendant: number };
+    style: string;
+    theme: ChartColorTheme;
+    colorMode?: ChartColorMode;
+    isGenerating?: boolean;
+    onToggleHouseDetails?: () => void;
+    isHouseDetailsOpen?: boolean;
+    onLearn?: () => void;
+    onToggleColorMode?: () => void;
+    onZoom?: () => void;
+    houseData?: Record<number, { planets: { name: string; degree: string; isRetro: boolean }[]; signName: string }>;
+}
+
+// Single Column Layout Component - Shows chart on left and planetary table on right
+function SingleColumnChartLayout({
+    chart,
+    chartProps,
+    style,
+    theme,
+    colorMode,
+    isGenerating,
+    onToggleHouseDetails,
+    isHouseDetailsOpen,
+    onLearn,
+    onToggleColorMode,
+    onZoom,
+    houseData
+}: SingleColumnChartLayoutProps) {
+    // Prepare planetary table data
+    const planetaryTableData = useMemo(() => {
+        const asc = chartProps.planets.find((p: any) => p.name === 'As' || p.name === 'Ascendant');
+        const others = chartProps.planets.filter((p: any) => p.name !== 'As' && p.name !== 'Ascendant');
+        const sortedPlanets = asc ? [asc, ...others] : others;
+
+        return sortedPlanets.map((p: any) => ({
+            planet: fullPlanetNames[p.name] || p.name,
+            sign: signIdToName[p.signId] || '-',
+            degree: p.degree || '-',
+            nakshatra: p.nakshatra || '-',
+            nakshatraPart: p.pada ? (typeof p.pada === 'number' ? p.pada : parseInt(String(p.pada).replace('Pada ', ''))) : undefined,
+            house: p.house || ((p.signId - chartProps.ascendant + 12) % 12) + 1,
+            isRetro: p.isRetro
+        }));
+    }, [chartProps.planets, chartProps.ascendant]);
+
+    return (
+        <div className="h-full flex flex-col p-1">
+            {/* Actions Toolbar */}
+            <div className="flex items-center gap-1 mb-1 shrink-0 overflow-x-auto no-scrollbar">
+                {onToggleHouseDetails && (
+                    <button
+                        onClick={onToggleHouseDetails}
+                        className={cn(
+                            "flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium transition-all border",
+                            isHouseDetailsOpen
+                                ? "bg-gold-primary border-gold-dark text-white shadow-sm font-bold"
+                                : "bg-white border-[#E6D5B8]/40 text-primary hover:border-gold-primary hover:text-gold-dark"
+                        )}
+                    >
+                        <House className="w-2.5 h-2.5" />
+                        Houses
+                    </button>
+                )}
+
+                {onLearn && (
+                    <button
+                        onClick={onLearn}
+                        className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium bg-white border border-[#E6D5B8]/40 text-ink hover:border-purple-300 hover:text-purple-600 transition-all text-xs"
+                    >
+                        <BookOpen className="w-2.5 h-2.5" />
+                        Learn
+                    </button>
+                )}
+
+                {onToggleColorMode && style === 'South Indian' && (
+                    <button
+                        onClick={onToggleColorMode}
+                        className={cn(
+                            "flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium transition-all border",
+                            colorMode === 'blackwhite'
+                                ? "bg-zinc-800 border-zinc-900 text-white"
+                                : "bg-white border-[#E6D5B8]/40 text-primary hover:border-blue-300 hover:text-blue-600"
+                        )}
+                    >
+                        <Sparkles className="w-2.5 h-2.5" />
+                        Color
+                    </button>
+                )}
+
+                {onZoom && (
+                    <button
+                        onClick={onZoom}
+                        className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium bg-white border border-[#E6D5B8]/40 text-ink hover:border-gold-primary hover:text-gold-dark transition-all ml-auto"
+                    >
+                        <Maximize2 className="w-2.5 h-2.5" />
+                        Zoom
+                    </button>
+                )}
+            </div>
+
+            {/* Split View: Chart Left, Table Right */}
+            <div className="flex-1 min-h-0 flex flex-col md:flex-row gap-4 overflow-hidden">
+                {/* Left Panel - Chart */}
+                <div className="flex flex-col min-h-0 h-full w-full md:w-[40%] shrink-0 relative bg-surface-warm rounded-lg border border-gold-primary/10 overflow-hidden">
+                    {isGenerating ? (
+                        <div className="absolute inset-0 z-10 bg-white/60 backdrop-blur-[1px] flex items-center justify-center">
+                            <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                        </div>
+                    ) : null}
+                    
+                    <div className="flex-1 min-h-0 w-full p-0 flex flex-col">
+                        {style === 'South Indian' ? (
+                            <div className="p-2 w-full h-full flex items-center justify-center">
+                                <SouthIndianChart
+                                    ascendantSign={chartProps.ascendant}
+                                    planets={chartProps.planets}
+                                    colorMode={colorMode || 'color'}
+                                    colorTheme={theme}
+                                    className="w-full h-full"
+                                />
+                            </div>
+                        ) : (
+                            <ChartWithPopup
+                                ascendantSign={chartProps.ascendant}
+                                planets={chartProps.planets}
+                                className="bg-transparent border-none w-full h-full"
+                                showDegrees={chart.id === 'D1'}
+                                preserveAspectRatio="none"
+                            />
+                        )}
+                    </div>
+                </div>
+
+                {/* Right Panel - Planetary Positions Table */}
+                <div className="w-full md:w-[60%] flex flex-col min-h-0 h-full bg-surface-warm/30 rounded-lg border border-gold-primary/10 overflow-hidden">
+                    <div className="bg-gold-primary/10 px-4 py-2 border-b border-gold-primary/15 shrink-0">
+                        <h3 className="font-serif text-[18px] font-semibold text-ink leading-tight tracking-wide">
+                            Birth planetary positions
+                        </h3>
+                    </div>
+                    <div className="flex-1 overflow-auto scrollbar-hide p-0">
+                        <PlanetaryTable
+                            planets={planetaryTableData}
+                            variant="expanded"
+                            rowClassName="py-2"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* House Details Panel */}
+            {isHouseDetailsOpen && houseData && (
+                <div className="mt-2 bg-white rounded-lg border border-gold-primary/10 p-1.5 overflow-hidden shrink-0">
+                    <div className={cn(TYPOGRAPHY.label, "mb-1 text-ink/70 font-bold uppercase tracking-wider text-[9px]")}>House-wise Positions</div>
+                    <div className="grid grid-cols-6 gap-1 max-h-20 overflow-y-auto">
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(h => (
+                            <div key={h} className={cn(
+                                "overflow-hidden rounded border border-gold-primary/10 transition-all",
+                                houseData[h]?.planets.length ? "bg-white shadow-sm" : "bg-gold-primary/5 opacity-60"
+                            )}>
+                                <div className={cn(
+                                    "px-1.5 py-0.5 flex items-center justify-between border-b border-gold-primary/5",
+                                    houseData[h]?.planets.length ? "bg-gold-primary/5" : "bg-transparent"
+                                )}>
+                                    <span className="font-bold text-ink text-[9px]">H{h}</span>
+                                    <span className="text-[8px] font-medium text-gold-dark">{houseData[h]?.signName?.substring(0, 3)}</span>
+                                </div>
+                                <div className="p-0.5 px-1 min-h-[14px] flex flex-col gap-0">
+                                    {houseData[h]?.planets.length > 0 ? (
+                                        houseData[h].planets.map((p, pIdx) => (
+                                            <div key={pIdx} className="flex items-center justify-between gap-1 text-[7px] leading-tight">
+                                                <span className="font-bold text-ink">{p.name}</span>
+                                                <span className="text-ink/60 font-sans text-[6px]">
+                                                    {p.degree}{p.isRetro && <span className="text-rose-500 font-bold ml-0.5">(R)</span>}
+                                                </span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-[8px] text-ink/30 italic py-0.5">-</div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
 interface DraggableChartBoxProps {
     chart: SelectedItemDetail;
     chartProps: { planets: any[]; ascendant: number };
@@ -895,6 +1105,8 @@ interface DraggableChartBoxProps {
     onLearn?: () => void;
     houseData?: Record<number, { planets: { name: string; degree: string; isRetro: boolean }[]; signName: string }>;
     isKpSystem?: boolean;
+    // Column layout for responsive sizing
+    columnCount?: number;
 }
 
 function DraggableChartBox({
@@ -921,7 +1133,8 @@ function DraggableChartBox({
     onLearn,
     houseData,
     isKpSystem,
-    onAyanamsaChange
+    onAyanamsaChange,
+    columnCount = 3
 }: DraggableChartBoxProps) {
     const [isGeneratingLocal, setIsGeneratingLocal] = useState(false);
 
@@ -964,6 +1177,7 @@ function DraggableChartBox({
             ayanamsa={chartAyanamsa}
             onAyanamsaChange={onAyanamsaChange}
             disableContentZoom
+            columnCount={columnCount}
         >
             {!isAvailable ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
@@ -1001,6 +1215,22 @@ function DraggableChartBox({
                         </div>
                     )}
                 </div>
+            ) : columnCount === 1 ? (
+                // Single column layout: Split view with chart on left and planetary table on right
+                <SingleColumnChartLayout
+                    chart={chart}
+                    chartProps={chartProps}
+                    style={style}
+                    theme={theme}
+                    colorMode={colorMode}
+                    isGenerating={isGenerating}
+                    onToggleHouseDetails={onToggleHouseDetails}
+                    isHouseDetailsOpen={isHouseDetailsOpen}
+                    onLearn={onLearn}
+                    onToggleColorMode={onToggleColorMode}
+                    onZoom={onZoom}
+                    houseData={houseData}
+                />
             ) : (
                 <div className="h-full flex flex-col p-1">
                     {/* Actions Toolbar */}
@@ -1063,7 +1293,7 @@ function DraggableChartBox({
                             </div>
                         ) : null}
 
-                        <div className="w-full h-full p-0">
+                        <div className="w-full h-full p-0 flex items-center justify-center overflow-hidden">
                             {style === 'South Indian' ? (
                                 <SouthIndianChart
                                     ascendantSign={chartProps.ascendant}
