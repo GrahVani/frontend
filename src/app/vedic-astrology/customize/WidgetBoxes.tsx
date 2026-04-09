@@ -91,6 +91,7 @@ export const WIDGET_SCALE_CONFIG: Record<WidgetSize, { zoom: number; minHeight: 
     large: { zoom: 1.2, minHeight: '300px', headerText: 'text-[11px]', titleMaxW: 'max-w-[180px]' },
     wide: { zoom: 1.15, minHeight: '280px', headerText: 'text-[10px]', titleMaxW: 'max-w-[160px]' },
     full: { zoom: 1.4, minHeight: '360px', headerText: 'text-[12px]', titleMaxW: 'max-w-[240px]' },
+    custom: { zoom: 1.0, minHeight: '200px', headerText: 'text-[10px]', titleMaxW: 'max-w-[120px]' },
 };
 
 function SizeToggle({ size, onChange }: { size: WidgetSize; onChange?: (s: WidgetSize) => void }) {

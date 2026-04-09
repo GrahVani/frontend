@@ -4,32 +4,166 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAstrologerStore } from '@/store/useAstrologerStore';
 import { clientApi } from '@/lib/api';
 
-export type WidgetSize = 'small' | 'medium' | 'large' | 'wide' | 'full';
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPES - Free Form Widget System (No Grid!)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+export type WidgetSize = 'small' | 'medium' | 'large' | 'wide' | 'full' | 'custom';
+
+export interface WidgetDimensions {
+    width: number;   // pixels
+    height: number;  // pixels
+    minWidth: number;
+    minHeight: number;
+    maxWidth: number;
+    maxHeight: number;
+}
+
+export const DEFAULT_DIMENSIONS: WidgetDimensions = {
+    width: 320,
+    height: 280,
+    minWidth: 200,
+    minHeight: 150,
+    maxWidth: 800,
+    maxHeight: 600,
+};
+
+export interface WidgetTheme {
+    backgroundColor: string;
+    backgroundGradient?: string;
+    titleColor: string;
+    textColor: string;
+    accentColor: string;
+    borderColor: string;
+    borderWidth: number;
+    borderRadius: number;
+    headerBackground: string;
+    headerTextColor: string;
+    shadowIntensity: 'none' | 'light' | 'medium' | 'heavy';
+    // New header customization
+    headerHeight?: number;
+    headerFontSize?: number;
+    contentTextScale?: number;
+    titleAlign?: 'left' | 'center' | 'right';
+    titleMaxWidth?: number;
+}
+
+export const DEFAULT_WIDGET_THEME: WidgetTheme = {
+    backgroundColor: '#FDFBF7',
+    titleColor: '#3E2A1F',
+    textColor: '#3E2A1F',
+    accentColor: '#C9A24D',
+    borderColor: '#E6D5B8',
+    borderWidth: 1,
+    borderRadius: 12,
+    headerBackground: 'transparent',
+    headerTextColor: '#3E2A1F',
+    shadowIntensity: 'light',
+    // New defaults
+    headerHeight: 36,
+    headerFontSize: 12,
+    contentTextScale: 1,
+    titleAlign: 'left',
+    titleMaxWidth: undefined,
+};
+
+export const PRESET_THEMES: Record<string, WidgetTheme> = {
+    default: DEFAULT_WIDGET_THEME,
+    vedic: {
+        ...DEFAULT_WIDGET_THEME,
+        backgroundColor: '#FFF8E7',
+        headerBackground: 'linear-gradient(135deg, #D4AD5A 0%, #C9A24D 100%)',
+        headerTextColor: '#FFFFFF',
+        accentColor: '#9C7A2F',
+        borderColor: '#D4AD5A',
+    },
+    dark: {
+        ...DEFAULT_WIDGET_THEME,
+        backgroundColor: '#1A1A2E',
+        titleColor: '#E8E8E8',
+        textColor: '#B8B8B8',
+        headerBackground: '#16213E',
+        headerTextColor: '#E8E8E8',
+        accentColor: '#E94560',
+        borderColor: '#0F3460',
+        shadowIntensity: 'medium',
+    },
+    spiritual: {
+        ...DEFAULT_WIDGET_THEME,
+        backgroundColor: '#F0F4F0',
+        headerBackground: 'linear-gradient(135deg, #5B8A5B 0%, #4A704A 100%)',
+        headerTextColor: '#FFFFFF',
+        accentColor: '#7BA37B',
+        borderColor: '#A8C6A8',
+    },
+    royal: {
+        ...DEFAULT_WIDGET_THEME,
+        backgroundColor: '#FAF5FF',
+        headerBackground: 'linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%)',
+        headerTextColor: '#FFFFFF',
+        accentColor: '#8B5CF6',
+        borderColor: '#DDD6FE',
+    },
+    ocean: {
+        ...DEFAULT_WIDGET_THEME,
+        backgroundColor: '#F0F9FF',
+        headerBackground: 'linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%)',
+        headerTextColor: '#FFFFFF',
+        accentColor: '#38BDF8',
+        borderColor: '#BAE6FD',
+    },
+    sunset: {
+        ...DEFAULT_WIDGET_THEME,
+        backgroundColor: '#FFF7ED',
+        headerBackground: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
+        headerTextColor: '#FFFFFF',
+        accentColor: '#FB923C',
+        borderColor: '#FED7AA',
+    },
+    minimal: {
+        ...DEFAULT_WIDGET_THEME,
+        backgroundColor: '#FFFFFF',
+        headerBackground: '#F9FAFB',
+        headerTextColor: '#111827',
+        accentColor: '#6B7280',
+        borderColor: '#E5E7EB',
+        shadowIntensity: 'none',
+    },
+};
+
+// Default dimensions by widget type
+export const WIDGET_DIMENSION_PRESETS: Record<string, WidgetDimensions> = {
+    // Charts - square-ish
+    divisional: { ...DEFAULT_DIMENSIONS, width: 320, height: 320 },
+    lagna: { ...DEFAULT_DIMENSIONS, width: 320, height: 320 },
+    rare_shodash: { ...DEFAULT_DIMENSIONS, width: 300, height: 300 },
+    
+    // Tables - wider
+    ashtakavarga: { ...DEFAULT_DIMENSIONS, width: 500, height: 350 },
+    widget_shodasha: { ...DEFAULT_DIMENSIONS, width: 600, height: 300 },
+    
+    // Analysis - tall
+    dasha: { ...DEFAULT_DIMENSIONS, width: 400, height: 450 },
+    widget_shadbala: { ...DEFAULT_DIMENSIONS, width: 450, height: 400 },
+    widget_yoga: { ...DEFAULT_DIMENSIONS, width: 450, height: 400 },
+    widget_dosha: { ...DEFAULT_DIMENSIONS, width: 450, height: 400 },
+    
+    // Others
+    widget_transit: { ...DEFAULT_DIMENSIONS, width: 400, height: 250 },
+    widget_remedy: { ...DEFAULT_DIMENSIONS, width: 500, height: 400 },
+    kp_module: { ...DEFAULT_DIMENSIONS, width: 400, height: 350 },
+};
 
 export interface CustomizeChartItem {
     id: string;
     name: string;
     description: string;
-    category:
-        | 'divisional'
-        | 'rare_shodash'
-        | 'lagna'
-        | 'dasha'
-        | 'ashtakavarga'
-        | 'special'
-        | 'widget_pushkara'
-        | 'widget_chakra'
-        | 'widget_karaka'
-        | 'widget_shadbala'
-        | 'widget_yoga'
-        | 'widget_dosha'
-        | 'widget_transit'
-        | 'widget_remedy'
-        | 'widget_shodasha'
-        | 'kp_module';
+    category: string;
     size?: WidgetSize;
     lahiriOnly?: boolean;
     requiredSystem?: string;
+    defaultDimensions?: WidgetDimensions;
+    defaultTheme?: Partial<WidgetTheme>;
 }
 
 export interface ChartInstance {
@@ -38,6 +172,16 @@ export interface ChartInstance {
     size: WidgetSize;
     collapsed: boolean;
     ayanamsa?: string;
+    
+    // FREE FORM - Pixel dimensions
+    dimensions: WidgetDimensions;
+    theme: WidgetTheme;
+    customTitle?: string;
+    showHeader: boolean;
+    showBorder: boolean;
+    
+    // Position for free-form layout
+    position?: { x: number; y: number };
 }
 
 export interface SelectedItemDetail extends CustomizeChartItem {
@@ -45,6 +189,12 @@ export interface SelectedItemDetail extends CustomizeChartItem {
     size: WidgetSize;
     collapsed: boolean;
     ayanamsa?: string;
+    dimensions: WidgetDimensions;
+    theme: WidgetTheme;
+    customTitle?: string;
+    showHeader: boolean;
+    showBorder: boolean;
+    position?: { x: number; y: number };
 }
 
 interface CustomizeChartsState {
@@ -52,292 +202,123 @@ interface CustomizeChartsState {
     isLoading: boolean;
 }
 
-const STORAGE_KEY_V2 = 'grahvani_customize_layout_v2';
-const STORAGE_KEY_V1 = 'grahvani_customize_charts';
+// ═══════════════════════════════════════════════════════════════════════════════
+// STORAGE & CATALOG
+// ═══════════════════════════════════════════════════════════════════════════════
 
-// Layout presets per ayanamsa system
-export const LAYOUT_PRESETS: Record<string, Record<string, string[]>> = {
-    lahiri: {
-        'Classical Vedic': ['D1', 'D9', 'D60', 'vimshottari'],
-        'Marriage': ['D1', 'D9', 'D7', 'upapada_lagna'],
-        'Career': ['D1', 'D10', 'D60', 'vimshottari'],
-        'Strength & Karma': ['D1', 'D27', 'D30', 'D60', 'widget_shadbala'],
-    },
-    raman: {
-        'Classical Vedic': ['D1', 'D9', 'D60', 'vimshottari'],
-    },
-    kp: {
-        'Classical KP': ['kp_planets_cusps', 'kp_bhava_details', 'kp_ruling_planets', 'kp_house_significations'],
-    },
-    yukteswar: {
-        'Classical Vedic': ['D1', 'D9', 'D60', 'vimshottari'],
-    },
-    bhasin: {
-        'Classical Vedic': ['D1', 'D9', 'D60', 'vimshottari'],
-    },
-};
+const STORAGE_KEY_V4 = 'grahvani_customize_layout_v4'; // Free form version
 
-// All available charts with metadata
 export const CHART_CATALOG: CustomizeChartItem[] = [
-    // Standard Divisional Charts
-    { id: 'D1', name: 'D1 - Rashi', description: 'The fundamental physical existence', category: 'divisional', size: 'medium' },
-    { id: 'D2', name: 'D2 - Hora', description: 'Wealth and prosperity', category: 'divisional', size: 'medium' },
-    { id: 'D3', name: 'D3 - Drekkana', description: 'Siblings and courage', category: 'divisional', size: 'medium' },
-    { id: 'D4', name: 'D4 - Chaturthamsha', description: 'Fortune and fixed assets', category: 'divisional', size: 'medium' },
-    { id: 'D7', name: 'D7 - Saptamsha', description: 'Progeny and creative fruits', category: 'divisional', size: 'medium' },
-    { id: 'D9', name: 'D9 - Navamsha', description: 'The internal fruit and marriage', category: 'divisional', size: 'medium' },
-    { id: 'D10', name: 'D10 - Dashamsha', description: 'Career and public achievements', category: 'divisional', size: 'medium' },
-    { id: 'D12', name: 'D12 - Dwadashamsha', description: 'Parents and ancestry', category: 'divisional', size: 'medium' },
-    { id: 'D16', name: 'D16 - Shodashamsha', description: 'Vehicles and comforts', category: 'divisional', size: 'medium' },
-    { id: 'D20', name: 'D20 - Vimshamsha', description: 'Spiritual progress and devotion', category: 'divisional', size: 'medium' },
-    { id: 'D24', name: 'D24 - Chaturvimshamsha', description: 'Learning and knowledge', category: 'divisional', size: 'medium' },
-    { id: 'D27', name: 'D27 - Bhamsha', description: 'General strength and vitality', category: 'divisional', size: 'medium' },
-    { id: 'D30', name: 'D30 - Trimshamsha', description: 'Evils and misfortunes', category: 'divisional', size: 'medium' },
-    { id: 'D40', name: 'D40 - Khavedamsha', description: 'Auspicious/Inauspicious effects', category: 'divisional', size: 'medium' },
-    { id: 'D45', name: 'D45 - Akshavedamsha', description: 'General character and fruits', category: 'divisional', size: 'medium' },
-    { id: 'D60', name: 'D60 - Shashtiamsha', description: 'Past karma and detailed results', category: 'divisional', size: 'medium' },
+    // Divisional Charts
+    { id: 'D1', name: 'D1 - Rashi', description: 'The fundamental physical existence', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
+    { id: 'D2', name: 'D2 - Hora', description: 'Wealth and prosperity', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
+    { id: 'D3', name: 'D3 - Drekkana', description: 'Siblings and courage', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
+    { id: 'D4', name: 'D4 - Chaturthamsha', description: 'Fortune and fixed assets', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
+    { id: 'D7', name: 'D7 - Saptamsha', description: 'Progeny and creative fruits', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
+    { id: 'D9', name: 'D9 - Navamsha', description: 'The internal fruit and marriage', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
+    { id: 'D10', name: 'D10 - Dashamsha', description: 'Career and public achievements', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
+    { id: 'D12', name: 'D12 - Dwadashamsha', description: 'Parents and ancestry', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
+    { id: 'D16', name: 'D16 - Shodashamsha', description: 'Vehicles and comforts', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
+    { id: 'D20', name: 'D20 - Vimshamsha', description: 'Spiritual progress and devotion', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
+    { id: 'D24', name: 'D24 - Chaturvimshamsha', description: 'Learning and knowledge', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
+    { id: 'D27', name: 'D27 - Bhamsha', description: 'General strength and vitality', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
+    { id: 'D30', name: 'D30 - Trimshamsha', description: 'Evils and misfortunes', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
+    { id: 'D40', name: 'D40 - Khavedamsha', description: 'Auspicious/Inauspicious effects', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
+    { id: 'D45', name: 'D45 - Akshavedamsha', description: 'General character and fruits', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
+    { id: 'D60', name: 'D60 - Shashtiamsha', description: 'Past karma and detailed results', category: 'divisional', defaultDimensions: WIDGET_DIMENSION_PRESETS.divisional },
 
-    // Rare Shodash Varga (Lahiri only)
-    { id: 'd2_iyer', name: 'D2 Iyer', description: 'Wealth - Iyer variation', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
-    { id: 'd2_somanatha', name: 'D2 Somanatha', description: 'Wealth - Somanatha method', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
-    { id: 'd2_kashinatha', name: 'D2 Kashinatha', description: 'Wealth - Kashinatha method', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
-    { id: 'd4_vedamsha', name: 'D4 Vedamsha', description: 'Fortune - Vedamsha variation', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
-    { id: 'd5', name: 'D5 Panchamsha', description: 'Power & Authority', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
-    { id: 'd6_kaulaka', name: 'D6 Kaulaka', description: 'Health - Kaulaka method', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
-    { id: 'd8_chart', name: 'D8 Ashtamsha', description: 'Unexpected Troubles', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
-    { id: 'd9_nadhi', name: 'D9 Nadhi', description: 'Spouse - Nadhi variation', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
-    { id: 'd9_pada_special', name: 'D9 Pada', description: 'Spouse - Special method', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
-    { id: 'd9_somanatha', name: 'D9 Somanatha', description: 'Spouse - Somanatha method', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
-    { id: 'd11', name: 'D11 Ekadasamsha', description: 'Gains and acquisitions', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
-    { id: 'd24_parasidamsha', name: 'D24 Parasidamsha', description: 'Education - Parasidamsha', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
-    { id: 'd24_siddhamsha', name: 'D24 Siddhamsha', description: 'Education - Siddhamsha', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
-    { id: 'd30_venkatesha', name: 'D30 Venkatesha', description: 'Misfortunes - Venkatesha', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
-    { id: 'd108_nd', name: 'D108 ND', description: 'Past karma - ND method', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
-    { id: 'd108_dn', name: 'D108 DN', description: 'Past karma - DN method', category: 'rare_shodash', size: 'medium', lahiriOnly: true },
+    // Rare Shodash Varga
+    { id: 'd2_iyer', name: 'D2 Iyer', description: 'Wealth - Iyer variation', category: 'rare_shodash', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.rare_shodash },
+    { id: 'd2_somanatha', name: 'D2 Somanatha', description: 'Wealth - Somanatha method', category: 'rare_shodash', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.rare_shodash },
+    { id: 'd9_somanatha', name: 'D9 Somanatha', description: 'Spouse - Somanatha method', category: 'rare_shodash', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.rare_shodash },
 
     // Lagna Charts
-    { id: 'moon_chart', name: 'Chandra Lagna', description: 'Moon ascendant chart', category: 'lagna', size: 'medium' },
-    { id: 'sun_chart', name: 'Surya Lagna', description: 'Sun ascendant chart', category: 'lagna', size: 'medium' },
-    { id: 'arudha_lagna', name: 'Arudha Lagna', description: 'Perception and illusion', category: 'lagna', size: 'medium' },
-    { id: 'bhava_lagna', name: 'Bhava Lagna', description: 'Relative strength analysis', category: 'lagna', size: 'medium' },
-    { id: 'hora_lagna', name: 'Hora Lagna', description: 'Prosperity analysis', category: 'lagna', size: 'medium' },
-    { id: 'karkamsha_d1', name: 'Karkamsha D1', description: 'Life purpose analysis', category: 'lagna', size: 'medium' },
-    { id: 'karkamsha_d9', name: 'Karkamsha D9', description: 'Inner nature analysis', category: 'lagna', size: 'medium' },
-    { id: 'upapada_lagna', name: 'Upapada Lagna', description: 'Marriage and partnerships', category: 'lagna', size: 'medium' },
-    { id: 'swamsha', name: 'Swamsha', description: 'Navamsha lagna chart', category: 'lagna', size: 'medium' },
-    { id: 'pada_chart', name: 'Pada Chart', description: 'Arudha pada analysis', category: 'lagna', size: 'medium' },
-    { id: 'sripathi_bhava', name: 'Sripathi bhava', description: 'House analysis (Sripathi)', category: 'lagna', size: 'medium' },
-    { id: 'kp_bhava_lagna', name: 'KP bhava', description: 'Stellar system (KP Bhava)', category: 'lagna', size: 'medium' },
-    { id: 'equal_bhava', name: 'Equal bhava', description: 'Equal house division', category: 'lagna', size: 'medium' },
-    { id: 'gati_kalagna', name: 'Gati kalagna', description: 'GL chart analysis', category: 'lagna', size: 'medium' },
-    { id: 'mandi_chart', name: 'Mandi', description: 'Karmic obstacles analysis', category: 'lagna', size: 'medium' },
-    { id: 'gulika_chart', name: 'Gulika', description: 'Instant karma analysis', category: 'lagna', size: 'medium' },
+    { id: 'moon_chart', name: 'Chandra Lagna', description: 'Moon ascendant chart', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
+    { id: 'sun_chart', name: 'Surya Lagna', description: 'Sun ascendant chart', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
+    { id: 'arudha_lagna', name: 'Arudha Lagna', description: 'Perception and illusion', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
+    { id: 'bhava_lagna', name: 'Bhava Lagna', description: 'Relative strength analysis', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
+    { id: 'hora_lagna', name: 'Hora Lagna', description: 'Prosperity analysis', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
+    { id: 'karkamsha_d1', name: 'Karkamsha D1', description: 'Life purpose analysis', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
+    { id: 'karkamsha_d9', name: 'Karkamsha D9', description: 'Inner nature analysis', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
+    { id: 'upapada_lagna', name: 'Upapada Lagna', description: 'Marriage and partnerships', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
+    { id: 'swamsha', name: 'Swamsha', description: 'Navamsha lagna chart', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
+    { id: 'pada_chart', name: 'Pada Chart', description: 'Arudha pada analysis', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
+    { id: 'sripathi_bhava', name: 'Sripathi bhava', description: 'House analysis (Sripathi)', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
+    { id: 'kp_bhava_lagna', name: 'KP bhava', description: 'Stellar system (KP Bhava)', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
+    { id: 'equal_bhava', name: 'Equal bhava', description: 'Equal house division', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
+    { id: 'gati_kalagna', name: 'Gati kalagna', description: 'GL chart analysis', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
+    { id: 'mandi_chart', name: 'Mandi', description: 'Karmic obstacles analysis', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
+    { id: 'gulika_chart', name: 'Gulika', description: 'Instant karma analysis', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },
 
     // Dasha Systems
-    { id: 'vimshottari', name: 'Vimshottari Dasha', description: 'Universal Moon-nakshatra based dasha (120 years)', category: 'dasha', size: 'medium' },
-    { id: 'tribhagi', name: 'Tribhagi Dasha', description: 'One-third portions of Vimshottari periods (40 years)', category: 'dasha', size: 'medium' },
-    { id: 'ashtottari', name: 'Ashtottari Dasha', description: 'For specific lagna conditions (108 years)', category: 'dasha', size: 'medium' },
-    { id: 'shodashottari', name: 'Shodashottari Dasha', description: 'Venus in 9th + Lagna in hora of Venus (116 years)', category: 'dasha', size: 'medium' },
-    { id: 'dwadashottari', name: 'Dwadashottari Dasha', description: 'Venus in Lagna + Moon in Venusian nakshatra (112 years)', category: 'dasha', size: 'medium' },
-    { id: 'panchottari', name: 'Panchottari Dasha', description: 'Cancer Lagna with Dhanishtha nakshatra (105 years)', category: 'dasha', size: 'medium' },
-    { id: 'chaturshitisama', name: 'Chaturshitisama Dasha', description: '10th lord posited in 10th house (84 years)', category: 'dasha', size: 'medium' },
-    { id: 'satabdika', name: 'Satabdika Dasha', description: 'Lagna in Vargottama position (100 years)', category: 'dasha', size: 'medium' },
-    { id: 'dwisaptati', name: 'Dwisaptati Sama', description: 'Lagna lord in 7th or 7th lord in Lagna (72 years)', category: 'dasha', size: 'medium' },
-    { id: 'shastihayani', name: 'Shastihayani Dasha', description: 'Sun posited in the Lagna (60 years)', category: 'dasha', size: 'medium' },
-    { id: 'shattrimshatsama', name: 'Shattrimshatsama Dasha', description: 'Born in daytime with Moon in Lagna (36 years)', category: 'dasha', size: 'medium' },
-    { id: 'chara', name: 'Chara Dasha (Jaimini)', description: 'Sign-based Jaimini dasha system', category: 'dasha', size: 'medium' },
+    { id: 'vimshottari', name: 'Vimshottari Dasha', description: 'Universal Moon-nakshatra based dasha (120 years)', category: 'dasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.dasha },
+    { id: 'tribhagi', name: 'Tribhagi Dasha', description: 'One-third portions of Vimshottari periods (40 years)', category: 'dasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.dasha },
+    { id: 'ashtottari', name: 'Ashtottari Dasha', description: 'For specific lagna conditions (108 years)', category: 'dasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.dasha },
+    { id: 'shodashottari', name: 'Shodashottari Dasha', description: 'Venus in 9th + Lagna in hora of Venus (116 years)', category: 'dasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.dasha },
+    { id: 'dwadashottari', name: 'Dwadashottari Dasha', description: 'Venus in Lagna + Moon in Venusian nakshatra (112 years)', category: 'dasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.dasha },
+    { id: 'panchottari', name: 'Panchottari Dasha', description: 'Cancer Lagna with Dhanishtha nakshatra (105 years)', category: 'dasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.dasha },
+    { id: 'chaturshitisama', name: 'Chaturshitisama Dasha', description: '10th lord posited in 10th house (84 years)', category: 'dasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.dasha },
+    { id: 'satabdika', name: 'Satabdika Dasha', description: 'Lagna in Vargottama position (100 years)', category: 'dasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.dasha },
+    { id: 'dwisaptati', name: 'Dwisaptati Sama', description: 'Lagna lord in 7th or 7th lord in Lagna (72 years)', category: 'dasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.dasha },
+    { id: 'shastihayani', name: 'Shastihayani Dasha', description: 'Sun posited in the Lagna (60 years)', category: 'dasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.dasha },
+    { id: 'shattrimshatsama', name: 'Shattrimshatsama Dasha', description: 'Born in daytime with Moon in Lagna (36 years)', category: 'dasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.dasha },
+    { id: 'chara', name: 'Chara Dasha (Jaimini)', description: 'Sign-based Jaimini dasha system', category: 'dasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.dasha },
 
     // Ashtakavarga Types
-    { id: 'ashtakavarga_sarva', name: 'Sarvashtakavarga', description: 'Combined strength points of all planets (SAV)', category: 'ashtakavarga', size: 'medium' },
-    { id: 'ashtakavarga_bhinna', name: 'Bhinna Ashtakavarga', description: 'Individual planetary strength points (BAV)', category: 'ashtakavarga', size: 'medium' },
-    { id: 'widget_shodasha_varga', name: 'Shodashvarga Summary', description: 'Planetary dignities across 16 divisional charts', category: 'widget_shodasha', size: 'wide' },
+    { id: 'ashtakavarga_sarva', name: 'Sarvashtakavarga', description: 'Combined strength points of all planets (SAV)', category: 'ashtakavarga', defaultDimensions: WIDGET_DIMENSION_PRESETS.ashtakavarga },
+    { id: 'ashtakavarga_bhinna', name: 'Bhinna Ashtakavarga', description: 'Individual planetary strength points (BAV)', category: 'ashtakavarga', defaultDimensions: WIDGET_DIMENSION_PRESETS.ashtakavarga },
+    { id: 'widget_shodasha_varga', name: 'Shodashvarga Summary', description: 'Planetary dignities across 16 divisional charts', category: 'widget_shodasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_shodasha },
 
     // LAHIRI WIDGETS
-    {
-        id: 'widget_shadbala',
-        name: 'Shadbala Analysis',
-        description: 'Six-fold planetary strength with Ishta/Kashta phala',
-        category: 'widget_shadbala',
-        size: 'wide',
-        lahiriOnly: true
-    },
-    {
-        id: 'widget_pushkara',
-        name: 'Pushkara Navamsha',
-        description: 'Auspicious Navamsha divisions and Pushkara Bhaga',
-        category: 'widget_pushkara',
-        size: 'wide',
-        lahiriOnly: true
-    },
-    {
-        id: 'widget_karaka',
-        name: 'Chara Karakas',
-        description: 'Variable significators based on planetary degrees',
-        category: 'widget_karaka',
-        size: 'medium',
-        lahiriOnly: true
-    },
-    {
-        id: 'widget_chakra',
-        name: 'Sudarshan Chakra',
-        description: 'Tri-layer radial chart (Surya, Chandra, Lagna)',
-        category: 'widget_chakra',
-        size: 'large',
-        lahiriOnly: false
-    },
-    {
-        id: 'widget_yoga',
-        name: 'Yoga Analysis',
-        description: 'Benefic and challenging planetary combinations',
-        category: 'widget_yoga',
-        size: 'wide',
-        lahiriOnly: true
-    },
-    {
-        id: 'widget_dosha',
-        name: 'Dosha Analysis',
-        description: 'Karmic debts and planetary afflictions',
-        category: 'widget_dosha',
-        size: 'wide',
-        lahiriOnly: true
-    },
-    {
-        id: 'widget_transit',
-        name: 'Daily Transit',
-        description: 'Live planetary movements and Gochar analysis',
-        category: 'widget_transit',
-        size: 'wide',
-        lahiriOnly: false
-    },
-    {
-        id: 'widget_remedy_gemstone',
-        name: 'Gemstone Prescription',
-        description: 'Planetary gemstone recommendations',
-        category: 'widget_remedy',
-        size: 'full',
-        lahiriOnly: true
-    },
-    {
-        id: 'widget_remedy_mantra',
-        name: 'Mantra Sadhana',
-        description: 'Sacred syllables for planetary propitiation',
-        category: 'widget_remedy',
-        size: 'wide',
-        lahiriOnly: true
-    },
+    { id: 'widget_shadbala', name: 'Shadbala Analysis', description: 'Six-fold planetary strength with Ishta/Kashta phala', category: 'widget_shadbala', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_shadbala },
+    { id: 'widget_pushkara', name: 'Pushkara Navamsha', description: 'Auspicious Navamsha divisions and Pushkara Bhaga', category: 'widget_pushkara', lahiriOnly: true, defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 450, height: 300 } },
+    { id: 'widget_karaka', name: 'Chara Karakas', description: 'Variable significators based on planetary degrees', category: 'widget_karaka', lahiriOnly: true, defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 350, height: 300 } },
+    { id: 'widget_chakra', name: 'Sudarshan Chakra', description: 'Tri-layer radial chart (Surya, Chandra, Lagna)', category: 'widget_chakra', defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 400, height: 400 } },
+    { id: 'widget_yoga', name: 'Yoga Analysis', description: 'Benefic and challenging planetary combinations', category: 'widget_yoga', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_yoga },
+    { id: 'widget_dosha', name: 'Dosha Analysis', description: 'Karmic debts and planetary afflictions', category: 'widget_dosha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_dosha },
+    { id: 'widget_transit', name: 'Daily Transit', description: 'Live planetary movements and Gochar analysis', category: 'widget_transit', defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_transit },
+    { id: 'widget_remedy_gemstone', name: 'Gemstone Prescription', description: 'Planetary gemstone recommendations', category: 'widget_remedy', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_remedy },
+    { id: 'widget_remedy_mantra', name: 'Mantra Sadhana', description: 'Sacred syllables for planetary propitiation', category: 'widget_remedy', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_remedy },
 
     // KP SYSTEM MODULES
-    // KP SYSTEM MODULES
-    {
-        id: 'kp_planets',
-        name: 'Planets',
-        description: 'Planetary positions with stellar star and sub lords',
-        category: 'kp_module',
-        size: 'wide',
-        requiredSystem: 'kp'
-    },
-    {
-        id: 'kp_cusps',
-        name: 'Cuspal Chart',
-        description: 'Visual chart displaying the 12 house cusps with sign, nakshatra, and sub-lord details',
-        category: 'kp_module',
-        size: 'wide',
-        requiredSystem: 'kp'
-    },
-    {
-        id: 'kp_house_significations',
-        name: 'House Significations',
-        description: 'Thematic significations of houses in KP system (Tabular)',
-        category: 'kp_module',
-        size: 'wide',
-        requiredSystem: 'kp'
-    },
-    {
-        id: 'kp_planetary_significators',
-        name: 'Planetary Significators',
-        description: 'Mapping of planets to the houses they signify',
-        category: 'kp_module',
-        size: 'wide',
-        requiredSystem: 'kp'
-    },
-    {
-        id: 'kp_bhava_details',
-        name: 'Bhava Details',
-        description: 'Technical bhava analysis including signs and sub-lords',
-        category: 'kp_module',
-        size: 'wide',
-        requiredSystem: 'kp'
-    },
-    {
-        id: 'kp_interlinks',
-        name: 'Interlinks',
-        description: 'Planetary interlink analysis and connection chains',
-        category: 'kp_module',
-        size: 'wide',
-        requiredSystem: 'kp'
-    },
-    {
-        id: 'kp_advanced_ssl',
-        name: 'Advanced SSL',
-        description: 'Advanced SSL connection analysis and strength',
-        category: 'kp_module',
-        size: 'wide',
-        requiredSystem: 'kp'
-    },
-    {
-        id: 'kp_nakshatra_nadi',
-        name: 'Nakshatra Nadi',
-        description: 'Detailed Nadi coordinates for planets and houses',
-        category: 'kp_module',
-        size: 'wide',
-        requiredSystem: 'kp'
-    },
-    {
-        id: 'kp_fortuna',
-        name: 'Pars Fortuna',
-        description: 'Part of Fortune calculation for success points',
-        category: 'kp_module',
-        size: 'small',
-        requiredSystem: 'kp'
-    },
-    {
-        id: 'kp_ruling_planets',
-        name: 'Ruling Planets',
-        description: 'Real-time strong planets for the current moment',
-        category: 'kp_module',
-        size: 'small',
-        requiredSystem: 'kp'
-    },
-    {
-        id: 'kp_ashtakavarga',
-        name: 'Ashtakavarga (KP)',
-        description: 'Ashtakavarga calculation within the KP system framework',
-        category: 'kp_module',
-        size: 'medium',
-        requiredSystem: 'kp',
-    },
+    { id: 'kp_planets', name: 'Planets', description: 'Planetary positions with stellar star and sub lords', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.kp_module },
+    { id: 'kp_cusps', name: 'Cuspal Chart', description: 'Visual chart displaying the 12 house cusps', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 400, height: 400 } },
+    { id: 'kp_house_significations', name: 'House Significations', description: 'Thematic significations of houses in KP system', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.kp_module },
+    { id: 'kp_planetary_significators', name: 'Planetary Significators', description: 'Mapping of planets to the houses they signify', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.kp_module },
+    { id: 'kp_bhava_details', name: 'Bhava Details', description: 'Technical bhava analysis including signs and sub-lords', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.kp_module },
+    { id: 'kp_interlinks', name: 'Interlinks', description: 'Planetary interlink analysis and connection chains', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.kp_module },
+    { id: 'kp_advanced_ssl', name: 'Advanced SSL', description: 'Advanced SSL connection analysis and strength', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.kp_module },
+    { id: 'kp_nakshatra_nadi', name: 'Nakshatra Nadi', description: 'Detailed Nadi coordinates for planets and houses', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.kp_module },
+    { id: 'kp_fortuna', name: 'Pars Fortuna', description: 'Part of Fortune calculation for success points', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 250, height: 200 } },
+    { id: 'kp_ruling_planets', name: 'Ruling Planets', description: 'Real-time strong planets for the current moment', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 250, height: 200 } },
+    { id: 'kp_ashtakavarga', name: 'Ashtakavarga (KP)', description: 'Ashtakavarga calculation within the KP system', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.ashtakavarga },
 ];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// UTILITY FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════════════════
 
 function generateInstanceId() {
     return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// MAIN HOOK
+// ═══════════════════════════════════════════════════════════════════════════════
+
 export function useCustomizeCharts() {
     const { ayanamsa } = useAstrologerStore();
     const activeSystem = ayanamsa.toLowerCase();
     const isLahiri = activeSystem === 'lahiri';
-    
-    // Unified storage key for multi-system mixing
-    const STORAGE_KEY_UNIFIED = 'grahvani_customize_unified_v1';
 
     const [state, setState] = useState<CustomizeChartsState>({
         selectedItems: [],
         isLoading: true,
     });
 
-    // Load from localStorage on mount
+    // Load from localStorage
     useEffect(() => {
-        const stored = localStorage.getItem(STORAGE_KEY_UNIFIED);
+        const stored = localStorage.getItem(STORAGE_KEY_V4);
         if (stored) {
             try {
                 const items = JSON.parse(stored) as ChartInstance[];
@@ -345,41 +326,45 @@ export function useCustomizeCharts() {
                     setState({ selectedItems: items, isLoading: false });
                     return;
                 }
-            } catch {
-                // fall through
-            }
-        }
-        
-        // Fallback to migrating from system-specific storage if unified doesn't exist
-        const oldStored = localStorage.getItem(STORAGE_KEY_V2);
-        if (oldStored) {
-            try {
-                const parsed = JSON.parse(oldStored) as Record<string, ChartInstance[]>;
-                const allItems = Object.values(parsed).flat();
-                if (allItems.length > 0) {
-                    setState({ selectedItems: allItems, isLoading: false });
-                    return;
-                }
             } catch { /* ignore */ }
         }
-        
         setState({ selectedItems: [], isLoading: false });
     }, []);
 
-    // Save to localStorage when selection changes
     const saveToStorage = useCallback((items: ChartInstance[]) => {
-        localStorage.setItem(STORAGE_KEY_UNIFIED, JSON.stringify(items));
+        localStorage.setItem(STORAGE_KEY_V4, JSON.stringify(items));
     }, []);
 
-    const addChart = useCallback((chartId: string, system?: string) => {
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ACTIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const addChart = useCallback((
+        chartId: string, 
+        system?: string, 
+        customization?: {
+            dimensions?: Partial<WidgetDimensions>;
+            theme?: Partial<WidgetTheme>;
+            customTitle?: string;
+            showHeader?: boolean;
+            showBorder?: boolean;
+        }
+    ) => {
         setState(prev => {
             const catalog = CHART_CATALOG.find(c => c.id === chartId);
+            const baseDimensions = catalog?.defaultDimensions || DEFAULT_DIMENSIONS;
+            
             const newItem: ChartInstance = {
                 instanceId: generateInstanceId(),
                 id: chartId,
                 size: catalog?.size || 'medium',
                 collapsed: false,
                 ayanamsa: catalog?.requiredSystem || system || activeSystem,
+                dimensions: { ...baseDimensions, ...customization?.dimensions },
+                theme: { ...DEFAULT_WIDGET_THEME, ...catalog?.defaultTheme, ...customization?.theme },
+                customTitle: customization?.customTitle,
+                showHeader: customization?.showHeader !== false,
+                showBorder: customization?.showBorder !== false,
             };
             const newItems = [...prev.selectedItems, newItem];
             saveToStorage(newItems);
@@ -401,11 +386,10 @@ export function useCustomizeCharts() {
             if (idx === -1) return prev;
             const source = prev.selectedItems[idx];
             const newItem: ChartInstance = {
+                ...source,
                 instanceId: generateInstanceId(),
-                id: source.id,
-                size: source.size,
                 collapsed: false,
-                ayanamsa: source.ayanamsa,
+                customTitle: source.customTitle ? `${source.customTitle} (Copy)` : undefined,
             };
             const newItems = [...prev.selectedItems];
             newItems.splice(idx + 1, 0, newItem);
@@ -444,6 +428,103 @@ export function useCustomizeCharts() {
         });
     }, [saveToStorage]);
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // FREE FORM DIMENSION ACTIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const updateDimensions = useCallback((instanceId: string, dimensions: Partial<WidgetDimensions>) => {
+        setState(prev => {
+            const newItems = prev.selectedItems.map(i =>
+                i.instanceId === instanceId 
+                    ? { ...i, dimensions: { ...i.dimensions, ...dimensions } } 
+                    : i
+            );
+            saveToStorage(newItems);
+            return { ...prev, selectedItems: newItems };
+        });
+    }, [saveToStorage]);
+
+    const resizeByDelta = useCallback((instanceId: string, deltaWidth: number, deltaHeight: number) => {
+        setState(prev => {
+            const newItems = prev.selectedItems.map(i => {
+                if (i.instanceId !== instanceId) return i;
+                return {
+                    ...i,
+                    dimensions: {
+                        ...i.dimensions,
+                        width: Math.min(
+                            i.dimensions.maxWidth,
+                            Math.max(i.dimensions.minWidth, i.dimensions.width + deltaWidth)
+                        ),
+                        height: Math.min(
+                            i.dimensions.maxHeight,
+                            Math.max(i.dimensions.minHeight, i.dimensions.height + deltaHeight)
+                        ),
+                    }
+                };
+            });
+            saveToStorage(newItems);
+            return { ...prev, selectedItems: newItems };
+        });
+    }, [saveToStorage]);
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // THEME ACTIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const updateTheme = useCallback((instanceId: string, theme: Partial<WidgetTheme>) => {
+        setState(prev => {
+            const newItems = prev.selectedItems.map(i =>
+                i.instanceId === instanceId ? { ...i, theme: { ...i.theme, ...theme } } : i
+            );
+            saveToStorage(newItems);
+            return { ...prev, selectedItems: newItems };
+        });
+    }, [saveToStorage]);
+
+    const applyThemePreset = useCallback((instanceId: string, presetName: string) => {
+        const preset = PRESET_THEMES[presetName];
+        if (!preset) return;
+        
+        setState(prev => {
+            const newItems = prev.selectedItems.map(i =>
+                i.instanceId === instanceId ? { ...i, theme: { ...preset } } : i
+            );
+            saveToStorage(newItems);
+            return { ...prev, selectedItems: newItems };
+        });
+    }, [saveToStorage]);
+
+    const updateCustomTitle = useCallback((instanceId: string, customTitle: string | undefined) => {
+        setState(prev => {
+            const newItems = prev.selectedItems.map(i =>
+                i.instanceId === instanceId ? { ...i, customTitle } : i
+            );
+            saveToStorage(newItems);
+            return { ...prev, selectedItems: newItems };
+        });
+    }, [saveToStorage]);
+
+    const toggleHeader = useCallback((instanceId: string) => {
+        setState(prev => {
+            const newItems = prev.selectedItems.map(i =>
+                i.instanceId === instanceId ? { ...i, showHeader: !i.showHeader } : i
+            );
+            saveToStorage(newItems);
+            return { ...prev, selectedItems: newItems };
+        });
+    }, [saveToStorage]);
+
+    const toggleBorder = useCallback((instanceId: string) => {
+        setState(prev => {
+            const newItems = prev.selectedItems.map(i =>
+                i.instanceId === instanceId ? { ...i, showBorder: !i.showBorder } : i
+            );
+            saveToStorage(newItems);
+            return { ...prev, selectedItems: newItems };
+        });
+    }, [saveToStorage]);
+
     const reorderItems = useCallback((newOrder: ChartInstance[]) => {
         setState(prev => {
             saveToStorage(newOrder);
@@ -456,47 +537,17 @@ export function useCustomizeCharts() {
         saveToStorage([]);
     }, [saveToStorage]);
 
-    const clearAll = useCallback(() => {
-        setState(prev => ({ ...prev, selectedItems: [] }));
-        saveToStorage([]);
-    }, [saveToStorage]);
+    // ═══════════════════════════════════════════════════════════════════════════
+    // COMPUTED
+    // ═══════════════════════════════════════════════════════════════════════════
 
-    const loadPreset = useCallback((presetName: string) => {
-        const presetIds = LAYOUT_PRESETS[activeSystem]?.[presetName] || [];
-        if (presetIds.length === 0) return;
-        const newItems: ChartInstance[] = presetIds.map(id => {
-            const catalog = CHART_CATALOG.find(c => id === id);
-            return {
-                instanceId: generateInstanceId(),
-                id,
-                size: catalog?.size || 'medium',
-                collapsed: false,
-            };
-        });
-        setState(prev => {
-            saveToStorage(newItems);
-            return { ...prev, selectedItems: newItems };
-        });
-    }, [activeSystem, saveToStorage]);
-
-    // Get available charts based on system
     const availableCharts = useMemo(() => {
-        if (isLahiri) {
-            return CHART_CATALOG;
-        }
+        if (isLahiri) return CHART_CATALOG;
         return CHART_CATALOG.filter(chart =>
-            chart.category !== 'rare_shodash' &&
-            !chart.lahiriOnly
+            chart.category !== 'rare_shodash' && !chart.lahiriOnly
         );
     }, [isLahiri]);
 
-    // Get charts not yet selected
-    const unselectedCharts = useMemo(() => {
-        const selectedIds = new Set(state.selectedItems.map(i => i.id));
-        return availableCharts.filter(chart => !selectedIds.has(chart.id));
-    }, [availableCharts, state.selectedItems]);
-
-    // Get selected chart details merged with runtime state
     const selectedChartDetails = useMemo((): SelectedItemDetail[] => {
         return state.selectedItems
             .map(instance => {
@@ -508,39 +559,22 @@ export function useCustomizeCharts() {
                     size: instance.size,
                     collapsed: instance.collapsed,
                     ayanamsa: instance.ayanamsa || catalog.requiredSystem || activeSystem,
+                    dimensions: instance.dimensions,
+                    theme: instance.theme,
+                    customTitle: instance.customTitle,
+                    showHeader: instance.showHeader,
+                    showBorder: instance.showBorder,
+                    position: instance.position,
                 };
             })
             .filter(Boolean) as SelectedItemDetail[];
     }, [state.selectedItems, activeSystem]);
-
-    // Generate a missing chart
-    const generateMissingChart = useCallback(async (clientId: string, chartId: string, system?: string) => {
-        try {
-            const catalogItem = CHART_CATALOG.find(c => c.id === chartId);
-            if (chartId === 'vimshottari') {
-                await clientApi.generateDasha(clientId, 'mahadasha', system || activeSystem, true);
-            } else if (catalogItem?.category === 'dasha') {
-                await clientApi.generateOtherDasha(clientId, chartId, system || activeSystem, 'mahadasha', true);
-            } else {
-                await clientApi.generateChart(clientId, chartId, system || activeSystem);
-            }
-            return true;
-        } catch (error) {
-            console.error(`Failed to generate chart ${chartId}:`, error);
-            return false;
-        }
-    }, [activeSystem]);
-
-    const presetNames = useMemo(() => {
-        return Object.keys(LAYOUT_PRESETS[activeSystem] || {});
-    }, [activeSystem]);
 
     return {
         selectedItems: state.selectedItems,
         selectedChartDetails,
         isLoading: state.isLoading,
         availableCharts,
-        unselectedCharts,
         addChart,
         removeChart,
         duplicateChart,
@@ -548,11 +582,26 @@ export function useCustomizeCharts() {
         toggleCollapse,
         reorderItems,
         resetToDefaults,
-        clearAll,
-        generateMissingChart,
-        loadPreset,
-        presetNames,
         isLahiri,
         updateChartAyanamsa,
+        
+        // Free form actions
+        updateDimensions,
+        resizeByDelta,
+        
+        // Theme actions
+        updateTheme,
+        applyThemePreset,
+        updateCustomTitle,
+        toggleHeader,
+        toggleBorder,
+        
+        // Constants
+        PRESET_THEMES,
+        DEFAULT_WIDGET_THEME,
+        DEFAULT_DIMENSIONS,
+        CHART_CATALOG,
     };
 }
+
+export default useCustomizeCharts;
