@@ -205,7 +205,53 @@ export function useKpTransformedData(input: KpTransformedDataInput) {
             return { planets: visualPlanets, ascendant: ascSignId };
         }
 
-        // Fallback to processedCharts
+        // Fallback to processedCharts - check kp_planets_cusps_kp first for KP data
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const kpCuspsRaw = (processedCharts['kp_planets_cusps_kp']?.chartData as any)?.data || processedCharts['kp_planets_cusps_kp']?.chartData;
+        if (kpCuspsRaw?.planets) {
+            const { ascendant, planets } = kpCuspsRaw;
+            let ascSignId = 1;
+
+            if (ascendant) {
+                const signName = ascendant.sign;
+                const normalized = signName.charAt(0).toUpperCase() + signName.slice(1).toLowerCase();
+                ascSignId = signNameToId[normalized] || 1;
+            }
+
+            const visualPlanets: KpVisualPlanet[] = [];
+            if (planets && !Array.isArray(planets)) {
+                Object.entries(planets).forEach(([name, p]: [string, any]) => {
+                    const normalizedSign = p.sign.charAt(0).toUpperCase() + p.sign.slice(1).toLowerCase();
+                    visualPlanets.push({
+                        name: name.substring(0, 2),
+                        signId: signNameToId[normalizedSign] || 1,
+                        degree: p.longitude?.split('°')[0] + '°' || "0°",
+                        isRetro: p.is_retro || false,
+                        house: p.house,
+                        // @ts-ignore
+                        starLord: p.star_lord || p.nakshatra_lord || '',
+                        // @ts-ignore
+                        subLord: p.sub_lord || '',
+                    });
+                });
+            }
+
+            visualPlanets.push({
+                name: 'As',
+                signId: ascSignId,
+                degree: ascendant?.longitude?.split('°')[0] + '°' || "0°",
+                isRetro: false,
+                house: 1,
+                // @ts-ignore
+                starLord: ascendant?.star_lord || ascendant?.nakshatra_lord || '',
+                // @ts-ignore
+                subLord: ascendant?.sub_lord || '',
+            });
+
+            return { planets: visualPlanets, ascendant: ascSignId };
+        }
+
+        // Final fallback to D1_kp
         const d1Kp = processedCharts['D1_kp'];
         if (d1Kp?.chartData) {
             const parsed = parseChartData(d1Kp.chartData);

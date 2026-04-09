@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
     Gem,
     Sparkles,
@@ -221,12 +221,24 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
 // Main Remedies Page (Upaya)
 // ============================================================================
 export default function RemediesPage() {
-    const { clientDetails } = useVedicClient();
+    const { clientDetails, processedCharts, isLoadingCharts, isRefreshingCharts } = useVedicClient();
     const { ayanamsa } = useAstrologerStore();
     const [activeTab, setActiveTab] = useState('gemstone');
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [remedyData, setRemedyData] = useState<Record<string, Record<string, unknown>>>({});
+    
+    // Get remedy data from database (processedCharts)
+    const remedyKey = `remedy_${activeTab}_${ayanamsa.toLowerCase()}`;
+    const remedyRaw = processedCharts[remedyKey]?.chartData;
+    const remedyData = useMemo(() => {
+        const data = remedyRaw?.data || remedyRaw;
+        return (data || {}) as Record<string, Record<string, unknown>>;
+    }, [remedyRaw]);
+    const loading = !remedyData && (isLoadingCharts || isRefreshingCharts);
+
+    // Handle refresh - trigger charts refresh
+    const handleRefresh = () => {
+        window.location.reload();
+    };
 
     const [selectedPlanet, setSelectedPlanet] = useState<string>('');
     const [selectedHouse, setSelectedHouse] = useState<string>('');
@@ -240,82 +252,8 @@ export default function RemediesPage() {
     const clientId = clientDetails?.id || '';
     const activeRemedyTab = REMEDY_TABS.find(t => t.id === activeTab)!;
 
-    // Fetch remedy data when tab changes
-    useEffect(() => {
-        if (!clientId || !activeRemedyTab) return;
-
-        // Skip if already fetched 
-        if (remedyData[activeTab]) return;
-
-        // DISABLE AUTO-FETCH FOR LAL KITAB
-        if (activeTab === 'lal_kitab') return;
-
-        const fetchRemedy = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                // Prepare options for Lal Kitab
-                const options: Record<string, unknown> = {};
-                if (activeTab === 'lal_kitab') {
-                    if (selectedPlanet) options.planet = selectedPlanet;
-                    if (selectedHouse) options.house = parseInt(selectedHouse);
-                }
-
-                const result = await clientApi.generateChart(
-                    clientId,
-                    activeRemedyTab.apiType,
-                    'lahiri',
-                    options
-                );
-                setRemedyData(prev => ({
-                    ...prev,
-                    [activeTab]: (result.data || result.chartData || result) as Record<string, unknown>
-                }));
-            } catch (err: unknown) {
-                setError(err instanceof Error ? err.message : `Failed to fetch ${activeRemedyTab.name} data`);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchRemedy();
-    }, [clientId, activeTab, activeRemedyTab]); // Removed selectedPlanet/House dependencies to prevent auto-fetch on selection change
-
-    const handleRefresh = async () => {
-        if (!clientId || !activeRemedyTab) return;
-
-        // Clear cached data for this tab and re-fetch
-        setRemedyData(prev => {
-            const updated = { ...prev };
-            delete updated[activeTab];
-            return updated;
-        });
-        setLoading(true);
-        setError(null);
-        try {
-            // Prepare options for Lal Kitab
-            const options: Record<string, unknown> = {};
-            if (activeTab === 'lal_kitab') {
-                if (selectedPlanet) options.planet = selectedPlanet;
-                if (selectedHouse) options.house = parseInt(selectedHouse);
-            }
-
-            const result = await clientApi.generateChart(
-                clientId,
-                activeRemedyTab.apiType,
-                'lahiri',
-                options
-            );
-            setRemedyData(prev => ({
-                ...prev,
-                [activeTab]: (result.data || result.chartData || result) as Record<string, unknown>
-            }));
-        } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : `Failed to fetch ${activeRemedyTab.name} data`);
-        } finally {
-            setLoading(false);
-        }
-    };
+    // Data is now fetched from database (processedCharts) - no API calls needed
+    // The system automatically fetches remedies when client is loaded
 
     // System check — Remedies are Lahiri-exclusive
     if (ayanamsa !== 'Lahiri') {
@@ -394,9 +332,10 @@ export default function RemediesPage() {
                         <button
                             onClick={handleRefresh}
                             className="px-4 py-2 bg-gold-primary text-white text-[14px] font-medium rounded-lg hover:bg-gold-dark transition-colors flex items-center gap-2 shadow-sm"
+                            disabled={isRefreshingCharts}
                         >
-                            <RefreshCw className="w-4 h-4" />
-                            Get remedies
+                            <RefreshCw className={cn("w-4 h-4", isRefreshingCharts && "animate-spin")} />
+                            {isRefreshingCharts ? 'Loading...' : 'Get remedies'}
                         </button>
                     </div>
                 </div>
@@ -416,13 +355,14 @@ export default function RemediesPage() {
                         <p className={cn(TYPOGRAPHY.subValue, "text-red-600 max-w-md mx-auto !text-[12px]")}>{error}</p>
                         <button
                             onClick={handleRefresh}
-                            className={cn(TYPOGRAPHY.label, "mt-4 px-4 py-2 bg-red-100 text-red-700 rounded-lg !text-[12px] !font-bold hover:bg-red-200 transition-colors !mb-0")}
+                            disabled={isRefreshingCharts}
+                            className={cn(TYPOGRAPHY.label, "mt-4 px-4 py-2 bg-red-100 text-red-700 rounded-lg !text-[12px] !font-bold hover:bg-red-200 transition-colors !mb-0 disabled:opacity-50")}
                         >
-                            Try again
+                            {isRefreshingCharts ? 'Loading...' : 'Try again'}
                         </button>
                     </div>
-                ) : remedyData[activeTab] ? (
-                    <RemedyDataView data={remedyData[activeTab]} type={activeTab} />
+                ) : remedyData ? (
+                    <RemedyDataView data={remedyData} type={activeTab} />
                 ) : activeTab === 'lal_kitab' ? (
                     <div className="flex flex-col items-center justify-center py-16 prem-card rounded-2xl animate-in fade-in">
                         <Scroll className="w-10 h-10 text-gold-primary mb-4 opacity-70" />

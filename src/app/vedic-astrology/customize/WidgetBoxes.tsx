@@ -276,13 +276,16 @@ function WidgetCard({
 // ═══════════════════════════════════════════════════════════════════════════════
 export function ShadbalaWidget(props: WidgetBoxProps) {
     const { widget, onRemove, clientId, activeSystem } = props;
-    const { data: shadbalaResult, isLoading: loading } = useShadbala(
-        (activeSystem === 'lahiri' && clientId) ? clientId : ''
-    );
+    const { processedCharts, isLoadingCharts } = useVedicClient();
+    
+    // Fetch from database (processedCharts) instead of API
+    const shadbalaKey = `shadbala_${activeSystem.toLowerCase()}`;
+    const shadbalaRaw = processedCharts[shadbalaKey]?.chartData;
+    const shadbalaResult = shadbalaRaw?.data || shadbalaRaw;
+    const loading = !shadbalaResult && isLoadingCharts;
 
     const data = useMemo(() => {
-        const rawBody = shadbalaResult?.data?.data || shadbalaResult?.data || shadbalaResult;
-        const rawData = rawBody as any;
+        const rawData = shadbalaResult as any;
         if (!rawData || !rawData.shadbala_virupas) return null;
 
         const planets: any[] = [];
@@ -495,7 +498,7 @@ export function KarakaWidget(props: WidgetBoxProps) {
 export function ChakraWidget(props: WidgetBoxProps) {
     const { widget, onRemove, clientId, activeSystem } = props;
     const { processedCharts, isLoadingCharts } = useVedicClient();
-    const key = `sudarshana_${activeSystem}`;
+    const key = `sudarshana_${activeSystem.toLowerCase()}`;
     const raw = processedCharts[key]?.chartData;
     const chakraData = raw?.data || raw;
     const loading = !chakraData && isLoadingCharts;
@@ -527,8 +530,8 @@ export function ChakraWidget(props: WidgetBoxProps) {
 export function ShodashaWidget(props: WidgetBoxProps) {
     const { widget, onRemove, clientId, activeSystem } = props;
     const { processedCharts, isLoadingCharts } = useVedicClient();
-    const shodashaKey = `ashtakavarga_shodasha_${activeSystem}`;
-    const shodashaKpKey = `shodasha_varga_signs_${activeSystem}`;
+    const shodashaKey = `ashtakavarga_shodasha_${activeSystem.toLowerCase()}`;
+    const shodashaKpKey = `shodasha_varga_signs_${activeSystem.toLowerCase()}`;
     const raw = processedCharts[shodashaKey]?.chartData || processedCharts[shodashaKpKey]?.chartData;
     const shodashaData = raw ? (raw.data || raw) : null;
     const loading = !shodashaData && isLoadingCharts;
@@ -559,11 +562,31 @@ export function ShodashaWidget(props: WidgetBoxProps) {
 // ═══════════════════════════════════════════════════════════════════════════════
 export function YogaWidget(props: WidgetBoxProps) {
     const { widget, onRemove, clientId, activeSystem } = props;
+    const { processedCharts, isLoadingCharts } = useVedicClient();
+    
+    // Fetch from database (processedCharts) instead of API
+    const yogaKey = `yoga_all_${activeSystem.toLowerCase()}`;
+    const yogaRaw = processedCharts[yogaKey]?.chartData;
+    const yogaData = yogaRaw?.data || yogaRaw;
+    const loading = !yogaData && isLoadingCharts;
+    
     return (
         <WidgetCard {...props}>
-            <div className="h-full overflow-auto custom-scrollbar p-4">
-                <YogaAnalysisView clientId={clientId} yogaType="all" ayanamsa={activeSystem} />
-            </div>
+            {loading ? (
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <Loader2 className="w-8 h-8 text-pink-500 animate-spin mb-3" />
+                    <p className="text-[11px] text-ink/50">Loading yoga analysis...</p>
+                </div>
+            ) : yogaData ? (
+                <div className="h-full overflow-auto custom-scrollbar p-4">
+                    <YogaAnalysisView clientId={clientId} yogaType="all" ayanamsa={activeSystem} />
+                </div>
+            ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                    <Sparkles className="w-8 h-8 text-pink-300 mb-3" />
+                    <p className="text-[11px] text-ink/50">Yoga data not generated yet</p>
+                </div>
+            )}
         </WidgetCard>
     );
 }
@@ -573,11 +596,31 @@ export function YogaWidget(props: WidgetBoxProps) {
 // ═══════════════════════════════════════════════════════════════════════════════
 export function DoshaWidget(props: WidgetBoxProps) {
     const { widget, onRemove, clientId, activeSystem } = props;
+    const { processedCharts, isLoadingCharts } = useVedicClient();
+    
+    // Fetch from database (processedCharts) instead of API
+    const doshaKey = `dosha_all_${activeSystem.toLowerCase()}`;
+    const doshaRaw = processedCharts[doshaKey]?.chartData;
+    const doshaData = doshaRaw?.data || doshaRaw;
+    const loading = !doshaData && isLoadingCharts;
+    
     return (
         <WidgetCard {...props}>
-            <div className="h-full overflow-auto custom-scrollbar p-4">
-                <DoshaAnalysis clientId={clientId} doshaType="all" ayanamsa={activeSystem} />
-            </div>
+            {loading ? (
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <Loader2 className="w-8 h-8 text-rose-500 animate-spin mb-3" />
+                    <p className="text-[11px] text-ink/50">Loading dosha analysis...</p>
+                </div>
+            ) : doshaData ? (
+                <div className="h-full overflow-auto custom-scrollbar p-4">
+                    <DoshaAnalysis clientId={clientId} doshaType="all" ayanamsa={activeSystem} />
+                </div>
+            ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                    <Shield className="w-8 h-8 text-rose-300 mb-3" />
+                    <p className="text-[11px] text-ink/50">Dosha data not generated yet</p>
+                </div>
+            )}
         </WidgetCard>
     );
 }
@@ -600,20 +643,15 @@ export function TransitWidget(props: WidgetBoxProps) {
 // REMEDY WIDGET
 // ═══════════════════════════════════════════════════════════════════════════════
 export function RemedyWidget(props: WidgetBoxProps) {
-    const { widget, onRemove, clientId } = props;
-    const [data, setData] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
+    const { widget, onRemove, clientId, activeSystem } = props;
+    const { processedCharts, isLoadingCharts } = useVedicClient();
+    
+    // Fetch from database (processedCharts) instead of API
     const type = widget.id === 'widget_remedy_gemstone' ? 'gemstone' : 'mantra';
-
-    useEffect(() => {
-        if (!clientId) return;
-        setLoading(true);
-        clientApi.generateChart(clientId, `remedy:${type}`, 'lahiri')
-            .then((res: any) => {
-                setData(res.data || res.chartData || res);
-            })
-            .finally(() => setLoading(false));
-    }, [clientId, type]);
+    const remedyKey = `remedy_${type}_${(activeSystem || 'lahiri').toLowerCase()}`;
+    const remedyRaw = processedCharts[remedyKey]?.chartData;
+    const data = remedyRaw?.data || remedyRaw;
+    const loading = !data && isLoadingCharts;
 
     return (
         <WidgetCard {...props}>
@@ -670,7 +708,21 @@ export function KpModuleWidget(props: WidgetBoxProps) {
                 return <KpPlanetaryWidget planets={transformed.planetaryData} className="h-full border-none" />;
 
             case 'kp_cusps':
-                return <KpCuspsWidget cusps={transformed.cuspData} className="h-full border-none" />;
+                // Extract house signs from cusp data for KpCuspalChart
+                const houseSigns = transformed.cuspData.map(c => c.signId);
+                // Ensure we have 12 houses, fill with default if needed
+                while (houseSigns.length < 12) houseSigns.push(1);
+                return (
+                    <div className="flex-1 min-h-0 relative w-full h-full">
+                        <div className="w-full h-full p-0 flex items-center justify-center overflow-hidden">
+                            <KpCuspalChart 
+                                planets={transformed.d1Data.planets} 
+                                houseSigns={houseSigns}
+                                className="w-full h-full" 
+                            />
+                        </div>
+                    </div>
+                );
 
             case 'kp_house_significations':
                 return (

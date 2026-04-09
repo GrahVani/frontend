@@ -152,14 +152,7 @@ export const AYANAMSA_HIERARCHY: AyanamsaOption[] = [
                 id: 'cat-ashtakavarga',
                 name: 'Ashtakavarga',
                 widgets: [
-                    { id: 'kp_ashtakavarga' }, { id: 'widget_shodasha_varga' }
-                ]
-            },
-            {
-                id: 'cat-chakra',
-                name: 'Sudarshan Chakra',
-                widgets: [
-                    { id: 'widget_chakra' }
+                    { id: 'widget_shodasha_varga' }
                 ]
             }
         ]
@@ -301,7 +294,7 @@ export const AYANAMSA_HIERARCHY: AyanamsaOption[] = [
                 id: 'cat-ashtakavarga',
                 name: 'Ashtakavarga',
                 widgets: [
-                    { id: 'ashtakavarga_sarva' }, { id: 'ashtakavarga_bhinna' }, { id: 'widget_shodasha_varga' }
+                    { id: 'ashtakavarga_sarva' }, { id: 'ashtakavarga_bhinna' }
                 ]
             },
             {
@@ -384,9 +377,8 @@ export const AYANAMSA_CONFIGS: Record<AyanamsaSystem, AyanamsaConfig> = {
             'cat-divisional',
             'cat-lagna',
             'cat-kp',
-            'cat-ashtakavarga',
             'cat-dashas',
-            'cat-chakra'
+            'cat-ashtakavarga'
         ]
     },
     /**

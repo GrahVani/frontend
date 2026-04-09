@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
     Orbit,
@@ -104,13 +104,10 @@ const PLANET_THEMES: Record<string, { color: string, bg: string, text: string, b
 // ============================================================================
 
 export default function ShadbalaPage() {
-    const { clientDetails } = useVedicClient();
+    const { clientDetails, processedCharts, isLoadingCharts, isRefreshingCharts } = useVedicClient();
     const { ayanamsa } = useAstrologerStore();
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [data, setData] = useState<ShadbalaData | null>(null);
-    const [rawResponse, setRawResponse] = useState<Record<string, unknown> | null>(null);
-
+    
     const clientId = clientDetails?.id || '';
 
     // Standard Minimum Rupa Requirements
@@ -199,37 +196,24 @@ export default function ShadbalaPage() {
         };
     };
 
-    const fetchShadbala = async (force: boolean = false) => {
-        if (!clientId) {
-            return;
-        }
+    // Get Shadbala data from database (processedCharts)
+    const shadbalaKey = `shadbala_${ayanamsa.toLowerCase()}`;
+    const shadbalaRaw = processedCharts[shadbalaKey]?.chartData;
+    const rawData = shadbalaRaw?.data || shadbalaRaw;
+    
+    // Normalize data for display
+    const data: ShadbalaData | null = useMemo(() => {
+        const raw = rawData as Record<string, Record<string, unknown>> | undefined;
+        if (!raw || !raw.shadbala_virupas) return null;
+        return normalizeShadbalaData(raw);
+    }, [rawData]);
+    
+    const loading = !data && (isLoadingCharts || isRefreshingCharts);
 
-        setLoading(true);
-        setError(null);
-        try {
-            const result = await clientApi.getShadbala(clientId) as any;
-            // Robust extraction: Handle nested data structure
-            const rawData = result.data?.data || result.chartData?.data || result.data || result.chartData || result;
-            setRawResponse(result);
-
-            if (rawData && rawData.shadbala_virupas) {
-                const normalized = normalizeShadbalaData(rawData);
-                setData(normalized);
-            } else {
-                setData(null);
-            }
-        } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : "Failed to calculate Shadbala strengths");
-        } finally {
-            setLoading(false);
-        }
+    // Handle refresh - trigger page reload to refresh charts
+    const handleRefresh = () => {
+        window.location.reload();
     };
-
-    useEffect(() => {
-        if (ayanamsa === 'Lahiri' && clientId) {
-            fetchShadbala();
-        }
-    }, [clientId, ayanamsa]);
 
     if (ayanamsa !== 'Lahiri') {
         return (
@@ -270,8 +254,12 @@ export default function ShadbalaPage() {
                     <AlertTriangle className="w-10 h-10 text-red-500 mx-auto mb-4" />
                     <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 text-[18px] mb-2")}>Calculation Error</h3>
                     <p className={cn(TYPOGRAPHY.profileDetail, "text-red-600 max-w-md mx-auto mb-6")}>{error}</p>
-                    <button onClick={() => fetchShadbala(true)} className={cn(TYPOGRAPHY.label, "px-6 py-2.5 bg-red-100 text-red-700 rounded-xl !text-[14px] !font-bold hover:bg-red-200 transition-colors !mb-0")}>
-                        Retry Calculation
+                    <button 
+                        onClick={handleRefresh} 
+                        disabled={isRefreshingCharts}
+                        className={cn(TYPOGRAPHY.label, "px-6 py-2.5 bg-red-100 text-red-700 rounded-xl !text-[14px] !font-bold hover:bg-red-200 transition-colors !mb-0 disabled:opacity-50")}
+                    >
+                        {isRefreshingCharts ? 'Loading...' : 'Retry Calculation'}
                     </button>
                 </div>
             ) : data?.planets ? (

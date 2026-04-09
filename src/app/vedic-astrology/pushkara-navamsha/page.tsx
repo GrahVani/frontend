@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
     Sparkles,
@@ -15,6 +15,7 @@ import {
     XCircle,
     TrendingUp,
     Shield,
+    RefreshCw,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useVedicClient } from '@/context/VedicClientContext';
@@ -100,48 +101,70 @@ const SIGN_SYMBOLS: Record<string, string> = {
 // ============================================================================
 
 export default function PushkaraNavamshaPage() {
-    const { clientDetails } = useVedicClient();
+    const { clientDetails, processedCharts, isLoadingCharts, isRefreshingCharts, isGeneratingCharts, refreshCharts } = useVedicClient();
     const { ayanamsa } = useAstrologerStore();
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [data, setData] = useState<PushkaraData | null>(null);
+    const [isGeneratingLocal, setIsGeneratingLocal] = useState(false);
 
     const clientId = clientDetails?.id || '';
 
-    const fetchData = async () => {
-        if (!clientId) return;
-        setLoading(true);
-        setError(null);
-        try {
-            const result = await clientApi.getPushkaraNavamsha(clientId) as any;
-            const rawData = result.data?.data || result.chartData?.data || result.data || result.chartData || result;
+    // Get Pushkara Navamsha data from database (processedCharts)
+    const data: PushkaraData | null = useMemo(() => {
+        const chartKey = `pushkara_navamsha_${ayanamsa.toLowerCase()}`;
+        const chart = processedCharts[chartKey];
+        const rawData = (chart?.chartData?.data || chart?.chartData) as Record<string, unknown> | undefined;
 
-            if (rawData && rawData.planets) {
-                // Normalize planet names (add name field)
-                const planets: Record<string, PlanetData> = {};
-                Object.entries(rawData.planets).forEach(([name, pData]: [string, any]) => {
-                    planets[name] = { ...pData, name };
-                });
-                setData({
-                    ...rawData,
-                    planets,
-                    ascendant: { ...rawData.ascendant, name: 'Ascendant' },
-                });
-            } else {
-                setError("No Pushkara Navamsha data found.");
-            }
+        if (!rawData) return null;
+
+        const rawPlanets = rawData.planets as Record<string, PlanetData> | undefined;
+        if (rawPlanets) {
+            // Normalize planet names (add name field)
+            const planets: Record<string, PlanetData> = {};
+            Object.entries(rawPlanets).forEach(([name, pData]: [string, PlanetData]) => {
+                planets[name] = { ...pData, name };
+            });
+            return {
+                ...rawData,
+                planets,
+                ascendant: { ...(rawData.ascendant as PlanetData), name: 'Ascendant' },
+                pushkara_summary: (rawData.pushkara_summary as PushkaraSummary) || {} as PushkaraSummary,
+                birth_details: (rawData.birth_details as Record<string, unknown>) || {},
+                calculation_settings: (rawData.calculation_settings as Record<string, unknown>) || {},
+                user_name: (rawData.user_name as string) || '',
+            } as PushkaraData;
+        }
+        return null;
+    }, [processedCharts, ayanamsa]);
+
+    // Show loading while: initial fetch, auto-generating, or refreshing
+    const loading = !data && (isLoadingCharts || isGeneratingCharts || isRefreshingCharts || isGeneratingLocal);
+
+    // Handle generate - for when specific chart is missing
+    const handleGenerate = async () => {
+        if (!clientId) return;
+        setIsGeneratingLocal(true);
+        try {
+            await clientApi.generateChart(clientId, 'pushkara_navamsha', ayanamsa.toLowerCase());
+            await refreshCharts();
         } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : "Failed to load Pushkara Navamsha data");
+            setError(err instanceof Error ? err.message : 'Failed to generate Pushkara Navamsha');
         } finally {
-            setLoading(false);
+            setIsGeneratingLocal(false);
         }
     };
 
+    // Handle refresh - trigger page reload
+    const handleRefresh = () => {
+        window.location.reload();
+    };
+
     useEffect(() => {
-        if (ayanamsa === 'Lahiri' && clientId) {
-            fetchData();
+        if (!data && !isLoadingCharts && !isGeneratingCharts && !isRefreshingCharts && !isGeneratingLocal) {
+            setError("No Pushkara Navamsha data found.");
+        } else {
+            setError(null);
         }
-    }, [clientId, ayanamsa]);
+    }, [data, isLoadingCharts, isGeneratingCharts, isRefreshingCharts, isGeneratingLocal]);
 
     if (ayanamsa !== 'Lahiri') {
         return (
@@ -177,11 +200,28 @@ export default function PushkaraNavamshaPage() {
             ) : error ? (
                 <div className="p-10 bg-red-50 border border-red-100 rounded-3xl text-center">
                     <AlertTriangle className="w-10 h-10 text-red-500 mx-auto mb-4" />
-                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 !mb-2")}>Analysis Error</h3>
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 !mb-2")}>Data Not Available</h3>
                     <p className={cn(TYPOGRAPHY.subValue, "!text-red-600 max-w-md mx-auto !mb-6")}>{error}</p>
-                    <button onClick={fetchData} className={cn(TYPOGRAPHY.label, "px-6 py-2.5 bg-red-100 text-red-700 rounded-xl !text-[14px] !font-bold hover:bg-red-200 transition-colors")}>
-                        Retry
-                    </button>
+                    <div className="flex items-center justify-center gap-3">
+                        <button 
+                            onClick={handleGenerate} 
+                            disabled={isGeneratingLocal}
+                            className={cn(TYPOGRAPHY.label, "px-6 py-2.5 bg-gold-primary text-white rounded-xl !text-[14px] !font-bold hover:bg-gold-dark transition-colors disabled:opacity-50 flex items-center gap-2")}
+                        >
+                            {isGeneratingLocal ? (
+                                <><Loader2 className="w-4 h-4 animate-spin" /> Generating...</>
+                            ) : (
+                                <><RefreshCw className="w-4 h-4" /> Generate Pushkara Data</>
+                            )}
+                        </button>
+                        <button 
+                            onClick={handleRefresh} 
+                            disabled={isRefreshingCharts}
+                            className={cn(TYPOGRAPHY.label, "px-6 py-2.5 bg-red-100 text-red-700 rounded-xl !text-[14px] !font-bold hover:bg-red-200 transition-colors disabled:opacity-50")}
+                        >
+                            Refresh Page
+                        </button>
+                    </div>
                 </div>
             ) : data ? (
                 <PushkaraDashboard data={data} />

@@ -99,6 +99,18 @@ export default function CustomizePage() {
     useEffect(() => {
         localStorage.setItem('grahvani_customize_ayanamsa', localAyanamsa);
     }, [localAyanamsa]);
+
+    // Track previous global ayanamsa to detect actual changes vs local overrides
+    const prevGlobalAyanamsaRef = useRef(globalAyanamsa);
+
+    // Sync localAyanamsa with globalAyanamsa when global changes (from header)
+    useEffect(() => {
+        // Only sync if global ayanamsa actually changed (not on initial mount)
+        if (prevGlobalAyanamsaRef.current !== globalAyanamsa) {
+            setLocalAyanamsa(globalAyanamsa);
+            prevGlobalAyanamsaRef.current = globalAyanamsa;
+        }
+    }, [globalAyanamsa]);
     const {
         selectedItems,
         selectedChartDetails,
@@ -540,7 +552,8 @@ export default function CustomizePage() {
                         {/* Render All Items in Order */}
                         {selectedChartDetails.map((item) => {
                             const isWidget = item.category.startsWith('widget_') || item.category === 'kp_module';
-                            const colSpan = getWidgetSizeClasses(item.size);
+                            // When in single column mode, force col-span-1 to prevent layout issues
+                            const colSpan = columnCount === 1 ? 'col-span-1' : getWidgetSizeClasses(item.size);
                             const commonProps = {
                                 size: item.size,
                                 collapsed: item.collapsed,
@@ -1376,21 +1389,54 @@ function DashaBox({ dasha, clientId, activeSystem, onRemove, size, collapsed, on
 
     // Use vimshottari hook for vimshottari and tribhagi (tribhagi is a variation of vimshottari)
     const isVimshottari = dasha.id === 'vimshottari' || dasha.id === 'tribhagi';
-    const { data: vimshottariData, isLoading: isVimshottariLoading } = useDasha(
+    const { 
+        data: vimshottariData, 
+        isLoading: isVimshottariLoading,
+        isFetching: isVimshottariFetching
+    } = useDasha(
         isVimshottari && !cachedData ? clientId : '',
         'mahadasha',
         activeSystem
     );
     // Use other dasha hook for non-vimshottari dashas
-    const { data: otherDashaData, isLoading: isOtherDashaLoading } = useOtherDasha(
+    const { 
+        data: otherDashaData, 
+        isLoading: isOtherDashaLoading,
+        isFetching: isOtherDashaFetching
+    } = useOtherDasha(
         !isVimshottari && !cachedData ? clientId : '',
         dasha.id,
         activeSystem,
         'mahadasha'
     );
+    
     const dashaData = cachedData || (isVimshottari ? vimshottariData : otherDashaData);
     const isDashaLoading = !dashaData && (isVimshottari ? isVimshottariLoading : isOtherDashaLoading);
+    const isDashaFetching = isVimshottari ? isVimshottariFetching : isOtherDashaFetching;
     const hasData = !!dashaData;
+    
+    // Track which ayanamsa the displayed data corresponds to
+    const [dataAyanamsa, setDataAyanamsa] = useState(activeSystem);
+    const isDataStale = hasData && dataAyanamsa !== activeSystem;
+    
+    useEffect(() => {
+        // When ayanamsa changes and we have data, mark as stale until we confirm data is for new ayanamsa
+        if (dataAyanamsa !== activeSystem && hasData) {
+            // Check if we have cached data for the new ayanamsa
+            if (cachedData) {
+                // We have cached data for new ayanamsa, update immediately
+                setDataAyanamsa(activeSystem);
+            }
+            // Otherwise wait for fetch to complete
+        }
+    }, [activeSystem, dataAyanamsa, hasData, cachedData]);
+    
+    useEffect(() => {
+        // When fetch completes and we have data, update the data ayanamsa
+        if (hasData && isDashaFetching === false && dataAyanamsa !== activeSystem) {
+            setDataAyanamsa(activeSystem);
+        }
+    }, [hasData, isDashaFetching, activeSystem, dataAyanamsa]);
 
     return (
         <DashboardCard
@@ -1406,7 +1452,7 @@ function DashaBox({ dasha, clientId, activeSystem, onRemove, size, collapsed, on
             ayanamsa={activeSystem}
             onAyanamsaChange={onAyanamsaChange}
         >
-            {!hasData ? (
+            {!hasData || isDataStale ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                     {!isChartCompatible(dasha.id, activeSystem) ? (
                         <>
@@ -1421,7 +1467,9 @@ function DashaBox({ dasha, clientId, activeSystem, onRemove, size, collapsed, on
                     ) : (
                         <>
                             <AlertCircle className="w-8 h-8 text-purple-300 mb-3" />
-                            <p className="text-[11px] text-ink/50 mb-4">Dasha data loading...</p>
+                            <p className="text-[11px] text-ink/50 mb-4">
+                                {isDataStale ? 'Updating for new ayanamsa...' : 'Dasha data loading...'}
+                            </p>
                             <Loader2 className="w-5 h-5 animate-spin text-purple-500" />
                         </>
                     )}
@@ -1481,7 +1529,7 @@ function AshtakavargaBox({
     onSizeChange: (s: WidgetSize) => void;
     onAyanamsaChange: (a: string) => void;
 }) {
-    const ashtakaKey = `${ashtakavarga.id}_${activeSystem}`;
+    const ashtakaKey = `${ashtakavarga.id}_${activeSystem.toLowerCase()}`;
     const { processedCharts, isGeneratingCharts } = useVedicClient();
     const rawData = processedCharts[ashtakaKey]?.chartData;
     const isAshtakaLoading = !rawData && isGeneratingCharts;

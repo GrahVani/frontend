@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
     Shield,
@@ -11,6 +11,7 @@ import {
     User,
     CheckCircle2,
     Info,
+    RefreshCw,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useVedicClient } from '@/context/VedicClientContext';
@@ -33,7 +34,7 @@ export interface KarakaData {
 
 export interface CharaKarakasResponse {
     karakas: KarakaData[];
-    all_planet_positions?: Record<string, any>;
+    all_planet_positions?: Record<string, unknown>;
 }
 
 // ============================================================================
@@ -68,78 +69,95 @@ const PLANET_ICON_COLORS: Record<string, string> = {
 // ============================================================================
 
 export default function CharaKarakasPage() {
-    const { clientDetails } = useVedicClient();
+    const { clientDetails, processedCharts, isLoadingCharts, isRefreshingCharts, isGeneratingCharts, refreshCharts } = useVedicClient();
     const { ayanamsa } = useAstrologerStore();
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [data, setData] = useState<CharaKarakasResponse | null>(null);
+    const [isGeneratingLocal, setIsGeneratingLocal] = useState(false);
 
     const clientId = clientDetails?.id || '';
 
-    const fetchData = async () => {
+    // Get Chara Karakas data from database (processedCharts)
+    const data: CharaKarakasResponse | null = useMemo(() => {
+        const chartKey = `chara_karakas_${ayanamsa.toLowerCase()}`;
+        const chart = processedCharts[chartKey];
+        const rawData = (chart?.chartData?.data || chart?.chartData) as Record<string, unknown> | undefined;
+
+        if (!rawData) return null;
+
+        // If the data returns 'karakas' directly, use it
+        const rawKarakas = rawData.karakas as KarakaData[] | undefined;
+        if (rawKarakas) {
+            return {
+                karakas: rawKarakas,
+                all_planet_positions: (rawData.all_planet_positions as Record<string, unknown>) || undefined
+            };
+        }
+        // If it only returns planet positions, calculate them (7-karaka system)
+        const rawPlanetPositions = rawData.all_planet_positions as Record<string, { degree_in_sign: number; dms_in_sign?: string; sign_name?: string }> | undefined;
+        if (rawPlanetPositions) {
+            const planetsToProcess = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
+
+            const extractedPlanets = planetsToProcess
+                .filter(name => rawPlanetPositions[name])
+                .map(name => ({
+                    name,
+                    degreeVal: rawPlanetPositions[name].degree_in_sign,
+                    degreeFormatted: rawPlanetPositions[name].dms_in_sign || '',
+                    sign: rawPlanetPositions[name].sign_name || ''
+                }))
+                .sort((a, b) => b.degreeVal - a.degreeVal);
+
+            const karakaShort = ['AK', 'AmK', 'BK', 'MK', 'PuK', 'GK', 'DK'];
+            const karakaFull = [
+                'Atma Karaka', 'Amatya Karaka', 'Bhatra Karaka',
+                'Matra Karaka', 'Putra Karaka', 'Gnati Karaka', 'Dara Karaka'
+            ];
+
+            const computedKarakas: KarakaData[] = extractedPlanets.map((p, i) => ({
+                planet: p.name,
+                karaka_full: karakaFull[i] || 'Karaka',
+                karaka_short: karakaShort[i] || 'K',
+                degree: p.degreeFormatted,
+                sign: p.sign
+            }));
+
+            return {
+                karakas: computedKarakas,
+                all_planet_positions: rawPlanetPositions
+            };
+        }
+        return null;
+    }, [processedCharts, ayanamsa]);
+
+    // Show loading while: initial fetch, auto-generating, or refreshing
+    const loading = !data && (isLoadingCharts || isGeneratingCharts || isRefreshingCharts || isGeneratingLocal);
+
+    // Handle generate - for when specific chart is missing
+    const handleGenerate = async () => {
         if (!clientId) return;
-        setLoading(true);
-        setError(null);
+        setIsGeneratingLocal(true);
         try {
-            const result = await clientApi.getCharaKarakas(clientId) as any;
-            const rawData = result.data?.data || result.chartData?.data || result.data || result.chartData || result;
-
-            if (rawData) {
-                // If the API returns 'karakas' directly, use it
-                if (rawData.karakas) {
-                    setData(rawData);
-                }
-                // If it only returns planet positions, calculate them (7-karaka system)
-                else if (rawData.all_planet_positions) {
-                    const planetsToProcess = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
-                    const planetPositions = rawData.all_planet_positions;
-
-                    const extractedPlanets = planetsToProcess
-                        .filter(name => planetPositions[name])
-                        .map(name => ({
-                            name,
-                            degreeVal: planetPositions[name].degree_in_sign,
-                            degreeFormatted: planetPositions[name].dms_in_sign || '',
-                            sign: planetPositions[name].sign_name || '' // Some engines provide sign_name
-                        }))
-                        .sort((a, b) => b.degreeVal - a.degreeVal);
-
-                    const karakaShort = ['AK', 'AmK', 'BK', 'MK', 'PuK', 'GK', 'DK'];
-                    const karakaFull = [
-                        'Atma Karaka', 'Amatya Karaka', 'Bhatra Karaka',
-                        'Matra Karaka', 'Putra Karaka', 'Gnati Karaka', 'Dara Karaka'
-                    ];
-
-                    const computedKarakas: KarakaData[] = extractedPlanets.map((p, i) => ({
-                        planet: p.name,
-                        karaka_full: karakaFull[i] || 'Karaka',
-                        karaka_short: karakaShort[i] || 'K',
-                        degree: p.degreeFormatted,
-                        sign: p.sign
-                    }));
-
-                    setData({
-                        karakas: computedKarakas,
-                        all_planet_positions: rawData.all_planet_positions
-                    });
-                } else {
-                    setError("Response format not recognized.");
-                }
-            } else {
-                setError("No Chara Karakas data found.");
-            }
+            await clientApi.generateChart(clientId, 'chara_karakas', ayanamsa.toLowerCase());
+            await refreshCharts();
         } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : "Failed to load Chara Karakas data");
+            setError(err instanceof Error ? err.message : 'Failed to generate Chara Karakas');
         } finally {
-            setLoading(false);
+            setIsGeneratingLocal(false);
         }
     };
 
+    // Handle refresh - trigger page reload
+    const handleRefresh = () => {
+        window.location.reload();
+    };
+
     useEffect(() => {
-        if (ayanamsa === 'Lahiri' && clientId) {
-            fetchData();
+        if (!data && !isLoadingCharts && !isGeneratingCharts && !isRefreshingCharts && !isGeneratingLocal) {
+            setError("No Chara Karakas data found.");
+        } else {
+            setError(null);
         }
-    }, [clientId, ayanamsa]);
+    }, [data, isLoadingCharts, isGeneratingCharts, isRefreshingCharts, isGeneratingLocal]);
 
     if (ayanamsa !== 'Lahiri') {
         return (
@@ -177,10 +195,28 @@ export default function CharaKarakasPage() {
             ) : error ? (
                 <div className="p-8 bg-red-50/50 border border-red-100 rounded-2xl text-center">
                     <AlertTriangle className="w-8 h-8 text-red-500 mx-auto mb-3" />
+                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 !text-base !mb-2")}>Data Not Available</h3>
                     <p className={cn(TYPOGRAPHY.subValue, "!text-red-600 !text-[13px] !mb-4")}>{error}</p>
-                    <button onClick={fetchData} className={cn(TYPOGRAPHY.label, "px-5 py-2 bg-red-100 text-red-700 rounded-lg !text-[12px] !font-bold hover:bg-red-200 transition-colors")}>
-                        Retry
-                    </button>
+                    <div className="flex items-center justify-center gap-3">
+                        <button 
+                            onClick={handleGenerate} 
+                            disabled={isGeneratingLocal}
+                            className={cn(TYPOGRAPHY.label, "px-5 py-2 bg-gold-primary text-white rounded-lg !text-[12px] !font-bold hover:bg-gold-dark transition-colors disabled:opacity-50 flex items-center gap-2")}
+                        >
+                            {isGeneratingLocal ? (
+                                <><Loader2 className="w-4 h-4 animate-spin" /> Generating...</>
+                            ) : (
+                                <><RefreshCw className="w-4 h-4" /> Generate Karakas</>
+                            )}
+                        </button>
+                        <button 
+                            onClick={handleRefresh} 
+                            disabled={isRefreshingCharts}
+                            className={cn(TYPOGRAPHY.label, "px-5 py-2 bg-red-100 text-red-700 rounded-lg !text-[12px] !font-bold hover:bg-red-200 transition-colors disabled:opacity-50")}
+                        >
+                            Refresh Page
+                        </button>
+                    </div>
                 </div>
             ) : data ? (
                 <KarakaDashboard data={data} />

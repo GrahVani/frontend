@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode, useEffect, useMemo, useCallback } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect, useMemo, useCallback, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { useClientCharts, type ChartLookup } from "@/hooks/queries/useClientCharts";
 import { useGenerateProfile } from "@/hooks/mutations/useGenerateProfile";
@@ -63,6 +63,27 @@ export function VedicClientProvider({ children }: { children: ReactNode }) {
     // isLoadingCharts should be true only if we have no data AND we are loading/fetching
     // This mimics the original behavior where isLoadingCharts was true only on initial empty fetch
     const isLoadingCharts = isQueryLoading && Object.keys(processedCharts).length === 0;
+
+    // Auto-generate charts on first visit if no charts exist (Option 2)
+    const hasAttemptedAutoGenRef = useRef(false);
+    useEffect(() => {
+        // Only run when:
+        // 1. Charts have finished loading (isQueryLoading is false)
+        // 2. We haven't already attempted auto-generation
+        // 3. Client ID exists
+        // 4. Charts are empty
+        // 5. Not already generating
+        if (
+            !isQueryLoading &&
+            !hasAttemptedAutoGenRef.current &&
+            chartClientId &&
+            Object.keys(processedCharts).length === 0 &&
+            !isGeneratingCharts
+        ) {
+            hasAttemptedAutoGenRef.current = true;
+            generateMutation.mutate(chartClientId);
+        }
+    }, [isQueryLoading, chartClientId, processedCharts, isGeneratingCharts, generateMutation]);
 
     // Rehydrate from sessionStorage with validation (ST-003)
     useEffect(() => {

@@ -238,8 +238,8 @@ export const CHART_CATALOG: CustomizeChartItem[] = [
     },
     {
         id: 'kp_cusps',
-        name: 'House Cusps',
-        description: 'Technical positions of the 12 house starting points (Cusps)',
+        name: 'Cuspal Chart',
+        description: 'Visual chart displaying the 12 house cusps with sign, nakshatra, and sub-lord details',
         category: 'kp_module',
         size: 'wide',
         requiredSystem: 'kp'
