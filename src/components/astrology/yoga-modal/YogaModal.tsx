@@ -1,9 +1,9 @@
 ﻿'use client';
 
-import React, { useState, useEffect, useMemo, memo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { Loader2, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { clientApi } from '@/lib/api';
+import { useVedicClient } from '@/context/VedicClientContext';
 import { KnowledgeTooltip } from '@/components/knowledge';
 import { normalizeYogaData } from './utils/normalizer';
 import { YogaSectionRenderer } from './YogaSectionRenderer';
@@ -18,13 +18,7 @@ interface YogaModalProps {
 }
 
 /**
- * YogaModal â€” the orchestrator component.
- *
- * 1. Fetches yoga data from the existing API (unchanged)
- * 2. Normalizes via normalizeYogaData()
- * 3. Delegates rendering to YogaSectionRenderer
- *
- * Handles loading, error, and "yoga absent" states.
+ * YogaModal — reads yoga data from processedCharts (database cache).
  */
 export const YogaModal = memo(function YogaModal({
     clientId,
@@ -33,34 +27,30 @@ export const YogaModal = memo(function YogaModal({
     className,
     onClose,
 }: YogaModalProps) {
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [rawData, setRawData] = useState<unknown>(null);
+    const { processedCharts, isLoadingCharts } = useVedicClient();
 
-    // Fetch data from existing API (no backend changes)
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const result = await clientApi.getYogaAnalysis(clientId, yogaType, ayanamsa);
-                // Safely unwrap: backend might return { data: { data: ... } }
-                const responseData = result.data?.data || result.data || result;
-                setRawData(responseData);
-            } catch (err: unknown) {
-                const message = err instanceof Error ? err.message : 'Failed to fetch yoga analysis';
-                setError(message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (clientId) {
-            fetchData();
+    // Get yoga data from processedCharts
+    const { rawData, loading, error } = useMemo(() => {
+        const yogaKey = `yoga_all_${ayanamsa.toLowerCase()}`;
+        const chart = processedCharts[yogaKey];
+        
+        if (!chart) {
+            return {
+                rawData: null,
+                loading: isLoadingCharts,
+                error: isLoadingCharts ? null : 'Yoga data not available'
+            };
         }
-    }, [clientId, yogaType, ayanamsa]);
 
-    // Normalize data â€” memoized to avoid re-processing on every render
+        const data = chart.chartData?.data || chart.chartData;
+        return {
+            rawData: data,
+            loading: false,
+            error: null
+        };
+    }, [processedCharts, ayanamsa, isLoadingCharts]);
+
+    // Normalize data — memoized to avoid re-processing on every render
     const normalized = useMemo(() => {
         if (!rawData) return null;
         return normalizeYogaData(rawData);

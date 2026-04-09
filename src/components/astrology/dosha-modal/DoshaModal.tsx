@@ -1,9 +1,9 @@
 ﻿'use client';
 
-import React, { useState, useEffect, useMemo, memo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { Loader2, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { clientApi } from '@/lib/api';
+import { useVedicClient } from '@/context/VedicClientContext';
 import { normalizeDoshaData } from './utils/dosha-normalizer';
 import { KnowledgeTooltip } from '@/components/knowledge';
 import { DoshaSectionRenderer } from '@/components/astrology/dosha-modal/DoshaSectionRenderer';
@@ -17,7 +17,7 @@ interface DoshaModalProps {
 }
 
 /**
- * DoshaModal â€” independent orchestrator for Dosha analysis.
+ * DoshaModal — reads dosha data from processedCharts (database cache).
  */
 export const DoshaModal = memo(function DoshaModal({
     clientId,
@@ -25,31 +25,28 @@ export const DoshaModal = memo(function DoshaModal({
     ayanamsa = 'lahiri',
     className,
 }: DoshaModalProps) {
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [rawData, setRawData] = useState<unknown>(null);
+    const { processedCharts, isLoadingCharts } = useVedicClient();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                // Fetch from Dosha-specific API
-                const result = await clientApi.getDoshaAnalysis(clientId, doshaType, ayanamsa);
-                const responseData = result.data?.data || result.data || result;
-                setRawData(responseData);
-            } catch (err: unknown) {
-                const message = err instanceof Error ? err.message : 'Failed to fetch dosha analysis';
-                setError(message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (clientId) {
-            fetchData();
+    // Get dosha data from processedCharts
+    const { rawData, loading, error } = useMemo(() => {
+        const doshaKey = `dosha_all_${ayanamsa.toLowerCase()}`;
+        const chart = processedCharts[doshaKey];
+        
+        if (!chart) {
+            return {
+                rawData: null,
+                loading: isLoadingCharts,
+                error: isLoadingCharts ? null : 'Dosha data not available'
+            };
         }
-    }, [clientId, doshaType, ayanamsa]);
+
+        const data = chart.chartData?.data || chart.chartData;
+        return {
+            rawData: data,
+            loading: false,
+            error: null
+        };
+    }, [processedCharts, ayanamsa, isLoadingCharts]);
 
     const normalized = useMemo(() => {
         if (!rawData) return null;
