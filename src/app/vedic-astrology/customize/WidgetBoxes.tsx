@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-    X, Loader2, AlertCircle, Sparkles, Layers, Shield, Gem, Star
+    X, Loader2, AlertCircle, Sparkles, Layers, Shield, Gem, Star, Table2
 } from 'lucide-react';
 import { clientApi } from '@/lib/api';
 import { cn } from "@/lib/utils";
@@ -13,6 +13,8 @@ import type { PushkaraData } from '@/app/vedic-astrology/pushkara-navamsha/page'
 import type { CharaKarakasResponse } from '@/app/vedic-astrology/chara-karakas/page';
 import SudarshanChakraFinal from '@/components/astrology/SudarshanChakraFinal';
 import ShodashaVargaTable from '@/components/astrology/ShodashaVargaTable';
+import IntegratedDashaViewer from '@/components/astrology/IntegratedDashaViewer';
+import AshtakavargaMatrix from '@/components/astrology/AshtakavargaMatrix';
 import { isChartCompatible, type AyanamsaSystem } from './ayana-types';
 import AyanamsaSelect from './AyanamsaSelect';
 
@@ -641,6 +643,63 @@ export function TransitWidget(props: WidgetBoxProps) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// DASHA WIDGET CONTENT (no card wrapper - for use in ResizableWidgetBox)
+// ═══════════════════════════════════════════════════════════════════════════════
+function DashaWidgetContent({ widget, clientId, activeSystem }: { widget: CustomizeChartItem; clientId: string; activeSystem: string }) {
+    const { processedCharts, isLoadingCharts } = useVedicClient();
+    
+    // Fetch from database (processedCharts) - key pattern: {dashaType}_{ayanamsa}
+    const dashaKey = `${widget.id}_${activeSystem.toLowerCase()}`;
+    const dashaRaw = processedCharts[dashaKey]?.chartData;
+    const dashaData = dashaRaw?.data || dashaRaw;
+    const loading = !dashaData && isLoadingCharts;
+
+    if (loading) {
+        return (
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <Loader2 className="w-8 h-8 text-purple-500 animate-spin mb-3" />
+                <p className="text-[11px] text-ink/50">Loading {widget.name}...</p>
+            </div>
+        );
+    }
+
+    if (!dashaData) {
+        return (
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                <AlertCircle className="w-8 h-8 text-purple-300 mb-3" />
+                <p className="text-[11px] text-ink/50">{widget.name} not generated</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="h-full overflow-auto custom-scrollbar">
+            <IntegratedDashaViewer
+                dashaType={widget.id}
+                clientId={clientId}
+                ayanamsa={activeSystem}
+                dashaData={dashaData}
+                isLoading={false}
+                compact
+            />
+        </div>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DASHA WIDGET (with card wrapper)
+// ═══════════════════════════════════════════════════════════════════════════════
+export function DashaWidget(props: WidgetBoxProps) {
+    const { widget, clientId, activeSystem } = props;
+    
+    return (
+        <WidgetCard {...props}>
+            <DashaWidgetContent widget={widget} clientId={clientId} activeSystem={activeSystem} />
+        </WidgetCard>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // REMEDY WIDGET
 // ═══════════════════════════════════════════════════════════════════════════════
 export function RemedyWidget(props: WidgetBoxProps) {
@@ -829,7 +888,7 @@ export function KpModuleWidget(props: WidgetBoxProps) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// RENDERER HELPER
+// RENDERER HELPER - Returns full widget with card wrapper
 // ═══════════════════════════════════════════════════════════════════════════════
 export function renderWidget(
     item: CustomizeChartItem & {
@@ -868,8 +927,186 @@ export function renderWidget(
         case 'widget_dosha': return <DoshaWidget key={item.instanceId} {...props} />;
         case 'widget_transit': return <TransitWidget key={item.instanceId} {...props} />;
         case 'widget_remedy': return <RemedyWidget key={item.instanceId} {...props} />;
+        case 'dasha': return <DashaWidget key={item.instanceId} {...props} />;
         case 'kp_module': return <KpModuleWidget key={item.instanceId} {...props} />;
         default: return null;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CONTENT-ONLY COMPONENTS (no card wrapper - for use in ResizableWidgetBox)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// Chakra Content Only
+function ChakraWidgetContent({ activeSystem }: { activeSystem: string }) {
+    const { processedCharts, isLoadingCharts } = useVedicClient();
+    const key = `sudarshana_${activeSystem.toLowerCase()}`;
+    const raw = processedCharts[key]?.chartData;
+    const chakraData = raw?.data || raw;
+    const loading = !chakraData && isLoadingCharts;
+
+    if (loading) {
+        return (
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <Loader2 className="w-8 h-8 text-violet-500 animate-spin mb-3" />
+                <p className="text-[11px] text-ink/50">Synchronizing chakra layers...</p>
+            </div>
+        );
+    }
+
+    if (!chakraData) {
+        return (
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                <Layers className="w-8 h-8 text-violet-300 mb-3" />
+                <p className="text-[11px] text-ink/50">Sudarshan Chakra not generated yet</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="h-full flex items-center justify-center p-4 overflow-visible">
+            <SudarshanChakraFinal data={chakraData} className="w-full h-full max-w-[520px] max-h-[520px]" />
+        </div>
+    );
+}
+
+// Shodasha Content Only
+function ShodashaWidgetContent({ activeSystem }: { activeSystem: string }) {
+    const { processedCharts, isLoadingCharts } = useVedicClient();
+    const shodashaKey = `ashtakavarga_shodasha_${activeSystem.toLowerCase()}`;
+    const shodashaKpKey = `shodasha_varga_signs_${activeSystem.toLowerCase()}`;
+    const raw = processedCharts[shodashaKey]?.chartData || processedCharts[shodashaKpKey]?.chartData;
+    const shodashaData = raw ? (raw.data || raw) : null;
+    const loading = !shodashaData && isLoadingCharts;
+
+    if (loading) {
+        return (
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <Loader2 className="w-8 h-8 text-teal-500 animate-spin mb-3" />
+                <p className="text-[11px] text-ink/50">Loading Shodashvarga...</p>
+            </div>
+        );
+    }
+
+    if (!shodashaData) {
+        return (
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                <Layers className="w-8 h-8 text-teal-300 mb-3" />
+                <p className="text-[11px] text-ink/50">Shodashvarga data unavailable</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="h-full overflow-auto custom-scrollbar p-2">
+            <ShodashaVargaTable data={shodashaData as Record<string, unknown>} />
+        </div>
+    );
+}
+
+// Ashtakavarga Content Only
+function AshtakavargaWidgetContent({ widget, activeSystem }: { widget: CustomizeChartItem; activeSystem: string }) {
+    const { processedCharts, isLoadingCharts } = useVedicClient();
+    const isSarva = widget.id === 'ashtakavarga_sarva';
+    const key = isSarva ? `ashtakavarga_sarva_${activeSystem.toLowerCase()}` : `ashtakavarga_bhinna_${activeSystem.toLowerCase()}`;
+    const raw = processedCharts[key]?.chartData;
+    const fullData = raw ? (raw.data || raw) : null;
+    const loading = !fullData && isLoadingCharts;
+
+    if (loading) {
+        return (
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <Loader2 className="w-8 h-8 text-emerald-500 animate-spin mb-3" />
+                <p className="text-[11px] text-ink/50">Loading Ashtakavarga...</p>
+            </div>
+        );
+    }
+
+    if (!fullData) {
+        return (
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                <Table2 className="w-8 h-8 text-emerald-300 mb-3" />
+                <p className="text-[11px] text-ink/50">{widget.name} not generated yet</p>
+            </div>
+        );
+    }
+    
+    return (
+        <div className="h-full p-2 overflow-auto">
+            <PremiumAshtakavargaMatrix 
+                data={fullData as any} 
+                type={isSarva ? 'sarva' : 'bhinna'} 
+                planet="Sun"
+            />
+        </div>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CONTENT RENDERER - Returns only the inner content (no card wrapper)
+// For use inside ResizableWidgetBox
+// ═══════════════════════════════════════════════════════════════════════════════
+export function renderWidgetContent(
+    item: CustomizeChartItem & {
+        instanceId: string;
+        size: WidgetSize;
+        collapsed: boolean;
+        onRemove: () => void;
+        onSizeChange?: (s: WidgetSize) => void;
+        onDuplicate?: () => void;
+        onCollapseToggle?: () => void;
+        onAyanamsaChange?: (a: string) => void;
+    },
+    clientId: string,
+    activeSystem: string
+): React.ReactNode {
+    // Build props for widgets that need the full WidgetBoxProps
+    const props: WidgetBoxProps = {
+        widget: item,
+        onRemove: item.onRemove,
+        clientId,
+        activeSystem,
+        size: item.size,
+        collapsed: item.collapsed,
+        onSizeChange: item.onSizeChange,
+        onDuplicate: item.onDuplicate,
+        onCollapseToggle: item.onCollapseToggle,
+        onAyanamsaChange: item.onAyanamsaChange,
+    };
+
+    switch (item.category) {
+        case 'dasha':
+            return <DashaWidgetContent widget={item} clientId={clientId} activeSystem={activeSystem} />;
+        case 'widget_chakra':
+            return <ChakraWidgetContent activeSystem={activeSystem} />;
+        case 'widget_shodasha':
+            return <ShodashaWidgetContent activeSystem={activeSystem} />;
+        case 'ashtakavarga':
+            return <AshtakavargaWidgetContent widget={item} activeSystem={activeSystem} />;
+        // For other widgets, use the full widget component (it has its own WidgetCard)
+        case 'widget_shadbala':
+            return <ShadbalaWidget {...props} />;
+        case 'widget_pushkara':
+            return <PushkaraWidget {...props} />;
+        case 'widget_karaka':
+            return <KarakaWidget {...props} />;
+        case 'widget_yoga':
+            return <YogaWidget {...props} />;
+        case 'widget_dosha':
+            return <DoshaWidget {...props} />;
+        case 'widget_transit':
+            return <TransitWidget {...props} />;
+        case 'widget_remedy':
+            return <RemedyWidget {...props} />;
+        case 'kp_module':
+            return <KpModuleWidget {...props} />;
+        default:
+            return (
+                <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+                    <AlertCircle className="w-8 h-8 text-gold-dark/30 mb-3" />
+                    <p className="text-[11px] text-ink/50">{item.name} content</p>
+                </div>
+            );
     }
 }
 
