@@ -39,7 +39,7 @@ import {
     DEFAULT_WIDGET_THEME,
     DEFAULT_DIMENSIONS,
 } from '@/hooks/useCustomizeCharts';
-import { renderWidget } from './WidgetBoxes';
+import { renderWidget, renderWidgetContent } from './WidgetBoxes';
 import WidgetConfigurator from './WidgetConfigurator';
 import CompactWidgetPanel from './CompactWidgetPanel';
 import ChartSelectorModal from './ChartSelectorModal';
@@ -526,7 +526,7 @@ export default function CustomizePage() {
                 ) : (
                     <div className="flex flex-wrap gap-6 content-start">
                         {selectedChartDetails.map((item) => {
-                            const isWidget = item.category.startsWith('widget_') || item.category === 'kp_module';
+                            const isWidget = item.category.startsWith('widget_') || item.category === 'kp_module' || item.category === 'dasha' || item.category === 'ashtakavarga';
                             const isDragged = draggedId === item.instanceId;
                             const isDragOver = dragOverId === item.instanceId && !isDragged;
                             
@@ -553,9 +553,14 @@ export default function CustomizePage() {
                                             onResize={(dw, dh) => resizeByDelta(item.instanceId, dw, dh)}
                                             onUpdateDimensions={(dims) => updateDimensions(item.instanceId, dims)}
                                         >
-                                            <div className="p-4 text-[10px]">
-                                                Widget: {item.name}
-                                            </div>
+                                            {renderWidgetContent({
+                                                ...item,
+                                                onRemove: () => removeChart(item.instanceId),
+                                                onSizeChange: () => {},
+                                                onDuplicate: () => duplicateChart(item.instanceId),
+                                                onCollapseToggle: () => {},
+                                                onAyanamsaChange: (a) => updateChartAyanamsa(item.instanceId, a),
+                                            }, clientId, activeSystem)}
                                         </ResizableWidgetBox>
                                     ) : (
                                         <ResizableWidgetBox

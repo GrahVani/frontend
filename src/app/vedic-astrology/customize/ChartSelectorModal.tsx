@@ -1,28 +1,19 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { 
     X, 
-    ChevronLeft, 
-    ChevronRight,
+    Plus,
     Globe,
-    Grid3X3,
+    Filter,
+    LayoutGrid,
+    ChevronDown,
     Check,
-    Search,
-    Sparkles,
-    Circle,
-    BarChart3,
-    Table2,
-    Layers,
-    Star,
-    Moon,
-    Sun,
     ArrowRight,
-    RotateCcw,
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import type { CustomizeChartItem } from '@/hooks/useCustomizeCharts';
-import { AYANAMSA_HIERARCHY, AYANAMSA_CONFIGS } from './ayana-types';
+import { AYANAMSA_HIERARCHY, AYANAMSA_OPTIONS, type AyanamsaSystem } from './ayana-types';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -37,61 +28,108 @@ interface ChartSelectorModalProps {
     currentAyanamsa: string;
 }
 
-type Step = 'ayanamsa' | 'category' | 'widget';
+interface DropdownProps {
+    label: string;
+    icon: React.ElementType;
+    value: string;
+    options: { value: string; label: string; count?: number }[];
+    onChange: (value: string) => void;
+    placeholder: string;
+    disabled?: boolean;
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// CATEGORY ICONS & COLORS
+// CUSTOM DROPDOWN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const CATEGORY_ICONS: Record<string, React.ElementType> = {
-    'divisional': Circle,
-    'lagna': Star,
-    'dasha': BarChart3,
-    'ashtakavarga': Table2,
-    'rare_shodash': Sparkles,
-    'special': Sparkles,
-    'widget_shadbala': BarChart3,
-    'widget_pushkara': Star,
-    'widget_karaka': Circle,
-    'widget_chakra': Circle,
-    'widget_shodasha': Table2,
-    'widget_yoga': Sparkles,
-    'widget_dosha': Moon,
-    'widget_transit': Sun,
-    'widget_remedy': Star,
-    'kp_module': Layers,
-};
+function CustomDropdown({ label, icon: Icon, value, options, onChange, placeholder, disabled = false }: DropdownProps) {
+    const [isOpen, setIsOpen] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
 
-const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-    'divisional': { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200' },
-    'lagna': { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200' },
-    'dasha': { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-200' },
-    'ashtakavarga': { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200' },
-    'rare_shodash': { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200' },
-    'widget_shadbala': { bg: 'bg-indigo-50', text: 'text-indigo-700', border: 'border-indigo-200' },
-    'widget_yoga': { bg: 'bg-pink-50', text: 'text-pink-700', border: 'border-pink-200' },
-    'widget_dosha': { bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-200' },
-    'kp_module': { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200' },
-};
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
-const CATEGORY_LABELS: Record<string, string> = {
-    'divisional': 'Divisional Charts',
-    'lagna': 'Lagna Charts',
-    'dasha': 'Dasha Systems',
-    'ashtakavarga': 'Ashtakavarga',
-    'rare_shodash': 'Rare Shodash Varga',
-    'special': 'Special Charts',
-    'widget_shadbala': 'Shadbala Analysis',
-    'widget_pushkara': 'Pushkara',
-    'widget_karaka': 'Chara Karaka',
-    'widget_chakra': 'Sudarshan Chakra',
-    'widget_shodasha': 'Shodashvarga',
-    'widget_yoga': 'Yoga Analysis',
-    'widget_dosha': 'Dosha Analysis',
-    'widget_transit': 'Daily Transit',
-    'widget_remedy': 'Remedies',
-    'kp_module': 'KP System',
-};
+    const selectedOption = options.find(opt => opt.value === value);
+    const displayText = selectedOption 
+        ? `${selectedOption.label}${selectedOption.count !== undefined ? ` (${selectedOption.count})` : ''}`
+        : placeholder;
+
+    return (
+        <div ref={containerRef} className="relative flex-1 min-w-0">
+            <label className="block text-[10px] font-black uppercase tracking-wider text-gold-dark mb-1.5">
+                {label}
+            </label>
+            <button
+                type="button"
+                onClick={() => !disabled && setIsOpen(!isOpen)}
+                disabled={disabled}
+                className={cn(
+                    "w-full flex items-center gap-2.5 px-4 py-3 rounded-xl border-2 text-left transition-all",
+                    disabled 
+                        ? "bg-gray-50 border-gray-200 cursor-not-allowed opacity-60" 
+                        : "bg-white border-[#E6D5B8]/50 hover:border-primary/40 hover:shadow-sm cursor-pointer"
+                )}
+            >
+                <Icon className={cn(
+                    "w-4 h-4 shrink-0",
+                    disabled ? "text-gray-400" : "text-gold-dark"
+                )} />
+                <span className={cn(
+                    "flex-1 text-[13px] font-medium truncate",
+                    selectedOption ? "text-ink" : "text-ink/50"
+                )}>
+                    {displayText}
+                </span>
+                <ChevronDown className={cn(
+                    "w-4 h-4 shrink-0 transition-transform duration-200",
+                    isOpen ? "rotate-180" : "",
+                    disabled ? "text-gray-400" : "text-gold-dark"
+                )} />
+            </button>
+
+            {/* Dropdown Menu */}
+            {isOpen && !disabled && (
+                <div className="absolute z-[100] top-full left-0 right-0 mt-2 bg-white rounded-xl border border-[#E6D5B8]/50 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[280px] overflow-y-auto custom-scrollbar">
+                    {options.map((option) => {
+                        const isSelected = option.value === value;
+                        const displayLabel = `${option.label}${option.count !== undefined ? ` (${option.count})` : ''}`;
+                        return (
+                            <button
+                                key={option.value}
+                                type="button"
+                                onClick={() => {
+                                    onChange(option.value);
+                                    setIsOpen(false);
+                                }}
+                                className={cn(
+                                    "w-full flex items-center justify-between px-4 py-3 text-left transition-all",
+                                    isSelected 
+                                        ? "bg-primary/5 text-primary" 
+                                        : "hover:bg-surface-warm/50 text-ink"
+                                )}
+                            >
+                                <span className="text-[13px] font-medium">
+                                    {displayLabel}
+                                </span>
+                                {isSelected && (
+                                    <Check className="w-4 h-4 text-primary shrink-0" />
+                                )}
+                            </button>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // MAIN COMPONENT
@@ -105,30 +143,46 @@ export default function ChartSelectorModal({
     onSelect,
     currentAyanamsa,
 }: ChartSelectorModalProps) {
-    const [step, setStep] = useState<Step>('ayanamsa');
-    const [selectedAyanamsa, setSelectedAyanamsa] = useState(currentAyanamsa);
+    const [selectedAyanamsa, setSelectedAyanamsa] = useState<AyanamsaSystem>(currentAyanamsa as AyanamsaSystem || 'Lahiri');
     const [selectedCategory, setSelectedCategory] = useState<string>('');
-    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedWidget, setSelectedWidget] = useState<string>('');
 
     // Get hierarchy for selected ayanamsa
     const activeHierarchy = useMemo(() => {
         return AYANAMSA_HIERARCHY.find(h => h.value === selectedAyanamsa);
     }, [selectedAyanamsa]);
 
-    // Get categories for selected ayanamsa
-    const availableCategories = useMemo(() => {
+    // Ayanamsa dropdown options
+    const ayanamsaOptions = useMemo(() => {
+        return AYANAMSA_OPTIONS.map(opt => ({
+            value: opt.value,
+            label: opt.label,
+        }));
+    }, []);
+
+    // Category dropdown options
+    const categoryOptions = useMemo(() => {
         if (!activeHierarchy) return [];
-        return activeHierarchy.categories.filter(cat => {
-            // Check if category has any available widgets
-            return cat.widgets.some(w => {
-                const chart = availableCharts.find(c => c.id === w.id);
-                return chart && !selectedCharts.includes(`${w.id}_${selectedAyanamsa.toLowerCase()}`);
-            });
-        });
+        return activeHierarchy.categories
+            .filter(cat => {
+                // Check if category has any available widgets
+                return cat.widgets.some(w => {
+                    const chart = availableCharts.find(c => c.id === w.id);
+                    return chart && !selectedCharts.includes(`${w.id}_${selectedAyanamsa.toLowerCase()}`);
+                });
+            })
+            .map(cat => ({
+                value: cat.id,
+                label: cat.name,
+                count: cat.widgets.filter(w => {
+                    const chart = availableCharts.find(c => c.id === w.id);
+                    return chart && !selectedCharts.includes(`${w.id}_${selectedAyanamsa.toLowerCase()}`);
+                }).length,
+            }));
     }, [activeHierarchy, availableCharts, selectedCharts, selectedAyanamsa]);
 
-    // Get widgets for selected category
-    const categoryWidgets = useMemo(() => {
+    // Widget dropdown options
+    const widgetOptions = useMemo(() => {
         if (!selectedCategory || !activeHierarchy) return [];
         const cat = activeHierarchy.categories.find(c => c.id === selectedCategory);
         if (!cat) return [];
@@ -137,77 +191,85 @@ export default function ChartSelectorModal({
             .map(w => availableCharts.find(c => c.id === w.id))
             .filter((c): c is CustomizeChartItem => !!c)
             .filter(c => !selectedCharts.includes(`${c.id}_${selectedAyanamsa.toLowerCase()}`))
-            .filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                        c.description.toLowerCase().includes(searchQuery.toLowerCase()));
-    }, [selectedCategory, activeHierarchy, availableCharts, selectedCharts, selectedAyanamsa, searchQuery]);
+            .map(c => ({
+                value: c.id,
+                label: c.name,
+            }));
+    }, [selectedCategory, activeHierarchy, availableCharts, selectedCharts, selectedAyanamsa]);
+
+    // Reset category and widget when ayanamsa changes
+    const handleAyanamsaChange = (value: string) => {
+        setSelectedAyanamsa(value as AyanamsaSystem);
+        setSelectedCategory('');
+        setSelectedWidget('');
+    };
+
+    // Reset widget when category changes
+    const handleCategoryChange = (value: string) => {
+        setSelectedCategory(value);
+        setSelectedWidget('');
+    };
+
+    // Handle widget selection - add the widget
+    const handleAddWidget = () => {
+        if (!selectedWidget) return;
+        const widget = availableCharts.find(c => c.id === selectedWidget);
+        if (widget) {
+            onSelect(widget, selectedAyanamsa);
+            // Reset widget selection after adding
+            setSelectedWidget('');
+            onClose();
+        }
+    };
 
     // Reset when opening
     React.useEffect(() => {
         if (isOpen) {
-            setStep('ayanamsa');
-            setSelectedAyanamsa(currentAyanamsa);
+            setSelectedAyanamsa(currentAyanamsa as AyanamsaSystem || 'Lahiri');
             setSelectedCategory('');
-            setSearchQuery('');
+            setSelectedWidget('');
         }
     }, [isOpen, currentAyanamsa]);
 
-    const handleAyanamsaSelect = (ayanamsa: string) => {
-        setSelectedAyanamsa(ayanamsa);
-        setStep('category');
-    };
-
-    const handleCategorySelect = (category: string) => {
-        setSelectedCategory(category);
-        setStep('widget');
-    };
-
-    const handleWidgetSelect = (widget: CustomizeChartItem) => {
-        onSelect(widget, selectedAyanamsa);
-    };
-
-    const handleBack = () => {
-        if (step === 'widget') {
-            setStep('category');
-            setSearchQuery('');
-        } else if (step === 'category') {
-            setStep('ayanamsa');
-            setSelectedCategory('');
+    // Auto-select "All Items" equivalent or first category when ayanamsa changes
+    React.useEffect(() => {
+        if (selectedAyanamsa && categoryOptions.length > 0 && !selectedCategory) {
+            // Find "All Items" option or use first category
+            const allItemsOption = categoryOptions.find(c => 
+                c.label.toLowerCase().includes('all') || c.label.toLowerCase().includes('divisional')
+            );
+            if (allItemsOption) {
+                setSelectedCategory(allItemsOption.value);
+            } else {
+                setSelectedCategory(categoryOptions[0].value);
+            }
         }
-    };
+    }, [categoryOptions, selectedAyanamsa, selectedCategory]);
 
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[70] flex items-start justify-center pt-20 animate-in fade-in duration-300">
             {/* Backdrop */}
-            <div className="absolute inset-0 bg-primary/50 backdrop-blur-md" onClick={onClose} />
+            <div className="absolute inset-0 bg-primary/40 backdrop-blur-sm" onClick={onClose} />
 
             {/* Modal */}
-            <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500 max-h-[85vh] flex flex-col">
+            <div className="relative w-full max-w-3xl mx-4 bg-[#F5EFE6] rounded-2xl shadow-2xl animate-in zoom-in-95 duration-300">
                 
                 {/* Header */}
-                <div className="px-6 py-4 border-b border-[#E6D5B8]/30 bg-surface-warm shrink-0">
+                <div className="px-6 py-5 bg-[#FDFBF7] border-b border-[#E6D5B8]/30">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            {step !== 'ayanamsa' && (
-                                <button
-                                    onClick={handleBack}
-                                    className="p-2 hover:bg-gold-primary/20 rounded-xl transition-colors text-ink/60 hover:text-ink"
-                                >
-                                    <ChevronLeft className="w-5 h-5" />
-                                </button>
-                            )}
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-xl bg-[#3D2314] flex items-center justify-center">
+                                <Plus className="w-6 h-6 text-white" />
+                            </div>
                             <div>
                                 <h2 className="text-[18px] font-black text-ink tracking-tight">
-                                    {step === 'ayanamsa' && 'Select Ayanamsa'}
-                                    {step === 'category' && 'Select Category'}
-                                    {step === 'widget' && CATEGORY_LABELS[selectedCategory] || 'Select Widget'}
+                                    ADD WIDGETS
                                 </h2>
-                                {step !== 'ayanamsa' && (
-                                    <p className="text-[11px] text-gold-dark font-bold mt-0.5">
-                                        {selectedAyanamsa} {step === 'widget' && `• ${categoryWidgets.length} available`}
-                                    </p>
-                                )}
+                                <p className="text-[11px] font-bold text-gold-dark tracking-wide">
+                                    SELECT CHARTS, WIDGETS & TOOLS
+                                </p>
                             </div>
                         </div>
                         <button
@@ -217,250 +279,67 @@ export default function ChartSelectorModal({
                             <X className="w-5 h-5" />
                         </button>
                     </div>
+                </div>
 
-                    {/* Progress Steps */}
-                    <div className="flex items-center gap-2 mt-4">
-                        {[
-                            { id: 'ayanamsa', label: 'Ayanamsa', icon: Globe },
-                            { id: 'category', label: 'Category', icon: Grid3X3 },
-                            { id: 'widget', label: 'Widget', icon: Check },
-                        ].map((s, idx) => {
-                            const isActive = step === s.id;
-                            const isPast = 
-                                (step === 'category' && s.id === 'ayanamsa') ||
-                                (step === 'widget' && (s.id === 'ayanamsa' || s.id === 'category'));
-                            
+                {/* Dropdowns Row */}
+                <div className="px-6 py-5 bg-[#E6D5B8]/20">
+                    <div className="flex items-start gap-4">
+                        <CustomDropdown
+                            label="Ayanamsa"
+                            icon={Globe}
+                            value={selectedAyanamsa}
+                            options={ayanamsaOptions}
+                            onChange={handleAyanamsaChange}
+                            placeholder="Select ayanamsa"
+                        />
+                        <CustomDropdown
+                            label="Category"
+                            icon={Filter}
+                            value={selectedCategory}
+                            options={categoryOptions}
+                            onChange={handleCategoryChange}
+                            placeholder={categoryOptions.length > 0 ? `${categoryOptions.length} categories` : "No categories"}
+                            disabled={categoryOptions.length === 0}
+                        />
+                        <CustomDropdown
+                            label="Widget"
+                            icon={LayoutGrid}
+                            value={selectedWidget}
+                            options={widgetOptions}
+                            onChange={setSelectedWidget}
+                            placeholder={widgetOptions.length > 0 ? `Choose widget (${widgetOptions.length})` : "No widgets"}
+                            disabled={widgetOptions.length === 0}
+                        />
+                    </div>
+                </div>
+
+                {/* Selected Widget Preview */}
+                {selectedWidget && (
+                    <div className="px-6 py-4 bg-white border-t border-[#E6D5B8]/30">
+                        {(() => {
+                            const widget = availableCharts.find(c => c.id === selectedWidget);
+                            if (!widget) return null;
                             return (
-                                <React.Fragment key={s.id}>
-                                    <div className={cn(
-                                        "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all",
-                                        isActive 
-                                            ? "bg-primary text-white shadow-sm" 
-                                            : isPast
-                                                ? "bg-primary/10 text-primary"
-                                                : "bg-white border border-[#E6D5B8]/30 text-ink/40"
-                                    )}>
-                                        <s.icon className="w-3.5 h-3.5" />
-                                        {s.label}
+                                <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                                        <LayoutGrid className="w-5 h-5 text-primary" />
                                     </div>
-                                    {idx < 2 && (
-                                        <ChevronRight className="w-4 h-4 text-ink/20" />
-                                    )}
-                                </React.Fragment>
+                                    <div className="flex-1">
+                                        <h3 className="text-[14px] font-bold text-ink">{widget.name}</h3>
+                                        <p className="text-[12px] text-ink/50">{widget.description}</p>
+                                    </div>
+                                    <button
+                                        onClick={handleAddWidget}
+                                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white bg-[#3D2314] hover:bg-[#3D2314]/90 transition-colors shadow-sm"
+                                    >
+                                        Add Widget
+                                        <ArrowRight className="w-4 h-4" />
+                                    </button>
+                                </div>
                             );
-                        })}
+                        })()}
                     </div>
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 overflow-y-auto custom-scrollbar p-5">
-                    {/* STEP 1: AYANAMSA SELECTION */}
-                    {step === 'ayanamsa' && (
-                        <div className="space-y-3">
-                            <p className="text-[13px] text-ink/60 mb-4">
-                                Choose the ayanamsa system for your calculations. Different systems support different charts.
-                            </p>
-                            
-                            {AYANAMSA_HIERARCHY.map((ayanamsa) => {
-                                const config = AYANAMSA_CONFIGS[ayanamsa.value as keyof typeof AYANAMSA_CONFIGS];
-                                const isSelected = selectedAyanamsa === ayanamsa.value;
-                                
-                                return (
-                                    <button
-                                        key={ayanamsa.value}
-                                        onClick={() => handleAyanamsaSelect(ayanamsa.value)}
-                                        className={cn(
-                                            "w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all",
-                                            isSelected
-                                                ? "border-primary bg-primary/5 shadow-sm"
-                                                : "border-[#E6D5B8]/30 bg-white hover:border-primary/30 hover:bg-surface-warm/30"
-                                        )}
-                                    >
-                                        <div className={cn(
-                                            "w-12 h-12 rounded-xl flex items-center justify-center shrink-0",
-                                            isSelected ? "bg-primary text-white" : "bg-surface-warm text-gold-dark"
-                                        )}>
-                                            <Globe className="w-6 h-6" />
-                                        </div>
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-[15px] font-bold text-ink">{ayanamsa.label}</span>
-                                                {isSelected && <Check className="w-4 h-4 text-primary" />}
-                                            </div>
-                                            <p className="text-[11px] text-ink/50 mt-0.5">
-                                                {`${ayanamsa.categories.length} categories available`}
-                                            </p>
-                                        </div>
-                                        <ArrowRight className={cn(
-                                            "w-5 h-5 transition-colors",
-                                            isSelected ? "text-primary" : "text-ink/20"
-                                        )} />
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    )}
-
-                    {/* STEP 2: CATEGORY SELECTION */}
-                    {step === 'category' && (
-                        <div className="space-y-3">
-                            <p className="text-[13px] text-ink/60 mb-4">
-                                Select a category to browse available widgets for <span className="font-bold text-ink">{selectedAyanamsa}</span>.
-                            </p>
-
-                            {availableCategories.length === 0 ? (
-                                <div className="text-center py-8 text-ink/50">
-                                    <p>No categories available for this ayanamsa.</p>
-                                    <button
-                                        onClick={handleBack}
-                                        className="mt-4 px-4 py-2 bg-primary/10 text-primary rounded-lg text-[12px] font-bold"
-                                    >
-                                        Select Different Ayanamsa
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-1 gap-2">
-                                    {availableCategories.map((category) => {
-                                        const Icon = CATEGORY_ICONS[category.id] || Grid3X3;
-                                        const colors = CATEGORY_COLORS[category.id] || { bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200' };
-                                        const label = CATEGORY_LABELS[category.id] || category.name;
-                                        
-                                        return (
-                                            <button
-                                                key={category.id}
-                                                onClick={() => handleCategorySelect(category.id)}
-                                                className={cn(
-                                                    "flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all hover:shadow-sm",
-                                                    "border-[#E6D5B8]/30 bg-white hover:border-primary/30"
-                                                )}
-                                            >
-                                                <div className={cn(
-                                                    "w-12 h-12 rounded-xl flex items-center justify-center shrink-0",
-                                                    colors.bg, colors.text
-                                                )}>
-                                                    <Icon className="w-6 h-6" />
-                                                </div>
-                                                <div className="flex-1">
-                                                    <span className="text-[15px] font-bold text-ink block">{label}</span>
-                                                    <p className="text-[11px] text-ink/50 mt-0.5">
-                                                        {category.widgets.length} widgets available
-                                                    </p>
-                                                </div>
-                                                <ArrowRight className="w-5 h-5 text-ink/20" />
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    {/* STEP 3: WIDGET SELECTION */}
-                    {step === 'widget' && (
-                        <div className="space-y-3">
-                            {/* Search */}
-                            <div className="relative mb-4">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink/40" />
-                                <input
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="Search widgets..."
-                                    className="w-full pl-10 pr-4 py-3 bg-white border border-[#E6D5B8]/30 rounded-xl text-[13px] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                                />
-                            </div>
-
-                            {categoryWidgets.length === 0 ? (
-                                <div className="text-center py-8">
-                                    <p className="text-ink/50">
-                                        {searchQuery ? 'No widgets match your search.' : 'No widgets available in this category.'}
-                                    </p>
-                                    {searchQuery && (
-                                        <button
-                                            onClick={() => setSearchQuery('')}
-                                            className="mt-4 px-4 py-2 bg-primary/10 text-primary rounded-lg text-[12px] font-bold"
-                                        >
-                                            Clear Search
-                                        </button>
-                                    )}
-                                </div>
-                            ) : (
-                                <div className="space-y-2">
-                                    {categoryWidgets.map((widget) => {
-                                        const Icon = CATEGORY_ICONS[widget.category] || Grid3X3;
-                                        const colors = CATEGORY_COLORS[widget.category] || { bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200' };
-                                        
-                                        return (
-                                            <button
-                                                key={widget.id}
-                                                onClick={() => handleWidgetSelect(widget)}
-                                                className="w-full flex items-start gap-4 p-4 rounded-xl border border-[#E6D5B8]/30 bg-white hover:border-primary hover:shadow-md transition-all text-left group"
-                                            >
-                                                <div className={cn(
-                                                    "w-10 h-10 rounded-lg flex items-center justify-center shrink-0 mt-0.5",
-                                                    colors.bg, colors.text
-                                                )}>
-                                                    <Icon className="w-5 h-5" />
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="flex items-center gap-2">
-                                                        <span className="text-[14px] font-bold text-ink group-hover:text-primary transition-colors">
-                                                            {widget.name}
-                                                        </span>
-                                                        {widget.defaultDimensions && (
-                                                            <span className="text-[9px] text-ink/30 bg-ink/5 px-1.5 py-0.5 rounded">
-                                                                {widget.defaultDimensions.width}×{widget.defaultDimensions.height}
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                    <p className="text-[12px] text-ink/50 mt-0.5 line-clamp-2">
-                                                        {widget.description}
-                                                    </p>
-                                                </div>
-                                                <div className="w-8 h-8 rounded-lg border-2 border-[#E6D5B8]/30 flex items-center justify-center group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-all shrink-0">
-                                                    <ArrowRight className="w-4 h-4" />
-                                                </div>
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </div>
-
-                {/* Footer */}
-                <div className="px-6 py-4 border-t border-[#E6D5B8]/30 bg-surface-warm shrink-0">
-                    <div className="flex items-center justify-between">
-                        {step === 'ayanamsa' ? (
-                            <button
-                                onClick={onClose}
-                                className="text-[13px] font-bold text-ink/50 hover:text-ink/70 px-4 py-2"
-                            >
-                                Cancel
-                            </button>
-                        ) : (
-                            <button
-                                onClick={handleBack}
-                                className="flex items-center gap-2 text-[13px] font-bold text-ink/60 hover:text-ink px-4 py-2"
-                            >
-                                <ChevronLeft className="w-4 h-4" />
-                                Back
-                            </button>
-                        )}
-                        
-                        {step === 'ayanamsa' && (
-                            <button
-                                onClick={() => setStep('category')}
-                                disabled={!selectedAyanamsa}
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white bg-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                Continue
-                                <ArrowRight className="w-4 h-4" />
-                            </button>
-                        )}
-                    </div>
-                </div>
+                )}
             </div>
         </div>
     );
