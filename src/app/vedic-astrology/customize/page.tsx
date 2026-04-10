@@ -45,15 +45,202 @@ import CompactWidgetPanel from './CompactWidgetPanel';
 import ChartSelectorModal from './ChartSelectorModal';
 import AyanamsaSelect from './AyanamsaSelect';
 
-// Components
-import { ChartWithPopup, CompactChartWithPopup, Planet } from '@/components/astrology/NorthIndianChart';
+// Components - Use ChartWithPopup (same as Kundali page) instead of CompactChartWithPopup
+import { ChartWithPopup, Planet, type ChartDisplayOptions } from '@/components/astrology/NorthIndianChart';
 import SouthIndianChart, { ChartColorMode } from '@/components/astrology/SouthIndianChart';
 import dynamic from 'next/dynamic';
 
 const DivisionalChartZoomModal = dynamic(() => import('@/components/astrology/DivisionalChartZoomModal'));
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// RESIZABLE WIDGET BOX - With resize handles and quick controls
+// SMART DEFAULT DIMENSIONS BY CONTENT TYPE
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const SMART_DEFAULTS: Record<string, WidgetDimensions> = {
+    // Charts - square aspect ratio for optimal first view (matching Kundali page)
+    divisional: { 
+        width: 470, height: 500, 
+        minWidth: 280, minHeight: 300, 
+        maxWidth: 900, maxHeight: 900 
+    },
+    lagna: { 
+        width: 470, height: 500, 
+        minWidth: 280, minHeight: 300, 
+        maxWidth: 900, maxHeight: 900 
+    },
+    rare_shodash: { 
+        width: 450, height: 480, 
+        minWidth: 280, minHeight: 300, 
+        maxWidth: 800, maxHeight: 800 
+    },
+    
+    // Tables - wider for data readability
+    ashtakavarga: { 
+        width: 580, height: 420, 
+        minWidth: 400, minHeight: 300, 
+        maxWidth: 1000, maxHeight: 700 
+    },
+    widget_shodasha: { 
+        width: 650, height: 380, 
+        minWidth: 500, minHeight: 300, 
+        maxWidth: 1200, maxHeight: 600 
+    },
+    
+    // Analysis widgets - balanced proportions
+    dasha: { 
+        width: 450, height: 520, 
+        minWidth: 350, minHeight: 400, 
+        maxWidth: 800, maxHeight: 900 
+    },
+    widget_shadbala: { 
+        width: 520, height: 480, 
+        minWidth: 400, minHeight: 350, 
+        maxWidth: 900, maxHeight: 800 
+    },
+    widget_yoga: { 
+        width: 500, height: 480, 
+        minWidth: 380, minHeight: 350, 
+        maxWidth: 900, maxHeight: 800 
+    },
+    widget_dosha: { 
+        width: 500, height: 480, 
+        minWidth: 380, minHeight: 350, 
+        maxWidth: 900, maxHeight: 800 
+    },
+    
+    // Others
+    widget_transit: { 
+        width: 480, height: 320, 
+        minWidth: 380, minHeight: 250, 
+        maxWidth: 900, maxHeight: 600 
+    },
+    widget_remedy: { 
+        width: 520, height: 450, 
+        minWidth: 400, minHeight: 350, 
+        maxWidth: 900, maxHeight: 800 
+    },
+    widget_pushkara: { 
+        width: 480, height: 380, 
+        minWidth: 380, minHeight: 300, 
+        maxWidth: 900, maxHeight: 700 
+    },
+    widget_karaka: { 
+        width: 400, height: 380, 
+        minWidth: 320, minHeight: 300, 
+        maxWidth: 800, maxHeight: 700 
+    },
+    widget_chakra: { 
+        width: 480, height: 480, 
+        minWidth: 380, minHeight: 380, 
+        maxWidth: 900, maxHeight: 900 
+    },
+    kp_module: { 
+        width: 480, height: 420, 
+        minWidth: 380, minHeight: 320, 
+        maxWidth: 900, maxHeight: 800 
+    },
+};
+
+// Get smart defaults for a widget type
+function getSmartDefaults(category: string): WidgetDimensions {
+    return SMART_DEFAULTS[category] || SMART_DEFAULTS.divisional;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CUSTOM CHART WIDGET - Optimized for customization page
+// Uses ChartWithPopup (square) like Kundali page, NOT CompactChartWithPopup
+// ═══════════════════════════════════════════════════════════════════════════════
+
+interface CustomChartWidgetProps extends ChartDisplayOptions {
+    planets: Planet[];
+    ascendantSign: number;
+    width: number;
+    height: number;
+    chartStyle?: 'North Indian' | 'South Indian';
+    colorTheme?: ChartColorTheme;
+}
+
+// Memoized chart widget to prevent unnecessary re-renders
+// Chart STRETCHES to fill the container (no centering, no aspect ratio preservation)
+const CustomChartWidget = React.memo(function CustomChartWidget({
+    planets,
+    ascendantSign,
+    width,
+    height,
+    chartStyle = 'North Indian',
+    colorTheme = 'classic',
+    // Chart display options
+    planetDisplayMode = 'name',
+    planetFontSize,
+    planetFontWeight = '600',
+    showDegrees = true,
+    degreeFormat = 'short',
+    degreeFontSize,
+    showHouseNumbers = true,
+    showGridLines = true,
+    gridLineColor = '#D4C4A8',
+    gridLineWidth = 2,
+    showRetrogradeIndicator = true,
+    retrogradeStyle = 'R',
+    planetSpacing = 'normal',
+    labelDensity = 'normal',
+}: CustomChartWidgetProps) {
+    
+    if (chartStyle === 'South Indian') {
+        return (
+            <div className="w-full h-full overflow-hidden">
+                <SouthIndianChart
+                    ascendantSign={ascendantSign}
+                    planets={planets}
+                    colorMode="color"
+                    colorTheme={colorTheme}
+                    className="w-full h-full"
+                />
+            </div>
+        );
+    }
+
+    return (
+        <div className="w-full h-full overflow-hidden">
+            <ChartWithPopup
+                ascendantSign={ascendantSign}
+                planets={planets}
+                className="w-full h-full"
+                preserveAspectRatio="none"
+                // Pass all chart display options
+                planetDisplayMode={planetDisplayMode}
+                planetFontSize={planetFontSize}
+                planetFontWeight={planetFontWeight}
+                showDegrees={showDegrees}
+                degreeFormat={degreeFormat}
+                degreeFontSize={degreeFontSize}
+                showHouseNumbers={showHouseNumbers}
+                showGridLines={showGridLines}
+                gridLineColor={gridLineColor}
+                gridLineWidth={gridLineWidth}
+                showRetrogradeIndicator={showRetrogradeIndicator}
+                retrogradeStyle={retrogradeStyle}
+                planetSpacing={planetSpacing}
+                labelDensity={labelDensity}
+            />
+        </div>
+    );
+}, (prev, next) => {
+    // Custom comparison for memoization
+    return prev.ascendantSign === next.ascendantSign &&
+           prev.width === next.width &&
+           prev.height === next.height &&
+           prev.chartStyle === next.chartStyle &&
+           prev.planetDisplayMode === next.planetDisplayMode &&
+           prev.planetFontSize === next.planetFontSize &&
+           prev.showDegrees === next.showDegrees &&
+           prev.showHouseNumbers === next.showHouseNumbers &&
+           prev.showGridLines === next.showGridLines &&
+           JSON.stringify(prev.planets) === JSON.stringify(next.planets);
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// RESIZABLE WIDGET BOX - With smart scroll behavior and overlap fixes
 // ═══════════════════════════════════════════════════════════════════════════════
 
 interface ResizableWidgetBoxProps {
@@ -69,7 +256,7 @@ interface ResizableWidgetBoxProps {
     onGenerate?: () => void;
 }
 
-function ResizableWidgetBox({
+const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
     item,
     onRemove,
     onCustomize,
@@ -92,7 +279,16 @@ function ResizableWidgetBox({
     }[theme.shadowIntensity];
 
     const [isResizing, setIsResizing] = useState(false);
+    const [needsScroll, setNeedsScroll] = useState(false);
+    const contentRef = useRef<HTMLDivElement>(null);
     const resizeStart = useRef({ x: 0, y: 0, width: 0, height: 0 });
+
+    // Check if content needs scroll based on default size
+    useEffect(() => {
+        const defaults = getSmartDefaults(item.category);
+        const isCompressed = dimensions.width < defaults.minWidth || dimensions.height < defaults.minHeight;
+        setNeedsScroll(isCompressed);
+    }, [dimensions, item.category]);
 
     // Quick resize handlers
     const handleQuickResize = (deltaW: number, deltaH: number) => {
@@ -142,7 +338,7 @@ function ResizableWidgetBox({
     return (
         <div
             className={cn(
-                "relative flex flex-col overflow-hidden transition-shadow",
+                "relative flex flex-col transition-shadow",
                 shadowClass,
                 showBorder && "border",
                 isResizing && "select-none",
@@ -157,10 +353,10 @@ function ResizableWidgetBox({
                 borderRadius: theme.borderRadius,
             }}
         >
-            {/* Header with Quick Controls */}
+            {/* Header with Quick Controls - positioned outside overflow container to allow dropdowns */}
             {showHeader && (
                 <div
-                    className="flex items-center justify-between px-3 shrink-0 cursor-move overflow-hidden"
+                    className="flex items-center justify-between px-3 shrink-0 cursor-move relative z-10"
                     style={{
                         background: theme.headerBackground,
                         color: theme.headerTextColor,
@@ -178,7 +374,7 @@ function ResizableWidgetBox({
                                 color: theme.headerTextColor,
                                 fontSize: Math.min(
                                     (theme.headerFontSize ?? 12) * (theme.contentTextScale ?? 1),
-                                    dimensions.width / 20  // Scale based on widget width
+                                    dimensions.width / 20
                                 ),
                                 maxWidth: theme.titleMaxWidth ?? dimensions.width * 0.5,
                                 textAlign: theme.titleAlign ?? 'left',
@@ -235,9 +431,9 @@ function ResizableWidgetBox({
                             </button>
                         </div>
 
-                        {/* Ayanamsa Selector */}
+                        {/* Ayanamsa Selector - dropdown needs overflow visible */}
                         {onAyanamsaChange && (
-                            <div className="mr-1">
+                            <div className="mr-1 relative">
                                 <AyanamsaSelect
                                     value={ayanamsa || 'Lahiri'}
                                     onChange={onAyanamsaChange}
@@ -267,8 +463,14 @@ function ResizableWidgetBox({
                 </div>
             )}
 
-            {/* Content Area */}
-            <div className="flex-1 relative overflow-auto min-h-0">
+            {/* Content Area - Smart scroll behavior */}
+            <div 
+                ref={contentRef}
+                className={cn(
+                    "flex-1 relative min-h-0",
+                    needsScroll ? "overflow-auto" : "overflow-hidden"
+                )}
+            >
                 {isGenerating && (
                     <div className="absolute inset-0 z-10 bg-white/60 backdrop-blur-[1px] flex items-center justify-center">
                         <Loader2 className="w-6 h-6 text-primary animate-spin" />
@@ -289,6 +491,7 @@ function ResizableWidgetBox({
                     </div>
                 ) : (
                     <div 
+                        className="w-full h-full"
                         style={{ 
                             color: theme.textColor,
                             fontSize: `${(theme.contentTextScale ?? 1) * 100}%`,
@@ -323,7 +526,14 @@ function ResizableWidgetBox({
             </div>
         </div>
     );
-}
+}, (prev, next) => {
+    // Only re-render if these specific props change
+    return prev.item.instanceId === next.item.instanceId &&
+           prev.item.dimensions.width === next.item.dimensions.width &&
+           prev.item.dimensions.height === next.item.dimensions.height &&
+           prev.item.showHeader === next.item.showHeader &&
+           prev.item.showBorder === next.item.showBorder;
+});
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // MAIN PAGE
@@ -394,7 +604,7 @@ export default function CustomizePage() {
     // Handlers
     const handleSelectChart = useCallback((chart: CustomizeChartItem, ayanamsa: string) => {
         setSelectedChartForConfig(chart);
-        setLocalAyanamsa(ayanamsa as typeof localAyanamsa); // Update local ayanamsa to match selection
+        setLocalAyanamsa(ayanamsa as typeof localAyanamsa);
         setIsWidgetConfiguratorOpen(true);
         setIsChartSelectorOpen(false);
     }, []);
@@ -583,7 +793,8 @@ export default function CustomizePage() {
                                                 });
                                             }}
                                         >
-                                            <div className="h-full p-2">
+                                            {/* Use CustomChartWidget with ChartWithPopup (same as Kundali page) */}
+                                            <div className="w-full h-full p-2">
                                                 {(() => {
                                                     const { planets, ascendant } = getChartProps(item.id, item.ayanamsa);
                                                     return chartStyle === 'South Indian' ? (
@@ -595,11 +806,28 @@ export default function CustomizePage() {
                                                             className="w-full h-full"
                                                         />
                                                     ) : (
-                                                        <CompactChartWithPopup
+                                                        <CustomChartWidget
                                                             ascendantSign={ascendant}
                                                             planets={planets}
-                                                            className="w-full h-full"
-                                                            showDegrees={item.id === 'D1'}
+                                                            width={item.dimensions.width - 16}
+                                                            height={item.dimensions.height - (item.showHeader ? (item.theme.headerHeight ?? 36) : 0) - 16}
+                                                            chartStyle="North Indian"
+                                                            colorTheme={chartColorTheme}
+                                                            // Pass all chart display options from theme
+                                                            planetDisplayMode={item.theme.planetDisplayMode}
+                                                            planetFontSize={item.theme.planetFontSize}
+                                                            planetFontWeight={item.theme.planetFontWeight}
+                                                            showDegrees={item.theme.showDegrees !== undefined ? item.theme.showDegrees : (item.id === 'D1')}
+                                                            degreeFormat={item.theme.degreeFormat}
+                                                            degreeFontSize={item.theme.degreeFontSize}
+                                                            showHouseNumbers={item.theme.showHouseNumbers}
+                                                            showGridLines={item.theme.showGridLines}
+                                                            gridLineColor={item.theme.gridLineColor}
+                                                            gridLineWidth={item.theme.gridLineWidth}
+                                                            showRetrogradeIndicator={item.theme.showRetrogradeIndicator}
+                                                            retrogradeStyle={item.theme.retrogradeStyle}
+                                                            planetSpacing={item.theme.planetSpacing}
+                                                            labelDensity={item.theme.labelDensity}
                                                         />
                                                     );
                                                 })()}
@@ -640,24 +868,48 @@ export default function CustomizePage() {
                 isOpen={customizationPanel.isOpen}
                 onClose={() => setCustomizationPanel({ isOpen: false })}
                 widget={customizationPanel.selectedWidget || null}
-                onUpdateTheme={(t) => customizationPanel.selectedWidget && updateTheme(customizationPanel.selectedWidget.instanceId, t)}
-                onUpdateDimensions={(d) => customizationPanel.selectedWidget && updateDimensions(customizationPanel.selectedWidget.instanceId, d)}
-                onUpdateCustomTitle={(title) => customizationPanel.selectedWidget && updateCustomTitle(customizationPanel.selectedWidget.instanceId, title)}
-                onToggleHeader={() => customizationPanel.selectedWidget && toggleHeader(customizationPanel.selectedWidget.instanceId)}
-                onToggleBorder={() => customizationPanel.selectedWidget && toggleBorder(customizationPanel.selectedWidget.instanceId)}
-                onDuplicate={() => {
+                onUpdateTheme={useCallback((t) => {
+                    if (customizationPanel.selectedWidget) {
+                        updateTheme(customizationPanel.selectedWidget.instanceId, t);
+                    }
+                }, [customizationPanel.selectedWidget, updateTheme])}
+                onUpdateDimensions={useCallback((d) => {
+                    if (customizationPanel.selectedWidget) {
+                        updateDimensions(customizationPanel.selectedWidget.instanceId, d);
+                    }
+                }, [customizationPanel.selectedWidget, updateDimensions])}
+                onUpdateCustomTitle={useCallback((title) => {
+                    if (customizationPanel.selectedWidget) {
+                        updateCustomTitle(customizationPanel.selectedWidget.instanceId, title);
+                    }
+                }, [customizationPanel.selectedWidget, updateCustomTitle])}
+                onToggleHeader={useCallback(() => {
+                    if (customizationPanel.selectedWidget) {
+                        toggleHeader(customizationPanel.selectedWidget.instanceId);
+                    }
+                }, [customizationPanel.selectedWidget, toggleHeader])}
+                onToggleBorder={useCallback(() => {
+                    if (customizationPanel.selectedWidget) {
+                        toggleBorder(customizationPanel.selectedWidget.instanceId);
+                    }
+                }, [customizationPanel.selectedWidget, toggleBorder])}
+                onDuplicate={useCallback(() => {
                     if (customizationPanel.selectedWidget) {
                         duplicateChart(customizationPanel.selectedWidget.instanceId);
                         setCustomizationPanel({ isOpen: false });
                     }
-                }}
-                onRemove={() => {
+                }, [customizationPanel.selectedWidget, duplicateChart])}
+                onRemove={useCallback(() => {
                     if (customizationPanel.selectedWidget) {
                         removeChart(customizationPanel.selectedWidget.instanceId);
                         setCustomizationPanel({ isOpen: false });
                     }
-                }}
-                onApplyThemePreset={(preset) => customizationPanel.selectedWidget && applyThemePreset(customizationPanel.selectedWidget.instanceId, preset)}
+                }, [customizationPanel.selectedWidget, removeChart])}
+                onApplyThemePreset={useCallback((preset) => {
+                    if (customizationPanel.selectedWidget) {
+                        applyThemePreset(customizationPanel.selectedWidget.instanceId, preset);
+                    }
+                }, [customizationPanel.selectedWidget, applyThemePreset])}
             />
         </div>
     );

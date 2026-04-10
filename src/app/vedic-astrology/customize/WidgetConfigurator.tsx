@@ -60,13 +60,13 @@ const THEME_PREVIEWS = [
     { key: 'ocean', name: 'Ocean', desc: 'Blue' },
 ];
 
-// Size presets
+// Size presets - Updated to match smart defaults for optimal first view
 const SIZE_PRESETS = [
-    { name: 'Small', width: 250, height: 200, icon: 'S' },
-    { name: 'Medium', width: 350, height: 280, icon: 'M' },
-    { name: 'Large', width: 500, height: 400, icon: 'L' },
-    { name: 'Wide', width: 600, height: 300, icon: 'W' },
-    { name: 'Tall', width: 350, height: 500, icon: 'T' },
+    { name: 'Small', width: 320, height: 340, icon: 'S', desc: 'Compact view' },
+    { name: 'Medium', width: 470, height: 500, icon: 'M', desc: 'Chart optimized' },
+    { name: 'Large', width: 580, height: 620, icon: 'L', desc: 'Detailed view' },
+    { name: 'Wide', width: 650, height: 380, icon: 'W', desc: 'Table optimized' },
+    { name: 'Tall', width: 450, height: 520, icon: 'T', desc: 'Analysis view' },
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════════

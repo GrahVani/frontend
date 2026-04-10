@@ -9,17 +9,38 @@ import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { HOUSE_CENTERS_MAP } from '@/lib/chart-geometry';
 import { KnowledgeTooltip } from '@/components/knowledge';
 
-interface ChartWithPopupProps {
+import type { ChartDisplayOptions } from './NorthIndianChart';
+
+interface ChartWithPopupProps extends ChartDisplayOptions {
     planets: Planet[];
     ascendantSign: number;
     className?: string;
     preserveAspectRatio?: string;
-    showDegrees?: boolean;
 }
 
 import { createPortal } from 'react-dom';
 
-export default function ChartWithPopup({ planets, ascendantSign, className = "", preserveAspectRatio, showDegrees = true }: ChartWithPopupProps) {
+export default function ChartWithPopup({ 
+    planets, 
+    ascendantSign, 
+    className = "", 
+    preserveAspectRatio,
+    // Chart display options
+    planetDisplayMode = 'name',
+    planetFontSize,
+    planetFontWeight = '600',
+    showDegrees = true,
+    degreeFormat = 'short',
+    degreeFontSize,
+    showHouseNumbers = true,
+    showGridLines = true,
+    gridLineColor = '#D4C4A8',
+    gridLineWidth = 2,
+    showRetrogradeIndicator = true,
+    retrogradeStyle = 'R',
+    planetSpacing = 'normal',
+    labelDensity = 'normal',
+}: ChartWithPopupProps) {
     const [selectedHouse, setSelectedHouse] = useState<number | null>(null);
     const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
     const [mounted, setMounted] = useState(false);
@@ -95,7 +116,21 @@ export default function ChartWithPopup({ planets, ascendantSign, className = "",
                 ascendantSign={ascendantSign}
                 preserveAspectRatio={preserveAspectRatio}
                 onHouseClick={handleHouseClick}
+                // Chart display options
+                planetDisplayMode={planetDisplayMode}
+                planetFontSize={planetFontSize}
+                planetFontWeight={planetFontWeight}
                 showDegrees={showDegrees}
+                degreeFormat={degreeFormat}
+                degreeFontSize={degreeFontSize}
+                showHouseNumbers={showHouseNumbers}
+                showGridLines={showGridLines}
+                gridLineColor={gridLineColor}
+                gridLineWidth={gridLineWidth}
+                showRetrogradeIndicator={showRetrogradeIndicator}
+                retrogradeStyle={retrogradeStyle}
+                planetSpacing={planetSpacing}
+                labelDensity={labelDensity}
             />
 
             {/* Portal Overlay Popup */}
