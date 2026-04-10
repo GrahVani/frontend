@@ -40,12 +40,39 @@ export interface WidgetTheme {
     headerBackground: string;
     headerTextColor: string;
     shadowIntensity: 'none' | 'light' | 'medium' | 'heavy';
-    // New header customization
+    // Header customization
     headerHeight?: number;
     headerFontSize?: number;
     contentTextScale?: number;
     titleAlign?: 'left' | 'center' | 'right';
     titleMaxWidth?: number;
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // ASTROLOGER CUSTOMIZATION OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // Planet Display
+    planetDisplayMode?: 'name' | 'symbol' | 'both';  // Show planet names, symbols, or both
+    planetFontSize?: number;                          // Planet name font size in chart
+    planetFontWeight?: 'normal' | 'bold' | '600';    // Planet text weight
+    // Degree Display
+    showDegrees?: boolean;                           // Show planet degrees
+    degreeFormat?: 'full' | 'short';                 // Full (12°34'56") or short (12:34)
+    degreeFontSize?: number;                         // Degree text size
+    // House & Grid
+    showHouseNumbers?: boolean;                      // Show house numbers (1-12)
+    showGridLines?: boolean;                         // Show chart grid lines
+    gridLineColor?: string;                          // Grid line color
+    gridLineWidth?: number;                          // Grid line thickness
+    // Retrograde & Special
+    showRetrogradeIndicator?: boolean;               // Show (R) for retrograde
+    retrogradeStyle?: 'R' | 'R%' | 'circle-R';       // Different retro styles
+    // Aspect Visualization
+    showAspects?: boolean;                           // Show planetary aspects (if available)
+    aspectColor?: string;                            // Aspect line color
+    // Typography
+    fontFamily?: 'default' | 'serif' | 'traditional'; // Chart font style
+    // Spacing & Density
+    planetSpacing?: 'compact' | 'normal' | 'spacious'; // Space between planets in houses
+    labelDensity?: 'minimal' | 'normal' | 'detailed';  // How much info to show
 }
 
 export const DEFAULT_WIDGET_THEME: WidgetTheme = {
@@ -59,12 +86,30 @@ export const DEFAULT_WIDGET_THEME: WidgetTheme = {
     headerBackground: 'transparent',
     headerTextColor: '#3E2A1F',
     shadowIntensity: 'light',
-    // New defaults
+    // Header defaults
     headerHeight: 36,
     headerFontSize: 12,
     contentTextScale: 1,
     titleAlign: 'left',
     titleMaxWidth: undefined,
+    // Astrologer defaults
+    planetDisplayMode: 'name',
+    planetFontSize: 14,
+    planetFontWeight: '600',
+    showDegrees: true,
+    degreeFormat: 'short',
+    degreeFontSize: 9,
+    showHouseNumbers: true,
+    showGridLines: true,
+    gridLineColor: '#D4C4A8',
+    gridLineWidth: 2,
+    showRetrogradeIndicator: true,
+    retrogradeStyle: 'R',
+    showAspects: false,
+    aspectColor: '#9C7A2F',
+    fontFamily: 'default',
+    planetSpacing: 'normal',
+    labelDensity: 'normal',
 };
 
 export const PRESET_THEMES: Record<string, WidgetTheme> = {
@@ -131,27 +176,95 @@ export const PRESET_THEMES: Record<string, WidgetTheme> = {
     },
 };
 
-// Default dimensions by widget type
+// ═══════════════════════════════════════════════════════════════════════════════
+// SMART DEFAULT DIMENSIONS - Optimized for best first view
+// Charts use square aspect ratio like Kundali page for consistency
+// ═══════════════════════════════════════════════════════════════════════════════
+
 export const WIDGET_DIMENSION_PRESETS: Record<string, WidgetDimensions> = {
-    // Charts - square-ish
-    divisional: { ...DEFAULT_DIMENSIONS, width: 320, height: 320 },
-    lagna: { ...DEFAULT_DIMENSIONS, width: 320, height: 320 },
-    rare_shodash: { ...DEFAULT_DIMENSIONS, width: 300, height: 300 },
+    // Charts - square aspect ratio for optimal chart viewing (matching Kundali page D1: 435px)
+    // Default: 470×500 gives comfortable padding while maintaining square chart area
+    divisional: { 
+        width: 470, height: 500, 
+        minWidth: 280, minHeight: 300, 
+        maxWidth: 900, maxHeight: 900 
+    },
+    lagna: { 
+        width: 470, height: 500, 
+        minWidth: 280, minHeight: 300, 
+        maxWidth: 900, maxHeight: 900 
+    },
+    rare_shodash: { 
+        width: 450, height: 480, 
+        minWidth: 280, minHeight: 300, 
+        maxWidth: 800, maxHeight: 800 
+    },
     
-    // Tables - wider
-    ashtakavarga: { ...DEFAULT_DIMENSIONS, width: 500, height: 350 },
-    widget_shodasha: { ...DEFAULT_DIMENSIONS, width: 600, height: 300 },
+    // Tables - wider for data readability with proper min sizes
+    ashtakavarga: { 
+        width: 580, height: 420, 
+        minWidth: 400, minHeight: 300, 
+        maxWidth: 1000, maxHeight: 700 
+    },
+    widget_shodasha: { 
+        width: 650, height: 380, 
+        minWidth: 500, minHeight: 300, 
+        maxWidth: 1200, maxHeight: 600 
+    },
     
-    // Analysis - tall
-    dasha: { ...DEFAULT_DIMENSIONS, width: 400, height: 450 },
-    widget_shadbala: { ...DEFAULT_DIMENSIONS, width: 450, height: 400 },
-    widget_yoga: { ...DEFAULT_DIMENSIONS, width: 450, height: 400 },
-    widget_dosha: { ...DEFAULT_DIMENSIONS, width: 450, height: 400 },
+    // Analysis widgets - balanced proportions for content
+    dasha: { 
+        width: 450, height: 520, 
+        minWidth: 350, minHeight: 400, 
+        maxWidth: 800, maxHeight: 900 
+    },
+    widget_shadbala: { 
+        width: 520, height: 480, 
+        minWidth: 400, minHeight: 350, 
+        maxWidth: 900, maxHeight: 800 
+    },
+    widget_yoga: { 
+        width: 500, height: 480, 
+        minWidth: 380, minHeight: 350, 
+        maxWidth: 900, maxHeight: 800 
+    },
+    widget_dosha: { 
+        width: 500, height: 480, 
+        minWidth: 380, minHeight: 350, 
+        maxWidth: 900, maxHeight: 800 
+    },
     
-    // Others
-    widget_transit: { ...DEFAULT_DIMENSIONS, width: 400, height: 250 },
-    widget_remedy: { ...DEFAULT_DIMENSIONS, width: 500, height: 400 },
-    kp_module: { ...DEFAULT_DIMENSIONS, width: 400, height: 350 },
+    // Others - optimized for their specific content
+    widget_transit: { 
+        width: 480, height: 320, 
+        minWidth: 380, minHeight: 250, 
+        maxWidth: 900, maxHeight: 600 
+    },
+    widget_remedy: { 
+        width: 520, height: 450, 
+        minWidth: 400, minHeight: 350, 
+        maxWidth: 900, maxHeight: 800 
+    },
+    widget_pushkara: { 
+        width: 480, height: 380, 
+        minWidth: 380, minHeight: 300, 
+        maxWidth: 900, maxHeight: 700 
+    },
+    widget_karaka: { 
+        width: 400, height: 380, 
+        minWidth: 320, minHeight: 300, 
+        maxWidth: 800, maxHeight: 700 
+    },
+    widget_chakra: { 
+        width: 480, height: 480, 
+        minWidth: 380, minHeight: 380, 
+        maxWidth: 900, maxHeight: 900 
+    },
+    kp_module: { 
+        width: 480, height: 420, 
+        minWidth: 380, minHeight: 320, 
+        maxWidth: 900, maxHeight: 800 
+    },
 };
 
 export interface CustomizeChartItem {

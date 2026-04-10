@@ -107,7 +107,7 @@ export function AyanamsaSelect({
             {/* Dropdown Menu */}
             <div
                 className={cn(
-                    "absolute z-50 mt-1.5 min-w-[140px] rounded-xl overflow-hidden",
+                    "absolute z-[100] mt-1.5 min-w-[140px] rounded-xl overflow-hidden",
                     "bg-white border shadow-xl",
                     "transition-all duration-200 origin-top",
                     isOpen 
