@@ -71,18 +71,16 @@ const formatTime = (timeStr: string) => {
         if (timeStr.includes('T')) {
             const timePart = timeStr.split('T')[1];
             const cleanTime = timePart.replace('Z', '').split('+')[0].split('.')[0];
-            const [hours, minutes] = cleanTime.split(':');
-            const h = parseInt(hours);
-            const ampm = h >= 12 ? 'PM' : 'AM';
-            const h12 = h % 12 || 12;
-            return `${h12}:${minutes} ${ampm}`;
+            const [hours, minutes, seconds] = cleanTime.split(':');
+            return seconds ? `${hours}:${minutes}:${seconds}` : `${hours}:${minutes}`;
         }
         const date = new Date(`1970-01-01T${timeStr}`);
         if (!isNaN(date.getTime())) {
-            return date.toLocaleTimeString('en-US', {
-                hour: 'numeric',
+            return date.toLocaleTimeString('en-GB', {
+                hour: '2-digit',
                 minute: '2-digit',
-                hour12: true
+                second: '2-digit',
+                hour12: false
             });
         }
         return timeStr;

@@ -255,7 +255,7 @@ function WidgetCard({
                         widget.category === 'widget_chakra' ? 'overflow-visible' : 'overflow-auto'
                     )}
                 >
-                    <div style={{ zoom: scaleConfig.zoom, minHeight: '100%' }}>
+                    <div style={{ zoom: scaleConfig.zoom }}>
                         {!isCompatible ? (
                             <div className="flex flex-col items-center justify-center p-6 text-center" style={{ minHeight: `${100 / scaleConfig.zoom}%` }}>
                                 <Shield className="w-8 h-8 text-gold-dark/40 mb-3" />
@@ -275,10 +275,9 @@ function WidgetCard({
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SHADBALA WIDGET
+// SHADBALA WIDGET CONTENT (no card wrapper - for use in ResizableWidgetBox)
 // ═══════════════════════════════════════════════════════════════════════════════
-export function ShadbalaWidget(props: WidgetBoxProps) {
-    const { widget, onRemove, clientId, activeSystem } = props;
+function ShadbalaWidgetContent({ activeSystem }: { activeSystem: string }) {
     const { processedCharts, isLoadingCharts } = useVedicClient();
     
     // Fetch from database (processedCharts) instead of API
@@ -355,23 +354,38 @@ export function ShadbalaWidget(props: WidgetBoxProps) {
         };
     }, [shadbalaResult]);
 
+    if (loading) {
+        return (
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <Loader2 className="w-8 h-8 text-gold-primary animate-spin mb-3" />
+                <p className="text-[11px] text-ink/50">Calculating Shadbala...</p>
+            </div>
+        );
+    }
+    
+    if (data) {
+        return (
+            <div className="h-full overflow-auto custom-scrollbar p-2">
+                <ShadbalaDashboard displayData={data} />
+            </div>
+        );
+    }
+    
+    return (
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+            <AlertCircle className="w-8 h-8 text-gold-dark/30 mb-3" />
+            <p className="text-[11px] text-ink/50">Shadbala data unavailable</p>
+        </div>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SHADBALA WIDGET (with card wrapper)
+// ═══════════════════════════════════════════════════════════════════════════════
+export function ShadbalaWidget(props: WidgetBoxProps) {
     return (
         <WidgetCard {...props}>
-            {loading ? (
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <Loader2 className="w-8 h-8 text-gold-primary animate-spin mb-3" />
-                    <p className="text-[11px] text-ink/50">Calculating Shadbala...</p>
-                </div>
-            ) : data ? (
-                <div className="h-full overflow-auto custom-scrollbar p-2">
-                    <ShadbalaDashboard displayData={data} />
-                </div>
-            ) : (
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                    <AlertCircle className="w-8 h-8 text-gold-dark/30 mb-3" />
-                    <p className="text-[11px] text-ink/50">Shadbala data unavailable</p>
-                </div>
-            )}
+            <ShadbalaWidgetContent activeSystem={props.activeSystem} />
         </WidgetCard>
     );
 }
@@ -735,17 +749,10 @@ export function RemedyWidget(props: WidgetBoxProps) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// KP MODULE WIDGET
+// KP MODULE WIDGET CONTENT (no card wrapper - for use in ResizableWidgetBox)
 // ═══════════════════════════════════════════════════════════════════════════════
-export function KpModuleWidget(props: WidgetBoxProps) {
-    const { widget, clientId, activeSystem } = props;
+function KpModuleWidgetContent({ widget, activeSystem }: { widget: CustomizeChartItem; activeSystem: string }) {
     const { processedCharts } = useVedicClient();
-
-    // Database Check
-    const hasPlanetsCusps = !!processedCharts['kp_planets_cusps_kp'];
-    const hasHouseSignificators = !!processedCharts['kp_house_significations_kp'];
-    const hasPlanetSignificators = !!processedCharts['kp_planetary_significators_kp'];
-    const hasBhavaDetails = !!processedCharts['kp_bhava_details_kp'];
 
     // Use transformed data hook
     const transformed = useKpTransformedData({
@@ -761,9 +768,7 @@ export function KpModuleWidget(props: WidgetBoxProps) {
         fortunaQuery: { data: null, isLoading: false } as any,
     });
 
-    const renderContent = () => {
-
-        switch (widget.id) {
+    switch (widget.id) {
             case 'kp_planets':
                 return <KpPlanetaryWidget planets={transformed.planetaryData} className="h-full border-none" />;
 
@@ -831,7 +836,7 @@ export function KpModuleWidget(props: WidgetBoxProps) {
                 );
                 return (
                     <div className="h-full overflow-auto p-4">
-                        <KpNakshatraNadiFocusedView data={transformed.nadiData as any} />
+                        <KpNakshatraNadiFocusedView data={{ nadiData: transformed.nadiData }} />
                     </div>
                 );
 
@@ -844,7 +849,7 @@ export function KpModuleWidget(props: WidgetBoxProps) {
                 );
                 return (
                     <div className="h-full overflow-auto p-4">
-                        <KpFortunaView data={transformed.fortunaData as any} />
+                        <KpFortunaView data={{ fortunaData: transformed.fortunaData }} />
                     </div>
                 );
 
@@ -878,11 +883,15 @@ export function KpModuleWidget(props: WidgetBoxProps) {
                     </div>
                 );
         }
-    };
+};
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// KP MODULE WIDGET (with card wrapper)
+// ═══════════════════════════════════════════════════════════════════════════════
+export function KpModuleWidget(props: WidgetBoxProps) {
     return (
         <WidgetCard {...props}>
-            {renderContent()}
+            <KpModuleWidgetContent widget={props.widget} activeSystem={props.activeSystem} />
         </WidgetCard>
     );
 }
@@ -1060,12 +1069,15 @@ export function renderWidgetContent(
     clientId: string,
     activeSystem: string
 ): React.ReactNode {
+    // Use widget-specific ayanamsa if set, otherwise fall back to global activeSystem
+    const widgetAyanamsa = item.ayanamsa || activeSystem;
+    
     // Build props for widgets that need the full WidgetBoxProps
     const props: WidgetBoxProps = {
         widget: item,
         onRemove: item.onRemove,
         clientId,
-        activeSystem,
+        activeSystem: widgetAyanamsa,
         size: item.size,
         collapsed: item.collapsed,
         onSizeChange: item.onSizeChange,
@@ -1076,16 +1088,16 @@ export function renderWidgetContent(
 
     switch (item.category) {
         case 'dasha':
-            return <DashaWidgetContent widget={item} clientId={clientId} activeSystem={activeSystem} />;
+            return <DashaWidgetContent widget={item} clientId={clientId} activeSystem={widgetAyanamsa} />;
         case 'widget_chakra':
-            return <ChakraWidgetContent activeSystem={activeSystem} />;
+            return <ChakraWidgetContent activeSystem={widgetAyanamsa} />;
         case 'widget_shodasha':
-            return <ShodashaWidgetContent activeSystem={activeSystem} />;
+            return <ShodashaWidgetContent activeSystem={widgetAyanamsa} />;
         case 'ashtakavarga':
-            return <AshtakavargaWidgetContent widget={item} activeSystem={activeSystem} />;
+            return <AshtakavargaWidgetContent widget={item} activeSystem={widgetAyanamsa} />;
         // For other widgets, use the full widget component (it has its own WidgetCard)
         case 'widget_shadbala':
-            return <ShadbalaWidget {...props} />;
+            return <ShadbalaWidgetContent activeSystem={widgetAyanamsa} />;
         case 'widget_pushkara':
             return <PushkaraWidget {...props} />;
         case 'widget_karaka':
@@ -1099,7 +1111,7 @@ export function renderWidgetContent(
         case 'widget_remedy':
             return <RemedyWidget {...props} />;
         case 'kp_module':
-            return <KpModuleWidget {...props} />;
+            return <KpModuleWidgetContent widget={item} activeSystem={widgetAyanamsa} />;
         default:
             return (
                 <div className="flex flex-col items-center justify-center h-full p-6 text-center">

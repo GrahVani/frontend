@@ -78,6 +78,29 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
     const availablePlanets = useMemo(() => {
         if (isSarva) return [];
         const root = (data.bhinnashtakavarga || data.ashtakvarga || data) as any;
+        
+        // Handle tables array structure: ashtakvarga.tables = [{ planet: 'Sun', ... }, { planet: 'Moon', ... }]
+        if (root.tables && Array.isArray(root.tables)) {
+            const planetsFromTables = root.tables
+                .map((t: any) => t.planet)
+                .filter((p: string) => p && ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Lagna', 'Ascendant'].includes(p));
+            
+            // Normalize and Deduplicate
+            const normalized = Array.from(new Set(planetsFromTables.map((p: string) => {
+                if (p.toLowerCase().startsWith('asc') || p.toLowerCase() === 'lagna') return 'Lagna';
+                return p.charAt(0).toUpperCase() + p.slice(1).toLowerCase();
+            })));
+            
+            // Ensure prompt planet or default is in state
+            if (normalized.length > 0 && !normalized.includes(selectedPlanet)) {
+                 const match = normalized.find((n) => (n as string).toLowerCase() === selectedPlanet.toLowerCase());
+                 if (!match) setSelectedPlanet(normalized[0] as string);
+            }
+            
+            return normalized as string[];
+        }
+        
+        // Fallback: look for planet keys directly in root
         const keys = Object.keys(root).filter(k => 
             ['lagna', 'ascendant', 'sun', 'moon', 'mars', 'mercury', 'jupiter', 'venus', 'saturn'].includes(k.toLowerCase())
         );
@@ -124,11 +147,11 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
         };
 
         // Determine the source object for the matrix
-        let activeSource = (isSarva 
-            ? (bhinnaDict || root) 
-            : (bhinnaDict?.[selectedPlanet] || root[selectedPlanet] || root[selectedPlanet.toLowerCase()] || root[selectedPlanet.toUpperCase()] || {})) as any;
+        // For both Sarva and Bhinna: use bhinnaDict or root which should contain all planets' data
+        // This allows us to iterate through all planets (rows) and find their contributions
+        let activeSource = (bhinnaDict || root) as any;
 
-        // NEW: If activeSource is null or undefined, use root as a fallback
+        // Fallback: if activeSource is null or empty, use root
         if (!activeSource || (typeof activeSource === 'object' && Object.keys(activeSource).length === 0)) {
             activeSource = root;
         }
@@ -136,7 +159,7 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
         // Enhanced source detection: Look for nested matrix/table/data
         if (activeSource && typeof activeSource === 'object' && !Array.isArray(activeSource)) {
             // Priority list for matrix containers
-            const matrixKeys = ['matrix', 'table', 'rows', 'data', 'bhinnashtakavarga_points', 'ashtakavarga_points', 'ashtaka_table', 'contributors', 'contributions', 'contribution'];
+            const matrixKeys = ['tables', 'matrix', 'table', 'rows', 'data', 'bhinnashtakavarga_points', 'ashtakavarga_points', 'ashtaka_table', 'contributors', 'contributions', 'contribution'];
             
             for (const key of matrixKeys) {
                 const nested = activeSource[key];
@@ -172,7 +195,24 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
             }
         }
 
-        const contributorsList = dataContribs || (activeSource && activeSource._is_array ? activeSource.items : null) || (activeSource?.contributors && Array.isArray(activeSource.contributors) ? activeSource.contributors : null);
+        // Check if activeSource is from a "tables" array (ashtakvarga.tables structure)
+        // where each item has { planet, contributors, total_bindus }
+        const isTablesArray = activeSource?._is_array && activeSource.items?.[0]?.planet && activeSource.items?.[0]?.contributors;
+        
+        // For tables array: find the selected planet's table and use its contributors
+        let selectedPlanetTable = null;
+        if (isTablesArray && !isSarva) {
+            // Map UI planet names to API planet names (Lagna -> Ascendant)
+            const planetLookupName = selectedPlanet.toLowerCase() === 'lagna' ? 'ascendant' : selectedPlanet.toLowerCase();
+            selectedPlanetTable = activeSource.items.find((t: any) => 
+                t.planet?.toLowerCase() === planetLookupName
+            );
+        }
+        
+        const contributorsList = dataContribs || 
+            (selectedPlanetTable?.contributors) ||
+            (activeSource && activeSource._is_array ? activeSource.items : null) || 
+            (activeSource?.contributors && Array.isArray(activeSource.contributors) ? activeSource.contributors : null);
 
         rows.forEach(rowName => {
             matrix[rowName] = {};
@@ -194,7 +234,7 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
                     }
                 }
             }
-
+            
             // Strategy 2: Check contributors array (if present in root data or activeSource)
             if (!rd && contributorsList && Array.isArray(contributorsList)) {
                 const item = contributorsList.find((it: any) => 
