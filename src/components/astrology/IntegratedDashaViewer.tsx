@@ -219,39 +219,40 @@ export default function IntegratedDashaViewer({
                 </div>
             )}
 
-            <div className="flex-1 overflow-auto no-scrollbar bg-white/40 p-1">
-                <table className="w-full border-separate border-spacing-y-1.5 border-spacing-x-0 table-fixed">
-                    <thead className="sticky top-0 z-20 bg-surface-warm/95 backdrop-blur-sm shadow-sm">
-                        <tr className={cn(TYPOGRAPHY.tableHeader)}>
-                            <th className="px-2 py-1.5 text-left w-[44%] !text-[11px] !font-bold">
-                                {DASHA_LEVELS[currentLevel]?.name || 'Period'}
-                            </th>
-                            <th className="px-1 py-1.5 text-center w-[20%] !text-[11px] !font-bold">Start</th>
-                            <th className="px-1 py-1.5 text-center w-[20%] !text-[11px] !font-bold">End</th>
-                            <th className="px-1 py-1.5 text-center w-[16%] !text-[11px] !font-bold">Dur.</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-transparent">
-                        {viewingPeriods.length > 0 ? viewingPeriods.map((period, idx) => {
-                            const startFmt = formatDate(period.startDate);
-                            const endFmt = formatDate(period.endDate);
-                            const durationStr = calculateDuration(period.startDate, period.endDate);
-                            const isClickable = (currentLevel === 0 || period.canDrillFurther || (isAshtottari && currentLevel < 2) || (allowMathematicalDrillDown && currentLevel < 4));
-                            const nameStr = period.planet || period.lord || "";
-                            const pName = isChara ? String(period.raw?.sign_name || nameStr) : (PLANET_ABBREVIATIONS[nameStr] || nameStr.substring(0, 2));
+            <div className="flex-1 bg-white/40 p-0.5 flex flex-col min-h-0">
+                <div className="flex-1 flex flex-col h-full">
+                    {/* Header Strip - Fixed height */}
+                    <div className="sticky top-0 z-20 bg-surface-warm/95 backdrop-blur-sm shadow-sm flex items-center shrink-0 border-b border-gold-primary/10 h-[36px]">
+                        <div className="px-2 text-left w-[44%] !text-[11px] !font-black uppercase tracking-wider text-ink/60">
+                            {DASHA_LEVELS[currentLevel]?.name || 'Period'}
+                        </div>
+                        <div className="px-1 text-center w-[20%] !text-[11px] !font-black uppercase tracking-wider text-ink/60">Start</div>
+                        <div className="px-1 text-center w-[20%] !text-[11px] !font-black uppercase tracking-wider text-ink/60">End</div>
+                        <div className="px-1 text-center w-[16%] !text-[11px] !font-black uppercase tracking-wider text-ink/60">Dur.</div>
+                    </div>
 
-                            return (
-                                <tr
-                                    key={idx}
-                                    className={cn(
-                                        "transition-all duration-200 group rounded-lg",
-                                        period.isCurrent ? "bg-gold-primary/10" : "hover:bg-gold-primary/5 bg-white/40 shadow-sm",
-                                        isClickable ? "cursor-pointer" : "cursor-default"
-                                    )}
-                                    onClick={() => isClickable && !isSubLevelFetching && handleDrillDown(period)}
-                                >
-                                    <td className="px-2 py-1.5 rounded-l-lg border-l-2 border-transparent group-hover:border-gold-primary transition-all">
-                                        <div className="flex items-center gap-1 text-[11px] font-sans font-semibold leading-none overflow-hidden">
+                    {/* Filling Rows - Stretches to fill available height */}
+                    <div className="flex-1 flex flex-col min-h-0">
+                        {viewingPeriods.length > 0 ? (
+                            viewingPeriods.map((period, idx) => {
+                                const startFmt = formatDate(period.startDate);
+                                const endFmt = formatDate(period.endDate);
+                                const durationStr = calculateDuration(period.startDate, period.endDate);
+                                const isClickable = (currentLevel === 0 || period.canDrillFurther || (isAshtottari && currentLevel < 2) || (allowMathematicalDrillDown && currentLevel < 4));
+                                const nameStr = period.planet || period.lord || "";
+                                const pName = isChara ? String(period.raw?.sign_name || nameStr) : (PLANET_ABBREVIATIONS[nameStr] || nameStr.substring(0, 2));
+
+                                return (
+                                    <div
+                                        key={idx}
+                                        className={cn(
+                                            "flex-1 flex items-center transition-all duration-200 group border-b border-gold-primary/5 last:border-none",
+                                            period.isCurrent ? "bg-gold-primary/10" : "hover:bg-gold-primary/5 bg-white/40 shadow-sm",
+                                            isClickable ? "cursor-pointer" : "cursor-default"
+                                        )}
+                                        onClick={() => isClickable && !isSubLevelFetching && handleDrillDown(period)}
+                                    >
+                                        <div className="px-1.5 flex items-center gap-1 w-[44%] h-full border-l-2 border-transparent group-hover:border-gold-primary transition-all overflow-hidden">
                                             {isClickable ? (
                                                 <ChevronRight className="w-2.5 h-2.5 text-ink/40 group-hover:text-gold-dark transition-colors flex-shrink-0" />
                                             ) : (
@@ -259,36 +260,35 @@ export default function IntegratedDashaViewer({
                                             )}
                                             <div className="flex items-baseline gap-0.5 truncate overflow-hidden">
                                                 {selectedPath.length > 0 && (
-                                                    <span className="!text-ink font-medium shrink-0 tracking-tighter mr-0.5 !text-[12px]">{pathPrefix}</span>
+                                                    <span className="!text-ink font-medium shrink-0 tracking-tighter mr-0.5 !text-[11px] opacity-60 font-mono">{pathPrefix}</span>
                                                 )}
-                                                <span className={cn("!font-medium !text-ink !text-[12px]")}>{pName}</span>
+                                                <span className={cn("!font-black !text-ink !text-[12.5px] uppercase tracking-tight")}>{pName}</span>
                                             </div>
                                             {period.isCurrent && (
-                                                <span className="ml-1 px-1.5 py-0.5 bg-green-500/20 border border-green-500/30 rounded-full leading-none text-green-700 font-bold text-[9px] shrink-0">
+                                                <span className="ml-auto px-1 py-0.5 bg-green-500/20 border border-green-500/30 rounded-full leading-none text-green-700 font-bold text-[8px] shrink-0">
                                                     A
                                                 </span>
                                             )}
-                                            {isSubLevelFetching && (period.planet || period.lord) === selectedIntelPlanet && (
-                                                <Loader2 className="w-3 h-3 text-gold-dark animate-spin ml-auto shrink-0" />
-                                            )}
                                         </div>
-                                    </td>
-                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-1 py-1.5 !text-[10px] !font-medium !text-ink text-center tracking-tight")}>
-                                        {startFmt.date}
-                                    </td>
-                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-1 py-1.5 !text-[10px] !font-medium !text-ink text-center tracking-tight")}>
-                                        {endFmt.date}
-                                    </td>
-                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-1 py-1.5 !text-[10px] !font-medium !text-ink rounded-r-lg text-center tracking-tight")}>
-                                        {durationStr}
-                                    </td>
-                                </tr>
-                            );
-                        }) : (
-                            <tr><td colSpan={4} className="py-8 text-center text-[12px] text-primary/40 italic font-sans">Horizon line reached. No sub-eras available.</td></tr>
+                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "w-[20%] px-0.5 text-center !text-[10px] !font-bold !text-ink tracking-tighter")}>
+                                            {startFmt.date}
+                                        </div>
+                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "w-[20%] px-0.5 text-center !text-[10px] !font-bold !text-ink tracking-tighter")}>
+                                            {endFmt.date}
+                                        </div>
+                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "w-[16%] px-0.5 text-center !text-[10px] !font-bold !text-ink tracking-tighter")}>
+                                            {durationStr}
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <div className="flex-1 flex items-center justify-center py-8 text-[12px] text-primary/40 italic font-sans text-center">
+                                Horizon line reached. No sub-eras available.
+                            </div>
                         )}
-                    </tbody>
-                </table>
+                    </div>
+                </div>
             </div>
         </div>
     );

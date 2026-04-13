@@ -16,6 +16,7 @@ interface ChartWithPopupProps extends ChartDisplayOptions {
     ascendantSign: number;
     className?: string;
     preserveAspectRatio?: string;
+    chartId?: string;
 }
 
 import { createPortal } from 'react-dom';
@@ -25,11 +26,12 @@ export default function ChartWithPopup({
     ascendantSign, 
     className = "", 
     preserveAspectRatio,
+    chartId = '',
     // Chart display options
     planetDisplayMode = 'name',
     planetFontSize,
     planetFontWeight = '600',
-    showDegrees = true,
+    showDegrees,
     degreeFormat = 'short',
     degreeFontSize,
     showHouseNumbers = true,
@@ -41,6 +43,9 @@ export default function ChartWithPopup({
     planetSpacing = 'normal',
     labelDensity = 'normal',
 }: ChartWithPopupProps) {
+    // Determine if degrees should be shown: use explicit value if provided, 
+    // otherwise only show for D1 (Rashi) chart
+    const shouldShowDegrees = showDegrees !== undefined ? showDegrees : (chartId === 'D1');
     const [selectedHouse, setSelectedHouse] = useState<number | null>(null);
     const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
     const [mounted, setMounted] = useState(false);
@@ -120,7 +125,7 @@ export default function ChartWithPopup({
                 planetDisplayMode={planetDisplayMode}
                 planetFontSize={planetFontSize}
                 planetFontWeight={planetFontWeight}
-                showDegrees={showDegrees}
+                showDegrees={shouldShowDegrees}
                 degreeFormat={degreeFormat}
                 degreeFontSize={degreeFontSize}
                 showHouseNumbers={showHouseNumbers}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { 
     X, 
     Palette, 
@@ -16,6 +16,14 @@ import {
     ChevronRight,
     Move,
     RotateCcw,
+    LayoutGrid,
+    Table2,
+    List,
+    Circle,
+    FileText,
+    Grid3x3,
+    CreditCard,
+    Settings,
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import type { 
@@ -28,6 +36,11 @@ import {
     DEFAULT_WIDGET_THEME,
     DEFAULT_DIMENSIONS,
 } from '@/hooks/useCustomizeCharts';
+import {
+    useContentAwareDimensions,
+    type ContentCategory,
+} from '@/hooks/useContentAwareDimensions';
+import AyanamsaSelect from './AyanamsaSelect';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -44,6 +57,7 @@ interface WidgetConfiguratorProps {
         customTitle?: string;
         showHeader: boolean;
         showBorder: boolean;
+        ayanamsa: string;
     }) => void;
 }
 
@@ -60,14 +74,92 @@ const THEME_PREVIEWS = [
     { key: 'ocean', name: 'Ocean', desc: 'Blue' },
 ];
 
-// Size presets - Updated to match smart defaults for optimal first view
-const SIZE_PRESETS = [
-    { name: 'Small', width: 320, height: 340, icon: 'S', desc: 'Compact view' },
-    { name: 'Medium', width: 470, height: 500, icon: 'M', desc: 'Chart optimized' },
-    { name: 'Large', width: 580, height: 620, icon: 'L', desc: 'Detailed view' },
-    { name: 'Wide', width: 650, height: 380, icon: 'W', desc: 'Table optimized' },
-    { name: 'Tall', width: 450, height: 520, icon: 'T', desc: 'Analysis view' },
-];
+// Size presets by content category - Content-aware defaults
+const SIZE_PRESETS_BY_CATEGORY: Record<ContentCategory, Array<{name: string; width: number; height: number; icon: string; desc: string}>> = {
+    chart: [
+        { name: 'Small', width: 320, height: 340, icon: 'S', desc: 'Compact view' },
+        { name: 'Medium', width: 470, height: 500, icon: 'M', desc: 'Chart optimized' },
+        { name: 'Large', width: 620, height: 660, icon: 'L', desc: 'Detailed view' },
+    ],
+    circular: [
+        { name: 'Small', width: 380, height: 380, icon: 'S', desc: 'Compact view' },
+        { name: 'Medium', width: 480, height: 480, icon: 'M', desc: 'Default view' },
+        { name: 'Large', width: 600, height: 600, icon: 'L', desc: 'Detailed view' },
+    ],
+    table_wide: [
+        { name: 'Small', width: 500, height: 320, icon: 'S', desc: 'Compact view' },
+        { name: 'Medium', width: 650, height: 380, icon: 'M', desc: 'Table optimized' },
+        { name: 'Large', width: 800, height: 450, icon: 'L', desc: 'Full data' },
+    ],
+    table_tall: [
+        { name: 'Small', width: 350, height: 420, icon: 'S', desc: 'Compact view' },
+        { name: 'Medium', width: 450, height: 520, icon: 'M', desc: 'List view' },
+        { name: 'Large', width: 550, height: 650, icon: 'L', desc: 'Full view' },
+    ],
+    analysis_card: [
+        { name: 'Small', width: 380, height: 360, icon: 'S', desc: 'Compact view' },
+        { name: 'Medium', width: 500, height: 480, icon: 'M', desc: 'Default view' },
+        { name: 'Large', width: 650, height: 620, icon: 'L', desc: 'Detailed view' },
+    ],
+    data_grid: [
+        { name: 'Small', width: 400, height: 340, icon: 'S', desc: 'Compact view' },
+        { name: 'Medium', width: 580, height: 420, icon: 'M', desc: 'Grid view' },
+        { name: 'Large', width: 720, height: 480, icon: 'L', desc: 'Full grid' },
+    ],
+    compact_card: [
+        { name: 'Small', width: 200, height: 180, icon: 'XS', desc: 'Minimal' },
+        { name: 'Medium', width: 280, height: 220, icon: 'M', desc: 'Default view' },
+        { name: 'Large', width: 350, height: 280, icon: 'L', desc: 'Expanded' },
+    ],
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CATEGORY ICON MAPPING
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const CATEGORY_ICONS: Record<ContentCategory, React.ElementType> = {
+    chart: LayoutGrid,
+    table_wide: Table2,
+    table_tall: List,
+    circular: Circle,
+    analysis_card: FileText,
+    data_grid: Grid3x3,
+    compact_card: CreditCard,
+};
+
+const CATEGORY_COLORS: Record<ContentCategory, { bg: string; text: string }> = {
+    chart: { bg: 'bg-amber-100', text: 'text-amber-700' },
+    table_wide: { bg: 'bg-blue-100', text: 'text-blue-700' },
+    table_tall: { bg: 'bg-emerald-100', text: 'text-emerald-700' },
+    circular: { bg: 'bg-violet-100', text: 'text-violet-700' },
+    analysis_card: { bg: 'bg-rose-100', text: 'text-rose-700' },
+    data_grid: { bg: 'bg-cyan-100', text: 'text-cyan-700' },
+    compact_card: { bg: 'bg-gray-100', text: 'text-gray-700' },
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// LIVE DIMENSIONS BADGE COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
+
+interface LiveDimensionsBadgeProps {
+    width: number;
+    height: number;
+    isRecommended: boolean;
+}
+
+function LiveDimensionsBadge({ width, height, isRecommended }: LiveDimensionsBadgeProps) {
+    return (
+        <span className={cn(
+            "text-[11px] font-bold px-2 py-0.5 rounded transition-colors duration-200",
+            isRecommended 
+                ? "bg-green-100 text-green-700"
+                : "bg-amber-100 text-amber-700"
+        )}>
+            {width} × {height}px
+            {isRecommended && <Check className="w-3 h-3 inline ml-1" />}
+        </span>
+    );
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // PIXEL SIZE CONTROL
@@ -422,19 +514,41 @@ export default function WidgetConfigurator({
     const [customTitle, setCustomTitle] = useState('');
     const [showHeader, setShowHeader] = useState(true);
     const [showBorder, setShowBorder] = useState(true);
+    const [selectedAyanamsa, setSelectedAyanamsa] = useState(currentAyanamsa);
+
+    // Content-aware dimensions based on selected chart
+    const contentAware = useContentAwareDimensions(chart?.id || '', dimensions);
+
+    // Check if current dimensions match recommended size
+    const isRecommendedSize = useMemo(() => {
+        const recommended = contentAware.dimensions;
+        return dimensions.width === recommended.width && 
+               dimensions.height === recommended.height;
+    }, [dimensions, contentAware.dimensions]);
+
+    // Get category icon and colors
+    const CategoryIcon = CATEGORY_ICONS[contentAware.profile.category];
+    const categoryColors = CATEGORY_COLORS[contentAware.profile.category];
 
     // Reset when chart changes
     React.useEffect(() => {
         if (chart) {
-            const defaultDims = chart.defaultDimensions || DEFAULT_DIMENSIONS;
+            // Use content-aware dimensions as default
+            const defaultDims = chart.defaultDimensions || contentAware.dimensions;
             setDimensions({ ...defaultDims });
             setTheme({ ...DEFAULT_WIDGET_THEME, ...chart.defaultTheme });
             setCustomTitle('');
             setShowHeader(true);
             setShowBorder(true);
+            setSelectedAyanamsa(currentAyanamsa);
             setActiveTab('size');
         }
-    }, [chart?.id]);
+    }, [chart?.id, currentAyanamsa]);
+
+    // Get size presets based on content category
+    const sizePresets = chart 
+        ? SIZE_PRESETS_BY_CATEGORY[contentAware.profile.category] 
+        : SIZE_PRESETS_BY_CATEGORY.analysis_card;
 
     const handleApplyThemePreset = useCallback((presetKey: string) => {
         const preset = PRESET_THEMES[presetKey];
@@ -448,9 +562,10 @@ export default function WidgetConfigurator({
             customTitle: customTitle.trim() || undefined,
             showHeader,
             showBorder,
+            ayanamsa: selectedAyanamsa,
         });
         onClose();
-    }, [dimensions, theme, customTitle, showHeader, showBorder, onAdd, onClose]);
+    }, [dimensions, theme, customTitle, showHeader, showBorder, selectedAyanamsa, onAdd, onClose]);
 
     if (!isOpen || !chart) return null;
 
@@ -464,19 +579,73 @@ export default function WidgetConfigurator({
                 
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-[#E6D5B8]/30 bg-surface-warm shrink-0">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white shadow-md">
-                                <Maximize2 className="w-6 h-6" />
+                    <div className="flex items-start justify-between">
+                        {/* Left: Category Icon + Info */}
+                        <div className="flex items-start gap-3">
+                            {/* Dynamic Category Icon */}
+                            <div className={cn(
+                                "w-12 h-12 rounded-xl flex items-center justify-center shadow-md shrink-0",
+                                categoryColors.bg,
+                                categoryColors.text
+                            )}>
+                                <CategoryIcon className="w-6 h-6" />
                             </div>
-                            <div>
-                                <h2 className="text-[20px] font-black text-ink leading-tight">Configure Widget</h2>
-                                <p className="text-[12px] text-gold-dark font-bold mt-0.5">{chart.name} • {currentAyanamsa}</p>
+                            
+                            {/* Widget Info */}
+                            <div className="min-w-0">
+                                <h2 className="text-[18px] font-black text-ink leading-tight truncate">{chart.name}</h2>
+                                <p className="text-[11px] text-ink/60 mt-0.5 truncate">{chart.description}</p>
+                                
+                                {/* Tags Row: Content Type + Live Dimensions */}
+                                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                                    <span className={cn(
+                                        "text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded",
+                                        categoryColors.bg,
+                                        categoryColors.text
+                                    )}>
+                                        {contentAware.contentInfo.label}
+                                    </span>
+                                    <span className="text-ink/20">•</span>
+                                    <LiveDimensionsBadge 
+                                        width={dimensions.width}
+                                        height={dimensions.height}
+                                        isRecommended={isRecommendedSize}
+                                    />
+                                </div>
                             </div>
                         </div>
-                        <button onClick={onClose} className="p-2 hover:bg-gold-primary/20 rounded-xl transition-colors text-ink/40 hover:text-ink">
-                            <X className="w-6 h-6" />
-                        </button>
+                        
+                        {/* Right: Actions */}
+                        <div className="flex items-center gap-1.5 shrink-0">
+                            {/* Ayanamsa Selector */}
+                            <AyanamsaSelect
+                                value={selectedAyanamsa}
+                                onChange={setSelectedAyanamsa}
+                                compact
+                            />
+                            
+                            {/* Settings Button - Switch to Advanced tab */}
+                            <button
+                                onClick={() => setActiveTab('advanced')}
+                                className={cn(
+                                    "p-2 rounded-lg transition-colors",
+                                    activeTab === 'advanced'
+                                        ? "bg-primary text-white"
+                                        : "hover:bg-gold-primary/20 text-ink/40 hover:text-ink"
+                                )}
+                                title="Settings"
+                            >
+                                <Settings className="w-5 h-5" />
+                            </button>
+                            
+                            {/* Close Button */}
+                            <button 
+                                onClick={onClose} 
+                                className="p-2 hover:bg-gold-primary/20 rounded-lg transition-colors text-ink/40 hover:text-ink"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
                     </div>
 
                     {/* Tabs */}
@@ -510,43 +679,59 @@ export default function WidgetConfigurator({
                         <div className="p-5">
                             {activeTab === 'size' && (
                                 <div className="space-y-4">
-                                    {/* Size Presets */}
-                                    <div className="grid grid-cols-5 gap-2">
-                                        {SIZE_PRESETS.map((preset) => (
-                                            <button
-                                                key={preset.name}
-                                                onClick={() => setDimensions({ ...dimensions, width: preset.width, height: preset.height })}
-                                                className={cn(
-                                                    "p-2 rounded-xl border text-center transition-all",
-                                                    dimensions.width === preset.width && dimensions.height === preset.height
-                                                        ? "bg-primary text-white border-primary"
-                                                        : "bg-white border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
-                                                )}
-                                            >
-                                                <span className="text-[14px] font-black block">{preset.icon}</span>
-                                                <span className="text-[9px] font-bold">{preset.name}</span>
-                                            </button>
-                                        ))}
+                                    {/* Content Type Info */}
+                                    <div className="bg-blue-50 rounded-xl p-3 border border-blue-100">
+                                        <p className="text-[11px] text-blue-700 leading-relaxed">
+                                            <strong>{contentAware.contentInfo.label}</strong>: {contentAware.contentInfo.description}
+                                        </p>
+                                        <p className="text-[10px] text-blue-600 mt-1">
+                                            Recommended: {contentAware.contentInfo.defaultSize} • Free resize
+                                        </p>
                                     </div>
 
-                                    {/* Width Control */}
+                                    {/* Size Presets - Dynamic based on content type */}
+                                    <div>
+                                        <label className="text-[10px] font-bold text-ink/50 mb-2 block uppercase tracking-wider">
+                                            Recommended Sizes
+                                        </label>
+                                        <div className="grid grid-cols-3 gap-2">
+                                            {sizePresets.map((preset) => (
+                                                <button
+                                                    key={preset.name}
+                                                    onClick={() => setDimensions({ ...dimensions, width: preset.width, height: preset.height })}
+                                                    className={cn(
+                                                        "p-2 rounded-xl border text-center transition-all",
+                                                        dimensions.width === preset.width && dimensions.height === preset.height
+                                                            ? "bg-primary text-white border-primary"
+                                                            : "bg-white border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
+                                                    )}
+                                                >
+                                                    <span className="text-[14px] font-black block">{preset.icon}</span>
+                                                    <span className="text-[9px] font-bold">{preset.name}</span>
+                                                    <span className="text-[8px] opacity-70 block">{preset.desc}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Width Control - Use content-aware min/max */}
                                     <PixelSizeControl
                                         label="Width"
                                         value={dimensions.width}
-                                        min={dimensions.minWidth}
-                                        max={dimensions.maxWidth}
+                                        min={contentAware.dimensions.minWidth}
+                                        max={contentAware.dimensions.maxWidth}
                                         onChange={(width) => setDimensions({ ...dimensions, width })}
-                                        step={10}
+                                        step={contentAware.resizeStep}
                                     />
 
-                                    {/* Height Control */}
+                                    {/* Height Control - Use content-aware min/max */}
                                     <PixelSizeControl
                                         label="Height"
                                         value={dimensions.height}
-                                        min={dimensions.minHeight}
-                                        max={dimensions.maxHeight}
+                                        min={contentAware.dimensions.minHeight}
+                                        max={contentAware.dimensions.maxHeight}
                                         onChange={(height) => setDimensions({ ...dimensions, height })}
-                                        step={10}
+                                        step={contentAware.resizeStep}
                                     />
                                 </div>
                             )}

@@ -46,6 +46,8 @@ export interface WidgetTheme {
     contentTextScale?: number;
     titleAlign?: 'left' | 'center' | 'right';
     titleMaxWidth?: number;
+    // Auto-scale content based on widget dimensions
+    autoScale?: boolean;
     // ═══════════════════════════════════════════════════════════════════════════════
     // ASTROLOGER CUSTOMIZATION OPTIONS
     // ═══════════════════════════════════════════════════════════════════════════════
@@ -73,6 +75,34 @@ export interface WidgetTheme {
     // Spacing & Density
     planetSpacing?: 'compact' | 'normal' | 'spacious'; // Space between planets in houses
     labelDensity?: 'minimal' | 'normal' | 'detailed';  // How much info to show
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // TABLE CUSTOMIZATION OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+    tableStyle?: 'compact' | 'comfortable' | 'spacious';
+    rowHeight?: number;
+    cellPadding?: number;
+    alternateRowColors?: boolean;
+    tableFontSize?: number;
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // CARD & LAYOUT OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+    cardStyle?: 'flat' | 'elevated' | 'outlined';
+    contentLayout?: 'list' | 'grid' | 'timeline';
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // ANALYSIS WIDGET OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+    showSummaryStats?: boolean;
+    highlightSeverity?: boolean;
+    expandableSections?: boolean;
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // COMPACT WIDGET OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+    showIcon?: boolean;
+    compactFontSize?: number;
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // BACKGROUND STYLE OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+    backgroundStyle?: 'solid' | 'gradient' | 'pattern';
 }
 
 export const DEFAULT_WIDGET_THEME: WidgetTheme = {
@@ -92,11 +122,13 @@ export const DEFAULT_WIDGET_THEME: WidgetTheme = {
     contentTextScale: 1,
     titleAlign: 'left',
     titleMaxWidth: undefined,
+    // Auto-scale enabled by default
+    autoScale: true,
     // Astrologer defaults
     planetDisplayMode: 'name',
     planetFontSize: 14,
     planetFontWeight: '600',
-    showDegrees: true,
+    // showDegrees: undefined by default - will be determined by chart type (D1 shows degrees, others don't)
     degreeFormat: 'short',
     degreeFontSize: 9,
     showHouseNumbers: true,
@@ -110,6 +142,24 @@ export const DEFAULT_WIDGET_THEME: WidgetTheme = {
     fontFamily: 'default',
     planetSpacing: 'normal',
     labelDensity: 'normal',
+    // Table defaults
+    tableStyle: 'comfortable',
+    rowHeight: 32,
+    cellPadding: 8,
+    alternateRowColors: true,
+    tableFontSize: 12,
+    // Card defaults
+    cardStyle: 'elevated',
+    contentLayout: 'list',
+    // Analysis widget defaults
+    showSummaryStats: true,
+    highlightSeverity: true,
+    expandableSections: true,
+    // Compact widget defaults
+    showIcon: true,
+    compactFontSize: 11,
+    // Background style
+    backgroundStyle: 'solid',
 };
 
 export const PRESET_THEMES: Record<string, WidgetTheme> = {
@@ -214,9 +264,9 @@ export const WIDGET_DIMENSION_PRESETS: Record<string, WidgetDimensions> = {
     
     // Analysis widgets - balanced proportions for content
     dasha: { 
-        width: 450, height: 520, 
+        width: 800, height: 516, 
         minWidth: 350, minHeight: 400, 
-        maxWidth: 800, maxHeight: 900 
+        maxWidth: 1200, maxHeight: 1000 
     },
     widget_shadbala: { 
         width: 520, height: 480, 
