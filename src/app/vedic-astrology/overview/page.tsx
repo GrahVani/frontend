@@ -33,7 +33,8 @@ import {
     Sunrise,
     Sunset,
     AlertTriangle,
-    LayoutTemplate
+    LayoutTemplate,
+    Plus
 } from 'lucide-react';
 import Link from 'next/link';
 import { useVedicClient } from '@/context/VedicClientContext';
@@ -49,6 +50,7 @@ import BirthPanchanga, { type BirthPanchangaData } from '@/components/astrology/
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { COLORS } from '@/design-tokens/colors';
 import { KnowledgeTooltip } from '@/components/knowledge';
+import { CHART_CATALOG } from '@/hooks/useCustomizeCharts';
 
 const formatDate = (dateStr: string) => {
     if (!dateStr) return "";
@@ -150,27 +152,11 @@ export default function VedicOverviewPage() {
     }, [clientDetails?.id, settings.ayanamsa]);
 
     const d1Data = React.useMemo(() => parseChartData(processedCharts[`D1_${activeSystem}`]?.chartData), [processedCharts, activeSystem]);
-    const d9Data = React.useMemo(() => parseChartData(processedCharts[`D9_${activeSystem}`]?.chartData), [processedCharts, activeSystem]);
-    const d10Data = React.useMemo(() => parseChartData(processedCharts[`D10_${activeSystem}`]?.chartData), [processedCharts, activeSystem]);
-    const d60Data = React.useMemo(() => parseChartData(processedCharts[`D60_${activeSystem}`]?.chartData), [processedCharts, activeSystem]);
-
     const zoomedData = React.useMemo(() => {
         if (!zoomedChart) return { planets: [], ascendant: 1 };
         const key = `${zoomedChart.varga}_${activeSystem}`;
         return parseChartData(processedCharts[key]?.chartData);
     }, [zoomedChart, processedCharts, activeSystem]);
-
-    const planetaryTableData = React.useMemo(() => {
-        return d1Data.planets.map(p => ({
-            planet: fullPlanetNames[p.name] || p.name,
-            sign: signIdToName[p.signId] || '-',
-            degree: p.degree,
-            nakshatra: p.nakshatra || '-',
-            nakshatraPart: p.pada ? (typeof p.pada === 'number' ? p.pada : parseInt(String(p.pada).replace('Pada ', ''))) : undefined,
-            house: p.house || 0,
-            isRetro: p.isRetro
-        }));
-    }, [d1Data]);
 
     const isLoading = isGeneratingCharts || (isLoadingCharts && Object.keys(processedCharts).length === 0);
 
@@ -212,9 +198,6 @@ export default function VedicOverviewPage() {
             <KundaliContent 
                 clientDetails={clientDetails}
                 d1Data={d1Data}
-                d9Data={d9Data}
-                d10Data={d10Data}
-                planetaryTableData={planetaryTableData}
                 birthPanchangaData={birthPanchangaData}
                 dashaData={dashaData}
                 dashaLoading={dashaLoading}
@@ -269,13 +252,186 @@ export default function VedicOverviewPage() {
     );
 }
 
+// ============================================================================
+// Constants for Chart Slots
+// ============================================================================
+const KUNDALI_SLOTS_KEY = 'grahvani_kundali_chart_slots';
+const DEFAULT_SLOTS: (string | null)[] = ['D1', 'D9', 'D10'];
+const PICKER_CATEGORIES = ['divisional', 'lagna', 'rare_shodash'];
+
+const HEADER_STYLE = {
+    background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
+    borderBottom: '1px solid rgba(220,201,166,0.25)',
+};
+
+// ============================================================================
+// Chart Picker Modal
+// ============================================================================
+function ChartPickerModal({
+    onClose,
+    onSelect,
+    ayanamsa,
+}: {
+    onClose: () => void;
+    onSelect: (chartId: string) => void;
+    ayanamsa: string;
+}) {
+    const isLahiri = ayanamsa.toLowerCase() === 'lahiri';
+    const filteredCharts = CHART_CATALOG.filter(chart => {
+        if (!PICKER_CATEGORIES.includes(chart.category)) return false;
+        if (!isLahiri && (chart.lahiriOnly || chart.category === 'rare_shodash')) return false;
+        if (chart.requiredSystem && chart.requiredSystem !== ayanamsa.toLowerCase()) return false;
+        return true;
+    });
+
+    const grouped = filteredCharts.reduce((acc, chart) => {
+        const cat = chart.category;
+        if (!acc[cat]) acc[cat] = [];
+        acc[cat].push(chart);
+        return acc;
+    }, {} as Record<string, typeof filteredCharts>);
+
+    const categoryLabels: Record<string, string> = {
+        'divisional': 'Divisional Charts',
+        'lagna': 'Lagna Charts',
+        'rare_shodash': 'Rare Shodash Varga',
+    };
+
+    return (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-ink/60 backdrop-blur-sm animate-in fade-in zoom-in-95 duration-300"
+            role="dialog" aria-modal="true" aria-label="Select a chart"
+            onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+        >
+            <div className="max-w-2xl w-full max-h-[80vh] overflow-y-auto relative rounded-3xl p-6 custom-scrollbar"
+                style={{
+                    background: 'linear-gradient(165deg, rgba(255,253,249,0.97) 0%, rgba(250,245,234,0.95) 50%, rgba(255,253,249,0.96) 100%)',
+                    border: '1px solid rgba(220,201,166,0.35)',
+                    borderBottom: '4px solid rgba(201,162,77,0.60)',
+                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), 0 25px 60px rgba(62,46,22,0.22)',
+                    backdropFilter: 'blur(20px)',
+                }}>
+                <button onClick={onClose} aria-label="Close chart picker"
+                    className="absolute top-4 right-4 p-2 rounded-2xl text-ink/40 hover:text-status-error transition-all"
+                    style={{
+                        background: 'rgba(255,253,249,0.80)',
+                        border: '1px solid rgba(220,201,166,0.30)',
+                    }}>
+                    <X className="w-5 h-5" />
+                </button>
+                <h2 className="text-[18px] font-serif font-bold text-ink mb-1">Select a Chart</h2>
+                <p className={cn(TYPOGRAPHY.profileDetail, "mb-5")}>Choose a divisional or lagna chart to display</p>
+
+                {Object.entries(grouped).map(([category, charts]) => (
+                    <div key={category} className="mb-5">
+                        <h3 className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-widest mb-2 opacity-60")}>{categoryLabels[category] || category}</h3>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            {charts.map(chart => (
+                                <button
+                                    key={chart.id}
+                                    onClick={() => onSelect(chart.id)}
+                                    className="p-3 rounded-xl text-left transition-all hover:shadow-md group cursor-pointer"
+                                    style={{
+                                        background: 'rgba(255,253,249,0.70)',
+                                        border: '1px solid rgba(220,201,166,0.25)',
+                                    }}
+                                >
+                                    <div className={cn(TYPOGRAPHY.value, "text-[12px] group-hover:text-gold-dark transition-colors")}>{chart.name}</div>
+                                    <div className={cn(TYPOGRAPHY.profileDetail, "text-[10px] mt-0.5 line-clamp-2")}>{chart.description}</div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+// ============================================================================
+// Empty Chart Slot (Add Chart Placeholder)
+// ============================================================================
+function EmptyChartSlot({ height, onClick }: { height: string; onClick: () => void }) {
+    return (
+        <div className="prem-card overflow-hidden">
+            <div
+                className={cn("w-full flex flex-col items-center justify-center cursor-pointer group transition-all hover:bg-gold-primary/3", height)}
+                onClick={onClick}
+            >
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-2 transition-all group-hover:scale-110"
+                    style={{
+                        background: 'linear-gradient(135deg, rgba(201,162,77,0.08) 0%, rgba(201,162,77,0.03) 100%)',
+                        border: '1px solid rgba(220,201,166,0.25)',
+                    }}>
+                    <Plus className="w-5 h-5 text-gold-primary/40 group-hover:text-gold-primary/70 transition-colors" />
+                </div>
+                <span className={cn(TYPOGRAPHY.profileDetail, "text-[11px] text-ink/30 group-hover:text-ink/50 transition-colors")}>Add Chart</span>
+            </div>
+        </div>
+    );
+}
+
+// ============================================================================
+// Rendered Chart Slot (with X dismiss + Zoom)
+// ============================================================================
+function RenderedChartSlot({
+    chartId,
+    height,
+    showDegrees,
+    onZoom,
+    onDismiss,
+}: {
+    chartId: string;
+    height: string;
+    showDegrees: boolean;
+    onZoom: () => void;
+    onDismiss: () => void;
+}) {
+    const { processedCharts } = useVedicClient();
+    const { ayanamsa } = useAstrologerStore();
+    const activeSystem = ayanamsa.toLowerCase();
+    const key = `${chartId}_${activeSystem}`;
+    const data = React.useMemo(() => parseChartData(processedCharts[key]?.chartData), [processedCharts, key]);
+    const meta = CHART_METADATA[chartId] || { name: chartId, desc: 'Chart' };
+    const displayName = `${meta.name} (${chartId})`;
+
+    return (
+        <div className="prem-card overflow-hidden">
+            <div className="px-3 py-1.5 flex justify-between items-center" style={HEADER_STYLE}>
+                <h2 className={TYPOGRAPHY.sectionTitle}>{displayName}</h2>
+                <div className="flex items-center gap-1">
+                    <button onClick={onZoom} className="p-1 text-ink/40 hover:text-gold-dark transition-colors" aria-label={`Zoom ${displayName}`}>
+                        <Maximize2 className="w-3 h-3" />
+                    </button>
+                    <button onClick={onDismiss} className="p-1 text-ink/25 hover:text-rose-500 transition-colors" aria-label={`Remove ${displayName}`}>
+                        <X className="w-3 h-3" />
+                    </button>
+                </div>
+            </div>
+            <div className={cn("w-full bg-surface-warm", height)}>
+                {data.planets.length > 0 ? (
+                    <ChartWithPopup
+                        ascendantSign={data.ascendant}
+                        planets={data.planets}
+                        className="bg-transparent border-none w-full h-full"
+                        preserveAspectRatio="none"
+                        showDegrees={showDegrees}
+                    />
+                ) : (
+                    <div className={cn(TYPOGRAPHY.subValue, "p-4 text-ink/35 italic flex items-center justify-center h-full")}>
+                        No {meta.name} chart data available
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+// ============================================================================
 // Kundali Tab Content
+// ============================================================================
 function KundaliContent({ 
     clientDetails, 
     d1Data, 
-    d9Data, 
-    d10Data, 
-    planetaryTableData, 
     birthPanchangaData,
     dashaData,
     dashaLoading,
@@ -283,191 +439,239 @@ function KundaliContent({
 }: { 
     clientDetails: any;
     d1Data: any;
-    d9Data: any;
-    d10Data: any;
-    planetaryTableData: any[];
     birthPanchangaData: BirthPanchangaData | null;
     dashaData: DashaResponse | null;
     dashaLoading: boolean;
     setZoomedChart: (chart: { varga: string, label: string } | null) => void;
 }) {
     const { ayanamsa } = useAstrologerStore();
+    const { processedCharts } = useVedicClient();
     const activeSystem = ayanamsa.toLowerCase();
 
+    // ── Chart Slots State (persisted to localStorage) ──
+    const [chartSlots, setChartSlots] = useState<(string | null)[]>(() => {
+        if (typeof window === 'undefined') return DEFAULT_SLOTS;
+        try {
+            const stored = localStorage.getItem(KUNDALI_SLOTS_KEY);
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                if (Array.isArray(parsed) && parsed.length === 3) return parsed;
+            }
+        } catch { /* ignore */ }
+        return DEFAULT_SLOTS;
+    });
+
+    const [addChartModalSlot, setAddChartModalSlot] = useState<number | null>(null);
+
+    // Persist to localStorage on change
+    useEffect(() => {
+        localStorage.setItem(KUNDALI_SLOTS_KEY, JSON.stringify(chartSlots));
+    }, [chartSlots]);
+
+    // Escape key to close modal
+    useEffect(() => {
+        if (addChartModalSlot === null) return;
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setAddChartModalSlot(null);
+        };
+        document.addEventListener('keydown', handleEscape);
+        return () => document.removeEventListener('keydown', handleEscape);
+    }, [addChartModalSlot]);
+
+    // ── Slot Actions ──
+    const dismissSlot = (index: number) => {
+        setChartSlots(prev => {
+            const next = [...prev];
+            next[index] = null;
+            return next;
+        });
+    };
+
+    const selectChart = (chartId: string) => {
+        if (addChartModalSlot === null) return;
+        setChartSlots(prev => {
+            const next = [...prev];
+            next[addChartModalSlot] = chartId;
+            return next;
+        });
+        setAddChartModalSlot(null);
+    };
+
+    // ── Dynamic Planetary Table Data (from Slot 0) ──
+    const slot0ChartId = chartSlots[0];
+    const slot0Key = slot0ChartId ? `${slot0ChartId}_${activeSystem}` : null;
+    const slot0Data = React.useMemo(
+        () => slot0Key ? parseChartData(processedCharts[slot0Key]?.chartData) : { planets: [], ascendant: 1 },
+        [processedCharts, slot0Key]
+    );
+    const slot0Meta = slot0ChartId ? (CHART_METADATA[slot0ChartId] || { name: slot0ChartId }) : null;
+
+    const planetaryTableData = React.useMemo(() => {
+        return slot0Data.planets.map((p: any) => ({
+            planet: fullPlanetNames[p.name] || p.name,
+            sign: signIdToName[p.signId] || '-',
+            degree: p.degree,
+            nakshatra: p.nakshatra || '-',
+            nakshatraPart: p.pada ? (typeof p.pada === 'number' ? p.pada : parseInt(String(p.pada).replace('Pada ', ''))) : undefined,
+            house: p.house || 0,
+            isRetro: p.isRetro
+        }));
+    }, [slot0Data]);
+
+    const planetaryTableTitle = slot0Meta
+        ? `${slot0Meta.name} planetary positions`
+        : 'Planetary positions';
+
+    // ── Render Helpers ──
+    const renderSlot = (index: number, height: string) => {
+        const chartId = chartSlots[index];
+        if (!chartId) {
+            return <EmptyChartSlot height={height} onClick={() => setAddChartModalSlot(index)} />;
+        }
+        const meta = CHART_METADATA[chartId] || { name: chartId, desc: 'Chart' };
+        return (
+            <RenderedChartSlot
+                chartId={chartId}
+                height={height}
+                showDegrees={chartId === 'D1'}
+                onZoom={() => setZoomedChart({ varga: chartId, label: `${meta.name} (${chartId})` })}
+                onDismiss={() => dismissSlot(index)}
+            />
+        );
+    };
+
     return (
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
-            {/* LEFT COLUMN: D1 & Planetary Details */}
-            <div className="md:col-span-5 flex flex-col gap-2">
-                {/* D1 Chart Window */}
-                <div className="prem-card overflow-hidden">
-                    <div className="px-3 py-1.5 flex justify-between items-center"
-                        style={{
-                            background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
-                            borderBottom: '1px solid rgba(220,201,166,0.25)',
-                        }}>
-                        <h2 className={TYPOGRAPHY.sectionTitle}>Birth chart (<KnowledgeTooltip term="varga_d1_rashi" unstyled>D1</KnowledgeTooltip>)</h2>
-                        <button onClick={() => setZoomedChart({ varga: "D1", label: "Birth Chart (D1)" })} className="text-ink/40 hover:text-gold-dark transition-colors"><Maximize2 className="w-3 h-3" /></button>
-                    </div>
-                    <div className="w-full h-[435px] bg-surface-warm">
-                        <ChartWithPopup
-                            ascendantSign={d1Data.ascendant}
-                            planets={d1Data.planets}
-                            className="bg-transparent border-none w-full h-full"
-                            preserveAspectRatio="none"
-                            showDegrees={true}
-                        />
-                    </div>
-                </div>
+        <>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
+                {/* LEFT COLUMN: Slot 0 & Planetary Details */}
+                <div className="md:col-span-5 flex flex-col gap-2">
+                    {/* Slot 0: Main Chart */}
+                    {renderSlot(0, 'h-[435px]')}
 
-                {/* Planetary Details Window */}
-                <div className="prem-card overflow-hidden">
-                    <div className="px-3 py-1.5"
-                        style={{
-                            background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
-                            borderBottom: '1px solid rgba(220,201,166,0.25)',
-                        }}>
-                        <h2 className={TYPOGRAPHY.sectionTitle}>Birth <KnowledgeTooltip term="planetary_positions" unstyled>planetary positions</KnowledgeTooltip></h2>
-                    </div>
-                    <div className="bg-surface-warm">
-                        <PlanetaryTable
-                            planets={planetaryTableData}
-                            variant="compact"
-                            rowClassName="py-1"
-                        />
-                    </div>
-                </div>
-            </div>
-
-            {/* RIGHT COLUMN: Divisional Charts, Dasha, Profile */}
-            <div className="md:col-span-7 flex flex-col gap-2">
-                {/* Client Identity Bar */}
-                {clientDetails && (
+                    {/* Planetary Details Window (dynamic from Slot 0) */}
                     <div className="prem-card overflow-hidden">
-                        <div className="px-3 py-1.5"
-                            style={{
-                                background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
-                                borderBottom: '1px solid rgba(220,201,166,0.25)',
-                            }}>
-                            <h2 className={TYPOGRAPHY.sectionTitle}>Client profile</h2>
+                        <div className="px-3 py-1.5" style={HEADER_STYLE}>
+                            <h2 className={TYPOGRAPHY.sectionTitle}>
+                                {slot0ChartId ? (
+                                    <>{slot0Meta?.name} <KnowledgeTooltip term="planetary_positions" unstyled>planetary positions</KnowledgeTooltip></>
+                                ) : (
+                                    <KnowledgeTooltip term="planetary_positions" unstyled>Planetary positions</KnowledgeTooltip>
+                                )}
+                            </h2>
                         </div>
-                        <div className="px-3 py-2 flex flex-wrap items-center gap-x-4 gap-y-2">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-lg flex items-center justify-center text-white shrink-0"
-                                    style={{
-                                        background: 'linear-gradient(135deg, rgba(201,162,77,0.90) 0%, rgba(139,90,43,0.85) 100%)',
-                                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), 0 2px 6px rgba(139,90,43,0.15)',
-                                    }}>
-                                    <span className={TYPOGRAPHY.value}>{clientDetails.name.charAt(0)}</span>
+                        <div className="bg-surface-warm">
+                            {planetaryTableData.length > 0 ? (
+                                <PlanetaryTable
+                                    planets={planetaryTableData}
+                                    variant="compact"
+                                    rowClassName="py-1"
+                                />
+                            ) : (
+                                <div className={cn(TYPOGRAPHY.subValue, "p-6 text-center text-ink/30 italic")}>
+                                    Select a chart above to see positions
                                 </div>
-                                <div className="min-w-0">
-                                    <div className={TYPOGRAPHY.profileName}>{clientDetails.name}</div>
-                                    <div className={cn(TYPOGRAPHY.profileDetail, "flex flex-wrap gap-x-2 mt-1 !font-serif")}>
-                                        <span className="!font-serif">{formatDate(clientDetails.dateOfBirth)}</span>
-                                        <span className="text-ink/30">•</span>
-                                        <span className="!font-serif">{formatTime(clientDetails.timeOfBirth)}</span>
-                                        <span className="text-ink/30">•</span>
-                                        <span className="truncate max-w-[250px] !font-serif" title={clientDetails.placeOfBirth.city}>{clientDetails.placeOfBirth.city}</span>
-                                    </div>
-                                </div>
-                            </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
 
-                            {/* Lagna / Moon / Sun — inline chips */}
-                            <div className="flex items-center gap-1.5 ml-auto">
-                                {[
-                                    { key: 'lagna', label: <KnowledgeTooltip term="lagna" unstyled>Lagna</KnowledgeTooltip> as React.ReactNode, value: signIdToName[(d1Data.ascendant || 1) as number] },
-                                    { key: 'moon', label: 'Moon' as React.ReactNode, value: d1Data.planets.find((p: any) => p.name === "Mo") ? signIdToName[d1Data.planets.find((p: any) => p.name === "Mo")!.signId] : "-" },
-                                    { key: 'sun', label: 'Sun' as React.ReactNode, value: d1Data.planets.find((p: any) => p.name === "Su") ? signIdToName[d1Data.planets.find((p: any) => p.name === "Su")!.signId] : "-" },
-                                ].map((chip) => (
-                                    <div key={chip.key}
-                                        className="px-2.5 py-1 rounded-lg group hover:border-gold-primary/30 transition-colors flex items-center gap-1.5"
+                {/* RIGHT COLUMN: Divisional Charts, Dasha, Profile */}
+                <div className="md:col-span-7 flex flex-col gap-2">
+                    {/* Client Identity Bar */}
+                    {clientDetails && (
+                        <div className="prem-card overflow-hidden">
+                            <div className="px-3 py-1.5" style={HEADER_STYLE}>
+                                <h2 className={TYPOGRAPHY.sectionTitle}>Client profile</h2>
+                            </div>
+                            <div className="px-3 py-2 flex flex-wrap items-center gap-x-4 gap-y-2">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-lg flex items-center justify-center text-white shrink-0"
                                         style={{
-                                            background: 'rgba(255,253,249,0.70)',
-                                            border: '1px solid rgba(220,201,166,0.25)',
-                                            boxShadow: '0 1px 3px rgba(62,46,22,0.04)',
+                                            background: 'linear-gradient(135deg, rgba(201,162,77,0.90) 0%, rgba(139,90,43,0.85) 100%)',
+                                            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), 0 2px 6px rgba(139,90,43,0.15)',
                                         }}>
-                                        <span className={TYPOGRAPHY.badgeLabel}>{chip.label} :</span>
-                                        <span className={cn(TYPOGRAPHY.badgeValue, "group-hover:text-gold-dark transition-colors")}>{chip.value}</span>
+                                        <span className={TYPOGRAPHY.value}>{clientDetails.name.charAt(0)}</span>
                                     </div>
-                                ))}
+                                    <div className="min-w-0">
+                                        <div className={TYPOGRAPHY.profileName}>{clientDetails.name}</div>
+                                        <div className={cn(TYPOGRAPHY.profileDetail, "flex flex-wrap gap-x-2 mt-1 !font-serif")}>
+                                            <span className="!font-serif">{formatDate(clientDetails.dateOfBirth)}</span>
+                                            <span className="text-ink/30">•</span>
+                                            <span className="!font-serif">{formatTime(clientDetails.timeOfBirth)}</span>
+                                            <span className="text-ink/30">•</span>
+                                            <span className="truncate max-w-[250px] !font-serif" title={clientDetails.placeOfBirth.city}>{clientDetails.placeOfBirth.city}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Lagna / Moon / Sun — always from D1 */}
+                                <div className="flex items-center gap-1.5 ml-auto">
+                                    {[
+                                        { key: 'lagna', label: <KnowledgeTooltip term="lagna" unstyled>Lagna</KnowledgeTooltip> as React.ReactNode, value: signIdToName[(d1Data.ascendant || 1) as number] },
+                                        { key: 'moon', label: 'Moon' as React.ReactNode, value: d1Data.planets.find((p: any) => p.name === "Mo") ? signIdToName[d1Data.planets.find((p: any) => p.name === "Mo")!.signId] : "-" },
+                                        { key: 'sun', label: 'Sun' as React.ReactNode, value: d1Data.planets.find((p: any) => p.name === "Su") ? signIdToName[d1Data.planets.find((p: any) => p.name === "Su")!.signId] : "-" },
+                                    ].map((chip) => (
+                                        <div key={chip.key}
+                                            className="px-2.5 py-1 rounded-lg group hover:border-gold-primary/30 transition-colors flex items-center gap-1.5"
+                                            style={{
+                                                background: 'rgba(255,253,249,0.70)',
+                                                border: '1px solid rgba(220,201,166,0.25)',
+                                                boxShadow: '0 1px 3px rgba(62,46,22,0.04)',
+                                            }}>
+                                            <span className={TYPOGRAPHY.badgeLabel}>{chip.label} :</span>
+                                            <span className={cn(TYPOGRAPHY.badgeValue, "group-hover:text-gold-dark transition-colors")}>{chip.value}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Panchanga & Dasha side-by-side */}
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
+                        {/* Birth Panchanga Card */}
+                        <div className="col-span-12 md:col-span-5 lg:col-span-4 prem-card overflow-hidden flex flex-col">
+                            <div className="px-3 py-1.5 flex items-center gap-1.5" style={HEADER_STYLE}>
+                                <Sparkle className="w-3 h-3 text-gold-dark" />
+                                <h2 className={TYPOGRAPHY.sectionTitle}>Birth <KnowledgeTooltip term="panchanga" unstyled>panchanga</KnowledgeTooltip></h2>
+                            </div>
+                            <div className="p-2.5 flex-1 flex flex-col justify-between gap-2 bg-surface-warm">
+                                <BirthPanchanga data={birthPanchangaData} />
+                            </div>
+                        </div>
+
+                        {/* Vimshottari Dasha */}
+                        <div className="col-span-12 md:col-span-7 lg:col-span-8 prem-card overflow-hidden flex flex-col">
+                            <div className="px-3 py-1.5" style={HEADER_STYLE}>
+                                <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="dasha_vimshottari" unstyled>Vimshottari</KnowledgeTooltip> dasha</h2>
+                            </div>
+                            <div className="p-0 bg-surface-warm">
+                                <VimshottariTreeGrid
+                                    data={dashaData ? processDashaResponse(dashaData as unknown as RawDashaPeriod).slice(0, 9) : []}
+                                    isLoading={dashaLoading}
+                                    className="border-none shadow-none rounded-none bg-transparent"
+                                />
                             </div>
                         </div>
                     </div>
-                )}
 
-                {/* Panchanga & Dasha side-by-side */}
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
-                    {/* Birth Panchanga Card */}
-                    <div className="col-span-12 md:col-span-5 lg:col-span-4 prem-card overflow-hidden flex flex-col">
-                        <div className="px-3 py-1.5 flex items-center gap-1.5"
-                            style={{
-                                background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
-                                borderBottom: '1px solid rgba(220,201,166,0.25)',
-                            }}>
-                            <Sparkle className="w-3 h-3 text-gold-dark" />
-                            <h2 className={TYPOGRAPHY.sectionTitle}>Birth <KnowledgeTooltip term="panchanga" unstyled>panchanga</KnowledgeTooltip></h2>
-                        </div>
-                        <div className="p-2.5 flex-1 flex flex-col justify-between gap-2 bg-surface-warm">
-                            <BirthPanchanga data={birthPanchangaData} />
-                        </div>
-                    </div>
-
-                    {/* Vimshottari Dasha */}
-                    <div className="col-span-12 md:col-span-7 lg:col-span-8 prem-card overflow-hidden flex flex-col">
-                        <div className="px-3 py-1.5"
-                            style={{
-                                background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
-                                borderBottom: '1px solid rgba(220,201,166,0.25)',
-                            }}>
-                            <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="dasha_vimshottari" unstyled>Vimshottari</KnowledgeTooltip> dasha</h2>
-                        </div>
-                        <div className="p-0 bg-surface-warm">
-                            <VimshottariTreeGrid
-                                data={dashaData ? processDashaResponse(dashaData as unknown as RawDashaPeriod).slice(0, 9) : []}
-                                isLoading={dashaLoading}
-                                className="border-none shadow-none rounded-none bg-transparent"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Middle Row: D9 & D10 */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {/* D9 Navamsha */}
-                    <div className="prem-card overflow-hidden">
-                        <div className="px-3 py-1.5 flex justify-between items-center"
-                            style={{
-                                background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
-                                borderBottom: '1px solid rgba(220,201,166,0.25)',
-                            }}>
-                            <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="varga_d9_navamsha" unstyled>Navamsha</KnowledgeTooltip> (D9)</h2>
-                            <button onClick={() => setZoomedChart({ varga: "D9", label: "Navamsha (D9)" })} className="p-1.5 text-ink/40 hover:text-gold-dark transition-colors" aria-label="Zoom Navamsha D9 chart"><Maximize2 className="w-4 h-4" /></button>
-                        </div>
-                        <div className="w-full h-[320px] bg-surface-warm">
-                            {d9Data.planets.length > 0 ? (
-                                <ChartWithPopup ascendantSign={d9Data.ascendant} planets={d9Data.planets} className="bg-transparent border-none w-full h-full" preserveAspectRatio="none" showDegrees={false} />
-                            ) : <div className={cn(TYPOGRAPHY.subValue, "p-2 text-ink/35 italic")}>No D9 chart data available</div>}
-                        </div>
-                    </div>
-
-                    {/* D10 Dashamsha */}
-                    <div className="prem-card overflow-hidden">
-                        <div className="px-3 py-1.5 flex justify-between items-center"
-                            style={{
-                                background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
-                                borderBottom: '1px solid rgba(220,201,166,0.25)',
-                            }}>
-                            <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="varga_d10_dashamsha" unstyled>Dashamsha</KnowledgeTooltip> (D10)</h2>
-                            <button onClick={() => setZoomedChart({ varga: "D10", label: "Dashamsha (D10)" })} className="p-1.5 text-ink/40 hover:text-gold-dark transition-colors" aria-label="Zoom Dashamsha D10 chart"><Maximize2 className="w-4 h-4" /></button>
-                        </div>
-                        <div className="w-full h-[320px] bg-surface-warm">
-                            {d10Data.planets.length > 0 ? (
-                                <ChartWithPopup ascendantSign={d10Data.ascendant} planets={d10Data.planets} className="bg-transparent border-none w-full h-full" preserveAspectRatio="none" showDegrees={false} />
-                            ) : <div className={cn(TYPOGRAPHY.subValue, "p-2 text-ink/35 italic")}>No D10 chart data available</div>}
-                        </div>
+                    {/* Middle Row: Slot 1 & Slot 2 */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {renderSlot(1, 'h-[320px]')}
+                        {renderSlot(2, 'h-[320px]')}
                     </div>
                 </div>
             </div>
-        </div>
+
+            {/* Chart Picker Modal */}
+            {addChartModalSlot !== null && (
+                <ChartPickerModal
+                    onClose={() => setAddChartModalSlot(null)}
+                    onSelect={selectChart}
+                    ayanamsa={ayanamsa}
+                />
+            )}
+        </>
     );
 }
 

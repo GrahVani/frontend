@@ -16,9 +16,29 @@ interface CompactChartWithPopupProps {
     className?: string;
     preserveAspectRatio?: string;
     showDegrees?: boolean;
+    planetFontSize?: number;
+    degreeFontSize?: number;
+    planetFontWeight?: string | number;
+    planetDisplayMode?: 'name' | 'symbol' | 'both';
+    showHouseNumbers?: boolean;
+    planetSpacing?: 'compact' | 'normal' | 'spacious';
+    colorTheme?: 'classic' | 'modern' | 'royal' | 'earth' | 'ocean';
 }
 
-export default function CompactChartWithPopup({ planets, ascendantSign, className = "", preserveAspectRatio, showDegrees = true }: CompactChartWithPopupProps) {
+export default function CompactChartWithPopup({ 
+    planets, 
+    ascendantSign, 
+    className = "", 
+    preserveAspectRatio, 
+    showDegrees = true,
+    planetFontSize,
+    degreeFontSize,
+    planetFontWeight,
+    planetDisplayMode,
+    showHouseNumbers,
+    planetSpacing,
+    colorTheme = 'classic'
+}: CompactChartWithPopupProps) {
     const [selectedHouse, setSelectedHouse] = useState<number | null>(null);
     const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
     const [mounted, setMounted] = useState(false);
@@ -88,6 +108,13 @@ export default function CompactChartWithPopup({ planets, ascendantSign, classNam
                 preserveAspectRatio={preserveAspectRatio}
                 onHouseClick={handleHouseClick}
                 showDegrees={showDegrees}
+                planetFontSize={planetFontSize}
+                degreeFontSize={degreeFontSize}
+                planetFontWeight={planetFontWeight}
+                planetDisplayMode={planetDisplayMode}
+                showHouseNumbers={showHouseNumbers}
+                planetSpacing={planetSpacing}
+                colorTheme={colorTheme}
             />
 
             {/* Portal Overlay Popup */}

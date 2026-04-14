@@ -49,9 +49,10 @@ import ChartSelectorModal from './ChartSelectorModal';
 import AyanamsaSelect from './AyanamsaSelect';
 import PageTabs from './PageTabs';
 
-// Components - Use ChartWithPopup (same as Kundali page) instead of CompactChartWithPopup
-import { ChartWithPopup, Planet, type ChartDisplayOptions } from '@/components/astrology/NorthIndianChart';
+// Components - Use CompactChartWithPopup for dashboard density as requested
+import { CompactChartWithPopup, Planet, type ChartDisplayOptions } from '@/components/astrology/NorthIndianChart';
 import SouthIndianChart, { ChartColorMode } from '@/components/astrology/SouthIndianChart';
+import CompactSouthIndianChart from '@/components/astrology/CompactSouthIndianChart';
 import dynamic from 'next/dynamic';
 
 const DivisionalChartZoomModal = dynamic(() => import('@/components/astrology/DivisionalChartZoomModal'));
@@ -80,7 +81,7 @@ const SMART_DEFAULTS: Record<string, WidgetDimensions> = {
 
     // Tables - wider for data readability
     ashtakavarga: {
-        width: 580, height: 420,
+        width: 1000, height: 428,
         minWidth: 400, minHeight: 300,
         maxWidth: 1000, maxHeight: 700
     },
@@ -97,9 +98,9 @@ const SMART_DEFAULTS: Record<string, WidgetDimensions> = {
         maxWidth: 1000, maxHeight: 1000
     },
     widget_shadbala: {
-        width: 520, height: 480,
-        minWidth: 400, minHeight: 350,
-        maxWidth: 900, maxHeight: 800
+        width: 680, height: 520,
+        minWidth: 450, minHeight: 380,
+        maxWidth: 1100, maxHeight: 900
     },
     widget_yoga: {
         width: 500, height: 480,
@@ -134,7 +135,7 @@ const SMART_DEFAULTS: Record<string, WidgetDimensions> = {
         maxWidth: 800, maxHeight: 700
     },
     widget_chakra: {
-        width: 480, height: 480,
+        width: 560, height: 552,
         minWidth: 380, minHeight: 380,
         maxWidth: 900, maxHeight: 900
     },
@@ -196,12 +197,17 @@ const CustomChartWidget = React.memo(function CustomChartWidget({
     if (chartStyle === 'South Indian') {
         return (
             <div className="w-full h-full overflow-hidden">
-                <SouthIndianChart
+                <CompactSouthIndianChart
                     ascendantSign={ascendantSign}
                     planets={planets}
                     colorMode="color"
                     colorTheme={colorTheme}
                     className="w-full h-full"
+                    planetFontSize={planetFontSize}
+                    degreeFontSize={degreeFontSize}
+                    showDegrees={shouldShowDegrees}
+                    planetDisplayMode={planetDisplayMode}
+                    showHouseNumbers={showHouseNumbers}
                 />
             </div>
         );
@@ -209,26 +215,17 @@ const CustomChartWidget = React.memo(function CustomChartWidget({
 
     return (
         <div className="w-full h-full overflow-hidden">
-            <ChartWithPopup
+            <CompactChartWithPopup
                 ascendantSign={ascendantSign}
                 planets={planets}
                 className="w-full h-full"
                 preserveAspectRatio="none"
-                chartId={chartId}
-                planetDisplayMode={planetDisplayMode}
-                planetFontSize={planetFontSize}
-                planetFontWeight={planetFontWeight}
                 showDegrees={shouldShowDegrees}
-                degreeFormat={degreeFormat}
+                planetFontSize={planetFontSize}
                 degreeFontSize={degreeFontSize}
+                planetDisplayMode={planetDisplayMode}
                 showHouseNumbers={showHouseNumbers}
-                showGridLines={showGridLines}
-                gridLineColor={gridLineColor}
-                gridLineWidth={gridLineWidth}
-                showRetrogradeIndicator={showRetrogradeIndicator}
-                retrogradeStyle={retrogradeStyle}
                 planetSpacing={planetSpacing}
-                labelDensity={labelDensity}
             />
         </div>
     );
@@ -286,9 +283,11 @@ interface ResizableWidgetBoxProps {
     onCustomize: () => void;
     onAyanamsaChange?: (ayanamsa: string) => void;
     onUpdateDimensions: (dims: Partial<WidgetDimensions>) => void;
+    onUpdateTheme: (theme: Partial<WidgetTheme>) => void;
     children: React.ReactNode;
     isAvailable?: boolean;
     isGenerating?: boolean;
+    isLoading?: boolean;
     onGenerate?: () => void;
     autoScale?: boolean;
 }
@@ -299,9 +298,11 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
     onCustomize,
     onAyanamsaChange,
     onUpdateDimensions,
+    onUpdateTheme,
     children,
     isAvailable,
     isGenerating,
+    isLoading,
     onGenerate,
     autoScale = true,
 }: ResizableWidgetBoxProps) {
@@ -434,22 +435,74 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                             {displayTitle}
                         </span>
 
-                        <span
-                            className="opacity-50 shrink-0"
-                            style={{ fontSize: Math.max(9, (theme.headerFontSize ?? 12) * 0.75 * finalScale.scale) }}
-                        >
-                            {dimensions.width}×{dimensions.height}
-                        </span>
+                        <div className="flex items-center gap-1.5 bg-black/5 px-1.5 py-0.5 rounded-md border border-black/5 shadow-inner">
+                            {/* Width Control */}
+                            <div className="flex items-center gap-1 group/w">
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ width: dimensions.width - 10 }); }}
+                                    className="p-0.5 hover:bg-black/10 rounded-sm transition-colors"
+                                >
+                                    <Minus className="w-2.5 h-2.5 opacity-50" />
+                                </button>
+                                <span className="text-[9px] font-black text-ink/40 min-w-[42px] text-center uppercase">
+                                    W: {dimensions.width}
+                                </span>
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ width: dimensions.width + 10 }); }}
+                                    className="p-0.5 hover:bg-black/10 rounded-sm transition-colors"
+                                >
+                                    <Plus className="w-2.5 h-2.5 opacity-50" />
+                                </button>
+                            </div>
 
-                        {finalScale.isScaled && (
-                            <span
-                                className="shrink-0 px-1.5 py-0.5 rounded bg-primary/10 text-primary font-bold"
-                                style={{ fontSize: Math.max(8, (theme.headerFontSize ?? 12) * 0.65 * finalScale.scale) }}
-                                title="Content auto-scaled based on widget size"
+                            <div className="w-px h-2.5 bg-black/10 mx-0.5" />
+
+                            {/* Height Control */}
+                            <div className="flex items-center gap-1 group/h">
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ height: dimensions.height - 10 }); }}
+                                    className="p-0.5 hover:bg-black/10 rounded-sm transition-colors"
+                                >
+                                    <Minus className="w-2.5 h-2.5 opacity-50" />
+                                </button>
+                                <span className="text-[9px] font-black text-ink/40 min-w-[42px] text-center uppercase">
+                                    H: {dimensions.height}
+                                </span>
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ height: dimensions.height + 10 }); }}
+                                    className="p-0.5 hover:bg-black/10 rounded-sm transition-colors"
+                                >
+                                    <Plus className="w-2.5 h-2.5 opacity-50" />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Granular Zoom Control */}
+                        <div className="flex items-center gap-1 bg-primary/10 px-1.5 py-0.5 rounded-md border border-primary/10 shadow-inner">
+                            <button 
+                                onClick={(e) => { 
+                                    e.stopPropagation(); 
+                                    const currentScale = theme.contentTextScale ?? 1;
+                                    onUpdateTheme({ contentTextScale: Math.max(0.5, currentScale - 0.05) }); 
+                                }}
+                                className="p-0.5 hover:bg-primary/20 rounded-sm transition-colors"
                             >
+                                <Minus className="w-2.5 h-2.5 text-primary opacity-60" />
+                            </button>
+                            <span className="text-[9px] font-black text-primary min-w-[30px] text-center">
                                 {finalScale.scalePercentage}%
                             </span>
-                        )}
+                            <button 
+                                onClick={(e) => { 
+                                    e.stopPropagation(); 
+                                    const currentScale = theme.contentTextScale ?? 1;
+                                    onUpdateTheme({ contentTextScale: Math.min(2, currentScale + 0.05) }); 
+                                }}
+                                className="p-0.5 hover:bg-primary/20 rounded-sm transition-colors"
+                            >
+                                <Plus className="w-2.5 h-2.5 text-primary opacity-60" />
+                            </button>
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-1">
@@ -495,7 +548,12 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                     </div>
                 )}
 
-                {!isAvailable && onGenerate ? (
+                {isLoading ? (
+                    <div className="h-full flex flex-col items-center justify-center p-4 text-center">
+                        <Loader2 className="w-8 h-8 text-primary/30 animate-spin mb-3" />
+                        <p className="text-[10px] font-bold text-ink/30 uppercase tracking-[0.2em]">Synchronizing Data...</p>
+                    </div>
+                ) : !isAvailable && onGenerate ? (
                     <div className="h-full flex flex-col items-center justify-center p-4 text-center">
                         <AlertCircle className="w-8 h-8 text-gold-dark/30 mb-2" />
                         <p className="text-[11px] text-ink/50 mb-3">{item.name} not generated</p>
@@ -821,6 +879,8 @@ export default function CustomizePage() {
                                             onCustomize={() => setCustomizationPanel({ isOpen: true, selectedWidget: item })}
                                             onAyanamsaChange={(a) => updateChartAyanamsa(item.instanceId, a)}
                                             onUpdateDimensions={(dims) => updateDimensions(item.instanceId, dims)}
+                                            onUpdateTheme={(theme) => updateTheme(item.instanceId, theme)}
+                                            isLoading={isLoadingCharts}
                                         >
                                             {renderWidgetContent({
                                                 ...item,
@@ -838,8 +898,10 @@ export default function CustomizePage() {
                                             onCustomize={() => setCustomizationPanel({ isOpen: true, selectedWidget: item })}
                                             onAyanamsaChange={(a) => updateChartAyanamsa(item.instanceId, a)}
                                             onUpdateDimensions={(dims) => updateDimensions(item.instanceId, dims)}
+                                            onUpdateTheme={(theme) => updateTheme(item.instanceId, theme)}
                                             isAvailable={isChartAvailable(item.id, item.ayanamsa)}
                                             isGenerating={generatingCharts.has(item.id)}
+                                            isLoading={isLoadingCharts}
                                             onGenerate={async () => {
                                                 setGeneratingCharts(prev => new Set(prev).add(item.id));
                                                 await clientApi.generateChart(clientId, item.id, item.ayanamsa || activeSystem);
@@ -854,14 +916,25 @@ export default function CustomizePage() {
                                             <div className="w-full h-full p-2">
                                                 {(() => {
                                                     const { planets, ascendant } = getChartProps(item.id, item.ayanamsa);
-                                                    return chartStyle === 'South Indian' ? (
-                                                        <SouthIndianChart
-                                                            ascendantSign={ascendant}
-                                                            planets={planets}
-                                                            colorMode="color"
-                                                            colorTheme={chartColorTheme}
-                                                            className="w-full h-full"
-                                                        />
+                                                    const widgetChartStyle = item.theme.chartStyle || 'North Indian';
+                                                    const widgetColorTheme = item.theme.colorTheme || chartColorTheme;
+
+                                                    return widgetChartStyle === 'South Indian' ? (
+                                                        <div className="w-full h-full overflow-hidden">
+                                                            <CompactSouthIndianChart
+                                                                ascendantSign={ascendant}
+                                                                planets={planets}
+                                                                colorMode="color"
+                                                                colorTheme={widgetColorTheme}
+                                                                className="w-full h-full"
+                                                                planetFontSize={item.theme.planetFontSize}
+                                                                planetFontWeight={item.theme.planetFontWeight}
+                                                                degreeFontSize={item.theme.degreeFontSize}
+                                                                showDegrees={item.theme.showDegrees !== false}
+                                                                planetDisplayMode={item.theme.planetDisplayMode}
+                                                                showHouseNumbers={item.theme.showHouseNumbers !== false}
+                                                            />
+                                                        </div>
                                                     ) : (
                                                         <CustomChartWidget
                                                             ascendantSign={ascendant}
@@ -869,7 +942,7 @@ export default function CustomizePage() {
                                                             width={item.dimensions.width - 16}
                                                             height={item.dimensions.height - (item.showHeader ? (item.theme.headerHeight ?? 36) : 0) - 16}
                                                             chartStyle="North Indian"
-                                                            colorTheme={chartColorTheme}
+                                                            colorTheme={widgetColorTheme}
                                                             chartId={item.id}
                                                             planetDisplayMode={item.theme.planetDisplayMode}
                                                             planetFontSize={item.theme.planetFontSize}

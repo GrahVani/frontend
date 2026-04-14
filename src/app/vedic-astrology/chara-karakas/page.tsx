@@ -198,8 +198,8 @@ export default function CharaKarakasPage() {
                     <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 !text-base !mb-2")}>Data Not Available</h3>
                     <p className={cn(TYPOGRAPHY.subValue, "!text-red-600 !text-[13px] !mb-4")}>{error}</p>
                     <div className="flex items-center justify-center gap-3">
-                        <button 
-                            onClick={handleGenerate} 
+                        <button
+                            onClick={handleGenerate}
                             disabled={isGeneratingLocal}
                             className={cn(TYPOGRAPHY.label, "px-5 py-2 bg-gold-primary text-white rounded-lg !text-[12px] !font-bold hover:bg-gold-dark transition-colors disabled:opacity-50 flex items-center gap-2")}
                         >
@@ -209,8 +209,8 @@ export default function CharaKarakasPage() {
                                 <><RefreshCw className="w-4 h-4" /> Generate Karakas</>
                             )}
                         </button>
-                        <button 
-                            onClick={handleRefresh} 
+                        <button
+                            onClick={handleRefresh}
                             disabled={isRefreshingCharts}
                             className={cn(TYPOGRAPHY.label, "px-5 py-2 bg-red-100 text-red-700 rounded-lg !text-[12px] !font-bold hover:bg-red-200 transition-colors disabled:opacity-50")}
                         >

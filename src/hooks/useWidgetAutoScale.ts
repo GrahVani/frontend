@@ -48,17 +48,17 @@ export const WIDGET_BASE_DIMENSIONS: Record<string, { width: number; height: num
     divisional: { width: 470, height: 500 },
     lagna: { width: 470, height: 500 },
     rare_shodash: { width: 450, height: 480 },
-    
+
     // Tables - wider for data
     ashtakavarga: { width: 580, height: 420 },
     widget_shodasha: { width: 650, height: 380 },
-    
+
     // Analysis widgets
     dasha: { width: 450, height: 380 }, // Lowered height to match 9-row content, triggering larger font scales
     widget_shadbala: { width: 520, height: 480 },
     widget_yoga: { width: 500, height: 480 },
     widget_dosha: { width: 500, height: 480 },
-    
+
     // Others
     widget_transit: { width: 480, height: 320 },
     widget_remedy: { width: 520, height: 450 },
@@ -74,17 +74,17 @@ export const CATEGORY_SCALE_LIMITS: Record<string, { min: number; max: number }>
     divisional: { min: 0.7, max: 1.5 },
     lagna: { min: 0.7, max: 1.5 },
     rare_shodash: { min: 0.7, max: 1.5 },
-    
+
     // Tables need careful scaling to maintain readability
     ashtakavarga: { min: 0.75, max: 1.35 },
     widget_shodasha: { min: 0.75, max: 1.35 },
-    
+
     // Analysis widgets
     dasha: { min: 0.75, max: 2.0 }, // Increased max scale for 'cover' mode
     widget_shadbala: { min: 0.75, max: 1.4 },
     widget_yoga: { min: 0.75, max: 1.4 },
     widget_dosha: { min: 0.75, max: 1.4 },
-    
+
     // Others
     widget_transit: { min: 0.8, max: 1.3 },
     widget_remedy: { min: 0.75, max: 1.4 },
@@ -122,10 +122,10 @@ export function calculateAutoScale(
 ): AutoScaleResult {
     // Get base dimensions for category
     const baseDims = WIDGET_BASE_DIMENSIONS[category] || WIDGET_BASE_DIMENSIONS.divisional;
-    
+
     // Get category-specific limits or defaults
     const limits = CATEGORY_SCALE_LIMITS[category] || { min: 0.75, max: 1.4 };
-    
+
     // Merge config
     const config: AutoScaleConfig = {
         ...DEFAULT_AUTO_SCALE_CONFIG,
