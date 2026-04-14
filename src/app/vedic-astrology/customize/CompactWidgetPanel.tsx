@@ -385,10 +385,64 @@ export default function CompactWidgetPanel({
                         title="Chart Display" 
                         isOpen={openSections.display} 
                         onToggle={() => toggleSection('display')}
-                        badge={theme.planetDisplayMode === 'symbol' ? '☉☽♂' : (theme.planetDisplayMode === 'both' ? '☉Sun' : 'Names')}
+                        badge={`${theme.chartStyle || 'North Indian'} • ${theme.planetFontSize || 14}px`}
                         icon={Eye}
                     >
                         <div className="space-y-4">
+                            {/* Chart Style & Theme */}
+                            <div className="bg-surface-warm/30 rounded-xl p-3 border border-[#E6D5B8]/20 space-y-3">
+                                <div>
+                                    <label className="text-[10px] font-bold text-gold-dark mb-2 block uppercase tracking-wider">
+                                        Chart System
+                                    </label>
+                                    <div className="flex gap-1.5 p-1 bg-white rounded-xl border border-[#E6D5B8]/20">
+                                        {['North Indian', 'South Indian'].map((style) => (
+                                            <button
+                                                key={style}
+                                                onClick={() => updateTheme({ chartStyle: style as any })}
+                                                className={cn(
+                                                    "flex-1 py-1.5 rounded-lg text-[11px] font-bold transition-all",
+                                                    (theme.chartStyle || 'North Indian') === style
+                                                        ? "bg-primary text-white shadow-md scale-[1.02]"
+                                                        : "text-ink/60 hover:bg-surface-warm"
+                                                )}
+                                            >
+                                                {style}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="text-[10px] font-bold text-gold-dark mb-2 block uppercase tracking-wider">
+                                        Color Theme
+                                    </label>
+                                    <div className="grid grid-cols-5 gap-1.5">
+                                        {[
+                                            { key: 'classic', color: 'bg-[#FDFBF7]', label: 'Cl' },
+                                            { key: 'modern', color: 'bg-blue-500', label: 'Mo' },
+                                            { key: 'royal', color: 'bg-purple-600', label: 'Ro' },
+                                            { key: 'earth', color: 'bg-emerald-600', label: 'Ea' },
+                                            { key: 'ocean', color: 'bg-cyan-500', label: 'Oc' },
+                                        ].map((t) => (
+                                            <button
+                                                key={t.key}
+                                                onClick={() => updateTheme({ colorTheme: t.key as any })}
+                                                className={cn(
+                                                    "w-full aspect-square rounded-lg border-2 flex items-center justify-center transition-all",
+                                                    (theme.colorTheme || 'classic') === t.key
+                                                        ? "border-primary scale-110 shadow-sm"
+                                                        : "border-transparent hover:border-[#E6D5B8]"
+                                                )}
+                                                title={t.key.charAt(0).toUpperCase() + t.key.slice(1)}
+                                            >
+                                                <div className={cn("w-full h-full rounded-[6px]", t.color)} />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
                             {/* Planet Labels */}
                             <div className="bg-surface-warm/30 rounded-xl p-3 border border-[#E6D5B8]/20">
                                 <label className="text-[10px] font-bold text-gold-dark mb-2 block uppercase tracking-wider">

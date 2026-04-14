@@ -4,17 +4,18 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import {
     Clock,
-    Calendar,
     Flame,
     Shield,
     Sparkles,
-    Info,
-    ArrowRight,
-    Star
+    Star,
+    Zap,
+    Shapes,
+    HeartHandshake
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import styles from './RemedialShared.module.css';
 import { KnowledgeTooltip } from '@/components/knowledge';
+import { PLANET_COLORS } from '@/design-tokens/colors';
 
 interface DashaRemedy {
     category: string;
@@ -55,104 +56,133 @@ const DashaRemediesCard: React.FC<DashaRemediesCardProps> = ({ dashaData }) => {
     const current = now - start;
     const progress = Math.min(Math.max((current / total) * 100, 0), 100);
 
+    // Get planet theme
+    const planetTheme = PLANET_COLORS[current_dasha_lord] || PLANET_COLORS.Sun;
+
     const getPriorityColor = (priority: string) => {
         switch (priority.toLowerCase()) {
-            case 'high': return 'text-orange-600 bg-orange-100 border-orange-200';
-            case 'medium': return 'text-indigo-600 bg-indigo-100 border-indigo-200';
-            case 'low': return 'text-emerald-600 bg-emerald-100 border-emerald-200';
-            default: return 'text-ink/55 bg-gold-primary/8 border-gold-primary/15';
+            case 'high': return 'text-rose-600 bg-rose-50 border-rose-100';
+            case 'medium': return 'text-amber-600 bg-amber-50 border-amber-100';
+            case 'low': return 'text-emerald-600 bg-emerald-50 border-emerald-100';
+            default: return 'text-ink/50 bg-ink/5 border-ink/10';
         }
     };
 
     const getCategoryIcon = (category: string) => {
         switch (category.toLowerCase()) {
-            case 'mantra': return <Flame className="w-4 h-4" />;
-            case 'yantra': return <Shield className="w-4 h-4" />;
-            case 'lifestyle': case 'dietary': return <Sparkles className="w-4 h-4" />;
-            default: return <Star className="w-4 h-4" />;
+            case 'mantra': return <Flame className="w-3.5 h-3.5" />;
+            case 'yantra': return <Shield className="w-3.5 h-3.5" />;
+            case 'charity': return <HeartHandshake className="w-3.5 h-3.5" />;
+            case 'lifestyle': return <Zap className="w-3.5 h-3.5" />;
+            default: return <Star className="w-3.5 h-3.5" />;
         }
     };
 
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className={cn("p-4 md:p-5 backdrop-blur-md relative overflow-hidden group flex flex-col rounded-[2rem]", styles.glassPanel)}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={cn("p-4 relative overflow-hidden flex flex-col rounded-[1.5rem] border border-gold-primary/15", styles.glassPanel)}
         >
-            {/* Header */}
-            <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-3 mb-5">
-                <div>
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 text-ink">Current <KnowledgeTooltip term="dasha_mahadasha">mahadasha</KnowledgeTooltip> phase</h3>
-                    <div className="flex items-baseline gap-2">
-                        <h2 className="text-4xl font-black tracking-tighter text-ink">{current_dasha_lord}</h2>
-                        <span className="text-[14px] font-bold uppercase tracking-widest">Protocol</span>
+            {/* Header Area — More compact */}
+            <div className="flex items-center justify-between gap-4 mb-4">
+                <div className="flex items-center gap-3">
+                    <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg shrink-0 bg-gradient-to-br", planetTheme.gradient)}>
+                        <span className="text-xl font-serif leading-none mt-0.5">{planetTheme.symbol}</span>
+                    </div>
+                    <div>
+                        <div className="flex items-center gap-2 leading-none mb-1">
+                            <h2 className="text-xl font-black text-ink">{current_dasha_lord}</h2>
+                            <span className="text-[9px] font-black tracking-[0.2em] text-ink/40">Mahadasha</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-[10px] font-bold text-ink/60">
+                            <Clock className="w-3 h-3" />
+                            <span>{new Date(period.start_date).getFullYear()} – {new Date(period.end_date).getFullYear()}</span>
+                        </div>
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-1.5 min-w-[280px]">
-                    <div className="flex justify-between text-[9px] font-black uppercase tracking-widest">
-                        <span>{new Date(period.start_date).getFullYear()}</span>
-                        <span>{Math.round(progress)}% Complete</span>
-                        <span>{new Date(period.end_date).getFullYear()}</span>
+                <div className="flex flex-col items-end gap-1.5 min-w-[140px] max-w-[200px] flex-1">
+                    <div className="flex justify-between w-full text-[9px] font-black tracking-wider text-ink/40">
+                        <span>Progress</span>
+                        <span>{Math.round(progress)}%</span>
                     </div>
-                    <div className="h-1.5 w-full rounded-full overflow-hidden border border-gold-primary/20 bg-black/5 relative">
+                    <div className="h-1.5 w-full rounded-full bg-ink/5 relative overflow-hidden border border-ink/5">
                         <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${progress}%` }}
                             transition={{ duration: 1.5, ease: "easeOut" }}
-                            className="h-full bg-gradient-to-r from-orange-500 to-amber-500 relative shadow-sm"
-                        >
-                            <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.2)_50%,transparent_75%)] bg-[length:20px_20px] animate-[shimmer_2s_infinite_linear]" />
-                        </motion.div>
+                            className={cn("h-full relative shadow-sm bg-gradient-to-r", planetTheme.gradient)}
+                        />
                     </div>
                 </div>
             </div>
 
-            {/* Remedies Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1">
+            {/* Strategic Protocol Grid — High Density */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                 {remedies.map((remedy, idx) => (
                     <motion.div
                         key={idx}
-                        className="border border-gold-primary/15 p-3 md:p-4 rounded-2xl flex flex-col gap-1.5 transition-all group overflow-hidden relative bg-white/30"
+                        className="bg-white/40 hover:bg-white border border-transparent hover:border-gold-primary/20 p-2.5 rounded-xl transition-all group flex flex-col justify-between"
                     >
-                        <div className="flex items-center justify-between mb-0.5">
-                            <div className="flex items-center gap-2">
-                                <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-purple-50 text-purple-600 border border-purple-100/50">
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-1.5">
+                                <div className={cn("w-6 h-6 rounded-md flex items-center justify-center transition-colors", planetTheme.bgSoft, planetTheme.textOnSoft)}>
                                     {getCategoryIcon(remedy.category)}
                                 </div>
-                                <h3 className="text-[10px] font-black uppercase tracking-widest">{remedy.category}</h3>
+                                <span className="text-[10px] font-black tracking-wider text-ink/70">{remedy.category}</span>
                             </div>
                             <span className={cn(
-                                "px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest border",
+                                "px-1.5 py-0.5 rounded text-[8px] font-black tracking-widest border border-transparent",
                                 getPriorityColor(remedy.priority)
                             )}>
                                 {remedy.priority}
                             </span>
                         </div>
 
-                        <div className="flex-1">
+                        <div className="mb-2">
                             {remedy.mantra && (
-                                <p className="text-[13px] font-bold leading-tight mb-1.5 tracking-tight text-ink">{remedy.mantra}</p>
+                                <p className="text-[11px] font-bold leading-tight text-ink line-clamp-2 italic mb-1">"{remedy.mantra}"</p>
                             )}
                             {remedy.items && (
-                                <p className="text-[11px] font-semibold text-body">
-                                    <span className="text-[9px] uppercase tracking-wider font-black mr-1.5">Donate:</span> {remedy.items.join(', ')}
+                                <p className="text-[10px] font-medium text-ink/80 leading-snug">
+                                    <span className="font-black text-[8px] tracking-tighter opacity-40 mr-1">Donate:</span>
+                                    {remedy.items.join(', ')}
+                                </p>
+                            )}
+                            {remedy.yantra && (
+                                <p className="text-[10px] font-medium text-ink/80 leading-snug">
+                                    <span className="font-black text-[8px] tracking-tighter opacity-40 mr-1">Worship:</span>
+                                    {remedy.yantra}
                                 </p>
                             )}
                             {remedy.suggestions && (
-                                <p className="text-[11px] font-semibold text-body">{remedy.suggestions[0]}</p>
-                            )}
-                            {remedy.yantra && (
-                                <p className="text-[11px] font-semibold text-body">
-                                    <span className="text-[9px] uppercase tracking-wider font-black mr-1.5">Worship:</span> {remedy.yantra}
-                                </p>
+                                <p className="text-[10px] font-medium text-ink/80 leading-snug">{remedy.suggestions[0]}</p>
                             )}
                         </div>
 
-                        <div className="mt-1.5 pt-1.5 border-t flex items-center justify-between border-gold-primary/15">
-                            <span className="text-[9px] font-black uppercase tracking-widest">
-                                {remedy.deity || (remedy.count ? `${remedy.count.toLocaleString()} Chants` : '') || (remedy.color ? `Color: ${remedy.color}` : 'Standard')}
-                            </span>
+                        {/* Dense Meta Info Tags */}
+                        <div className="flex flex-wrap gap-1 mt-auto pt-2 border-t border-ink/5 group-hover:border-gold-primary/10">
+                            {remedy.deity && (
+                                <span className={cn("text-[8px] font-bold px-1.5 py-0.5 rounded-md", planetTheme.bgSoft, planetTheme.textOnSoft)}>
+                                    {remedy.deity}
+                                </span>
+                            )}
+                            {remedy.count && (
+                                <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-700">
+                                    {remedy.count.toLocaleString()} Chants
+                                </span>
+                            )}
+                            {remedy.day && (
+                                <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700">
+                                    {remedy.day}s
+                                </span>
+                            )}
+                            {!remedy.deity && !remedy.count && !remedy.day && (
+                                <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-md bg-ink/5 text-ink/40">
+                                    Protocol Step
+                                </span>
+                            )}
                         </div>
                     </motion.div>
                 ))}

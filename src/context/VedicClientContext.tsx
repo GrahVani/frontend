@@ -7,6 +7,7 @@ import { useGenerateProfile } from "@/hooks/mutations/useGenerateProfile";
 
 /** Pages that consume chart data — only fetch charts when on these routes */
 const CHART_ROUTES = ['/vedic-astrology/customize', '/vedic-astrology', '/client/', '/comparison', '/matchmaking'];
+const CHART_CACHE_KEY = 'vedic_charts_cache';
 
 export interface VedicClientDetails {
     id?: string;
@@ -44,6 +45,7 @@ const VedicClientContext = createContext<VedicClientContextType | undefined>(und
 export function VedicClientProvider({ children }: { children: ReactNode }) {
     const [clientDetails, setClientDetails] = useState<VedicClientDetails | null>(null);
     const [isInitialized, setIsInitialized] = useState(false);
+    const [cachedCharts, setCachedCharts] = useState<ChartLookup>({});
     const pathname = usePathname();
 
     // Only fetch charts when on pages that actually need them (avoids 401 on dashboard/settings)
@@ -60,9 +62,13 @@ export function VedicClientProvider({ children }: { children: ReactNode }) {
     const generateMutation = useGenerateProfile();
     const isGeneratingCharts = generateMutation.isPending;
 
-    // isLoadingCharts should be true only if we have no data AND we are loading/fetching
-    // This mimics the original behavior where isLoadingCharts was true only on initial empty fetch
-    const isLoadingCharts = isQueryLoading && Object.keys(processedCharts).length === 0;
+    // Merge cached charts with query charts (query charts take precedence)
+    const effectiveCharts = useMemo(() => {
+        return { ...cachedCharts, ...processedCharts };
+    }, [cachedCharts, processedCharts]);
+
+    // isLoadingCharts should be true only if we have NO data (live or cached) AND we are loading
+    const isLoadingCharts = isQueryLoading && Object.keys(effectiveCharts).length === 0;
 
     // Auto-generate charts on first visit if no charts exist (Option 2)
     const hasAttemptedAutoGenRef = useRef(false);
@@ -114,6 +120,31 @@ export function VedicClientProvider({ children }: { children: ReactNode }) {
         setIsInitialized(true);
     }, []);
 
+    // Rehydrate Chart Cache (ST-004)
+    useEffect(() => {
+        if (!clientDetails?.id) return;
+        const stored = sessionStorage.getItem(`${CHART_CACHE_KEY}_${clientDetails.id}`);
+        if (stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                if (parsed && typeof parsed === 'object') {
+                    setCachedCharts(parsed);
+                }
+            } catch (e) {
+                console.error("Failed to parse chart cache", e);
+            }
+        } else {
+            setCachedCharts({});
+        }
+    }, [clientDetails?.id]);
+
+    // Persist Charts to Cache when fetched (ST-005)
+    useEffect(() => {
+        if (clientDetails?.id && Object.keys(processedCharts).length > 0) {
+            sessionStorage.setItem(`${CHART_CACHE_KEY}_${clientDetails.id}`, JSON.stringify(processedCharts));
+        }
+    }, [processedCharts, clientDetails?.id]);
+
     const updateClientDetails = useCallback((details: VedicClientDetails | null) => {
         setClientDetails(details);
         if (details) {
@@ -136,12 +167,12 @@ export function VedicClientProvider({ children }: { children: ReactNode }) {
         clearClientDetails,
         isClientSet: !!clientDetails,
         isGeneratingCharts,
-        processedCharts,
+        processedCharts: effectiveCharts,
         isLoadingCharts,
         isRefreshingCharts,
         refreshCharts: handleRefreshCharts,
         isInitialized,
-    }), [clientDetails, isGeneratingCharts, processedCharts, isLoadingCharts, isRefreshingCharts, handleRefreshCharts, isInitialized, clearClientDetails]);
+    }), [clientDetails, isGeneratingCharts, effectiveCharts, isLoadingCharts, isRefreshingCharts, handleRefreshCharts, isInitialized, clearClientDetails]);
 
     return (
         <VedicClientContext.Provider value={value}>

@@ -24,6 +24,7 @@ interface PremiumMatrixProps {
     data: AshtakavargaData;
     lagnaSign?: number;
     className?: string;
+    onPlanetChange?: (planet: string) => void;
 }
 
 const PLANETS = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
@@ -46,26 +47,38 @@ const PLANET_METADATA: Record<string, { label: string; color: string }> = {
  * Premium Ashtakavarga Matrix
  * A high-density, heatmap-style visualization for planetary bindus.
  */
-export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, data, lagnaSign, className }: PremiumMatrixProps) {
+export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, data, lagnaSign, className, onPlanetChange }: PremiumMatrixProps) {
     const isSarva = type === 'sarva';
     const [selectedPlanet, setSelectedPlanet] = React.useState<string>(propPlanet || 'Lagna');
+
+    // Sync internal state with propPlanet if it changes externally
+    React.useEffect(() => {
+        if (propPlanet && propPlanet !== selectedPlanet) {
+            setSelectedPlanet(propPlanet);
+        }
+    }, [propPlanet]);
+
+    const handlePlanetChange = (planet: string) => {
+        setSelectedPlanet(planet);
+        onPlanetChange?.(planet);
+    };
 
     // 1. Data Normalization Helper
     const getVal = (rd: any, s: number): number => {
         if (!rd) return 0;
-        
+
         // 1. If it's an array
         if (Array.isArray(rd)) return rd[s - 1] ?? 0;
-        
+
         // 2. If it's an object with numeric or string keys
         if (rd[s] !== undefined && rd[s] !== null) return Number(rd[s]);
         if (rd[s.toString()] !== undefined && rd[s.toString()] !== null) return Number(rd[s.toString()]);
-        
+
         // 3. Check for sign names as keys
         const signName = ZODIAC_SIGNS[s - 1];
         if (rd[signName] !== undefined) return Number(rd[signName]);
         if (rd[signName.toLowerCase()] !== undefined) return Number(rd[signName.toLowerCase()]);
-        
+
         // 4. Handle nested bindus/points property
         if (rd.bindus) return getVal(rd.bindus, s);
         if (rd.points) return getVal(rd.points, s);
@@ -78,30 +91,30 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
     const availablePlanets = useMemo(() => {
         if (isSarva) return [];
         const root = (data.bhinnashtakavarga || data.ashtakvarga || data) as any;
-        
+
         // Handle tables array structure: ashtakvarga.tables = [{ planet: 'Sun', ... }, { planet: 'Moon', ... }]
         if (root.tables && Array.isArray(root.tables)) {
             const planetsFromTables = root.tables
                 .map((t: any) => t.planet)
                 .filter((p: string) => p && ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Lagna', 'Ascendant'].includes(p));
-            
+
             // Normalize and Deduplicate
             const normalized = Array.from(new Set(planetsFromTables.map((p: string) => {
                 if (p.toLowerCase().startsWith('asc') || p.toLowerCase() === 'lagna') return 'Lagna';
                 return p.charAt(0).toUpperCase() + p.slice(1).toLowerCase();
             })));
-            
+
             // Ensure prompt planet or default is in state
             if (normalized.length > 0 && !normalized.includes(selectedPlanet)) {
-                 const match = normalized.find((n) => (n as string).toLowerCase() === selectedPlanet.toLowerCase());
-                 if (!match) setSelectedPlanet(normalized[0] as string);
+                const match = normalized.find((n) => (n as string).toLowerCase() === selectedPlanet.toLowerCase());
+                if (!match) handlePlanetChange(normalized[0] as string);
             }
-            
+
             return normalized as string[];
         }
-        
+
         // Fallback: look for planet keys directly in root
-        const keys = Object.keys(root).filter(k => 
+        const keys = Object.keys(root).filter(k =>
             ['lagna', 'ascendant', 'sun', 'moon', 'mars', 'mercury', 'jupiter', 'venus', 'saturn'].includes(k.toLowerCase())
         );
         // Normalize and Deduplicate
@@ -109,14 +122,14 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
             if (k.toLowerCase().startsWith('asc') || k.toLowerCase() === 'lagna') return 'Lagna';
             return k.charAt(0).toUpperCase() + k.slice(1).toLowerCase();
         })));
-        
+
         // Ensure prompt planet or default is in state
         if (normalized.length > 0 && !normalized.includes(selectedPlanet)) {
-             // Try to find a match or default to first
-             const match = normalized.find(n => n.toLowerCase() === selectedPlanet.toLowerCase());
-             if (!match) setSelectedPlanet(normalized[0]);
+            // Try to find a match or default to first
+            const match = normalized.find(n => n.toLowerCase() === selectedPlanet.toLowerCase());
+            if (!match) handlePlanetChange(normalized[0]);
         }
-        
+
         return normalized;
     }, [data, isSarva, selectedPlanet]);
 
@@ -131,7 +144,7 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
 
         // For Sarva: All 7 Planets. For Bhinna: All Contributors to the selected planet's BAV.
         let rows = isSarva ? PLANETS : PLANETS_WITH_ASC;
-        
+
         const matrix: Record<string, Record<number, number>> = {};
         const colTotals: Record<number, number> = {};
 
@@ -160,15 +173,15 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
         if (activeSource && typeof activeSource === 'object' && !Array.isArray(activeSource)) {
             // Priority list for matrix containers
             const matrixKeys = ['tables', 'matrix', 'table', 'rows', 'data', 'bhinnashtakavarga_points', 'ashtakavarga_points', 'ashtaka_table', 'contributors', 'contributions', 'contribution'];
-            
+
             for (const key of matrixKeys) {
                 const nested = activeSource[key];
                 if (nested && typeof nested === 'object') {
                     if (Array.isArray(nested) && nested.length > 0) {
                         // Check if it's an array of objects (contributors) rather than a list of numbers (totals)
                         const firstItem = nested[0];
-                        if (typeof firstItem === 'object' && firstItem !== null && 
-                           (firstItem.contributor || firstItem.planet || firstItem.name || firstItem.label)) {
+                        if (typeof firstItem === 'object' && firstItem !== null &&
+                            (firstItem.contributor || firstItem.planet || firstItem.name || firstItem.label)) {
                             activeSource = { _is_array: true, items: nested };
                             break;
                         }
@@ -181,7 +194,7 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
                     }
                 }
             }
-            
+
             // SPECIAL CASE: Only use 'bindus' or 'points' if they are NOT a simple numeric array (which usually means totals)
             if (!activeSource._is_array && !Object.keys(activeSource).some(k => ['Sun', 'Moon', 'Mars'].some(pa => k.toLowerCase().startsWith(pa.toLowerCase())))) {
                 const fallbackKeys = ['bindus', 'points'];
@@ -198,27 +211,27 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
         // Check if activeSource is from a "tables" array (ashtakvarga.tables structure)
         // where each item has { planet, contributors, total_bindus }
         const isTablesArray = activeSource?._is_array && activeSource.items?.[0]?.planet && activeSource.items?.[0]?.contributors;
-        
+
         // For tables array: find the selected planet's table and use its contributors
         let selectedPlanetTable = null;
         if (isTablesArray && !isSarva) {
             // Map UI planet names to API planet names (Lagna -> Ascendant)
             const planetLookupName = selectedPlanet.toLowerCase() === 'lagna' ? 'ascendant' : selectedPlanet.toLowerCase();
-            selectedPlanetTable = activeSource.items.find((t: any) => 
+            selectedPlanetTable = activeSource.items.find((t: any) =>
                 t.planet?.toLowerCase() === planetLookupName
             );
         }
-        
-        const contributorsList = dataContribs || 
+
+        const contributorsList = dataContribs ||
             (selectedPlanetTable?.contributors) ||
-            (activeSource && activeSource._is_array ? activeSource.items : null) || 
+            (activeSource && activeSource._is_array ? activeSource.items : null) ||
             (activeSource?.contributors && Array.isArray(activeSource.contributors) ? activeSource.contributors : null);
 
         rows.forEach(rowName => {
             matrix[rowName] = {};
-            
+
             const rowIdentifiers = [
-                rowName.toLowerCase(), 
+                rowName.toLowerCase(),
                 ...(PLANET_ALIASES[rowName]?.map(a => a.toLowerCase()) || [])
             ];
 
@@ -234,11 +247,11 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
                     }
                 }
             }
-            
+
             // Strategy 2: Check contributors array (if present in root data or activeSource)
             if (!rd && contributorsList && Array.isArray(contributorsList)) {
-                const item = contributorsList.find((it: any) => 
-                    rowIdentifiers.includes(it.contributor?.toLowerCase()) || 
+                const item = contributorsList.find((it: any) =>
+                    rowIdentifiers.includes(it.contributor?.toLowerCase()) ||
                     rowIdentifiers.includes(it.planet?.toLowerCase()) ||
                     rowIdentifiers.includes(it.name?.toLowerCase()) ||
                     rowIdentifiers.includes(it.label?.toLowerCase())
@@ -256,11 +269,11 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
         });
 
         // Use pre-calculated totals from the API if available to ensure consistency
-        const preCalcTotals = isSarva 
-            ? sarvaDict 
+        const preCalcTotals = isSarva
+            ? sarvaDict
             : (bhinnaDict?.[selectedPlanet]?.total || bhinnaDict?.[selectedPlanet]?.total_bindus || bhinnaDict?.[selectedPlanet]?.bindus ||
-               root[selectedPlanet]?.total || root[selectedPlanet]?.total_bindus || root[selectedPlanet]?.bindus ||
-               root[selectedPlanet.toLowerCase()]?.total || null);
+                root[selectedPlanet]?.total || root[selectedPlanet]?.total_bindus || root[selectedPlanet]?.bindus ||
+                root[selectedPlanet.toLowerCase()]?.total || null);
 
         if (preCalcTotals && (typeof preCalcTotals === 'object' || Array.isArray(preCalcTotals))) {
             const hasValues = SIGNS.some(s => getVal(preCalcTotals, s) > 0);
@@ -310,11 +323,11 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
                     {availablePlanets.map(p => (
                         <button
                             key={p}
-                            onClick={() => setSelectedPlanet(p)}
+                            onClick={() => handlePlanetChange(p)}
                             className={cn(
                                 "whitespace-nowrap px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider transition-all duration-300",
-                                selectedPlanet === p 
-                                    ? "bg-gold-primary text-white shadow-sm" 
+                                selectedPlanet === p
+                                    ? "bg-gold-primary text-white shadow-sm"
                                     : "bg-surface-warm/40 text-ink/40 hover:bg-surface-warm hover:text-ink/60"
                             )}
                         >
@@ -325,8 +338,8 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
             )}
 
             <div className="flex-1 overflow-auto custom-scrollbar-slim">
-                <table className="w-full border-collapse border border-ink/20">
-                    <thead className="sticky top-0 z-20">
+                <table className="w-full h-full border-collapse border border-ink/20">
+                    <thead className="sticky top-0 z-20 bg-surface-warm">
                         <tr className="border-b border-ink/20">
                             <th className="w-10 p-1 text-[9px] font-black uppercase text-ink text-left border-r border-ink/20">PL</th>
                             {SIGNS.map(s => (
@@ -341,7 +354,7 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
                         {rows.map((rowName) => {
                             const rowData = matrix[rowName] || {};
                             let rowTot = SIGNS.reduce((acc, s) => acc + (rowData[s] || 0), 0);
-                            const meta = PLANET_METADATA[rowName] || { label: rowName.substring(0,2).toUpperCase(), color: 'text-ink' };
+                            const meta = PLANET_METADATA[rowName] || { label: rowName.substring(0, 2).toUpperCase(), color: 'text-ink' };
 
                             return (
                                 <tr key={rowName} className="border-b border-ink/10 last:border-b-0">
@@ -363,7 +376,7 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
                             );
                         })}
                     </tbody>
-                    <tfoot className="sticky bottom-0 z-10 border-t border-ink/20">
+                    <tfoot className="sticky bottom-0 z-10 border-t border-ink/20 bg-surface-warm">
                         <tr>
                             <td className="p-1 px-1.5 border-r border-ink/20">
                                 <span className="text-[9px] font-black uppercase text-ink">TT</span>
@@ -389,10 +402,6 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
                 </table>
             </div>
 
-            {/* Compact Legend */}
-            <div className="flex items-center justify-between px-1 shrink-0 pt-0.5">
-                <span className="text-[7px] font-bold uppercase text-ink/40 tracking-wider">Ashtakavarga Bindus</span>
-            </div>
         </div>
     );
 }

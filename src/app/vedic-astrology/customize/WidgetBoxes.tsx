@@ -2,19 +2,21 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-    X, Loader2, AlertCircle, Sparkles, Layers, Shield, Gem, Star, Table2
+    X, Loader2, AlertCircle, Sparkles, Layers, Shield, Gem, Star, Table2, Map as MapIcon
 } from 'lucide-react';
 import { clientApi } from '@/lib/api';
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
 import type { CustomizeChartItem, WidgetSize } from '@/hooks/useCustomizeCharts';
-import type { ShadbalaData } from '@/app/vedic-astrology/shadbala/page';
+// ShadbalaData type now handled by ShadbalaCustomizeWidget
 import type { PushkaraData } from '@/app/vedic-astrology/pushkara-navamsha/page';
 import type { CharaKarakasResponse } from '@/app/vedic-astrology/chara-karakas/page';
 import SudarshanChakraFinal from '@/components/astrology/SudarshanChakraFinal';
 import ShodashaVargaTable from '@/components/astrology/ShodashaVargaTable';
 import IntegratedDashaViewer from '@/components/astrology/IntegratedDashaViewer';
 import AshtakavargaMatrix from '@/components/astrology/AshtakavargaMatrix';
+import AshtakavargaChart from '@/components/astrology/AshtakavargaChart';
+import { parseChartData, signNameToId } from '@/lib/chart-helpers';
 import { isChartCompatible, type AyanamsaSystem } from './ayana-types';
 import AyanamsaSelect from './AyanamsaSelect';
 
@@ -23,7 +25,7 @@ import { useShadbala, useAshtakavarga, useDasha, useOtherDasha } from '@/hooks/q
 import dynamic from 'next/dynamic';
 
 // Lazy load the heavy dashboard components
-const ShadbalaDashboard = dynamic(() => import('@/app/vedic-astrology/shadbala/page').then(m => ({ default: m.ShadbalaDashboard })));
+const ShadbalaCustomizeWidget = dynamic(() => import('./ShadbalaCustomizeWidget'));
 const PushkaraDashboard = dynamic(() => import('@/app/vedic-astrology/pushkara-navamsha/page').then(m => ({ default: m.PushkaraDashboard })));
 const KarakaDashboard = dynamic(() => import('@/app/vedic-astrology/chara-karakas/page').then(m => ({ default: m.KarakaDashboard })));
 const YogaAnalysisView = dynamic(() => import('@/components/astrology/YogaAnalysis'));
@@ -279,7 +281,7 @@ function WidgetCard({
 // ═══════════════════════════════════════════════════════════════════════════════
 function ShadbalaWidgetContent({ activeSystem }: { activeSystem: string }) {
     const { processedCharts, isLoadingCharts } = useVedicClient();
-    
+
     // Fetch from database (processedCharts) instead of API
     const shadbalaKey = `shadbala_${activeSystem.toLowerCase()}`;
     const shadbalaRaw = processedCharts[shadbalaKey]?.chartData;
@@ -362,15 +364,15 @@ function ShadbalaWidgetContent({ activeSystem }: { activeSystem: string }) {
             </div>
         );
     }
-    
+
     if (data) {
         return (
-            <div className="h-full overflow-auto custom-scrollbar p-2">
-                <ShadbalaDashboard displayData={data} />
+            <div className="h-full overflow-hidden">
+                <ShadbalaCustomizeWidget displayData={data} />
             </div>
         );
     }
-    
+
     return (
         <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
             <AlertCircle className="w-8 h-8 text-gold-dark/30 mb-3" />
@@ -580,13 +582,13 @@ export function ShodashaWidget(props: WidgetBoxProps) {
 export function YogaWidget(props: WidgetBoxProps) {
     const { widget, onRemove, clientId, activeSystem } = props;
     const { processedCharts, isLoadingCharts } = useVedicClient();
-    
+
     // Fetch from database (processedCharts) instead of API
     const yogaKey = `yoga_all_${activeSystem.toLowerCase()}`;
     const yogaRaw = processedCharts[yogaKey]?.chartData;
     const yogaData = yogaRaw?.data || yogaRaw;
     const loading = !yogaData && isLoadingCharts;
-    
+
     return (
         <WidgetCard {...props}>
             {loading ? (
@@ -614,13 +616,13 @@ export function YogaWidget(props: WidgetBoxProps) {
 export function DoshaWidget(props: WidgetBoxProps) {
     const { widget, onRemove, clientId, activeSystem } = props;
     const { processedCharts, isLoadingCharts } = useVedicClient();
-    
+
     // Fetch from database (processedCharts) instead of API
     const doshaKey = `dosha_all_${activeSystem.toLowerCase()}`;
     const doshaRaw = processedCharts[doshaKey]?.chartData;
     const doshaData = doshaRaw?.data || doshaRaw;
     const loading = !doshaData && isLoadingCharts;
-    
+
     return (
         <WidgetCard {...props}>
             {loading ? (
@@ -661,7 +663,7 @@ export function TransitWidget(props: WidgetBoxProps) {
 // ═══════════════════════════════════════════════════════════════════════════════
 function DashaWidgetContent({ widget, clientId, activeSystem }: { widget: CustomizeChartItem; clientId: string; activeSystem: string }) {
     const { processedCharts, isLoadingCharts } = useVedicClient();
-    
+
     // Fetch from database (processedCharts) - key pattern: {dashaType}_{ayanamsa}
     const dashaKey = `${widget.id}_${activeSystem.toLowerCase()}`;
     const dashaRaw = processedCharts[dashaKey]?.chartData;
@@ -705,7 +707,7 @@ function DashaWidgetContent({ widget, clientId, activeSystem }: { widget: Custom
 // ═══════════════════════════════════════════════════════════════════════════════
 export function DashaWidget(props: WidgetBoxProps) {
     const { widget, clientId, activeSystem } = props;
-    
+
     return (
         <WidgetCard {...props}>
             <DashaWidgetContent widget={widget} clientId={clientId} activeSystem={activeSystem} />
@@ -719,7 +721,7 @@ export function DashaWidget(props: WidgetBoxProps) {
 export function RemedyWidget(props: WidgetBoxProps) {
     const { widget, onRemove, clientId, activeSystem } = props;
     const { processedCharts, isLoadingCharts } = useVedicClient();
-    
+
     // Fetch from database (processedCharts) instead of API
     const type = widget.id === 'widget_remedy_gemstone' ? 'gemstone' : 'mantra';
     const remedyKey = `remedy_${type}_${(activeSystem || 'lahiri').toLowerCase()}`;
@@ -769,120 +771,120 @@ function KpModuleWidgetContent({ widget, activeSystem }: { widget: CustomizeChar
     });
 
     switch (widget.id) {
-            case 'kp_planets':
-                return <KpPlanetaryWidget planets={transformed.planetaryData} className="h-full border-none" />;
+        case 'kp_planets':
+            return <KpPlanetaryWidget planets={transformed.planetaryData} className="h-full border-none" />;
 
-            case 'kp_cusps':
-                // Extract house signs from cusp data for KpCuspalChart
-                const houseSigns = transformed.cuspData.map(c => c.signId);
-                // Ensure we have 12 houses, fill with default if needed
-                while (houseSigns.length < 12) houseSigns.push(1);
-                return (
-                    <div className="flex-1 min-h-0 relative w-full h-full">
-                        <div className="w-full h-full p-0 flex items-center justify-center overflow-hidden">
-                            <KpCuspalChart 
-                                planets={transformed.d1Data.planets} 
-                                houseSigns={houseSigns}
-                                className="w-full h-full" 
-                            />
-                        </div>
-                    </div>
-                );
-
-            case 'kp_house_significations':
-                return (
-                    <div className="h-full overflow-auto p-2">
-                        <HouseSignificatorsTable data={transformed.houseSignificators} className="border-none shadow-none" />
-                    </div>
-                );
-
-            case 'kp_planetary_significators':
-                return (
-                    <div className="h-full overflow-auto p-2">
-                        <SignificationMatrix
-                            significations={transformed.significationData}
-                            className="border-none"
+        case 'kp_cusps':
+            // Extract house signs from cusp data for KpCuspalChart
+            const houseSigns = transformed.cuspData.map(c => c.signId);
+            // Ensure we have 12 houses, fill with default if needed
+            while (houseSigns.length < 12) houseSigns.push(1);
+            return (
+                <div className="flex-1 min-h-0 relative w-full h-full">
+                    <div className="w-full h-full p-0 flex items-center justify-center overflow-hidden">
+                        <KpCuspalChart
+                            planets={transformed.d1Data.planets}
+                            houseSigns={houseSigns}
+                            className="w-full h-full"
                         />
                     </div>
-                );
+                </div>
+            );
 
-            case 'kp_bhava_details':
-                return (
-                    <div className="h-full overflow-auto p-2">
-                        <BhavaDetailsTable bhavaDetails={transformed.bhavaDetails} className="border-none shadow-none" />
-                    </div>
-                );
+        case 'kp_house_significations':
+            return (
+                <div className="h-full overflow-auto p-2">
+                    <HouseSignificatorsTable data={transformed.houseSignificators} className="border-none shadow-none" />
+                </div>
+            );
 
-            case 'kp_interlinks':
-                return (
-                    <div className="h-full overflow-auto p-4 shrink-0">
-                        <KpFocusedCuspView promises={transformed.interlinksData} cusps={transformed.cuspData} />
-                    </div>
-                );
+        case 'kp_planetary_significators':
+            return (
+                <div className="h-full overflow-auto p-2">
+                    <SignificationMatrix
+                        significations={transformed.significationData}
+                        className="border-none"
+                    />
+                </div>
+            );
 
-            case 'kp_advanced_ssl':
-                return (
-                    <div className="h-full overflow-auto p-4 flex-1">
-                        <KpAdvancedSslView promises={transformed.sslData} cusps={transformed.cuspData} />
-                    </div>
-                );
+        case 'kp_bhava_details':
+            return (
+                <div className="h-full overflow-auto p-2">
+                    <BhavaDetailsTable bhavaDetails={transformed.bhavaDetails} className="border-none shadow-none" />
+                </div>
+            );
 
-            case 'kp_nakshatra_nadi':
-                if (!transformed.nadiData) return (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                        <AlertCircle className="w-8 h-8 text-orange-200 mb-3" />
-                        <p className="text-[11px] text-ink/50">Nakshatra Nadi data pending</p>
-                    </div>
-                );
-                return (
-                    <div className="h-full overflow-auto p-4">
-                        <KpNakshatraNadiFocusedView data={{ nadiData: transformed.nadiData }} />
-                    </div>
-                );
+        case 'kp_interlinks':
+            return (
+                <div className="h-full overflow-auto p-4 shrink-0">
+                    <KpFocusedCuspView promises={transformed.interlinksData} cusps={transformed.cuspData} />
+                </div>
+            );
 
-            case 'kp_fortuna':
-                if (!transformed.fortunaData) return (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                        <AlertCircle className="w-8 h-8 text-orange-200 mb-3" />
-                        <p className="text-[11px] text-ink/50">Fortuna data pending</p>
-                    </div>
-                );
-                return (
-                    <div className="h-full overflow-auto p-4">
-                        <KpFortunaView data={{ fortunaData: transformed.fortunaData }} />
-                    </div>
-                );
+        case 'kp_advanced_ssl':
+            return (
+                <div className="h-full overflow-auto p-4 flex-1">
+                    <KpAdvancedSslView promises={transformed.sslData} cusps={transformed.cuspData} />
+                </div>
+            );
 
-            case 'kp_ruling_planets':
-                const rpRaw = processedCharts['kp_ruling_planets_kp']?.chartData;
-                const rpData = (rpRaw && typeof rpRaw === 'object' && Object.keys(rpRaw).length > 0) ? (rpRaw.data || rpRaw) : null;
-                return (
-                    <div className="h-full p-2">
-                        <RulingPlanetsWidget data={rpData as any} isLoading={false} className="h-full shadow-none border-none !bg-transparent" />
-                    </div>
-                );
+        case 'kp_nakshatra_nadi':
+            if (!transformed.nadiData) return (
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                    <AlertCircle className="w-8 h-8 text-orange-200 mb-3" />
+                    <p className="text-[11px] text-ink/50">Nakshatra Nadi data pending</p>
+                </div>
+            );
+            return (
+                <div className="h-full overflow-auto p-4">
+                    <KpNakshatraNadiFocusedView data={{ nadiData: transformed.nadiData }} />
+                </div>
+            );
 
-            case 'kp_ashtakavarga':
-                const avRaw = processedCharts['kp_ashtakavarga_shodasha_kp']?.chartData || processedCharts['ashtakavarga_shodasha_kp']?.chartData;
-                const avData = avRaw?.data || avRaw || null;
-                return (
-                    <div className="h-full p-2 overflow-auto">
-                        <div className="text-[10px] text-orange-600 font-bold mb-2 uppercase tracking-widest text-center">KP Ashtakavarga Matrix</div>
-                        <PremiumAshtakavargaMatrix
-                            data={avData as any}
-                            type="sarva"
-                        />
-                    </div>
-                );
+        case 'kp_fortuna':
+            if (!transformed.fortunaData) return (
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                    <AlertCircle className="w-8 h-8 text-orange-200 mb-3" />
+                    <p className="text-[11px] text-ink/50">Fortuna data pending</p>
+                </div>
+            );
+            return (
+                <div className="h-full overflow-auto p-4">
+                    <KpFortunaView data={{ fortunaData: transformed.fortunaData }} />
+                </div>
+            );
 
-            default:
-                return (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                        <AlertCircle className="w-8 h-8 text-orange-200 mb-3" />
-                        <p className="text-[11px] text-ink/50">KP Module visualization pending</p>
-                    </div>
-                );
-        }
+        case 'kp_ruling_planets':
+            const rpRaw = processedCharts['kp_ruling_planets_kp']?.chartData;
+            const rpData = (rpRaw && typeof rpRaw === 'object' && Object.keys(rpRaw).length > 0) ? (rpRaw.data || rpRaw) : null;
+            return (
+                <div className="h-full p-2">
+                    <RulingPlanetsWidget data={rpData as any} isLoading={false} className="h-full shadow-none border-none !bg-transparent" />
+                </div>
+            );
+
+        case 'kp_ashtakavarga':
+            const avRaw = processedCharts['kp_ashtakavarga_shodasha_kp']?.chartData || processedCharts['ashtakavarga_shodasha_kp']?.chartData;
+            const avData = avRaw?.data || avRaw || null;
+            return (
+                <div className="h-full p-2 overflow-auto">
+                    <div className="text-[10px] text-orange-600 font-bold mb-2 uppercase tracking-widest text-center">KP Ashtakavarga Matrix</div>
+                    <PremiumAshtakavargaMatrix
+                        data={avData as any}
+                        type="sarva"
+                    />
+                </div>
+            );
+
+        default:
+            return (
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                    <AlertCircle className="w-8 h-8 text-orange-200 mb-3" />
+                    <p className="text-[11px] text-ink/50">KP Module visualization pending</p>
+                </div>
+            );
+    }
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -904,6 +906,7 @@ export function renderWidget(
         instanceId: string;
         size: WidgetSize;
         collapsed: boolean;
+        ayanamsa?: string;
         onRemove: () => void;
         onSizeChange?: (s: WidgetSize) => void;
         onDuplicate?: () => void;
@@ -1019,8 +1022,73 @@ function AshtakavargaWidgetContent({ widget, activeSystem }: { widget: Customize
     const isSarva = widget.id === 'ashtakavarga_sarva';
     const key = isSarva ? `ashtakavarga_sarva_${activeSystem.toLowerCase()}` : `ashtakavarga_bhinna_${activeSystem.toLowerCase()}`;
     const raw = processedCharts[key]?.chartData;
-    const fullData = raw ? (raw.data || raw) : null;
+    const fullData = raw ? (raw.data || raw) : null as any;
     const loading = !fullData && isLoadingCharts;
+
+    // Get selected planet state to sync chart and matrix
+    // We default to Lagna for BAV if not specified
+    const [selectedPlanet, setSelectedPlanet] = React.useState<string>("Lagna");
+
+    // Fetch D1 for ascendant
+    const d1Key = `D1_${activeSystem.toLowerCase()}`;
+    const d1Raw = processedCharts[d1Key]?.chartData;
+    const { ascendant: ascSign } = React.useMemo(() => parseChartData(d1Raw), [d1Raw]);
+
+    const houseValues: Record<number, number> = React.useMemo(() => {
+        if (!fullData) return {};
+        const scores: Record<number, number> = {};
+
+        if (isSarva) {
+            const sarvaData = fullData.sarvashtakavarga || fullData.sarvashtakavarga_summary || fullData.ashtakvarga || fullData;
+            const signs = sarvaData.signs || sarvaData.houses_matrix || sarvaData.houses || sarvaData.sarvashtakavarga_summary || {};
+            const houseMatrix = sarvaData.house_strength_matrix || fullData.house_strength_matrix;
+
+            if (Array.isArray(houseMatrix)) {
+                houseMatrix.forEach((h: any) => {
+                    const signId = signNameToId[h.sign_name as string] || h.house_number as number;
+                    if (signId && signId >= 1 && signId <= 12) scores[signId] = (h.total_points as number) || 0;
+                });
+            } else if (typeof signs === 'object' && !Array.isArray(signs)) {
+                Object.entries(signs).forEach(([s, v]) => {
+                    const signId = signNameToId[s] || signNameToId[s.charAt(0).toUpperCase() + s.slice(1)] ||
+                        (s.startsWith('House') ? ((ascSign + parseInt(s.split(' ')[1]) - 2) % 12) + 1 : parseInt(s));
+                    if (signId && signId >= 1 && signId <= 12) scores[signId] = v as number;
+                });
+            }
+        } else {
+            const bhinnaRoot = fullData.bhinnashtakavarga || fullData.ashtakvarga || fullData;
+            const planetKey = selectedPlanet === 'Lagna' ? 'Ascendant' : selectedPlanet;
+            const tables = bhinnaRoot.tables || [];
+            const specificTable = Array.isArray(tables) ? tables.find((t: any) => t.planet === planetKey || t.planet === selectedPlanet) : null;
+
+            let planetData = specificTable?.total_bindus || bhinnaRoot[planetKey] || bhinnaRoot[planetKey.toLowerCase()] || {};
+            if (planetData && typeof planetData === 'object' && !Array.isArray(planetData)) {
+                if (planetData.total) planetData = planetData.total;
+                else if (planetData.total_bindus) planetData = planetData.total_bindus;
+                else if (planetData.bindus && Array.isArray(planetData.bindus)) planetData = planetData.bindus;
+            }
+
+            if (Array.isArray(planetData)) {
+                planetData.forEach((v, idx) => { scores[idx + 1] = v; });
+            } else {
+                Object.entries(planetData).forEach(([s, v]) => {
+                    const signId = signNameToId[s] || signNameToId[s.charAt(0).toUpperCase() + s.slice(1)] || parseInt(s);
+                    if (signId && signId >= 1 && signId <= 12) {
+                        scores[signId] = (typeof v === 'number' ? v : (v as any).total as number) || 0;
+                    }
+                });
+            }
+        }
+
+        const hVals: Record<number, number> = {};
+        if (Object.keys(scores).length > 0 && ascSign) {
+            for (let h = 1; h <= 12; h++) {
+                const s = ((ascSign + h - 2) % 12) + 1;
+                hVals[h] = scores[s] || 0;
+            }
+        }
+        return hVals;
+    }, [fullData, isSarva, selectedPlanet, ascSign]);
 
     if (loading) {
         return (
@@ -1039,14 +1107,45 @@ function AshtakavargaWidgetContent({ widget, activeSystem }: { widget: Customize
             </div>
         );
     }
-    
+
     return (
-        <div className="h-full p-2 overflow-auto">
-            <PremiumAshtakavargaMatrix 
-                data={fullData as any} 
-                type={isSarva ? 'sarva' : 'bhinna'} 
-                planet="Sun"
-            />
+        <div className="h-full p-2 overflow-auto custom-scrollbar-slim flex flex-col">
+            <div className="grid grid-cols-[1.2fr_3fr] gap-3 flex-1 min-h-0 pb-4">
+                {/* Visual Chart Area */}
+                <div className="flex flex-col min-w-0 h-full">
+                    <div className="flex items-center gap-1.5 px-0.5 pb-1 shrink-0">
+                        <MapIcon className="w-3 h-3 text-emerald-600" />
+                        <span className="text-[9px] font-black uppercase text-ink/60 tracking-wider">
+                            Distribution
+                        </span>
+                    </div>
+                    <div className="bg-surface-warm/30 rounded-lg p-1 border border-[#E6D5B8]/30 flex items-center justify-center flex-1 min-h-0">
+                        <AshtakavargaChart
+                            type={isSarva ? 'sarva' : 'bhinna'}
+                            ascendantSign={ascSign || 1}
+                            houseValues={houseValues}
+                            className="w-full h-full max-w-[200px]"
+                        />
+                    </div>
+                </div>
+
+                {/* Matrix Table Area */}
+                <div className="flex flex-col h-full space-y-1">
+                    <div className="flex items-center gap-1.5 px-0.5 shrink-0">
+                        <Table2 className="w-3 h-3 text-emerald-600" />
+                        <span className="text-[9px] font-black uppercase text-ink/60 tracking-wider">
+                            Bindu Matrix
+                        </span>
+                    </div>
+                    <PremiumAshtakavargaMatrix
+                        data={fullData as any}
+                        type={isSarva ? 'sarva' : 'bhinna'}
+                        planet={selectedPlanet}
+                        onPlanetChange={setSelectedPlanet}
+                        className="border-none flex-1 min-h-0"
+                    />
+                </div>
+            </div>
         </div>
     );
 }
@@ -1060,6 +1159,7 @@ export function renderWidgetContent(
         instanceId: string;
         size: WidgetSize;
         collapsed: boolean;
+        ayanamsa?: string;
         onRemove: () => void;
         onSizeChange?: (s: WidgetSize) => void;
         onDuplicate?: () => void;
@@ -1071,7 +1171,7 @@ export function renderWidgetContent(
 ): React.ReactNode {
     // Use widget-specific ayanamsa if set, otherwise fall back to global activeSystem
     const widgetAyanamsa = item.ayanamsa || activeSystem;
-    
+
     // Build props for widgets that need the full WidgetBoxProps
     const props: WidgetBoxProps = {
         widget: item,
