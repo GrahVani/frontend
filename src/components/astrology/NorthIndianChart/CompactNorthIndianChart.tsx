@@ -185,11 +185,11 @@ export default function CompactNorthIndianChart({
                                 fontSize={planetFontSize}
                                 style={{ fontSize: `${planetFontSize}px` }}
                                 fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
-                                fontWeight={userPlanetFontWeight || "400"}
+                                fontWeight={userPlanetFontWeight || TYPOGRAPHY.svgSignNumber.fontWeight}
                                 fill={theme.signText}
                                 textAnchor="middle"
                                 dominantBaseline="central"
-                                className="select-none pointer-events-none transition-all duration-300 opacity-60"
+                                className="select-none pointer-events-none transition-all duration-300"
                             >
                                 {signId}
                             </text>
@@ -247,9 +247,9 @@ export default function CompactNorthIndianChart({
                                                 y={degreeYOffset}
                                                 fontSize={degreeFontSize}
                                                 style={{ fontSize: `${degreeFontSize}px` }}
-                                                fontWeight="600" fill="var(--text-primary)"
+                                                fontWeight="700" fill="var(--text-primary)"
                                                 textAnchor="middle" dominantBaseline="central"
-                                                className="select-none opacity-60"
+                                                className="select-none"
                                             >
                                                 {p.degree}
                                             </text>

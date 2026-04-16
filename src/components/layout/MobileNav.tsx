@@ -26,7 +26,6 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/clients", label: "Clients", icon: Users, subItems: CLIENTS_General_Sidebar },
     { href: "/vedic-astrology", label: "Vedic Astrology", icon: Star },
     { href: "/vedic-astrology/panchanga", label: "Panchang", icon: Sparkle },
     { href: "/muhurta", label: "Muhurta", icon: Clock, subItems: MUHURTA_Sidebar },

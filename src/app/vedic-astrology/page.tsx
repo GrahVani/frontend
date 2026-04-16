@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Search, Loader2, Star } from 'lucide-react';
 import ParchmentInput from "@/components/ui/ParchmentInput";
 import ClientListRow from "@/components/clients/ClientListRow";
@@ -13,6 +13,8 @@ import { Client } from "@/types/client";
 export default function VedicClientSelectionPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const redirectPath = searchParams.get('redirect');
     const { setClientDetails } = useVedicClient();
 
     const handleSelectForVedic = useCallback((client: Client) => {
@@ -25,8 +27,8 @@ export default function VedicClientSelectionPage() {
             placeOfBirth: { city: client.placeOfBirth || client.birthPlace || '' },
             rashi: client.rashi,
         });
-        router.push('/vedic-astrology/overview');
-    }, [router, setClientDetails]);
+        router.push(redirectPath || '/vedic-astrology/overview');
+    }, [router, setClientDetails, redirectPath]);
 
     const { data: clientsData, isLoading: loading, error: clientsError } = useClients({
         myClientsOnly: true,

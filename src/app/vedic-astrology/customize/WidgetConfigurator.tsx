@@ -150,7 +150,7 @@ interface LiveDimensionsBadgeProps {
 function LiveDimensionsBadge({ width, height, isRecommended }: LiveDimensionsBadgeProps) {
     return (
         <span className={cn(
-            "text-[11px] font-bold px-2 py-0.5 rounded transition-colors duration-200",
+            "text-[11px] font-medium px-2 py-0.5 rounded transition-colors duration-200",
             isRecommended 
                 ? "bg-green-100 text-green-700"
                 : "bg-amber-100 text-amber-700"
@@ -186,7 +186,7 @@ function PixelSizeControl({
     return (
         <div className="bg-surface-warm/50 rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
-                <label className="text-[12px] font-bold text-ink/70 flex items-center gap-2">
+                <label className="text-[12px] font-medium text-ink/70 flex items-center gap-2">
                     <Maximize2 className="w-4 h-4 text-gold-dark" />
                     {label}
                 </label>
@@ -198,7 +198,7 @@ function PixelSizeControl({
                             const val = parseInt(e.target.value) || min;
                             onChange(Math.max(min, Math.min(max, val)));
                         }}
-                        className="w-20 px-2 py-1.5 text-right text-[14px] font-bold text-primary bg-white border border-[#E6D5B8]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                        className="w-20 px-2 py-1.5 text-right text-[14px] font-medium text-primary bg-white border border-[#E6D5B8]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
                         min={min}
                         max={max}
                         step={step}
@@ -243,7 +243,7 @@ function PixelSizeControl({
                         key={val}
                         onClick={() => onChange(val)}
                         className={cn(
-                            "flex-1 py-1.5 rounded-lg text-[10px] font-bold transition-all",
+                            "flex-1 py-1.5 rounded-lg text-[10px] font-medium transition-all",
                             Math.abs(value - val) < step
                                 ? "bg-primary text-white"
                                 : "bg-white border border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
@@ -292,8 +292,8 @@ function WidgetPreview({
     return (
         <div className="bg-[#F5F3EF] rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
-                <span className="text-[10px] font-bold text-ink/40 uppercase tracking-wider">Preview</span>
-                <span className="text-[11px] font-bold text-primary">
+                <span className="text-[10px] font-medium text-ink/40 uppercase tracking-wider">Preview</span>
+                <span className="text-[11px] font-medium text-primary">
                     {dimensions.width} × {dimensions.height}px
                 </span>
             </div>
@@ -333,7 +333,7 @@ function WidgetPreview({
                             }}
                         >
                             <span 
-                                className="truncate font-bold"
+                                className="truncate font-medium"
                                 style={{ 
                                     color: theme.headerTextColor,
                                     fontSize: `${9 * scale}px`,
@@ -411,7 +411,7 @@ function ThemeSelector({
                                     className="w-3 h-3 rounded-full border border-black/10"
                                     style={{ backgroundColor: theme.accentColor }}
                                 />
-                                <span className="text-[11px] font-bold" style={{ color: theme.textColor }}>
+                                <span className="text-[11px] font-medium" style={{ color: theme.textColor }}>
                                     {preset.name}
                                 </span>
                                 {isSelected && <Check className="w-3 h-3 text-primary ml-auto" />}
@@ -427,7 +427,7 @@ function ThemeSelector({
             {/* Custom Colors Toggle */}
             <button
                 onClick={() => setShowCustom(!showCustom)}
-                className="w-full flex items-center justify-between p-3 bg-surface-warm/50 rounded-xl text-[12px] font-bold text-ink/70 hover:bg-surface-warm transition-colors"
+                className="w-full flex items-center justify-between p-3 bg-surface-warm/50 rounded-xl text-[12px] font-medium text-ink/70 hover:bg-surface-warm transition-colors"
             >
                 <span>Custom Colors</span>
                 {showCustom ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
@@ -464,7 +464,7 @@ function ThemeSelector({
                                 key={shadow}
                                 onClick={() => onChange({ shadowIntensity: shadow })}
                                 className={cn(
-                                    "flex-1 py-2 rounded-lg border text-[10px] font-bold capitalize transition-all",
+                                    "flex-1 py-2 rounded-lg border text-[10px] font-medium capitalize transition-all",
                                     value.shadowIntensity === shadow
                                         ? "bg-primary text-white border-primary"
                                         : "bg-white border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
@@ -593,13 +593,13 @@ export default function WidgetConfigurator({
                             
                             {/* Widget Info */}
                             <div className="min-w-0">
-                                <h2 className="text-[18px] font-black text-ink leading-tight truncate">{chart.name}</h2>
+                                <h2 className="text-[18px] font-medium text-ink leading-tight truncate">{chart.name}</h2>
                                 <p className="text-[11px] text-ink/60 mt-0.5 truncate">{chart.description}</p>
                                 
                                 {/* Tags Row: Content Type + Live Dimensions */}
                                 <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                                     <span className={cn(
-                                        "text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded",
+                                        "text-[9px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded",
                                         categoryColors.bg,
                                         categoryColors.text
                                     )}>
@@ -659,7 +659,7 @@ export default function WidgetConfigurator({
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
                                 className={cn(
-                                    "flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-bold transition-all",
+                                    "flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-medium transition-all",
                                     activeTab === tab.id
                                         ? "bg-primary text-white shadow-sm"
                                         : "bg-white border border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
@@ -706,8 +706,8 @@ export default function WidgetConfigurator({
                                                             : "bg-white border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
                                                     )}
                                                 >
-                                                    <span className="text-[14px] font-black block">{preset.icon}</span>
-                                                    <span className="text-[9px] font-bold">{preset.name}</span>
+                                                    <span className="text-[14px] font-semibold block">{preset.icon}</span>
+                                                    <span className="text-[9px] font-medium">{preset.name}</span>
                                                     <span className="text-[8px] opacity-70 block">{preset.desc}</span>
                                                 </button>
                                             ))}
@@ -772,7 +772,7 @@ export default function WidgetConfigurator({
                                         >
                                             <div className="flex items-center gap-3">
                                                 <TypeIcon className={cn("w-5 h-5", showHeader ? "text-primary" : "text-ink/30")} />
-                                                <span className="text-[13px] font-bold text-ink">Show Header</span>
+                                                <span className="text-[13px] font-medium text-ink">Show Header</span>
                                             </div>
                                             <div className={cn("w-11 h-5 rounded-full relative transition-colors", showHeader ? "bg-primary" : "bg-ink/20")}>
                                                 <span className={cn("absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform shadow-sm", showHeader ? "translate-x-6" : "")} />
@@ -788,7 +788,7 @@ export default function WidgetConfigurator({
                                         >
                                             <div className="flex items-center gap-3">
                                                 <Square className={cn("w-5 h-5", showBorder ? "text-primary" : "text-ink/30")} />
-                                                <span className="text-[13px] font-bold text-ink">Show Border</span>
+                                                <span className="text-[13px] font-medium text-ink">Show Border</span>
                                             </div>
                                             <div className={cn("w-11 h-5 rounded-full relative transition-colors", showBorder ? "bg-primary" : "bg-ink/20")}>
                                                 <span className={cn("absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform shadow-sm", showBorder ? "translate-x-6" : "")} />

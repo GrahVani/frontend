@@ -27,6 +27,7 @@ export interface ChartDisplayOptions {
     degreeFormat?: 'full' | 'short';
     degreeFontSize?: number;
     showHouseNumbers?: boolean;
+    signNumberFontSize?: number;
     showGridLines?: boolean;
     gridLineColor?: string;
     gridLineWidth?: number;
@@ -62,6 +63,7 @@ export default function NorthIndianChart({
     degreeFormat = 'short',
     degreeFontSize = 9,
     showHouseNumbers = true,
+    signNumberFontSize,
     showGridLines = true,
     gridLineColor = '#D4C4A8',
     gridLineWidth = 2,
@@ -118,10 +120,10 @@ export default function NorthIndianChart({
             </defs>
 
             {/* Background is handled by parent container */}
-            <g 
-                stroke={showGridLines ? gridLineColor : 'transparent'} 
+            <g
+                stroke={showGridLines ? gridLineColor : 'transparent'}
                 strokeWidth={showGridLines ? gridLineWidth : 0}
-                strokeLinecap="round" 
+                strokeLinecap="round"
                 strokeLinejoin="round"
             >
                 {/* Outer Square Border */}
@@ -189,7 +191,7 @@ export default function NorthIndianChart({
                             <text
                                 x={signNumberPositions[pos.h].x}
                                 y={signNumberPositions[pos.h].y}
-                                fontSize={TYPOGRAPHY.svgSignNumber.fontSize}
+                                fontSize={signNumberFontSize || TYPOGRAPHY.svgSignNumber.fontSize}
                                 fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
                                 fontWeight={TYPOGRAPHY.svgSignNumber.fontWeight}
                                 fill={TYPOGRAPHY.svgSignNumber.fill}
@@ -224,14 +226,14 @@ export default function NorthIndianChart({
                             {
                                 (() => {
                                     const planetCount = boxPlanets.length;
-                                    
+
                                     // Spacing multiplier based on planetSpacing setting
                                     const spacingMultiplier = {
                                         'compact': 0.8,
                                         'normal': 1,
                                         'spacious': 1.3
                                     }[planetSpacing] || 1;
-                                    
+
                                     // Smart layout algorithm based on planet count
                                     let cols: number;
                                     let hSpacing: number;
@@ -240,7 +242,7 @@ export default function NorthIndianChart({
                                     let autoDegreeFontSize: number;
                                     let retroFontSize: number;
                                     let degreeYOffset: number;
-                                    
+
                                     if (planetCount === 1) {
                                         // Single planet - comfortable spacing
                                         cols = 1;
@@ -296,26 +298,26 @@ export default function NorthIndianChart({
                                         retroFontSize = 8;
                                         degreeYOffset = 9;
                                     }
-                                    
+
                                     const rows = Math.ceil(planetCount / cols);
-                                    
+
                                     // Use user-defined font sizes or auto-calculated ones
                                     const finalPlanetFontSize = planetFontSize || autoPlanetFontSize;
                                     const finalDegreeFontSize = degreeFontSize || autoDegreeFontSize;
-                                    
+
                                     return boxPlanets.map((p, i) => {
                                         const row = Math.floor(i / cols);
                                         const col = i % cols;
-                                        
+
                                         // Calculate position in grid with proper centering
                                         const planetsInThisRow = Math.min(cols, planetCount - row * cols);
                                         const rowWidth = (planetsInThisRow - 1) * hSpacing;
                                         const xOffset = (col * hSpacing) - (rowWidth / 2);
                                         const yOffset = (row * vSpacing) - ((rows - 1) * vSpacing / 2);
-                                        
+
                                         const planetColor = PLANET_SVG_FILLS[p.name] || 'var(--ink)';
                                         const hasDegree = (showDegrees !== false) && p.degree && p.degree !== '-';
-                                        
+
                                         // Get planet label based on display mode
                                         const getPlanetLabel = () => {
                                             const symbol = getPlanetSymbol(p.name);
@@ -329,12 +331,12 @@ export default function NorthIndianChart({
                                                     return p.name;
                                             }
                                         };
-                                        
+
                                         // Get retrograde indicator
-                                        const retroIndicator = (p.isRetro && showRetrogradeIndicator !== false) 
+                                        const retroIndicator = (p.isRetro && showRetrogradeIndicator !== false)
                                             ? getRetrogradeIndicator(retrogradeStyle)
                                             : null;
-                                        
+
 
 
                                         return (
@@ -354,10 +356,10 @@ export default function NorthIndianChart({
                                                 >
                                                     {getPlanetLabel()}
                                                     {retroIndicator && (
-                                                        <tspan 
-                                                            fontSize={retroFontSize} 
-                                                            fontWeight="bold" 
-                                                            fill="var(--status-error)" 
+                                                        <tspan
+                                                            fontSize={retroFontSize}
+                                                            fontWeight="bold"
+                                                            fill="var(--status-error)"
                                                             dx="2"
                                                         >{retroIndicator}</tspan>
                                                     )}

@@ -1,12 +1,13 @@
 import { cn } from '@/lib/utils';
 
-type ContainerVariant = 'standard' | 'wide' | 'narrow' | 'form';
+type ContainerVariant = 'standard' | 'wide' | 'narrow' | 'form' | 'full';
 
 const VARIANT_CLASSES: Record<ContainerVariant, string> = {
     standard: 'max-w-[1600px]',
     wide: 'max-w-[1920px]',
     narrow: 'max-w-3xl',
     form: 'max-w-4xl',
+    full: 'max-w-none px-0',
 };
 
 interface PageContainerProps {

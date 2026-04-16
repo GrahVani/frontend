@@ -55,7 +55,7 @@ export default function NavLink({ href, label, active, subItems }: NavLinkProps)
             <Link href={href} aria-current={active ? "page" : undefined} className={baseClass}>
                 {label}
                 {active && (
-                    <div className="absolute -bottom-[7px] left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-active-glow shadow-[0_0_8px_2px_rgba(255,210,125,0.4)]" />
+                    <div className="absolute bottom-[2px] left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-active-glow shadow-[0_0_8px_2px_rgba(255,210,125,0.4)]" />
                 )}
             </Link>
         );
@@ -85,7 +85,7 @@ export default function NavLink({ href, label, active, subItems }: NavLinkProps)
                     open && "rotate-180"
                 )} />
                 {active && (
-                    <div className="absolute -bottom-[7px] left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-active-glow shadow-[0_0_8px_2px_rgba(255,210,125,0.4)]" />
+                    <div className="absolute bottom-[2px] left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-active-glow shadow-[0_0_8px_2px_rgba(255,210,125,0.4)]" />
                 )}
             </button>
 
