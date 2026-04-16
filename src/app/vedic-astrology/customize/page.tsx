@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import React, { useMemo, useEffect, useRef, useCallback, useState } from 'react';
 import {
     LayoutGrid,
     Sparkles,
@@ -14,7 +14,7 @@ import {
     House,
     BookOpen,
     Settings,
-    GripVertical,
+
     Minus,
     Move,
     ChevronDown,
@@ -28,26 +28,31 @@ import { useAstrologerStore, type ChartColorTheme } from '@/store/useAstrologerS
 import { clientApi } from '@/lib/api';
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
+
 import { parseChartData } from '@/lib/chart-helpers';
-import { 
-    useCustomizeCharts, 
-    type CustomizeChartItem, 
-    type SelectedItemDetail, 
+import {
+    useCustomizePages,
     type WidgetTheme,
     type WidgetDimensions,
     CHART_CATALOG,
     DEFAULT_WIDGET_THEME,
     DEFAULT_DIMENSIONS,
-} from '@/hooks/useCustomizeCharts';
+} from '@/hooks/useCustomizePages';
+import {
+    useWidgetAutoScale,
+    type AutoScaleResult
+} from '@/hooks/useWidgetAutoScale';
 import { renderWidget, renderWidgetContent } from './WidgetBoxes';
 import WidgetConfigurator from './WidgetConfigurator';
 import CompactWidgetPanel from './CompactWidgetPanel';
 import ChartSelectorModal from './ChartSelectorModal';
 import AyanamsaSelect from './AyanamsaSelect';
+import PageTabs from './PageTabs';
 
-// Components - Use ChartWithPopup (same as Kundali page) instead of CompactChartWithPopup
-import { ChartWithPopup, Planet, type ChartDisplayOptions } from '@/components/astrology/NorthIndianChart';
+// Components - Use CompactChartWithPopup for dashboard density as requested
+import { CompactChartWithPopup, Planet, type ChartDisplayOptions } from '@/components/astrology/NorthIndianChart';
 import SouthIndianChart, { ChartColorMode } from '@/components/astrology/SouthIndianChart';
+import CompactSouthIndianChart from '@/components/astrology/CompactSouthIndianChart';
 import dynamic from 'next/dynamic';
 
 const DivisionalChartZoomModal = dynamic(() => import('@/components/astrology/DivisionalChartZoomModal'));
@@ -58,86 +63,86 @@ const DivisionalChartZoomModal = dynamic(() => import('@/components/astrology/Di
 
 const SMART_DEFAULTS: Record<string, WidgetDimensions> = {
     // Charts - square aspect ratio for optimal first view (matching Kundali page)
-    divisional: { 
-        width: 470, height: 500, 
-        minWidth: 280, minHeight: 300, 
-        maxWidth: 900, maxHeight: 900 
+    divisional: {
+        width: 470, height: 500,
+        minWidth: 280, minHeight: 300,
+        maxWidth: 900, maxHeight: 900
     },
-    lagna: { 
-        width: 470, height: 500, 
-        minWidth: 280, minHeight: 300, 
-        maxWidth: 900, maxHeight: 900 
+    lagna: {
+        width: 470, height: 500,
+        minWidth: 280, minHeight: 300,
+        maxWidth: 900, maxHeight: 900
     },
-    rare_shodash: { 
-        width: 450, height: 480, 
-        minWidth: 280, minHeight: 300, 
-        maxWidth: 800, maxHeight: 800 
+    rare_shodash: {
+        width: 450, height: 480,
+        minWidth: 280, minHeight: 300,
+        maxWidth: 800, maxHeight: 800
     },
-    
+
     // Tables - wider for data readability
-    ashtakavarga: { 
-        width: 580, height: 420, 
-        minWidth: 400, minHeight: 300, 
-        maxWidth: 1000, maxHeight: 700 
+    ashtakavarga: {
+        width: 1000, height: 428,
+        minWidth: 400, minHeight: 300,
+        maxWidth: 1000, maxHeight: 700
     },
-    widget_shodasha: { 
-        width: 650, height: 380, 
-        minWidth: 500, minHeight: 300, 
-        maxWidth: 1200, maxHeight: 600 
+    widget_shodasha: {
+        width: 650, height: 380,
+        minWidth: 500, minHeight: 300,
+        maxWidth: 1200, maxHeight: 600
     },
-    
+
     // Analysis widgets - balanced proportions
-    dasha: { 
-        width: 450, height: 520, 
-        minWidth: 350, minHeight: 400, 
-        maxWidth: 800, maxHeight: 900 
+    dasha: {
+        width: 800, height: 516,
+        minWidth: 350, minHeight: 400,
+        maxWidth: 1000, maxHeight: 1000
     },
-    widget_shadbala: { 
-        width: 520, height: 480, 
-        minWidth: 400, minHeight: 350, 
-        maxWidth: 900, maxHeight: 800 
+    widget_shadbala: {
+        width: 680, height: 520,
+        minWidth: 450, minHeight: 380,
+        maxWidth: 1100, maxHeight: 900
     },
-    widget_yoga: { 
-        width: 500, height: 480, 
-        minWidth: 380, minHeight: 350, 
-        maxWidth: 900, maxHeight: 800 
+    widget_yoga: {
+        width: 500, height: 480,
+        minWidth: 380, minHeight: 350,
+        maxWidth: 900, maxHeight: 800
     },
-    widget_dosha: { 
-        width: 500, height: 480, 
-        minWidth: 380, minHeight: 350, 
-        maxWidth: 900, maxHeight: 800 
+    widget_dosha: {
+        width: 500, height: 480,
+        minWidth: 380, minHeight: 350,
+        maxWidth: 900, maxHeight: 800
     },
-    
+
     // Others
-    widget_transit: { 
-        width: 480, height: 320, 
-        minWidth: 380, minHeight: 250, 
-        maxWidth: 900, maxHeight: 600 
+    widget_transit: {
+        width: 480, height: 320,
+        minWidth: 380, minHeight: 250,
+        maxWidth: 900, maxHeight: 600
     },
-    widget_remedy: { 
-        width: 520, height: 450, 
-        minWidth: 400, minHeight: 350, 
-        maxWidth: 900, maxHeight: 800 
+    widget_remedy: {
+        width: 520, height: 450,
+        minWidth: 400, minHeight: 350,
+        maxWidth: 900, maxHeight: 800
     },
-    widget_pushkara: { 
-        width: 480, height: 380, 
-        minWidth: 380, minHeight: 300, 
-        maxWidth: 900, maxHeight: 700 
+    widget_pushkara: {
+        width: 480, height: 380,
+        minWidth: 380, minHeight: 300,
+        maxWidth: 900, maxHeight: 700
     },
-    widget_karaka: { 
-        width: 400, height: 380, 
-        minWidth: 320, minHeight: 300, 
-        maxWidth: 800, maxHeight: 700 
+    widget_karaka: {
+        width: 400, height: 380,
+        minWidth: 320, minHeight: 300,
+        maxWidth: 800, maxHeight: 700
     },
-    widget_chakra: { 
-        width: 480, height: 480, 
-        minWidth: 380, minHeight: 380, 
-        maxWidth: 900, maxHeight: 900 
+    widget_chakra: {
+        width: 560, height: 552,
+        minWidth: 380, minHeight: 380,
+        maxWidth: 900, maxHeight: 900
     },
-    kp_module: { 
-        width: 480, height: 420, 
-        minWidth: 380, minHeight: 320, 
-        maxWidth: 900, maxHeight: 800 
+    kp_module: {
+        width: 480, height: 420,
+        minWidth: 380, minHeight: 320,
+        maxWidth: 900, maxHeight: 800
     },
 };
 
@@ -161,7 +166,7 @@ interface CustomChartWidgetProps extends ChartDisplayOptions {
 }
 
 // Memoized chart widget to prevent unnecessary re-renders
-// Chart STRETCHES to fill the container (no centering, no aspect ratio preservation)
+// Only D1 chart shows degrees by default; other charts hide degrees
 const CustomChartWidget = React.memo(function CustomChartWidget({
     planets,
     ascendantSign,
@@ -169,11 +174,10 @@ const CustomChartWidget = React.memo(function CustomChartWidget({
     height,
     chartStyle = 'North Indian',
     colorTheme = 'classic',
-    // Chart display options
     planetDisplayMode = 'name',
     planetFontSize,
     planetFontWeight = '600',
-    showDegrees = true,
+    showDegrees,
     degreeFormat = 'short',
     degreeFontSize,
     showHouseNumbers = true,
@@ -184,17 +188,26 @@ const CustomChartWidget = React.memo(function CustomChartWidget({
     retrogradeStyle = 'R',
     planetSpacing = 'normal',
     labelDensity = 'normal',
-}: CustomChartWidgetProps) {
-    
+    chartId = '',
+}: CustomChartWidgetProps & { chartId?: string }) {
+    // Determine if degrees should be shown: use explicit value if provided, 
+    // otherwise only show for D1 (Rashi) chart
+    const shouldShowDegrees = showDegrees !== undefined ? showDegrees : (chartId === 'D1');
+
     if (chartStyle === 'South Indian') {
         return (
             <div className="w-full h-full overflow-hidden">
-                <SouthIndianChart
+                <CompactSouthIndianChart
                     ascendantSign={ascendantSign}
                     planets={planets}
                     colorMode="color"
                     colorTheme={colorTheme}
                     className="w-full h-full"
+                    planetFontSize={planetFontSize}
+                    degreeFontSize={degreeFontSize}
+                    showDegrees={shouldShowDegrees}
+                    planetDisplayMode={planetDisplayMode}
+                    showHouseNumbers={showHouseNumbers}
                 />
             </div>
         );
@@ -202,45 +215,66 @@ const CustomChartWidget = React.memo(function CustomChartWidget({
 
     return (
         <div className="w-full h-full overflow-hidden">
-            <ChartWithPopup
+            <CompactChartWithPopup
                 ascendantSign={ascendantSign}
                 planets={planets}
                 className="w-full h-full"
                 preserveAspectRatio="none"
-                // Pass all chart display options
-                planetDisplayMode={planetDisplayMode}
+                showDegrees={shouldShowDegrees}
                 planetFontSize={planetFontSize}
-                planetFontWeight={planetFontWeight}
-                showDegrees={showDegrees}
-                degreeFormat={degreeFormat}
                 degreeFontSize={degreeFontSize}
+                planetDisplayMode={planetDisplayMode}
                 showHouseNumbers={showHouseNumbers}
-                showGridLines={showGridLines}
-                gridLineColor={gridLineColor}
-                gridLineWidth={gridLineWidth}
-                showRetrogradeIndicator={showRetrogradeIndicator}
-                retrogradeStyle={retrogradeStyle}
                 planetSpacing={planetSpacing}
-                labelDensity={labelDensity}
             />
         </div>
     );
 }, (prev, next) => {
-    // Custom comparison for memoization
     return prev.ascendantSign === next.ascendantSign &&
-           prev.width === next.width &&
-           prev.height === next.height &&
-           prev.chartStyle === next.chartStyle &&
-           prev.planetDisplayMode === next.planetDisplayMode &&
-           prev.planetFontSize === next.planetFontSize &&
-           prev.showDegrees === next.showDegrees &&
-           prev.showHouseNumbers === next.showHouseNumbers &&
-           prev.showGridLines === next.showGridLines &&
-           JSON.stringify(prev.planets) === JSON.stringify(next.planets);
+        prev.width === next.width &&
+        prev.height === next.height &&
+        prev.chartStyle === next.chartStyle &&
+        prev.planetDisplayMode === next.planetDisplayMode &&
+        prev.planetFontSize === next.planetFontSize &&
+        prev.planetFontWeight === next.planetFontWeight &&
+        prev.showDegrees === next.showDegrees &&
+        prev.chartId === next.chartId &&
+        prev.degreeFormat === next.degreeFormat &&
+        prev.degreeFontSize === next.degreeFontSize &&
+        prev.showHouseNumbers === next.showHouseNumbers &&
+        prev.showGridLines === next.showGridLines &&
+        prev.gridLineColor === next.gridLineColor &&
+        prev.gridLineWidth === next.gridLineWidth &&
+        prev.showRetrogradeIndicator === next.showRetrogradeIndicator &&
+        prev.retrogradeStyle === next.retrogradeStyle &&
+        prev.planetSpacing === next.planetSpacing &&
+        prev.labelDensity === next.labelDensity &&
+        JSON.stringify(prev.planets) === JSON.stringify(next.planets);
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// RESIZABLE WIDGET BOX - With smart scroll behavior and overlap fixes
+// TYPES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+type SelectedItemDetail = {
+    id: string;
+    name: string;
+    description: string;
+    category: string;
+    instanceId: string;
+    size: 'small' | 'medium' | 'large' | 'wide' | 'full' | 'custom';
+    collapsed: boolean;
+    ayanamsa?: string;
+    dimensions: WidgetDimensions;
+    theme: WidgetTheme;
+    customTitle?: string;
+    showHeader: boolean;
+    showBorder: boolean;
+    position?: { x: number; y: number };
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// RESIZABLE WIDGET BOX
 // ═══════════════════════════════════════════════════════════════════════════════
 
 interface ResizableWidgetBoxProps {
@@ -248,12 +282,14 @@ interface ResizableWidgetBoxProps {
     onRemove: () => void;
     onCustomize: () => void;
     onAyanamsaChange?: (ayanamsa: string) => void;
-    onResize: (deltaWidth: number, deltaHeight: number) => void;
     onUpdateDimensions: (dims: Partial<WidgetDimensions>) => void;
+    onUpdateTheme: (theme: Partial<WidgetTheme>) => void;
     children: React.ReactNode;
     isAvailable?: boolean;
     isGenerating?: boolean;
+    isLoading?: boolean;
     onGenerate?: () => void;
+    autoScale?: boolean;
 }
 
 const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
@@ -261,16 +297,18 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
     onRemove,
     onCustomize,
     onAyanamsaChange,
-    onResize,
     onUpdateDimensions,
+    onUpdateTheme,
     children,
     isAvailable,
     isGenerating,
+    isLoading,
     onGenerate,
+    autoScale = true,
 }: ResizableWidgetBoxProps) {
     const { theme, customTitle, showHeader, showBorder, dimensions, ayanamsa } = item;
     const displayTitle = customTitle || item.name;
-    
+
     const shadowClass = {
         'none': '',
         'light': 'shadow-sm',
@@ -283,19 +321,37 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
     const contentRef = useRef<HTMLDivElement>(null);
     const resizeStart = useRef({ x: 0, y: 0, width: 0, height: 0 });
 
-    // Check if content needs scroll based on default size
+    const isAutoScaleEnabled = theme.autoScale !== false;
+    const scaleResult = useWidgetAutoScale(
+        dimensions,
+        item.category,
+        autoScale && isAutoScaleEnabled,
+        {
+            minScale: 0.7,
+            maxScale: 1.5,
+            mode: item.category === 'dasha' ? 'cover' : (item.category === 'divisional' ? 'fit' : 'geometric')
+        }
+    );
+
+    const finalScale = useMemo(() => {
+        const manualScale = theme.contentTextScale ?? 1;
+        if (manualScale !== 1) {
+            return {
+                ...scaleResult,
+                scale: scaleResult.scale * manualScale,
+                fontSizeMultiplier: scaleResult.fontSizeMultiplier * manualScale,
+                scalePercentage: Math.round(scaleResult.scale * manualScale * 100),
+            };
+        }
+        return scaleResult;
+    }, [scaleResult, theme.contentTextScale]);
+
     useEffect(() => {
         const defaults = getSmartDefaults(item.category);
         const isCompressed = dimensions.width < defaults.minWidth || dimensions.height < defaults.minHeight;
         setNeedsScroll(isCompressed);
     }, [dimensions, item.category]);
 
-    // Quick resize handlers
-    const handleQuickResize = (deltaW: number, deltaH: number) => {
-        onResize(deltaW, deltaH);
-    };
-
-    // Mouse resize handlers
     const handleResizeStart = (e: React.MouseEvent, direction: string) => {
         e.preventDefault();
         e.stopPropagation();
@@ -310,7 +366,7 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
         const handleMouseMove = (e: MouseEvent) => {
             const deltaX = e.clientX - resizeStart.current.x;
             const deltaY = e.clientY - resizeStart.current.y;
-            
+
             let newWidth = resizeStart.current.width;
             let newHeight = resizeStart.current.height;
 
@@ -353,7 +409,6 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                 borderRadius: theme.borderRadius,
             }}
         >
-            {/* Header with Quick Controls - positioned outside overflow container to allow dropdowns */}
             {showHeader && (
                 <div
                     className="flex items-center justify-between px-3 shrink-0 cursor-move relative z-10"
@@ -364,76 +419,95 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                     }}
                 >
                     <div className="flex items-center gap-2 min-w-0 flex-1" style={{ justifyContent: theme.titleAlign ?? 'flex-start' }}>
-                        {/* Drag Handle */}
-                        <GripVertical className="opacity-40 shrink-0" style={{ width: (theme.headerFontSize ?? 12) + 2, height: (theme.headerFontSize ?? 12) + 2 }} />
-                        
-                        {/* Title - with scaling based on widget width */}
-                        <span 
-                            className="font-bold truncate"
-                            style={{ 
+                        <span
+                            className="font-bold truncate min-w-[20px]"
+                            style={{
                                 color: theme.headerTextColor,
                                 fontSize: Math.min(
-                                    (theme.headerFontSize ?? 12) * (theme.contentTextScale ?? 1),
+                                    (theme.headerFontSize ?? 12) * finalScale.scale,
                                     dimensions.width / 20
                                 ),
                                 maxWidth: theme.titleMaxWidth ?? dimensions.width * 0.5,
                                 textAlign: theme.titleAlign ?? 'left',
                             }}
+                            title={displayTitle}
                         >
                             {displayTitle}
                         </span>
-                        
-                        {/* Size Indicator */}
-                        <span 
-                            className="opacity-50 shrink-0"
-                            style={{ fontSize: Math.max(9, (theme.headerFontSize ?? 12) * 0.75 * (theme.contentTextScale ?? 1)) }}
-                        >
-                            {dimensions.width}×{dimensions.height}
-                        </span>
+
+                        <div className="flex items-center gap-1.5 bg-black/5 px-1.5 py-0.5 rounded-md border border-black/5 shadow-inner">
+                            {/* Width Control */}
+                            <div className="flex items-center gap-1 group/w">
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ width: dimensions.width - 10 }); }}
+                                    className="p-0.5 hover:bg-black/10 rounded-sm transition-colors"
+                                >
+                                    <Minus className="w-2.5 h-2.5 opacity-50" />
+                                </button>
+                                <span className="text-[9px] font-black text-ink/40 min-w-[42px] text-center uppercase">
+                                    W: {dimensions.width}
+                                </span>
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ width: dimensions.width + 10 }); }}
+                                    className="p-0.5 hover:bg-black/10 rounded-sm transition-colors"
+                                >
+                                    <Plus className="w-2.5 h-2.5 opacity-50" />
+                                </button>
+                            </div>
+
+                            <div className="w-px h-2.5 bg-black/10 mx-0.5" />
+
+                            {/* Height Control */}
+                            <div className="flex items-center gap-1 group/h">
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ height: dimensions.height - 10 }); }}
+                                    className="p-0.5 hover:bg-black/10 rounded-sm transition-colors"
+                                >
+                                    <Minus className="w-2.5 h-2.5 opacity-50" />
+                                </button>
+                                <span className="text-[9px] font-black text-ink/40 min-w-[42px] text-center uppercase">
+                                    H: {dimensions.height}
+                                </span>
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ height: dimensions.height + 10 }); }}
+                                    className="p-0.5 hover:bg-black/10 rounded-sm transition-colors"
+                                >
+                                    <Plus className="w-2.5 h-2.5 opacity-50" />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Granular Zoom Control */}
+                        <div className="flex items-center gap-1 bg-primary/10 px-1.5 py-0.5 rounded-md border border-primary/10 shadow-inner">
+                            <button 
+                                onClick={(e) => { 
+                                    e.stopPropagation(); 
+                                    const currentScale = theme.contentTextScale ?? 1;
+                                    onUpdateTheme({ contentTextScale: Math.max(0.5, currentScale - 0.05) }); 
+                                }}
+                                className="p-0.5 hover:bg-primary/20 rounded-sm transition-colors"
+                            >
+                                <Minus className="w-2.5 h-2.5 text-primary opacity-60" />
+                            </button>
+                            <span className="text-[9px] font-black text-primary min-w-[30px] text-center">
+                                {finalScale.scalePercentage}%
+                            </span>
+                            <button 
+                                onClick={(e) => { 
+                                    e.stopPropagation(); 
+                                    const currentScale = theme.contentTextScale ?? 1;
+                                    onUpdateTheme({ contentTextScale: Math.min(2, currentScale + 0.05) }); 
+                                }}
+                                className="p-0.5 hover:bg-primary/20 rounded-sm transition-colors"
+                            >
+                                <Plus className="w-2.5 h-2.5 text-primary opacity-60" />
+                            </button>
+                        </div>
                     </div>
 
-                    {/* Quick Controls */}
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        {/* Quick Resize Buttons */}
-                        <div className="flex items-center bg-black/10 rounded-lg p-0.5 mr-2">
-                            <button
-                                onClick={() => handleQuickResize(-20, 0)}
-                                className="p-1 hover:bg-white/20 rounded transition-colors"
-                                title="Decrease width"
-                            >
-                                <Minus className="w-3 h-3" />
-                            </button>
-                            <span className="text-[9px] px-1 opacity-70">W</span>
-                            <button
-                                onClick={() => handleQuickResize(20, 0)}
-                                className="p-1 hover:bg-white/20 rounded transition-colors"
-                                title="Increase width"
-                            >
-                                <Plus className="w-3 h-3" />
-                            </button>
-                        </div>
-
-                        <div className="flex items-center bg-black/10 rounded-lg p-0.5 mr-2">
-                            <button
-                                onClick={() => handleQuickResize(0, -20)}
-                                className="p-1 hover:bg-white/20 rounded transition-colors"
-                                title="Decrease height"
-                            >
-                                <Minus className="w-3 h-3" />
-                            </button>
-                            <span className="text-[9px] px-1 opacity-70">H</span>
-                            <button
-                                onClick={() => handleQuickResize(0, 20)}
-                                className="p-1 hover:bg-white/20 rounded transition-colors"
-                                title="Increase height"
-                            >
-                                <Plus className="w-3 h-3" />
-                            </button>
-                        </div>
-
-                        {/* Ayanamsa Selector - dropdown needs overflow visible */}
+                    <div className="flex items-center gap-1">
                         {onAyanamsaChange && (
-                            <div className="mr-1 relative">
+                            <div className="mr-1 relative opacity-80 hover:opacity-100 transition-opacity">
                                 <AyanamsaSelect
                                     value={ayanamsa || 'Lahiri'}
                                     onChange={onAyanamsaChange}
@@ -442,19 +516,17 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                             </div>
                         )}
 
-                        {/* Settings */}
                         <button
                             onClick={onCustomize}
-                            className="p-1.5 hover:bg-white/20 rounded-lg transition-colors"
+                            className="p-1.5 hover:bg-white/20 rounded-lg transition-colors opacity-60 hover:opacity-100"
                             title="Customize"
                         >
                             <Settings className="w-3.5 h-3.5" />
                         </button>
 
-                        {/* Remove */}
                         <button
                             onClick={onRemove}
-                            className="p-1.5 hover:bg-white/20 rounded-lg transition-colors"
+                            className="p-1.5 hover:bg-white/20 rounded-lg transition-colors opacity-60 hover:opacity-100"
                             title="Remove"
                         >
                             <X className="w-3.5 h-3.5" />
@@ -463,8 +535,7 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                 </div>
             )}
 
-            {/* Content Area - Smart scroll behavior */}
-            <div 
+            <div
                 ref={contentRef}
                 className={cn(
                     "flex-1 relative min-h-0",
@@ -476,8 +547,13 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                         <Loader2 className="w-6 h-6 text-primary animate-spin" />
                     </div>
                 )}
-                
-                {!isAvailable && onGenerate ? (
+
+                {isLoading ? (
+                    <div className="h-full flex flex-col items-center justify-center p-4 text-center">
+                        <Loader2 className="w-8 h-8 text-primary/30 animate-spin mb-3" />
+                        <p className="text-[10px] font-bold text-ink/30 uppercase tracking-[0.2em]">Synchronizing Data...</p>
+                    </div>
+                ) : !isAvailable && onGenerate ? (
                     <div className="h-full flex flex-col items-center justify-center p-4 text-center">
                         <AlertCircle className="w-8 h-8 text-gold-dark/30 mb-2" />
                         <p className="text-[11px] text-ink/50 mb-3">{item.name} not generated</p>
@@ -490,11 +566,12 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                         </button>
                     </div>
                 ) : (
-                    <div 
-                        className="w-full h-full"
-                        style={{ 
+                    <div
+                        className="w-full h-full widget-scaled-content"
+                        style={{
                             color: theme.textColor,
-                            fontSize: `${(theme.contentTextScale ?? 1) * 100}%`,
+                            zoom: finalScale.zoom,
+                            transformOrigin: 'top left',
                         }}
                     >
                         {children}
@@ -502,23 +579,19 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                 )}
             </div>
 
-            {/* Resize Handles */}
             <div className="absolute inset-0 pointer-events-none">
-                {/* Bottom-right corner */}
                 <div
                     className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize pointer-events-auto opacity-0 group-hover:opacity-100 transition-opacity"
                     onMouseDown={(e) => handleResizeStart(e, 'se')}
                 >
                     <div className="absolute bottom-1 right-1 w-2 h-2 bg-primary rounded-full" />
                 </div>
-                
-                {/* Bottom edge */}
+
                 <div
                     className="absolute bottom-0 left-4 right-4 h-2 cursor-s-resize pointer-events-auto opacity-0 group-hover:opacity-100 transition-opacity"
                     onMouseDown={(e) => handleResizeStart(e, 's')}
                 />
-                
-                {/* Right edge */}
+
                 <div
                     className="absolute top-4 bottom-4 right-0 w-2 cursor-e-resize pointer-events-auto opacity-0 group-hover:opacity-100 transition-opacity"
                     onMouseDown={(e) => handleResizeStart(e, 'e')}
@@ -527,12 +600,13 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
         </div>
     );
 }, (prev, next) => {
-    // Only re-render if these specific props change
     return prev.item.instanceId === next.item.instanceId &&
-           prev.item.dimensions.width === next.item.dimensions.width &&
-           prev.item.dimensions.height === next.item.dimensions.height &&
-           prev.item.showHeader === next.item.showHeader &&
-           prev.item.showBorder === next.item.showBorder;
+        prev.item.dimensions.width === next.item.dimensions.width &&
+        prev.item.dimensions.height === next.item.dimensions.height &&
+        prev.item.showHeader === next.item.showHeader &&
+        prev.item.showBorder === next.item.showBorder &&
+        prev.autoScale === next.autoScale &&
+        JSON.stringify(prev.item.theme) === JSON.stringify(next.item.theme);
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -542,11 +616,11 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
 export default function CustomizePage() {
     const { clientDetails, processedCharts, isGeneratingCharts, isLoadingCharts, refreshCharts } = useVedicClient();
     const { ayanamsa: globalAyanamsa, chartStyle, chartColorTheme } = useAstrologerStore();
-    
+
     // Local state
     const [localAyanamsa, setLocalAyanamsa] = useState(globalAyanamsa);
     useEffect(() => { localStorage.setItem('grahvani_customize_ayanamsa', localAyanamsa); }, [localAyanamsa]);
-    
+
     const prevGlobalAyanamsaRef = useRef(globalAyanamsa);
     useEffect(() => {
         if (prevGlobalAyanamsaRef.current !== globalAyanamsa) {
@@ -555,11 +629,21 @@ export default function CustomizePage() {
         }
     }, [globalAyanamsa]);
 
-    // Hook
+    // Multi-page hook
     const {
+        pages,
+        activePageId,
+        activePage,
         selectedItems,
         selectedChartDetails,
         availableCharts,
+        createPage,
+        deletePage,
+        duplicatePage,
+        renamePage,
+        setActivePage,
+        canCreateMorePages,
+        canDeletePage,
         addChart,
         removeChart,
         duplicateChart,
@@ -572,8 +656,8 @@ export default function CustomizePage() {
         toggleHeader,
         toggleBorder,
         reorderItems,
-        resetToDefaults,
-    } = useCustomizeCharts();
+        resetCurrentPage,
+    } = useCustomizePages();
 
     const activeSystem = localAyanamsa.toLowerCase();
     const clientId = clientDetails?.id || '';
@@ -581,7 +665,7 @@ export default function CustomizePage() {
     // UI State
     const [isChartSelectorOpen, setIsChartSelectorOpen] = useState(false);
     const [isWidgetConfiguratorOpen, setIsWidgetConfiguratorOpen] = useState(false);
-    const [selectedChartForConfig, setSelectedChartForConfig] = useState<CustomizeChartItem | null>(null);
+    const [selectedChartForConfig, setSelectedChartForConfig] = useState<{ id: string, name: string, description: string, category: string } | null>(null);
     const [customizationPanel, setCustomizationPanel] = useState<{ isOpen: boolean; selectedWidget?: SelectedItemDetail }>({ isOpen: false });
     const [generatingCharts, setGeneratingCharts] = useState<Set<string>>(new Set());
 
@@ -602,7 +686,7 @@ export default function CustomizePage() {
     };
 
     // Handlers
-    const handleSelectChart = useCallback((chart: CustomizeChartItem, ayanamsa: string) => {
+    const handleSelectChart = useCallback((chart: { id: string, name: string, description: string, category: string }, ayanamsa: string) => {
         setSelectedChartForConfig(chart);
         setLocalAyanamsa(ayanamsa as typeof localAyanamsa);
         setIsWidgetConfiguratorOpen(true);
@@ -615,12 +699,13 @@ export default function CustomizePage() {
         customTitle?: string;
         showHeader: boolean;
         showBorder: boolean;
+        ayanamsa: string;
     }) => {
         if (!selectedChartForConfig) return;
-        addChart(selectedChartForConfig.id, localAyanamsa, config);
+        addChart(selectedChartForConfig.id, config.ayanamsa, config);
         setIsWidgetConfiguratorOpen(false);
         setSelectedChartForConfig(null);
-    }, [addChart, localAyanamsa, selectedChartForConfig]);
+    }, [addChart, selectedChartForConfig]);
 
     // Drag handlers
     const handleDragStart = (e: React.DragEvent, instanceId: string) => {
@@ -646,13 +731,13 @@ export default function CustomizePage() {
         const currentOrder = [...selectedItems];
         const draggedIdx = currentOrder.findIndex(i => i.instanceId === draggedId);
         const targetIdx = currentOrder.findIndex(i => i.instanceId === targetId);
-        
+
         if (draggedIdx === -1 || targetIdx === -1) return;
 
         const [moved] = currentOrder.splice(draggedIdx, 1);
         currentOrder.splice(targetIdx, 0, moved);
         reorderItems(currentOrder);
-        
+
         setDraggedId(null);
         setDragOverId(null);
     };
@@ -672,8 +757,9 @@ export default function CustomizePage() {
         <div className="flex flex-col h-[calc(100vh-104px)] w-[calc(100%+2rem)] -mx-4 -mt-4">
             {/* Toolbar */}
             <div className="flex items-center gap-4 px-6 py-3 bg-surface-warm/95 border-b border-gold-primary/20 shrink-0">
+                {/* Brand */}
                 <span
-                    className="font-serif font-bold text-[16px] tracking-[0.12em] uppercase"
+                    className="font-serif font-bold text-[16px] tracking-[0.12em] uppercase shrink-0"
                     style={{
                         background: 'linear-gradient(to bottom, #D4AD5A 0%, #C9A24D 40%, #9C7A2F 100%)',
                         WebkitBackgroundClip: 'text',
@@ -683,6 +769,25 @@ export default function CustomizePage() {
                     Grahvani
                 </span>
 
+                {/* Divider */}
+                <div className="w-px h-6 bg-gold-primary/20 shrink-0" />
+
+                {/* Page Tabs - Multi-page navigation */}
+                <PageTabs
+                    pages={pages}
+                    activePageId={activePageId}
+                    onSelectPage={setActivePage}
+                    onAddPage={createPage}
+                    onDeletePage={deletePage}
+                    onRenamePage={renamePage}
+                    canCreateMore={canCreateMorePages}
+                    canDelete={canDeletePage}
+                />
+
+                {/* Divider */}
+                <div className="w-px h-6 bg-gold-primary/20 shrink-0" />
+
+                {/* Add Widget Button */}
                 <button
                     onClick={() => setIsChartSelectorOpen(true)}
                     className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider active:scale-95 transition-all hover:brightness-110 shadow-sm"
@@ -696,9 +801,10 @@ export default function CustomizePage() {
                     Add Widget
                 </button>
 
+                {/* Clear Current Page */}
                 {selectedItems.length > 0 && (
                     <button
-                        onClick={resetToDefaults}
+                        onClick={resetCurrentPage}
                         className="text-[11px] font-black uppercase tracking-widest text-ink hover:text-red-700 transition-all bg-red-50/50 px-2 py-0.5 rounded-md border border-red-200/30"
                     >
                         Clear All
@@ -707,11 +813,21 @@ export default function CustomizePage() {
 
                 <div className="flex-1" />
 
+                {/* Widget Count */}
                 {selectedItems.length > 0 && (
                     <div className="flex items-center gap-1.5">
                         <LayoutGrid className="w-3.5 h-3.5 text-gold-dark/50" />
                         <span className="text-[11px] font-black uppercase tracking-wider text-gold-dark/70">
                             {selectedItems.length} Widget{selectedItems.length !== 1 ? 's' : ''}
+                        </span>
+                    </div>
+                )}
+
+                {/* Page Count */}
+                {pages.length > 1 && (
+                    <div className="flex items-center gap-1.5 ml-2">
+                        <span className="text-[11px] font-medium text-ink/50">
+                            {pages.length} Pages
                         </span>
                     </div>
                 )}
@@ -721,7 +837,9 @@ export default function CustomizePage() {
             <div className="flex-1 overflow-auto bg-[#FAF9F6] p-6">
                 {selectedItems.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center">
-                        <h3 className="text-[24px] font-black text-ink mb-3">Your Canvas is Empty</h3>
+                        <h3 className="text-[24px] font-black text-ink mb-3">
+                            {activePage?.name || 'Your Canvas'} is Empty
+                        </h3>
                         <p className="text-[14px] text-ink/50 max-w-md mb-6">
                             Add charts, dashas, and analysis widgets. Resize freely with drag handles or quick buttons.
                         </p>
@@ -739,7 +857,7 @@ export default function CustomizePage() {
                             const isWidget = item.category.startsWith('widget_') || item.category === 'kp_module' || item.category === 'dasha' || item.category === 'ashtakavarga';
                             const isDragged = draggedId === item.instanceId;
                             const isDragOver = dragOverId === item.instanceId && !isDragged;
-                            
+
                             return (
                                 <div
                                     key={item.instanceId}
@@ -760,15 +878,16 @@ export default function CustomizePage() {
                                             onRemove={() => removeChart(item.instanceId)}
                                             onCustomize={() => setCustomizationPanel({ isOpen: true, selectedWidget: item })}
                                             onAyanamsaChange={(a) => updateChartAyanamsa(item.instanceId, a)}
-                                            onResize={(dw, dh) => resizeByDelta(item.instanceId, dw, dh)}
                                             onUpdateDimensions={(dims) => updateDimensions(item.instanceId, dims)}
+                                            onUpdateTheme={(theme) => updateTheme(item.instanceId, theme)}
+                                            isLoading={isLoadingCharts}
                                         >
                                             {renderWidgetContent({
                                                 ...item,
                                                 onRemove: () => removeChart(item.instanceId),
-                                                onSizeChange: () => {},
+                                                onSizeChange: () => { },
                                                 onDuplicate: () => duplicateChart(item.instanceId),
-                                                onCollapseToggle: () => {},
+                                                onCollapseToggle: () => { },
                                                 onAyanamsaChange: (a) => updateChartAyanamsa(item.instanceId, a),
                                             }, clientId, activeSystem)}
                                         </ResizableWidgetBox>
@@ -778,10 +897,11 @@ export default function CustomizePage() {
                                             onRemove={() => removeChart(item.instanceId)}
                                             onCustomize={() => setCustomizationPanel({ isOpen: true, selectedWidget: item })}
                                             onAyanamsaChange={(a) => updateChartAyanamsa(item.instanceId, a)}
-                                            onResize={(dw, dh) => resizeByDelta(item.instanceId, dw, dh)}
                                             onUpdateDimensions={(dims) => updateDimensions(item.instanceId, dims)}
+                                            onUpdateTheme={(theme) => updateTheme(item.instanceId, theme)}
                                             isAvailable={isChartAvailable(item.id, item.ayanamsa)}
                                             isGenerating={generatingCharts.has(item.id)}
+                                            isLoading={isLoadingCharts}
                                             onGenerate={async () => {
                                                 setGeneratingCharts(prev => new Set(prev).add(item.id));
                                                 await clientApi.generateChart(clientId, item.id, item.ayanamsa || activeSystem);
@@ -793,18 +913,28 @@ export default function CustomizePage() {
                                                 });
                                             }}
                                         >
-                                            {/* Use CustomChartWidget with ChartWithPopup (same as Kundali page) */}
                                             <div className="w-full h-full p-2">
                                                 {(() => {
                                                     const { planets, ascendant } = getChartProps(item.id, item.ayanamsa);
-                                                    return chartStyle === 'South Indian' ? (
-                                                        <SouthIndianChart
-                                                            ascendantSign={ascendant}
-                                                            planets={planets}
-                                                            colorMode="color"
-                                                            colorTheme={chartColorTheme}
-                                                            className="w-full h-full"
-                                                        />
+                                                    const widgetChartStyle = item.theme.chartStyle || 'North Indian';
+                                                    const widgetColorTheme = item.theme.colorTheme || chartColorTheme;
+
+                                                    return widgetChartStyle === 'South Indian' ? (
+                                                        <div className="w-full h-full overflow-hidden">
+                                                            <CompactSouthIndianChart
+                                                                ascendantSign={ascendant}
+                                                                planets={planets}
+                                                                colorMode="color"
+                                                                colorTheme={widgetColorTheme}
+                                                                className="w-full h-full"
+                                                                planetFontSize={item.theme.planetFontSize}
+                                                                planetFontWeight={item.theme.planetFontWeight}
+                                                                degreeFontSize={item.theme.degreeFontSize}
+                                                                showDegrees={item.theme.showDegrees !== false}
+                                                                planetDisplayMode={item.theme.planetDisplayMode}
+                                                                showHouseNumbers={item.theme.showHouseNumbers !== false}
+                                                            />
+                                                        </div>
                                                     ) : (
                                                         <CustomChartWidget
                                                             ascendantSign={ascendant}
@@ -812,12 +942,12 @@ export default function CustomizePage() {
                                                             width={item.dimensions.width - 16}
                                                             height={item.dimensions.height - (item.showHeader ? (item.theme.headerHeight ?? 36) : 0) - 16}
                                                             chartStyle="North Indian"
-                                                            colorTheme={chartColorTheme}
-                                                            // Pass all chart display options from theme
+                                                            colorTheme={widgetColorTheme}
+                                                            chartId={item.id}
                                                             planetDisplayMode={item.theme.planetDisplayMode}
                                                             planetFontSize={item.theme.planetFontSize}
                                                             planetFontWeight={item.theme.planetFontWeight}
-                                                            showDegrees={item.theme.showDegrees !== undefined ? item.theme.showDegrees : (item.id === 'D1')}
+                                                            showDegrees={item.theme.showDegrees}
                                                             degreeFormat={item.theme.degreeFormat}
                                                             degreeFontSize={item.theme.degreeFontSize}
                                                             showHouseNumbers={item.theme.showHouseNumbers}
@@ -841,7 +971,7 @@ export default function CustomizePage() {
                 )}
             </div>
 
-            {/* Chart Selector - Step by Step */}
+            {/* Chart Selector */}
             <ChartSelectorModal
                 isOpen={isChartSelectorOpen}
                 onClose={() => setIsChartSelectorOpen(false)}
@@ -867,7 +997,9 @@ export default function CustomizePage() {
             <CompactWidgetPanel
                 isOpen={customizationPanel.isOpen}
                 onClose={() => setCustomizationPanel({ isOpen: false })}
-                widget={customizationPanel.selectedWidget || null}
+                widget={customizationPanel.selectedWidget
+                    ? selectedChartDetails.find(w => w.instanceId === customizationPanel.selectedWidget?.instanceId) || customizationPanel.selectedWidget
+                    : null}
                 onUpdateTheme={useCallback((t) => {
                     if (customizationPanel.selectedWidget) {
                         updateTheme(customizationPanel.selectedWidget.instanceId, t);

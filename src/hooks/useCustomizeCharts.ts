@@ -46,6 +46,8 @@ export interface WidgetTheme {
     contentTextScale?: number;
     titleAlign?: 'left' | 'center' | 'right';
     titleMaxWidth?: number;
+    // Auto-scale content based on widget dimensions
+    autoScale?: boolean;
     // ═══════════════════════════════════════════════════════════════════════════════
     // ASTROLOGER CUSTOMIZATION OPTIONS
     // ═══════════════════════════════════════════════════════════════════════════════
@@ -73,6 +75,39 @@ export interface WidgetTheme {
     // Spacing & Density
     planetSpacing?: 'compact' | 'normal' | 'spacious'; // Space between planets in houses
     labelDensity?: 'minimal' | 'normal' | 'detailed';  // How much info to show
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // TABLE CUSTOMIZATION OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+    tableStyle?: 'compact' | 'comfortable' | 'spacious';
+    rowHeight?: number;
+    cellPadding?: number;
+    alternateRowColors?: boolean;
+    tableFontSize?: number;
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // CARD & LAYOUT OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+    cardStyle?: 'flat' | 'elevated' | 'outlined';
+    contentLayout?: 'list' | 'grid' | 'timeline';
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // ANALYSIS WIDGET OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+    showSummaryStats?: boolean;
+    highlightSeverity?: boolean;
+    expandableSections?: boolean;
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // COMPACT WIDGET OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+    showIcon?: boolean;
+    compactFontSize?: number;
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // BACKGROUND STYLE OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+    backgroundStyle?: 'solid' | 'gradient' | 'pattern';
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // CHART SPECIFIC OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+    chartStyle?: 'North Indian' | 'South Indian';
+    colorTheme?: 'classic' | 'modern' | 'royal' | 'earth' | 'ocean';
 }
 
 export const DEFAULT_WIDGET_THEME: WidgetTheme = {
@@ -92,11 +127,13 @@ export const DEFAULT_WIDGET_THEME: WidgetTheme = {
     contentTextScale: 1,
     titleAlign: 'left',
     titleMaxWidth: undefined,
+    // Auto-scale enabled by default
+    autoScale: true,
     // Astrologer defaults
     planetDisplayMode: 'name',
     planetFontSize: 14,
     planetFontWeight: '600',
-    showDegrees: true,
+    // showDegrees: undefined by default - will be determined by chart type (D1 shows degrees, others don't)
     degreeFormat: 'short',
     degreeFontSize: 9,
     showHouseNumbers: true,
@@ -110,6 +147,27 @@ export const DEFAULT_WIDGET_THEME: WidgetTheme = {
     fontFamily: 'default',
     planetSpacing: 'normal',
     labelDensity: 'normal',
+    // Table defaults
+    tableStyle: 'comfortable',
+    rowHeight: 32,
+    cellPadding: 8,
+    alternateRowColors: true,
+    tableFontSize: 12,
+    // Card defaults
+    cardStyle: 'elevated',
+    contentLayout: 'list',
+    // Analysis widget defaults
+    showSummaryStats: true,
+    highlightSeverity: true,
+    expandableSections: true,
+    // Compact widget defaults
+    showIcon: true,
+    compactFontSize: 11,
+    // Background style
+    backgroundStyle: 'solid',
+    // Chart Specific Defaults
+    chartStyle: 'North Indian',
+    colorTheme: 'classic',
 };
 
 export const PRESET_THEMES: Record<string, WidgetTheme> = {
@@ -202,7 +260,7 @@ export const WIDGET_DIMENSION_PRESETS: Record<string, WidgetDimensions> = {
     
     // Tables - wider for data readability with proper min sizes
     ashtakavarga: { 
-        width: 580, height: 420, 
+        width: 1000, height: 428, 
         minWidth: 400, minHeight: 300, 
         maxWidth: 1000, maxHeight: 700 
     },
@@ -214,9 +272,9 @@ export const WIDGET_DIMENSION_PRESETS: Record<string, WidgetDimensions> = {
     
     // Analysis widgets - balanced proportions for content
     dasha: { 
-        width: 450, height: 520, 
+        width: 800, height: 516, 
         minWidth: 350, minHeight: 400, 
-        maxWidth: 800, maxHeight: 900 
+        maxWidth: 1200, maxHeight: 1000 
     },
     widget_shadbala: { 
         width: 520, height: 480, 
@@ -256,7 +314,7 @@ export const WIDGET_DIMENSION_PRESETS: Record<string, WidgetDimensions> = {
         maxWidth: 800, maxHeight: 700 
     },
     widget_chakra: { 
-        width: 480, height: 480, 
+        width: 560, height: 552, 
         minWidth: 380, minHeight: 380, 
         maxWidth: 900, maxHeight: 900 
     },
@@ -378,7 +436,7 @@ export const CHART_CATALOG: CustomizeChartItem[] = [
     { id: 'chara', name: 'Chara Dasha (Jaimini)', description: 'Sign-based Jaimini dasha system', category: 'dasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.dasha },
 
     // Ashtakavarga Types
-    { id: 'ashtakavarga_sarva', name: 'Sarvashtakavarga', description: 'Combined strength points of all planets (SAV)', category: 'ashtakavarga', defaultDimensions: WIDGET_DIMENSION_PRESETS.ashtakavarga },
+    { id: 'ashtakavarga_sarva', name: 'Sarvashtakavarga', description: 'Combined strength points of all planets (SAV)', category: 'ashtakavarga', defaultDimensions: WIDGET_DIMENSION_PRESETS.ashtakavarga, defaultTheme: { contentTextScale: 1.33 } },
     { id: 'ashtakavarga_bhinna', name: 'Bhinna Ashtakavarga', description: 'Individual planetary strength points (BAV)', category: 'ashtakavarga', defaultDimensions: WIDGET_DIMENSION_PRESETS.ashtakavarga },
     { id: 'widget_shodasha_varga', name: 'Shodashvarga Summary', description: 'Planetary dignities across 16 divisional charts', category: 'widget_shodasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_shodasha },
 
@@ -386,7 +444,7 @@ export const CHART_CATALOG: CustomizeChartItem[] = [
     { id: 'widget_shadbala', name: 'Shadbala Analysis', description: 'Six-fold planetary strength with Ishta/Kashta phala', category: 'widget_shadbala', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_shadbala },
     { id: 'widget_pushkara', name: 'Pushkara Navamsha', description: 'Auspicious Navamsha divisions and Pushkara Bhaga', category: 'widget_pushkara', lahiriOnly: true, defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 450, height: 300 } },
     { id: 'widget_karaka', name: 'Chara Karakas', description: 'Variable significators based on planetary degrees', category: 'widget_karaka', lahiriOnly: true, defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 350, height: 300 } },
-    { id: 'widget_chakra', name: 'Sudarshan Chakra', description: 'Tri-layer radial chart (Surya, Chandra, Lagna)', category: 'widget_chakra', defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 400, height: 400 } },
+    { id: 'widget_chakra', name: 'Sudarshan Chakra', description: 'Tri-layer radial chart (Surya, Chandra, Lagna)', category: 'widget_chakra', defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_chakra, defaultTheme: { contentTextScale: 1.16 } },
     { id: 'widget_yoga', name: 'Yoga Analysis', description: 'Benefic and challenging planetary combinations', category: 'widget_yoga', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_yoga },
     { id: 'widget_dosha', name: 'Dosha Analysis', description: 'Karmic debts and planetary afflictions', category: 'widget_dosha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_dosha },
     { id: 'widget_transit', name: 'Daily Transit', description: 'Live planetary movements and Gochar analysis', category: 'widget_transit', defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_transit },

@@ -954,3 +954,268 @@ select {
 .dark body::before {
   opacity: 0.05;
 }
+
+/* ============================================ */
+/* WIDGET AUTO-SCALE SYSTEM                     */
+/* Proportional font scaling for all widgets    */
+/* ============================================ */
+
+/* 
+  Widget Scaled Content Container
+  This class is applied to all widget content areas in the customize page.
+  It uses CSS custom properties (--widget-scale) that are dynamically
+  calculated based on widget dimensions.
+*/
+.widget-scaled-content {
+  /* Base font size that will be scaled */
+  font-size: var(--widget-font-size-md, 14px);
+  line-height: var(--widget-line-height, 1.5);
+}
+
+/* All direct children inherit the scaling context */
+.widget-scaled-content > * {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* 
+  Scaled Typography Classes
+  These use the CSS variables set by the auto-scale system.
+  They automatically adjust based on widget dimensions.
+*/
+.widget-text-xs {
+  font-size: var(--widget-font-size-xs, 10px);
+  line-height: var(--widget-line-height, 1.5);
+}
+
+.widget-text-sm {
+  font-size: var(--widget-font-size-sm, 12px);
+  line-height: var(--widget-line-height, 1.5);
+}
+
+.widget-text-md {
+  font-size: var(--widget-font-size-md, 14px);
+  line-height: var(--widget-line-height, 1.5);
+}
+
+.widget-text-lg {
+  font-size: var(--widget-font-size-lg, 16px);
+  line-height: var(--widget-line-height, 1.4);
+}
+
+.widget-text-xl {
+  font-size: var(--widget-font-size-xl, 20px);
+  line-height: var(--widget-line-height, 1.3);
+}
+
+/* 
+  Scaled Spacing Utilities
+  These also respond to widget scale for consistent proportions
+*/
+.widget-space-xs {
+  margin: var(--widget-spacing-xs, 4px);
+}
+
+.widget-space-sm {
+  margin: var(--widget-spacing-sm, 8px);
+}
+
+.widget-space-md {
+  margin: var(--widget-spacing-md, 16px);
+}
+
+.widget-space-lg {
+  margin: var(--widget-spacing-lg, 24px);
+}
+
+.widget-pad-xs {
+  padding: var(--widget-spacing-xs, 4px);
+}
+
+.widget-pad-sm {
+  padding: var(--widget-spacing-sm, 8px);
+}
+
+.widget-pad-md {
+  padding: var(--widget-spacing-md, 16px);
+}
+
+.widget-pad-lg {
+  padding: var(--widget-spacing-lg, 24px);
+}
+
+/* 
+  Table Scaling within Widgets
+  Ensures tables respond to widget scale
+*/
+.widget-scaled-content table {
+  font-size: var(--widget-font-size-sm, 12px);
+}
+
+.widget-scaled-content th,
+.widget-scaled-content td {
+  padding: var(--widget-spacing-xs, 4px) var(--widget-spacing-sm, 8px);
+}
+
+/* 
+  Chart Scaling within Widgets
+  SVG charts and canvas elements
+*/
+.widget-scaled-content svg {
+  font-size: var(--widget-font-size-sm, 12px);
+}
+
+.widget-scaled-content text {
+  font-size: var(--widget-font-size-xs, 10px);
+}
+
+/* 
+  Form Element Scaling
+  Inputs, selects, buttons within widgets
+*/
+.widget-scaled-content input,
+.widget-scaled-content select,
+.widget-scaled-content button {
+  font-size: var(--widget-font-size-sm, 12px);
+  padding: var(--widget-spacing-xs, 4px) var(--widget-spacing-sm, 8px);
+}
+
+/* 
+  Badge and Label Scaling
+  Small UI elements
+*/
+.widget-scaled-content .badge,
+.widget-scaled-content .label,
+.widget-scaled-content .tag {
+  font-size: var(--widget-font-size-xs, 10px);
+  padding: 2px var(--widget-spacing-xs, 4px);
+}
+
+/* 
+  Animation: Smooth scale transitions
+  When widget is resized, scale changes smoothly
+*/
+.widget-scaled-content,
+.widget-scaled-content *,
+.widget-text-xs,
+.widget-text-sm,
+.widget-text-md,
+.widget-text-lg,
+.widget-text-xl {
+  transition: font-size 0.2s ease-out, line-height 0.2s ease-out;
+}
+
+/* Disable transition during active resizing for performance */
+.widget-resizing .widget-scaled-content,
+.widget-resizing .widget-scaled-content * {
+  transition: none !important;
+}
+
+/* 
+  Responsive Overrides
+  At very small widget sizes, enforce minimums
+*/
+@media (max-width: 300px) {
+  .widget-scaled-content {
+    --widget-font-size-xs: 9px;
+    --widget-font-size-sm: 10px;
+    --widget-font-size-md: 11px;
+    --widget-font-size-lg: 12px;
+    --widget-font-size-xl: 14px;
+  }
+}
+
+/* 
+  High DPI Display Adjustments
+  On retina/4K displays, slightly increase base sizes
+*/
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .widget-scaled-content {
+    --widget-font-size-base: 15px;
+  }
+}
+
+/* 
+  Widget Scale Indicator Badge
+  Shown in widget headers to indicate current scale
+*/
+.widget-scale-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(201, 162, 77, 0.15);
+  color: var(--gold-dark);
+  border: 1px solid rgba(201, 162, 77, 0.3);
+}
+
+/* 
+  Print Styles
+  Ensure widgets print properly
+*/
+@media print {
+  .widget-scaled-content {
+    --widget-scale: 1 !important;
+    font-size: 12px !important;
+  }
+}
+
+/* 
+  Widget Table Stretch - Makes tables fill available height
+  Applied to table containers within widgets to prevent whitespace
+  when widget is larger than table content
+*/
+.widget-stretch-table {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.widget-stretch-table table {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.widget-stretch-table tbody {
+  flex: 1;
+}
+
+.widget-stretch-table tbody tr {
+  height: auto;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.widget-stretch-table tbody tr > * {
+  flex: 1;
+}
+
+/* 
+  Alternative: Justified table rows that distribute evenly
+  Use this when you want equal-height rows
+*/
+.widget-rows-even {
+  height: 100%;
+}
+
+.widget-rows-even tbody {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.widget-rows-even tbody tr {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.widget-rows-even tbody tr td,
+.widget-rows-even tbody tr th {
+  flex: 1;
+  padding: 8px;
+}

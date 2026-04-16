@@ -2,45 +2,42 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
-import { PLANET_SVG_FILLS } from '@/design-tokens/colors';
+import { PLANET_SVG_FILLS, CHART_THEMES } from '@/design-tokens/colors';
 import { ZODIAC_SIGNS } from '@/lib/chart-geometry';
 
 // Re-use the same Planet interface
 export type { Planet } from './NorthIndianChart';
 import type { Planet } from './NorthIndianChart';
+import { getPlanetSymbol } from '@/lib/planet-symbols';
 
-/**
- * Rectangular geometry for the Compact North Indian Chart.
- * ViewBox: 0 0 600 400  (3:2 aspect ratio)
- *
- * Key points:
- *   Outer rect:  (10,10) to (590,390)  →  580 × 380
- *   Center:      (300, 200)
- *   Diamond vertices (edge midpoints):
- *     Top    (E): (300, 10)
- *     Left   (F): (10, 200)
- *     Bottom (G): (300, 390)
- *     Right  (H): (590, 200)
- *
- *   Inner intersection points (diagonal ∩ diamond edge):
- *     UL: (155, 105)    UR: (445, 105)
- *     LL: (155, 295)    LR: (445, 295)
- */
+export interface CompactNorthIndianChartProps {
+    planets: Planet[];
+    ascendantSign: number;
+    className?: string;
+    onHouseClick?: (houseNumber: number) => void;
+    houseValues?: Record<number, number>;
+    valueType?: 'bindu' | 'none';
+    preserveAspectRatio?: string;
+    showDegrees?: boolean;
+    planetFontSize?: number;
+    degreeFontSize?: number;
+    planetFontWeight?: string | number;
+    planetDisplayMode?: 'name' | 'symbol' | 'both';
+    showHouseNumbers?: boolean;
+    planetSpacing?: 'compact' | 'normal' | 'spacious';
+    colorTheme?: 'classic' | 'modern' | 'royal' | 'earth' | 'ocean';
+}
 
 const COMPACT_HOUSE_CENTERS: readonly { h: number; x: number; y: number }[] = [
-    { h: 1, x: 300, y: 105 },  // Top Diamond
-    { h: 2, x: 155, y: 42 },   // Top Left Triangle (upper)
-    { h: 3, x: 58, y: 105 },  // Top Left Triangle (left)
-    { h: 4, x: 155, y: 200 },  // Left Diamond
-    { h: 5, x: 58, y: 295 },  // Bottom Left Triangle (left)
-    { h: 6, x: 155, y: 358 },  // Bottom Left Triangle (bottom)
-    { h: 7, x: 300, y: 295 },  // Bottom Diamond
-    { h: 8, x: 445, y: 358 },  // Bottom Right Triangle (bottom)
-    { h: 9, x: 542, y: 295 },  // Bottom Right Triangle (right)
-    { h: 10, x: 445, y: 200 },  // Right Diamond
-    { h: 11, x: 542, y: 105 },  // Top Right Triangle (right)
-    { h: 12, x: 445, y: 42 },   // Top Right Triangle (upper)
+    { h: 1, x: 300, y: 105 },  { h: 2, x: 155, y: 42 },   { h: 3, x: 58, y: 105 },
+    { h: 4, x: 155, y: 200 },  { h: 5, x: 58, y: 295 },  { h: 6, x: 155, y: 358 },
+    { h: 7, x: 300, y: 295 },  { h: 8, x: 445, y: 358 },  { h: 9, x: 542, y: 295 },
+    { h: 10, x: 445, y: 200 }, { h: 11, x: 542, y: 105 }, { h: 12, x: 445, y: 42 },
 ] as const;
+
+export const COMPACT_HOUSE_CENTERS_MAP: Record<number, { x: number; y: number }> = Object.fromEntries(
+    COMPACT_HOUSE_CENTERS.map(c => [c.h, { x: c.x, y: c.y }])
+);
 
 const COMPACT_HOUSE_POLYGONS: Record<number, string> = {
     1: "300,10 155,105 300,200 445,105",
@@ -58,34 +55,11 @@ const COMPACT_HOUSE_POLYGONS: Record<number, string> = {
 };
 
 const COMPACT_SIGN_POSITIONS: Record<number, { x: number; y: number }> = {
-    1: { x: 300, y: 165 },
-    2: { x: 155, y: 78 },
-    3: { x: 85, y: 118 },
-    4: { x: 215, y: 198 },
-    5: { x: 85, y: 288 },
-    6: { x: 155, y: 330 },
-    7: { x: 300, y: 235 },
-    8: { x: 445, y: 330 },
-    9: { x: 515, y: 288 },
-    10: { x: 390, y: 202 },
-    11: { x: 515, y: 118 },
-    12: { x: 445, y: 78 },
+    1: { x: 300, y: 165 }, 2: { x: 155, y: 78 },   3: { x: 85, y: 118 },
+    4: { x: 215, y: 198 }, 5: { x: 85, y: 288 },   6: { x: 155, y: 330 },
+    7: { x: 300, y: 235 }, 8: { x: 445, y: 330 },  9: { x: 515, y: 288 },
+    10: { x: 390, y: 202 }, 11: { x: 515, y: 118 }, 12: { x: 445, y: 78 },
 };
-
-export const COMPACT_HOUSE_CENTERS_MAP: Record<number, { x: number; y: number }> = Object.fromEntries(
-    COMPACT_HOUSE_CENTERS.map(c => [c.h, { x: c.x, y: c.y }])
-);
-
-interface CompactNorthIndianChartProps {
-    planets: Planet[];
-    ascendantSign: number;
-    className?: string;
-    onHouseClick?: (houseNumber: number) => void;
-    houseValues?: Record<number, number>;
-    valueType?: 'bindu' | 'none';
-    preserveAspectRatio?: string;
-    showDegrees?: boolean;
-}
 
 export default function CompactNorthIndianChart({
     planets,
@@ -95,9 +69,17 @@ export default function CompactNorthIndianChart({
     houseValues,
     valueType = 'none',
     preserveAspectRatio,
-    showDegrees = true
+    showDegrees = true,
+    planetFontSize: userPlanetFontSize,
+    degreeFontSize: userDegreeFontSize,
+    planetFontWeight: userPlanetFontWeight,
+    planetDisplayMode = 'name',
+    showHouseNumbers = true,
+    planetSpacing = 'normal',
+    colorTheme: userColorTheme = 'classic'
 }: CompactNorthIndianChartProps) {
     const [hoveredHouse, setHoveredHouse] = useState<number | null>(null);
+    const theme = CHART_THEMES[userColorTheme] || CHART_THEMES.classic;
 
     const getHouseColor = (houseNum: number) => {
         if (!houseValues || !houseValues[houseNum]) return "transparent";
@@ -110,239 +92,171 @@ export default function CompactNorthIndianChart({
         return "transparent";
     };
 
-    const houseCenters = COMPACT_HOUSE_CENTERS;
-    const housePolygons = COMPACT_HOUSE_POLYGONS;
-    const signNumberPositions = COMPACT_SIGN_POSITIONS;
-
-    const handleHouseClick = (houseNum: number) => {
-        if (onHouseClick) {
-            onHouseClick(houseNum);
-        }
-    };
-
     return (
-        <svg viewBox="0 0 600 400" preserveAspectRatio={preserveAspectRatio || "none"} className={cn("w-full h-full", className)} style={{ display: 'block' }} role="img" aria-label="North Indian birth chart showing planetary positions in 12 houses">
-            <desc>Diamond-shaped North Indian style horoscope chart (compact rectangular layout)</desc>
-            <defs>
-                <linearGradient id="compactChartParchment" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="var(--surface-warm)" />
-                    <stop offset="100%" stopColor="var(--softwhite)" />
-                </linearGradient>
-            </defs>
-
-            {/* Rectangular grid lines */}
-            <g stroke="var(--header-border)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                {/* Outer Rectangle Border */}
+        <svg viewBox="0 0 600 400" preserveAspectRatio={preserveAspectRatio || "none"} className={cn("w-full h-full", className)} role="img" style={{ background: theme.background }}>
+            <g stroke={theme.border} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="10" y="10" width="580" height="380" fill="none" />
-                {/* Cross Lines (corner to corner diagonals) */}
                 <line x1="10" y1="10" x2="590" y2="390" />
                 <line x1="590" y1="10" x2="10" y2="390" />
-                {/* Diamond Lines (edge midpoints) */}
                 <line x1="300" y1="10" x2="10" y2="200" />
                 <line x1="10" y1="200" x2="300" y2="390" />
                 <line x1="300" y1="390" x2="590" y2="200" />
                 <line x1="590" y1="200" x2="300" y2="10" />
             </g>
 
-            {/* Clickable Regions & Heatmap */}
-            {houseCenters.map((pos) => {
-                const signId = ((ascendantSign + pos.h - 2) % 12) + 1;
-                return (
-                    <polygon
-                        key={`poly-${pos.h}`}
-                        points={housePolygons[pos.h]}
-                        fill={hoveredHouse === pos.h ? "rgba(208, 140, 96, 0.25)" : getHouseColor(pos.h)}
-                        stroke="transparent"
-                        strokeWidth="0"
-                        className={cn("transition-all duration-300", onHouseClick && "cursor-pointer")}
-                        onMouseEnter={() => setHoveredHouse(pos.h)}
-                        onMouseLeave={() => setHoveredHouse(null)}
-                        onClick={() => handleHouseClick(pos.h)}
-                        tabIndex={onHouseClick ? 0 : undefined}
-                        role={onHouseClick ? "button" : undefined}
-                        aria-label={onHouseClick ? `House ${pos.h} - ${ZODIAC_SIGNS[signId - 1]}` : undefined}
-                        onKeyDown={onHouseClick ? (e) => {
-                            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleHouseClick(pos.h); }
-                            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-                                e.preventDefault();
-                                const next = pos.h === 12 ? 1 : pos.h + 1;
-                                (e.currentTarget.parentElement?.querySelector(`[data-house="${next}"]`) as HTMLElement)?.focus();
-                            }
-                            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-                                e.preventDefault();
-                                const prev = pos.h === 1 ? 12 : pos.h - 1;
-                                (e.currentTarget.parentElement?.querySelector(`[data-house="${prev}"]`) as HTMLElement)?.focus();
-                            }
-                        } : undefined}
-                        data-house={pos.h}
-                    />
-                );
-            })}
-
-            {/* Render Houses & Planets */}
-            {houseCenters.map((pos) => {
+            {COMPACT_HOUSE_CENTERS.map((pos) => {
                 const signId = ((ascendantSign + pos.h - 2) % 12) + 1;
                 const boxPlanets = planets
                     .filter(p => (p.house ? p.house === pos.h : p.signId === signId))
                     .sort((a, b) => a.degree.localeCompare(b.degree));
+                
+                const planetCount = boxPlanets.length;
                 const isHovered = hoveredHouse === pos.h;
+
+                // Dynamic sizing logic
+                let cols: number;
+                let hSpacing: number;
+                let vSpacing: number;
+                let planetFontSize: number;
+                let degreeFontSize: number;
+                let retroFontSize: number;
+                let degreeYOffset: number;
+
+                if (planetCount === 1) {
+                    cols = 1; hSpacing = 0; vSpacing = 0;
+                    planetFontSize = userPlanetFontSize || 22;
+                    degreeFontSize = userDegreeFontSize || 14;
+                    retroFontSize = Math.max(10, planetFontSize * 0.8);
+                    degreeYOffset = 16;
+                } else if (planetCount === 2) {
+                    cols = 2; hSpacing = 52; vSpacing = 0;
+                    planetFontSize = userPlanetFontSize || 20;
+                    degreeFontSize = userDegreeFontSize || 13;
+                    retroFontSize = Math.max(8, planetFontSize * 0.8);
+                    degreeYOffset = 15;
+                } else if (planetCount === 3) {
+                    cols = 3; hSpacing = 40; vSpacing = 0;
+                    planetFontSize = userPlanetFontSize || 17;
+                    degreeFontSize = userDegreeFontSize || 11;
+                    retroFontSize = Math.max(8, planetFontSize * 0.8);
+                    degreeYOffset = 13;
+                } else if (planetCount === 4) {
+                    cols = 2; hSpacing = 46; vSpacing = 38;
+                    planetFontSize = userPlanetFontSize || 19;
+                    degreeFontSize = userDegreeFontSize || 10;
+                    retroFontSize = Math.max(8, planetFontSize * 0.8);
+                    degreeYOffset = 14;
+                } else if (planetCount <= 6) {
+                    cols = 3; hSpacing = 36; vSpacing = 34;
+                    planetFontSize = userPlanetFontSize || 15;
+                    degreeFontSize = userDegreeFontSize || 10;
+                    retroFontSize = Math.max(8, planetFontSize * 0.8);
+                    degreeYOffset = 12;
+                } else {
+                    cols = 4; hSpacing = 30; vSpacing = 30;
+                    planetFontSize = userPlanetFontSize || 14;
+                    degreeFontSize = userDegreeFontSize || 9;
+                    retroFontSize = Math.max(8, planetFontSize * 0.8);
+                    degreeYOffset = 11;
+                }
+
+                const rows = Math.ceil(planetCount / cols);
+                const spacingModifier = planetSpacing === 'compact' ? 0.8 : planetSpacing === 'spacious' ? 1.2 : 1.0;
+                const hSpacingAdjusted = hSpacing * spacingModifier;
+                const vSpacingAdjusted = vSpacing * spacingModifier;
 
                 return (
                     <g key={pos.h} className={cn("transition-all duration-300", isHovered && "opacity-100")}>
-                        {/* Sign Number */}
-                        <text
-                            x={signNumberPositions[pos.h].x}
-                            y={signNumberPositions[pos.h].y}
-                            fontSize="25"
-                            fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
-                            fontWeight="400"
-                            fill={TYPOGRAPHY.svgSignNumber.fill}
-                            fillOpacity="0.9"
-                            textAnchor="middle"
-                            dominantBaseline="central"
-                            className="select-none pointer-events-none"
-                        >
-                            {signId}
-                        </text>
+                        {/* Clickable Area */}
+                        <polygon
+                            points={COMPACT_HOUSE_POLYGONS[pos.h]}
+                            fill={isHovered ? "rgba(208, 140, 96, 0.25)" : getHouseColor(pos.h)}
+                            className={cn("transition-all duration-300", onHouseClick && "cursor-pointer")}
+                            onMouseEnter={() => setHoveredHouse(pos.h)}
+                            onMouseLeave={() => setHoveredHouse(null)}
+                            onClick={() => onHouseClick?.(pos.h)}
+                        />
 
-                        {/* Ashtakavarga Score / Value */}
-                        {houseValues && houseValues[pos.h] !== undefined && (
+                        {/* House Numbers (Zodiac Signs) - Same size as planets as requested */}
+                        {showHouseNumbers && (
                             <text
-                                x={pos.x}
-                                y={pos.y}
-                                fontSize="34"
+                                x={COMPACT_SIGN_POSITIONS[pos.h].x}
+                                y={COMPACT_SIGN_POSITIONS[pos.h].y}
+                                fontSize={planetFontSize}
+                                style={{ fontSize: `${planetFontSize}px` }}
                                 fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
-                                fontWeight="400"
-                                fill={houseValues[pos.h] < 20 ? "var(--status-error)" : houseValues[pos.h] >= 30 ? "var(--status-success)" : "var(--text-ink)"}
+                                fontWeight={userPlanetFontWeight || "400"}
+                                fill={theme.signText}
                                 textAnchor="middle"
                                 dominantBaseline="central"
+                                className="select-none pointer-events-none transition-all duration-300 opacity-60"
+                            >
+                                {signId}
+                            </text>
+                        )}
+
+                        {/* Ashtakavarga Score */}
+                        {houseValues && houseValues[pos.h] !== undefined && (
+                            <text
+                                x={pos.x} y={pos.y}
+                                fontSize="34" style={{ fontSize: "34px" }}
+                                fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
+                                fontWeight="400"
+                                fill={houseValues[pos.h] < 20 ? "var(--status-error)" : houseValues[pos.h] >= 30 ? "var(--status-success)" : theme.planetText}
+                                textAnchor="middle" dominantBaseline="central"
                                 className="select-none pointer-events-none"
                             >
                                 {houseValues[pos.h]}
                             </text>
                         )}
 
-                        {/* Planets List - Smart Grid Layout based on planet count */}
+                        {/* Planets */}
                         <g transform={`translate(${pos.x}, ${pos.y + (houseValues ? 20 : -5)})`}>
-                            {
-                                (() => {
-                                    const planetCount = boxPlanets.length;
-                                    
-                                    // Smart layout algorithm based on planet count
-                                    let cols: number;
-                                    let hSpacing: number;
-                                    let vSpacing: number;
-                                    let planetFontSize: number;
-                                    let degreeFontSize: number;
-                                    let retroFontSize: number;
-                                    let degreeYOffset: number;
-                                    
-                                    if (planetCount === 1) {
-                                        cols = 1;
-                                        hSpacing = 0;
-                                        vSpacing = 0;
-                                        planetFontSize = 22; // Larger planet name
-                                        degreeFontSize = 14;  // Smaller degree
-                                        retroFontSize = 17;
-                                        degreeYOffset = 16;
-                                    } else if (planetCount === 2) {
-                                        cols = 2;
-                                        hSpacing = 52;
-                                        vSpacing = 0;
-                                        planetFontSize = 20;
-                                        degreeFontSize = 13;
-                                        retroFontSize = 16;
-                                        degreeYOffset = 15;
-                                    } else if (planetCount === 3) {
-                                        cols = 3;
-                                        hSpacing = 40;
-                                        vSpacing = 0;
-                                        planetFontSize = 17;
-                                        degreeFontSize = 11;
-                                        retroFontSize = 14;
-                                        degreeYOffset = 13;
-                                    } else if (planetCount === 4) {
-                                        // 2x2 grid for 4 planets (optimal)
-                                        cols = 2;
-                                        hSpacing = 46;
-                                        vSpacing = 38; // More vertical space for 2 rows
-                                        planetFontSize = 19; // Increased planet name
-                                        degreeFontSize = 10; // Decreased degree
-                                        retroFontSize = 15;
-                                        degreeYOffset = 14;
-                                    } else if (planetCount === 5 || planetCount === 6) {
-                                        cols = 3;
-                                        hSpacing = 36;
-                                        vSpacing = 34;
-                                        planetFontSize = 15;
-                                        degreeFontSize = 10;
-                                        retroFontSize = 13;
-                                        degreeYOffset = 12;
-                                    } else {
-                                        // 7+ planets - compact mode
-                                        cols = 4;
-                                        hSpacing = 30;
-                                        vSpacing = 30;
-                                        planetFontSize = 14;
-                                        degreeFontSize = 9;
-                                        retroFontSize = 12;
-                                        degreeYOffset = 11;
-                                    }
-                                    
-                                    const rows = Math.ceil(planetCount / cols);
-                                    
-                                    return boxPlanets.map((p, i) => {
-                                        const row = Math.floor(i / cols);
-                                        const col = i % cols;
-                                        const planetsInThisRow = Math.min(cols, planetCount - row * cols);
-                                        const rowWidth = (planetsInThisRow - 1) * hSpacing;
-                                        const xOffset = (col * hSpacing) - (rowWidth / 2);
-                                        const yOffset = (row * vSpacing) - ((rows - 1) * vSpacing / 2);
-                                        const planetColor = PLANET_SVG_FILLS[p.name] || 'var(--ink)';
-                                        const hasDegree = (showDegrees || p.name === 'As' || p.name === 'Asc') && p.degree && p.degree !== '-';
-                                        
+                            {boxPlanets.map((p, i) => {
+                                const row = Math.floor(i / cols);
+                                const col = i % cols;
+                                const planetsInThisRow = Math.min(cols, planetCount - row * cols);
+                                const rowWidth = (planetsInThisRow - 1) * hSpacingAdjusted;
+                                const xOffset = (col * hSpacingAdjusted) - (rowWidth / 2);
+                                const yOffset = (row * vSpacingAdjusted) - ((rows - 1) * vSpacingAdjusted / 2);
+                                
+                                const getLabel = () => {
+                                    const symbol = getPlanetSymbol(p.name);
+                                    if (planetDisplayMode === 'symbol') return symbol;
+                                    if (planetDisplayMode === 'both') return `${symbol} ${p.name}`;
+                                    return p.name;
+                                };
 
-
-                                        return (
-                                            <g key={p.name} transform={`translate(${xOffset}, ${yOffset})`}>
-                                                <text
-                                                    fontSize={planetFontSize}
-                                                    fontFamily={TYPOGRAPHY.svgPlanetName.fontFamily}
-                                                    fontWeight="400"
-                                                    fill={planetColor}
-                                                    textAnchor="middle"
-                                                    dominantBaseline="central"
-                                                    className="select-none transition-all duration-300"
-                                                >
-                                                    {p.name}
-                                                    {p.isRetro && (
-                                                        <tspan 
-                                                            fontSize={retroFontSize} 
-                                                            fontWeight="400" 
-                                                            fill="var(--status-error)" 
-                                                            dx="1"
-                                                        >R</tspan>
-                                                    )}
-                                                </text>
-                                                {hasDegree && (
-                                                    <text
-                                                        y={degreeYOffset}
-                                                        fontSize={degreeFontSize}
-                                                        fontFamily={TYPOGRAPHY.svgPlanetName.fontFamily}
-                                                        fontWeight="600"
-                                                        fill="var(--text-primary)"
-                                                        textAnchor="middle"
-                                                        dominantBaseline="central"
-                                                        className="select-none"
-                                                    >
-                                                        {p.degree}
-                                                    </text>
-                                                )}
-                                            </g>
-                                        );
-                                    });
-                                })()
-                            }
+                                return (
+                                    <g key={p.name} transform={`translate(${xOffset}, ${yOffset})`}>
+                                        <text
+                                            fontSize={planetFontSize}
+                                            style={{ fontSize: `${planetFontSize}px` }}
+                                            fontWeight={userPlanetFontWeight || "600"}
+                                            fill={PLANET_SVG_FILLS[p.name] || theme.planetText}
+                                            textAnchor="middle" dominantBaseline="central"
+                                            className="select-none transition-all duration-300"
+                                        >
+                                            {getLabel()}
+                                            {p.isRetro && (
+                                                <tspan fontSize={retroFontSize} style={{ fontSize: `${retroFontSize}px` }} fill="var(--status-error)" dx="1">R</tspan>
+                                            )}
+                                        </text>
+                                        {(showDegrees || p.name === 'As') && p.degree && p.degree !== '-' && (
+                                            <text
+                                                y={degreeYOffset}
+                                                fontSize={degreeFontSize}
+                                                style={{ fontSize: `${degreeFontSize}px` }}
+                                                fontWeight="600" fill="var(--text-primary)"
+                                                textAnchor="middle" dominantBaseline="central"
+                                                className="select-none opacity-60"
+                                            >
+                                                {p.degree}
+                                            </text>
+                                        )}
+                                    </g>
+                                );
+                            })}
                         </g>
                     </g>
                 );

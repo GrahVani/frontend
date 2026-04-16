@@ -7,13 +7,16 @@ import {
     ShieldAlert,
     HandHeart,
     CheckCircle2,
-    ChevronRight,
     Search,
     Brain,
     Scale,
     Activity,
     FileWarning,
-    Compass
+    Compass,
+    Bell,
+    HeartHandshake,
+    Flame,
+    Zap
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { KnowledgeTooltip } from '@/components/knowledge';
@@ -44,130 +47,98 @@ const getSeverityStyles = (severity: string) => {
     switch (severity.toLowerCase()) {
         case 'high':
             return {
-                border: 'border-rose-500/30',
-                bg: 'bg-rose-500/5',
-                accent: 'text-rose-400',
-                dot: 'bg-rose-500',
-                glow: 'shadow-[0_0_20px_rgba(244,63,94,0.1)]',
-                icon: <ShieldAlert className="w-5 h-5 text-rose-400" />
+                badge: 'bg-rose-50 text-rose-700 border-rose-100',
+                icon: <ShieldAlert className="w-4 h-4 text-rose-500" />,
+                card: 'border-rose-100 bg-rose-50/10 hover:bg-white'
             };
         case 'medium':
             return {
-                border: 'border-amber-500/30',
-                bg: 'bg-amber-500/5',
-                accent: 'text-amber-400',
-                dot: 'bg-amber-500',
-                glow: 'shadow-[0_0_20px_rgba(245,158,11,0.1)]',
-                icon: <AlertTriangle className="w-5 h-5 text-amber-400" />
+                badge: 'bg-amber-50 text-amber-700 border-amber-100',
+                icon: <AlertTriangle className="w-4 h-4 text-amber-500" />,
+                card: 'border-amber-100 bg-amber-50/10 hover:bg-white'
             };
         default:
             return {
-                border: 'border-emerald-500/30',
-                bg: 'bg-emerald-500/5',
-                accent: 'text-emerald-400',
-                dot: 'bg-emerald-500',
-                glow: 'shadow-[0_0_20px_rgba(16,185,129,0.1)]',
-                icon: <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                badge: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+                icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />,
+                card: 'border-emerald-100 bg-emerald-50/10 hover:bg-white'
             };
     }
 };
 
-const getLightSeverityStyles = (severity: string) => {
-    switch (severity.toLowerCase()) {
-        case 'high':
-            return {
-                container: 'bg-rose-50/20 border-rose-200/50 hover:border-rose-400/50',
-                iconBg: 'bg-rose-100/50 text-rose-600',
-                badge: 'bg-rose-100 text-rose-700 border-rose-200',
-                accent: 'text-rose-700'
-            };
-        case 'medium':
-            return {
-                container: 'bg-amber-50/20 border-amber-200/50 hover:border-amber-400/50',
-                iconBg: 'bg-amber-100/50 text-amber-600',
-                badge: 'bg-amber-100 text-amber-700 border-amber-200',
-                accent: 'text-amber-700'
-            };
-        default:
-            return {
-                container: 'bg-emerald-50/20 border-emerald-200/50 hover:border-emerald-400/50',
-                iconBg: 'bg-emerald-100/50 text-emerald-600',
-                badge: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-                accent: 'text-emerald-700'
-            };
-    }
+/** Guess icon based on remedy text */
+const getRemedyIcon = (text: string) => {
+    const t = text.toLowerCase();
+    if (t.includes('puja') || t.includes('worship') || t.includes('temple')) return <Bell className="w-3 h-3 text-purple-500" />;
+    if (t.includes('mantra') || t.includes('chant') || t.includes('recite')) return <Flame className="w-3 h-3 text-orange-500" />;
+    if (t.includes('donate') || t.includes('charity') || t.includes('give')) return <HeartHandshake className="w-3 h-3 text-pink-500" />;
+    if (t.includes('fast') || t.includes('diet')) return <Zap className="w-3 h-3 text-blue-500" />;
+    return <HandHeart className="w-3 h-3 text-emerald-500" />;
 };
 
 const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaAnalysis }) => {
     const doshaList = Object.entries(doshaRemedies);
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {doshaList.map(([key, dosha], idx) => {
                 const styles = getSeverityStyles(dosha.severity);
                 const analysis = doshaAnalysis[key];
 
-                const lightStyles = getLightSeverityStyles(dosha.severity);
-
                 return (
                     <motion.div
                         key={idx}
-                        initial={{ opacity: 0, y: 15 }}
+                        initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.05 + idx * 0.05 }}
+                        transition={{ delay: idx * 0.05 }}
                         className={cn(
-                            "group relative rounded-[1.5rem] border p-5 transition-all duration-300",
-                            lightStyles.container,
-                            "hover:shadow-sm hover:bg-white"
+                            "group relative rounded-2xl border p-3.5 transition-all duration-300",
+                            styles.card
                         )}
                     >
-                        {/* Status Pin */}
-                        <div className="absolute top-3 right-3 flex items-center gap-2">
-                            <span className={cn("px-1.5 py-0.5 rounded-[4px] text-[8px] font-black uppercase tracking-widest border", lightStyles.badge)}>
-                                {dosha.severity}
-                            </span>
-                        </div>
-
-                        <div className="flex items-start gap-3 mb-4">
-                            <div className={cn("p-2 rounded-lg transition-transform group-hover:scale-105", lightStyles.iconBg)}>
-                                <div className="w-5 h-5 flex items-center justify-center">
+                        {/* Header: Dense */}
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center border border-gold-primary/10">
                                     {styles.icon}
                                 </div>
-                            </div>
-                            <div>
-                                <h3 className="text-[16px] font-bold tracking-tight leading-tight text-ink">{dosha.dosha_name}</h3>
-                                <p className="text-[11px] mt-1 leading-normal text-body">{dosha.description}</p>
+                                <div>
+                                    <h3 className="text-[14px] font-black tracking-tight text-ink">{dosha.dosha_name}</h3>
+                                    <span className={cn("text-[8px] font-black tracking-widest leading-none mt-1", styles.badge.split(' ').slice(1).join(' '))}>
+                                        {dosha.severity} Intensity
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
-                        <div className="space-y-4">
-                            {/* Impact Areas */}
-                            <div>
-                                <div className="flex flex-wrap gap-1.5">
-                                    {dosha.impact_areas.map((area, i) => (
-                                        <span key={i} className="text-[9px] px-2 py-0.5 bg-white/40 rounded-md border border-gold-primary/20 font-bold uppercase tracking-tight text-ink">
-                                            {area}
-                                        </span>
-                                    ))}
-                                </div>
+                        <p className="text-[10px] leading-relaxed text-ink/60 mb-3 ml-1 line-clamp-2">{dosha.description}</p>
+
+                        <div className="space-y-3">
+                            {/* Impact Areas: Tighter row */}
+                            <div className="flex flex-wrap gap-1">
+                                {dosha.impact_areas.map((area, i) => (
+                                    <span key={i} className="text-[8px] px-1.5 py-0.5 bg-ink/5 border border-ink/5 rounded-md font-bold tracking-tight text-ink/70">
+                                        {area}
+                                    </span>
+                                ))}
                             </div>
 
-                            {/* Technical Analysis / Cancellations */}
+                            {/* Strategic Mitigation Factors */}
                             {analysis && (analysis.cancellation_factors?.length || analysis.positive_note) && (
-                                <div className="p-3 rounded-xl border border-indigo-500/10 bg-indigo-50/20">
-                                    <div className="flex items-center gap-1.5 mb-1.5">
+                                <div className="p-2.5 rounded-xl border border-indigo-500/10 bg-indigo-50/20">
+                                    <div className="flex items-center gap-1.5 mb-1.5 opacity-60">
                                         <FileWarning className="w-2.5 h-2.5 text-indigo-500" />
-                                        <span className="text-[9px] font-black uppercase tracking-widest text-indigo-600">Neutralizing Factors</span>
+                                        <span className="text-[8px] font-black tracking-widest text-indigo-600">Neutralizing Factors</span>
                                     </div>
                                     <ul className="space-y-1">
                                         {analysis.cancellation_factors?.map((factor, i) => (
-                                            <li key={i} className="text-[10px] flex items-start gap-1.5 text-body">
+                                            <li key={i} className="text-[9px] flex items-start gap-1.5 text-ink/70 font-medium">
                                                 <span className="text-indigo-400 mt-0.5">•</span>
                                                 {factor}
                                             </li>
                                         ))}
                                         {analysis.positive_note && (
-                                            <li className="text-[10px] flex items-start gap-1.5 mt-1 text-emerald-700">
+                                            <li className="text-[9px] flex items-start gap-1.5 mt-1 text-emerald-800 font-bold bg-emerald-50/50 p-1 rounded-md">
                                                 <Compass className="w-2.5 h-2.5 mt-0.5 shrink-0" />
                                                 <span>{analysis.positive_note}</span>
                                             </li>
@@ -176,17 +147,19 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
                                 </div>
                             )}
 
-                            {/* Remedial Steps */}
-                            <div className="border-t border-black/[0.03] pt-3">
-                                <div className="flex items-center gap-1.5 mb-2">
-                                    <HandHeart className={cn("w-2.5 h-2.5", lightStyles.accent)} />
-                                    <span className="text-[9px] font-black uppercase tracking-widest text-ink"><KnowledgeTooltip term="upaya">Prescribed Action</KnowledgeTooltip></span>
+                            {/* Prescribed Actions: 2-Column High Density */}
+                            <div className="pt-2">
+                                <div className="flex items-center gap-1.5 mb-2 opacity-60">
+                                    <HandHeart className="w-2.5 h-2.5 text-ink" />
+                                    <span className="text-[8px] font-black tracking-widest text-ink">Actionable Remedies</span>
                                 </div>
-                                <div className="grid grid-cols-1 gap-1.5">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                                     {dosha.remedies.map((remedy, i) => (
-                                        <div key={i} className="flex items-center gap-2 px-2.5 py-1.5 bg-white/40 rounded-md border border-transparent hover:border-purple-100 hover:bg-white transition-all cursor-default">
-                                            <div className="w-1 h-1 rounded-full bg-purple-400 shrink-0" />
-                                            <span className="text-[12px] font-medium text-ink">{remedy}</span>
+                                        <div key={i} className="flex items-center gap-2 px-2 py-1.5 bg-white shadow-sm rounded-lg border border-gold-primary/5 hover:border-gold-primary/20 transition-all group/item">
+                                            <div className="w-5 h-5 rounded-md bg-ink/5 flex items-center justify-center shrink-0">
+                                                {getRemedyIcon(remedy)}
+                                            </div>
+                                            <span className="text-[10px] font-semibold text-ink/80 leading-tight line-clamp-2">{remedy}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -200,3 +173,4 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
 };
 
 export default DoshaRemedyGrid;
+
