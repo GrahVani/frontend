@@ -5,7 +5,7 @@ export interface YogaItem {
     name: string;
     sanskrit: string;
     description: string;
-    category: 'benefic' | 'challenging';
+    category: 'benefic' | 'challenging' | 'jaimini' | 'tajika';
     icon: React.ReactNode;
 }
 

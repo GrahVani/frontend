@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronRight, Sparkles, Clock, Info, Maximize2, X, ArrowDown, ChevronDown } from 'lucide-react';
@@ -131,6 +131,20 @@ export default function ActiveYogasLayout({
                                 </optgroup>
                                 <optgroup label="Challenging" className="font-serif italic text-ink">
                                     {allYogas.filter(y => y.category === 'challenging').map(y => (
+                                        <option key={y.id} value={y.id} className="font-sans not-italic font-medium text-ink">
+                                            {y.name}
+                                        </option>
+                                    ))}
+                                </optgroup>
+                                <optgroup label="Jaimini Yogas" className="font-serif italic text-ink">
+                                    {allYogas.filter(y => y.category === 'jaimini').map(y => (
+                                        <option key={y.id} value={y.id} className="font-sans not-italic font-medium text-ink">
+                                            {y.name}
+                                        </option>
+                                    ))}
+                                </optgroup>
+                                <optgroup label="Tajika Yogas" className="font-serif italic text-ink">
+                                    {allYogas.filter(y => y.category === 'tajika').map(y => (
                                         <option key={y.id} value={y.id} className="font-sans not-italic font-medium text-ink">
                                             {y.name}
                                         </option>

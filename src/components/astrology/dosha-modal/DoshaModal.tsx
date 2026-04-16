@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useMemo, memo } from 'react';
 import { Loader2, Info } from 'lucide-react';
@@ -29,7 +29,8 @@ export const DoshaModal = memo(function DoshaModal({
 
     // Get dosha data from processedCharts
     const { rawData, loading, error } = useMemo(() => {
-        const doshaKey = `dosha_all_${ayanamsa.toLowerCase()}`;
+        // Fix: Use the specific doshaType rather than 'dosha_all'
+        const doshaKey = `dosha_${doshaType.toLowerCase()}_${ayanamsa.toLowerCase()}`;
         const chart = processedCharts[doshaKey];
         
         if (!chart) {
@@ -46,7 +47,7 @@ export const DoshaModal = memo(function DoshaModal({
             loading: false,
             error: null
         };
-    }, [processedCharts, ayanamsa, isLoadingCharts]);
+    }, [processedCharts, ayanamsa, isLoadingCharts, doshaType]);
 
     const normalized = useMemo(() => {
         if (!rawData) return null;
