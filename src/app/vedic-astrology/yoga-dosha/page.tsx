@@ -50,6 +50,53 @@ const YOGA_TYPES: YogaItem[] = [
     { id: 'daridra', name: 'Daridra yoga', sanskrit: 'दरिद्रयोग', description: 'Poverty combinations — 11th lord in 6th/8th/12th', category: 'challenging', icon: <AlertTriangle className="w-4 h-4" /> },
     { id: 'malefic', name: 'Malefic yogas', sanskrit: 'पापयोग', description: 'Harmful planetary combinations requiring remedies', category: 'challenging', icon: <AlertTriangle className="w-4 h-4" /> },
     { id: 'special', name: 'Special yogas', sanskrit: 'विशेषयोग', description: 'Rare and unique planetary combinations', category: 'benefic', icon: <Sparkles className="w-4 h-4" /> },
+
+    // Jaimini Yogas
+    { id: 'chara_karakas_raja', name: 'Chara Karakas Raja', sanskrit: 'चर कारक राजयोग', description: 'Raja yoga from Chara Karakas — power through karaka alignments', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'arudha_lagna_raja', name: 'Arudha Lagna Raja', sanskrit: 'आरूढ़ लग्न राजयोग', description: 'Raja yoga from Arudha Lagna — worldly recognition & status', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'swamsa_raja', name: 'Swamsa Raja', sanskrit: 'स्वांश राजयोग', description: 'Raja yoga from Swamsa — soul-level power & authority', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'hora_lagna_dhana', name: 'Hora Lagna Dhana', sanskrit: 'होरा लग्न धन', description: 'Wealth yoga from Hora Lagna — financial prosperity indicators', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'jaimini_wealth', name: 'Jaimini Wealth', sanskrit: 'जैमिनी धन', description: 'Navamsha-based wealth indication from Jaimini system', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'karakamsa_arishta', name: 'Karakamsa Arishta', sanskrit: 'कारकांश अरिष्ट', description: 'Health afflictions from Karakamsa — disease & suffering indicators', category: 'jaimini', icon: <AlertTriangle className="w-4 h-4" /> },
+    { id: 'jaimini_maraka', name: 'Jaimini Maraka', sanskrit: 'जैमिनी मारक', description: 'Maraka (death-inflicting) yoga from Jaimini system', category: 'jaimini', icon: <AlertTriangle className="w-4 h-4" /> },
+    { id: 'arista_sutra', name: 'Arista Sutra', sanskrit: 'अरिष्ट सूत्र', description: 'Special Arista Sutra health & longevity combinations', category: 'jaimini', icon: <AlertTriangle className="w-4 h-4" /> },
+    { id: 'jaimini_gajakesari', name: 'Jaimini Gajakesari', sanskrit: 'जैमिनी गजकेसरी', description: 'Advanced Gajakesari yoga through Jaimini karakas', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'amala', name: 'Amala Yoga', sanskrit: 'अमला योग', description: 'Yoga of purity — benefic in 10th from Lagna/Moon', category: 'jaimini', icon: <Sparkles className="w-4 h-4" /> },
+    { id: 'parvata', name: 'Parvata Yoga', sanskrit: 'पर्वत योग', description: 'Mountain yoga — fame, fortune & leadership qualities', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'kahala', name: 'Kahala Yoga', sanskrit: 'कहल योग', description: 'Yoga of strength — bold, courageous & commanding', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'vasumati', name: 'Vasumati Yoga', sanskrit: 'वसुमती योग', description: 'Yoga of wealth — benefics in upachaya houses from Moon', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'kartari', name: 'Kartari Yoga', sanskrit: 'कर्तरी योग', description: 'Shubha Kartari — benefic hemming of key houses', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'jaimini_combination', name: 'Jaimini Combination', sanskrit: 'जैमिनी संयोजन', description: 'Combined Jaimini yoga patterns for comprehensive analysis', category: 'jaimini', icon: <Sparkles className="w-4 h-4" /> },
+    { id: 'jaimini_argala', name: 'Jaimini Argala', sanskrit: 'जैमिनी अर्गला', description: 'Argala (planetary intervention) analysis from Jaimini', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'jaimini_argala_position', name: 'Argala Position', sanskrit: 'अर्गला स्थिति', description: 'Positional argala — house-wise intervention effects', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'virodha_argala', name: 'Virodha Argala', sanskrit: 'विरोध अर्गला', description: 'Counter-intervention — planets obstructing argala effects', category: 'jaimini', icon: <AlertTriangle className="w-4 h-4" /> },
+    { id: 'relationship_upapada', name: 'Upapada Yogas', sanskrit: 'उपपद योग', description: 'Relationship yoga from Upapada Lagna — marriage & partnerships', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'jaimini_navamsa', name: 'Jaimini Navamsa', sanskrit: 'जैमिनी नवांश', description: 'Navamsha relationship indicators from Jaimini system', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'karakamsa_spiritual', name: 'Karakamsa Spiritual', sanskrit: 'कारकांश आध्यात्मिक', description: 'Spiritual indications from Karakamsa position', category: 'jaimini', icon: <Sparkles className="w-4 h-4" /> },
+    { id: 'jaimini_spiritual', name: 'Jaimini Spiritual', sanskrit: 'जैमिनी आध्यात्मिक', description: 'Spiritual combination yogas from Jaimini system', category: 'jaimini', icon: <Sparkles className="w-4 h-4" /> },
+    { id: 'bk_yogas', name: 'Bhratrukaraka Yogas', sanskrit: 'भ्रातृकारक योग', description: 'Yogas from Bhratrukaraka — sibling & courage indications', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'jaimini_mk', name: 'Matrukaraka Yogas', sanskrit: 'मातृकारक योग', description: 'Yogas from Matrukaraka — mother, property & happiness', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'putrakaraka', name: 'Putrakaraka Yogas', sanskrit: 'पुत्रकारक योग', description: 'Yogas from Putrakaraka — children, creativity & intelligence', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+    { id: 'gk_yogas', name: 'Gnatikaraka Yogas', sanskrit: 'ग्नातिकारक योग', description: 'Yogas from Gnatikaraka — obstacles, disease & enemies', category: 'jaimini', icon: <AlertTriangle className="w-4 h-4" /> },
+    { id: 'jaimini_other', name: 'Jaimini Other', sanskrit: 'जैमिनी अन्य', description: 'Miscellaneous Jaimini yoga combinations', category: 'jaimini', icon: <Star className="w-4 h-4" /> },
+
+    // Tajika Yogas
+    { id: 'duphali_kutta', name: 'Duphali Kutta', sanskrit: 'दुफली कुट्ट', description: 'Tajika yoga indicating sudden events & transformations', category: 'tajika', icon: <Flame className="w-4 h-4" /> },
+    { id: 'iqabala', name: 'Iqabala Yoga', sanskrit: 'इक़बाल योग', description: 'Yoga of fortune — planetary dignity in solar return', category: 'tajika', icon: <Flame className="w-4 h-4" /> },
+    { id: 'induvara', name: 'Induvara Yoga', sanskrit: 'इन्दुवार योग', description: 'Moon-based Tajika yoga — emotional & mental strength', category: 'tajika', icon: <Moon className="w-4 h-4" /> },
+    { id: 'ithasala', name: 'Ithasala Yoga', sanskrit: 'इत्थशाल योग', description: 'Applying aspect yoga — events materializing in the year', category: 'tajika', icon: <Flame className="w-4 h-4" /> },
+    { id: 'esharpha', name: 'Esharpha Yoga', sanskrit: 'ईशराफ योग', description: 'Separating aspect — opportunities slipping away', category: 'tajika', icon: <AlertTriangle className="w-4 h-4" /> },
+    { id: 'nakata', name: 'Nakata Yoga', sanskrit: 'नकत योग', description: 'Transfer of light — indirect planetary connections', category: 'tajika', icon: <Flame className="w-4 h-4" /> },
+    { id: 'yamaya', name: 'Yamaya Yoga', sanskrit: 'यमया योग', description: 'Yoga of restraint — blocked desires & delayed results', category: 'tajika', icon: <Flame className="w-4 h-4" /> },
+    { id: 'manau', name: 'Manau Yoga', sanskrit: 'मनाउ योग', description: 'Yoga of prevention — obstacles in the annual chart', category: 'tajika', icon: <Flame className="w-4 h-4" /> },
+    { id: 'kamboola', name: 'Kamboola Yoga', sanskrit: 'कंबूल योग', description: 'Reception yoga — mutual planetary support in Varshaphal', category: 'tajika', icon: <Flame className="w-4 h-4" /> },
+    { id: 'gairi_kamboola', name: 'Gairi Kamboola', sanskrit: 'गैरी कंबूल', description: 'Non-mutual reception — one-sided planetary support', category: 'tajika', icon: <Flame className="w-4 h-4" /> },
+    { id: 'khallasara', name: 'Khallasara Yoga', sanskrit: 'खल्लासर योग', description: 'Void of course — lack of aspects blocking fruition', category: 'tajika', icon: <AlertTriangle className="w-4 h-4" /> },
+    { id: 'radda', name: 'Radda Yoga', sanskrit: 'रद्द योग', description: 'Refusal yoga — cancellation of promised results', category: 'tajika', icon: <AlertTriangle className="w-4 h-4" /> },
+    { id: 'dutthotta_daivira', name: 'Dutthotta Daivira', sanskrit: 'दुत्थोत्थ दैविर', description: 'Rise after fall — recovery & reformation yoga', category: 'tajika', icon: <Flame className="w-4 h-4" /> },
+    { id: 'tambira', name: 'Tambira Yoga', sanskrit: 'तम्बीर योग', description: 'Tajika yoga of gradual improvement & subtle gains', category: 'tajika', icon: <Flame className="w-4 h-4" /> },
+    { id: 'kuttha', name: 'Kuttha Yoga', sanskrit: 'कुत्थ योग', description: 'Tajika yoga of confrontation & power struggles', category: 'tajika', icon: <AlertTriangle className="w-4 h-4" /> },
+    { id: 'durupha', name: 'Durupha Yoga', sanskrit: 'दुरुफ योग', description: 'Tajika yoga of slow & persistent planetary influence', category: 'tajika', icon: <Flame className="w-4 h-4" /> },
 ];
 
 const DOSHA_TYPES: DoshaItem[] = [
@@ -68,7 +115,7 @@ const DOSHA_TYPES: DoshaItem[] = [
 ];
 
 type MainTab = 'yogas' | 'doshas';
-type YogaCategory = 'all' | 'benefic' | 'challenging';
+type YogaCategory = 'all' | 'benefic' | 'challenging' | 'jaimini' | 'tajika';
 
 // Main Page Component
 // ============================================================================

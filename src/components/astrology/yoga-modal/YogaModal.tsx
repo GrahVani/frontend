@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useMemo, memo } from 'react';
 import { Loader2, Info } from 'lucide-react';
@@ -31,7 +31,10 @@ export const YogaModal = memo(function YogaModal({
 
     // Get yoga data from processedCharts
     const { rawData, loading, error } = useMemo(() => {
-        const yogaKey = `yoga_all_${ayanamsa.toLowerCase()}`;
+        // Fix: Use the specific yogaType rather than 'yoga_all' which doesn't exist
+        // in processedCharts. The backend stores them as yoga_<type> 
+        // which maps to yoga_<type>_<ayanamsa> in processedCharts.
+        const yogaKey = `yoga_${yogaType.toLowerCase()}_${ayanamsa.toLowerCase()}`;
         const chart = processedCharts[yogaKey];
         
         if (!chart) {
@@ -48,7 +51,7 @@ export const YogaModal = memo(function YogaModal({
             loading: false,
             error: null
         };
-    }, [processedCharts, ayanamsa, isLoadingCharts]);
+    }, [processedCharts, ayanamsa, isLoadingCharts, yogaType]);
 
     // Normalize data — memoized to avoid re-processing on every render
     const normalized = useMemo(() => {
