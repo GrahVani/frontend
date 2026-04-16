@@ -1405,7 +1405,7 @@ export default function Dashboard() {
     const firstName = user?.name?.split(' ')[0] || 'Astrologer';
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6 px-4 pb-12">
             {/* ── Greeting + Stats ── */}
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
                 <div>

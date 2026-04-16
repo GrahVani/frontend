@@ -65,7 +65,7 @@ const BALA_AXES = [
 
 const TABS: { id: ShadbalaViewTab; label: string; icon: React.ElementType; tip: string }[] = [
     { id: 'table', label: 'Table', icon: Table2, tip: 'Summary Table' },
-    { id: 'percentage', label: '% Strength', icon: Percent, tip: 'Percentage of Required' },
+    { id: 'percentage', label: 'Strength', icon: Percent, tip: 'Percentage of Required' },
     { id: 'bar', label: 'Bar Chart', icon: BarChart3, tip: 'Stacked Bar' },
     { id: 'pie', label: 'Composition', icon: PieChart, tip: 'Strength Composition' },
     { id: 'gauge', label: 'Gauges', icon: Gauge, tip: 'Radial Meters' },
@@ -119,7 +119,7 @@ export default function ShadbalaCustomizeWidget({ displayData }: { displayData: 
     return (
         <div className="h-full flex flex-col overflow-hidden">
             {/* ── Hero Badges ── */}
-            <div className="flex items-stretch gap-2 px-3 pt-3 pb-1 shrink-0">
+            <div className="flex items-stretch gap-1.5 px-3 pt-3 pb-0.5 shrink-0">
                 <HeroBadge planet={strongest} type="strongest" />
                 <HeroBadge planet={weakest} type="weakest" />
             </div>
@@ -135,10 +135,10 @@ export default function ShadbalaCustomizeWidget({ displayData }: { displayData: 
                             onClick={() => setActiveTab(tab.id)}
                             title={tab.tip}
                             className={cn(
-                                "flex items-center gap-1 px-2.5 py-1.5 rounded-t-lg text-[10px] font-bold tracking-wider transition-all",
+                                "flex items-center gap-1 px-2.5 py-1 rounded-t-lg text-[9px] font-medium tracking-wider transition-all",
                                 isActive
-                                    ? "bg-white text-amber-800 border border-gold-primary/20 border-b-white shadow-sm -mb-px z-10"
-                                    : "text-ink/40 hover:text-ink/70 hover:bg-gold-primary/5"
+                                    ? "bg-white text-amber-900 border border-gold-primary/20 border-b-white shadow-sm -mb-px z-10"
+                                    : "text-black/50 hover:text-black/80 hover:bg-gold-primary/5"
                             )}
                         >
                             <Icon className="w-3 h-3" />
@@ -185,7 +185,7 @@ function HeroBadge({ planet, type }: { planet: ShadbalaPlanetData; type: 'strong
 
     return (
         <div className={cn(
-            "flex-1 flex items-center gap-2 rounded-xl px-3 py-2 border transition-shadow hover:shadow-md",
+            "flex-1 flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 border transition-shadow hover:shadow-md",
             isStrongest
                 ? "bg-emerald-50/80 border-emerald-200/60"
                 : "bg-rose-50/80 border-rose-200/60"
@@ -196,22 +196,22 @@ function HeroBadge({ planet, type }: { planet: ShadbalaPlanetData; type: 'strong
                     : <TrendingDown className="w-3 h-3 text-rose-500" />
                 }
                 <span className={cn(
-                    "text-[8px] font-black tracking-widest",
+                    "text-[8px] font-bold tracking-widest",
                     isStrongest ? "text-emerald-700" : "text-rose-700"
                 )}>
                     {isStrongest ? 'Strongest' : 'Weakest'}
                 </span>
             </div>
             <div
-                className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-[11px] font-bold shadow-sm shrink-0"
+                className="w-6 h-6 rounded-md flex items-center justify-center text-white text-[10px] font-bold shadow-sm shrink-0"
                 style={{ backgroundColor: hex }}
             >
                 {PLANET_SYMBOLS[planet.planet]}
             </div>
             <div className="min-w-0">
-                <p className="text-[12px] font-bold text-ink truncate">{planet.planet}</p>
+                <p className="text-[11px] font-medium text-primary truncate leading-tight">{planet.planet}</p>
                 <p className={cn(
-                    "text-[10px] font-semibold",
+                    "text-[9px] font-medium",
                     isStrongest ? "text-emerald-600" : "text-rose-500"
                 )}>
                     {planet.percentOfRequired.toFixed(2)}× · #{planet.rank}
@@ -249,7 +249,7 @@ function MiniRing({ value, max, color, size = 36 }: { value: number; max: number
                 style={{ filter: `drop-shadow(0 0 3px ${color}40)` }}
             />
             <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central"
-                fontSize={size * 0.22} fontWeight="800" fill={color}>
+                fontSize={size * 0.22} fontWeight="600" fill={color}>
                 {value.toFixed(1)}×
             </text>
         </svg>
@@ -281,7 +281,7 @@ function TableView({ planets, sortKey, sortAsc, onSort }: {
         { key: 'totalBala', label: 'Virupas', align: 'center' as const, width: 'w-14', highlight: true },
         { key: 'rupaBala', label: 'Rupas', align: 'center' as const, width: 'w-14' },
         { key: 'rank', label: 'Rank', align: 'center' as const, width: 'w-10' },
-        { key: 'percentOfRequired', label: '% Req', align: 'center' as const, width: 'w-14' },
+        { key: 'percentOfRequired', label: 'Required', align: 'center' as const, width: 'w-14' },
     ];
 
     return (
@@ -295,9 +295,9 @@ function TableView({ planets, sortKey, sortAsc, onSort }: {
                                     key={col.key}
                                     onClick={() => col.key !== 'planet' && onSort(col.key)}
                                     className={cn(
-                                        "py-1.5 px-1.5 font-black tracking-wider text-amber-800/70 whitespace-nowrap",
+                                        "py-1 px-1.5 font-bold tracking-wider text-amber-900 whitespace-nowrap",
                                         col.align === 'center' ? 'text-center' : 'text-left',
-                                        col.key !== 'planet' && "cursor-pointer hover:text-amber-900 select-none",
+                                        col.key !== 'planet' && "cursor-pointer hover:text-amber-950 select-none",
                                         col.width,
                                     )}
                                 >
@@ -320,10 +320,10 @@ function TableView({ planets, sortKey, sortAsc, onSort }: {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: idx * 0.03 }}
-                                    className="border-b border-gold-primary/5 hover:bg-amber-50/30 transition-colors"
+                                    className="border-b border-gold-primary/5 hover:bg-amber-50/20 transition-colors"
                                 >
                                     {/* Planet */}
-                                    <td className="py-1.5 px-1.5">
+                                    <td className="py-1 px-1.5">
                                         <div className="flex items-center gap-1.5">
                                             <div
                                                 className="w-5 h-5 rounded-md flex items-center justify-center text-white text-[8px] font-bold shrink-0"
@@ -331,7 +331,7 @@ function TableView({ planets, sortKey, sortAsc, onSort }: {
                                             >
                                                 {PLANET_SYMBOLS[p.planet]}
                                             </div>
-                                            <span className="font-bold text-ink text-[11px]">{p.planet}</span>
+                                            <span className="font-medium text-primary text-[11px]">{p.planet}</span>
                                         </div>
                                     </td>
 
@@ -340,18 +340,13 @@ function TableView({ planets, sortKey, sortAsc, onSort }: {
                                         const val = (p as unknown as Record<string, number>)[axis.key] || 0;
                                         const intensity = Math.min(Math.abs(val) / maxValues[axis.key], 1);
                                         const isNeg = val < 0;
-                                        const bgColor = isNeg
-                                            ? `rgba(239, 68, 68, ${0.06 + intensity * 0.15})`
-                                            : `rgba(156, 122, 47, ${0.04 + intensity * 0.18})`;
-
                                         return (
-                                            <td key={axis.key} className="py-1.5 px-1 text-center">
+                                            <td key={axis.key} className="py-1 px-1 text-center">
                                                 <span
                                                     className={cn(
-                                                        "inline-block px-1.5 py-0.5 rounded font-mono tabular-nums font-semibold",
-                                                        isNeg ? "text-red-600" : "text-ink/80"
+                                                        "font-mono tabular-nums font-medium text-[9px]",
+                                                        isNeg ? "text-red-600" : "text-primary"
                                                     )}
-                                                    style={{ backgroundColor: bgColor }}
                                                 >
                                                     {val.toFixed(0)}
                                                 </span>
@@ -361,30 +356,30 @@ function TableView({ planets, sortKey, sortAsc, onSort }: {
 
                                     {/* Virupas */}
                                     <td className="py-1.5 px-1 text-center">
-                                        <span className="font-bold text-amber-700 tabular-nums bg-amber-50 px-1.5 py-0.5 rounded">
+                                        <span className="font-medium text-amber-900 tabular-nums">
                                             {p.totalBala.toFixed(0)}
                                         </span>
                                     </td>
 
                                     {/* Rupas */}
-                                    <td className="py-1.5 px-1 text-center font-bold tabular-nums text-ink">
+                                    <td className="py-1.5 px-1 text-center font-medium tabular-nums text-primary">
                                         {p.rupaBala.toFixed(2)}
                                     </td>
 
                                     {/* Rank */}
-                                    <td className="py-1.5 px-1 text-center font-bold tabular-nums text-ink/60">
+                                    <td className="py-1.5 px-1 text-center font-medium tabular-nums text-primary/60">
                                         #{p.rank}
                                     </td>
 
                                     {/* % Required */}
                                     <td className="py-1.5 px-1 text-center">
                                         <span className={cn(
-                                            "font-bold tabular-nums px-1.5 py-0.5 rounded-full text-[9px]",
+                                            "font-medium tabular-nums text-[9px]",
                                             p.percentOfRequired >= 1.0
-                                                ? "bg-emerald-50 text-emerald-600"
+                                                ? "text-emerald-600"
                                                 : p.percentOfRequired >= 0.8
-                                                    ? "bg-amber-50 text-amber-600"
-                                                    : "bg-rose-50 text-rose-600"
+                                                    ? "text-amber-600"
+                                                    : "text-rose-600"
                                         )}>
                                             {p.percentOfRequired.toFixed(2)}×
                                         </span>
@@ -397,18 +392,18 @@ function TableView({ planets, sortKey, sortAsc, onSort }: {
             </div>
 
             {/* ── Ishta · Kashta Phala — Prominent Section ── */}
-            <div className="mt-3 pt-3 border-t-2 border-amber-200/40">
-                <div className="flex items-center gap-2 mb-3 px-1">
-                    <div className="w-5 h-5 rounded-md bg-gradient-to-br from-emerald-500 to-rose-500 flex items-center justify-center">
-                        <span className="text-[8px] text-white font-black">I/k</span>
+            <div className="mt-2 pt-2 border-t-2 border-amber-200/20">
+                <div className="flex items-center gap-2 mb-2 px-1">
+                    <div className="w-4 h-4 rounded-md bg-gradient-to-br from-emerald-500 to-rose-500 flex items-center justify-center">
+                        <span className="text-[7px] text-white font-bold">i/k</span>
                     </div>
                     <div>
-                        <p className="text-[11px] font-bold text-ink leading-none">Ishta & Kashta Phala</p>
-                        <p className="text-[8px] text-ink/40 mt-0.5">Auspicious vs Inauspicious Fruit — Higher Ishta = planet delivers good results</p>
+                        <p className="text-[10px] font-medium text-primary leading-none">Ishta & Kashta Phala</p>
+                        <p className="text-[7px] text-primary mt-0.5 opacity-70">Higher Ishta = planet delivers auspicious results</p>
                     </div>
-                    <div className="ml-auto flex items-center gap-3 text-[8px]">
-                        <span className="flex items-center gap-1"><span className="w-2.5 h-1.5 rounded-sm bg-gradient-to-r from-emerald-400 to-emerald-500" /> Ishta (Good)</span>
-                        <span className="flex items-center gap-1"><span className="w-2.5 h-1.5 rounded-sm bg-gradient-to-r from-rose-400 to-rose-500" /> Kashta (Challenging)</span>
+                    <div className="ml-auto flex items-center gap-2.5 text-[7px]">
+                        <span className="flex items-center gap-1"><span className="w-2.5 h-1 rounded-sm bg-gradient-to-r from-emerald-400 to-emerald-500" /> Ishta</span>
+                        <span className="flex items-center gap-1"><span className="w-2.5 h-1 rounded-sm bg-gradient-to-r from-rose-400 to-rose-500" /> Kashta</span>
                     </div>
                 </div>
 
@@ -436,10 +431,10 @@ function TableView({ planets, sortKey, sortAsc, onSort }: {
                                 >
                                     {PLANET_SYMBOLS[p.planet]}
                                 </div>
-                                <span className="text-[10px] font-bold text-ink w-14 shrink-0 truncate">{p.planet}</span>
+                                <span className="text-[10px] font-medium text-primary w-14 shrink-0 truncate">{p.planet}</span>
 
                                 {/* Ishta value */}
-                                <span className="text-[10px] font-bold tabular-nums text-emerald-600 w-8 text-right shrink-0">
+                                <span className="text-[10px] font-medium tabular-nums text-emerald-600 w-8 text-right shrink-0">
                                     {ishta.toFixed(0)}
                                 </span>
 
@@ -463,13 +458,13 @@ function TableView({ planets, sortKey, sortAsc, onSort }: {
                                 </div>
 
                                 {/* Kashta value */}
-                                <span className="text-[10px] font-bold tabular-nums text-rose-500 w-8 shrink-0">
+                                <span className="text-[10px] font-medium tabular-nums text-rose-500 w-8 shrink-0">
                                     {kashta.toFixed(0)}
                                 </span>
 
                                 {/* Dominance indicator */}
                                 <span className={cn(
-                                    "text-[7px] font-black tracking-wider px-1.5 py-0.5 rounded-full shrink-0 w-12 text-center",
+                                    "text-[7px] font-bold tracking-wider px-1.5 py-0.5 rounded-full shrink-0 w-12 text-center",
                                     isIshtaDominant
                                         ? "bg-emerald-50 text-emerald-700"
                                         : "bg-rose-50 text-rose-700"
@@ -501,15 +496,15 @@ function PercentageView({ planets }: { planets: ShadbalaPlanetData[] }) {
     const thresholdPos = Math.min((1.0 / maxPct) * 100, 100);
 
     return (
-        <div className="p-3 space-y-1">
-            <div className="flex items-center justify-between mb-2">
-                <p className="text-[9px] font-bold tracking-wider text-ink/40">
-                    Ratio of Actual vs Required Minimum Strength
+        <div className="p-2 space-y-0.5">
+            <div className="flex items-center justify-between mb-1.5 px-1">
+                <p className="text-[8px] font-medium tracking-wider text-primary/70 uppercase">
+                    Actual vs Required Strength
                 </p>
-                <div className="flex items-center gap-3 text-[8px]">
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-500" /> ≥ 1.0× Strong</span>
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-500" /> 0.8–1.0×</span>
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-rose-500" /> &lt; 0.8× Weak</span>
+                <div className="flex items-center gap-2 text-[7px]">
+                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> ≥ 1.0×</span>
+                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-amber-500" /> 0.8–1.0×</span>
+                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-rose-500" /> &lt; 0.8×</span>
                 </div>
             </div>
 
@@ -525,19 +520,19 @@ function PercentageView({ planets }: { planets: ShadbalaPlanetData[] }) {
                         initial={{ opacity: 0, x: -12 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.4, delay: idx * 0.05 }}
-                        className="flex items-center gap-2 py-1"
+                        className="flex items-center gap-2 py-0.5 px-1 hover:bg-gold-primary/5 rounded-md transition-colors"
                     >
                         {/* Planet badge */}
                         <div
-                            className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-[10px] font-bold shrink-0 shadow-sm"
+                            className="w-6 h-6 rounded-md flex items-center justify-center text-white text-[9px] font-bold shrink-0 shadow-sm"
                             style={{ backgroundColor: hex }}
                         >
                             {PLANET_SYMBOLS[p.planet]}
                         </div>
-                        <span className="text-[11px] font-bold text-ink w-16 shrink-0">{p.planet}</span>
+                        <span className="text-[10px] font-medium text-primary w-14 shrink-0">{p.planet}</span>
 
                         {/* Bar */}
-                        <div className="flex-1 relative h-5">
+                        <div className="flex-1 relative h-4">
                             <div className="absolute inset-0 bg-gold-primary/5 rounded-full overflow-hidden">
                                 <motion.div
                                     className="h-full rounded-full"
@@ -555,11 +550,11 @@ function PercentageView({ planets }: { planets: ShadbalaPlanetData[] }) {
                             </div>
                             {/* 1.0× threshold line */}
                             <div
-                                className="absolute top-0 bottom-0 w-px bg-ink/30"
+                                className="absolute top-0 bottom-0 w-px bg-primary/30"
                                 style={{ left: `${thresholdPos}%` }}
                             >
                                 {idx === 0 && (
-                                    <span className="absolute -top-3.5 -translate-x-1/2 text-[7px] font-black text-ink/50 whitespace-nowrap">
+                                    <span className="absolute -top-3.5 -translate-x-1/2 text-[7px] font-bold text-primary/50 whitespace-nowrap">
                                         1.0× min
                                     </span>
                                 )}
@@ -568,7 +563,7 @@ function PercentageView({ planets }: { planets: ShadbalaPlanetData[] }) {
 
                         {/* Value */}
                         <span className={cn(
-                            "text-[11px] font-bold tabular-nums w-10 text-right shrink-0",
+                            "text-[10px] font-medium tabular-nums w-10 text-right shrink-0",
                             meetsMin ? "text-emerald-600" : pct >= 0.8 ? "text-amber-600" : "text-rose-600"
                         )}>
                             {pct.toFixed(2)}×
@@ -576,14 +571,14 @@ function PercentageView({ planets }: { planets: ShadbalaPlanetData[] }) {
 
                         {/* Status pill */}
                         <span className={cn(
-                            "text-[7px] font-black tracking-wider px-1.5 py-0.5 rounded-full shrink-0",
+                            "text-[6px] font-bold tracking-wider px-1.5 py-0.5 rounded-full shrink-0 uppercase",
                             meetsMin
                                 ? "bg-emerald-50 text-emerald-700"
                                 : pct >= 0.8
                                     ? "bg-amber-50 text-amber-700"
                                     : "bg-rose-50 text-rose-700"
                         )}>
-                            {meetsMin ? 'Strong' : pct >= 0.8 ? 'Avg' : 'Weak'}
+                            {meetsMin ? 'Strong' : pct >= 0.8 ? 'Fair' : 'Weak'}
                         </span>
                     </motion.div>
                 );
@@ -593,9 +588,9 @@ function PercentageView({ planets }: { planets: ShadbalaPlanetData[] }) {
             <div className="mt-3 pt-2 border-t border-gold-primary/10 grid grid-cols-7 gap-1">
                 {sorted.map(p => (
                     <div key={`rupa-${p.planet}`} className="text-center">
-                        <span className="text-[8px] font-bold text-ink/40 block">{PLANET_SYMBOLS[p.planet]}</span>
-                        <span className="text-[10px] font-bold text-ink block">{p.rupaBala.toFixed(2)}</span>
-                        <span className="text-[7px] text-ink/30">rupa</span>
+                        <span className="text-[8px] font-medium text-primary block">{PLANET_SYMBOLS[p.planet]}</span>
+                        <span className="text-[10px] font-medium text-primary block">{p.rupaBala.toFixed(2)}</span>
+                        <span className="text-[7px] text-primary">rupa</span>
                     </div>
                 ))}
             </div>
@@ -610,13 +605,13 @@ function PercentageView({ planets }: { planets: ShadbalaPlanetData[] }) {
 function BarChartView({ planets }: { planets: ShadbalaPlanetData[] }) {
     const sorted = useMemo(() => [...planets].sort((a, b) => a.rank - b.rank), [planets]);
 
-    // Chart layout
-    const svgW = 560;
-    const svgH = 320;
+    // Chart layout - Optimized for Wide Viewports
+    const svgW = 1120;
+    const svgH = 240;
     const marginL = 50;
     const marginR = 20;
-    const marginT = 30;
-    const marginB = 55;
+    const marginT = 25;
+    const marginB = 50;
     const chartW = svgW - marginL - marginR;
     const chartH = svgH - marginT - marginB;
 
@@ -633,15 +628,15 @@ function BarChartView({ planets }: { planets: ShadbalaPlanetData[] }) {
     const yTicks = Array.from({ length: yTickCount + 1 }, (_, i) => Math.round((yMax / yTickCount) * i));
 
     return (
-        <div className="p-3">
-            <div className="flex items-center justify-between mb-2">
-                <p className="text-[9px] font-bold tracking-wider text-ink/40">
+        <div className="p-2 h-full flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between mb-1.5 px-1 shrink-0">
+                <p className="text-[8px] font-medium tracking-wider text-primary/70 uppercase">
                     Total Strength Comparison (Virupas)
                 </p>
-                <span className="text-[8px] text-ink/30">Ranked by strength</span>
+                <span className="text-[7px] text-primary/50 uppercase tracking-tighter">Ranked by strength</span>
             </div>
 
-            <svg viewBox={`0 0 ${svgW} ${svgH}`} className="w-full">
+            <svg viewBox={`0 0 ${svgW} ${svgH}`} className="w-full flex-1 min-h-0">
                 {/* Definitions — bar gradients */}
                 <defs>
                     {sorted.map(p => {
@@ -722,7 +717,7 @@ function BarChartView({ planets }: { planets: ShadbalaPlanetData[] }) {
                                 x={cx}
                                 textAnchor="middle"
                                 fontSize={10}
-                                fontWeight="800"
+                                fontWeight="600"
                                 fill={hex}
                                 fontFamily="system-ui"
                                 initial={{ y: marginT + chartH - 4, opacity: 0 }}
@@ -770,7 +765,7 @@ function BarChartView({ planets }: { planets: ShadbalaPlanetData[] }) {
             </svg>
 
             {/* Strength/Weakness summary strip */}
-            <div className="flex items-center justify-center gap-3 mt-1 text-[8px]">
+            <div className="flex items-center justify-center gap-3 mt-0.5 text-[7px] shrink-0">
                 <span className="flex items-center gap-1 text-ink/40">
                     <span className="text-emerald-500">✓</span> Meets min. required
                 </span>
@@ -790,14 +785,14 @@ function PieChartView({ planets }: { planets: ShadbalaPlanetData[] }) {
     const sorted = useMemo(() => [...planets].sort((a, b) => a.rank - b.rank), [planets]);
 
     return (
-        <div className="p-3">
-            <div className="flex items-center justify-between mb-2">
-                <p className="text-[9px] font-bold tracking-wider text-ink/40">
+        <div className="p-2">
+            <div className="flex items-center justify-between mb-1.5 px-1">
+                <p className="text-[8px] font-medium tracking-wider text-primary/70 uppercase">
                     Strength Composition per Planet
                 </p>
             </div>
 
-            <div className="grid grid-cols-4 gap-3" style={{ gridTemplateRows: 'auto auto' }}>
+            <div className="grid grid-cols-7 gap-2">
                 {sorted.map((p, idx) => (
                     <MiniDonut key={p.planet} planet={p} idx={idx} />
                 ))}
@@ -808,7 +803,7 @@ function PieChartView({ planets }: { planets: ShadbalaPlanetData[] }) {
                 {BALA_AXES.map(axis => (
                     <div key={axis.key} className="flex items-center gap-1">
                         <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: axis.color }} />
-                        <span className="text-[8px] text-ink/60 font-medium">{axis.shortLabel}</span>
+                        <span className="text-[8px] text-primary font-medium">{axis.shortLabel}</span>
                     </div>
                 ))}
             </div>
@@ -817,7 +812,7 @@ function PieChartView({ planets }: { planets: ShadbalaPlanetData[] }) {
 }
 
 function MiniDonut({ planet, idx }: { planet: ShadbalaPlanetData; idx: number }) {
-    const size = 100;
+    const size = 80;
     const cx = size / 2;
     const cy = size / 2;
     const innerR = 24;
@@ -877,19 +872,19 @@ function MiniDonut({ planet, idx }: { planet: ShadbalaPlanetData; idx: number })
                 {/* Center info */}
                 <circle cx={cx} cy={cy} r={innerR - 1} fill="white" />
                 <text x={cx} y={cy - 4} textAnchor="middle" dominantBaseline="central"
-                    fontSize={15} fontWeight="800" fill={hex}>
+                    fontSize={12} fontWeight="600" fill={hex}>
                     {PLANET_SYMBOLS[planet.planet]}
                 </text>
-                <text x={cx} y={cy + 11} textAnchor="middle" dominantBaseline="central"
-                    fontSize={8} fontWeight="700" fill="#6B5F52">
+                <text x={cx} y={cy + 8} textAnchor="middle" dominantBaseline="central"
+                    fontSize={7} fontWeight="600" fill="#6B5F52">
                     {planet.rupaBala.toFixed(1)}R
                 </text>
             </svg>
 
             {/* Planet name & status */}
-            <span className="text-[9px] font-bold text-ink mt-0.5">{planet.planet}</span>
+            <span className="text-[9px] font-medium text-primary mt-0.5">{planet.planet}</span>
             <span className={cn(
-                "text-[7px] font-bold px-1 py-0.5 rounded-full mt-0.5",
+                "text-[7px] font-medium px-1 py-0.5 rounded-full mt-0.5",
                 planet.isStrong ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-500"
             )}>
                 {planet.isStrong ? 'Strong' : 'Weak'}
@@ -903,12 +898,12 @@ function MiniDonut({ planet, idx }: { planet: ShadbalaPlanetData; idx: number })
                         <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 bg-[#1E140A]" />
                         <div className="flex items-center gap-1.5 mb-1">
                             <div className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ backgroundColor: hovered.color }} />
-                            <span className="text-[10px] font-bold">{hovered.label}</span>
+                            <span className="text-[10px] font-medium">{hovered.label}</span>
                         </div>
                         <div className="flex items-center justify-between gap-3">
-                            <span className="text-[11px] font-bold tabular-nums text-amber-300">{hovered.value.toFixed(1)}</span>
+                            <span className="text-[11px] font-medium tabular-nums text-amber-300">{hovered.value.toFixed(1)}</span>
                             <span className="text-[9px] text-white/60">virupas</span>
-                            <span className="text-[10px] font-bold tabular-nums text-emerald-400 ml-auto">{hovered.pct.toFixed(1)}%</span>
+                            <span className="text-[10px] font-medium tabular-nums text-emerald-400 ml-auto">{hovered.pct.toFixed(1)}%</span>
                         </div>
                     </div>
                 </div>
@@ -947,7 +942,7 @@ function GaugeView({ planets }: { planets: ShadbalaPlanetData[] }) {
     return (
         <div className="p-3">
             <div className="flex items-center justify-between mb-2">
-                <p className="text-[9px] font-bold tracking-wider text-ink/40">
+                <p className="text-[9px] font-medium tracking-wider text-primary">
                     Rupa Strength Meters — Red tick = minimum required
                 </p>
             </div>
@@ -966,7 +961,7 @@ function GaugeView({ planets }: { planets: ShadbalaPlanetData[] }) {
 }
 
 function RadialGaugeMeter({ planet, idx }: { planet: ShadbalaPlanetData; idx: number }) {
-    const size = 110;
+    const size = 90;
     const strokeWidth = 8;
     const radius = (size - strokeWidth) / 2 - 6;
     const center = size / 2;
@@ -1011,7 +1006,7 @@ function RadialGaugeMeter({ planet, idx }: { planet: ShadbalaPlanetData; idx: nu
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: idx * 0.07 }}
-            className="flex flex-col items-center"
+            className="flex flex-col items-center py-1"
         >
             <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
                 {/* Track */}
@@ -1039,29 +1034,29 @@ function RadialGaugeMeter({ planet, idx }: { planet: ShadbalaPlanetData; idx: nu
 
                 {/* Planet symbol */}
                 <text x={center} y={center - 5} textAnchor="middle" dominantBaseline="central"
-                    fontSize={18} fill={hex} fontWeight="700" fontFamily="serif">
+                    fontSize={18} fill={hex} fontWeight="600" fontFamily="serif">
                     {PLANET_SYMBOLS[planet.planet]}
                 </text>
 
                 {/* Rupa value */}
                 <text x={center} y={center + 14} textAnchor="middle" dominantBaseline="central"
-                    fontSize={11} fill="#3E2A1F" fontWeight="800">
+                    fontSize={11} fill={hex} fontWeight="600">
                     {planet.rupaBala.toFixed(2)}
                 </text>
 
                 {/* "RUPA" label */}
                 <text x={center} y={center + 25} textAnchor="middle" dominantBaseline="central"
-                    fontSize={6} fill="#9C7A2F" fontWeight="700" letterSpacing={1.5}>
+                    fontSize={6} fill="#9C7A2F" fontWeight="600" letterSpacing={1.5}>
                     Rupa
                 </text>
             </svg>
 
             {/* Planet name and status */}
-            <p className="text-[10px] font-bold text-ink mt-0.5">{planet.planet}</p>
+            <p className="text-[10px] font-medium text-primary mt-0.5">{planet.planet}</p>
             <div className="flex items-center gap-1 mt-0.5">
-                <span className="text-[8px] font-semibold text-ink/40">#{planet.rank}</span>
+                <span className="text-[8px] font-normal text-primary">#{planet.rank}</span>
                 <span className={cn(
-                    "text-[7px] font-bold px-1.5 py-0.5 rounded-full tracking-wider",
+                    "text-[7px] font-medium px-1.5 py-0.5 rounded-full tracking-wider",
                     planet.isStrong ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-500"
                 )}>
                     {planet.isStrong ? 'Potent' : 'Weak'}

@@ -106,7 +106,7 @@ function SizeToggle({ size, onChange }: { size: WidgetSize; onChange?: (s: Widge
                     key={opt.key}
                     onClick={() => onChange?.(opt.key)}
                     className={cn(
-                        "px-1.5 py-0.5 rounded-md text-[10px] font-bold transition-all min-w-[20px]",
+                        "px-1.5 py-0.5 rounded-md text-[10px] font-medium transition-all min-w-[20px]",
                         size === opt.key
                             ? "bg-primary text-white shadow-sm"
                             : "text-ink/40 hover:text-ink hover:bg-white"
@@ -187,24 +187,30 @@ function WidgetCard({
         )} style={{ height: 'calc((100vh - 200px) / 2)', minHeight: scaleConfig.minHeight }}
             data-widget-size={size}
         >
-            {/* High-Density Header */}
-            <div className="flex items-center justify-between mb-0.5 shrink-0 px-0.5">
-                <div className="flex items-center gap-1 min-w-0">
+            {/* High-Density Header — Premium Redesign */}
+            <div 
+                className="flex items-center justify-between shrink-0 px-2 py-1.5 border-b"
+                style={{
+                    background: 'linear-gradient(180deg, #F8F3EB 0%, #F0E8DA 100%)',
+                    borderBottomColor: '#D4C4A8',
+                }}
+            >
+                <div className="flex items-center gap-1.5 min-w-0">
                     <span className={cn(
-                        "px-1 py-0 rounded font-black uppercase tracking-wider shrink-0",
+                        "px-1.5 py-0.5 rounded font-medium tracking-wider shrink-0 shadow-sm",
                         scaleConfig.headerText,
                         getCategoryColor()
                     )} style={{ fontSize: `max(7px, ${7 * scaleConfig.zoom}px)` }}>
                         {getCategoryLabel()}
                     </span>
                     <h4 className={cn(
-                        "font-black text-ink uppercase tracking-tight truncate",
+                        "font-medium text-[#3E2A1F] tracking-tight truncate",
                         scaleConfig.titleMaxW
-                    )} style={{ fontSize: `max(9px, ${9 * scaleConfig.zoom}px)` }}>
+                    )} style={{ fontSize: `max(9px, ${10 * scaleConfig.zoom}px)` }}>
                         {widget.name}
                     </h4>
                     {onAyanamsaChange && (
-                        <div className="ml-auto mr-2">
+                        <div className="ml-1 shrink-0">
                             <AyanamsaSelect
                                 value={activeSystem || 'Lahiri'}
                                 onChange={onAyanamsaChange}
@@ -215,33 +221,39 @@ function WidgetCard({
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
-                    {/* Size Selector Mockup Style: S M L F X */}
-                    <div className={cn("flex items-center gap-1.5 font-black text-ink/30 mr-1 uppercase", scaleConfig.headerText)}>
-                        {(['S', 'M', 'L', 'F'] as const).map((s) => (
-                            <button
-                                key={s}
-                                onClick={() => {
-                                    if (!onSizeChange) return;
-                                    const map: Record<string, WidgetSize> = { S: 'small', M: 'medium', L: 'large', F: 'full' };
-                                    onSizeChange(map[s]);
-                                }}
-                                className={cn(
-                                    "hover:text-gold-dark transition-colors",
-                                    (size === 'small' && s === 'S') ||
-                                        (size === 'medium' && s === 'M') ||
-                                        (size === 'large' && s === 'L') ||
-                                        (size === 'full' && s === 'F')
-                                        ? "text-gold-dark font-black"
-                                        : ""
-                                )}
-                            >
-                                {s}
-                            </button>
+                    {/* Size Selector — High Density Pill */}
+                    <div className={cn(
+                        "flex items-center px-1 py-0.5 rounded-lg border border-[#C9B896] shrink-0",
+                        scaleConfig.headerText
+                    )}>
+                        {(['S', 'M', 'L', 'F'] as const).map((s, idx) => (
+                            <React.Fragment key={s}>
+                                <button
+                                    onClick={() => {
+                                        if (!onSizeChange) return;
+                                        const map: Record<string, WidgetSize> = { S: 'small', M: 'medium', L: 'large', F: 'full' };
+                                        onSizeChange(map[s]);
+                                    }}
+                                    className={cn(
+                                        "px-1.5 py-0.5 rounded transition-all font-medium text-[9px]",
+                                        (size === 'small' && s === 'S') ||
+                                            (size === 'medium' && s === 'M') ||
+                                            (size === 'large' && s === 'L') ||
+                                            (size === 'full' && s === 'F')
+                                            ? "bg-[#D4C4A8] text-[#3E2A1F] shadow-sm"
+                                            : "text-[#5A4A3A]/40 hover:text-[#5A4A3A]"
+                                    )}
+                                >
+                                    {s}
+                                </button>
+                                {idx < 3 && <div className="w-px h-2.5 bg-[#C9B896]/50 mx-0.5" />}
+                            </React.Fragment>
                         ))}
                     </div>
+                    
                     <button
                         onClick={onRemove}
-                        className="text-ink/20 hover:text-red-500 transition-colors"
+                        className="w-6 h-6 flex items-center justify-center rounded-lg border border-[#D4C4A8] hover:bg-red-50 hover:border-red-300 text-[#7A6A5A] hover:text-red-500 transition-all active:scale-95 shadow-sm"
                         title="Remove"
                     >
                         <X className="w-3.5 h-3.5" />
@@ -261,10 +273,10 @@ function WidgetCard({
                         {!isCompatible ? (
                             <div className="flex flex-col items-center justify-center p-6 text-center" style={{ minHeight: `${100 / scaleConfig.zoom}%` }}>
                                 <Shield className="w-8 h-8 text-gold-dark/40 mb-3" />
-                                <p className="text-[10px] font-black uppercase text-gold-dark/60 tracking-wider mb-1 leading-tight px-4">
+                                <p className="text-[10px] font-medium uppercase text-gold-dark/60 tracking-wider mb-1 leading-tight px-4">
                                     {widget.name}
                                 </p>
-                                <p className="text-[8px] font-bold text-ink/40 uppercase tracking-[0.15em] px-2">
+                                <p className="text-[8px] font-medium text-ink/40 uppercase tracking-[0.15em] px-2">
                                     Not compatible with {activeSystem}
                                 </p>
                             </div>

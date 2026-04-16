@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { ChartWithPopup } from "@/components/astrology/NorthIndianChart";
@@ -34,7 +34,11 @@ import {
     Sunset,
     AlertTriangle,
     LayoutTemplate,
-    Plus
+    Plus,
+    Minus,
+    Settings,
+    ChevronDown,
+    ChevronUp
 } from 'lucide-react';
 import Link from 'next/link';
 import { useVedicClient } from '@/context/VedicClientContext';
@@ -195,7 +199,7 @@ export default function VedicOverviewPage() {
                 </div>
             )}
 
-            <KundaliContent 
+            <KundaliContent
                 clientDetails={clientDetails}
                 d1Data={d1Data}
                 birthPanchangaData={birthPanchangaData}
@@ -256,7 +260,22 @@ export default function VedicOverviewPage() {
 // Constants for Chart Slots
 // ============================================================================
 const KUNDALI_SLOTS_KEY = 'grahvani_kundali_chart_slots';
+const KUNDALI_SETTINGS_KEY = 'grahvani_kundali_chart_settings';
 const DEFAULT_SLOTS: (string | null)[] = ['D1', 'D9', 'D10'];
+
+interface ChartSlotSettings {
+    planetSize: number;
+    houseSize: number;
+    degreeSize: number;
+    showDegrees: boolean;
+}
+
+const DEFAULT_CHART_SETTINGS: ChartSlotSettings = {
+    planetSize: 14,
+    houseSize: 18,
+    degreeSize: 9,
+    showDegrees: true
+};
 const PICKER_CATEGORIES = ['divisional', 'lagna', 'rare_shodash'];
 
 const HEADER_STYLE = {
@@ -376,37 +395,170 @@ function EmptyChartSlot({ height, onClick }: { height: string; onClick: () => vo
 function RenderedChartSlot({
     chartId,
     height,
-    showDegrees,
+    settings,
+    onUpdateSettings,
     onZoom,
     onDismiss,
 }: {
     chartId: string;
     height: string;
-    showDegrees: boolean;
+    settings: ChartSlotSettings;
+    onUpdateSettings: (s: Partial<ChartSlotSettings>) => void;
     onZoom: () => void;
     onDismiss: () => void;
 }) {
     const { processedCharts } = useVedicClient();
     const { ayanamsa } = useAstrologerStore();
     const activeSystem = ayanamsa.toLowerCase();
+    const [showSettings, setShowSettings] = useState(false);
+    const settingsRef = useRef<HTMLDivElement>(null);
+
     const key = `${chartId}_${activeSystem}`;
     const data = React.useMemo(() => parseChartData(processedCharts[key]?.chartData), [processedCharts, key]);
     const meta = CHART_METADATA[chartId] || { name: chartId, desc: 'Chart' };
     const displayName = `${meta.name} (${chartId})`;
 
+    useEffect(() => {
+        if (!showSettings) return;
+        const handleClickOutside = (event: MouseEvent) => {
+            if (settingsRef.current && !settingsRef.current.contains(event.target as Node)) {
+                setShowSettings(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [showSettings]);
+
     return (
-        <div className="prem-card overflow-hidden">
+        <div className="prem-card overflow-hidden relative">
             <div className="px-3 py-1.5 flex justify-between items-center" style={HEADER_STYLE}>
                 <h2 className={TYPOGRAPHY.sectionTitle}>{displayName}</h2>
                 <div className="flex items-center gap-1">
-                    <button onClick={onZoom} className="p-1 text-ink/40 hover:text-gold-dark transition-colors" aria-label={`Zoom ${displayName}`}>
+                    <button 
+                        onClick={() => setShowSettings(!showSettings)} 
+                        className={cn("p-1 transition-colors", showSettings ? "text-primary" : "text-primary/70 hover:text-primary")} 
+                        aria-label="Chart Settings"
+                    >
+                        <Settings className="w-3 h-3" />
+                    </button>
+                    <button onClick={onZoom} className="p-1 text-primary/70 hover:text-primary transition-colors" aria-label={`Zoom ${displayName}`}>
                         <Maximize2 className="w-3 h-3" />
                     </button>
-                    <button onClick={onDismiss} className="p-1 text-ink/25 hover:text-rose-500 transition-colors" aria-label={`Remove ${displayName}`}>
+                    <button onClick={onDismiss} className="p-1 text-primary/50 hover:text-rose-500 transition-colors" aria-label={`Remove ${displayName}`}>
                         <X className="w-3 h-3" />
                     </button>
                 </div>
             </div>
+
+            {showSettings && (
+                <div 
+                    ref={settingsRef}
+                    className="absolute top-9 right-2 z-50 w-56 p-4 rounded-2xl shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+                    style={{
+                        background: 'rgba(255, 253, 249, 0.98)',
+                        backdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(220, 201, 166, 0.4)',
+                        boxShadow: '0 10px 30px -5px rgba(62, 46, 22, 0.2), 0 4px 12px -2px rgba(62, 46, 22, 0.1)',
+                    }}
+                >
+                    <div className="space-y-4">
+                        <div>
+                            <div className="flex justify-between items-center mb-1.5">
+                                <label className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-wider")}>Planet Size</label>
+                                <span className={cn(TYPOGRAPHY.value, "text-[11px] text-primary")}>{settings.planetSize ?? DEFAULT_CHART_SETTINGS.planetSize}px</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button 
+                                    onClick={() => onUpdateSettings({ planetSize: Math.max(8, settings.planetSize - 1) })}
+                                    className="p-1 rounded-md bg-surface-warm border border-primary/20 hover:border-primary/40 text-primary/80"
+                                >
+                                    <Minus className="w-3 h-3" />
+                                </button>
+                                <input 
+                                    type="range" min="8" max="24" value={settings.planetSize ?? DEFAULT_CHART_SETTINGS.planetSize} 
+                                    onChange={(e) => onUpdateSettings({ planetSize: parseInt(e.target.value) })}
+                                    className="flex-1 accent-primary h-1 bg-primary/10 rounded-full appearance-none cursor-pointer"
+                                />
+                                <button 
+                                    onClick={() => onUpdateSettings({ planetSize: Math.min(24, settings.planetSize + 1) })}
+                                    className="p-1 rounded-md bg-surface-warm border border-gold-primary/10 hover:border-gold-primary/30 text-gold-primary/70"
+                                >
+                                    <Plus className="w-3 h-3" />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div className="flex justify-between items-center mb-1.5">
+                                <label className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-wider")}>Degree Size</label>
+                                <span className={cn(TYPOGRAPHY.value, "text-[11px] text-primary")}>{settings.degreeSize ?? DEFAULT_CHART_SETTINGS.degreeSize}px</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button 
+                                    onClick={() => onUpdateSettings({ degreeSize: Math.max(6, settings.degreeSize - 1) })}
+                                    className="p-1 rounded-md bg-surface-warm border border-gold-primary/10 hover:border-gold-primary/30 text-gold-primary/70"
+                                >
+                                    <Minus className="w-3 h-3" />
+                                </button>
+                                <input 
+                                    type="range" min="6" max="18" value={settings.degreeSize ?? DEFAULT_CHART_SETTINGS.degreeSize} 
+                                    onChange={(e) => onUpdateSettings({ degreeSize: parseInt(e.target.value) })}
+                                    className="flex-1 accent-gold-primary h-1 bg-gold-primary/10 rounded-full appearance-none cursor-pointer"
+                                />
+                                <button 
+                                    onClick={() => onUpdateSettings({ degreeSize: Math.min(18, settings.degreeSize + 1) })}
+                                    className="p-1 rounded-md bg-surface-warm border border-gold-primary/10 hover:border-gold-primary/30 text-gold-primary/70"
+                                >
+                                    <Plus className="w-3 h-3" />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div className="flex justify-between items-center mb-1.5">
+                                <label className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-wider")}>House Number Size</label>
+                                <span className={cn(TYPOGRAPHY.value, "text-[11px] text-primary")}>{settings.houseSize ?? DEFAULT_CHART_SETTINGS.houseSize}px</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button 
+                                    onClick={() => onUpdateSettings({ houseSize: Math.max(10, settings.houseSize - 1) })}
+                                    className="p-1 rounded-md bg-surface-warm border border-gold-primary/10 hover:border-gold-primary/30 text-gold-primary/70"
+                                >
+                                    <Minus className="w-3 h-3" />
+                                </button>
+                                <input 
+                                    type="range" min="10" max="40" value={settings.houseSize ?? DEFAULT_CHART_SETTINGS.houseSize} 
+                                    onChange={(e) => onUpdateSettings({ houseSize: parseInt(e.target.value) })}
+                                    className="flex-1 accent-gold-primary h-1 bg-gold-primary/10 rounded-full appearance-none cursor-pointer"
+                                />
+                                <button 
+                                    onClick={() => onUpdateSettings({ houseSize: Math.min(40, settings.houseSize + 1) })}
+                                    className="p-1 rounded-md bg-surface-warm border border-gold-primary/10 hover:border-gold-primary/30 text-gold-primary/70"
+                                >
+                                    <Plus className="w-3 h-3" />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-2 border-t border-primary/10">
+                            <label className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-wider")}>Show Degrees</label>
+                            <button 
+                                onClick={() => onUpdateSettings({ showDegrees: !settings.showDegrees })}
+                                className={cn(
+                                    "w-8 h-4 rounded-full transition-colors relative",
+                                    settings.showDegrees ? "bg-primary" : "bg-ink/20"
+                                )}
+                            >
+                                <div className={cn(
+                                    "absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all",
+                                    settings.showDegrees ? "left-4.5" : "left-0.5"
+                                )} style={{ left: settings.showDegrees ? '1.125rem' : '0.125rem' }} />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className={cn("w-full bg-surface-warm", height)}>
                 {data.planets.length > 0 ? (
                     <ChartWithPopup
@@ -414,7 +566,10 @@ function RenderedChartSlot({
                         planets={data.planets}
                         className="bg-transparent border-none w-full h-full"
                         preserveAspectRatio="none"
-                        showDegrees={showDegrees}
+                        showDegrees={settings.showDegrees}
+                        planetFontSize={settings.planetSize}
+                        degreeFontSize={settings.degreeSize}
+                        signNumberFontSize={settings.houseSize}
                     />
                 ) : (
                     <div className={cn(TYPOGRAPHY.subValue, "p-4 text-ink/35 italic flex items-center justify-center h-full")}>
@@ -429,14 +584,14 @@ function RenderedChartSlot({
 // ============================================================================
 // Kundali Tab Content
 // ============================================================================
-function KundaliContent({ 
-    clientDetails, 
-    d1Data, 
+function KundaliContent({
+    clientDetails,
+    d1Data,
     birthPanchangaData,
     dashaData,
     dashaLoading,
-    setZoomedChart 
-}: { 
+    setZoomedChart
+}: {
     clientDetails: any;
     d1Data: any;
     birthPanchangaData: BirthPanchangaData | null;
@@ -461,12 +616,40 @@ function KundaliContent({
         return DEFAULT_SLOTS;
     });
 
+    const [chartSettings, setChartSettings] = useState<Record<number, ChartSlotSettings>>(() => {
+        const defaults: Record<number, ChartSlotSettings> = { 0: { ...DEFAULT_CHART_SETTINGS }, 1: { ...DEFAULT_CHART_SETTINGS }, 2: { ...DEFAULT_CHART_SETTINGS } };
+        if (typeof window === 'undefined') return defaults;
+        try {
+            const stored = localStorage.getItem(KUNDALI_SETTINGS_KEY);
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                if (parsed && typeof parsed === 'object') {
+                    // Merge each slot's saved settings with DEFAULT_CHART_SETTINGS to handle migrations
+                    const migrated: Record<number, ChartSlotSettings> = { ...defaults };
+                    Object.keys(parsed).forEach(key => {
+                        const idx = parseInt(key);
+                        if (!isNaN(idx) && parsed[key]) {
+                            migrated[idx] = { ...DEFAULT_CHART_SETTINGS, ...parsed[key] };
+                        }
+                    });
+                    return migrated;
+                }
+            }
+        } catch { /* ignore */ }
+        return defaults;
+    });
+
     const [addChartModalSlot, setAddChartModalSlot] = useState<number | null>(null);
 
-    // Persist to localStorage on change
+    // Persist slots to localStorage on change
     useEffect(() => {
         localStorage.setItem(KUNDALI_SLOTS_KEY, JSON.stringify(chartSlots));
     }, [chartSlots]);
+
+    // Persist settings to localStorage on change
+    useEffect(() => {
+        localStorage.setItem(KUNDALI_SETTINGS_KEY, JSON.stringify(chartSettings));
+    }, [chartSettings]);
 
     // Escape key to close modal
     useEffect(() => {
@@ -497,17 +680,16 @@ function KundaliContent({
         setAddChartModalSlot(null);
     };
 
-    // ── Dynamic Planetary Table Data (from Slot 0) ──
-    const slot0ChartId = chartSlots[0];
-    const slot0Key = slot0ChartId ? `${slot0ChartId}_${activeSystem}` : null;
-    const slot0Data = React.useMemo(
-        () => slot0Key ? parseChartData(processedCharts[slot0Key]?.chartData) : { planets: [], ascendant: 1 },
-        [processedCharts, slot0Key]
-    );
-    const slot0Meta = slot0ChartId ? (CHART_METADATA[slot0ChartId] || { name: slot0ChartId }) : null;
+    const updateSlotSettings = (index: number, newSettings: Partial<ChartSlotSettings>) => {
+        setChartSettings(prev => ({
+            ...prev,
+            [index]: { ...prev[index], ...newSettings }
+        }));
+    };
 
+    // ── Fixed Planetary Table Data (Always from D1 / Rashi) ──
     const planetaryTableData = React.useMemo(() => {
-        return slot0Data.planets.map((p: any) => ({
+        return d1Data.planets.map((p: any) => ({
             planet: fullPlanetNames[p.name] || p.name,
             sign: signIdToName[p.signId] || '-',
             degree: p.degree,
@@ -516,11 +698,9 @@ function KundaliContent({
             house: p.house || 0,
             isRetro: p.isRetro
         }));
-    }, [slot0Data]);
+    }, [d1Data]);
 
-    const planetaryTableTitle = slot0Meta
-        ? `${slot0Meta.name} planetary positions`
-        : 'Planetary positions';
+    const planetaryTableTitle = 'Rashi planetary positions';
 
     // ── Render Helpers ──
     const renderSlot = (index: number, height: string) => {
@@ -529,11 +709,14 @@ function KundaliContent({
             return <EmptyChartSlot height={height} onClick={() => setAddChartModalSlot(index)} />;
         }
         const meta = CHART_METADATA[chartId] || { name: chartId, desc: 'Chart' };
+        const settings = chartSettings[index] || DEFAULT_CHART_SETTINGS;
+
         return (
             <RenderedChartSlot
                 chartId={chartId}
                 height={height}
-                showDegrees={chartId === 'D1'}
+                settings={settings}
+                onUpdateSettings={(s) => updateSlotSettings(index, s)}
                 onZoom={() => setZoomedChart({ varga: chartId, label: `${meta.name} (${chartId})` })}
                 onDismiss={() => dismissSlot(index)}
             />
@@ -546,17 +729,13 @@ function KundaliContent({
                 {/* LEFT COLUMN: Slot 0 & Planetary Details */}
                 <div className="md:col-span-5 flex flex-col gap-2">
                     {/* Slot 0: Main Chart */}
-                    {renderSlot(0, 'h-[435px]')}
+                    {renderSlot(0, 'h-[405px]')}
 
                     {/* Planetary Details Window (dynamic from Slot 0) */}
                     <div className="prem-card overflow-hidden">
                         <div className="px-3 py-1.5" style={HEADER_STYLE}>
                             <h2 className={TYPOGRAPHY.sectionTitle}>
-                                {slot0ChartId ? (
-                                    <>{slot0Meta?.name} <KnowledgeTooltip term="planetary_positions" unstyled>planetary positions</KnowledgeTooltip></>
-                                ) : (
-                                    <KnowledgeTooltip term="planetary_positions" unstyled>Planetary positions</KnowledgeTooltip>
-                                )}
+                                Rashi <KnowledgeTooltip term="planetary_positions" unstyled>planetary positions</KnowledgeTooltip>
                             </h2>
                         </div>
                         <div className="bg-surface-warm">
@@ -657,8 +836,8 @@ function KundaliContent({
 
                     {/* Middle Row: Slot 1 & Slot 2 */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {renderSlot(1, 'h-[320px]')}
-                        {renderSlot(2, 'h-[320px]')}
+                        {renderSlot(1, 'h-[335px]')}
+                        {renderSlot(2, 'h-[335px]')}
                     </div>
                 </div>
             </div>

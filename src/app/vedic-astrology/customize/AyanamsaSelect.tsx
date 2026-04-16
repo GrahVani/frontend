@@ -80,12 +80,9 @@ export function AyanamsaSelect({
                         : "px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide"
                 )}
                 style={{
-                    background: isOpen 
-                        ? 'linear-gradient(180deg, #FDFBF7 0%, #F5EFE6 100%)'
-                        : 'linear-gradient(180deg, #FFFFFF 0%, #FDFBF7 100%)',
+                    backgroundColor: 'transparent',
                     borderColor: isOpen ? selectedOption.color : '#E6D5B8',
                     color: isOpen ? selectedOption.color : '#8B7355',
-                    boxShadow: isOpen ? `0 0 0 1px ${selectedOption.color}30` : '0 1px 2px rgba(0,0,0,0.04)',
                     ['--focus-ring-color' as string]: selectedOption.color
                 }}
                 aria-expanded={isOpen}
