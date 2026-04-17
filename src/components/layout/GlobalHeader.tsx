@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Settings, Clock, ChevronDown, Menu, Bell } from "lucide-react";
 import { useAstrologerStore } from "@/store/useAstrologerStore";
@@ -64,12 +64,24 @@ export default function GlobalHeader() {
         return null;
     }
 
-    const isActive = (path: string) => {
-        if (path === "/" && pathname === "/dashboard") return true;
-        if (path === "/dashboard" && pathname === "/dashboard") return true;
+    const searchParams = useSearchParams();
+    const redirectParam = searchParams.get('redirect');
 
-        // Prevent double highlighting: If we're on Panchang, don't highlight the parent Vedic Astrology tab
-        if (path === "/vedic-astrology" && pathname?.startsWith("/vedic-astrology/panchanga")) return false;
+    const isActive = (path: string) => {
+        if (path === "/vedic-astrology/customize") {
+            if (pathname === "/vedic-astrology/customize") return true;
+            if (pathname === "/vedic-astrology" && redirectParam === "/vedic-astrology/customize") return true;
+            return false;
+        }
+
+        if (path === "/" && (pathname === "/dashboard" || pathname?.startsWith("/clients"))) return true;
+        if (path === "/dashboard" && (pathname === "/dashboard" || pathname?.startsWith("/clients"))) return true;
+
+        // Prevent double highlighting
+        if (path === "/vedic-astrology" && (pathname?.startsWith("/vedic-astrology/panchanga") || pathname?.startsWith("/vedic-astrology/customize"))) return false;
+
+        // Avoid highlighting Vedic Astrology when we are on the client list for Customize
+        if (path === "/vedic-astrology" && pathname === "/vedic-astrology" && redirectParam === "/vedic-astrology/customize") return false;
 
         if (path !== "/" && pathname?.startsWith(path)) return true;
         return false;
@@ -129,7 +141,7 @@ export default function GlobalHeader() {
 
                     <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="Main navigation">
                         <NavLink href="/dashboard" label="Dashboard" active={isActive("/dashboard")} />
-                        <NavLink href="/clients" label="Clients" active={isActive("/clients")} subItems={CLIENT_SUB_ITEMS} />
+                        <NavLink href="/vedic-astrology?redirect=/vedic-astrology/customize" label="Workbench" active={isActive("/vedic-astrology/customize")} />
                         <NavLink href="/vedic-astrology" label="Vedic Astrology" active={isActive("/vedic-astrology")} />
                         <NavLink href="/vedic-astrology/panchanga" label="Panchang" active={isActive("/vedic-astrology/panchanga")} />
                         <NavLink href="/muhurta" label="Muhurta" active={isActive("/muhurta")} />

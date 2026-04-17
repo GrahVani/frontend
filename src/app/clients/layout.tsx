@@ -4,6 +4,7 @@ import React from 'react';
 import PageContainer from '@/components/layout/PageContainer';
 import Breadcrumbs from '@/components/layout/Breadcrumbs';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import DashboardTabs from '@/components/dashboard/DashboardTabs';
 
 export default function ClientsLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -17,9 +18,10 @@ export default function ClientsLayout({ children }: { children: React.ReactNode 
                 <div className="glass-orb glass-orb-amber" />
                 <div className="glass-orb glass-orb-blue" />
                 <div className="pt-14 relative z-10 w-full min-h-screen">
-                    <main className="flex-1 p-4 sm:p-6 lg:p-8">
-                        <PageContainer>
+                    <main className="flex-1">
+                        <PageContainer variant="full">
                             <Breadcrumbs />
+                            <DashboardTabs />
                             {children}
                         </PageContainer>
                     </main>

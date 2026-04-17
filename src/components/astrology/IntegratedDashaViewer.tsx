@@ -204,13 +204,13 @@ export default function IntegratedDashaViewer({
             {/* Navigation Header */}
             {selectedPath.length > 0 && (
                 <div className="bg-surface-warm/30 border-b border-gold-primary/10 px-3 py-1 flex items-center gap-1 overflow-x-auto no-scrollbar shrink-0">
-                    <button onClick={() => handleBreadcrumbClick(-1)} className={cn("px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors text-[11px] font-medium uppercase tracking-wider !text-ink")}>Home</button>
+                    <button onClick={() => handleBreadcrumbClick(-1)} className={cn("px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors text-[11px] font-medium uppercase tracking-wider !text-primary")}>Home</button>
                     {selectedPath.map((node, i) => (
                         <React.Fragment key={i}>
-                            <ChevronRight className="w-2.5 h-2.5 text-ink/30 shrink-0" />
+                            <ChevronRight className="w-2.5 h-2.5 text-primary/30 shrink-0" />
                             <button
                                 onClick={() => handleBreadcrumbClick(i)}
-                                className={cn("px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors text-[11px] font-medium whitespace-nowrap !text-ink")}
+                                className={cn("px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors text-[11px] font-medium whitespace-nowrap !text-primary")}
                             >
                                 {isChara ? String(node.raw?.sign_name || node.planet || node.lord) : (PLANET_ABBREVIATIONS[node.planet || node.lord || ""] || (node.planet || node.lord || ""))}
                             </button>
@@ -223,12 +223,12 @@ export default function IntegratedDashaViewer({
                 <div className="flex-1 flex flex-col h-full">
                     {/* Header Strip - Fixed height */}
                     <div className="sticky top-0 z-20 bg-surface-warm/95 backdrop-blur-sm shadow-sm flex items-center shrink-0 border-b border-gold-primary/10 h-[36px]">
-                        <div className="px-2 text-left w-[44%] !text-[11px] !font-black uppercase tracking-wider text-ink/60">
+                        <div className="px-2 text-left w-[44%] !text-[11px] font-semibold tracking-wider text-primary">
                             {DASHA_LEVELS[currentLevel]?.name || 'Period'}
                         </div>
-                        <div className="px-1 text-center w-[20%] !text-[11px] !font-black uppercase tracking-wider text-ink/60">Start</div>
-                        <div className="px-1 text-center w-[20%] !text-[11px] !font-black uppercase tracking-wider text-ink/60">End</div>
-                        <div className="px-1 text-center w-[16%] !text-[11px] !font-black uppercase tracking-wider text-ink/60">Dur.</div>
+                        <div className="px-1 text-center w-[20%] !text-[11px] font-semibold tracking-wider text-primary">Start</div>
+                        <div className="px-1 text-center w-[20%] !text-[11px] font-semibold tracking-wider text-primary">End</div>
+                        <div className="px-1 text-center w-[16%] !text-[11px] font-semibold tracking-wider text-primary">Dur.</div>
                     </div>
 
                     {/* Filling Rows - Stretches to fill available height */}
@@ -254,15 +254,15 @@ export default function IntegratedDashaViewer({
                                     >
                                         <div className="px-1.5 flex items-center gap-1 w-[44%] h-full border-l-2 border-transparent group-hover:border-gold-primary transition-all overflow-hidden">
                                             {isClickable ? (
-                                                <ChevronRight className="w-2.5 h-2.5 text-ink/40 group-hover:text-gold-dark transition-colors flex-shrink-0" />
+                                                <ChevronRight className="w-2.5 h-2.5 text-primary/40 group-hover:text-gold-dark transition-colors flex-shrink-0" />
                                             ) : (
                                                 <div className="w-2 flex-shrink-0" />
                                             )}
                                             <div className="flex items-baseline gap-0.5 truncate overflow-hidden">
                                                 {selectedPath.length > 0 && (
-                                                    <span className="!text-ink font-medium shrink-0 tracking-tighter mr-0.5 !text-[11px] opacity-60 font-mono">{pathPrefix}</span>
+                                                    <span className="!text-primary font-semibold shrink-0 tracking-tighter mr-0.5 !text-[11px] font-mono">{pathPrefix}</span>
                                                 )}
-                                                <span className={cn("!font-black !text-ink !text-[12.5px] uppercase tracking-tight")}>{pName}</span>
+                                                <span className={cn("font-semibold !text-primary !text-[12.5px] tracking-tight")}>{pName}</span>
                                             </div>
                                             {period.isCurrent && (
                                                 <span className="ml-auto px-1 py-0.5 bg-green-500/20 border border-green-500/30 rounded-full leading-none text-green-700 font-bold text-[8px] shrink-0">
@@ -270,13 +270,13 @@ export default function IntegratedDashaViewer({
                                                 </span>
                                             )}
                                         </div>
-                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "w-[20%] px-0.5 text-center !text-[10px] !font-bold !text-ink tracking-tighter")}>
+                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "w-[20%] px-0.5 text-center !text-[10px] font-semibold !text-primary tracking-tighter")}>
                                             {startFmt.date}
                                         </div>
-                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "w-[20%] px-0.5 text-center !text-[10px] !font-bold !text-ink tracking-tighter")}>
+                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "w-[20%] px-0.5 text-center !text-[10px] font-semibold !text-primary tracking-tighter")}>
                                             {endFmt.date}
                                         </div>
-                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "w-[16%] px-0.5 text-center !text-[10px] !font-bold !text-ink tracking-tighter")}>
+                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "w-[16%] px-0.5 text-center !text-[10px] font-semibold !text-primary tracking-tighter")}>
                                             {durationStr}
                                         </div>
                                     </div>

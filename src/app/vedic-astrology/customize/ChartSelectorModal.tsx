@@ -64,7 +64,7 @@ function CustomDropdown({ label, icon: Icon, value, options, onChange, placehold
 
     return (
         <div ref={containerRef} className="relative flex-1 min-w-0">
-            <label className="block text-[10px] font-black uppercase tracking-wider text-gold-dark mb-1.5">
+            <label className="block text-[10px] font-medium uppercase tracking-wider text-gold-dark mb-1.5">
                 {label}
             </label>
             <button
@@ -264,10 +264,10 @@ export default function ChartSelectorModal({
                                 <Plus className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                                <h2 className="text-[18px] font-black text-ink tracking-tight">
+                                <h2 className="text-[18px] font-medium text-ink tracking-tight">
                                     ADD WIDGETS
                                 </h2>
-                                <p className="text-[11px] font-bold text-gold-dark tracking-wide">
+                                <p className="text-[11px] font-medium text-gold-dark tracking-wide">
                                     SELECT CHARTS, WIDGETS & TOOLS
                                 </p>
                             </div>

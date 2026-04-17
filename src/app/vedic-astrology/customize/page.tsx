@@ -98,9 +98,9 @@ const SMART_DEFAULTS: Record<string, WidgetDimensions> = {
         maxWidth: 1000, maxHeight: 1000
     },
     widget_shadbala: {
-        width: 680, height: 520,
-        minWidth: 450, minHeight: 380,
-        maxWidth: 1100, maxHeight: 900
+        width: 1470, height: 840,
+        minWidth: 600, minHeight: 400,
+        maxWidth: 2400, maxHeight: 1200
     },
     widget_yoga: {
         width: 500, height: 480,
@@ -403,137 +403,157 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
             style={{
                 width: dimensions.width,
                 height: dimensions.height,
+                maxWidth: '100%',
                 backgroundColor: theme.backgroundColor,
                 borderColor: showBorder ? theme.borderColor : 'transparent',
                 borderWidth: showBorder ? theme.borderWidth : 0,
                 borderRadius: theme.borderRadius,
             }}
         >
-            {showHeader && (
-                <div
-                    className="flex items-center justify-between px-3 shrink-0 cursor-move relative z-10"
-                    style={{
-                        background: theme.headerBackground,
-                        color: theme.headerTextColor,
-                        height: theme.headerHeight ?? 36,
-                    }}
-                >
-                    <div className="flex items-center gap-2 min-w-0 flex-1" style={{ justifyContent: theme.titleAlign ?? 'flex-start' }}>
-                        <span
-                            className="font-bold truncate min-w-[20px]"
-                            style={{
-                                color: theme.headerTextColor,
-                                fontSize: Math.min(
-                                    (theme.headerFontSize ?? 12) * finalScale.scale,
-                                    dimensions.width / 20
-                                ),
-                                maxWidth: theme.titleMaxWidth ?? dimensions.width * 0.5,
-                                textAlign: theme.titleAlign ?? 'left',
-                            }}
-                            title={displayTitle}
-                        >
-                            {displayTitle}
-                        </span>
+            {showHeader && (() => {
+                // Responsive breakpoints based on actual widget width
+                const w = dimensions.width;
+                const showDimensionControls = w >= 380;
+                const showZoomControl = w >= 450;
+                const showAyanamsa = w >= 320;
+                const isCompact = w < 300;
 
-                        <div className="flex items-center gap-1.5 bg-black/5 px-1.5 py-0.5 rounded-md border border-black/5 shadow-inner">
-                            {/* Width Control */}
-                            <div className="flex items-center gap-1 group/w">
-                                <button 
-                                    onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ width: dimensions.width - 10 }); }}
-                                    className="p-0.5 hover:bg-black/10 rounded-sm transition-colors"
-                                >
-                                    <Minus className="w-2.5 h-2.5 opacity-50" />
-                                </button>
-                                <span className="text-[9px] font-black text-ink/40 min-w-[42px] text-center uppercase">
-                                    W: {dimensions.width}
-                                </span>
-                                <button 
-                                    onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ width: dimensions.width + 10 }); }}
-                                    className="p-0.5 hover:bg-black/10 rounded-sm transition-colors"
-                                >
-                                    <Plus className="w-2.5 h-2.5 opacity-50" />
-                                </button>
-                            </div>
+                // Dynamic title max-width: leave room for controls
+                const titleMaxWidth = isCompact
+                    ? Math.max(40, w - 80)
+                    : showDimensionControls
+                        ? Math.max(30, w * 0.18)
+                        : Math.max(40, w * 0.38);
 
-                            <div className="w-px h-2.5 bg-black/10 mx-0.5" />
-
-                            {/* Height Control */}
-                            <div className="flex items-center gap-1 group/h">
-                                <button 
-                                    onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ height: dimensions.height - 10 }); }}
-                                    className="p-0.5 hover:bg-black/10 rounded-sm transition-colors"
-                                >
-                                    <Minus className="w-2.5 h-2.5 opacity-50" />
-                                </button>
-                                <span className="text-[9px] font-black text-ink/40 min-w-[42px] text-center uppercase">
-                                    H: {dimensions.height}
-                                </span>
-                                <button 
-                                    onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ height: dimensions.height + 10 }); }}
-                                    className="p-0.5 hover:bg-black/10 rounded-sm transition-colors"
-                                >
-                                    <Plus className="w-2.5 h-2.5 opacity-50" />
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Granular Zoom Control */}
-                        <div className="flex items-center gap-1 bg-primary/10 px-1.5 py-0.5 rounded-md border border-primary/10 shadow-inner">
-                            <button 
-                                onClick={(e) => { 
-                                    e.stopPropagation(); 
-                                    const currentScale = theme.contentTextScale ?? 1;
-                                    onUpdateTheme({ contentTextScale: Math.max(0.5, currentScale - 0.05) }); 
+                return (
+                    <div
+                        className="flex items-center justify-between px-2.5 shrink-0 cursor-move relative z-10 overflow-hidden border-b"
+                        style={{
+                            background: 'linear-gradient(180deg, #F8F3EB 0%, #F0E8DA 100%)',
+                            borderBottomColor: '#D4C4A8',
+                            height: theme.headerHeight ?? 38,
+                        }}
+                    >
+                        {/* Left side: Title + dimension/zoom controls */}
+                        <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
+                            {/* Title — bold, dark, prominent */}
+                            <span
+                                className="font-medium truncate shrink-0 tracking-wide"
+                                style={{
+                                    color: '#3E2A1F',
+                                    fontSize: Math.min(
+                                        (theme.headerFontSize ?? 12) * finalScale.scale,
+                                        isCompact ? 10 : Math.max(11, dimensions.width / 25)
+                                    ),
+                                    maxWidth: titleMaxWidth,
                                 }}
-                                className="p-0.5 hover:bg-primary/20 rounded-sm transition-colors"
+                                title={displayTitle}
                             >
-                                <Minus className="w-2.5 h-2.5 text-primary opacity-60" />
-                            </button>
-                            <span className="text-[9px] font-black text-primary min-w-[30px] text-center">
-                                {finalScale.scalePercentage}%
+                                {displayTitle}
                             </span>
-                            <button 
-                                onClick={(e) => { 
-                                    e.stopPropagation(); 
-                                    const currentScale = theme.contentTextScale ?? 1;
-                                    onUpdateTheme({ contentTextScale: Math.min(2, currentScale + 0.05) }); 
-                                }}
-                                className="p-0.5 hover:bg-primary/20 rounded-sm transition-colors"
+
+                            {/* W/H Controls — warm gold pill, high contrast */}
+                            {showDimensionControls && (
+                                <div className="flex items-center gap-0.5 px-1.5 py-1 rounded-lg border border-[#C9B896] shrink-0">
+                                    {/* Width */}
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ width: dimensions.width - 10 }); }}
+                                        className="w-5 h-5 flex items-center justify-center rounded hover:bg-[#D4C4A8] active:scale-90 transition-all"
+                                    >
+                                        <Minus className="w-3 h-3 text-[#6B5B4E]" />
+                                    </button>
+                                    <span className="text-[10px] font-medium text-[#5A4A3A] text-center uppercase whitespace-nowrap min-w-[42px] tracking-wide">
+                                        W: {dimensions.width}
+                                    </span>
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ width: dimensions.width + 10 }); }}
+                                        className="w-5 h-5 flex items-center justify-center rounded hover:bg-[#D4C4A8] active:scale-90 transition-all"
+                                    >
+                                        <Plus className="w-3 h-3 text-[#6B5B4E]" />
+                                    </button>
+
+                                    <div className="w-px h-3.5 bg-[#C9B896] mx-1" />
+
+                                    {/* Height */}
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ height: dimensions.height - 10 }); }}
+                                        className="w-5 h-5 flex items-center justify-center rounded hover:bg-[#D4C4A8] active:scale-90 transition-all"
+                                    >
+                                        <Minus className="w-3 h-3 text-[#6B5B4E]" />
+                                    </button>
+                                    <span className="text-[10px] font-medium text-[#5A4A3A] text-center uppercase whitespace-nowrap min-w-[42px] tracking-wide">
+                                        H: {dimensions.height}
+                                    </span>
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ height: dimensions.height + 10 }); }}
+                                        className="w-5 h-5 flex items-center justify-center rounded hover:bg-[#D4C4A8] active:scale-90 transition-all"
+                                    >
+                                        <Plus className="w-3 h-3 text-[#6B5B4E]" />
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* Zoom Control — vibrant primary pill */}
+                            {showZoomControl && (
+                                <div className="flex items-center gap-0.5 px-1.5 py-1 rounded-lg border border-primary/30 shrink-0">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const currentScale = theme.contentTextScale ?? 1;
+                                            onUpdateTheme({ contentTextScale: Math.max(0.5, currentScale - 0.05) });
+                                        }}
+                                        className="w-5 h-5 flex items-center justify-center rounded hover:bg-primary/20 active:scale-90 transition-all"
+                                    >
+                                        <Minus className="w-3 h-3 text-primary" />
+                                    </button>
+                                    <span className="text-[10px] font-medium text-primary whitespace-nowrap text-center min-w-[32px] tracking-wide">
+                                        {finalScale.scalePercentage}%
+                                    </span>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const currentScale = theme.contentTextScale ?? 1;
+                                            onUpdateTheme({ contentTextScale: Math.min(2, currentScale + 0.05) });
+                                        }}
+                                        className="w-5 h-5 flex items-center justify-center rounded hover:bg-primary/20 active:scale-90 transition-all"
+                                    >
+                                        <Plus className="w-3 h-3 text-primary" />
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Right side: Ayanamsa + Settings + Close — always visible */}
+                        <div className="flex items-center gap-1 shrink-0 ml-2">
+                            {onAyanamsaChange && showAyanamsa && (
+                                <div className="relative">
+                                    <AyanamsaSelect
+                                        value={ayanamsa || 'Lahiri'}
+                                        onChange={onAyanamsaChange}
+                                        compact
+                                    />
+                                </div>
+                            )}
+
+                            <button
+                                onClick={onCustomize}
+                                className="w-7 h-7 flex items-center justify-center rounded-lg border border-[#D4C4A8] hover:bg-white hover:border-primary/40 text-[#7A6A5A] hover:text-primary transition-all active:scale-95"
+                                title="Customize"
                             >
-                                <Plus className="w-2.5 h-2.5 text-primary opacity-60" />
+                                <Settings className="w-3.5 h-3.5" />
+                            </button>
+
+                            <button
+                                onClick={onRemove}
+                                className="w-7 h-7 flex items-center justify-center rounded-lg border border-[#D4C4A8] hover:bg-red-50 hover:border-red-300 text-[#7A6A5A] hover:text-red-500 transition-all active:scale-95"
+                                title="Remove"
+                            >
+                                <X className="w-3.5 h-3.5" />
                             </button>
                         </div>
                     </div>
-
-                    <div className="flex items-center gap-1">
-                        {onAyanamsaChange && (
-                            <div className="mr-1 relative opacity-80 hover:opacity-100 transition-opacity">
-                                <AyanamsaSelect
-                                    value={ayanamsa || 'Lahiri'}
-                                    onChange={onAyanamsaChange}
-                                    compact
-                                />
-                            </div>
-                        )}
-
-                        <button
-                            onClick={onCustomize}
-                            className="p-1.5 hover:bg-white/20 rounded-lg transition-colors opacity-60 hover:opacity-100"
-                            title="Customize"
-                        >
-                            <Settings className="w-3.5 h-3.5" />
-                        </button>
-
-                        <button
-                            onClick={onRemove}
-                            className="p-1.5 hover:bg-white/20 rounded-lg transition-colors opacity-60 hover:opacity-100"
-                            title="Remove"
-                        >
-                            <X className="w-3.5 h-3.5" />
-                        </button>
-                    </div>
-                </div>
-            )}
+                );
+            })()}
 
             <div
                 ref={contentRef}
@@ -551,7 +571,7 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                 {isLoading ? (
                     <div className="h-full flex flex-col items-center justify-center p-4 text-center">
                         <Loader2 className="w-8 h-8 text-primary/30 animate-spin mb-3" />
-                        <p className="text-[10px] font-bold text-ink/30 uppercase tracking-[0.2em]">Synchronizing Data...</p>
+                        <p className="text-[10px] font-medium text-ink/30 uppercase tracking-[0.2em]">Synchronizing Data...</p>
                     </div>
                 ) : !isAvailable && onGenerate ? (
                     <div className="h-full flex flex-col items-center justify-center p-4 text-center">
@@ -560,7 +580,7 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                         <button
                             onClick={onGenerate}
                             disabled={isGenerating}
-                            className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-[10px] font-bold transition-all"
+                            className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-[10px] font-medium transition-all"
                         >
                             Generate
                         </button>
@@ -754,7 +774,7 @@ export default function CustomizePage() {
     }
 
     return (
-        <div className="flex flex-col h-[calc(100vh-104px)] w-[calc(100%+2rem)] -mx-4 -mt-4">
+        <div className="flex flex-col h-[calc(100vh-104px)] w-[calc(100%+2rem)] -mx-4 mt-0">
             {/* Toolbar */}
             <div className="flex items-center gap-4 px-6 py-3 bg-surface-warm/95 border-b border-gold-primary/20 shrink-0">
                 {/* Brand */}

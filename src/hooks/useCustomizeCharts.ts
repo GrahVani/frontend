@@ -277,9 +277,9 @@ export const WIDGET_DIMENSION_PRESETS: Record<string, WidgetDimensions> = {
         maxWidth: 1200, maxHeight: 1000 
     },
     widget_shadbala: { 
-        width: 520, height: 480, 
-        minWidth: 400, minHeight: 350, 
-        maxWidth: 900, maxHeight: 800 
+        width: 1470, height: 840, 
+        minWidth: 600, minHeight: 400, 
+        maxWidth: 2400, maxHeight: 1200 
     },
     widget_yoga: { 
         width: 500, height: 480, 
@@ -441,7 +441,7 @@ export const CHART_CATALOG: CustomizeChartItem[] = [
     { id: 'widget_shodasha_varga', name: 'Shodashvarga Summary', description: 'Planetary dignities across 16 divisional charts', category: 'widget_shodasha', defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_shodasha },
 
     // LAHIRI WIDGETS
-    { id: 'widget_shadbala', name: 'Shadbala Analysis', description: 'Six-fold planetary strength with Ishta/Kashta phala', category: 'widget_shadbala', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_shadbala },
+    { id: 'widget_shadbala', name: 'Shadbala Analysis', description: 'Six-fold planetary strength with Ishta/Kashta phala', category: 'widget_shadbala', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_shadbala, defaultTheme: { contentTextScale: 1.2 } },
     { id: 'widget_pushkara', name: 'Pushkara Navamsha', description: 'Auspicious Navamsha divisions and Pushkara Bhaga', category: 'widget_pushkara', lahiriOnly: true, defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 450, height: 300 } },
     { id: 'widget_karaka', name: 'Chara Karakas', description: 'Variable significators based on planetary degrees', category: 'widget_karaka', lahiriOnly: true, defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 350, height: 300 } },
     { id: 'widget_chakra', name: 'Sudarshan Chakra', description: 'Tri-layer radial chart (Surya, Chandra, Lagna)', category: 'widget_chakra', defaultDimensions: WIDGET_DIMENSION_PRESETS.widget_chakra, defaultTheme: { contentTextScale: 1.16 } },

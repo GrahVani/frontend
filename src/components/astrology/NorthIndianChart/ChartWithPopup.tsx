@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef, useEffect } from 'react';
 import NorthIndianChart, { Planet } from './NorthIndianChart';
@@ -35,6 +35,7 @@ export default function ChartWithPopup({
     degreeFormat = 'short',
     degreeFontSize,
     showHouseNumbers = true,
+    signNumberFontSize,
     showGridLines = true,
     gridLineColor = '#D4C4A8',
     gridLineWidth = 2,
@@ -129,6 +130,7 @@ export default function ChartWithPopup({
                 degreeFormat={degreeFormat}
                 degreeFontSize={degreeFontSize}
                 showHouseNumbers={showHouseNumbers}
+                signNumberFontSize={signNumberFontSize}
                 showGridLines={showGridLines}
                 gridLineColor={gridLineColor}
                 gridLineWidth={gridLineWidth}

@@ -90,32 +90,34 @@ export default function VimshottariTreeGrid({ data, isLoading, className }: Vims
     return (
         <div className={cn("w-full flex flex-col overflow-hidden rounded-lg border border-gold-primary/15 bg-white shadow-sm", className)}>
             {/* Navigation Header / Breadcrumbs */}
-            {navPath.length > 0 && (
-                <div className="bg-surface-warm/30 border-b border-gold-primary/10 p-1.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-                    <button
-                        onClick={handleReset}
-                        className={cn("px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors leading-compact text-ink/60", TYPOGRAPHY.breadcrumb)}
-                    >
-                        Home
-                    </button>
-                    <ChevronRight className="w-2.5 h-2.5 text-ink flex-shrink-0" />
-                    {navPath.map((node, i) => (
-                        <React.Fragment key={i}>
-                            {i > 0 && <ChevronRight className="w-2.5 h-2.5 text-ink flex-shrink-0" />}
-                            <button
-                                onClick={() => setNavPath(navPath.slice(0, i + 1))}
-                                className={cn(
-                                    "px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors leading-compact",
-                                    i === navPath.length - 1 ? "font-bold text-ink" : "text-ink/70",
-                                    TYPOGRAPHY.breadcrumb
-                                )}
-                            >
-                                {node.planet}
-                            </button>
-                        </React.Fragment>
-                    ))}
-                </div>
-            )}
+            <div className="bg-surface-warm/30 border-b border-gold-primary/10 p-1.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                <button
+                    onClick={handleReset}
+                    className={cn(
+                        "px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors leading-compact font-serif",
+                        navPath.length === 0 ? "font-bold text-primary" : "text-primary",
+                        TYPOGRAPHY.breadcrumb
+                    )}
+                >
+                    Home
+                </button>
+                {navPath.length > 0 && <ChevronRight className="w-2.5 h-2.5 text-primary flex-shrink-0" />}
+                {navPath.map((node, i) => (
+                    <React.Fragment key={i}>
+                        {i > 0 && <ChevronRight className="w-2.5 h-2.5 text-primary flex-shrink-0" />}
+                        <button
+                            onClick={() => setNavPath(navPath.slice(0, i + 1))}
+                            className={cn(
+                                "px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors leading-compact font-serif",
+                                i === navPath.length - 1 ? "font-bold text-primary" : "text-primary",
+                                TYPOGRAPHY.breadcrumb
+                            )}
+                        >
+                            {node.planet}
+                        </button>
+                    </React.Fragment>
+                ))}
+            </div>
 
             <div className="flex-1 overflow-x-auto scrollbar-hidden">
                 <table className="w-full border-collapse table-fixed">
@@ -196,10 +198,9 @@ function DashaDrillRow({ node, depth, pathPrefix, onDrill }: { node: DashaNode; 
                             <span className="w-2.5 inline-block" />
                         )}
                         {depth > 0 && (
-                            <span className="text-ink/40 font-normal shrink-0 tracking-tighter mr-0.5">{pathPrefix}</span>
-                        )}
-                        <span className={TYPOGRAPHY.planetName}>
-                            {node.planet}
+                            <span className={cn(TYPOGRAPHY.planetName, "font-serif text-primary shrink-0 tracking-tighter")}>{pathPrefix}</span>
+                        )}<span className={cn(TYPOGRAPHY.planetName, "font-serif text-primary tracking-tighter")}>
+                            {PLANET_ABBREVIATIONS[node.planet] || node.planet}
                         </span>
                         {isActive && (
                             <span className={cn("ml-1 px-1.5 py-0.5 bg-green-500/20 border border-green-500/30 rounded-full leading-none", TYPOGRAPHY.breadcrumb, "text-green-700 font-bold text-[9px]")}>

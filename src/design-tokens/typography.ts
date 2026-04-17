@@ -38,15 +38,15 @@ export const TYPOGRAPHY = {
 
     // ===== Chart Specific (SVG attributes) =====
     svgSignNumber: {
-        fontFamily: "'Inter', 'Source Sans 3', sans-serif",
+        fontFamily: "Inter, system-ui, -apple-system, sans-serif",
         fontSize: "18",
-        fontWeight: "500",
+        fontWeight: "700",
         fill: "var(--text-primary)"
     },
     svgPlanetName: {
-        fontFamily: "'Inter', 'Source Sans 3', sans-serif",
+        fontFamily: "Inter, system-ui, -apple-system, sans-serif",
         fontSize: "14",
-        fontWeight: "600"
+        fontWeight: "700"
     },
     svgDegree: {
         fontSize: "10",

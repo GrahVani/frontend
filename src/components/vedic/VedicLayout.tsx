@@ -68,7 +68,6 @@ const VEDIC_NAV_ITEMS: NavItem[] = [
     { name: "Chara Karakas", path: "/chara-karakas", icon: Shield, isOverflow: true, systemFilter: ['Lahiri'] },
     { name: "Report Lab", path: "/reports", icon: FileText },
     { name: "Notes", path: "/notes", icon: NotebookPen, isOverflow: true },
-    { name: "Customize", path: "/customize", icon: Settings2, isOverflow: true },
 ];
 
 // ============================================================================
@@ -267,13 +266,26 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
 
     React.useEffect(() => {
         if (isInitialized && !isClientSet && pathname !== "/vedic-astrology") {
-            router.push("/vedic-astrology");
+            router.push(`/vedic-astrology?redirect=${pathname}`);
         }
     }, [isInitialized, isClientSet, pathname, router]);
 
     if ((!isInitialized || !isClientSet) && pathname !== "/vedic-astrology") {
         return null;
     }
+
+    // Paths that should use the edge-to-edge full width layout
+    const dashboardPaths = [
+        "/vedic-astrology/overview",
+        "/vedic-astrology/workbench",
+        "/vedic-astrology/divisional",
+        "/vedic-astrology/ashtakavarga",
+        "/vedic-astrology/shadbala",
+        "/vedic-astrology/transits",
+        "/vedic-astrology/customize"
+    ];
+
+    const isDashboard = dashboardPaths.includes(pathname);
 
     return (
         <div className="flex flex-col min-h-screen pt-14 bg-luxury-radial relative">
@@ -283,7 +295,7 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
             />
 
             {/* Sub-Header Hub */}
-            {pathname !== "/vedic-astrology" && (
+            {pathname !== "/vedic-astrology" && pathname !== "/vedic-astrology/customize" && (
                 <VedicSubHeader
                     clientDetails={clientDetails}
                     setClientDetails={setClientDetails}
@@ -295,8 +307,11 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
 
             {/* Main Content Area */}
             <main className="flex-1 relative transition-all duration-500" aria-label="Vedic astrology content">
-                <div className="p-1 sm:p-2 lg:p-4 w-full h-full pb-10">
-                    <PageContainer variant="wide">
+                <div className={cn(
+                    "w-full h-full",
+                    isDashboard ? "p-0" : "p-1 sm:p-2 lg:p-4 pb-10"
+                )}>
+                    <PageContainer variant={isDashboard ? "full" : "wide"}>
                         {children}
                     </PageContainer>
                 </div>
