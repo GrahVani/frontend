@@ -183,6 +183,175 @@ const KNOWN_TOP_LEVEL_KEYS = new Set([
 ]);
 
 /**
+ * Bridge logic to parse the deeply nested and varied JSON payloads from 
+ * the new 43 Jaimini and Tajika endpoints into a structurally consistent state.
+ */
+function analyzeJaiminiTajikaPayload(data: Record<string, unknown>, backupHeaderTitle?: string) {
+    let isPresent = false;
+    const yogas: Array<{ name: string; result?: string; description?: string; code?: string }> = [];
+    let totalCount = 0;
+    
+    // Check known deeply nested arrays and objects specific to Jaimini/Tajika
+    for (const [k, v] of Object.entries(data)) {
+        if (Array.isArray(v) && v.length > 0) {
+            if (['yogas_triggered', 'yogas_identified', 'detected_arishta_yogas', 'active_tajika_yogas', 'detected_yogas', 'yamaya_yogas_detected', 'manau_yogas_detected', 'yogas', 'jy_085_evaluation'].includes(k)) {
+                isPresent = true;
+                totalCount += v.length;
+                v.forEach(item => {
+                    if (typeof item === 'object' && item !== null) {
+                        // Bulletproof name extraction
+                        let nameVal = item.name || item.yoga || item.axis || 'Yoga detected';
+                        if (typeof nameVal === 'object') {
+                            nameVal = nameVal.name || nameVal.id || JSON.stringify(nameVal);
+                        }
+                        
+                        let resultVal = item.result || item.description || item.status || item.details;
+                        if (typeof resultVal === 'object') {
+                            resultVal = JSON.stringify(resultVal);
+                        }
+                        
+                        yogas.push({
+                            name: String(nameVal),
+                            result: resultVal ? String(resultVal) : undefined,
+                            code: item.code ? String(item.code) : undefined
+                        });
+                    }
+                });
+            }
+        }
+        
+        if (k === 'yogas' || k === 'special_combinations' || k === 'karmic_marriage_yogas' || k === 'jaimini_bk_yogas') {
+            if (v && typeof v === 'object' && !Array.isArray(v)) {
+               const keys = Object.keys(v);
+               if (keys.length > 0 && (keys[0].startsWith('JY') || keys[0].includes('yoga') || keys[0].includes('induvara') || typeof (v as any)[keys[0]] === 'string' || ((v as any)[keys[0]] && typeof (v as any)[keys[0]] === 'object' && 'yoga' in ((v as any)[keys[0]] as any)))) {
+                   isPresent = true;
+                   totalCount += keys.length;
+                   Object.entries(v).forEach(([code, details]) => {
+                       let nameVal = String(code).replace(/_/g, ' ');
+                       let resultVal = JSON.stringify(details);
+                       
+                       if (details && typeof details === 'object' && !Array.isArray(details)) {
+                            nameVal = (details as any).yoga || (details as any).name || nameVal;
+                            resultVal = (details as any).details || (details as any).description || resultVal;
+                       } else if (typeof details === 'string') {
+                            resultVal = details;
+                       }
+                       
+                       yogas.push({
+                           name: nameVal,
+                           result: resultVal,
+                           code: String(code)
+                       });
+                   });
+               } else if ('details' in v && Array.isArray((v as any).details)) {
+                   // Tajika 'yogas' object with 'details' array and 'total_ithasala'
+                   const details = (v as any).details;
+                   totalCount += details.length;
+                   if (details.length > 0) isPresent = true;
+                   details.forEach((item: any) => {
+                       yogas.push({
+                           name: String(item.status || item.aspect || 'Tajika Aspect'),
+                           description: `Faster: ${item.faster_planet || 'N/A'}, Slower: ${item.slower_planet || 'N/A'}, Aspect: ${item.aspect || 'N/A'}`
+                       });
+                   });
+               }
+           }
+        }
+        
+        // Custom boolean flags
+        if (k === 'kahala_yoga_present' && v === true) isPresent = true;
+
+        // Extract meaningful data from deeply nested Jaimini objects that aren't standard yoga arrays
+        // e.g. condition_evaluations: { JY-052: {...}, JY-053: {...} }
+        if (!Array.isArray(v) && v && typeof v === 'object' && 
+            ['condition_evaluations', 'jaimini_rule_evaluations', 'jaimini_yogas_triggered', 'yoga_checks',
+             'amala_yoga_evaluations', 'parvata_yoga_jy064_analysis', 'vasumati_yoga_jy066',
+             'jy_065_analysis', 'primary_argala_analysis', 'navamsa_analysis_rules',
+             'kamboola_analysis_by_house', 'yoga_analysis', 'evaluation_matrix',
+             'iqabala_yoga', 'conditions', 'components', 'tajika_analysis'].includes(k)) {
+            const entries = Object.entries(v as Record<string, unknown>);
+            if (entries.length > 0) {
+                entries.forEach(([subKey, subVal]) => {
+                    if (subVal && typeof subVal === 'object' && !Array.isArray(subVal)) {
+                        const sv = subVal as Record<string, unknown>;
+                        // Check for presence flags inside
+                        if (sv.is_present === true || sv.yoga_present === true || sv.result === 'ACTIVE' || sv.result === 'Present') {
+                            isPresent = true;
+                        }
+                        const yogaName = sv.yoga || sv.name || sv.rule_summary || sv.description || subKey;
+                        const yogaResult = sv.result || sv.status || sv.details || sv.condition || '';
+                        yogas.push({
+                            name: String(yogaName).replace(/_/g, ' '),
+                            result: typeof yogaResult === 'object' ? JSON.stringify(yogaResult) : String(yogaResult),
+                            code: subKey
+                        });
+                        totalCount++;
+                    } else if (typeof subVal === 'string' || typeof subVal === 'boolean' || typeof subVal === 'number') {
+                        yogas.push({
+                            name: String(subKey).replace(/_/g, ' '),
+                            result: String(subVal),
+                            code: subKey
+                        });
+                        totalCount++;
+                    }
+                });
+            }
+        }
+
+        // Handle array-type analysis keys like kamboola_analysis_by_house, navamsa_analysis_rules
+        if (Array.isArray(v) && v.length > 0 && 
+            ['kamboola_analysis_by_house', 'navamsa_analysis_rules', 'spiritual_yogas_triggered',
+             'arishta_yogas_identified'].includes(k)) {
+            isPresent = true;
+            totalCount += v.length;
+            v.forEach((item: any) => {
+                if (typeof item === 'object' && item !== null) {
+                    yogas.push({
+                        name: String(item.rule_id || item.yoga || item.name || item.house || k.replace(/_/g, ' ')),
+                        result: String(item.result || item.condition || item.details || item.status || ''),
+                        code: item.rule_id || item.code
+                    });
+                } else if (typeof item === 'string') {
+                    yogas.push({ name: item, result: 'Detected' });
+                }
+            });
+        }
+    }
+    
+    // Direct recursive boolean indicators — only used to confirm presence, NOT to create fake data
+    const checkBooleanPresent = (obj: any, depth = 0): boolean => {
+        if (!obj || typeof obj !== 'object' || Array.isArray(obj) || depth > 3) return false;
+        for (const [key, val] of Object.entries(obj)) {
+            if (typeof val === 'boolean' && val === true) {
+                if (key.includes('present') || key === 'is_present' || key === 'yoga_detected' || key === 'amala_yoga_present' || key === 'tambira_yoga_present') {
+                    return true;
+                }
+            }
+            if (typeof val === 'object' && val !== null) {
+                if (checkBooleanPresent(val, depth + 1)) return true;
+            }
+        }
+        return false;
+    };
+    
+    const booleanDetected = checkBooleanPresent(data);
+    if (!isPresent && booleanDetected) {
+        isPresent = true;
+    }
+
+    // If no structured yogas found, DO NOT create fake combinations out of debug variables.
+    // Instead, return an empty array, which disables the combinations block.
+    if (yogas.length === 0) {
+        return { isPresent, yogas: [], totalCount: 0 };
+    }
+
+    if (yogas.length > 0 || isPresent) {
+        return { isPresent, yogas, totalCount };
+    }
+    return null;
+}
+
+/**
  * Find the yoga analysis object inside the raw response.
  * Searches known regex patterns, then falls back to raj_yogas,
  * then falls back to any unknown object containing yoga_present.
@@ -219,6 +388,24 @@ function extractYogaAnalysis(data: Record<string, unknown>): YogaAnalysisCore | 
                 return obj as YogaAnalysisCore;
             }
         }
+    }
+
+    // 3. Fallback for Jaimini / Tajika responses
+    const jtState = analyzeJaiminiTajikaPayload(data);
+    if (jtState) {
+        return {
+            yoga_present: jtState.isPresent,
+            total_yogas_found: jtState.totalCount,
+            detailed_analysis: "Detailed indicators found for special yogas. Review combinations below.",
+            yoga_combinations: jtState.yogas.map(y => ({
+                type: y.name,
+                present: true,
+                effects: [
+                    y.result ? `Result: ${y.result}` : null,
+                    y.description ? `Description: ${y.description}` : null
+                ].filter(Boolean)
+            }))
+        } as unknown as YogaAnalysisCore;
     }
 
     return null;
@@ -325,8 +512,12 @@ function collectUnknownKeys(data: Record<string, unknown>): Record<string, unkno
 
 // ─── Section Extractors ────────────────────────────────────────────
 
-function extractHeader(data: Record<string, unknown>, analysis: YogaAnalysisCore | null): NormalizedHeader | null {
-    const yogaName = extractYogaTypeName(data);
+function extractHeader(data: Record<string, unknown>, analysis: YogaAnalysisCore | null, backupTitle?: string): NormalizedHeader | null {
+    let yogaName = extractYogaTypeName(data);
+    // If the internal JSON didn't yield a meaningful name, use the dropdown selection name
+    if (yogaName === 'Yoga Analysis' && backupTitle) {
+        yogaName = backupTitle;
+    }
 
     // yoga_present can live at top-level, nested under yoga_formation_analysis,
     // or be derived from total_yogas_found / total_count > 0
@@ -443,12 +634,19 @@ function extractMeta(data: Record<string, unknown>): NormalizedMeta | null {
         ayanamsa: notes?.ayanamsa ?? (chartDetails?.ayanamsa as string | undefined) ?? chartInfo?.ayanamsa,
         ayanamsaValue,
         houseSystem: notes?.house_system ?? chartDetails?.house_system ?? chartInfo?.house_system,
-        chartType: notes?.chart_type,
-        analysisType: notes?.analysis_type ?? notes?.analysis_methodology,
+        chartType: notes?.chart_type ?? ((data.metadata as any)?.yoga_category ? String((data.metadata as any).yoga_category).toUpperCase() : undefined),
+        analysisType: notes?.analysis_type ?? notes?.analysis_methodology ?? ((data.metadata as any)?.system ? String((data.metadata as any).system).toUpperCase() + ' SYSTEM' : undefined),
     };
 }
 
-function extractDescription(analysis: YogaAnalysisCore | null): NormalizedDescription | null {
+function extractDescription(analysis: YogaAnalysisCore | null, data?: Record<string, unknown>): NormalizedDescription | null {
+    // Top-level fallback for Tajika/Jaimini reasons
+    if (data && (data.reason || data.explanation || data.details || data.summary)) {
+        return {
+            text: (data.reason || data.explanation || data.details || data.summary) as string
+        };
+    }
+
     if (!analysis) return null;
 
     const text = analysis.detailed_analysis;
@@ -640,22 +838,52 @@ function extractCombinations(analysis: YogaAnalysisCore | null): NormalizedCombi
 }
 
 function extractPlanets(data: Record<string, unknown>): Record<string, PlanetPosition> | null {
-    const raw = data as RawYogaResponse;
-
-    // Full planet grids
     const grids = [
-        raw.all_planetary_positions,
-        raw.planetary_positions,
-        raw.chart_foundations?.planetary_positions
+        data.all_planetary_positions,
+        data.planetary_positions,
+        data.planets,
+        data.debug_planetary_d9,
+        data.all_planetary_data,
+        data.planetary_data,
+        data['4_raw_planet_data'],
+        data.raw_planet_data,
+        data.planetary_signs,
+        (data.chart_foundations as any)?.planetary_positions
     ];
 
+    // Harvest Jaimini Karakas into planets output so they render in the YogaPlanetsGrid beautifully
+    const jaiminiKarakas = [ data.chara_karakas, data.core_karakas, data.karakas, data.karakamsa_houses ];
+    for (const jk of jaiminiKarakas) {
+        if (jk && typeof jk === 'object' && !Array.isArray(jk)) {
+            const mappedGrid: Record<string, PlanetPosition> = {};
+            Object.entries(jk).forEach(([karakaName, planetName]) => {
+                if (typeof planetName === 'string' && planetName.length > 0 && isNaN(Number(karakaName))) {
+                    let cleanName = karakaName.replace(/_/g, ' ');
+                    const abbrMatch = karakaName.match(/\((.*?)\)/);
+                    if (abbrMatch) cleanName = abbrMatch[1];
+                    mappedGrid[cleanName] = { planet: cleanName, sign: planetName, house: 0 };
+                }
+            });
+            if (Object.keys(mappedGrid).length > 0) return mappedGrid;
+        }
+    }
+
     for (const grid of grids) {
-        if (grid && Object.keys(grid).length > 0) {
-            // Apply fixes to grid items if needed (e.g. formatted_degree)
-            Object.values(grid).forEach(p => {
+        if (grid && typeof grid === 'object' && Object.keys(grid).length > 0) {
+            if (Array.isArray(grid)) {
+                // Handle case where planetary data is an array of objects
+                const mappedGrid: Record<string, PlanetPosition> = {};
+                grid.forEach(p => {
+                    const name = p.planet || p.name || p.id;
+                    if (name) mappedGrid[name] = p;
+                });
+                return mappedGrid;
+            }
+            
+            Object.values(grid as Record<string, any>).forEach(p => {
                 if (!p.degrees && p.formatted_degree) p.degrees = p.formatted_degree;
             });
-            return grid;
+            return grid as Record<string, PlanetPosition>;
         }
     }
 
@@ -772,13 +1000,35 @@ function extractTechnical(data: Record<string, unknown>, normalizedMeta: Normali
     const validation = raw.yoga_validation_report;
     const calcInfo = raw.calculation_info;
     const techNotes = raw.technical_notes;
+    const calcParams = (raw.calculation_parameters ?? raw.system_params ?? raw.metadata ?? raw.system_details ?? raw.system_flags) as Record<string, any>;
+    
+    // Extract Jaimini Core indicators directly as methodology or rules
+    const jCore = (raw.jaimini_core ?? raw.core_metrics ?? raw.core_astrology ?? raw.chart_core ?? raw.base_calculations ?? raw.karakamsa_lagna ?? raw.swamsa ?? raw.lagna ?? raw.jaimini_variables) as Record<string, any> | string;
+    const extraRules: string[] = [];
+    if (jCore) {
+        if (typeof jCore === 'string') extraRules.push(`Karakamsa/Lagna: ${jCore}`);
+        else if (typeof jCore === 'object') {
+            Object.entries(jCore).forEach(([k, v]) => {
+                if (typeof v === 'string' || typeof v === 'number') {
+                    extraRules.push(`${k.replace(/_/g, ' ')}: ${v}`);
+                }
+            });
+        }
+    }
 
-    return {
-        ayanamsa: normalizedMeta?.ayanamsa,
-        ayanamsaValue: normalizedMeta?.ayanamsaValue,
-        houseSystem: normalizedMeta?.houseSystem,
-        calculationMethod: (notes?.calculation_method ?? (notes?.['calculation_type'] as string | undefined)) as string | undefined,
-        chartType: normalizedMeta?.chartType,
+    // Try extracting any top level key containing lagna, ascendant, ayanamsa that wasn't caught
+    for(const k of ['karakamsa_lagna', 'arudha_lagna', 'upapada_lagna', 'ascendant_sign', 'lagna_sign']) {
+        if (typeof raw[k] === 'string') {
+            extraRules.push(`${k.replace(/_/g, ' ')}: ${raw[k]}`);
+        }
+    }
+
+    const result = {
+        ayanamsa: normalizedMeta?.ayanamsa ?? calcParams?.ayanamsa,
+        ayanamsaValue: normalizedMeta?.ayanamsaValue ?? calcParams?.ayanamsa_value,
+        houseSystem: normalizedMeta?.houseSystem ?? calcParams?.house_system,
+        calculationMethod: (notes?.calculation_method ?? calcParams?.calculation_mode ?? calcParams?.node_calculation ?? calcParams?.nodes ?? (notes?.['calculation_type'] as string | undefined)) as string | undefined,
+        chartType: normalizedMeta?.chartType ?? calcParams?.chart_type,
         yogaRules: (notes?.yoga_validation ?? notes?.conjunction_rule ?? notes?.kaal_sarpa_rule) as string | undefined,
         coordinateSystem: (notes?.coordinate_system ?? notes?.ephemeris ?? calcInfo?.coordinate_system ?? calcInfo?.ephemeris ?? techNotes?.coordinate_system ?? techNotes?.ephemeris) as string | undefined,
         classicalRules: [
@@ -789,12 +1039,77 @@ function extractTechnical(data: Record<string, unknown>, normalizedMeta: Normali
             ...(techNotes?.fixes_applied ?? []),
             ...(raw.interpretation_guide?.rule_explanations
                 ? Object.entries(raw.interpretation_guide.rule_explanations).map(([k, v]) => `${k.replace(/_/g, ' ')}: ${v}`)
-                : [])
+                : []),
+            ...extraRules
         ],
         methodology: validation
             ? Object.entries(validation).map(([k, v]) => `${k.replace(/_/g, ' ')}: ${v}`).join(', ')
             : (calcInfo?.precision ?? techNotes?.calculation_precision),
     };
+
+    const hasData = Object.entries(result).some(([k, v]) => {
+        if (Array.isArray(v)) return v.length > 0;
+        return v !== undefined && v !== null && v !== '';
+    });
+
+    return hasData ? result : null;
+}
+
+function extractCoreMetrics(data: Record<string, unknown>): Record<string, Record<string, string>> | null {
+    const raw = data as RawYogaResponse;
+    const metrics: Record<string, Record<string, string>> = {};
+
+    // 1. Chara Karakas
+    const jaiminiKarakas = raw.chara_karakas ?? raw.core_karakas ?? raw.karakas;
+    if (jaiminiKarakas && typeof jaiminiKarakas === 'object' && !Array.isArray(jaiminiKarakas)) {
+        metrics['Chara Karakas'] = {};
+        Object.entries(jaiminiKarakas).forEach(([k, v]) => {
+            if (typeof v === 'string' || typeof v === 'number') {
+                metrics['Chara Karakas'][k.replace(/_/g, ' ')] = String(v);
+            }
+        });
+    }
+
+    // 2. Jaimini Core / Core Metrics map
+    const jCore = raw.jaimini_core ?? raw.core_metrics ?? raw.core_astrology ?? raw.chart_core ?? raw.karakamsa_houses;
+    if (jCore && typeof jCore === 'object' && !Array.isArray(jCore)) {
+        metrics['Core Astrology Metrics'] = {};
+        Object.entries(jCore).forEach(([k, v]) => {
+            if (typeof v === 'string' || typeof v === 'number') metrics['Core Astrology Metrics'][k.replace(/_/g, ' ')] = String(v);
+            else if (typeof v === 'boolean') metrics['Core Astrology Metrics'][k.replace(/_/g, ' ')] = v ? 'Yes' : 'No';
+        });
+    }
+
+    // 3. Various top-level independent values pulled from root
+    const rootMatches: Record<string, string> = {};
+    for (const k of ['karakamsa_lagna', 'swamsa', 'arudha_lagna', 'upapada_lagna', 'lagnesh', 'karyesh', 'ascendant_sign', 'lagna_sign', 'moon_sign', 'darakaraka', 'atmakaraka', 'ayanamsa']) {
+        if (typeof raw[k] === 'string' || typeof raw[k] === 'number') {
+            rootMatches[k.replace(/_/g, ' ')] = String(raw[k]);
+        }
+    }
+    if (Object.keys(rootMatches).length > 0) {
+        metrics['Key Chart Indicators'] = rootMatches;
+    }
+
+    // 4. Arrays & specific isolated indicators
+    if (Array.isArray(raw.planets_in_karakamsa) && raw.planets_in_karakamsa.length > 0) {
+        if (!metrics['Jaimini Indicators']) metrics['Jaimini Indicators'] = {};
+        metrics['Jaimini Indicators']['Planets in Karakamsa'] = raw.planets_in_karakamsa.join(', ');
+    }
+    const tajikaYogaRaw = raw.iqabala_yoga ?? raw.tambira_yoga_present;
+    if (tajikaYogaRaw) {
+        if (!metrics['Tajika Metrics']) metrics['Tajika Metrics'] = {};
+        if (typeof tajikaYogaRaw === 'boolean') metrics['Tajika Metrics']['Yoga Present'] = tajikaYogaRaw ? 'Yes' : 'No';
+        else if (typeof tajikaYogaRaw === 'object' && !Array.isArray(tajikaYogaRaw)) {
+            Object.entries(tajikaYogaRaw).forEach(([k, v]) => {
+                if (typeof v === 'string' || typeof v === 'number') metrics['Tajika Metrics'][k.replace(/_/g, ' ')] = String(v);
+                else if (typeof v === 'boolean') metrics['Tajika Metrics'][k.replace(/_/g, ' ')] = v ? 'Yes' : 'No';
+            });
+        }
+    }
+
+    if (Object.keys(metrics).length === 0) return null;
+    return metrics;
 }
 
 // ─── Main Normalizer ───────────────────────────────────────────────
@@ -806,7 +1121,7 @@ function extractTechnical(data: Record<string, unknown>, normalizedMeta: Normali
  * @param input - Raw JSON from the backend (may be double-nested)
  * @returns NormalizedYogaData with null sections where data is absent
  */
-export function normalizeYogaData(input: unknown): NormalizedYogaData {
+export function normalizeYogaData(input: unknown, originalYogaType?: string): NormalizedYogaData {
     // Step 1: Unwrap double-nested data.data
     let data: Record<string, unknown> = {};
     if (input && typeof input === 'object') {
@@ -823,15 +1138,21 @@ export function normalizeYogaData(input: unknown): NormalizedYogaData {
         }
     }
 
+    const backupHeaderTitle = originalYogaType 
+        ? originalYogaType.split('_').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ')
+        : undefined;
+
     // Step 2: Extract yoga analysis from dynamic key
     const analysis = extractYogaAnalysis(data);
     const meta = extractMeta(data);
 
+    const jaiminiTajika = analyzeJaiminiTajikaPayload(data, backupHeaderTitle);
+
     // Step 3: Build normalized sections
-    return {
-        header: extractHeader(data, analysis),
+    const normalized: NormalizedYogaData = {
+        header: extractHeader(data, analysis, backupHeaderTitle),
         meta,
-        description: extractDescription(analysis),
+        description: extractDescription(analysis, data),
         effects: extractEffects(data, analysis),
         strength: extractStrength(data, analysis),
         combinations: extractCombinations(analysis),
@@ -844,6 +1165,21 @@ export function normalizeYogaData(input: unknown): NormalizedYogaData {
         cancellation: extractCancellation(data),
         doshaSeverity: extractDoshaSeverity(data, analysis),
         technical: extractTechnical(data, meta),
+        coreMetrics: extractCoreMetrics(data),
         raw: collectUnknownKeys(data),
     };
+
+    if (jaiminiTajika) {
+        if (!normalized.header || (normalized.header && !normalized.header.isPresent)) {
+            normalized.header = { isPresent: jaiminiTajika.isPresent, title: backupHeaderTitle ?? 'Detected Yoga' };
+        }
+        
+        normalized.combinations = jaiminiTajika.yogas.map(y => ({
+            type: y.name,
+            present: jaiminiTajika.isPresent,
+            effects: y.result ? [y.result] : [],
+        }));
+    }
+
+    return normalized;
 }
