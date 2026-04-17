@@ -461,6 +461,7 @@ export interface NormalizedYogaData {
     cancellation: CancellationFactor[] | null;
     doshaSeverity: NormalizedDoshaSeverity | null;
     technical: NormalizedTechnical | null;
+    coreMetrics: Record<string, Record<string, string>> | null;
     raw: Record<string, unknown>;
 }
 

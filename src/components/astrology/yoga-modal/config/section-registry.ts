@@ -26,6 +26,8 @@ import { YogaTechnicalDetails } from '../sections/YogaTechnicalDetails';
 import { YogaRemedies } from '../sections/YogaRemedies';
 import { YogaConditions } from '../sections/YogaConditions';
 import { YogaRajYogas } from '../sections/YogaRajYogas';
+import { YogaRawDetails } from '../sections/YogaRawDetails';
+import { YogaCoreMetrics } from '../sections/YogaCoreMetrics';
 import type { SectionKey } from '@/types/yoga.types';
 
 export interface RegistryEntry {
@@ -50,6 +52,7 @@ export const SECTION_REGISTRY: RegistryEntry[] = ([
     { key: 'strength' as const, component: YogaStrengthIndicator, priority: 80 },
     { key: 'conditions' as const, component: YogaConditions, priority: 75 },
     { key: 'description' as const, component: YogaDescription, priority: 70 },
+    { key: 'coreMetrics' as const, component: YogaCoreMetrics, priority: 68 },
     { key: 'rajYogas' as const, component: YogaRajYogas, priority: 67 },
     { key: 'effects' as const, component: YogaEffects, priority: 65 },
     { key: 'combinations' as const, component: YogaCombinations, priority: 60 },
@@ -60,4 +63,6 @@ export const SECTION_REGISTRY: RegistryEntry[] = ([
     { key: 'doshaSeverity' as const, component: YogaDoshaSeverity, priority: 35 },
     { key: 'technical' as const, component: YogaTechnicalDetails, priority: 25 },
     { key: 'remedies' as const, component: YogaRemedies, priority: 20 },
+    // Raw details disabled manually based on user UX feedback: "We don't need to show the raw data"
+    // { key: 'raw', component: YogaRawDetails as any, priority: 10 }
 ] as RegistryEntry[]).sort((a, b) => b.priority - a.priority);

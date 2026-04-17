@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { memo } from 'react';
 import { Trophy, CheckCircle2, XCircle } from 'lucide-react';
@@ -45,7 +45,15 @@ export const YogaHeader = memo(function YogaHeader({ data }: YogaHeaderProps) {
                     </div>
                     <div>
                         <h2 className="text-[20px] font-serif font-bold text-ink leading-tight">
-                            {title.trim().replace(/\s*yoga$/i, '').trim() || 'Yoga'} <KnowledgeTooltip term="yoga_system" unstyled>Yoga</KnowledgeTooltip>
+                            {(() => {
+                                const clean = title.trim();
+                                // If the title already ends with yoga/yogas/dosha, show as-is
+                                if (/yoga[s]?$/i.test(clean) || /dosha$/i.test(clean) || /sutra$/i.test(clean) || /argala$/i.test(clean)) {
+                                    return <><KnowledgeTooltip term="yoga_system" unstyled>{clean}</KnowledgeTooltip></>;
+                                }
+                                // Otherwise append "Yoga"
+                                return <>{clean} <KnowledgeTooltip term="yoga_system" unstyled>Yoga</KnowledgeTooltip></>;
+                            })()}
                         </h2>
                         <div className="flex items-center gap-2 mt-1">
                             <span className={cn(

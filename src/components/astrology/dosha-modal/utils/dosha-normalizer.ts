@@ -81,6 +81,8 @@ function extractHeader(data: any) {
     const sadeSati = data.sade_sati;
     const pitra = data.pitra_dosha_analysis;
     const manglik = data.manglik_dosha_analysis;
+    const kalaSarpa = data.kala_sarpa_analysis;
+    const guruChandal = data.guru_chandal_dosha_analysis;
 
     const isPresent =
         angarak?.has_angarak_dosha ??
@@ -88,6 +90,9 @@ function extractHeader(data: any) {
         sadeSati?.status?.active ??
         pitra?.pitra_dosha_present ??
         manglik?.is_present ??
+        kalaSarpa?.overall_yoga_present ??
+        kalaSarpa?.yoga_present ??
+        guruChandal?.is_present ??
         data.is_sade_sati_active ??
         data.is_present ??
         false;
@@ -96,7 +101,9 @@ function extractHeader(data: any) {
         (shrapit ? "Shrapit Dosha" :
             (pitra ? "Pitra Dosha" :
                 (manglik ? "Manglik Dosha" :
-                    (sadeSati ? "Sade Sati" : (data.calculation_notes?.analysis_type || "Dosha Analysis")))));
+                    (kalaSarpa ? "Kala Sarpa Dosha" :
+                        (guruChandal ? "Guru Chandal Dosha" :
+                            (sadeSati ? "Sade Sati" : (data.calculation_notes?.analysis_type || "Dosha Analysis")))))));
 
     return {
         title,
@@ -139,11 +146,15 @@ function extractDoshaSeverity(data: any) {
     const shrapit = data.shrapit_dosha_analysis;
     const sadeSati = data.sade_sati;
     const pitra = data.pitra_dosha_analysis;
+    const kalaSarpa = data.kala_sarpa_analysis;
+    const guruChandal = data.guru_chandal_dosha_analysis;
 
     const severity = angarak?.overall_severity ||
         shrapit?.severity ||
         pitra?.overall_severity ||
         sadeSati?.intensity_interpretation?.level ||
+        kalaSarpa?.final_assessment?.severity ||
+        guruChandal?.severity ||
         data.severity ||
         data.sade_sati_analysis?.intensity ||
         "Medium";
@@ -152,6 +163,8 @@ function extractDoshaSeverity(data: any) {
         shrapit?.degree_analysis ||
         (pitra?.pitra_dosha_present ? "Karmic baggage related to ancestors detected." : null) ||
         sadeSati?.intensity_interpretation?.description ||
+        kalaSarpa?.detailed_analysis ||
+        guruChandal?.detailed_analysis ||
         `This condition is analyzed at ${severity.toLowerCase()} intensity.`;
 
     return {
@@ -166,6 +179,27 @@ function extractImpacts(data: any) {
     const shrapit = data.shrapit_dosha_analysis;
     const sadeSati = data.sade_sati;
     const pitra = data.pitra_dosha_analysis;
+    const kalaSarpa = data.kala_sarpa_analysis;
+    const guruChandal = data.guru_chandal_dosha_analysis;
+
+    if (kalaSarpa) {
+        if (kalaSarpa.final_assessment?.recommendation) {
+            impacts.push({ title: "Core Recommendation", content: kalaSarpa.final_assessment.recommendation, type: 'impact' });
+        }
+        if (kalaSarpa.rule_by_rule_analysis) {
+             Object.entries(kalaSarpa.rule_by_rule_analysis).forEach(([k, v]: [string, any]) => {
+                 if (v && v.description) {
+                     impacts.push({ title: k.replace(/_/g, ' '), content: v.description, type: 'analysis' });
+                 }
+             });
+        }
+    }
+
+    if (guruChandal && guruChandal.impacts) {
+        if (Array.isArray(guruChandal.impacts)) {
+            guruChandal.impacts.forEach((imp: string) => impacts.push({ title: "Impact", content: imp, type: 'impact'}));
+        }
+    }
 
     if (angarak) {
         // 1. House effects

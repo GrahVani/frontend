@@ -56,8 +56,8 @@ export const YogaModal = memo(function YogaModal({
     // Normalize data — memoized to avoid re-processing on every render
     const normalized = useMemo(() => {
         if (!rawData) return null;
-        return normalizeYogaData(rawData);
-    }, [rawData]);
+        return normalizeYogaData(rawData, yogaType);
+    }, [rawData, yogaType]);
 
     // â”€â”€â”€ Loading State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if (loading) {
