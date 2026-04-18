@@ -22,6 +22,10 @@ import {
     Globe,
     Search,
     RefreshCw,
+    User,
+    Calendar,
+    Clock,
+    MapPin,
 } from 'lucide-react';
 import { useVedicClient } from '@/context/VedicClientContext';
 import { useAstrologerStore, type ChartColorTheme } from '@/store/useAstrologerStore';
@@ -630,6 +634,49 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const formatDate = (dateStr: string) => {
+    if (!dateStr) return "";
+    try {
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return dateStr;
+        return date.toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+    } catch (e) {
+        return dateStr;
+    }
+};
+
+const formatTime = (timeStr: string) => {
+    if (!timeStr) return "";
+    try {
+        if (timeStr.includes('T')) {
+            const timePart = timeStr.split('T')[1];
+            const cleanTime = timePart.replace('Z', '').split('+')[0].split('.')[0];
+            const [hours, minutes, seconds] = cleanTime.split(':');
+            return seconds ? `${hours}:${minutes}:${seconds}` : `${hours}:${minutes}`;
+        }
+        const date = new Date(`1970-01-01T${timeStr}`);
+        if (!isNaN(date.getTime())) {
+            return date.toLocaleTimeString('en-GB', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+        }
+        return timeStr;
+    } catch (e) {
+        return timeStr;
+    }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // MAIN PAGE
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -774,23 +821,51 @@ export default function CustomizePage() {
     }
 
     return (
-        <div className="flex flex-col h-[calc(100vh-104px)] w-[calc(100%+2rem)] -mx-4 mt-0">
+        <div className="flex flex-col h-[calc(100vh-3.5rem)] w-full">
             {/* Toolbar */}
             <div className="flex items-center gap-4 px-6 py-3 bg-surface-warm/95 border-b border-gold-primary/20 shrink-0">
-                {/* Brand */}
-                <span
-                    className="font-serif font-bold text-[16px] tracking-[0.12em] uppercase shrink-0"
-                    style={{
-                        background: 'linear-gradient(to bottom, #D4AD5A 0%, #C9A24D 40%, #9C7A2F 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                    }}
-                >
-                    Grahvani
-                </span>
+                {/* Client Identity Context */}
+                <div className="flex items-center gap-3 shrink-0">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-serif shrink-0 shadow-sm"
+                         style={{
+                             background: 'linear-gradient(135deg, rgba(201,162,77,0.90) 0%, rgba(139,90,43,0.85) 100%)',
+                             border: '1px solid rgba(255,255,255,0.15)',
+                         }}>
+                        <span className="text-[16px] font-bold">{(clientDetails?.name?.[0] || 'U').toUpperCase()}</span>
+                    </div>
+
+                    <div className="flex flex-col min-w-0">
+                        <div className="flex items-center gap-2">
+                            <h2 className="font-serif text-[16px] font-bold text-ink leading-tight truncate max-w-[180px]" title={clientDetails.name}>
+                                {clientDetails.name}
+                            </h2>
+                        </div>
+
+                        <div className="flex items-center gap-3 mt-1 overflow-hidden">
+                            <div className="flex items-center gap-1 shrink-0">
+                                <Calendar className="w-3 h-3 text-gold-dark/60" />
+                                <span className="text-[11px] font-medium text-ink/70 font-serif whitespace-nowrap">
+                                    {formatDate(clientDetails.dateOfBirth)}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-1 shrink-0">
+                                <Clock className="w-3 h-3 text-gold-dark/60" />
+                                <span className="text-[11px] font-medium text-ink/70 font-serif whitespace-nowrap">
+                                    {formatTime(clientDetails.timeOfBirth)}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-1 shrink-0 overflow-hidden">
+                                <MapPin className="w-3 h-3 text-gold-dark/60 shrink-0" />
+                                <span className="text-[11px] font-medium text-ink/70 font-serif truncate max-w-[150px]" title={clientDetails.placeOfBirth.city}>
+                                    {clientDetails.placeOfBirth.city}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 {/* Divider */}
-                <div className="w-px h-6 bg-gold-primary/20 shrink-0" />
+                <div className="w-px h-8 bg-gold-primary/20 shrink-0" />
 
                 {/* Page Tabs - Multi-page navigation */}
                 <PageTabs

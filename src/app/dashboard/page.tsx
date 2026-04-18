@@ -14,7 +14,10 @@ import { useRecentClients, useDashboardStats } from "@/hooks/queries/useDashboar
 import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
 import { KnowledgeTooltip } from '@/components/knowledge';
+import { useVedicClient, type VedicClientDetails } from "@/context/VedicClientContext";
+import { useRouter } from "next/navigation";
 import type { Client } from "@/types/client";
+import { NowBadge } from "@/components/common/Badges";
 
 /* ═══════════════════════════════════════════════════════════════════
    SYMBOL & COLOR MAPS
@@ -156,17 +159,6 @@ function calcRemaining(start: string, end: string): string {
    UI PRIMITIVES
    ═══════════════════════════════════════════════════════════════════ */
 
-function NowBadge() {
-    return (
-        <span className="inline-flex items-center gap-1.5 text-[9px] font-bold tracking-wider text-gold-dark bg-gold-primary/20 ring-1 ring-gold-primary/20 px-2.5 py-0.5 rounded-full shrink-0">
-            <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold-primary opacity-60" />
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-gold-primary" />
-            </span>
-            NOW
-        </span>
-    );
-}
 
 const ROW_BORDER: React.CSSProperties = { borderBottom: '1px solid rgba(220, 201, 166, 0.15)' };
 
@@ -1166,7 +1158,6 @@ function LagnaJourney({ schedule, current }: {
                             </span>
                             <span className="text-[10px] font-mono font-bold text-ink ml-2">{tHrs}h {tMins}m</span>
                         </div>
-
                         <div className="relative">
                             <div className="flex h-[46px] rounded-xl overflow-hidden"
                                 style={{ border: '1px solid rgba(186,164,126,0.30)' }}>
@@ -1292,8 +1283,27 @@ function LagnaJourney({ schedule, current }: {
 
 function RecentClientsCard() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, isLoading } = useRecentClients(5) as { data: any; isLoading: boolean };
-    const clients: Client[] = data?.clients || [];
+    const { data: recentData, isLoading } = useRecentClients(5) as { data: any; isLoading: boolean };
+    const clients: Client[] = recentData?.clients || [];
+    const { setClientDetails } = useVedicClient();
+    const router = useRouter();
+
+    const handleClientSelect = (c: Client) => {
+        const details: VedicClientDetails = {
+            id: c.id,
+            name: c.fullName,
+            gender: c.gender || "male",
+            dateOfBirth: c.birthDate || "",
+            timeOfBirth: c.birthTime || "",
+            placeOfBirth: {
+                city: c.birthPlace || "",
+                latitude: c.birthLatitude,
+                longitude: c.birthLongitude
+            }
+        };
+        setClientDetails(details);
+        router.push("/vedic-astrology/overview");
+    };
 
     return (
         <div className="prem-card overflow-hidden">
@@ -1320,15 +1330,18 @@ function RecentClientsCard() {
                         </Link>
                     </div>
                 ) : clients.map(c => (
-                    <Link key={c.id} href={`/clients/${c.id}`}
-                        className="flex items-center gap-3 px-5 h-12 hover:bg-[var(--bg-hover)] transition-colors group"
-                        style={ROW_BORDER}>
+                    <button
+                        key={c.id}
+                        onClick={() => handleClientSelect(c)}
+                        className="w-full flex items-center gap-3 px-5 h-12 hover:bg-[var(--bg-hover)] transition-colors group text-left"
+                        style={ROW_BORDER}
+                    >
                         <div className="w-8 h-8 rounded-full bg-surface-warm border border-gold-primary/10 flex items-center justify-center text-[10px] font-bold text-gold-dark shrink-0 group-hover:border-gold-primary/40">
                             {getInitials(c.fullName)}
                         </div>
                         <span className="text-[14px] font-medium text-ink truncate flex-1">{c.fullName}</span>
                         <ChevronRight className="w-3.5 h-3.5 text-ink/80 group-hover:text-gold-primary shrink-0" />
-                    </Link>
+                    </button>
                 ))}
             </div>
         </div>

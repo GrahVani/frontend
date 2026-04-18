@@ -13,6 +13,9 @@ import MobileNav from "@/components/layout/MobileNav";
 import NavLink, { type NavSubItem } from "@/components/layout/NavLink";
 import GlobalSettingsModal from "@/components/layout/GlobalSettingsModal";
 import { CLIENTS_General_Sidebar, NUMEROLOGY_SYSTEMS, CALENDAR_Sidebar } from "@/config/sidebarConfig";
+import { useVedicClient } from "@/context/VedicClientContext";
+import { X, UserCheck, Lock } from "lucide-react";
+import { useToast } from "@/context/ToastContext";
 
 const CLIENT_SUB_ITEMS: NavSubItem[] = CLIENTS_General_Sidebar.map((s) => ({
     name: s.name,
@@ -35,12 +38,17 @@ const CALENDAR_SUB_ITEMS: NavSubItem[] = CALENDAR_Sidebar.map((s) => ({
 export default function GlobalHeader() {
     const pathname = usePathname();
     const router = useRouter();
-    const { ayanamsa, chartStyle, recentClientIds } = useAstrologerStore();
+    const { ayanamsa, chartStyle, recentClientIds, updateSettings } = useAstrologerStore();
     const settings = { ayanamsa, chartStyle, recentClientIds };
     const { user, logout } = useAuth();
+    const { isClientSet, clientDetails, clearClientDetails } = useVedicClient();
     const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
     const [isProfileOpen, setIsProfileOpen] = React.useState(false);
     const [isMobileNavOpen, setIsMobileNavOpen] = React.useState(false);
+    const toast = useToast();
+    const searchParams = useSearchParams();
+    const redirectParam = searchParams.get('redirect');
+
     const [mounted, setMounted] = React.useState(false);
 
     React.useEffect(() => {
@@ -64,27 +72,64 @@ export default function GlobalHeader() {
         return null;
     }
 
-    const searchParams = useSearchParams();
-    const redirectParam = searchParams.get('redirect');
-
     const isActive = (path: string) => {
+        // Special case for Workbench (Customize)
         if (path === "/vedic-astrology/customize") {
             if (pathname === "/vedic-astrology/customize") return true;
             if (pathname === "/vedic-astrology" && redirectParam === "/vedic-astrology/customize") return true;
             return false;
         }
 
+        // Dashboard logic
         if (path === "/" && (pathname === "/dashboard" || pathname?.startsWith("/clients"))) return true;
         if (path === "/dashboard" && (pathname === "/dashboard" || pathname?.startsWith("/clients"))) return true;
 
-        // Prevent double highlighting
-        if (path === "/vedic-astrology" && (pathname?.startsWith("/vedic-astrology/panchanga") || pathname?.startsWith("/vedic-astrology/customize"))) return false;
+        // Shared Vedic layout check
+        const isVedicPath = pathname?.startsWith("/vedic-astrology");
 
-        // Avoid highlighting Vedic Astrology when we are on the client list for Customize
-        if (path === "/vedic-astrology" && pathname === "/vedic-astrology" && redirectParam === "/vedic-astrology/customize") return false;
+        // KP Tab logic: highlight if ayanamsa is KP AND we are within the vedic system
+        if (path === "/vedic-astrology/kp-tab") {
+            return isVedicPath && ayanamsa === 'KP';
+        }
 
+        // Vedic Astrology Tab logic: highlight if NOT KP and within the vedic system
+        if (path === "/vedic-astrology/vedic-tab") {
+            // Exceptions for other specific tabs like Panchang or Workbench
+            if (pathname?.startsWith("/vedic-astrology/panchanga") || pathname?.startsWith("/vedic-astrology/customize")) return false;
+            return isVedicPath && ayanamsa !== 'KP';
+        }
+
+        // Generic path matching for other tabs
         if (path !== "/" && pathname?.startsWith(path)) return true;
         return false;
+    };
+
+    const handleProtectedClick = (e: React.MouseEvent, overrideHandler?: (e: React.MouseEvent) => void) => {
+        if (!isClientSet) {
+            e.preventDefault();
+            toast.warning("Please select a client from Dashboard to continue.");
+            if (pathname !== "/dashboard") {
+                router.push("/dashboard");
+            }
+            return;
+        }
+        if (overrideHandler) overrideHandler(e);
+    };
+
+    const handleKPClick = (e: React.MouseEvent) => {
+        handleProtectedClick(e, () => {
+            if (ayanamsa !== 'KP') {
+                updateSettings({ ayanamsa: 'KP' });
+            }
+        });
+    };
+
+    const handleVedicClick = (e: React.MouseEvent) => {
+        handleProtectedClick(e, () => {
+            if (ayanamsa === 'KP') {
+                updateSettings({ ayanamsa: 'Lahiri' });
+            }
+        });
     };
 
     return (
@@ -110,19 +155,25 @@ export default function GlobalHeader() {
                     </button>
 
                     <Link href="/dashboard" className="group flex items-center gap-1 -ml-3">
-                        <div className="relative flex items-center">
+                        <div className="relative flex items-center py-1">
                             <Image
                                 src="/Logo.png"
                                 alt="Grahvani Logo"
-                                width={80}
-                                height={40}
-                                className="object-contain contrast-[1.1] brightness-[1.1]"
+                                width={180}
+                                height={90}
+                                className="object-contain contrast-[1.1] brightness-[1.1] select-none"
+                                style={{
+                                    height: '52px',
+                                    width: 'auto',
+                                    maxWidth: 'none',
+                                    display: 'block'
+                                }}
                                 priority
                                 unoptimized
                             />
                         </div>
                         <span
-                            className="font-serif font-bold text-[24px] tracking-[0.18em] uppercase hidden sm:inline -ml-1 select-none"
+                            className="font-serif font-bold text-[22px] tracking-[0.12em] uppercase hidden lg:inline -ml-1 select-none"
                             style={{
                                 background: 'linear-gradient(to bottom, #fffb4f 0%, #ffe14a 25%, #e2b226 50%, #c18c19 75%, #b67c00 100%)',
                                 WebkitBackgroundClip: 'text',
@@ -141,10 +192,11 @@ export default function GlobalHeader() {
 
                     <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="Main navigation">
                         <NavLink href="/dashboard" label="Dashboard" active={isActive("/dashboard")} />
-                        <NavLink href="/vedic-astrology?redirect=/vedic-astrology/customize" label="Workbench" active={isActive("/vedic-astrology/customize")} />
-                        <NavLink href="/vedic-astrology" label="Vedic Astrology" active={isActive("/vedic-astrology")} />
-                        <NavLink href="/vedic-astrology/panchanga" label="Panchang" active={isActive("/vedic-astrology/panchanga")} />
-                        <NavLink href="/muhurta" label="Muhurta" active={isActive("/muhurta")} />
+                        <NavLink href={isClientSet ? "/vedic-astrology/customize" : "/vedic-astrology?redirect=/vedic-astrology/customize"} label="Workbench" active={isActive("/vedic-astrology/customize")} onClick={handleProtectedClick} isLocked={!isClientSet} />
+                        <NavLink href={isClientSet ? "/vedic-astrology/overview" : "/vedic-astrology"} label="Vedic Astrology" active={isActive("/vedic-astrology/vedic-tab")} onClick={handleVedicClick} isLocked={!isClientSet} />
+                        <NavLink href={isClientSet ? "/vedic-astrology/overview" : "/vedic-astrology/overview"} label="KP" active={isActive("/vedic-astrology/kp-tab")} onClick={handleKPClick} isLocked={!isClientSet} />
+                        <NavLink href="/vedic-astrology/panchanga" label="Panchang" active={isActive("/vedic-astrology/panchanga")} onClick={handleProtectedClick} isLocked={!isClientSet} />
+                        <NavLink href="/muhurta" label="Muhurta" active={isActive("/muhurta")} onClick={handleProtectedClick} isLocked={!isClientSet} />
                         <NavLink href="/matchmaking" label="Matchmaking" active={isActive("/matchmaking")} />
                         <NavLink href="/numerology" label="Numerology" active={isActive("/numerology")} subItems={NUMEROLOGY_SUB_ITEMS} />
                         <NavLink href="/calendar" label="Calendar" active={isActive("/calendar")} subItems={CALENDAR_SUB_ITEMS} />
@@ -153,6 +205,21 @@ export default function GlobalHeader() {
 
                 {/* RIGHT: Context + Actions + Profile */}
                 <div className="flex items-center gap-3 lg:gap-4">
+                    {/* Current Client Chip */}
+                    {isClientSet && clientDetails && (
+                        <div className="hidden xl:flex items-center gap-2 pl-2.5 pr-1.5 py-1 rounded-full bg-gold-primary/15 border border-gold-primary/30 group/client transition-all animate-in fade-in slide-in-from-right-2">
+                            <UserCheck className="w-3.5 h-3.5 text-gold-primary" />
+                            <span className="text-[11px] font-bold text-active-glow truncate max-w-[100px]">{clientDetails.name}</span>
+                            <button
+                                onClick={clearClientDetails}
+                                className="w-5 h-5 rounded-full flex items-center justify-center hover:bg-gold-primary/20 text-gold-primary/70 hover:text-gold-primary transition-colors"
+                                title="Switch Client"
+                            >
+                                <X className="w-3 h-3" />
+                            </button>
+                        </div>
+                    )}
+
                     {/* Ayanamsa & Time chip */}
                     <div className="hidden lg:flex items-center gap-2.5 px-3 py-1.5 rounded-lg"
                         style={{

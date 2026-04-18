@@ -126,13 +126,6 @@ export const AYANAMSA_HIERARCHY: AyanamsaOption[] = [
                 ]
             },
             {
-                id: 'cat-lagna',
-                name: 'Lagna Charts',
-                widgets: [
-                    { id: 'kp_bhava_lagna' }, { id: 'moon_chart' }, { id: 'sun_chart' }
-                ]
-            },
-            {
                 id: 'cat-kp',
                 name: 'Kp System',
                 widgets: [
@@ -146,13 +139,6 @@ export const AYANAMSA_HIERARCHY: AyanamsaOption[] = [
                 name: 'Dasha Systems',
                 widgets: [
                     { id: 'vimshottari' }
-                ]
-            },
-            {
-                id: 'cat-ashtakavarga',
-                name: 'Ashtakavarga',
-                widgets: [
-                    { id: 'widget_shodasha_varga' }
                 ]
             }
         ]
@@ -375,10 +361,8 @@ export const AYANAMSA_CONFIGS: Record<AyanamsaSystem, AyanamsaConfig> = {
         allowedCategoryIds: [
             'all',
             'cat-divisional',
-            'cat-lagna',
             'cat-kp',
-            'cat-dashas',
-            'cat-ashtakavarga'
+            'cat-dashas'
         ]
     },
     /**
@@ -464,7 +448,7 @@ export const WORKBENCH_CATEGORIES: WorkbenchCategory[] = [
         name: 'Lagna Charts',
         description: 'Solar, Lunar and Return charts',
         icon: Globe,
-        allowedAyanamsas: ['Lahiri', 'KP', 'Raman', 'Yukteswar', 'Bhasin']
+        allowedAyanamsas: ['Lahiri', 'Raman', 'Yukteswar', 'Bhasin']
     },
     {
         id: 'cat-kp',
@@ -478,7 +462,7 @@ export const WORKBENCH_CATEGORIES: WorkbenchCategory[] = [
         name: 'Ashtakavarga',
         description: 'Mathematical point-based strength analysis',
         icon: Sparkles,
-        allowedAyanamsas: ['Lahiri', 'KP', 'Raman', 'Yukteswar', 'Bhasin']
+        allowedAyanamsas: ['Lahiri', 'Raman', 'Yukteswar', 'Bhasin']
     },
     {
         id: 'cat-dashas',
