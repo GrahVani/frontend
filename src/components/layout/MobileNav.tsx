@@ -4,10 +4,15 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { X, LayoutDashboard, Users, Star, Clock, Heart, Calendar, ChevronDown, Settings, Hash, Sparkle } from "lucide-react";
+import { X, LayoutDashboard, Users, Star, Clock, Heart, Calendar, ChevronDown, Settings, Hash, Sparkles, UserCheck, FlaskConical, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
 import { SidebarItem } from "@/components/layout/SectionSidebar";
+import { useAstrologerStore } from "@/store/useAstrologerStore";
+import { useVedicClient } from "@/context/VedicClientContext";
+import { useRouter } from "next/navigation";
+import { NowBadge } from "@/components/common/Badges";
+import { useToast } from "@/context/ToastContext";
 import {
     CLIENTS_General_Sidebar,
     MUHURTA_Sidebar,
@@ -24,20 +29,26 @@ interface NavItem {
     subItems?: SidebarItem[];
 }
 
-const NAV_ITEMS: NavItem[] = [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/vedic-astrology", label: "Vedic Astrology", icon: Star },
-    { href: "/vedic-astrology/panchanga", label: "Panchang", icon: Sparkle },
-    { href: "/muhurta", label: "Muhurta", icon: Clock, subItems: MUHURTA_Sidebar },
-    { href: "/numerology", label: "Numerology", icon: Hash, subItems: NUMEROLOGY_SYSTEMS },
-    { href: "/matchmaking", label: "Matchmaking", icon: Heart, subItems: MATCHMAKING_Sidebar },
-    { href: "/calendar", label: "Calendar", icon: Calendar, subItems: CALENDAR_Sidebar },
-    { href: "/settings", label: "Settings", icon: Settings, subItems: SETTINGS_Sidebar },
-];
-
 export default function MobileNav({ onClose }: { onClose: () => void }) {
     const pathname = usePathname();
+    const router = useRouter();
+    const { ayanamsa, updateSettings } = useAstrologerStore();
+    const { isClientSet, clientDetails, clearClientDetails } = useVedicClient();
+    const toast = useToast();
     const overlayRef = React.useRef<HTMLDivElement>(null);
+
+    const NAV_ITEMS: NavItem[] = [
+        { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+        { href: isClientSet ? "/vedic-astrology/customize" : "/vedic-astrology?redirect=/vedic-astrology/customize", label: "Workbench", icon: FlaskConical },
+        { href: isClientSet ? "/vedic-astrology/overview" : "/vedic-astrology", label: "Vedic Astrology", icon: Star },
+        { href: isClientSet ? "/vedic-astrology/overview" : "/vedic-astrology/overview", label: "KP", icon: Star },
+        { href: "/vedic-astrology/panchanga", label: "Panchang", icon: Sparkles },
+        { href: "/muhurta", label: "Muhurta", icon: Clock, subItems: MUHURTA_Sidebar },
+        { href: "/numerology", label: "Numerology", icon: Hash, subItems: NUMEROLOGY_SYSTEMS },
+        { href: "/matchmaking", label: "Matchmaking", icon: Heart, subItems: MATCHMAKING_Sidebar },
+        { href: "/calendar", label: "Calendar", icon: Calendar, subItems: CALENDAR_Sidebar },
+        { href: "/settings", label: "Settings", icon: Settings, subItems: SETTINGS_Sidebar },
+    ];
 
     React.useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
@@ -100,18 +111,70 @@ export default function MobileNav({ onClose }: { onClose: () => void }) {
                     </button>
                 </div>
 
+                {/* Current Client Status in Sidebar */}
+                {isClientSet && clientDetails && (
+                    <div className="mx-4 mt-4 p-4 rounded-2xl bg-gold-primary/10 border border-gold-primary/20 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-gold-primary/20 flex items-center justify-center">
+                                <UserCheck className="w-4 h-4 text-gold-primary" />
+                            </div>
+                            <div>
+                                <p className="text-[10px] font-bold text-active-glow/60 uppercase tracking-widest">Active Client</p>
+                                <p className="text-[13px] font-bold text-active-glow">{clientDetails.name}</p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={clearClientDetails}
+                            className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-colors"
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
+                    </div>
+                )}
+
                 {/* Links */}
                 <div className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
                     {NAV_ITEMS.map((item) => {
-                        const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
+                        const isVedicPath = pathname?.startsWith("/vedic-astrology");
+                        const isKPPage = pathname === "/vedic-astrology/kp"; // Specific KP component page
+                        
+                        let isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
+                        
+                        // Refined active logic for Vedic vs KP
+                        if (item.label === "Vedic Astrology") {
+                            isActive = isVedicPath && ayanamsa !== 'KP' && !isKPPage;
+                        } else if (item.label === "KP") {
+                            isActive = (isVedicPath && ayanamsa === 'KP') || isKPPage;
+                        }
+                        
                         const Icon = item.icon;
                         const hasSubItems = isActive && item.subItems && item.subItems.length > 0;
 
+                        const handleClick = (e: React.MouseEvent) => {
+                            const protectedLabels = ["Workbench", "Vedic Astrology", "KP", "Panchang", "Muhurta"];
+                            if (!isClientSet && protectedLabels.includes(item.label)) {
+                                e.preventDefault();
+                                toast.warning("Please select a client from Dashboard to continue.");
+                                if (pathname !== "/dashboard") {
+                                    router.push("/dashboard");
+                                }
+                                onClose();
+                                return;
+                            }
+
+                            if (item.label === "KP") {
+                                updateSettings({ ayanamsa: 'KP' });
+                            } else if (item.label === "Vedic Astrology" && ayanamsa === 'KP') {
+                                updateSettings({ ayanamsa: 'Lahiri' });
+                            }
+                            onClose();
+                        };
+
                         return (
-                            <div key={item.href}>
+                            <div key={item.label}>
                                 <Link
                                     href={item.href}
-                                    onClick={onClose}
+                                    onClick={handleClick}
                                     aria-current={isActive ? "page" : undefined}
                                     className={cn(
                                         "flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-200 min-h-[48px]",
@@ -121,7 +184,9 @@ export default function MobileNav({ onClose }: { onClose: () => void }) {
                                     )}
                                 >
                                     <Icon className={cn("w-5 h-5 shrink-0", isActive ? "text-active-glow" : "text-header-border")} />
-                                    <span className={cn(TYPOGRAPHY.value, "!text-sm tracking-wide !mt-0 flex-1", isActive ? "!text-active-glow" : "!text-white")}>{item.label}</span>
+                                    <div className="flex-1 flex items-center justify-between">
+                                        <span className={cn(TYPOGRAPHY.value, "!text-sm tracking-wide !mt-0 flex-1", isActive ? "!text-active-glow" : "!text-white")}>{item.label}</span>
+                                    </div>
                                     {hasSubItems && <ChevronDown className="w-3.5 h-3.5 text-active-glow/60" />}
                                 </Link>
 

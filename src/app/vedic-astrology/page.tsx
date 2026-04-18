@@ -15,7 +15,14 @@ export default function VedicClientSelectionPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const redirectPath = searchParams.get('redirect');
-    const { setClientDetails } = useVedicClient();
+    const { setClientDetails, isClientSet, isInitialized } = useVedicClient();
+
+    // Smart Redirect: If a client is already set, don't show the selection registry
+    React.useEffect(() => {
+        if (isInitialized && isClientSet) {
+            router.push(redirectPath || '/vedic-astrology/overview');
+        }
+    }, [isInitialized, isClientSet, router, redirectPath]);
 
     const handleSelectForVedic = useCallback((client: Client) => {
         setClientDetails({

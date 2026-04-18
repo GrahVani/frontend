@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface NavSubItem {
@@ -16,9 +16,11 @@ interface NavLinkProps {
     label: string;
     active: boolean;
     subItems?: NavSubItem[];
+    onClick?: (e: React.MouseEvent) => void;
+    isLocked?: boolean;
 }
 
-export default function NavLink({ href, label, active, subItems }: NavLinkProps) {
+export default function NavLink({ href, label, active, subItems, onClick, isLocked }: NavLinkProps) {
     const [open, setOpen] = React.useState(false);
     const ref = React.useRef<HTMLDivElement>(null);
 
@@ -43,7 +45,7 @@ export default function NavLink({ href, label, active, subItems }: NavLinkProps)
     const hasDropdown = subItems && subItems.length > 0;
 
     const baseClass = cn(
-        "px-4 py-1.5 rounded-lg font-semibold text-[13px] tracking-wide transition-all duration-300 relative inline-flex items-center gap-1",
+        "px-2 lg:px-3 py-1.5 rounded-lg font-semibold text-[13px] tracking-wide transition-all duration-300 relative inline-flex items-center gap-1",
         active
             ? "nav-glass-pill text-active-glow text-shadow-glow"
             : "text-white hover:text-white hover:bg-white/[0.06]"
@@ -52,7 +54,13 @@ export default function NavLink({ href, label, active, subItems }: NavLinkProps)
     // Simple link (no dropdown)
     if (!hasDropdown) {
         return (
-            <Link href={href} aria-current={active ? "page" : undefined} className={baseClass}>
+            <Link 
+                href={href} 
+                aria-current={active ? "page" : undefined} 
+                className={baseClass} 
+                onClick={onClick}
+                title={isLocked ? "Please select a client from Dashboard to unlock" : undefined}
+            >
                 {label}
                 {active && (
                     <div className="absolute bottom-[2px] left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-active-glow shadow-[0_0_8px_2px_rgba(255,210,125,0.4)]" />
@@ -70,15 +78,21 @@ export default function NavLink({ href, label, active, subItems }: NavLinkProps)
                 aria-haspopup="true"
                 aria-label={`${label} menu`}
                 className={cn(baseClass, "cursor-pointer pr-2.5 gap-1.5")}
+                title={isLocked ? "Please select a client from Dashboard to unlock" : undefined}
             >
-                <Link
-                    href={href}
-                    aria-current={active ? "page" : undefined}
-                    onClick={(e) => e.stopPropagation()}
-                    className="hover:underline underline-offset-2 decoration-white/30"
-                >
-                    {label}
-                </Link>
+                <div className="flex items-center gap-1">
+                    <Link
+                        href={href}
+                        aria-current={active ? "page" : undefined}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            if (onClick) onClick(e);
+                        }}
+                        className="hover:underline underline-offset-2 decoration-white/30"
+                    >
+                        {label}
+                    </Link>
+                </div>
                 <ChevronDown className={cn(
                     "w-3.5 h-3.5 transition-transform duration-200 shrink-0",
                     active ? "text-active-glow" : "text-white",

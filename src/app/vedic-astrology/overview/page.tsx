@@ -8,6 +8,11 @@ import { cn } from "@/lib/utils";
 import { useDasha } from "@/hooks/queries/useCalculations";
 import { CHART_METADATA } from '@/lib/api';
 const DivisionalChartZoomModal = dynamic(() => import('@/components/astrology/DivisionalChartZoomModal'));
+const KundliAnalyticsPanel = dynamic(() => import('@/components/astrology/KundliAnalyticsPanel'));
+const KpCuspalChartCard = dynamic(() => import('@/components/kp/KpKundliPanel').then(mod => ({ default: mod.KpCuspalChartCard })));
+const KpPlanetaryTableCard = dynamic(() => import('@/components/kp/KpKundliPanel').then(mod => ({ default: mod.KpPlanetaryTableCard })));
+const KpBhavaDetailsCard = dynamic(() => import('@/components/kp/KpKundliPanel').then(mod => ({ default: mod.KpBhavaDetailsCard })));
+const KpFortunaCard = dynamic(() => import('@/components/kp/KpKundliPanel').then(mod => ({ default: mod.KpFortunaCard })));
 import {
     Maximize2,
     TrendingUp,
@@ -200,6 +205,7 @@ export default function VedicOverviewPage() {
             )}
 
             <KundaliContent
+                key={activeSystem}
                 clientDetails={clientDetails}
                 d1Data={d1Data}
                 birthPanchangaData={birthPanchangaData}
@@ -434,9 +440,9 @@ function RenderedChartSlot({
             <div className="px-3 py-1.5 flex justify-between items-center" style={HEADER_STYLE}>
                 <h2 className={TYPOGRAPHY.sectionTitle}>{displayName}</h2>
                 <div className="flex items-center gap-1">
-                    <button 
-                        onClick={() => setShowSettings(!showSettings)} 
-                        className={cn("p-1 transition-colors", showSettings ? "text-primary" : "text-primary/70 hover:text-primary")} 
+                    <button
+                        onClick={() => setShowSettings(!showSettings)}
+                        className={cn("p-1 transition-colors", showSettings ? "text-primary" : "text-primary/70 hover:text-primary")}
                         aria-label="Chart Settings"
                     >
                         <Settings className="w-3 h-3" />
@@ -444,14 +450,16 @@ function RenderedChartSlot({
                     <button onClick={onZoom} className="p-1 text-primary/70 hover:text-primary transition-colors" aria-label={`Zoom ${displayName}`}>
                         <Maximize2 className="w-3 h-3" />
                     </button>
-                    <button onClick={onDismiss} className="p-1 text-primary/50 hover:text-rose-500 transition-colors" aria-label={`Remove ${displayName}`}>
-                        <X className="w-3 h-3" />
-                    </button>
+                    {!(activeSystem === 'kp' && chartId === 'D1') && (
+                        <button onClick={onDismiss} className="p-1 text-primary/50 hover:text-rose-500 transition-colors" aria-label={`Remove ${displayName}`}>
+                            <X className="w-3 h-3" />
+                        </button>
+                    )}
                 </div>
             </div>
 
             {showSettings && (
-                <div 
+                <div
                     ref={settingsRef}
                     className="absolute top-9 right-2 z-50 w-56 p-4 rounded-2xl shadow-2xl animate-in fade-in zoom-in-95 duration-200"
                     style={{
@@ -468,18 +476,18 @@ function RenderedChartSlot({
                                 <span className={cn(TYPOGRAPHY.value, "text-[11px] text-primary")}>{settings.planetSize ?? DEFAULT_CHART_SETTINGS.planetSize}px</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <button 
+                                <button
                                     onClick={() => onUpdateSettings({ planetSize: Math.max(8, settings.planetSize - 1) })}
                                     className="p-1 rounded-md bg-surface-warm border border-primary/20 hover:border-primary/40 text-primary/80"
                                 >
                                     <Minus className="w-3 h-3" />
                                 </button>
-                                <input 
-                                    type="range" min="8" max="24" value={settings.planetSize ?? DEFAULT_CHART_SETTINGS.planetSize} 
+                                <input
+                                    type="range" min="8" max="24" value={settings.planetSize ?? DEFAULT_CHART_SETTINGS.planetSize}
                                     onChange={(e) => onUpdateSettings({ planetSize: parseInt(e.target.value) })}
                                     className="flex-1 accent-primary h-1 bg-primary/10 rounded-full appearance-none cursor-pointer"
                                 />
-                                <button 
+                                <button
                                     onClick={() => onUpdateSettings({ planetSize: Math.min(24, settings.planetSize + 1) })}
                                     className="p-1 rounded-md bg-surface-warm border border-gold-primary/10 hover:border-gold-primary/30 text-gold-primary/70"
                                 >
@@ -494,18 +502,18 @@ function RenderedChartSlot({
                                 <span className={cn(TYPOGRAPHY.value, "text-[11px] text-primary")}>{settings.degreeSize ?? DEFAULT_CHART_SETTINGS.degreeSize}px</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <button 
+                                <button
                                     onClick={() => onUpdateSettings({ degreeSize: Math.max(6, settings.degreeSize - 1) })}
                                     className="p-1 rounded-md bg-surface-warm border border-gold-primary/10 hover:border-gold-primary/30 text-gold-primary/70"
                                 >
                                     <Minus className="w-3 h-3" />
                                 </button>
-                                <input 
-                                    type="range" min="6" max="18" value={settings.degreeSize ?? DEFAULT_CHART_SETTINGS.degreeSize} 
+                                <input
+                                    type="range" min="6" max="18" value={settings.degreeSize ?? DEFAULT_CHART_SETTINGS.degreeSize}
                                     onChange={(e) => onUpdateSettings({ degreeSize: parseInt(e.target.value) })}
                                     className="flex-1 accent-gold-primary h-1 bg-gold-primary/10 rounded-full appearance-none cursor-pointer"
                                 />
-                                <button 
+                                <button
                                     onClick={() => onUpdateSettings({ degreeSize: Math.min(18, settings.degreeSize + 1) })}
                                     className="p-1 rounded-md bg-surface-warm border border-gold-primary/10 hover:border-gold-primary/30 text-gold-primary/70"
                                 >
@@ -520,18 +528,18 @@ function RenderedChartSlot({
                                 <span className={cn(TYPOGRAPHY.value, "text-[11px] text-primary")}>{settings.houseSize ?? DEFAULT_CHART_SETTINGS.houseSize}px</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <button 
+                                <button
                                     onClick={() => onUpdateSettings({ houseSize: Math.max(10, settings.houseSize - 1) })}
                                     className="p-1 rounded-md bg-surface-warm border border-gold-primary/10 hover:border-gold-primary/30 text-gold-primary/70"
                                 >
                                     <Minus className="w-3 h-3" />
                                 </button>
-                                <input 
-                                    type="range" min="10" max="40" value={settings.houseSize ?? DEFAULT_CHART_SETTINGS.houseSize} 
+                                <input
+                                    type="range" min="10" max="40" value={settings.houseSize ?? DEFAULT_CHART_SETTINGS.houseSize}
                                     onChange={(e) => onUpdateSettings({ houseSize: parseInt(e.target.value) })}
                                     className="flex-1 accent-gold-primary h-1 bg-gold-primary/10 rounded-full appearance-none cursor-pointer"
                                 />
-                                <button 
+                                <button
                                     onClick={() => onUpdateSettings({ houseSize: Math.min(40, settings.houseSize + 1) })}
                                     className="p-1 rounded-md bg-surface-warm border border-gold-primary/10 hover:border-gold-primary/30 text-gold-primary/70"
                                 >
@@ -542,7 +550,7 @@ function RenderedChartSlot({
 
                         <div className="flex items-center justify-between pt-2 border-t border-primary/10">
                             <label className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-wider")}>Show Degrees</label>
-                            <button 
+                            <button
                                 onClick={() => onUpdateSettings({ showDegrees: !settings.showDegrees })}
                                 className={cn(
                                     "w-8 h-4 rounded-full transition-colors relative",
@@ -555,6 +563,16 @@ function RenderedChartSlot({
                                 )} style={{ left: settings.showDegrees ? '1.125rem' : '0.125rem' }} />
                             </button>
                         </div>
+
+                        <button
+                            onClick={() => onUpdateSettings(DEFAULT_CHART_SETTINGS)}
+                            className="w-full mt-2 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all hover:bg-gold-primary/5 border border-gold-primary/20 text-gold-primary/60 hover:text-gold-primary/90"
+                            style={{
+                                background: 'linear-gradient(135deg, rgba(201,162,77,0.05) 0%, rgba(201,162,77,0.02) 100%)',
+                            }}
+                        >
+                            Reset to Defaults
+                        </button>
                     </div>
                 </div>
             )}
@@ -603,13 +621,24 @@ function KundaliContent({
     const { processedCharts } = useVedicClient();
     const activeSystem = ayanamsa.toLowerCase();
 
+    // ── Guard against cross-system overwrites during transitions ──
+    const [mountSystem] = useState(activeSystem);
+
     // ── Chart Slots State (persisted to localStorage) ──
     const [chartSlots, setChartSlots] = useState<(string | null)[]>(() => {
         if (typeof window === 'undefined') return DEFAULT_SLOTS;
+        const systemKey = `${KUNDALI_SLOTS_KEY}_${activeSystem}`;
         try {
-            const stored = localStorage.getItem(KUNDALI_SLOTS_KEY);
-            if (stored) {
-                const parsed = JSON.parse(stored);
+            // Priority 1: System-specific layout (e.g. _lahiri)
+            const storedSystem = localStorage.getItem(systemKey);
+            if (storedSystem) {
+                const parsed = JSON.parse(storedSystem);
+                if (Array.isArray(parsed) && parsed.length === 3) return parsed;
+            }
+            // Priority 2: Global legacy layout (fallback for existing users)
+            const storedGlobal = localStorage.getItem(KUNDALI_SLOTS_KEY);
+            if (storedGlobal) {
+                const parsed = JSON.parse(storedGlobal);
                 if (Array.isArray(parsed) && parsed.length === 3) return parsed;
             }
         } catch { /* ignore */ }
@@ -619,12 +648,28 @@ function KundaliContent({
     const [chartSettings, setChartSettings] = useState<Record<number, ChartSlotSettings>>(() => {
         const defaults: Record<number, ChartSlotSettings> = { 0: { ...DEFAULT_CHART_SETTINGS }, 1: { ...DEFAULT_CHART_SETTINGS }, 2: { ...DEFAULT_CHART_SETTINGS } };
         if (typeof window === 'undefined') return defaults;
+        const systemKey = `${KUNDALI_SETTINGS_KEY}_${activeSystem}`;
         try {
-            const stored = localStorage.getItem(KUNDALI_SETTINGS_KEY);
-            if (stored) {
-                const parsed = JSON.parse(stored);
+            // Priority 1: System-specific settings
+            const storedSystem = localStorage.getItem(systemKey);
+            if (storedSystem) {
+                const parsed = JSON.parse(storedSystem);
                 if (parsed && typeof parsed === 'object') {
-                    // Merge each slot's saved settings with DEFAULT_CHART_SETTINGS to handle migrations
+                    const migrated: Record<number, ChartSlotSettings> = { ...defaults };
+                    Object.keys(parsed).forEach(key => {
+                        const idx = parseInt(key);
+                        if (!isNaN(idx) && parsed[key]) {
+                            migrated[idx] = { ...DEFAULT_CHART_SETTINGS, ...parsed[key] };
+                        }
+                    });
+                    return migrated;
+                }
+            }
+            // Priority 2: Global legacy settings
+            const storedGlobal = localStorage.getItem(KUNDALI_SETTINGS_KEY);
+            if (storedGlobal) {
+                const parsed = JSON.parse(storedGlobal);
+                if (parsed && typeof parsed === 'object') {
                     const migrated: Record<number, ChartSlotSettings> = { ...defaults };
                     Object.keys(parsed).forEach(key => {
                         const idx = parseInt(key);
@@ -641,15 +686,19 @@ function KundaliContent({
 
     const [addChartModalSlot, setAddChartModalSlot] = useState<number | null>(null);
 
-    // Persist slots to localStorage on change
+    // Persist slots to localStorage on change (System Aware + Guarded)
     useEffect(() => {
-        localStorage.setItem(KUNDALI_SLOTS_KEY, JSON.stringify(chartSlots));
-    }, [chartSlots]);
+        if (activeSystem === mountSystem) {
+            localStorage.setItem(`${KUNDALI_SLOTS_KEY}_${activeSystem}`, JSON.stringify(chartSlots));
+        }
+    }, [chartSlots, activeSystem, mountSystem]);
 
-    // Persist settings to localStorage on change
+    // Persist settings to localStorage on change (System Aware + Guarded)
     useEffect(() => {
-        localStorage.setItem(KUNDALI_SETTINGS_KEY, JSON.stringify(chartSettings));
-    }, [chartSettings]);
+        if (activeSystem === mountSystem) {
+            localStorage.setItem(`${KUNDALI_SETTINGS_KEY}_${activeSystem}`, JSON.stringify(chartSettings));
+        }
+    }, [chartSettings, activeSystem, mountSystem]);
 
     // Escape key to close modal
     useEffect(() => {
@@ -731,34 +780,44 @@ function KundaliContent({
                     {/* Slot 0: Main Chart */}
                     {renderSlot(0, 'h-[405px]')}
 
-                    {/* Planetary Details Window (dynamic from Slot 0) */}
-                    <div className="prem-card overflow-hidden">
-                        <div className="px-3 py-1.5" style={HEADER_STYLE}>
-                            <h2 className={TYPOGRAPHY.sectionTitle}>
-                                Rashi <KnowledgeTooltip term="planetary_positions" unstyled>planetary positions</KnowledgeTooltip>
-                            </h2>
+                    {/* Planetary Details Window (dynamic from Slot 0) — hidden for KP */}
+                    {activeSystem !== 'kp' && (
+                        <div className="prem-card overflow-hidden">
+                            <div className="px-3 py-1.5" style={HEADER_STYLE}>
+                                <h2 className={TYPOGRAPHY.sectionTitle}>
+                                    Rashi <KnowledgeTooltip term="planetary_positions" unstyled>planetary positions</KnowledgeTooltip>
+                                </h2>
+                            </div>
+                            <div className="bg-surface-warm">
+                                {planetaryTableData.length > 0 ? (
+                                    <PlanetaryTable
+                                        planets={planetaryTableData}
+                                        variant="compact"
+                                        rowClassName="py-1"
+                                    />
+                                ) : (
+                                    <div className={cn(TYPOGRAPHY.subValue, "p-6 text-center text-ink/30 italic")}>
+                                        Select a chart above to see positions
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                        <div className="bg-surface-warm">
-                            {planetaryTableData.length > 0 ? (
-                                <PlanetaryTable
-                                    planets={planetaryTableData}
-                                    variant="compact"
-                                    rowClassName="py-1"
-                                />
-                            ) : (
-                                <div className={cn(TYPOGRAPHY.subValue, "p-6 text-center text-ink/30 italic")}>
-                                    Select a chart above to see positions
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                    )}
+
+                    {/* KP Cuspal Chart — shown only for KP ayanamsa, replaces Rashi table */}
+                    {activeSystem === 'kp' && (
+                        <>
+                            <KpCuspalChartCard />
+                            <KpBhavaDetailsCard />
+                        </>
+                    )}
                 </div>
 
                 {/* RIGHT COLUMN: Divisional Charts, Dasha, Profile */}
                 <div className="md:col-span-7 flex flex-col gap-2">
                     {/* Client Identity Bar */}
                     {clientDetails && (
-                        <div className="prem-card overflow-hidden">
+                        <div className="prem-card">
                             <div className="px-3 py-1.5" style={HEADER_STYLE}>
                                 <h2 className={TYPOGRAPHY.sectionTitle}>Client profile</h2>
                             </div>
@@ -834,13 +893,30 @@ function KundaliContent({
                         </div>
                     </div>
 
-                    {/* Middle Row: Slot 1 & Slot 2 */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {renderSlot(1, 'h-[335px]')}
-                        {renderSlot(2, 'h-[335px]')}
-                    </div>
+                    {/* Middle Row: Slot 1 & Slot 2 - Hidden for KP Ayanamsa */}
+                    {activeSystem !== 'kp' && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {renderSlot(1, 'h-[335px]')}
+                            {renderSlot(2, 'h-[335px]')}
+                        </div>
+                    )}
+
+                    {/* KP Planetary Positions Table — full width (shown only for KP Ayanamsa) */}
+                    {activeSystem === 'kp' && (
+                        <>
+                            <KpPlanetaryTableCard />
+                            <KpFortunaCard />
+                        </>
+                    )}
                 </div>
             </div>
+
+            {/* Shadbala + Sarvashtakavarga — Lahiri Only (Full Width) */}
+            {activeSystem === 'lahiri' && (
+                <div className="mt-2">
+                    <KundliAnalyticsPanel />
+                </div>
+            )}
 
             {/* Chart Picker Modal */}
             {addChartModalSlot !== null && (

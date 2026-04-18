@@ -51,7 +51,6 @@ interface NavItem extends SidebarItem {
 
 const VEDIC_NAV_ITEMS: NavItem[] = [
     { name: "Kundali", path: "/overview", icon: LayoutTemplate },
-    { name: "Work Bench", path: "/workbench", icon: LayoutDashboard },
     { name: "Divisional Charts", path: "/divisional", icon: Map, systemFilter: ['Lahiri', 'Raman', 'Yukteswar', 'Bhasin'] },
     { name: "Dashas", path: "/dashas", icon: History },
     { name: "Yogas & Doshas", path: "/yoga-dosha", icon: Sparkles, systemFilter: ['Lahiri'] },
@@ -61,7 +60,6 @@ const VEDIC_NAV_ITEMS: NavItem[] = [
     { name: "Upaya", path: "/remedies", icon: Gem, systemFilter: ['Lahiri'] },
     { name: "Sudarshan Chakra", path: "/chakras", icon: Layers },
     { name: "KP System", path: "/kp", icon: FlaskConical, systemFilter: ['KP'] },
-    { name: "Ashtakavarga", path: "/ashtakavarga", icon: Shield, systemFilter: ['KP'] },
     { name: "Horary", path: "/kp?tab=horary", icon: HelpCircle, systemFilter: ['KP'] },
     { name: "Compatibility", path: "/comparison", icon: Heart, isOverflow: true },
     { name: "Pushkara Navamsha", path: "/pushkara-navamsha", icon: Sparkles, isOverflow: true, systemFilter: ['Lahiri'] },
@@ -265,12 +263,12 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
     const router = useRouter();
 
     React.useEffect(() => {
-        if (isInitialized && !isClientSet && pathname !== "/vedic-astrology") {
-            router.push(`/vedic-astrology?redirect=${pathname}`);
+        if (isInitialized && !isClientSet && pathname !== "/dashboard") {
+            router.push(`/dashboard?redirect=${pathname}`);
         }
     }, [isInitialized, isClientSet, pathname, router]);
 
-    if ((!isInitialized || !isClientSet) && pathname !== "/vedic-astrology") {
+    if ((!isInitialized || !isClientSet) && pathname !== "/dashboard") {
         return null;
     }
 

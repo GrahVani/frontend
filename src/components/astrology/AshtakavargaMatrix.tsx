@@ -99,7 +99,7 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                                     {isSarva ? 'Planet' : planet?.substring(0, 4)}
                                 </th>
                                 {SIGNS.map(s => (
-                                    <th key={s} className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1 text-center w-8 border-r border-primary text-ink font-bold")}>{s}</th>
+                                    <th key={s} className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1 text-center w-8 border-r border-primary text-ink font-medium")}>{s}</th>
                                 ))}
                                 <th className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1.5 text-center bg-surface-warm w-10")}>Tot</th>
                             </tr>
@@ -122,12 +122,12 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                                         {SIGNS.map(s => {
                                             const val = getVal(rd, s);
                                             return (
-                                                <td key={s} className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1 text-center border-r border-primary font-bold")}>
+                                                <td key={s} className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1 text-center border-r border-primary font-medium")}>
                                                     {val}
                                                 </td>
                                             );
                                         })}
-                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1.5 text-center font-semibold bg-surface-warm")}>{rowTot}</td>
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1.5 text-center font-medium bg-surface-warm")}>{rowTot}</td>
                                     </tr>
                                 );
                             })}
@@ -140,12 +140,12 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                                     return (
                                         <td key={s} className="py-3 px-1 text-center border-r border-primary">
                                             <div className="flex flex-col items-center justify-center leading-none">
-                                                <span className={cn(TYPOGRAPHY.value, "leading-none font-bold")}>{v}</span>
+                                                <span className={cn(TYPOGRAPHY.value, "leading-none font-medium")}>{v}</span>
                                             </div>
                                         </td>
                                     );
                                 })}
-                                <td className={cn(TYPOGRAPHY.value, "py-3 px-1.5 text-center bg-amber-50/50 font-bold")}>
+                                <td className={cn(TYPOGRAPHY.value, "py-3 px-1.5 text-center bg-amber-50/50 font-medium")}>
                                     {Object.values(sav).reduce((a, b) => a + b, 0)}
                                 </td>
                             </tr>

@@ -6,8 +6,24 @@ import PageContainer from '@/components/layout/PageContainer';
 import Breadcrumbs from '@/components/layout/Breadcrumbs';
 import { MUHURTA_Sidebar } from '@/config/sidebarConfig';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import { useVedicClient } from '@/context/VedicClientContext';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function MuhurtaLayout({ children }: { children: React.ReactNode }) {
+    const { isClientSet, isInitialized } = useVedicClient();
+    const router = useRouter();
+    const pathname = usePathname();
+
+    React.useEffect(() => {
+        if (isInitialized && !isClientSet) {
+            router.push(`/dashboard?redirect=${pathname}`);
+        }
+    }, [isInitialized, isClientSet, pathname, router]);
+
+    if (!isInitialized || !isClientSet) {
+        return null;
+    }
+
     return (
         <ProtectedRoute>
         <div className="min-h-screen bg-luxury-radial relative">
