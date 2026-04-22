@@ -8,6 +8,8 @@ import { motion } from "framer-motion";
 import { authApi } from "@/lib/api";
 import PremiumButton from "@/components/GoldenButton";
 
+import Image from "next/image";
+
 export default function RegisterPage() {
     const router = useRouter();
     const [name, setName] = useState("");
@@ -102,14 +104,40 @@ export default function RegisterPage() {
                             transition={{ delay: 0.5, duration: 0.8 }}
                             className="w-full"
                         >
-                            <div className="flex flex-col items-center mb-8">
-                                <h1 className="text-2xl font-serif font-bold tracking-[0.15em] text-ink uppercase">
-                                    Create Account
+                            <div className="flex flex-col items-center mb-8 w-full text-center">
+                                {/* Branding */}
+                                <div className="relative flex items-center justify-center mb-2">
+                                    <Image
+                                        src="/Logo.png"
+                                        alt="Grahvani Logo"
+                                        width={240}
+                                        height={120}
+                                        className="object-contain contrast-[1.1] brightness-[1.1] select-none"
+                                        style={{
+                                            height: '100px',
+                                            width: 'auto',
+                                        }}
+                                        priority
+                                    />
+                                </div>
+                                <h1 className="text-4xl font-serif font-bold tracking-[0.15em] text-ink uppercase select-none">
+                                    Grahvani
                                 </h1>
-                                <div className="flex items-center gap-2 mt-2 opacity-80">
-                                    <div className="h-[1px] w-6 bg-gold-dark" />
-                                    <span className="text-[9px] font-serif uppercase tracking-widest text-gold-dark">Professional Astrology Platform</span>
-                                    <div className="h-[1px] w-6 bg-gold-dark" />
+                                <div className="flex items-center gap-2 mt-3 mb-6 opacity-90">
+                                    <div className="h-[1px] w-8 bg-gold-dark/60" />
+                                    <span className="text-[11px] font-serif uppercase tracking-[0.2em] text-gold-dark font-bold">Wisdom of Stars</span>
+                                    <div className="h-[1px] w-8 bg-gold-dark/60" />
+                                </div>
+
+                                <div className="h-[1px] w-full bg-gold-primary/20 mb-8" />
+
+                                <h2 className="text-2xl font-serif font-bold tracking-[0.15em] text-ink uppercase">
+                                    Create Account
+                                </h2>
+                                <div className="flex items-center gap-2 mt-2 opacity-80 px-4">
+                                    <div className="h-[1px] flex-1 bg-gold-dark/40" />
+                                    <span className="text-[9px] font-serif uppercase tracking-widest text-gold-dark whitespace-nowrap">Professional Astrology Platform</span>
+                                    <div className="h-[1px] flex-1 bg-gold-dark/40" />
                                 </div>
                             </div>
 

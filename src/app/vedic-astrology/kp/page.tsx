@@ -24,7 +24,7 @@ import type { KpTab } from '@/components/kp/KpTabContent';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { COLORS } from '@/design-tokens/colors';
-import { Loader2, LayoutGrid, Grid3x3, Home, Clock, HelpCircle, Star } from 'lucide-react';
+import { Loader2, LayoutGrid, Grid3x3, Home, Clock, HelpCircle, Star, History, Calendar } from 'lucide-react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 
 // Lazy-load the chart
@@ -44,6 +44,7 @@ const tabs: { id: KpTab; label: string; icon: React.ReactNode }[] = [
     { id: 'nakshatra-nadi', label: 'Nakshatra Nadi', icon: <HelpCircle className="w-4 h-4" /> },
     { id: 'fortuna', label: 'Pars Fortuna', icon: <Clock className="w-4 h-4" /> },
     { id: 'ruling-planets', label: 'Ruling Planets', icon: <Clock className="w-4 h-4" /> },
+    { id: 'dashas', label: 'Dashas', icon: <Calendar className="w-4 h-4" /> },
 ];
 
 const VALID_TABS = tabs.map(t => t.id) as string[];
@@ -84,6 +85,7 @@ export default function KpDashboardPage() {
     const nakshatraNadiQuery = useKpNakshatraNadi(clientId, { enabled: activeTab === 'nakshatra-nadi' });
     const fortunaQuery = useKpFortuna(clientId, { enabled: activeTab === 'fortuna' });
     const ashtakavargaQuery = useAshtakavarga(clientId, ayanamsa, 'shodasha');
+
 
     // ── Data Transformation (extracted hook) ─────────────────────────
 

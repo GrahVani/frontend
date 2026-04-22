@@ -529,7 +529,7 @@ export default function CompactWidgetPanel({
                                         <span className="text-[10px] text-ink/50">Grid Color</span>
                                         <input
                                             type="color"
-                                            value={theme.gridLineColor || '#D4C4A8'}
+                                            value={theme.gridLineColor || '#D08C60'}
                                             onChange={(e) => updateTheme({ gridLineColor: e.target.value })}
                                             className="w-7 h-7 rounded cursor-pointer border-0 p-0"
                                         />

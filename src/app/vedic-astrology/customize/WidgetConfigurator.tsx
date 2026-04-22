@@ -300,7 +300,7 @@ function WidgetPreview({
             
             {/* Preview Container */}
             <div 
-                className="bg-white rounded-lg border-2 border-dashed border-[#D4C4A8] flex items-center justify-center overflow-hidden"
+                className="bg-white rounded-lg border-2 border-dashed border-[#D08C60] flex items-center justify-center overflow-hidden"
                 style={{ 
                     width: maxPreviewWidth, 
                     height: maxPreviewHeight 

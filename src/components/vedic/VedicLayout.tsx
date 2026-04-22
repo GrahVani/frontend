@@ -52,7 +52,7 @@ interface NavItem extends SidebarItem {
 const VEDIC_NAV_ITEMS: NavItem[] = [
     { name: "Kundali", path: "/overview", icon: LayoutTemplate },
     { name: "Divisional Charts", path: "/divisional", icon: Map, systemFilter: ['Lahiri', 'Raman', 'Yukteswar', 'Bhasin'] },
-    { name: "Dashas", path: "/dashas", icon: History },
+    { name: "Dashas", path: "/dashas", icon: History, systemFilter: ['Lahiri', 'Raman', 'Yukteswar', 'Bhasin'] },
     { name: "Yogas & Doshas", path: "/yoga-dosha", icon: Sparkles, systemFilter: ['Lahiri'] },
     { name: "Ashtakavargas", path: "/ashtakavarga", icon: Shield, systemFilter: ['Lahiri', 'Raman', 'Yukteswar', 'Bhasin'] },
     { name: "Shadbala", path: "/shadbala", icon: Orbit, systemFilter: ['Lahiri'] },
@@ -71,12 +71,13 @@ const VEDIC_NAV_ITEMS: NavItem[] = [
 // ============================================================================
 // Sub-Header Navigation Bar
 // ============================================================================
-function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, ayanamsa }: {
+function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, ayanamsa, hasClientBar }: {
     clientDetails: VedicClientDetails | null;
     setClientDetails: (d: VedicClientDetails | null) => void;
     pathname: string;
     router: ReturnType<typeof useRouter>;
     ayanamsa: string;
+    hasClientBar: boolean;
 }) {
     const searchParams = useSearchParams();
     const [isMoreOpen, setIsMoreOpen] = React.useState(false);
@@ -115,7 +116,7 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
     });
 
     return (
-        <div className="sticky top-14 left-0 right-0 z-40 h-12 bg-header-gradient flex items-center px-4 md:px-6 gap-4" role="navigation" aria-label="Vedic astrology sections">
+        <div className={cn("sticky left-0 right-0 z-40 h-12 bg-header-gradient flex items-center px-4 md:px-6 gap-4", hasClientBar ? "top-24" : "top-14")} role="navigation" aria-label="Vedic astrology sections">
             {/* Top Border Indicator */}
             <div className="absolute top-0 left-0 right-0 h-[1px] bg-gold-primary opacity-10" />
 
@@ -233,22 +234,6 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                 </div>
             )}
 
-            {/* Client Profile Card (Right) */}
-            {clientDetails && (
-                <div className="flex items-center gap-4 pl-6 border-l border-gold-primary/20 shrink-0 h-10 ml-4">
-                    <div
-                        className="flex items-center gap-3 cursor-pointer group"
-                        onClick={() => router.push(`/vedic-astrology/overview`)}
-                    >
-                        <div className="hidden sm:block text-right">
-                            <h2 className={cn(TYPOGRAPHY.profileName, "!text-white !text-md tracking-wide group-hover:!text-active-glow transition-colors")}>{clientDetails.name}</h2>
-                        </div>
-                        <div className="w-9 h-9 rounded-full bg-ink-deep border border-gold-primary/30 flex items-center justify-center text-active-glow font-serif font-bold text-[14px] shadow-[0_0_15px_rgba(208,140,96,0.1)] group-hover:border-active-glow/50 transition-all">
-                            {clientDetails.name.charAt(0)}
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }
@@ -257,7 +242,7 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
 // Main Layout Wrapper
 // ============================================================================
 export default function VedicLayout({ children }: { children: React.ReactNode }) {
-    const { isClientSet, clientDetails, setClientDetails, isInitialized } = useVedicClient();
+    const { isClientSet, clientDetails, setClientDetails, isInitialized, openClients } = useVedicClient();
     const { ayanamsa } = useAstrologerStore();
     const pathname = usePathname();
     const router = useRouter();
@@ -284,9 +269,10 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
     ];
 
     const isDashboard = dashboardPaths.includes(pathname);
+    const hasClientBar = openClients.length > 0;
 
     return (
-        <div className="flex flex-col min-h-screen pt-14 bg-luxury-radial relative">
+        <div className={cn("flex flex-col min-h-screen bg-luxury-radial relative", hasClientBar ? "pt-24" : "pt-14")}>
             {/* Subtle Texture Overlay */}
             <div
                 className="absolute inset-0 opacity-15 pointer-events-none z-0 bg-[url('/textures/aged-paper.png')] bg-blend-multiply"
@@ -300,6 +286,7 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
                     pathname={pathname}
                     router={router}
                     ayanamsa={ayanamsa}
+                    hasClientBar={hasClientBar}
                 />
             )}
 
@@ -307,7 +294,7 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
             <main className="flex-1 relative transition-all duration-500" aria-label="Vedic astrology content">
                 <div className={cn(
                     "w-full h-full",
-                    isDashboard ? "p-0" : "p-1 sm:p-2 lg:p-4 pb-10"
+                    isDashboard ? (pathname === "/vedic-astrology/customize" ? "p-0" : "p-0 pt-4") : "p-1 sm:p-2 lg:p-4 pb-10"
                 )}>
                     <PageContainer variant={isDashboard ? "full" : "wide"}>
                         {children}

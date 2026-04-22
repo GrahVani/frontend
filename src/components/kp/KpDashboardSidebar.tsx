@@ -13,6 +13,7 @@ import {
     HelpCircle,
     FileText,
     Compass,
+    Calendar,
 } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { KnowledgeTooltip } from '@/components/knowledge';
@@ -50,7 +51,7 @@ const SIDEBAR_ITEMS: { id: KpSection; label: React.ReactNode; icon: React.Compon
     { id: 'advanced-ssl', label: <>Advanced <KnowledgeTooltip term="sub_sub_lord">SSL</KnowledgeTooltip></>, icon: FlaskConical },
     { id: 'nakshatra-nadi', label: <KnowledgeTooltip term="kp_nakshatra_nadi">Nakshatra Nadi</KnowledgeTooltip>, icon: Compass },
     { id: 'fortuna', label: <KnowledgeTooltip term="kp_fortuna">Pars Fortuna</KnowledgeTooltip>, icon: Clock },
-    { id: 'dashas', label: 'Dashas', icon: History },
+    { id: 'dashas', label: 'Dashas', icon: Calendar },
     { id: 'transit', label: 'Transit', icon: Globe },
     { id: 'events', label: <KnowledgeTooltip term="kp_horary">Horary</KnowledgeTooltip>, icon: HelpCircle },
     { id: 'reports', label: 'Notes', icon: FileText },

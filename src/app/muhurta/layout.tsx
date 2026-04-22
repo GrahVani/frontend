@@ -10,9 +10,10 @@ import { useVedicClient } from '@/context/VedicClientContext';
 import { useRouter, usePathname } from 'next/navigation';
 
 export default function MuhurtaLayout({ children }: { children: React.ReactNode }) {
-    const { isClientSet, isInitialized } = useVedicClient();
+    const { isClientSet, isInitialized, openClients } = useVedicClient();
     const router = useRouter();
     const pathname = usePathname();
+    const hasClientBar = openClients.length > 0;
 
     React.useEffect(() => {
         if (isInitialized && !isClientSet) {
@@ -32,8 +33,8 @@ export default function MuhurtaLayout({ children }: { children: React.ReactNode 
                 className="absolute inset-0 opacity-15 pointer-events-none z-0 bg-[url('/textures/aged-paper.png')] [background-blend-mode:multiply]"
             />
 
-            <div className="pt-14 relative z-10 w-full min-h-screen">
-                <div className="hidden md:block fixed left-0 top-14 bottom-0 md:w-16 lg:w-64 overflow-y-auto z-20">
+            <div className={`${hasClientBar ? 'pt-24' : 'pt-14'} relative z-10 w-full min-h-screen`}>
+                <div className={`hidden md:block fixed left-0 ${hasClientBar ? 'top-24' : 'top-14'} bottom-0 md:w-16 lg:w-64 overflow-y-auto z-20`}>
                     <SectionSidebar title="Muhurta" basePath="/muhurta" items={MUHURTA_Sidebar} />
                 </div>
 

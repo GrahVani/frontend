@@ -8,6 +8,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { authApi } from "@/lib/api";
 import PremiumButton from "@/components/GoldenButton";
 
+import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
@@ -87,24 +88,29 @@ export default function LoginPage() {
                             transition={{ delay: 0.5, duration: 0.8 }}
                             className="w-full"
                         >
-                            {/* Header - Ancient Emblem */}
+                            {/* Header - Branding */}
                             <div className="flex flex-col items-center mb-8">
-                                <div className="w-20 h-20 relative mb-4 flex items-center justify-center">
-                                    {/* Sun/Moon Emblem Simulation */}
-                                    <div className="absolute inset-0 border-2 border-dotted border-bronze rounded-full opacity-30 animate-spin-slow" />
-                                    <div className="w-12 h-12 bg-gradient-to-br from-accent-gold-light to-bronze rounded-full flex items-center justify-center shadow-inner">
-                                        <div className="w-8 h-8 rounded-full bg-surface-warm relative overflow-hidden">
-                                            <div className="absolute -right-2 -top-2 w-6 h-6 bg-accent-gold-light rounded-full" />
-                                        </div>
-                                    </div>
+                                <div className="relative flex items-center justify-center mb-2">
+                                    <Image
+                                        src="/Logo.png"
+                                        alt="Grahvani Logo"
+                                        width={240}
+                                        height={120}
+                                        className="object-contain contrast-[1.1] brightness-[1.1] select-none"
+                                        style={{
+                                            height: '100px',
+                                            width: 'auto',
+                                        }}
+                                        priority
+                                    />
                                 </div>
-                                <h1 className="text-3xl font-serif font-bold tracking-[0.15em] text-ink uppercase">
+                                <h1 className="text-4xl font-serif font-bold tracking-[0.15em] text-ink uppercase select-none">
                                     Grahvani
                                 </h1>
-                                <div className="flex items-center gap-2 mt-2 opacity-80">
-                                    <div className="h-[1px] w-6 bg-gold-dark" />
-                                    <span className="text-[10px] font-serif uppercase tracking-widest text-gold-dark">Wisdom of Stars</span>
-                                    <div className="h-[1px] w-6 bg-gold-dark" />
+                                <div className="flex items-center gap-2 mt-3 opacity-90">
+                                    <div className="h-[1px] w-8 bg-gold-dark/60" />
+                                    <span className="text-[11px] font-serif uppercase tracking-[0.2em] text-gold-dark font-bold">Wisdom of Stars</span>
+                                    <div className="h-[1px] w-8 bg-gold-dark/60" />
                                 </div>
                             </div>
 

@@ -8,6 +8,8 @@ import { useGenerateProfile } from "@/hooks/mutations/useGenerateProfile";
 /** Pages that consume chart data — only fetch charts when on these routes */
 const CHART_ROUTES = ['/vedic-astrology/customize', '/vedic-astrology', '/client/', '/comparison', '/matchmaking'];
 const CHART_CACHE_KEY = 'vedic_charts_cache';
+const OPEN_CLIENTS_KEY = 'vedic_open_clients';
+const MAX_OPEN_CLIENTS = 8;
 
 export interface VedicClientDetails {
     id?: string;
@@ -38,12 +40,31 @@ interface VedicClientContextType {
     isRefreshingCharts: boolean; // True whenever a fetch is in progress
     refreshCharts: () => Promise<void>;
     isInitialized: boolean;
+    // Multi-client tab management
+    openClients: VedicClientDetails[];
+    addOpenClient: (details: VedicClientDetails) => void;
+    removeOpenClient: (clientId: string) => void;
+    switchToClient: (clientId: string) => void;
 }
 
 const VedicClientContext = createContext<VedicClientContextType | undefined>(undefined);
 
+/** Validate a client object has the minimum required shape */
+function isValidClientDetails(obj: unknown): obj is VedicClientDetails {
+    return (
+        !!obj &&
+        typeof obj === 'object' &&
+        typeof (obj as VedicClientDetails).name === 'string' &&
+        typeof (obj as VedicClientDetails).dateOfBirth === 'string' &&
+        typeof (obj as VedicClientDetails).timeOfBirth === 'string' &&
+        !!(obj as VedicClientDetails).placeOfBirth &&
+        typeof (obj as VedicClientDetails).placeOfBirth.city === 'string'
+    );
+}
+
 export function VedicClientProvider({ children }: { children: ReactNode }) {
     const [clientDetails, setClientDetails] = useState<VedicClientDetails | null>(null);
+    const [openClients, setOpenClients] = useState<VedicClientDetails[]>([]);
     const [isInitialized, setIsInitialized] = useState(false);
     const [cachedCharts, setCachedCharts] = useState<ChartLookup>({});
     const pathname = usePathname();
@@ -91,32 +112,48 @@ export function VedicClientProvider({ children }: { children: ReactNode }) {
         }
     }, [isQueryLoading, chartClientId, processedCharts, isGeneratingCharts, generateMutation]);
 
-    // Rehydrate from sessionStorage with validation (ST-003)
+    // ── Persist openClients to sessionStorage ──
+    const persistOpenClients = useCallback((clients: VedicClientDetails[]) => {
+        try {
+            sessionStorage.setItem(OPEN_CLIENTS_KEY, JSON.stringify(clients));
+        } catch {
+            // sessionStorage quota exceeded — silently ignore
+        }
+    }, []);
+
+    // ── Rehydrate from sessionStorage with validation (ST-003) ──
     useEffect(() => {
+        // Rehydrate active client
         const stored = sessionStorage.getItem("vedic_client_temp");
         if (stored) {
             try {
                 const parsed = JSON.parse(stored);
-                // Validate required shape before trusting sessionStorage data
-                if (
-                    parsed &&
-                    typeof parsed === 'object' &&
-                    typeof parsed.name === 'string' &&
-                    typeof parsed.dateOfBirth === 'string' &&
-                    typeof parsed.timeOfBirth === 'string' &&
-                    parsed.placeOfBirth &&
-                    typeof parsed.placeOfBirth.city === 'string'
-                ) {
+                if (isValidClientDetails(parsed)) {
                     setClientDetails(parsed as VedicClientDetails);
                 } else {
-                    // Invalid shape — clear corrupted data
                     sessionStorage.removeItem("vedic_client_temp");
                 }
             } catch {
-                // Corrupted JSON — clear it
                 sessionStorage.removeItem("vedic_client_temp");
             }
         }
+
+        // Rehydrate open clients list
+        const storedOpen = sessionStorage.getItem(OPEN_CLIENTS_KEY);
+        if (storedOpen) {
+            try {
+                const parsed = JSON.parse(storedOpen);
+                if (Array.isArray(parsed)) {
+                    const valid = parsed.filter(isValidClientDetails) as VedicClientDetails[];
+                    setOpenClients(valid.slice(0, MAX_OPEN_CLIENTS));
+                } else {
+                    sessionStorage.removeItem(OPEN_CLIENTS_KEY);
+                }
+            } catch {
+                sessionStorage.removeItem(OPEN_CLIENTS_KEY);
+            }
+        }
+
         setIsInitialized(true);
     }, []);
 
@@ -145,14 +182,66 @@ export function VedicClientProvider({ children }: { children: ReactNode }) {
         }
     }, [processedCharts, clientDetails?.id]);
 
+    // ── Add a client to open tabs (and set as active) ──
+    const addOpenClient = useCallback((details: VedicClientDetails) => {
+        setOpenClients(prev => {
+            // Remove existing entry for this client (by id or name fallback)
+            const key = details.id || details.name;
+            const filtered = prev.filter(c => (c.id || c.name) !== key);
+            // Add to front, cap at MAX
+            const updated = [details, ...filtered].slice(0, MAX_OPEN_CLIENTS);
+            persistOpenClients(updated);
+            return updated;
+        });
+    }, [persistOpenClients]);
+
+    // ── Remove a client tab ──
+    const removeOpenClient = useCallback((clientId: string) => {
+        setOpenClients(prev => {
+            const updated = prev.filter(c => (c.id || c.name) !== clientId);
+            persistOpenClients(updated);
+
+            // If we removed the active client, switch to the next one (or clear)
+            const activeKey = clientDetails?.id || clientDetails?.name;
+            if (activeKey === clientId) {
+                if (updated.length > 0) {
+                    setClientDetails(updated[0]);
+                    sessionStorage.setItem("vedic_client_temp", JSON.stringify(updated[0]));
+                } else {
+                    setClientDetails(null);
+                    sessionStorage.removeItem("vedic_client_temp");
+                }
+            }
+
+            return updated;
+        });
+    }, [clientDetails, persistOpenClients]);
+
+    // ── Switch to a client from the tab bar ──
+    const switchToClient = useCallback((clientId: string) => {
+        setOpenClients(prev => {
+            const target = prev.find(c => (c.id || c.name) === clientId);
+            if (target) {
+                setClientDetails(target);
+                sessionStorage.setItem("vedic_client_temp", JSON.stringify(target));
+                // Reset auto-gen ref so charts are regenerated if needed
+                hasAttemptedAutoGenRef.current = false;
+            }
+            return prev;
+        });
+    }, []);
+
+    // ── Core update: also adds to open clients ──
     const updateClientDetails = useCallback((details: VedicClientDetails | null) => {
         setClientDetails(details);
         if (details) {
             sessionStorage.setItem("vedic_client_temp", JSON.stringify(details));
+            // Also add to open clients tab bar
+            addOpenClient(details);
         } else {
             sessionStorage.removeItem("vedic_client_temp");
         }
-    }, []);
+    }, [addOpenClient]);
 
     const clearClientDetails = useCallback(() => updateClientDetails(null), [updateClientDetails]);
 
@@ -172,7 +261,12 @@ export function VedicClientProvider({ children }: { children: ReactNode }) {
         isRefreshingCharts,
         refreshCharts: handleRefreshCharts,
         isInitialized,
-    }), [clientDetails, isGeneratingCharts, effectiveCharts, isLoadingCharts, isRefreshingCharts, handleRefreshCharts, isInitialized, clearClientDetails]);
+        // Multi-client tab management
+        openClients,
+        addOpenClient,
+        removeOpenClient,
+        switchToClient,
+    }), [clientDetails, isGeneratingCharts, effectiveCharts, isLoadingCharts, isRefreshingCharts, handleRefreshCharts, isInitialized, clearClientDetails, openClients, addOpenClient, removeOpenClient, switchToClient]);
 
     return (
         <VedicClientContext.Provider value={value}>
