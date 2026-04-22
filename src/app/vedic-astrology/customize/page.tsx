@@ -186,7 +186,7 @@ const CustomChartWidget = React.memo(function CustomChartWidget({
     degreeFontSize,
     showHouseNumbers = true,
     showGridLines = true,
-    gridLineColor = '#D4C4A8',
+    gridLineColor = 'var(--header-border)',
     gridLineWidth = 2,
     showRetrogradeIndicator = true,
     retrogradeStyle = 'R',

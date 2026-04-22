@@ -138,7 +138,7 @@ export const DEFAULT_WIDGET_THEME: WidgetTheme = {
     degreeFontSize: 9,
     showHouseNumbers: true,
     showGridLines: true,
-    gridLineColor: '#D4C4A8',
+    gridLineColor: '#D08C60',
     gridLineWidth: 2,
     showRetrogradeIndicator: true,
     retrogradeStyle: 'R',

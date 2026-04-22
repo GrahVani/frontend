@@ -5,13 +5,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Settings, Clock, ChevronDown, Menu, Bell } from "lucide-react";
+import { Settings, Clock, ChevronDown, Menu, Bell, Heart, Hash, Calendar } from "lucide-react";
 import { useAstrologerStore } from "@/store/useAstrologerStore";
 import { useAuth } from "@/context/AuthContext";
 import { LogOut, User } from "lucide-react";
 import MobileNav from "@/components/layout/MobileNav";
 import NavLink, { type NavSubItem } from "@/components/layout/NavLink";
 import GlobalSettingsModal from "@/components/layout/GlobalSettingsModal";
+import ClientSwitcherBar from "@/components/layout/ClientSwitcherBar";
 import { CLIENTS_General_Sidebar, NUMEROLOGY_SYSTEMS, CALENDAR_Sidebar } from "@/config/sidebarConfig";
 import { useVedicClient } from "@/context/VedicClientContext";
 import { X, UserCheck, Lock } from "lucide-react";
@@ -190,35 +191,31 @@ export default function GlobalHeader() {
                     {/* Glass separator between brand and nav */}
                     <div className="header-divider hidden md:block" />
 
-                    <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="Main navigation">
+                    <nav className="hidden md:flex items-center gap-0.5" role="navigation" aria-label="Main navigation">
                         <NavLink href="/dashboard" label="Dashboard" active={isActive("/dashboard")} />
                         <NavLink href={isClientSet ? "/vedic-astrology/customize" : "/vedic-astrology?redirect=/vedic-astrology/customize"} label="Workbench" active={isActive("/vedic-astrology/customize")} onClick={handleProtectedClick} isLocked={!isClientSet} />
                         <NavLink href={isClientSet ? "/vedic-astrology/overview" : "/vedic-astrology"} label="Vedic Astrology" active={isActive("/vedic-astrology/vedic-tab")} onClick={handleVedicClick} isLocked={!isClientSet} />
                         <NavLink href={isClientSet ? "/vedic-astrology/overview" : "/vedic-astrology/overview"} label="KP" active={isActive("/vedic-astrology/kp-tab")} onClick={handleKPClick} isLocked={!isClientSet} />
                         <NavLink href="/vedic-astrology/panchanga" label="Panchang" active={isActive("/vedic-astrology/panchanga")} onClick={handleProtectedClick} isLocked={!isClientSet} />
                         <NavLink href="/muhurta" label="Muhurta" active={isActive("/muhurta")} onClick={handleProtectedClick} isLocked={!isClientSet} />
-                        <NavLink href="/matchmaking" label="Matchmaking" active={isActive("/matchmaking")} />
-                        <NavLink href="/numerology" label="Numerology" active={isActive("/numerology")} subItems={NUMEROLOGY_SUB_ITEMS} />
-                        <NavLink href="/calendar" label="Calendar" active={isActive("/calendar")} subItems={CALENDAR_SUB_ITEMS} />
+                        
+                        {/* Overflowing Items Grouped */}
+                        <NavLink 
+                            href="#" 
+                            label="More" 
+                            active={isActive("/matchmaking") || isActive("/numerology") || isActive("/calendar")}
+                            subItems={[
+                                { name: "Matchmaking", path: "/matchmaking", icon: Heart },
+                                { name: "Numerology", path: "/numerology", icon: Hash },
+                                { name: "Calendar", path: "/calendar", icon: Calendar },
+                            ]}
+                        />
                     </nav>
                 </div>
 
                 {/* RIGHT: Context + Actions + Profile */}
                 <div className="flex items-center gap-3 lg:gap-4">
-                    {/* Current Client Chip */}
-                    {isClientSet && clientDetails && (
-                        <div className="hidden xl:flex items-center gap-2 pl-2.5 pr-1.5 py-1 rounded-full bg-gold-primary/15 border border-gold-primary/30 group/client transition-all animate-in fade-in slide-in-from-right-2">
-                            <UserCheck className="w-3.5 h-3.5 text-gold-primary" />
-                            <span className="text-[11px] font-bold text-active-glow truncate max-w-[100px]">{clientDetails.name}</span>
-                            <button
-                                onClick={clearClientDetails}
-                                className="w-5 h-5 rounded-full flex items-center justify-center hover:bg-gold-primary/20 text-gold-primary/70 hover:text-gold-primary transition-colors"
-                                title="Switch Client"
-                            >
-                                <X className="w-3 h-3" />
-                            </button>
-                        </div>
-                    )}
+                    {/* Client chip removed — replaced by ClientSwitcherBar below */}
 
                     {/* Ayanamsa & Time chip */}
                     <div className="hidden lg:flex items-center gap-2.5 px-3 py-1.5 rounded-lg"
@@ -332,6 +329,9 @@ export default function GlobalHeader() {
                     </div>
                 </div>
             </div>
+
+            {/* Client Switcher Bar — multi-client tabs */}
+            <ClientSwitcherBar />
 
             {isSettingsOpen && (
                 <GlobalSettingsModal onClose={() => setIsSettingsOpen(false)} router={router} />

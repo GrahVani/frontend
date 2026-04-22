@@ -123,11 +123,11 @@ function ShadbalaBarChart({ planets }: { planets: ShadbalaPlanet[] }) {
                         <motion.text
                             x={cx}
                             textAnchor="middle"
-                            fontSize={11}
-                            fontWeight="600"
+                            fontSize={14}
+                            fontWeight="700"
                             fill={hex}
                             initial={{ y: marginT + chartH - 4, opacity: 0 }}
-                            animate={{ y: barY - 6, opacity: 1 }}
+                            animate={{ y: barY - 8, opacity: 1 }}
                             transition={{ duration: 0.8, delay: i * 0.05 + 0.3 }}
                         >
                             {p.totalBala.toFixed(0)}
@@ -135,25 +135,25 @@ function ShadbalaBarChart({ planets }: { planets: ShadbalaPlanet[] }) {
 
                         {/* Planet Symbol overlaid at base or just below */}
                         <g>
-                            <text x={cx} y={marginT + chartH + 14}
+                            <text x={cx} y={marginT + chartH + 16}
                                 textAnchor="middle"
-                                fontSize={10} fontWeight="700" fill={hex} opacity={0.9}>
+                                fontSize={13} fontWeight="700" fill={hex} opacity={1}>
                                 {PLANET_SYMBOLS[p.planet]}
                             </text>
-                            <text x={cx} y={marginT + chartH + 26}
+                            <text x={cx} y={marginT + chartH + 28}
                                 textAnchor="middle"
-                                fontSize={8} fontWeight="500" fill="#6B5F52">
+                                fontSize={11} fontWeight="600" fill="#3D3228">
                                 {p.planet}
                             </text>
                         </g>
 
                         {/* Strength Badge Overlay */}
                         {barH > 40 && (
-                            <circle cx={cx + barW / 2 - 8} cy={barY + 8} r={6} fill="white" fillOpacity={0.2} />
+                            <circle cx={cx + barW / 2 - 8} cy={barY + 8} r={7} fill="white" fillOpacity={0.3} />
                         )}
                         {barH > 40 && (
-                            <text x={cx + barW / 2 - 8} y={barY + 11}
-                                textAnchor="middle" fontSize={8} fill="white">
+                            <text x={cx + barW / 2 - 8} y={barY + 11.5}
+                                textAnchor="middle" fontSize={10} fontWeight="bold" fill="white">
                                 {p.isStrong ? '✓' : '⚠'}
                             </text>
                         )}
@@ -163,13 +163,13 @@ function ShadbalaBarChart({ planets }: { planets: ShadbalaPlanet[] }) {
 
             {/* Virupas Label at side */}
             <text
-                x={marginL - 10} y={marginT + chartH / 2}
+                x={marginL - 12} y={marginT + chartH / 2}
                 textAnchor="middle"
-                fontSize={8}
+                fontSize={10}
                 fill="#9C7A2F"
-                fontWeight="500"
-                transform={`rotate(-90, ${marginL - 10}, ${marginT + chartH / 2})`}
-                opacity={0.6}
+                fontWeight="700"
+                transform={`rotate(-90, ${marginL - 12}, ${marginT + chartH / 2})`}
+                opacity={0.8}
             >
                 VIRUPAS
             </text>
@@ -188,7 +188,7 @@ function SarvashtakavargaChart({ houseValues, ascendant }: { houseValues: Record
     return (
         <div className="space-y-1">
             <div className="flex items-center justify-between px-1 mb-1">
-                <span className="text-[10px] text-ink/40 tracking-wider">Total Bindus: <span className="text-ink/70 font-medium">{total}</span></span>
+                <span className="text-[12px] text-primary tracking-wider">Total Bindus: <span className="text-primary font-bold">{total}</span></span>
             </div>
             <div className="flex gap-0.5 items-end h-[120px] px-1">
                 {Array.from({ length: 12 }, (_, i) => {
@@ -203,8 +203,8 @@ function SarvashtakavargaChart({ houseValues, ascendant }: { houseValues: Record
                         <div key={house} className="flex-1 flex flex-col items-center gap-0.5">
                             {/* Value */}
                             <span className={cn(
-                                "text-[9px] tabular-nums",
-                                isHigh ? "text-emerald-600" : isLow ? "text-rose-500" : "text-ink/50"
+                                "text-[11px] font-bold tabular-nums",
+                                isHigh ? "text-emerald-600" : isLow ? "text-rose-500" : "text-primary"
                             )}>
                                 {val}
                             </span>
@@ -220,16 +220,16 @@ function SarvashtakavargaChart({ houseValues, ascendant }: { houseValues: Record
                                 style={{ opacity: 0.75 }}
                             />
                             {/* Sign label */}
-                            <span className="text-[8px] text-ink/40 leading-tight">{SIGN_NAMES[signId]}</span>
-                            <span className="text-[7px] text-ink/25">H{house}</span>
+                            <span className="text-[10px] text-primary font-medium leading-tight">{SIGN_NAMES[signId]}</span>
+                            <span className="text-[9px] text-primary font-bold">H{house}</span>
                         </div>
                     );
                 })}
             </div>
-            <div className="flex items-center justify-center gap-3 text-[8px] text-ink/40 mt-1">
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-emerald-500 opacity-75" /> ≥30 Strong</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-amber-400 opacity-75" /> Average</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-rose-400 opacity-75" /> ≤22 Weak</span>
+            <div className="flex items-center justify-center gap-4 text-[10px] text-primary font-bold mt-1">
+                <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-emerald-500" /> ≥30 Strong</span>
+                <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-amber-400" /> Average</span>
+                <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-rose-400" /> ≤22 Weak</span>
             </div>
         </div>
     );

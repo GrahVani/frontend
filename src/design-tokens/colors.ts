@@ -237,7 +237,7 @@ export const CHART_THEMES: Record<string, ChartThemePalette> = {
         accent: '#8B5A2B',
         background: '#FFFDF9',
         border: '#D08C60',
-        gridLine: '#D4A574',
+        gridLine: '#D08C60',
         ascLine: '#8B5A2B',
         ascText: '#8B5A2B',
         signText: '#3E2A1F',

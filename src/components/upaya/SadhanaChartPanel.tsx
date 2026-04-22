@@ -21,11 +21,11 @@ export default function SadhanaChartPanel({ chartData }: SadhanaChartPanelProps)
         <div className={cn("flex flex-col h-full w-full overflow-hidden rounded-lg border border-gold-primary/20 bg-surface-warm", COLORS.wbContainer)}>
             {/* Header - Matching workbench style */}
             <div className="bg-gold-primary/10 px-3 py-1.5 border-b border-gold-primary/15 flex justify-between items-center shrink-0">
-                <h3 className="font-serif text-[16px] font-semibold text-ink leading-tight tracking-wide">
+                <h3 className="font-serif text-[18px] font-semibold text-primary leading-tight tracking-wide">
                     Horoscope projection
                 </h3>
                 <div className="px-2 py-0.5 bg-gold-primary/10 rounded border border-gold-primary/15">
-                    <span className={cn(TYPOGRAPHY.label, "text-ink !mb-0")}><KnowledgeTooltip term="ayanamsa_lahiri" unstyled>Lahiri</KnowledgeTooltip></span>
+                    <span className={cn(TYPOGRAPHY.label, "text-primary !mb-0")}><KnowledgeTooltip term="ayanamsa_lahiri" unstyled>Lahiri</KnowledgeTooltip></span>
                 </div>
             </div>
 

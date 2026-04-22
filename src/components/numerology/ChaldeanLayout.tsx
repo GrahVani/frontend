@@ -9,6 +9,7 @@ import { TYPOGRAPHY } from "@/design-tokens/typography";
 import { ChevronDown } from "lucide-react";
 import { CHALDEAN_CATEGORIES } from "@/lib/numerology-constants";
 import { Calculator } from "lucide-react";
+import { useVedicClient } from "@/context/VedicClientContext";
 
 // Primary nav items (first 8 categories visible, rest in "More")
 const PRIMARY_COUNT = 8;
@@ -21,7 +22,7 @@ const EXTRA_ITEMS = [
     { name: 'Raw Calculators', path: '/numerology/chaldean/raw-calculators', icon: Calculator },
 ];
 
-function ChaldeanSubHeader({ pathname }: { pathname: string }) {
+function ChaldeanSubHeader({ pathname, hasClientBar }: { pathname: string; hasClientBar: boolean }) {
     const [isMoreOpen, setIsMoreOpen] = React.useState(false);
     const moreRef = React.useRef<HTMLDivElement>(null);
 
@@ -36,7 +37,7 @@ function ChaldeanSubHeader({ pathname }: { pathname: string }) {
     }, []);
 
     return (
-        <div className="sticky top-14 left-0 right-0 z-40 h-12 bg-header-gradient flex items-center px-4 md:px-6 gap-4" role="navigation" aria-label="Chaldean numerology sections">
+        <div className={cn("sticky left-0 right-0 z-40 h-12 bg-header-gradient flex items-center px-4 md:px-6 gap-4", hasClientBar ? "top-24" : "top-14")} role="navigation" aria-label="Chaldean numerology sections">
             {/* Top Border Indicator */}
             <div className="absolute top-0 left-0 right-0 h-[1px] bg-gold-primary opacity-10" />
 
@@ -129,16 +130,18 @@ function ChaldeanSubHeader({ pathname }: { pathname: string }) {
 
 export default function ChaldeanLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
+    const { openClients } = useVedicClient();
+    const hasClientBar = openClients.length > 0;
 
     return (
-        <div className="flex flex-col min-h-screen pt-14 bg-luxury-radial relative">
+        <div className={cn("flex flex-col min-h-screen bg-luxury-radial relative", hasClientBar ? "pt-24" : "pt-14")}>
             {/* Subtle Texture Overlay */}
             <div
                 className="absolute inset-0 opacity-15 pointer-events-none z-0 bg-[url('/textures/aged-paper.png')] bg-blend-multiply"
             />
 
             {/* Sub-Header Hub — always visible for category navigation */}
-            <ChaldeanSubHeader pathname={pathname} />
+            <ChaldeanSubHeader pathname={pathname} hasClientBar={hasClientBar} />
 
             {/* Main Content Area */}
             <main className="flex-1 relative transition-all duration-500" aria-label="Chaldean numerology content">

@@ -777,6 +777,9 @@ function KundaliContent({
             <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
                 {/* LEFT COLUMN: Slot 0 & Planetary Details */}
                 <div className="md:col-span-5 flex flex-col gap-2">
+                    {/* KP Cuspal Chart — shown only for KP ayanamsa, replaces Rashi table */}
+                    {activeSystem === 'kp' && <KpCuspalChartCard />}
+
                     {/* Slot 0: Main Chart */}
                     {renderSlot(0, 'h-[405px]')}
 
@@ -804,12 +807,9 @@ function KundaliContent({
                         </div>
                     )}
 
-                    {/* KP Cuspal Chart — shown only for KP ayanamsa, replaces Rashi table */}
+                    {/* Additional KP cards */}
                     {activeSystem === 'kp' && (
-                        <>
-                            <KpCuspalChartCard />
-                            <KpBhavaDetailsCard />
-                        </>
+                        <KpBhavaDetailsCard />
                     )}
                 </div>
 

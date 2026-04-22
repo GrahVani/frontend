@@ -46,10 +46,11 @@ const KpFocusedCuspView = dynamic(() => import('@/components/kp/KpFocusedCuspVie
 const KpAdvancedSslView = dynamic(() => import('@/components/kp/KpAdvancedSslView').then(m => ({ default: m.KpAdvancedSslView })).catch(() => ({ default: () => <DynamicErrorFallback name="SSL View" /> })), { loading: DynamicLoadingFallback });
 const KpNakshatraNadiFocusedView = dynamic(() => import('@/components/kp/KpNakshatraNadiFocusedView').then(m => ({ default: m.KpNakshatraNadiFocusedView })).catch(() => ({ default: () => <DynamicErrorFallback name="Nadi View" /> })), { loading: DynamicLoadingFallback });
 const ShodashaVargaTable = dynamic(() => import('@/components/astrology/ShodashaVargaTable').catch(() => ({ default: () => <DynamicErrorFallback name="Ashtakavarga" /> })), { loading: DynamicLoadingFallback });
+const KpDashaViewer = dynamic(() => import('@/components/kp/KpDashaViewer').catch(() => ({ default: () => <DynamicErrorFallback name="Dasha Table" /> })), { loading: DynamicLoadingFallback });
 
 // ─── Types ───────────────────────────────────────────────────────────
 
-export type KpTab = 'planets-cusps' | 'significations' | 'planetary-significators' | 'bhava-details' | 'ruling-planets' | 'horary' | 'interlinks' | 'advanced-ssl' | 'fortuna' | 'nakshatra-nadi' | 'ashtakavarga';
+export type KpTab = 'planets-cusps' | 'significations' | 'planetary-significators' | 'bhava-details' | 'ruling-planets' | 'dashas' | 'horary' | 'interlinks' | 'advanced-ssl' | 'fortuna' | 'nakshatra-nadi' | 'ashtakavarga';
 
 interface KpTabContentProps {
     activeTab: KpTab;
@@ -293,6 +294,14 @@ export default function KpTabContent(props: KpTabContentProps) {
                     </div>
                 </TabSection>
             );
+
+        case 'dashas':
+            return (
+                <div className="w-full h-full p-1">
+                    <KpDashaViewer />
+                </div>
+            );
+
 
         default:
             return <EmptyMessage text="Select a tab to view data" />;
