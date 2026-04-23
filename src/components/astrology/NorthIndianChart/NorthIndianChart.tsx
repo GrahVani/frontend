@@ -44,6 +44,7 @@ interface NorthIndianChartProps extends ChartDisplayOptions {
     onHouseClick?: (houseNumber: number) => void;
     houseValues?: Record<number, number>; // Map of HouseNumber (1-12) to Value (e.g. Bindus)
     valueType?: 'bindu' | 'none';
+    valueFontSize?: number;
     preserveAspectRatio?: string;
 }
 
@@ -54,6 +55,7 @@ export default function NorthIndianChart({
     onHouseClick,
     houseValues,
     valueType = 'none',
+    valueFontSize = 34,
     preserveAspectRatio,
     // Display options with defaults
     planetDisplayMode = 'name',
@@ -209,7 +211,7 @@ export default function NorthIndianChart({
                             <text
                                 x={pos.x}
                                 y={pos.y}
-                                fontSize="34"
+                                fontSize={valueFontSize}
                                 fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
                                 fontWeight="600"
                                 fill={houseValues[pos.h] < 20 ? "var(--status-error)" : houseValues[pos.h] >= 30 ? "var(--status-success)" : "var(--text-ink)"}
