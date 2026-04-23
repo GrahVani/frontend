@@ -220,7 +220,7 @@ export const clientApi = {
                 },
                 features: {
                     dasha: ['mahadasha', 'antardasha', 'pratyantardasha', 'sookshma', 'prana'],
-                    ashtakavarga: ['bhinna', 'sarva', 'shodasha_summary', 'temporal_maitri', 'panchadha_maitri'],
+                    ashtakavarga: ['bhinna', 'sarva', 'shodasha_summary', 'temporal_maitri', 'panchadha_maitri', 'samudaya'],
                     shadbala: ['shadbala'],
                     compatibility: ['synastry', 'composite', 'progressed'],
                     numerology: ['chaldean', 'lo_shu']
