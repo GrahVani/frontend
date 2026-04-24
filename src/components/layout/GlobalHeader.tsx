@@ -195,7 +195,7 @@ export default function GlobalHeader() {
                         <NavLink href="/dashboard" label="Dashboard" active={isActive("/dashboard")} />
                         <NavLink href={isClientSet ? "/vedic-astrology/customize" : "/vedic-astrology?redirect=/vedic-astrology/customize"} label="Workbench" active={isActive("/vedic-astrology/customize")} onClick={handleProtectedClick} isLocked={!isClientSet} />
                         <NavLink href={isClientSet ? "/vedic-astrology/overview" : "/vedic-astrology"} label="Vedic Astrology" active={isActive("/vedic-astrology/vedic-tab")} onClick={handleVedicClick} isLocked={!isClientSet} />
-                        <NavLink href={isClientSet ? "/vedic-astrology/overview" : "/vedic-astrology/overview"} label="KP" active={isActive("/vedic-astrology/kp-tab")} onClick={handleKPClick} isLocked={!isClientSet} />
+                        <NavLink href={isClientSet ? "/vedic-astrology/kp" : "/vedic-astrology/kp"} label="KP" active={isActive("/vedic-astrology/kp-tab")} onClick={handleKPClick} isLocked={!isClientSet} />
                         <NavLink href="/vedic-astrology/panchanga" label="Panchang" active={isActive("/vedic-astrology/panchanga")} onClick={handleProtectedClick} isLocked={!isClientSet} />
                         <NavLink href="/muhurta" label="Muhurta" active={isActive("/muhurta")} onClick={handleProtectedClick} isLocked={!isClientSet} />
                         

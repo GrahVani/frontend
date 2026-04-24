@@ -446,6 +446,41 @@ export function useCustomizePages() {
         updateActivePageItems(() => []);
     }, [updateActivePageItems]);
 
+    const resetWidgetToDefaults = useCallback((instanceId: string) => {
+        updateActivePageItems(items =>
+            items.map(i => {
+                if (i.instanceId !== instanceId) return i;
+                const catalog = CHART_CATALOG.find(c => c.id === i.id);
+                const baseDimensions = catalog?.defaultDimensions || DEFAULT_DIMENSIONS;
+                return {
+                    ...i,
+                    dimensions: { ...baseDimensions },
+                    theme: { ...DEFAULT_WIDGET_THEME, ...(catalog?.defaultTheme || {}) },
+                    customTitle: undefined,
+                    showHeader: true,
+                    showBorder: true,
+                };
+            })
+        );
+    }, [updateActivePageItems]);
+
+    const resetAllWidgetsToDefaults = useCallback(() => {
+        updateActivePageItems(items =>
+            items.map(i => {
+                const catalog = CHART_CATALOG.find(c => c.id === i.id);
+                const baseDimensions = catalog?.defaultDimensions || DEFAULT_DIMENSIONS;
+                return {
+                    ...i,
+                    dimensions: { ...baseDimensions },
+                    theme: { ...DEFAULT_WIDGET_THEME, ...(catalog?.defaultTheme || {}) },
+                    customTitle: undefined,
+                    showHeader: true,
+                    showBorder: true,
+                };
+            })
+        );
+    }, [updateActivePageItems]);
+
     // ═══════════════════════════════════════════════════════════════════════════
     // COMPUTED
     // ═══════════════════════════════════════════════════════════════════════════
@@ -523,6 +558,8 @@ export function useCustomizePages() {
         toggleBorder,
         reorderItems,
         resetCurrentPage,
+        resetWidgetToDefaults,
+        resetAllWidgetsToDefaults,
         
         // Limits
         canCreateMorePages,

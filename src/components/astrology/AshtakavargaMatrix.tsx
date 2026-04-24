@@ -4,6 +4,8 @@ import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { ZODIAC_SIGNS } from '@/lib/chart-geometry';
 import { KnowledgeTooltip } from '@/components/knowledge';
+import { getPlanetSymbol, PLANET_COLORS } from '@/lib/planet-symbols';
+import { Star } from 'lucide-react';
 
 interface ContributorEntry {
     contributor: string;
@@ -36,11 +38,32 @@ const HOUSE_GROUPS = {
     moksha: { houses: [4, 8, 12], name: 'moksha', displayName: 'Moksha', desc: 'Liberation', color: 'bg-blue-100 text-blue-800', termKey: 'house_moksha' }
 };
 
-// Minimal badge indicator for SAV values only (no colored text)
+// Visual intensity dot for bindu values (0-8 scale in BAV / Sarva rows)
+const getBinduDot = (val: number) => {
+    if (val === 0) return <span className="w-1.5 h-1.5 rounded-full bg-ink/10" />;
+    if (val <= 2) return <span className="w-1.5 h-1.5 rounded-full bg-red-400" />;
+    if (val <= 4) return <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />;
+    if (val <= 6) return <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />;
+    return <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />;
+};
+
+// SAV strength indicator
 const getSavBadge = (val: number) => {
     if (val >= 30) return <span className="w-1.5 h-1.5 rounded-full bg-green-600" />;
     if (val < 22) return <span className="w-1.5 h-1.5 rounded-full bg-red-500" />;
     return null;
+};
+
+// Planet label with symbol and color
+const PlanetRowLabel = ({ name, abbrev }: { name: string; abbrev: string }) => {
+    const symbol = getPlanetSymbol(name);
+    const color = PLANET_COLORS[name] || PLANET_COLORS[abbrev] || '#3D3228';
+    return (
+        <div className="flex items-center gap-1.5">
+            <span className="text-[16px] leading-none" style={{ color }}>{symbol}</span>
+            <span className="font-medium text-ink/80">{abbrev}</span>
+        </div>
+    );
 };
 
 export default function AshtakavargaMatrix({ type, planet, data, className }: MatrixProps) {
@@ -95,7 +118,7 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                     <table className="w-full h-full border-collapse text-[14px]" role="table" aria-label={isSarva ? "Sarvashtakavarga matrix showing planetary bindus across signs" : `Bhinnashtakavarga matrix for ${planet || 'planet'}`}>
                         <thead className="sticky top-0 z-10">
                             <tr className="bg-amber-50/30 border-b border-primary">
-                                <th className={cn(TYPOGRAPHY.tableHeader, "py-3 px-2 text-left w-16 border-r border-primary")}>
+                                <th className={cn(TYPOGRAPHY.tableHeader, "py-3 px-2 text-left w-20 border-r border-primary")}>
                                     {isSarva ? 'Planet' : planet?.substring(0, 4)}
                                 </th>
                                 {SIGNS.map(s => (
@@ -118,12 +141,17 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
 
                                 return (
                                     <tr key={p} className={cn("border-b border-primary", idx % 2 === 1 && "bg-surface-warm/30")}>
-                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-2 font-medium border-r border-primary")}>{p.substring(0, 3)}</td>
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-2 font-medium border-r border-primary")}>
+                                            <PlanetRowLabel name={p} abbrev={p.substring(0, 3)} />
+                                        </td>
                                         {SIGNS.map(s => {
                                             const val = getVal(rd, s);
                                             return (
                                                 <td key={s} className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1 text-center border-r border-primary font-medium")}>
-                                                    {val}
+                                                    <div className="flex items-center justify-center gap-1">
+                                                        <span>{val}</span>
+                                                        {getBinduDot(val)}
+                                                    </div>
                                                 </td>
                                             );
                                         })}
@@ -134,13 +162,19 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                         </tbody>
                         <tfoot>
                             <tr className="bg-surface-warm border-t border-primary">
-                                <td className={cn(TYPOGRAPHY.label, "py-3 px-2 border-r border-primary mb-0")}><KnowledgeTooltip term="ashtakavarga_sav" unstyled>SAV</KnowledgeTooltip></td>
+                                <td className={cn(TYPOGRAPHY.label, "py-3 px-2 border-r border-primary mb-0")}>
+                                    <div className="flex items-center gap-1.5">
+                                        <Star className="w-3.5 h-3.5 text-gold-dark" />
+                                        <KnowledgeTooltip term="ashtakavarga_sav" unstyled>SAV</KnowledgeTooltip>
+                                    </div>
+                                </td>
                                 {SIGNS.map(s => {
                                     const v = sav[s];
                                     return (
                                         <td key={s} className="py-3 px-1 text-center border-r border-primary">
-                                            <div className="flex flex-col items-center justify-center leading-none">
+                                            <div className="flex flex-col items-center justify-center leading-none gap-1">
                                                 <span className={cn(TYPOGRAPHY.value, "leading-none font-medium")}>{v}</span>
+                                                {getSavBadge(v)}
                                             </div>
                                         </td>
                                     );
@@ -156,4 +190,3 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
         </div>
     );
 }
-

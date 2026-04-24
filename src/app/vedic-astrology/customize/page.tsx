@@ -14,7 +14,7 @@ import {
     House,
     BookOpen,
     Settings,
-
+    RotateCcw,
     Minus,
     Move,
     ChevronDown,
@@ -724,6 +724,8 @@ export default function CustomizePage() {
         toggleBorder,
         reorderItems,
         resetCurrentPage,
+        resetWidgetToDefaults,
+        resetAllWidgetsToDefaults,
     } = useCustomizePages();
 
     const activeSystem = localAyanamsa.toLowerCase();
@@ -896,14 +898,24 @@ export default function CustomizePage() {
                     Add Widget
                 </button>
 
-                {/* Clear Current Page */}
+                {/* Reset Layout + Clear Current Page */}
                 {selectedItems.length > 0 && (
-                    <button
-                        onClick={resetCurrentPage}
-                        className="text-[11px] font-black uppercase tracking-widest text-ink hover:text-red-700 transition-all bg-red-50/50 px-2 py-0.5 rounded-md border border-red-200/30"
-                    >
-                        Clear All
-                    </button>
+                    <>
+                        <button
+                            onClick={resetAllWidgetsToDefaults}
+                            className="flex items-center gap-1 text-[11px] font-black uppercase tracking-widest text-primary hover:text-gold-dark transition-all bg-gold-primary/10 px-2 py-0.5 rounded-md border border-gold-primary/20"
+                            title="Reset all widgets to their default sizes"
+                        >
+                            <RotateCcw className="w-3 h-3" />
+                            Reset Layout
+                        </button>
+                        <button
+                            onClick={resetCurrentPage}
+                            className="text-[11px] font-black uppercase tracking-widest text-ink hover:text-red-700 transition-all bg-red-50/50 px-2 py-0.5 rounded-md border border-red-200/30"
+                        >
+                            Clear All
+                        </button>
+                    </>
                 )}
 
                 <div className="flex-1" />
@@ -1137,6 +1149,11 @@ export default function CustomizePage() {
                         applyThemePreset(customizationPanel.selectedWidget.instanceId, preset);
                     }
                 }, [customizationPanel.selectedWidget, applyThemePreset])}
+                onResetToDefaults={useCallback(() => {
+                    if (customizationPanel.selectedWidget) {
+                        resetWidgetToDefaults(customizationPanel.selectedWidget.instanceId);
+                    }
+                }, [customizationPanel.selectedWidget, resetWidgetToDefaults])}
             />
         </div>
     );

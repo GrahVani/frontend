@@ -8,11 +8,11 @@
  */
 export const TYPOGRAPHY = {
     // ===== Core Layout =====
-    sectionTitle: "font-sans text-md font-semibold text-primary leading-tight tracking-wide",
-    pageTitle: "font-sans text-[20px] font-bold text-primary leading-tight",
+    sectionTitle: "font-sans text-md font-semibold text-primary leading-tight tracking-wide text-balance",
+    pageTitle: "font-sans text-[20px] font-bold text-primary leading-tight text-balance",
 
     // ===== Data Tables =====
-    tableHeader: "font-sans text-[14px] font-medium text-primary capitalize tracking-wider leading-normal",
+    tableHeader: "font-sans text-[14px] font-medium text-primary capitalize tracking-wider leading-normal text-balance",
     planetName: "font-sans text-[16px] font-medium text-primary leading-tight",
     dateAndDuration: "font-sans text-[14px] font-medium text-primary whitespace-nowrap leading-compact tracking-tight",
 

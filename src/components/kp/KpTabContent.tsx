@@ -46,11 +46,11 @@ const KpFocusedCuspView = dynamic(() => import('@/components/kp/KpFocusedCuspVie
 const KpAdvancedSslView = dynamic(() => import('@/components/kp/KpAdvancedSslView').then(m => ({ default: m.KpAdvancedSslView })).catch(() => ({ default: () => <DynamicErrorFallback name="SSL View" /> })), { loading: DynamicLoadingFallback });
 const KpNakshatraNadiFocusedView = dynamic(() => import('@/components/kp/KpNakshatraNadiFocusedView').then(m => ({ default: m.KpNakshatraNadiFocusedView })).catch(() => ({ default: () => <DynamicErrorFallback name="Nadi View" /> })), { loading: DynamicLoadingFallback });
 const ShodashaVargaTable = dynamic(() => import('@/components/astrology/ShodashaVargaTable').catch(() => ({ default: () => <DynamicErrorFallback name="Ashtakavarga" /> })), { loading: DynamicLoadingFallback });
-const KpDashaViewer = dynamic(() => import('@/components/kp/KpDashaViewer').catch(() => ({ default: () => <DynamicErrorFallback name="Dasha Table" /> })), { loading: DynamicLoadingFallback });
+
 
 // ─── Types ───────────────────────────────────────────────────────────
 
-export type KpTab = 'planets-cusps' | 'significations' | 'planetary-significators' | 'bhava-details' | 'ruling-planets' | 'dashas' | 'horary' | 'interlinks' | 'advanced-ssl' | 'fortuna' | 'nakshatra-nadi' | 'ashtakavarga';
+export type KpTab = 'planets-cusps' | 'significations' | 'bhava-details' | 'ruling-planets' | 'horary' | 'interlinks' | 'advanced-ssl' | 'fortuna' | 'nakshatra-nadi' | 'ashtakavarga';
 
 interface KpTabContentProps {
     activeTab: KpTab;
@@ -104,7 +104,7 @@ function TabSection({ title, subtitle, badge, children, noPadding }: {
     return (
         <div className="border border-gold-primary/20 rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm h-full outline-none">
             <div className="bg-gold-primary/10 px-3 py-1 border-b border-gold-primary/15 flex justify-between items-center shrink-0">
-                <h3 className={cn(TYPOGRAPHY.value, "text-[16px] text-ink leading-tight tracking-wide")}>{title}</h3>
+                <h3 className={cn(TYPOGRAPHY.value, "text-[16px] text-ink leading-tight tracking-wide text-balance")}>{title}</h3>
                 {subtitle && (
                     <span className={cn(TYPOGRAPHY.subValue, "text-[10px] hidden sm:inline-block")}>{subtitle}</span>
                 )}
@@ -133,6 +133,46 @@ function EmptyMessage({ text }: { text: string }) {
     return <p className="text-ink text-center py-8">{text}</p>;
 }
 
+// ─── Unified Significations Tab (House + Planet Views) ───────────────
+
+function SignificationsTab(props: KpTabContentProps) {
+    return (
+        <div className="flex flex-col gap-3 h-full min-h-0">
+            {/* House Significators Table — Top */}
+            <div className="flex-1 min-h-0">
+                <TabSection
+                    title={<>House <KnowledgeTooltip term="kp_significator">Significations</KnowledgeTooltip></>}
+                    subtitle="Planets that signify specific houses based on stellar positions"
+                >
+                    {props.houseSignificationsLoading && !props.houseSignificators.length ? (
+                        <LoadingSpinner />
+                    ) : props.houseSignificators.length > 0 ? (
+                        <HouseSignificatorsTable data={props.houseSignificators} className="border-none shadow-none rounded-none" />
+                    ) : (
+                        <EmptyMessage text="No house signification data available" />
+                    )}
+                </TabSection>
+            </div>
+
+            {/* Planet Significators Table — Bottom */}
+            <div className="flex-1 min-h-0">
+                <TabSection
+                    title={<>Planetary <KnowledgeTooltip term="kp_significator">Significators</KnowledgeTooltip></>}
+                    subtitle="Which houses are signified by each planet - core of KP prediction"
+                >
+                    {props.planetSignificatorsLoading && !props.significationData.length ? (
+                        <LoadingSpinner />
+                    ) : props.significationData.length > 0 ? (
+                        <SignificationMatrix significations={props.significationData} className="border-none shadow-none rounded-none" />
+                    ) : (
+                        <EmptyMessage text="No planetary significator data available" />
+                    )}
+                </TabSection>
+            </div>
+        </div>
+    );
+}
+
 // ─── Main Component ──────────────────────────────────────────────────
 
 export default function KpTabContent(props: KpTabContentProps) {
@@ -153,36 +193,7 @@ export default function KpTabContent(props: KpTabContentProps) {
             );
 
         case 'significations':
-            return (
-                <TabSection
-                    title={<>House <KnowledgeTooltip term="kp_significator">significations</KnowledgeTooltip></>}
-                    subtitle="Planets that signify specific houses based on their stellar positions"
-                >
-                    {props.houseSignificationsLoading && !props.houseSignificators.length ? (
-                        <LoadingSpinner />
-                    ) : props.houseSignificators.length > 0 ? (
-                        <HouseSignificatorsTable data={props.houseSignificators} className="border-none shadow-none rounded-none" />
-                    ) : (
-                        <EmptyMessage text="No house signification data available" />
-                    )}
-                </TabSection>
-            );
-
-        case 'planetary-significators':
-            return (
-                <TabSection
-                    title={<>Planetary <KnowledgeTooltip term="kp_significator">significators</KnowledgeTooltip></>}
-                    subtitle="Which houses are signified by each planet - the core of KP prediction"
-                >
-                    {props.planetSignificatorsLoading && !props.significationData.length ? (
-                        <LoadingSpinner />
-                    ) : props.significationData.length > 0 ? (
-                        <SignificationMatrix significations={props.significationData} className="border-none shadow-none rounded-none" />
-                    ) : (
-                        <EmptyMessage text="No planetary significator data available" />
-                    )}
-                </TabSection>
-            );
+            return <SignificationsTab {...props} />;
 
         case 'bhava-details':
             return (
@@ -294,14 +305,6 @@ export default function KpTabContent(props: KpTabContentProps) {
                     </div>
                 </TabSection>
             );
-
-        case 'dashas':
-            return (
-                <div className="w-full h-full p-1">
-                    <KpDashaViewer />
-                </div>
-            );
-
 
         default:
             return <EmptyMessage text="Select a tab to view data" />;

@@ -41,7 +41,7 @@ export default function MobileNav({ onClose }: { onClose: () => void }) {
         { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
         { href: isClientSet ? "/vedic-astrology/customize" : "/vedic-astrology?redirect=/vedic-astrology/customize", label: "Workbench", icon: FlaskConical },
         { href: isClientSet ? "/vedic-astrology/overview" : "/vedic-astrology", label: "Vedic Astrology", icon: Star },
-        { href: isClientSet ? "/vedic-astrology/overview" : "/vedic-astrology/overview", label: "KP", icon: Star },
+        { href: isClientSet ? "/vedic-astrology/kp" : "/vedic-astrology/kp", label: "KP", icon: Star },
         { href: "/vedic-astrology/panchanga", label: "Panchang", icon: Sparkles },
         { href: "/muhurta", label: "Muhurta", icon: Clock, subItems: MUHURTA_Sidebar },
         { href: "/numerology", label: "Numerology", icon: Hash, subItems: NUMEROLOGY_SYSTEMS },

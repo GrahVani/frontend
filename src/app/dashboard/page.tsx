@@ -1419,37 +1419,25 @@ export default function Dashboard() {
 
     return (
         <div className="space-y-6 px-4 pb-12">
-            {/* ── Greeting + Stats ── */}
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-                <div>
-                    <h1 className="text-[30px] font-serif text-ink font-bold leading-tight tracking-tight">
-                        {getGreeting()}, {firstName}
-                    </h1>
-                    <p className="text-[14px] text-ink font-serif font-bold italic mt-1.5">
-                        {todayDate()}
-                        {panchang?.vara?.name && panchang.vara.name !== '-' && (
-                            <span className="not-italic font-bold ml-2" style={{ color: PANCH_ACCENT.Vara }}>
-                                {panchang.vara.name}
-                            </span>
-                        )}
-                    </p>
-                </div>
-                <div className="flex items-center gap-3">
-                    <Link href="/clients" className="prem-card flex items-center gap-3 px-5 py-3 hover:border-gold-primary/30 transition-colors">
-                        <Users className="w-5 h-5 text-gold-dark" />
-                        <div className="text-right">
-                            <div className="text-[20px] font-serif font-bold text-ink leading-none">{stats?.totalClients ?? '—'}</div>
-                            <div className="text-[9px] text-ink font-bold uppercase tracking-widest mt-0.5">Clients</div>
-                        </div>
-                    </Link>
-                    <div className="prem-card flex items-center gap-3 px-5 py-3">
-                        <BarChart3 className="w-5 h-5 text-gold-dark" />
-                        <div className="text-right">
-                            <div className="text-[20px] font-serif font-bold text-ink leading-none">{stats?.chartsGenerated ?? 0}</div>
-                            <div className="text-[9px] text-ink font-bold uppercase tracking-widest mt-0.5">Charts</div>
-                        </div>
-                    </div>
-                </div>
+            {/* ── Greeting ── */}
+            <div>
+                <h1 className="text-[30px] font-serif text-ink font-bold leading-tight tracking-tight">
+                    {getGreeting()}, {firstName}
+                </h1>
+                <p className="text-[14px] text-ink font-serif font-bold italic mt-1.5">
+                    {todayDate()}
+                    {panchang?.vara?.name && panchang.vara.name !== '-' && (
+                        <span className="not-italic font-bold ml-2" style={{ color: PANCH_ACCENT.Vara }}>
+                            {panchang.vara.name}
+                        </span>
+                    )}
+                </p>
+            </div>
+
+            {/* ── Clients + Actions ── */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <RecentClientsCard />
+                <QuickActionsCard />
             </div>
 
             {/* ── NOW Status Strip ── */}
@@ -1475,11 +1463,6 @@ export default function Dashboard() {
                 <LagnaJourney schedule={lagnaData.schedule} current={lagnaData.current} />
             )}
 
-            {/* ── Clients + Actions ── */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <RecentClientsCard />
-                <QuickActionsCard />
-            </div>
         </div>
     );
 }

@@ -160,6 +160,15 @@ export default function VedicOverviewPage() {
         }
     }, [clientDetails?.id, settings.ayanamsa]);
 
+    const router = useRouter();
+
+    // Redirect to KP dashboard when KP ayanamsa is selected
+    useEffect(() => {
+        if (ayanamsa === 'KP') {
+            router.replace('/vedic-astrology/kp');
+        }
+    }, [ayanamsa, router]);
+
     const d1Data = React.useMemo(() => parseChartData(processedCharts[`D1_${activeSystem}`]?.chartData), [processedCharts, activeSystem]);
     const zoomedData = React.useMemo(() => {
         if (!zoomedChart) return { planets: [], ascendant: 1 };

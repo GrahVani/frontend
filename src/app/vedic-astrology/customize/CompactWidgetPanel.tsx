@@ -21,6 +21,7 @@ import {
     Grid3X3,
     Sparkles,
     Undo,
+    RotateCcw,
     ZoomIn,
     LayoutGrid,
     Table2,
@@ -54,6 +55,7 @@ interface CompactWidgetPanelProps {
     onDuplicate: () => void;
     onRemove: () => void;
     onApplyThemePreset: (presetName: string) => void;
+    onResetToDefaults?: () => void;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -296,6 +298,7 @@ export default function CompactWidgetPanel({
     onDuplicate,
     onRemove,
     onApplyThemePreset,
+    onResetToDefaults,
 }: CompactWidgetPanelProps) {
     // ═══════════════════════════════════════════════════════════════════════════
     // LOCAL STATE - For immediate UI feedback
@@ -915,6 +918,17 @@ export default function CompactWidgetPanel({
                                 onUpdateDimensions={onUpdateDimensions}
                                 category={category}
                             />
+
+                            {/* Reset to Defaults */}
+                            {onResetToDefaults && (
+                                <button
+                                    onClick={onResetToDefaults}
+                                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border border-gold-primary/30 bg-gold-primary/5 text-primary hover:bg-gold-primary/15 hover:border-gold-primary/50 transition-all active:scale-95"
+                                >
+                                    <RotateCcw className="w-3.5 h-3.5" />
+                                    <span className="text-[11px] font-semibold">Reset to Defaults</span>
+                                </button>
+                            )}
                         </div>
                     </Section>
 

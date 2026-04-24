@@ -4,11 +4,19 @@ import { cn } from '@/lib/utils';
 import { Planet } from '../astrology/NorthIndianChart/NorthIndianChart';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { PLANET_SVG_FILLS } from '@/design-tokens/colors';
-import { HOUSE_CENTERS, HOUSE_POLYGONS } from '@/lib/chart-geometry';
+import { HOUSE_CENTERS, HOUSE_POLYGONS, SIGN_NUMBER_POSITIONS } from '@/lib/chart-geometry';
+
+export interface KpCuspDetail {
+    house: number;
+    degreeFormatted: string;
+    sign: string;
+    signId: number;
+}
 
 export interface KpCuspalChartProps {
     planets: Planet[]; // Planets mapped to houses
     houseSigns: number[]; // Array of 12 sign IDs, one for each house (1-12)
+    cuspDetails?: KpCuspDetail[];
     className?: string;
     preserveAspectRatio?: string;
     onHouseClick?: (houseNumber: number) => void;
@@ -24,6 +32,7 @@ export interface KpCuspalChartProps {
 export default function KpCuspalChart({
     planets,
     houseSigns,
+    cuspDetails,
     className = "",
     preserveAspectRatio,
     onHouseClick,
@@ -32,6 +41,12 @@ export default function KpCuspalChart({
 
     const houseCenters = HOUSE_CENTERS;
     const housePolygons = HOUSE_POLYGONS;
+    const signNumberPositions = SIGN_NUMBER_POSITIONS;
+
+    const cuspMap = React.useMemo(() => {
+        if (!cuspDetails) return {} as Record<number, KpCuspDetail>;
+        return Object.fromEntries(cuspDetails.map(c => [c.house, c]));
+    }, [cuspDetails]);
 
     const handleHouseClick = (houseNum: number) => {
         if (onHouseClick) {
@@ -98,14 +113,14 @@ export default function KpCuspalChart({
                         <g transform={`translate(${pos.x}, ${pos.y})`}>
                             {
                                 boxPlanets.map((p, i) => {
-                                    const spacing = boxPlanets.length > 5 ? 10 : 14;
+                                    const spacing = boxPlanets.length > 5 ? 13 : 17;
                                     const yOffset = (i * spacing) - ((boxPlanets.length - 1) * (spacing / 2));
                                     const planetColor = PLANET_SVG_FILLS[p.name] || 'var(--ink)';
 
                                     return (
                                         <g key={p.name} transform={`translate(0, ${yOffset})`}>
                                             <text
-                                                fontSize={TYPOGRAPHY.svgPlanetName.fontSize}
+                                                fontSize="17"
                                                 fontFamily={TYPOGRAPHY.svgPlanetName.fontFamily}
                                                 fontWeight={isHovered ? "800" : TYPOGRAPHY.svgPlanetName.fontWeight}
                                                 fill={planetColor}
@@ -115,10 +130,10 @@ export default function KpCuspalChart({
                                             >
                                                 {p.name}
                                                 {p.isRetro && (
-                                                    <tspan fontSize="12" fontWeight="bold" fill="var(--status-error)" dx="1">R</tspan>
+                                                    <tspan fontSize="14" fontWeight="bold" fill="var(--status-error)" dx="1">R</tspan>
                                                 )}
                                                 <tspan
-                                                    fontSize={TYPOGRAPHY.svgDegree.fontSize}
+                                                    fontSize="11"
                                                     fontWeight={TYPOGRAPHY.svgDegree.fontWeight}
                                                     fill="var(--ink)"
                                                     dx="2"
@@ -132,11 +147,25 @@ export default function KpCuspalChart({
                             }
                         </g>
 
-                        {/* House Number (Roman or Small) - Optional, typically North Indian Charts don't show house numbers explicitly 
-                            except by position. Keeping it clean. */}
+                        {/* House Number */}
+                        {cuspMap[pos.h] && (
+                            <g transform={`translate(${signNumberPositions[pos.h].x}, ${signNumberPositions[pos.h].y})`}>
+                                <text
+                                    fontSize="14"
+                                    fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
+                                    fontWeight="700"
+                                    fill="var(--text-muted)"
+                                    textAnchor="middle"
+                                    dominantBaseline="central"
+                                    className="select-none pointer-events-none"
+                                >
+                                    {pos.h}
+                                </text>
+                            </g>
+                        )}
                     </g>
                 );
             })}
-        </svg >
+        </svg>
     );
 }
