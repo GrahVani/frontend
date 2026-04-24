@@ -116,7 +116,7 @@ export function KpCuspalChartCard() {
     if (!clientId) return null;
 
     return (
-        <div className="prem-card flex flex-col">
+        <div className="prem-card flex flex-col -mt-2">
             <div className="px-3 py-1.5" style={HEADER_STYLE}>
                 <h2 className={TYPOGRAPHY.sectionTitle}>Cuspal chart</h2>
             </div>
@@ -129,6 +129,12 @@ export function KpCuspalChartCard() {
                     <KpCuspalChart
                         planets={transformed.d1Data.planets}
                         houseSigns={transformed.cuspData.map(c => c.signId)}
+                        cuspDetails={transformed.cuspData.map(c => ({
+                            house: c.cusp,
+                            degreeFormatted: c.degreeFormatted,
+                            sign: c.sign,
+                            signId: c.signId,
+                        }))}
                         className="w-full h-full bg-transparent border-none"
                         preserveAspectRatio="none"
                     />

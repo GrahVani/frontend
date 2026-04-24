@@ -102,6 +102,7 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
         if (item.name === "Gochar" && !capabilities.charts.special.includes('transit')) return false;
         if (item.name === "Sudarshan Chakra" && !capabilities.charts.special.includes('sudarshana')) return false;
         if (item.name === "KP System" && (!capabilities.hasHorary && ayanamsa !== 'KP')) return false;
+        if (item.name === "Kundali" && ayanamsa === 'KP') return false;
         if (item.systemFilter && !item.systemFilter.includes(ayanamsa)) return false;
         return true;
     });
@@ -149,7 +150,7 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
 
                     // Visual separator between generic items and system-specific groups (e.g. KP)
                     const prevItem = index > 0 ? filteredPrimaryItems[index - 1] : null;
-                    const isGroupTransition = item.systemFilter && !prevItem?.systemFilter;
+                    const isGroupTransition = index > 0 && item.systemFilter && !prevItem?.systemFilter;
 
                     return (
                         <React.Fragment key={item.name}>
@@ -265,7 +266,8 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
         "/vedic-astrology/ashtakavarga",
         "/vedic-astrology/shadbala",
         "/vedic-astrology/transits",
-        "/vedic-astrology/customize"
+        "/vedic-astrology/customize",
+        "/vedic-astrology/kp"
     ];
 
     const isDashboard = dashboardPaths.includes(pathname);
@@ -294,7 +296,7 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
             <main className="flex-1 relative transition-all duration-500" aria-label="Vedic astrology content">
                 <div className={cn(
                     "w-full h-full",
-                    isDashboard ? (pathname === "/vedic-astrology/customize" ? "p-0" : "p-0 pt-4") : "p-1 sm:p-2 lg:p-4 pb-10"
+                    isDashboard ? (pathname === "/vedic-astrology/customize" || pathname === "/vedic-astrology/kp" ? "p-0" : "p-0 pt-4") : "p-1 sm:p-2 lg:p-4 pb-10"
                 )}>
                     <PageContainer variant={isDashboard ? "full" : "wide"}>
                         {children}

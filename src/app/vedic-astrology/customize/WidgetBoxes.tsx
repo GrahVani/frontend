@@ -797,6 +797,12 @@ function KpModuleWidgetContent({ widget, activeSystem }: { widget: CustomizeChar
                         <KpCuspalChart
                             planets={transformed.d1Data.planets}
                             houseSigns={houseSigns}
+                            cuspDetails={transformed.cuspData.map(c => ({
+                                house: c.cusp,
+                                degreeFormatted: c.degreeFormatted,
+                                sign: c.sign,
+                                signId: c.signId,
+                            }))}
                             className="w-full h-full"
                         />
                     </div>

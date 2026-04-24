@@ -86,10 +86,10 @@ export default function AshtakavargaPage() {
         const capabilities = clientApi.getSystemCapabilities(ayanamsa);
         const hasSarva = capabilities.features.ashtakavarga.includes('sarva');
         const hasBhinna = capabilities.features.ashtakavarga.includes('bhinna');
-        const hasShodasha = capabilities.features.ashtakavarga.includes('shodasha_summary') || 
-                           capabilities.features.ashtakavarga.includes('shodasha_varga');
+        const hasShodasha = capabilities.features.ashtakavarga.includes('shodasha_summary') ||
+            capabilities.features.ashtakavarga.includes('shodasha_varga');
         const hasSamudaya = capabilities.features.ashtakavarga.includes('samudaya');
-        
+
         // If current tab is not available, switch to first available
         if (activeTab === 'sarva' && !hasSarva) {
             if (hasBhinna) setActiveTab('bhinna');
@@ -478,14 +478,14 @@ function SamudayaTab({
 
         // Fallback: sarva-style formats (used by some other endpoints)
         const root = (data as Record<string, unknown>).sarvashtakavarga ||
-                     (data as Record<string, unknown>).sarvashtakavarga_summary ||
-                     (data as Record<string, unknown>).ashtakvarga ||
-                     data;
+            (data as Record<string, unknown>).sarvashtakavarga_summary ||
+            (data as Record<string, unknown>).ashtakvarga ||
+            data;
         const signs = (root as Record<string, unknown>).signs ||
-                      (root as Record<string, unknown>).houses_matrix ||
-                      (root as Record<string, unknown>).houses ||
-                      (root as Record<string, unknown>).sarvashtakavarga_summary ||
-                      {};
+            (root as Record<string, unknown>).houses_matrix ||
+            (root as Record<string, unknown>).houses ||
+            (root as Record<string, unknown>).sarvashtakavarga_summary ||
+            {};
         let scores: Record<number, number> = {};
 
         const houseMatrix = (root as Record<string, unknown>).house_strength_matrix || (data as Record<string, unknown>).house_strength_matrix;

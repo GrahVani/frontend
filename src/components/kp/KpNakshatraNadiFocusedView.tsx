@@ -7,14 +7,12 @@ import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { PLANET_COLORS } from '@/design-tokens/colors';
 import { KnowledgeTooltip } from '@/components/knowledge';
 
-// Planet data derived from centralized tokens
 const PLANET_DATA: Record<string, { symbol: string; color: string; element: string }> = Object.fromEntries(
     Object.entries(PLANET_COLORS).map(([name, c]) => [name, {
         symbol: c.symbol, color: c.gradient, element: c.element,
     }])
 );
 
-// Zodiac data
 const ZODIAC_DATA: Record<string, { symbol: string; element: string; quality: string }> = {
     'Aries': { symbol: '♈', element: 'Fire', quality: 'Cardinal' },
     'Taurus': { symbol: '♉', element: 'Earth', quality: 'Fixed' },
@@ -30,7 +28,6 @@ const ZODIAC_DATA: Record<string, { symbol: string; element: string; quality: st
     'Pisces': { symbol: '♓', element: 'Water', quality: 'Mutable' },
 };
 
-// Nakshatra data with their lords and padas
 const NAKSHATRA_MEANINGS: Record<string, string> = {
     'Ashwini': 'Swift healing, new beginnings',
     'Bharani': 'Transformation, restraint',
@@ -61,7 +58,6 @@ const NAKSHATRA_MEANINGS: Record<string, string> = {
     'Revati': 'Wealth, safe passage',
 };
 
-// Common interface for planet/cusp data
 interface NadiItem {
     name?: string;
     label?: string;
@@ -83,10 +79,8 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
     const [selectedItem, setSelectedItem] = useState<string | null>(null);
     const { nadiData } = data;
 
-    // Helper to normalize lookups
     const normalize = (val: string) => val?.trim() || '';
 
-    // Get planets and cusps arrays
     const planets = useMemo((): NadiItem[] => {
         if (!nadiData?.planets) return [];
         return (Array.isArray(nadiData.planets) ? nadiData.planets : Object.values(nadiData.planets)) as NadiItem[];
@@ -97,7 +91,6 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
         return (Array.isArray(nadiData.cusps) ? nadiData.cusps : Object.values(nadiData.cusps)) as NadiItem[];
     }, [nadiData]);
 
-    // Get selected item details
     const selectedDetails = useMemo((): NadiItem | null => {
         if (!selectedItem) return null;
         if (activeTab === 'planets') {
@@ -107,7 +100,7 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
     }, [selectedItem, activeTab, planets, cusps]);
 
     if (!nadiData) {
-        return <div className="p-8 text-center bg-white rounded-xl text-ink">Loading nadi data...</div>;
+        return <div className="p-8 text-center bg-white rounded-xl text-primary text-[14px] font-medium">Loading nadi data...</div>;
     }
 
     const TabButton = ({ id, label, icon: Icon }: { id: 'planets' | 'cusps', label: string, icon: React.ComponentType<{ className?: string }> }) => (
@@ -115,15 +108,13 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
             onClick={() => { setActiveTab(id); setSelectedItem(null); }}
             className={cn(
                 "flex items-center gap-2 px-6 py-3 tracking-wide transition-all border-b-2",
-                TYPOGRAPHY.value,
-                "text-[14px] font-semibold",
                 activeTab === id
                     ? "border-gold-primary text-gold-dark bg-gold-soft/10"
-                    : "border-transparent text-ink hover:text-ink hover:bg-gold-primary/5"
+                    : "border-transparent text-primary hover:text-primary hover:bg-gold-primary/5"
             )}
         >
             <Icon className="w-4 h-4" />
-            {label}
+            <span className="text-[14px] font-semibold">{label}</span>
         </button>
     );
 
@@ -133,13 +124,12 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
             <div className="flex items-center border-b border-gold-primary/15 bg-surface-warm/60 rounded-t-xl overflow-hidden">
                 <TabButton id="planets" label="Planetary nadi" icon={Sparkles} />
                 <TabButton id="cusps" label="Cuspal nadi (bhavas)" icon={Compass} />
-                {/* KnowledgeTooltips applied on detail panel labels below */}
             </div>
 
             {/* Main Content */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
                 {/* Left - Selection Grid */}
-                <div className="lg:col-span-2 bg-white border-r border-gold-primary/15 p-4">
+                <div className="lg:col-span-2 bg-white border-r border-gold-primary/15 p-5">
                     {activeTab === 'planets' ? (
                         <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
                             {planets.map((planet: NadiItem) => {
@@ -158,7 +148,7 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                                         )}
                                     >
                                         {planet.isRetro && (
-                                            <span className="absolute top-1 right-1 text-[9px] bg-rose-500 text-white px-1.5 py-0.5 rounded-full font-bold">R</span>
+                                            <span className="absolute top-1 right-1 text-[9px] bg-rose-500 text-white px-1.5 py-0.5 rounded-full font-semibold">R</span>
                                         )}
                                         <div className={cn(
                                             "w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center text-[24px] text-white shadow-lg bg-gradient-to-br",
@@ -166,8 +156,8 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                                         )}>
                                             {pData.symbol}
                                         </div>
-                                        <span className={cn(TYPOGRAPHY.value, "font-bold text-ink text-[14px]")}>{planet.name}</span>
-                                        <span className={cn(TYPOGRAPHY.label, "block text-[10px] text-ink mt-1")}>{planet.sign || 'Unknown'}</span>
+                                        <span className="font-semibold text-primary text-[14px]">{planet.name}</span>
+                                        <span className="block text-[11px] text-primary/70 mt-1 font-medium">{planet.sign || 'Unknown'}</span>
                                     </button>
                                 );
                             })}
@@ -190,10 +180,10 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                                                 : "border-gold-primary/20 bg-surface-warm/30 hover:border-gold-primary/30 hover:shadow-md"
                                         )}
                                     >
-                                        <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-gradient-to-br from-surface-warm to-white/80 shadow-sm border border-gold-primary/20 flex items-center justify-center text-ink font-bold">
-                                            <span className={TYPOGRAPHY.value}>{cuspNum}</span>
+                                        <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-gradient-to-br from-surface-warm to-white/80 shadow-sm border border-gold-primary/20 flex items-center justify-center text-primary font-semibold">
+                                            <span className="text-[14px]">{cuspNum}</span>
                                         </div>
-                                        <span className={cn(TYPOGRAPHY.value, "font-semibold text-ink text-[12px]")}>{signData.symbol} {cusp.sign}</span>
+                                        <span className="font-semibold text-primary text-[12px]">{signData.symbol} {cusp.sign}</span>
                                     </button>
                                 );
                             })}
@@ -201,134 +191,146 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                     )}
 
                     {/* Quick Stats */}
-                    <div className="mt-8 grid grid-cols-3 gap-6">
+                    <div className="mt-6 grid grid-cols-3 gap-4">
                         <div className="bg-surface-warm/40 rounded-xl p-4 text-center border border-gold-primary/20 border-b-4 shadow-sm flex flex-col items-center justify-center">
                             <Sun className="w-6 h-6 text-gold-dark mb-2" />
-                            <span className={cn(TYPOGRAPHY.sectionTitle, "text-[30px] leading-none mb-1")}>{planets.length}</span>
-                            <span className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-widest")}>Grahas</span>
+                            <span className="text-[28px] font-semibold text-primary leading-none mb-1">{planets.length}</span>
+                            <span className="text-[11px] text-primary uppercase tracking-widest font-medium">Grahas</span>
                         </div>
                         <div className="bg-surface-warm/40 rounded-xl p-4 text-center border border-gold-primary/20 border-b-4 shadow-sm flex flex-col items-center justify-center">
                             <CircleDot className="w-6 h-6 text-indigo-500/80 mb-2" />
-                            <span className={cn(TYPOGRAPHY.sectionTitle, "text-[30px] leading-none mb-1")}>{cusps.length}</span>
-                            <span className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-widest")}>Bhavas</span>
+                            <span className="text-[28px] font-semibold text-primary leading-none mb-1">{cusps.length}</span>
+                            <span className="text-[11px] text-primary uppercase tracking-widest font-medium">Bhavas</span>
                         </div>
                         <div className="bg-surface-warm/40 rounded-xl p-4 text-center border border-gold-primary/20 border-b-4 shadow-sm flex flex-col items-center justify-center">
                             <Star className="w-6 h-6 text-gold-dark/80 mb-2" />
-                            <span className={cn(TYPOGRAPHY.sectionTitle, "text-[30px] leading-none mb-1")}>27</span>
-                            <span className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-widest")}><KnowledgeTooltip term="nakshatra">Nakshatras</KnowledgeTooltip></span>
+                            <span className="text-[28px] font-semibold text-primary leading-none mb-1">27</span>
+                            <span className="text-[11px] text-primary uppercase tracking-widest font-medium">
+                                <KnowledgeTooltip term="nakshatra">Nakshatras</KnowledgeTooltip>
+                            </span>
                         </div>
                     </div>
                 </div>
 
                 {/* Right - Detail Panel */}
-                <div className="bg-surface-warm p-6 min-h-[400px] border-l border-gold-primary/20">
+                <div className="bg-surface-warm p-5 min-h-[400px] border-l border-gold-primary/20">
                     {selectedDetails ? (
-                        <div key={selectedItem} className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                        <div key={selectedItem} className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
                             {/* Header */}
                             <div className="text-center">
                                 {activeTab === 'planets' ? (
                                     <>
-                                        <div className="w-20 h-20 mx-auto mb-3 rounded-full bg-surface-warm shadow-xl border border-gold-primary/20 flex items-center justify-center text-[30px] text-ink font-bold">
+                                        <div className="w-20 h-20 mx-auto mb-3 rounded-full bg-surface-warm shadow-xl border border-gold-primary/20 flex items-center justify-center text-[30px] text-primary font-semibold">
                                             {PLANET_DATA[normalize(selectedDetails.name || '')]?.symbol || '☉'}
                                         </div>
-                                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] mb-1")}>{selectedDetails.name}</h2>
+                                        <h2 className="text-[24px] font-semibold text-primary mb-1">{selectedDetails.name}</h2>
                                         {selectedDetails.isRetro && (
-                                            <span className={cn(TYPOGRAPHY.label, "inline-block mt-1 text-[10px] bg-rose-100 !text-rose-700 px-2 py-0.5 rounded-full")}>Retrograde</span>
+                                            <span className="inline-block mt-1 text-[10px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-medium">Retrograde</span>
                                         )}
                                     </>
                                 ) : (
                                     <>
-                                        <div className="w-20 h-20 mx-auto mb-3 rounded-full bg-gradient-to-br from-gold-primary to-gold-dark shadow-xl border border-gold-dark/30 flex items-center justify-center text-[30px] text-white font-bold">
-                                            <span className={TYPOGRAPHY.value}>{(selectedDetails.label || '').replace('Cusp ', '').replace('C', '')}</span>
+                                        <div className="w-20 h-20 mx-auto mb-3 rounded-full bg-gradient-to-br from-gold-primary to-gold-dark shadow-xl border border-gold-dark/30 flex items-center justify-center text-[30px] text-white font-semibold">
+                                            <span>{(selectedDetails.label || '').replace('Cusp ', '').replace('C', '')}</span>
                                         </div>
-                                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px]")}>{selectedDetails.label}</h2>
+                                        <h2 className="text-[24px] font-semibold text-primary">{selectedDetails.label}</h2>
                                     </>
                                 )}
                             </div>
 
                             {/* Position Card */}
                             <div className="bg-white rounded-xl p-4 border border-gold-primary/20 shadow-sm">
-                                <h4 className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wider mb-3")}>Position</h4>
+                                <h4 className="text-[11px] uppercase tracking-wider text-primary/60 font-medium mb-3">Position</h4>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-baseline gap-2">
-                                        <span className="text-[30px]">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.symbol || '♈'}</span>
-                                        <span className={cn(TYPOGRAPHY.value, "text-[20px] text-ink")}>{selectedDetails.sign}</span>
+                                        <span className="text-[28px]">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.symbol || '♈'}</span>
+                                        <span className="text-[20px] text-primary font-medium">{selectedDetails.sign}</span>
                                     </div>
                                     <div className="text-right">
-                                        <span className={cn(TYPOGRAPHY.value, "font-mono text-[18px] text-ink")}>{selectedDetails.longitude}</span>
-                                        <span className={cn(TYPOGRAPHY.subValue, "block text-[10px]")}>{ZODIAC_DATA[normalize(selectedDetails.sign)]?.element || 'Unknown'} • {ZODIAC_DATA[normalize(selectedDetails.sign)]?.quality || 'Unknown'}</span>
+                                        <span className="text-[18px] text-primary font-medium">{selectedDetails.longitude}</span>
+                                        <span className="block text-[11px] text-primary/60 font-medium">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.element || 'Unknown'} · {ZODIAC_DATA[normalize(selectedDetails.sign)]?.quality || 'Unknown'}</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Nakshatra Details */}
                             <div className="bg-white rounded-xl p-4 border border-gold-primary/20 shadow-sm">
-                                <h4 className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wider mb-3")}><KnowledgeTooltip term="nakshatra">Nakshatra</KnowledgeTooltip> (Star)</h4>
+                                <h4 className="text-[11px] uppercase tracking-wider text-primary/60 font-medium mb-3">
+                                    <KnowledgeTooltip term="nakshatra">Nakshatra</KnowledgeTooltip> (Star)
+                                </h4>
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center shadow-md">
+                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center shadow-md shrink-0">
                                         <Star className="w-6 h-6 text-white" />
                                     </div>
                                     <div>
-                                        <span className={cn(TYPOGRAPHY.value, "text-[18px] text-ink")}>{selectedDetails.nakshatraName}</span>
-                                        <span className={cn(TYPOGRAPHY.subValue, "block text-[14px]")}>Lord: <span className="text-ink font-semibold">{selectedDetails.nakshatraLord}</span></span>
+                                        <span className="text-[18px] text-primary font-medium">{selectedDetails.nakshatraName}</span>
+                                        <span className="block text-[14px] text-primary/70 font-medium">Lord: <span className="text-primary font-semibold">{selectedDetails.nakshatraLord}</span></span>
                                     </div>
                                 </div>
                                 {NAKSHATRA_MEANINGS[normalize(selectedDetails.nakshatraName)] && (
-                                    <p className={cn(TYPOGRAPHY.subValue, "mt-3 text-[12px] bg-surface-warm/50 p-2 rounded-lg italic")}>
+                                    <p className="mt-3 text-[13px] text-primary/70 bg-surface-warm/50 p-2.5 rounded-lg italic font-medium">
                                         "{NAKSHATRA_MEANINGS[normalize(selectedDetails.nakshatraName)]}"
                                     </p>
                                 )}
                             </div>
 
-                            {/* Sub Lord - Highlighted */}
+                            {/* Sub Lord */}
                             <div className="bg-gradient-to-br from-gold-primary to-gold-dark rounded-xl p-4 text-white shadow-md border border-gold-dark/30">
-                                <h4 className={cn(TYPOGRAPHY.label, "text-[10px] !text-white/90 uppercase tracking-widest mb-2")}><KnowledgeTooltip term="sub_lord" unstyled>Sub lord</KnowledgeTooltip> (key signifier)</h4>
+                                <h4 className="text-[11px] text-white/90 uppercase tracking-widest font-medium mb-2">
+                                    <KnowledgeTooltip term="sub_lord" unstyled>Sub lord</KnowledgeTooltip> (key signifier)
+                                </h4>
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-[24px] shadow-inner text-white">
+                                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-[24px] shadow-inner text-white shrink-0">
                                         {PLANET_DATA[normalize(selectedDetails.subLord)]?.symbol || '☉'}
                                     </div>
                                     <div>
-                                        <span className={cn(TYPOGRAPHY.value, "text-[24px] tracking-wide !text-white font-bold")}>{selectedDetails.subLord}</span>
-                                        <span className={cn(TYPOGRAPHY.subValue, "block text-[12px] !text-white/80 mt-0.5")}>Determines fine timing & results</span>
+                                        <span className="text-[24px] tracking-wide text-white font-semibold">{selectedDetails.subLord}</span>
+                                        <span className="block text-[12px] text-white/80 mt-0.5 font-medium">Determines fine timing & results</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Lord Chain Summary */}
                             <div className="bg-white rounded-xl p-4 border border-gold-primary/20 shadow-sm">
-                                <h4 className={cn(TYPOGRAPHY.label, "text-[10px] uppercase tracking-wider mb-3")}>Stellar chain</h4>
+                                <h4 className="text-[11px] uppercase tracking-wider text-primary/60 font-medium mb-3">Stellar chain</h4>
                                 <div className="flex items-center justify-between text-center">
                                     <div className="flex-1">
-                                        <span className="text-[18px]">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.symbol || '♈'}</span>
-                                        <span className={cn(TYPOGRAPHY.label, "block text-[10px] opacity-60")}>Sign</span>
+                                        <span className="text-[20px]">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.symbol || '♈'}</span>
+                                        <span className="block text-[10px] text-primary/60 font-medium mt-0.5">Sign</span>
                                     </div>
-                                    <span className="text-gold-primary/40">→</span>
+                                    <span className="text-gold-primary/40 text-[14px]">→</span>
                                     <div className="flex-1">
-                                        <span className="text-[18px]">{PLANET_DATA[normalize(selectedDetails.nakshatraLord)]?.symbol || '☉'}</span>
-                                        <span className={cn(TYPOGRAPHY.label, "block text-[10px] opacity-60")}><KnowledgeTooltip term="star_lord">Star lord</KnowledgeTooltip></span>
+                                        <span className="text-[20px]">{PLANET_DATA[normalize(selectedDetails.nakshatraLord)]?.symbol || '☉'}</span>
+                                        <span className="block text-[10px] text-primary/60 font-medium mt-0.5">
+                                            <KnowledgeTooltip term="star_lord">Star lord</KnowledgeTooltip>
+                                        </span>
                                     </div>
-                                    <span className="text-gold-primary/40">→</span>
+                                    <span className="text-gold-primary/40 text-[14px]">→</span>
                                     <div className="flex-1 bg-gold-primary/10 rounded-lg py-1">
-                                        <span className="text-[18px]">{PLANET_DATA[normalize(selectedDetails.subLord)]?.symbol || '☉'}</span>
-                                        <span className={cn(TYPOGRAPHY.label, "block text-[10px] !text-gold-dark !font-bold")}><KnowledgeTooltip term="sub_lord" unstyled>Sub lord</KnowledgeTooltip></span>
+                                        <span className="text-[20px]">{PLANET_DATA[normalize(selectedDetails.subLord)]?.symbol || '☉'}</span>
+                                        <span className="block text-[10px] text-gold-dark font-semibold mt-0.5">
+                                            <KnowledgeTooltip term="sub_lord" unstyled>Sub lord</KnowledgeTooltip>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     ) : (
-                        <div className="h-full flex flex-col items-center justify-center text-center text-ink">
+                        <div className="h-full flex flex-col items-center justify-center text-center text-primary">
                             <Moon className="w-16 h-16 mb-4 opacity-40" />
-                            <p className="font-serif text-[18px] text-ink">Select a {activeTab === 'planets' ? 'planet' : 'cusp'}</p>
-                            <p className="text-[14px] font-sans mt-1">to view detailed Nadi information</p>
+                            <p className="font-serif text-[18px] text-primary font-medium">Select a {activeTab === 'planets' ? 'planet' : 'cusp'}</p>
+                            <p className="text-[14px] font-sans mt-1 text-primary/70 font-medium">to view detailed Nadi information</p>
                         </div>
                     )}
                 </div>
             </div>
 
             {/* Footer */}
-            <div className="bg-surface-warm/30 p-3 text-center border-t border-gold-primary/10 text-[12px] text-ink rounded-b-xl">
-                <Star className="w-3 h-3 inline-block mr-1 text-gold-dark" />
-                <strong className="font-serif"><KnowledgeTooltip term="kp_nakshatra_nadi">Nakshatra nadi</KnowledgeTooltip> system</strong>: <KnowledgeTooltip term="star_lord">Star lords</KnowledgeTooltip> reveal the source, <KnowledgeTooltip term="sub_lord">Sub lords</KnowledgeTooltip> determine the result.
+            <div className="bg-surface-warm/30 p-3 text-center border-t border-gold-primary/10 text-[13px] text-primary rounded-b-xl font-medium">
+                <Star className="w-3.5 h-3.5 inline-block mr-1 text-gold-dark" />
+                <span className="font-semibold">
+                    <KnowledgeTooltip term="kp_nakshatra_nadi">Nakshatra nadi</KnowledgeTooltip> system
+                </span>: <KnowledgeTooltip term="star_lord">Star lords</KnowledgeTooltip> reveal the source, <KnowledgeTooltip term="sub_lord">Sub lords</KnowledgeTooltip> determine the result.
             </div>
         </div >
     );

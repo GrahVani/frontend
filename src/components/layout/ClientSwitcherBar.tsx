@@ -87,7 +87,7 @@ function AddClientPopover({ onClose }: { onClose: () => void }) {
                     placeholder="Search clients…"
                     value={search}
                     onChange={e => setSearch(e.target.value)}
-                    className="flex-1 text-[13px] text-ink bg-transparent outline-none placeholder:text-ink/40 font-medium"
+                    className="flex-1 text-[13px] text-ink bg-transparent outline-none placeholder:text-ink/70 font-medium"
                 />
             </div>
 
@@ -99,7 +99,7 @@ function AddClientPopover({ onClose }: { onClose: () => void }) {
                     </div>
                 ) : clients.length === 0 ? (
                     <div className="text-center py-6 px-4">
-                        <p className="text-[12px] text-ink/60 font-medium">
+                        <p className="text-[12px] text-ink/90 font-medium">
                             {search.trim() ? 'No clients found' : 'Type to search clients'}
                         </p>
                     </div>
@@ -135,13 +135,13 @@ function AddClientPopover({ onClose }: { onClose: () => void }) {
                                     </div>
                                     <div className="flex items-center gap-2 mt-0.5">
                                         {birthPlace && (
-                                            <span className="flex items-center gap-0.5 text-[10px] text-ink/50 font-medium">
+                                            <span className="flex items-center gap-0.5 text-[10px] text-ink/75 font-medium">
                                                 <MapPin className="w-2.5 h-2.5" />
                                                 <span className="truncate max-w-[80px]">{birthPlace}</span>
                                             </span>
                                         )}
                                         {birthDate && (
-                                            <span className="flex items-center gap-0.5 text-[10px] text-ink/50 font-medium">
+                                            <span className="flex items-center gap-0.5 text-[10px] text-ink/75 font-medium">
                                                 <Calendar className="w-2.5 h-2.5" />
                                                 {new Date(birthDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: '2-digit' })}
                                             </span>

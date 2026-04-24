@@ -32,15 +32,15 @@ const signSymbols: Record<string, string> = {
 export default function KpPlanetaryTable({ planets, className }: KpPlanetaryTableProps) {
     if (!planets || planets.length === 0) {
         return (
-            <div className="text-center py-8 text-ink text-[14px]">
+            <div className="text-center py-8 text-primary text-[14px]">
                 No planetary data available
             </div>
         );
     }
 
     return (
-        <div className={cn("overflow-x-auto overflow-y-auto h-full w-full", className)}>
-            <table className="w-full h-full text-[12px] border-collapse font-sans text-ink">
+        <div className={cn("w-full h-full overflow-auto scrollbar-thin", className)}>
+            <table className="w-full text-[12px] border-collapse font-sans">
                 <thead className="sticky top-0 z-10">
                     <tr className="bg-surface-warm/60 border-y border-gold-primary/20 backdrop-blur-sm">
                         <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Planet</th>
@@ -48,8 +48,12 @@ export default function KpPlanetaryTable({ planets, className }: KpPlanetaryTabl
                         <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Degree</th>
                         <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>House</th>
                         <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Nakshatra</th>
-                        <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}><KnowledgeTooltip term="star_lord">Star lord</KnowledgeTooltip></th>
-                        <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left !text-gold-dark")}><KnowledgeTooltip term="sub_lord">Sub lord</KnowledgeTooltip></th>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>
+                            <KnowledgeTooltip term="star_lord">Star Lord</KnowledgeTooltip>
+                        </th>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>
+                            <KnowledgeTooltip term="sub_lord">Sub Lord</KnowledgeTooltip>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,50 +65,67 @@ export default function KpPlanetaryTable({ planets, className }: KpPlanetaryTabl
                                 idx % 2 === 0 ? "bg-white" : "bg-surface-warm"
                             )}
                         >
-                            <td className="py-1 px-3">
+                            {/* Planet */}
+                            <td className="py-1.5 px-3 whitespace-nowrap">
                                 <span className="flex items-center gap-2">
-                                    <span className="text-[18px] text-ink font-serif">{planetEmojis[planet.name] || planetEmojis[planet.fullName || ''] || '●'}</span>
-                                    <span className={cn(TYPOGRAPHY.value, "font-semibold text-ink")}>
+                                    <span className="text-[16px] text-primary font-serif">
+                                        {planetEmojis[planet.name] || planetEmojis[planet.fullName || ''] || '●'}
+                                    </span>
+                                    <span className="text-[14px] text-primary font-medium">
                                         {planet.fullName || planet.name}
                                     </span>
                                     {planet.isRetrograde && (
                                         <span className="flex items-center text-rose-500" title="Retrograde">
                                             <ArrowDown className="w-2.5 h-2.5" />
-                                            <span className={cn(TYPOGRAPHY.label, "text-[9px] !text-rose-500")}>R</span>
+                                            <span className="text-[9px] font-semibold text-rose-500">R</span>
                                         </span>
                                     )}
                                 </span>
                             </td>
-                            <td className="py-1 px-3">
-                                <span className="flex items-center gap-1">
-                                    <span className="text-[14px] text-ink font-serif">{signSymbols[planet.sign] || ''}</span>
-                                    <span className={cn(TYPOGRAPHY.value, "text-[12px] font-medium")}>{planet.sign}</span>
+
+                            {/* Sign */}
+                            <td className="py-1.5 px-3 whitespace-nowrap">
+                                <span className="flex items-center gap-1.5">
+                                    <span className="text-[14px] text-primary font-serif">
+                                        {signSymbols[planet.sign] || ''}
+                                    </span>
+                                    <span className="text-[14px] text-primary font-medium">
+                                        {planet.sign}
+                                    </span>
                                 </span>
                             </td>
-                            <td className="py-1 px-3 font-mono text-[11px] text-ink font-semibold">
-                                {planet.degreeFormatted || `${planet.degree.toFixed(2)}°`}
+
+                            {/* Degree */}
+                            <td className="py-1.5 px-3 whitespace-nowrap">
+                                <span className="text-[14px] text-primary font-medium">
+                                    {planet.degreeFormatted || `${planet.degree.toFixed(2)}°`}
+                                </span>
                             </td>
-                            <td className="py-1 px-3">
-                                <span className="inline-flex items-center justify-center w-5 h-5 rounded border border-gold-primary/20 bg-white text-ink text-[10px] font-semibold shadow-sm">
+
+                            {/* House */}
+                            <td className="py-1.5 px-3">
+                                <span className="inline-flex items-center justify-center w-5 h-5 rounded border border-gold-primary/20 bg-white text-primary text-[10px] font-semibold shadow-sm">
                                     {planet.house}
                                 </span>
                             </td>
-                            <td className="py-1 px-3 text-ink font-medium">
-                                <span className={cn(TYPOGRAPHY.value, "text-[11px]")}>{planet.nakshatra}</span>
+
+                            {/* Nakshatra */}
+                            <td className="py-1.5 px-3 whitespace-nowrap">
+                                <span className="text-[14px] text-primary font-medium">
+                                    {planet.nakshatra}
+                                </span>
                             </td>
-                            <td className="py-1 px-3">
-                                <span className={cn(
-                                    TYPOGRAPHY.label,
-                                    "px-1.5 py-0 bg-surface-warm border border-gold-primary/20 text-ink rounded text-[11px] shadow-sm"
-                                )}>
+
+                            {/* Star Lord */}
+                            <td className="py-1.5 px-3">
+                                <span className="inline-block px-2 py-0.5 bg-surface-warm border border-gold-primary/20 text-primary rounded text-[13px] font-medium shadow-sm">
                                     {planet.nakshatraLord}
                                 </span>
                             </td>
-                            <td className="py-1 px-3">
-                                <span className={cn(
-                                    TYPOGRAPHY.label,
-                                    "px-1.5 py-0 bg-gold-primary/10 border border-gold-primary/30 text-gold-dark rounded text-[11px] shadow-sm"
-                                )}>
+
+                            {/* Sub Lord */}
+                            <td className="py-1.5 px-3">
+                                <span className="inline-block px-2 py-0.5 bg-gold-primary/10 border border-gold-primary/30 text-primary rounded text-[13px] font-medium shadow-sm">
                                     {planet.subLord}
                                 </span>
                             </td>

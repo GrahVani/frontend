@@ -14,60 +14,95 @@ interface SignificationMatrixProps {
 export default function SignificationMatrix({ significations, className }: SignificationMatrixProps) {
     // Helper to format house list
     const formatHouses = (houses: number[] | undefined) => {
-        if (!houses || houses.length === 0) return '';
+        if (!houses || houses.length === 0) return '—';
         return houses.join(', ');
     };
 
     return (
-        <div className={cn("w-full overflow-hidden flex flex-col h-full", className)}>
-            <div className="flex-1 overflow-auto w-full scrollbar-thin">
-                <table className="w-full h-full text-[12px] text-left">
-                    <thead className="bg-surface-warm/60 backdrop-blur-sm border-b border-gold-primary/15 tracking-wide sticky top-0 z-10">
-                        <tr>
-                            <th scope="col" className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5")}>
-                                Planet
-                            </th>
-                            <th scope="col" className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-center")}>
-                                <span className="block font-bold">Very strong</span>
-                                <span className="text-[9px] font-normal lowercase opacity-70"><KnowledgeTooltip term="kp_significator">significator</KnowledgeTooltip></span>
-                            </th>
-                            <th scope="col" className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-center")}>
-                                <span className="block font-bold">Strong</span>
-                                <span className="text-[9px] font-normal lowercase opacity-70"><KnowledgeTooltip term="kp_significator">significator</KnowledgeTooltip></span>
-                            </th>
-                            <th scope="col" className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-center")}>
-                                <span className="block font-bold">Normal</span>
-                                <span className="text-[9px] font-normal lowercase opacity-70"><KnowledgeTooltip term="kp_significator">significator</KnowledgeTooltip></span>
-                            </th>
-                            <th scope="col" className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-center")}>
-                                <span className="block font-bold">Weak</span>
-                                <span className="text-[9px] font-normal lowercase opacity-70"><KnowledgeTooltip term="kp_significator">significator</KnowledgeTooltip></span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gold-primary/15 font-sans">
-                        {significations.map((row) => (
-                            <tr key={row.planet} className="hover:bg-gold-primary/5 transition-colors bg-white">
-                                <th scope="row" className={cn(TYPOGRAPHY.value, "px-3 py-1 font-bold text-ink whitespace-nowrap")}>
+        <div className={cn("w-full overflow-auto scrollbar-thin", className)}>
+            <table className="w-full text-[12px] border-collapse font-sans">
+                <thead className="sticky top-0 z-10">
+                    <tr className="bg-surface-warm/60 border-y border-gold-primary/20 backdrop-blur-sm">
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-left")}>
+                            Planet
+                        </th>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-center")}>
+                            Very Strong
+                        </th>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-center")}>
+                            Strong
+                        </th>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-center")}>
+                            Normal
+                        </th>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-center")}>
+                            Weak
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {significations.map((row, idx) => (
+                        <tr
+                            key={row.planet}
+                            className={cn(
+                                "border-b border-gold-primary/15 hover:bg-gold-primary/5 transition-colors",
+                                idx % 2 === 0 ? "bg-white" : "bg-surface-warm"
+                            )}
+                        >
+                            {/* Planet */}
+                            <td className="py-2 px-4 whitespace-nowrap">
+                                <span className="text-[15px] text-primary font-medium">
                                     {row.planet}
-                                </th>
-                                <td className="px-3 py-1 text-center font-medium">
-                                    {row.levelA?.length ? <span className={cn(TYPOGRAPHY.label, "inline-block px-1.5 py-0 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded text-[11px] shadow-sm")}>{formatHouses(row.levelA)}</span> : <span className="text-ink opacity-30 text-[10px]">-</span>}
-                                </td>
-                                <td className="px-3 py-1 text-center font-medium">
-                                    {row.levelB?.length ? <span className={cn(TYPOGRAPHY.label, "inline-block px-1.5 py-0 bg-sky-50 text-sky-700 border border-sky-100 rounded text-[11px] shadow-sm")}>{formatHouses(row.levelB)}</span> : <span className="text-ink opacity-30 text-[10px]">-</span>}
-                                </td>
-                                <td className="px-3 py-1 text-center">
-                                    {row.levelC?.length ? <span className={cn(TYPOGRAPHY.label, "inline-block px-1.5 py-0 bg-surface-warm text-ink border border-gold-primary/20 rounded text-[11px] shadow-sm")}>{formatHouses(row.levelC)}</span> : <span className="text-ink opacity-30 text-[10px]">-</span>}
-                                </td>
-                                <td className="px-3 py-1 text-center">
-                                    {row.levelD?.length ? <span className={cn(TYPOGRAPHY.label, "inline-block px-1.5 py-0 bg-white/80 border border-gold-primary/15 text-ink rounded text-[11px] shadow-sm")}>{formatHouses(row.levelD)}</span> : <span className="text-ink opacity-30 text-[10px]">-</span>}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                                </span>
+                            </td>
+
+                            {/* Very Strong */}
+                            <td className="py-2 px-4 text-center">
+                                {row.levelA?.length ? (
+                                    <span className="inline-block px-2.5 py-1 bg-emerald-50 border border-emerald-100 rounded text-[14px] text-primary font-medium shadow-sm">
+                                        {formatHouses(row.levelA)}
+                                    </span>
+                                ) : (
+                                    <span className="text-[15px] text-primary opacity-30">—</span>
+                                )}
+                            </td>
+
+                            {/* Strong */}
+                            <td className="py-2 px-4 text-center">
+                                {row.levelB?.length ? (
+                                    <span className="inline-block px-2.5 py-1 bg-sky-50 border border-sky-100 rounded text-[14px] text-primary font-medium shadow-sm">
+                                        {formatHouses(row.levelB)}
+                                    </span>
+                                ) : (
+                                    <span className="text-[15px] text-primary opacity-30">—</span>
+                                )}
+                            </td>
+
+                            {/* Normal */}
+                            <td className="py-2 px-4 text-center">
+                                {row.levelC?.length ? (
+                                    <span className="inline-block px-2.5 py-1 bg-surface-warm border border-gold-primary/20 rounded text-[14px] text-primary font-medium shadow-sm">
+                                        {formatHouses(row.levelC)}
+                                    </span>
+                                ) : (
+                                    <span className="text-[15px] text-primary opacity-30">—</span>
+                                )}
+                            </td>
+
+                            {/* Weak */}
+                            <td className="py-2 px-4 text-center">
+                                {row.levelD?.length ? (
+                                    <span className="inline-block px-2.5 py-1 bg-white/80 border border-gold-primary/15 rounded text-[14px] text-primary font-medium shadow-sm">
+                                        {formatHouses(row.levelD)}
+                                    </span>
+                                ) : (
+                                    <span className="text-[15px] text-primary opacity-30">—</span>
+                                )}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 }

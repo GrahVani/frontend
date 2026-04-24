@@ -21,9 +21,13 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
         if (v < minV) { minV = v; minH = parseInt(h); }
     });
 
-    // Color logic from North Indian Chart
+    // Color logic: green for the main SAV score, muted for sign index
     const getValueColor = () => {
-        return "var(--text-primary)";
+        return "#F25912";
+    };
+
+    const getSignNumberColor = () => {
+        return "#03346E";
     };
 
     // House positions for house values (centered in segments)
@@ -86,6 +90,7 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
                     const isMax = houseNum === maxH;
                     const isMin = houseNum === minH;
                     const vColor = getValueColor();
+                    const sColor = getSignNumberColor();
 
                     return (
                         <g key={houseNum}>
@@ -111,7 +116,7 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
                                 y={vP.y}
                                 fontSize="12"
                                 fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
-                                fontWeight="500"
+                                fontWeight="600"
                                 fill={vColor}
                                 textAnchor="middle"
                                 dominantBaseline="middle"
@@ -127,7 +132,7 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
                                 fontSize="12"
                                 fontWeight="500"
                                 fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
-                                fill={vColor}
+                                fill={sColor}
                                 textAnchor="middle"
                                 dominantBaseline="middle"
                             >
