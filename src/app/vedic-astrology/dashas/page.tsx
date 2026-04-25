@@ -581,7 +581,7 @@ export default function VedicDashasPage() {
                                     ) : isShattrimshatsama ? (
                                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                         <ShattrimshatsamaDasha periods={viewingPeriods} isApplicable={((otherData?.data?.mahadashas as any)?.meta)?.is_applicable !== false} />
-                                    ) : isAshtottari && currentLevel === 0 ? (
+                                    ) : isAshtottari && !isTrueChitra && currentLevel === 0 ? (
                                         <AshtottariDasha
                                             periods={viewingPeriods}
                                             onFetchPratyantar={async (mahaLord, antarLord) => {
