@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useMemo, useCallback } from "react";
+import React, { createContext, useContext, useMemo, useCallback, useEffect } from "react";
 import { useUserProfile } from "@/hooks/queries/useUserProfile";
 import { useAuthMutations } from "@/hooks/mutations/useAuthMutations";
 
@@ -26,6 +26,8 @@ interface AuthContextType {
     logout: () => Promise<void>;
     refreshProfile: () => Promise<void>;
     isAuthenticated: boolean;
+    isLearner: boolean;
+    isProfessional: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -47,6 +49,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await refreshProfile();
     }, [refreshProfile]);
 
+    // Force refresh user profile on mount to get latest role (only if token exists)
+    useEffect(() => {
+        const hasToken = typeof window !== "undefined" && 
+            (!!localStorage.getItem("accessToken") || !!localStorage.getItem("refreshToken"));
+        if (hasToken) {
+            refreshProfile();
+        }
+    }, [refreshProfile]);
+
     // ST-001: Memoize context value to prevent unnecessary consumer re-renders
     const value = useMemo<AuthContextType>(() => ({
         user,
@@ -55,6 +66,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         logout,
         refreshProfile: handleRefreshProfile,
         isAuthenticated: !!user,
+        isLearner: user?.role === "learner",
+        isProfessional: user?.role === "user" || user?.role === "admin" || user?.role === "moderator",
     }), [user, loading, login, logout, handleRefreshProfile]);
 
     return (

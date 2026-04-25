@@ -43,6 +43,8 @@ export { matchmakingApi } from './matchmaking';
 export { muhuratApi, fetchDailyMuhurta, searchCategoryMuhurta } from './muhurta';
 export { numerologyApi } from './numerology';
 export { knowledgeApi } from './knowledge';
+export { learnApi } from './learn';
+export type { Course, Lesson, LessonContent, QuizQuestion, SubmitResponse, DashboardData } from './learn';
 
 // Error mapping & stale times
 export { mapApiError } from './error-codes';

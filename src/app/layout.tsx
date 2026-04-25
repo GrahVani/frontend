@@ -69,6 +69,7 @@ export const viewport = {
 };
 
 import { AuthProvider } from "@/context/AuthContext";
+import RoleGuard from "@/components/auth/RoleGuard";
 
 import QueryProvider from "@/providers/QueryProvider";
 
@@ -93,7 +94,7 @@ export default function RootLayout({
                 <MonitoringInit />
                 <GlobalHeader />
                 <main id="main-content" className="flex-1">
-                  {children}
+                  <RoleGuard>{children}</RoleGuard>
                 </main>
               </ToastProvider>
             </VedicClientProvider>
