@@ -170,12 +170,6 @@ export default function VedicDashasPage() {
             setCurrentLevel(0);
             setSelectedPath([]);
             setDashaTree([]);
-        } else if (settings.ayanamsa === 'TrueChitra' && selectedDashaType === 'vimshottari') {
-            // True Chitra has no vimshottari — default to first available dasha
-            setSelectedDashaType('ashtottari');
-            setCurrentLevel(0);
-            setSelectedPath([]);
-            setDashaTree([]);
         } else if (settings.ayanamsa !== 'Raman' && settings.ayanamsa !== 'KP' && selectedDashaType === 'chara') {
             // Explicitly allow chara for other systems (Lahiri, etc.)
             // No reset needed
@@ -460,8 +454,9 @@ export default function VedicDashasPage() {
                                                 return sys.id === 'vimshottari';
                                             }
                                             if (settings.ayanamsa === 'TrueChitra') {
-                                                // True Chitra supports all 12 specialized dashas (no vimshottari, no chara)
-                                                return sys.id !== 'vimshottari' && sys.id !== 'chara';
+                                                // True Chitra supports all dashas including vimshottari (prana_dasha endpoint)
+                                                // Chara is sign-based and not applicable to True Chitra
+                                                return sys.id !== 'chara';
                                             }
                                             // Chara is now primarily a Lahiri/Jaimini feature
                                             return true;
