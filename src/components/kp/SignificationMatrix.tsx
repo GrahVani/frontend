@@ -23,19 +23,19 @@ export default function SignificationMatrix({ significations, className }: Signi
             <table className="w-full text-[12px] border-collapse font-sans">
                 <thead className="sticky top-0 z-10">
                     <tr className="bg-surface-warm/60 border-y border-gold-primary/20 backdrop-blur-sm">
-                        <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-left")}>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-left text-[13px]")}>
                             Planet
                         </th>
-                        <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-center")}>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-center text-[13px]")}>
                             Very Strong
                         </th>
-                        <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-center")}>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-center text-[13px]")}>
                             Strong
                         </th>
-                        <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-center")}>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-center text-[13px]")}>
                             Normal
                         </th>
-                        <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-center")}>
+                        <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-center text-[13px]")}>
                             Weak
                         </th>
                     </tr>
@@ -51,53 +51,37 @@ export default function SignificationMatrix({ significations, className }: Signi
                         >
                             {/* Planet */}
                             <td className="py-2 px-4 whitespace-nowrap">
-                                <span className="text-[15px] text-primary font-medium">
+                                <span className="text-[14px] text-primary font-medium">
                                     {row.planet}
                                 </span>
                             </td>
 
                             {/* Very Strong */}
                             <td className="py-2 px-4 text-center">
-                                {row.levelA?.length ? (
-                                    <span className="inline-block px-2.5 py-1 bg-emerald-50 border border-emerald-100 rounded text-[14px] text-primary font-medium shadow-sm">
-                                        {formatHouses(row.levelA)}
-                                    </span>
-                                ) : (
-                                    <span className="text-[15px] text-primary opacity-30">—</span>
-                                )}
+                                <span className="text-[14px] text-primary font-medium">
+                                    {formatHouses(row.levelA)}
+                                </span>
                             </td>
 
                             {/* Strong */}
                             <td className="py-2 px-4 text-center">
-                                {row.levelB?.length ? (
-                                    <span className="inline-block px-2.5 py-1 bg-sky-50 border border-sky-100 rounded text-[14px] text-primary font-medium shadow-sm">
-                                        {formatHouses(row.levelB)}
-                                    </span>
-                                ) : (
-                                    <span className="text-[15px] text-primary opacity-30">—</span>
-                                )}
+                                <span className="text-[14px] text-primary font-medium">
+                                    {formatHouses(row.levelB)}
+                                </span>
                             </td>
 
                             {/* Normal */}
                             <td className="py-2 px-4 text-center">
-                                {row.levelC?.length ? (
-                                    <span className="inline-block px-2.5 py-1 bg-surface-warm border border-gold-primary/20 rounded text-[14px] text-primary font-medium shadow-sm">
-                                        {formatHouses(row.levelC)}
-                                    </span>
-                                ) : (
-                                    <span className="text-[15px] text-primary opacity-30">—</span>
-                                )}
+                                <span className="text-[14px] text-primary font-medium">
+                                    {formatHouses(row.levelC)}
+                                </span>
                             </td>
 
                             {/* Weak */}
                             <td className="py-2 px-4 text-center">
-                                {row.levelD?.length ? (
-                                    <span className="inline-block px-2.5 py-1 bg-white/80 border border-gold-primary/15 rounded text-[14px] text-primary font-medium shadow-sm">
-                                        {formatHouses(row.levelD)}
-                                    </span>
-                                ) : (
-                                    <span className="text-[15px] text-primary opacity-30">—</span>
-                                )}
+                                <span className="text-[14px] text-primary font-medium">
+                                    {formatHouses(row.levelD)}
+                                </span>
                             </td>
                         </tr>
                     ))}

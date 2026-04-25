@@ -481,7 +481,7 @@ function RenderedChartSlot({
                     <div className="space-y-4">
                         <div>
                             <div className="flex justify-between items-center mb-1.5">
-                                <label className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-wider")}>Planet Size</label>
+                                <label className={cn(TYPOGRAPHY.label, "text-[10px] text-primary uppercase tracking-wider")}>Planet Size</label>
                                 <span className={cn(TYPOGRAPHY.value, "text-[11px] text-primary")}>{settings.planetSize ?? DEFAULT_CHART_SETTINGS.planetSize}px</span>
                             </div>
                             <div className="flex items-center gap-2">
@@ -507,7 +507,7 @@ function RenderedChartSlot({
 
                         <div>
                             <div className="flex justify-between items-center mb-1.5">
-                                <label className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-wider")}>Degree Size</label>
+                                <label className={cn(TYPOGRAPHY.label, "text-[10px] text-primary uppercase tracking-wider")}>Degree Size</label>
                                 <span className={cn(TYPOGRAPHY.value, "text-[11px] text-primary")}>{settings.degreeSize ?? DEFAULT_CHART_SETTINGS.degreeSize}px</span>
                             </div>
                             <div className="flex items-center gap-2">
@@ -533,7 +533,7 @@ function RenderedChartSlot({
 
                         <div>
                             <div className="flex justify-between items-center mb-1.5">
-                                <label className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-wider")}>House Number Size</label>
+                                <label className={cn(TYPOGRAPHY.label, "text-[10px] text-primary uppercase tracking-wider")}>House Number Size</label>
                                 <span className={cn(TYPOGRAPHY.value, "text-[11px] text-primary")}>{settings.houseSize ?? DEFAULT_CHART_SETTINGS.houseSize}px</span>
                             </div>
                             <div className="flex items-center gap-2">
@@ -558,7 +558,7 @@ function RenderedChartSlot({
                         </div>
 
                         <div className="flex items-center justify-between pt-2 border-t border-primary/10">
-                            <label className={cn(TYPOGRAPHY.label, "text-[10px] opacity-60 uppercase tracking-wider")}>Show Degrees</label>
+                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-primary uppercase tracking-wider")}>Show Degrees</label>
                             <button
                                 onClick={() => onUpdateSettings({ showDegrees: !settings.showDegrees })}
                                 className={cn(
@@ -575,7 +575,7 @@ function RenderedChartSlot({
 
                         <button
                             onClick={() => onUpdateSettings(DEFAULT_CHART_SETTINGS)}
-                            className="w-full mt-2 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all hover:bg-gold-primary/5 border border-gold-primary/20 text-gold-primary/60 hover:text-gold-primary/90"
+                            className="w-full mt-2 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all hover:bg-gold-primary/5 border border-gold-primary/20 text-primary hover:text-gold-primary"
                             style={{
                                 background: 'linear-gradient(135deg, rgba(201,162,77,0.05) 0%, rgba(201,162,77,0.02) 100%)',
                             }}
@@ -897,6 +897,7 @@ function KundaliContent({
                                     data={dashaData ? processDashaResponse(dashaData as unknown as RawDashaPeriod).slice(0, 9) : []}
                                     isLoading={dashaLoading}
                                     className="border-none shadow-none rounded-none bg-transparent"
+                                    maxDepth={activeSystem === 'kp' ? 2 : 4}
                                 />
                             </div>
                         </div>

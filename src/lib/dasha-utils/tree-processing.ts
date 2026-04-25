@@ -27,7 +27,7 @@ function mapDashaLevelRecursive(node: RawDashaPeriod, level: number, inheritedSt
         myStartDateRaw = inheritedStartDate;
     }
 
-    if (Array.isArray(rawChildren)) {
+    if (Array.isArray(rawChildren) && level < maxLevel) {
         let runningStart = myStartDateRaw;
         mappedChildren = rawChildren.map((child: RawDashaPeriod) => {
             const mappedChild = mapDashaLevelRecursive(child, level + 1, runningStart, maxLevel);

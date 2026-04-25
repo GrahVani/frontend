@@ -43,19 +43,19 @@ import { PLANET_COLORS, SIGN_COLORS } from '@/lib/astrology-constants';
 import {
     findActiveDashaPath,
     processDashaResponse,
-    standardizeDashaLevels,
     extractPeriodsArray,
     getSublevels,
     ActiveDashaPath,
     DashaNode,
     standardizeDuration,
-    generateVimshottariSubperiods
+    generateVimshottariSubperiods,
+    parseApiDate
 } from '@/lib/dasha-utils';
 import { DASHA_LEVELS, DASHA_SYSTEMS } from '@/lib/dasha-constants';
 
 function parseDateStr(dateStr: string): Date | null {
     if (!dateStr) return null;
-    const d = new Date(dateStr);
+    const d = parseApiDate(dateStr);
     return isNaN(d.getTime()) ? null : d;
 }
 
@@ -209,13 +209,11 @@ export default function VedicDashasPage() {
             setSelectedPath([]);
         }
 
-        if (!allowMathematicalDrillDown || (isTribhagi && currentLevel >= 1) || (isShodashottari && currentLevel >= 1) || (isDwadashottari && currentLevel >= 1) || (isPanchottari && currentLevel >= 1) || (isChaturshitisama && currentLevel >= 1) || (isSatabdika && currentLevel >= 1) || (isDwisaptati && currentLevel >= 1) || (isAshtottari && currentLevel >= 2)) {
-            if ((isTribhagi || isShodashottari || isDwadashottari || isPanchottari || isChaturshitisama || isSatabdika || isDwisaptati) && currentLevel === 0) {
-                setViewingPeriods(dashaTree);
-            } else if (!isTribhagi && !isShodashottari && !isDwadashottari && !isPanchottari && !isChaturshitisama && !isSatabdika && !isDwisaptati && !isAshtottari) {
+        if (!allowMathematicalDrillDown) {
+            if (!isAshtottari) {
                 setViewingPeriods(dashaTree);
             }
-            if (!isVimshottari && !isTribhagi && !isShodashottari && !isDwadashottari && !isPanchottari && !isChaturshitisama && !isSatabdika && !isDwisaptati && !isAshtottari && !isChara) {
+            if (!isVimshottari && !isAshtottari && !isChara) {
                 setViewingPeriods(dashaTree);
                 return;
             }
@@ -237,7 +235,7 @@ export default function VedicDashasPage() {
 
     // Navigation Methods (Refactored for Processed Tree)
     const handleDrillDown = async (period: DashaNode) => {
-        if (isTribhagi || isShodashottari || isDwadashottari || isPanchottari || isChaturshitisama || isSatabdika || isDwisaptati) return; // Disable global drill-down for specialized views
+        // All specialized dashas now use global drill-down
 
         // ASHTOTTARI INCREMENTAL FETCH (only for non-TrueChitra — True Chitra JSON already has all levels)
         if (isAshtottari && !isTrueChitra && currentLevel === 1 && (!period.sublevel || period.sublevel.length === 0)) {
@@ -275,8 +273,8 @@ export default function VedicDashasPage() {
 
         let nextLevelPeriods = period.sublevel || [];
 
-        // Hybrid Logic: If API didn't return deeper levels, generate them on fly
-        if ((!nextLevelPeriods || nextLevelPeriods.length === 0) && allowMathematicalDrillDown && currentLevel < 4) {
+        // Hybrid Logic: If API didn't return deeper levels, generate them on fly (Vimshottari only)
+        if ((!nextLevelPeriods || nextLevelPeriods.length === 0) && allowMathematicalDrillDown && currentLevel < 4 && isVimshottari) {
             nextLevelPeriods = generateVimshottariSubperiods(period);
             period.sublevel = nextLevelPeriods; // Cache it
         }
@@ -541,69 +539,32 @@ export default function VedicDashasPage() {
                                 </div>
                             ) : (
                                 <>
-                                    {/* Specialized views with selected path header */}
-                                    {(isTribhagi || isShodashottari || isDwadashottari || isPanchottari || isChaturshitisama || isSatabdika || isDwisaptati || isShasthihayani || isShattrimshatsama || isAshtottari) && selectedPath.length > 0 && (
-                                        <div className="grid grid-cols-2 gap-4 p-4 border-b border-orange-100 bg-orange-50/30 shrink-0">
-                                            {selectedPath[0] && (
-                                                <div className="flex flex-col">
-                                                    <span className="text-[10px] font-black text-gold-dark/40 uppercase tracking-widest mb-1">Mahadasha (M)</span>
-                                                    <span className="text-[14px] font-black text-body uppercase">{selectedPath[0].planet}</span>
-                                                </div>
-                                            )}
-                                            {selectedPath[1] && (
-                                                <div className="flex flex-col">
-                                                    <span className={cn(TYPOGRAPHY.label, "!text-[10px] !font-black !text-gold-dark/40 uppercase tracking-widest !mb-1")}>Antardasha (A)</span>
-                                                    <span className={cn(TYPOGRAPHY.value, "!text-[14px] !font-black !text-body uppercase !mt-0")}>{selectedPath[1].planet}</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-
                                     {/* Handle Specialized Views */}
-                                    {isTribhagi ? (
-                                        <TribhagiDasha periods={viewingPeriods} />
-                                    ) : isShodashottari ? (
-                                        <ShodashottariDasha periods={viewingPeriods} />
-                                    ) : isDwadashottari ? (
-                                        <DwadashottariDasha periods={viewingPeriods} />
-                                    ) : isPanchottari ? (
-                                        <PanchottariDasha periods={viewingPeriods} />
-                                    ) : isChaturshitisama ? (
-                                        <ChaturshitisamaDasha periods={viewingPeriods} />
-                                    ) : isSatabdika ? (
-                                        <SatabdikaDasha periods={viewingPeriods} />
-                                    ) : isDwisaptati ? (
+                                    {isTribhagi && currentLevel === 0 ? (
+                                        <TribhagiDasha periods={viewingPeriods} onDrillDown={handleDrillDown} />
+                                    ) : isShodashottari && currentLevel === 0 ? (
+                                        <ShodashottariDasha periods={viewingPeriods} onDrillDown={handleDrillDown} />
+                                    ) : isDwadashottari && currentLevel === 0 ? (
+                                        <DwadashottariDasha periods={viewingPeriods} onDrillDown={handleDrillDown} />
+                                    ) : isPanchottari && currentLevel === 0 ? (
+                                        <PanchottariDasha periods={viewingPeriods} onDrillDown={handleDrillDown} />
+                                    ) : isChaturshitisama && currentLevel === 0 ? (
+                                        <ChaturshitisamaDasha periods={viewingPeriods} onDrillDown={handleDrillDown} />
+                                    ) : isSatabdika && currentLevel === 0 ? (
+                                        <SatabdikaDasha periods={viewingPeriods} onDrillDown={handleDrillDown} />
+                                    ) : isDwisaptati && currentLevel === 0 ? (
                                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                        <DwisaptatiDasha periods={viewingPeriods} isApplicable={((otherData?.data?.mahadashas as any)?.meta)?.is_applicable !== false} />
-                                    ) : isShasthihayani ? (
+                                        <DwisaptatiDasha periods={viewingPeriods} isApplicable={((otherData?.data?.mahadashas as any)?.meta)?.is_applicable !== false} onDrillDown={handleDrillDown} />
+                                    ) : isShasthihayani && currentLevel === 0 ? (
                                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                        <ShasthihayaniDasha periods={viewingPeriods} isApplicable={((otherData?.data?.mahadashas as any)?.meta)?.is_applicable !== false} />
-                                    ) : isShattrimshatsama ? (
+                                        <ShasthihayaniDasha periods={viewingPeriods} isApplicable={((otherData?.data?.mahadashas as any)?.meta)?.is_applicable !== false} onDrillDown={handleDrillDown} />
+                                    ) : isShattrimshatsama && currentLevel === 0 ? (
                                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                        <ShattrimshatsamaDasha periods={viewingPeriods} isApplicable={((otherData?.data?.mahadashas as any)?.meta)?.is_applicable !== false} />
+                                        <ShattrimshatsamaDasha periods={viewingPeriods} isApplicable={((otherData?.data?.mahadashas as any)?.meta)?.is_applicable !== false} onDrillDown={handleDrillDown} />
                                     ) : isAshtottari && !isTrueChitra && currentLevel === 0 ? (
                                         <AshtottariDasha
                                             periods={viewingPeriods}
-                                            onFetchPratyantar={async (mahaLord, antarLord) => {
-                                                if (!clientDetails?.id) return [];
-                                                try {
-                                                    const result = await clientApi.generateOtherDasha(clientDetails.id, 'ashtottari', settings.ayanamsa.toLowerCase(), 'pratyantardasha', false, { mahaLord, antarLord });
-                                                    const rawPeriods = extractPeriodsArray(result?.data);
-                                                    if (rawPeriods.length > 0 && !getSublevels(rawPeriods[0])) return standardizeDashaLevels(rawPeriods);
-                                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                    const mahaNode = rawPeriods.find((m: any) => (m.planet || m.lord) === mahaLord);
-                                                    if (mahaNode) {
-                                                        const antardashas = getSublevels(mahaNode);
-                                                        if (antardashas) {
-                                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                            const antarNode = antardashas.find((a: any) => (a.planet || a.lord) === antarLord);
-                                                            const pratyantardashas = antarNode ? getSublevels(antarNode) : null;
-                                                            if (pratyantardashas && pratyantardashas.length > 0) return standardizeDashaLevels(pratyantardashas);
-                                                        }
-                                                    }
-                                                    return [];
-                                                } catch (err) { return []; }
-                                            }}
+                                            onDrillDown={handleDrillDown}
                                         />
                                     ) : isChara ? (
                                         <table className="w-full">
@@ -618,7 +579,7 @@ export default function VedicDashasPage() {
                                             </thead>
                                             <tbody className="divide-y divide-gold-primary/10 font-medium bg-white/40">
                                                 {viewingPeriods.map((period, idx) => (
-                                                    <tr key={idx} className={cn("hover:bg-gold-primary/10 transition-colors group", period.isCurrent && "bg-gold-primary/5", (period.canDrillFurther || (allowMathematicalDrillDown && currentLevel < 4)) ? "cursor-pointer" : "cursor-default")} onClick={() => (period.canDrillFurther || (allowMathematicalDrillDown && currentLevel < 4)) && (isSubLevelFetching ? null : handleDrillDown(period))}>
+                                                    <tr key={idx} className={cn("hover:bg-gold-primary/10 transition-colors group", period.isCurrent && "bg-gold-primary/5", (period.canDrillFurther || (isVimshottari && currentLevel < 4)) ? "cursor-pointer" : "cursor-default")} onClick={() => (period.canDrillFurther || (isVimshottari && currentLevel < 4)) && (isSubLevelFetching ? null : handleDrillDown(period))}>
                                                         <td className="px-3 py-2">
                                                             <div className="flex items-center gap-2">
                                                                 <span className={cn("inline-flex items-center px-2 py-0.5 rounded-md text-[12px] font-bold border shadow-sm min-w-[60px] justify-center", SIGN_COLORS[String(period.raw?.sign_name || period.planet)] || "bg-surface-pure")}>{String(period.raw?.sign_name || period.planet)}</span>
@@ -628,7 +589,7 @@ export default function VedicDashasPage() {
                                                         <td className="px-3 py-2"><div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}><Calendar className="w-3 h-3 text-gold-dark/40" />{formatDateShort(period.startDate)}</div></td>
                                                         <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{formatDateShort(period.endDate)}</td>
                                                         <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{standardizeDuration((period.raw?.duration_years as number) || 0, period.raw?.duration_days as number)}</td>
-                                                        <td className="px-3 py-2 text-center">{period.isCurrent ? <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span> : (period.canDrillFurther || (allowMathematicalDrillDown && currentLevel < 4)) ? <ChevronRight className="w-3 h-3 text-gold-dark transition-transform group-hover:scale-125" /> : <span className="text-gold-dark/40 text-[12px]">—</span>}</td>
+                                                        <td className="px-3 py-2 text-center">{period.isCurrent ? <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span> : (period.canDrillFurther || (isVimshottari && currentLevel < 4)) ? <ChevronRight className="w-3 h-3 text-gold-dark transition-transform group-hover:scale-125" /> : <span className="text-gold-dark/40 text-[12px]">—</span>}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -646,7 +607,7 @@ export default function VedicDashasPage() {
                                             </thead>
                                             <tbody className="divide-y divide-gold-primary/10 font-medium bg-white/40">
                                                 {viewingPeriods.map((period, idx) => (
-                                                    <tr key={idx} className={cn("hover:bg-gold-primary/10 transition-colors group", period.isCurrent && "bg-gold-primary/5", (period.canDrillFurther || (isAshtottari && currentLevel < 2) || (allowMathematicalDrillDown && currentLevel < 4)) ? "cursor-pointer" : "cursor-default")} onClick={() => (period.canDrillFurther || (isAshtottari && currentLevel < 2) || (allowMathematicalDrillDown && currentLevel < 4)) && (isSubLevelFetching ? null : handleDrillDown(period))}>
+                                                    <tr key={idx} className={cn("hover:bg-gold-primary/10 transition-colors group", period.isCurrent && "bg-gold-primary/5", (period.canDrillFurther || (isAshtottari && currentLevel < 2) || (isVimshottari && currentLevel < 4)) ? "cursor-pointer" : "cursor-default")} onClick={() => (period.canDrillFurther || (isAshtottari && currentLevel < 2) || (isVimshottari && currentLevel < 4)) && (isSubLevelFetching ? null : handleDrillDown(period))}>
                                                         <td className="px-3 py-2">
                                                             <div className="flex items-center gap-2">
                                                                 <span className={cn("inline-flex items-center px-2 py-0.5 rounded-md text-[12px] font-bold border shadow-sm min-w-[60px] justify-center", PLANET_COLORS[period.planet] || "bg-surface-pure")}>{period.planet}</span>
@@ -656,7 +617,7 @@ export default function VedicDashasPage() {
                                                         <td className="px-3 py-2"><div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}><Calendar className="w-3 h-3 text-gold-dark/40" />{formatDateShort(period.startDate)}</div></td>
                                                         <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{formatDateShort(period.endDate)}</td>
                                                         <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{standardizeDuration((period.raw?.duration_years as number) || 0, period.raw?.duration_days as number)}</td>
-                                                        <td className="px-3 py-2 text-center">{isSubLevelFetching && currentLevel === 1 && period.planet === selectedIntelPlanet ? <Loader2 className="w-3 h-3 text-gold-dark animate-spin" /> : period.isCurrent ? <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span> : (period.canDrillFurther || (isAshtottari && currentLevel < 2) || (allowMathematicalDrillDown && currentLevel < 4)) ? <ChevronRight className="w-3 h-3 text-gold-dark transition-transform group-hover:scale-125" /> : <span className="text-gold-dark/40 text-[12px]">—</span>}</td>
+                                                        <td className="px-3 py-2 text-center">{isSubLevelFetching && currentLevel === 1 && period.planet === selectedIntelPlanet ? <Loader2 className="w-3 h-3 text-gold-dark animate-spin" /> : period.isCurrent ? <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span> : (period.canDrillFurther || (isAshtottari && currentLevel < 2) || (isVimshottari && currentLevel < 4)) ? <ChevronRight className="w-3 h-3 text-gold-dark transition-transform group-hover:scale-125" /> : <span className="text-gold-dark/40 text-[12px]">—</span>}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>

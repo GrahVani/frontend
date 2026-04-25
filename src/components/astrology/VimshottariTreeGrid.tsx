@@ -11,6 +11,7 @@ interface VimshottariTreeGridProps {
     data: DashaNode[];
     isLoading?: boolean;
     className?: string;
+    maxDepth?: number;
 }
 
 const PLANET_SYMBOLS: Record<string, string> = {
@@ -44,7 +45,7 @@ const formatDate = (dateStr?: string) => {
     }
 };
 
-export default function VimshottariTreeGrid({ data, isLoading, className }: VimshottariTreeGridProps) {
+export default function VimshottariTreeGrid({ data, isLoading, className, maxDepth = 4 }: VimshottariTreeGridProps) {
     // State to track the navigation path (array of selected nodes)
     const [navPath, setNavPath] = useState<DashaNode[]>([]);
 
@@ -142,6 +143,7 @@ export default function VimshottariTreeGrid({ data, isLoading, className }: Vims
                                     depth={navPath.length}
                                     pathPrefix={pathPrefix}
                                     onDrill={() => handleDrillDown(node)}
+                                    maxDepth={maxDepth}
                                 />
                             ))
                         ) : (
@@ -157,12 +159,12 @@ export default function VimshottariTreeGrid({ data, isLoading, className }: Vims
     );
 }
 
-function DashaDrillRow({ node, depth, pathPrefix, onDrill }: { node: DashaNode; depth: number; pathPrefix: string; onDrill: () => void }) {
+function DashaDrillRow({ node, depth, pathPrefix, onDrill, maxDepth = 4 }: { node: DashaNode; depth: number; pathPrefix: string; onDrill: () => void; maxDepth?: number }) {
     const isActive = node.isCurrent;
     const hasData = node.sublevel && node.sublevel.length > 0;
     // Allow drilling if we have data OR if we are not yet at the deepest level (Prana = depth 4)
     // This allows generating sub-periods on the fly for non-active branches
-    const isDrillable = hasData || depth < 4;
+    const isDrillable = hasData || depth < maxDepth;
 
     // Calculate progress for active rows
     const progress = useMemo(() => {

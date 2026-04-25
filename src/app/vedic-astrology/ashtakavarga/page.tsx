@@ -11,7 +11,10 @@ import {
     Zap,
     Compass,
     Grid3X3,
+    Settings,
     Settings2,
+    Plus,
+    Minus,
     X
 } from 'lucide-react';
 import { useQueryClient } from "@tanstack/react-query";
@@ -409,14 +412,14 @@ function SamudayaTab({
     const [generating, setGenerating] = useState(false);
     const [progress, setProgress] = useState(0);
 
-    type DivSettings = { show: boolean; planetSize: number; houseSize: number };
+    type DivSettings = { show: boolean; planetSize: number; houseSize: number; degreeSize: number; showDegrees: boolean };
     type SamSettings = { show: boolean; scoreSize: number; houseSize: number };
 
     const [divSettings, setDivSettings] = useState<Record<string, DivSettings>>({});
     const [samSettings, setSamSettings] = useState<Record<string, SamSettings>>({});
 
     const getDivSettings = (key: string): DivSettings =>
-        divSettings[key] ?? { show: false, planetSize: 14, houseSize: 14 };
+        divSettings[key] ?? { show: false, planetSize: 18, houseSize: 14, degreeSize: 9, showDegrees: false };
     const getSamSettings = (key: string): SamSettings =>
         samSettings[key] ?? { show: false, scoreSize: 22, houseSize: 14 };
 
@@ -427,8 +430,8 @@ function SamudayaTab({
         setSamSettings(prev => ({ ...prev, [key]: { ...getSamSettings(key), ...patch } }));
     };
 
-    const resetDivDefaults = (key: string) => updateDivSettings(key, { planetSize: 14, houseSize: 14 });
-    const resetSamDefaults = (key: string) => updateSamSettings(key, { scoreSize: 22, houseSize: 14 });
+    const resetDivDefaults = (key: string) => updateDivSettings(key, { planetSize: 18, houseSize: 14, degreeSize: 9, showDegrees: false, show: false });
+    const resetSamDefaults = (key: string) => updateSamSettings(key, { scoreSize: 22, houseSize: 14, show: false });
 
     const SIGN_MAP_LOCAL: Record<string, number> = {
         'Aries': 1, 'Taurus': 2, 'Gemini': 3, 'Cancer': 4, 'Leo': 5, 'Virgo': 6,
@@ -552,10 +555,10 @@ function SamudayaTab({
                 <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-bold mb-4")}>
                     Divisional Charts &amp; Samudaya Ashtakavarga
                 </h3>
-                <p className="text-gray-400 mb-2 max-w-lg">
+                <p className="text-primary mb-2 max-w-lg">
                     {missingPairs.length} of {CHART_PAIRS.length} chart pairs are not yet generated.
                 </p>
-                <p className="text-gray-500 mb-6 text-sm">
+                <p className="text-primary mb-6 text-sm">
                     Missing: {missingPairs.map(c => c.label).join(', ')}
                 </p>
                 <button
@@ -584,7 +587,7 @@ function SamudayaTab({
                 <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg font-bold")}>
                     Samudaya Ashtakavarga — Divisional Charts
                 </h3>
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-sm text-primary mt-1">
                     Combined Ashtakavarga bindu counts for all divisional charts.
                 </p>
             </div>
@@ -606,7 +609,7 @@ function SamudayaTab({
                                 <div className="flex flex-col items-center">
                                     {/* Title with inline settings toggle */}
                                     <div className="flex items-center gap-1.5 mb-1">
-                                        <h4 className={cn(TYPOGRAPHY.label, "text-[11px] text-ink/70 text-center")}>
+                                        <h4 className={cn(TYPOGRAPHY.label, "text-[13px] text-ink font-bold text-center")}>
                                             {pair.label}
                                         </h4>
                                         <button
@@ -615,63 +618,150 @@ function SamudayaTab({
                                                 "p-1 rounded-md transition-all",
                                                 dSet.show
                                                     ? cn("text-ink shadow-sm", COLORS.wbActiveTab)
-                                                    : "text-ink/35 hover:bg-gold-primary/10 hover:text-ink/70"
+                                                    : "text-primary hover:bg-primary hover:primary"
                                             )}
                                             title="Divisional chart settings"
                                         >
-                                            <Settings2 className="w-3 h-3" />
+                                            <Settings className="w-3 h-3" />
                                         </button>
                                     </div>
 
-                                    {/* Inline settings panel — pushes chart down, no overlap */}
-                                    {dSet.show && (
-                                        <div className="w-full prem-card rounded-lg p-2.5 mb-2 space-y-2.5 border border-gold-primary/15">
-                                            <div className="flex items-center justify-between">
-                                                <span className={cn(TYPOGRAPHY.label, "text-[10px] text-ink")}>{pair.label}</span>
-                                                <button
-                                                    onClick={() => resetDivDefaults(pair.divKey)}
-                                                    className="text-[10px] font-bold text-gold-primary hover:underline"
-                                                >
-                                                    Default
-                                                </button>
-                                            </div>
-                                            <div className="space-y-1">
-                                                <div className="flex items-center justify-between">
-                                                    <label className="text-[10px] text-ink/70">Planet size</label>
-                                                    <span className="text-[10px] font-bold text-ink">{dSet.planetSize}px</span>
-                                                </div>
-                                                <input
-                                                    type="range" min={8} max={22} step={1}
-                                                    value={dSet.planetSize}
-                                                    onChange={(e) => updateDivSettings(pair.divKey, { planetSize: parseInt(e.target.value) })}
-                                                    className="w-full accent-amber-600 h-1"
-                                                />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <div className="flex items-center justify-between">
-                                                    <label className="text-[10px] text-ink/70">House number size</label>
-                                                    <span className="text-[10px] font-bold text-ink">{dSet.houseSize}px</span>
-                                                </div>
-                                                <input
-                                                    type="range" min={8} max={24} step={1}
-                                                    value={dSet.houseSize}
-                                                    onChange={(e) => updateDivSettings(pair.divKey, { houseSize: parseInt(e.target.value) })}
-                                                    className="w-full accent-amber-600 h-1"
-                                                />
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    <div className="w-full">
+                                    <div className="w-full relative">
                                         <NorthIndianChart
                                             planets={divParsed.planets}
                                             ascendantSign={divParsed.ascendant}
-                                            showDegrees={false}
+                                            showDegrees={dSet.showDegrees}
                                             planetFontSize={dSet.planetSize}
+                                            degreeFontSize={dSet.degreeSize}
                                             signNumberFontSize={dSet.houseSize}
                                             showHouseNumbers={true}
                                             valueType="none"
                                         />
+
+                                        {/* Floating settings panel — overlay on top of chart */}
+                                        {dSet.show && (
+                                            <div
+                                                className="absolute top-2 right-2 z-20 w-52 p-4 rounded-2xl shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+                                                style={{
+                                                    background: 'rgba(255, 251, 243, 0.98)',
+                                                    backdropFilter: 'blur(10px)',
+                                                    border: '1px solid rgba(201, 162, 77, 0.2)'
+                                                }}
+                                            >
+                                                <div className="space-y-4">
+                                                    {/* Planet Size */}
+                                                    <div>
+                                                        <div className="flex justify-between items-center mb-1.5">
+                                                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-wider")}>Planet Size</label>
+                                                            <span className={cn(TYPOGRAPHY.value, "text-[11px] text-ink")}>{dSet.planetSize}px</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <button
+                                                                onClick={() => updateDivSettings(pair.divKey, { planetSize: Math.max(8, dSet.planetSize - 1) })}
+                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                            >
+                                                                <Minus className="w-3 h-3" />
+                                                            </button>
+                                                            <input
+                                                                type="range" min={8} max={36} step={1}
+                                                                value={dSet.planetSize}
+                                                                onChange={(e) => updateDivSettings(pair.divKey, { planetSize: parseInt(e.target.value) })}
+                                                                className="flex-1 accent-ink h-1 bg-ink/10 rounded-full appearance-none cursor-pointer"
+                                                            />
+                                                            <button
+                                                                onClick={() => updateDivSettings(pair.divKey, { planetSize: Math.min(36, dSet.planetSize + 1) })}
+                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                            >
+                                                                <Plus className="w-3 h-3" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Degree Size */}
+                                                    <div>
+                                                        <div className="flex justify-between items-center mb-1.5">
+                                                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-wider")}>Degree Size</label>
+                                                            <span className={cn(TYPOGRAPHY.value, "text-[11px] text-ink")}>{dSet.degreeSize}px</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <button
+                                                                onClick={() => updateDivSettings(pair.divKey, { degreeSize: Math.max(6, dSet.degreeSize - 1) })}
+                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                            >
+                                                                <Minus className="w-3 h-3" />
+                                                            </button>
+                                                            <input
+                                                                type="range" min={6} max={18} step={1}
+                                                                value={dSet.degreeSize}
+                                                                onChange={(e) => updateDivSettings(pair.divKey, { degreeSize: parseInt(e.target.value) })}
+                                                                className="flex-1 accent-amber-600 h-1 bg-ink/10 rounded-full appearance-none cursor-pointer"
+                                                            />
+                                                            <button
+                                                                onClick={() => updateDivSettings(pair.divKey, { degreeSize: Math.min(18, dSet.degreeSize + 1) })}
+                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                            >
+                                                                <Plus className="w-3 h-3" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* House Number Size */}
+                                                    <div>
+                                                        <div className="flex justify-between items-center mb-1.5">
+                                                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-wider")}>House Number Size</label>
+                                                            <span className={cn(TYPOGRAPHY.value, "text-[11px] text-ink")}>{dSet.houseSize}px</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <button
+                                                                onClick={() => updateDivSettings(pair.divKey, { houseSize: Math.max(8, dSet.houseSize - 1) })}
+                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                            >
+                                                                <Minus className="w-3 h-3" />
+                                                            </button>
+                                                            <input
+                                                                type="range" min={8} max={24} step={1}
+                                                                value={dSet.houseSize}
+                                                                onChange={(e) => updateDivSettings(pair.divKey, { houseSize: parseInt(e.target.value) })}
+                                                                className="flex-1 accent-amber-600 h-1 bg-ink/10 rounded-full appearance-none cursor-pointer"
+                                                            />
+                                                            <button
+                                                                onClick={() => updateDivSettings(pair.divKey, { houseSize: Math.min(24, dSet.houseSize + 1) })}
+                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                            >
+                                                                <Plus className="w-3 h-3" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Show Degrees Toggle */}
+                                                    <div className="flex items-center justify-between pt-2 border-t border-ink/10">
+                                                        <label className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-wider")}>Show Degrees</label>
+                                                        <button
+                                                            onClick={() => updateDivSettings(pair.divKey, { showDegrees: !dSet.showDegrees })}
+                                                            className={cn(
+                                                                "w-8 h-4 rounded-full transition-colors relative",
+                                                                dSet.showDegrees ? "bg-ink" : "bg-ink/20"
+                                                            )}
+                                                        >
+                                                            <div className={cn(
+                                                                "absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all",
+                                                                dSet.showDegrees ? "left-4.5" : "left-0.5"
+                                                            )} style={{ left: dSet.showDegrees ? '1.125rem' : '0.125rem' }} />
+                                                        </button>
+                                                    </div>
+
+                                                    <button
+                                                        onClick={() => resetDivDefaults(pair.divKey)}
+                                                        className="w-full mt-2 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all hover:bg-gold-primary/5 border border-gold-primary/20 text-ink"
+                                                        style={{
+                                                            background: 'linear-gradient(135deg, rgba(201,162,77,0.05) 0%, rgba(201,162,77,0.02) 100%)',
+                                                        }}
+                                                    >
+                                                        Reset to Defaults
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
@@ -679,7 +769,7 @@ function SamudayaTab({
                                 <div className="flex flex-col items-center">
                                     {/* Title with inline settings toggle */}
                                     <div className="flex items-center gap-1.5 mb-1">
-                                        <h4 className={cn(TYPOGRAPHY.label, "text-[11px] text-ink/70 text-center")}>
+                                        <h4 className={cn(TYPOGRAPHY.label, "text-[13px] text-ink font-bold text-center")}>
                                             Samudaya
                                         </h4>
                                         <button
@@ -688,54 +778,15 @@ function SamudayaTab({
                                                 "p-1 rounded-md transition-all",
                                                 sSet.show
                                                     ? cn("text-ink shadow-sm", COLORS.wbActiveTab)
-                                                    : "text-ink/35 hover:bg-gold-primary/10 hover:text-ink/70"
+                                                    : "text-primary hover:bg-primary hover:primary"
                                             )}
                                             title="Samudaya chart settings"
                                         >
-                                            <Settings2 className="w-3 h-3" />
+                                            <Settings className="w-3 h-3" />
                                         </button>
                                     </div>
 
-                                    {/* Inline settings panel — pushes chart down, no overlap */}
-                                    {sSet.show && (
-                                        <div className="w-full prem-card rounded-lg p-2.5 mb-2 space-y-2.5 border border-gold-primary/15">
-                                            <div className="flex items-center justify-between">
-                                                <span className={cn(TYPOGRAPHY.label, "text-[10px] text-ink")}>Samudaya</span>
-                                                <button
-                                                    onClick={() => resetSamDefaults(pair.divKey)}
-                                                    className="text-[10px] font-bold text-gold-primary hover:underline"
-                                                >
-                                                    Default
-                                                </button>
-                                            </div>
-                                            <div className="space-y-1">
-                                                <div className="flex items-center justify-between">
-                                                    <label className="text-[10px] text-ink/70">Score size</label>
-                                                    <span className="text-[10px] font-bold text-ink">{sSet.scoreSize}px</span>
-                                                </div>
-                                                <input
-                                                    type="range" min={12} max={36} step={1}
-                                                    value={sSet.scoreSize}
-                                                    onChange={(e) => updateSamSettings(pair.divKey, { scoreSize: parseInt(e.target.value) })}
-                                                    className="w-full accent-amber-600 h-1"
-                                                />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <div className="flex items-center justify-between">
-                                                    <label className="text-[10px] text-ink/70">House number size</label>
-                                                    <span className="text-[10px] font-bold text-ink">{sSet.houseSize}px</span>
-                                                </div>
-                                                <input
-                                                    type="range" min={8} max={24} step={1}
-                                                    value={sSet.houseSize}
-                                                    onChange={(e) => updateSamSettings(pair.divKey, { houseSize: parseInt(e.target.value) })}
-                                                    className="w-full accent-amber-600 h-1"
-                                                />
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    <div className="w-full">
+                                    <div className="w-full relative">
                                         <NorthIndianChart
                                             planets={[]}
                                             ascendantSign={divParsed.ascendant}
@@ -745,6 +796,86 @@ function SamudayaTab({
                                             signNumberFontSize={sSet.houseSize}
                                             valueFontSize={sSet.scoreSize}
                                         />
+
+                                        {/* Floating settings panel — overlay on top of chart */}
+                                        {sSet.show && (
+                                            <div
+                                                className="absolute top-2 right-2 z-20 w-52 p-4 rounded-2xl shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+                                                style={{
+                                                    background: 'rgba(255, 251, 243, 0.98)',
+                                                    backdropFilter: 'blur(10px)',
+                                                    border: '1px solid rgba(201, 162, 77, 0.2)'
+                                                }}
+                                            >
+                                                <div className="space-y-4">
+                                                    {/* Score Size */}
+                                                    <div>
+                                                        <div className="flex justify-between items-center mb-1.5">
+                                                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-wider")}>Score Size</label>
+                                                            <span className={cn(TYPOGRAPHY.value, "text-[11px] text-ink")}>{sSet.scoreSize}px</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <button
+                                                                onClick={() => updateSamSettings(pair.divKey, { scoreSize: Math.max(12, sSet.scoreSize - 1) })}
+                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                            >
+                                                                <Minus className="w-3 h-3" />
+                                                            </button>
+                                                            <input
+                                                                type="range" min={12} max={36} step={1}
+                                                                value={sSet.scoreSize}
+                                                                onChange={(e) => updateSamSettings(pair.divKey, { scoreSize: parseInt(e.target.value) })}
+                                                                className="flex-1 accent-ink h-1 bg-ink/10 rounded-full appearance-none cursor-pointer"
+                                                            />
+                                                            <button
+                                                                onClick={() => updateSamSettings(pair.divKey, { scoreSize: Math.min(36, sSet.scoreSize + 1) })}
+                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                            >
+                                                                <Plus className="w-3 h-3" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* House Number Size */}
+                                                    <div>
+                                                        <div className="flex justify-between items-center mb-1.5">
+                                                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-wider")}>House Number Size</label>
+                                                            <span className={cn(TYPOGRAPHY.value, "text-[11px] text-ink")}>{sSet.houseSize}px</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <button
+                                                                onClick={() => updateSamSettings(pair.divKey, { houseSize: Math.max(8, sSet.houseSize - 1) })}
+                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                            >
+                                                                <Minus className="w-3 h-3" />
+                                                            </button>
+                                                            <input
+                                                                type="range" min={8} max={24} step={1}
+                                                                value={sSet.houseSize}
+                                                                onChange={(e) => updateSamSettings(pair.divKey, { houseSize: parseInt(e.target.value) })}
+                                                                className="flex-1 accent-amber-600 h-1 bg-ink/10 rounded-full appearance-none cursor-pointer"
+                                                            />
+                                                            <button
+                                                                onClick={() => updateSamSettings(pair.divKey, { houseSize: Math.min(24, sSet.houseSize + 1) })}
+                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                            >
+                                                                <Plus className="w-3 h-3" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <button
+                                                        onClick={() => resetSamDefaults(pair.divKey)}
+                                                        className="w-full mt-2 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all hover:bg-gold-primary/5 border border-gold-primary/20 text-ink"
+                                                        style={{
+                                                            background: 'linear-gradient(135deg, rgba(201,162,77,0.05) 0%, rgba(201,162,77,0.02) 100%)',
+                                                        }}
+                                                    >
+                                                        Reset to Defaults
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>

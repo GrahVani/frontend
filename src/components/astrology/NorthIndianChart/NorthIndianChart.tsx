@@ -263,49 +263,25 @@ export default function NorthIndianChart({
                                         autoDegreeFontSize = 9;
                                         retroFontSize = 11;
                                         degreeYOffset = 13;
-                                    } else if (planetCount === 3) {
-                                        // Three planets - 3-column layout
-                                        cols = 3;
-                                        hSpacing = Math.round(32 * spacingMultiplier);
-                                        vSpacing = 0;
-                                        autoPlanetFontSize = 13;
-                                        autoDegreeFontSize = 8;
-                                        retroFontSize = 10;
-                                        degreeYOffset = 12;
-                                    } else if (planetCount === 4) {
-                                        // Four planets - 2x2 grid (optimal for 4)
+                                    } else {
+                                        // 3+ planets - 2-column grid ("two in one row")
                                         cols = 2;
                                         hSpacing = Math.round(36 * spacingMultiplier);
                                         vSpacing = Math.round(26 * spacingMultiplier);
-                                        autoPlanetFontSize = 14;
+                                        autoPlanetFontSize = 13;
                                         autoDegreeFontSize = 7;
                                         retroFontSize = 10;
                                         degreeYOffset = 11;
-                                    } else if (planetCount === 5 || planetCount === 6) {
-                                        // 5-6 planets - 3x2 grid
-                                        cols = 3;
-                                        hSpacing = Math.round(28 * spacingMultiplier);
-                                        vSpacing = Math.round(24 * spacingMultiplier);
-                                        autoPlanetFontSize = 12;
-                                        autoDegreeFontSize = 7;
-                                        retroFontSize = 9;
-                                        degreeYOffset = 10;
-                                    } else {
-                                        // 7+ planets - compact mode
-                                        cols = 4;
-                                        hSpacing = Math.round(24 * spacingMultiplier);
-                                        vSpacing = Math.round(22 * spacingMultiplier);
-                                        autoPlanetFontSize = 11;
-                                        autoDegreeFontSize = 6;
-                                        retroFontSize = 8;
-                                        degreeYOffset = 9;
                                     }
 
                                     const rows = Math.ceil(planetCount / cols);
 
-                                    // Use user-defined font sizes or auto-calculated ones
+                                    // Use user-defined font sizes or auto-calculated ones (reverted scaling as requested)
                                     const finalPlanetFontSize = planetFontSize || autoPlanetFontSize;
                                     const finalDegreeFontSize = degreeFontSize || autoDegreeFontSize;
+                                    
+                                    // Scale retro font size proportionally to planet size (approx 80%)
+                                    const finalRetroFontSize = Math.round(finalPlanetFontSize * 0.85);
 
                                     return boxPlanets.map((p, i) => {
                                         const row = Math.floor(i / cols);
@@ -359,7 +335,7 @@ export default function NorthIndianChart({
                                                     {getPlanetLabel()}
                                                     {retroIndicator && (
                                                         <tspan
-                                                            fontSize={retroFontSize}
+                                                            fontSize={finalRetroFontSize}
                                                             fontWeight="bold"
                                                             fill="var(--status-error)"
                                                             dx="2"

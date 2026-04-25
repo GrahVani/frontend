@@ -42,35 +42,35 @@ interface MaitriRow {
 
 const ROW_META: Record<string, { icon: React.ReactNode; badge: 'success' | 'error' | 'warning'; border: string; bg: string; label: string }> = {
     fast_friends: {
-        icon: <HeartHandshake className="w-4 h-4 text-status-success" />,
+        icon: <HeartHandshake className="w-5 h-5 text-status-success" />,
         badge: 'success',
         border: 'border-l-[3px] border-l-status-success',
         bg: 'bg-emerald-50/50',
         label: 'Fast Friends',
     },
     friends: {
-        icon: <Handshake className="w-4 h-4 text-status-success" />,
+        icon: <Handshake className="w-5 h-5 text-status-success" />,
         badge: 'success',
         border: 'border-l-[3px] border-l-status-success',
         bg: 'bg-emerald-50/25',
         label: 'Friends',
     },
     neutral: {
-        icon: <Minus className="w-4 h-4 text-status-warning" />,
+        icon: <Minus className="w-5 h-5 text-status-warning" />,
         badge: 'warning',
         border: 'border-l-[3px] border-l-status-warning',
         bg: 'bg-amber-50/40',
         label: 'Neutral',
     },
     enemies: {
-        icon: <Swords className="w-4 h-4 text-status-error" />,
+        icon: <Swords className="w-5 h-5 text-status-error" />,
         badge: 'error',
         border: 'border-l-[3px] border-l-status-error',
         bg: 'bg-red-50/25',
         label: 'Enemies',
     },
     bitter_enemies: {
-        icon: <AlertTriangle className="w-4 h-4 text-status-error" />,
+        icon: <AlertTriangle className="w-5 h-5 text-status-error" />,
         badge: 'error',
         border: 'border-l-[3px] border-l-status-error',
         bg: 'bg-red-50/50',
@@ -101,9 +101,9 @@ export default function PanchadhaMaitriTable({ data, className }: PanchadhaMaitr
             render: (row: MaitriRow) => {
                 const meta = ROW_META[row.kind];
                 return (
-                    <div className={cn("flex items-center gap-2 h-full px-3 py-2", meta.border, meta.bg)}>
+                    <div className={cn("flex items-center gap-2 h-full px-3 py-2.5", meta.border, meta.bg)}>
                         {meta.icon}
-                        <span className="font-semibold text-ink/80 text-[12px]">{meta.label}</span>
+                        <span className="font-semibold text-ink/80 text-[15px]">{meta.label}</span>
                     </div>
                 );
             },
@@ -112,7 +112,8 @@ export default function PanchadhaMaitriTable({ data, className }: PanchadhaMaitr
             key: planetName,
             header: planetName,
             align: 'center' as const,
-            cellClassName: cn(TYPOGRAPHY.value, "align-top min-w-[80px] font-normal"),
+            headerClassName: 'text-[16px] font-semibold',
+            cellClassName: cn(TYPOGRAPHY.value, "align-top min-w-[80px] font-normal text-[15px]"),
             render: (row: MaitriRow) => {
                 const relations = chakra[planetName]?.relations || [];
                 const list = relations
@@ -122,13 +123,13 @@ export default function PanchadhaMaitriTable({ data, className }: PanchadhaMaitr
                 const meta = ROW_META[row.kind];
 
                 return (
-                    <div className="flex flex-col gap-1.5 items-center">
+                    <div className="flex flex-col gap-2 items-center">
                         {list.map((name: string) => (
-                            <Badge key={name} variant={meta.badge} size="sm">
+                            <Badge key={name} variant={meta.badge} size="md" className="font-normal text-[14px]">
                                 {name}
                             </Badge>
                         ))}
-                        {list.length === 0 && <span className="text-ink/20">{'\u2014'}</span>}
+                        {list.length === 0 && <span className="text-ink/20 text-[14px]">{'\u2014'}</span>}
                     </div>
                 );
             },

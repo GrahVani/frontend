@@ -104,7 +104,7 @@ export default function KpPlanetaryTable({ planets, className }: KpPlanetaryTabl
 
                             {/* House */}
                             <td className="py-1.5 px-3">
-                                <span className="inline-flex items-center justify-center w-5 h-5 rounded border border-gold-primary/20 bg-white text-primary text-[10px] font-semibold shadow-sm">
+                                <span className="text-[14px] text-primary font-medium">
                                     {planet.house}
                                 </span>
                             </td>
@@ -118,14 +118,14 @@ export default function KpPlanetaryTable({ planets, className }: KpPlanetaryTabl
 
                             {/* Star Lord */}
                             <td className="py-1.5 px-3">
-                                <span className="inline-block px-2 py-0.5 bg-surface-warm border border-gold-primary/20 text-primary rounded text-[13px] font-medium shadow-sm">
+                                <span className="text-[14px] text-primary font-medium">
                                     {planet.nakshatraLord}
                                 </span>
                             </td>
 
                             {/* Sub Lord */}
                             <td className="py-1.5 px-3">
-                                <span className="inline-block px-2 py-0.5 bg-gold-primary/10 border border-gold-primary/30 text-primary rounded text-[13px] font-medium shadow-sm">
+                                <span className="text-[14px] text-primary font-medium">
                                     {planet.subLord}
                                 </span>
                             </td>

@@ -38,20 +38,22 @@ const HOUSE_GROUPS = {
     moksha: { houses: [4, 8, 12], name: 'moksha', displayName: 'Moksha', desc: 'Liberation', color: 'bg-blue-100 text-blue-800', termKey: 'house_moksha' }
 };
 
-// Visual intensity dot for bindu values (0-8 scale in BAV / Sarva rows)
-const getBinduDot = (val: number) => {
-    if (val === 0) return <span className="w-1.5 h-1.5 rounded-full bg-ink/10" />;
+// Visual intensity dot for bindu values
+// In Bhinna (binary 0/1): 1 = bindu present (positive) → green
+// In Sarva (0-8 scale): low = weak (red), high = strong (green)
+const getBinduDot = (val: number, isBinary = false) => {
+    if (val === 0 || isBinary) return null; // no dot for zero or in Bhinna mode
     if (val <= 2) return <span className="w-1.5 h-1.5 rounded-full bg-red-400" />;
     if (val <= 4) return <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />;
     if (val <= 6) return <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />;
     return <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />;
 };
 
-// SAV strength indicator
+// SAV strength indicator — per-sign SAV ranges 0-8
 const getSavBadge = (val: number) => {
-    if (val >= 30) return <span className="w-1.5 h-1.5 rounded-full bg-green-600" />;
-    if (val < 22) return <span className="w-1.5 h-1.5 rounded-full bg-red-500" />;
-    return null;
+    if (val >= 6) return <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />;   // strong
+    if (val <= 3) return <span className="w-1.5 h-1.5 rounded-full bg-red-400" />;      // weak
+    return null; // 4-5 = average, no badge
 };
 
 // Planet label with symbol and color
@@ -59,9 +61,9 @@ const PlanetRowLabel = ({ name, abbrev }: { name: string; abbrev: string }) => {
     const symbol = getPlanetSymbol(name);
     const color = PLANET_COLORS[name] || PLANET_COLORS[abbrev] || '#3D3228';
     return (
-        <div className="flex items-center gap-1.5">
-            <span className="text-[16px] leading-none" style={{ color }}>{symbol}</span>
-            <span className="font-medium text-ink/80">{abbrev}</span>
+        <div className="flex items-center gap-2">
+            <span className="text-[20px] leading-none" style={{ color }}>{symbol}</span>
+            <span className="font-medium text-primary text-[16px]">{abbrev}</span>
         </div>
     );
 };
@@ -150,7 +152,7 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                                                 <td key={s} className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1 text-center border-r border-primary font-medium")}>
                                                     <div className="flex items-center justify-center gap-1">
                                                         <span>{val}</span>
-                                                        {getBinduDot(val)}
+                                                        {getBinduDot(val, !isSarva)}
                                                     </div>
                                                 </td>
                                             );

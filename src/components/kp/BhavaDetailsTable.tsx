@@ -42,13 +42,13 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
     const sortedKeys = Object.keys(bhavaDetails).sort((a, b) => parseInt(a) - parseInt(b));
 
     return (
-        <div className={cn("w-full h-full flex flex-col", className)}>
-            <div className="flex-1 overflow-auto scrollbar-thin">
+        <div className={cn("w-full flex flex-col", className)}>
+            <div className="w-full overflow-x-auto">
                 <table className="w-full text-[12px] border-collapse font-sans">
                     <thead className="sticky top-0 z-10">
                         <tr className="bg-surface-warm/60 border-y border-gold-primary/20 backdrop-blur-sm">
                             <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>House</th>
-                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Sign & degree</th>
+                            <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Degree</th>
                             <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Nakshatra</th>
                             <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center")}>Pada</th>
                             <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-center")}>
@@ -79,58 +79,50 @@ export default function BhavaDetailsTable({ bhavaDetails, className }: BhavaDeta
                                     )}
                                 >
                                     {/* House */}
-                                    <td className="py-1.5 px-3 whitespace-nowrap">
+                                    <td className="py-2 px-3 whitespace-nowrap">
                                         <span className="flex items-center gap-2">
-                                            <span className="inline-flex items-center justify-center w-5 h-5 rounded border border-gold-primary/20 bg-white text-primary text-[10px] font-semibold shadow-sm shrink-0">
+                                            <span className="text-primary text-[12px] font-bold shrink-0 w-4">
                                                 {key}
                                             </span>
-                                            <span className="text-[14px] text-primary font-medium">
+                                            <span className="text-[13px] text-primary font-medium">
                                                 {houseNames[key]}
                                             </span>
                                         </span>
                                     </td>
 
-                                    {/* Sign & degree */}
-                                    <td className="py-1.5 px-3">
+                                    {/* Degree */}
+                                    <td className="py-2 px-3">
                                         <div className="flex items-center gap-1.5">
                                             <span
-                                                className="w-6 h-6 flex items-center justify-center rounded-full bg-surface-warm border border-gold-primary/20 text-[14px] text-primary font-serif shrink-0"
+                                                className="text-[14px] text-primary/80 font-serif shrink-0"
                                                 title={bhava.sign}
                                             >
                                                 {signSymbols[bhava.sign] || ''}
                                             </span>
-                                            <div className="flex items-center gap-1">
-                                                <span className="text-[14px] text-primary font-medium">{bhava.sign}</span>
-                                                <span className="text-[13px] text-primary font-medium">
-                                                    {bhava.longitude_dms.replace(/["]/g, '')}
-                                                </span>
-                                            </div>
+                                            <span className="text-[13px] text-primary font-medium">
+                                                {bhava.longitude_dms.replace(/["]/g, '')}
+                                            </span>
                                         </div>
                                     </td>
 
                                     {/* Nakshatra */}
-                                    <td className="py-1.5 px-3 whitespace-nowrap">
-                                        <span className="text-[14px] text-primary font-medium">
+                                    <td className="py-2 px-3 whitespace-nowrap">
+                                        <span className="text-[13px] text-primary font-medium">
                                             {bhava.nakshatra}
                                         </span>
                                     </td>
 
                                     {/* Pada */}
-                                    <td className="py-1.5 px-3 text-center">
-                                        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white border border-gold-primary/20 text-primary text-[10px] font-medium shadow-sm">
+                                    <td className="py-2 px-3 text-center">
+                                        <span className="text-primary text-[13px] font-medium">
                                             {bhava.pada}
                                         </span>
                                     </td>
 
                                     {/* RL, NL, SL, SS */}
                                     {['RL', 'NL', 'SL', 'SS'].map((lordType) => (
-                                        <td key={lordType} className="py-1.5 px-3 text-center">
-                                            <span className={cn(
-                                                "inline-block text-[13px] text-primary font-medium rounded px-2 py-0.5",
-                                                lordType === 'SL'
-                                                    ? "bg-gold-primary/10 border border-gold-primary/30 shadow-sm"
-                                                    : ""
-                                            )}>
+                                        <td key={lordType} className="py-2 px-3 text-center">
+                                            <span className="text-[14px] font-medium text-primary">
                                                 {/* @ts-ignore - dynamic access */}
                                                 {(bhava[lordType] || '—').slice(0, 2)}
                                             </span>
