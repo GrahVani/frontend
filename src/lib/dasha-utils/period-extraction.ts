@@ -42,6 +42,7 @@ export function getSublevels(node: RawDashaPeriod): RawDashaPeriod[] | null {
         node.sookshmadashas ||
         node.prandashas ||
         node.pran_dashas ||
+        node.sub_periods ||
         node.sublevel ||
         node.timeline ||
         node.periods;
@@ -62,13 +63,13 @@ export function resolvePlanetName(p: RawDashaPeriod): string {
 export function resolveStartDate(p: RawDashaPeriod): string {
     return p.start_date || p.startDate || p.start || p.starting || p.starting_date ||
         p.beginning || p.beginning_date || p.mahadasha_beginning || p.mahadasha_starting_date ||
-        p.from || p.from_date;
+        p.from || p.from_date || p.start_date_utc;
 }
 
 /** Resolve end date from a raw period record */
 export function resolveEndDate(p: RawDashaPeriod): string {
     return p.end_date || p.endDate || p.end || p.ending || p.ending_date ||
-        p.mahadasha_ending || p.mahadasha_ending_date || p.to || p.to_date;
+        p.mahadasha_ending || p.mahadasha_ending_date || p.to || p.to_date || p.end_date_utc;
 }
 
 /**
@@ -125,6 +126,19 @@ export function extractPeriodsArray(data: RawDashaPeriod | RawDashaPeriod[]): Ra
                     planet: a.lord, startDate: a.start_date, endDate: a.end_date, raw: a
                 }))
             }));
+        }
+
+        // True Chitra Ashtottari: nested inside ashtottari_data.dasha_sequence
+        if (data.ashtottari_data && data.ashtottari_data.dasha_sequence && Array.isArray(data.ashtottari_data.dasha_sequence)) {
+            return data.ashtottari_data.dasha_sequence;
+        }
+
+        // True Chitra Prana Dasha / recursive sub_periods structures
+        if (data.prana_dasha && Array.isArray(data.prana_dasha)) {
+            return data.prana_dasha;
+        }
+        if (data.sub_periods && Array.isArray(data.sub_periods)) {
+            return data.sub_periods;
         }
 
         // Generic timeline/dasha_table fallback

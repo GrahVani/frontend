@@ -182,10 +182,11 @@ export function AyanamsaSelect({
                     style={{
                         background: `linear-gradient(90deg, 
                             ${AYANAMSA_OPTIONS[0].color} 0%, 
-                            ${AYANAMSA_OPTIONS[1].color} 25%, 
-                            ${AYANAMSA_OPTIONS[2].color} 50%, 
-                            ${AYANAMSA_OPTIONS[3].color} 75%, 
-                            ${AYANAMSA_OPTIONS[4].color} 100%)`
+                            ${AYANAMSA_OPTIONS[1].color} 20%, 
+                            ${AYANAMSA_OPTIONS[2].color} 40%, 
+                            ${AYANAMSA_OPTIONS[3].color} 60%, 
+                            ${AYANAMSA_OPTIONS[4].color} 80%,
+                            ${AYANAMSA_OPTIONS[5].color} 100%)`
                     }}
                 />
             </div>

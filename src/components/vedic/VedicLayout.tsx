@@ -52,7 +52,7 @@ interface NavItem extends SidebarItem {
 const VEDIC_NAV_ITEMS: NavItem[] = [
     { name: "Kundali", path: "/overview", icon: LayoutTemplate },
     { name: "Divisional Charts", path: "/divisional", icon: Map, systemFilter: ['Lahiri', 'Raman', 'Yukteswar', 'Bhasin'] },
-    { name: "Dashas", path: "/dashas", icon: History, systemFilter: ['Lahiri', 'Raman', 'Yukteswar', 'Bhasin'] },
+    { name: "Dashas", path: "/dashas", icon: History, systemFilter: ['Lahiri', 'Raman', 'Yukteswar', 'Bhasin', 'TrueChitra'] },
     { name: "Yogas & Doshas", path: "/yoga-dosha", icon: Sparkles, systemFilter: ['Lahiri'] },
     { name: "Ashtakavargas", path: "/ashtakavarga", icon: Shield, systemFilter: ['Lahiri', 'Raman', 'Yukteswar', 'Bhasin'] },
     { name: "Shadbala", path: "/shadbala", icon: Orbit, systemFilter: ['Lahiri'] },
@@ -100,9 +100,9 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
         if (item.name === "Ashtakavargas" && !capabilities.hasAshtakavarga) return false;
         if (item.name === "Shadbala" && capabilities.features.shadbala.length === 0) return false;
         if (item.name === "Gochar" && !capabilities.charts.special.includes('transit')) return false;
-        if (item.name === "Sudarshan Chakra" && !capabilities.charts.special.includes('sudarshana')) return false;
+        if (item.name === "Sudarshan Chakra" && (!capabilities.charts.special.includes('sudarshana') || ayanamsa === 'TrueChitra')) return false;
         if (item.name === "KP System" && (!capabilities.hasHorary && ayanamsa !== 'KP')) return false;
-        if (item.name === "Kundali" && ayanamsa === 'KP') return false;
+        if (item.name === "Kundali" && (ayanamsa === 'KP' || ayanamsa === 'TrueChitra')) return false;
         if (item.systemFilter && !item.systemFilter.includes(ayanamsa)) return false;
         return true;
     });

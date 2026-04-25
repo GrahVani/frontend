@@ -15,6 +15,7 @@ const AYANAMSAS = [
     { id: 'Raman', label: 'Raman', desc: 'BV Raman traditional ayanamsa' },
     { id: 'Yukteswar', label: 'Sri Yukteswar', desc: 'Galactic Center based precision' },
     { id: 'Bhasin', label: 'Bhasin', desc: 'J.N. Bhasin ayanamsa system' },
+    { id: 'TrueChitra', label: 'True Chitra', desc: 'True Chitra ayanamsa — dasha-only system' },
 ];
 
 interface GlobalSettingsModalProps {
@@ -46,7 +47,12 @@ export default function GlobalSettingsModal({ onClose, router }: GlobalSettingsM
             onClose();
 
             if (systemChanged) {
-                router.push('/vedic-astrology/overview');
+                // True Chitra is dasha-only — redirect to Dashas page
+                if (tempSettings.ayanamsa === 'TrueChitra') {
+                    router.push('/vedic-astrology/dashas');
+                } else {
+                    router.push('/vedic-astrology/overview');
+                }
             }
         }, 600);
     };
