@@ -3,18 +3,17 @@
 import React, { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
-import { ChevronDown, ChevronUp, Calendar, AlertCircle } from 'lucide-react';
+import { ChevronRight, Calendar, AlertCircle } from 'lucide-react';
 import { DashaNode, formatDateDisplay, standardizeDuration } from '@/lib/dasha-utils';
 import { PLANET_COLORS } from '@/lib/astrology-constants';
-import { KnowledgeTooltip } from '@/components/knowledge';
 
 interface ShodashottariDashaProps {
     periods: DashaNode[];
+    onDrillDown?: (period: DashaNode) => void;
 }
 
-export default function ShodashottariDasha({ periods }: ShodashottariDashaProps) {
+export default function ShodashottariDasha({ periods, onDrillDown }: ShodashottariDashaProps) {
     const [selectedCycle, setSelectedCycle] = useState<number>(1);
-    const [expandedMahadasha, setExpandedMahadasha] = useState<string | null>(null);
 
     // Group periods by cycle dynamically (8 planets per cycle for Shodashottari)
     const cycles = useMemo(() => {
@@ -92,103 +91,62 @@ export default function ShodashottariDasha({ periods }: ShodashottariDashaProps)
                     </thead>
                     <tbody className="divide-y divide-gold-primary/10 font-medium">
                         {currentCyclePeriods.map((mahadasha: DashaNode, mIdx: number) => {
-                            const isExpanded = expandedMahadasha === mahadasha.planet;
-                            const antardashas = mahadasha.sublevel || [];
+                            const canDrill = mahadasha.canDrillFurther || (mahadasha.sublevel && mahadasha.sublevel.length > 0);
                             const isBalance = mahadasha.raw?.is_balance === true;
 
                             return (
-                                <React.Fragment key={mIdx}>
-                                    <tr
-                                        className={cn(
-                                            "hover:bg-gold-primary/10 transition-colors group cursor-pointer",
-                                            mahadasha.isCurrent && "bg-gold-primary/5"
-                                        )}
-                                        onClick={() => setExpandedMahadasha(isExpanded ? null : mahadasha.planet)}
-                                    >
-                                        <td className="px-3 py-1.5">
-                                            <div className="flex items-center gap-2">
-                                                <span className={cn(
-                                                    "inline-flex items-center px-2 py-0.5 rounded-md text-[12px] font-bold border shadow-sm min-w-[60px] justify-center",
-                                                    PLANET_COLORS[mahadasha.planet || ''] || "bg-white"
-                                                )}>
-                                                    {mahadasha.planet}
-                                                </span>
-                                                {mahadasha.isCurrent && (
-                                                    <span className="inline-flex items-center px-1.5 py-0 rounded-full text-[9px] font-semibold bg-green-100 text-green-700 border border-green-200 animate-pulse uppercase tracking-wider">
-                                                        Current Active
-                                                    </span>
-                                                )}
-                                                {isBalance && (
-                                                    <span className="inline-flex items-center gap-1 px-1.5 py-0 rounded-full text-[9px] font-semibold bg-blue-100 text-blue-700 border border-blue-200 uppercase tracking-wider">
-                                                        <AlertCircle className="w-2.5 h-2.5" />
-                                                        Balance
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </td>
-                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
-                                            <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}>
-                                                <Calendar className="w-3 h-3 text-ink/30" />
-                                                {formatDateDisplay(mahadasha.startDate)}
-                                            </div>
-                                        </td>
-                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>{formatDateDisplay(mahadasha.endDate)}</td>
-                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
-                                            {standardizeDuration((mahadasha.raw?.duration_years as number) || (mahadasha.raw?.years as number) || 0)}
-                                        </td>
-                                        <td className="px-3 py-1.5 text-center">
-                                            <div className="flex items-center justify-center gap-2">
-                                                {mahadasha.isCurrent ? (
-                                                    <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm animate-pulse">ACTIVE</span>
-                                                ) : antardashas.length > 0 ? (
-                                                    isExpanded ? <ChevronUp className="w-4 h-4 text-gold-dark" /> : <ChevronDown className="w-4 h-4 text-gold-dark" />
-                                                ) : (
-                                                    <span className="text-gold-dark/40 text-[12px]">—</span>
-                                                )}
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    {/* Expanded Antardasha Row */}
-                                    {isExpanded && antardashas.length > 0 && (
-                                        <tr>
-                                            <td colSpan={5} className="bg-surface-warm/60/60 px-3 py-2">
-                                                <div className="text-2xs font-black text-ink/45 uppercase tracking-[0.2em] mb-2 pl-2">
-                                                    <KnowledgeTooltip term="dasha_antardasha">Antardasha</KnowledgeTooltip> Sub-Periods
-                                                </div>
-                                                <table className="w-full">
-                                                    <tbody className="divide-y divide-gold-primary/10">
-                                                        {antardashas.map((antar: DashaNode, aIdx: number) => (
-                                                            <tr key={aIdx} className={cn(
-                                                                "hover:bg-white/50 transition-colors",
-                                                                antar.isCurrent && "bg-green-50/50"
-                                                            )}>
-                                                                <td className="px-3 py-2">
-                                                                    <span className={cn(
-                                                                        "inline-flex items-center px-1.5 py-0.5 rounded text-[12px] font-bold border",
-                                                                        PLANET_COLORS[antar.planet || ''] || "bg-white"
-                                                                    )}>
-                                                                        {antar.planet}
-                                                                    </span>
-                                                                </td>
-                                                                <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{formatDateDisplay(antar.startDate)}</td>
-                                                                <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{formatDateDisplay(antar.endDate)}</td>
-                                                                <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>
-                                                                    {standardizeDuration((antar.raw?.duration_years as number) || (antar.raw?.years as number) || 0, antar.raw?.duration_days as number)}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-center">
-                                                                    {antar.isCurrent && (
-                                                                        <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 animate-pulse">ACTIVE</span>
-                                                                    )}
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
+                                <tr
+                                    key={mIdx}
+                                    className={cn(
+                                        "hover:bg-gold-primary/10 transition-colors group",
+                                        mahadasha.isCurrent && "bg-gold-primary/5",
+                                        canDrill ? "cursor-pointer" : "cursor-default"
                                     )}
-                                </React.Fragment>
+                                    onClick={() => canDrill && onDrillDown?.(mahadasha)}
+                                >
+                                    <td className="px-3 py-1.5">
+                                        <div className="flex items-center gap-2">
+                                            <span className={cn(
+                                                "inline-flex items-center px-2 py-0.5 rounded-md text-[12px] font-bold border shadow-sm min-w-[60px] justify-center",
+                                                PLANET_COLORS[mahadasha.planet || ''] || "bg-white"
+                                            )}>
+                                                {mahadasha.planet}
+                                            </span>
+                                            {mahadasha.isCurrent && (
+                                                <span className="inline-flex items-center px-1.5 py-0 rounded-full text-[9px] font-semibold bg-green-100 text-green-700 border border-green-200 animate-pulse uppercase tracking-wider">
+                                                    Current Active
+                                                </span>
+                                            )}
+                                            {isBalance && (
+                                                <span className="inline-flex items-center gap-1 px-1.5 py-0 rounded-full text-[9px] font-semibold bg-blue-100 text-blue-700 border border-blue-200 uppercase tracking-wider">
+                                                    <AlertCircle className="w-2.5 h-2.5" />
+                                                    Balance
+                                                </span>
+                                            )}
+                                        </div>
+                                    </td>
+                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
+                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}>
+                                            <Calendar className="w-3 h-3 text-ink/30" />
+                                            {formatDateDisplay(mahadasha.startDate)}
+                                        </div>
+                                    </td>
+                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>{formatDateDisplay(mahadasha.endDate)}</td>
+                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
+                                        {standardizeDuration((mahadasha.raw?.duration_years as number) || (mahadasha.raw?.years as number) || 0)}
+                                    </td>
+                                    <td className="px-3 py-1.5 text-center">
+                                        <div className="flex items-center justify-center gap-2">
+                                            {mahadasha.isCurrent ? (
+                                                <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm animate-pulse">ACTIVE</span>
+                                            ) : canDrill ? (
+                                                <ChevronRight className="w-4 h-4 text-gold-dark transition-transform group-hover:scale-125" />
+                                            ) : (
+                                                <span className="text-gold-dark/40 text-[12px]">—</span>
+                                            )}
+                                        </div>
+                                    </td>
+                                </tr>
                             );
                         })}
                     </tbody>

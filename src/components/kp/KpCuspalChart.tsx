@@ -20,6 +20,10 @@ export interface KpCuspalChartProps {
     className?: string;
     preserveAspectRatio?: string;
     onHouseClick?: (houseNumber: number) => void;
+    planetFontSize?: number;
+    degreeFontSize?: number;
+    signNumberFontSize?: number;
+    showDegrees?: boolean;
 }
 
 /**
@@ -36,6 +40,10 @@ export default function KpCuspalChart({
     className = "",
     preserveAspectRatio,
     onHouseClick,
+    planetFontSize = 17,
+    degreeFontSize = 11,
+    signNumberFontSize = 14,
+    showDegrees = true,
 }: KpCuspalChartProps) {
     const [hoveredHouse, setHoveredHouse] = useState<number | null>(null);
 
@@ -120,7 +128,7 @@ export default function KpCuspalChart({
                                     return (
                                         <g key={p.name} transform={`translate(0, ${yOffset})`}>
                                             <text
-                                                fontSize="17"
+                                                fontSize={planetFontSize}
                                                 fontFamily={TYPOGRAPHY.svgPlanetName.fontFamily}
                                                 fontWeight={isHovered ? "800" : TYPOGRAPHY.svgPlanetName.fontWeight}
                                                 fill={planetColor}
@@ -130,16 +138,18 @@ export default function KpCuspalChart({
                                             >
                                                 {p.name}
                                                 {p.isRetro && (
-                                                    <tspan fontSize="14" fontWeight="bold" fill="var(--status-error)" dx="1">R</tspan>
+                                                    <tspan fontSize={Math.max(8, planetFontSize - 3)} fontWeight="bold" fill="var(--status-error)" dx="1">R</tspan>
                                                 )}
-                                                <tspan
-                                                    fontSize="11"
-                                                    fontWeight={TYPOGRAPHY.svgDegree.fontWeight}
-                                                    fill="var(--ink)"
-                                                    dx="2"
-                                                >
-                                                    {p.degree}
-                                                </tspan>
+                                                {showDegrees && (
+                                                    <tspan
+                                                        fontSize={degreeFontSize}
+                                                        fontWeight={TYPOGRAPHY.svgDegree.fontWeight}
+                                                        fill="var(--ink)"
+                                                        dx="2"
+                                                    >
+                                                        {p.degree}
+                                                    </tspan>
+                                                )}
                                             </text>
                                         </g>
                                     );
@@ -151,7 +161,7 @@ export default function KpCuspalChart({
                         {cuspMap[pos.h] && (
                             <g transform={`translate(${signNumberPositions[pos.h].x}, ${signNumberPositions[pos.h].y})`}>
                                 <text
-                                    fontSize="14"
+                                    fontSize={signNumberFontSize}
                                     fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
                                     fontWeight="700"
                                     fill="var(--text-muted)"

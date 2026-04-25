@@ -61,21 +61,21 @@ function getNeutralList(entries: TemporalRelationEntry[], planetName: string): s
 
 const ROW_META: Record<string, { icon: React.ReactNode; badge: 'success' | 'error' | 'warning'; border: string; bg: string; label: string }> = {
     friends: {
-        icon: <Handshake className="w-4 h-4 text-status-success" />,
+        icon: <Handshake className="w-5 h-5 text-status-success" />,
         badge: 'success',
         border: 'border-l-[3px] border-l-status-success',
         bg: 'bg-emerald-50/40',
         label: 'Friends',
     },
     enemies: {
-        icon: <Swords className="w-4 h-4 text-status-error" />,
+        icon: <Swords className="w-5 h-5 text-status-error" />,
         badge: 'error',
         border: 'border-l-[3px] border-l-status-error',
         bg: 'bg-red-50/40',
         label: 'Enemies',
     },
     neutral: {
-        icon: <Minus className="w-4 h-4 text-status-warning" />,
+        icon: <Minus className="w-5 h-5 text-status-warning" />,
         badge: 'warning',
         border: 'border-l-[3px] border-l-status-warning',
         bg: 'bg-amber-50/40',
@@ -100,13 +100,13 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
             header: '',
             headerClassName: 'bg-surface-warm/50',
             cellClassName: cn(TYPOGRAPHY.label, "bg-surface-warm/50 !mb-0 !p-0"),
-            width: 'w-28',
+            width: 'w-32',
             render: (row: RelationRow) => {
                 const meta = ROW_META[row.kind];
                 return (
-                    <div className={cn("flex items-center gap-2 h-full px-3 py-2", meta.border, meta.bg)}>
+                    <div className={cn("flex items-center gap-2 h-full px-3 py-2.5", meta.border, meta.bg)}>
                         {meta.icon}
-                        <span className="font-semibold text-ink/80">{meta.label}</span>
+                        <span className="font-semibold text-ink/80 text-[15px]">{meta.label}</span>
                     </div>
                 );
             },
@@ -115,7 +115,8 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
             key: planetName,
             header: planetName,
             align: 'center' as const,
-            cellClassName: cn(TYPOGRAPHY.value, "align-top min-w-[80px] font-normal"),
+            headerClassName: 'text-[16px] font-semibold',
+            cellClassName: cn(TYPOGRAPHY.value, "align-top min-w-[80px] font-normal text-[15px]"),
             render: (row: RelationRow) => {
                 let list: string[] = [];
                 if (row.kind === 'friends') {
@@ -129,13 +130,13 @@ export default function TemporalRelationshipTable({ data, className }: TemporalR
                 const meta = ROW_META[row.kind];
 
                 return (
-                    <div className="flex flex-col gap-1.5 items-center">
+                    <div className="flex flex-col gap-2 items-center">
                         {list.map((name: string) => (
-                            <Badge key={name} variant={meta.badge} size="sm">
+                            <Badge key={name} variant={meta.badge} size="md" className="font-normal text-[14px]">
                                 {name}
                             </Badge>
                         ))}
-                        {list.length === 0 && <span className="text-ink/30">{'\u2014'}</span>}
+                        {list.length === 0 && <span className="text-ink/30 text-[14px]">{'\u2014'}</span>}
                     </div>
                 );
             },

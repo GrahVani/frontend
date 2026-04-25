@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Loader2, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Loader2, ChevronRight, Milestone } from 'lucide-react';
 import { clientApi } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
@@ -63,6 +63,7 @@ export default function IntegratedDashaViewer({
     const [viewingPeriods, setViewingPeriods] = useState<DashaNode[]>([]);
     const [isSubLevelFetching, setIsSubLevelFetching] = useState(false);
     const [selectedIntelPlanet, setSelectedIntelPlanet] = useState<string | null>(null);
+    const [selectedCycle, setSelectedCycle] = useState<number>(1);
 
     const isVimshottari = dashaType === 'vimshottari';
     const isTribhagi = dashaType.includes('tribhagi');
@@ -74,9 +75,63 @@ export default function IntegratedDashaViewer({
     const isDwisaptati = dashaType === 'dwisaptati';
     const isAshtottari = dashaType === 'ashtottari';
     const isChara = dashaType === 'chara';
-    const isShasthihayani = dashaType === 'shastihayani' || Boolean(((dashaData?.mahadashas as any)?.meta as any)?.shastihayani_condition);
+    const isShasthihayani = dashaType === 'shasthihayani' || Boolean(((dashaData?.mahadashas as any)?.meta as any)?.shastihayani_condition);
     const isShattrimshatsama = dashaType === 'shattrimshatsama' || Boolean(((dashaData?.mahadashas as any)?.meta as any)?.shattrimshatsama_condition);
 
+    const isCycleBased = isTribhagi || isShodashottari || isDwadashottari || isPanchottari || isSatabdika || isDwisaptati || isShattrimshatsama;
+
+    const getPlanetsPerCycle = (type: string): number => {
+        switch (type) {
+            case 'tribhagi': return 9;
+            case 'shodashottari': return 8;
+            case 'dwadashottari': return 8;
+            case 'panchottari': return 7;
+            case 'satabdika': return 7;
+            case 'dwisaptati': return 8;
+            case 'shattrimshatsama': return 8;
+            default: return 9;
+        }
+    };
+
+    const ERA_NAMES: Record<number, string> = {
+        1: "First Era (Childhood To Youth)",
+        2: "Second Era (Adulthood)",
+        3: "Third Era (Maturity & Wisdom)",
+        4: "Fourth Era (Legacy)"
+    };
+
+    // Group periods by cycle for cycle-based dashas
+    const cycles = useMemo(() => {
+        if (!dashaTree.length || !isCycleBased || currentLevel > 0) return {};
+        const grouped: Record<number, DashaNode[]> = {};
+        const planetsPerCycle = getPlanetsPerCycle(dashaType);
+        dashaTree.forEach((p, idx) => {
+            const cNum = (p.raw?.cycle as number) || Math.floor(idx / planetsPerCycle) + 1;
+            if (!grouped[cNum]) grouped[cNum] = [];
+            grouped[cNum].push(p);
+        });
+        return grouped;
+    }, [dashaTree, isCycleBased, currentLevel, dashaType]);
+
+    const availableCycles = useMemo(() => {
+        return Object.keys(cycles).map(Number).sort((a, b) => a - b);
+    }, [cycles]);
+
+    const activeCycleNum = useMemo(() => {
+        if (!availableCycles.length) return 1;
+        for (const cNum of availableCycles) {
+            if (cycles[cNum]?.some(p => p.isCurrent)) return cNum;
+        }
+        return availableCycles[0];
+    }, [cycles, availableCycles]);
+
+    useEffect(() => {
+        if (activeCycleNum && isCycleBased && currentLevel === 0) {
+            setSelectedCycle(activeCycleNum);
+        }
+    }, [activeCycleNum, isCycleBased, currentLevel]);
+
+    const isKP = ayanamsa.toLowerCase() === 'kp';
     const allowMathematicalDrillDown = isVimshottari && !isTribhagi && !isShodashottari && !isDwadashottari && !isPanchottari && !isChaturshitisama && !isSatabdika && !isDwisaptati && !isShasthihayani && !isShattrimshatsama && !isAshtottari;
 
     useEffect(() => {
@@ -125,7 +180,6 @@ export default function IntegratedDashaViewer({
     }, [dashaTree, selectedPath, currentLevel]);
 
     const handleDrillDown = async (period: DashaNode) => {
-        if (isTribhagi) return;
         const isMahaLevel = currentLevel === 0;
         const isAntarLevel = currentLevel === 1;
 
@@ -161,7 +215,7 @@ export default function IntegratedDashaViewer({
         }
 
         let nextLevelPeriods = period.sublevel || [];
-        if ((!nextLevelPeriods || nextLevelPeriods.length === 0) && allowMathematicalDrillDown && currentLevel < 4) {
+        if ((!nextLevelPeriods || nextLevelPeriods.length === 0) && allowMathematicalDrillDown && currentLevel < (isKP ? 2 : 4)) {
             nextLevelPeriods = generateVimshottariSubperiods(period);
             period.sublevel = nextLevelPeriods;
         }
@@ -199,6 +253,19 @@ export default function IntegratedDashaViewer({
         return isChara ? String(n.raw?.sign_name || name) : (PLANET_ABBREVIATIONS[name] || name.substring(0, 2));
     }).join('-') + (selectedPath.length > 0 ? '-' : '');
 
+    // Filter periods by selected cycle when at level 0 for cycle-based dashas
+    const displayPeriods = (isCycleBased && currentLevel === 0 && availableCycles.length > 0)
+        ? (cycles[selectedCycle] || [])
+        : viewingPeriods;
+
+    const extractYear = (dateStr?: string) => {
+        if (!dateStr) return '';
+        const fmt = formatDate(dateStr);
+        if (fmt.date === '—') return '';
+        const parts = fmt.date.split('-');
+        return parts.length === 3 ? parts[2] : '';
+    };
+
     return (
         <div className="flex flex-col h-full overflow-hidden">
             {/* Navigation Header */}
@@ -219,6 +286,50 @@ export default function IntegratedDashaViewer({
                 </div>
             )}
 
+            {/* Cycle Tabs - for cycle-based dashas at level 0 */}
+            {isCycleBased && currentLevel === 0 && availableCycles.length > 1 && (
+                <div className="shrink-0 px-2 py-1.5 border-b border-gold-primary/10 bg-surface-warm/20">
+                    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+                        <div className="flex bg-gold-soft/40 rounded-lg p-0.5 gap-0.5 border border-gold-primary/10 backdrop-blur-sm">
+                            {availableCycles.map((c) => {
+                                const isActive = selectedCycle === c;
+                                const cyclePeriods = cycles[c] || [];
+                                const startYear = cyclePeriods.length > 0 ? extractYear(cyclePeriods[0].startDate) : '';
+                                const endYear = cyclePeriods.length > 0 ? extractYear(cyclePeriods[cyclePeriods.length - 1].endDate) : '';
+                                return (
+                                    <button
+                                        key={c}
+                                        onClick={() => setSelectedCycle(c)}
+                                        className={cn(
+                                            "flex items-center gap-1 px-2 py-1 rounded-md transition-all duration-200 whitespace-nowrap",
+                                            isActive
+                                                ? "bg-primary text-active-glow shadow-sm font-semibold"
+                                                : "hover:bg-primary/5 text-ink/70 font-medium"
+                                        )}
+                                    >
+                                        <span className="text-[9px] uppercase tracking-wider">Cycle {c}</span>
+                                        {startYear && endYear && (
+                                            <>
+                                                <span className="text-[9px] opacity-50">|</span>
+                                                <span className="text-[9px] font-mono opacity-80">{startYear}-{endYear}</span>
+                                            </>
+                                        )}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                        {isTribhagi && (
+                            <div className="hidden sm:flex items-center gap-1 ml-auto">
+                                <span className="text-[9px] font-bold text-ink/50 flex items-center gap-1 uppercase tracking-wider bg-gold-soft/30 px-2 py-0.5 rounded-md border border-gold-primary/10">
+                                    <Milestone className="w-2.5 h-2.5 text-gold-dark" />
+                                    {ERA_NAMES[selectedCycle] || `Cycle ${selectedCycle}`}
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+
             <div className="flex-1 bg-white/40 p-0.5 flex flex-col min-h-0">
                 <div className="flex-1 flex flex-col h-full">
                     {/* Header Strip - Fixed height */}
@@ -233,12 +344,12 @@ export default function IntegratedDashaViewer({
 
                     {/* Filling Rows - Stretches to fill available height */}
                     <div className="flex-1 flex flex-col min-h-0">
-                        {viewingPeriods.length > 0 ? (
-                            viewingPeriods.map((period, idx) => {
+                        {displayPeriods.length > 0 ? (
+                            displayPeriods.map((period, idx) => {
                                 const startFmt = formatDate(period.startDate);
                                 const endFmt = formatDate(period.endDate);
                                 const durationStr = calculateDuration(period.startDate, period.endDate);
-                                const isClickable = (currentLevel === 0 || period.canDrillFurther || (isAshtottari && currentLevel < 2) || (allowMathematicalDrillDown && currentLevel < 4));
+                                const isClickable = (currentLevel === 0 || period.canDrillFurther || (isAshtottari && currentLevel < 2) || (allowMathematicalDrillDown && currentLevel < (isKP ? 2 : 4)));
                                 const nameStr = period.planet || period.lord || "";
                                 const pName = isChara ? String(period.raw?.sign_name || nameStr) : (PLANET_ABBREVIATIONS[nameStr] || nameStr.substring(0, 2));
 
@@ -262,7 +373,12 @@ export default function IntegratedDashaViewer({
                                                 {selectedPath.length > 0 && (
                                                     <span className="!text-primary font-semibold shrink-0 tracking-tighter mr-0.5 !text-[11px] font-mono">{pathPrefix}</span>
                                                 )}
-                                                <span className={cn("font-semibold !text-primary !text-[12.5px] tracking-tight")}>{pName}</span>
+                                                <span className={cn(
+                                                    "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold border shadow-sm shrink-0",
+                                                    PLANET_COLORS[period.planet || period.lord || ''] || "bg-white text-primary border-gold-primary/20"
+                                                )}>
+                                                    {pName}
+                                                </span>
                                             </div>
                                             {period.isCurrent && (
                                                 <span className="ml-auto px-1 py-0.5 bg-green-500/20 border border-green-500/30 rounded-full leading-none text-green-700 font-bold text-[8px] shrink-0">

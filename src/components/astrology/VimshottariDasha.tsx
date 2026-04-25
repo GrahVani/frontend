@@ -222,6 +222,7 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
                             onToggle={toggle}
                             compact={compact}
                             path={[d.planet]}
+                            maxDepth={settings.ayanamsa.toLowerCase() === 'kp' ? 2 : 4}
                         />
                     ))}
             </div>
@@ -229,17 +230,18 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
     );
 }
 
-function DashaItem({ level, depth, expanded, onToggle, compact = false, path }: {
+function DashaItem({ level, depth, expanded, onToggle, compact = false, path, maxDepth = 4 }: {
     level: DashaLevel,
     depth: number,
     expanded: string[],
     onToggle: (id: string, level: DashaLevel, depth: number, path: string[]) => void,
     compact?: boolean,
     path: string[]
+    maxDepth?: number;
 }) {
     const uniqueId = path.join('-');
     const isExpanded = expanded.includes(uniqueId);
-    const canExpand = (level.sublevels && level.sublevels.length > 0) || depth < 4;
+    const canExpand = (level.sublevels && level.sublevels.length > 0) || depth < maxDepth;
     const now = new Date();
     const isActive = new Date(level.start) <= now && new Date(level.end) >= now;
 
@@ -300,6 +302,7 @@ function DashaItem({ level, depth, expanded, onToggle, compact = false, path }: 
                                 onToggle={onToggle}
                                 compact={compact}
                                 path={[...path, s.planet]}
+                                maxDepth={maxDepth}
                             />
                         ))
                     ) : (

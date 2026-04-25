@@ -47,11 +47,11 @@ export function getPlanetSymbol(name: string): string {
  * Format planet label based on display mode
  */
 export function formatPlanetLabel(
-    name: string, 
+    name: string,
     mode: 'name' | 'symbol' | 'both' = 'name'
 ): string {
     const symbol = getPlanetSymbol(name);
-    
+
     switch (mode) {
         case 'symbol':
             return symbol;

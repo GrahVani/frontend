@@ -148,7 +148,7 @@ export default function KpDashboardPage() {
             <div className={cn("flex-1 min-h-0 flex flex-col xl:flex-row gap-4", activeTab === 'ashtakavarga' ? "overflow-y-auto" : "")}>
                 {/* Left: Cuspal Chart + Dasha (40%) */}
                 {activeTab !== 'ashtakavarga' && (
-                    <div className="w-full xl:w-[40%] shrink-0 flex flex-col min-h-0 h-full gap-4">
+                    <div className="w-full xl:w-[30%] shrink-0 flex flex-col min-h-0 h-full gap-4">
                         {/* Cuspal Chart */}
                         <div className="prem-card rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm flex-[3] min-h-0">
                             <div className="bg-gold-primary/10 px-3 py-1.5 border-b border-gold-primary/15 shrink-0 flex justify-between items-center">
@@ -188,7 +188,7 @@ export default function KpDashboardPage() {
                 )}
 
                 {/* Right: Tab Bar + Tab Content (60%) */}
-                <div className={cn("w-full flex flex-col min-h-0 h-full overflow-hidden", activeTab === 'ashtakavarga' ? "xl:w-full" : "xl:w-[60%]")}>
+                <div className={cn("w-full flex flex-col min-h-0 h-full overflow-hidden", activeTab === 'ashtakavarga' ? "xl:w-full" : "xl:w-[70%]")}>
                     {/* Tab Bar — spans right column only */}
                     {showHeader && (
                         <div className="shrink-0 relative z-10 w-full">

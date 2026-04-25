@@ -296,7 +296,11 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
             <main className="flex-1 relative transition-all duration-500" aria-label="Vedic astrology content">
                 <div className={cn(
                     "w-full h-full",
-                    isDashboard ? (pathname === "/vedic-astrology/customize" || pathname === "/vedic-astrology/kp" ? "p-0" : "p-0 pt-4") : "p-1 sm:p-2 lg:p-4 pb-10"
+                    isDashboard
+                        ? (pathname === "/vedic-astrology/customize" || pathname === "/vedic-astrology/kp" ? "p-0" : "p-0 pt-4")
+                        : pathname === "/vedic-astrology/dashas"
+                            ? "p-0"
+                            : "p-1 sm:p-2 lg:p-4 pb-10"
                 )}>
                     <PageContainer variant={isDashboard ? "full" : "wide"}>
                         {children}

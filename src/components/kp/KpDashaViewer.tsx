@@ -51,7 +51,7 @@ export default function KpDashaViewer({ className }: KpDashaViewerProps) {
     useEffect(() => {
         const dashaData = vimshottariResponse?.data;
         if (dashaData) {
-            const processedTree = processDashaResponse(dashaData, 4);
+            const processedTree = processDashaResponse(dashaData, 2);
             if (processedTree.length > 0) {
                 setDashaTree(processedTree.slice(0, 9));
             }
@@ -178,7 +178,7 @@ export default function KpDashaViewer({ className }: KpDashaViewerProps) {
 function DashaDrillRow({ node, depth, pathPrefix, onDrill }: { node: DashaNode; depth: number; pathPrefix: string; onDrill: () => void }) {
     const isActive = node.isCurrent;
     const hasData = node.sublevel && node.sublevel.length > 0;
-    const isDrillable = hasData || depth < 4;
+    const isDrillable = depth < 2;
 
     const progress = useMemo(() => {
         if (!isActive || !node.startDate || !node.endDate) return 0;
@@ -223,7 +223,7 @@ function DashaDrillRow({ node, depth, pathPrefix, onDrill }: { node: DashaNode; 
                             </span>
                         )}
                     </div>
-                   
+
                 </div>
             </td>
             <td className={cn("px-1.5 py-1 overflow-hidden", TYPOGRAPHY.dateAndDuration)}>
