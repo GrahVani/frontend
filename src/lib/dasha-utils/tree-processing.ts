@@ -59,12 +59,49 @@ function mapDashaLevelRecursive(node: RawDashaPeriod, level: number, inheritedSt
     };
 }
 
+/** Detect how many levels deep the raw dasha data goes */
+function detectDashaDepth(node: RawDashaPeriod, currentDepth: number = 0): number {
+    if (!node) return currentDepth;
+    const children = getSublevels(node);
+    if (!Array.isArray(children) || children.length === 0) {
+        return currentDepth;
+    }
+    // Find the deepest child
+    let maxChildDepth = currentDepth + 1;
+    for (const child of children) {
+        const childDepth = detectDashaDepth(child, currentDepth + 1);
+        if (childDepth > maxChildDepth) maxChildDepth = childDepth;
+    }
+    return maxChildDepth;
+}
+
+/** Auto-detect max level by scanning all periods for the deepest tree */
+function autoDetectMaxLevel(data: RawDashaPeriod): number {
+    const periods = extractPeriodsArray(data);
+    if (periods.length === 0) return 4; // Default fallback
+    // Scan all periods to find the maximum depth (first period may be a balance period with fewer levels)
+    let maxDepth = 0;
+    for (const period of periods) {
+        const depth = detectDashaDepth(period, 0);
+        if (depth > maxDepth) maxDepth = depth;
+    }
+    // depth 0 = no children → maxLevel 0 (just maha)
+    // depth 1 = maha + antar → maxLevel 1
+    // depth 2 = maha + antar + pratyantar → maxLevel 2
+    // depth 3 = maha + antar + pratyantar + sookshma → maxLevel 3
+    // depth 4 = maha + antar + pratyantar + sookshma + prana → maxLevel 4
+    return maxDepth;
+}
+
 /** Process the full API response into a standardized Dasha tree */
-export function processDashaResponse(data: RawDashaPeriod, maxLevel: number = 4): DashaNode[] {
+export function processDashaResponse(data: RawDashaPeriod, maxLevel?: number): DashaNode[] {
     if (!data) return [];
 
     const periods = extractPeriodsArray(data);
     if (periods.length === 0) return [];
+
+    // Auto-detect depth if maxLevel not provided
+    const effectiveMaxLevel = maxLevel !== undefined ? maxLevel : autoDetectMaxLevel(data);
 
     let currentStart = '';
 
@@ -84,7 +121,7 @@ export function processDashaResponse(data: RawDashaPeriod, maxLevel: number = 4)
     return periods.map((m: RawDashaPeriod) => {
         const s = m.start_date || m.start;
         if (s) currentStart = s;
-        const mapped = mapDashaLevelRecursive(m, 0, currentStart, maxLevel);
+        const mapped = mapDashaLevelRecursive(m, 0, currentStart, effectiveMaxLevel);
         const e = m.end_date || m.end;
         if (e) currentStart = e;
         return mapped;

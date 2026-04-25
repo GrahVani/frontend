@@ -5,7 +5,7 @@ import { Save, Settings2 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { useToast } from "@/context/ToastContext";
 
-type Ayanamsa = "lahiri" | "raman" | "kp";
+type Ayanamsa = "lahiri" | "raman" | "kp" | "yukteswar" | "bhasin" | "true_chitra";
 type ChartStyle = "north_indian" | "south_indian" | "east_indian";
 
 const SETTINGS_KEY = "grahvani:chart-preferences";
@@ -96,6 +96,9 @@ export default function SettingsPage() {
                         { value: "lahiri", label: "Lahiri (Chitrapaksha)", desc: "Most common in India" },
                         { value: "raman", label: "Raman", desc: "B.V. Raman's system" },
                         { value: "kp", label: "KP (Krishnamurti)", desc: "Krishnamurti Paddhati" },
+                        { value: "yukteswar", label: "Sri Yukteswar", desc: "Galactic Center based precision" },
+                        { value: "bhasin", label: "Bhasin", desc: "J.N. Bhasin ayanamsa system" },
+                        { value: "true_chitra", label: "True Chitra", desc: "True Chitra ayanamsa — dasha-only system" },
                     ] as const).map((option) => (
                         <button
                             key={option.value}

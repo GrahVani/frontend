@@ -12,7 +12,7 @@ import {
 /**
  * Supported Ayanamsa Systems for the Customize Page
  */
-export const AYANAMSA_SYSTEMS = ['Lahiri', 'KP', 'Raman', 'Yukteswar', 'Bhasin'] as const;
+export const AYANAMSA_SYSTEMS = ['Lahiri', 'KP', 'Raman', 'Yukteswar', 'Bhasin', 'TrueChitra'] as const;
 export type AyanamsaSystem = typeof AYANAMSA_SYSTEMS[number];
 
 /**
@@ -24,7 +24,8 @@ export const AYANAMSA_OPTIONS: { value: AyanamsaSystem; label: string; color: st
     { value: 'KP', label: 'KP', color: '#E6C97A' },
     { value: 'Raman', label: 'Raman', color: '#D17C4D' },
     { value: 'Yukteswar', label: 'Yukteswar', color: '#7C4DFF' },
-    { value: 'Bhasin', label: 'Bhasin', color: '#4CAF50' }
+    { value: 'Bhasin', label: 'Bhasin', color: '#4CAF50' },
+    { value: 'TrueChitra', label: 'True Chitra', color: '#9C27B0' }
 ];
 
 export interface WidgetRef {
@@ -291,6 +292,23 @@ export const AYANAMSA_HIERARCHY: AyanamsaOption[] = [
                 ]
             }
         ]
+    },
+    {
+        value: 'TrueChitra',
+        label: 'True Chitra',
+        description: 'True Chitra ayanamsa — specialized dasha-only system with 12 dasha variants.',
+        categories: [
+            {
+                id: 'cat-true-chitra',
+                name: 'True Chitra Dasha Systems',
+                widgets: [
+                    { id: 'prana' }, { id: 'ashtottari' }, { id: 'tribhagi' }, { id: 'tribhagi_40' },
+                    { id: 'shodashottari' }, { id: 'dwadashottari' }, { id: 'dwisaptati' },
+                    { id: 'shastihayani' }, { id: 'shattrimshatsama' }, { id: 'panchottari' },
+                    { id: 'satabdika' }, { id: 'chaturshitisama' }
+                ]
+            }
+        ]
     }
 ];
 
@@ -429,6 +447,22 @@ export const AYANAMSA_CONFIGS: Record<AyanamsaSystem, AyanamsaConfig> = {
             'cat-dashas',
             'cat-chakra'
         ]
+    },
+    /**
+     * True Chitra System
+     * Supports:
+     * - Dasha Systems ONLY (no natal/divisional charts)
+     * - 12 specialized dasha variants under True Chitra ayanamsa
+     */
+    TrueChitra: {
+        title: 'True Chitra Workbench',
+        subtitle: 'True Chitra Ayanamsa Dasha Analysis',
+        themeColor: '#9C27B0',
+        pillLabel: 'True Chitra',
+        allowedCategoryIds: [
+            'all',
+            'cat-true-chitra'
+        ]
     }
 };
 
@@ -491,6 +525,13 @@ export const WORKBENCH_CATEGORIES: WorkbenchCategory[] = [
         description: 'Triple-ring planetary alignment',
         icon: IterationCcw,
         allowedAyanamsas: ['Lahiri', 'KP', 'Raman', 'Yukteswar', 'Bhasin']
+    },
+    {
+        id: 'cat-true-chitra',
+        name: 'True Chitra Dasha',
+        description: 'True Chitra ayanamsa dasha systems',
+        icon: History,
+        allowedAyanamsas: ['TrueChitra']
     }
 ];
 

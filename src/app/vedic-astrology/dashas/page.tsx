@@ -82,11 +82,15 @@ export default function VedicDashasPage() {
     const { ayanamsa, chartStyle, recentClientIds } = useAstrologerStore();
     const settings = { ayanamsa, chartStyle, recentClientIds };
 
-    // D1 Chart Logic for Sidebar
-    const activeSystem = settings.ayanamsa.toLowerCase();
+    // Normalize ayanamsa for API calls: TrueChitra -> true_chitra
+    const apiAyanamsa = settings.ayanamsa === 'TrueChitra' ? 'true_chitra' : settings.ayanamsa.toLowerCase();
+    const isTrueChitra = settings.ayanamsa === 'TrueChitra';
+
+    // D1 Chart Logic for Sidebar (only for non-TrueChitra systems)
+    const activeSystem = apiAyanamsa;
     const d1Chart = React.useMemo(() => {
-        return processedCharts[`D1_${activeSystem}`];
-    }, [activeSystem, processedCharts]);
+        return isTrueChitra ? null : processedCharts[`D1_${activeSystem}`];
+    }, [activeSystem, processedCharts, isTrueChitra]);
 
     const { planets: displayPlanets, ascendant: ascendantSign } = parseChartData(d1Chart?.chartData);
 
@@ -111,37 +115,50 @@ export default function VedicDashasPage() {
     const { data: treeResponse, isLoading: treeLoading, error: treeError } = useDasha(
         clientDetails?.id || '',
         'mahadasha',
-        settings.ayanamsa.toLowerCase()
+        apiAyanamsa
     );
 
     const { data: otherData, isLoading: otherLoading, error: otherError } = useOtherDasha(
         clientDetails?.id || '',
         selectedDashaType,
-        settings.ayanamsa.toLowerCase()
+        apiAyanamsa
     );
 
     const isVimshottari = selectedDashaType === 'vimshottari';
     const isLoading = isVimshottari ? treeLoading : otherLoading;
 
-    // Derived flags for specialized views
-    const isTribhagi = selectedDashaType.includes('tribhagi');
+    // Dasha type flags (used for routing to specialized components & drill-down logic)
+    const isAshtottari = selectedDashaType === 'ashtottari';
+    const isChara = selectedDashaType === 'chara';
+    const isTribhagi = selectedDashaType === 'tribhagi';
     const isShodashottari = selectedDashaType === 'shodashottari';
     const isDwadashottari = selectedDashaType === 'dwadashottari';
-    const isPanchottari = selectedDashaType.includes('panchottari');
+    const isPanchottari = selectedDashaType === 'panchottari';
     const isChaturshitisama = selectedDashaType === 'chaturshitisama';
     const isSatabdika = selectedDashaType === 'satabdika';
     const isDwisaptati = selectedDashaType === 'dwisaptati';
-    const isAshtottari = selectedDashaType === 'ashtottari';
-    const isChara = selectedDashaType === 'chara';
-    // Fallback detection for Shastihayani via metadata condition
-    const hasShasthiMeta = Boolean(((otherData?.data?.mahadashas as Record<string, unknown> | undefined)?.meta as Record<string, unknown> | undefined)?.shastihayani_condition);
-    const isShasthihayani = selectedDashaType === 'shastihayani' || hasShasthiMeta;
-    const hasShattrimMeta = Boolean(((otherData?.data?.mahadashas as Record<string, unknown> | undefined)?.meta as Record<string, unknown> | undefined)?.shattrimshatsama_condition);
-    const isShattrimshatsama = selectedDashaType === 'shattrimshatsama' || hasShattrimMeta;
+    const isShasthihayani = selectedDashaType === 'shastihayani';
+    const isShattrimshatsama = selectedDashaType === 'shattrimshatsama';
 
-    const allowMathematicalDrillDown = isVimshottari && !isTribhagi && !isShodashottari && !isDwadashottari && !isPanchottari && !isChaturshitisama && !isSatabdika && !isDwisaptati && !isShasthihayani && !isShattrimshatsama && !isAshtottari;
+    // Compute max available levels from the processed tree
+    // This is dynamic — each dasha system returns different depths
+    const maxAvailableLevel = useMemo(() => {
+        if (!dashaTree || dashaTree.length === 0) return 0;
+        // Check first maha's children depth
+        const firstMaha = dashaTree[0];
+        let depth = 0;
+        let current = firstMaha;
+        while (current?.sublevel && current.sublevel.length > 0 && depth < 4) {
+            depth++;
+            current = current.sublevel[0];
+        }
+        return depth;
+    }, [dashaTree]);
 
-    // Effect: Reset to Vimshottari if Raman/KP is selected, unless KP is using Chara
+    // Show drill-down UI only if data has 2+ levels
+    const allowMathematicalDrillDown = maxAvailableLevel >= 1;
+
+    // Effect: Reset dasha type when ayanamsa changes
     useEffect(() => {
         if (settings.ayanamsa === 'Raman' && selectedDashaType !== 'vimshottari') {
             setSelectedDashaType('vimshottari');
@@ -150,6 +167,12 @@ export default function VedicDashasPage() {
             setDashaTree([]);
         } else if (settings.ayanamsa === 'KP' && selectedDashaType !== 'vimshottari') {
             setSelectedDashaType('vimshottari');
+            setCurrentLevel(0);
+            setSelectedPath([]);
+            setDashaTree([]);
+        } else if (settings.ayanamsa === 'TrueChitra' && selectedDashaType === 'vimshottari') {
+            // True Chitra has no vimshottari — default to first available dasha
+            setSelectedDashaType('ashtottari');
             setCurrentLevel(0);
             setSelectedPath([]);
             setDashaTree([]);
@@ -163,11 +186,9 @@ export default function VedicDashasPage() {
     useEffect(() => {
         const dashaData = isVimshottari ? treeResponse?.data : otherData?.data;
         if (dashaData) {
-            // Use the robust processor from utils
-            // HARD-LOCK: Specialized systems get maxLevel 1 (Antardasha), Vimshottari gets 4 (Prana)
-            // HARD-LOCK: Specialized systems get maxLevel 1 (Antardasha), Vimshottari gets 4 (Prana), Ashtottari gets 2 (Pratyantar)
-            const maxLevel = isVimshottari ? 4 : (isAshtottari ? 2 : (isTribhagi || isShodashottari || isDwadashottari || isPanchottari || isChaturshitisama || isSatabdika || isDwisaptati || isShasthihayani || isShattrimshatsama ? 1 : 4));
-            const processedTree = processDashaResponse(dashaData, maxLevel);
+            // Auto-detect depth from the API response — no hard-coded limits
+            // Each dasha system returns its own natural depth (2-5 levels)
+            const processedTree = processDashaResponse(dashaData);
 
             if (processedTree.length > 0) {
                 // Vimshottari has exactly 9 planetary lords per cycle - limit to one cycle
@@ -175,10 +196,6 @@ export default function VedicDashasPage() {
                 setDashaTree(finalTree);
 
                 // Real-time analysis of the current active sequence
-                // We can still use the raw response for this if findActiveDashaPath expects raw
-                // Or update findActiveDashaPath to handle processed notes.
-                // dasha-utils findActiveDashaPath handles raw. 
-                // Let's stick to that for the "Active Analysis" widget.
                 const analysis = findActiveDashaPath(dashaData);
                 setActiveAnalysis(analysis);
 
@@ -187,12 +204,11 @@ export default function VedicDashasPage() {
                 }
             }
         }
-    }, [treeResponse, otherData, isVimshottari, isTribhagi, isShodashottari, isDwadashottari, isPanchottari, isChaturshitisama, isSatabdika, isDwisaptati, isShasthihayani, isShattrimshatsama, isAshtottari]);
+    }, [treeResponse, otherData, isVimshottari]);
 
 
 
     // Derived Viewing Periods based on drill-down
-    // This allows traversing the full 5-level tree
     useEffect(() => {
         if ((!allowMathematicalDrillDown && !isAshtottari && currentLevel > 1) || (isAshtottari && currentLevel > 2)) {
             setCurrentLevel(0);
@@ -200,15 +216,11 @@ export default function VedicDashasPage() {
         }
 
         if (!allowMathematicalDrillDown || (isTribhagi && currentLevel >= 1) || (isShodashottari && currentLevel >= 1) || (isDwadashottari && currentLevel >= 1) || (isPanchottari && currentLevel >= 1) || (isChaturshitisama && currentLevel >= 1) || (isSatabdika && currentLevel >= 1) || (isDwisaptati && currentLevel >= 1) || (isAshtottari && currentLevel >= 2)) {
-            // Revert: If it's specialized and we are at Antardasha or deeper, don't allow further
             if ((isTribhagi || isShodashottari || isDwadashottari || isPanchottari || isChaturshitisama || isSatabdika || isDwisaptati) && currentLevel === 0) {
                 setViewingPeriods(dashaTree);
             } else if (!isTribhagi && !isShodashottari && !isDwadashottari && !isPanchottari && !isChaturshitisama && !isSatabdika && !isDwisaptati && !isAshtottari) {
                 setViewingPeriods(dashaTree);
             }
-            // For other systems, just show the root level (processed via standardizeDashaLevels previously)
-            // But now we rely on dashaTree being processed.
-            // Actually, the original logic for non-vimshottari was just showing root.
             if (!isVimshottari && !isTribhagi && !isShodashottari && !isDwadashottari && !isPanchottari && !isChaturshitisama && !isSatabdika && !isDwisaptati && !isAshtottari && !isChara) {
                 setViewingPeriods(dashaTree);
                 return;
@@ -216,17 +228,7 @@ export default function VedicDashasPage() {
         }
 
         let currentNodes = dashaTree;
-
-        // Traverse down the path
         for (const p of selectedPath) {
-            // p is the raw node in the old code, but let's see. 
-            // In handleDrillDown below, we should push the PLANET NAME or ID to path, 
-            // like the Demo does.
-            // Refactoring path to store IDs/Names is cleaner than storing objects.
-            // BUT, to minimize breaking changes, let's see what selectedPath stores.
-            // Currently it stores provided objects "raw".
-
-            // If selectedPath stores objects, we find the matching node in currentNodes
             const match = currentNodes.find(n => n.planet === (p.planet || p.lord));
             if (match && match.sublevel) {
                 currentNodes = match.sublevel;
@@ -235,10 +237,8 @@ export default function VedicDashasPage() {
                 break;
             }
         }
-
         setViewingPeriods(currentNodes);
-
-    }, [dashaTree, selectedPath, allowMathematicalDrillDown, isTribhagi, isShodashottari, isDwadashottari, isPanchottari, isChaturshitisama, isSatabdika, isDwisaptati, currentLevel, isAshtottari]);
+    }, [dashaTree, selectedPath, allowMathematicalDrillDown, isTribhagi, isShodashottari, isDwadashottari, isPanchottari, isChaturshitisama, isSatabdika, isDwisaptati, currentLevel, isAshtottari, isVimshottari, isChara]);
 
 
     // Navigation Methods (Refactored for Processed Tree)
@@ -410,9 +410,10 @@ export default function VedicDashasPage() {
             {/* ================================================================= */}
             {/* MAIN CONTENT - SPLIT LAYOUT */}
             {/* ================================================================= */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 h-[500px]">
+            <div className={`grid grid-cols-1 lg:grid-cols-12 gap-3 h-[500px] ${isTrueChitra ? 'h-auto' : ''}`}>
 
-                {/* LEFT COLUMN - NATAL CHART */}
+                {/* LEFT COLUMN - NATAL CHART (hidden for True Chitra) */}
+                {!isTrueChitra && (
                 <div className="lg:col-span-4 h-full">
                     <div className="prem-card rounded-2xl overflow-hidden bg-surface-pure flex flex-col h-full">
                         <div className={cn("px-4 py-2 border-b border-gold-primary/15 flex justify-between items-center shrink-0", COLORS.wbSectionHeader)}>
@@ -438,9 +439,10 @@ export default function VedicDashasPage() {
                         </div>
                     </div>
                 </div>
+                )}
 
                 {/* RIGHT COLUMN - DASHA TABLE */}
-                <div className="lg:col-span-8 h-full flex flex-col min-h-0">
+                <div className={isTrueChitra ? "lg:col-span-12 h-full flex flex-col min-h-0" : "lg:col-span-8 h-full flex flex-col min-h-0"}>
                     <div className="prem-card overflow-hidden flex flex-col h-full">
                         {/* Selector Tray - Fixed Top */}
                         <div className="p-4 border-b border-gold-primary/10 flex flex-wrap items-center justify-between gap-4 shrink-0">
@@ -457,6 +459,10 @@ export default function VedicDashasPage() {
                                             if (settings.ayanamsa === 'KP' || settings.ayanamsa === 'Raman') {
                                                 return sys.id === 'vimshottari';
                                             }
+                                            if (settings.ayanamsa === 'TrueChitra') {
+                                                // True Chitra supports all 12 specialized dashas (no vimshottari, no chara)
+                                                return sys.id !== 'vimshottari' && sys.id !== 'chara';
+                                            }
                                             // Chara is now primarily a Lahiri/Jaimini feature
                                             return true;
                                         }).map((sys, idx) => (
@@ -469,10 +475,10 @@ export default function VedicDashasPage() {
                                 </div>
                             </div>
 
-                            {/* Level Tabs */}
-                            {allowMathematicalDrillDown && !isTribhagi && !isShodashottari && !isDwadashottari && !isPanchottari && !isChaturshitisama && !isSatabdika && !isDwisaptati && !isShasthihayani && (
+                            {/* Level Tabs — show only levels that exist in the data */}
+                            {allowMathematicalDrillDown && (
                                 <div className="flex gap-1 overflow-x-auto">
-                                    {DASHA_LEVELS.filter((_, idx) => !isTribhagi || idx <= 1).map((level, idx) => (
+                                    {DASHA_LEVELS.filter((_, idx) => idx <= maxAvailableLevel).map((level, idx) => (
                                         <button
                                             key={level.id}
                                             onClick={() => handleBreadcrumbClick(idx - 1)}
@@ -494,7 +500,7 @@ export default function VedicDashasPage() {
                         </div>
 
                         {/* Breadcrumbs - Fixed Top */}
-                        {!isTribhagi && !isShodashottari && !isDwadashottari && !isPanchottari && !isChaturshitisama && !isSatabdika && !isDwisaptati && (
+                        {maxAvailableLevel >= 1 && (
                             <div className="px-4 py-3 bg-surface-pure border-b border-gold-primary/10 flex items-center gap-2 overflow-x-auto shrink-0">
                                 <button
                                     onClick={() => handleBreadcrumbClick(-1)}

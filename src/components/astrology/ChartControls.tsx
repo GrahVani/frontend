@@ -18,8 +18,13 @@ export default function ChartControls() {
 
     const updateAyanamsa = (newAyanamsa: string) => {
         setAyanamsa(newAyanamsa as Ayanamsa);
-        // Redirect to Kundali (Overview) page if system changed
-        router.push('/vedic-astrology/overview');
+        // True Chitra is dasha-only — redirect to Dashas page
+        // Other systems redirect to Overview (Kundali)
+        if (newAyanamsa === 'TrueChitra') {
+            router.push('/vedic-astrology/dashas');
+        } else {
+            router.push('/vedic-astrology/overview');
+        }
     };
 
     const [showAdvanced, setShowAdvanced] = React.useState(false);
@@ -78,6 +83,7 @@ export default function ChartControls() {
                             { value: 'KP', label: 'KP' },
                             { value: 'Yukteswar', label: 'Sri Yukteswar' },
                             { value: 'Bhasin', label: 'Bhasin' },
+                            { value: 'TrueChitra', label: 'True Chitra' },
                         ]}
                     />
                     <p className="text-[9px] text-gold-dark/60 mt-2 italic">* This updates your global astrologer preferences.</p>

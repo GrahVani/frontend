@@ -176,9 +176,38 @@ export function VedicClientProvider({ children }: { children: ReactNode }) {
     }, [clientDetails?.id]);
 
     // Persist Charts to Cache when fetched (ST-005)
+    // Excludes large dasha payloads to avoid QuotaExceededError
     useEffect(() => {
         if (clientDetails?.id && Object.keys(processedCharts).length > 0) {
-            sessionStorage.setItem(`${CHART_CACHE_KEY}_${clientDetails.id}`, JSON.stringify(processedCharts));
+            try {
+                // Strip large dasha data before caching — keep metadata only
+                const cacheable: ChartLookup = {};
+                for (const [key, chart] of Object.entries(processedCharts)) {
+                    if (key.startsWith('dasha_') || key.startsWith('dasha-')) {
+                        // Store dasha entries with truncated data (keep only first 2 items)
+                        const chartData = chart?.chartData;
+                        const truncatedData = Array.isArray(chartData)
+                            ? chartData.slice(0, 2)
+                            : typeof chartData === 'object' && chartData !== null
+                                ? { ...chartData, periods: Array.isArray((chartData as any).periods) ? (chartData as any).periods.slice(0, 2) : (chartData as any).periods }
+                                : chartData;
+                        cacheable[key] = {
+                            ...chart,
+                            chartData: truncatedData,
+                            _truncated: true,
+                        } as any;
+                    } else {
+                        cacheable[key] = chart;
+                    }
+                }
+                sessionStorage.setItem(`${CHART_CACHE_KEY}_${clientDetails.id}`, JSON.stringify(cacheable));
+            } catch (e) {
+                // Quota exceeded — clear cache and continue without caching
+                console.warn("[VedicClientContext] sessionStorage quota exceeded, skipping chart cache");
+                try {
+                    sessionStorage.removeItem(`${CHART_CACHE_KEY}_${clientDetails.id}`);
+                } catch {}
+            }
         }
     }, [processedCharts, clientDetails?.id]);
 

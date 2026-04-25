@@ -307,6 +307,25 @@ export const clientApi = {
                 hasCompatibility: false,
                 hasHorary: false,
             },
+            true_chitra: {
+                charts: {
+                    divisional: [],
+                    special: [],
+                    lagna: []
+                },
+                features: {
+                    dasha: ['prana', 'ashtottari', 'tribhagi', 'tribhagi_40', 'shodashottari', 'dwadashottari', 'dwisaptati', 'shastihayani', 'shattrimshatsama', 'panchottari', 'satabdika', 'chaturshitisama'],
+                    ashtakavarga: [],
+                    shadbala: [],
+                    compatibility: [],
+                    numerology: []
+                },
+                hasDivisional: false,
+                hasAshtakavarga: false,
+                hasNumerology: false,
+                hasCompatibility: false,
+                hasHorary: false,
+            },
         };
         return CAPABILITIES[system.toLowerCase()] || CAPABILITIES.lahiri;
     },
