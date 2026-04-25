@@ -47,7 +47,7 @@ function mapDashaLevelRecursive(node: RawDashaPeriod, level: number, inheritedSt
         endDate: eDate,
         isCurrent,
         canDrillFurther: level < maxLevel && hasChildren,
-        sublevel: level < maxLevel ? mappedChildren : [],
+        sublevel: mappedChildren,
         raw: {
             ...node,
             duration_years: node.duration_years || (node.duration && typeof node.duration === 'number' ? node.duration : undefined) || (() => {

@@ -133,7 +133,10 @@ export function extractPeriodsArray(data: RawDashaPeriod | RawDashaPeriod[]): Ra
             return data.ashtottari_data.dasha_sequence;
         }
 
-        // True Chitra Prana Dasha / recursive sub_periods structures
+        // True Chitra Prana Dasha (returns vimshottari_dasha key with recursive sub_periods)
+        if (data.vimshottari_dasha && Array.isArray(data.vimshottari_dasha)) {
+            return data.vimshottari_dasha;
+        }
         if (data.prana_dasha && Array.isArray(data.prana_dasha)) {
             return data.prana_dasha;
         }
