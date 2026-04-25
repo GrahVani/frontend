@@ -239,8 +239,8 @@ export default function VedicDashasPage() {
     const handleDrillDown = async (period: DashaNode) => {
         if (isTribhagi || isShodashottari || isDwadashottari || isPanchottari || isChaturshitisama || isSatabdika || isDwisaptati) return; // Disable global drill-down for specialized views
 
-        // ASHTOTTARI INCREMENTAL FETCH
-        if (isAshtottari && currentLevel === 1 && (!period.sublevel || period.sublevel.length === 0)) {
+        // ASHTOTTARI INCREMENTAL FETCH (only for non-TrueChitra — True Chitra JSON already has all levels)
+        if (isAshtottari && !isTrueChitra && currentLevel === 1 && (!period.sublevel || period.sublevel.length === 0)) {
             if (!clientDetails?.id) return;
             setIsSubLevelFetching(true);
             try {
