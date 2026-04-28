@@ -62,8 +62,8 @@ export default function LearnProgressPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
       {/* Header */}
-      <div className="bg-white border-b border-amber-200/60">
-        <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="bg-white border-b border-amber-200/60 shadow-sm">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <h1 className="text-3xl font-bold text-amber-900 mb-2">Your Learning Journey</h1>
           <p className="text-amber-600">
             Hey {firstName}, here's how you're progressing through Vedic astrology mastery.
@@ -71,7 +71,7 @@ export default function LearnProgressPage() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Overall Progress */}
         <div className="bg-white rounded-2xl border border-amber-200/60 p-6 mb-8">
           <div className="flex items-center gap-2 mb-6">

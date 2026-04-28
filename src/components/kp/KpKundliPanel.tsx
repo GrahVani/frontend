@@ -113,7 +113,7 @@ const DEFAULT_KP_CHART_SETTINGS = {
     planetSize: 17,
     houseSize: 14,
     degreeSize: 11,
-    showDegrees: true,
+    showDegrees: false,
 };
 
 export function KpCuspalChartCard() {

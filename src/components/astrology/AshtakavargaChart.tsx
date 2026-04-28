@@ -69,8 +69,8 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
                 <rect x="0" y="0" width="280" height="280" fill="var(--surface-warm)" />
 
                 {/* Chart lines */}
-                <g stroke="var(--header-border)" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="1" y="1" width="278" height="278" strokeWidth="2" />
+                <g stroke="#D97706" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="1" y="1" width="278" height="278" />
                     <line x1="0" y1="0" x2="280" y2="280" />
                     <line x1="280" y1="0" x2="0" y2="280" />
                     <line x1="140" y1="0" x2="0" y2="140" />

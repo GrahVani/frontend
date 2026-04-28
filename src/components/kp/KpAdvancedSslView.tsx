@@ -87,8 +87,8 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
     return (
         <div className={cn("space-y-5 animate-in fade-in duration-500", className)}>
             {/* Cusp Selector */}
-            <div className="flex items-center justify-center gap-1 p-1.5 bg-surface-warm rounded-xl border border-gold-primary/20 overflow-x-auto">
-                <button className="p-1.5 text-primary hover:text-gold-dark transition-colors shrink-0" onClick={() => setSelectedCusp(Math.max(1, selectedCusp - 1))}>
+            <div className="flex items-center justify-center gap-1 p-1.5 bg-amber-50/60 rounded-xl border border-amber-200/60 overflow-x-auto">
+                <button className="p-1.5 text-amber-700 hover:text-amber-900 transition-colors shrink-0" onClick={() => setSelectedCusp(Math.max(1, selectedCusp - 1))}>
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
                 </button>
                 {Array.from({ length: 12 }, (_, i) => i + 1).map(cusp => {
@@ -102,8 +102,8 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                             className={cn(
                                 "flex flex-col items-center justify-center min-w-[48px] h-14 rounded-lg transition-all duration-200 shrink-0",
                                 isActive
-                                    ? "bg-gradient-to-r from-gold-primary to-gold-dark text-white shadow-md scale-105"
-                                    : "bg-white/60 text-primary hover:bg-white hover:shadow-sm border border-gold-primary/20"
+                                    ? "bg-amber-600 text-white shadow-md scale-105"
+                                    : "bg-white/60 text-amber-900 hover:bg-white hover:shadow-sm border border-amber-200/60"
                             )}
                         >
                             <span className="text-[20px] leading-none">{ZODIAC_SYMBOLS[signIdx] || '♈'}</span>
@@ -111,7 +111,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                         </button>
                     );
                 })}
-                <button className="p-1.5 text-primary hover:text-gold-dark transition-colors shrink-0" onClick={() => setSelectedCusp(Math.min(12, selectedCusp + 1))}>
+                <button className="p-1.5 text-amber-700 hover:text-amber-900 transition-colors shrink-0" onClick={() => setSelectedCusp(Math.min(12, selectedCusp + 1))}>
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                 </button>
             </div>
@@ -119,7 +119,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
             {/* Main Content */}
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
                 {/* Left Panel — SSL Chain */}
-                <div className="xl:col-span-2 bg-white rounded-xl p-5 border border-gold-primary/20 shadow-sm">
+                <div className="xl:col-span-2 bg-white rounded-xl p-5 border border-amber-200/60 shadow-sm">
                     {/* Header */}
                     <div className="flex items-center justify-between mb-3">
                         <div>
@@ -128,21 +128,21 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                             </h3>
                             <p className="text-[11px] text-primary/60 mt-0.5 font-medium">Final confirmation of house promise</p>
                         </div>
-                        <span className="px-2.5 py-1 bg-surface-warm rounded border border-gold-primary/20 text-[12px] text-primary font-medium uppercase tracking-wide">
+                        <span className="px-2.5 py-1 bg-amber-50 rounded border border-amber-200/60 text-[12px] text-amber-900 font-medium uppercase tracking-wide">
                             {selectedCusp}{[1, 21, 31].includes(selectedCusp) ? 'st' : [2, 22].includes(selectedCusp) ? 'nd' : [3, 23].includes(selectedCusp) ? 'rd' : 'th'} House
                         </span>
                     </div>
 
                     {/* House Topic + Degree */}
-                    <div className="mb-5 p-4 bg-surface-warm/50 rounded-xl border border-gold-primary/20">
+                    <div className="mb-5 p-4 bg-amber-50/50 rounded-xl border border-amber-200/60">
                         <div className="flex items-start justify-between">
                             <div>
-                                <h2 className="text-[18px] font-semibold text-primary">{houseInfo?.topic}</h2>
-                                <p className="text-[24px] font-light text-primary mt-1">{signName} <span className="text-[18px] font-medium text-primary/70">{degreeDisplay}</span></p>
+                                <h2 className="text-[18px] font-semibold text-amber-900">{houseInfo?.topic}</h2>
+                                <p className="text-[24px] font-light text-amber-900 mt-1">{signName} <span className="text-[18px] font-medium text-amber-800/70">{degreeDisplay}</span></p>
                             </div>
                             <div className="flex flex-wrap gap-1 justify-end max-w-[140px]">
                                 {houseInfo?.keywords.map(k => (
-                                    <span key={k} className="px-2 py-0.5 bg-white rounded text-[11px] text-primary font-medium border border-gold-primary/20">{k}</span>
+                                    <span key={k} className="px-2 py-0.5 bg-white rounded text-[11px] text-amber-900 font-medium border border-amber-200/60">{k}</span>
                                 ))}
                             </div>
                         </div>
@@ -152,40 +152,40 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                     {currentPromise && (
                         <div className="flex items-center justify-between">
                             {/* Sign Lord */}
-                            <div className="flex-1 text-center p-3 bg-surface-warm/30 rounded-lg border border-gold-primary/20">
-                                <span className="text-[24px] text-primary block">{PLANET_SYMBOLS[currentPromise.chain.signLord.planet] || '☉'}</span>
-                                <span className="block text-[10px] text-primary/60 uppercase tracking-wider font-medium mt-1">
+                            <div className="flex-1 text-center p-3 bg-amber-50/40 rounded-lg border border-amber-200/60">
+                                <span className="text-[24px] text-amber-900 block">{PLANET_SYMBOLS[currentPromise.chain.signLord.planet] || '☉'}</span>
+                                <span className="block text-[10px] text-amber-700/60 uppercase tracking-wider font-medium mt-1">
                                     <KnowledgeTooltip term="sign_lord">Sign lord</KnowledgeTooltip>
                                 </span>
-                                <span className="text-[15px] text-primary font-medium">{currentPromise.chain.signLord.planet}</span>
+                                <span className="text-[15px] text-amber-900 font-medium">{currentPromise.chain.signLord.planet}</span>
                             </div>
 
-                            <div className="w-6 flex-shrink-0 flex items-center justify-center text-gold-primary/40 text-[14px]">→</div>
+                            <div className="w-6 flex-shrink-0 flex items-center justify-center text-amber-400/60 text-[14px]">→</div>
 
                             {/* Star Lord */}
-                            <div className="flex-1 text-center p-3 bg-surface-warm/30 rounded-lg border border-gold-primary/20">
-                                <span className="text-[24px] text-primary block">{PLANET_SYMBOLS[currentPromise.chain.starLord.planet] || '☉'}</span>
-                                <span className="block text-[10px] text-primary/60 uppercase tracking-wider font-medium mt-1">
+                            <div className="flex-1 text-center p-3 bg-amber-50/40 rounded-lg border border-amber-200/60">
+                                <span className="text-[24px] text-amber-900 block">{PLANET_SYMBOLS[currentPromise.chain.starLord.planet] || '☉'}</span>
+                                <span className="block text-[10px] text-amber-700/60 uppercase tracking-wider font-medium mt-1">
                                     <KnowledgeTooltip term="star_lord">Star lord</KnowledgeTooltip>
                                 </span>
-                                <span className="text-[15px] text-primary font-medium">{currentPromise.chain.starLord.planet}</span>
+                                <span className="text-[15px] text-amber-900 font-medium">{currentPromise.chain.starLord.planet}</span>
                             </div>
 
-                            <div className="w-6 flex-shrink-0 flex items-center justify-center text-gold-primary/40 text-[14px]">→</div>
+                            <div className="w-6 flex-shrink-0 flex items-center justify-center text-amber-400/60 text-[14px]">→</div>
 
                             {/* Sub Lord */}
-                            <div className="flex-1 text-center p-3 bg-gold-primary/10 rounded-lg border border-gold-primary/30">
-                                <span className="text-[24px] text-gold-dark block">{PLANET_SYMBOLS[currentPromise.chain.subLord.planet] || '☉'}</span>
-                                <span className="block text-[10px] text-gold-dark uppercase tracking-wider font-medium mt-1">
+                            <div className="flex-1 text-center p-3 bg-amber-100 rounded-lg border border-amber-300/50">
+                                <span className="text-[24px] text-amber-800 block">{PLANET_SYMBOLS[currentPromise.chain.subLord.planet] || '☉'}</span>
+                                <span className="block text-[10px] text-amber-800 uppercase tracking-wider font-medium mt-1">
                                     <KnowledgeTooltip term="sub_lord" unstyled>Sub lord</KnowledgeTooltip>
                                 </span>
-                                <span className="text-[15px] text-gold-dark font-medium">{currentPromise.chain.subLord.planet}</span>
+                                <span className="text-[15px] text-amber-800 font-medium">{currentPromise.chain.subLord.planet}</span>
                             </div>
 
-                            <div className="w-6 flex-shrink-0 flex items-center justify-center text-primary font-semibold text-[14px]">⟹</div>
+                            <div className="w-6 flex-shrink-0 flex items-center justify-center text-amber-900 font-semibold text-[14px]">⟹</div>
 
                             {/* Sub-Sub Lord */}
-                            <div className="flex-1 text-center p-4 bg-gradient-to-br from-gold-primary to-gold-dark rounded-xl shadow-md border border-gold-dark/30">
+                            <div className="flex-1 text-center p-4 bg-gradient-to-br from-amber-500 to-amber-700 rounded-xl shadow-md border border-amber-800/30">
                                 <span className="text-[30px] text-white block mb-1">{PLANET_SYMBOLS[currentPromise.chain.subSubLord.planet] || '☉'}</span>
                                 <span className="block text-[10px] text-white/90 uppercase tracking-wider font-medium mt-1">
                                     <KnowledgeTooltip term="sub_sub_lord" unstyled>Sub-sub lord</KnowledgeTooltip>
@@ -247,7 +247,7 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                 </div>
 
                 {/* Right Panel — Promise Meter */}
-                <div className="bg-white rounded-xl p-5 border border-gold-primary/20 shadow-sm">
+                <div className="bg-white rounded-xl p-5 border border-amber-200/60 shadow-sm">
                     <h3 className={cn(TYPOGRAPHY.label, "text-[12px] uppercase tracking-wider mb-5")}>Promise analysis</h3>
 
                     {analysis && currentPromise && (
@@ -293,12 +293,12 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
                             </div>
 
                             {/* SSL Verdict */}
-                            <div className="p-4 bg-gradient-to-br from-surface-warm to-white/80 border border-gold-primary/20 rounded-xl text-center shadow-sm">
-                                <AlertCircle className="w-6 h-6 text-gold-dark mx-auto mb-2" />
-                                <h4 className="text-[11px] text-primary uppercase tracking-wider font-semibold">
+                            <div className="p-4 bg-gradient-to-br from-amber-50 to-white/80 border border-amber-200/60 rounded-xl text-center shadow-sm">
+                                <AlertCircle className="w-6 h-6 text-amber-700 mx-auto mb-2" />
+                                <h4 className="text-[11px] text-amber-900 uppercase tracking-wider font-semibold">
                                     <KnowledgeTooltip term="sub_sub_lord">SSL</KnowledgeTooltip> verdict
                                 </h4>
-                                <p className="text-primary mt-2 text-[14px] leading-relaxed font-medium">
+                                <p className="text-amber-900 mt-2 text-[14px] leading-relaxed font-medium">
                                     <span className="font-semibold font-serif">{currentPromise.chain.subSubLord.planet}</span> as SSL
                                     {analysis.positiveRatio >= 50
                                         ? <span className="text-emerald-600 font-semibold"> confirms</span>
@@ -320,9 +320,9 @@ export const KpAdvancedSslView: React.FC<KpAdvancedSslViewProps> = ({
 
             {/* Interpretation Footer */}
             {currentPromise && analysis && (
-                <div className="bg-surface-warm/50 rounded-xl p-4 border border-gold-primary/20">
+                <div className="bg-amber-50/50 rounded-xl p-4 border border-amber-200/60">
                     <p className="text-[14px] text-primary text-center font-medium">
-                        <span className="inline-block px-2 py-0.5 bg-gold-soft/10 border border-gold-soft rounded text-[11px] text-gold-dark font-semibold uppercase tracking-wide mr-2">Focus</span>
+                        <span className="inline-block px-2 py-0.5 bg-amber-100 border border-amber-300 rounded text-[11px] text-amber-800 font-semibold uppercase tracking-wide mr-2">Focus</span>
                         For <span className="font-semibold">{houseInfo?.topic}</span>, the <KnowledgeTooltip term="sub_sub_lord">Sub-Sub Lord</KnowledgeTooltip>{' '}
                         <span className="font-semibold text-primary">{currentPromise.chain.subSubLord.planet}</span> signifies
                         {(currentPromise.positiveHouses || []).length > 0 && (

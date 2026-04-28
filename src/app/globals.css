@@ -180,8 +180,10 @@
   --font-size-sm: 0.8125rem;
   --font-size-xs: 0.75rem;
   --font-size-2xs: 0.6875rem;
-  --font-size-3xs: 0.625rem;  /* 10px — data-dense labels, badges */
-  --font-size-4xs: 0.5625rem; /* 9px — micro labels, decorative text */
+  --font-size-3xs: 0.625rem;
+  /* 10px — data-dense labels, badges */
+  --font-size-4xs: 0.5625rem;
+  /* 9px — micro labels, decorative text */
 
   /* --- Font Weights --- */
   --font-weight-regular: 400;
@@ -204,11 +206,16 @@
   /* ============================================ */
   /* SPACING & LAYOUT SYSTEM                     */
   /* ============================================ */
-  --spacing-section: 1.5rem;   /* 24px — between major sections */
-  --spacing-card: 1rem;        /* 16px — card internal padding */
-  --spacing-card-gap: 0.75rem; /* 12px — gap between cards in a grid */
-  --spacing-inline: 0.5rem;    /* 8px — between inline elements */
-  --spacing-tight: 0.25rem;    /* 4px — tight spacing (labels, badges) */
+  --spacing-section: 1.5rem;
+  /* 24px — between major sections */
+  --spacing-card: 1rem;
+  /* 16px — card internal padding */
+  --spacing-card-gap: 0.75rem;
+  /* 12px — gap between cards in a grid */
+  --spacing-inline: 0.5rem;
+  /* 8px — between inline elements */
+  --spacing-tight: 0.25rem;
+  /* 4px — tight spacing (labels, badges) */
 
   /* Container max widths */
   --container-sm: 640px;
@@ -460,12 +467,10 @@ body::before {
    Frosted glass + inner refraction + ambient orb blur.
    Semi-transparent bg lets backdrop-filter blur through.   */
 .prem-card {
-  background: linear-gradient(
-    165deg,
-    rgba(255, 253, 249, 0.72) 0%,
-    rgba(250, 245, 234, 0.52) 50%,
-    rgba(255, 253, 249, 0.62) 100%
-  );
+  background: linear-gradient(165deg,
+      rgba(255, 253, 249, 0.72) 0%,
+      rgba(250, 245, 234, 0.52) 50%,
+      rgba(255, 253, 249, 0.62) 100%);
   backdrop-filter: blur(16px) saturate(1.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);
   border: 1px solid rgba(255, 255, 255, 0.45);
@@ -482,12 +487,10 @@ body::before {
 }
 
 .prem-card:hover {
-  background: linear-gradient(
-    165deg,
-    rgba(255, 253, 249, 0.82) 0%,
-    rgba(250, 245, 234, 0.62) 50%,
-    rgba(255, 253, 249, 0.72) 100%
-  );
+  background: linear-gradient(165deg,
+      rgba(255, 253, 249, 0.82) 0%,
+      rgba(250, 245, 234, 0.62) 50%,
+      rgba(255, 253, 249, 0.72) 100%);
   border-color: rgba(255, 255, 255, 0.58);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
@@ -519,20 +522,47 @@ body::before {
 /* ============================================ */
 
 @keyframes glass-float {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -25px) scale(1.05); }
-  66% { transform: translate(-20px, 15px) scale(0.95); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(30px, -25px) scale(1.05);
+  }
+
+  66% {
+    transform: translate(-20px, 15px) scale(0.95);
+  }
 }
 
 @keyframes glass-float-alt {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(-25px, 20px) scale(0.97); }
-  66% { transform: translate(15px, -30px) scale(1.04); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(-25px, 20px) scale(0.97);
+  }
+
+  66% {
+    transform: translate(15px, -30px) scale(1.04);
+  }
 }
 
 @keyframes glass-float-slow {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(20px, -20px) scale(1.02); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(20px, -20px) scale(1.02);
+  }
 }
 
 .glass-orb {
@@ -573,8 +603,13 @@ body::before {
 
 /* Subtle light-sweep shimmer for active glass elements */
 @keyframes glass-shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .glass-shimmer::after {
@@ -582,14 +617,12 @@ body::before {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.06) 45%,
-    rgba(255, 255, 255, 0.12) 50%,
-    rgba(255, 255, 255, 0.06) 55%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.06) 45%,
+      rgba(255, 255, 255, 0.12) 50%,
+      rgba(255, 255, 255, 0.06) 55%,
+      transparent 100%);
   background-size: 200% 100%;
   animation: glass-shimmer 8s ease-in-out infinite;
   pointer-events: none;
@@ -776,13 +809,48 @@ body::before {
   background: radial-gradient(circle at 50% 40%, #FFF9F0 0%, #F2E6D0 40%, #E0CCAA 100%);
 }
 
+.bg-unified-header {
+  background: linear-gradient(180deg, #451a03 0%, #78350f 100%);
+  backdrop-filter: blur(24px) saturate(1.6);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+}
+
+.bg-learn-warm {
+  background: linear-gradient(to bottom right, var(--color-amber-50), var(--color-orange-50), var(--color-yellow-50));
+}
+
+.bg-learn-hero {
+  background: linear-gradient(to right, var(--color-amber-900), var(--color-amber-800), var(--color-orange-900));
+}
+
+.learn-card {
+  background-color: white;
+  border: 1px solid rgba(217, 119, 6, 0.2); /* amber-600/20 */
+  border-radius: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+.learn-card-interactive {
+  background-color: white;
+  border: 1px solid rgba(217, 119, 6, 0.2);
+  border-radius: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+
+.learn-card-interactive:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  border-color: rgba(217, 119, 6, 0.4);
+}
+
 /* ============================================ */
 /* UNIFIED HEADER & SIDEBAR GRADIENT           */
 /* ============================================ */
 .bg-header-gradient {
-  background: linear-gradient(180deg, rgba(152,82,47,0.92) 0%, rgba(118,58,31,0.95) 40%, rgba(85,37,15,0.97) 100%);
+  background: linear-gradient(180deg, #451a03 0%, #78350f 100%);
   backdrop-filter: blur(24px) saturate(1.6);
   -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  border-bottom: 1px solid rgba(251, 191, 36, 0.1);
 }
 
 .text-shadow-glow {
@@ -791,14 +859,14 @@ body::before {
 
 /* Header glass nav pill — active link background */
 .nav-glass-pill {
-  background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,210,125,0.10) 50%, rgba(255,255,255,0.06) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 210, 125, 0.10) 50%, rgba(255, 255, 255, 0.06) 100%);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,210,125,0.25);
+  border: 1px solid rgba(255, 210, 125, 0.25);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.20),
-    inset 0 -1px 0 rgba(255,255,255,0.05),
-    0 0 12px rgba(255,210,125,0.12);
+    inset 0 1px 0 rgba(255, 255, 255, 0.20),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 0 12px rgba(255, 210, 125, 0.12);
 }
 
 /* Header utility icon button */
@@ -809,17 +877,18 @@ body::before {
   color: #fff;
   transition: all 0.25s ease;
 }
+
 .header-icon-btn:hover {
   color: #fff;
-  background: rgba(255,255,255,0.10);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 0 8px rgba(255,210,125,0.10);
+  background: rgba(255, 255, 255, 0.10);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 0 8px rgba(255, 210, 125, 0.10);
 }
 
 /* Header divider — vertical glass separator */
 .header-divider {
   width: 1px;
   height: 28px;
-  background: linear-gradient(180deg, transparent 0%, rgba(208,140,96,0.35) 30%, rgba(208,140,96,0.35) 70%, transparent 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(217, 119, 6, 0.35) 30%, rgba(217, 119, 6, 0.35) 70%, transparent 100%);
 }
 
 /* ============================================ */
@@ -827,9 +896,10 @@ body::before {
 /* Sits between GlobalHeader and SubHeader      */
 /* ============================================ */
 .bg-client-bar {
-  background: linear-gradient(180deg, rgba(85,42,22,0.95) 0%, rgba(68,34,18,0.97) 100%);
+  background: linear-gradient(180deg, #78350f 0%, #78350f 100%); /* Same as top bar bottom */
   backdrop-filter: blur(20px) saturate(1.5);
   -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  border-bottom: 1px solid rgba(251, 191, 36, 0.1);
 }
 
 /* Client tab — base style */
@@ -848,17 +918,17 @@ body::before {
 }
 
 .client-tab:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(208,140,96,0.18);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(217, 119, 6, 0.25);
 }
 
 /* Active client tab — gold glow + underline */
 .client-tab-active {
-  background: linear-gradient(135deg, rgba(255,210,125,0.14) 0%, rgba(201,162,77,0.10) 100%);
-  border-color: rgba(255,210,125,0.30);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.14) 0%, rgba(217, 119, 6, 0.10) 100%);
+  border-color: rgba(251, 191, 36, 0.30);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.12),
-    0 0 12px rgba(255,210,125,0.12);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 12px rgba(251, 191, 36, 0.12);
 }
 
 .client-tab-active::after {
@@ -868,8 +938,8 @@ body::before {
   left: 8px;
   right: 8px;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--active-glow), transparent);
-  box-shadow: 0 0 8px rgba(255,210,125,0.5);
+  background: linear-gradient(90deg, transparent, var(--color-amber-400), transparent);
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
   border-radius: 1px;
 }
 
@@ -883,7 +953,7 @@ body::before {
   border-radius: 50%;
   opacity: 0;
   transition: all 0.15s ease;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255, 255, 255, 0.5);
   flex-shrink: 0;
 }
 
@@ -893,8 +963,8 @@ body::before {
 }
 
 .client-tab-close:hover {
-  background: rgba(255,255,255,0.15);
-  color: rgba(255,255,255,0.9);
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* ============================================ */
@@ -929,6 +999,7 @@ select {
 /* Disables all CSS transitions/animations AND  */
 /* tells framer-motion to skip via data attr.   */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -1048,7 +1119,7 @@ select {
 }
 
 /* All direct children inherit the scaling context */
-.widget-scaled-content > * {
+.widget-scaled-content>* {
   font-size: inherit;
   line-height: inherit;
 }
@@ -1204,7 +1275,8 @@ select {
   High DPI Display Adjustments
   On retina/4K displays, slightly increase base sizes
 */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
   .widget-scaled-content {
     --widget-font-size-base: 15px;
   }
@@ -1265,7 +1337,7 @@ select {
   align-items: center;
 }
 
-.widget-stretch-table tbody tr > * {
+.widget-stretch-table tbody tr>* {
   flex: 1;
 }
 

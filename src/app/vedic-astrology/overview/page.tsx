@@ -57,7 +57,7 @@ import VimshottariTreeGrid from '@/components/astrology/VimshottariTreeGrid';
 import { processDashaResponse, RawDashaPeriod } from '@/lib/dasha-utils';
 import BirthPanchanga, { type BirthPanchangaData } from '@/components/astrology/BirthPanchanga';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
-import { COLORS } from '@/design-tokens/colors';
+import { COLORS, PLANET_SVG_FILLS } from '@/design-tokens/colors';
 import { KnowledgeTooltip } from '@/components/knowledge';
 import { CHART_CATALOG } from '@/hooks/useCustomizeCharts';
 
@@ -205,8 +205,8 @@ export default function VedicOverviewPage() {
             {isLoading && (
                 <div className="absolute top-4 right-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-bold text-white tracking-wide shadow-lg animate-in fade-in slide-in-from-top-2"
                     style={{
-                        background: 'linear-gradient(135deg, rgba(201,162,77,0.95) 0%, rgba(180,140,60,0.95) 100%)',
-                        boxShadow: '0 4px 12px rgba(201,162,77,0.30)',
+                        background: 'linear-gradient(135deg, var(--color-amber-600) 0%, var(--color-orange-600) 100%)',
+                        boxShadow: '0 4px 12px rgba(217,119,6,0.30)',
                     }}>
                     <Loader2 className="w-3 h-3 animate-spin" />
                     Analyzing chart...
@@ -242,10 +242,10 @@ export default function VedicOverviewPage() {
                 <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-ink/60 backdrop-blur-sm animate-in fade-in zoom-in-95 duration-300" role="dialog" aria-modal="true" aria-label={analysisModal.label}>
                     <div className="max-w-4xl w-full max-h-[90vh] overflow-y-auto relative rounded-3xl p-8 custom-scrollbar"
                         style={{
-                            background: 'linear-gradient(165deg, rgba(255,253,249,0.95) 0%, rgba(250,245,234,0.92) 50%, rgba(255,253,249,0.93) 100%)',
-                            border: '1px solid rgba(220,201,166,0.35)',
-                            borderBottom: '4px solid rgba(201,162,77,0.60)',
-                            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), 0 25px 60px rgba(62,46,22,0.22), 0 8px 24px rgba(62,46,22,0.12)',
+                            background: 'linear-gradient(165deg, rgba(255,255,255,0.95) 0%, rgba(255,251,235,0.92) 50%, rgba(255,255,255,0.93) 100%)',
+                            border: '1px solid rgba(217,119,6,0.2)',
+                            borderBottom: '4px solid rgba(217,119,6,0.5)',
+                            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), 0 25px 60px rgba(120,53,15,0.15)',
                             backdropFilter: 'blur(20px)',
                         }}>
                         <button onClick={() => setAnalysisModal(null)} aria-label="Close analysis"
@@ -275,7 +275,7 @@ export default function VedicOverviewPage() {
 // Constants for Chart Slots
 // ============================================================================
 const KUNDALI_SLOTS_KEY = 'grahvani_kundali_chart_slots';
-const KUNDALI_SETTINGS_KEY = 'grahvani_kundali_chart_settings';
+const KUNDALI_SETTINGS_KEY = 'grahvani_kundali_chart_settings_v2';
 const DEFAULT_SLOTS: (string | null)[] = ['D1', 'D9', 'D10'];
 
 interface ChartSlotSettings {
@@ -286,16 +286,16 @@ interface ChartSlotSettings {
 }
 
 const DEFAULT_CHART_SETTINGS: ChartSlotSettings = {
-    planetSize: 14,
+    planetSize: 18,
     houseSize: 18,
     degreeSize: 9,
-    showDegrees: true
+    showDegrees: false
 };
 const PICKER_CATEGORIES = ['divisional', 'lagna', 'rare_shodash'];
 
 const HEADER_STYLE = {
-    background: 'linear-gradient(180deg, rgba(250,245,234,0.60) 0%, rgba(250,245,234,0.30) 100%)',
-    borderBottom: '1px solid rgba(220,201,166,0.25)',
+    background: 'linear-gradient(180deg, rgba(255,251,235,0.80) 0%, rgba(255,251,235,0.40) 100%)',
+    borderBottom: '1px solid rgba(217,119,6,0.15)',
 };
 
 // ============================================================================
@@ -386,7 +386,7 @@ function ChartPickerModal({
 // ============================================================================
 function EmptyChartSlot({ height, onClick }: { height: string; onClick: () => void }) {
     return (
-        <div className="prem-card overflow-hidden">
+        <div className="learn-card overflow-hidden">
             <div
                 className={cn("w-full flex flex-col items-center justify-center cursor-pointer group transition-all hover:bg-gold-primary/3", height)}
                 onClick={onClick}
@@ -445,7 +445,7 @@ function RenderedChartSlot({
     }, [showSettings]);
 
     return (
-        <div className="prem-card overflow-hidden relative">
+        <div className="learn-card overflow-hidden relative">
             <div className="px-3 py-1.5 flex justify-between items-center" style={HEADER_STYLE}>
                 <h2 className={TYPOGRAPHY.sectionTitle}>{displayName}</h2>
                 <div className="flex items-center gap-1">
@@ -574,7 +574,10 @@ function RenderedChartSlot({
                         </div>
 
                         <button
-                            onClick={() => onUpdateSettings(DEFAULT_CHART_SETTINGS)}
+                            onClick={() => {
+                                onUpdateSettings({ ...DEFAULT_CHART_SETTINGS });
+                                setShowSettings(false);
+                            }}
                             className="w-full mt-2 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all hover:bg-gold-primary/5 border border-gold-primary/20 text-primary hover:text-gold-primary"
                             style={{
                                 background: 'linear-gradient(135deg, rgba(201,162,77,0.05) 0%, rgba(201,162,77,0.02) 100%)',
@@ -593,7 +596,8 @@ function RenderedChartSlot({
                         planets={data.planets}
                         className="bg-transparent border-none w-full h-full"
                         preserveAspectRatio="none"
-                        showDegrees={settings.showDegrees}
+                        chartId={chartId}
+                        showDegrees={chartId === 'D1' ? true : settings.showDegrees}
                         planetFontSize={settings.planetSize}
                         degreeFontSize={settings.degreeSize}
                         signNumberFontSize={settings.houseSize}
@@ -794,13 +798,13 @@ function KundaliContent({
 
                     {/* Planetary Details Window (dynamic from Slot 0) — hidden for KP */}
                     {activeSystem !== 'kp' && (
-                        <div className="prem-card overflow-hidden">
-                            <div className="px-3 py-1.5" style={HEADER_STYLE}>
-                                <h2 className={TYPOGRAPHY.sectionTitle}>
+                        <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
+                            <div className="px-3 py-1.5 bg-amber-50 border-b border-amber-200/50">
+                                <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-amber-900")}>
                                     Rashi <KnowledgeTooltip term="planetary_positions" unstyled>planetary positions</KnowledgeTooltip>
                                 </h2>
                             </div>
-                            <div className="bg-surface-warm">
+                            <div className="bg-white">
                                 {planetaryTableData.length > 0 ? (
                                     <PlanetaryTable
                                         planets={planetaryTableData}
@@ -808,7 +812,7 @@ function KundaliContent({
                                         rowClassName="py-1"
                                     />
                                 ) : (
-                                    <div className={cn(TYPOGRAPHY.subValue, "p-6 text-center text-ink/30 italic")}>
+                                    <div className={cn(TYPOGRAPHY.subValue, "p-6 text-center text-amber-700/30 italic")}>
                                         Select a chart above to see positions
                                     </div>
                                 )}
@@ -826,49 +830,96 @@ function KundaliContent({
                 <div className="md:col-span-7 flex flex-col gap-2">
                     {/* Client Identity Bar */}
                     {clientDetails && (
-                        <div className="prem-card">
-                            <div className="px-3 py-1.5" style={HEADER_STYLE}>
-                                <h2 className={TYPOGRAPHY.sectionTitle}>Client profile</h2>
+                        <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
+                            <div className="px-3 py-1.5 bg-amber-50 border-b border-amber-200/50">
+                                <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-amber-900")}>Client profile</h2>
                             </div>
-                            <div className="px-3 py-2 flex flex-wrap items-center gap-x-4 gap-y-2">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-lg flex items-center justify-center text-white shrink-0"
+                            <div className="px-3 py-2.5 flex flex-wrap items-center gap-x-4 gap-y-2">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white shrink-0 ring-2 ring-amber-200/60 ring-offset-2 ring-offset-white"
                                         style={{
-                                            background: 'linear-gradient(135deg, rgba(201,162,77,0.90) 0%, rgba(139,90,43,0.85) 100%)',
-                                            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), 0 2px 6px rgba(139,90,43,0.15)',
+                                            background: 'linear-gradient(135deg, #D97706 0%, #92400E 100%)',
+                                            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.20), 0 2px 8px rgba(146,64,14,0.20)',
                                         }}>
-                                        <span className={TYPOGRAPHY.value}>{clientDetails.name.charAt(0)}</span>
+                                        <span className="text-[18px] font-semibold">{clientDetails.name.charAt(0)}</span>
                                     </div>
                                     <div className="min-w-0">
-                                        <div className={TYPOGRAPHY.profileName}>{clientDetails.name}</div>
-                                        <div className={cn(TYPOGRAPHY.profileDetail, "flex flex-wrap gap-x-2 mt-1 !font-serif")}>
-                                            <span className="!font-serif">{formatDate(clientDetails.dateOfBirth)}</span>
-                                            <span className="text-ink/30">•</span>
-                                            <span className="!font-serif">{formatTime(clientDetails.timeOfBirth)}</span>
-                                            <span className="text-ink/30">•</span>
-                                            <span className="truncate max-w-[250px] !font-serif" title={clientDetails.placeOfBirth.city}>{clientDetails.placeOfBirth.city}</span>
+                                        <div className={cn(TYPOGRAPHY.profileName, "text-amber-900 text-[16px] font-semibold")}>{clientDetails.name}</div>
+                                        <div className={cn(TYPOGRAPHY.profileDetail, "flex flex-wrap items-center gap-x-2 mt-1 text-[12px]")}>
+                                            <span className="flex items-center gap-1 text-amber-700/80">
+                                                <Calendar className="w-3 h-3" />
+                                                {formatDate(clientDetails.dateOfBirth)}
+                                            </span>
+                                            <span className="text-amber-300">•</span>
+                                            <span className="flex items-center gap-1 text-amber-700/80">
+                                                <Clock className="w-3 h-3" />
+                                                {formatTime(clientDetails.timeOfBirth)}
+                                            </span>
+                                            <span className="text-amber-300">•</span>
+                                            <span className="flex items-center gap-1 text-amber-700/80 truncate max-w-[180px]" title={clientDetails.placeOfBirth.city}>
+                                                <MapPin className="w-3 h-3" />
+                                                {clientDetails.placeOfBirth.city}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Lagna / Moon / Sun — always from D1 */}
                                 <div className="flex items-center gap-1.5 ml-auto">
-                                    {[
-                                        { key: 'lagna', label: <KnowledgeTooltip term="lagna" unstyled>Lagna</KnowledgeTooltip> as React.ReactNode, value: signIdToName[(d1Data.ascendant || 1) as number] },
-                                        { key: 'moon', label: 'Moon' as React.ReactNode, value: d1Data.planets.find((p: any) => p.name === "Mo") ? signIdToName[d1Data.planets.find((p: any) => p.name === "Mo")!.signId] : "-" },
-                                        { key: 'sun', label: 'Sun' as React.ReactNode, value: d1Data.planets.find((p: any) => p.name === "Su") ? signIdToName[d1Data.planets.find((p: any) => p.name === "Su")!.signId] : "-" },
-                                    ].map((chip) => (
-                                        <div key={chip.key}
-                                            className="px-2.5 py-1 rounded-lg group hover:border-gold-primary/30 transition-colors flex items-center gap-1.5"
-                                            style={{
-                                                background: 'rgba(255,253,249,0.70)',
-                                                border: '1px solid rgba(220,201,166,0.25)',
-                                                boxShadow: '0 1px 3px rgba(62,46,22,0.04)',
-                                            }}>
-                                            <span className={TYPOGRAPHY.badgeLabel}>{chip.label} :</span>
-                                            <span className={cn(TYPOGRAPHY.badgeValue, "group-hover:text-gold-dark transition-colors")}>{chip.value}</span>
-                                        </div>
-                                    ))}
+                                    {(() => {
+                                        const moonSign = d1Data.planets.find((p: any) => p.name === "Mo") ? signIdToName[d1Data.planets.find((p: any) => p.name === "Mo")!.signId] : "-";
+                                        const sunSign = d1Data.planets.find((p: any) => p.name === "Su") ? signIdToName[d1Data.planets.find((p: any) => p.name === "Su")!.signId] : "-";
+                                        const lagnaSign = signIdToName[(d1Data.ascendant || 1) as number];
+
+                                        const signSymbols: Record<string, string> = {
+                                            'Aries': '♈', 'Taurus': '♉', 'Gemini': '♊', 'Cancer': '♋',
+                                            'Leo': '♌', 'Virgo': '♍', 'Libra': '♎', 'Scorpio': '♏',
+                                            'Sagittarius': '♐', 'Capricorn': '♑', 'Aquarius': '♒', 'Pisces': '♓',
+                                        };
+
+                                        const signElementColors: Record<string, { bg: string; border: string; text: string; iconBg: string }> = {
+                                            'Aries':     { bg: 'bg-orange-50',    border: 'border-orange-200/50',    text: 'text-orange-800',    iconBg: 'bg-orange-100' },
+                                            'Leo':       { bg: 'bg-orange-50',    border: 'border-orange-200/50',    text: 'text-orange-800',    iconBg: 'bg-orange-100' },
+                                            'Sagittarius':{ bg: 'bg-orange-50',   border: 'border-orange-200/50',    text: 'text-orange-800',    iconBg: 'bg-orange-100' },
+                                            'Taurus':    { bg: 'bg-emerald-50',   border: 'border-emerald-200/50',   text: 'text-emerald-800',   iconBg: 'bg-emerald-100' },
+                                            'Virgo':     { bg: 'bg-emerald-50',   border: 'border-emerald-200/50',   text: 'text-emerald-800',   iconBg: 'bg-emerald-100' },
+                                            'Capricorn': { bg: 'bg-emerald-50',   border: 'border-emerald-200/50',   text: 'text-emerald-800',   iconBg: 'bg-emerald-100' },
+                                            'Gemini':    { bg: 'bg-violet-50',    border: 'border-violet-200/50',    text: 'text-violet-800',    iconBg: 'bg-violet-100' },
+                                            'Libra':     { bg: 'bg-violet-50',    border: 'border-violet-200/50',    text: 'text-violet-800',    iconBg: 'bg-violet-100' },
+                                            'Aquarius':  { bg: 'bg-violet-50',    border: 'border-violet-200/50',    text: 'text-violet-800',    iconBg: 'bg-violet-100' },
+                                            'Cancer':    { bg: 'bg-sky-50',       border: 'border-sky-200/50',       text: 'text-sky-800',       iconBg: 'bg-sky-100' },
+                                            'Scorpio':   { bg: 'bg-sky-50',       border: 'border-sky-200/50',       text: 'text-sky-800',       iconBg: 'bg-sky-100' },
+                                            'Pisces':    { bg: 'bg-sky-50',       border: 'border-sky-200/50',       text: 'text-sky-800',       iconBg: 'bg-sky-100' },
+                                        };
+
+                                        const planetColors: Record<string, string> = {
+                                            'lagna': PLANET_SVG_FILLS['As'] || '#7C3AED',
+                                            'moon': PLANET_SVG_FILLS['Moon'] || '#2563EB',
+                                            'sun': PLANET_SVG_FILLS['Sun'] || '#F97316',
+                                        };
+
+                                        const chips = [
+                                            { key: 'lagna', label: <KnowledgeTooltip term="lagna" unstyled>Lagna</KnowledgeTooltip> as React.ReactNode, value: lagnaSign, planetColor: planetColors['lagna'] },
+                                            { key: 'moon', label: 'Moon', value: moonSign, planetColor: planetColors['moon'] },
+                                            { key: 'sun', label: 'Sun', value: sunSign, planetColor: planetColors['sun'] },
+                                        ];
+
+                                        return chips.map((chip) => {
+                                            const style = signElementColors[chip.value] || { bg: 'bg-amber-50', border: 'border-amber-200/50', text: 'text-amber-800', iconBg: 'bg-amber-100' };
+                                            return (
+                                                <div key={chip.key}
+                                                    className={cn("px-2 py-1 rounded-lg transition-colors flex items-center gap-1.5 border", style.bg, style.border)}>
+                                                    <span className="text-[11px] font-medium text-amber-700/70">{chip.label} :</span>
+                                                    <span className={cn("flex items-center gap-1 text-[12px] font-semibold", style.text)}>
+                                                        <span className={cn("w-5 h-5 rounded flex items-center justify-center text-[10px] font-serif", style.iconBg)}>
+                                                            {signSymbols[chip.value] || ''}
+                                                        </span>
+                                                        {chip.value}
+                                                    </span>
+                                                </div>
+                                            );
+                                        });
+                                    })()}
                                 </div>
                             </div>
                         </div>

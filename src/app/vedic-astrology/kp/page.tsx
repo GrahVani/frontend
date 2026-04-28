@@ -150,11 +150,11 @@ export default function KpDashboardPage() {
                 {activeTab !== 'ashtakavarga' && (
                     <div className="w-full xl:w-[30%] shrink-0 flex flex-col min-h-0 h-full gap-4">
                         {/* Cuspal Chart */}
-                        <div className="prem-card rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm flex-[3] min-h-0">
-                            <div className="bg-gold-primary/10 px-3 py-1.5 border-b border-gold-primary/15 shrink-0 flex justify-between items-center">
-                                <h3 className={cn(TYPOGRAPHY.value, "text-[14px] text-ink font-semibold leading-tight tracking-wide !mb-0 text-balance")}>Cuspal chart</h3>
+                        <div className="bg-white rounded-lg overflow-hidden shadow-sm flex flex-col border border-amber-200/60 flex-[3] min-h-0">
+                            <div className="bg-amber-50 px-3 py-1.5 border-b border-amber-200/50 shrink-0 flex justify-between items-center">
+                                <h3 className={cn(TYPOGRAPHY.value, "text-[14px] text-amber-900 font-semibold leading-tight tracking-wide !mb-0 text-balance")}>Cuspal chart</h3>
                             </div>
-                            <div className="flex-1 min-h-0 bg-surface-warm w-full">
+                            <div className="flex-1 min-h-0 bg-white w-full">
                                 {planetsCuspsQuery.isLoading && !transformed.cuspData.length ? (
                                     <div className="flex items-center justify-center py-6">
                                         <Loader2 className="w-6 h-6 text-gold-primary animate-spin" />
@@ -175,7 +175,7 @@ export default function KpDashboardPage() {
                                         />
                                     </div>
                                 ) : (
-                                    <p className="text-ink text-center py-4 text-[12px]">No cusp data available</p>
+                                    <p className="text-amber-900 text-center py-4 text-[12px]">No cusp data available</p>
                                 )}
                             </div>
                         </div>
@@ -192,17 +192,17 @@ export default function KpDashboardPage() {
                     {/* Tab Bar — spans right column only */}
                     {showHeader && (
                         <div className="shrink-0 relative z-10 w-full">
-                            <div className="flex w-full prem-card rounded-lg shadow-sm overflow-hidden border border-gold-primary/15">
+                            <div className="flex w-full bg-white rounded-lg shadow-sm overflow-hidden border border-amber-200/60">
                                 {tabs.map((tab) => (
                                     <button
                                         key={tab.id}
                                         onClick={() => handleTabChange(tab.id)}
                                         className={cn(
-                                            "flex-1 flex items-center justify-center px-2 py-2 transition-all whitespace-nowrap border-r border-gold-primary/10 last:border-r-0",
+                                            "flex-1 flex items-center justify-center px-2 py-2 transition-all whitespace-nowrap border-r border-amber-200/50 last:border-r-0",
                                             "text-[13px] font-medium tracking-wide",
                                             activeTab === tab.id
-                                                ? cn("text-white shadow-md", COLORS.wbActiveTab)
-                                                : "text-primary hover:text-ink hover:bg-gold-primary/5"
+                                                ? "bg-amber-600 text-white shadow-md"
+                                                : "text-amber-900 hover:bg-amber-50"
                                         )}
                                     >
                                         <span>{tab.label}</span>

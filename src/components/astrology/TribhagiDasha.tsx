@@ -6,6 +6,7 @@ import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { ChevronRight, Calendar, Milestone } from 'lucide-react';
 import { DashaNode, formatDateDisplay, standardizeDuration } from '@/lib/dasha-utils';
 import { PLANET_COLORS } from '@/lib/astrology-constants';
+import { getPlanetSymbol } from '@/lib/planet-symbols';
 
 
 interface TribhagiDashaProps {
@@ -58,7 +59,7 @@ export default function TribhagiDasha({ periods, onDrillDown }: TribhagiDashaPro
         <div className="space-y-3 animate-in fade-in duration-700">
             {/* Cycle/Era Navigation - Compact Tabs */}
             <div className="flex flex-wrap gap-2 items-center px-4 pt-2">
-                <div className="flex bg-gold-soft/40 rounded-lg p-0.5 gap-1 border border-gold-primary/10 backdrop-blur-sm overflow-x-auto scrollbar-hide">
+                <div className="flex bg-amber-50/50 rounded-lg p-0.5 gap-1 border border-amber-200/60 backdrop-blur-sm overflow-x-auto scrollbar-hide">
                     {availableCycles.map((c) => {
                         const isActive = selectedCycle === c;
                         const cyclePeriods = cycles[c];
@@ -70,10 +71,10 @@ export default function TribhagiDasha({ periods, onDrillDown }: TribhagiDashaPro
                                 key={c}
                                 onClick={() => setSelectedCycle(c)}
                                 className={cn(
-                                    "flex items-center gap-2 px-3 py-1.5 rounded-md transition-all duration-200 whitespace-nowrap",
+                                    "flex items-center gap-2 px-2 py-1 rounded-md transition-all duration-200 whitespace-nowrap",
                                     isActive
-                                        ? "bg-primary text-active-glow shadow-sm font-semibold"
-                                        : "hover:bg-primary/5 text-ink/70 font-medium"
+                                        ? "bg-amber-600 text-white shadow-sm font-semibold"
+                                        : "hover:bg-amber-50 text-amber-700 font-medium"
                                 )}
                             >
                                 <span className="text-[10px] uppercase tracking-wider">Cycle {c}</span>
@@ -85,16 +86,16 @@ export default function TribhagiDasha({ periods, onDrillDown }: TribhagiDashaPro
                 </div>
 
                 <div className="ml-auto hidden sm:flex items-center gap-2">
-                    <h3 className="text-[10px] font-bold text-ink/55 flex items-center gap-2 uppercase tracking-wider bg-gold-soft/30 px-2 py-1 rounded-md border border-gold-primary/10">
-                        <Milestone className="w-3 h-3 text-gold-dark" />
+                    <h3 className="text-[10px] font-bold text-amber-700 flex items-center gap-2 uppercase tracking-wider bg-amber-50 px-2 py-1 rounded-md border border-amber-200/60">
+                        <Milestone className="w-3 h-3 text-amber-600" />
                         {ERA_NAMES[selectedCycle] || `Cycle ${selectedCycle}`}
                     </h3>
                 </div>
             </div>
 
             <div className="flex items-center justify-end sm:hidden px-4">
-                <h3 className="text-[10px] font-bold text-ink/55 flex items-center gap-2 uppercase tracking-wider">
-                    <Milestone className="w-3.5 h-3.5 text-gold-dark" />
+                <h3 className="text-[10px] font-bold text-amber-700 flex items-center gap-2 uppercase tracking-wider">
+                    <Milestone className="w-3.5 h-3.5 text-amber-600" />
                     {ERA_NAMES[selectedCycle] || `Cycle ${selectedCycle}`}
                 </h3>
             </div>
@@ -102,16 +103,16 @@ export default function TribhagiDasha({ periods, onDrillDown }: TribhagiDashaPro
             {/* Table */}
             <div className="">
                 <table className="w-full border-separate border-spacing-0">
-                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-white border-b border-gold-primary/15 sticky top-0 z-10 shadow-sm")}>
+                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-white border-b border-amber-200/60 sticky top-0 z-30 shadow-sm")}>
                         <tr>
-                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">Planet</th>
-                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">Start Date</th>
-                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">End Date</th>
-                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">Duration</th>
-                            <th className="px-3 py-2 text-center border-b border-gold-primary/10">Status</th>
+                            <th className="px-3 py-2 text-left text-amber-800">Planet</th>
+                            <th className="px-3 py-2 text-left text-amber-800">Start Date</th>
+                            <th className="px-3 py-2 text-left text-amber-800">End Date</th>
+                            <th className="px-3 py-2 text-left text-amber-800">Duration</th>
+                            <th className="px-3 py-2 text-center text-amber-800">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gold-primary/10 font-medium">
+                    <tbody className="divide-y divide-amber-200/40 font-medium bg-white/60">
                         {currentCyclePeriods.map((mahadasha, mIdx) => {
                             const canDrill = mahadasha.canDrillFurther || (mahadasha.sublevel && mahadasha.sublevel.length > 0);
 
@@ -119,19 +120,19 @@ export default function TribhagiDasha({ periods, onDrillDown }: TribhagiDashaPro
                                 <tr
                                     key={mIdx}
                                     className={cn(
-                                        "hover:bg-gold-primary/10 transition-colors group",
-                                        mahadasha.isCurrent && "bg-gold-primary/5",
+                                        "hover:bg-amber-50/60 transition-colors group",
+                                        mahadasha.isCurrent && "bg-amber-50/40",
                                         canDrill ? "cursor-pointer" : "cursor-default"
                                     )}
                                     onClick={() => canDrill && onDrillDown?.(mahadasha)}
                                 >
-                                    <td className="px-3 py-1.5">
+                                    <td className="px-3 py-2">
                                         <div className="flex items-center gap-2">
                                             <span className={cn(
-                                                "inline-flex items-center px-2 py-0.5 rounded-md text-[12px] font-bold border shadow-sm min-w-[60px] justify-center",
-                                                PLANET_COLORS[mahadasha.planet || ''] || "bg-white"
+                                                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[14px] font-semibold border shadow-sm min-w-[72px] justify-center",
+                                                PLANET_COLORS[mahadasha.planet || ''] || "bg-white border-amber-200 text-amber-800"
                                             )}>
-                                                {mahadasha.planet}
+                                                <span className="opacity-90 text-[14px]">{getPlanetSymbol(mahadasha.planet)}</span>{mahadasha.planet}
                                             </span>
                                             {mahadasha.isCurrent && (
                                                 <span className="inline-flex items-center px-1.5 py-0 rounded-full text-[8px] font-bold bg-green-100 text-green-700 border border-green-200 animate-pulse uppercase tracking-wider">
@@ -140,24 +141,24 @@ export default function TribhagiDasha({ periods, onDrillDown }: TribhagiDashaPro
                                             )}
                                         </div>
                                     </td>
-                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
-                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}>
-                                            <Calendar className="w-3 h-3 text-ink/30" />
+                                    <td className="px-3 py-2">
+                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5 text-amber-700")}>
+                                            <Calendar className="w-3 h-3 text-amber-400" />
                                             {formatDateDisplay(mahadasha.startDate)}
                                         </div>
                                     </td>
-                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>{formatDateDisplay(mahadasha.endDate)}</td>
-                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
+                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2 text-amber-700")}>{formatDateDisplay(mahadasha.endDate)}</td>
+                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2 text-amber-700")}>
                                         {standardizeDuration((mahadasha.raw?.duration_years as number) || (mahadasha.raw?.years as number) || 0, mahadasha.raw?.duration_days as number)}
                                     </td>
-                                    <td className="px-3 py-1.5 text-center">
+                                    <td className="px-3 py-2 text-center">
                                         <div className="flex items-center justify-center gap-2">
                                             {mahadasha.isCurrent ? (
                                                 <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span>
                                             ) : canDrill ? (
-                                                <ChevronRight className="w-3 h-3 text-gold-dark transition-transform group-hover:scale-125" />
+                                                <ChevronRight className="w-3 h-3 text-amber-600 transition-transform group-hover:scale-125" />
                                             ) : (
-                                                <span className="text-gold-dark/40 text-[12px]">—</span>
+                                                <span className="text-amber-400 text-[12px]">—</span>
                                             )}
                                         </div>
                                     </td>

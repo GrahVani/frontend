@@ -121,7 +121,7 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
     return (
         <div className={cn("space-y-0 animate-in fade-in duration-500", className)}>
             {/* Header Tabs */}
-            <div className="flex items-center border-b border-gold-primary/15 bg-surface-warm/60 rounded-t-xl overflow-hidden">
+            <div className="flex items-center border-b border-amber-200/50 bg-amber-50/60 rounded-t-xl overflow-hidden">
                 <TabButton id="planets" label="Planetary nadi" icon={Sparkles} />
                 <TabButton id="cusps" label="Cuspal nadi (bhavas)" icon={Compass} />
             </div>
@@ -129,7 +129,7 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
             {/* Main Content */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
                 {/* Left - Selection Grid */}
-                <div className="lg:col-span-2 bg-white border-r border-gold-primary/15 p-5">
+                <div className="lg:col-span-2 bg-white border-r border-amber-200/50 p-5">
                     {activeTab === 'planets' ? (
                         <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
                             {planets.map((planet: NadiItem) => {
@@ -143,8 +143,8 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                                         className={cn(
                                             "relative p-4 rounded-xl transition-all duration-300 border-2 text-center group",
                                             isSelected
-                                                ? "border-gold-primary bg-gold-primary/10 shadow-lg scale-105"
-                                                : "border-gold-primary/20 bg-surface-warm/30 hover:border-gold-primary/30 hover:shadow-md"
+                                                ? "border-amber-500 bg-amber-50 shadow-lg scale-105"
+                                                : "border-amber-200/60 bg-amber-50/30 hover:border-amber-400/60 hover:shadow-md"
                                         )}
                                     >
                                         {planet.isRetro && (
@@ -156,8 +156,8 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                                         )}>
                                             {pData.symbol}
                                         </div>
-                                        <span className="font-semibold text-primary text-[14px]">{planet.name}</span>
-                                        <span className="block text-[11px] text-primary/70 mt-1 font-medium">{planet.sign || 'Unknown'}</span>
+                                        <span className="font-semibold text-amber-900 text-[14px]">{planet.name}</span>
+                                        <span className="block text-[11px] text-amber-700/70 mt-1 font-medium">{planet.sign || 'Unknown'}</span>
                                     </button>
                                 );
                             })}
@@ -176,14 +176,14 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                                         className={cn(
                                             "relative p-3 rounded-xl transition-all duration-300 border-2 text-center",
                                             isSelected
-                                                ? "border-gold-primary bg-gold-primary/10 shadow-lg scale-105"
-                                                : "border-gold-primary/20 bg-surface-warm/30 hover:border-gold-primary/30 hover:shadow-md"
+                                                ? "border-amber-500 bg-amber-50 shadow-lg scale-105"
+                                                : "border-amber-200/60 bg-amber-50/30 hover:border-amber-400/60 hover:shadow-md"
                                         )}
                                     >
-                                        <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-gradient-to-br from-surface-warm to-white/80 shadow-sm border border-gold-primary/20 flex items-center justify-center text-primary font-semibold">
+                                        <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-gradient-to-br from-amber-50 to-white/80 shadow-sm border border-amber-200/60 flex items-center justify-center text-amber-900 font-semibold">
                                             <span className="text-[14px]">{cuspNum}</span>
                                         </div>
-                                        <span className="font-semibold text-primary text-[12px]">{signData.symbol} {cusp.sign}</span>
+                                        <span className="font-semibold text-amber-900 text-[12px]">{signData.symbol} {cusp.sign}</span>
                                     </button>
                                 );
                             })}
@@ -192,20 +192,20 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
 
                     {/* Quick Stats */}
                     <div className="mt-6 grid grid-cols-3 gap-4">
-                        <div className="bg-surface-warm/40 rounded-xl p-4 text-center border border-gold-primary/20 border-b-4 shadow-sm flex flex-col items-center justify-center">
-                            <Sun className="w-6 h-6 text-gold-dark mb-2" />
-                            <span className="text-[28px] font-semibold text-primary leading-none mb-1">{planets.length}</span>
-                            <span className="text-[11px] text-primary uppercase tracking-widest font-medium">Grahas</span>
+                        <div className="bg-amber-50/60 rounded-xl p-4 text-center border border-amber-200/60 border-b-4 shadow-sm flex flex-col items-center justify-center">
+                            <Sun className="w-6 h-6 text-amber-700 mb-2" />
+                            <span className="text-[28px] font-semibold text-amber-900 leading-none mb-1">{planets.length}</span>
+                            <span className="text-[11px] text-amber-700 uppercase tracking-widest font-medium">Grahas</span>
                         </div>
-                        <div className="bg-surface-warm/40 rounded-xl p-4 text-center border border-gold-primary/20 border-b-4 shadow-sm flex flex-col items-center justify-center">
-                            <CircleDot className="w-6 h-6 text-indigo-500/80 mb-2" />
-                            <span className="text-[28px] font-semibold text-primary leading-none mb-1">{cusps.length}</span>
-                            <span className="text-[11px] text-primary uppercase tracking-widest font-medium">Bhavas</span>
+                        <div className="bg-amber-50/60 rounded-xl p-4 text-center border border-amber-200/60 border-b-4 shadow-sm flex flex-col items-center justify-center">
+                            <CircleDot className="w-6 h-6 text-amber-600/80 mb-2" />
+                            <span className="text-[28px] font-semibold text-amber-900 leading-none mb-1">{cusps.length}</span>
+                            <span className="text-[11px] text-amber-700 uppercase tracking-widest font-medium">Bhavas</span>
                         </div>
-                        <div className="bg-surface-warm/40 rounded-xl p-4 text-center border border-gold-primary/20 border-b-4 shadow-sm flex flex-col items-center justify-center">
-                            <Star className="w-6 h-6 text-gold-dark/80 mb-2" />
-                            <span className="text-[28px] font-semibold text-primary leading-none mb-1">27</span>
-                            <span className="text-[11px] text-primary uppercase tracking-widest font-medium">
+                        <div className="bg-amber-50/60 rounded-xl p-4 text-center border border-amber-200/60 border-b-4 shadow-sm flex flex-col items-center justify-center">
+                            <Star className="w-6 h-6 text-amber-700/80 mb-2" />
+                            <span className="text-[28px] font-semibold text-amber-900 leading-none mb-1">27</span>
+                            <span className="text-[11px] text-amber-700 uppercase tracking-widest font-medium">
                                 <KnowledgeTooltip term="nakshatra">Nakshatras</KnowledgeTooltip>
                             </span>
                         </div>
@@ -213,49 +213,49 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                 </div>
 
                 {/* Right - Detail Panel */}
-                <div className="bg-surface-warm p-5 min-h-[400px] border-l border-gold-primary/20">
+                <div className="bg-amber-50/60 p-5 min-h-[400px] border-l border-amber-200/50">
                     {selectedDetails ? (
                         <div key={selectedItem} className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
                             {/* Header */}
                             <div className="text-center">
                                 {activeTab === 'planets' ? (
                                     <>
-                                        <div className="w-20 h-20 mx-auto mb-3 rounded-full bg-surface-warm shadow-xl border border-gold-primary/20 flex items-center justify-center text-[30px] text-primary font-semibold">
+                                        <div className="w-20 h-20 mx-auto mb-3 rounded-full bg-amber-50 shadow-xl border border-amber-200/60 flex items-center justify-center text-[30px] text-amber-900 font-semibold">
                                             {PLANET_DATA[normalize(selectedDetails.name || '')]?.symbol || '☉'}
                                         </div>
-                                        <h2 className="text-[24px] font-semibold text-primary mb-1">{selectedDetails.name}</h2>
+                                        <h2 className="text-[24px] font-semibold text-amber-900 mb-1">{selectedDetails.name}</h2>
                                         {selectedDetails.isRetro && (
                                             <span className="inline-block mt-1 text-[10px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-medium">Retrograde</span>
                                         )}
                                     </>
                                 ) : (
                                     <>
-                                        <div className="w-20 h-20 mx-auto mb-3 rounded-full bg-gradient-to-br from-gold-primary to-gold-dark shadow-xl border border-gold-dark/30 flex items-center justify-center text-[30px] text-white font-semibold">
+                                        <div className="w-20 h-20 mx-auto mb-3 rounded-full bg-gradient-to-br from-amber-500 to-amber-700 shadow-xl border border-amber-800/30 flex items-center justify-center text-[30px] text-white font-semibold">
                                             <span>{(selectedDetails.label || '').replace('Cusp ', '').replace('C', '')}</span>
                                         </div>
-                                        <h2 className="text-[24px] font-semibold text-primary">{selectedDetails.label}</h2>
+                                        <h2 className="text-[24px] font-semibold text-amber-900">{selectedDetails.label}</h2>
                                     </>
                                 )}
                             </div>
 
                             {/* Position Card */}
-                            <div className="bg-white rounded-xl p-4 border border-gold-primary/20 shadow-sm">
-                                <h4 className="text-[11px] uppercase tracking-wider text-primary/60 font-medium mb-3">Position</h4>
+                            <div className="bg-white rounded-xl p-4 border border-amber-200/60 shadow-sm">
+                                <h4 className="text-[11px] uppercase tracking-wider text-amber-700/60 font-medium mb-3">Position</h4>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-baseline gap-2">
                                         <span className="text-[28px]">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.symbol || '♈'}</span>
-                                        <span className="text-[20px] text-primary font-medium">{selectedDetails.sign}</span>
+                                        <span className="text-[20px] text-amber-900 font-medium">{selectedDetails.sign}</span>
                                     </div>
                                     <div className="text-right">
-                                        <span className="text-[18px] text-primary font-medium">{selectedDetails.longitude}</span>
-                                        <span className="block text-[11px] text-primary/60 font-medium">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.element || 'Unknown'} · {ZODIAC_DATA[normalize(selectedDetails.sign)]?.quality || 'Unknown'}</span>
+                                        <span className="text-[18px] text-amber-900 font-medium">{selectedDetails.longitude}</span>
+                                        <span className="block text-[11px] text-amber-700/60 font-medium">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.element || 'Unknown'} · {ZODIAC_DATA[normalize(selectedDetails.sign)]?.quality || 'Unknown'}</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Nakshatra Details */}
-                            <div className="bg-white rounded-xl p-4 border border-gold-primary/20 shadow-sm">
-                                <h4 className="text-[11px] uppercase tracking-wider text-primary/60 font-medium mb-3">
+                            <div className="bg-white rounded-xl p-4 border border-amber-200/60 shadow-sm">
+                                <h4 className="text-[11px] uppercase tracking-wider text-amber-700/60 font-medium mb-3">
                                     <KnowledgeTooltip term="nakshatra">Nakshatra</KnowledgeTooltip> (Star)
                                 </h4>
                                 <div className="flex items-center gap-3">
@@ -263,19 +263,19 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                                         <Star className="w-6 h-6 text-white" />
                                     </div>
                                     <div>
-                                        <span className="text-[18px] text-primary font-medium">{selectedDetails.nakshatraName}</span>
-                                        <span className="block text-[14px] text-primary/70 font-medium">Lord: <span className="text-primary font-semibold">{selectedDetails.nakshatraLord}</span></span>
+                                        <span className="text-[18px] text-amber-900 font-medium">{selectedDetails.nakshatraName}</span>
+                                        <span className="block text-[14px] text-amber-800/70 font-medium">Lord: <span className="text-amber-900 font-semibold">{selectedDetails.nakshatraLord}</span></span>
                                     </div>
                                 </div>
                                 {NAKSHATRA_MEANINGS[normalize(selectedDetails.nakshatraName)] && (
-                                    <p className="mt-3 text-[13px] text-primary/70 bg-surface-warm/50 p-2.5 rounded-lg italic font-medium">
+                                    <p className="mt-3 text-[13px] text-amber-800/70 bg-amber-50/50 p-2.5 rounded-lg italic font-medium">
                                         "{NAKSHATRA_MEANINGS[normalize(selectedDetails.nakshatraName)]}"
                                     </p>
                                 )}
                             </div>
 
                             {/* Sub Lord */}
-                            <div className="bg-gradient-to-br from-gold-primary to-gold-dark rounded-xl p-4 text-white shadow-md border border-gold-dark/30">
+                            <div className="bg-gradient-to-br from-amber-500 to-amber-700 rounded-xl p-4 text-white shadow-md border border-amber-800/30">
                                 <h4 className="text-[11px] text-white/90 uppercase tracking-widest font-medium mb-2">
                                     <KnowledgeTooltip term="sub_lord" unstyled>Sub lord</KnowledgeTooltip> (key signifier)
                                 </h4>
@@ -291,24 +291,24 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                             </div>
 
                             {/* Lord Chain Summary */}
-                            <div className="bg-white rounded-xl p-4 border border-gold-primary/20 shadow-sm">
-                                <h4 className="text-[11px] uppercase tracking-wider text-primary/60 font-medium mb-3">Stellar chain</h4>
+                            <div className="bg-white rounded-xl p-4 border border-amber-200/60 shadow-sm">
+                                <h4 className="text-[11px] uppercase tracking-wider text-amber-700/60 font-medium mb-3">Stellar chain</h4>
                                 <div className="flex items-center justify-between text-center">
                                     <div className="flex-1">
                                         <span className="text-[20px]">{ZODIAC_DATA[normalize(selectedDetails.sign)]?.symbol || '♈'}</span>
-                                        <span className="block text-[10px] text-primary/60 font-medium mt-0.5">Sign</span>
+                                        <span className="block text-[10px] text-amber-700/60 font-medium mt-0.5">Sign</span>
                                     </div>
                                     <span className="text-gold-primary/40 text-[14px]">→</span>
                                     <div className="flex-1">
                                         <span className="text-[20px]">{PLANET_DATA[normalize(selectedDetails.nakshatraLord)]?.symbol || '☉'}</span>
-                                        <span className="block text-[10px] text-primary/60 font-medium mt-0.5">
+                                        <span className="block text-[10px] text-amber-700/60 font-medium mt-0.5">
                                             <KnowledgeTooltip term="star_lord">Star lord</KnowledgeTooltip>
                                         </span>
                                     </div>
                                     <span className="text-gold-primary/40 text-[14px]">→</span>
                                     <div className="flex-1 bg-gold-primary/10 rounded-lg py-1">
                                         <span className="text-[20px]">{PLANET_DATA[normalize(selectedDetails.subLord)]?.symbol || '☉'}</span>
-                                        <span className="block text-[10px] text-gold-dark font-semibold mt-0.5">
+                                        <span className="block text-[10px] text-amber-800 font-semibold mt-0.5">
                                             <KnowledgeTooltip term="sub_lord" unstyled>Sub lord</KnowledgeTooltip>
                                         </span>
                                     </div>
@@ -316,18 +316,18 @@ export const KpNakshatraNadiFocusedView: React.FC<KpNakshatraNadiFocusedViewProp
                             </div>
                         </div>
                     ) : (
-                        <div className="h-full flex flex-col items-center justify-center text-center text-primary">
+                        <div className="h-full flex flex-col items-center justify-center text-center text-amber-900">
                             <Moon className="w-16 h-16 mb-4 opacity-40" />
-                            <p className="font-serif text-[18px] text-primary font-medium">Select a {activeTab === 'planets' ? 'planet' : 'cusp'}</p>
-                            <p className="text-[14px] font-sans mt-1 text-primary/70 font-medium">to view detailed Nadi information</p>
+                            <p className="font-serif text-[18px] text-amber-900 font-medium">Select a {activeTab === 'planets' ? 'planet' : 'cusp'}</p>
+                            <p className="text-[14px] font-sans mt-1 text-amber-800/70 font-medium">to view detailed Nadi information</p>
                         </div>
                     )}
                 </div>
             </div>
 
             {/* Footer */}
-            <div className="bg-surface-warm/30 p-3 text-center border-t border-gold-primary/10 text-[13px] text-primary rounded-b-xl font-medium">
-                <Star className="w-3.5 h-3.5 inline-block mr-1 text-gold-dark" />
+            <div className="bg-amber-50/40 p-3 text-center border-t border-amber-200/40 text-[13px] text-amber-900 rounded-b-xl font-medium">
+                <Star className="w-3.5 h-3.5 inline-block mr-1 text-amber-700" />
                 <span className="font-semibold">
                     <KnowledgeTooltip term="kp_nakshatra_nadi">Nakshatra nadi</KnowledgeTooltip> system
                 </span>: <KnowledgeTooltip term="star_lord">Star lords</KnowledgeTooltip> reveal the source, <KnowledgeTooltip term="sub_lord">Sub lords</KnowledgeTooltip> determine the result.

@@ -117,12 +117,16 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
     });
 
     return (
-        <div className={cn("sticky left-0 right-0 z-40 h-12 bg-header-gradient flex items-center px-4 md:px-6 gap-4", hasClientBar ? "top-24" : "top-14")} role="navigation" aria-label="Vedic astrology sections">
-            {/* Top Border Indicator */}
-            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gold-primary opacity-10" />
-
-            {/* Bottom Ornament */}
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-gold-primary to-transparent shadow-[0_1px_3px_rgba(0,0,0,0.3)]" />
+        <div className={cn("sticky left-0 right-0 z-40 h-12 flex items-center px-4 md:px-6 gap-4", hasClientBar ? "top-24" : "top-14")}
+            style={{
+                background: '#78350f',
+                backdropFilter: 'blur(16px)',
+                borderBottom: '1px solid rgba(251, 191, 36, 0.1)',
+            }}
+            role="navigation"
+            aria-label="Vedic astrology sections">
+            {/* Top Border Indicator - keep very subtle */}
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/5" />
 
             {/* Navigation Items */}
             <nav className="flex-1 flex items-center gap-0.5 overflow-x-auto no-scrollbar h-full" aria-label="Vedic astrology sub-navigation">
@@ -155,25 +159,25 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                     return (
                         <React.Fragment key={item.name}>
                             {isGroupTransition && (
-                                <div className="w-[1px] h-6 bg-gold-primary/30 mx-1 shrink-0" aria-hidden="true" />
+                                <div className="w-[1px] h-6 bg-amber-400/20 mx-1 shrink-0" aria-hidden="true" />
                             )}
                             <Link
                                 href={href}
                                 aria-current={isActive ? "page" : undefined}
                                 className={cn(
-                                    TYPOGRAPHY.tableHeader,
-                                    "flex items-center px-3 py-2 transition-all duration-300 relative group shrink-0 whitespace-nowrap !font-medium",
+                                    "relative h-full flex items-center px-4 transition-all duration-300",
+                                    "text-[14px] font-semibold tracking-wide",
                                     isActive
-                                        ? "text-active-glow text-shadow-glow"
-                                        : "text-white hover:text-active-glow"
+                                        ? "text-white text-shadow-glow"
+                                        : "text-white hover:text-white"
                                 )}
                             >
                                 <span>{item.name}</span>
                                 {isActive && (
                                     <>
-                                        <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-active-glow to-transparent shadow-[0_0_10px_2px_rgba(255,210,125,0.5)]" />
+                                        <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-amber-300 to-transparent shadow-[0_0_10px_2px_rgba(251,191,36,0.5)]" />
                                         <span
-                                            className="absolute inset-0 -z-10 rounded-lg opacity-20 blur-md pointer-events-none [background:radial-gradient(ellipse_at_center,var(--active-glow)_0%,transparent_70%)]"
+                                            className="absolute inset-0 -z-10 rounded-lg opacity-20 blur-md pointer-events-none [background:radial-gradient(ellipse_at_center,var(--color-amber-300)_0%,transparent_70%)]"
                                         />
                                     </>
                                 )}
@@ -206,7 +210,7 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                     </button>
 
                     {isMoreOpen && (
-                        <div role="menu" aria-label="Additional navigation" className="absolute top-full right-0 mt-0 w-48 bg-surface-warm border border-gold-primary/30 rounded-xl shadow-2xl overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                        <div role="menu" aria-label="Additional navigation" className="absolute top-full right-0 mt-0 w-48 bg-white border border-amber-500/20 rounded-xl shadow-2xl overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
                             {filteredOverflowItems.map((item) => {
                                 const href = `/vedic-astrology${item.path}`;
                                 const isActive = pathname === href;
@@ -221,8 +225,8 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                                             TYPOGRAPHY.tableHeader,
                                             "flex items-center gap-3 px-4 py-3 transition-all !capitalize",
                                             isActive
-                                                ? "text-gold-dark bg-gold-primary/10 !font-bold"
-                                                : "text-primary hover:text-gold-dark hover:bg-gold-primary/5"
+                                                ? "text-amber-800 bg-amber-100/50 !font-bold"
+                                                : "text-primary hover:text-amber-700 hover:bg-amber-50"
                                         )}
                                     >
                                         {Icon && <Icon className="w-4 h-4" />}
@@ -274,10 +278,10 @@ export default function VedicLayout({ children }: { children: React.ReactNode })
     const hasClientBar = openClients.length > 0;
 
     return (
-        <div className={cn("flex flex-col min-h-screen bg-luxury-radial relative", hasClientBar ? "pt-24" : "pt-14")}>
-            {/* Subtle Texture Overlay */}
+        <div className={cn("flex flex-col min-h-screen bg-learn-warm relative", hasClientBar ? "pt-24" : "pt-14")}>
+            {/* Subtle Texture Overlay - Reduced for Learn style */}
             <div
-                className="absolute inset-0 opacity-15 pointer-events-none z-0 bg-[url('/textures/aged-paper.png')] bg-blend-multiply"
+                className="absolute inset-0 opacity-5 pointer-events-none z-0 bg-[url('/textures/aged-paper.png')] bg-blend-multiply"
             />
 
             {/* Sub-Header Hub */}

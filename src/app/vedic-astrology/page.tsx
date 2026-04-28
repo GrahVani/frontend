@@ -54,7 +54,7 @@ export default function VedicClientSelectionPage() {
 
     return (
         <div className="w-full space-y-6 animate-in fade-in duration-700 py-4 px-0">
-            <div className="px-4 text-[11px] font-bold uppercase tracking-widest text-gold-dark">
+            <div className="px-4 text-[11px] font-bold uppercase tracking-widest text-amber-700">
                 Vedic Astrology
             </div>
 
@@ -73,8 +73,8 @@ export default function VedicClientSelectionPage() {
                     <Link href="/clients/new"
                           className="px-8 py-4 text-white rounded-2xl text-[11px] font-bold uppercase tracking-wider transition-transform hover:scale-105"
                           style={{
-                              background: 'linear-gradient(135deg, rgba(201,162,77,0.90) 0%, rgba(139,90,43,0.85) 100%)',
-                              boxShadow: '0 4px 12px rgba(139,90,43,0.25), inset 0 1px 0 rgba(255,255,255,0.15)',
+                              background: 'linear-gradient(135deg, var(--color-amber-600) 0%, var(--color-orange-600) 100%)',
+                              boxShadow: '0 4px 12px rgba(217,119,6,0.25), inset 0 1px 0 rgba(255,255,255,0.15)',
                               border: '1px solid rgba(255,255,255,0.10)',
                           }}>
                         + Add Client
@@ -83,7 +83,7 @@ export default function VedicClientSelectionPage() {
             </div>
 
             {/* Search Bar */}
-            <div className="mx-0 prem-card glass-shimmer relative overflow-hidden p-4">
+            <div className="mx-0 learn-card relative overflow-hidden p-4">
                 <ParchmentInput
                     placeholder="Search clients by name or city..."
                     icon={<Search className="w-5 h-5 text-gold-dark" />}
@@ -119,7 +119,7 @@ export default function VedicClientSelectionPage() {
                 )}
 
                 {!loading && !error && filteredClients.length > 0 && (
-                    <div className="prem-card glass-shimmer relative overflow-hidden">
+                    <div className="learn-card relative overflow-hidden">
                         {filteredClients.map((client, idx) => (
                             <React.Fragment key={client.id}>
                                 {idx > 0 && (
@@ -132,7 +132,7 @@ export default function VedicClientSelectionPage() {
                 )}
 
                 {!loading && !error && filteredClients.length === 0 && (
-                    <div className="text-center py-16 prem-card">
+                    <div className="text-center py-16 learn-card">
                         {searchQuery ? (
                             <p className="font-serif text-[17px] italic text-ink/45 leading-relaxed">
                                 No clients match your search.
@@ -146,8 +146,8 @@ export default function VedicClientSelectionPage() {
                                     href="/clients/new"
                                     className="inline-flex items-center gap-2 px-6 py-3 text-white font-serif font-bold rounded-xl transition-colors"
                                     style={{
-                                        background: 'linear-gradient(135deg, rgba(201,162,77,0.90) 0%, rgba(139,90,43,0.85) 100%)',
-                                        boxShadow: '0 2px 8px rgba(139,90,43,0.20)',
+                                        background: 'linear-gradient(135deg, var(--color-amber-600) 0%, var(--color-orange-600) 100%)',
+                                        boxShadow: '0 2px 8px rgba(217,119,6,0.20)',
                                     }}
                                 >
                                     + Create First Client

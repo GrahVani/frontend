@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { ChevronRight, Calendar, Star, Zap, Loader2 } from 'lucide-react';
+import { getPlanetSymbol } from '@/lib/planet-symbols';
 import { useVedicClient } from '@/context/VedicClientContext';
 import { clientApi } from '@/lib/api'; // Keep for now if we do manual expansion triggers, or remove if fully hookified
 import { useAstrologerStore } from '@/store/useAstrologerStore';
@@ -149,7 +150,7 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
             <div className="flex items-center gap-2 mb-6 text-[14px] overflow-x-auto">
                 <button
                     onClick={() => setExpanded([])}
-                    className={cn("hover:text-gold-dark transition-colors font-semibold uppercase tracking-widest text-[12px]", expanded.length === 0 ? "text-gold-dark" : "text-ink/60")}
+                    className={cn("hover:text-amber-800 transition-colors font-semibold uppercase tracking-widest text-[12px]", expanded.length === 0 ? "text-amber-800" : "text-amber-600/60")}
                 >
                     <KnowledgeTooltip term="dasha_mahadasha">Mahadasha</KnowledgeTooltip>
                 </button>
@@ -157,8 +158,8 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
                     const label = id.split('-').pop();
                     return (
                         <React.Fragment key={id}>
-                            <ChevronRight className="w-3 h-3 text-gold-dark/40" />
-                            <span className="font-semibold uppercase tracking-widest text-[12px] text-gold-dark whitespace-nowrap">
+                            <ChevronRight className="w-3 h-3 text-amber-500" />
+                            <span className="font-semibold uppercase tracking-widest text-[12px] text-amber-800 whitespace-nowrap">
                                 {label}
                             </span>
                         </React.Fragment>
@@ -171,30 +172,30 @@ export default function VimshottariDasha({ compact = false }: VimshottariDashaPr
     if (loading && !dashaData.length) {
         return (
             <div className={cn(
-                "bg-white border border-gold-primary/15 rounded-[2.5rem] p-4 backdrop-blur-3xl h-full flex items-center justify-center shadow-xl",
+                "bg-white border border-amber-200/60 rounded-[2.5rem] p-4 backdrop-blur-3xl h-full flex items-center justify-center shadow-xl",
                 compact && "p-3 rounded-[2rem] shadow-2xl"
             )}>
-                <Loader2 className="w-8 h-8 text-gold-dark animate-spin" role="status" aria-label="Loading dasha data" />
+                <Loader2 className="w-8 h-8 text-amber-700 animate-spin" role="status" aria-label="Loading dasha data" />
             </div>
         );
     }
 
     return (
         <div className={cn(
-            "bg-white border border-gold-primary/15 rounded-[2.5rem] p-4 backdrop-blur-3xl h-full overflow-hidden flex flex-col shadow-xl",
+            "bg-white border border-amber-200/60 rounded-[2.5rem] p-4 backdrop-blur-3xl h-full overflow-hidden flex flex-col shadow-xl",
             compact && "p-3 rounded-[2rem] bg-white shadow-2xl"
         )}>
             <div className="flex items-center justify-between mb-4">
                 <div>
                     {!compact ? (
                         <>
-                            <h3 className="text-[12px] font-semibold text-gold-dark uppercase tracking-[0.3em] mb-1"><KnowledgeTooltip term="dasha_vimshottari">Vimshottari System</KnowledgeTooltip></h3>
-                            <h2 className="text-[24px] font-serif text-ink font-bold tracking-tight italic">Temporal Matrix</h2>
+                            <h3 className="text-[12px] font-semibold text-amber-700 uppercase tracking-[0.3em] mb-1"><KnowledgeTooltip term="dasha_vimshottari">Vimshottari System</KnowledgeTooltip></h3>
+                            <h2 className="text-[24px] font-serif text-amber-900 font-bold tracking-tight italic">Temporal Matrix</h2>
                         </>
                     ) : (
                         <div>
-                            <h2 className="text-[18px] font-serif text-ink font-bold tracking-tight">{currentMaha} Mahadasha</h2>
-                            <p className="text-2xs text-copper-dark uppercase tracking-[0.3em] font-semibold mt-1">Time Lord Sequence</p>
+                            <h2 className="text-[18px] font-serif text-amber-900 font-bold tracking-tight">{currentMaha} Mahadasha</h2>
+                            <p className="text-2xs text-amber-600 uppercase tracking-[0.3em] font-semibold mt-1">Time Lord Sequence</p>
                         </div>
                     )}
                 </div>
@@ -250,38 +251,38 @@ function DashaItem({ level, depth, expanded, onToggle, compact = false, path, ma
             <div
                 onClick={() => !compact && canExpand && onToggle(uniqueId, level, depth, path)}
                 className={cn(
-                    "flex items-center justify-between p-4 rounded-2xl transition-all cursor-pointer border group",
-                    depth === 0 ? "bg-surface-modal border-gold-primary/10 hover:bg-surface-warm shadow-sm" : "bg-transparent border-transparent hover:bg-surface-modal/50",
-                    isExpanded && depth === 0 && !compact && "bg-surface-warm border-gold-primary/20",
-                    isActive && depth > 0 && "bg-active-glow/20 border-active-glow/40",
-                    compact && "p-3 cursor-default"
+                    "flex items-center justify-between p-3 rounded-xl transition-all cursor-pointer border group",
+                    depth === 0 ? "bg-white border-amber-200/50 hover:bg-amber-50/50 shadow-sm" : "bg-transparent border-transparent hover:bg-amber-50/30",
+                    isExpanded && depth === 0 && !compact && "bg-amber-50/50 border-amber-300/50",
+                    isActive && depth > 0 && "bg-green-50 border-green-200/40",
+                    compact && "p-2 cursor-default"
                 )}
             >
                 <div className="flex items-center gap-4">
                     {!compact && canExpand && (
-                        <ChevronRight className={cn("w-4 h-4 text-gold-dark transition-transform duration-300", isExpanded && "rotate-90")} />
+                        <ChevronRight className={cn("w-4 h-4 text-amber-700 transition-transform duration-300", isExpanded && "rotate-90")} />
                     )}
                     {!compact && !canExpand && <div className="w-4" />}
 
-                    <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-all",
-                        depth === 0 ? "bg-gold-primary/10 text-gold-dark" : "bg-gold-primary/5 text-gold-dark/40",
-                        compact && "w-8 h-8 rounded-lg",
-                        isActive && "bg-active-glow text-ink shadow-lg"
+                    <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center transition-all text-[14px] font-bold border",
+                        depth === 0 ? "bg-amber-100 text-amber-700 border-amber-200" : "bg-amber-50 text-amber-400 border-amber-100",
+                        compact && "w-7 h-7 rounded-lg text-[12px]",
+                        isActive && "bg-green-100 text-green-700 border-green-200 shadow-sm"
                     )}>
-                        <Star className={cn("w-5 h-5", compact && "w-4 h-4")} />
+                        {getPlanetSymbol(level.planet)}
                     </div>
 
                     <div>
                         <h4 className={cn("font-serif font-bold tracking-tight flex items-center gap-2",
-                            depth === 0 ? "text-[18px] text-ink" : "text-md text-body",
-                            compact && (depth === 0 ? "text-md" : "text-[14px]")
+                            depth === 0 ? "text-[16px] text-amber-900" : "text-[14px] text-amber-700",
+                            compact && (depth === 0 ? "text-[14px]" : "text-[13px]")
                         )}>
                             {level.planet}
-                            {isActive && <span className="text-[9px] bg-ink text-active-glow px-1.5 py-0.5 rounded uppercase tracking-wider">Current</span>}
+                            {isActive && <span className="text-[8px] bg-green-600 text-white px-1.5 py-0.5 rounded uppercase tracking-wider">Current</span>}
                         </h4>
                         <div className="flex items-center gap-2 mt-0.5">
-                            <Calendar className="w-3 h-3 text-gold-dark/60" />
-                            <span className="text-2xs font-semibold text-gold-dark/40 uppercase tracking-widest">{formatDate(level.start)} — {formatDate(level.end)}</span>
+                            <Calendar className="w-3 h-3 text-amber-500" />
+                            <span className="text-2xs font-semibold text-amber-500 uppercase tracking-widest">{formatDate(level.start)} — {formatDate(level.end)}</span>
                         </div>
                     </div>
                 </div>
@@ -289,7 +290,7 @@ function DashaItem({ level, depth, expanded, onToggle, compact = false, path, ma
 
             {isExpanded && (
                 <div className={cn(
-                    "ml-10 border-l border-gold-primary/15 pl-4 space-y-2 animate-in slide-in-from-left-2 duration-300",
+                    "ml-8 border-l border-amber-200/50 pl-3 space-y-1.5 animate-in slide-in-from-left-2 duration-300",
                     compact && "ml-4 pl-3"
                 )}>
                     {level.sublevels && level.sublevels.length > 0 ? (
@@ -307,8 +308,8 @@ function DashaItem({ level, depth, expanded, onToggle, compact = false, path, ma
                         ))
                     ) : (
                         <div className="flex items-center gap-2 p-2" role="status" aria-label="Loading sub-periods">
-                            <Loader2 className="w-4 h-4 text-gold-dark animate-spin" />
-                            <span className="text-[12px] text-gold-dark">Loading sub-periods...</span>
+                            <Loader2 className="w-4 h-4 text-amber-700 animate-spin" />
+                            <span className="text-[12px] text-amber-700">Loading sub-periods...</span>
                         </div>
                     )}
                 </div>

@@ -1,9 +1,11 @@
+
+
 "use client";
 
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, LayoutDashboard, GraduationCap } from "lucide-react";
+import { BookOpen, LayoutDashboard, GraduationCap, Sun } from "lucide-react";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function LearnLayout({ children }: { children: React.ReactNode }) {
@@ -11,6 +13,7 @@ export default function LearnLayout({ children }: { children: React.ReactNode })
 
   const navItems = [
     { href: "/learn", label: "Courses", icon: GraduationCap },
+    { href: "/learn/daily", label: "Daily", icon: Sun },
     { href: "/learn/progress", label: "Progress", icon: LayoutDashboard },
   ];
 
@@ -19,7 +22,7 @@ export default function LearnLayout({ children }: { children: React.ReactNode })
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
         {/* Learning Navigation */}
         <div className="fixed top-14 left-0 right-0 z-40 bg-white/80 backdrop-blur-md border-b border-amber-200/50">
-          <div className="max-w-6xl mx-auto px-4">
+          <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
             <div className="flex items-center gap-6 h-12">
               <Link href="/learn" className="flex items-center gap-2 text-amber-800 font-bold">
                 <BookOpen className="w-5 h-5" />
@@ -47,10 +50,8 @@ export default function LearnLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Content */}
-        <div className="pt-28 pb-12 px-4">
-          <div className="max-w-6xl mx-auto">
-            {children}
-          </div>
+        <div className="pt-28 pb-12">
+          {children}
         </div>
       </div>
     </ProtectedRoute>

@@ -40,6 +40,7 @@ function DashaLoadingSkeleton() {
 }
 
 import { PLANET_COLORS, SIGN_COLORS } from '@/lib/astrology-constants';
+import { getPlanetSymbol } from '@/lib/planet-symbols';
 import {
     findActiveDashaPath,
     processDashaResponse,
@@ -73,6 +74,70 @@ function getDaysRemaining(endDateStr: string): number {
 }
 
 // =============================================================================
+// SUB-COMPONENTS
+// =============================================================================
+
+const MiniDashaList = () => {
+    const { clientDetails } = useVedicClient();
+    const { data: lahiriDasha, isLoading: lahiriLoading } = useDasha(
+        clientDetails?.id || '',
+        'mahadasha',
+        'lahiri'
+    );
+
+    if (lahiriLoading) return (
+        <div className="flex flex-col items-center justify-center h-full py-10 opacity-50">
+            <Loader2 className="w-6 h-6 animate-spin text-amber-600 mb-2" />
+            <p className="text-[10px] text-amber-700 font-serif italic">Syncing Eras...</p>
+        </div>
+    );
+
+    const periods = processDashaResponse(lahiriDasha?.data || []).slice(0, 9);
+
+    return (
+        <div className="space-y-1.5 p-1">
+            <div className="flex items-center justify-between mb-2 px-1">
+                <span className="text-[11px] font-bold text-amber-700 tracking-wider">Lahiri Mahadashas</span>
+                <span className="text-[10px] text-amber-400 font-mono">120 year cycle</span>
+            </div>
+            {periods.map((period, idx) => (
+                <div 
+                    key={idx} 
+                    className={cn(
+                        "px-3 py-2 rounded-xl border transition-all flex items-center justify-between",
+                        period.isCurrent 
+                            ? "bg-amber-100/80 border-amber-300 shadow-sm ring-1 ring-amber-200" 
+                            : "bg-white border-amber-100 hover:border-amber-200 hover:bg-amber-50/50"
+                    )}
+                >
+                    <div className="flex items-center gap-2">
+                         <span className={cn(
+                             "w-7 h-7 rounded-lg flex items-center justify-center text-[14px] font-bold border shadow-sm",
+                             PLANET_COLORS[period.planet] || "bg-white border-amber-200 text-amber-800"
+                         )}>
+                             {getPlanetSymbol(period.planet)}
+                         </span>
+                         <div className="flex flex-col">
+                             <span className="text-[12px] font-bold text-amber-900 leading-none">{period.planet}</span>
+                             {period.isCurrent && (
+                                <div className="flex items-center gap-1 mt-0.5">
+                                    <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />
+                                    <span className="text-[9px] font-black text-green-600 tracking-tighter">Current</span>
+                                </div>
+                             )}
+                         </div>
+                    </div>
+                    <div className="text-right">
+                        <div className="text-[10px] font-mono font-bold text-amber-800 leading-none">{formatDateShort(period.startDate)}</div>
+                        <div className="text-[9px] text-amber-500 font-medium mt-0.5">{standardizeDuration((period.raw?.duration_years as number) || 0, period.raw?.duration_days as number)}</div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+// =============================================================================
 // MAIN COMPONENT
 // =============================================================================
 
@@ -86,11 +151,12 @@ export default function VedicDashasPage() {
     const apiAyanamsa = settings.ayanamsa === 'TrueChitra' ? 'true_chitra' : settings.ayanamsa.toLowerCase();
     const isTrueChitra = settings.ayanamsa === 'TrueChitra';
 
-    // D1 Chart Logic for Sidebar (only for non-TrueChitra systems)
-    const activeSystem = apiAyanamsa;
+    // D1 Chart Logic for Sidebar
+    // For True Chitra, we default to Lahiri D1 chart as per user request
     const d1Chart = React.useMemo(() => {
-        return isTrueChitra ? null : processedCharts[`D1_${activeSystem}`];
-    }, [activeSystem, processedCharts, isTrueChitra]);
+        const targetSystem = isTrueChitra ? 'lahiri' : apiAyanamsa;
+        return processedCharts[`D1_${targetSystem}`];
+    }, [apiAyanamsa, processedCharts, isTrueChitra]);
 
     const { planets: displayPlanets, ascendant: ascendantSign } = parseChartData(d1Chart?.chartData);
 
@@ -110,6 +176,7 @@ export default function VedicDashasPage() {
     const [selectedIntelPlanet, setSelectedIntelPlanet] = useState<string | null>(null);
 
     const [isSubLevelFetching, setIsSubLevelFetching] = useState(false);
+    const [leftPanelTab, setLeftPanelTab] = useState<'chart' | 'dashas'>('chart');
 
     // Queries
     const { data: treeResponse, isLoading: treeLoading, error: treeError } = useDasha(
@@ -318,7 +385,7 @@ export default function VedicDashasPage() {
     if (!clientDetails) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-                <p className={cn(TYPOGRAPHY.sectionTitle, "!text-[20px] !text-gold-dark !mb-0")}>Please select a client to view Dasha details</p>
+                <p className={cn(TYPOGRAPHY.sectionTitle, "!text-[20px] !text-amber-700 !mb-0")}>Please select a client to view Dasha details</p>
             </div>
         );
     }
@@ -326,38 +393,39 @@ export default function VedicDashasPage() {
     const metadata = activeAnalysis?.metadata;
 
     return (
-        <div className="space-y-3 animate-in fade-in duration-500 pt-2">
+        <div className="space-y-4 animate-in fade-in duration-500 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 -mx-4 -mt-4 px-4 py-6">
             {/* Page Heading */}
-            <div className="mb-2">
-                <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-bold")}>Dasha system</h1>
+            <div className="mb-4">
+                <h1 className="text-[28px] font-bold text-amber-900">Dasha System</h1>
+                <p className="text-[16px] text-amber-600 mt-1">Explore planetary time periods and their influences</p>
             </div>
 
             {/* ================================================================= */}
             {/* TOP - HORIZONTAL CURRENT DASHA SUMMARY */}
             {/* ================================================================= */}
             {activeLords[0] && (
-                <div className="bg-surface-pure border border-gold-primary/20 rounded-xl p-2 shadow-sm mb-2">
+                <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-4">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-2">
                         {/* Status & Title */}
                         <div className="flex items-center gap-3 shrink-0 min-w-[120px]">
-                            <div className="w-10 h-10 rounded-xl bg-gold-primary/10 flex items-center justify-center">
-                                <TrendingUp className="w-5 h-5 text-gold-dark" />
+                            <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+                                <TrendingUp className="w-5 h-5 text-amber-700" />
                             </div>
                             <div>
-                                <h2 className={cn(TYPOGRAPHY.sectionTitle, "!mb-0 text-[16px]")}>Current dasha</h2>
-                                <div className="flex items-center gap-2 text-[9px] text-gold-dark font-sans">
-                                    <span className={cn(TYPOGRAPHY.label, "text-green-600 !mb-0")}>● Live</span>
+                                <h2 className="text-[18px] font-bold text-amber-900 !mb-0">Current Dasha</h2>
+                                <div className="flex items-center gap-2 text-[11px] text-amber-600 font-sans">
+                                    <span className="text-green-600 font-semibold tracking-wider">● Live</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* Mid Section: Date & Levels */}
-                        <div className="flex flex-1 flex-wrap items-center justify-around gap-4 px-4 border-x border-gold-primary/10">
+                        <div className="flex flex-1 flex-wrap items-center justify-around gap-4 px-4 border-x border-amber-200/60">
                             {/* Dasha Levels */}
                             <div className="flex items-center gap-6">
                                 {activeLords.slice(0, 3).map((node, i) => (
                                     <div key={i} className="flex flex-col">
-                                        <span className="text-[9px] uppercase tracking-wider text-gold-dark/60 font-bold mb-0.5">
+                                        <span className="text-[11px] tracking-wider text-amber-500 font-bold mb-0.5">
                                             {i === 0 ? 'Mahadasha' : i === 1 ? 'Antardasha' : 'Pratyantar'}
                                         </span>
                                         <span className={cn(
@@ -372,26 +440,26 @@ export default function VedicDashasPage() {
 
                             {/* Date Range */}
                             <div className="flex flex-col text-center">
-                                <span className="text-[10px] uppercase tracking-wider text-gold-dark/60 font-bold mb-1">Duration</span>
-                                <div className="text-[12px] text-gold-dark font-mono bg-gold-primary/5 px-2 py-1 rounded">
+                                <span className="text-[12px] tracking-wide text-amber-500 font-bold mb-1">Duration</span>
+                                <div className="text-[14px] text-amber-800 font-mono bg-amber-50 px-2 py-1 rounded border border-amber-200/50">
                                     {`${formatDateShort(activeLords[0].startDate)} — ${formatDateShort(activeLords[0].endDate)}`}
                                 </div>
                             </div>
                         </div>
 
                         {/* Progress Section */}
-                        <div className="shrink-0 min-w-[180px] w-full md:w-auto">
-                            <div className="flex justify-between text-[9px] mb-1 font-medium tracking-tight">
-                                <span className="text-gold-dark uppercase">Maha progress</span>
-                                <span className="text-amber-600 font-bold">{activeAnalysis?.progress}%</span>
+                        <div className="shrink-0 min-w-[200px] w-full md:w-auto">
+                            <div className="flex justify-between text-[13px] mb-1 font-medium tracking-tight">
+                                <span className="text-amber-600">Maha progress</span>
+                                <span className="text-amber-700 font-bold">{activeAnalysis?.progress}%</span>
                             </div>
-                            <div className="h-1.5 bg-gold-primary/10 rounded-full overflow-hidden">
+                            <div className="h-1.5 bg-amber-100 rounded-full overflow-hidden">
                                 <div
-                                    className="h-full bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full"
+                                    className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full"
                                     style={{ width: `${activeAnalysis?.progress || 0}%` }}
                                 />
                             </div>
-                            <div className="text-[9px] text-right mt-1 text-gold-dark/60 font-mono">
+                            <div className="text-[12px] text-right mt-1 text-amber-500 font-mono">
                                 {getDaysRemaining(activeLords[0].endDate).toLocaleString()} days left
                             </div>
                         </div>
@@ -402,50 +470,76 @@ export default function VedicDashasPage() {
             {/* ================================================================= */}
             {/* MAIN CONTENT - SPLIT LAYOUT */}
             {/* ================================================================= */}
-            <div className={`grid grid-cols-1 lg:grid-cols-12 gap-3 h-[500px] ${isTrueChitra ? 'h-auto' : ''}`}>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:h-[calc(100vh-200px)]">
 
-                {/* LEFT COLUMN - NATAL CHART (hidden for True Chitra) */}
-                {!isTrueChitra && (
+                {/* LEFT COLUMN - NATAL CHART / MINI DASHAS */}
                 <div className="lg:col-span-4 h-full">
-                    <div className="prem-card rounded-2xl overflow-hidden bg-surface-pure flex flex-col h-full">
-                        <div className={cn("px-4 py-2 border-b border-gold-primary/15 flex justify-between items-center shrink-0", COLORS.wbSectionHeader)}>
-                            <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[16px] !mb-0")}>Natal Chart (D1)</h3>
-                            <div className="px-2 py-0.5 bg-gold-primary/10 rounded border border-gold-primary/15">
-                                <span className={cn(TYPOGRAPHY.label, "text-ink !mb-0 text-[10px]")}>{ayanamsa}</span>
+                    <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden flex flex-col h-full">
+                        <div className="px-3 py-2 border-b border-amber-200/50 flex justify-between items-center shrink-0 bg-amber-50/50">
+                            <div className="flex gap-1">
+                                <button
+                                    onClick={() => setLeftPanelTab('chart')}
+                                    className={cn(
+                                        "px-2 py-1 text-[13px] font-bold rounded-lg transition-all",
+                                        leftPanelTab === 'chart' ? "bg-amber-100 text-amber-900 border border-amber-200" : "text-amber-500 hover:text-amber-700"
+                                    )}
+                                >
+                                    D1 Chart
+                                </button>
+                                <button
+                                    onClick={() => setLeftPanelTab('dashas')}
+                                    className={cn(
+                                        "px-2 py-1 text-[13px] font-bold rounded-lg transition-all",
+                                        leftPanelTab === 'dashas' ? "bg-amber-100 text-amber-900 border border-amber-200" : "text-amber-500 hover:text-amber-700"
+                                    )}
+                                >
+                                    Dashas
+                                </button>
+                            </div>
+                            <div className="px-2 py-0.5 bg-amber-100 rounded border border-amber-200">
+                                <span className="text-amber-800 font-semibold !mb-0 text-[11px]">{isTrueChitra && leftPanelTab === 'chart' ? 'Lahiri' : (leftPanelTab === 'dashas' ? 'Lahiri' : ayanamsa)}</span>
                             </div>
                         </div>
-                        <div className="flex-1 flex items-center justify-center p-4 bg-surface-pure/50">
-                            {displayPlanets.length > 0 ? (
-                                <ChartWithPopup
-                                    ascendantSign={ascendantSign}
-                                    planets={displayPlanets}
-                                    className="w-full aspect-square max-h-full"
-                                    showDegrees={true}
-                                />
+                        <div className="flex-1 flex flex-col overflow-hidden bg-amber-50/30">
+                            {leftPanelTab === 'chart' ? (
+                                <div className="flex-1 flex items-center justify-center p-4">
+                                    {displayPlanets.length > 0 ? (
+                                        <ChartWithPopup
+                                            ascendantSign={ascendantSign}
+                                            planets={displayPlanets}
+                                            className="w-full aspect-square max-h-full"
+                                            showDegrees={true}
+                                        />
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center text-center p-6 opacity-40">
+                                            <Loader2 className="w-8 h-8 animate-spin mb-4" />
+                                            <p className="text-[14px] font-serif italic text-amber-700">Quantum mapping natal positions...</p>
+                                        </div>
+                                    )}
+                                </div>
                             ) : (
-                                <div className="flex flex-col items-center justify-center text-center p-6 opacity-40">
-                                    <Loader2 className="w-8 h-8 animate-spin mb-4" />
-                                    <p className="text-[14px] font-serif italic text-ink">Quantum mapping natal positions...</p>
+                                <div className="flex-1 overflow-auto p-2 custom-scrollbar">
+                                    {/* Mini Dasha List for Lahiri */}
+                                    <MiniDashaList />
                                 </div>
                             )}
                         </div>
                     </div>
                 </div>
-                )}
 
                 {/* RIGHT COLUMN - DASHA TABLE */}
-                <div className={isTrueChitra ? "lg:col-span-12 h-full flex flex-col min-h-0" : "lg:col-span-8 h-full flex flex-col min-h-0"}>
-                    <div className="prem-card overflow-hidden flex flex-col h-full">
+                <div className="lg:col-span-8 h-full flex flex-col min-h-0">
+                    <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden flex flex-col h-full">
                         {/* Selector Tray - Fixed Top */}
-                        <div className="p-4 border-b border-gold-primary/10 flex flex-wrap items-center justify-between gap-4 shrink-0">
+                        <div className="p-4 border-b border-amber-200/50 flex flex-wrap items-center justify-between gap-4 shrink-0 bg-amber-50/30">
                             <div className="flex items-center gap-3">
-                                <label htmlFor="vedic-dasha-system-select" className={cn(TYPOGRAPHY.label, "!mb-0")}>System</label>
+                                <label htmlFor="vedic-dasha-system-select" className="text-[14px] font-bold text-amber-700 tracking-wide !mb-0">System</label>
                                 <div className="relative">
                                     <select
                                         id="vedic-dasha-system-select"
                                         value={selectedDashaType}
                                         onChange={(e) => handleSystemChange(e.target.value)}
-                                        className="appearance-none bg-surface-pure border border-gold-primary/20 rounded-xl px-4 py-2 pr-10 text-ink font-medium focus:outline-none focus:ring-2 focus:ring-gold-primary/30 cursor-pointer min-w-[200px]"
+                                        className="appearance-none bg-amber-50/50 border border-amber-200 rounded-xl px-4 py-2 pr-10 text-amber-900 font-medium focus:outline-none focus:ring-2 focus:ring-amber-300 cursor-pointer min-w-[200px]"
                                     >
                                         {DASHA_SYSTEMS.filter(sys => {
                                             if (settings.ayanamsa === 'KP' || settings.ayanamsa === 'Raman') {
@@ -464,7 +558,7 @@ export default function VedicDashasPage() {
                                             </option>
                                         ))}
                                     </select>
-                                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gold-dark pointer-events-none" />
+                                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-600 pointer-events-none" />
                                 </div>
                             </div>
 
@@ -477,12 +571,12 @@ export default function VedicDashasPage() {
                                             onClick={() => handleBreadcrumbClick(idx - 1)}
                                             disabled={idx > selectedPath.length}
                                             className={cn(
-                                                "px-3 py-1.5 rounded-lg text-[12px] font-bold transition-all whitespace-nowrap border",
+                                                "px-3 py-1.5 rounded-lg text-[13px] font-bold transition-all whitespace-nowrap border",
                                                 currentLevel === idx
-                                                    ? cn(COLORS.wbActiveTab, "border-transparent shadow-sm")
+                                                    ? "bg-amber-600 text-white border-transparent shadow-sm"
                                                     : idx <= selectedPath.length
-                                                        ? "bg-surface-pure text-gold-dark border-gold-primary/20 hover:bg-gold-primary/10"
-                                                        : "bg-surface-warm text-ink/30 border-gold-primary/15 cursor-not-allowed"
+                                                        ? "bg-white text-amber-700 border-amber-200 hover:bg-amber-50"
+                                                        : "bg-amber-50/50 text-amber-400/50 border-amber-100 cursor-not-allowed"
                                             )}
                                         >
                                             {level.short}
@@ -494,27 +588,26 @@ export default function VedicDashasPage() {
 
                         {/* Breadcrumbs - Fixed Top */}
                         {maxAvailableLevel >= 1 && (
-                            <div className="px-4 py-3 bg-surface-pure border-b border-gold-primary/10 flex items-center gap-2 overflow-x-auto shrink-0">
+                            <div className="px-4 py-3 bg-amber-50/30 border-b border-amber-200/50 flex items-center gap-2 overflow-x-auto shrink-0">
                                 <button
                                     onClick={() => handleBreadcrumbClick(-1)}
                                     className={cn(
-                                        TYPOGRAPHY.label,
-                                        "!text-[14px] !font-bold !mb-0",
-                                        currentLevel === 0 ? "!text-gold-dark" : "!text-gold-dark hover:!text-gold-dark"
+                                        "text-[15px] font-bold !mb-0",
+                                        currentLevel === 0 ? "text-amber-800" : "text-amber-700 hover:text-amber-900"
                                     )}
                                 >
                                     Mahadasha
                                 </button>
                                 {selectedPath.map((period, idx) => (
                                     <React.Fragment key={idx}>
-                                        <ChevronRight className="w-4 h-4 text-gold-dark/40" />
+                                        <ChevronRight className="w-4 h-4 text-amber-400" />
                                         <button
                                             onClick={() => handleBreadcrumbClick(idx)}
                                             className={cn(
-                                                "text-[14px] font-bold px-2 py-0.5 rounded border",
+                                                "text-[15px] font-bold px-2 py-0.5 rounded border",
                                                 isChara
-                                                    ? (SIGN_COLORS[String(period.raw?.sign_name || period.planet)] || "bg-surface-pure border-gold-primary/15")
-                                                    : (PLANET_COLORS[period.planet || period.lord || 'Jupiter'] || "bg-surface-pure border-gold-primary/15")
+                                                    ? (SIGN_COLORS[String(period.raw?.sign_name || period.planet)] || "bg-white border-amber-200")
+                                                    : (PLANET_COLORS[period.planet || period.lord || 'Jupiter'] || "bg-white border-amber-200")
                                             )}
                                         >
                                             {isChara ? String(period.raw?.sign_name || period.planet) : (period.planet || period.lord)} {DASHA_LEVELS[idx].short}
@@ -523,21 +616,21 @@ export default function VedicDashasPage() {
                                 ))}
                                 {currentLevel > 0 && (
                                     <>
-                                        <ChevronRight className="w-4 h-4 text-gold-dark/40" />
-                                        <span className={cn(TYPOGRAPHY.label, "!text-[14px] !font-bold !text-gold-dark !mb-0")}>{DASHA_LEVELS[currentLevel].name}</span>
+                                        <ChevronRight className="w-4 h-4 text-amber-400" />
+                                        <span className="text-[15px] font-bold text-amber-800 !mb-0">{DASHA_LEVELS[currentLevel].name}</span>
                                     </>
                                 )}
                             </div>
                         )}
 
-                        {/* Scrollable Table Area */}
-                        <div className="flex-1 overflow-auto min-h-0 bg-white/40 relative custom-scrollbar">
+                        {/* Table Area */}
+                        <div className="flex-1 overflow-auto min-h-0 bg-amber-50/30 relative custom-scrollbar">
                             {isLoading ? (
-                                <div className="flex flex-col items-center justify-center h-full min-h-[300px]">
-                                    <Loader2 className="w-10 h-10 text-gold-dark animate-spin mb-4" />
-                                    <p className="font-serif text-[14px] text-gold-dark animate-pulse italic">Quantum Calculating Eras...</p>
+                                <div className="flex flex-col items-center justify-center py-8">
+                                    <Loader2 className="w-8 h-8 text-amber-600 animate-spin mb-2" />
+                                    <p className="font-serif text-[12px] text-amber-700 animate-pulse italic">Quantum Calculating Eras...</p>
                                 </div>
-                            ) : (
+                            ) :(
                                 <>
                                     {/* Handle Specialized Views */}
                                     {isTribhagi && currentLevel === 0 ? (
@@ -568,56 +661,56 @@ export default function VedicDashasPage() {
                                         />
                                     ) : isChara ? (
                                         <table className="w-full">
-                                            <thead className={cn(TYPOGRAPHY.tableHeader, "bg-ink/5 border-b border-gold-primary/10 sticky top-0 z-10")}>
+                                            <thead className={cn(TYPOGRAPHY.tableHeader, "bg-white border-b border-amber-200/60 sticky top-0 z-30 shadow-sm")}>
                                                 <tr>
-                                                    <th className="px-3 py-2 text-left">Sign</th>
-                                                    <th className="px-3 py-2 text-left">Start date</th>
-                                                    <th className="px-3 py-2 text-left">End date</th>
-                                                    <th className="px-3 py-2 text-left">Duration</th>
-                                                    <th className="px-3 py-2 text-center">Status</th>
+                                                    <th className="px-3 py-2 text-left text-amber-800">Sign</th>
+                                                    <th className="px-3 py-2 text-left text-amber-800">Start date</th>
+                                                    <th className="px-3 py-2 text-left text-amber-800">End date</th>
+                                                    <th className="px-3 py-2 text-left text-amber-800">Duration</th>
+                                                    <th className="px-3 py-2 text-center text-amber-800">Status</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-gold-primary/10 font-medium bg-white/40">
+                                            <tbody className="divide-y divide-amber-200/40 font-medium bg-white/60">
                                                 {viewingPeriods.map((period, idx) => (
-                                                    <tr key={idx} className={cn("hover:bg-gold-primary/10 transition-colors group", period.isCurrent && "bg-gold-primary/5", (period.canDrillFurther || (isVimshottari && currentLevel < 4)) ? "cursor-pointer" : "cursor-default")} onClick={() => (period.canDrillFurther || (isVimshottari && currentLevel < 4)) && (isSubLevelFetching ? null : handleDrillDown(period))}>
+                                                    <tr key={idx} className={cn("hover:bg-amber-50/60 transition-colors group", period.isCurrent && "bg-amber-50/40", (period.canDrillFurther || (isVimshottari && currentLevel < 4)) ? "cursor-pointer" : "cursor-default")} onClick={() => (period.canDrillFurther || (isVimshottari && currentLevel < 4)) && (isSubLevelFetching ? null : handleDrillDown(period))}>
                                                         <td className="px-3 py-2">
                                                             <div className="flex items-center gap-2">
-                                                                <span className={cn("inline-flex items-center px-2 py-0.5 rounded-md text-[12px] font-bold border shadow-sm min-w-[60px] justify-center", SIGN_COLORS[String(period.raw?.sign_name || period.planet)] || "bg-surface-pure")}>{String(period.raw?.sign_name || period.planet)}</span>
-                                                                {period.isCurrent && <span className="inline-flex items-center px-1.5 py-0 rounded-full text-[8px] font-bold bg-green-100 text-green-700 border border-green-200 animate-pulse uppercase tracking-wider">Current</span>}
+                                                                <span className={cn("inline-flex items-center px-2.5 py-1 rounded-md text-[14px] font-semibold border shadow-sm min-w-[72px] justify-center", SIGN_COLORS[String(period.raw?.sign_name || period.planet)] || "bg-white border-amber-200 text-amber-800")}>{String(period.raw?.sign_name || period.planet)}</span>
+                                                                {period.isCurrent && <span className="inline-flex items-center px-1.5 py-0 rounded-full text-[9px] font-bold bg-green-100 text-green-700 border border-green-200 animate-pulse tracking-wide">Current</span>}
                                                             </div>
                                                         </td>
-                                                        <td className="px-3 py-2"><div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}><Calendar className="w-3 h-3 text-gold-dark/40" />{formatDateShort(period.startDate)}</div></td>
-                                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{formatDateShort(period.endDate)}</td>
-                                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{standardizeDuration((period.raw?.duration_years as number) || 0, period.raw?.duration_days as number)}</td>
-                                                        <td className="px-3 py-2 text-center">{period.isCurrent ? <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span> : (period.canDrillFurther || (isVimshottari && currentLevel < 4)) ? <ChevronRight className="w-3 h-3 text-gold-dark transition-transform group-hover:scale-125" /> : <span className="text-gold-dark/40 text-[12px]">—</span>}</td>
+                                                        <td className="px-3 py-2"><div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5 text-amber-700")}><Calendar className="w-3 h-3 text-amber-400" />{formatDateShort(period.startDate)}</div></td>
+                                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2 text-amber-700")}>{formatDateShort(period.endDate)}</td>
+                                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2 text-amber-700")}>{standardizeDuration((period.raw?.duration_years as number) || 0, period.raw?.duration_days as number)}</td>
+                                                        <td className="px-3 py-2 text-center">{period.isCurrent ? <span className="text-[10px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">Active</span> : (period.canDrillFurther || (isVimshottari && currentLevel < 4)) ? <ChevronRight className="w-3 h-3 text-amber-600 transition-transform group-hover:scale-125" /> : <span className="text-amber-400 text-[12px]">—</span>}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
                                         </table>
                                     ) : (
                                         <table className="w-full">
-                                            <thead className={cn(TYPOGRAPHY.tableHeader, "bg-ink/5 border-b border-gold-primary/10 sticky top-0 z-10")}>
+                                            <thead className={cn(TYPOGRAPHY.tableHeader, "bg-white border-b border-amber-200/60 sticky top-0 z-30 shadow-sm")}>
                                                 <tr>
-                                                    <th className="px-3 py-2 text-left">Planet</th>
-                                                    <th className="px-3 py-2 text-left">Start date</th>
-                                                    <th className="px-3 py-2 text-left">End date</th>
-                                                    <th className="px-3 py-2 text-left">Duration</th>
-                                                    <th className="px-3 py-2 text-center">Status</th>
+                                                    <th className="px-3 py-2 text-left text-amber-800">Planet</th>
+                                                    <th className="px-3 py-2 text-left text-amber-800">Start date</th>
+                                                    <th className="px-3 py-2 text-left text-amber-800">End date</th>
+                                                    <th className="px-3 py-2 text-left text-amber-800">Duration</th>
+                                                    <th className="px-3 py-2 text-center text-amber-800">Status</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-gold-primary/10 font-medium bg-white/40">
+                                            <tbody className="divide-y divide-amber-200/40 font-medium bg-white/60">
                                                 {viewingPeriods.map((period, idx) => (
-                                                    <tr key={idx} className={cn("hover:bg-gold-primary/10 transition-colors group", period.isCurrent && "bg-gold-primary/5", (period.canDrillFurther || (isAshtottari && currentLevel < 2) || (isVimshottari && currentLevel < 4)) ? "cursor-pointer" : "cursor-default")} onClick={() => (period.canDrillFurther || (isAshtottari && currentLevel < 2) || (isVimshottari && currentLevel < 4)) && (isSubLevelFetching ? null : handleDrillDown(period))}>
+                                                    <tr key={idx} className={cn("hover:bg-amber-50/60 transition-colors group", period.isCurrent && "bg-amber-50/40", (period.canDrillFurther || (isAshtottari && currentLevel < 2) || (isVimshottari && currentLevel < 4)) ? "cursor-pointer" : "cursor-default")} onClick={() => (period.canDrillFurther || (isAshtottari && currentLevel < 2) || (isVimshottari && currentLevel < 4)) && (isSubLevelFetching ? null : handleDrillDown(period))}>
                                                         <td className="px-3 py-2">
                                                             <div className="flex items-center gap-2">
-                                                                <span className={cn("inline-flex items-center px-2 py-0.5 rounded-md text-[12px] font-bold border shadow-sm min-w-[60px] justify-center", PLANET_COLORS[period.planet] || "bg-surface-pure")}>{period.planet}</span>
+                                                                <span className={cn("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[14px] font-semibold border shadow-sm min-w-[72px] justify-center", PLANET_COLORS[period.planet] || "bg-white border-amber-200 text-amber-800")}><span className="opacity-90 text-[14px]">{getPlanetSymbol(period.planet)}</span>{period.planet}</span>
                                                                 {period.isCurrent && <span className="inline-flex items-center px-1.5 py-0 rounded-full text-[8px] font-bold bg-green-100 text-green-700 border border-green-200 animate-pulse uppercase tracking-wider">Current</span>}
                                                             </div>
                                                         </td>
-                                                        <td className="px-3 py-2"><div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}><Calendar className="w-3 h-3 text-gold-dark/40" />{formatDateShort(period.startDate)}</div></td>
-                                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{formatDateShort(period.endDate)}</td>
-                                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2")}>{standardizeDuration((period.raw?.duration_years as number) || 0, period.raw?.duration_days as number)}</td>
-                                                        <td className="px-3 py-2 text-center">{isSubLevelFetching && currentLevel === 1 && period.planet === selectedIntelPlanet ? <Loader2 className="w-3 h-3 text-gold-dark animate-spin" /> : period.isCurrent ? <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span> : (period.canDrillFurther || (isAshtottari && currentLevel < 2) || (isVimshottari && currentLevel < 4)) ? <ChevronRight className="w-3 h-3 text-gold-dark transition-transform group-hover:scale-125" /> : <span className="text-gold-dark/40 text-[12px]">—</span>}</td>
+                                                        <td className="px-3 py-2"><div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5 text-amber-700")}><Calendar className="w-3 h-3 text-amber-400" />{formatDateShort(period.startDate)}</div></td>
+                                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2 text-amber-700")}>{formatDateShort(period.endDate)}</td>
+                                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2 text-amber-700")}>{standardizeDuration((period.raw?.duration_years as number) || 0, period.raw?.duration_days as number)}</td>
+                                                        <td className="px-3 py-2 text-center">{isSubLevelFetching && currentLevel === 1 && period.planet === selectedIntelPlanet ? <Loader2 className="w-3 h-3 text-amber-600 animate-spin" /> : period.isCurrent ? <span className="text-[10px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">Active</span> : (period.canDrillFurther || (isAshtottari && currentLevel < 2) || (isVimshottari && currentLevel < 4)) ? <ChevronRight className="w-3 h-3 text-amber-600 transition-transform group-hover:scale-125" /> : <span className="text-amber-400 text-[12px]">—</span>}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>

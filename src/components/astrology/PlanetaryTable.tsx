@@ -1,6 +1,22 @@
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { KnowledgeTooltip } from '@/components/knowledge';
+import { getPlanetSymbol } from '@/lib/planet-symbols';
+import { PLANET_SVG_FILLS } from '@/design-tokens/colors';
+
+const SIGN_SYMBOLS: Record<string, string> = {
+    'Aries': '♈', 'Taurus': '♉', 'Gemini': '♊', 'Cancer': '♋',
+    'Leo': '♌', 'Virgo': '♍', 'Libra': '♎', 'Scorpio': '♏',
+    'Sagittarius': '♐', 'Capricorn': '♑', 'Aquarius': '♒', 'Pisces': '♓',
+};
+
+/** Element-based tint for sign symbols — subtle, doesn't compete with planet colors */
+const SIGN_ELEMENT_COLORS: Record<string, string> = {
+    'Aries': '#D97706', 'Leo': '#D97706', 'Sagittarius': '#D97706',       // Fire
+    'Taurus': '#65A30D', 'Virgo': '#65A30D', 'Capricorn': '#65A30D',       // Earth
+    'Gemini': '#7C3AED', 'Libra': '#7C3AED', 'Aquarius': '#7C3AED',       // Air
+    'Cancer': '#0EA5E9', 'Scorpio': '#0EA5E9', 'Pisces': '#0EA5E9',       // Water
+};
 
 export interface PlanetaryInfo {
     planet: string;
@@ -45,7 +61,7 @@ export default function PlanetaryTable({ planets, className, rowClassName, varia
     return (
         <div className={cn("w-full", className)} role="table" aria-label="Planetary positions table">
             {/* Header */}
-            <div className={cn("flex py-1.5 px-3 border-b border-gold-primary/15", colWidths.gap, TYPOGRAPHY.tableHeader)} role="row">
+            <div className={cn("flex py-1.5 px-3 border-b border-amber-200/50", colWidths.gap, TYPOGRAPHY.tableHeader)} role="row">
                 <div className={cn(colWidths.planet, "shrink-0")} role="columnheader">Planet</div>
                 <div className={cn(colWidths.sign, "shrink-0")} role="columnheader">Sign</div>
                 <div className={cn(colWidths.degree, "shrink-0")} role="columnheader">Degree</div>
@@ -60,21 +76,33 @@ export default function PlanetaryTable({ planets, className, rowClassName, varia
                     <div
                         key={p.planet}
                         className={cn(
-                            "flex items-center px-3 font-sans text-[16px] border-b border-gold-primary/15 last:border-0 hover:bg-gold-primary/5 transition-colors leading-normal",
+                            "flex items-center px-3 font-sans text-[16px] border-b border-amber-200/40 last:border-0 hover:bg-amber-50 transition-colors leading-normal",
                             colWidths.gap,
                             rowClassName || "py-1.5",
-                            i % 2 === 0 ? "bg-transparent" : "bg-gold-primary/5"
+                            i % 2 === 0 ? "bg-transparent" : "bg-amber-50/50"
                         )}
                     >
                         {/* Planet Name */}
-                        <div className={cn(colWidths.planet, "shrink-0 truncate", TYPOGRAPHY.planetName)} title={p.planet}>
-                            {p.planet}
-                            {p.isRetro && <span className="ml-0.5 text-red-600 text-[12px]">(R)</span>}
+                        <div className={cn(colWidths.planet, "shrink-0 truncate flex items-center gap-1.5", TYPOGRAPHY.planetName)} title={p.planet}>
+                            <span
+                                className="text-[18px] font-serif"
+                                style={{ color: PLANET_SVG_FILLS[p.planet] || '#92400E' }}
+                            >
+                                {getPlanetSymbol(p.planet)}
+                            </span>
+                            <span>{p.planet}</span>
+                            {p.isRetro && <span className="-ml-0.5 text-rose-600 text-[12px] font-medium">℞</span>}
                         </div>
 
                         {/* Sign */}
-                        <div className={cn(colWidths.sign, "shrink-0 truncate font-regular", TYPOGRAPHY.planetName)} title={p.sign}>
-                            {p.sign}
+                        <div className={cn(colWidths.sign, "shrink-0 truncate font-regular flex items-center gap-1.5", TYPOGRAPHY.planetName)} title={p.sign}>
+                            <span
+                                className="text-[16px] font-serif opacity-80"
+                                style={{ color: SIGN_ELEMENT_COLORS[p.sign] || '#B45309' }}
+                            >
+                                {SIGN_SYMBOLS[p.sign] || ''}
+                            </span>
+                            <span>{p.sign}</span>
                         </div>
 
                         {/* Degree */}

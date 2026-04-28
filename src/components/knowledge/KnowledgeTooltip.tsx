@@ -72,7 +72,7 @@ export function KnowledgeTooltip({
             <PopoverTrigger asChild>
                 <span
                     className={cn(
-                        "cursor-help inline-flex items-center gap-1 transition-all duration-200 group/kt",
+                        "cursor-help inline-flex flex-wrap items-center gap-1 transition-all duration-200 group/kt",
                         !unstyled && [
                             "border-b-2 border-dotted border-gold-dark",
                             "hover:border-gold-primary hover:text-gold-dark",
@@ -107,7 +107,7 @@ export function KnowledgeTooltip({
                 side={side}
                 sideOffset={8}
                 className={cn(
-                    "w-[420px] max-h-[520px] overflow-y-auto p-0",
+                    "w-[calc(100vw-32px)] sm:w-[420px] max-h-[520px] overflow-y-auto p-0",
                     "bg-softwhite border-2 border-gold-dark/30",
                     "rounded-xl",
                     "shadow-[0_8px_40px_rgba(62,42,31,0.25),0_2px_8px_rgba(62,42,31,0.12)]",

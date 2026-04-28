@@ -323,10 +323,12 @@ export default function KundliAnalyticsPanel() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-2 w-full">
             {/* Shadbala Bar Chart */}
             <div className="col-span-12 md:col-span-5 prem-card overflow-hidden flex flex-col">
-                <div className="px-3 py-1.5 flex items-center gap-1.5" style={HEADER_STYLE}>
-                    <BarChart3 className="w-3.5 h-3.5 text-amber-600" />
-                    <h2 className={TYPOGRAPHY.sectionTitle}>Shadbala strength</h2>
-                    <span className="text-[9px] text-ink/30 ml-auto tracking-wider">LAHIRI ONLY</span>
+                <div className="px-3 py-1.5 flex items-center justify-between gap-1.5" style={HEADER_STYLE}>
+                    <div className="flex items-center gap-1.5 min-w-0">
+                        <BarChart3 className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "truncate")}>Shadbala strength</h2>
+                    </div>
+                    <span className="text-[9px] text-ink/30 tracking-wider whitespace-nowrap shrink-0">LAHIRI ONLY</span>
                 </div>
                 <div className="flex-1 bg-surface-warm overflow-hidden">
                     {loading ? (
@@ -348,10 +350,12 @@ export default function KundliAnalyticsPanel() {
 
             {/* Sarvashtakavarga Chart (Official North Indian Style) */}
             <div className="col-span-12 md:col-span-7 prem-card overflow-hidden flex flex-col">
-                <div className="px-3 py-1.5 flex items-center gap-1.5" style={HEADER_STYLE}>
-                    <Grid3X3 className="w-3.5 h-3.5 text-purple-600" />
-                    <h2 className={TYPOGRAPHY.sectionTitle}>Sarvashtakavarga</h2>
-                    <span className="text-[9px] text-ink/30 ml-auto tracking-wider">LAHIRI ONLY</span>
+                <div className="px-3 py-1.5 flex items-center justify-between gap-1.5" style={HEADER_STYLE}>
+                    <div className="flex items-center gap-1.5 min-w-0">
+                        <Grid3X3 className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "truncate")}>Sarvashtakavarga</h2>
+                    </div>
+                    <span className="text-[9px] text-ink/30 tracking-wider whitespace-nowrap shrink-0">LAHIRI ONLY</span>
                 </div>
                 <div className="flex-1 p-3 bg-surface-warm min-h-[180px] flex flex-col xl:flex-row items-stretch gap-6 overflow-hidden">
                     {loading ? (
