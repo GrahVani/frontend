@@ -182,6 +182,7 @@ export function useKpTransformedData(input: KpTransformedDataInput) {
                         degree: p.longitude?.split('°')[0] + '°' || "0°",
                         isRetro: p.is_retro || false,
                         house: p.house,
+                        chartLabel: p.chart_label || `${name.substring(0, 2)}(${p.sign_index || signNameToId[normalizedSign] || 1})`,
                         // @ts-ignore - extending Planet interface for KP display
                         starLord: p.star_lord || p.nakshatra_lord || '',
                         // @ts-ignore

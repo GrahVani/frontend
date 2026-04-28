@@ -6,6 +6,7 @@ import type { KpPlanet } from '@/types/kp.types';
 import { ArrowDown } from 'lucide-react';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { KnowledgeTooltip } from '@/components/knowledge';
+import { PLANET_SVG_FILLS } from '@/design-tokens/colors';
 
 interface KpPlanetaryTableProps {
     planets: KpPlanet[];
@@ -25,6 +26,29 @@ const signSymbols: Record<string, string> = {
     'Sagittarius': '♐', 'Capricorn': '♑', 'Aquarius': '♒', 'Pisces': '♓',
 };
 
+const SIGN_ELEMENT_COLORS: Record<string, string> = {
+    'Aries': '#D97706', 'Leo': '#D97706', 'Sagittarius': '#D97706',
+    'Taurus': '#65A30D', 'Virgo': '#65A30D', 'Capricorn': '#65A30D',
+    'Gemini': '#7C3AED', 'Libra': '#7C3AED', 'Aquarius': '#7C3AED',
+    'Cancer': '#0EA5E9', 'Scorpio': '#0EA5E9', 'Pisces': '#0EA5E9',
+};
+
+/** Standard Vedic planet order: Sun→Saturn, then nodes, then outer planets last */
+const PLANET_ORDER: Record<string, number> = {
+    'Sun': 1, 'Su': 1,
+    'Moon': 2, 'Mo': 2,
+    'Mars': 3, 'Ma': 3,
+    'Mercury': 4, 'Me': 4,
+    'Jupiter': 5, 'Ju': 5,
+    'Venus': 6, 'Ve': 6,
+    'Saturn': 7, 'Sa': 7,
+    'Rahu': 8, 'Ra': 8,
+    'Ketu': 9, 'Ke': 9,
+    'Pluto': 10, 'Pl': 10,
+    'Uranus': 11, 'Ur': 11,
+    'Neptune': 12, 'Ne': 12,
+};
+
 /**
  * KP Planetary Table
  * Displays planets with Nakshatra, Sub-Lord, Sub-Sub-Lord (key for KP)
@@ -42,7 +66,7 @@ export default function KpPlanetaryTable({ planets, className }: KpPlanetaryTabl
         <div className={cn("w-full h-full overflow-auto scrollbar-thin", className)}>
             <table className="w-full text-[12px] border-collapse font-sans">
                 <thead className="sticky top-0 z-10">
-                    <tr className="bg-surface-warm/60 border-y border-gold-primary/20 backdrop-blur-sm">
+                    <tr className="bg-amber-50/80 border-y border-amber-200/50 backdrop-blur-sm">
                         <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Planet</th>
                         <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Sign</th>
                         <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>Degree</th>
@@ -57,21 +81,28 @@ export default function KpPlanetaryTable({ planets, className }: KpPlanetaryTabl
                     </tr>
                 </thead>
                 <tbody>
-                    {planets.map((planet, idx) => (
+                    {[...planets].sort((a, b) => {
+                        const orderA = PLANET_ORDER[a.name] || PLANET_ORDER[a.fullName || ''] || 99;
+                        const orderB = PLANET_ORDER[b.name] || PLANET_ORDER[b.fullName || ''] || 99;
+                        return orderA - orderB;
+                    }).map((planet, idx) => (
                         <tr
                             key={planet.name}
                             className={cn(
-                                "border-b border-gold-primary/15 hover:bg-gold-primary/5 transition-colors",
-                                idx % 2 === 0 ? "bg-white" : "bg-surface-warm"
+                                "border-b border-amber-200/40 hover:bg-amber-50 transition-colors",
+                                idx % 2 === 0 ? "bg-white" : "bg-amber-50/40"
                             )}
                         >
                             {/* Planet */}
                             <td className="py-1.5 px-3 whitespace-nowrap">
                                 <span className="flex items-center gap-2">
-                                    <span className="text-[16px] text-primary font-serif">
+                                    <span
+                                        className="text-[16px] font-serif"
+                                        style={{ color: PLANET_SVG_FILLS[planet.fullName || planet.name] || PLANET_SVG_FILLS[planet.name] || '#92400E' }}
+                                    >
                                         {planetEmojis[planet.name] || planetEmojis[planet.fullName || ''] || '●'}
                                     </span>
-                                    <span className="text-[14px] text-primary font-medium">
+                                    <span className="text-[14px] text-amber-900 font-medium">
                                         {planet.fullName || planet.name}
                                     </span>
                                     {planet.isRetrograde && (
@@ -86,10 +117,13 @@ export default function KpPlanetaryTable({ planets, className }: KpPlanetaryTabl
                             {/* Sign */}
                             <td className="py-1.5 px-3 whitespace-nowrap">
                                 <span className="flex items-center gap-1.5">
-                                    <span className="text-[14px] text-primary font-serif">
+                                    <span
+                                        className="text-[14px] font-serif opacity-80"
+                                        style={{ color: SIGN_ELEMENT_COLORS[planet.sign] || '#B45309' }}
+                                    >
                                         {signSymbols[planet.sign] || ''}
                                     </span>
-                                    <span className="text-[14px] text-primary font-medium">
+                                    <span className="text-[14px] text-amber-900 font-medium">
                                         {planet.sign}
                                     </span>
                                 </span>
@@ -97,35 +131,35 @@ export default function KpPlanetaryTable({ planets, className }: KpPlanetaryTabl
 
                             {/* Degree */}
                             <td className="py-1.5 px-3 whitespace-nowrap">
-                                <span className="text-[14px] text-primary font-medium">
+                                <span className="text-[14px] text-amber-900 font-medium">
                                     {planet.degreeFormatted || `${planet.degree.toFixed(2)}°`}
                                 </span>
                             </td>
 
                             {/* House */}
                             <td className="py-1.5 px-3">
-                                <span className="text-[14px] text-primary font-medium">
+                                <span className="text-[14px] text-amber-900 font-medium">
                                     {planet.house}
                                 </span>
                             </td>
 
                             {/* Nakshatra */}
                             <td className="py-1.5 px-3 whitespace-nowrap">
-                                <span className="text-[14px] text-primary font-medium">
+                                <span className="text-[14px] text-amber-900 font-medium">
                                     {planet.nakshatra}
                                 </span>
                             </td>
 
                             {/* Star Lord */}
                             <td className="py-1.5 px-3">
-                                <span className="text-[14px] text-primary font-medium">
+                                <span className="text-[14px] text-amber-900 font-medium">
                                     {planet.nakshatraLord}
                                 </span>
                             </td>
 
                             {/* Sub Lord */}
                             <td className="py-1.5 px-3">
-                                <span className="text-[14px] text-primary font-medium">
+                                <span className="text-[14px] text-amber-900 font-medium">
                                     {planet.subLord}
                                 </span>
                             </td>

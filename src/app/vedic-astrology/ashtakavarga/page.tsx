@@ -57,18 +57,18 @@ const AnalyzeCard = ({ icon, title, desc, color }: { icon: React.ReactNode; titl
         "p-4 rounded-3xl border transition-all hover:shadow-lg",
         color === 'amber' ? "bg-amber-50/50 border-amber-100" :
             color === 'rose' ? "bg-rose-50/50 border-rose-100" :
-                "bg-copper-50/50 border-copper-100"
+                "bg-orange-50/50 border-orange-100"
     )}>
         <div className={cn(
             "w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-sm",
-            color === 'amber' ? "bg-amber-100 text-ink" :
+            color === 'amber' ? "bg-amber-100 text-amber-900" :
                 color === 'rose' ? "bg-rose-100 text-rose-600" :
-                    "bg-copper-100 text-ink"
+                    "bg-orange-100 text-orange-700"
         )}>
             {icon}
         </div>
-        <h4 className={cn(TYPOGRAPHY.value, "!text-[14px] mb-2 text-ink")}>{title}</h4>
-        <p className={cn(TYPOGRAPHY.subValue, "!text-[10px] leading-relaxed text-ink")}>{desc}</p>
+        <h4 className={cn(TYPOGRAPHY.value, "!text-[14px] mb-2 text-amber-900")}>{title}</h4>
+        <p className={cn(TYPOGRAPHY.subValue, "!text-[10px] leading-relaxed text-amber-900")}>{desc}</p>
     </div>
 );
 
@@ -154,10 +154,10 @@ export default function AshtakavargaPage() {
 
     if (!clientDetails) {
         return (
-            <div className="flex flex-col items-center justify-center h-[60vh] text-center p-6 bg-copper-50/30 rounded-2xl border border-dashed border-copper-200">
-                <Shield className="w-16 h-16 text-ink mb-4 animate-pulse" />
-                <h2 className="text-[18px] font-serif text-ink mb-2">No Client Selected</h2>
-                <p className="text-[12px] text-ink max-w-md">Please select a client from the workbench to analyze their Ashtakavarga strengths.</p>
+            <div className="flex flex-col items-center justify-center h-[60vh] text-center p-6 bg-amber-50/30 rounded-2xl border border-dashed border-amber-200">
+                <Shield className="w-16 h-16 text-amber-900 mb-4 animate-pulse" />
+                <h2 className="text-[18px] font-serif text-amber-900 mb-2">No Client Selected</h2>
+                <p className="text-[12px] text-amber-900 max-w-md">Please select a client from the workbench to analyze their Ashtakavarga strengths.</p>
             </div>
         );
     }
@@ -230,7 +230,7 @@ export default function AshtakavargaPage() {
     }
 
     return (
-        <div className="space-y-2 pt-0 px-1 sm:px-0">
+        <div className="space-y-3 animate-in fade-in duration-500 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 -mx-4 -mt-4 px-4 py-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div>
                     <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] font-bold")}>
@@ -239,7 +239,7 @@ export default function AshtakavargaPage() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <div className="flex prem-card p-1 rounded-xl overflow-x-auto">
+                    <div className="flex bg-white rounded-xl border border-amber-200/60 shadow-sm p-1 overflow-x-auto">
                         {(['sarva', 'bhinna', 'shodasha', 'samudaya', 'temporal'] as const)
                             .filter(tab => {
                                 const capabilities = clientApi.getSystemCapabilities(ayanamsa);
@@ -259,8 +259,8 @@ export default function AshtakavargaPage() {
                                         TYPOGRAPHY.label,
                                         "!text-[14px] !font-bold !mb-0",
                                         activeTab === tab
-                                            ? cn("text-ink shadow-sm scale-[1.02]", COLORS.wbActiveTab)
-                                            : "text-ink/55 hover:bg-gold-primary/10 hover:text-ink"
+                                            ? "bg-amber-600 text-white shadow-sm scale-[1.02]"
+                                            : "text-amber-600 hover:bg-amber-50 hover:text-amber-800"
                                     )}
                                 >
                                     {tab === 'sarva' ? 'Sarvashtakavarga' :
@@ -278,7 +278,7 @@ export default function AshtakavargaPage() {
             {loading && activeTab !== 'samudaya' && !(data as any)?.[activeTab] ? (
                 <div className="flex items-center justify-center h-[50vh]">
                     <div className="text-center">
-                        <Loader2 className="w-12 h-12 text-ink animate-spin mx-auto mb-4" />
+                        <Loader2 className="w-12 h-12 text-amber-600 animate-spin mx-auto mb-4" />
                         <p className={cn(TYPOGRAPHY.sectionTitle, "text-[16px]")}>Compiling bindu matrices...</p>
                     </div>
                 </div>
@@ -287,13 +287,13 @@ export default function AshtakavargaPage() {
                     {activeTab === 'sarva' || activeTab === 'bhinna' ? (
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
                             <div className="lg:col-span-12 space-y-3">
-                                <div className="prem-card rounded-xl overflow-hidden">
-                                    <div className="py-2 px-3 border-b border-gold-primary/15 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                                <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
+                                    <div className="py-2 px-3 border-b border-amber-200/60 flex flex-col md:flex-row md:items-center justify-between gap-3">
                                         <div>
                                             <h2 className={TYPOGRAPHY.sectionTitle}>
                                                 {activeTab === 'sarva' ? 'Sarvashtakavarga (SAV)' : `Bhinnashtakavarga: ${selectedPlanet}`}
                                             </h2>
-                                            <p className="text-[12px] text-ink/55 font-sans mt-0.5">
+                                            <p className="text-[12px] text-amber-600 font-sans mt-0.5">
                                                 {activeTab === 'sarva'
                                                     ? 'The collective strength of all planets across the 12 signs/houses.'
                                                     : `Individual contributions to ${selectedPlanet}'s strength in each sign.`}
@@ -301,7 +301,7 @@ export default function AshtakavargaPage() {
                                         </div>
 
                                         {activeTab === 'bhinna' && (
-                                            <div className="flex gap-1.5 p-1 rounded-xl prem-card overflow-x-auto">
+                                            <div className="flex gap-1.5 p-1 rounded-xl bg-white border border-amber-200/60 shadow-sm overflow-x-auto">
                                                 {PLANETS.map(p => (
                                                     <button
                                                         key={p}
@@ -309,8 +309,8 @@ export default function AshtakavargaPage() {
                                                         className={cn(
                                                             "px-3 py-1 text-[14px] font-semibold font-sans rounded-lg transition-all whitespace-nowrap",
                                                             selectedPlanet === p
-                                                                ? cn("text-ink shadow-sm scale-105", COLORS.wbActiveTab)
-                                                                : "text-ink/55 hover:bg-gold-primary/10 hover:text-ink"
+                                                                ? "bg-amber-600 text-white shadow-sm scale-105"
+                                                                : "text-amber-600 hover:bg-amber-50 hover:text-amber-800"
                                                         )}
                                                     >
                                                         {p}
@@ -322,7 +322,7 @@ export default function AshtakavargaPage() {
 
                                     <div className="p-3 grid grid-cols-1 lg:grid-cols-[5fr_12fr] gap-5 items-start">
                                         <div className="space-y-1.5">
-                                            <h3 className={cn(TYPOGRAPHY.label, "text-ink flex items-center gap-2")}>
+                                            <h3 className={cn(TYPOGRAPHY.label, "text-amber-900 flex items-center gap-2")}>
                                                 <MapIcon className="w-3.5 h-3.5" /> House distribution
                                             </h3>
                                             <div className="flex justify-start w-full max-w-lg mx-auto lg:mx-0">
@@ -336,7 +336,7 @@ export default function AshtakavargaPage() {
                                         </div>
 
                                         <div className="space-y-1.5 w-full">
-                                            <h3 className={cn(TYPOGRAPHY.label, "text-ink flex items-center gap-2")}>
+                                            <h3 className={cn(TYPOGRAPHY.label, "text-amber-900 flex items-center gap-2")}>
                                                 <Grid3X3 className="w-3.5 h-3.5" /> Bindu matrix
                                             </h3>
                                             <AshtakavargaMatrix
@@ -376,14 +376,14 @@ export default function AshtakavargaPage() {
                                 </div>
                             )}
                             {!data?.temporal && !data?.panchadha && (
-                                <div className="flex flex-col items-center justify-center min-h-[300px] prem-card rounded-3xl border-dashed p-12 text-center">
+                                <div className="flex flex-col items-center justify-center min-h-[300px] bg-white rounded-3xl border border-amber-200/60 shadow-sm border-dashed p-12 text-center">
                                     <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-bold mb-4")}>No temporal relationship data</h3>
                                     <button
                                         onClick={() => {
                                             clientApi.generateChart(clientDetails.id!, 'tatkalik_maitri_chakra', activeSystem);
                                             clientApi.generateChart(clientDetails.id!, 'panchadha_maitri', activeSystem).then(() => window.location.reload());
                                         }}
-                                        className={cn("px-8 py-3 text-ink rounded-2xl font-bold hover:shadow-xl transition-all", COLORS.premiumGradient)}
+                                        className="px-8 py-3 text-white rounded-2xl font-bold hover:shadow-xl transition-all bg-amber-600"
                                     >
                                         Generate maitri systems
                                     </button>
@@ -551,23 +551,20 @@ function SamudayaTab({
 
     if (missingPairs.length > 0) {
         return (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 flex flex-col items-center justify-center min-h-[400px] prem-card rounded-3xl border-dashed p-12 text-center">
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 flex flex-col items-center justify-center min-h-[400px] bg-white rounded-3xl border border-amber-200/60 shadow-sm border-dashed p-12 text-center">
                 <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-bold mb-4")}>
                     Divisional Charts &amp; Samudaya Ashtakavarga
                 </h3>
-                <p className="text-primary mb-2 max-w-lg">
+                <p className="text-amber-700 mb-2 max-w-lg">
                     {missingPairs.length} of {CHART_PAIRS.length} chart pairs are not yet generated.
                 </p>
-                <p className="text-primary mb-6 text-sm">
+                <p className="text-amber-700 mb-6 text-sm">
                     Missing: {missingPairs.map(c => c.label).join(', ')}
                 </p>
                 <button
                     onClick={handleGenerateAll}
                     disabled={generating}
-                    className={cn(
-                        "px-8 py-3 text-ink rounded-2xl font-bold hover:shadow-xl transition-all flex items-center gap-2",
-                        COLORS.premiumGradient
-                    )}
+                    className="px-8 py-3 text-white rounded-2xl font-bold hover:shadow-xl transition-all flex items-center gap-2 bg-amber-600"
                 >
                     {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
                     {generating ? `Generating ${progress}/${missingPairs.flatMap(p => {
@@ -587,7 +584,7 @@ function SamudayaTab({
                 <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-lg font-bold")}>
                     Samudaya Ashtakavarga — Divisional Charts
                 </h3>
-                <p className="text-sm text-primary mt-1">
+                <p className="text-sm text-amber-700 mt-1">
                     Combined Ashtakavarga bindu counts for all divisional charts.
                 </p>
             </div>
@@ -603,13 +600,13 @@ function SamudayaTab({
                     const sSet = getSamSettings(pair.divKey);
 
                     return (
-                        <div key={pair.divKey} className="prem-card rounded-xl p-2">
+                        <div key={pair.divKey} className="bg-white rounded-xl border border-amber-200/60 shadow-sm p-2">
                             <div className="grid grid-cols-2 gap-3">
                                 {/* Divisional Chart */}
                                 <div className="flex flex-col items-center">
                                     {/* Title with inline settings toggle */}
                                     <div className="flex items-center gap-1.5 mb-1">
-                                        <h4 className={cn(TYPOGRAPHY.label, "text-[13px] text-ink font-bold text-center")}>
+                                        <h4 className={cn(TYPOGRAPHY.label, "text-[13px] text-amber-900 font-bold text-center")}>
                                             {pair.label}
                                         </h4>
                                         <button
@@ -617,8 +614,8 @@ function SamudayaTab({
                                             className={cn(
                                                 "p-1 rounded-md transition-all",
                                                 dSet.show
-                                                    ? cn("text-ink shadow-sm", COLORS.wbActiveTab)
-                                                    : "text-primary hover:bg-primary hover:primary"
+                                                    ? "bg-amber-600 text-white shadow-sm"
+                                                    : "text-amber-700 hover:bg-amber-50 hover:text-amber-800"
                                             )}
                                             title="Divisional chart settings"
                                         >
@@ -643,22 +640,22 @@ function SamudayaTab({
                                             <div
                                                 className="absolute top-2 right-2 z-20 w-52 p-4 rounded-2xl shadow-2xl animate-in fade-in zoom-in-95 duration-200"
                                                 style={{
-                                                    background: 'rgba(255, 251, 243, 0.98)',
+                                                    background: 'rgba(255, 252, 246, 0.98)',
                                                     backdropFilter: 'blur(10px)',
-                                                    border: '1px solid rgba(201, 162, 77, 0.2)'
+                                                    border: '1px solid rgba(217, 119, 6, 0.2)'
                                                 }}
                                             >
                                                 <div className="space-y-4">
                                                     {/* Planet Size */}
                                                     <div>
                                                         <div className="flex justify-between items-center mb-1.5">
-                                                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-wider")}>Planet Size</label>
-                                                            <span className={cn(TYPOGRAPHY.value, "text-[11px] text-ink")}>{dSet.planetSize}px</span>
+                                                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-amber-900 uppercase tracking-wider")}>Planet Size</label>
+                                                            <span className={cn(TYPOGRAPHY.value, "text-[11px] text-amber-900")}>{dSet.planetSize}px</span>
                                                         </div>
                                                         <div className="flex items-center gap-2">
                                                             <button
                                                                 onClick={() => updateDivSettings(pair.divKey, { planetSize: Math.max(8, dSet.planetSize - 1) })}
-                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                                className="p-1 rounded-md bg-amber-50/60 border border-amber-200/60 hover:border-amber-300 text-amber-700"
                                                             >
                                                                 <Minus className="w-3 h-3" />
                                                             </button>
@@ -666,11 +663,11 @@ function SamudayaTab({
                                                                 type="range" min={8} max={36} step={1}
                                                                 value={dSet.planetSize}
                                                                 onChange={(e) => updateDivSettings(pair.divKey, { planetSize: parseInt(e.target.value) })}
-                                                                className="flex-1 accent-ink h-1 bg-ink/10 rounded-full appearance-none cursor-pointer"
+                                                                className="flex-1 accent-amber-600 h-1 bg-amber-100 rounded-full appearance-none cursor-pointer"
                                                             />
                                                             <button
                                                                 onClick={() => updateDivSettings(pair.divKey, { planetSize: Math.min(36, dSet.planetSize + 1) })}
-                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                                className="p-1 rounded-md bg-amber-50/60 border border-amber-200/60 hover:border-amber-300 text-amber-700"
                                                             >
                                                                 <Plus className="w-3 h-3" />
                                                             </button>
@@ -680,13 +677,13 @@ function SamudayaTab({
                                                     {/* Degree Size */}
                                                     <div>
                                                         <div className="flex justify-between items-center mb-1.5">
-                                                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-wider")}>Degree Size</label>
-                                                            <span className={cn(TYPOGRAPHY.value, "text-[11px] text-ink")}>{dSet.degreeSize}px</span>
+                                                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-amber-900 uppercase tracking-wider")}>Degree Size</label>
+                                                            <span className={cn(TYPOGRAPHY.value, "text-[11px] text-amber-900")}>{dSet.degreeSize}px</span>
                                                         </div>
                                                         <div className="flex items-center gap-2">
                                                             <button
                                                                 onClick={() => updateDivSettings(pair.divKey, { degreeSize: Math.max(6, dSet.degreeSize - 1) })}
-                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                                className="p-1 rounded-md bg-amber-50/60 border border-amber-200/60 hover:border-amber-300 text-amber-700"
                                                             >
                                                                 <Minus className="w-3 h-3" />
                                                             </button>
@@ -694,11 +691,11 @@ function SamudayaTab({
                                                                 type="range" min={6} max={18} step={1}
                                                                 value={dSet.degreeSize}
                                                                 onChange={(e) => updateDivSettings(pair.divKey, { degreeSize: parseInt(e.target.value) })}
-                                                                className="flex-1 accent-amber-600 h-1 bg-ink/10 rounded-full appearance-none cursor-pointer"
+                                                                className="flex-1 accent-amber-600 h-1 bg-amber-100 rounded-full appearance-none cursor-pointer"
                                                             />
                                                             <button
                                                                 onClick={() => updateDivSettings(pair.divKey, { degreeSize: Math.min(18, dSet.degreeSize + 1) })}
-                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                                className="p-1 rounded-md bg-amber-50/60 border border-amber-200/60 hover:border-amber-300 text-amber-700"
                                                             >
                                                                 <Plus className="w-3 h-3" />
                                                             </button>
@@ -708,13 +705,13 @@ function SamudayaTab({
                                                     {/* House Number Size */}
                                                     <div>
                                                         <div className="flex justify-between items-center mb-1.5">
-                                                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-wider")}>House Number Size</label>
-                                                            <span className={cn(TYPOGRAPHY.value, "text-[11px] text-ink")}>{dSet.houseSize}px</span>
+                                                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-amber-900 uppercase tracking-wider")}>House Number Size</label>
+                                                            <span className={cn(TYPOGRAPHY.value, "text-[11px] text-amber-900")}>{dSet.houseSize}px</span>
                                                         </div>
                                                         <div className="flex items-center gap-2">
                                                             <button
                                                                 onClick={() => updateDivSettings(pair.divKey, { houseSize: Math.max(8, dSet.houseSize - 1) })}
-                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                                className="p-1 rounded-md bg-amber-50/60 border border-amber-200/60 hover:border-amber-300 text-amber-700"
                                                             >
                                                                 <Minus className="w-3 h-3" />
                                                             </button>
@@ -722,11 +719,11 @@ function SamudayaTab({
                                                                 type="range" min={8} max={24} step={1}
                                                                 value={dSet.houseSize}
                                                                 onChange={(e) => updateDivSettings(pair.divKey, { houseSize: parseInt(e.target.value) })}
-                                                                className="flex-1 accent-amber-600 h-1 bg-ink/10 rounded-full appearance-none cursor-pointer"
+                                                                className="flex-1 accent-amber-600 h-1 bg-amber-100 rounded-full appearance-none cursor-pointer"
                                                             />
                                                             <button
                                                                 onClick={() => updateDivSettings(pair.divKey, { houseSize: Math.min(24, dSet.houseSize + 1) })}
-                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                                className="p-1 rounded-md bg-amber-50/60 border border-amber-200/60 hover:border-amber-300 text-amber-700"
                                                             >
                                                                 <Plus className="w-3 h-3" />
                                                             </button>
@@ -734,13 +731,13 @@ function SamudayaTab({
                                                     </div>
 
                                                     {/* Show Degrees Toggle */}
-                                                    <div className="flex items-center justify-between pt-2 border-t border-ink/10">
-                                                        <label className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-wider")}>Show Degrees</label>
+                                                    <div className="flex items-center justify-between pt-2 border-t border-amber-100">
+                                                        <label className={cn(TYPOGRAPHY.label, "text-[10px] text-amber-900 uppercase tracking-wider")}>Show Degrees</label>
                                                         <button
                                                             onClick={() => updateDivSettings(pair.divKey, { showDegrees: !dSet.showDegrees })}
                                                             className={cn(
                                                                 "w-8 h-4 rounded-full transition-colors relative",
-                                                                dSet.showDegrees ? "bg-ink" : "bg-ink/20"
+                                                                dSet.showDegrees ? "bg-amber-600" : "bg-amber-200"
                                                             )}
                                                         >
                                                             <div className={cn(
@@ -752,9 +749,9 @@ function SamudayaTab({
 
                                                     <button
                                                         onClick={() => resetDivDefaults(pair.divKey)}
-                                                        className="w-full mt-2 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all hover:bg-gold-primary/5 border border-gold-primary/20 text-ink"
+                                                        className="w-full mt-2 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all hover:bg-amber-50 border border-amber-200/60 text-amber-700"
                                                         style={{
-                                                            background: 'linear-gradient(135deg, rgba(201,162,77,0.05) 0%, rgba(201,162,77,0.02) 100%)',
+                                                            background: 'linear-gradient(135deg, rgba(245,158,11,0.05) 0%, rgba(245,158,11,0.02) 100%)',
                                                         }}
                                                     >
                                                         Reset to Defaults
@@ -769,7 +766,7 @@ function SamudayaTab({
                                 <div className="flex flex-col items-center">
                                     {/* Title with inline settings toggle */}
                                     <div className="flex items-center gap-1.5 mb-1">
-                                        <h4 className={cn(TYPOGRAPHY.label, "text-[13px] text-ink font-bold text-center")}>
+                                        <h4 className={cn(TYPOGRAPHY.label, "text-[13px] text-amber-900 font-bold text-center")}>
                                             Samudaya
                                         </h4>
                                         <button
@@ -777,8 +774,8 @@ function SamudayaTab({
                                             className={cn(
                                                 "p-1 rounded-md transition-all",
                                                 sSet.show
-                                                    ? cn("text-ink shadow-sm", COLORS.wbActiveTab)
-                                                    : "text-primary hover:bg-primary hover:primary"
+                                                    ? "bg-amber-600 text-white shadow-sm"
+                                                    : "text-amber-700 hover:bg-amber-50 hover:text-amber-800"
                                             )}
                                             title="Samudaya chart settings"
                                         >
@@ -802,22 +799,22 @@ function SamudayaTab({
                                             <div
                                                 className="absolute top-2 right-2 z-20 w-52 p-4 rounded-2xl shadow-2xl animate-in fade-in zoom-in-95 duration-200"
                                                 style={{
-                                                    background: 'rgba(255, 251, 243, 0.98)',
+                                                    background: 'rgba(255, 252, 246, 0.98)',
                                                     backdropFilter: 'blur(10px)',
-                                                    border: '1px solid rgba(201, 162, 77, 0.2)'
+                                                    border: '1px solid rgba(217, 119, 6, 0.2)'
                                                 }}
                                             >
                                                 <div className="space-y-4">
                                                     {/* Score Size */}
                                                     <div>
                                                         <div className="flex justify-between items-center mb-1.5">
-                                                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-wider")}>Score Size</label>
-                                                            <span className={cn(TYPOGRAPHY.value, "text-[11px] text-ink")}>{sSet.scoreSize}px</span>
+                                                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-amber-900 uppercase tracking-wider")}>Score Size</label>
+                                                            <span className={cn(TYPOGRAPHY.value, "text-[11px] text-amber-900")}>{sSet.scoreSize}px</span>
                                                         </div>
                                                         <div className="flex items-center gap-2">
                                                             <button
                                                                 onClick={() => updateSamSettings(pair.divKey, { scoreSize: Math.max(12, sSet.scoreSize - 1) })}
-                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                                className="p-1 rounded-md bg-amber-50/60 border border-amber-200/60 hover:border-amber-300 text-amber-700"
                                                             >
                                                                 <Minus className="w-3 h-3" />
                                                             </button>
@@ -825,11 +822,11 @@ function SamudayaTab({
                                                                 type="range" min={12} max={36} step={1}
                                                                 value={sSet.scoreSize}
                                                                 onChange={(e) => updateSamSettings(pair.divKey, { scoreSize: parseInt(e.target.value) })}
-                                                                className="flex-1 accent-ink h-1 bg-ink/10 rounded-full appearance-none cursor-pointer"
+                                                                className="flex-1 accent-amber-600 h-1 bg-amber-100 rounded-full appearance-none cursor-pointer"
                                                             />
                                                             <button
                                                                 onClick={() => updateSamSettings(pair.divKey, { scoreSize: Math.min(36, sSet.scoreSize + 1) })}
-                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                                className="p-1 rounded-md bg-amber-50/60 border border-amber-200/60 hover:border-amber-300 text-amber-700"
                                                             >
                                                                 <Plus className="w-3 h-3" />
                                                             </button>
@@ -839,13 +836,13 @@ function SamudayaTab({
                                                     {/* House Number Size */}
                                                     <div>
                                                         <div className="flex justify-between items-center mb-1.5">
-                                                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-ink uppercase tracking-wider")}>House Number Size</label>
-                                                            <span className={cn(TYPOGRAPHY.value, "text-[11px] text-ink")}>{sSet.houseSize}px</span>
+                                                            <label className={cn(TYPOGRAPHY.label, "text-[10px] text-amber-900 uppercase tracking-wider")}>House Number Size</label>
+                                                            <span className={cn(TYPOGRAPHY.value, "text-[11px] text-amber-900")}>{sSet.houseSize}px</span>
                                                         </div>
                                                         <div className="flex items-center gap-2">
                                                             <button
                                                                 onClick={() => updateSamSettings(pair.divKey, { houseSize: Math.max(8, sSet.houseSize - 1) })}
-                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                                className="p-1 rounded-md bg-amber-50/60 border border-amber-200/60 hover:border-amber-300 text-amber-700"
                                                             >
                                                                 <Minus className="w-3 h-3" />
                                                             </button>
@@ -853,11 +850,11 @@ function SamudayaTab({
                                                                 type="range" min={8} max={24} step={1}
                                                                 value={sSet.houseSize}
                                                                 onChange={(e) => updateSamSettings(pair.divKey, { houseSize: parseInt(e.target.value) })}
-                                                                className="flex-1 accent-amber-600 h-1 bg-ink/10 rounded-full appearance-none cursor-pointer"
+                                                                className="flex-1 accent-amber-600 h-1 bg-amber-100 rounded-full appearance-none cursor-pointer"
                                                             />
                                                             <button
                                                                 onClick={() => updateSamSettings(pair.divKey, { houseSize: Math.min(24, sSet.houseSize + 1) })}
-                                                                className="p-1 rounded-md bg-surface-warm border border-ink/20 hover:border-ink/40 text-ink/80"
+                                                                className="p-1 rounded-md bg-amber-50/60 border border-amber-200/60 hover:border-amber-300 text-amber-700"
                                                             >
                                                                 <Plus className="w-3 h-3" />
                                                             </button>
@@ -866,9 +863,9 @@ function SamudayaTab({
 
                                                     <button
                                                         onClick={() => resetSamDefaults(pair.divKey)}
-                                                        className="w-full mt-2 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all hover:bg-gold-primary/5 border border-gold-primary/20 text-ink"
+                                                        className="w-full mt-2 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all hover:bg-amber-50 border border-amber-200/60 text-amber-700"
                                                         style={{
-                                                            background: 'linear-gradient(135deg, rgba(201,162,77,0.05) 0%, rgba(201,162,77,0.02) 100%)',
+                                                            background: 'linear-gradient(135deg, rgba(245,158,11,0.05) 0%, rgba(245,158,11,0.02) 100%)',
                                                         }}
                                                     >
                                                         Reset to Defaults

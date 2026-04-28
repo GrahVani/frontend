@@ -80,7 +80,7 @@ function AddClientPopover({ onClose }: { onClose: () => void }) {
             {/* Search input */}
             <div className="flex items-center gap-2 px-3 py-2.5"
                 style={{ borderBottom: '1px solid rgba(186,164,126,0.25)' }}>
-                <Search className="w-3.5 h-3.5 text-gold-dark/60 shrink-0" />
+                <Search className="w-3.5 h-3.5 text-amber-700/60 shrink-0" />
                 <input
                     ref={inputRef}
                     type="text"
@@ -95,7 +95,7 @@ function AddClientPopover({ onClose }: { onClose: () => void }) {
             <div className="max-h-[280px] overflow-y-auto">
                 {isLoading ? (
                     <div className="flex items-center justify-center py-6">
-                        <div className="w-5 h-5 border-2 border-gold-primary/30 border-t-gold-primary rounded-full animate-spin" />
+                        <div className="w-5 h-5 border-2 border-amber-500/30 border-t-amber-600 rounded-full animate-spin" />
                     </div>
                 ) : clients.length === 0 ? (
                     <div className="text-center py-6 px-4">
@@ -120,10 +120,10 @@ function AddClientPopover({ onClose }: { onClose: () => void }) {
                                 style={{ borderBottom: '1px solid rgba(186,164,126,0.12)' }}
                             >
                                 {/* Avatar */}
-                                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-[11px] font-serif font-bold text-gold-dark"
+                                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-[11px] font-serif font-bold text-amber-800"
                                     style={{
-                                        background: 'linear-gradient(135deg, rgba(201,162,77,0.15) 0%, rgba(139,90,43,0.08) 100%)',
-                                        border: '1px solid rgba(201,162,77,0.20)',
+                                        background: 'linear-gradient(135deg, rgba(217, 119, 6, 0.15) 0%, rgba(180, 83, 9, 0.08) 100%)',
+                                        border: '1px solid rgba(217, 119, 6, 0.20)',
                                     }}>
                                     {name[0]?.toUpperCase() || '?'}
                                 </div>
@@ -131,7 +131,7 @@ function AddClientPopover({ onClose }: { onClose: () => void }) {
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-1.5">
                                         <span className="text-[13px] font-semibold text-ink truncate">{name}</span>
-                                        {isOpen && <UserCheck className="w-3 h-3 text-gold-primary shrink-0" />}
+                                        {isOpen && <UserCheck className="w-3 h-3 text-amber-600 shrink-0" />}
                                     </div>
                                     <div className="flex items-center gap-2 mt-0.5">
                                         {birthPlace && (
@@ -204,8 +204,8 @@ function ClientTab({
             {/* Client name */}
             <span
                 className={cn(
-                    "text-[11px] font-semibold truncate max-w-[100px]",
-                    isActive ? "text-active-glow text-shadow-glow" : "text-white/75"
+                    "text-[13px] font-semibold truncate max-w-[100px]",
+                    isActive ? "text-white text-shadow-glow" : "text-white"
                 )}
             >
                 {client.name}
@@ -246,8 +246,6 @@ export default function ClientSwitcherBar() {
         >
             {/* Top border line */}
             <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/8 to-transparent" />
-            {/* Bottom ornament */}
-            <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-gold-primary/25 to-transparent" />
 
             {/* Add client button */}
             <div className="relative shrink-0">

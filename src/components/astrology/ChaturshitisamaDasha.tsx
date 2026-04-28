@@ -6,6 +6,7 @@ import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { ChevronRight, Calendar, AlertCircle } from 'lucide-react';
 import { DashaNode, formatDateDisplay, calculateDuration } from '@/lib/dasha-utils';
 import { PLANET_COLORS } from '@/lib/astrology-constants';
+import { getPlanetSymbol } from '@/lib/planet-symbols';
 
 interface ChaturshitisamaDashaProps {
     periods: DashaNode[];
@@ -20,16 +21,16 @@ export default function ChaturshitisamaDasha({ periods, onDrillDown }: Chaturshi
             {/* Table */}
             <div className="">
                 <table className="w-full border-separate border-spacing-0">
-                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-white border-b border-gold-primary/15 sticky top-0 z-10 shadow-sm")}>
+                    <thead className={cn(TYPOGRAPHY.tableHeader, "bg-white border-b border-amber-200/60 sticky top-0 z-30 shadow-sm")}>
                         <tr>
-                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">Planet</th>
-                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">Start Date</th>
-                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">End Date</th>
-                            <th className="px-3 py-2 text-left border-b border-gold-primary/10">Duration</th>
-                            <th className="px-3 py-2 text-center border-b border-gold-primary/10">Status</th>
+                            <th className="px-3 py-2 text-left text-amber-800">Planet</th>
+                            <th className="px-3 py-2 text-left text-amber-800">Start Date</th>
+                            <th className="px-3 py-2 text-left text-amber-800">End Date</th>
+                            <th className="px-3 py-2 text-left text-amber-800">Duration</th>
+                            <th className="px-3 py-2 text-center text-amber-800">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gold-primary/10 font-medium">
+                    <tbody className="divide-y divide-amber-200/40 font-medium bg-white/60">
                         {periods.map((mahadasha, mIdx) => {
                             const canDrill = mahadasha.canDrillFurther || (mahadasha.sublevel && mahadasha.sublevel.length > 0);
                             const isBalance = mahadasha.raw?.dasha_balance_at_birth != null && mIdx === 0;
@@ -38,19 +39,19 @@ export default function ChaturshitisamaDasha({ periods, onDrillDown }: Chaturshi
                                 <tr
                                     key={mIdx}
                                     className={cn(
-                                        "hover:bg-gold-primary/10 transition-colors group",
-                                        mahadasha.isCurrent && "bg-gold-primary/5",
+                                        "hover:bg-amber-50/60 transition-colors group",
+                                        mahadasha.isCurrent && "bg-amber-50/40",
                                         canDrill ? "cursor-pointer" : "cursor-default"
                                     )}
                                     onClick={() => canDrill && onDrillDown?.(mahadasha)}
                                 >
-                                    <td className="px-3 py-1.5">
+                                    <td className="px-3 py-2">
                                         <div className="flex items-center gap-2">
                                             <span className={cn(
-                                                "inline-flex items-center px-2 py-0.5 rounded-md text-[12px] font-bold border shadow-sm min-w-[60px] justify-center",
-                                                PLANET_COLORS[mahadasha.planet || ''] || "bg-white"
+                                                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[14px] font-semibold border shadow-sm min-w-[72px] justify-center",
+                                                PLANET_COLORS[mahadasha.planet || ''] || "bg-white border-amber-200 text-amber-800"
                                             )}>
-                                                {mahadasha.planet}
+                                                <span className="opacity-90 text-[14px]">{getPlanetSymbol(mahadasha.planet)}</span>{mahadasha.planet}
                                             </span>
                                             {mahadasha.isCurrent && (
                                                 <span className="inline-flex items-center px-1.5 py-0 rounded-full text-[8px] font-bold bg-green-100 text-green-700 border border-green-200 animate-pulse uppercase tracking-wider">
@@ -65,24 +66,24 @@ export default function ChaturshitisamaDasha({ periods, onDrillDown }: Chaturshi
                                             )}
                                         </div>
                                     </td>
-                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
-                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5")}>
-                                            <Calendar className="w-3 h-3 text-ink/30" />
+                                    <td className="px-3 py-2">
+                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "flex items-center gap-1.5 text-amber-700")}>
+                                            <Calendar className="w-3 h-3 text-amber-400" />
                                             {formatDateDisplay(mahadasha.startDate)}
                                         </div>
                                     </td>
-                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>{formatDateDisplay(mahadasha.endDate)}</td>
-                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-1.5")}>
+                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2 text-amber-700")}>{formatDateDisplay(mahadasha.endDate)}</td>
+                                    <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2 text-amber-700")}>
                                         {calculateDuration(mahadasha.startDate, mahadasha.endDate)}
                                     </td>
-                                    <td className="px-3 py-1.5 text-center">
+                                    <td className="px-3 py-2 text-center">
                                         <div className="flex items-center justify-center gap-2">
                                             {mahadasha.isCurrent ? (
                                                 <span className="text-[9px] font-black text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-200 shadow-sm">ACTIVE</span>
                                             ) : canDrill ? (
-                                                <ChevronRight className="w-3 h-3 text-gold-dark transition-transform group-hover:scale-125" />
+                                                <ChevronRight className="w-3 h-3 text-amber-600 transition-transform group-hover:scale-125" />
                                             ) : (
-                                                <span className="text-gold-dark/40 text-[12px]">—</span>
+                                                <span className="text-amber-400 text-[12px]">—</span>
                                             )}
                                         </div>
                                     </td>

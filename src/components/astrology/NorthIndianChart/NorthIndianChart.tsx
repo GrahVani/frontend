@@ -14,6 +14,7 @@ export interface Planet {
     house?: number;
     nakshatra?: string;
     pada?: number;
+    chartLabel?: string;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -61,14 +62,14 @@ export default function NorthIndianChart({
     planetDisplayMode = 'name',
     planetFontSize = 14,
     planetFontWeight = '600',
-    showDegrees = true,
+    showDegrees = false,
     degreeFormat = 'short',
     degreeFontSize = 9,
     showHouseNumbers = true,
     signNumberFontSize,
     showGridLines = true,
-    gridLineColor = 'var(--header-border)',
-    gridLineWidth = 2,
+    gridLineColor = '#D97706',
+    gridLineWidth = 1.5,
     showRetrogradeIndicator = true,
     retrogradeStyle = 'R',
     planetSpacing = 'normal',
@@ -253,7 +254,7 @@ export default function NorthIndianChart({
                                         autoPlanetFontSize = 16;
                                         autoDegreeFontSize = 9;
                                         retroFontSize = 12;
-                                        degreeYOffset = 13;
+                                        degreeYOffset = 17;
                                     } else if (planetCount === 2) {
                                         // Two planets - side by side
                                         cols = 2;
@@ -262,7 +263,7 @@ export default function NorthIndianChart({
                                         autoPlanetFontSize = 15;
                                         autoDegreeFontSize = 9;
                                         retroFontSize = 11;
-                                        degreeYOffset = 13;
+                                        degreeYOffset = 17;
                                     } else {
                                         // 3+ planets - 2-column grid ("two in one row")
                                         cols = 2;
@@ -271,7 +272,7 @@ export default function NorthIndianChart({
                                         autoPlanetFontSize = 13;
                                         autoDegreeFontSize = 7;
                                         retroFontSize = 10;
-                                        degreeYOffset = 11;
+                                        degreeYOffset = 15;
                                     }
 
                                     const rows = Math.ceil(planetCount / cols);

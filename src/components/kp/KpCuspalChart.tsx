@@ -42,8 +42,8 @@ export default function KpCuspalChart({
     onHouseClick,
     planetFontSize = 17,
     degreeFontSize = 11,
-    signNumberFontSize = 14,
-    showDegrees = true,
+    signNumberFontSize = 17,
+    showDegrees = false,
 }: KpCuspalChartProps) {
     const [hoveredHouse, setHoveredHouse] = useState<number | null>(null);
 
@@ -73,7 +73,7 @@ export default function KpCuspalChart({
             </defs>
 
             {/* Background is handled by parent container but we keep SVG geometry */}
-            <g stroke="var(--header-border)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <g stroke="#D97706" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 {/* Outer Square Border */}
                 <rect x="10" y="10" width="380" height="380" fill="url(#kpChartBg)" />
                 {/* Cross Lines (X) */}
@@ -124,6 +124,7 @@ export default function KpCuspalChart({
                                     const spacing = boxPlanets.length > 5 ? 13 : 17;
                                     const yOffset = (i * spacing) - ((boxPlanets.length - 1) * (spacing / 2));
                                     const planetColor = PLANET_SVG_FILLS[p.name] || 'var(--ink)';
+                                    const displayLabel = p.chartLabel || p.name;
 
                                     return (
                                         <g key={p.name} transform={`translate(0, ${yOffset})`}>
@@ -136,7 +137,7 @@ export default function KpCuspalChart({
                                                 dominantBaseline="central"
                                                 className="select-none transition-all duration-300"
                                             >
-                                                {p.name}
+                                                {displayLabel}
                                                 {p.isRetro && (
                                                     <tspan fontSize={Math.max(8, planetFontSize - 3)} fontWeight="bold" fill="var(--status-error)" dx="1">R</tspan>
                                                 )}
@@ -157,22 +158,20 @@ export default function KpCuspalChart({
                             }
                         </g>
 
-                        {/* House Number */}
-                        {cuspMap[pos.h] && (
-                            <g transform={`translate(${signNumberPositions[pos.h].x}, ${signNumberPositions[pos.h].y})`}>
-                                <text
-                                    fontSize={signNumberFontSize}
-                                    fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
-                                    fontWeight="700"
-                                    fill="var(--text-muted)"
-                                    textAnchor="middle"
-                                    dominantBaseline="central"
-                                    className="select-none pointer-events-none"
-                                >
-                                    {pos.h}
-                                </text>
-                            </g>
-                        )}
+                        {/* Sign Number */}
+                        <g transform={`translate(${signNumberPositions[pos.h].x}, ${signNumberPositions[pos.h].y})`}>
+                            <text
+                                fontSize={signNumberFontSize}
+                                fontFamily={TYPOGRAPHY.svgSignNumber.fontFamily}
+                                fontWeight="700"
+                                fill="var(--text-muted)"
+                                textAnchor="middle"
+                                dominantBaseline="central"
+                                className="select-none pointer-events-none"
+                            >
+                                {signId}
+                            </text>
+                        </g>
                     </g>
                 );
             })}

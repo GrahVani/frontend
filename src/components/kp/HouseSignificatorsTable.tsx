@@ -26,7 +26,7 @@ export default function HouseSignificatorsTable({ data, className }: HouseSignif
         <div className={cn("w-full h-full overflow-auto scrollbar-thin", className)}>
             <table className="w-full text-[12px] border-collapse font-sans">
                 <thead className="sticky top-0 z-10">
-                    <tr className="bg-surface-warm/60 border-y border-gold-primary/20 backdrop-blur-sm">
+                    <tr className="bg-amber-50/80 border-y border-amber-200/50 backdrop-blur-sm">
                         <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>House</th>
                         <th className={cn(TYPOGRAPHY.tableHeader, "py-1.5 px-3 text-left")}>
                             In Nak. of <KnowledgeTooltip term="occupant">Occupants</KnowledgeTooltip>
@@ -48,17 +48,17 @@ export default function HouseSignificatorsTable({ data, className }: HouseSignif
                         <tr
                             key={row.house}
                             className={cn(
-                                "border-b border-gold-primary/15 hover:bg-gold-primary/5 transition-colors",
-                                idx % 2 === 0 ? "bg-white" : "bg-surface-warm"
+                                "border-b border-amber-200/40 hover:bg-amber-50 transition-colors",
+                                idx % 2 === 0 ? "bg-white" : "bg-amber-50/40"
                             )}
                         >
                             {/* House */}
                             <td className="py-1.5 px-3 whitespace-nowrap">
                                 <span className="flex items-center gap-2">
-                                    <span className="inline-flex items-center justify-center w-5 h-5 rounded border border-gold-primary/20 bg-white text-primary text-[10px] font-semibold shadow-sm shrink-0">
+                                    <span className="inline-flex items-center justify-center w-5 h-5 rounded border border-amber-200/60 bg-white text-amber-900 text-[10px] font-semibold shadow-sm shrink-0">
                                         {row.house}
                                     </span>
-                                    <span className="text-[14px] text-primary font-medium">
+                                    <span className="text-[14px] text-amber-900 font-medium">
                                         {houseNames[row.house - 1]}
                                     </span>
                                 </span>
@@ -66,7 +66,7 @@ export default function HouseSignificatorsTable({ data, className }: HouseSignif
 
                             {/* Planets in nak. of occupants */}
                             <td className="py-1.5 px-3">
-                                <span className="text-[14px] text-primary font-medium">
+                                <span className="text-[14px] text-amber-900 font-medium">
                                     {formatPlanets(row.levelB)}
                                 </span>
                             </td>

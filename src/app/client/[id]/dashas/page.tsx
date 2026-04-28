@@ -20,6 +20,7 @@ import {
 } from '@/lib/dasha-utils';
 import { cn } from '@/lib/utils';
 import { PLANET_COLORS } from '@/lib/astrology-constants';
+import { getPlanetSymbol } from '@/lib/planet-symbols';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -465,13 +466,13 @@ export default function VedicDashasPage() {
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3">
                                                         <div className={cn(
-                                                            "w-10 h-10 rounded-xl flex items-center justify-center border font-bold text-[12px] shadow-sm",
+                                                            "w-10 h-10 rounded-xl flex items-center justify-center border font-semibold text-[16px] shadow-sm",
                                                             PLANET_COLORS[period.planet] || "bg-surface-pure border-gold-primary/15"
                                                         )}>
-                                                            {String(isChara ? (period.raw?.sign_name || period.planet) : period.planet).slice(0, 2)}
+                                                            {isChara ? String(period.raw?.sign_name || period.planet).slice(0, 2) : getPlanetSymbol(period.planet)}
                                                         </div>
                                                         <div>
-                                                            <div className="font-bold text-ink">{isChara ? String(period.raw?.sign_name || period.planet) : period.planet}</div>
+                                                            <div className="font-semibold text-ink text-[15px]">{isChara ? String(period.raw?.sign_name || period.planet) : <span className="inline-flex items-center gap-1.5">{getPlanetSymbol(period.planet)} {period.planet}</span>}</div>
                                                             {period.isCurrent && (
                                                                 <span className="text-[9px] font-black uppercase text-gold-dark bg-gold-primary/10 px-1.5 py-0.5 rounded tracking-tighter">Current Period</span>
                                                             )}

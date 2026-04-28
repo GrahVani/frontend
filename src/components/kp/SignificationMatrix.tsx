@@ -22,7 +22,7 @@ export default function SignificationMatrix({ significations, className }: Signi
         <div className={cn("w-full overflow-auto scrollbar-thin", className)}>
             <table className="w-full text-[12px] border-collapse font-sans">
                 <thead className="sticky top-0 z-10">
-                    <tr className="bg-surface-warm/60 border-y border-gold-primary/20 backdrop-blur-sm">
+                    <tr className="bg-amber-50/80 border-y border-amber-200/50 backdrop-blur-sm">
                         <th className={cn(TYPOGRAPHY.tableHeader, "py-2 px-4 text-left text-[13px]")}>
                             Planet
                         </th>
@@ -45,13 +45,13 @@ export default function SignificationMatrix({ significations, className }: Signi
                         <tr
                             key={row.planet}
                             className={cn(
-                                "border-b border-gold-primary/15 hover:bg-gold-primary/5 transition-colors",
-                                idx % 2 === 0 ? "bg-white" : "bg-surface-warm"
+                                "border-b border-amber-200/40 hover:bg-amber-50 transition-colors",
+                                idx % 2 === 0 ? "bg-white" : "bg-amber-50/40"
                             )}
                         >
                             {/* Planet */}
                             <td className="py-2 px-4 whitespace-nowrap">
-                                <span className="text-[14px] text-primary font-medium">
+                                <span className="text-[14px] text-amber-900 font-medium">
                                     {row.planet}
                                 </span>
                             </td>

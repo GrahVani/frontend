@@ -45,19 +45,19 @@ export default function NavLink({ href, label, active, subItems, onClick, isLock
     const hasDropdown = subItems && subItems.length > 0;
 
     const baseClass = cn(
-        "px-2 lg:px-3 py-1.5 rounded-lg font-semibold text-[13px] tracking-wide transition-all duration-300 relative inline-flex items-center gap-1",
+        "px-2 lg:px-3 py-1.5 rounded-lg font-semibold text-[14px] tracking-wide transition-all duration-300 relative inline-flex items-center gap-1",
         active
-            ? "nav-glass-pill text-active-glow text-shadow-glow"
+            ? "nav-glass-pill text-white text-shadow-glow"
             : "text-white hover:text-white hover:bg-white/[0.06]"
     );
 
     // Simple link (no dropdown)
     if (!hasDropdown) {
         return (
-            <Link 
-                href={href} 
-                aria-current={active ? "page" : undefined} 
-                className={baseClass} 
+            <Link
+                href={href}
+                aria-current={active ? "page" : undefined}
+                className={baseClass}
                 onClick={onClick}
                 title={isLocked ? "Please select a client from Dashboard to unlock" : undefined}
             >
@@ -95,7 +95,7 @@ export default function NavLink({ href, label, active, subItems, onClick, isLock
                 </div>
                 <ChevronDown className={cn(
                     "w-3.5 h-3.5 transition-transform duration-200 shrink-0",
-                    active ? "text-active-glow" : "text-white",
+                    "text-white",
                     open && "rotate-180"
                 )} />
                 {active && (

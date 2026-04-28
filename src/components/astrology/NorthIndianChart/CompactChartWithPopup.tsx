@@ -30,7 +30,7 @@ export default function CompactChartWithPopup({
     ascendantSign, 
     className = "", 
     preserveAspectRatio, 
-    showDegrees = true,
+    showDegrees = false,
     planetFontSize,
     degreeFontSize,
     planetFontWeight,

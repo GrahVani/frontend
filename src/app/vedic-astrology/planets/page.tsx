@@ -42,6 +42,21 @@ const SIGN_LORDS: Record<string, string> = {
 
 
 import { parseChartData, signIdToName } from '@/lib/chart-helpers';
+import { getPlanetSymbol } from '@/lib/planet-symbols';
+import { PLANET_SVG_FILLS } from '@/design-tokens/colors';
+
+const SIGN_SYMBOLS: Record<string, string> = {
+    'Aries': '♈', 'Taurus': '♉', 'Gemini': '♊', 'Cancer': '♋',
+    'Leo': '♌', 'Virgo': '♍', 'Libra': '♎', 'Scorpio': '♏',
+    'Sagittarius': '♐', 'Capricorn': '♑', 'Aquarius': '♒', 'Pisces': '♓',
+};
+
+const SIGN_ELEMENT_COLORS: Record<string, string> = {
+    'Aries': '#D97706', 'Leo': '#D97706', 'Sagittarius': '#D97706',
+    'Taurus': '#65A30D', 'Virgo': '#65A30D', 'Capricorn': '#65A30D',
+    'Gemini': '#7C3AED', 'Libra': '#7C3AED', 'Aquarius': '#7C3AED',
+    'Cancer': '#0EA5E9', 'Scorpio': '#0EA5E9', 'Pisces': '#0EA5E9',
+};
 
 function mapChartToPlanetInfo(chartData: unknown): PlanetInfo[] {
     // Leverage the robust parser we alread fixed
@@ -111,7 +126,7 @@ export default function VedicPlanetsPage() {
     if (!clientDetails) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-                <p className="font-serif text-[20px] text-gold-dark">Please select a client to view planetary diagnostics</p>
+                <p className="font-serif text-[20px] text-amber-800">Please select a client to view planetary diagnostics</p>
             </div>
         );
     }
@@ -121,16 +136,16 @@ export default function VedicPlanetsPage() {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                    <Compass className="w-8 h-8 text-gold-dark" />
+                    <Compass className="w-8 h-8 text-amber-700" />
                     <div>
-                        <h1 className="text-[24px] font-serif text-ink font-black tracking-tight">Planetary Diagnostics</h1>
+                        <h1 className="text-[24px] font-serif text-amber-900 font-black tracking-tight">Planetary Diagnostics</h1>
                         <div className="flex items-center gap-2">
-                            <p className="text-gold-dark font-serif text-[14px]">Natal positions for {clientDetails.name}</p>
-                            <span className="px-2 py-0.5 bg-gold-primary/10 text-gold-dark text-[10px] font-bold uppercase rounded-full border border-gold-primary/20">
+                            <p className="text-amber-700 font-serif text-[14px]">Natal positions for {clientDetails.name}</p>
+                            <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold uppercase rounded-full border border-amber-200/60">
                                 {settings.ayanamsa}
                             </span>
                             {isGeneratingCharts && (
-                                <span className="flex items-center gap-1.5 px-2 py-0.5 bg-green-100/80 text-green-700 text-[10px] font-bold rounded-full border border-green-200 animate-pulse">
+                                <span className="flex items-center gap-1.5 px-2 py-0.5 bg-emerald-100/80 text-emerald-700 text-[10px] font-bold rounded-full border border-emerald-200 animate-pulse">
                                     <Loader2 className="w-3 h-3 animate-spin" />
                                     Generating...
                                 </span>
@@ -147,7 +162,7 @@ export default function VedicPlanetsPage() {
                 <button
                     onClick={refreshCharts}
                     disabled={isLoadingCharts}
-                    className="p-2 rounded-lg bg-white border border-gold-primary/20 hover:bg-gold-primary/10 text-gold-dark disabled:opacity-50"
+                    className="p-2 rounded-lg bg-white border border-amber-200/60 hover:bg-amber-50 text-amber-700 disabled:opacity-50"
                 >
                     <RefreshCw className={cn("w-4 h-4", isRefreshingCharts && "animate-spin")} />
                 </button>
@@ -156,19 +171,19 @@ export default function VedicPlanetsPage() {
             {/* Loading State - Only show if NO data exists */}
             {isLoadingCharts && Object.keys(processedCharts).length === 0 && (
                 <div className="flex flex-col items-center justify-center py-16">
-                    <Loader2 className="w-8 h-8 text-gold-dark animate-spin mb-3" />
-                    <p className="font-serif text-gold-dark">Loading planetary positions...</p>
+                    <Loader2 className="w-8 h-8 text-amber-700 animate-spin mb-3" />
+                    <p className="font-serif text-amber-700">Loading planetary positions...</p>
                 </div>
             )}
 
             {/* No Data State */}
             {!isLoadingCharts && planetData.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-20 text-center">
-                    <p className="font-serif text-gold-dark text-[18px] mb-2">No planetary data available</p>
-                    <p className="text-[14px] text-gold-dark/60 mb-4">Charts are being generated for this client</p>
+                    <p className="font-serif text-amber-800 text-[18px] mb-2">No planetary data available</p>
+                    <p className="text-[14px] text-amber-700/60 mb-4">Charts are being generated for this client</p>
                     <button
                         onClick={refreshCharts}
-                        className="px-4 py-2 bg-gold-primary text-white rounded-lg font-medium hover:bg-gold-primary/90"
+                        className="px-4 py-2 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700"
                     >
                         Refresh
                     </button>
@@ -177,12 +192,12 @@ export default function VedicPlanetsPage() {
 
             {/* Planets Table */}
             {planetData.length > 0 && (
-                <div className="prem-card rounded-2xl overflow-hidden">
+                <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-[14px]">
-                            <thead className="bg-ink/5 text-body/70 font-black uppercase text-[10px] tracking-widest">
+                            <thead className="bg-amber-50/80 text-amber-800/70 font-black uppercase text-[10px] tracking-widest">
                                 <tr>
-                                    <th className="px-4 py-3 text-left sticky left-0 bg-surface-pure z-10">Planet</th>
+                                    <th className="px-4 py-3 text-left sticky left-0 bg-white z-10">Planet</th>
                                     <th className="px-4 py-3 text-left">Sign</th>
                                     <th className="px-4 py-3 text-left">Sign Lord</th>
                                     <th className="px-4 py-3 text-left">Degree</th>
@@ -194,33 +209,49 @@ export default function VedicPlanetsPage() {
                                     <th className="px-4 py-3 text-left">Dignity</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gold-primary/10">
+                            <tbody className="divide-y divide-amber-200/40">
                                 {planetData.map((p, idx) => (
-                                    <tr key={idx} className="hover:bg-ink/5 transition-colors">
-                                        <td className="px-4 py-3 font-bold text-ink sticky left-0 bg-surface-warm z-10">
+                                    <tr key={idx} className="hover:bg-amber-50 transition-colors">
+                                        <td className="px-4 py-3 font-bold text-amber-900 sticky left-0 bg-white z-10">
                                             <span className="flex items-center gap-2">
-                                                {p.planet}
+                                                <span
+                                                    className="text-[18px] font-serif"
+                                                    style={{ color: PLANET_SVG_FILLS[p.planet] || '#92400E' }}
+                                                >
+                                                    {getPlanetSymbol(p.planet)}
+                                                </span>
+                                                <span>{p.planet}</span>
                                                 {p.retrograde && (
-                                                    <span className="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded">R</span>
+                                                    <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">R</span>
                                                 )}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 font-serif text-ink">{p.sign}</td>
-                                        <td className="px-4 py-3 text-gold-dark">{p.signLord}</td>
-                                        <td className="px-4 py-3 font-mono text-ink font-medium">{p.degree}</td>
-                                        <td className="px-4 py-3 font-mono text-[12px] text-gold-dark">{p.longitude}</td>
-                                        <td className="px-4 py-3 text-ink">{p.nakshatra}</td>
-                                        <td className="px-4 py-3 text-center font-bold text-gold-dark">{p.pada}</td>
-                                        <td className="px-4 py-3 text-gold-dark">{p.nakshatraLord}</td>
-                                        <td className="px-4 py-3 text-center font-bold text-ink">{p.house}</td>
+                                        <td className="px-4 py-3 font-serif text-amber-900">
+                                            <span className="flex items-center gap-1.5">
+                                                <span
+                                                    className="text-[16px] font-serif opacity-80"
+                                                    style={{ color: SIGN_ELEMENT_COLORS[p.sign] || '#B45309' }}
+                                                >
+                                                    {SIGN_SYMBOLS[p.sign] || ''}
+                                                </span>
+                                                <span>{p.sign}</span>
+                                            </span>
+                                        </td>
+                                        <td className="px-4 py-3 text-amber-700">{p.signLord}</td>
+                                        <td className="px-4 py-3 font-mono text-amber-900 font-medium">{p.degree}</td>
+                                        <td className="px-4 py-3 font-mono text-[12px] text-amber-700">{p.longitude}</td>
+                                        <td className="px-4 py-3 text-amber-900">{p.nakshatra}</td>
+                                        <td className="px-4 py-3 text-center font-bold text-amber-700">{p.pada}</td>
+                                        <td className="px-4 py-3 text-amber-700">{p.nakshatraLord}</td>
+                                        <td className="px-4 py-3 text-center font-bold text-amber-900">{p.house}</td>
                                         <td className="px-4 py-3">
                                             <span className={cn(
                                                 "px-2 py-0.5 rounded text-[10px] uppercase font-bold",
-                                                p.dignity === 'Exalted' ? 'bg-green-100 text-green-700' :
+                                                p.dignity === 'Exalted' ? 'bg-emerald-100 text-emerald-700' :
                                                     p.dignity === 'Debilitated' ? 'bg-red-100 text-red-700' :
                                                         p.dignity === 'Own Sign' ? 'bg-blue-100 text-blue-700' :
                                                             p.dignity === 'Moolatrikona' ? 'bg-purple-100 text-purple-700' :
-                                                                'bg-gold-primary/10 text-ink/50'
+                                                                'bg-amber-100 text-amber-700'
                                             )}>
                                                 {p.dignity}
                                             </span>

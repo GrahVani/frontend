@@ -137,12 +137,10 @@ export default function GlobalHeader() {
         <header className="fixed top-0 left-0 right-0 z-50 h-14" role="banner">
             <div className="relative h-full w-full flex items-center justify-between px-1 lg:px-4 bg-header-gradient"
                 style={{
-                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10), inset 0 -1px 0 rgba(0,0,0,0.15), 0 4px 20px rgba(42,24,16,0.35), 0 1px 4px rgba(42,24,16,0.25)',
+                    borderBottom: '1px solid rgba(251, 191, 36, 0.1)',
                 }}>
                 {/* Top light edge — glass refraction */}
                 <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                {/* Bottom warm glow edge */}
-                <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-active-glow/30 to-transparent" />
 
                 {/* LEFT: Brand + Navigation */}
                 <div className="flex items-center gap-2 md:gap-4">
@@ -278,10 +276,10 @@ export default function GlobalHeader() {
                         >
                             <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-serif overflow-hidden"
                                 style={{
-                                    background: 'linear-gradient(135deg, rgba(201,162,77,0.30) 0%, rgba(85,37,15,0.50) 100%)',
-                                    border: '1px solid rgba(208,140,96,0.40)',
+                                    background: 'linear-gradient(135deg, rgba(217, 119, 6, 0.30) 0%, rgba(120, 53, 15, 0.50) 100%)',
+                                    border: '1px solid rgba(217, 119, 6, 0.40)',
                                     boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.12)',
-                                    color: '#FFD27D',
+                                    color: 'var(--color-amber-200)',
                                 }}>
                                 {user?.avatarUrl ? (
                                     <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />

@@ -74,8 +74,8 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
     return (
         <div className={cn("space-y-5 animate-in fade-in duration-500", className)}>
             {/* Cusp Selector */}
-            <div className="flex items-center justify-center gap-1 p-1.5 bg-surface-warm rounded-xl border border-gold-primary/20 overflow-x-auto">
-                <button className="p-1.5 text-primary hover:text-gold-dark transition-colors shrink-0" onClick={() => setSelectedCusp(Math.max(1, selectedCusp - 1))}>
+            <div className="flex items-center justify-center gap-1 p-1.5 bg-amber-50/60 rounded-xl border border-amber-200/60 overflow-x-auto">
+                <button className="p-1.5 text-amber-700 hover:text-amber-900 transition-colors shrink-0" onClick={() => setSelectedCusp(Math.max(1, selectedCusp - 1))}>
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
                 </button>
                 {Array.from({ length: 12 }, (_, i) => i + 1).map(cusp => {
@@ -89,8 +89,8 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                             className={cn(
                                 "flex flex-col items-center justify-center min-w-[48px] h-14 rounded-lg transition-all duration-200 shrink-0",
                                 isActive
-                                    ? "bg-gradient-to-r from-gold-primary to-gold-dark text-white shadow-md scale-105"
-                                    : "bg-white/60 text-primary hover:bg-white hover:shadow-sm border border-gold-primary/20"
+                                    ? "bg-amber-600 text-white shadow-md scale-105"
+                                    : "bg-white/60 text-amber-900 hover:bg-white hover:shadow-sm border border-amber-200/60"
                             )}
                         >
                             <span className="text-[20px] leading-none">{ZODIAC_SYMBOLS[signIdx] || '♈'}</span>
@@ -98,7 +98,7 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                         </button>
                     );
                 })}
-                <button className="p-1.5 text-primary hover:text-gold-dark transition-colors shrink-0" onClick={() => setSelectedCusp(Math.min(12, selectedCusp + 1))}>
+                <button className="p-1.5 text-amber-700 hover:text-amber-900 transition-colors shrink-0" onClick={() => setSelectedCusp(Math.min(12, selectedCusp + 1))}>
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                 </button>
             </div>
@@ -106,19 +106,19 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
             {/* Main Content */}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                 {/* Left — Cusp Script */}
-                <div className="bg-white rounded-xl p-5 border border-gold-primary/20 shadow-sm">
+                <div className="bg-white rounded-xl p-5 border border-amber-200/60 shadow-sm">
                     {/* Header */}
                     <div className="flex items-center justify-between mb-3">
                         <span className={cn(TYPOGRAPHY.label, "text-[12px] uppercase tracking-wider")}>Focused Cusp Script</span>
-                        <span className="px-2.5 py-1 bg-surface-warm rounded border border-gold-primary/20 text-[12px] text-primary font-medium uppercase tracking-wide">
+                        <span className="px-2.5 py-1 bg-amber-50 rounded border border-amber-200/60 text-[12px] text-amber-900 font-medium uppercase tracking-wide">
                             {selectedCusp}H · {HOUSE_TOPICS[selectedCusp]}
                         </span>
                     </div>
 
                     {/* Degree */}
                     <div className="flex items-baseline gap-2 mb-6">
-                        <span className="text-[34px] font-serif font-bold text-primary tracking-tight">{signName}</span>
-                        <span className="text-[22px] text-primary/70 font-medium">{degreeDisplay}</span>
+                        <span className="text-[34px] font-serif font-bold text-amber-900 tracking-tight">{signName}</span>
+                        <span className="text-[22px] text-amber-800/70 font-medium">{degreeDisplay}</span>
                     </div>
 
                     {/* Lord Chain — Horizontal */}
@@ -127,22 +127,22 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                             {lordChain.map((lord, idx) => (
                                 <React.Fragment key={lord.key}>
                                     {idx > 0 && (
-                                        <ChevronRight className="w-4 h-4 text-gold-primary/40 shrink-0" />
+                                        <ChevronRight className="w-4 h-4 text-amber-400/60 shrink-0" />
                                     )}
                                     <div className={cn(
                                         "flex items-center gap-2.5 px-4 py-3 rounded-lg shrink-0",
                                         lord.highlight
-                                            ? "bg-gradient-to-r from-gold-primary to-gold-dark text-white shadow-sm"
-                                            : "bg-surface-warm border border-gold-primary/15"
+                                            ? "bg-amber-600 text-white shadow-sm"
+                                            : "bg-amber-50 border border-amber-200/60"
                                     )}>
-                                        <span className={cn("text-[20px] font-serif", lord.highlight ? "text-white" : "text-primary")}>
+                                        <span className={cn("text-[20px] font-serif", lord.highlight ? "text-white" : "text-amber-900")}>
                                             {PLANET_SYMBOLS[lord.data.planet] || '☉'}
                                         </span>
                                         <div>
-                                            <span className={cn("block text-[11px] uppercase tracking-wider font-medium", lord.highlight ? "text-white/80" : "text-primary/60")}>
+                                            <span className={cn("block text-[11px] uppercase tracking-wider font-medium", lord.highlight ? "text-white/80" : "text-amber-700/60")}>
                                                 <KnowledgeTooltip term={lord.term} unstyled>{lord.label}</KnowledgeTooltip>
                                             </span>
-                                            <span className={cn("text-[15px] font-medium leading-tight", lord.highlight ? "text-white" : "text-primary")}>
+                                            <span className={cn("text-[15px] font-medium leading-tight", lord.highlight ? "text-white" : "text-amber-900")}>
                                                 {lord.data.planet}
                                                 {lord.data.isRetro && <span className={cn("ml-0.5 text-[12px]", lord.highlight ? "text-rose-200" : "text-rose-500")}>R</span>}
                                             </span>
@@ -154,18 +154,18 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                     )}
 
                     {!currentPromise && (
-                        <div className="text-center py-6 text-primary text-[14px] font-medium">
+                        <div className="text-center py-6 text-amber-900 text-[14px] font-medium">
                             No interlink data for House {selectedCusp}
                         </div>
                     )}
                 </div>
 
                 {/* Right — Interlinks Promise */}
-                <div className="bg-white rounded-xl p-5 border border-gold-primary/20 shadow-sm">
+                <div className="bg-white rounded-xl p-5 border border-amber-200/60 shadow-sm">
                     {/* Header */}
                     <div className="flex items-center justify-between mb-3">
                         <span className={cn(TYPOGRAPHY.label, "text-[12px] uppercase tracking-wider")}>Cuspal Interlinks Promise</span>
-                        <span className="px-2.5 py-1 bg-surface-warm rounded border border-gold-primary/20 text-[12px] text-primary font-medium uppercase tracking-wide">CIL</span>
+                        <span className="px-2.5 py-1 bg-amber-50 rounded border border-amber-200/60 text-[12px] text-amber-900 font-medium uppercase tracking-wide">CIL</span>
                     </div>
 
                     {currentPromise && (
@@ -187,7 +187,7 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                                                 </span>
                                             ))
                                         ) : (
-                                            <span className="text-[13px] text-primary/30">—</span>
+                                            <span className="text-[13px] text-amber-700/30">—</span>
                                         )}
                                     </div>
                                 </div>
@@ -207,7 +207,7 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                                                 </span>
                                             ))
                                         ) : (
-                                            <span className="text-[13px] text-primary/30">—</span>
+                                            <span className="text-[13px] text-amber-700/30">—</span>
                                         )}
                                     </div>
                                 </div>
@@ -218,11 +218,11 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                                 <div className="mb-3">
                                     <div className="flex items-center gap-1.5 mb-1.5">
                                         <span className="w-1.5 h-1.5 rounded-full bg-gold-primary" />
-                                        <span className="text-[13px] font-semibold text-primary uppercase tracking-wide">Neutral</span>
+                                        <span className="text-[13px] font-semibold text-amber-900 uppercase tracking-wide">Neutral</span>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                         {neutralHouses.map(h => (
-                                            <span key={h} className="inline-flex items-center justify-center w-9 h-9 bg-white text-primary font-medium rounded-md text-[15px] border border-gold-primary/20 shadow-sm">
+                                            <span key={h} className="inline-flex items-center justify-center w-9 h-9 bg-white text-amber-900 font-medium rounded-md text-[15px] border border-amber-200/60 shadow-sm">
                                                 {h}
                                             </span>
                                         ))}
@@ -233,7 +233,7 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                             {/* Interpretation */}
                             <div className="pt-3 border-t border-gold-primary/10">
                                 <p className="text-[15px] text-primary leading-relaxed font-medium">
-                                    <span className="inline-block px-2 py-0.5 bg-gold-soft/10 border border-gold-soft rounded text-[12px] text-gold-dark font-semibold uppercase tracking-wide mr-1.5">Focus</span>
+                                    <span className="inline-block px-2 py-0.5 bg-amber-100 border border-amber-300 rounded text-[12px] text-amber-800 font-semibold uppercase tracking-wide mr-1.5">Focus</span>
                                     {selectedCusp}{selectedCusp === 1 ? 'st' : selectedCusp === 2 ? 'nd' : selectedCusp === 3 ? 'rd' : 'th'} cusp
                                     {' '}<KnowledgeTooltip term="sub_lord">Sub Lord</KnowledgeTooltip> ({currentPromise.chain.subLord.planet})
                                     {currentPromise.positiveHouses.length > 0 && (
@@ -251,7 +251,7 @@ export const KpFocusedCuspView: React.FC<KpFocusedCuspViewProps> = ({
                     )}
 
                     {!currentPromise && (
-                        <div className="text-center py-6 text-primary text-[14px] font-medium">
+                        <div className="text-center py-6 text-amber-900 text-[14px] font-medium">
                             No interlink promise data
                         </div>
                     )}

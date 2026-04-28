@@ -115,6 +115,27 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
         <div className={cn(className, "h-full flex flex-col")}>
             <div className="rounded-xl border border-primary flex-1 overflow-hidden">
 
+                {/* Legend */}
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 px-3 py-2 bg-amber-50/30 border-b border-primary text-[11px] text-primary">
+                    <span className="font-semibold uppercase tracking-wider">Legend:</span>
+                    <span className="flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                        Weak (≤2)
+                    </span>
+                    <span className="flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                        Average (3–4)
+                    </span>
+                    <span className="flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                        Good (5–6)
+                    </span>
+                    <span className="flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                        Strong (≥7)
+                    </span>
+                </div>
+
                 {/* Table */}
                 <div className="overflow-x-auto">
                     <table className="w-full h-full border-collapse text-[14px]" role="table" aria-label={isSarva ? "Sarvashtakavarga matrix showing planetary bindus across signs" : `Bhinnashtakavarga matrix for ${planet || 'planet'}`}>

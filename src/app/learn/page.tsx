@@ -89,8 +89,8 @@ export default function LearnPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
       {/* Welcome Hero */}
-      <div className="bg-gradient-to-r from-amber-900 via-amber-800 to-orange-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 py-10">
+      <div className="bg-gradient-to-r from-amber-900 via-amber-800 to-orange-900 text-white shadow-lg">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-2 mb-3">
@@ -122,7 +122,7 @@ export default function LearnPage() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Stats Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
           <StatCard
@@ -210,11 +210,10 @@ export default function LearnPage() {
               (level, idx) => (
                 <React.Fragment key={level}>
                   <div
-                    className={`px-4 py-2 rounded-xl text-sm font-semibold ${
-                      idx === 0
+                    className={`px-4 py-2 rounded-xl text-sm font-semibold ${idx === 0
                         ? "bg-amber-600 text-white"
                         : "bg-amber-100 text-amber-600"
-                    }`}
+                      }`}
                   >
                     {level}
                   </div>

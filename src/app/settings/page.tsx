@@ -23,7 +23,7 @@ const DEFAULTS: ChartPreferences = {
     chartStyle: "north_indian",
     defaultOrb: "8",
     showRetro: true,
-    showDegrees: true,
+    showDegrees: false,
 };
 
 function loadPreferences(): ChartPreferences {

@@ -58,8 +58,8 @@ export default function HoraryPanel({
             {/* Input Form */}
             <form onSubmit={handleSubmit} className="prem-card p-6">
                 <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-indigo-100 rounded-xl">
-                        <HelpCircle className="w-5 h-5 text-indigo-600" />
+                    <div className="p-2 bg-amber-100 rounded-xl">
+                        <HelpCircle className="w-5 h-5 text-amber-600" />
                     </div>
                     <div>
                         <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px]")}>KP <KnowledgeTooltip term="kp_horary">Horary</KnowledgeTooltip> (Prashna)</h3>

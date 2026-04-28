@@ -102,15 +102,15 @@ function TabSection({ title, subtitle, badge, children, noPadding }: {
     noPadding?: boolean;
 }) {
     return (
-        <div className="border border-gold-primary/20 rounded-lg overflow-hidden shadow-sm flex flex-col bg-surface-warm h-full outline-none">
-            <div className="bg-gold-primary/10 px-3 py-1 border-b border-gold-primary/15 flex justify-between items-center shrink-0">
-                <h3 className={cn(TYPOGRAPHY.value, "text-[16px] text-ink leading-tight tracking-wide text-balance")}>{title}</h3>
+        <div className="border border-amber-200/60 rounded-lg overflow-hidden shadow-sm flex flex-col bg-white h-full outline-none">
+            <div className="bg-amber-50 px-3 py-1 border-b border-amber-200/50 flex justify-between items-center shrink-0">
+                <h3 className={cn(TYPOGRAPHY.value, "text-[16px] text-amber-900 leading-tight tracking-wide text-balance")}>{title}</h3>
                 {subtitle && (
                     <span className={cn(TYPOGRAPHY.subValue, "text-[10px] hidden sm:inline-block")}>{subtitle}</span>
                 )}
                 {badge && (
-                    <div className="px-2 py-0.5 bg-gold-primary/10 rounded border border-gold-primary/20">
-                        <span className={cn(TYPOGRAPHY.label, "text-[9px] uppercase tracking-widest")}>{badge}</span>
+                    <div className="px-2 py-0.5 bg-amber-100 rounded border border-amber-200/60">
+                        <span className={cn(TYPOGRAPHY.label, "text-[9px] text-amber-700 uppercase tracking-widest")}>{badge}</span>
                     </div>
                 )}
             </div>
@@ -130,7 +130,7 @@ function LoadingSpinner() {
 }
 
 function EmptyMessage({ text }: { text: string }) {
-    return <p className="text-ink text-center py-8">{text}</p>;
+    return <p className="text-amber-900 text-center py-8">{text}</p>;
 }
 
 // ─── Unified Significations Tab (House + Planet Views) ───────────────

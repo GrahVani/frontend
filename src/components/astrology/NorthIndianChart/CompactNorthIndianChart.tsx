@@ -69,7 +69,7 @@ export default function CompactNorthIndianChart({
     houseValues,
     valueType = 'none',
     preserveAspectRatio,
-    showDegrees = true,
+    showDegrees = false,
     planetFontSize: userPlanetFontSize,
     degreeFontSize: userDegreeFontSize,
     planetFontWeight: userPlanetFontWeight,
@@ -127,37 +127,37 @@ export default function CompactNorthIndianChart({
                     planetFontSize = userPlanetFontSize || 22;
                     degreeFontSize = userDegreeFontSize || 14;
                     retroFontSize = Math.max(10, planetFontSize * 0.8);
-                    degreeYOffset = 16;
+                    degreeYOffset = 20;
                 } else if (planetCount === 2) {
                     cols = 2; hSpacing = 52; vSpacing = 0;
                     planetFontSize = userPlanetFontSize || 20;
                     degreeFontSize = userDegreeFontSize || 13;
                     retroFontSize = Math.max(8, planetFontSize * 0.8);
-                    degreeYOffset = 15;
+                    degreeYOffset = 19;
                 } else if (planetCount === 3) {
                     cols = 3; hSpacing = 40; vSpacing = 0;
                     planetFontSize = userPlanetFontSize || 17;
                     degreeFontSize = userDegreeFontSize || 11;
                     retroFontSize = Math.max(8, planetFontSize * 0.8);
-                    degreeYOffset = 13;
+                    degreeYOffset = 17;
                 } else if (planetCount === 4) {
                     cols = 2; hSpacing = 46; vSpacing = 38;
                     planetFontSize = userPlanetFontSize || 19;
                     degreeFontSize = userDegreeFontSize || 10;
                     retroFontSize = Math.max(8, planetFontSize * 0.8);
-                    degreeYOffset = 14;
+                    degreeYOffset = 18;
                 } else if (planetCount <= 6) {
                     cols = 3; hSpacing = 36; vSpacing = 34;
                     planetFontSize = userPlanetFontSize || 15;
                     degreeFontSize = userDegreeFontSize || 10;
                     retroFontSize = Math.max(8, planetFontSize * 0.8);
-                    degreeYOffset = 12;
+                    degreeYOffset = 16;
                 } else {
                     cols = 4; hSpacing = 30; vSpacing = 30;
                     planetFontSize = userPlanetFontSize || 14;
                     degreeFontSize = userDegreeFontSize || 9;
                     retroFontSize = Math.max(8, planetFontSize * 0.8);
-                    degreeYOffset = 11;
+                    degreeYOffset = 15;
                 }
 
                 const rows = Math.ceil(planetCount / cols);
