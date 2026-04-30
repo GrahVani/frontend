@@ -1,15 +1,16 @@
-
-
 "use client";
 
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BookOpen, LayoutDashboard, GraduationCap, Sun } from "lucide-react";
+import { useVedicClient } from "@/context/VedicClientContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function LearnLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { openClients } = useVedicClient();
+  const hasClientBar = openClients.length > 0;
 
   const navItems = [
     { href: "/learn", label: "Courses", icon: GraduationCap },
@@ -20,8 +21,12 @@ export default function LearnLayout({ children }: { children: React.ReactNode })
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
-        {/* Learning Navigation */}
-        <div className="fixed top-14 left-0 right-0 z-40 bg-white/80 backdrop-blur-md border-b border-amber-200/50">
+        {/* Learning Navigation — positioned below header + client bar when present */}
+        <div
+          className={`fixed left-0 right-0 z-40 bg-white/80 backdrop-blur-md border-b border-amber-200/50 ${
+            hasClientBar ? "top-24" : "top-14"
+          }`}
+        >
           <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
             <div className="flex items-center gap-6 h-12">
               <Link href="/learn" className="flex items-center gap-2 text-amber-800 font-bold">
@@ -49,8 +54,8 @@ export default function LearnLayout({ children }: { children: React.ReactNode })
           </div>
         </div>
 
-        {/* Content */}
-        <div className="pt-28 pb-12">
+        {/* Content — extra padding when client bar is present */}
+        <div className={`pb-12 ${hasClientBar ? "pt-40" : "pt-28"}`}>
           {children}
         </div>
       </div>
