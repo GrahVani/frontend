@@ -23,7 +23,7 @@ import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { COLORS } from '@/design-tokens/colors';
 import dynamic from 'next/dynamic';
 
-const DashboardLoading = () => <div className="flex items-center justify-center py-12"><Loader2 className="w-6 h-6 text-gold-primary animate-spin" /></div>;
+const DashboardLoading = () => <div className="flex items-center justify-center py-12"><Loader2 className="w-6 h-6 text-amber-500 animate-spin" /></div>;
 const UpayaDashboard = dynamic(() => import('@/components/upaya/UpayaDashboard'), { loading: DashboardLoading });
 const YantraDashboard = dynamic(() => import('@/components/upaya/YantraDashboard'), { loading: DashboardLoading });
 const LalKitabDashboard = dynamic(() => import('@/components/upaya/LalKitabDashboard'), { loading: DashboardLoading });
@@ -94,7 +94,7 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
         return (
             <div className="p-6 text-center">
                 <AlertTriangle className="w-8 h-8 text-amber-500 mx-auto mb-3" />
-                <p className="text-[14px] text-ink">No remedy data available for this type.</p>
+                <p className="text-[14px] text-amber-800">No remedy data available for this type.</p>
             </div>
         );
     }
@@ -136,9 +136,9 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
                     if (['ayanamsa', 'system', 'cached', 'chart_type', 'birth_details'].includes(key)) return null;
 
                     return (
-                        <div key={key} className="prem-card rounded-2xl p-5 hover:shadow-md transition-shadow">
-                            <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-3 flex items-center gap-2")}>
-                                <Sparkles className="w-4 h-4 text-gold-primary" />
+                        <div key={key} className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-5 hover:shadow-md transition-shadow">
+                            <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-3 flex items-center gap-2 text-amber-900")}>
+                                <Sparkles className="w-4 h-4 text-amber-500" />
                                 {key.replace(/_/g, ' ').toLowerCase().replace(/^\w/, (c) => c.toUpperCase())}
                             </h3>
                             {typeof value === 'string' ? (
@@ -147,7 +147,7 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
                                 <div className="space-y-2">
                                     {Array.isArray(value) ? (
                                         value.map((item: unknown, i: number) => (
-                                            <div key={i} className="prem-card rounded-xl p-4">
+                                            <div key={i} className="bg-white rounded-xl border border-amber-200/60 shadow-sm p-4">
                                                 {typeof item === 'string' ? (
                                                     <p className={TYPOGRAPHY.value}>{item}</p>
                                                 ) : (typeof item === 'object' && item !== null) ? (
@@ -166,7 +166,7 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
                                         ))
                                     ) : (
                                         Object.entries(value).map(([k, v]) => (
-                                            <div key={k} className="flex items-start gap-2 text-[14px] bg-surface-warm rounded-lg p-3">
+                                            <div key={k} className="flex items-start gap-2 text-[14px] bg-amber-50/60 rounded-lg p-3">
                                                 <span className={cn(TYPOGRAPHY.label, "min-w-[120px]")}>{k.replace(/_/g, ' ')}</span>
                                                 <span className={TYPOGRAPHY.value}>{typeof v === 'object' ? JSON.stringify(v, null, 2) : String(v)}</span>
                                             </div>
@@ -188,7 +188,7 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
         return (
             <div className="space-y-3">
                 {remedyContent.map((item: unknown, i: number) => (
-                    <div key={i} className="prem-card rounded-2xl p-5">
+                    <div key={i} className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-5">
                         {typeof item === 'string' ? (
                             <p className={TYPOGRAPHY.value}>{item}</p>
                         ) : (typeof item === 'object' && item !== null) ? (
@@ -209,8 +209,8 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
 
     // Fallback: render as formatted JSON
     return (
-        <div className="bg-surface-warm rounded-xl p-6 border border-gold-primary/15">
-            <pre className="text-[12px] text-ink/70 whitespace-pre-wrap overflow-auto max-h-96">
+        <div className="bg-amber-50/60 rounded-xl p-6 border border-amber-200/60">
+            <pre className="text-[12px] text-amber-800/70 whitespace-pre-wrap overflow-auto max-h-96">
                 {JSON.stringify(remedyContent, null, 2)}
             </pre>
         </div>
@@ -258,13 +258,15 @@ export default function RemediesPage() {
     // System check — Remedies are Lahiri-exclusive
     if (ayanamsa !== 'Lahiri') {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-                <Gem className="w-12 h-12 text-ink mb-4" />
-                <h2 className={cn(TYPOGRAPHY.sectionTitle, "mb-2")}>Upaya — Lahiri only</h2>
-                <p className={cn(TYPOGRAPHY.value, "max-w-md")}>
-                    Remedial prescriptions are currently available exclusively with the <strong>Lahiri Ayanamsa</strong>.
-                    Please switch to Lahiri from the header dropdown to access remedies.
-                </p>
+            <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 flex flex-col items-center justify-center text-center px-4">
+                <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-10 max-w-md">
+                    <Gem className="w-12 h-12 text-amber-600 mb-4 mx-auto" />
+                    <h2 className={cn(TYPOGRAPHY.sectionTitle, "mb-2 text-amber-900")}>Upaya — Lahiri only</h2>
+                    <p className={cn(TYPOGRAPHY.value, "max-w-md text-amber-700")}>
+                        Remedial prescriptions are currently available exclusively with the <strong>Lahiri Ayanamsa</strong>.
+                        Please switch to Lahiri from the header dropdown to access remedies.
+                    </p>
+                </div>
             </div>
         );
     }
@@ -274,10 +276,10 @@ export default function RemediesPage() {
     const isFixedLayoutTab = ['mantra', 'yantra', 'vedic_remedies', 'lal_kitab'].includes(activeTab);
 
     return (
-        <div className={cn("animate-in fade-in duration-500", isFixedLayoutTab ? "h-[calc(100vh-140px)] overflow-hidden flex flex-col gap-2" : "space-y-6 pb-10")}>
+        <div className={cn("min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 animate-in fade-in duration-500", isFixedLayoutTab ? "h-[calc(100vh-140px)] overflow-hidden flex flex-col gap-2" : "space-y-6 pb-10")}>
 
             {/* Remedy Type Tabs */}
-            <div className="flex flex-wrap gap-2 p-1 prem-card rounded-xl">
+            <div className="flex flex-wrap gap-2 p-1 bg-white rounded-xl border border-amber-200/60 shadow-sm">
                 {REMEDY_TABS.map((tab) => (
                     <button
                         key={tab.id}
@@ -288,10 +290,10 @@ export default function RemediesPage() {
                             "!font-bold !mb-0",
                             activeTab === tab.id
                                 ? cn("text-white shadow-md", COLORS.wbActiveTab)
-                                : "text-ink hover:text-ink hover:bg-white/50"
+                                : "text-amber-800 hover:text-amber-900 hover:bg-amber-50/60"
                         )}
                     >
-                        {tab.icon}
+                        <span className={activeTab === tab.id ? "text-white" : "text-amber-600"}>{tab.icon}</span>
                         <span>{tab.name}</span>
                     </button>
                 ))}
@@ -299,13 +301,13 @@ export default function RemediesPage() {
 
             {/* Lal Kitab Specific Inputs */}
             {activeTab === 'lal_kitab' && (
-                <div className="flex flex-wrap gap-4 p-4 prem-card rounded-xl shadow-sm animate-in slide-in-from-top-2">
+                <div className="flex flex-wrap gap-4 p-4 bg-white rounded-xl border border-amber-200/60 shadow-sm animate-in slide-in-from-top-2">
                     <div className="flex flex-col gap-1.5">
-                        <label className={cn(TYPOGRAPHY.label, "mb-0")}>Select planet</label>
+                        <label className={cn(TYPOGRAPHY.label, "mb-0 text-amber-700")}>Select planet</label>
                         <select
                             value={selectedPlanet}
                             onChange={(e) => setSelectedPlanet(e.target.value)}
-                            className="px-3 py-2 rounded-lg border border-gold-primary/20 bg-white text-[14px] text-ink focus:outline-none focus:ring-2 focus:ring-gold-primary/20 min-w-[150px]"
+                            className="px-3 py-2 rounded-lg border border-amber-200 bg-white text-[14px] text-amber-900 focus:outline-none focus:ring-2 focus:ring-amber-200 min-w-[150px]"
                         >
                             <option value="">-- All / General --</option>
                             {PLANETS.map(p => (
@@ -315,11 +317,11 @@ export default function RemediesPage() {
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label className={cn(TYPOGRAPHY.label, "mb-0")}>Select house</label>
+                        <label className={cn(TYPOGRAPHY.label, "mb-0 text-amber-700")}>Select house</label>
                         <select
                             value={selectedHouse}
                             onChange={(e) => setSelectedHouse(e.target.value)}
-                            className="px-3 py-2 rounded-lg border border-gold-primary/20 bg-white text-[14px] text-ink focus:outline-none focus:ring-2 focus:ring-gold-primary/20 min-w-[150px]"
+                            className="px-3 py-2 rounded-lg border border-amber-200 bg-white text-[14px] text-amber-900 focus:outline-none focus:ring-2 focus:ring-amber-200 min-w-[150px]"
                         >
                             <option value="">-- All / General --</option>
                             {HOUSES.map(h => (
@@ -331,7 +333,7 @@ export default function RemediesPage() {
                     <div className="flex items-end">
                         <button
                             onClick={handleRefresh}
-                            className="px-4 py-2 bg-gold-primary text-white text-[14px] font-medium rounded-lg hover:bg-gold-dark transition-colors flex items-center gap-2 shadow-sm"
+                            className="px-4 py-2 bg-amber-500 text-white text-[14px] font-medium rounded-lg hover:bg-amber-600 transition-colors flex items-center gap-2 shadow-sm"
                             disabled={isRefreshingCharts}
                         >
                             <RefreshCw className={cn("w-4 h-4", isRefreshingCharts && "animate-spin")} />
@@ -344,12 +346,12 @@ export default function RemediesPage() {
             {/* Content Area */}
             <div className={cn(isFixedLayoutTab ? "flex-1 min-h-0 overflow-hidden" : "min-h-[300px]")}>
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center py-16 prem-card rounded-2xl">
-                        <Loader2 className="w-8 h-8 text-gold-primary animate-spin mb-4" />
-                        <p className={cn(TYPOGRAPHY.subValue, "italic")}>Consulting planetary prescriptions...</p>
+                    <div className="flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-amber-200/60 shadow-sm">
+                        <Loader2 className="w-8 h-8 text-amber-500 animate-spin mb-4" />
+                        <p className={cn(TYPOGRAPHY.subValue, "italic text-amber-700")}>Consulting planetary prescriptions...</p>
                     </div>
                 ) : error ? (
-                    <div className="p-6 bg-red-50 border border-red-100 rounded-2xl text-center">
+                    <div className="p-6 bg-red-50 border border-red-200 rounded-2xl text-center">
                         <AlertTriangle className="w-8 h-8 text-red-500 mx-auto mb-3" />
                         <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 mb-1")}>Prescription unavailable</h3>
                         <p className={cn(TYPOGRAPHY.subValue, "text-red-600 max-w-md mx-auto !text-[12px]")}>{error}</p>
@@ -364,17 +366,17 @@ export default function RemediesPage() {
                 ) : remedyData ? (
                     <RemedyDataView data={remedyData} type={activeTab} />
                 ) : activeTab === 'lal_kitab' ? (
-                    <div className="flex flex-col items-center justify-center py-16 prem-card rounded-2xl animate-in fade-in">
-                        <Scroll className="w-10 h-10 text-gold-primary mb-4 opacity-70" />
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-2")}>Lal Kitab remedies</h3>
-                        <p className={cn(TYPOGRAPHY.value, "max-w-md text-center mb-6 text-ink/70")}>
+                    <div className="flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-amber-200/60 shadow-sm animate-in fade-in">
+                        <Scroll className="w-10 h-10 text-amber-500 mb-4 opacity-70" />
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-2 text-amber-900")}>Lal Kitab remedies</h3>
+                        <p className={cn(TYPOGRAPHY.value, "max-w-md text-center mb-6 text-amber-700")}>
                             Lal Kitab remedies are highly specific. Please select a Planet and a House above to view the precise remedial measures.
                         </p>
                     </div>
                 ) : (
-                    <div className="flex flex-col items-center justify-center py-16 prem-card rounded-2xl">
-                        <Gem className="w-8 h-8 text-ink mb-3" />
-                        <p className={TYPOGRAPHY.value}>Select a remedy type to view prescriptions</p>
+                    <div className="flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-amber-200/60 shadow-sm">
+                        <Gem className="w-8 h-8 text-amber-600 mb-3" />
+                        <p className={cn(TYPOGRAPHY.value, "text-amber-700")}>Select a remedy type to view prescriptions</p>
                     </div>
                 )}
             </div>

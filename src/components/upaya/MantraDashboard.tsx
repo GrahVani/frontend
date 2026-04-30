@@ -171,8 +171,8 @@ const SectionHeader = ({
                 <Icon className="w-5 h-5 text-white" />
             </div>
             <div>
-                <h3 className="text-[17px] font-bold text-ink">{title}</h3>
-                {subtitle && <p className="text-[12px] text-ink/50">{subtitle}</p>}
+                <h3 className="text-[17px] font-bold text-amber-900">{title}</h3>
+                {subtitle && <p className="text-[12px] text-amber-700/50">{subtitle}</p>}
             </div>
         </div>
     );
@@ -186,7 +186,7 @@ export default function MantraDashboard({ data }: MantraDashboardProps) {
         return (
             <div className="bg-amber-50/50 rounded-2xl border border-amber-200 p-8 text-center">
                 <Info className="w-10 h-10 text-amber-400 mx-auto mb-3" />
-                <p className="text-[14px] text-ink/50">Mantra analysis data not available</p>
+                <p className="text-[14px] text-amber-700/50">Mantra analysis data not available</p>
             </div>
         );
     }
@@ -244,7 +244,7 @@ export default function MantraDashboard({ data }: MantraDashboardProps) {
                                     <span className="text-amber-600 font-bold">1</span>
                                 </div>
                                 <h4 className="text-[13px] font-bold text-amber-900 mb-2">What are these mantras?</h4>
-                                <p className="text-[11px] text-ink/70 leading-relaxed">
+                                <p className="text-[11px] text-amber-800/70 leading-relaxed">
                                     Mantras are sacred sounds that connect you with planetary energies. 
                                     Each planet has a specific "seed" (Beej) mantra. Chanting them helps 
                                     balance their effects in your life.
@@ -255,7 +255,7 @@ export default function MantraDashboard({ data }: MantraDashboardProps) {
                                     <span className="text-emerald-600 font-bold">2</span>
                                 </div>
                                 <h4 className="text-[13px] font-bold text-emerald-900 mb-2">How do I practice?</h4>
-                                <p className="text-[11px] text-ink/70 leading-relaxed">
+                                <p className="text-[11px] text-amber-800/70 leading-relaxed">
                                     1. Choose a quiet time daily<br/>
                                     2. Use a mala (108 beads) to count<br/>
                                     3. Chant with focus on the sound<br/>
@@ -267,7 +267,7 @@ export default function MantraDashboard({ data }: MantraDashboardProps) {
                                     <span className="text-indigo-600 font-bold">3</span>
                                 </div>
                                 <h4 className="text-[13px] font-bold text-indigo-900 mb-2">What will I see below?</h4>
-                                <p className="text-[11px] text-ink/70 leading-relaxed">
+                                <p className="text-[11px] text-amber-800/70 leading-relaxed">
                                     • <strong>Dasha Mantras:</strong> Most urgent - planets currently ruling your life<br/>
                                     • <strong>Weak Planets:</strong> Need strengthening for long-term balance<br/>
                                     • <strong>Timing Tips:</strong> Best days and times for each mantra
@@ -289,26 +289,26 @@ export default function MantraDashboard({ data }: MantraDashboardProps) {
                         <div className="bg-white/70 rounded-xl p-3">
                             <div className="flex items-center gap-2 mb-2">
                                 <Sun className="w-4 h-4 text-amber-500" />
-                                <span className="text-[11px] font-bold text-ink/60 uppercase">Current Hora</span>
+                                <span className="text-[11px] font-bold text-amber-700/60 uppercase">Current Hora</span>
                             </div>
-                            <p className="text-[15px] font-bold text-ink">{current_timing.hora?.hora_lord}</p>
-                            <p className="text-[10px] text-ink/50 mt-1">Hour #{current_timing.hora?.hora_number}</p>
+                            <p className="text-[15px] font-bold text-amber-900">{current_timing.hora?.hora_lord}</p>
+                            <p className="text-[10px] text-amber-700/50 mt-1">Hour #{current_timing.hora?.hora_number}</p>
                         </div>
                         <div className="bg-white/70 rounded-xl p-3">
                             <div className="flex items-center gap-2 mb-2">
                                 <Moon className="w-4 h-4 text-indigo-500" />
-                                <span className="text-[11px] font-bold text-ink/60 uppercase">Lunar Tithi</span>
+                                <span className="text-[11px] font-bold text-amber-700/60 uppercase">Lunar Tithi</span>
                             </div>
-                            <p className="text-[15px] font-bold text-ink">{current_timing.tithi?.name}</p>
-                            <p className="text-[10px] text-ink/50 mt-1">{current_timing.tithi?.paksha} Paksha, Day {current_timing.tithi?.number}</p>
+                            <p className="text-[15px] font-bold text-amber-900">{current_timing.tithi?.name}</p>
+                            <p className="text-[10px] text-amber-700/50 mt-1">{current_timing.tithi?.paksha} Paksha, Day {current_timing.tithi?.number}</p>
                         </div>
                         <div className="bg-white/70 rounded-xl p-3">
                             <div className="flex items-center gap-2 mb-2">
                                 <Compass className="w-4 h-4 text-violet-500" />
-                                <span className="text-[11px] font-bold text-ink/60 uppercase">Rahu Kaal</span>
+                                <span className="text-[11px] font-bold text-amber-700/60 uppercase">Rahu Kaal</span>
                             </div>
-                            <p className="text-[15px] font-bold text-ink">{current_timing.rahu_kaal?.duration_minutes} min</p>
-                            <p className="text-[10px] text-ink/50 mt-1 truncate" title={current_timing.rahu_kaal?.recommendation}>
+                            <p className="text-[15px] font-bold text-amber-900">{current_timing.rahu_kaal?.duration_minutes} min</p>
+                            <p className="text-[10px] text-amber-700/50 mt-1 truncate" title={current_timing.rahu_kaal?.recommendation}>
                                 {current_timing.rahu_kaal?.recommendation}
                             </p>
                         </div>
@@ -356,7 +356,7 @@ export default function MantraDashboard({ data }: MantraDashboardProps) {
                                         
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 flex-wrap">
-                                                <h4 className="text-[20px] font-bold text-ink">{dasha.planet}</h4>
+                                                <h4 className="text-[20px] font-bold text-amber-900">{dasha.planet}</h4>
                                                 <span className={cn("px-2.5 py-1 rounded-full text-[10px] font-bold", 
                                                     dasha.type === 'Mahadasha' 
                                                         ? 'bg-amber-100 text-amber-700 border border-amber-200' 
@@ -375,13 +375,13 @@ export default function MantraDashboard({ data }: MantraDashboardProps) {
                                             
                                             {/* Quick Stats */}
                                             <div className="flex items-center gap-4 mt-3">
-                                                <div className="flex items-center gap-1.5 text-[12px] text-ink/60">
+                                                <div className="flex items-center gap-1.5 text-[12px] text-amber-700/60">
                                                     <Target className="w-3.5 h-3.5" />
-                                                    <span><strong className="text-ink">{dasha.daily_count}</strong>/day</span>
+                                                    <span><strong className="text-amber-900">{dasha.daily_count}</strong>/day</span>
                                                 </div>
-                                                <div className="flex items-center gap-1.5 text-[12px] text-ink/60">
+                                                <div className="flex items-center gap-1.5 text-[12px] text-amber-700/60">
                                                     <Clock className="w-3.5 h-3.5" />
-                                                    <span><strong className="text-ink">{dasha.remaining_years}</strong> years left</span>
+                                                    <span><strong className="text-amber-900">{dasha.remaining_years}</strong> years left</span>
                                                 </div>
                                                 <span className="text-[12px] text-indigo-600 font-medium flex items-center gap-1">
                                                     {isExpanded ? 'Show less' : 'Show mantra details'}
@@ -399,19 +399,19 @@ export default function MantraDashboard({ data }: MantraDashboardProps) {
                                             {/* Mantra Card */}
                                             <div className="bg-white rounded-xl p-4 shadow-sm mb-4">
                                                 <div className="flex items-center justify-between mb-3">
-                                                    <span className="text-[11px] font-bold text-ink/50 uppercase tracking-wider">Beej Mantra</span>
+                                                    <span className="text-[11px] font-bold text-amber-700/50 uppercase tracking-wider">Beej Mantra</span>
                                                     <button className="w-10 h-10 rounded-full bg-amber-500 text-white flex items-center justify-center hover:scale-105 transition-transform shadow-md">
                                                         <Play className="w-5 h-5 ml-0.5" />
                                                     </button>
                                                 </div>
                                                 
-                                                <p className="text-[22px] font-serif text-ink text-center py-2 leading-relaxed">
+                                                <p className="text-[22px] font-serif text-amber-900 text-center py-2 leading-relaxed">
                                                     {dasha.mantra.sanskrit}
                                                 </p>
-                                                <p className="text-[14px] text-ink/70 text-center font-medium">
+                                                <p className="text-[14px] text-amber-800/70 text-center font-medium">
                                                     {dasha.mantra.transliteration}
                                                 </p>
-                                                <p className="text-[12px] text-ink/50 text-center italic mt-2">
+                                                <p className="text-[12px] text-amber-700/50 text-center italic mt-2">
                                                     "{dasha.mantra.meaning}"
                                                 </p>
                                             </div>
@@ -476,21 +476,21 @@ export default function MantraDashboard({ data }: MantraDashboardProps) {
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center gap-2">
-                                                    <h5 className="text-[17px] font-bold text-ink">{planet.planet}</h5>
+                                                    <h5 className="text-[17px] font-bold text-amber-900">{planet.planet}</h5>
                                                     <SeverityBadge severity={planet.severity} />
                                                 </div>
-                                                <div className="flex items-center gap-2 mt-1 text-[11px] text-ink/50">
+                                                <div className="flex items-center gap-2 mt-1 text-[11px] text-amber-700/50">
                                                     <MapPin className="w-3 h-3" />
                                                     <span>House {planet.house}</span>
                                                     <span>•</span>
                                                     <span>Best: {planet.best_day}</span>
                                                 </div>
                                                 <div className="flex items-center gap-3 mt-2">
-                                                    <span className="text-[11px] text-ink/60">
-                                                        Daily: <strong className="text-ink">{planet.count.daily_count}</strong>
+                                                    <span className="text-[11px] text-amber-700/60">
+                                                        Daily: <strong className="text-amber-900">{planet.count.daily_count}</strong>
                                                     </span>
-                                                    <span className="text-[11px] text-ink/60">
-                                                        Total: <strong className="text-ink">{planet.count.total_count.toLocaleString()}</strong>
+                                                    <span className="text-[11px] text-amber-700/60">
+                                                        Total: <strong className="text-amber-900">{planet.count.total_count.toLocaleString()}</strong>
                                                     </span>
                                                     <span className="text-[11px] text-indigo-600 font-medium">
                                                         {isExpanded ? 'Less' : 'More'}
@@ -522,13 +522,13 @@ export default function MantraDashboard({ data }: MantraDashboardProps) {
 
                                                 {/* Mantra */}
                                                 <div className="bg-white rounded-lg p-3 shadow-sm">
-                                                    <p className="text-[16px] font-serif text-ink text-center">
+                                                    <p className="text-[16px] font-serif text-amber-900 text-center">
                                                         {planet.mantra.sanskrit}
                                                     </p>
-                                                    <p className="text-[12px] text-ink/60 text-center mt-1">
+                                                    <p className="text-[12px] text-amber-700/60 text-center mt-1">
                                                         {planet.mantra.transliteration}
                                                     </p>
-                                                    <p className="text-[10px] text-ink/40 text-center italic mt-1">
+                                                    <p className="text-[10px] text-amber-700/40 text-center italic mt-1">
                                                         "{planet.mantra.meaning}"
                                                     </p>
                                                 </div>
@@ -536,12 +536,12 @@ export default function MantraDashboard({ data }: MantraDashboardProps) {
                                                 {/* Stats */}
                                                 <div className="grid grid-cols-2 gap-2 text-[11px]">
                                                     <div className="bg-white/60 rounded p-2">
-                                                        <span className="text-ink/50">Daily:</span>
+                                                        <span className="text-amber-700/50">Daily:</span>
                                                         <strong className="ml-1">{planet.count.daily_count}</strong>
-                                                        <span className="text-ink/40 ml-1">({planet.count.mala_rounds} malas)</span>
+                                                        <span className="text-amber-700/40 ml-1">({planet.count.mala_rounds} malas)</span>
                                                     </div>
                                                     <div className="bg-white/60 rounded p-2">
-                                                        <span className="text-ink/50">Duration:</span>
+                                                        <span className="text-amber-700/50">Duration:</span>
                                                         <strong className="ml-1">{planet.count.duration_days} days</strong>
                                                     </div>
                                                 </div>
@@ -575,13 +575,13 @@ export default function MantraDashboard({ data }: MantraDashboardProps) {
                                         </div>
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2">
-                                                <h5 className="text-[14px] font-bold text-ink">{rec.category}</h5>
+                                                <h5 className="text-[14px] font-bold text-amber-900">{rec.category}</h5>
                                                 <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[9px] font-bold">
                                                     Priority {rec.priority}
                                                 </span>
                                             </div>
-                                            <p className="text-[13px] text-ink/80 mt-1">{rec.action}</p>
-                                            <p className="text-[11px] text-ink/50 italic mt-1">💡 {rec.note}</p>
+                                            <p className="text-[13px] text-amber-800/80 mt-1">{rec.action}</p>
+                                            <p className="text-[11px] text-amber-700/50 italic mt-1">💡 {rec.note}</p>
                                         </div>
                                     </div>
                                 </div>

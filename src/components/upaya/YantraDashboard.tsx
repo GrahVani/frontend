@@ -101,7 +101,7 @@ const YantraCard = ({ yantra, index }: { yantra: YantraDetails; index: number })
             transition={{ delay: index * 0.1 }}
             className={cn(
                 "rounded-2xl border p-5 space-y-4",
-                priorityBg[index] || 'bg-white border-gold-primary/15'
+                priorityBg[index] || 'bg-white border-amber-200/60'
             )}
         >
             {/* Header */}
@@ -114,7 +114,7 @@ const YantraCard = ({ yantra, index }: { yantra: YantraDetails; index: number })
                         <PlanetIcon planet={yantra.planet} className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                        <h3 className="text-[18px] font-bold text-ink">{yantra.planet}</h3>
+                        <h3 className="text-[18px] font-bold text-amber-900">{yantra.planet}</h3>
                         <p className="text-[12px] text-amber-700/70 font-medium">{details.sanskrit_name}</p>
                     </div>
                 </div>
@@ -134,7 +134,7 @@ const YantraCard = ({ yantra, index }: { yantra: YantraDetails; index: number })
                 )}>
                     {yantra.functional_nature}
                 </span>
-                <span className="text-[11px] text-ink/50 font-medium">
+                <span className="text-[11px] text-amber-700/50 font-medium">
                     Score: {yantra.priority_score}/150
                 </span>
             </div>
@@ -145,17 +145,17 @@ const YantraCard = ({ yantra, index }: { yantra: YantraDetails; index: number })
                     <div className="flex items-center gap-3">
                         <div className="flex-1">
                             <span className="text-[10px] font-medium text-amber-700/60 uppercase tracking-wide">Position</span>
-                            <p className="text-[11px] font-semibold text-ink">
+                            <p className="text-[11px] font-semibold text-amber-900">
                                 House {yantra.planetary_info.house} • {yantra.planetary_info.sign}
                             </p>
                         </div>
                         <div className="text-right">
                             <span className="text-[10px] font-medium text-amber-700/60 uppercase tracking-wide">Nakshatra</span>
-                            <p className="text-[11px] font-semibold text-ink">{yantra.planetary_info.nakshatra}</p>
+                            <p className="text-[11px] font-semibold text-amber-900">{yantra.planetary_info.nakshatra}</p>
                         </div>
                         <div className="text-right border-l border-amber-200/50 pl-3">
                             <span className="text-[10px] font-medium text-amber-700/60 uppercase tracking-wide">Degree</span>
-                            <p className="text-[11px] font-semibold text-ink">{yantra.planetary_info.degree.toFixed(1)}°</p>
+                            <p className="text-[11px] font-semibold text-amber-900">{yantra.planetary_info.degree.toFixed(1)}°</p>
                         </div>
                     </div>
                     {/* Status Badges */}
@@ -183,7 +183,7 @@ const YantraCard = ({ yantra, index }: { yantra: YantraDetails; index: number })
             {yantra.shadbala_status && (
                 <div className="bg-white/60 rounded-xl p-3 space-y-2">
                     <div className="flex items-center justify-between">
-                        <span className="text-[12px] font-medium text-ink/70">Shadbala Strength</span>
+                        <span className="text-[12px] font-medium text-amber-800/70">Shadbala Strength</span>
                         <span className={cn(
                             "text-[12px] font-bold",
                             yantra.shadbala_status.is_weak ? "text-red-600" : "text-emerald-600"
@@ -201,11 +201,11 @@ const YantraCard = ({ yantra, index }: { yantra: YantraDetails; index: number })
                                 style={{ width: `${Math.min(yantra.shadbala_status.percentage, 100)}%` }}
                             />
                         </div>
-                        <span className="text-[11px] font-bold text-ink/60 min-w-[45px] text-right">
+                        <span className="text-[11px] font-bold text-amber-700/60 min-w-[45px] text-right">
                             {yantra.shadbala_status.percentage.toFixed(0)}%
                         </span>
                     </div>
-                    <div className="text-[10px] text-ink/50">
+                    <div className="text-[10px] text-amber-700/50">
                         {yantra.shadbala_status.current_rupas.toFixed(1)} / {yantra.shadbala_status.required_rupas} Rupas
                         {yantra.rules_important_houses && (
                             <span className="ml-2 text-amber-600 font-medium">• Rules Important Houses</span>
@@ -227,28 +227,28 @@ const YantraCard = ({ yantra, index }: { yantra: YantraDetails; index: number })
                             <Crown className="w-3 h-3" />
                             <span className="font-medium uppercase tracking-wide">Deity</span>
                         </div>
-                        <p className="font-semibold text-ink">{details.deity}</p>
+                        <p className="font-semibold text-amber-900">{details.deity}</p>
                     </div>
                     <div className="bg-white/50 rounded-lg p-2.5">
                         <div className="flex items-center gap-1.5 text-amber-700/60 mb-1">
                             <Clock className="w-3 h-3" />
                             <span className="font-medium uppercase tracking-wide">Day</span>
                         </div>
-                        <p className="font-semibold text-ink">{details.day}</p>
+                        <p className="font-semibold text-amber-900">{details.day}</p>
                     </div>
                     <div className="bg-white/50 rounded-lg p-2.5">
                         <div className="flex items-center gap-1.5 text-amber-700/60 mb-1">
                             <Sun className="w-3 h-3" />
                             <span className="font-medium uppercase tracking-wide">Time</span>
                         </div>
-                        <p className="font-semibold text-ink">{details.time}</p>
+                        <p className="font-semibold text-amber-900">{details.time}</p>
                     </div>
                     <div className="bg-white/50 rounded-lg p-2.5">
                         <div className="flex items-center gap-1.5 text-amber-700/60 mb-1">
                             <Compass className="w-3 h-3" />
                             <span className="font-medium uppercase tracking-wide">Direction</span>
                         </div>
-                        <p className="font-semibold text-ink">{details.direction}</p>
+                        <p className="font-semibold text-amber-900">{details.direction}</p>
                     </div>
                 </div>
 
@@ -270,7 +270,7 @@ const YantraCard = ({ yantra, index }: { yantra: YantraDetails; index: number })
                         <CheckCircle2 className="w-3.5 h-3.5" />
                         Benefits
                     </h5>
-                    <p className="text-[12px] text-ink/80 leading-relaxed">{details.benefits}</p>
+                    <p className="text-[12px] text-amber-800/80 leading-relaxed">{details.benefits}</p>
                 </div>
 
                 {/* Wearing Instructions */}
@@ -285,7 +285,7 @@ const YantraCard = ({ yantra, index }: { yantra: YantraDetails; index: number })
                 {/* Beej Mantra */}
                 <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-xl p-3 border border-amber-200/50">
                     <h5 className="text-[10px] font-bold text-amber-800 uppercase tracking-wide mb-2">Beej Mantra</h5>
-                    <p className="text-[14px] font-serif text-ink text-center py-1">{details.beej_mantra}</p>
+                    <p className="text-[14px] font-serif text-amber-900 text-center py-1">{details.beej_mantra}</p>
                 </div>
             </div>
 
@@ -295,7 +295,7 @@ const YantraCard = ({ yantra, index }: { yantra: YantraDetails; index: number })
                     <h5 className="text-[10px] font-bold text-amber-900/60 uppercase tracking-wide mb-2">Why This Yantra?</h5>
                     <ul className="space-y-1">
                         {yantra.reasons.map((reason, i) => (
-                            <li key={i} className="flex items-start gap-2 text-[11px] text-ink/70">
+                            <li key={i} className="flex items-start gap-2 text-[11px] text-amber-800/70">
                                 <ChevronRight className="w-3 h-3 text-amber-500 shrink-0 mt-0.5" />
                                 <span>{reason}</span>
                             </li>
@@ -322,7 +322,7 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
     return (
         <div className={cn("h-full overflow-hidden flex flex-col", styles.dashboardContainer, className)} style={{ margin: 0, borderRadius: '1rem' }}>
             {/* Header Area */}
-            <div className="flex items-center justify-between border-b border-gold-primary/20 px-5 py-2.5 shrink-0 bg-surface-warm/50">
+            <div className="flex items-center justify-between border-b border-amber-300/60 px-5 py-2.5 shrink-0 bg-amber-50/50">
                 <div className="flex items-center gap-3">
                     <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] font-bold tracking-tight !mb-0")}>
                         <KnowledgeTooltip term="general_yantra">Yantras</KnowledgeTooltip> : {String(data.user_name || "Sadhaka")}
@@ -338,7 +338,7 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
             <div className="flex-1 flex overflow-hidden min-h-0">
 
                 {/* LEFT SIDE: Only Chart — Fixed, No Scroll, 30% */}
-                <div className="w-[30%] shrink-0 flex flex-col overflow-hidden border-r border-gold-primary/15">
+                <div className="w-[30%] shrink-0 flex flex-col overflow-hidden border-r border-amber-200/60">
                     <SadhanaChartPanel
                         chartData={d1Chart}
                         doshaStatus={detailedAnalysis?.doshas || {}}
@@ -371,9 +371,9 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
                                 </div>
                             </div>
                         ) : (
-                            <div className="p-12 text-center bg-surface-warm/30 rounded-2xl border-2 border-dashed border-gold-primary/15">
-                                <Gem className="w-12 h-12 text-gold-primary/30 mx-auto mb-4" />
-                                <p className="text-[14px] font-medium text-ink/45 italic">No specific yantras recommended at this time.</p>
+                            <div className="p-12 text-center bg-amber-50/40 rounded-2xl border-2 border-dashed border-amber-200/60">
+                                <Gem className="w-12 h-12 text-amber-500/30 mx-auto mb-4" />
+                                <p className="text-[14px] font-medium text-amber-700/45 italic">No specific yantras recommended at this time.</p>
                             </div>
                         )}
 
@@ -386,18 +386,18 @@ export default function YantraDashboard({ data, className }: YantraDashboardProp
                         />
 
                         {/* Legend / Insights */}
-                        <div className="bg-white/30 rounded-xl px-3 py-2.5 border border-gold-primary/15 flex items-center gap-4">
+                        <div className="bg-white/30 rounded-xl px-3 py-2.5 border border-amber-200/60 flex items-center gap-4">
                             <h4 className="text-[9px] font-medium uppercase tracking-[0.15em] text-amber-900/50 shrink-0">Insights</h4>
                             <div className="flex items-center gap-3">
-                                <div className="flex items-center gap-1.5 text-[10px] font-medium text-ink">
+                                <div className="flex items-center gap-1.5 text-[10px] font-medium text-amber-900">
                                     <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                                     Karmic
                                 </div>
-                                <div className="flex items-center gap-1.5 text-[10px] font-medium text-ink">
+                                <div className="flex items-center gap-1.5 text-[10px] font-medium text-amber-900">
                                     <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
                                     <KnowledgeTooltip term="dasha_system">Dasha</KnowledgeTooltip>
                                 </div>
-                                <div className="flex items-center gap-1.5 text-[10px] font-medium text-ink">
+                                <div className="flex items-center gap-1.5 text-[10px] font-medium text-amber-900">
                                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                                     Growth
                                 </div>

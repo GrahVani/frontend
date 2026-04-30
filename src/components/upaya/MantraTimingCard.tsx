@@ -43,9 +43,9 @@ const MantraTimingCard: React.FC<MantraTimingCardProps> = ({ timing }) => {
     const isRahuKaalActive = rahu_kaal.recommendation.toLowerCase().includes("avoid");
 
     return (
-        <div className="rounded-2xl border border-gold-primary/20 bg-white/30 backdrop-blur-sm overflow-hidden">
+        <div className="rounded-2xl border border-amber-300/60 bg-white/30 backdrop-blur-sm overflow-hidden">
             {/* Header strip */}
-            <div className="flex items-center gap-1.5 px-3 py-1.5 border-b border-gold-primary/15 bg-white/20">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 border-b border-amber-200/60 bg-white/20">
                 <Clock className="w-3 h-3 text-amber-600" />
                 <span className="text-[9px] font-black uppercase tracking-[0.2em] text-amber-900/50">Sacred Timing Analysis</span>
                 <Sparkles className="w-2.5 h-2.5 text-amber-400/40 ml-auto" />
@@ -63,7 +63,7 @@ const MantraTimingCard: React.FC<MantraTimingCardProps> = ({ timing }) => {
                         <span className="text-[9px] font-black uppercase tracking-widest text-amber-900/40">Current Hora</span>
                         <span className="text-[8px] font-black px-1 py-0.5 rounded bg-orange-50 text-orange-700 border border-orange-200 ml-auto">#{hora.hora_number}</span>
                     </div>
-                    <p className="text-[12px] font-bold text-ink leading-none mb-1">{hora.hora_lord} Lord</p>
+                    <p className="text-[12px] font-bold text-amber-900 leading-none mb-1">{hora.hora_lord} Lord</p>
                     <div className="flex items-center gap-1">
                         <div className="flex-1 h-0.5 bg-black/5 rounded-full overflow-hidden">
                             <motion.div
@@ -72,21 +72,21 @@ const MantraTimingCard: React.FC<MantraTimingCardProps> = ({ timing }) => {
                                 className="h-full bg-orange-400 rounded-full"
                             />
                         </div>
-                        <span className="text-[7px] font-bold text-ink/25 uppercase">Cycle</span>
+                        <span className="text-[7px] font-bold text-amber-700/25 uppercase">Cycle</span>
                     </div>
                 </div>
 
                 {/* Rahu Kaal */}
                 <div className={cn("px-3 py-2", isRahuKaalActive ? "bg-rose-50/50" : "")}>
                     <div className="flex items-center gap-1.5 mb-1">
-                        <div className={cn("p-1 rounded border", isRahuKaalActive ? "bg-rose-100 text-rose-600 border-rose-200" : "bg-surface-warm text-ink/35 border-gold-primary/15")}>
+                        <div className={cn("p-1 rounded border", isRahuKaalActive ? "bg-rose-100 text-rose-600 border-rose-200" : "bg-amber-50/60 text-amber-700/35 border-amber-200/60")}>
                             <AlertOctagon className="w-2.5 h-2.5" />
                         </div>
                         <span className="text-[9px] font-black uppercase tracking-widest text-amber-900/40"><KnowledgeTooltip term="rahu_kaal">Rahu Kaal</KnowledgeTooltip></span>
                         {isRahuKaalActive && <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse ml-auto" />}
                     </div>
-                    <p className="text-[12px] font-bold text-ink leading-none mb-1">{rahu_kaal.duration_minutes} Min</p>
-                    <p className={cn("text-[9px] font-medium leading-tight line-clamp-2", isRahuKaalActive ? "text-rose-600" : "text-ink/45")}>
+                    <p className="text-[12px] font-bold text-amber-900 leading-none mb-1">{rahu_kaal.duration_minutes} Min</p>
+                    <p className={cn("text-[9px] font-medium leading-tight line-clamp-2", isRahuKaalActive ? "text-rose-600" : "text-amber-700/45")}>
                         {rahu_kaal.recommendation}
                     </p>
                 </div>
@@ -100,13 +100,13 @@ const MantraTimingCard: React.FC<MantraTimingCardProps> = ({ timing }) => {
                         <span className="text-[9px] font-black uppercase tracking-widest text-amber-900/40">Lunar Tithi</span>
                         <span className="text-[8px] font-black px-1 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 ml-auto">{tithi.paksha}</span>
                     </div>
-                    <p className="text-[12px] font-bold text-ink leading-none mb-1">{tithi.name}</p>
+                    <p className="text-[12px] font-bold text-amber-900 leading-none mb-1">{tithi.name}</p>
                     <div className="flex flex-wrap gap-1">
                         {tithi.is_amavasya && <span className="text-[7px] px-1 py-0.5 rounded-full font-black uppercase bg-ink text-parchment">Amavasya</span>}
                         {tithi.is_purnima && <span className="text-[7px] px-1 py-0.5 rounded-full font-black uppercase bg-amber-500 text-white">Purnima</span>}
                         {tithi.is_ekadashi && <span className="text-[7px] px-1 py-0.5 rounded-full font-black uppercase bg-purple-600 text-white">Ekadashi</span>}
                         {!tithi.is_amavasya && !tithi.is_purnima && !tithi.is_ekadashi && (
-                            <span className="text-[9px] text-ink/35 font-medium">Regular day</span>
+                            <span className="text-[9px] text-amber-700/35 font-medium">Regular day</span>
                         )}
                     </div>
                 </div>

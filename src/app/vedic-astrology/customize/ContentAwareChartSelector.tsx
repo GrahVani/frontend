@@ -171,7 +171,7 @@ function ChartCard({ chart, isSelected, onClick, contentCategory }: ChartCardPro
         "relative w-full text-left p-3 rounded-xl border-2 transition-all group",
         isSelected 
           ? cn("border-primary bg-primary/5", config?.bgColor)
-          : cn("border-transparent hover:border-[#E6D5B8]/50 bg-white", config?.bgColor.replace('50', '30'))
+          : cn("border-transparent hover:border-amber-200/60 bg-white", config?.bgColor.replace('50', '30'))
       )}
     >
       {/* Selection indicator */}
@@ -191,12 +191,12 @@ function ChartCard({ chart, isSelected, onClick, contentCategory }: ChartCardPro
       </div>
       
       {/* Name */}
-      <h4 className="text-[12px] font-black text-ink leading-tight mb-1">
+      <h4 className="text-[12px] font-black text-amber-900 leading-tight mb-1">
         {chart.name}
       </h4>
       
       {/* Description */}
-      <p className="text-[9px] text-ink/50 line-clamp-2 leading-relaxed">
+      <p className="text-[9px] text-amber-900/50 line-clamp-2 leading-relaxed">
         {chart.description}
       </p>
       
@@ -207,7 +207,7 @@ function ChartCard({ chart, isSelected, onClick, contentCategory }: ChartCardPro
       
       {/* Size preview */}
       {chart.defaultDimensions && (
-        <div className="mt-2 flex items-center gap-1 text-[8px] text-ink/40">
+        <div className="mt-2 flex items-center gap-1 text-[8px] text-amber-900/40">
           <span>{chart.defaultDimensions.width}×{chart.defaultDimensions.height}px</span>
         </div>
       )}
@@ -267,7 +267,7 @@ function CategorySection({
             <h3 className={cn("text-[14px] font-black", config.color)}>
               {config.label}
             </h3>
-            <p className="text-[10px] text-ink/50">
+            <p className="text-[10px] text-amber-900/50">
               {config.description}
             </p>
           </div>
@@ -283,13 +283,13 @@ function CategorySection({
               {selectedCount} selected
             </span>
           )}
-          <span className="text-[11px] font-bold text-ink/40">
+          <span className="text-[11px] font-bold text-amber-900/40">
             {charts.length}
           </span>
           {isExpanded ? (
-            <ChevronDown className="w-5 h-5 text-ink/40" />
+            <ChevronDown className="w-5 h-5 text-amber-900/40" />
           ) : (
-            <ChevronRight className="w-5 h-5 text-ink/40" />
+            <ChevronRight className="w-5 h-5 text-amber-900/40" />
           )}
         </div>
       </button>
@@ -394,22 +394,22 @@ export default function ContentAwareChartSelector({
       <div className="relative w-full max-w-4xl max-h-[85vh] bg-white rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 flex flex-col">
         
         {/* Header */}
-        <div className="px-6 py-4 border-b border-[#E6D5B8]/30 bg-surface-warm shrink-0">
+        <div className="px-6 py-4 border-b border-amber-200/60 bg-amber-50 shrink-0">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white shadow-md">
                 <Sparkles className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-[20px] font-black text-ink leading-tight">Add Widget</h2>
-                <p className="text-[12px] text-gold-dark font-bold mt-0.5">
+                <h2 className="text-[20px] font-black text-amber-900 leading-tight">Add Widget</h2>
+                <p className="text-[12px] text-amber-700 font-bold mt-0.5">
                   {totalVisible} available • {totalSelected} selected
                 </p>
               </div>
             </div>
             <button 
               onClick={onClose} 
-              className="p-2 hover:bg-gold-primary/20 rounded-xl transition-colors text-ink/40 hover:text-ink"
+              className="p-2 hover:bg-amber-50 rounded-xl transition-colors text-amber-900/40 hover:text-amber-900"
             >
               <X className="w-6 h-6" />
             </button>
@@ -418,13 +418,13 @@ export default function ContentAwareChartSelector({
           {/* Search & Ayanamsa */}
           <div className="flex gap-3">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink/30" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-900/30" />
               <input
                 type="text"
                 placeholder="Search charts, tables, analysis..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-white border border-[#E6D5B8]/30 rounded-xl text-[13px] text-ink placeholder:text-ink/30 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full pl-10 pr-4 py-2.5 bg-white border border-amber-200/60 rounded-xl text-[13px] text-amber-900 placeholder:text-amber-900/30 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
               />
             </div>
             <AyanamsaSelect
@@ -438,8 +438,8 @@ export default function ContentAwareChartSelector({
         <div className="flex-1 overflow-y-auto custom-scrollbar p-6">
           {totalVisible === 0 ? (
             <div className="text-center py-12">
-              <Search className="w-12 h-12 text-ink/20 mx-auto mb-4" />
-              <p className="text-[14px] font-bold text-ink/50">
+              <Search className="w-12 h-12 text-amber-900/20 mx-auto mb-4" />
+              <p className="text-[14px] font-bold text-amber-900/50">
                 No widgets found for &quot;{searchQuery}&quot;
               </p>
               <button
@@ -467,17 +467,17 @@ export default function ContentAwareChartSelector({
         </div>
         
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-[#E6D5B8]/30 bg-surface-warm shrink-0">
+        <div className="px-6 py-4 border-t border-amber-200/60 bg-amber-50 shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-[11px] text-ink/50">
+              <div className="flex items-center gap-2 text-[11px] text-amber-900/50">
                 <Info className="w-4 h-4" />
                 <span>Each widget type has optimal dimensions for its content</span>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl text-[13px] font-bold text-ink/60 hover:text-ink hover:bg-ink/5 transition-colors"
+              className="px-5 py-2.5 rounded-xl text-[13px] font-bold text-amber-900/60 hover:text-amber-900 hover:bg-amber-900/5 transition-colors"
             >
               Done
             </button>

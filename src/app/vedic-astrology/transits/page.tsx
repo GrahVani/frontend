@@ -1,17 +1,18 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { AlertTriangle, ShieldAlert, Loader2, Calendar, Info } from 'lucide-react';
+import { AlertTriangle, Loader2, Calendar, Info } from 'lucide-react';
 import { useVedicClient } from '@/context/VedicClientContext';
 import { useAstrologerStore } from '@/store/useAstrologerStore';
 import { captureException } from '@/lib/monitoring';
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
-import { COLORS } from '@/design-tokens/colors';
+
 import { ChartWithPopup, Planet } from '@/components/astrology/NorthIndianChart';
 import { clientApi } from '@/lib/api';
 import { parseChartData, signNameToId, signIdToName } from '@/lib/chart-helpers';
 import { mapChartToTransits, PLANET_SYMBOLS } from '@/lib/transit-helpers';
+import { PLANET_COLORS } from '@/design-tokens/colors';
 import DailyTransitView from '@/components/transits/DailyTransitView';
 
 type GocharTab = 'gochar' | 'daily_transit';
@@ -91,24 +92,23 @@ export default function TransitsPage() {
     }, [clientDetails?.id, isGeneratingCharts]);
 
     const retroPlanets = transitData.filter(t => t.isRetro);
-    const debilitatedPlanets = transitData.filter(t => t.status === 'Debilitated');
+
 
     if (!clientDetails) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-                <p className="font-serif text-[20px] text-ink">Please select a client to view transit analysis</p>
+                <p className="font-serif text-[20px] text-amber-800">Please select a client to view transit analysis</p>
             </div>
         );
     }
 
     return (
-        <div className="space-y-2 animate-in fade-in duration-500 pt-0 overflow-hidden">
-            {/* Header with inline Tab Switcher */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-4 animate-in fade-in duration-500 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 -mx-4 -mt-4 px-4 py-6">
+            {/* Page Heading + Tab Switcher */}
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
                 <div>
-                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] flex items-center gap-2")}>
-                        Transit impact analysis
-                    </h1>
+                    <h1 className="text-[28px] font-bold text-amber-900">Transit Analysis</h1>
+                    <p className="text-[16px] text-amber-600 mt-1">Current planetary positions and their influences</p>
                     {(isGeneratingCharts || isLiveLoading || isRefreshingCharts) && (
                         <div className="flex items-center gap-2 mt-2">
                             {(isGeneratingCharts || isLiveLoading) && (
@@ -127,37 +127,33 @@ export default function TransitsPage() {
                     )}
                 </div>
 
-                {/* Compact Tab Switcher */}
-                <div className="inline-flex items-center gap-1 bg-surface-pure rounded-lg p-1 prem-card shrink-0 mt-2 sm:mt-0 shadow-sm">
-                    {isLahiri && (
-                        <button
-                            onClick={() => setActiveTab('daily_transit')}
-                            className={cn(
-                                "px-3 py-1.5 rounded-md transition-all flex items-center justify-center gap-1.5 whitespace-nowrap",
-                                TYPOGRAPHY.value,
-                                "!text-[12px]",
-                                activeTab === 'daily_transit'
-                                    ? COLORS.wbActiveTab
-                                    : "text-ink hover:bg-black/5"
-                            )}
-                        >
-                            Daily transit
-                        </button>
-                    )}
+                {/* Tab Switcher — Right Side Top */}
+                <div className="inline-flex items-center gap-1 bg-white rounded-xl p-1 border border-amber-200/60 shadow-sm shrink-0 self-start sm:mt-2">
+                {isLahiri && (
                     <button
-                        onClick={() => setActiveTab('gochar')}
+                        onClick={() => setActiveTab('daily_transit')}
                         className={cn(
-                            "px-3 py-1.5 rounded-md transition-all whitespace-nowrap",
-                            TYPOGRAPHY.value,
-                            "!text-[12px]",
-                            activeTab === 'gochar'
-                                ? COLORS.wbActiveTab
-                                : "text-ink hover:bg-black/5"
+                            "px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-1.5 whitespace-nowrap text-[13px] font-bold",
+                            activeTab === 'daily_transit'
+                                ? "bg-amber-100 text-amber-900 border border-amber-200"
+                                : "text-amber-500 hover:text-amber-700 hover:bg-amber-50/50"
                         )}
                     >
-                        Gochar
+                        Daily Transit
                     </button>
-                </div>
+                )}
+                <button
+                    onClick={() => setActiveTab('gochar')}
+                    className={cn(
+                        "px-4 py-2 rounded-lg transition-all whitespace-nowrap text-[13px] font-bold",
+                        activeTab === 'gochar'
+                            ? "bg-amber-100 text-amber-900 border border-amber-200"
+                            : "text-amber-500 hover:text-amber-700 hover:bg-amber-50/50"
+                    )}
+                >
+                    Gochar
+                </button>
+            </div>
             </div>
 
             {/* ========== GOCHAR TAB ========== */}
@@ -165,19 +161,19 @@ export default function TransitsPage() {
                 <>
                     {(isLiveLoading || (isLoadingCharts && Object.keys(processedCharts).length === 0)) && (
                         <div className="flex flex-col items-center justify-center py-16">
-                            <Loader2 className="w-8 h-8 text-gold-dark animate-spin mb-3" />
-                            <p className="font-serif text-ink">Calculating transit positions...</p>
+                            <Loader2 className="w-8 h-8 text-amber-600 animate-spin mb-3" />
+                            <p className="font-serif text-amber-800">Calculating transit positions...</p>
                         </div>
                     )}
 
                     {!isLiveLoading && !isLoadingCharts && transitData.length === 0 && (
                         <div className="flex flex-col items-center justify-center py-16 text-center">
-                            <Info className="w-12 h-12 text-ink mb-3" />
-                            <p className="font-serif text-ink text-[18px] mb-2">Transit data unavailable</p>
-                            <p className="text-[14px] text-ink mb-4">Charts are being generated for this client</p>
+                            <Info className="w-12 h-12 text-amber-400 mb-3" />
+                            <p className="font-serif text-amber-900 text-[18px] mb-2">Transit data unavailable</p>
+                            <p className="text-[14px] text-amber-600 mb-4">Charts are being generated for this client</p>
                             <button
                                 onClick={refreshCharts}
-                                className="px-4 py-2 bg-gold-primary text-white rounded-lg font-medium hover:bg-gold-primary/90"
+                                className="px-4 py-2 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-lg font-medium hover:from-amber-500 hover:to-amber-600 shadow-sm"
                             >
                                 Refresh
                             </button>
@@ -186,40 +182,26 @@ export default function TransitsPage() {
 
                     {transitData.length > 0 && (
                         <>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                {retroPlanets.length > 0 && (
-                                    <div className="bg-red-50 border border-red-200 rounded-md p-3 flex items-start gap-3">
-                                        <div className="p-1.5 bg-red-100 rounded-lg text-red-600">
-                                            <AlertTriangle className="w-5 h-5" />
-                                        </div>
-                                        <div>
-                                            <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900")}>Retrograde alert</h3>
-                                            <p className={cn(TYPOGRAPHY.subValue, "text-red-800 mt-0.5 whitespace-normal")}>
-                                                {retroPlanets.map(p => p.planet).join(', ')} {retroPlanets.length === 1 ? 'is' : 'are'} retrograde.
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className="bg-gold-primary/10 border border-gold-primary/20 rounded-md p-3 flex items-start gap-3">
-                                    <div className="p-1.5 bg-gold-primary/15 rounded-lg text-ink">
-                                        <ShieldAlert className="w-5 h-5" />
+                            {/* Alert Cards */}
+                            {retroPlanets.length > 0 && (
+                                <div className="bg-white border border-amber-200/60 rounded-2xl p-4 flex items-start gap-3 shadow-sm max-w-xl">
+                                    <div className="p-2 bg-red-50 rounded-xl text-red-600 border border-red-100">
+                                        <AlertTriangle className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Transit Summary</h3>
-                                        <p className={cn(TYPOGRAPHY.subValue, "mt-0.5 whitespace-normal")}>
-                                            {debilitatedPlanets.length > 0
-                                                ? `${debilitatedPlanets.map(p => p.planet).join(', ')} in challenging positions.`
-                                                : 'No major planetary afflictions.'}
+                                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 text-[16px]")}>Retrograde Alert</h3>
+                                        <p className={cn(TYPOGRAPHY.subValue, "text-red-700 mt-1 whitespace-normal text-[13px]")}>
+                                            {retroPlanets.map(p => p.planet).join(', ')} {retroPlanets.length === 1 ? 'is' : 'are'} currently retrograde.
                                         </p>
                                     </div>
                                 </div>
-                            </div>
+                            )}
 
-                            <div className={cn("flex flex-col lg:flex-row overflow-hidden", COLORS.wbContainer)}>
-                                <div className="lg:w-[440px] w-full flex flex-col border-r border-gold-primary/15 shrink-0 bg-white/20">
-                                    <div className={cn("px-4 py-2 h-11 flex items-center shrink-0", COLORS.wbSectionHeader)}>
-                                        <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Gochar chart</h3>
+                            {/* Main Chart + Table */}
+                            <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden flex flex-col lg:flex-row">
+                                <div className="lg:w-[440px] w-full flex flex-col border-r border-amber-200/50 shrink-0 bg-amber-50/30">
+                                    <div className="px-4 py-3 border-b border-amber-200/50 flex items-center shrink-0 bg-amber-50/50">
+                                        <h3 className="text-[15px] font-bold text-amber-900">Gochar Chart</h3>
                                     </div>
                                     <div className="flex-1 flex flex-col items-center justify-start pt-0">
                                         <div className="w-full aspect-square -mt-3">
@@ -228,49 +210,51 @@ export default function TransitsPage() {
                                                 planets={transitPlanets}
                                                 className="w-full h-full"
                                                 showDegrees={false}
+                                                planetFontSize={18}
+                                                signNumberFontSize={18}
                                             />
                                         </div>
-                                        <p className={cn(TYPOGRAPHY.subValue, "text-center mt-2 font-medium text-ink")}>
+                                        <p className="text-[13px] text-amber-700 font-medium text-center mt-2 mb-3">
                                             Natal Ascendant: {signIdToName[natalAscendant]}
                                         </p>
                                     </div>
                                 </div>
 
                                 <div className="flex-1 flex flex-col min-w-0">
-                                    <div className={cn("px-4 py-2 h-11 flex justify-between items-center shrink-0", COLORS.wbSectionHeader)}>
-                                        <h3 className={cn(TYPOGRAPHY.sectionTitle)}>Transit positions</h3>
-                                        <div className={cn(TYPOGRAPHY.label, "flex items-center gap-1.5 text-ink !mb-0")}>
-                                            <Calendar className="w-3.5 h-3.5" />
+                                    <div className="px-4 py-3 border-b border-amber-200/50 flex justify-between items-center shrink-0 bg-amber-50/50">
+                                        <h3 className="text-[15px] font-bold text-amber-900">Transit Positions</h3>
+                                        <div className="flex items-center gap-1.5 text-amber-700 text-[12px] font-semibold">
+                                            <Calendar className="w-3.5 h-3.5 text-amber-500" />
                                             {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                         </div>
                                     </div>
-                                    <div className="flex-1 overflow-y-auto bg-white/40">
+                                    <div className="flex-1 overflow-y-auto bg-white/60 custom-scrollbar">
                                         <table className="w-full border-collapse">
-                                            <thead className="sticky top-0 bg-surface-warm/90 backdrop-blur-md z-10 border-b border-gold-primary/10">
+                                            <thead className="sticky top-0 bg-white border-b border-amber-200/60 z-10 shadow-sm">
                                                 <tr>
-                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-left")}>Planet</th>
-                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-left")}>Sign</th>
-                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-left")}>Degree</th>
-                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-left")}>Nakshatra</th>
-                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-1.5 text-center")}>House</th>
+                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-2 text-left text-amber-800")}>Planet</th>
+                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-2 text-left text-amber-800")}>Sign</th>
+                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-2 text-left text-amber-800")}>Degree</th>
+                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-2 text-left text-amber-800")}>Nakshatra</th>
+                                                    <th className={cn(TYPOGRAPHY.tableHeader, "px-3 py-2 text-center text-amber-800")}>House</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-gold-primary/10">
+                                            <tbody className="divide-y divide-amber-200/40 font-medium">
                                                 {transitData.map((row, i) => (
-                                                    <tr key={i} className="hover:bg-primary/5 transition-colors border-b border-gold-primary/5 last:border-0">
+                                                    <tr key={i} className="hover:bg-amber-50/60 transition-colors group">
                                                         <td className="px-3 py-2">
-                                                            <span className={cn(TYPOGRAPHY.planetName, "flex items-center gap-2")}>
-                                                                <span className="text-[16px] text-ink/70">{PLANET_SYMBOLS[row.planet] || '\u25CF'}</span>
+                                                            <span className={cn(TYPOGRAPHY.planetName, "flex items-center gap-2 text-[18px]")}>
+                                                                <span className="text-[20px]" style={{ color: PLANET_COLORS[row.planet]?.hex || '#B45309' }}>{PLANET_SYMBOLS[row.planet] || '\u25CF'}</span>
                                                                 {row.planet}
                                                                 {row.isRetro && (
-                                                                    <span className="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded ml-1">R</span>
+                                                                    <span className="text-[10px] font-bold text-red-600 bg-red-50 px-1.5 py-0.5 rounded border border-red-200">R</span>
                                                                 )}
                                                             </span>
                                                         </td>
-                                                        <td className={cn(TYPOGRAPHY.value, "px-3 py-2")}>{row.sign}</td>
-                                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2 font-mono text-[14px]")}>{row.degree}</td>
-                                                        <td className={cn(TYPOGRAPHY.value, "px-3 py-2 font-medium")}>{row.nakshatra}</td>
-                                                        <td className={cn(TYPOGRAPHY.value, "px-3 py-2 text-center text-[16px]")}>{row.house}</td>
+                                                        <td className={cn(TYPOGRAPHY.value, "px-3 py-2 text-amber-700")}>{row.sign}</td>
+                                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "px-3 py-2 font-mono text-[14px] text-amber-700")}>{row.degree}</td>
+                                                        <td className={cn(TYPOGRAPHY.value, "px-3 py-2 font-medium text-amber-700")}>{row.nakshatra}</td>
+                                                        <td className={cn(TYPOGRAPHY.value, "px-3 py-2 text-center text-[18px] text-amber-700")}>{row.house}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -278,18 +262,18 @@ export default function TransitsPage() {
                                     </div>
 
                                     {/* Legend */}
-                                    <div className="mt-auto px-4 py-1.5 bg-surface-warm/30 border-t border-gold-primary/15 flex items-center justify-between shrink-0">
+                                    <div className="mt-auto px-4 py-2 bg-amber-50/30 border-t border-amber-200/50 flex items-center justify-between shrink-0">
                                         <div className="flex items-center gap-6">
                                             <div className="flex items-center gap-2">
-                                                <span className="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded border border-red-100">R</span>
-                                                <span className={cn(TYPOGRAPHY.label, "!mb-0 text-[11px]")}>Retrograde Motion</span>
+                                                <span className="text-[10px] font-bold text-red-600 bg-red-50 px-1.5 py-0.5 rounded border border-red-200 shadow-sm">R</span>
+                                                <span className="text-[11px] text-amber-700 font-semibold">Retrograde Motion</span>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <div className="w-2 h-2 rounded-full bg-primary/70"></div>
-                                                <span className={cn(TYPOGRAPHY.label, "!mb-0 text-[11px]")}>Strong Influence</span>
+                                                <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+                                                <span className="text-[11px] text-amber-700 font-semibold">Strong Influence</span>
                                             </div>
                                         </div>
-                                        <div className={cn(TYPOGRAPHY.label, "text-gold-dark text-[10px] font-mono italic")}>
+                                        <div className="text-amber-600 text-[10px] font-mono italic">
                                             Refreshed: {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </div>
                                     </div>
@@ -316,7 +300,7 @@ export default function TransitsPage() {
                         <DailyTransitView clientId={clientDetails.id} />
                     ) : (
                         <div className="flex flex-col items-center justify-center py-16 text-center">
-                            <Info className="w-12 h-12 text-ink mb-3" />
+                            <Info className="w-12 h-12 text-amber-400 mb-3" />
                             <p className={cn(TYPOGRAPHY.sectionTitle, "text-[18px]")}>Client ID required</p>
                             <p className={cn(TYPOGRAPHY.subValue, "text-[14px] mt-1")}>Please select a saved client to fetch daily transit data.</p>
                         </div>

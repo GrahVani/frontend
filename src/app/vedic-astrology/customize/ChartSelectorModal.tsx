@@ -64,7 +64,7 @@ function CustomDropdown({ label, icon: Icon, value, options, onChange, placehold
 
     return (
         <div ref={containerRef} className="relative flex-1 min-w-0">
-            <label className="block text-[10px] font-medium uppercase tracking-wider text-gold-dark mb-1.5">
+            <label className="block text-[10px] font-medium uppercase tracking-wider text-amber-700 mb-1.5">
                 {label}
             </label>
             <button
@@ -75,29 +75,29 @@ function CustomDropdown({ label, icon: Icon, value, options, onChange, placehold
                     "w-full flex items-center gap-2.5 px-4 py-3 rounded-xl border-2 text-left transition-all",
                     disabled 
                         ? "bg-gray-50 border-gray-200 cursor-not-allowed opacity-60" 
-                        : "bg-white border-[#E6D5B8]/50 hover:border-primary/40 hover:shadow-sm cursor-pointer"
+                        : "bg-white border-amber-200/60 hover:border-primary/40 hover:shadow-sm cursor-pointer"
                 )}
             >
                 <Icon className={cn(
                     "w-4 h-4 shrink-0",
-                    disabled ? "text-gray-400" : "text-gold-dark"
+                    disabled ? "text-gray-400" : "text-amber-700"
                 )} />
                 <span className={cn(
                     "flex-1 text-[13px] font-medium truncate",
-                    selectedOption ? "text-ink" : "text-ink/50"
+                    selectedOption ? "text-amber-900" : "text-amber-900/50"
                 )}>
                     {displayText}
                 </span>
                 <ChevronDown className={cn(
                     "w-4 h-4 shrink-0 transition-transform duration-200",
                     isOpen ? "rotate-180" : "",
-                    disabled ? "text-gray-400" : "text-gold-dark"
+                    disabled ? "text-gray-400" : "text-amber-700"
                 )} />
             </button>
 
             {/* Dropdown Menu */}
             {isOpen && !disabled && (
-                <div className="absolute z-[100] top-full left-0 right-0 mt-2 bg-white rounded-xl border border-[#E6D5B8]/50 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[280px] overflow-y-auto custom-scrollbar">
+                <div className="absolute z-[100] top-full left-0 right-0 mt-2 bg-white rounded-xl border border-amber-200/60 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[280px] overflow-y-auto custom-scrollbar">
                     {options.map((option) => {
                         const isSelected = option.value === value;
                         const displayLabel = `${option.label}${option.count !== undefined ? ` (${option.count})` : ''}`;
@@ -113,7 +113,7 @@ function CustomDropdown({ label, icon: Icon, value, options, onChange, placehold
                                     "w-full flex items-center justify-between px-4 py-3 text-left transition-all",
                                     isSelected 
                                         ? "bg-primary/5 text-primary" 
-                                        : "hover:bg-surface-warm/50 text-ink"
+                                        : "hover:bg-amber-50/50 text-amber-900"
                                 )}
                             >
                                 <span className="text-[13px] font-medium">
@@ -257,24 +257,24 @@ export default function ChartSelectorModal({
             <div className="relative w-full max-w-3xl mx-4 bg-[#F5EFE6] rounded-2xl shadow-2xl animate-in zoom-in-95 duration-300">
                 
                 {/* Header */}
-                <div className="px-6 py-5 bg-[#FDFBF7] border-b border-[#E6D5B8]/30">
+                <div className="px-6 py-5 bg-[#FDFBF7] border-b border-amber-200/60">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 rounded-xl bg-[#3D2314] flex items-center justify-center">
                                 <Plus className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                                <h2 className="text-[18px] font-medium text-ink tracking-tight">
+                                <h2 className="text-[18px] font-medium text-amber-900 tracking-tight">
                                     ADD WIDGETS
                                 </h2>
-                                <p className="text-[11px] font-medium text-gold-dark tracking-wide">
+                                <p className="text-[11px] font-medium text-amber-700 tracking-wide">
                                     SELECT CHARTS, WIDGETS & TOOLS
                                 </p>
                             </div>
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-2 hover:bg-gold-primary/20 rounded-xl transition-colors text-ink/40 hover:text-ink"
+                            className="p-2 hover:bg-amber-50 rounded-xl transition-colors text-amber-900/40 hover:text-amber-900"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -315,7 +315,7 @@ export default function ChartSelectorModal({
 
                 {/* Selected Widget Preview */}
                 {selectedWidget && (
-                    <div className="px-6 py-4 bg-white border-t border-[#E6D5B8]/30">
+                    <div className="px-6 py-4 bg-white border-t border-amber-200/60">
                         {(() => {
                             const widget = availableCharts.find(c => c.id === selectedWidget);
                             if (!widget) return null;
@@ -325,8 +325,8 @@ export default function ChartSelectorModal({
                                         <LayoutGrid className="w-5 h-5 text-primary" />
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="text-[14px] font-bold text-ink">{widget.name}</h3>
-                                        <p className="text-[12px] text-ink/50">{widget.description}</p>
+                                        <h3 className="text-[14px] font-bold text-amber-900">{widget.name}</h3>
+                                        <p className="text-[12px] text-amber-900/50">{widget.description}</p>
                                     </div>
                                     <button
                                         onClick={handleAddWidget}

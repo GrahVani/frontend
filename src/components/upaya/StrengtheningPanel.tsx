@@ -117,10 +117,10 @@ const CircularProgress = ({
             </svg>
             <div className="absolute flex flex-col items-center">
                 <span className={cn(
-                    "font-bold text-ink",
+                    "font-bold text-amber-900",
                     size === "lg" ? "text-[18px]" : size === "md" ? "text-[15px]" : "text-[13px]"
                 )}>{percentage}%</span>
-                <span className="text-[9px] text-ink/40 font-medium">strength</span>
+                <span className="text-[9px] text-amber-700/40 font-medium">strength</span>
             </div>
         </div>
     );
@@ -131,7 +131,7 @@ const InfoTooltip = ({ children, title }: { children: React.ReactNode; title: st
         <Info className="w-4 h-4 text-amber-400 cursor-help" />
         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-white rounded-xl shadow-xl border border-amber-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
             <h5 className="text-[12px] font-bold text-amber-900 mb-1">{title}</h5>
-            <p className="text-[11px] text-ink/70 leading-relaxed">{children}</p>
+            <p className="text-[11px] text-amber-800/70 leading-relaxed">{children}</p>
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 bg-white border-r border-b border-amber-100 rotate-45" />
         </div>
     </div>
@@ -202,7 +202,7 @@ export default function StrengtheningPanel({ planetaryStrengths }: Strengthening
                                             <Target className="w-4 h-4 text-amber-500" />
                                             <span className="text-[12px] font-bold text-amber-900">What is Shadbala?</span>
                                         </div>
-                                        <p className="text-[11px] text-ink/70 leading-relaxed">
+                                        <p className="text-[11px] text-amber-800/70 leading-relaxed">
                                             Shadbala means "six-fold strength" - a Vedic astrology measure of how strong a planet is in your birth chart. 
                                             Higher percentage = stronger planet.
                                         </p>
@@ -212,7 +212,7 @@ export default function StrengtheningPanel({ planetaryStrengths }: Strengthening
                                             <Clock className="w-4 h-4 text-amber-500" />
                                             <span className="text-[12px] font-bold text-amber-900">Why Mantra Japa?</span>
                                         </div>
-                                        <p className="text-[11px] text-ink/70 leading-relaxed">
+                                        <p className="text-[11px] text-amber-800/70 leading-relaxed">
                                             Chanting a planet's beej (seed) mantra activates its positive energies. 
                                             Regular practice helps balance weak planetary influences in your life.
                                         </p>
@@ -222,7 +222,7 @@ export default function StrengtheningPanel({ planetaryStrengths }: Strengthening
                                             <Play className="w-4 h-4 text-amber-500" />
                                             <span className="text-[12px] font-bold text-amber-900">How to Practice?</span>
                                         </div>
-                                        <p className="text-[11px] text-ink/70 leading-relaxed">
+                                        <p className="text-[11px] text-amber-800/70 leading-relaxed">
                                             1. Click on a planet card below<br/>
                                             2. Learn its beej mantra<br/>
                                             3. Chant daily (108x or as advised)<br/>
@@ -259,7 +259,7 @@ export default function StrengtheningPanel({ planetaryStrengths }: Strengthening
                                 "rounded-2xl border transition-all cursor-pointer overflow-hidden",
                                 isExpanded 
                                     ? "bg-white border-amber-300 shadow-lg" 
-                                    : "bg-white/60 border-gold-primary/15 hover:bg-white hover:border-amber-200"
+                                    : "bg-white/60 border-amber-200/60 hover:bg-white hover:border-amber-200"
                             )}
                             onClick={() => setExpandedPlanet(isExpanded ? null : name)}
                         >
@@ -270,7 +270,7 @@ export default function StrengtheningPanel({ planetaryStrengths }: Strengthening
                                     
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2">
-                                            <h4 className="text-[17px] font-bold text-ink">{name}</h4>
+                                            <h4 className="text-[17px] font-bold text-amber-900">{name}</h4>
                                             <span className={cn(
                                                 "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase",
                                                 data.strength_category === 'Weak' ? "bg-red-100 text-red-700" :
@@ -284,8 +284,8 @@ export default function StrengtheningPanel({ planetaryStrengths }: Strengthening
                                         {/* Progress Bar */}
                                         <div className="mt-2">
                                             <div className="flex items-center justify-between text-[11px] mb-1">
-                                                <span className="text-ink/50">Current Strength</span>
-                                                <span className="font-bold text-ink">{percentage}%</span>
+                                                <span className="text-amber-700/50">Current Strength</span>
+                                                <span className="font-bold text-amber-900">{percentage}%</span>
                                             </div>
                                             <div className="h-2 bg-amber-100 rounded-full overflow-hidden">
                                                 <motion.div 
@@ -303,9 +303,9 @@ export default function StrengtheningPanel({ planetaryStrengths }: Strengthening
 
                                         {/* Target Info */}
                                         <div className="flex items-center gap-4 mt-3 text-[11px]">
-                                            <div className="flex items-center gap-1.5 text-ink/60">
+                                            <div className="flex items-center gap-1.5 text-amber-700/60">
                                                 <Target className="w-3.5 h-3.5" />
-                                                <span>Target: <strong className="text-ink">{targetCount.toLocaleString()}</strong> repetitions</span>
+                                                <span>Target: <strong className="text-amber-900">{targetCount.toLocaleString()}</strong> repetitions</span>
                                             </div>
                                             <div className="flex items-center gap-1 text-amber-600">
                                                 <span>{isExpanded ? 'Show less' : 'Click for mantra'}</span>
@@ -336,10 +336,10 @@ export default function StrengtheningPanel({ planetaryStrengths }: Strengthening
                                                         <Play className="w-4 h-4 ml-0.5" />
                                                     </button>
                                                 </div>
-                                                <p className="text-[16px] font-serif text-ink text-center py-2 leading-relaxed">
+                                                <p className="text-[16px] font-serif text-amber-900 text-center py-2 leading-relaxed">
                                                     {mantra.beej}
                                                 </p>
-                                                <p className="text-[11px] text-ink/60 text-center italic">
+                                                <p className="text-[11px] text-amber-700/60 text-center italic">
                                                     "{mantra.meaning}"
                                                 </p>
                                             </div>

@@ -59,9 +59,9 @@ interface ClientFormProps {
 // Section header for each form group
 function SectionHeader({ icon: Icon, title }: { icon: React.ElementType; title: string }) {
     return (
-        <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gold-primary/10">
-            <Icon className="w-5 h-5 text-gold-burnished" />
-            <h2 className={cn(TYPOGRAPHY.sectionTitle, "!text-[18px] !font-bold !text-ink-deep !mb-0")}>{title}</h2>
+        <div className="flex items-center gap-2 mb-4 pb-2 border-b border-amber-200/60">
+            <Icon className="w-5 h-5 text-amber-600" />
+            <h2 className={cn(TYPOGRAPHY.sectionTitle, "!text-[18px] !font-bold !text-amber-900 !mb-0")}>{title}</h2>
         </div>
     );
 }
@@ -69,7 +69,7 @@ function SectionHeader({ icon: Icon, title }: { icon: React.ElementType; title: 
 // Label component used throughout
 function FieldLabel({ children, required }: { children: React.ReactNode; required?: boolean }) {
     return (
-        <label className={cn(TYPOGRAPHY.label, "block !text-[11px] !font-bold !text-ink uppercase tracking-widest !mb-1")}>
+        <label className={cn(TYPOGRAPHY.label, "block !text-[11px] !font-bold !text-amber-700 uppercase tracking-widest !mb-1")}>
             {children} {required && <span className="text-red-600">*</span>}
         </label>
     );
@@ -243,12 +243,12 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
         >
             {/* Draft restored notice */}
             {hasDraft && mode === 'create' && (
-                <div className="mb-4 p-3 bg-gold-primary/10 border border-gold-primary/30 rounded-lg text-[14px] text-gold-dark font-serif flex items-center justify-between">
+                <div className="mb-4 p-3 bg-amber-50 border border-amber-200/60 rounded-lg text-[14px] text-amber-700 flex items-center justify-between">
                     <span>A previously saved draft has been restored.</span>
                     <button
                         type="button"
                         onClick={() => { clearDraft(); form.reset(defaultValues); }}
-                        className="text-[12px] font-bold text-gold-dark hover:text-red-600 transition-colors underline"
+                        className="text-[12px] font-bold text-amber-700 hover:text-red-600 transition-colors underline"
                     >
                         Discard
                     </button>
@@ -416,7 +416,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                         <FieldLabel required>Place of Birth</FieldLabel>
                         <div className="relative">
                             <div className="relative">
-                                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gold-burnished" />
+                                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-600" />
                                 <input
                                     type="text"
                                     placeholder="Search city or town..."
@@ -439,14 +439,14 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                     onKeyDown={onLocationKeyDown}
                                     className={cn(
                                         TYPOGRAPHY.value,
-                                        "w-full bg-transparent border-b border-gold-primary/50 py-2 pl-10 pr-10",
-                                        "!text-ink-deep !font-serif placeholder:text-gold-burnished placeholder:opacity-80",
-                                        "focus:outline-none focus:border-gold-dark transition-colors !mt-0",
+                                        "w-full bg-transparent border-b border-amber-300 py-2 pl-10 pr-10",
+                                        "!text-amber-900 placeholder:text-amber-500 placeholder:opacity-80",
+                                        "focus:outline-none focus:border-amber-600 transition-colors !mt-0",
                                         errors.birthPlace && "border-red-400",
                                     )}
                                 />
                                 {location.isLoading && (
-                                    <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gold-burnished animate-spin" />
+                                    <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-500 animate-spin" />
                                 )}
                             </div>
 
@@ -455,7 +455,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                 <div
                                     role="listbox"
                                     aria-label="Location suggestions"
-                                    className="absolute top-full left-0 right-0 mt-1 bg-white border border-gold-primary/10 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
+                                    className="absolute top-full left-0 right-0 mt-1 bg-white border border-amber-200/60 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
                                 >
                                     {location.suggestions.map((suggestion, index) => (
                                         <button
@@ -469,14 +469,14 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                                 onLocationSelect(suggestion);
                                             }}
                                             className={cn(
-                                                "w-full px-4 py-3 text-left border-b border-gold-primary/10 last:border-0 transition-colors",
+                                                "w-full px-4 py-3 text-left border-b border-amber-100 last:border-0 transition-colors",
                                                 index === location.activeIndex
-                                                    ? "bg-gold-primary/10"
-                                                    : "hover:bg-surface-warm",
+                                                    ? "bg-amber-50"
+                                                    : "hover:bg-amber-50/60",
                                             )}
                                         >
-                                            <p className="text-ink font-medium text-[14px]">{suggestion.formatted}</p>
-                                            <p className="text-gold-dark text-[12px] mt-1">
+                                            <p className="text-amber-900 font-medium text-[14px]">{suggestion.formatted}</p>
+                                            <p className="text-amber-700 text-[12px] mt-1">
                                                 {suggestion.latitude.toFixed(4)} N, {suggestion.longitude.toFixed(4)} E — {suggestion.timezone}
                                             </p>
                                         </button>
@@ -503,16 +503,16 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                     setValue('birthTimezone', 'Asia/Kolkata');
                                 }
                             }}
-                            className="w-4 h-4 accent-gold-dark cursor-pointer"
+                            className="w-4 h-4 accent-amber-600 cursor-pointer"
                         />
-                        <label htmlFor="manualCoords" className="text-[14px] text-ink font-serif cursor-pointer">
+                        <label htmlFor="manualCoords" className="text-[14px] text-amber-800 cursor-pointer">
                             Enter coordinates manually (for precise calculations)
                         </label>
                     </div>
 
                     {/* Coordinates & Timezone (C-014: timezone picker) */}
                     {showCoordinates && (
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-surface-warm rounded-xl border border-gold-primary/10 shadow-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-amber-50/60 rounded-xl border border-amber-200/60 shadow-sm">
                             <div className="space-y-2">
                                 <FieldLabel required>Latitude</FieldLabel>
                                 <input
@@ -520,7 +520,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                     step="any"
                                     {...register('birthLatitude', { valueAsNumber: true })}
                                     defaultValue={watch('birthLatitude')}
-                                    className={cn(TYPOGRAPHY.value, "w-full bg-transparent border-b border-gold-primary/10 focus:border-gold-dark focus:outline-none py-1 !text-ink !mt-0")}
+                                    className={cn(TYPOGRAPHY.value, "w-full bg-transparent border-b border-amber-200 focus:border-amber-600 focus:outline-none py-1 !text-amber-900 !mt-0")}
                                     aria-required="true"
                                     aria-invalid={!!errors.birthLatitude}
                                     aria-label="Birth latitude"
@@ -536,7 +536,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                     step="any"
                                     {...register('birthLongitude', { valueAsNumber: true })}
                                     defaultValue={watch('birthLongitude')}
-                                    className={cn(TYPOGRAPHY.value, "w-full bg-transparent border-b border-gold-primary/10 focus:border-gold-dark focus:outline-none py-1 !text-ink !font-serif !mt-0")}
+                                    className={cn(TYPOGRAPHY.value, "w-full bg-transparent border-b border-amber-200 focus:border-amber-600 focus:outline-none py-1 !text-amber-900 !mt-0")}
                                     aria-required="true"
                                     aria-invalid={!!errors.birthLongitude}
                                     aria-label="Birth longitude"
@@ -559,7 +559,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                                     error={errors.birthTimezone?.message}
                                 />
                             </div>
-                            <div className="md:col-span-3 text-[12px] text-gold-dark/70 italic">
+                            <div className="md:col-span-3 text-[12px] text-amber-600/70 italic">
                                 Latitude: -90 to 90 (e.g., 27.1833 for Agra) | Longitude: -180 to 180 (e.g., 78.0167)
                             </div>
                         </div>
@@ -613,16 +613,16 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                             aria-invalid={!!errors.notes}
                             className={cn(
                                 TYPOGRAPHY.value,
-                                "w-full bg-transparent border border-gold-primary/50 rounded-lg p-3 min-h-[100px]",
-                                "!text-ink-deep !font-serif placeholder:text-gold-burnished placeholder:opacity-80",
-                                "focus:outline-none focus:border-gold-dark transition-colors resize-none !mt-0",
+                                "w-full bg-transparent border border-amber-300 rounded-lg p-3 min-h-[100px]",
+                                "!text-amber-900 placeholder:text-amber-500 placeholder:opacity-80",
+                                "focus:outline-none focus:border-amber-600 transition-colors resize-none !mt-0",
                                 errors.notes && "border-red-400",
                             )}
                         />
                         {errors.notes && (
                             <span role="alert" className="block text-[12px] text-red-600 mt-1">{errors.notes.message}</span>
                         )}
-                        <p className="text-[12px] text-ink/45 mt-1 text-right">
+                        <p className="text-[12px] text-amber-600/50 mt-1 text-right">
                             {(watch('notes') || '').length} / 5000
                         </p>
                     </div>
@@ -630,14 +630,14 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
             )}
 
             {/* ─── Navigation & Submit (C-016: sticky submit bar) ─── */}
-            <div className="sticky bottom-0  backdrop-blur-md border-t border-gold-primary/20 pt-4 pb-4 mt-8 -mx-4 px-4 sm:-mx-6 sm:px-6 z-10">
+            <div className="sticky bottom-0 backdrop-blur-md bg-white/70 border-t border-amber-200/60 pt-4 pb-4 mt-8 -mx-4 px-4 sm:-mx-6 sm:px-6 z-10">
                 <div className="flex items-center justify-between gap-4">
                     {/* Back button */}
                     {step > 0 ? (
                         <button
                             type="button"
                             onClick={goPrev}
-                            className="px-5 py-2.5 rounded-lg border border-gold-primary/20 text-ink font-serif text-[14px] font-medium hover:bg-surface-warm transition-colors flex items-center gap-2"
+                            className="px-5 py-2.5 rounded-lg border border-amber-200 text-amber-800 text-[14px] font-medium hover:bg-amber-50 transition-colors flex items-center gap-2"
                         >
                             <ChevronLeft className="w-4 h-4" />
                             Back
@@ -651,7 +651,7 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
                         <button
                             type="button"
                             onClick={goNext}
-                            className="px-6 py-2.5 bg-gold-primary text-white rounded-lg font-serif font-semibold text-[14px] hover:bg-gold-dark transition-colors flex items-center gap-2"
+                            className="px-6 py-2.5 bg-amber-500 text-white rounded-lg font-semibold text-[14px] hover:bg-amber-600 transition-colors flex items-center gap-2"
                         >
                             Next
                             <ChevronRight className="w-4 h-4" />

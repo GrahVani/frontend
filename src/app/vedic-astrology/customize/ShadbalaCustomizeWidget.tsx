@@ -125,7 +125,7 @@ export default function ShadbalaCustomizeWidget({ displayData }: { displayData: 
             </div>
 
             {/* ── Tab Navigation ── */}
-            <div className="flex items-center gap-0.5 px-3 pt-2 pb-1 shrink-0 border-b border-gold-primary/10">
+            <div className="flex items-center gap-0.5 px-3 pt-2 pb-1 shrink-0 border-b border-amber-200/40">
                 {TABS.map(tab => {
                     const Icon = tab.icon;
                     const isActive = activeTab === tab.id;
@@ -137,8 +137,8 @@ export default function ShadbalaCustomizeWidget({ displayData }: { displayData: 
                             className={cn(
                                 "flex items-center gap-1 px-2.5 py-1 rounded-t-lg text-[9px] font-medium tracking-wider transition-all",
                                 isActive
-                                    ? "bg-white text-amber-900 border border-gold-primary/20 border-b-white shadow-sm -mb-px z-10"
-                                    : "text-black/50 hover:text-black/80 hover:bg-gold-primary/5"
+                                    ? "bg-white text-amber-900 border border-amber-200/60 border-b-white shadow-sm -mb-px z-10"
+                                    : "text-amber-900/50 hover:text-amber-900/80 hover:bg-amber-50/50"
                             )}
                         >
                             <Icon className="w-3 h-3" />
@@ -320,7 +320,7 @@ function TableView({ planets, sortKey, sortAsc, onSort }: {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: idx * 0.03 }}
-                                    className="border-b border-gold-primary/5 hover:bg-amber-50/20 transition-colors"
+                                    className="border-b border-amber-200/30 hover:bg-amber-50/20 transition-colors"
                                 >
                                     {/* Planet */}
                                     <td className="py-1 px-1.5">
@@ -439,7 +439,7 @@ function TableView({ planets, sortKey, sortAsc, onSort }: {
                                 </span>
 
                                 {/* Dual bar */}
-                                <div className="flex-1 h-4 rounded-full overflow-hidden flex shadow-inner border border-gold-primary/5">
+                                <div className="flex-1 h-4 rounded-full overflow-hidden flex shadow-inner border border-amber-200/30">
                                     <motion.div
                                         className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 flex items-center justify-center transition-all"
                                         initial={{ width: 0 }}
@@ -520,7 +520,7 @@ function PercentageView({ planets }: { planets: ShadbalaPlanetData[] }) {
                         initial={{ opacity: 0, x: -12 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.4, delay: idx * 0.05 }}
-                        className="flex items-center gap-2 py-0.5 px-1 hover:bg-gold-primary/5 rounded-md transition-colors"
+                        className="flex items-center gap-2 py-0.5 px-1 hover:bg-amber-50/50 rounded-md transition-colors"
                     >
                         {/* Planet badge */}
                         <div
@@ -533,7 +533,7 @@ function PercentageView({ planets }: { planets: ShadbalaPlanetData[] }) {
 
                         {/* Bar */}
                         <div className="flex-1 relative h-4">
-                            <div className="absolute inset-0 bg-gold-primary/5 rounded-full overflow-hidden">
+                            <div className="absolute inset-0 bg-amber-50/50 rounded-full overflow-hidden">
                                 <motion.div
                                     className="h-full rounded-full"
                                     initial={{ width: 0 }}
@@ -585,7 +585,7 @@ function PercentageView({ planets }: { planets: ShadbalaPlanetData[] }) {
             })}
 
             {/* Rupas summary at bottom */}
-            <div className="mt-3 pt-2 border-t border-gold-primary/10 grid grid-cols-7 gap-1">
+            <div className="mt-3 pt-2 border-t border-amber-200/40 grid grid-cols-7 gap-1">
                 {sorted.map(p => (
                     <div key={`rupa-${p.planet}`} className="text-center">
                         <span className="text-[8px] font-medium text-primary block">{PLANET_SYMBOLS[p.planet]}</span>
@@ -766,10 +766,10 @@ function BarChartView({ planets }: { planets: ShadbalaPlanetData[] }) {
 
             {/* Strength/Weakness summary strip */}
             <div className="flex items-center justify-center gap-3 mt-0.5 text-[7px] shrink-0">
-                <span className="flex items-center gap-1 text-ink/40">
+                <span className="flex items-center gap-1 text-amber-900/40">
                     <span className="text-emerald-500">✓</span> Meets min. required
                 </span>
-                <span className="flex items-center gap-1 text-ink/40">
+                <span className="flex items-center gap-1 text-amber-900/40">
                     <span className="text-amber-500">⚠</span> Below required
                 </span>
             </div>
@@ -799,7 +799,7 @@ function PieChartView({ planets }: { planets: ShadbalaPlanetData[] }) {
             </div>
 
             {/* Shared Legend */}
-            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 mt-3 pt-2 border-t border-gold-primary/10">
+            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 mt-3 pt-2 border-t border-amber-200/40">
                 {BALA_AXES.map(axis => (
                     <div key={axis.key} className="flex items-center gap-1">
                         <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: axis.color }} />
@@ -893,7 +893,7 @@ function MiniDonut({ planet, idx }: { planet: ShadbalaPlanetData; idx: number })
             {/* Tooltip */}
             {hovered && (
                 <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 translate-y-full z-50 pointer-events-none">
-                    <div className="bg-[#1E140A] text-white rounded-lg px-3 py-2 shadow-xl border border-gold-primary/20 whitespace-nowrap min-w-[120px]">
+                    <div className="bg-[#1E140A] text-white rounded-lg px-3 py-2 shadow-xl border border-amber-200/60 whitespace-nowrap min-w-[120px]">
                         {/* Arrow */}
                         <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 bg-[#1E140A]" />
                         <div className="flex items-center gap-1.5 mb-1">

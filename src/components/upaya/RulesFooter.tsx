@@ -13,11 +13,11 @@ export default function RulesFooter() {
         )}>
             {/* Rule 1 */}
             <div className="flex items-center gap-3 group">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center transition-all border bg-white/60 border-gold-primary/20 text-ink">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center transition-all border bg-white/60 border-amber-300/60 text-amber-900">
                     <Sun className="w-4 h-4 group-hover:text-amber-600 transition-colors" />
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-tighter transition-colors text-ink">
-                    RULE 1: <span className="font-bold ml-1 text-ink">Perform during daylight (Sunrise-Sunset).</span>
+                <span className="text-[10px] font-black uppercase tracking-tighter transition-colors text-amber-900">
+                    RULE 1: <span className="font-bold ml-1 text-amber-900">Perform during daylight (Sunrise-Sunset).</span>
                 </span>
             </div>
 
@@ -26,11 +26,11 @@ export default function RulesFooter() {
 
             {/* Rule 2 */}
             <div className="flex items-center gap-3 group">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center transition-all border bg-white/60 border-gold-primary/20 text-ink">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center transition-all border bg-white/60 border-amber-300/60 text-amber-900">
                     <Hand className="w-4 h-4 group-hover:text-blue-600 transition-colors" />
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-tighter transition-colors text-ink">
-                    RULE 2: <span className="font-bold ml-1 text-ink">One new remedy per day.</span>
+                <span className="text-[10px] font-black uppercase tracking-tighter transition-colors text-amber-900">
+                    RULE 2: <span className="font-bold ml-1 text-amber-900">One new remedy per day.</span>
                 </span>
             </div>
 
@@ -39,11 +39,11 @@ export default function RulesFooter() {
 
             {/* Rule 3 */}
             <div className="flex items-center gap-3 group">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center transition-all border bg-white/60 border-gold-primary/20 text-ink">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center transition-all border bg-white/60 border-amber-300/60 text-amber-900">
                     <Calendar className="w-4 h-4 group-hover:text-purple-600 transition-colors" />
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-tighter transition-colors text-ink">
-                    RULE 3: <span className="font-bold ml-1 text-ink">Respect 43-day continuity.</span>
+                <span className="text-[10px] font-black uppercase tracking-tighter transition-colors text-amber-900">
+                    RULE 3: <span className="font-bold ml-1 text-amber-900">Respect 43-day continuity.</span>
                 </span>
             </div>
         </div>

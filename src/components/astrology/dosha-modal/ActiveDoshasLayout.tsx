@@ -40,10 +40,10 @@ export default function ActiveDoshasLayout({
     const activeDosha = allDoshas.find(d => d.id === selectedDoshaId);
 
     return (
-        <div className={cn("flex flex-col lg:flex-row gap-4 p-4 bg-surface-warm min-h-screen font-sans", className)}>
+        <div className={cn("flex flex-col lg:flex-row gap-4 p-4 bg-amber-50/60 min-h-screen font-sans", className)}>
             {/* LEFT: Birth Chart - Fixed Width */}
             <div className="flex flex-col gap-2 min-h-[360px] h-[60vh] max-h-[600px] w-full lg:w-[440px] shrink-0">
-                <div className="border border-red-200 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm max-w-[440px]">
+                <div className="border border-red-200 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-amber-50/60 max-w-[440px]">
                     <div className="bg-red-50 px-3 py-1.5 border-b border-red-100 flex justify-between items-center shrink-0">
                         <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] text-red-900 leading-tight tracking-wide")}>Birth chart (D1)</h3>
                         <button
@@ -68,7 +68,7 @@ export default function ActiveDoshasLayout({
 
             {/* RIGHT: Doshas & Details - Flexible Width */}
             <div className="flex-1 flex flex-col gap-2 min-h-[360px] h-[60vh] max-h-[600px] min-w-0">
-                <div className="border border-red-200 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm">
+                <div className="border border-red-200 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-amber-50/60">
                     <div className="bg-red-50 px-4 py-2 border-b border-red-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
                         <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-[18px] text-red-900 leading-tight tracking-wide whitespace-nowrap")}><KnowledgeTooltip term="dosha_system" unstyled>Dosha</KnowledgeTooltip> analysis</h3>
 
@@ -81,21 +81,21 @@ export default function ActiveDoshasLayout({
                             >
                                 <optgroup label="Karmic / ancestral" className="font-serif italic text-red-900">
                                     {allDoshas.filter(d => d.category === 'karmic').map(dosha => (
-                                        <option key={dosha.id} value={dosha.id} className="font-sans not-italic font-medium text-ink">
+                                        <option key={dosha.id} value={dosha.id} className="font-sans not-italic font-medium text-amber-900">
                                             {dosha.name} ({dosha.severity.toUpperCase()})
                                         </option>
                                     ))}
                                 </optgroup>
                                 <optgroup label="Planetary afflictions" className="font-serif italic text-red-900">
                                     {allDoshas.filter(d => d.category === 'planetary').map(dosha => (
-                                        <option key={dosha.id} value={dosha.id} className="font-sans not-italic font-medium text-ink">
+                                        <option key={dosha.id} value={dosha.id} className="font-sans not-italic font-medium text-amber-900">
                                             {dosha.name} ({dosha.severity.toUpperCase()})
                                         </option>
                                     ))}
                                 </optgroup>
                                 <optgroup label="Periodic / transits" className="font-serif italic text-red-900">
                                     {allDoshas.filter(d => d.category === 'transit').map(dosha => (
-                                        <option key={dosha.id} value={dosha.id} className="font-sans not-italic font-medium text-ink">
+                                        <option key={dosha.id} value={dosha.id} className="font-sans not-italic font-medium text-amber-900">
                                             {dosha.name} ({dosha.severity.toUpperCase()})
                                         </option>
                                     ))}
@@ -143,11 +143,11 @@ export default function ActiveDoshasLayout({
             {/* Modal for Zoom */}
             {zoomedChart && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl bg-ink/40 animate-in fade-in zoom-in-95 duration-300" role="dialog" aria-modal="true" aria-label={zoomedChart.label}>
-                    <div className="bg-surface-warm border border-gold-primary/15 rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl">
+                    <div className="bg-amber-50/60 border border-amber-200/60 rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl">
                         <button
                             onClick={() => setZoomedChart(null)}
                             aria-label="Close zoomed chart"
-                            className="absolute top-4 right-4 p-2 rounded-xl bg-surface-warm text-ink hover:bg-gold-primary/20 hover:text-gold-dark transition-all"
+                            className="absolute top-4 right-4 p-2 rounded-xl bg-amber-50/60 text-amber-900 hover:bg-amber-100 hover:text-amber-700 transition-all"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -155,7 +155,7 @@ export default function ActiveDoshasLayout({
                             <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px]")}>{zoomedChart.label}</h2>
                             <p className={cn(TYPOGRAPHY.label, "mt-2")}>{zoomedChart.varga} divisional chart</p>
                         </div>
-                        <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6 border border-gold-primary/15">
+                        <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6 border border-amber-200/60">
                             <ChartWithPopup
                                 ascendantSign={ascendantSign}
                                 planets={planets}

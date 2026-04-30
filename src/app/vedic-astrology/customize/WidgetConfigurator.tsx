@@ -184,10 +184,10 @@ function PixelSizeControl({
     const roundedValue = Math.round(value / step) * step;
     
     return (
-        <div className="bg-surface-warm/50 rounded-xl p-4">
+        <div className="bg-amber-50/50 rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
-                <label className="text-[12px] font-medium text-ink/70 flex items-center gap-2">
-                    <Maximize2 className="w-4 h-4 text-gold-dark" />
+                <label className="text-[12px] font-medium text-amber-900/70 flex items-center gap-2">
+                    <Maximize2 className="w-4 h-4 text-amber-700" />
                     {label}
                 </label>
                 <div className="flex items-center gap-2">
@@ -198,12 +198,12 @@ function PixelSizeControl({
                             const val = parseInt(e.target.value) || min;
                             onChange(Math.max(min, Math.min(max, val)));
                         }}
-                        className="w-20 px-2 py-1.5 text-right text-[14px] font-medium text-primary bg-white border border-[#E6D5B8]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                        className="w-20 px-2 py-1.5 text-right text-[14px] font-medium text-primary bg-white border border-amber-200/60 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
                         min={min}
                         max={max}
                         step={step}
                     />
-                    <span className="text-[11px] text-ink/40">px</span>
+                    <span className="text-[11px] text-amber-900/40">px</span>
                 </div>
             </div>
             
@@ -211,7 +211,7 @@ function PixelSizeControl({
             <div className="flex items-center gap-3">
                 <button
                     onClick={() => onChange(Math.max(min, value - step))}
-                    className="w-10 h-10 rounded-lg bg-white border border-[#E6D5B8]/50 flex items-center justify-center transition-all hover:border-primary hover:text-primary active:scale-95"
+                    className="w-10 h-10 rounded-lg bg-white border border-amber-200/60 flex items-center justify-center transition-all hover:border-primary hover:text-primary active:scale-95"
                 >
                     <Minus className="w-4 h-4" />
                 </button>
@@ -230,7 +230,7 @@ function PixelSizeControl({
                 
                 <button
                     onClick={() => onChange(Math.min(max, value + step))}
-                    className="w-10 h-10 rounded-lg bg-white border border-[#E6D5B8]/50 flex items-center justify-center transition-all hover:border-primary hover:text-primary active:scale-95"
+                    className="w-10 h-10 rounded-lg bg-white border border-amber-200/60 flex items-center justify-center transition-all hover:border-primary hover:text-primary active:scale-95"
                 >
                     <Plus className="w-4 h-4" />
                 </button>
@@ -246,7 +246,7 @@ function PixelSizeControl({
                             "flex-1 py-1.5 rounded-lg text-[10px] font-medium transition-all",
                             Math.abs(value - val) < step
                                 ? "bg-primary text-white"
-                                : "bg-white border border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
+                                : "bg-white border border-amber-200/60 text-amber-900/60 hover:border-primary/50"
                         )}
                     >
                         {val}px
@@ -292,7 +292,7 @@ function WidgetPreview({
     return (
         <div className="bg-[#F5F3EF] rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
-                <span className="text-[10px] font-medium text-ink/40 uppercase tracking-wider">Preview</span>
+                <span className="text-[10px] font-medium text-amber-900/40 uppercase tracking-wider">Preview</span>
                 <span className="text-[11px] font-medium text-primary">
                     {dimensions.width} × {dimensions.height}px
                 </span>
@@ -360,13 +360,13 @@ function WidgetPreview({
             {/* Size info */}
             <div className="flex items-center justify-center gap-4 mt-3">
                 <div className="text-center">
-                    <span className="text-[10px] text-ink/40 block">Width</span>
-                    <span className="text-[13px] font-bold text-ink">{dimensions.width}px</span>
+                    <span className="text-[10px] text-amber-900/40 block">Width</span>
+                    <span className="text-[13px] font-bold text-amber-900">{dimensions.width}px</span>
                 </div>
-                <span className="text-ink/20">×</span>
+                <span className="text-amber-900/20">×</span>
                 <div className="text-center">
-                    <span className="text-[10px] text-ink/40 block">Height</span>
-                    <span className="text-[13px] font-bold text-ink">{dimensions.height}px</span>
+                    <span className="text-[10px] text-amber-900/40 block">Height</span>
+                    <span className="text-[13px] font-bold text-amber-900">{dimensions.height}px</span>
                 </div>
             </div>
         </div>
@@ -402,7 +402,7 @@ function ThemeSelector({
                             onClick={() => onApplyPreset(preset.key)}
                             className={cn(
                                 "p-2.5 rounded-xl border-2 transition-all text-left",
-                                isSelected ? "border-primary ring-1 ring-primary/20" : "border-transparent hover:border-[#E6D5B8]"
+                                isSelected ? "border-primary ring-1 ring-primary/20" : "border-transparent hover:border-amber-200/60"
                             )}
                             style={{ backgroundColor: theme.backgroundColor }}
                         >
@@ -427,14 +427,14 @@ function ThemeSelector({
             {/* Custom Colors Toggle */}
             <button
                 onClick={() => setShowCustom(!showCustom)}
-                className="w-full flex items-center justify-between p-3 bg-surface-warm/50 rounded-xl text-[12px] font-medium text-ink/70 hover:bg-surface-warm transition-colors"
+                className="w-full flex items-center justify-between p-3 bg-amber-50/50 rounded-xl text-[12px] font-medium text-amber-900/70 hover:bg-amber-50 transition-colors"
             >
                 <span>Custom Colors</span>
                 {showCustom ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
             </button>
 
             {showCustom && (
-                <div className="space-y-2 p-3 bg-surface-warm/30 rounded-xl">
+                <div className="space-y-2 p-3 bg-amber-50/30 rounded-xl">
                     {[
                         { key: 'backgroundColor', label: 'Background' },
                         { key: 'accentColor', label: 'Accent' },
@@ -442,7 +442,7 @@ function ThemeSelector({
                         { key: 'headerTextColor', label: 'Header Text' },
                     ].map((color) => (
                         <div key={color.key} className="flex items-center justify-between">
-                            <span className="text-[11px] text-ink/70">{color.label}</span>
+                            <span className="text-[11px] text-amber-900/70">{color.label}</span>
                             <input
                                 type="color"
                                 value={(value as any)[color.key]}
@@ -457,7 +457,7 @@ function ThemeSelector({
             {/* Style Options */}
             <div className="space-y-2 pt-2">
                 <div>
-                    <label className="text-[10px] font-bold text-ink/50 mb-1.5 block">Shadow</label>
+                    <label className="text-[10px] font-bold text-amber-900/50 mb-1.5 block">Shadow</label>
                     <div className="flex gap-1">
                         {(['none', 'light', 'medium', 'heavy'] as const).map((shadow) => (
                             <button
@@ -467,7 +467,7 @@ function ThemeSelector({
                                     "flex-1 py-2 rounded-lg border text-[10px] font-medium capitalize transition-all",
                                     value.shadowIntensity === shadow
                                         ? "bg-primary text-white border-primary"
-                                        : "bg-white border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
+                                        : "bg-white border-amber-200/60 text-amber-900/60 hover:border-primary/50"
                                 )}
                             >
                                 {shadow}
@@ -477,7 +477,7 @@ function ThemeSelector({
                 </div>
 
                 <div>
-                    <label className="text-[10px] font-bold text-ink/50 mb-1.5 block">Corner Radius</label>
+                    <label className="text-[10px] font-bold text-amber-900/50 mb-1.5 block">Corner Radius</label>
                     <div className="flex items-center gap-3">
                         <input
                             type="range"
@@ -578,7 +578,7 @@ export default function WidgetConfigurator({
             <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500 max-h-[90vh] flex flex-col">
                 
                 {/* Header */}
-                <div className="px-6 py-4 border-b border-[#E6D5B8]/30 bg-surface-warm shrink-0">
+                <div className="px-6 py-4 border-b border-amber-200/60 bg-amber-50 shrink-0">
                     <div className="flex items-start justify-between">
                         {/* Left: Category Icon + Info */}
                         <div className="flex items-start gap-3">
@@ -593,8 +593,8 @@ export default function WidgetConfigurator({
                             
                             {/* Widget Info */}
                             <div className="min-w-0">
-                                <h2 className="text-[18px] font-medium text-ink leading-tight truncate">{chart.name}</h2>
-                                <p className="text-[11px] text-ink/60 mt-0.5 truncate">{chart.description}</p>
+                                <h2 className="text-[18px] font-medium text-amber-900 leading-tight truncate">{chart.name}</h2>
+                                <p className="text-[11px] text-amber-900/60 mt-0.5 truncate">{chart.description}</p>
                                 
                                 {/* Tags Row: Content Type + Live Dimensions */}
                                 <div className="flex items-center gap-2 mt-1.5 flex-wrap">
@@ -605,7 +605,7 @@ export default function WidgetConfigurator({
                                     )}>
                                         {contentAware.contentInfo.label}
                                     </span>
-                                    <span className="text-ink/20">•</span>
+                                    <span className="text-amber-900/20">•</span>
                                     <LiveDimensionsBadge 
                                         width={dimensions.width}
                                         height={dimensions.height}
@@ -631,7 +631,7 @@ export default function WidgetConfigurator({
                                     "p-2 rounded-lg transition-colors",
                                     activeTab === 'advanced'
                                         ? "bg-primary text-white"
-                                        : "hover:bg-gold-primary/20 text-ink/40 hover:text-ink"
+                                        : "hover:bg-amber-50 text-amber-900/40 hover:text-amber-900"
                                 )}
                                 title="Settings"
                             >
@@ -641,7 +641,7 @@ export default function WidgetConfigurator({
                             {/* Close Button */}
                             <button 
                                 onClick={onClose} 
-                                className="p-2 hover:bg-gold-primary/20 rounded-lg transition-colors text-ink/40 hover:text-ink"
+                                className="p-2 hover:bg-amber-50 rounded-lg transition-colors text-amber-900/40 hover:text-amber-900"
                             >
                                 <X className="w-5 h-5" />
                             </button>
@@ -662,7 +662,7 @@ export default function WidgetConfigurator({
                                     "flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-medium transition-all",
                                     activeTab === tab.id
                                         ? "bg-primary text-white shadow-sm"
-                                        : "bg-white border border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
+                                        : "bg-white border border-amber-200/60 text-amber-900/60 hover:border-primary/50"
                                 )}
                             >
                                 <tab.icon className="w-4 h-4" />
@@ -675,7 +675,7 @@ export default function WidgetConfigurator({
                 {/* Content */}
                 <div className="flex-1 overflow-hidden flex">
                     {/* Left: Controls */}
-                    <div className="w-[360px] border-r border-[#E6D5B8]/30 overflow-y-auto custom-scrollbar">
+                    <div className="w-[360px] border-r border-amber-200/60 overflow-y-auto custom-scrollbar">
                         <div className="p-5">
                             {activeTab === 'size' && (
                                 <div className="space-y-4">
@@ -691,7 +691,7 @@ export default function WidgetConfigurator({
 
                                     {/* Size Presets - Dynamic based on content type */}
                                     <div>
-                                        <label className="text-[10px] font-bold text-ink/50 mb-2 block uppercase tracking-wider">
+                                        <label className="text-[10px] font-bold text-amber-900/50 mb-2 block uppercase tracking-wider">
                                             Recommended Sizes
                                         </label>
                                         <div className="grid grid-cols-3 gap-2">
@@ -703,7 +703,7 @@ export default function WidgetConfigurator({
                                                         "p-2 rounded-xl border text-center transition-all",
                                                         dimensions.width === preset.width && dimensions.height === preset.height
                                                             ? "bg-primary text-white border-primary"
-                                                            : "bg-white border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
+                                                            : "bg-white border-amber-200/60 text-amber-900/60 hover:border-primary/50"
                                                     )}
                                                 >
                                                     <span className="text-[14px] font-semibold block">{preset.icon}</span>
@@ -748,15 +748,15 @@ export default function WidgetConfigurator({
                                 <div className="space-y-4">
                                     {/* Custom Title */}
                                     <div>
-                                        <label className="text-[11px] font-bold text-ink/50 mb-2 block">Custom Title</label>
+                                        <label className="text-[11px] font-bold text-amber-900/50 mb-2 block">Custom Title</label>
                                         <input
                                             type="text"
                                             value={customTitle}
                                             onChange={(e) => setCustomTitle(e.target.value)}
                                             placeholder={chart.name}
-                                            className="w-full px-4 py-3 bg-white border border-[#E6D5B8]/30 rounded-xl text-[13px] text-ink placeholder:text-ink/30 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                            className="w-full px-4 py-3 bg-white border border-amber-200/60 rounded-xl text-[13px] text-amber-900 placeholder:text-amber-900/30 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                                         />
-                                        <p className="mt-1.5 text-[10px] text-ink/40">
+                                        <p className="mt-1.5 text-[10px] text-amber-900/40">
                                             Leave empty to use default: <span className="font-medium">{chart.name}</span>
                                         </p>
                                     </div>
@@ -767,12 +767,12 @@ export default function WidgetConfigurator({
                                             onClick={() => setShowHeader(!showHeader)}
                                             className={cn(
                                                 "w-full flex items-center justify-between p-3 rounded-xl border transition-all",
-                                                showHeader ? "bg-primary/5 border-primary/20" : "bg-white border-[#E6D5B8]/30"
+                                                showHeader ? "bg-primary/5 border-primary/20" : "bg-white border-amber-200/60"
                                             )}
                                         >
                                             <div className="flex items-center gap-3">
-                                                <TypeIcon className={cn("w-5 h-5", showHeader ? "text-primary" : "text-ink/30")} />
-                                                <span className="text-[13px] font-medium text-ink">Show Header</span>
+                                                <TypeIcon className={cn("w-5 h-5", showHeader ? "text-primary" : "text-amber-900/30")} />
+                                                <span className="text-[13px] font-medium text-amber-900">Show Header</span>
                                             </div>
                                             <div className={cn("w-11 h-5 rounded-full relative transition-colors", showHeader ? "bg-primary" : "bg-ink/20")}>
                                                 <span className={cn("absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform shadow-sm", showHeader ? "translate-x-6" : "")} />
@@ -783,12 +783,12 @@ export default function WidgetConfigurator({
                                             onClick={() => setShowBorder(!showBorder)}
                                             className={cn(
                                                 "w-full flex items-center justify-between p-3 rounded-xl border transition-all",
-                                                showBorder ? "bg-primary/5 border-primary/20" : "bg-white border-[#E6D5B8]/30"
+                                                showBorder ? "bg-primary/5 border-primary/20" : "bg-white border-amber-200/60"
                                             )}
                                         >
                                             <div className="flex items-center gap-3">
-                                                <Square className={cn("w-5 h-5", showBorder ? "text-primary" : "text-ink/30")} />
-                                                <span className="text-[13px] font-medium text-ink">Show Border</span>
+                                                <Square className={cn("w-5 h-5", showBorder ? "text-primary" : "text-amber-900/30")} />
+                                                <span className="text-[13px] font-medium text-amber-900">Show Border</span>
                                             </div>
                                             <div className={cn("w-11 h-5 rounded-full relative transition-colors", showBorder ? "bg-primary" : "bg-ink/20")}>
                                                 <span className={cn("absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform shadow-sm", showBorder ? "translate-x-6" : "")} />
@@ -823,7 +823,7 @@ export default function WidgetConfigurator({
                 </div>
 
                 {/* Footer */}
-                <div className="px-6 py-4 border-t border-[#E6D5B8]/30 bg-surface-warm shrink-0">
+                <div className="px-6 py-4 border-t border-amber-200/60 bg-amber-50 shrink-0">
                     <div className="flex items-center justify-between">
                         <button
                             onClick={() => {
@@ -834,7 +834,7 @@ export default function WidgetConfigurator({
                                 setShowHeader(true);
                                 setShowBorder(true);
                             }}
-                            className="flex items-center gap-2 text-[12px] font-bold text-ink/50 hover:text-ink/70 px-3 py-2 rounded-lg hover:bg-ink/5 transition-colors"
+                            className="flex items-center gap-2 text-[12px] font-bold text-amber-900/50 hover:text-amber-900/70 px-3 py-2 rounded-lg hover:bg-amber-900/5 transition-colors"
                         >
                             <RotateCcw className="w-4 h-4" />
                             Reset
@@ -842,7 +842,7 @@ export default function WidgetConfigurator({
                         <div className="flex gap-3">
                             <button
                                 onClick={onClose}
-                                className="px-5 py-2.5 rounded-xl text-[13px] font-bold text-ink/60 hover:text-ink hover:bg-ink/5 transition-colors"
+                                className="px-5 py-2.5 rounded-xl text-[13px] font-bold text-amber-900/60 hover:text-amber-900 hover:bg-amber-900/5 transition-colors"
                             >
                                 Cancel
                             </button>

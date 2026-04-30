@@ -125,8 +125,8 @@ export default function NaisargikMaitriTable({ className }: { className?: string
                         {list.map((name: string) => (
                                                         <span key={name} className={cn(
                                 "inline-flex items-center font-semibold rounded-full px-2.5 py-1 text-[13px] border",
-                                row.kind === 'friends' || row.kind === 'fast_friends' ? "text-emerald-700 bg-emerald-100 border-emerald-200" :
-                                row.kind === 'enemies' || row.kind === 'bitter_enemies' ? "text-red-700 bg-red-100 border-red-200" :
+                                row.kind === 'friends' ? "text-emerald-700 bg-emerald-100 border-emerald-200" :
+                                row.kind === 'enemies' ? "text-red-700 bg-red-100 border-red-200" :
                                 "text-amber-700 bg-amber-100 border-amber-200"
                             )}>{name}</span>
                         ))}

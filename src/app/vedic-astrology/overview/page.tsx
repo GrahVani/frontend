@@ -928,7 +928,7 @@ function KundaliContent({
                     {/* Panchanga & Dasha side-by-side */}
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
                         {/* Birth Panchanga Card */}
-                        <div className="col-span-12 md:col-span-5 lg:col-span-4 prem-card overflow-hidden flex flex-col">
+                        <div className="col-span-12 md:col-span-6 lg:col-span-5 prem-card overflow-hidden flex flex-col">
                             <div className="px-3 py-1.5 flex items-center gap-1.5" style={HEADER_STYLE}>
                                 <Sparkle className="w-3 h-3 text-gold-dark" />
                                 <h2 className={TYPOGRAPHY.sectionTitle}>Birth <KnowledgeTooltip term="panchanga" unstyled>panchanga</KnowledgeTooltip></h2>
@@ -939,7 +939,7 @@ function KundaliContent({
                         </div>
 
                         {/* Vimshottari Dasha */}
-                        <div className="col-span-12 md:col-span-7 lg:col-span-8 prem-card overflow-hidden flex flex-col">
+                        <div className="col-span-12 md:col-span-6 lg:col-span-7 prem-card overflow-hidden flex flex-col">
                             <div className="px-3 py-1.5" style={HEADER_STYLE}>
                                 <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="dasha_vimshottari" unstyled>Vimshottari</KnowledgeTooltip> dasha</h2>
                             </div>

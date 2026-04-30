@@ -55,7 +55,7 @@ const DashaMantraPanel: React.FC<DashaMantraPanelProps> = ({ mantras }) => {
                             "group relative overflow-hidden rounded-xl border p-3 transition-all duration-300",
                             isActive
                                 ? "bg-amber-500/5 border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.05)]"
-                                : "bg-white/40 border-gold-primary/15 hover:bg-white/60"
+                                : "bg-white/40 border-amber-200/60 hover:bg-white/60"
                         )}
                     >
                         <div className="flex items-start gap-3">
@@ -63,14 +63,14 @@ const DashaMantraPanel: React.FC<DashaMantraPanelProps> = ({ mantras }) => {
                                 "w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm border shrink-0 mt-1",
                                 isActive
                                     ? "bg-amber-500 text-white border-amber-600"
-                                    : "bg-white text-amber-600 border-gold-primary/20"
+                                    : "bg-white text-amber-600 border-amber-300/60"
                             )} aria-label={`Play ${mantra.planet} ${mantra.type} mantra`}>
                                 <Play className={cn("w-4 h-4", isActive ? "fill-current" : "")} />
                             </button>
 
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2 mb-0.5">
-                                    <h4 className="text-[15px] font-semibold text-ink tracking-tight">
+                                    <h4 className="text-[15px] font-semibold text-amber-900 tracking-tight">
                                         {mantra.planet}
                                     </h4>
                                     <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100/60 text-amber-700 border border-amber-200/50">
@@ -87,7 +87,7 @@ const DashaMantraPanel: React.FC<DashaMantraPanelProps> = ({ mantras }) => {
                                 </div>
 
                                 {/* Sanskrit */}
-                                <p className="text-[16px] font-serif text-ink tracking-tight leading-snug" title={mantra.mantra.sanskrit}>
+                                <p className="text-[16px] font-serif text-amber-900 tracking-tight leading-snug" title={mantra.mantra.sanskrit}>
                                     {mantra.mantra.sanskrit}
                                 </p>
 
@@ -97,18 +97,18 @@ const DashaMantraPanel: React.FC<DashaMantraPanelProps> = ({ mantras }) => {
                                 </p>
 
                                 {/* Meaning */}
-                                <p className="text-[10px] text-ink/40 mt-0.5">
+                                <p className="text-[10px] text-amber-700/40 mt-0.5">
                                     {mantra.mantra.meaning}
                                 </p>
 
                                 {/* Stats Row */}
                                 <div className="flex items-center gap-3 mt-1.5">
                                     <span className="text-[11px] font-semibold text-amber-900/50">
-                                        Goal: <span className="text-ink/80">{mantra.daily_count}/day</span>
+                                        Goal: <span className="text-amber-800/80">{mantra.daily_count}/day</span>
                                     </span>
-                                    <span className="text-[10px] text-ink/30">|</span>
+                                    <span className="text-[10px] text-amber-700/30">|</span>
                                     <span className="text-[11px] font-semibold text-amber-900/50">
-                                        Remaining: <span className="text-ink/80">{mantra.remaining_years} yrs</span>
+                                        Remaining: <span className="text-amber-800/80">{mantra.remaining_years} yrs</span>
                                     </span>
                                 </div>
 

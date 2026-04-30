@@ -18,19 +18,19 @@ export default function SadhanaChartPanel({ chartData }: SadhanaChartPanelProps)
     if (planets.length === 0) return null;
 
     return (
-        <div className={cn("flex flex-col h-full w-full overflow-hidden rounded-lg border border-gold-primary/20 bg-surface-warm", COLORS.wbContainer)}>
+        <div className={cn("flex flex-col h-full w-full overflow-hidden rounded-lg border border-amber-300/60 bg-amber-50/60", COLORS.wbContainer)}>
             {/* Header - Matching workbench style */}
-            <div className="bg-gold-primary/10 px-3 py-1.5 border-b border-gold-primary/15 flex justify-between items-center shrink-0">
+            <div className="bg-amber-50 px-3 py-1.5 border-b border-amber-200/60 flex justify-between items-center shrink-0">
                 <h3 className="font-serif text-[18px] font-semibold text-primary leading-tight tracking-wide">
                     Horoscope projection
                 </h3>
-                <div className="px-2 py-0.5 bg-gold-primary/10 rounded border border-gold-primary/15">
+                <div className="px-2 py-0.5 bg-amber-50 rounded border border-amber-200/60">
                     <span className={cn(TYPOGRAPHY.label, "text-primary !mb-0")}><KnowledgeTooltip term="ayanamsa_lahiri" unstyled>Lahiri</KnowledgeTooltip></span>
                 </div>
             </div>
 
             {/* Chart Area — Full space, no whitespace, matching workbench */}
-            <div className="flex-1 min-h-0 w-full bg-surface-warm">
+            <div className="flex-1 min-h-0 w-full bg-amber-50/60">
                 <ChartWithPopup
                     planets={planets}
                     ascendantSign={ascendantSign}

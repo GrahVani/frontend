@@ -14,8 +14,8 @@ export const DoshaPlanets = memo(function DoshaPlanets({ data }: DoshaPlanetsPro
     if (data.length === 0) return null;
 
     return (
-        <div className="bg-white border border-gold-primary/15 rounded-2xl p-5 shadow-sm">
-            <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-[10px] uppercase tracking-widest transition-colors">
+        <div className="bg-white border border-amber-200/60 rounded-2xl p-5 shadow-sm">
+            <h3 className="font-serif font-bold text-amber-900 mb-4 flex items-center gap-2 text-[10px] uppercase tracking-widest transition-colors">
                 <LayoutGrid className="w-3.5 h-3.5 text-red-500" /> <KnowledgeTooltip term="graha" unstyled>Chart Foundations</KnowledgeTooltip>
             </h3>
 
@@ -30,15 +30,15 @@ export const DoshaPlanets = memo(function DoshaPlanets({ data }: DoshaPlanetsPro
                     >
                         <div className={cn(
                             "w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black shrink-0 transition-transform group-hover/planet:scale-105",
-                            planet.isFocal ? "bg-red-500 text-white shadow-sm" : "bg-white border border-gold-primary/15 text-ink shadow-xs"
+                            planet.isFocal ? "bg-red-500 text-white shadow-sm" : "bg-white border border-amber-200/60 text-amber-900 shadow-xs"
                         )}>
                             {planet.name.substring(0, 2).toUpperCase()}
                         </div>
                         <div className="flex flex-col leading-tight overflow-hidden">
-                            <span className="text-[10px] font-black text-ink uppercase tracking-tight truncate" title={planet.name}>{planet.name}</span>
+                            <span className="text-[10px] font-black text-amber-900 uppercase tracking-tight truncate" title={planet.name}>{planet.name}</span>
                             <div className="flex items-center gap-1.5 mt-0.5">
-                                <span className="text-[10px] font-serif italic text-ink/55">{planet.sign}</span>
-                                <span className="w-1 h-1 bg-gold-primary/40 rounded-full" />
+                                <span className="text-[10px] font-serif italic text-amber-700/55">{planet.sign}</span>
+                                <span className="w-1 h-1 bg-amber-500/40 rounded-full" />
                                 <span className="text-[9px] font-mono text-red-600 font-bold">{planet.house}H</span>
                             </div>
                         </div>

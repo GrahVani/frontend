@@ -165,7 +165,7 @@ const CurrentDashaCard = ({ dashas }: { dashas: VimshottariDashas }) => {
         <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className={cn("p-4 relative overflow-hidden flex flex-col rounded-2xl border border-gold-primary/15", styles.glassPanel)}
+            className={cn("p-4 relative overflow-hidden flex flex-col rounded-2xl border border-amber-200/60", styles.glassPanel)}
         >
             <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
@@ -222,7 +222,7 @@ const PlanetaryStrengthGrid = ({ analysis, shadbala }: { analysis: Record<string
     });
 
     return (
-        <div className={cn("p-3 relative overflow-hidden flex flex-col rounded-2xl border border-gold-primary/10", styles.glassPanel)}>
+        <div className={cn("p-3 relative overflow-hidden flex flex-col rounded-2xl border border-amber-200/60", styles.glassPanel)}>
             <div className="flex items-center justify-between mb-3 px-1">
                 <div>
                     <h3 className="text-[18px] font-semibold tracking-tight flex items-center gap-2 text-primary">
@@ -258,7 +258,7 @@ const PlanetaryStrengthGrid = ({ analysis, shadbala }: { analysis: Record<string
                             transition={{ delay: idx * 0.04 }}
                             className={cn(
                                 "group relative border rounded-xl p-2.5 transition-all flex flex-col gap-1.5 bg-white/30 hover:bg-white",
-                                sa.is_mathematically_weak ? "border-rose-100 shadow-sm" : "border-gold-primary/5 hover:border-gold-primary/20"
+                                sa.is_mathematically_weak ? "border-rose-100 shadow-sm" : "border-amber-100 hover:border-amber-300/60"
                             )}
                         >
                             {/* Planet + Score */}
@@ -338,7 +338,7 @@ const DoshaReportSection = ({ doshaReport, doshaRemedies }: { doshaReport: Recor
     if (doshaList.length === 0) return null;
 
     return (
-        <div className={cn("p-3 relative overflow-hidden rounded-2xl border border-gold-primary/10", styles.glassPanel)}>
+        <div className={cn("p-3 relative overflow-hidden rounded-2xl border border-amber-200/60", styles.glassPanel)}>
             <div className="flex items-center gap-2 mb-3 px-1">
                 <div className="w-7 h-7 rounded-lg bg-purple-100 flex items-center justify-center">
                     <ScrollText className="w-4 h-4 text-purple-600" />
@@ -360,12 +360,12 @@ const DoshaReportSection = ({ doshaReport, doshaRemedies }: { doshaReport: Recor
                             initial={{ opacity: 0, y: 8 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: idx * 0.06 }}
-                            className="group border rounded-xl p-3 transition-all bg-white/30 hover:bg-white border-gold-primary/10 hover:border-gold-primary/20"
+                            className="group border rounded-xl p-3 transition-all bg-white/30 hover:bg-white border-amber-200/60 hover:border-amber-300/60"
                         >
                             {/* Dosha Header */}
                             <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-9 h-9 rounded-lg bg-white shadow-sm flex items-center justify-center border border-gold-primary/10">
+                                    <div className="w-9 h-9 rounded-lg bg-white shadow-sm flex items-center justify-center border border-amber-200/60">
                                         <ShieldAlert className="w-5 h-5 text-rose-500" />
                                     </div>
                                     <h4 className="text-[16px] font-semibold tracking-tight text-primary">
@@ -393,7 +393,7 @@ const DoshaReportSection = ({ doshaReport, doshaRemedies }: { doshaReport: Recor
                                             return <HandHeart className="w-4 h-4 text-emerald-600" />;
                                         };
                                         return (
-                                            <div key={i} className="flex items-center gap-3 px-3 py-2.5 bg-white shadow-sm rounded-lg border border-gold-primary/10 hover:border-gold-primary/30 transition-all">
+                                            <div key={i} className="flex items-center gap-3 px-3 py-2.5 bg-white shadow-sm rounded-lg border border-amber-200/60 hover:border-amber-300 transition-all">
                                                 <div className="w-8 h-8 rounded-md bg-primary/5 flex items-center justify-center shrink-0">
                                                     {getIcon(remedy)}
                                                 </div>
@@ -419,7 +419,7 @@ const PlanetaryRemediesGrid = ({ analysis }: { analysis: Record<string, Planetar
     if (planets.length === 0) return null;
 
     return (
-        <div className={cn("p-3 relative overflow-hidden rounded-2xl border border-gold-primary/10", styles.glassPanel)}>
+        <div className={cn("p-3 relative overflow-hidden rounded-2xl border border-amber-200/60", styles.glassPanel)}>
             <div className="flex items-center gap-2 mb-3 px-1">
                 <div className="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center">
                     <Sparkles className="w-4 h-4 text-amber-600" />
@@ -444,7 +444,7 @@ const PlanetaryRemediesGrid = ({ analysis }: { analysis: Record<string, Planetar
                             initial={{ opacity: 0, x: -8 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: idx * 0.04 }}
-                            className="group border rounded-xl p-3 transition-all bg-white/30 hover:bg-white border-gold-primary/5 hover:border-gold-primary/20"
+                            className="group border rounded-xl p-3 transition-all bg-white/30 hover:bg-white border-amber-100 hover:border-amber-300/60"
                         >
                             {/* Planet Header */}
                             <div className="flex items-center justify-between mb-2">
@@ -530,7 +530,7 @@ const YogasSection = ({ yogas }: { yogas: Record<string, YogaEntry> }) => {
     if (yogaList.length === 0) return null;
 
     return (
-        <div className={cn("p-3 relative overflow-hidden rounded-2xl border border-gold-primary/10", styles.glassPanel)}>
+        <div className={cn("p-3 relative overflow-hidden rounded-2xl border border-amber-200/60", styles.glassPanel)}>
             <div className="flex items-center gap-2 mb-3 px-1">
                 <div className="w-7 h-7 rounded-lg bg-indigo-100 flex items-center justify-center">
                     <Activity className="w-4 h-4 text-indigo-600" />
@@ -548,7 +548,7 @@ const YogasSection = ({ yogas }: { yogas: Record<string, YogaEntry> }) => {
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.05 }}
-                        className="border rounded-xl p-3 bg-white/30 hover:bg-white border-gold-primary/10 hover:border-gold-primary/20 transition-all"
+                        className="border rounded-xl p-3 bg-white/30 hover:bg-white border-amber-200/60 hover:border-amber-300/60 transition-all"
                     >
                         <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
@@ -587,7 +587,7 @@ const YogasSection = ({ yogas }: { yogas: Record<string, YogaEntry> }) => {
 // ============================================================================
 const MahadashaTimeline = ({ mahadashas, currentPlanet }: { mahadashas: VimshottariDashaPeriod[]; currentPlanet: string }) => {
     return (
-        <div className={cn("p-3 relative overflow-hidden rounded-2xl border border-gold-primary/10", styles.glassPanel)}>
+        <div className={cn("p-3 relative overflow-hidden rounded-2xl border border-amber-200/60", styles.glassPanel)}>
             <div className="flex items-center gap-2 mb-3 px-1">
                 <div className="w-7 h-7 rounded-lg bg-blue-100 flex items-center justify-center">
                     <Calendar className="w-4 h-4 text-blue-600" />
@@ -620,7 +620,7 @@ const MahadashaTimeline = ({ mahadashas, currentPlanet }: { mahadashas: Vimshott
                                 "flex flex-col items-center gap-1 py-2 px-1 rounded-lg border transition-all",
                                 isCurrent ? "bg-amber-50 border-amber-200 shadow-md ring-1 ring-amber-300/50" :
                                     isPast ? "bg-primary/[0.02] border-primary/5 opacity-60" :
-                                        "bg-white/40 border-gold-primary/5 hover:bg-white/70"
+                                        "bg-white/40 border-amber-100 hover:bg-white/70"
                             )}
                         >
                             <div className={cn(
@@ -687,7 +687,7 @@ const SafetyWarningsSection = ({ warnings }: { warnings: string[] }) => {
 // ============================================================================
 const MetadataFooter = ({ meta }: { meta: MetadataInfo }) => {
     return (
-        <div className="flex items-center gap-6 flex-wrap px-4 py-3 bg-primary/[0.03] rounded-xl border border-gold-primary/10">
+        <div className="flex items-center gap-6 flex-wrap px-4 py-3 bg-primary/[0.03] rounded-xl border border-amber-200/60">
             <div className="flex items-center gap-2">
                 <Info className="w-4 h-4 text-primary" />
                 <span className="text-[13px] font-medium text-primary">Ascendant:</span>
@@ -736,7 +736,7 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
     return (
         <div className={cn("h-full overflow-hidden flex flex-col", styles.dashboardContainer)} style={{ margin: 0, borderRadius: '1rem' }}>
             {/* Header Area */}
-            <div className="flex items-center justify-between border-b border-gold-primary/20 px-5 py-2.5 shrink-0 bg-surface-warm/50">
+            <div className="flex items-center justify-between border-b border-amber-300/60 px-5 py-2.5 shrink-0 bg-amber-50/50">
                 <div className="flex items-center gap-3">
                     <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] font-bold tracking-tight !mb-0")}>
                         Vedic <KnowledgeTooltip term="general_upaya">Remedies</KnowledgeTooltip>
@@ -753,7 +753,7 @@ const VedicRemediesDashboard: React.FC<VedicRemediesDashboardProps> = ({ data })
             <div className="flex-1 flex overflow-hidden min-h-0">
 
                 {/* LEFT SIDE: Only Chart — Fixed, No Scroll, 30% */}
-                <div className="w-[30%] shrink-0 flex flex-col overflow-hidden border-r border-gold-primary/15">
+                <div className="w-[30%] shrink-0 flex flex-col overflow-hidden border-r border-amber-200/60">
                     <SadhanaChartPanel
                         chartData={d1Chart}
                         doshaStatus={{}}

@@ -27,8 +27,8 @@ export default function PriorityAlert({ mahadasha = "Mercury", antardasha = "Sat
                 <div className="flex-1 px-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <span className="font-black uppercase tracking-tighter text-[14px] text-red-700">Priority Alert:</span>
-                        <div className="h-4 w-px mx-1 bg-gold-primary/20" />
-                        <span className="text-[13px] font-bold tracking-wide text-ink">
+                        <div className="h-4 w-px mx-1 bg-amber-100" />
+                        <span className="text-[13px] font-bold tracking-wide text-amber-900">
                             Current <KnowledgeTooltip term="dasha_system">Dasha</KnowledgeTooltip> Influence | <span className="text-red-700">{mahadasha} <KnowledgeTooltip term="dasha_mahadasha" unstyled>Mahadasha</KnowledgeTooltip></span> & <span className="text-orange-700">{antardasha} <KnowledgeTooltip term="dasha_antardasha" unstyled>Antardasha</KnowledgeTooltip></span>
                         </span>
                     </div>

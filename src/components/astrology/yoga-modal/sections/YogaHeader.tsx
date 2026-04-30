@@ -29,8 +29,8 @@ export const YogaHeader = memo(function YogaHeader({ data }: YogaHeaderProps) {
         .join(' ');
 
     return (
-        <div className="bg-white border border-gold-primary/15 rounded-2xl p-4 shadow-sm overflow-hidden relative">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-gold-primary/5 rounded-full -mr-20 -mt-20 blur-3xl" />
+        <div className="bg-white border border-amber-200/60 rounded-2xl p-4 shadow-sm overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-amber-50 rounded-full -mr-20 -mt-20 blur-3xl" />
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
                 {/* Left: Icon + Title */}
@@ -38,13 +38,13 @@ export const YogaHeader = memo(function YogaHeader({ data }: YogaHeaderProps) {
                     <div className={cn(
                         "w-12 h-12 rounded-xl flex items-center justify-center",
                         isPresent
-                            ? "bg-gold-primary/10 text-gold-primary"
+                            ? "bg-amber-50 text-amber-500"
                             : "bg-zinc-100 text-zinc-400"
                     )}>
                         <Trophy className="w-6 h-6" />
                     </div>
                     <div>
-                        <h2 className="text-[20px] font-serif font-bold text-ink leading-tight">
+                        <h2 className="text-[20px] font-serif font-bold text-amber-900 leading-tight">
                             {(() => {
                                 const clean = title.trim();
                                 // If the title already ends with yoga/yogas/dosha, show as-is
@@ -77,23 +77,23 @@ export const YogaHeader = memo(function YogaHeader({ data }: YogaHeaderProps) {
                 {(strength || strengthScore !== undefined) && isPresent && (
                     <div className="flex items-center gap-4">
                         <div className="text-right">
-                            <p className="text-[10px] uppercase tracking-widest text-ink opacity-70 font-bold mb-1">Strength</p>
+                            <p className="text-[10px] uppercase tracking-widest text-amber-900 opacity-70 font-bold mb-1">Strength</p>
                             <span className={cn(
                                 "px-3 py-1 rounded-full text-[10px] font-bold border",
                                 barPercent >= 80 ? "bg-amber-600 text-white border-amber-700"
-                                    : barPercent >= 60 ? "bg-gold-primary text-ink border-gold-dark"
-                                        : "bg-surface-warm text-ink border-gold-primary/15"
+                                    : barPercent >= 60 ? "bg-amber-500 text-amber-900 border-gold-dark"
+                                        : "bg-amber-50/60 text-amber-900 border-amber-200/60"
                             )}>
                                 {strengthLabel ?? `${strengthScore} pts`}
                             </span>
                         </div>
-                        <div className="w-20 h-1.5 bg-surface-warm rounded-full overflow-hidden border border-gold-primary/15">
+                        <div className="w-20 h-1.5 bg-amber-50/60 rounded-full overflow-hidden border border-amber-200/60">
                             <div
                                 className={cn(
                                     "h-full transition-all duration-1000 rounded-full",
                                     barPercent >= 80 ? "bg-amber-600 shadow-[0_0_6px_rgba(217,119,6,0.4)]"
-                                        : barPercent >= 60 ? "bg-gold-primary"
-                                            : "bg-gold-primary/50"
+                                        : barPercent >= 60 ? "bg-amber-500"
+                                            : "bg-amber-500"
                                 )}
                                 style={{ width: `${barPercent}%` }}
                             />
@@ -104,7 +104,7 @@ export const YogaHeader = memo(function YogaHeader({ data }: YogaHeaderProps) {
 
             {/* Subtitle / Reason */}
             {subtitle && (
-                <p className={cn(TYPOGRAPHY.value, "text-[12px] leading-relaxed border-t border-gold-primary/15 pt-3")}>
+                <p className={cn(TYPOGRAPHY.value, "text-[12px] leading-relaxed border-t border-amber-200/60 pt-3")}>
                     {subtitle}
                 </p>
             )}

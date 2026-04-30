@@ -50,11 +50,11 @@ export default function MantraFocusPanel({ currentDasha, yantras }: MantraFocusP
                         </button>
 
                         <div className="flex-1 min-w-0">
-                            <h4 className="text-[16px] font-medium text-ink tracking-tight">
+                            <h4 className="text-[16px] font-medium text-amber-900 tracking-tight">
                                 {currentDasha} <span className="opacity-40 text-[12px]">(<KnowledgeTooltip term="dasha_mahadasha">Mahadasha</KnowledgeTooltip>)</span>
                             </h4>
                             <div className="flex items-baseline gap-2 overflow-hidden">
-                                <p className="text-[18px] font-serif text-ink tracking-tight truncate">
+                                <p className="text-[18px] font-serif text-amber-900 tracking-tight truncate">
                                     ॐ ब्रां ब्रीं ब्रों स: बुधाय नम:
                                 </p>
                                 <span className="text-[12px] font-medium text-amber-900/40 whitespace-nowrap">| Goal: 108</span>
@@ -74,19 +74,19 @@ export default function MantraFocusPanel({ currentDasha, yantras }: MantraFocusP
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="group relative overflow-hidden rounded-2xl border p-4 transition-all duration-300 bg-white/40 border-gold-primary/15 hover:bg-white/60"
+                        className="group relative overflow-hidden rounded-2xl border p-4 transition-all duration-300 bg-white/40 border-amber-200/60 hover:bg-white/60"
                     >
                         <div className="flex items-center gap-4">
-                            <button className="w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-sm border bg-white text-amber-600 border-gold-primary/20" aria-label={`Play ${topRecommendation.planet} recommended mantra`}>
+                            <button className="w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-sm border bg-white text-amber-600 border-amber-300/60" aria-label={`Play ${topRecommendation.planet} recommended mantra`}>
                                 <Play className="w-5 h-5" />
                             </button>
 
                             <div className="flex-1 min-w-0">
-                                <h4 className="text-[16px] font-medium text-ink tracking-tight">
+                                <h4 className="text-[16px] font-medium text-amber-900 tracking-tight">
                                     {topRecommendation.planet} <span className="opacity-40 text-[12px]">(Recommended)</span>
                                 </h4>
                                 <div className="flex items-baseline gap-2 overflow-hidden">
-                                    <p className="text-[18px] font-serif text-ink tracking-tight truncate">
+                                    <p className="text-[18px] font-serif text-amber-900 tracking-tight truncate">
                                         ॐ ह्रां ह्रीं ह्रों स: सूर्याय नम:
                                     </p>
                                     <span className="text-[12px] font-medium text-amber-900/40 whitespace-nowrap">| Goal: 108</span>

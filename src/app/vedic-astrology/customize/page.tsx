@@ -444,7 +444,7 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                             <span
                                 className="font-medium truncate shrink-0 tracking-wide"
                                 style={{
-                                    color: '#3E2A1F',
+                                    color: '#451a03',
                                     fontSize: Math.min(
                                         (theme.headerFontSize ?? 12) * finalScale.scale,
                                         isCompact ? 10 : Math.max(11, dimensions.width / 25)
@@ -575,12 +575,12 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                 {isLoading ? (
                     <div className="h-full flex flex-col items-center justify-center p-4 text-center">
                         <Loader2 className="w-8 h-8 text-primary/30 animate-spin mb-3" />
-                        <p className="text-[10px] font-medium text-ink/30 uppercase tracking-[0.2em]">Synchronizing Data...</p>
+                        <p className="text-[10px] font-medium text-amber-900/30 uppercase tracking-[0.2em]">Synchronizing Data...</p>
                     </div>
                 ) : !isAvailable && onGenerate ? (
                     <div className="h-full flex flex-col items-center justify-center p-4 text-center">
-                        <AlertCircle className="w-8 h-8 text-gold-dark/30 mb-2" />
-                        <p className="text-[11px] text-ink/50 mb-3">{item.name} not generated</p>
+                        <AlertCircle className="w-8 h-8 text-amber-700/30 mb-2" />
+                        <p className="text-[11px] text-amber-900/50 mb-3">{item.name} not generated</p>
                         <button
                             onClick={onGenerate}
                             disabled={isGenerating}
@@ -814,23 +814,23 @@ export default function CustomizePage() {
     // Empty state
     if (!clientDetails) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-12 bg-white/50 backdrop-blur-md rounded-[2rem] prem-card mx-4 my-8">
-                <Shield className="w-16 h-16 text-gold-dark mb-6 opacity-30" />
-                <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-ink")}>Select a Profile</h2>
+            <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-12 bg-white rounded-2xl border border-amber-200/60 shadow-sm mx-4 my-8">
+                <Shield className="w-16 h-16 text-amber-700 mb-6 opacity-30" />
+                <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-amber-900")}>Select a Profile</h2>
                 <p className={cn(TYPOGRAPHY.label, "max-w-xs mx-auto")}>Choose a client to begin analysis.</p>
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col h-[calc(100vh-3.5rem)] w-full">
+        <div className="flex flex-col h-[calc(100vh-3.5rem)] w-full bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
             {/* Toolbar */}
-            <div className="flex items-center gap-4 px-6 py-3 bg-surface-warm/95 border-b border-gold-primary/20 shrink-0">
+            <div className="flex items-center gap-4 px-6 py-3 bg-amber-50/95 border-b border-amber-200/60 shrink-0">
                 {/* Client Identity Context */}
                 <div className="flex items-center gap-3 shrink-0">
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-serif shrink-0 shadow-sm"
                          style={{
-                             background: 'linear-gradient(135deg, rgba(201,162,77,0.90) 0%, rgba(139,90,43,0.85) 100%)',
+                             background: 'linear-gradient(135deg, rgba(217,119,6,0.90) 0%, rgba(146,64,14,0.85) 100%)',
                              border: '1px solid rgba(255,255,255,0.15)',
                          }}>
                         <span className="text-[16px] font-bold">{(clientDetails?.name?.[0] || 'U').toUpperCase()}</span>
@@ -838,27 +838,27 @@ export default function CustomizePage() {
 
                     <div className="flex flex-col min-w-0">
                         <div className="flex items-center gap-2">
-                            <h2 className="font-serif text-[16px] font-bold text-ink leading-tight truncate max-w-[180px]" title={clientDetails.name}>
+                            <h2 className="font-serif text-[16px] font-bold text-amber-900 leading-tight truncate max-w-[180px]" title={clientDetails.name}>
                                 {clientDetails.name}
                             </h2>
                         </div>
 
                         <div className="flex items-center gap-3 mt-1 overflow-hidden">
                             <div className="flex items-center gap-1 shrink-0">
-                                <Calendar className="w-3 h-3 text-gold-dark/60" />
-                                <span className="text-[11px] font-medium text-ink/70 font-serif whitespace-nowrap">
+                                <Calendar className="w-3 h-3 text-amber-700/60" />
+                                <span className="text-[11px] font-medium text-amber-900/70 font-serif whitespace-nowrap">
                                     {formatDate(clientDetails.dateOfBirth)}
                                 </span>
                             </div>
                             <div className="flex items-center gap-1 shrink-0">
-                                <Clock className="w-3 h-3 text-gold-dark/60" />
-                                <span className="text-[11px] font-medium text-ink/70 font-serif whitespace-nowrap">
+                                <Clock className="w-3 h-3 text-amber-700/60" />
+                                <span className="text-[11px] font-medium text-amber-900/70 font-serif whitespace-nowrap">
                                     {formatTime(clientDetails.timeOfBirth)}
                                 </span>
                             </div>
                             <div className="flex items-center gap-1 shrink-0 overflow-hidden">
-                                <MapPin className="w-3 h-3 text-gold-dark/60 shrink-0" />
-                                <span className="text-[11px] font-medium text-ink/70 font-serif truncate max-w-[150px]" title={clientDetails.placeOfBirth.city}>
+                                <MapPin className="w-3 h-3 text-amber-700/60 shrink-0" />
+                                <span className="text-[11px] font-medium text-amber-900/70 font-serif truncate max-w-[150px]" title={clientDetails.placeOfBirth.city}>
                                     {clientDetails.placeOfBirth.city}
                                 </span>
                             </div>
@@ -867,7 +867,7 @@ export default function CustomizePage() {
                 </div>
 
                 {/* Divider */}
-                <div className="w-px h-8 bg-gold-primary/20 shrink-0" />
+                <div className="w-px h-8 bg-amber-200/60 shrink-0" />
 
                 {/* Page Tabs - Multi-page navigation */}
                 <PageTabs
@@ -882,16 +882,16 @@ export default function CustomizePage() {
                 />
 
                 {/* Divider */}
-                <div className="w-px h-6 bg-gold-primary/20 shrink-0" />
+                <div className="w-px h-6 bg-amber-200/60 shrink-0" />
 
                 {/* Add Widget Button */}
                 <button
                     onClick={() => setIsChartSelectorOpen(true)}
                     className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider active:scale-95 transition-all hover:brightness-110 shadow-sm"
                     style={{
-                        background: 'linear-gradient(180deg, #E6C97A 0%, #C9A24D 50%, #9C7A2F 100%)',
-                        border: '1px solid #9C7A2F',
-                        color: '#3E2A1F',
+                        background: 'linear-gradient(180deg, #FCD34D 0%, #D97706 50%, #B45309 100%)',
+                        border: '1px solid #B45309',
+                        color: '#451a03',
                     }}
                 >
                     <Plus className="w-3.5 h-3.5" />
@@ -903,7 +903,7 @@ export default function CustomizePage() {
                     <>
                         <button
                             onClick={resetAllWidgetsToDefaults}
-                            className="flex items-center gap-1 text-[11px] font-black uppercase tracking-widest text-primary hover:text-gold-dark transition-all bg-gold-primary/10 px-2 py-0.5 rounded-md border border-gold-primary/20"
+                            className="flex items-center gap-1 text-[11px] font-black uppercase tracking-widest text-amber-800 hover:text-amber-900 transition-all bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60"
                             title="Reset all widgets to their default sizes"
                         >
                             <RotateCcw className="w-3 h-3" />
@@ -911,7 +911,7 @@ export default function CustomizePage() {
                         </button>
                         <button
                             onClick={resetCurrentPage}
-                            className="text-[11px] font-black uppercase tracking-widest text-ink hover:text-red-700 transition-all bg-red-50/50 px-2 py-0.5 rounded-md border border-red-200/30"
+                            className="text-[11px] font-black uppercase tracking-widest text-amber-900 hover:text-red-700 transition-all bg-red-50/50 px-2 py-0.5 rounded-md border border-red-200/30"
                         >
                             Clear All
                         </button>
@@ -923,8 +923,8 @@ export default function CustomizePage() {
                 {/* Widget Count */}
                 {selectedItems.length > 0 && (
                     <div className="flex items-center gap-1.5">
-                        <LayoutGrid className="w-3.5 h-3.5 text-gold-dark/50" />
-                        <span className="text-[11px] font-black uppercase tracking-wider text-gold-dark/70">
+                        <LayoutGrid className="w-3.5 h-3.5 text-amber-700/50" />
+                        <span className="text-[11px] font-black uppercase tracking-wider text-amber-700/70">
                             {selectedItems.length} Widget{selectedItems.length !== 1 ? 's' : ''}
                         </span>
                     </div>
@@ -933,7 +933,7 @@ export default function CustomizePage() {
                 {/* Page Count */}
                 {pages.length > 1 && (
                     <div className="flex items-center gap-1.5 ml-2">
-                        <span className="text-[11px] font-medium text-ink/50">
+                        <span className="text-[11px] font-medium text-amber-900/50">
                             {pages.length} Pages
                         </span>
                     </div>
@@ -941,18 +941,18 @@ export default function CustomizePage() {
             </div>
 
             {/* Canvas Area - Free Form Layout */}
-            <div className="flex-1 overflow-auto bg-[#FAF9F6] p-6">
+            <div className="flex-1 overflow-auto bg-amber-50/30 p-6">
                 {selectedItems.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center">
-                        <h3 className="text-[24px] font-black text-ink mb-3">
+                        <h3 className="text-[24px] font-black text-amber-900 mb-3">
                             {activePage?.name || 'Your Canvas'} is Empty
                         </h3>
-                        <p className="text-[14px] text-ink/50 max-w-md mb-6">
+                        <p className="text-[14px] text-amber-700/60 max-w-md mb-6">
                             Add charts, dashas, and analysis widgets. Resize freely with drag handles or quick buttons.
                         </p>
                         <button
                             onClick={() => setIsChartSelectorOpen(true)}
-                            className="px-8 py-4 bg-primary text-white rounded-2xl text-[13px] font-bold shadow-xl hover:bg-black transition-all flex items-center gap-2"
+                            className="px-8 py-4 bg-amber-800 text-white rounded-2xl text-[13px] font-bold shadow-xl hover:bg-amber-900 transition-all flex items-center gap-2"
                         >
                             <Plus className="w-5 h-5" />
                             Add First Widget

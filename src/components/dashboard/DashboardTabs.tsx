@@ -40,25 +40,25 @@ export default function DashboardTabs() {
                             className={cn(
                                 "group relative flex items-center gap-2.5 px-4 py-3 transition-all duration-300",
                                 tab.isActive 
-                                    ? "text-ink font-bold" 
-                                    : "text-ink/40 hover:text-ink/70"
+                                    ? "text-amber-900 font-bold" 
+                                    : "text-amber-900/40 hover:text-amber-900/70"
                             )}
                         >
                             <Icon className={cn(
                                 "w-4.5 h-4.5 transition-colors",
-                                tab.isActive ? "text-ink" : "text-ink/30 group-hover:text-ink/50"
+                                tab.isActive ? "text-amber-900" : "text-amber-900/30 group-hover:text-amber-900/50"
                             )} />
                             <span className={cn(
                                 TYPOGRAPHY.value, 
                                 "!text-[15px] tracking-widest uppercase font-serif !mt-0",
-                                tab.isActive ? "!text-ink" : "!text-inherit"
+                                tab.isActive ? "!text-amber-900" : "!text-inherit"
                             )}>
                                 {tab.name}
                             </span>
                             
                             {/* Animated underline */}
                             {tab.isActive && (
-                                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gold-dark shadow-[0_0_8px_rgba(201,162,77,0.3)] animate-in fade-in slide-in-from-bottom-1" />
+                                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-amber-700 shadow-[0_0_8px_rgba(201,162,77,0.3)] animate-in fade-in slide-in-from-bottom-1" />
                             )}
                         </Link>
                     );
