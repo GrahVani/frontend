@@ -127,14 +127,14 @@ export default function VimshottariTreeGrid({ data, isLoading, className, maxDep
                 <table className="w-full border-collapse table-fixed">
                     <thead className="sticky top-0 z-20 bg-amber-50/95 backdrop-blur-sm shadow-sm">
                         <tr className={cn("border-b border-amber-200/60", TYPOGRAPHY.tableHeader)}>
-                            <th className="px-0.5 py-0.5 text-left w-[30%]">
+                            <th className="px-0.5 py-0.5 text-left w-[33%]">
                                 {LEVEL_TOOLTIP_TERMS[currentLevelName] ? (
                                     <KnowledgeTooltip term={LEVEL_TOOLTIP_TERMS[currentLevelName]} unstyled>{currentLevelName}</KnowledgeTooltip>
                                 ) : currentLevelName}
                             </th>
-                            <th className="px-0.5 py-0.5 text-left w-[25%] text-emerald-700/70">Start</th>
-                            <th className="px-0.5 py-0.5 text-left w-[25%] text-amber-800/70">End</th>
-                            <th className="px-0.5 py-0.5 text-left w-[20%]">Dur</th>
+                            <th className="px-0.5 py-0.5 text-left w-[27%] text-emerald-700/70">Start</th>
+                            <th className="px-0.5 py-0.5 text-left w-[27%] text-amber-800/70">End</th>
+                            <th className="px-0.5 py-0.5 text-left w-[13%]">Dur</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-amber-200/40">

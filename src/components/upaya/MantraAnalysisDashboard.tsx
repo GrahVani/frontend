@@ -160,8 +160,8 @@ const SectionHeader = ({
                 <Icon className="w-5 h-5 text-white" />
             </div>
             <div>
-                <h3 className="text-[17px] font-bold text-ink">{title}</h3>
-                {subtitle && <p className="text-[12px] text-ink/50">{subtitle}</p>}
+                <h3 className="text-[17px] font-bold text-amber-900">{title}</h3>
+                {subtitle && <p className="text-[12px] text-amber-700/50">{subtitle}</p>}
             </div>
         </div>
     );
@@ -184,7 +184,7 @@ export default function MantraAnalysisDashboard({ data }: MantraAnalysisDashboar
         return (
             <div className="bg-amber-50/50 rounded-2xl border border-amber-200 p-8 text-center">
                 <Info className="w-10 h-10 text-amber-400 mx-auto mb-3" />
-                <p className="text-[14px] text-ink/50">Mantra analysis data not available</p>
+                <p className="text-[14px] text-amber-700/50">Mantra analysis data not available</p>
             </div>
         );
     }
@@ -204,16 +204,16 @@ export default function MantraAnalysisDashboard({ data }: MantraAnalysisDashboar
     return (
         <div className={cn("h-full overflow-hidden flex flex-col", styles.dashboardContainer)} style={{ margin: 0, borderRadius: '1rem' }}>
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-gold-primary/20 px-5 py-3 shrink-0 bg-surface-warm/50">
+            <div className="flex items-center justify-between border-b border-amber-300/60 px-5 py-3 shrink-0 bg-amber-50/50">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg">
                         <Flame className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                        <h2 className="text-[18px] font-bold text-ink">
+                        <h2 className="text-[18px] font-bold text-amber-900">
                             <KnowledgeTooltip term="general_mantra">Mantras</KnowledgeTooltip> : {userName}
                         </h2>
-                        <p className="text-[11px] text-ink/50">
+                        <p className="text-[11px] text-amber-700/50">
                             {String(chartSummary?.ascendant || '')} • Moon: {String(chartSummary?.moon_sign || '')} • {String(chartSummary?.moon_nakshatra || '')}
                         </p>
                     </div>
@@ -227,7 +227,7 @@ export default function MantraAnalysisDashboard({ data }: MantraAnalysisDashboar
             {/* Main Content - Scrollable */}
             <div className="flex-1 flex overflow-hidden min-h-0">
                 {/* LEFT: Chart */}
-                <div className="w-[35%] shrink-0 flex flex-col overflow-hidden border-r border-gold-primary/15">
+                <div className="w-[35%] shrink-0 flex flex-col overflow-hidden border-r border-amber-200/60">
                     <SadhanaChartPanel
                         chartData={(d1Chart || {}) as Record<string, unknown>}
                         doshaStatus={{} as Record<string, boolean>}
@@ -267,13 +267,13 @@ export default function MantraAnalysisDashboard({ data }: MantraAnalysisDashboar
                                 >
                                     <div className="bg-white/70 rounded-lg p-3">
                                         <h4 className="text-[12px] font-bold text-amber-900 mb-1">1. Dasha Mantras (Priority)</h4>
-                                        <p className="text-[11px] text-ink/60">
+                                        <p className="text-[11px] text-amber-700/60">
                                             These planets are currently ruling your life periods. Chant these FIRST for immediate benefits.
                                         </p>
                                     </div>
                                     <div className="bg-white/70 rounded-lg p-3">
                                         <h4 className="text-[12px] font-bold text-amber-900 mb-1">2. Weak Planets (Support)</h4>
-                                        <p className="text-[11px] text-ink/60">
+                                        <p className="text-[11px] text-amber-700/60">
                                             These planets are weak in your birth chart. Strengthen them for long-term balance.
                                         </p>
                                     </div>
@@ -290,19 +290,19 @@ export default function MantraAnalysisDashboard({ data }: MantraAnalysisDashboar
                                 </div>
                                 <div className="grid grid-cols-3 gap-3">
                                     <div className="bg-white/70 rounded-lg p-3">
-                                        <span className="text-[10px] font-bold text-ink/40 uppercase">Current Hora</span>
-                                        <p className="text-[14px] font-bold text-ink">{current_timing.hora?.hora_lord}</p>
-                                        <p className="text-[9px] text-ink/40">Hour #{current_timing.hora?.hora_number}</p>
+                                        <span className="text-[10px] font-bold text-amber-700/40 uppercase">Current Hora</span>
+                                        <p className="text-[14px] font-bold text-amber-900">{current_timing.hora?.hora_lord}</p>
+                                        <p className="text-[9px] text-amber-700/40">Hour #{current_timing.hora?.hora_number}</p>
                                     </div>
                                     <div className="bg-white/70 rounded-lg p-3">
-                                        <span className="text-[10px] font-bold text-ink/40 uppercase">Lunar Tithi</span>
-                                        <p className="text-[14px] font-bold text-ink">{current_timing.tithi?.name}</p>
-                                        <p className="text-[9px] text-ink/40">{current_timing.tithi?.paksha} Paksha</p>
+                                        <span className="text-[10px] font-bold text-amber-700/40 uppercase">Lunar Tithi</span>
+                                        <p className="text-[14px] font-bold text-amber-900">{current_timing.tithi?.name}</p>
+                                        <p className="text-[9px] text-amber-700/40">{current_timing.tithi?.paksha} Paksha</p>
                                     </div>
                                     <div className="bg-white/70 rounded-lg p-3">
-                                        <span className="text-[10px] font-bold text-ink/40 uppercase">Rahu Kaal</span>
-                                        <p className="text-[14px] font-bold text-ink">{current_timing.rahu_kaal?.duration_minutes} min</p>
-                                        <p className="text-[9px] text-ink/40 truncate" title={current_timing.rahu_kaal?.recommendation}>
+                                        <span className="text-[10px] font-bold text-amber-700/40 uppercase">Rahu Kaal</span>
+                                        <p className="text-[14px] font-bold text-amber-900">{current_timing.rahu_kaal?.duration_minutes} min</p>
+                                        <p className="text-[9px] text-amber-700/40 truncate" title={current_timing.rahu_kaal?.recommendation}>
                                             Rahu/Saturn only
                                         </p>
                                     </div>
@@ -355,7 +355,7 @@ export default function MantraAnalysisDashboard({ data }: MantraAnalysisDashboar
                                                 </div>
                                                 <div className="flex-1">
                                                     <div className="flex items-center gap-2">
-                                                        <h4 className="text-[16px] font-bold text-ink">{dasha.planet}</h4>
+                                                        <h4 className="text-[16px] font-bold text-amber-900">{dasha.planet}</h4>
                                                         <span className={cn("px-2 py-0.5 rounded-full text-[9px] font-bold", 
                                                             dasha.type === 'Mahadasha' 
                                                                 ? 'bg-amber-100 text-amber-700' 
@@ -379,7 +379,7 @@ export default function MantraAnalysisDashboard({ data }: MantraAnalysisDashboar
                                                         </span>
                                                     </div>
                                                 </div>
-                                                {isExpanded ? <ChevronUp className="w-4 h-4 text-ink/40" /> : <ChevronDown className="w-4 h-4 text-ink/40" />}
+                                                {isExpanded ? <ChevronUp className="w-4 h-4 text-amber-700/40" /> : <ChevronDown className="w-4 h-4 text-amber-700/40" />}
                                             </div>
                                         </div>
 
@@ -389,14 +389,14 @@ export default function MantraAnalysisDashboard({ data }: MantraAnalysisDashboar
                                                     {/* Mantra Card */}
                                                     <div className="bg-white rounded-lg p-3 shadow-sm mb-3">
                                                         <div className="flex items-center justify-between mb-2">
-                                                            <span className="text-[10px] font-bold text-ink/40 uppercase">Beej Mantra</span>
+                                                            <span className="text-[10px] font-bold text-amber-700/40 uppercase">Beej Mantra</span>
                                                             <button className="w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center">
                                                                 <Play className="w-4 h-4 ml-0.5" />
                                                             </button>
                                                         </div>
-                                                        <p className="text-[18px] font-serif text-ink text-center">{dasha.mantra.sanskrit}</p>
-                                                        <p className="text-[12px] text-ink/60 text-center">{dasha.mantra.transliteration}</p>
-                                                        <p className="text-[10px] text-ink/40 text-center italic">"{dasha.mantra.meaning}"</p>
+                                                        <p className="text-[18px] font-serif text-amber-900 text-center">{dasha.mantra.sanskrit}</p>
+                                                        <p className="text-[12px] text-amber-700/60 text-center">{dasha.mantra.transliteration}</p>
+                                                        <p className="text-[10px] text-amber-700/40 text-center italic">"{dasha.mantra.meaning}"</p>
                                                     </div>
 
                                                     {/* Practice Plan - Beginner Friendly */}
@@ -426,7 +426,7 @@ export default function MantraAnalysisDashboard({ data }: MantraAnalysisDashboar
                                                         <div className="mt-2 bg-white/60 rounded-lg p-2 flex items-center gap-2">
                                                             <Calendar className="w-4 h-4 text-amber-600 shrink-0" />
                                                             <div>
-                                                                <span className="text-[10px] text-ink/60">This planetary period ends in: </span>
+                                                                <span className="text-[10px] text-amber-700/60">This planetary period ends in: </span>
                                                                 <strong className="text-[12px] text-amber-700">{dasha.remaining_years} years</strong>
                                                             </div>
                                                         </div>
@@ -476,22 +476,22 @@ export default function MantraAnalysisDashboard({ data }: MantraAnalysisDashboar
                                                         </div>
                                                         <div className="flex-1">
                                                             <div className="flex items-center gap-2">
-                                                                <h5 className="text-[15px] font-bold text-ink">{planet.planet}</h5>
+                                                                <h5 className="text-[15px] font-bold text-amber-900">{planet.planet}</h5>
                                                                 <SeverityBadge severity={planet.severity} />
                                                             </div>
                                                             <div className="flex items-center gap-2 text-[10px]">
-                                                                <span className="text-ink/50">In House {planet.house}</span>
-                                                                <span className="text-ink/30">•</span>
+                                                                <span className="text-amber-700/50">In House {planet.house}</span>
+                                                                <span className="text-amber-700/30">•</span>
                                                                 <span className="bg-indigo-50 px-1.5 py-0.5 rounded text-indigo-700">
                                                                     Chant on {planet.best_day}s
                                                                 </span>
-                                                                <span className="text-ink/30">•</span>
+                                                                <span className="text-amber-700/30">•</span>
                                                                 <span className="bg-emerald-50 px-1.5 py-0.5 rounded text-emerald-700">
                                                                     {planet.count.daily_count}x daily
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                        {isExpanded ? <ChevronUp className="w-4 h-4 text-ink/40" /> : <ChevronDown className="w-4 h-4 text-ink/40" />}
+                                                        {isExpanded ? <ChevronUp className="w-4 h-4 text-amber-700/40" /> : <ChevronDown className="w-4 h-4 text-amber-700/40" />}
                                                     </div>
                                                 </div>
 
@@ -503,8 +503,8 @@ export default function MantraAnalysisDashboard({ data }: MantraAnalysisDashboar
                                                                 <p className="text-[11px] text-red-800/80">{planet.reasons[0]}</p>
                                                             </div>
                                                             <div className="bg-white rounded-lg p-3 shadow-sm">
-                                                                <p className="text-[16px] font-serif text-ink text-center">{planet.mantra.sanskrit}</p>
-                                                                <p className="text-[11px] text-ink/50 text-center">{planet.mantra.transliteration}</p>
+                                                                <p className="text-[16px] font-serif text-amber-900 text-center">{planet.mantra.sanskrit}</p>
+                                                                <p className="text-[11px] text-amber-700/50 text-center">{planet.mantra.transliteration}</p>
                                                             </div>
                                                             <div className="grid grid-cols-3 gap-2 text-[10px]">
                                                                 <div className="bg-emerald-50 rounded p-2 text-center">
@@ -547,8 +547,8 @@ export default function MantraAnalysisDashboard({ data }: MantraAnalysisDashboar
                                                 <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
                                                 <div>
                                                     <span className="text-[10px] font-bold text-emerald-700 uppercase">{rec.category}</span>
-                                                    <p className="text-[12px] text-ink">{rec.action}</p>
-                                                    <p className="text-[10px] text-ink/50 italic">{rec.note}</p>
+                                                    <p className="text-[12px] text-amber-900">{rec.action}</p>
+                                                    <p className="text-[10px] text-amber-700/50 italic">{rec.note}</p>
                                                 </div>
                                             </div>
                                         </div>

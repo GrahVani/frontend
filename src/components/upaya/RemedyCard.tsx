@@ -32,14 +32,14 @@ export default function RemedyCard({
         const lowerRemedy = remedyText.toLowerCase();
         const lowerPlanet = planet.toLowerCase();
 
-        if (lowerRemedy.includes('dog')) return <Dog className="w-10 h-10 text-ink/35" />;
-        if (lowerRemedy.includes('crow') || lowerRemedy.includes('bird')) return <Bird className="w-10 h-10 text-ink/35" />;
-        if (lowerRemedy.includes('silver') || lowerRemedy.includes('wear')) return <User className="w-10 h-10 text-ink/35" />;
-        if (lowerRemedy.includes('tilak') || lowerRemedy.includes('forehead')) return <Hand className="w-10 h-10 text-ink/35" />;
+        if (lowerRemedy.includes('dog')) return <Dog className="w-10 h-10 text-amber-700/35" />;
+        if (lowerRemedy.includes('crow') || lowerRemedy.includes('bird')) return <Bird className="w-10 h-10 text-amber-700/35" />;
+        if (lowerRemedy.includes('silver') || lowerRemedy.includes('wear')) return <User className="w-10 h-10 text-amber-700/35" />;
+        if (lowerRemedy.includes('tilak') || lowerRemedy.includes('forehead')) return <Hand className="w-10 h-10 text-amber-700/35" />;
 
         // Default planet icons
-        if (lowerPlanet === 'ketu') return <EyeOff className="w-10 h-10 text-ink/35" />;
-        return <Sparkles className="w-10 h-10 text-ink/35" />;
+        if (lowerPlanet === 'ketu') return <EyeOff className="w-10 h-10 text-amber-700/35" />;
+        return <Sparkles className="w-10 h-10 text-amber-700/35" />;
     };
 
     const isKetu = planet.toLowerCase() === 'ketu';
@@ -61,7 +61,7 @@ export default function RemedyCard({
             {/* Main Content Area */}
             <div className="p-5 flex gap-5">
                 {/* Visual Icon Section */}
-                <div className="flex-shrink-0 w-24 h-24 bg-surface-warm rounded-[1.5rem] border border-gold-primary/10 flex items-center justify-center relative group-hover:bg-white transition-colors">
+                <div className="flex-shrink-0 w-24 h-24 bg-amber-50/60 rounded-[1.5rem] border border-amber-200/60 flex items-center justify-center relative group-hover:bg-white transition-colors">
                     {getIcon()}
                     {/* Tiny info pulse */}
                     <div className="absolute top-1 right-1 w-2 h-2 rounded-full bg-blue-500/20" />
@@ -72,31 +72,31 @@ export default function RemedyCard({
                     <div className="grid grid-cols-1 gap-2">
                         {/* Diagnosis */}
                         <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase text-ink/55 tracking-tighter">Diagnosis:</span>
-                            <span className="text-[11px] font-bold text-ink/70 leading-tight">{diagnosis}</span>
+                            <span className="text-[10px] font-black uppercase text-amber-700/55 tracking-tighter">Diagnosis:</span>
+                            <span className="text-[11px] font-bold text-amber-800/70 leading-tight">{diagnosis}</span>
                         </div>
 
                         {/* Remedy */}
                         <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase text-ink/55 tracking-tighter"><KnowledgeTooltip term="general_upaya">Remedy</KnowledgeTooltip>:</span>
+                            <span className="text-[10px] font-black uppercase text-amber-700/55 tracking-tighter"><KnowledgeTooltip term="general_upaya">Remedy</KnowledgeTooltip>:</span>
                             <span className="text-[11px] font-bold text-blue-900 leading-tight">{remedyText}</span>
                         </div>
 
                         {/* Metadata Grid */}
                         <div className="grid grid-cols-2 gap-4 mt-1">
                             <div className="flex flex-col">
-                                <span className="text-[9px] font-black uppercase text-ink/55 tracking-tighter">Time:</span>
-                                <span className="text-[10px] font-bold text-ink/55">{time}</span>
+                                <span className="text-[9px] font-black uppercase text-amber-700/55 tracking-tighter">Time:</span>
+                                <span className="text-[10px] font-bold text-amber-700/55">{time}</span>
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-[9px] font-black uppercase text-ink/55 tracking-tighter">Constraint:</span>
-                                <span className="text-[10px] font-bold text-ink/55">{constraint}</span>
+                                <span className="text-[9px] font-black uppercase text-amber-700/55 tracking-tighter">Constraint:</span>
+                                <span className="text-[10px] font-bold text-amber-700/55">{constraint}</span>
                             </div>
                         </div>
 
                         {/* Status bar */}
-                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-gold-primary/10">
-                            <span className="text-[9px] font-black uppercase text-ink/55 tracking-tighter">Status: {status}</span>
+                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-amber-200/60">
+                            <span className="text-[9px] font-black uppercase text-amber-700/55 tracking-tighter">Status: {status}</span>
                             {status === 'Recommended' ? (
                                 <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white shadow-sm">
                                     <Check className="w-3.5 h-3.5 stroke-[4]" />
@@ -110,8 +110,8 @@ export default function RemedyCard({
                                     <span className="absolute inset-0 flex items-center justify-center text-[7px] font-bold text-blue-600">{progress}%</span>
                                 </div>
                             ) : (
-                                <div className="w-5 h-5 rounded-full bg-gold-primary/10 flex items-center justify-center text-ink/35">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-ink/35" />
+                                <div className="w-5 h-5 rounded-full bg-amber-50 flex items-center justify-center text-amber-700/35">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-amber-700/35" />
                                 </div>
                             )}
                         </div>

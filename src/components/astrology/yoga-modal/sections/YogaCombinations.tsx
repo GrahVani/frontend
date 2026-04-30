@@ -14,9 +14,9 @@ export const YogaCombinations = memo(function YogaCombinations({ data }: YogaCom
     if (data.length === 0) return null;
 
     return (
-        <div className="prem-card p-5">
-            <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-[14px] uppercase tracking-wider">
-                <Layers className="w-4 h-4 text-gold-primary" /> <KnowledgeTooltip term="yoga_system">Yoga</KnowledgeTooltip> Combinations
+        <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-5">
+            <h3 className="font-serif font-bold text-amber-900 mb-4 flex items-center gap-2 text-[14px] uppercase tracking-wider">
+                <Layers className="w-4 h-4 text-amber-500" /> <KnowledgeTooltip term="yoga_system">Yoga</KnowledgeTooltip> Combinations
             </h3>
 
             <div className="space-y-3">
@@ -38,12 +38,12 @@ export const YogaCombinations = memo(function YogaCombinations({ data }: YogaCom
                                 ) : (
                                     <XCircle className="w-3.5 h-3.5 text-zinc-400" />
                                 )}
-                                <span className="text-[12px] font-bold text-ink capitalize">
+                                <span className="text-[12px] font-bold text-amber-900 capitalize">
                                     {combo.type.replace(/_/g, ' ')}
                                 </span>
                             </div>
                             {combo.strengthScore !== undefined && (
-                                <span className="text-[10px] font-bold text-ink bg-gold-primary/10 px-2 py-0.5 rounded-full border border-gold-primary/20">
+                                <span className="text-[10px] font-bold text-amber-900 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/60">
                                     {combo.strengthScore} pts
                                 </span>
                             )}
@@ -52,22 +52,22 @@ export const YogaCombinations = memo(function YogaCombinations({ data }: YogaCom
                         {/* Detail Chips */}
                         <div className="flex flex-wrap gap-1.5 mb-2">
                             {combo.sign && (
-                                <span className="px-2 py-0.5 bg-surface-warm text-ink border border-gold-primary/15 rounded text-[9px] font-bold">
+                                <span className="px-2 py-0.5 bg-amber-50/60 text-amber-900 border border-amber-200/60 rounded text-[9px] font-bold">
                                     {combo.sign}
                                 </span>
                             )}
                             {combo.house !== undefined && (
-                                <span className="px-2 py-0.5 bg-surface-warm text-ink border border-gold-primary/15 rounded text-[9px] font-bold">
+                                <span className="px-2 py-0.5 bg-amber-50/60 text-amber-900 border border-amber-200/60 rounded text-[9px] font-bold">
                                     House {combo.house}
                                 </span>
                             )}
                             {combo.houseCategory && (
-                                <span className="px-2 py-0.5 bg-surface-warm text-ink border border-gold-primary/15 rounded text-[9px] font-bold capitalize">
+                                <span className="px-2 py-0.5 bg-amber-50/60 text-amber-900 border border-amber-200/60 rounded text-[9px] font-bold capitalize">
                                     {combo.houseCategory}
                                 </span>
                             )}
                             {combo.orbDegrees !== undefined && (
-                                <span className="px-2 py-0.5 bg-surface-warm text-ink border border-gold-primary/15 rounded text-[9px] font-bold">
+                                <span className="px-2 py-0.5 bg-amber-50/60 text-amber-900 border border-amber-200/60 rounded text-[9px] font-bold">
                                     Orb: {combo.orbDegrees}Â°
                                 </span>
                             )}
@@ -77,7 +77,7 @@ export const YogaCombinations = memo(function YogaCombinations({ data }: YogaCom
                                     combo.overallStrength === 'very_good' || combo.overallStrength === 'excellent'
                                         ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                         : combo.overallStrength === 'good'
-                                            ? "bg-gold-primary/10 text-gold-dark border-gold-primary/20"
+                                            ? "bg-amber-50 text-amber-700 border-amber-200/60"
                                             : "bg-zinc-100 text-zinc-600 border-zinc-200"
                                 )}>
                                     {combo.overallStrength.replace(/_/g, ' ')}
@@ -96,7 +96,7 @@ export const YogaCombinations = memo(function YogaCombinations({ data }: YogaCom
                                 {combo.effects.map(effect => (
                                     <span
                                         key={effect}
-                                        className="px-2 py-0.5 bg-gold-primary/5 text-gold-dark rounded-full text-[9px] font-medium capitalize"
+                                        className="px-2 py-0.5 bg-amber-50 text-amber-700 rounded-full text-[9px] font-medium capitalize"
                                     >
                                         {effect.replace(/_/g, ' ')}
                                     </span>

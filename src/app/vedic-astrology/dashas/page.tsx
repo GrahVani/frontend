@@ -470,10 +470,10 @@ export default function VedicDashasPage() {
             {/* ================================================================= */}
             {/* MAIN CONTENT - SPLIT LAYOUT */}
             {/* ================================================================= */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:h-[calc(100vh-200px)]">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:h-[600px]">
 
                 {/* LEFT COLUMN - NATAL CHART / MINI DASHAS */}
-                <div className="lg:col-span-4 h-full">
+                <div className="lg:col-span-5 h-full">
                     <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden flex flex-col h-full">
                         <div className="px-3 py-2 border-b border-amber-200/50 flex justify-between items-center shrink-0 bg-amber-50/50">
                             <div className="flex gap-1">
@@ -502,12 +502,12 @@ export default function VedicDashasPage() {
                         </div>
                         <div className="flex-1 flex flex-col overflow-hidden bg-amber-50/30">
                             {leftPanelTab === 'chart' ? (
-                                <div className="flex-1 flex items-center justify-center p-4">
+                                <div className="flex-1 flex items-start justify-center p-0">
                                     {displayPlanets.length > 0 ? (
                                         <ChartWithPopup
                                             ascendantSign={ascendantSign}
                                             planets={displayPlanets}
-                                            className="w-full aspect-square max-h-full"
+                                            className="h-full aspect-square max-w-full"
                                             showDegrees={true}
                                         />
                                     ) : (
@@ -528,7 +528,7 @@ export default function VedicDashasPage() {
                 </div>
 
                 {/* RIGHT COLUMN - DASHA TABLE */}
-                <div className="lg:col-span-8 h-full flex flex-col min-h-0">
+                <div className="lg:col-span-7 h-full flex flex-col min-h-0">
                     <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden flex flex-col h-full">
                         {/* Selector Tray - Fixed Top */}
                         <div className="p-4 border-b border-amber-200/50 flex flex-wrap items-center justify-between gap-4 shrink-0 bg-amber-50/30">

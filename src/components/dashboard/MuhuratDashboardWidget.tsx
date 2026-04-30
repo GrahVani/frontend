@@ -74,7 +74,7 @@ function MuhuratDashboardWidget({ className }: MuhuratDashboardWidgetProps) {
     /* ── Loading ── */
     if (isLoading) {
         return (
-            <div className={cn("prem-card p-4", className)}>
+            <div className={cn("bg-white rounded-2xl border border-amber-200/60 shadow-sm p-4", className)}>
                 <div className="flex items-center justify-between mb-3">
                     <Skeleton className="h-5 w-24" />
                     <Skeleton className="h-4 w-16" />
@@ -92,9 +92,9 @@ function MuhuratDashboardWidget({ className }: MuhuratDashboardWidgetProps) {
     /* ── Error ── */
     if (isError) {
         return (
-            <div className={cn("prem-card p-4", className)}>
-                <div className="flex items-center gap-2 text-sm text-ink/60">
-                    <AlertTriangle className="w-4 h-4 text-gold-dark/60 shrink-0" />
+            <div className={cn("bg-white rounded-2xl border border-amber-200/60 shadow-sm p-4", className)}>
+                <div className="flex items-center gap-2 text-sm text-amber-900/60">
+                    <AlertTriangle className="w-4 h-4 text-amber-700/60 shrink-0" />
                     <span>Could not load muhurat data</span>
                 </div>
             </div>
@@ -130,18 +130,18 @@ function MuhuratDashboardWidget({ className }: MuhuratDashboardWidgetProps) {
     const sunset = shortTime(inauspicious?.sun_timings?.sunset);
 
     return (
-        <div className={cn("prem-card p-4", className)}>
+        <div className={cn("bg-white rounded-2xl border border-amber-200/60 shadow-sm p-4", className)}>
             {/* ── Header ── */}
             <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-gold-primary" />
-                    <h3 className="text-sm font-semibold text-ink tracking-wide">
+                    <Clock className="w-4 h-4 text-amber-600" />
+                    <h3 className="text-sm font-semibold text-amber-900 tracking-wide">
                         Muhurat
                     </h3>
                 </div>
                 <Link
                     href="/muhurta"
-                    className="flex items-center gap-1 text-[11px] font-medium text-gold-dark hover:text-gold-primary transition-colors"
+                    className="flex items-center gap-1 text-[11px] font-medium text-amber-700 hover:text-amber-600 transition-colors"
                 >
                     View Full
                     <ArrowRight className="w-3 h-3" />
@@ -154,14 +154,14 @@ function MuhuratDashboardWidget({ className }: MuhuratDashboardWidgetProps) {
                     {panchangItems.map((item) => (
                         <div
                             key={item.term}
-                            className="bg-parchment/40 rounded-lg px-2.5 py-2 border border-gold-primary/8"
+                            className="bg-parchment/40 rounded-lg px-2.5 py-2 border border-amber-600/8"
                         >
                             <KnowledgeTooltip term={item.term}>
-                                <span className="text-[10px] uppercase tracking-[0.1em] text-gold-dark/70 font-semibold">
+                                <span className="text-[10px] uppercase tracking-[0.1em] text-amber-700/70 font-semibold">
                                     {item.label}
                                 </span>
                             </KnowledgeTooltip>
-                            <p className="text-[13px] font-medium text-ink leading-tight mt-0.5 truncate">
+                            <p className="text-[13px] font-medium text-amber-900 leading-tight mt-0.5 truncate">
                                 {item.value}
                             </p>
                         </div>
@@ -180,10 +180,10 @@ function MuhuratDashboardWidget({ className }: MuhuratDashboardWidgetProps) {
                     )}
                 >
                     <div className="min-w-0">
-                        <p className="text-[10px] uppercase tracking-[0.1em] text-ink/50 font-semibold">
+                        <p className="text-[10px] uppercase tracking-[0.1em] text-amber-900/50 font-semibold">
                             {tqResolved.system}
                         </p>
-                        <p className="text-[13px] font-medium text-ink leading-tight truncate">
+                        <p className="text-[13px] font-medium text-amber-900 leading-tight truncate">
                             {tqResolved.name}
                         </p>
                     </div>
@@ -219,7 +219,7 @@ function MuhuratDashboardWidget({ className }: MuhuratDashboardWidgetProps) {
 
             {/* ── Sunrise / Sunset ── */}
             {inauspicious?.sun_timings && (
-                <div className="flex items-center justify-between text-[11px] text-ink/60">
+                <div className="flex items-center justify-between text-[11px] text-amber-900/60">
                     <span className="flex items-center gap-1.5">
                         <Sun className="w-3.5 h-3.5 text-[#B8650A]" />
                         <span className="font-medium tabular-nums">{sunrise}</span>

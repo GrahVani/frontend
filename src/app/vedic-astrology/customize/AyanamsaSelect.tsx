@@ -97,7 +97,7 @@ export function AyanamsaSelect({
                         compact ? "w-3 h-3" : "w-3.5 h-3.5",
                         isOpen && "rotate-180"
                     )}
-                    style={{ color: isOpen ? selectedOption.color : '#C9A24D' }}
+                    style={{ color: isOpen ? selectedOption.color : '#D97706' }}
                 />
             </button>
 
@@ -126,7 +126,7 @@ export function AyanamsaSelect({
                         borderColor: '#E6D5B8' 
                     }}
                 >
-                    <span className="text-[9px] font-black uppercase tracking-wider text-gold-dark">
+                    <span className="text-[9px] font-black uppercase tracking-wider text-amber-700">
                         Select Ayanamsa
                     </span>
                 </div>
@@ -152,7 +152,7 @@ export function AyanamsaSelect({
                                 <span 
                                     className={cn(
                                         "text-[11px] font-bold uppercase tracking-wide",
-                                        isSelected ? "text-ink" : "text-ink/70"
+                                        isSelected ? "text-amber-900" : "text-amber-900/70"
                                     )}
                                 >
                                     {option.label}

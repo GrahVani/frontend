@@ -69,15 +69,15 @@ export default function ActiveYogasLayout({
     }, [zoomedChart]);
 
     return (
-        <div className={cn("flex flex-col lg:flex-row gap-4 p-4 bg-surface-warm min-h-screen font-sans", className)}>
+        <div className={cn("flex flex-col lg:flex-row gap-4 p-4 bg-amber-50/60 min-h-screen font-sans", className)}>
             {/* LEFT: Birth Chart - Fixed Width */}
             <div className="flex flex-col gap-2 min-h-[360px] h-[60vh] max-h-[600px] w-full lg:w-[440px] shrink-0">
-                <div className="border border-gold-primary/15 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm max-w-[440px]">
-                    <div className="bg-gold-primary/10 px-3 py-1.5 border-b border-gold-primary/15 flex justify-between items-center shrink-0">
+                <div className="border border-amber-200/60 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-amber-50/60 max-w-[440px]">
+                    <div className="bg-amber-50 px-3 py-1.5 border-b border-amber-200/60 flex justify-between items-center shrink-0">
                         <h3 className={cn(TYPOGRAPHY.sectionTitle, "leading-tight tracking-wide")}><KnowledgeTooltip term="chart_birth" unstyled>Birth chart</KnowledgeTooltip> (D1)</h3>
                         <button
                             onClick={() => setZoomedChart({ varga: "D1", label: "Birth chart (D1)" })}
-                            className="text-ink hover:text-gold-dark transition-colors"
+                            className="text-amber-900 hover:text-amber-700 transition-colors"
                         >
                             <Maximize2 className="w-3 h-3" />
                         </button>
@@ -97,8 +97,8 @@ export default function ActiveYogasLayout({
 
             {/* RIGHT: Yogas & Details - Flexible Width */}
             <div className="flex-1 flex flex-col gap-2 min-h-[360px] h-[60vh] max-h-[600px] min-w-0">
-                <div className="border border-gold-primary/15 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-surface-warm">
-                    <div className="bg-gold-primary/10 px-4 py-2 border-b border-gold-primary/15 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
+                <div className="border border-amber-200/60 rounded-lg overflow-hidden shadow-sm flex flex-col h-full bg-amber-50/60">
+                    <div className="bg-amber-50 px-4 py-2 border-b border-amber-200/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
                         <h3 className={cn(TYPOGRAPHY.sectionTitle, "leading-tight tracking-wide whitespace-nowrap")}><KnowledgeTooltip term="yoga_system" unstyled>Yoga</KnowledgeTooltip> & combinations</h3>
 
                         {/* Integrated Header Dropdown */}
@@ -120,38 +120,38 @@ export default function ActiveYogasLayout({
                                     }
                                 }
                                 }
-                                className={cn(TYPOGRAPHY.value, "w-full pl-3 pr-8 py-1.5 bg-white/80 border border-gold-primary/30 rounded-xl appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-gold-primary/30 transition-all shadow-sm group-hover:bg-white")}
+                                className={cn(TYPOGRAPHY.value, "w-full pl-3 pr-8 py-1.5 bg-white/80 border border-amber-300 rounded-xl appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-gold-primary/30 transition-all shadow-sm group-hover:bg-white")}
                             >
-                                <optgroup label="Benefic" className="font-serif italic text-ink">
+                                <optgroup label="Benefic" className="font-serif italic text-amber-900">
                                     {allYogas.filter(y => y.category === 'benefic').map(y => (
-                                        <option key={y.id} value={y.id} className="font-sans not-italic font-medium text-ink">
+                                        <option key={y.id} value={y.id} className="font-sans not-italic font-medium text-amber-900">
                                             {y.name}
                                         </option>
                                     ))}
                                 </optgroup>
-                                <optgroup label="Challenging" className="font-serif italic text-ink">
+                                <optgroup label="Challenging" className="font-serif italic text-amber-900">
                                     {allYogas.filter(y => y.category === 'challenging').map(y => (
-                                        <option key={y.id} value={y.id} className="font-sans not-italic font-medium text-ink">
+                                        <option key={y.id} value={y.id} className="font-sans not-italic font-medium text-amber-900">
                                             {y.name}
                                         </option>
                                     ))}
                                 </optgroup>
-                                <optgroup label="Jaimini Yogas" className="font-serif italic text-ink">
+                                <optgroup label="Jaimini Yogas" className="font-serif italic text-amber-900">
                                     {allYogas.filter(y => y.category === 'jaimini').map(y => (
-                                        <option key={y.id} value={y.id} className="font-sans not-italic font-medium text-ink">
+                                        <option key={y.id} value={y.id} className="font-sans not-italic font-medium text-amber-900">
                                             {y.name}
                                         </option>
                                     ))}
                                 </optgroup>
-                                <optgroup label="Tajika Yogas" className="font-serif italic text-ink">
+                                <optgroup label="Tajika Yogas" className="font-serif italic text-amber-900">
                                     {allYogas.filter(y => y.category === 'tajika').map(y => (
-                                        <option key={y.id} value={y.id} className="font-sans not-italic font-medium text-ink">
+                                        <option key={y.id} value={y.id} className="font-sans not-italic font-medium text-amber-900">
                                             {y.name}
                                         </option>
                                     ))}
                                 </optgroup>
                             </select>
-                            <div className="absolute right-2 top-1/2 -translate-y-1/2 text-gold-dark pointer-events-none transition-transform group-hover:scale-110">
+                            <div className="absolute right-2 top-1/2 -translate-y-1/2 text-amber-700 pointer-events-none transition-transform group-hover:scale-110">
                                 <ChevronDown className="w-3 h-3" />
                             </div>
                         </div>
@@ -161,9 +161,9 @@ export default function ActiveYogasLayout({
                         {/* RELOCATED: Yoga Detail Section (Right Side Panel) */}
                         {selectedYoga && (
                             <div className="flex-1 animate-in fade-in slide-in-from-right-4 duration-500 overflow-hidden flex flex-col">
-                                <div className="bg-white border border-gold-primary/30 rounded-[1.5rem] overflow-hidden shadow-lg relative flex flex-col h-full mt-0">
+                                <div className="bg-white border border-amber-300 rounded-[1.5rem] overflow-hidden shadow-lg relative flex flex-col h-full mt-0">
                                     {/* Detail Content */}
-                                    <div className="flex-1 p-0 bg-surface-warm/10 overflow-y-auto custom-scrollbar">
+                                    <div className="flex-1 p-0 bg-amber-50/20 overflow-y-auto custom-scrollbar">
                                         <YogaModal
                                             clientId={clientId}
                                             yogaType={selectedYoga.type}
@@ -173,10 +173,10 @@ export default function ActiveYogasLayout({
                                     </div>
 
                                     {/* Detail Footer - Simplified */}
-                                    <div className="bg-surface-warm/30 px-5 py-3 border-t border-gold-primary/15 flex justify-center shrink-0">
+                                    <div className="bg-amber-50/40 px-5 py-3 border-t border-amber-200/60 flex justify-center shrink-0">
                                         <button
                                             onClick={() => setSelectedYoga(null)}
-                                            className="text-ink hover:text-gold-dark transition-colors text-[9px] font-bold uppercase tracking-[0.15em] flex items-center gap-1.5"
+                                            className="text-amber-900 hover:text-amber-700 transition-colors text-[9px] font-bold uppercase tracking-[0.15em] flex items-center gap-1.5"
                                         >
                                             Clear selection
                                         </button>
@@ -191,11 +191,11 @@ export default function ActiveYogasLayout({
             {/* Modal for Zoom */}
             {zoomedChart && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl bg-ink/40 animate-in fade-in zoom-in-95 duration-300" role="dialog" aria-modal="true" aria-label={zoomedChart.label}>
-                    <div className="bg-surface-warm border border-gold-primary/15 rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl">
+                    <div className="bg-amber-50/60 border border-amber-200/60 rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl">
                         <button
                             onClick={() => setZoomedChart(null)}
                             aria-label="Close zoomed chart"
-                            className="absolute top-4 right-4 p-2 rounded-xl bg-surface-warm text-ink hover:bg-gold-primary/20 hover:text-gold-dark transition-all"
+                            className="absolute top-4 right-4 p-2 rounded-xl bg-amber-50/60 text-amber-900 hover:bg-amber-100 hover:text-amber-700 transition-all"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -203,7 +203,7 @@ export default function ActiveYogasLayout({
                             <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px]")}>{zoomedChart.label}</h2>
                             <p className={cn(TYPOGRAPHY.label, "mt-2")}>{zoomedChart.varga} divisional chart</p>
                         </div>
-                        <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6 border border-gold-primary/15">
+                        <div className="aspect-square w-full max-w-md mx-auto rounded-2xl p-6 border border-amber-200/60">
                             <ChartWithPopup
                                 ascendantSign={ascendantSign}
                                 planets={planets}

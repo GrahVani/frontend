@@ -210,35 +210,39 @@ export default function YogaDoshaPage() {
     // System check — Yoga/Dosha is Lahiri-exclusive
     if (ayanamsa !== 'Lahiri') {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-                <Sparkles className="w-12 h-12 text-ink mb-4" />
-                <h2 className={cn(TYPOGRAPHY.sectionTitle, "mb-2")}>Yoga & dosha — Lahiri only</h2>
-                <p className={cn(TYPOGRAPHY.value, "max-w-md")}>
-                    Yoga and Dosha analysis is currently available exclusively with the <strong>Lahiri Ayanamsa</strong>.
-                    Please switch to Lahiri from the header dropdown to access these features.
-                </p>
+            <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 flex flex-col items-center justify-center text-center px-4">
+                <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-10 max-w-md">
+                    <Sparkles className="w-12 h-12 text-amber-600 mb-4 mx-auto" />
+                    <h2 className={cn(TYPOGRAPHY.sectionTitle, "mb-2 text-amber-900")}>Yoga & dosha — Lahiri only</h2>
+                    <p className={cn(TYPOGRAPHY.value, "max-w-md text-amber-700")}>
+                        Yoga and Dosha analysis is currently available exclusively with the <strong>Lahiri Ayanamsa</strong>.
+                        Please switch to Lahiri from the header dropdown to access these features.
+                    </p>
+                </div>
             </div>
         );
     }
 
     if (!clientDetails) {
         return (
-            <div className="flex items-center justify-center min-h-[60vh]">
-                <div className="w-8 h-8 border-2 border-gold-primary border-t-transparent rounded-full animate-spin" />
+            <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 flex items-center justify-center">
+                <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
             </div>
         );
     }
 
     return (
-        <div className="space-y-4 animate-in fade-in duration-500 pt-4">
+        <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 pb-12 animate-in fade-in duration-500">
+            <div className="space-y-5">
             {/* Header: Title + Tabs */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] font-bold")}>Yoga & dosha analysis</h1>
+                    <h1 className="text-[28px] font-bold text-amber-900">Yoga & dosha analysis</h1>
+                    <p className="text-[16px] text-amber-600 mt-1">Planetary combinations & afflictions</p>
                 </div>
 
                 {/* Main Tabs: Yogas / Doshas */}
-                <div className="flex gap-1.5 p-1 prem-card rounded-full shadow-sm w-full md:w-auto">
+                <div className="flex gap-1.5 p-1 bg-white rounded-full border border-amber-200/60 shadow-sm w-full md:w-auto">
                     <button
                         onClick={() => setMainTab('yogas')}
                         className={cn(
@@ -247,7 +251,7 @@ export default function YogaDoshaPage() {
                             "!text-[12px] !font-bold !mt-0",
                             mainTab === 'yogas'
                                 ? cn(COLORS.wbActiveTab, "shadow-md")
-                                : "text-ink/55 hover:text-ink hover:bg-white/50"
+                                : "text-amber-700/55 hover:text-amber-900 hover:bg-amber-50/60"
                         )}
                     >
                         <Sparkles className="w-3.5 h-3.5 shrink-0" />
@@ -261,7 +265,7 @@ export default function YogaDoshaPage() {
                             "!text-[12px] !font-bold !mt-0",
                             mainTab === 'doshas'
                                 ? cn(COLORS.wbActiveTab, "shadow-md")
-                                : "text-ink/55 hover:text-ink hover:bg-white/50"
+                                : "text-amber-700/55 hover:text-amber-900 hover:bg-amber-50/60"
                         )}
                     >
                         <Shield className="w-3.5 h-3.5 shrink-0" />
@@ -274,9 +278,9 @@ export default function YogaDoshaPage() {
             {mainTab === 'yogas' && (
                 <div className="-mx-4 -mb-4">
                     {isLoadingCharts || isGeneratingCharts ? (
-                        <div className="flex flex-col items-center justify-center min-h-[300px] bg-white/50 rounded-2xl m-4 border border-gold-primary/20 border-dashed animate-pulse">
-                            <Sparkles className="w-6 h-6 text-gold-primary mb-3 animate-spin" />
-                            <p className={cn(TYPOGRAPHY.subValue, "italic")}>Synthesizing client dashboard...</p>
+                        <div className="flex flex-col items-center justify-center min-h-[300px] bg-amber-50/60 rounded-2xl m-4 border border-amber-200/60 border-dashed animate-pulse">
+                            <Sparkles className="w-6 h-6 text-amber-500 mb-3 animate-spin" />
+                            <p className={cn(TYPOGRAPHY.subValue, "italic text-amber-700")}>Synthesizing client dashboard...</p>
                         </div>
                     ) : (
                         <ActiveYogasLayout
@@ -306,6 +310,7 @@ export default function YogaDoshaPage() {
                     />
                 </div>
             )}
+            </div>
         </div>
     );
 }

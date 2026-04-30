@@ -18,7 +18,7 @@ const PLANET_ABBR: Record<string, string> = {
 
 /** Accent coloring for key planets */
 const PLANET_STYLES: Record<string, string> = {
-    Jupiter: 'bg-gold-primary text-ink font-bold',
+    Jupiter: 'bg-amber-500 text-amber-900 font-bold',
     Moon: 'bg-indigo-500 text-white',
     Sun: 'bg-amber-500 text-white',
     Mars: 'bg-red-500 text-white',
@@ -31,10 +31,10 @@ export const YogaPlanetsGrid = memo(function YogaPlanetsGrid({ data }: YogaPlane
     if (planetEntries.length === 0) return null;
 
     return (
-        <div className="bg-white border border-gold-primary/15 rounded-xl p-4">
+        <div className="bg-white border border-amber-200/60 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3 px-1">
-                <LayoutGrid className="w-3.5 h-3.5 text-gold-primary" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-ink opacity-60">
+                <LayoutGrid className="w-3.5 h-3.5 text-amber-500" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-900 opacity-60">
                     <KnowledgeTooltip term="graha_overview" unstyled>Planetary</KnowledgeTooltip> Positions
                 </span>
             </div>
@@ -43,17 +43,17 @@ export const YogaPlanetsGrid = memo(function YogaPlanetsGrid({ data }: YogaPlane
                 {planetEntries.map(([planet, details]) => (
                     <div
                         key={planet}
-                        className="flex items-center gap-2 bg-zinc-50 border border-zinc-100 rounded-lg p-2 hover:border-gold-primary/30 transition-colors"
+                        className="flex items-center gap-2 bg-zinc-50 border border-zinc-100 rounded-lg p-2 hover:border-amber-300 transition-colors"
                     >
                         <div className={cn(
                             "w-7 h-7 rounded flex items-center justify-center text-[9px] font-black shrink-0",
-                            PLANET_STYLES[planet] ?? 'bg-white border border-gold-primary/15 text-ink'
+                            PLANET_STYLES[planet] ?? 'bg-white border border-amber-200/60 text-amber-900'
                         )}>
                             {PLANET_ABBR[planet] ?? planet.substring(0, 2).toUpperCase()}
                         </div>
                         <div className="flex flex-col leading-none min-w-0">
-                            <span className="text-[10px] font-bold text-ink truncate" title={details.sign}>{details.sign}</span>
-                            <span className="text-[9px] text-ink opacity-60 font-mono">
+                            <span className="text-[10px] font-bold text-amber-900 truncate" title={details.sign}>{details.sign}</span>
+                            <span className="text-[9px] text-amber-900 opacity-60 font-mono">
                                 H{details.house}
                                 {details.retrograde === 'R' && <span className="text-red-500 ml-0.5">R</span>}
                             </span>

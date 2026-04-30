@@ -60,7 +60,7 @@ const VigorGauge = ({ score, isWeak, color }: { score: number; isWeak: boolean; 
                 />
             </svg>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 text-center">
-                <span className="text-[12px] font-black text-ink">{Math.round(score)}</span>
+                <span className="text-[12px] font-black text-amber-900">{Math.round(score)}</span>
             </div>
         </div>
     );
@@ -81,15 +81,15 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
     };
 
     return (
-        <div className={cn("p-4 relative overflow-hidden flex flex-col rounded-[1.5rem] border border-gold-primary/10", styles.glassPanel)}>
+        <div className={cn("p-4 relative overflow-hidden flex flex-col rounded-[1.5rem] border border-amber-200/60", styles.glassPanel)}>
             {/* Header */}
             <div className="flex items-center justify-between mb-4 px-1">
                 <div>
-                    <h3 className="text-[15px] font-bold tracking-tight flex items-center gap-2 text-ink/80">
+                    <h3 className="text-[15px] font-bold tracking-tight flex items-center gap-2 text-amber-800/80">
                         <Zap className="w-4 h-4 text-purple-600 fill-purple-600/20" />
                         Planetary Vigor
                     </h3>
-                    <p className="text-[9px] tracking-widest font-black text-ink/30 mt-0.5">Potency & Affliction Analysis</p>
+                    <p className="text-[9px] tracking-widest font-black text-amber-700/30 mt-0.5">Potency & Affliction Analysis</p>
                 </div>
                 <div className="flex items-center gap-3 text-[9px] font-black tracking-widest">
                     <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100/50">
@@ -117,7 +117,7 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
                             transition={{ delay: idx * 0.04 }}
                             className={cn(
                                 "group relative border rounded-xl p-2.5 transition-all flex flex-col gap-2 bg-white/30 hover:bg-white",
-                                data.is_weak ? "border-rose-100 shadow-sm" : "border-gold-primary/5 hover:border-gold-primary/20"
+                                data.is_weak ? "border-rose-100 shadow-sm" : "border-amber-100 hover:border-amber-300/60"
                             )}
                         >
                             {/* Card Top: Planet + Gauge */}
@@ -127,7 +127,7 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
                                         {theme.symbol}
                                     </div>
                                     <div>
-                                        <h4 className="text-[11px] font-black text-ink tracking-tight leading-none mb-1">{name}</h4>
+                                        <h4 className="text-[11px] font-black text-amber-900 tracking-tight leading-none mb-1">{name}</h4>
                                         <span className={cn(
                                             "text-[8px] font-black tracking-widest px-1 py-0.5 rounded",
                                             data.is_weak ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
@@ -152,7 +152,7 @@ const VedicStrengthPanel: React.FC<VedicStrengthPanelProps> = ({ planetaryStreng
                                     </span>
                                 ))}
                                 {data.afflictions.length === 0 && data.benefic_factors.length === 0 && (
-                                    <span className="text-[8px] italic text-ink/30 px-1 py-1">Neutral position</span>
+                                    <span className="text-[8px] italic text-amber-700/30 px-1 py-1">Neutral position</span>
                                 )}
                             </div>
 

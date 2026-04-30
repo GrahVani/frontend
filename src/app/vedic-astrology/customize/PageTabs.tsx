@@ -69,8 +69,8 @@ export default function PageTabs({
                                 "group relative flex items-center gap-2 px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all cursor-pointer select-none",
                                 isActive
                                     ? "bg-primary text-white shadow-md"
-                                    : "bg-white/50 text-ink/70 hover:bg-white hover:text-ink border border-transparent hover:border-gold-primary/20",
-                                isEditing && "ring-2 ring-primary bg-white text-ink"
+                                    : "bg-white/60 text-amber-900/70 hover:bg-white hover:text-amber-900 border border-transparent hover:border-amber-200/60",
+                                isEditing && "ring-2 ring-primary bg-white text-amber-900"
                             )}
                             onClick={() => !isEditing && onSelectPage(page.id)}
                             onDoubleClick={() => !isEditing && handleStartEdit(page)}
@@ -79,7 +79,7 @@ export default function PageTabs({
                             {!isEditing && (
                                 <span className={cn(
                                     "w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold",
-                                    isActive ? "bg-white/20" : "bg-gold-primary/10 text-gold-dark"
+                                    isActive ? "bg-white/20" : "bg-amber-50 text-amber-700 border border-amber-200/60"
                                 )}>
                                     {index + 1}
                                 </span>
@@ -94,7 +94,7 @@ export default function PageTabs({
                                     onChange={(e) => setTempName(e.target.value)}
                                     onBlur={handleSave}
                                     onKeyDown={handleKeyDown}
-                                    className="bg-transparent border-none outline-none font-medium w-full max-w-[120px] text-ink p-0 placeholder:text-ink/30"
+                                    className="bg-transparent border-none outline-none font-medium w-full max-w-[120px] text-amber-900 p-0 placeholder:text-amber-900/30"
                                     autoFocus
                                 />
                             ) : (
@@ -119,7 +119,7 @@ export default function PageTabs({
                                             "p-0.5 rounded transition-all",
                                             isActive 
                                                 ? "hover:bg-white/20 text-white/70 hover:text-white" 
-                                                : "hover:bg-gold-primary/10 text-ink/40 hover:text-primary"
+                                                : "hover:bg-amber-50 text-amber-900/40 hover:text-amber-700"
                                         )}
                                         title="Rename page"
                                     >
@@ -137,7 +137,7 @@ export default function PageTabs({
                                                 "p-0.5 rounded transition-all",
                                                 isActive 
                                                     ? "hover:bg-white/20 text-white/70 hover:text-white" 
-                                                    : "hover:bg-gold-primary/10 text-ink/40 hover:text-red-600"
+                                                    : "hover:bg-amber-50 text-amber-900/40 hover:text-red-600"
                                             )}
                                             title="Delete page"
                                         >
@@ -163,7 +163,7 @@ export default function PageTabs({
                 className={cn(
                     "flex items-center justify-center w-8 h-8 rounded-lg transition-all",
                     canCreateMore
-                        ? "bg-gold-primary/10 text-gold-dark hover:bg-gold-primary hover:text-white"
+                        ? "bg-amber-50 text-amber-700 hover:bg-amber-600 hover:text-white border border-amber-200/60"
                         : "bg-gray-100 text-gray-400 cursor-not-allowed"
                 )}
                 title={canCreateMore ? "Add new page" : `Maximum ${pages.length} pages reached`}

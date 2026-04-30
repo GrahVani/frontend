@@ -62,9 +62,9 @@ export const YogaModal = memo(function YogaModal({
     // â”€â”€â”€ Loading State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center p-8 bg-surface-warm/30 rounded-2xl border border-gold-primary/15" role="status" aria-label="Loading yoga analysis" aria-busy="true">
-                <Loader2 className="w-6 h-6 text-gold-primary animate-spin mb-3" aria-hidden="true" />
-                <p className="text-[12px] font-serif text-ink/55 italic">Analyzing celestial alignments...</p>
+            <div className="flex flex-col items-center justify-center p-8 bg-amber-50/40 rounded-2xl border border-amber-200/60" role="status" aria-label="Loading yoga analysis" aria-busy="true">
+                <Loader2 className="w-6 h-6 text-amber-500 animate-spin mb-3" aria-hidden="true" />
+                <p className="text-[12px] font-serif text-amber-700/55 italic">Analyzing celestial alignments...</p>
             </div>
         );
     }

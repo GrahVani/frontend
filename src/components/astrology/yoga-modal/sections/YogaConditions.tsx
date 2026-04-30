@@ -13,9 +13,9 @@ export const YogaConditions = memo(function YogaConditions({ data }: YogaConditi
     const { met, failed } = data;
 
     return (
-        <div className="prem-card p-5">
-            <h3 className="font-serif font-bold text-ink mb-4 flex items-center gap-2 text-[14px] uppercase tracking-wider">
-                <ListChecks className="w-4 h-4 text-gold-primary" /> <KnowledgeTooltip term="yoga" unstyled>Formation Conditions</KnowledgeTooltip>
+        <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-5">
+            <h3 className="font-serif font-bold text-amber-900 mb-4 flex items-center gap-2 text-[14px] uppercase tracking-wider">
+                <ListChecks className="w-4 h-4 text-amber-500" /> <KnowledgeTooltip term="yoga" unstyled>Formation Conditions</KnowledgeTooltip>
             </h3>
 
             <div className="space-y-4">
@@ -28,7 +28,7 @@ export const YogaConditions = memo(function YogaConditions({ data }: YogaConditi
                         {met.map((condition, i) => (
                             <div key={i} className="flex items-start gap-2.5 group">
                                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
-                                <p className="text-[11px] text-ink leading-relaxed">
+                                <p className="text-[11px] text-amber-900 leading-relaxed">
                                     {condition}
                                 </p>
                             </div>
@@ -45,7 +45,7 @@ export const YogaConditions = memo(function YogaConditions({ data }: YogaConditi
                         {failed.map((condition, i) => (
                             <div key={i} className="flex items-start gap-2.5 group">
                                 <XCircle className="w-3.5 h-3.5 text-red-400 mt-0.5 shrink-0" />
-                                <p className="text-[11px] text-ink opacity-50 leading-relaxed line-through decoration-red-200">
+                                <p className="text-[11px] text-amber-900 opacity-50 leading-relaxed line-through decoration-red-200">
                                     {condition}
                                 </p>
                             </div>

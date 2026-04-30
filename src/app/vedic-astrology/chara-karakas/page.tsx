@@ -161,15 +161,17 @@ export default function CharaKarakasPage() {
 
     if (ayanamsa !== 'Lahiri') {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
-                <Shield className="w-10 h-10 text-ink mb-3" />
-                <h2 className={cn(TYPOGRAPHY.sectionTitle, "!text-ink !text-lg !mb-1")}>Chara Karakas — Lahiri Only</h2>
-                <p className={cn(TYPOGRAPHY.subValue, "!text-ink/60 !text-[13px] max-w-sm !mt-0")}>
-                    Available exclusively with the <strong>Lahiri Ayanamsa</strong>.
-                </p>
-                <Link href="/vedic-astrology/overview" className={cn(TYPOGRAPHY.label, "!mt-4 !text-[13px] !text-gold-dark hover:!text-gold-primary transition-colors flex items-center gap-1")}>
-                    <ArrowLeft className="w-3.5 h-3.5" /> Back
-                </Link>
+            <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 flex flex-col items-center justify-center text-center px-4">
+                <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-10 max-w-md">
+                    <Shield className="w-10 h-10 text-amber-600 mb-3 mx-auto" />
+                    <h2 className={cn(TYPOGRAPHY.sectionTitle, "!text-amber-900 !text-lg !mb-1")}>Chara Karakas — Lahiri Only</h2>
+                    <p className={cn(TYPOGRAPHY.subValue, "!text-amber-700 !text-[13px] max-w-sm !mt-0")}>
+                        Available exclusively with the <strong>Lahiri Ayanamsa</strong>.
+                    </p>
+                    <Link href="/vedic-astrology/overview" className={cn(TYPOGRAPHY.label, "!mt-4 !text-[13px] !text-amber-700 hover:!text-amber-500 transition-colors flex items-center gap-1")}>
+                        <ArrowLeft className="w-3.5 h-3.5" /> Back
+                    </Link>
+                </div>
             </div>
         );
     }
@@ -177,23 +179,25 @@ export default function CharaKarakasPage() {
     if (!clientDetails) return null;
 
     return (
-        <div className="space-y-3 animate-in fade-in duration-500 pb-6 pt-2">
-            <div className="flex items-center justify-between border-b border-gold-primary/10 pb-2">
+        <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 pb-12 animate-in fade-in duration-500">
+            <div className="space-y-5">
+            <div className="flex items-center justify-between border-b border-amber-200/60 pb-2">
                 <div>
-                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "!text-ink tracking-tight !text-xl !mb-0")}>Chara Karakas</h1>
+                    <h1 className="text-[28px] font-bold text-amber-900 tracking-tight">Chara Karakas</h1>
+                    <p className="text-[16px] text-amber-600 mt-1">Variable significators by planetary degrees</p>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-full bg-gold-primary/10 text-gold-dark text-[10px] font-bold border border-gold-primary/20">Lahiri System</span>
+                    <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold border border-amber-200/60">Lahiri System</span>
                 </div>
             </div>
 
             {loading ? (
-                <div className="flex flex-col items-center justify-center py-20 prem-card rounded-2xl">
-                    <Loader2 className="w-8 h-8 text-gold-primary animate-spin mb-3" />
-                    <p className={cn(TYPOGRAPHY.subValue, "!text-ink/60 italic !text-[13px] !mt-0")}>Calculating...</p>
+                <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-amber-200/60 shadow-sm">
+                    <Loader2 className="w-8 h-8 text-amber-500 animate-spin mb-3" />
+                    <p className={cn(TYPOGRAPHY.subValue, "!text-amber-700 italic !text-[13px] !mt-0")}>Calculating...</p>
                 </div>
             ) : error ? (
-                <div className="p-8 bg-red-50/50 border border-red-100 rounded-2xl text-center">
+                <div className="p-8 bg-red-50/50 border border-red-200 rounded-2xl text-center">
                     <AlertTriangle className="w-8 h-8 text-red-500 mx-auto mb-3" />
                     <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 !text-base !mb-2")}>Data Not Available</h3>
                     <p className={cn(TYPOGRAPHY.subValue, "!text-red-600 !text-[13px] !mb-4")}>{error}</p>
@@ -201,7 +205,7 @@ export default function CharaKarakasPage() {
                         <button
                             onClick={handleGenerate}
                             disabled={isGeneratingLocal}
-                            className={cn(TYPOGRAPHY.label, "px-5 py-2 bg-gold-primary text-white rounded-lg !text-[12px] !font-bold hover:bg-gold-dark transition-colors disabled:opacity-50 flex items-center gap-2")}
+                            className={cn(TYPOGRAPHY.label, "px-5 py-2 bg-amber-500 text-white rounded-lg !text-[12px] !font-bold hover:bg-amber-600 transition-colors disabled:opacity-50 flex items-center gap-2")}
                         >
                             {isGeneratingLocal ? (
                                 <><Loader2 className="w-4 h-4 animate-spin" /> Generating...</>
@@ -221,6 +225,7 @@ export default function CharaKarakasPage() {
             ) : data ? (
                 <KarakaDashboard data={data} />
             ) : null}
+            </div>
         </div>
     );
 }
@@ -235,49 +240,49 @@ export function KarakaDashboard({ data }: { data: CharaKarakasResponse }) {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
             {/* Main Table */}
-            <div className="lg:col-span-8 prem-card rounded-2xl overflow-hidden">
-                <div className="p-3 border-b border-gold-primary/15 bg-surface-warm/10 flex items-center gap-2">
-                    <Star className="w-3.5 h-3.5 text-gold-primary" />
-                    <h3 className={cn(TYPOGRAPHY.label, "!text-[11px] font-bold tracking-wider !text-ink !mb-0")}>Principal Karakas</h3>
+            <div className="lg:col-span-8 bg-white rounded-2xl border border-amber-200/60 shadow-sm rounded-2xl overflow-hidden">
+                <div className="p-3 border-b border-amber-200/60 bg-amber-50/20 flex items-center gap-2">
+                    <Star className="w-3.5 h-3.5 text-amber-500" />
+                    <h3 className={cn(TYPOGRAPHY.label, "!text-[11px] font-bold tracking-wider !text-amber-900 !mb-0")}>Principal Karakas</h3>
                 </div>
                 <div className="overflow-x-auto max-h-[calc(100vh-250px)] no-scrollbar">
                     <table className="w-full text-left border-collapse">
                         <thead className="sticky top-0 bg-white z-10 shadow-sm">
-                            <tr className="border-b border-gold-primary/10">
-                                <th className={cn(TYPOGRAPHY.label, "px-4 py-2 !text-[9px] !font-bold text-ink/40 uppercase tracking-widest")}>Karaka</th>
-                                <th className={cn(TYPOGRAPHY.label, "px-4 py-2 !text-[9px] !font-bold text-ink/40 uppercase tracking-widest")}>Planet</th>
-                                <th className={cn(TYPOGRAPHY.label, "px-4 py-2 !text-[9px] !font-bold text-ink/40 uppercase tracking-widest text-right")}>Degree</th>
+                            <tr className="border-b border-amber-200/60">
+                                <th className={cn(TYPOGRAPHY.label, "px-4 py-2 !text-[9px] !font-bold text-amber-700/40 uppercase tracking-widest")}>Karaka</th>
+                                <th className={cn(TYPOGRAPHY.label, "px-4 py-2 !text-[9px] !font-bold text-amber-700/40 uppercase tracking-widest")}>Planet</th>
+                                <th className={cn(TYPOGRAPHY.label, "px-4 py-2 !text-[9px] !font-bold text-amber-700/40 uppercase tracking-widest text-right")}>Degree</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gold-primary/5">
+                        <tbody className="divide-y divide-amber-100">
                             {karakas.map((item, idx) => (
                                 <motion.tr
                                     key={item.karaka_short}
                                     initial={{ opacity: 0, x: -5 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: idx * 0.03 }}
-                                    className="hover:bg-gold-primary/5 transition-colors group"
+                                    className="hover:bg-amber-50 transition-colors group"
                                 >
                                     <td className="px-4 py-2.5">
                                         <div className="flex flex-col">
-                                            <span className={cn(TYPOGRAPHY.value, "!text-[13px] font-bold !text-ink")}>{item.karaka_full}</span>
-                                            <span className={cn(TYPOGRAPHY.label, "!text-[9px] font-bold text-gold-dark !mb-0")}>{item.karaka_short}</span>
+                                            <span className={cn(TYPOGRAPHY.value, "!text-[13px] font-bold !text-amber-900")}>{item.karaka_full}</span>
+                                            <span className={cn(TYPOGRAPHY.label, "!text-[9px] font-bold text-amber-700 !mb-0")}>{item.karaka_short}</span>
                                         </div>
                                     </td>
                                     <td className="px-4 py-2.5">
                                         <div className="flex items-center gap-2">
-                                            <div className={cn("w-7 h-7 rounded-lg bg-surface-warm flex items-center justify-center font-bold text-[11px] border border-gold-primary/10")}>
+                                            <div className={cn("w-7 h-7 rounded-lg bg-amber-50/60 flex items-center justify-center font-bold text-[11px] border border-amber-200/60")}>
                                                 {item.planet.substring(0, 2)}
                                             </div>
-                                            <span className={cn(TYPOGRAPHY.value, "!text-[13px] !font-medium !text-ink", PLANET_ICON_COLORS[item.planet])}>
+                                            <span className={cn(TYPOGRAPHY.value, "!text-[13px] !font-medium !text-amber-900", PLANET_ICON_COLORS[item.planet])}>
                                                 {item.planet}
                                             </span>
                                         </div>
                                     </td>
                                     <td className="px-4 py-2.5 text-right">
                                         <div className="flex flex-col items-end">
-                                            <span className={cn(TYPOGRAPHY.subValue, "!text-ink font-medium !text-[12px] !mt-0")}>{item.degree}</span>
-                                            <span className={cn(TYPOGRAPHY.label, "!text-[9px] text-ink/40 !mb-0")}>{item.sign}</span>
+                                            <span className={cn(TYPOGRAPHY.subValue, "!text-amber-900 font-medium !text-[12px] !mt-0")}>{item.degree}</span>
+                                            <span className={cn(TYPOGRAPHY.label, "!text-[9px] text-amber-700/40 !mb-0")}>{item.sign}</span>
                                         </div>
                                     </td>
                                 </motion.tr>
@@ -289,32 +294,32 @@ export function KarakaDashboard({ data }: { data: CharaKarakasResponse }) {
 
             {/* Info Card */}
             <div className="lg:col-span-4 space-y-3">
-                <div className="prem-card rounded-2xl p-4 bg-luxury-radial h-full">
+                <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm rounded-2xl p-4 bg-luxury-radial h-full">
                     <div className="flex items-center gap-2 mb-3">
-                        <Info className="w-4 h-4 text-gold-primary" />
+                        <Info className="w-4 h-4 text-amber-500" />
                         <h3 className={cn(TYPOGRAPHY.sectionTitle, "!text-[14px] !mb-0")}>Significance</h3>
                     </div>
-                    <p className={cn(TYPOGRAPHY.subValue, "!text-ink/80 leading-snug !text-[12px] !mt-0")}>
+                    <p className={cn(TYPOGRAPHY.subValue, "!text-amber-800/80 leading-snug !text-[12px] !mt-0")}>
                         Variable significators based on planetary longitudinal degrees within signs.
                     </p>
                     <div className="mt-4 space-y-3">
                         {karakas.slice(0, 4).map(item => (
                             <div key={item.karaka_short} className="flex gap-2.5">
-                                <div className="w-1 h-1 rounded-full bg-gold-primary mt-1.5 shrink-0" />
+                                <div className="w-1 h-1 rounded-full bg-amber-500 mt-1.5 shrink-0" />
                                 <div>
-                                    <p className={cn(TYPOGRAPHY.label, "!text-[10px] font-bold !text-ink !mb-0")}>{item.karaka_full}</p>
-                                    <p className={cn(TYPOGRAPHY.label, "!text-[9px] !text-ink/50 !mb-0 leading-tight")}>{KARAKA_DESCRIPTIONS[item.karaka_short] || ''}</p>
+                                    <p className={cn(TYPOGRAPHY.label, "!text-[10px] font-bold !text-amber-900 !mb-0")}>{item.karaka_full}</p>
+                                    <p className={cn(TYPOGRAPHY.label, "!text-[9px] !text-amber-700/50 !mb-0 leading-tight")}>{KARAKA_DESCRIPTIONS[item.karaka_short] || ''}</p>
                                 </div>
                             </div>
                         ))}
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-gold-primary/10">
+                    <div className="mt-6 pt-4 border-t border-amber-200/60">
                         <div className="flex items-center gap-2 mb-1.5">
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                            <h4 className={cn(TYPOGRAPHY.label, "!text-[11px] font-bold !text-ink !mb-0")}>Standard Calculation</h4>
+                            <h4 className={cn(TYPOGRAPHY.label, "!text-[11px] font-bold !text-amber-900 !mb-0")}>Standard Calculation</h4>
                         </div>
-                        <p className={cn(TYPOGRAPHY.label, "!text-[9px] !text-ink/50 !mb-0")}>
+                        <p className={cn(TYPOGRAPHY.label, "!text-[9px] !text-amber-700/50 !mb-0")}>
                             Using the 7-Karaka system (excluding Rahu/Ketu) as per BPHS guidelines for Lahiri.
                         </p>
                     </div>

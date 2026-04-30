@@ -44,9 +44,9 @@ const PLANET_ORDER: Record<string, number> = {
     'Saturn': 7, 'Sa': 7,
     'Rahu': 8, 'Ra': 8,
     'Ketu': 9, 'Ke': 9,
-    'Pluto': 10, 'Pl': 10,
-    'Uranus': 11, 'Ur': 11,
-    'Neptune': 12, 'Ne': 12,
+    'Uranus': 10, 'Ur': 10,
+    'Neptune': 11, 'Ne': 11,
+    'Pluto': 12, 'Pl': 12,
 };
 
 /**

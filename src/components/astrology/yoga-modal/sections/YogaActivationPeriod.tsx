@@ -19,9 +19,9 @@ export const YogaActivationPeriod = memo(function YogaActivationPeriod({ data }:
     ].filter(Boolean) as { label: string; suffix?: string; value: string; termKey?: string }[];
 
     return (
-        <div className="prem-card p-5">
-            <h3 className="font-serif font-bold text-ink mb-5 flex items-center gap-2 text-[14px] uppercase tracking-wider">
-                <Zap className="w-4 h-4 text-gold-primary" /> Activation Timeline
+        <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-5">
+            <h3 className="font-serif font-bold text-amber-900 mb-5 flex items-center gap-2 text-[14px] uppercase tracking-wider">
+                <Zap className="w-4 h-4 text-amber-500" /> Activation Timeline
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -29,9 +29,9 @@ export const YogaActivationPeriod = memo(function YogaActivationPeriod({ data }:
                 {timelineItems.length > 0 && (
                     <div className="space-y-4">
                         {timelineItems.map((item, i) => (
-                            <div key={i} className="relative pl-5 border-l-2 border-gold-primary/20">
-                                <div className="absolute w-2.5 h-2.5 bg-gold-primary rounded-full -left-[6px] top-1 border-2 border-surface-warm" style={{ opacity: 1 - i * 0.2 }} />
-                                <h4 className="text-[10px] font-bold text-ink opacity-60 uppercase mb-1">
+                            <div key={i} className="relative pl-5 border-l-2 border-amber-200/60">
+                                <div className="absolute w-2.5 h-2.5 bg-amber-500 rounded-full -left-[6px] top-1 border-2 border-surface-warm" style={{ opacity: 1 - i * 0.2 }} />
+                                <h4 className="text-[10px] font-bold text-amber-900 opacity-60 uppercase mb-1">
                                     {item.termKey ? (
                                         <><KnowledgeTooltip term={item.termKey} unstyled>{item.label}</KnowledgeTooltip>{item.suffix}</>
                                     ) : (
@@ -47,8 +47,8 @@ export const YogaActivationPeriod = memo(function YogaActivationPeriod({ data }:
                 {/* Remedial Timing */}
                 {data.remedialTiming && (
                     <div className="p-4 bg-copper-900/5 rounded-xl border border-copper-900/10">
-                        <h4 className="text-[12px] font-serif font-bold text-ink mb-2">Golden Timing</h4>
-                        <p className="text-[11px] text-ink leading-relaxed italic opacity-80">
+                        <h4 className="text-[12px] font-serif font-bold text-amber-900 mb-2">Golden Timing</h4>
+                        <p className="text-[11px] text-amber-900 leading-relaxed italic opacity-80">
                             &ldquo;{data.remedialTiming}&rdquo;
                         </p>
                     </div>

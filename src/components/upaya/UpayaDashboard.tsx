@@ -75,9 +75,9 @@ export default function UpayaDashboard({ data, className, compact }: UpayaDashbo
                         ))}
                     </div>
                 ) : (
-                    <div className={cn(compact ? "p-6" : "p-12", "text-center bg-surface-warm/30 rounded-2xl border-2 border-dashed border-gold-primary/15")}>
-                        <Sparkles className="w-12 h-12 text-gold-primary/30 mx-auto mb-4" />
-                        <p className="text-[14px] font-medium text-ink/45 italic">No specific gemstones required for current karma.</p>
+                    <div className={cn(compact ? "p-6" : "p-12", "text-center bg-amber-50/60 rounded-2xl border-2 border-dashed border-amber-200/60")}>
+                        <Sparkles className="w-12 h-12 text-amber-500/30 mx-auto mb-4" />
+                        <p className="text-[14px] font-medium text-amber-700/45 italic">No specific gemstones required for current karma.</p>
                     </div>
                 )}
             </div>

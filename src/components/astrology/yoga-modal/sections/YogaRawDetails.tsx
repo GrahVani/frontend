@@ -30,7 +30,7 @@ const JsonNode = ({ label, value, defaultOpen = false }: { label: string; value:
                 <span className="text-[11px] font-bold text-zinc-500 capitalize w-40 shrink-0">
                     {label.replace(/_/g, ' ')}
                 </span>
-                <span className="text-[12px] font-medium text-ink break-words">
+                <span className="text-[12px] font-medium text-amber-900 break-words">
                     {formatValue(value)}
                 </span>
             </div>
@@ -59,11 +59,11 @@ const JsonNode = ({ label, value, defaultOpen = false }: { label: string; value:
                 className="flex items-center gap-1.5 w-full text-left focus:outline-none group"
             >
                 {isOpen ? (
-                    <ChevronDown className="w-3.5 h-3.5 text-gold-primary transition-transform" />
+                    <ChevronDown className="w-3.5 h-3.5 text-amber-500 transition-transform" />
                 ) : (
-                    <ChevronRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-gold-primary transition-transform" />
+                    <ChevronRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-amber-500 transition-transform" />
                 )}
-                <span className="text-[11px] font-bold text-zinc-700 capitalize group-hover:text-gold-dark transition-colors">
+                <span className="text-[11px] font-bold text-zinc-700 capitalize group-hover:text-amber-700 transition-colors">
                     {label.replace(/_/g, ' ')}
                 </span>
                 <span className="text-[9px] text-zinc-400 ml-auto tracking-wider">
@@ -72,7 +72,7 @@ const JsonNode = ({ label, value, defaultOpen = false }: { label: string; value:
             </button>
 
             {isOpen && (
-                <div className="mt-2 ml-4 pl-3 border-l-2 border-gold-primary/10 space-y-1 animation-slide-down">
+                <div className="mt-2 ml-4 pl-3 border-l-2 border-amber-200/60 space-y-1 animation-slide-down">
                     {keys.map((k) => (
                         <JsonNode key={k} label={isArray ? `[${k}]` : k} value={(value as any)[k]} />
                     ))}
@@ -86,9 +86,9 @@ export const YogaRawDetails = memo(function YogaRawDetails({ data }: YogaRawDeta
     if (!data || Object.keys(data).length === 0) return null;
 
     return (
-        <div className="prem-card p-5">
-            <h3 className="font-serif font-bold text-ink mb-2 flex items-center gap-2 text-[14px] uppercase tracking-wider">
-                <Database className="w-4 h-4 text-gold-primary" /> Advanced Data
+        <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-5">
+            <h3 className="font-serif font-bold text-amber-900 mb-2 flex items-center gap-2 text-[14px] uppercase tracking-wider">
+                <Database className="w-4 h-4 text-amber-500" /> Advanced Data
             </h3>
             <p className="text-[11px] text-zinc-500 mb-4 leading-relaxed max-w-lg">
                 Raw astrological variables, parameters, and metadata utilized for this analysis. 

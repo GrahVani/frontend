@@ -99,11 +99,11 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
                         {/* Header: Dense */}
                         <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center border border-gold-primary/10">
+                                <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center border border-amber-200/60">
                                     {styles.icon}
                                 </div>
                                 <div>
-                                    <h3 className="text-[14px] font-black tracking-tight text-ink">{dosha.dosha_name}</h3>
+                                    <h3 className="text-[14px] font-black tracking-tight text-amber-900">{dosha.dosha_name}</h3>
                                     <span className={cn("text-[8px] font-black tracking-widest leading-none mt-1", styles.badge.split(' ').slice(1).join(' '))}>
                                         {dosha.severity} Intensity
                                     </span>
@@ -111,13 +111,13 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
                             </div>
                         </div>
 
-                        <p className="text-[10px] leading-relaxed text-ink/60 mb-3 ml-1 line-clamp-2">{dosha.description}</p>
+                        <p className="text-[10px] leading-relaxed text-amber-700/60 mb-3 ml-1 line-clamp-2">{dosha.description}</p>
 
                         <div className="space-y-3">
                             {/* Impact Areas: Tighter row */}
                             <div className="flex flex-wrap gap-1">
                                 {dosha.impact_areas.map((area, i) => (
-                                    <span key={i} className="text-[8px] px-1.5 py-0.5 bg-ink/5 border border-ink/5 rounded-md font-bold tracking-tight text-ink/70">
+                                    <span key={i} className="text-[8px] px-1.5 py-0.5 bg-ink/5 border border-ink/5 rounded-md font-bold tracking-tight text-amber-800/70">
                                         {area}
                                     </span>
                                 ))}
@@ -132,7 +132,7 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
                                     </div>
                                     <ul className="space-y-1">
                                         {analysis.cancellation_factors?.map((factor, i) => (
-                                            <li key={i} className="text-[9px] flex items-start gap-1.5 text-ink/70 font-medium">
+                                            <li key={i} className="text-[9px] flex items-start gap-1.5 text-amber-800/70 font-medium">
                                                 <span className="text-indigo-400 mt-0.5">•</span>
                                                 {factor}
                                             </li>
@@ -150,16 +150,16 @@ const DoshaRemedyGrid: React.FC<DoshaRemedyGridProps> = ({ doshaRemedies, doshaA
                             {/* Prescribed Actions: 2-Column High Density */}
                             <div className="pt-2">
                                 <div className="flex items-center gap-1.5 mb-2 opacity-60">
-                                    <HandHeart className="w-2.5 h-2.5 text-ink" />
-                                    <span className="text-[8px] font-black tracking-widest text-ink">Actionable Remedies</span>
+                                    <HandHeart className="w-2.5 h-2.5 text-amber-900" />
+                                    <span className="text-[8px] font-black tracking-widest text-amber-900">Actionable Remedies</span>
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                                     {dosha.remedies.map((remedy, i) => (
-                                        <div key={i} className="flex items-center gap-2 px-2 py-1.5 bg-white shadow-sm rounded-lg border border-gold-primary/5 hover:border-gold-primary/20 transition-all group/item">
+                                        <div key={i} className="flex items-center gap-2 px-2 py-1.5 bg-white shadow-sm rounded-lg border border-amber-100 hover:border-amber-300/60 transition-all group/item">
                                             <div className="w-5 h-5 rounded-md bg-ink/5 flex items-center justify-center shrink-0">
                                                 {getRemedyIcon(remedy)}
                                             </div>
-                                            <span className="text-[10px] font-semibold text-ink/80 leading-tight line-clamp-2">{remedy}</span>
+                                            <span className="text-[10px] font-semibold text-amber-800/80 leading-tight line-clamp-2">{remedy}</span>
                                         </div>
                                     ))}
                                 </div>

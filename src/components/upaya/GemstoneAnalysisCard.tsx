@@ -63,14 +63,14 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
             className={cn(
                 "group relative border rounded-2xl transition-all duration-300 overflow-hidden flex flex-col",
                 isRecommended
-                    ? "bg-white border-gold-primary/20 hover:border-gold-primary/50 shadow-sm hover:shadow-md"
+                    ? "bg-white border-amber-200/60 hover:border-amber-300 shadow-sm hover:shadow-md"
                     : "bg-white border-red-200/60 hover:border-red-300 shadow-sm hover:shadow-md"
             )}
         >
             {/* ── Header ── */}
             <div className={cn(
                 "px-4 py-3 flex items-center justify-between border-b",
-                isRecommended ? "bg-surface-warm/20 border-gold-primary/20" : "bg-red-50/30 border-red-100/40"
+                isRecommended ? "bg-amber-50/30 border-amber-200/60" : "bg-red-50/30 border-red-100/40"
             )}>
                 <div className="flex items-center gap-2.5 min-w-0">
                     {/* Gem dot */}
@@ -80,11 +80,11 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
                     </div>
                     <div className="min-w-0">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                            <h3 className="font-serif font-bold text-[14px] leading-tight text-ink">
+                            <h3 className="font-bold text-[14px] leading-tight text-amber-900">
                                 {gem_data.stone}
                             </h3>
                             {priority && (
-                                <span className="inline-flex items-center justify-center w-5 h-5 text-[10px] font-black rounded-full bg-gold-primary text-white shadow-sm shrink-0 ml-1">
+                                <span className="inline-flex items-center justify-center w-5 h-5 text-[10px] font-black rounded-full bg-amber-500 text-white shadow-sm shrink-0 ml-1">
                                     P{priority}
                                 </span>
                             )}
@@ -119,14 +119,14 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
                 <div className={cn(
                     "p-2.5 rounded-xl border",
                     isRecommended
-                        ? "bg-surface-warm/30 border-gold-primary/15"
+                        ? "bg-amber-50/30 border-amber-200/60"
                         : "bg-red-50/20 border-red-100/30"
                 )}>
                     <div className="flex items-center gap-1.5 mb-1.5">
                         <Info className={cn("w-3 h-3 shrink-0",
-                            isRecommended ? "text-gold-dark" : "text-red-400"
+                            isRecommended ? "text-amber-700" : "text-red-400"
                         )} />
-                        <span className="text-[8px] font-bold uppercase tracking-[0.12em] text-ink/45">
+                        <span className="text-[8px] font-bold uppercase tracking-[0.12em] text-amber-700/55">
                             Rationale
                         </span>
                     </div>
@@ -137,25 +137,25 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
 
                 {/* Metal & Finger + Placement */}
                 <div className="grid grid-cols-2 gap-2 mt-auto">
-                    <div className="p-2 rounded-xl bg-white border border-gold-primary/20">
+                    <div className="p-2 rounded-xl bg-white border border-amber-200/60">
                         <div className="flex items-center gap-1 mb-1">
-                            <Hand className="w-2.5 h-2.5 text-gold-primary" />
-                            <p className="text-[8px] font-bold uppercase tracking-[0.1em] text-ink/45">
+                            <Hand className="w-2.5 h-2.5 text-amber-500" />
+                            <p className="text-[8px] font-bold uppercase tracking-[0.1em] text-amber-700/55">
                                 Metal & finger
                             </p>
                         </div>
-                        <p className="text-[11px] font-semibold text-ink">
+                        <p className="text-[11px] font-semibold text-amber-900">
                             {gem_data.metal} — {gem_data.finger}
                         </p>
                     </div>
-                    <div className="p-2 rounded-xl bg-white border border-gold-primary/20">
+                    <div className="p-2 rounded-xl bg-white border border-amber-200/60">
                         <div className="flex items-center gap-1 mb-1">
-                            <Home className="w-2.5 h-2.5 text-gold-primary" />
-                            <p className="text-[8px] font-bold uppercase tracking-[0.1em] text-ink/45">
+                            <Home className="w-2.5 h-2.5 text-amber-500" />
+                            <p className="text-[8px] font-bold uppercase tracking-[0.1em] text-amber-700/55">
                                 Placement
                             </p>
                         </div>
-                        <p className="text-[11px] font-semibold text-ink">
+                        <p className="text-[11px] font-semibold text-amber-900">
                             {position.sign} in {position.house}{getOrdinal(position.house)}
                         </p>
                     </div>
@@ -166,7 +166,7 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
             {(rulerships.length > 0 || dasha_status.is_active) && (
                 <div className={cn(
                     "px-4 py-2 flex flex-wrap items-center gap-1.5 border-t",
-                    isRecommended ? "bg-surface-warm/10 border-gold-primary/15" : "bg-red-50/10 border-red-100/30"
+                    isRecommended ? "bg-amber-50/20 border-amber-200/60" : "bg-red-50/10 border-red-100/30"
                 )}>
                     {rulerships.length > 0 && (
                         <div className="flex items-center gap-1 px-2 py-0.5 bg-sky-50 rounded-lg border border-sky-100/60">

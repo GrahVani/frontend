@@ -92,21 +92,21 @@ function Section({
     icon?: React.ElementType;
 }) {
     return (
-        <div className="border-b border-[#E6D5B8]/20 last:border-b-0">
+        <div className="border-b border-amber-200/60 last:border-b-0">
             <button
                 onClick={onToggle}
-                className="w-full flex items-center justify-between px-4 py-3 hover:bg-surface-warm/30 transition-colors"
+                className="w-full flex items-center justify-between px-4 py-3 hover:bg-amber-50/30 transition-colors"
             >
                 <div className="flex items-center gap-2">
-                    {Icon && <Icon className="w-4 h-4 text-gold-dark" />}
-                    <span className="text-[12px] font-bold text-ink">{title}</span>
+                    {Icon && <Icon className="w-4 h-4 text-amber-700" />}
+                    <span className="text-[12px] font-bold text-amber-900">{title}</span>
                     {badge && (
                         <span className="text-[9px] px-1.5 py-0.5 bg-primary/10 text-primary rounded-full">
                             {badge}
                         </span>
                     )}
                 </div>
-                {isOpen ? <ChevronUp className="w-4 h-4 text-ink/40" /> : <ChevronDown className="w-4 h-4 text-ink/40" />}
+                {isOpen ? <ChevronUp className="w-4 h-4 text-amber-900/40" /> : <ChevronDown className="w-4 h-4 text-amber-900/40" />}
             </button>
             {isOpen && (
                 <div className="px-4 pb-4">
@@ -140,21 +140,21 @@ function NumberStepper({
 }) {
     return (
         <div className="flex items-center justify-between">
-            <span className="text-[11px] text-ink/60">{label}</span>
+            <span className="text-[11px] text-amber-900/60">{label}</span>
             <div className="flex items-center gap-1.5">
                 <button
                     onClick={() => onChange(Math.max(min, value - step))}
-                    className="w-7 h-7 rounded-lg bg-white border border-[#E6D5B8]/50 flex items-center justify-center text-ink/60 hover:border-primary active:scale-95 transition-all"
+                    className="w-7 h-7 rounded-lg bg-white border border-amber-200/60 flex items-center justify-center text-amber-900/60 hover:border-primary active:scale-95 transition-all"
                 >
                     <Minus className="w-3 h-3" />
                 </button>
                 <div className="w-16 text-center">
                     <span className="text-[13px] font-bold text-primary">{value}</span>
-                    {unit && <span className="text-[9px] text-ink/40 ml-0.5">{unit}</span>}
+                    {unit && <span className="text-[9px] text-amber-900/40 ml-0.5">{unit}</span>}
                 </div>
                 <button
                     onClick={() => onChange(Math.min(max, value + step))}
-                    className="w-7 h-7 rounded-lg bg-white border border-[#E6D5B8]/50 flex items-center justify-center text-ink/60 hover:border-primary active:scale-95 transition-all"
+                    className="w-7 h-7 rounded-lg bg-white border border-amber-200/60 flex items-center justify-center text-amber-900/60 hover:border-primary active:scale-95 transition-all"
                 >
                     <Plus className="w-3 h-3" />
                 </button>
@@ -181,8 +181,8 @@ function ToggleSwitch({
     return (
         <label className="flex items-center justify-between cursor-pointer group">
             <div className="flex items-center gap-2">
-                {Icon && <Icon className="w-3.5 h-3.5 text-ink/40" />}
-                <span className="text-[11px] text-ink/70 group-hover:text-ink transition-colors">{label}</span>
+                {Icon && <Icon className="w-3.5 h-3.5 text-amber-900/40" />}
+                <span className="text-[11px] text-amber-900/70 group-hover:text-amber-900 transition-colors">{label}</span>
             </div>
             <button
                 onClick={onChange}
@@ -271,7 +271,7 @@ function SizePresets({
                         "py-2 rounded-lg text-center transition-all active:scale-95",
                         dimensions.width === preset.w && dimensions.height === preset.h
                             ? "bg-primary text-white"
-                            : "bg-surface-warm text-ink/60 hover:bg-surface-warm/80"
+                            : "bg-amber-50 text-amber-900/60 hover:bg-amber-50/80"
                     )}
                     title={preset.desc}
                 >
@@ -393,12 +393,12 @@ export default function CompactWidgetPanel({
                     >
                         <div className="space-y-4">
                             {/* Chart Style & Theme */}
-                            <div className="bg-surface-warm/30 rounded-xl p-3 border border-[#E6D5B8]/20 space-y-3">
+                            <div className="bg-amber-50/30 rounded-xl p-3 border border-amber-200/60 space-y-3">
                                 <div>
-                                    <label className="text-[10px] font-bold text-gold-dark mb-2 block uppercase tracking-wider">
+                                    <label className="text-[10px] font-bold text-amber-700 mb-2 block uppercase tracking-wider">
                                         Chart System
                                     </label>
-                                    <div className="flex gap-1.5 p-1 bg-white rounded-xl border border-[#E6D5B8]/20">
+                                    <div className="flex gap-1.5 p-1 bg-white rounded-xl border border-amber-200/60">
                                         {['North Indian', 'South Indian'].map((style) => (
                                             <button
                                                 key={style}
@@ -407,7 +407,7 @@ export default function CompactWidgetPanel({
                                                     "flex-1 py-1.5 rounded-lg text-[11px] font-bold transition-all",
                                                     (theme.chartStyle || 'North Indian') === style
                                                         ? "bg-primary text-white shadow-md scale-[1.02]"
-                                                        : "text-ink/60 hover:bg-surface-warm"
+                                                        : "text-amber-900/60 hover:bg-amber-50"
                                                 )}
                                             >
                                                 {style}
@@ -417,7 +417,7 @@ export default function CompactWidgetPanel({
                                 </div>
 
                                 <div>
-                                    <label className="text-[10px] font-bold text-gold-dark mb-2 block uppercase tracking-wider">
+                                    <label className="text-[10px] font-bold text-amber-700 mb-2 block uppercase tracking-wider">
                                         Color Theme
                                     </label>
                                     <div className="grid grid-cols-5 gap-1.5">
@@ -435,7 +435,7 @@ export default function CompactWidgetPanel({
                                                     "w-full aspect-square rounded-lg border-2 flex items-center justify-center transition-all",
                                                     (theme.colorTheme || 'classic') === t.key
                                                         ? "border-primary scale-110 shadow-sm"
-                                                        : "border-transparent hover:border-[#E6D5B8]"
+                                                        : "border-transparent hover:border-amber-200/60"
                                                 )}
                                                 title={t.key.charAt(0).toUpperCase() + t.key.slice(1)}
                                             >
@@ -447,8 +447,8 @@ export default function CompactWidgetPanel({
                             </div>
 
                             {/* Planet Labels */}
-                            <div className="bg-surface-warm/30 rounded-xl p-3 border border-[#E6D5B8]/20">
-                                <label className="text-[10px] font-bold text-gold-dark mb-2 block uppercase tracking-wider">
+                            <div className="bg-amber-50/30 rounded-xl p-3 border border-amber-200/60">
+                                <label className="text-[10px] font-bold text-amber-700 mb-2 block uppercase tracking-wider">
                                     Planet Labels
                                 </label>
                                 <div className="grid grid-cols-3 gap-2">
@@ -464,13 +464,13 @@ export default function CompactWidgetPanel({
                                                 "py-2.5 px-1 rounded-xl border-2 transition-all text-center active:scale-95",
                                                 theme.planetDisplayMode === mode.key
                                                     ? "bg-primary/10 border-primary text-primary"
-                                                    : "bg-white border-transparent text-ink/60 hover:border-[#E6D5B8]"
+                                                    : "bg-white border-transparent text-amber-900/60 hover:border-amber-200/60"
                                             )}
                                         >
                                             <span className="text-[10px] font-bold block">{mode.label}</span>
                                             <span className={cn(
                                                 "text-[11px] mt-1 block",
-                                                theme.planetDisplayMode === mode.key ? "text-primary" : "text-ink/40"
+                                                theme.planetDisplayMode === mode.key ? "text-primary" : "text-amber-900/40"
                                             )}>
                                                 {mode.example}
                                             </span>
@@ -489,7 +489,7 @@ export default function CompactWidgetPanel({
                             />
 
                             {/* Degrees */}
-                            <div className="bg-surface-warm/30 rounded-xl p-3 border border-[#E6D5B8]/20">
+                            <div className="bg-amber-50/30 rounded-xl p-3 border border-amber-200/60">
                                 <ToggleSwitch
                                     label="Show Planet Degrees"
                                     checked={theme.showDegrees !== false}
@@ -529,7 +529,7 @@ export default function CompactWidgetPanel({
 
                                 {theme.showGridLines !== false && (
                                     <div className="flex items-center justify-between pl-6">
-                                        <span className="text-[10px] text-ink/50">Grid Color</span>
+                                        <span className="text-[10px] text-amber-900/50">Grid Color</span>
                                         <input
                                             type="color"
                                             value={theme.gridLineColor || '#D08C60'}
@@ -559,7 +559,7 @@ export default function CompactWidgetPanel({
                                                     "flex-1 py-1.5 rounded-lg border text-[12px] font-bold transition-all",
                                                     theme.retrogradeStyle === style
                                                         ? "bg-red-500 text-white border-red-500"
-                                                        : "bg-white border-[#E6D5B8]/30 text-ink/60 hover:border-red-300"
+                                                        : "bg-white border-amber-200/60 text-amber-900/60 hover:border-red-300"
                                                 )}
                                             >
                                                 {style === 'circle-R' ? 'Ⓡ' : style}
@@ -571,7 +571,7 @@ export default function CompactWidgetPanel({
 
                             {/* Spacing */}
                             <div>
-                                <label className="text-[10px] text-ink/40 mb-1.5 block">Planet Spacing</label>
+                                <label className="text-[10px] text-amber-900/40 mb-1.5 block">Planet Spacing</label>
                                 <div className="flex gap-1">
                                     {[
                                         { key: 'compact', label: 'Compact', desc: 'Closer' },
@@ -585,7 +585,7 @@ export default function CompactWidgetPanel({
                                                 "flex-1 py-2 rounded-lg border text-center transition-all active:scale-95",
                                                 (theme.planetSpacing || 'normal') === spacing.key
                                                     ? "bg-primary text-white border-primary"
-                                                    : "bg-white border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
+                                                    : "bg-white border-amber-200/60 text-amber-900/60 hover:border-primary/50"
                                             )}
                                             title={spacing.desc}
                                         >
@@ -609,8 +609,8 @@ export default function CompactWidgetPanel({
                         icon={Table2}
                     >
                         <div className="space-y-4">
-                            <div className="bg-surface-warm/30 rounded-xl p-3 border border-[#E6D5B8]/20">
-                                <label className="text-[10px] font-bold text-gold-dark mb-2 block uppercase tracking-wider">
+                            <div className="bg-amber-50/30 rounded-xl p-3 border border-amber-200/60">
+                                <label className="text-[10px] font-bold text-amber-700 mb-2 block uppercase tracking-wider">
                                     Table Style
                                 </label>
                                 <div className="flex gap-1">
@@ -626,7 +626,7 @@ export default function CompactWidgetPanel({
                                                 "flex-1 py-2 rounded-lg border text-center transition-all active:scale-95",
                                                 (theme.tableStyle || 'comfortable') === style.key
                                                     ? "bg-primary text-white border-primary"
-                                                    : "bg-white border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
+                                                    : "bg-white border-amber-200/60 text-amber-900/60 hover:border-primary/50"
                                             )}
                                         >
                                             <span className="text-[10px] font-bold">{style.label}</span>
@@ -680,8 +680,8 @@ export default function CompactWidgetPanel({
                         icon={FileText}
                     >
                         <div className="space-y-4">
-                            <div className="bg-surface-warm/30 rounded-xl p-3 border border-[#E6D5B8]/20">
-                                <label className="text-[10px] font-bold text-gold-dark mb-2 block uppercase tracking-wider">
+                            <div className="bg-amber-50/30 rounded-xl p-3 border border-amber-200/60">
+                                <label className="text-[10px] font-bold text-amber-700 mb-2 block uppercase tracking-wider">
                                     Card Style
                                 </label>
                                 <div className="flex gap-1">
@@ -697,7 +697,7 @@ export default function CompactWidgetPanel({
                                                 "flex-1 py-2 rounded-lg border text-center transition-all active:scale-95",
                                                 (theme.cardStyle || 'elevated') === style.key
                                                     ? "bg-primary text-white border-primary"
-                                                    : "bg-white border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
+                                                    : "bg-white border-amber-200/60 text-amber-900/60 hover:border-primary/50"
                                             )}
                                         >
                                             <span className="text-[10px] font-bold">{style.label}</span>
@@ -706,8 +706,8 @@ export default function CompactWidgetPanel({
                                 </div>
                             </div>
 
-                            <div className="bg-surface-warm/30 rounded-xl p-3 border border-[#E6D5B8]/20">
-                                <label className="text-[10px] font-bold text-gold-dark mb-2 block uppercase tracking-wider">
+                            <div className="bg-amber-50/30 rounded-xl p-3 border border-amber-200/60">
+                                <label className="text-[10px] font-bold text-amber-700 mb-2 block uppercase tracking-wider">
                                     Content Layout
                                 </label>
                                 <div className="flex gap-1">
@@ -723,7 +723,7 @@ export default function CompactWidgetPanel({
                                                 "flex-1 py-2 rounded-lg border text-center transition-all active:scale-95",
                                                 (theme.contentLayout || 'list') === layout.key
                                                     ? "bg-primary text-white border-primary"
-                                                    : "bg-white border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
+                                                    : "bg-white border-amber-200/60 text-amber-900/60 hover:border-primary/50"
                                             )}
                                         >
                                             <span className="text-[10px] font-bold">{layout.label}</span>
@@ -777,8 +777,8 @@ export default function CompactWidgetPanel({
                                 unit="px"
                             />
 
-                            <div className="bg-surface-warm/30 rounded-xl p-3 border border-[#E6D5B8]/20">
-                                <label className="text-[10px] font-bold text-gold-dark mb-2 block uppercase tracking-wider">
+                            <div className="bg-amber-50/30 rounded-xl p-3 border border-amber-200/60">
+                                <label className="text-[10px] font-bold text-amber-700 mb-2 block uppercase tracking-wider">
                                     Background Style
                                 </label>
                                 <div className="flex gap-1">
@@ -794,7 +794,7 @@ export default function CompactWidgetPanel({
                                                 "flex-1 py-2 rounded-lg border text-center transition-all active:scale-95",
                                                 (theme.backgroundStyle || 'solid') === style.key
                                                     ? "bg-primary text-white border-primary"
-                                                    : "bg-white border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
+                                                    : "bg-white border-amber-200/60 text-amber-900/60 hover:border-primary/50"
                                             )}
                                         >
                                             <span className="text-[10px] font-bold">{style.label}</span>
@@ -825,7 +825,7 @@ export default function CompactWidgetPanel({
             {/* Compact Panel */}
             <div className="fixed right-0 top-0 bottom-0 w-80 bg-white shadow-2xl z-[75] animate-in slide-in-from-right duration-200 flex flex-col">
                 {/* Header with Category Badge */}
-                <div className="px-4 py-3 border-b border-[#E6D5B8]/30 bg-surface-warm flex items-center justify-between shrink-0">
+                <div className="px-4 py-3 border-b border-amber-200/60 bg-amber-50 flex items-center justify-between shrink-0">
                     <div className="min-w-0 flex items-center gap-2">
                         <div className={cn(
                             "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
@@ -835,9 +835,9 @@ export default function CompactWidgetPanel({
                             <categoryConfig.icon className="w-4 h-4" />
                         </div>
                         <div className="min-w-0">
-                            <h3 className="text-[14px] font-black text-ink truncate">{name}</h3>
+                            <h3 className="text-[14px] font-black text-amber-900 truncate">{name}</h3>
                             <div className="flex items-center gap-1.5">
-                                <p className="text-[10px] text-ink/40">{dimensions.width}×{dimensions.height}px</p>
+                                <p className="text-[10px] text-amber-900/40">{dimensions.width}×{dimensions.height}px</p>
                                 <span className={cn(
                                     "text-[8px] px-1 py-0.5 rounded font-bold uppercase",
                                     categoryConfig.bgColor,
@@ -852,7 +852,7 @@ export default function CompactWidgetPanel({
                         {hasChanges && (
                             <button
                                 onClick={resetToOriginal}
-                                className="p-2 hover:bg-amber-100 rounded-lg text-ink/50 hover:text-amber-600"
+                                className="p-2 hover:bg-amber-100 rounded-lg text-amber-900/50 hover:text-amber-600"
                                 title="Reset changes"
                             >
                                 <Undo className="w-4 h-4" />
@@ -860,21 +860,21 @@ export default function CompactWidgetPanel({
                         )}
                         <button
                             onClick={onDuplicate}
-                            className="p-2 hover:bg-gold-primary/20 rounded-lg text-ink/50 hover:text-ink"
+                            className="p-2 hover:bg-amber-50 rounded-lg text-amber-900/50 hover:text-amber-900"
                             title="Duplicate"
                         >
                             <Copy className="w-4 h-4" />
                         </button>
                         <button
                             onClick={onRemove}
-                            className="p-2 hover:bg-red-100 rounded-lg text-ink/50 hover:text-red-600"
+                            className="p-2 hover:bg-red-100 rounded-lg text-amber-900/50 hover:text-red-600"
                             title="Remove"
                         >
                             <Trash2 className="w-4 h-4" />
                         </button>
                         <button
                             onClick={onClose}
-                            className="p-2 hover:bg-gold-primary/20 rounded-lg text-ink/50 hover:text-ink"
+                            className="p-2 hover:bg-amber-50 rounded-lg text-amber-900/50 hover:text-amber-900"
                         >
                             <X className="w-4 h-4" />
                         </button>
@@ -923,7 +923,7 @@ export default function CompactWidgetPanel({
                             {onResetToDefaults && (
                                 <button
                                     onClick={onResetToDefaults}
-                                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border border-gold-primary/30 bg-gold-primary/5 text-primary hover:bg-gold-primary/15 hover:border-gold-primary/50 transition-all active:scale-95"
+                                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border border-amber-200/60 bg-amber-50/50 text-primary hover:bg-amber-50 hover:border-amber-200/300 transition-all active:scale-95"
                                 >
                                     <RotateCcw className="w-3.5 h-3.5" />
                                     <span className="text-[11px] font-semibold">Reset to Defaults</span>
@@ -950,13 +950,13 @@ export default function CompactWidgetPanel({
                             {showHeader && (
                                 <>
                                     <div>
-                                        <label className="text-[10px] text-ink/40 mb-1.5 block">Widget Title</label>
+                                        <label className="text-[10px] text-amber-900/40 mb-1.5 block">Widget Title</label>
                                         <input
                                             type="text"
                                             value={localTitle}
                                             onChange={(e) => updateTitle(e.target.value)}
                                             placeholder={name}
-                                            className="w-full px-3 py-2 bg-white border border-[#E6D5B8]/30 rounded-lg text-[12px] text-ink placeholder:text-ink/30 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all"
+                                            className="w-full px-3 py-2 bg-white border border-amber-200/60 rounded-lg text-[12px] text-amber-900 placeholder:text-amber-900/30 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all"
                                         />
                                     </div>
 
@@ -986,18 +986,18 @@ export default function CompactWidgetPanel({
                                             onChange={() => updateTheme({ autoScale: !(theme.autoScale !== false) })}
                                             icon={ZoomIn}
                                         />
-                                        <p className="text-[9px] text-ink/40 mt-2 pl-6">
+                                        <p className="text-[9px] text-amber-900/40 mt-2 pl-6">
                                             Automatically adjusts text size when widget is resized
                                         </p>
                                     </div>
 
                                     {theme.autoScale === false && (
                                         <div>
-                                            <label className="text-[10px] text-ink/40 mb-1.5 block">Manual Content Scale</label>
+                                            <label className="text-[10px] text-amber-900/40 mb-1.5 block">Manual Content Scale</label>
                                             <div className="flex items-center gap-2">
                                                 <button
                                                     onClick={() => updateTheme({ contentTextScale: Math.max(0.7, (theme.contentTextScale || 1) - 0.1) })}
-                                                    className="w-8 h-8 rounded-lg bg-white border border-[#E6D5B8]/50 flex items-center justify-center text-ink/60 hover:border-primary active:scale-95 transition-all"
+                                                    className="w-8 h-8 rounded-lg bg-white border border-amber-200/60 flex items-center justify-center text-amber-900/60 hover:border-primary active:scale-95 transition-all"
                                                 >
                                                     <Minus className="w-3 h-3" />
                                                 </button>
@@ -1012,7 +1012,7 @@ export default function CompactWidgetPanel({
                                                 </span>
                                                 <button
                                                     onClick={() => updateTheme({ contentTextScale: Math.min(1.5, (theme.contentTextScale || 1) + 0.1) })}
-                                                    className="w-8 h-8 rounded-lg bg-white border border-[#E6D5B8]/50 flex items-center justify-center text-ink/60 hover:border-primary active:scale-95 transition-all"
+                                                    className="w-8 h-8 rounded-lg bg-white border border-amber-200/60 flex items-center justify-center text-amber-900/60 hover:border-primary active:scale-95 transition-all"
                                                 >
                                                     <Plus className="w-3 h-3" />
                                                 </button>
@@ -1021,7 +1021,7 @@ export default function CompactWidgetPanel({
                                     )}
 
                                     <div>
-                                        <label className="text-[10px] text-ink/40 mb-1.5 block">Title Alignment</label>
+                                        <label className="text-[10px] text-amber-900/40 mb-1.5 block">Title Alignment</label>
                                         <div className="flex gap-1">
                                             {[
                                                 { icon: AlignLeft, align: 'left', label: 'Left' },
@@ -1035,7 +1035,7 @@ export default function CompactWidgetPanel({
                                                         "flex-1 py-2 rounded-lg border transition-all flex items-center justify-center gap-1.5 active:scale-95",
                                                         theme.titleAlign === align
                                                             ? "bg-primary text-white border-primary"
-                                                            : "bg-white border-[#E6D5B8]/30 text-ink/50 hover:border-primary/50"
+                                                            : "bg-white border-amber-200/60 text-amber-900/50 hover:border-primary/50"
                                                     )}
                                                 >
                                                     <Icon className="w-3.5 h-3.5" />
@@ -1073,7 +1073,7 @@ export default function CompactWidgetPanel({
                                             "h-10 rounded-xl border-2 transition-all active:scale-95",
                                             theme.backgroundColor === presetTheme.backgroundColor
                                                 ? "border-primary ring-1 ring-primary/30"
-                                                : "border-transparent hover:border-[#E6D5B8]"
+                                                : "border-transparent hover:border-amber-200/60"
                                         )}
                                         style={{ backgroundColor: presetTheme.backgroundColor }}
                                         title={key}
@@ -1092,9 +1092,9 @@ export default function CompactWidgetPanel({
                                     { key: 'borderColor', label: 'Border' },
                                 ].map((color) => (
                                     <div key={color.key} className="flex items-center justify-between">
-                                        <span className="text-[11px] text-ink/60">{color.label}</span>
+                                        <span className="text-[11px] text-amber-900/60">{color.label}</span>
                                         <div className="flex items-center gap-2">
-                                            <span className="text-[9px] font-mono text-ink/30">
+                                            <span className="text-[9px] font-mono text-amber-900/30">
                                                 {(theme as any)[color.key]?.slice(0, 7) || '#000000'}
                                             </span>
                                             <input
@@ -1145,7 +1145,7 @@ export default function CompactWidgetPanel({
                             />
 
                             <div>
-                                <label className="text-[10px] text-ink/40 mb-1.5 block">Shadow</label>
+                                <label className="text-[10px] text-amber-900/40 mb-1.5 block">Shadow</label>
                                 <div className="flex gap-1">
                                     {(['none', 'light', 'medium', 'heavy'] as const).map((shadow) => (
                                         <button
@@ -1155,7 +1155,7 @@ export default function CompactWidgetPanel({
                                                 "flex-1 py-1.5 rounded-lg border text-[9px] font-bold capitalize transition-all active:scale-95",
                                                 theme.shadowIntensity === shadow
                                                     ? "bg-primary text-white border-primary"
-                                                    : "bg-white border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
+                                                    : "bg-white border-amber-200/60 text-amber-900/60 hover:border-primary/50"
                                             )}
                                         >
                                             {shadow}
@@ -1168,7 +1168,7 @@ export default function CompactWidgetPanel({
                 </div>
 
                 {/* Footer with Done button */}
-                <div className="p-3 border-t border-[#E6D5B8]/30 bg-surface-warm/50 shrink-0">
+                <div className="p-3 border-t border-amber-200/60 bg-amber-50/50 shrink-0">
                     <button
                         onClick={onClose}
                         className="w-full py-2.5 rounded-xl bg-primary text-white text-[13px] font-bold hover:bg-primary/90 transition-all flex items-center justify-center gap-2 active:scale-95"

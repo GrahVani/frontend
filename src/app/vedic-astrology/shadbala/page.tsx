@@ -33,6 +33,7 @@ import { clientApi } from '@/lib/api';
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { PLANET_COLORS } from '@/design-tokens/colors';
+import { PLANET_SYMBOLS as ASTRO_SYMBOLS } from '@/lib/planet-symbols';
 import DataGrid, { type DataGridColumn } from '@/components/ui/DataGrid';
 import {
     Tooltip,
@@ -223,15 +224,17 @@ export default function ShadbalaPage() {
 
     if (ayanamsa !== 'Lahiri') {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-                <Orbit className="w-12 h-12 text-primary mb-4" />
-                <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] mb-2")}>Shadbala Analysis — Lahiri Only</h2>
-                <p className={cn(TYPOGRAPHY.profileDetail, "max-w-md")}>
-                    Shadbala (Six-fold planetary strength) analysis is currently available exclusively with the <strong>Lahiri Ayanamsa</strong>.
-                </p>
-                <Link href="/vedic-astrology/overview" className="mt-6 text-[14px] font-medium text-gold-dark hover:text-gold-primary transition-colors flex items-center gap-1">
-                    <ArrowLeft className="w-4 h-4" /> Back to Kundali
-                </Link>
+            <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 flex flex-col items-center justify-center text-center px-4">
+                <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-10 max-w-md">
+                    <Orbit className="w-12 h-12 text-amber-600 mb-4 mx-auto" />
+                    <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-[20px] mb-2 text-amber-900")}>Shadbala Analysis — Lahiri Only</h2>
+                    <p className={cn(TYPOGRAPHY.profileDetail, "text-amber-700 max-w-md")}>
+                        Shadbala (Six-fold planetary strength) analysis is currently available exclusively with the <strong>Lahiri Ayanamsa</strong>.
+                    </p>
+                    <Link href="/vedic-astrology/overview" className="mt-6 inline-flex items-center gap-1 text-[14px] font-medium text-amber-700 hover:text-amber-500 transition-colors">
+                        <ArrowLeft className="w-4 h-4" /> Back to Kundali
+                    </Link>
+                </div>
             </div>
         );
     }
@@ -239,43 +242,43 @@ export default function ShadbalaPage() {
     if (!clientDetails) return null;
 
     return (
-        <div className="-mt-2 lg:-mt-4 space-y-2 animate-in fade-in duration-500 pb-12">
-            {/* Header Area */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px]")}>Shadbala</h1>
+        <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 pb-12 -mt-2 lg:-mt-4">
+            <div className="space-y-5 animate-in fade-in duration-500">
+                {/* Header Area */}
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                    <div>
+                        <h1 className="text-[28px] font-bold text-amber-900">Shadbala</h1>
+                        <p className="text-[16px] text-amber-600 mt-1">Six-fold planetary strength analysis</p>
+                    </div>
                 </div>
-                <div className="flex items-center gap-4">
 
-                </div>
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center py-24 bg-white rounded-2xl border border-amber-200/60 shadow-sm">
+                        <Loader2 className="w-10 h-10 text-amber-500 animate-spin mb-4" />
+                        <p className={cn(TYPOGRAPHY.value, "italic tracking-wide text-amber-700")}>Calculating celestial potencies...</p>
+                    </div>
+                ) : error ? (
+                    <div className="p-10 bg-red-50 border border-red-200 rounded-2xl text-center">
+                        <AlertTriangle className="w-10 h-10 text-red-500 mx-auto mb-4" />
+                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 text-[18px] mb-2")}>Calculation Error</h3>
+                        <p className={cn(TYPOGRAPHY.profileDetail, "text-red-600 max-w-md mx-auto mb-6")}>{error}</p>
+                        <button 
+                            onClick={handleRefresh} 
+                            disabled={isRefreshingCharts}
+                            className={cn(TYPOGRAPHY.label, "px-6 py-2.5 bg-red-100 text-red-700 rounded-xl !text-[14px] !font-bold hover:bg-red-200 transition-colors !mb-0 disabled:opacity-50")}
+                        >
+                            {isRefreshingCharts ? 'Loading...' : 'Retry Calculation'}
+                        </button>
+                    </div>
+                ) : data?.planets ? (
+                    <ShadbalaDashboard displayData={data} />
+                ) : (
+                    <div className="p-10 bg-white rounded-2xl border border-amber-200/60 shadow-sm text-center lg:py-16">
+                        <Orbit className="w-10 h-10 text-amber-600 mx-auto mb-4" />
+                        <p className={cn(TYPOGRAPHY.profileDetail, "text-amber-700")}>No Shadbala data found for this chart.</p>
+                    </div>
+                )}
             </div>
-
-            {loading ? (
-                <div className="flex flex-col items-center justify-center py-24 prem-card rounded-3xl">
-                    <Loader2 className="w-10 h-10 text-gold-primary animate-spin mb-4" />
-                    <p className={cn(TYPOGRAPHY.value, "italic tracking-wide")}>Calculating celestial potencies...</p>
-                </div>
-            ) : error ? (
-                <div className="p-10 bg-red-50 border border-red-100 rounded-3xl text-center">
-                    <AlertTriangle className="w-10 h-10 text-red-500 mx-auto mb-4" />
-                    <h3 className={cn(TYPOGRAPHY.sectionTitle, "text-red-900 text-[18px] mb-2")}>Calculation Error</h3>
-                    <p className={cn(TYPOGRAPHY.profileDetail, "text-red-600 max-w-md mx-auto mb-6")}>{error}</p>
-                    <button 
-                        onClick={handleRefresh} 
-                        disabled={isRefreshingCharts}
-                        className={cn(TYPOGRAPHY.label, "px-6 py-2.5 bg-red-100 text-red-700 rounded-xl !text-[14px] !font-bold hover:bg-red-200 transition-colors !mb-0 disabled:opacity-50")}
-                    >
-                        {isRefreshingCharts ? 'Loading...' : 'Retry Calculation'}
-                    </button>
-                </div>
-            ) : data?.planets ? (
-                <ShadbalaDashboard displayData={data} />
-            ) : (
-                <div className="p-10 prem-card rounded-2xl text-center lg:py-16">
-                    <Orbit className="w-10 h-10 text-primary mx-auto mb-4" />
-                    <p className={cn(TYPOGRAPHY.profileDetail)}>No Shadbala data found for this chart.</p>
-                </div>
-            )}
         </div>
     );
 }
@@ -325,7 +328,7 @@ function AnimatedBar({ value, maxVal, color, isNegative, height = 'h-[6px]' }: {
 }) {
     const barWidth = Math.min((Math.abs(value) / Math.max(maxVal, 1)) * 100, 100);
     return (
-        <div className={cn("flex-1 w-full bg-gold-primary/5 rounded-full overflow-hidden shadow-inner", height)}>
+        <div className={cn("flex-1 w-full bg-amber-50 rounded-full overflow-hidden shadow-inner", height)}>
             <motion.div
                 className={cn("h-full rounded-full relative overflow-hidden")}
                 initial={{ width: 0 }}
@@ -395,7 +398,7 @@ function RadialGauge({ planet, rupaBala, minRequired, isStrong, color, rank }: {
         >
             <div className="relative">
                 <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-                    <path d={describeArc(0, sweepAngle)} fill="none" stroke="var(--cream-light)" strokeWidth={strokeWidth} strokeLinecap="round" />
+                    <path d={describeArc(0, sweepAngle)} fill="none" stroke="#fef3c7" strokeWidth={strokeWidth} strokeLinecap="round" />
                     <motion.path
                         d={describeArc(0, valueAngle)}
                         fill="none"
@@ -410,18 +413,18 @@ function RadialGauge({ planet, rupaBala, minRequired, isStrong, color, rank }: {
                     <line
                         x1={minTickInner.x} y1={minTickInner.y}
                         x2={minTickOuter.x} y2={minTickOuter.y}
-                        stroke="var(--color-red-500)" strokeWidth={2.5} strokeLinecap="round"
+                        stroke="#ef4444" strokeWidth={2.5} strokeLinecap="round"
                     />
                     <text x={center} y={center - 6} textAnchor="middle" dominantBaseline="central"
-                        fontSize="24" fill={color} fontWeight="700" className="font-serif">
+                        fontSize="24" fill={color} fontWeight="700">
                         {PLANET_SYMBOLS[planet]}
                     </text>
                     <text x={center} y={center + 18} textAnchor="middle" dominantBaseline="central"
-                        fontSize="13" fill="var(--text-primary)" fontWeight="800">
+                        fontSize="13" fill="#78350f" fontWeight="800">
                         {rupaBala.toFixed(2)}
                     </text>
                     <text x={center} y={center + 32} textAnchor="middle" dominantBaseline="central"
-                        fontSize="8" fill="var(--text-primary)" fontWeight="700" letterSpacing="1.5">
+                        fontSize="8" fill="#78350f" fontWeight="700" letterSpacing="1.5">
                         RUPA
                     </text>
                 </svg>
@@ -429,7 +432,7 @@ function RadialGauge({ planet, rupaBala, minRequired, isStrong, color, rank }: {
             <div className="mt-1 text-center">
                 <p className={cn(TYPOGRAPHY.value, "text-[12px] tracking-tight")}>{planet}</p>
                 <div className="flex items-center justify-center gap-1 mt-0.5">
-                    <span className={cn(TYPOGRAPHY.label, "text-[9px] text-primary font-normal lowercase")}>#{rank}</span>
+                    <span className={cn(TYPOGRAPHY.label, "text-[9px] text-amber-600 font-normal lowercase")}>#{rank}</span>
                     <span className={cn(
                         TYPOGRAPHY.label,
                         "px-1.5 py-0.5 rounded-full tracking-wider text-[8px]",
@@ -462,9 +465,9 @@ function SubBalaBreakdownCard({ planet, axes, values, theme, idx }: {
             className="rounded-xl border p-3 transition-all hover:shadow-md"
             style={{ borderColor: `${theme.color}25`, background: `linear-gradient(135deg, ${theme.color}04, transparent)` }}
         >
-            <div className="flex items-center gap-2 mb-2 pb-1.5 border-b border-gold-primary/5">
-                <div className={cn("w-6 h-6 rounded-lg flex items-center justify-center text-white text-[11px] font-bold shadow-sm", theme.twBg)}>
-                    {PLANET_SYMBOLS[planet.planet]}
+            <div className="flex items-center gap-2 mb-2 pb-1.5 border-b border-amber-100">
+                <div className={cn("w-6 h-6 rounded-lg flex items-center justify-center text-white text-[12px] font-bold shadow-sm", theme.twBg)}>
+                    {ASTRO_SYMBOLS[planet.planet]}
                 </div>
                 <h4 className={cn(TYPOGRAPHY.value, "text-[12px]")}>{planet.planet}</h4>
             </div>
@@ -474,14 +477,14 @@ function SubBalaBreakdownCard({ planet, axes, values, theme, idx }: {
                     const isNegative = val < 0;
                     return (
                         <div key={axis.key} className="flex items-center gap-2">
-                            <span className={cn(TYPOGRAPHY.label, "w-[65px] shrink-0 text-right font-normal lowercase text-[8.5px] opacity-70")}>
+                            <span className={cn(TYPOGRAPHY.label, "w-[65px] shrink-0 text-right font-normal lowercase text-[10px] text-amber-700")}>
                                 {axis.label}
                             </span>
                             <AnimatedBar value={val} maxVal={localMax} color={theme.color} isNegative={isNegative} height="h-[5px]" />
                             <span className={cn(
                                 TYPOGRAPHY.subValue,
                                 "w-[34px] text-right tabular-nums text-[8.5px]",
-                                isNegative ? "text-rose-500" : "text-primary/70"
+                                isNegative ? "text-rose-500" : "text-amber-800"
                             )}>
                                 {val.toFixed(1)}
                             </span>
@@ -496,19 +499,13 @@ function SubBalaBreakdownCard({ planet, axes, values, theme, idx }: {
 // ============================================================================
 // Heatmap Cell Helper
 // ============================================================================
-function getHeatmapStyle(value: number, maxVal: number): { style: React.CSSProperties; indicator: string } {
+function getHeatmapIndicator(value: number, maxVal: number): string {
     if (value < 0) {
         const intensity = Math.min(Math.abs(value) / 50, 1);
-        return {
-            style: { backgroundColor: `rgba(155, 44, 44, ${0.08 + intensity * 0.18})` },
-            indicator: intensity > 0.5 ? '\u25BC' : '\u25BD',
-        };
+        return intensity > 0.5 ? '\u25BC' : '\u25BD';
     }
     const intensity = Math.min(value / maxVal, 1);
-    return {
-        style: { backgroundColor: `rgba(156, 122, 47, ${0.06 + intensity * 0.20})` },
-        indicator: intensity > 0.66 ? '\u25B2' : intensity > 0.33 ? '\u25B3' : '',
-    };
+    return intensity > 0.66 ? '\u25B2' : intensity > 0.33 ? '\u25B3' : '';
 }
 
 // ============================================================================
@@ -539,7 +536,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
         const dashOffset = circumference * (1 - pct);
         return (
             <svg width="56" height="56" viewBox="0 0 56 56">
-                <circle cx="28" cy="28" r={r} fill="none" stroke="var(--cream-light)" strokeWidth="5" />
+                <circle cx="28" cy="28" r={r} fill="none" stroke="#fef3c7" strokeWidth="5" />
                 <motion.circle
                     cx="28" cy="28" r={r} fill="none" stroke={color} strokeWidth="5"
                     strokeLinecap="round" strokeDasharray={circumference}
@@ -576,7 +573,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="prem-card p-4 rounded-2xl shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow border border-emerald-500/10"
+                    className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-4 relative overflow-hidden group hover:shadow-md transition-shadow"
                 >
                     <div className="absolute top-0 right-0 w-24 h-24 rounded-bl-[60px] -mr-4 -mt-4 transition-all group-hover:scale-110"
                         style={{ background: `linear-gradient(135deg, ${strongestTheme.color}15, transparent)` }}
@@ -608,7 +605,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.1 }}
-                    className="prem-card p-4 rounded-2xl shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow border border-rose-500/10"
+                    className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-4 relative overflow-hidden group hover:shadow-md transition-shadow"
                 >
                     <div className="absolute top-0 right-0 w-24 h-24 rounded-bl-[60px] -mr-4 -mt-4 transition-all group-hover:scale-110"
                         style={{ background: `linear-gradient(135deg, ${weakestTheme.color}15, transparent)` }}
@@ -640,21 +637,21 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
             {/* ═══════════════════════════════════════════════════════════════
                 SECTION 2: Summary Table (Moved Up)
             ═══════════════════════════════════════════════════════════════ */}
-            <div className="prem-card rounded-2xl shadow-sm overflow-hidden">
-                <div className="p-3 border-b border-gold-primary/15 bg-surface-warm/5 flex items-center gap-2">
+            <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
+                <div className="p-3 border-b border-amber-200/60 bg-amber-50/30 flex items-center gap-2">
                     <Table2 className="w-3.5 h-3.5 text-indigo-500" />
                     <h3 className={cn(TYPOGRAPHY.label, "md:text-[10px] leading-none opacity-80 uppercase tracking-widest")}>Shadbala Summary</h3>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Info className="w-3 h-3 text-gold-primary cursor-help" />
+                                <Info className="w-3 h-3 text-amber-500 cursor-help" />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Comprehensive breakdown of all six planetary strength factors measured in Virupas.</p>
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-primary font-normal lowercase tracking-wide text-[9px]")}>Complete Strength Matrix</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-600 font-normal lowercase tracking-wide text-[9px]")}>Complete Strength Matrix</span>
                 </div>
                 <DataGrid
                     columns={[
@@ -667,7 +664,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                                 const theme = PLANET_THEMES[row.planet];
                                 return (
                                     <div className={cn(TYPOGRAPHY.value, "flex items-center gap-2 text-[14px]")}>
-                                        <span className={cn(TYPOGRAPHY.profileName, "text-[16px]", theme.twText)}>{PLANET_SYMBOLS[row.planet]}</span>
+                                        <span className={cn(TYPOGRAPHY.profileName, "text-[14px]", theme.twText)}>{ASTRO_SYMBOLS[row.planet]}</span>
                                         {row.planet}
                                     </div>
                                 );
@@ -680,11 +677,11 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                             cellClassName: cn(TYPOGRAPHY.value, "text-[12px] tabular-nums"),
                             render: (row: ShadbalaPlanet) => {
                                 const val = (row as unknown as Record<string, number>)[axis.key] || 0;
-                                const { style, indicator } = getHeatmapStyle(val, tableMaxValues[axis.key]);
+                                const indicator = getHeatmapIndicator(val, tableMaxValues[axis.key]);
                                 return (
-                                    <span style={style} className="inline-flex items-center gap-0.5 px-1 rounded">
+                                    <span className="inline-flex items-center gap-0.5">
                                         {val.toFixed(0)}
-                                        {indicator && <span className="text-[8px] opacity-70" aria-hidden="true">{indicator}</span>}
+                                        {indicator && <span className="text-[8px] opacity-50" aria-hidden="true">{indicator}</span>}
                                     </span>
                                 );
                             },
@@ -693,8 +690,8 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                             key: 'totalBala',
                             header: 'Virupas',
                             align: 'center' as const,
-                            headerClassName: 'bg-gold-primary/5 text-gold-dark',
-                            cellClassName: cn(TYPOGRAPHY.value, "text-[12px] text-gold-dark bg-gold-primary/5 tabular-nums"),
+                            headerClassName: 'bg-amber-50 text-amber-700',
+                            cellClassName: cn(TYPOGRAPHY.value, "text-[12px] text-amber-700 bg-amber-50 tabular-nums"),
                             sortable: true,
                             render: (row: ShadbalaPlanet) => row.totalBala.toFixed(1),
                         },
@@ -744,7 +741,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                     data={sortedPlanets}
                     rowKey={(row) => row.planet}
                     cellPadding="p-3"
-                    headerClassName="bg-surface-warm/50 border-b border-gold-primary/15"
+                    headerClassName="bg-amber-50/50 border-b border-amber-200/60"
                     ariaLabel="Shadbala complete strength summary"
                     scrollShadows={true}
                 />
@@ -754,21 +751,21 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
             {/* ═══════════════════════════════════════════════════════════════
                 SECTION 3: Ishta & Kashta Phala (Prominent)
             ═══════════════════════════════════════════════════════════════ */}
-            <div className="prem-card rounded-2xl shadow-sm overflow-hidden">
-                <div className="p-3 border-b border-gold-primary/15 flex items-center gap-2">
+            <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
+                <div className="p-3 border-b border-amber-200/60 flex items-center gap-2">
                     <Activity className="w-3.5 h-3.5 text-emerald-600" />
                     <h3 className={cn(TYPOGRAPHY.label, "md:text-[10px] leading-none opacity-80 uppercase tracking-widest")}>Ishta & Kashta Phala</h3>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Info className="w-3 h-3 text-gold-primary cursor-help" />
+                                <Info className="w-3 h-3 text-amber-500 cursor-help" />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p><b>Ishta Phala</b> represents beneficial strength (happiness, success).<br/><b>Kashta Phala</b> represents challenging strength (obstacles).</p>
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-primary font-normal lowercase tracking-wide text-[9px]")}>Auspicious Ratio</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-600 font-normal lowercase tracking-wide text-[9px]")}>Auspicious Ratio</span>
                 </div>
                 <div className="p-5">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-4">
@@ -795,7 +792,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                                     <span className={cn(TYPOGRAPHY.value, "text-[11px] mb-1")}>{p.planet}</span>
 
                                     {/* Vertical stacked bar */}
-                                    <div className="w-full h-28 flex flex-col rounded-xl overflow-hidden shadow-inner border border-gold-primary/10">
+                                    <div className="w-full h-28 flex flex-col rounded-xl overflow-hidden shadow-inner border border-amber-200/60">
                                         <motion.div
                                             className="w-full bg-gradient-to-b from-emerald-400 to-emerald-500 flex items-center justify-center"
                                             initial={{ height: 0 }}
@@ -814,14 +811,14 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                         })}
                     </div>
                     {/* Legend */}
-                    <div className="flex items-center justify-center gap-6 pt-3 border-t border-gold-primary/10 mt-3">
+                    <div className="flex items-center justify-center gap-6 pt-3 border-t border-amber-200/60 mt-3">
                         <div className="flex items-center gap-1.5 grayscale-[0.5] hover:grayscale-0 transition-all">
                             <div className="w-3 h-3 rounded-sm bg-gradient-to-b from-emerald-400 to-emerald-500 shadow-sm" />
-                            <span className={cn(TYPOGRAPHY.label, "text-primary font-medium lowercase text-[10px]")}>Ishta (Auspicious)</span>
+                            <span className={cn(TYPOGRAPHY.label, "text-amber-700 font-medium lowercase text-[10px]")}>Ishta (Auspicious)</span>
                         </div>
                         <div className="flex items-center gap-1.5 grayscale-[0.5] hover:grayscale-0 transition-all">
                             <div className="w-3 h-3 rounded-sm bg-gradient-to-b from-rose-400 to-red-500 shadow-sm" />
-                            <span className={cn(TYPOGRAPHY.label, "text-primary font-medium lowercase text-[10px]")}>Kashta (Inauspicious)</span>
+                            <span className={cn(TYPOGRAPHY.label, "text-amber-700 font-medium lowercase text-[10px]")}>Kashta (Inauspicious)</span>
                         </div>
                     </div>
                 </div>
@@ -830,21 +827,21 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
             {/* ═══════════════════════════════════════════════════════════════
                 SECTION 4: Six-Fold Strength Profile (Per Planet Cards)
             ═══════════════════════════════════════════════════════════════ */}
-            <div className="prem-card rounded-2xl shadow-sm overflow-hidden">
-                <div className="p-3 border-b border-gold-primary/15 flex items-center gap-2">
-                    <Compass className="w-3.5 h-3.5 text-gold-primary" />
+            <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
+                <div className="p-3 border-b border-amber-200/60 flex items-center gap-2">
+                    <Compass className="w-3.5 h-3.5 text-amber-500" />
                     <h3 className={cn(TYPOGRAPHY.label, "md:text-[10px] leading-none opacity-80 uppercase tracking-widest")}>Six-Fold Strength Profile</h3>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Info className="w-3 h-3 text-gold-primary cursor-help" />
+                                <Info className="w-3 h-3 text-amber-500 cursor-help" />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Vertical analysis of the 6 primary strength components for each planet.</p>
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-primary font-normal lowercase tracking-wide text-[9px]")}>Systemic Potency</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-600 font-normal lowercase tracking-wide text-[9px]")}>Systemic Potency</span>
                 </div>
                 <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                     {sortedPlanets.map((p, idx) => {
@@ -865,14 +862,14 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                                 style={{ borderColor: `${theme.color}30`, background: `linear-gradient(135deg, ${theme.color}04, transparent)` }}
                             >
                                 {/* Planet Header */}
-                                <div className="flex items-center justify-between mb-2 pb-2 border-b border-gold-primary/5">
+                                <div className="flex items-center justify-between mb-2 pb-2 border-b border-amber-100">
                                     <div className="flex items-center gap-2">
-                                        <div className={cn("w-7 h-7 rounded-lg flex items-center justify-center text-white text-[12px] font-bold shadow-sm", theme.twBg)}>
-                                            {PLANET_SYMBOLS[p.planet]}
+                                        <div className={cn("w-7 h-7 rounded-lg flex items-center justify-center text-white text-[14px] font-bold shadow-sm", theme.twBg)}>
+                                            {ASTRO_SYMBOLS[p.planet]}
                                         </div>
                                         <div>
                                             <h4 className={cn(TYPOGRAPHY.value, "text-[12px] leading-none mb-0.5")}>{p.planet}</h4>
-                                            <p className={cn(TYPOGRAPHY.label, "text-[8.5px] lowercase font-medium opacity-60")}>
+                                            <p className={cn(TYPOGRAPHY.label, "text-[10px] lowercase font-medium text-amber-700")}>
                                                 {p.rupaBala.toFixed(2)} Rupa · #{p.rank}
                                             </p>
                                         </div>
@@ -895,7 +892,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                                                 <TooltipProvider>
                                                     <Tooltip>
                                                         <TooltipTrigger asChild>
-                                                            <span className={cn(TYPOGRAPHY.label, "w-[58px] shrink-0 text-right font-medium lowercase text-[9px] border-b border-dotted border-gold-primary/20 hover:text-gold-primary cursor-help transition-colors")}>
+                                                            <span className={cn(TYPOGRAPHY.label, "w-[58px] shrink-0 text-right font-normal lowercase text-[10px] text-amber-700 cursor-help")}>
                                                                 {bala.label}
                                                             </span>
                                                         </TooltipTrigger>
@@ -908,7 +905,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                                                 <span className={cn(
                                                     TYPOGRAPHY.subValue,
                                                     "w-[30px] text-right tabular-nums text-[9.5px] font-bold",
-                                                    isNegative ? "text-rose-500" : "text-primary/70"
+                                                    isNegative ? "text-rose-500" : "text-amber-800"
                                                 )}>
                                                     {bala.value.toFixed(0)}
                                                 </span>
@@ -925,21 +922,21 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
             {/* ═══════════════════════════════════════════════════════════════
                 SECTION 5: Sthana Bala Breakdown
             ═══════════════════════════════════════════════════════════════ */}
-            <div className="prem-card rounded-2xl shadow-sm overflow-hidden">
-                <div className="p-3 border-b border-gold-primary/15 flex items-center gap-2">
+            <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
+                <div className="p-3 border-b border-amber-200/60 flex items-center gap-2">
                     <Shield className="w-3.5 h-3.5 text-amber-600" />
                     <h3 className={cn(TYPOGRAPHY.label, "md:text-[10px] leading-none opacity-80 uppercase tracking-widest")}>Sthana Bala Breakdown</h3>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Info className="w-3 h-3 text-gold-primary cursor-help" />
+                                <Info className="w-3 h-3 text-amber-500 cursor-help" />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Deep dive into the 5 sub-components of Positional Strength.</p>
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-primary font-normal lowercase tracking-wide text-[9px]")}>Positional Details</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-600 font-normal lowercase tracking-wide text-[9px]")}>Positional Details</span>
                 </div>
                 <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                     {sortedPlanets.map((p, idx) => (
@@ -958,21 +955,21 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
             {/* ═══════════════════════════════════════════════════════════════
                 SECTION 6: Kala Bala Breakdown
             ═══════════════════════════════════════════════════════════════ */}
-            <div className="prem-card rounded-2xl shadow-sm overflow-hidden">
-                <div className="p-3 border-b border-gold-primary/15 flex items-center gap-2">
+            <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
+                <div className="p-3 border-b border-amber-200/60 flex items-center gap-2">
                     <Clock className="w-3.5 h-3.5 text-indigo-500" />
                     <h3 className={cn(TYPOGRAPHY.label, "md:text-[10px] leading-none opacity-80 uppercase tracking-widest")}>Kala Bala Breakdown</h3>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Info className="w-3 h-3 text-gold-primary cursor-help" />
+                                <Info className="w-3 h-3 text-amber-500 cursor-help" />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Deep dive into the 8 sub-components of Temporal Strength.</p>
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-primary font-normal lowercase tracking-wide text-[9px]")}>Temporal Details</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-600 font-normal lowercase tracking-wide text-[9px]")}>Temporal Details</span>
                 </div>
                 <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                     {sortedPlanets.map((p, idx) => (
@@ -991,21 +988,21 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
             {/* ═══════════════════════════════════════════════════════════════
                 SECTION 7: Percentage of Required Strength
             ═══════════════════════════════════════════════════════════════ */}
-            <div className="prem-card rounded-2xl shadow-sm overflow-hidden">
-                <div className="p-3 border-b border-gold-primary/15 flex items-center gap-2">
+            <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
+                <div className="p-3 border-b border-amber-200/60 flex items-center gap-2">
                     <Target className="w-3.5 h-3.5 text-blue-600" />
                     <h3 className={cn(TYPOGRAPHY.label, "md:text-[10px] leading-none opacity-80 uppercase tracking-widest")}>Required Strength %</h3>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Info className="w-3 h-3 text-gold-primary cursor-help" />
+                                <Info className="w-3 h-3 text-amber-500 cursor-help" />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Comparison of actual strength against the Shastric minimum requirement.<br/>Ratio ≥ 1.0 means the planet is functionally strong.</p>
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-primary font-normal lowercase tracking-wide text-[9px]")}>Efficiency Ratio</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-600 font-normal lowercase tracking-wide text-[9px]")}>Efficiency Ratio</span>
                 </div>
                 <div className="p-4 space-y-2">
                     {sortedPlanets.map((p, idx) => {
@@ -1030,7 +1027,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                                 </div>
                                 <span className={cn(TYPOGRAPHY.value, "w-[50px] shrink-0 text-[11px]")}>{p.planet}</span>
                                 <div className="flex-1 relative h-3.5">
-                                    <div className="h-full w-full bg-gold-primary/5 rounded-full overflow-hidden shadow-inner">
+                                    <div className="h-full w-full bg-amber-50 rounded-full overflow-hidden shadow-inner">
                                         <motion.div
                                             className="h-full rounded-full relative overflow-hidden"
                                             initial={{ width: 0 }}
@@ -1069,21 +1066,21 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
             {/* ═══════════════════════════════════════════════════════════════
                 SECTION 8: Radial Gauge Meters
             ═══════════════════════════════════════════════════════════════ */}
-            <div className="prem-card rounded-2xl shadow-sm overflow-hidden">
-                <div className="p-3 border-b border-gold-primary/15 flex items-center gap-2">
-                    <BarChart2 className="w-3.5 h-3.5 text-gold-primary" />
+            <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
+                <div className="p-3 border-b border-amber-200/60 flex items-center gap-2">
+                    <BarChart2 className="w-3.5 h-3.5 text-amber-500" />
                     <h3 className={cn(TYPOGRAPHY.label, "md:text-[10px] leading-none opacity-80 uppercase tracking-widest")}>Rupa Strength Overview</h3>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Info className="w-3 h-3 text-gold-primary cursor-help" />
+                                <Info className="w-3 h-3 text-amber-500 cursor-help" />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Planetary strength measured in Rupas (1 Rupa = 60 Virupas).<br/>The red tick marks the minimum required threshold.</p>
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-primary font-normal lowercase tracking-wide text-[9px]")}>Vigor Gauges</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-600 font-normal lowercase tracking-wide text-[9px]")}>Vigor Gauges</span>
                 </div>
                 <div className="p-4 flex flex-wrap items-center justify-center gap-2 md:gap-4">
                     {sortedPlanets.map((p) => {

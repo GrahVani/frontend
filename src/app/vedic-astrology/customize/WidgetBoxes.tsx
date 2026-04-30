@@ -100,7 +100,7 @@ export const WIDGET_SCALE_CONFIG: Record<WidgetSize, { zoom: number; minHeight: 
 
 function SizeToggle({ size, onChange }: { size: WidgetSize; onChange?: (s: WidgetSize) => void }) {
     return (
-        <div className="flex items-center bg-surface-warm rounded-lg p-0.5">
+        <div className="flex items-center bg-amber-50 rounded-lg p-0.5">
             {SIZE_OPTIONS.map(opt => (
                 <button
                     key={opt.key}
@@ -109,7 +109,7 @@ function SizeToggle({ size, onChange }: { size: WidgetSize; onChange?: (s: Widge
                         "px-1.5 py-0.5 rounded-md text-[10px] font-medium transition-all min-w-[20px]",
                         size === opt.key
                             ? "bg-primary text-white shadow-sm"
-                            : "text-ink/40 hover:text-ink hover:bg-white"
+                            : "text-amber-900/40 hover:text-amber-900 hover:bg-white"
                     )}
                     title={`Size: ${opt.label}`}
                 >
@@ -154,9 +154,9 @@ function WidgetCard({
             case 'widget_yoga': return 'bg-pink-100 text-pink-700';
             case 'widget_dosha': return 'bg-rose-100 text-rose-700';
             case 'widget_transit': return 'bg-cyan-100 text-cyan-700';
-            case 'widget_remedy': return 'bg-gold-primary/10 text-gold-dark';
+            case 'widget_remedy': return 'bg-amber-50 text-amber-700';
             case 'kp_module': return 'bg-orange-100 text-orange-700';
-            default: return 'bg-surface-warm text-ink';
+            default: return 'bg-amber-50 text-amber-900';
         }
     };
 
@@ -182,7 +182,7 @@ function WidgetCard({
 
     return (
         <div className={cn(
-            "bg-[#FDFBF7] border border-[#E6D5B8]/40 rounded p-1 shadow-sm relative group hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden",
+            "bg-[#FDFBF7] border border-amber-200/60 rounded p-1 shadow-sm relative group hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden",
             className
         )} style={{ height: 'calc((100vh - 200px) / 2)', minHeight: scaleConfig.minHeight }}
             data-widget-size={size}
@@ -272,11 +272,11 @@ function WidgetCard({
                     <div style={{ zoom: scaleConfig.zoom }}>
                         {!isCompatible ? (
                             <div className="flex flex-col items-center justify-center p-6 text-center" style={{ minHeight: `${100 / scaleConfig.zoom}%` }}>
-                                <Shield className="w-8 h-8 text-gold-dark/40 mb-3" />
-                                <p className="text-[10px] font-medium uppercase text-gold-dark/60 tracking-wider mb-1 leading-tight px-4">
+                                <Shield className="w-8 h-8 text-amber-700/40 mb-3" />
+                                <p className="text-[10px] font-medium uppercase text-amber-700/60 tracking-wider mb-1 leading-tight px-4">
                                     {widget.name}
                                 </p>
-                                <p className="text-[8px] font-medium text-ink/40 uppercase tracking-[0.15em] px-2">
+                                <p className="text-[8px] font-medium text-amber-900/40 uppercase tracking-[0.15em] px-2">
                                     Not compatible with {activeSystem}
                                 </p>
                             </div>
@@ -371,8 +371,8 @@ function ShadbalaWidgetContent({ activeSystem }: { activeSystem: string }) {
     if (loading) {
         return (
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <Loader2 className="w-8 h-8 text-gold-primary animate-spin mb-3" />
-                <p className="text-[11px] text-ink/50">Calculating Shadbala...</p>
+                <Loader2 className="w-8 h-8 text-amber-600 animate-spin mb-3" />
+                <p className="text-[11px] text-amber-900/50">Calculating Shadbala...</p>
             </div>
         );
     }
@@ -387,8 +387,8 @@ function ShadbalaWidgetContent({ activeSystem }: { activeSystem: string }) {
 
     return (
         <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-            <AlertCircle className="w-8 h-8 text-gold-dark/30 mb-3" />
-            <p className="text-[11px] text-ink/50">Shadbala data unavailable</p>
+            <AlertCircle className="w-8 h-8 text-amber-700/30 mb-3" />
+            <p className="text-[11px] text-amber-900/50">Shadbala data unavailable</p>
         </div>
     );
 }
@@ -438,7 +438,7 @@ export function PushkaraWidget(props: WidgetBoxProps) {
             {loading ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <Loader2 className="w-8 h-8 text-emerald-500 animate-spin mb-3" />
-                    <p className="text-[11px] text-ink/50">Analyzing Pushkara positions...</p>
+                    <p className="text-[11px] text-amber-900/50">Analyzing Pushkara positions...</p>
                 </div>
             ) : data ? (
                 <div className="h-full overflow-auto custom-scrollbar p-2">
@@ -447,7 +447,7 @@ export function PushkaraWidget(props: WidgetBoxProps) {
             ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                     <AlertCircle className="w-8 h-8 text-emerald-300 mb-3" />
-                    <p className="text-[11px] text-ink/50">Pushkara data unavailable</p>
+                    <p className="text-[11px] text-amber-900/50">Pushkara data unavailable</p>
                 </div>
             )}
         </WidgetCard>
@@ -507,7 +507,7 @@ export function KarakaWidget(props: WidgetBoxProps) {
             {loading ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <Loader2 className="w-8 h-8 text-amber-500 animate-spin mb-3" />
-                    <p className="text-[11px] text-ink/50">Calculating Karakas...</p>
+                    <p className="text-[11px] text-amber-900/50">Calculating Karakas...</p>
                 </div>
             ) : data ? (
                 <div className="h-full overflow-auto custom-scrollbar p-2">
@@ -516,7 +516,7 @@ export function KarakaWidget(props: WidgetBoxProps) {
             ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                     <AlertCircle className="w-8 h-8 text-amber-300 mb-3" />
-                    <p className="text-[11px] text-ink/50">Karaka data unavailable</p>
+                    <p className="text-[11px] text-amber-900/50">Karaka data unavailable</p>
                 </div>
             )}
         </WidgetCard>
@@ -539,7 +539,7 @@ export function ChakraWidget(props: WidgetBoxProps) {
             {loading ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <Loader2 className="w-8 h-8 text-violet-500 animate-spin mb-3" />
-                    <p className="text-[11px] text-ink/50">Synchronizing chakra layers...</p>
+                    <p className="text-[11px] text-amber-900/50">Synchronizing chakra layers...</p>
                 </div>
             ) : chakraData ? (
                 <div className="h-full flex items-center justify-center p-4 overflow-visible">
@@ -548,7 +548,7 @@ export function ChakraWidget(props: WidgetBoxProps) {
             ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                     <Layers className="w-8 h-8 text-violet-300 mb-3" />
-                    <p className="text-[11px] text-ink/50">Sudarshan Chakra not generated yet</p>
+                    <p className="text-[11px] text-amber-900/50">Sudarshan Chakra not generated yet</p>
                 </div>
             )}
         </WidgetCard>
@@ -572,7 +572,7 @@ export function ShodashaWidget(props: WidgetBoxProps) {
             {loading ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <Loader2 className="w-8 h-8 text-teal-500 animate-spin mb-3" />
-                    <p className="text-[11px] text-ink/50">Loading Shodashvarga...</p>
+                    <p className="text-[11px] text-amber-900/50">Loading Shodashvarga...</p>
                 </div>
             ) : shodashaData ? (
                 <div className="h-full overflow-auto custom-scrollbar p-2">
@@ -581,7 +581,7 @@ export function ShodashaWidget(props: WidgetBoxProps) {
             ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                     <Layers className="w-8 h-8 text-teal-300 mb-3" />
-                    <p className="text-[11px] text-ink/50">Shodashvarga data unavailable</p>
+                    <p className="text-[11px] text-amber-900/50">Shodashvarga data unavailable</p>
                 </div>
             )}
         </WidgetCard>
@@ -606,7 +606,7 @@ export function YogaWidget(props: WidgetBoxProps) {
             {loading ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <Loader2 className="w-8 h-8 text-pink-500 animate-spin mb-3" />
-                    <p className="text-[11px] text-ink/50">Loading yoga analysis...</p>
+                    <p className="text-[11px] text-amber-900/50">Loading yoga analysis...</p>
                 </div>
             ) : yogaData ? (
                 <div className="h-full overflow-auto custom-scrollbar p-4">
@@ -615,7 +615,7 @@ export function YogaWidget(props: WidgetBoxProps) {
             ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                     <Sparkles className="w-8 h-8 text-pink-300 mb-3" />
-                    <p className="text-[11px] text-ink/50">Yoga data not generated yet</p>
+                    <p className="text-[11px] text-amber-900/50">Yoga data not generated yet</p>
                 </div>
             )}
         </WidgetCard>
@@ -640,7 +640,7 @@ export function DoshaWidget(props: WidgetBoxProps) {
             {loading ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <Loader2 className="w-8 h-8 text-rose-500 animate-spin mb-3" />
-                    <p className="text-[11px] text-ink/50">Loading dosha analysis...</p>
+                    <p className="text-[11px] text-amber-900/50">Loading dosha analysis...</p>
                 </div>
             ) : doshaData ? (
                 <div className="h-full overflow-auto custom-scrollbar p-4">
@@ -649,7 +649,7 @@ export function DoshaWidget(props: WidgetBoxProps) {
             ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                     <Shield className="w-8 h-8 text-rose-300 mb-3" />
-                    <p className="text-[11px] text-ink/50">Dosha data not generated yet</p>
+                    <p className="text-[11px] text-amber-900/50">Dosha data not generated yet</p>
                 </div>
             )}
         </WidgetCard>
@@ -686,7 +686,7 @@ function DashaWidgetContent({ widget, clientId, activeSystem }: { widget: Custom
         return (
             <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <Loader2 className="w-8 h-8 text-purple-500 animate-spin mb-3" />
-                <p className="text-[11px] text-ink/50">Loading {widget.name}...</p>
+                <p className="text-[11px] text-amber-900/50">Loading {widget.name}...</p>
             </div>
         );
     }
@@ -695,7 +695,7 @@ function DashaWidgetContent({ widget, clientId, activeSystem }: { widget: Custom
         return (
             <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                 <AlertCircle className="w-8 h-8 text-purple-300 mb-3" />
-                <p className="text-[11px] text-ink/50">{widget.name} not generated</p>
+                <p className="text-[11px] text-amber-900/50">{widget.name} not generated</p>
             </div>
         );
     }
@@ -745,8 +745,8 @@ export function RemedyWidget(props: WidgetBoxProps) {
         <WidgetCard {...props}>
             {loading ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <Loader2 className="w-8 h-8 text-gold-primary animate-spin mb-3" />
-                    <p className="text-[11px] text-ink/50">Loading remedies...</p>
+                    <Loader2 className="w-8 h-8 text-amber-600 animate-spin mb-3" />
+                    <p className="text-[11px] text-amber-900/50">Loading remedies...</p>
                 </div>
             ) : data ? (
                 <div className="h-full overflow-auto custom-scrollbar">
@@ -754,8 +754,8 @@ export function RemedyWidget(props: WidgetBoxProps) {
                 </div>
             ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                    <Gem className="w-8 h-8 text-gold-primary/30 mb-3" />
-                    <p className="text-[11px] text-ink/50">Remedy data unavailable</p>
+                    <Gem className="w-8 h-8 text-amber-600/30 mb-3" />
+                    <p className="text-[11px] text-amber-900/50">Remedy data unavailable</p>
                 </div>
             )}
         </WidgetCard>
@@ -851,7 +851,7 @@ function KpModuleWidgetContent({ widget, activeSystem }: { widget: CustomizeChar
             if (!transformed.nadiData) return (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                     <AlertCircle className="w-8 h-8 text-orange-200 mb-3" />
-                    <p className="text-[11px] text-ink/50">Nakshatra Nadi data pending</p>
+                    <p className="text-[11px] text-amber-900/50">Nakshatra Nadi data pending</p>
                 </div>
             );
             return (
@@ -864,7 +864,7 @@ function KpModuleWidgetContent({ widget, activeSystem }: { widget: CustomizeChar
             if (!transformed.fortunaData) return (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                     <AlertCircle className="w-8 h-8 text-orange-200 mb-3" />
-                    <p className="text-[11px] text-ink/50">Fortuna data pending</p>
+                    <p className="text-[11px] text-amber-900/50">Fortuna data pending</p>
                 </div>
             );
             return (
@@ -899,7 +899,7 @@ function KpModuleWidgetContent({ widget, activeSystem }: { widget: CustomizeChar
             return (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                     <AlertCircle className="w-8 h-8 text-orange-200 mb-3" />
-                    <p className="text-[11px] text-ink/50">KP Module visualization pending</p>
+                    <p className="text-[11px] text-amber-900/50">KP Module visualization pending</p>
                 </div>
             );
     }
@@ -979,7 +979,7 @@ function ChakraWidgetContent({ activeSystem }: { activeSystem: string }) {
         return (
             <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <Loader2 className="w-8 h-8 text-violet-500 animate-spin mb-3" />
-                <p className="text-[11px] text-ink/50">Synchronizing chakra layers...</p>
+                <p className="text-[11px] text-amber-900/50">Synchronizing chakra layers...</p>
             </div>
         );
     }
@@ -988,7 +988,7 @@ function ChakraWidgetContent({ activeSystem }: { activeSystem: string }) {
         return (
             <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                 <Layers className="w-8 h-8 text-violet-300 mb-3" />
-                <p className="text-[11px] text-ink/50">Sudarshan Chakra not generated yet</p>
+                <p className="text-[11px] text-amber-900/50">Sudarshan Chakra not generated yet</p>
             </div>
         );
     }
@@ -1013,7 +1013,7 @@ function ShodashaWidgetContent({ activeSystem }: { activeSystem: string }) {
         return (
             <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <Loader2 className="w-8 h-8 text-teal-500 animate-spin mb-3" />
-                <p className="text-[11px] text-ink/50">Loading Shodashvarga...</p>
+                <p className="text-[11px] text-amber-900/50">Loading Shodashvarga...</p>
             </div>
         );
     }
@@ -1022,7 +1022,7 @@ function ShodashaWidgetContent({ activeSystem }: { activeSystem: string }) {
         return (
             <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                 <Layers className="w-8 h-8 text-teal-300 mb-3" />
-                <p className="text-[11px] text-ink/50">Shodashvarga data unavailable</p>
+                <p className="text-[11px] text-amber-900/50">Shodashvarga data unavailable</p>
             </div>
         );
     }
@@ -1112,7 +1112,7 @@ function AshtakavargaWidgetContent({ widget, activeSystem }: { widget: Customize
         return (
             <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <Loader2 className="w-8 h-8 text-emerald-500 animate-spin mb-3" />
-                <p className="text-[11px] text-ink/50">Loading Ashtakavarga...</p>
+                <p className="text-[11px] text-amber-900/50">Loading Ashtakavarga...</p>
             </div>
         );
     }
@@ -1121,7 +1121,7 @@ function AshtakavargaWidgetContent({ widget, activeSystem }: { widget: Customize
         return (
             <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                 <Table2 className="w-8 h-8 text-emerald-300 mb-3" />
-                <p className="text-[11px] text-ink/50">{widget.name} not generated yet</p>
+                <p className="text-[11px] text-amber-900/50">{widget.name} not generated yet</p>
             </div>
         );
     }
@@ -1133,11 +1133,11 @@ function AshtakavargaWidgetContent({ widget, activeSystem }: { widget: Customize
                 <div className="flex flex-col min-w-0 h-full">
                     <div className="flex items-center gap-1.5 px-0.5 pb-1 shrink-0">
                         <MapIcon className="w-3 h-3 text-emerald-600" />
-                        <span className="text-[9px] font-black uppercase text-ink/60 tracking-wider">
+                        <span className="text-[9px] font-black uppercase text-amber-900/60 tracking-wider">
                             Distribution
                         </span>
                     </div>
-                    <div className="bg-surface-warm/30 rounded-lg p-1 border border-[#E6D5B8]/30 flex items-center justify-center flex-1 min-h-0">
+                    <div className="bg-amber-50/30 rounded-lg p-1 border border-amber-200/60 flex items-center justify-center flex-1 min-h-0">
                         <AshtakavargaChart
                             type={isSarva ? 'sarva' : 'bhinna'}
                             ascendantSign={ascSign || 1}
@@ -1151,7 +1151,7 @@ function AshtakavargaWidgetContent({ widget, activeSystem }: { widget: Customize
                 <div className="flex flex-col h-full space-y-1">
                     <div className="flex items-center gap-1.5 px-0.5 shrink-0">
                         <Table2 className="w-3 h-3 text-emerald-600" />
-                        <span className="text-[9px] font-black uppercase text-ink/60 tracking-wider">
+                        <span className="text-[9px] font-black uppercase text-amber-900/60 tracking-wider">
                             Bindu Matrix
                         </span>
                     </div>
@@ -1233,8 +1233,8 @@ export function renderWidgetContent(
         default:
             return (
                 <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-                    <AlertCircle className="w-8 h-8 text-gold-dark/30 mb-3" />
-                    <p className="text-[11px] text-ink/50">{item.name} content</p>
+                    <AlertCircle className="w-8 h-8 text-amber-700/30 mb-3" />
+                    <p className="text-[11px] text-amber-900/50">{item.name} content</p>
                 </div>
             );
     }

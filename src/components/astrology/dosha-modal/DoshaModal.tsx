@@ -56,9 +56,9 @@ export const DoshaModal = memo(function DoshaModal({
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center p-8 bg-surface-warm/30 rounded-2xl border border-gold-primary/15" role="status" aria-label="Loading dosha analysis" aria-busy="true">
+            <div className="flex flex-col items-center justify-center p-8 bg-amber-50/40 rounded-2xl border border-amber-200/60" role="status" aria-label="Loading dosha analysis" aria-busy="true">
                 <Loader2 className="w-6 h-6 text-red-500 animate-spin mb-3" aria-hidden="true" />
-                <p className="text-[12px] font-serif text-ink/55 italic">Mapping karmic patterns...</p>
+                <p className="text-[12px] font-serif text-amber-700/55 italic">Mapping karmic patterns...</p>
             </div>
         );
     }

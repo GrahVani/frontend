@@ -34,19 +34,19 @@ export default function FormStepIndicator({ steps, currentStep, onStepClick }: F
                             >
                                 {/* Step circle */}
                                 <span className={cn(
-                                    "w-8 h-8 rounded-full flex items-center justify-center text-[14px] font-serif font-bold shrink-0 transition-all duration-300 border-2",
-                                    isComplete && "bg-gold-primary border-gold-primary text-white",
-                                    isCurrent && "bg-surface-warm border-gold-primary text-gold-dark",
-                                    !isComplete && !isCurrent && "bg-surface-warm border-gold-primary/20 text-ink/45",
+                                    "w-8 h-8 rounded-full flex items-center justify-center text-[14px] font-bold shrink-0 transition-all duration-300 border-2",
+                                    isComplete && "bg-amber-500 border-amber-500 text-white",
+                                    isCurrent && "bg-amber-50 border-amber-500 text-amber-700",
+                                    !isComplete && !isCurrent && "bg-amber-50 border-amber-200 text-amber-700/45",
                                 )}>
                                     {isComplete ? <Check className="w-4 h-4" /> : i + 1}
                                 </span>
                                 {/* Step label */}
                                 <span className={cn(
-                                    "text-[12px] font-serif font-medium tracking-wide hidden sm:inline transition-colors",
-                                    isCurrent && "text-ink font-bold",
-                                    isComplete && "text-gold-dark",
-                                    !isComplete && !isCurrent && "text-ink/45",
+                                    "text-[12px] font-medium tracking-wide hidden sm:inline transition-colors",
+                                    isCurrent && "text-amber-900 font-bold",
+                                    isComplete && "text-amber-700",
+                                    !isComplete && !isCurrent && "text-amber-700/45",
                                 )}>
                                     {label}
                                 </span>
@@ -55,7 +55,7 @@ export default function FormStepIndicator({ steps, currentStep, onStepClick }: F
                             {i < steps.length - 1 && (
                                 <div className={cn(
                                     "flex-1 h-0.5 rounded-full transition-colors duration-300",
-                                    i < currentStep ? "bg-gold-primary" : "bg-gold-primary/20",
+                                    i < currentStep ? "bg-amber-500" : "bg-amber-200",
                                 )} />
                             )}
                         </li>

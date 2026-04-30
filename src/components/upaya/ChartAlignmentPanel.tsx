@@ -54,13 +54,13 @@ export default function ChartAlignmentPanel({ chartData, planetaryAnalysis }: Ch
         .map(([house, _]) => `Significant ${getOrdinal(parseInt(house))} House Cluster`);
 
     return (
-        <div className={cn("p-6 h-full relative overflow-hidden group rounded-3xl", "bg-[rgba(254,250,234,0.6)] border border-gold-primary/20 backdrop-blur-md")}>
+        <div className={cn("p-6 h-full relative overflow-hidden group rounded-3xl", "bg-[rgba(254,250,234,0.6)] border border-amber-300/60 backdrop-blur-md")}>
             {/* Subtle Glow Effect - Adjusted for Light Theme */}
             <div className="absolute -top-24 -left-24 w-48 h-48 bg-amber-500/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-amber-500/10 transition-all duration-700" />
 
-            <h3 className="text-[14px] font-semibold mb-6 flex items-center gap-2 text-ink">
-                <span className="w-4 h-4 rounded-full flex items-center justify-center border bg-gold-primary/10 border-gold-primary">
-                    <span className="w-1.5 h-1.5 rounded-full bg-gold-primary" />
+            <h3 className="text-[14px] font-semibold mb-6 flex items-center gap-2 text-amber-900">
+                <span className="w-4 h-4 rounded-full flex items-center justify-center border bg-amber-50 border-amber-500">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                 </span>
                 Birth Chart & Planetary Alignments
             </h3>
@@ -94,21 +94,21 @@ export default function ChartAlignmentPanel({ chartData, planetaryAnalysis }: Ch
 
             <div className="mt-8 space-y-3">
                 {highlights.map((h, i) => (
-                    <div key={i} className="flex items-center gap-3 border border-gold-primary rounded-xl p-3 bg-gold-primary/5">
-                        <div className="w-2 h-2 rounded-full bg-gold-primary" />
-                        <span className="text-[14px] font-medium text-ink">{h}</span>
+                    <div key={i} className="flex items-center gap-3 border border-amber-500 rounded-xl p-3 bg-amber-50">
+                        <div className="w-2 h-2 rounded-full bg-amber-500" />
+                        <span className="text-[14px] font-medium text-amber-900">{h}</span>
                     </div>
                 ))}
                 {clusters.map((c, i) => (
                     <div key={i} className="flex items-center gap-3 border border-indigo-500/20 rounded-xl p-3 bg-indigo-500/5">
                         <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
-                        <span className="text-[14px] font-medium text-ink">{c}</span>
+                        <span className="text-[14px] font-medium text-amber-900">{c}</span>
                     </div>
                 ))}
             </div>
 
             <div className="mt-6 text-center">
-                <p className="text-[10px] uppercase tracking-widest font-bold text-ink/45">Karmic Focus Area</p>
+                <p className="text-[10px] uppercase tracking-widest font-bold text-amber-700/45">Karmic Focus Area</p>
                 <p className="text-[12px] mt-1 italic text-body">"The 5th house concentration indicates high creative and intelligence merit from past lives."</p>
             </div>
         </div>

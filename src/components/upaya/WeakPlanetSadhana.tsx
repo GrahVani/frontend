@@ -68,7 +68,7 @@ const CircularProgress = ({ percentage, color = "amber" }: { percentage: number,
                     className={colorClass}
                 />
             </svg>
-            <span className="absolute text-[11px] font-bold text-ink">{percentage}%</span>
+            <span className="absolute text-[11px] font-bold text-amber-900">{percentage}%</span>
         </div>
     );
 };
@@ -108,7 +108,7 @@ const WeakPlanetSadhana: React.FC<WeakPlanetSadhanaProps> = ({ weakPlanets }) =>
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.1 }}
-                        className="rounded-xl border border-gold-primary/15 bg-white/50 hover:bg-white/70 transition-all p-3"
+                        className="rounded-xl border border-amber-200/60 bg-white/50 hover:bg-white/70 transition-all p-3"
                     >
                         <div className="flex items-start gap-3">
                             {/* Progress Circle */}
@@ -117,25 +117,25 @@ const WeakPlanetSadhana: React.FC<WeakPlanetSadhanaProps> = ({ weakPlanets }) =>
                             {/* Planet Info */}
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2 flex-wrap mb-1">
-                                    <h4 className="text-[14px] font-semibold text-ink tracking-tight">
+                                    <h4 className="text-[14px] font-semibold text-amber-900 tracking-tight">
                                         {planet.planet}
                                     </h4>
-                                    <span className="text-[10px] text-ink/40 font-medium">
+                                    <span className="text-[10px] text-amber-700/40 font-medium">
                                         {planet.current_position}
                                     </span>
-                                    <span className="text-[10px] text-ink/35 font-medium">
+                                    <span className="text-[10px] text-amber-700/35 font-medium">
                                         House {planet.house}
                                     </span>
                                     <span className={cn("text-[8px] font-black uppercase px-1.5 py-0.5 rounded", sev.bg, sev.text, sev.border)}>
                                         {planet.severity}
                                     </span>
-                                    <span className="text-[9px] font-semibold text-ink/35 ml-auto">
+                                    <span className="text-[9px] font-semibold text-amber-700/35 ml-auto">
                                         Best: {planet.best_day}
                                     </span>
                                 </div>
 
                                 {/* Mantra Sanskrit */}
-                                <p className="text-[14px] font-serif text-ink leading-snug">
+                                <p className="text-[14px] font-serif text-amber-900 leading-snug">
                                     {planet.mantra?.sanskrit}
                                 </p>
                                 {/* Transliteration */}
@@ -143,7 +143,7 @@ const WeakPlanetSadhana: React.FC<WeakPlanetSadhanaProps> = ({ weakPlanets }) =>
                                     {planet.mantra?.transliteration}
                                 </p>
                                 {/* Meaning */}
-                                <p className="text-[9px] text-ink/35 mt-0.5">
+                                <p className="text-[9px] text-amber-700/35 mt-0.5">
                                     {planet.mantra?.meaning}
                                 </p>
 
@@ -160,18 +160,18 @@ const WeakPlanetSadhana: React.FC<WeakPlanetSadhanaProps> = ({ weakPlanets }) =>
 
                                 {/* Count Details */}
                                 {planet.count && (
-                                    <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1.5 text-[10px] text-ink/45 font-medium">
-                                        <span>Daily: <span className="text-ink/70 font-semibold">{planet.count.daily_count}</span></span>
-                                        <span className="text-ink/15">|</span>
-                                        <span>Total: <span className="text-ink/70 font-semibold">{planet.count.total_count?.toLocaleString()}</span></span>
-                                        <span className="text-ink/15">|</span>
-                                        <span>Base: <span className="text-ink/70 font-semibold">{planet.count.base_count?.toLocaleString()}</span></span>
-                                        <span className="text-ink/15">|</span>
-                                        <span>Mala: <span className="text-ink/70 font-semibold">{planet.count.mala_rounds}×</span></span>
-                                        <span className="text-ink/15">|</span>
-                                        <span>Duration: <span className="text-ink/70 font-semibold">{planet.count.duration_days}d</span></span>
-                                        <span className="text-ink/15">|</span>
-                                        <span>Mult: <span className="text-ink/70 font-semibold">{planet.count.multiplier}×</span></span>
+                                    <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1.5 text-[10px] text-amber-700/45 font-medium">
+                                        <span>Daily: <span className="text-amber-800/70 font-semibold">{planet.count.daily_count}</span></span>
+                                        <span className="text-amber-900/15">|</span>
+                                        <span>Total: <span className="text-amber-800/70 font-semibold">{planet.count.total_count?.toLocaleString()}</span></span>
+                                        <span className="text-amber-900/15">|</span>
+                                        <span>Base: <span className="text-amber-800/70 font-semibold">{planet.count.base_count?.toLocaleString()}</span></span>
+                                        <span className="text-amber-900/15">|</span>
+                                        <span>Mala: <span className="text-amber-800/70 font-semibold">{planet.count.mala_rounds}×</span></span>
+                                        <span className="text-amber-900/15">|</span>
+                                        <span>Duration: <span className="text-amber-800/70 font-semibold">{planet.count.duration_days}d</span></span>
+                                        <span className="text-amber-900/15">|</span>
+                                        <span>Mult: <span className="text-amber-800/70 font-semibold">{planet.count.multiplier}×</span></span>
                                     </div>
                                 )}
                             </div>

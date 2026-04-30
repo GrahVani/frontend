@@ -24,23 +24,23 @@ export const DoshaHeader = memo(function DoshaHeader({ data, meta }: DoshaHeader
                         "w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500",
                         data.isPresent
                             ? "bg-red-100 text-red-600 shadow-[0_0_15px_rgba(239,68,68,0.2)]"
-                            : "bg-surface-warm text-ink/55"
+                            : "bg-amber-50/60 text-amber-700/55"
                     )}>
                         <Shield className="w-8 h-8" />
                     </div>
                     <div>
-                        <h2 className="text-[24px] font-serif font-black text-ink tracking-tight flex items-center gap-2">
+                        <h2 className="text-[24px] font-serif font-black text-amber-900 tracking-tight flex items-center gap-2">
                             {data.title}
                             <span className={cn(
                                 "px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest border",
                                 data.isPresent
                                     ? "bg-red-50 text-red-700 border-red-200"
-                                    : "bg-surface-warm text-ink/55 border-gold-primary/15"
+                                    : "bg-amber-50/60 text-amber-700/55 border-amber-200/60"
                             )}>
                                 {data.strengthBadge}
                             </span>
                         </h2>
-                        <p className="text-[14px] text-ink/55 font-medium italic mt-0.5">
+                        <p className="text-[14px] text-amber-700/55 font-medium italic mt-0.5">
                             {data.subtitle}
                         </p>
                     </div>
@@ -48,17 +48,17 @@ export const DoshaHeader = memo(function DoshaHeader({ data, meta }: DoshaHeader
 
                 {/* 2. Compact Identity Strip */}
                 {meta && (
-                    <div className="flex items-center gap-4 text-[10px] bg-surface-warm/30 px-4 py-2 rounded-xl border border-gold-primary/15">
+                    <div className="flex items-center gap-4 text-[10px] bg-amber-50/40 px-4 py-2 rounded-xl border border-amber-200/60">
                         <div className="flex items-center gap-1.5">
-                            <User className="w-3 h-3 text-ink/55" />
-                            <span className="font-bold text-ink">{meta.userName}</span>
+                            <User className="w-3 h-3 text-amber-700/55" />
+                            <span className="font-bold text-amber-900">{meta.userName}</span>
                         </div>
-                        <div className="w-px h-3 bg-gold-primary/15" />
-                        <div className="flex items-center gap-1.5 text-ink/55">
+                        <div className="w-px h-3 bg-amber-500/15" />
+                        <div className="flex items-center gap-1.5 text-amber-700/55">
                             <Calendar className="w-3 h-3" /> {meta.date}
                         </div>
-                        <div className="w-px h-3 bg-gold-primary/15" />
-                        <div className="flex items-center gap-1.5 text-ink/55">
+                        <div className="w-px h-3 bg-amber-500/15" />
+                        <div className="flex items-center gap-1.5 text-amber-700/55">
                             <Compass className="w-3 h-3 text-red-600" />
                             <span className="font-serif font-bold">{meta.ascendantSign}</span>
                         </div>

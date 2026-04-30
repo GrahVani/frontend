@@ -86,7 +86,7 @@ function PixelSizeControl({
     return (
         <div>
             <div className="flex items-center justify-between mb-2">
-                <label className="text-[11px] font-bold text-ink/60">{label}</label>
+                <label className="text-[11px] font-bold text-amber-900/60">{label}</label>
                 <div className="flex items-center gap-1">
                     <input
                         type="number"
@@ -95,19 +95,19 @@ function PixelSizeControl({
                             const val = parseInt(e.target.value) || min;
                             onChange(Math.max(min, Math.min(max, val)));
                         }}
-                        className="w-16 px-2 py-1 text-right text-[13px] font-bold text-primary bg-white border border-[#E6D5B8]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                        className="w-16 px-2 py-1 text-right text-[13px] font-bold text-primary bg-white border border-amber-200/60 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
                         min={min}
                         max={max}
                         step={step}
                     />
-                    <span className="text-[10px] text-ink/40">px</span>
+                    <span className="text-[10px] text-amber-900/40">px</span>
                 </div>
             </div>
             
             <div className="flex items-center gap-2">
                 <button
                     onClick={() => onChange(Math.max(min, value - step))}
-                    className="w-8 h-8 rounded-lg bg-white border border-[#E6D5B8]/50 flex items-center justify-center hover:border-primary transition-colors"
+                    className="w-8 h-8 rounded-lg bg-white border border-amber-200/60 flex items-center justify-center hover:border-primary transition-colors"
                 >
                     <Minus className="w-3 h-3" />
                 </button>
@@ -124,7 +124,7 @@ function PixelSizeControl({
                 
                 <button
                     onClick={() => onChange(Math.min(max, value + step))}
-                    className="w-8 h-8 rounded-lg bg-white border border-[#E6D5B8]/50 flex items-center justify-center hover:border-primary transition-colors"
+                    className="w-8 h-8 rounded-lg bg-white border border-amber-200/60 flex items-center justify-center hover:border-primary transition-colors"
                 >
                     <Plus className="w-3 h-3" />
                 </button>
@@ -170,16 +170,16 @@ export default function WidgetCustomizationPanel({
             {/* Panel */}
             <div className="fixed right-0 top-0 bottom-0 w-full max-w-sm bg-white shadow-2xl z-[75] flex flex-col">
                 {/* Header */}
-                <div className="px-5 py-4 border-b border-[#E6D5B8]/30 bg-surface-warm">
+                <div className="px-5 py-4 border-b border-amber-200/60 bg-amber-50">
                     <div className="flex items-start justify-between">
                         <div>
-                            <h3 className="text-[18px] font-black text-ink">Customize</h3>
-                            <p className="text-[12px] text-gold-dark font-bold mt-0.5">{name}</p>
-                            <p className="text-[10px] text-ink/40 mt-1">
+                            <h3 className="text-[18px] font-black text-amber-900">Customize</h3>
+                            <p className="text-[12px] text-amber-700 font-bold mt-0.5">{name}</p>
+                            <p className="text-[10px] text-amber-900/40 mt-1">
                                 {dimensions.width} × {dimensions.height}px
                             </p>
                         </div>
-                        <button onClick={onClose} className="p-2 hover:bg-gold-primary/20 rounded-lg text-ink/40 hover:text-ink">
+                        <button onClick={onClose} className="p-2 hover:bg-amber-50 rounded-lg text-amber-900/40 hover:text-amber-900">
                             <X className="w-5 h-5" />
                         </button>
                     </div>
@@ -198,7 +198,7 @@ export default function WidgetCustomizationPanel({
                                     "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[11px] font-bold transition-all",
                                     activeTab === tab.id
                                         ? "bg-primary text-white"
-                                        : "bg-white border border-[#E6D5B8]/30 text-ink/60"
+                                        : "bg-white border border-amber-200/60 text-amber-900/60"
                                 )}
                             >
                                 <tab.icon className="w-3.5 h-3.5" />
@@ -222,7 +222,7 @@ export default function WidgetCustomizationPanel({
                                             onClick={() => onApplyThemePreset(preset.key)}
                                             className={cn(
                                                 "p-3 rounded-xl border-2 transition-all text-left",
-                                                isSelected ? "border-primary" : "border-transparent hover:border-[#E6D5B8]"
+                                                isSelected ? "border-primary" : "border-transparent hover:border-amber-200/60"
                                             )}
                                             style={{ backgroundColor: preset.bg }}
                                         >
@@ -243,21 +243,21 @@ export default function WidgetCustomizationPanel({
                             {/* Custom Colors Toggle */}
                             <button
                                 onClick={() => setShowCustomColors(!showCustomColors)}
-                                className="w-full flex items-center justify-between p-3 bg-surface-warm/50 rounded-xl text-[12px] font-bold text-ink/70"
+                                className="w-full flex items-center justify-between p-3 bg-amber-50/50 rounded-xl text-[12px] font-bold text-amber-900/70"
                             >
                                 Custom Colors
                                 {showCustomColors ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                             </button>
 
                             {showCustomColors && (
-                                <div className="space-y-2 p-3 bg-surface-warm/30 rounded-xl">
+                                <div className="space-y-2 p-3 bg-amber-50/30 rounded-xl">
                                     {[
                                         { key: 'backgroundColor', label: 'Background' },
                                         { key: 'accentColor', label: 'Accent' },
                                         { key: 'borderColor', label: 'Border' },
                                     ].map((color) => (
                                         <div key={color.key} className="flex items-center justify-between">
-                                            <span className="text-[11px] text-ink/70">{color.label}</span>
+                                            <span className="text-[11px] text-amber-900/70">{color.label}</span>
                                             <input
                                                 type="color"
                                                 value={(theme as any)[color.key]}
@@ -272,7 +272,7 @@ export default function WidgetCustomizationPanel({
                             {/* Style Options */}
                             <div className="space-y-3 pt-2">
                                 <div>
-                                    <label className="text-[10px] font-bold text-ink/50 mb-1.5 block">Shadow</label>
+                                    <label className="text-[10px] font-bold text-amber-900/50 mb-1.5 block">Shadow</label>
                                     <div className="flex gap-1">
                                         {(['none', 'light', 'medium', 'heavy'] as const).map((shadow) => (
                                             <button
@@ -282,7 +282,7 @@ export default function WidgetCustomizationPanel({
                                                     "flex-1 py-2 rounded-lg border text-[10px] font-bold capitalize transition-all",
                                                     theme.shadowIntensity === shadow
                                                         ? "bg-primary text-white border-primary"
-                                                        : "bg-white border-[#E6D5B8]/30 text-ink/60"
+                                                        : "bg-white border-amber-200/60 text-amber-900/60"
                                                 )}
                                             >
                                                 {shadow}
@@ -292,7 +292,7 @@ export default function WidgetCustomizationPanel({
                                 </div>
 
                                 <div>
-                                    <label className="text-[10px] font-bold text-ink/50 mb-1.5 block">Corner Radius: {theme.borderRadius}px</label>
+                                    <label className="text-[10px] font-bold text-amber-900/50 mb-1.5 block">Corner Radius: {theme.borderRadius}px</label>
                                     <input
                                         type="range"
                                         min={0}
@@ -310,12 +310,12 @@ export default function WidgetCustomizationPanel({
                                     onClick={onToggleHeader}
                                     className={cn(
                                         "w-full flex items-center justify-between p-3 rounded-xl border transition-all",
-                                        showHeader ? "bg-primary/5 border-primary/20" : "bg-white border-[#E6D5B8]/30"
+                                        showHeader ? "bg-primary/5 border-primary/20" : "bg-white border-amber-200/60"
                                     )}
                                 >
                                     <div className="flex items-center gap-3">
-                                        <TypeIcon className={cn("w-5 h-5", showHeader ? "text-primary" : "text-ink/30")} />
-                                        <span className="text-[13px] font-bold text-ink">Show Header</span>
+                                        <TypeIcon className={cn("w-5 h-5", showHeader ? "text-primary" : "text-amber-900/30")} />
+                                        <span className="text-[13px] font-bold text-amber-900">Show Header</span>
                                     </div>
                                     <div className={cn("w-10 h-5 rounded-full relative", showHeader ? "bg-primary" : "bg-ink/20")}>
                                         <span className={cn("absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform", showHeader ? "translate-x-5" : "")} />
@@ -326,12 +326,12 @@ export default function WidgetCustomizationPanel({
                                     onClick={onToggleBorder}
                                     className={cn(
                                         "w-full flex items-center justify-between p-3 rounded-xl border transition-all",
-                                        showBorder ? "bg-primary/5 border-primary/20" : "bg-white border-[#E6D5B8]/30"
+                                        showBorder ? "bg-primary/5 border-primary/20" : "bg-white border-amber-200/60"
                                     )}
                                 >
                                     <div className="flex items-center gap-3">
-                                        <Square className={cn("w-5 h-5", showBorder ? "text-primary" : "text-ink/30")} />
-                                        <span className="text-[13px] font-bold text-ink">Show Border</span>
+                                        <Square className={cn("w-5 h-5", showBorder ? "text-primary" : "text-amber-900/30")} />
+                                        <span className="text-[13px] font-bold text-amber-900">Show Border</span>
                                     </div>
                                     <div className={cn("w-10 h-5 rounded-full relative", showBorder ? "bg-primary" : "bg-ink/20")}>
                                         <span className={cn("absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform", showBorder ? "translate-x-5" : "")} />
@@ -341,15 +341,15 @@ export default function WidgetCustomizationPanel({
 
                             {/* Header Style - Only when header is shown */}
                             {showHeader && (
-                                <div className="space-y-3 pt-4 border-t border-[#E6D5B8]/30">
+                                <div className="space-y-3 pt-4 border-t border-amber-200/60">
                                     <div className="flex items-center gap-2 mb-2">
                                         <TypeIcon className="w-4 h-4 text-primary" />
-                                        <span className="text-[12px] font-bold text-ink">Header Style</span>
+                                        <span className="text-[12px] font-bold text-amber-900">Header Style</span>
                                     </div>
                                     
                                     {/* Header Height */}
                                     <div>
-                                        <label className="text-[10px] font-bold text-ink/50 mb-1.5 block">Height: {theme.headerHeight ?? 36}px</label>
+                                        <label className="text-[10px] font-bold text-amber-900/50 mb-1.5 block">Height: {theme.headerHeight ?? 36}px</label>
                                         <input
                                             type="range"
                                             min={24}
@@ -363,7 +363,7 @@ export default function WidgetCustomizationPanel({
 
                                     {/* Header Font Size */}
                                     <div>
-                                        <label className="text-[10px] font-bold text-ink/50 mb-1.5 block">Font Size: {theme.headerFontSize ?? 12}px</label>
+                                        <label className="text-[10px] font-bold text-amber-900/50 mb-1.5 block">Font Size: {theme.headerFontSize ?? 12}px</label>
                                         <input
                                             type="range"
                                             min={10}
@@ -377,7 +377,7 @@ export default function WidgetCustomizationPanel({
 
                                     {/* Title Max Width */}
                                     <div>
-                                        <label className="text-[10px] font-bold text-ink/50 mb-1.5 block">Title Max Width: {theme.titleMaxWidth ?? 0}px (0=auto)</label>
+                                        <label className="text-[10px] font-bold text-amber-900/50 mb-1.5 block">Title Max Width: {theme.titleMaxWidth ?? 0}px (0=auto)</label>
                                         <input
                                             type="range"
                                             min={0}
@@ -391,7 +391,7 @@ export default function WidgetCustomizationPanel({
 
                                     {/* Title Alignment */}
                                     <div>
-                                        <label className="text-[10px] font-bold text-ink/50 mb-1.5 block">Title Alignment</label>
+                                        <label className="text-[10px] font-bold text-amber-900/50 mb-1.5 block">Title Alignment</label>
                                         <div className="flex gap-1">
                                             {(['left', 'center', 'right'] as const).map((align) => (
                                                 <button
@@ -401,7 +401,7 @@ export default function WidgetCustomizationPanel({
                                                         "flex-1 py-2 rounded-lg border text-[10px] font-bold capitalize transition-all",
                                                         theme.titleAlign === align
                                                             ? "bg-primary text-white border-primary"
-                                                            : "bg-white border-[#E6D5B8]/30 text-ink/60"
+                                                            : "bg-white border-amber-200/60 text-amber-900/60"
                                                     )}
                                                 >
                                                     {align}
@@ -413,7 +413,7 @@ export default function WidgetCustomizationPanel({
                                     {/* Header Colors */}
                                     <div className="flex items-center gap-3 pt-2">
                                         <div className="flex-1">
-                                            <label className="text-[10px] font-bold text-ink/50 mb-1 block">Background</label>
+                                            <label className="text-[10px] font-bold text-amber-900/50 mb-1 block">Background</label>
                                             <input
                                                 type="color"
                                                 value={theme.headerBackground}
@@ -422,7 +422,7 @@ export default function WidgetCustomizationPanel({
                                             />
                                         </div>
                                         <div className="flex-1">
-                                            <label className="text-[10px] font-bold text-ink/50 mb-1 block">Text Color</label>
+                                            <label className="text-[10px] font-bold text-amber-900/50 mb-1 block">Text Color</label>
                                             <input
                                                 type="color"
                                                 value={theme.headerTextColor}
@@ -435,9 +435,9 @@ export default function WidgetCustomizationPanel({
                             )}
 
                             {/* Content Text Scaling */}
-                            <div className="space-y-3 pt-4 border-t border-[#E6D5B8]/30">
+                            <div className="space-y-3 pt-4 border-t border-amber-200/60">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-[12px] font-bold text-ink">Content Text Scale</span>
+                                    <span className="text-[12px] font-bold text-amber-900">Content Text Scale</span>
                                     <span className="text-[11px] font-bold text-primary">{Math.round((theme.contentTextScale ?? 1) * 100)}%</span>
                                 </div>
                                 <input
@@ -449,7 +449,7 @@ export default function WidgetCustomizationPanel({
                                     onChange={(e) => onUpdateTheme({ contentTextScale: parseFloat(e.target.value) })}
                                     className="w-full h-2 bg-[#E6D5B8]/30 rounded-full appearance-none cursor-pointer accent-primary"
                                 />
-                                <p className="text-[10px] text-ink/40">Scales all text proportionally to widget size</p>
+                                <p className="text-[10px] text-amber-900/40">Scales all text proportionally to widget size</p>
                             </div>
                         </div>
                     )}
@@ -466,7 +466,7 @@ export default function WidgetCustomizationPanel({
                                             "py-2 px-1 rounded-xl border text-center transition-all",
                                             dimensions.width === preset.width && dimensions.height === preset.height
                                                 ? "bg-primary text-white border-primary"
-                                                : "bg-white border-[#E6D5B8]/30 text-ink/60 hover:border-primary/50"
+                                                : "bg-white border-amber-200/60 text-amber-900/60 hover:border-primary/50"
                                         )}
                                     >
                                         <span className="text-[11px] font-bold block">{preset.name}</span>
@@ -509,31 +509,31 @@ export default function WidgetCustomizationPanel({
                     {activeTab === 'content' && (
                         <div className="space-y-4">
                             <div>
-                                <label className="text-[11px] font-bold text-ink/50 mb-2 block">Custom Title</label>
+                                <label className="text-[11px] font-bold text-amber-900/50 mb-2 block">Custom Title</label>
                                 <input
                                     type="text"
                                     value={customTitle}
                                     onChange={(e) => setCustomTitle(e.target.value)}
                                     onBlur={() => onUpdateCustomTitle(customTitle.trim() || undefined)}
                                     placeholder={name}
-                                    className="w-full px-4 py-3 bg-white border border-[#E6D5B8]/30 rounded-xl text-[13px] text-ink placeholder:text-ink/30 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                    className="w-full px-4 py-3 bg-white border border-amber-200/60 rounded-xl text-[13px] text-amber-900 placeholder:text-amber-900/30 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                                 />
-                                <p className="mt-1.5 text-[10px] text-ink/40">
+                                <p className="mt-1.5 text-[10px] text-amber-900/40">
                                     Default: <span className="font-medium">{name}</span>
                                 </p>
                             </div>
 
-                            <div className="space-y-2 pt-4 border-t border-[#E6D5B8]/30">
+                            <div className="space-y-2 pt-4 border-t border-amber-200/60">
                                 <button
                                     onClick={onDuplicate}
-                                    className="w-full flex items-center gap-3 p-3 rounded-xl border border-[#E6D5B8]/30 hover:bg-blue-50/50 transition-all text-left"
+                                    className="w-full flex items-center gap-3 p-3 rounded-xl border border-amber-200/60 hover:bg-blue-50/50 transition-all text-left"
                                 >
                                     <div className="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
                                         <Copy className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <span className="text-[13px] font-bold text-ink block">Duplicate</span>
-                                        <span className="text-[10px] text-ink/50">Copy with same settings</span>
+                                        <span className="text-[13px] font-bold text-amber-900 block">Duplicate</span>
+                                        <span className="text-[10px] text-amber-900/50">Copy with same settings</span>
                                     </div>
                                 </button>
 
@@ -546,7 +546,7 @@ export default function WidgetCustomizationPanel({
                                     </div>
                                     <div>
                                         <span className="text-[13px] font-bold text-red-600 block">Remove</span>
-                                        <span className="text-[10px] text-ink/50">Delete from dashboard</span>
+                                        <span className="text-[10px] text-amber-900/50">Delete from dashboard</span>
                                     </div>
                                 </button>
                             </div>
@@ -555,7 +555,7 @@ export default function WidgetCustomizationPanel({
                 </div>
 
                 {/* Footer */}
-                <div className="p-4 border-t border-[#E6D5B8]/30 bg-surface-warm/50">
+                <div className="p-4 border-t border-amber-200/60 bg-amber-50/50">
                     <button
                         onClick={onClose}
                         className="w-full py-3 rounded-xl bg-primary text-white text-[14px] font-bold hover:bg-primary/90 transition-all"

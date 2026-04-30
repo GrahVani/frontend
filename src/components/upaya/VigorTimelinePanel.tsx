@@ -54,8 +54,8 @@ export default function VigorTimelinePanel({ strengthAnalysis, dashaDetails }: V
     const nextDasha = dashaDetails.dasha_timeline.find((d: DashaTimelineEntry) => d.status === 'future' && d.planet !== dashaDetails.current_maha_dasha.planet);
 
     return (
-        <div className={cn("p-6 h-full rounded-3xl backdrop-blur-md", "bg-[rgba(254,250,234,0.6)] border border-gold-primary/20")}>
-            <h3 className="text-[14px] font-semibold mb-8 flex items-center gap-2 text-ink">
+        <div className={cn("p-6 h-full rounded-3xl backdrop-blur-md", "bg-[rgba(254,250,234,0.6)] border border-amber-300/60")}>
+            <h3 className="text-[14px] font-semibold mb-8 flex items-center gap-2 text-amber-900">
                 <span className="w-4 h-4 rounded-full flex items-center justify-center border bg-indigo-500/10 border-indigo-500/30">
                     <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full" />
                 </span>
@@ -71,7 +71,7 @@ export default function VigorTimelinePanel({ strengthAnalysis, dashaDetails }: V
                     const label = stats.is_weak ? (percentage < 30 ? 'Weakest' : 'Weak') : 'Strong';
 
                     return (
-                        <div key={p.key} className="border border-gold-primary/20 rounded-2xl p-4 flex items-center gap-4 group bg-white/40">
+                        <div key={p.key} className="border border-amber-300/60 rounded-2xl p-4 flex items-center gap-4 group bg-white/40">
                             <div className="relative w-14 h-14 flex-shrink-0">
                                 <svg className="w-full h-full transform -rotate-90">
                                     <circle
@@ -79,7 +79,7 @@ export default function VigorTimelinePanel({ strengthAnalysis, dashaDetails }: V
                                         stroke="currentColor"
                                         strokeWidth="4"
                                         fill="transparent"
-                                        className="text-ink/10"
+                                        className="text-amber-900/10"
                                     />
                                     <motion.circle
                                         cx="28" cy="28" r="24"
@@ -94,12 +94,12 @@ export default function VigorTimelinePanel({ strengthAnalysis, dashaDetails }: V
                                         className="drop-shadow-sm"
                                     />
                                 </svg>
-                                <div className="absolute inset-0 flex items-center justify-center font-bold text-[10px] text-ink">
+                                <div className="absolute inset-0 flex items-center justify-center font-bold text-[10px] text-amber-900">
                                     {p.name}
                                 </div>
                             </div>
                             <div>
-                                <p className="text-[12px] font-semibold text-ink">{p.name}: {percentage.toFixed(1)}%</p>
+                                <p className="text-[12px] font-semibold text-amber-900">{p.name}: {percentage.toFixed(1)}%</p>
                                 <p className={cn("text-[10px] mt-0.5 font-bold uppercase tracking-wider",
                                     label === 'Strong' ? "text-emerald-600" : "text-amber-600"
                                 )}>({label})</p>
@@ -113,12 +113,12 @@ export default function VigorTimelinePanel({ strengthAnalysis, dashaDetails }: V
             <div className="space-y-6">
                 <div className="flex justify-between items-end">
                     <div className="flex-1">
-                        <p className="text-[10px] uppercase tracking-widest font-black mb-1 text-ink">Current <KnowledgeTooltip term="dasha_mahadasha">Mahadasha</KnowledgeTooltip></p>
-                        <h4 className="text-[18px] font-bold mb-1 text-ink">{currentMaha.planet} <KnowledgeTooltip term="dasha_system">Dasha</KnowledgeTooltip></h4>
+                        <p className="text-[10px] uppercase tracking-widest font-black mb-1 text-amber-900">Current <KnowledgeTooltip term="dasha_mahadasha">Mahadasha</KnowledgeTooltip></p>
+                        <h4 className="text-[18px] font-bold mb-1 text-amber-900">{currentMaha.planet} <KnowledgeTooltip term="dasha_system">Dasha</KnowledgeTooltip></h4>
                     </div>
                     <div className="text-right">
-                        <p className="text-[10px] uppercase tracking-widest font-black mb-1 text-ink">Ends On</p>
-                        <p className="text-[14px] font-semibold text-ink">{new Date(currentMaha.end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                        <p className="text-[10px] uppercase tracking-widest font-black mb-1 text-amber-900">Ends On</p>
+                        <p className="text-[14px] font-semibold text-amber-900">{new Date(currentMaha.end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                     </div>
                 </div>
 
@@ -138,7 +138,7 @@ export default function VigorTimelinePanel({ strengthAnalysis, dashaDetails }: V
                     />
                 </div>
 
-                <div className="flex justify-between items-center bg-white/50 border border-gold-primary/20 rounded-2xl p-4 mt-8">
+                <div className="flex justify-between items-center bg-white/50 border border-amber-300/60 rounded-2xl p-4 mt-8">
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg flex items-center justify-center border text-indigo-600 bg-indigo-600/10 border-indigo-600/20">
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -146,8 +146,8 @@ export default function VigorTimelinePanel({ strengthAnalysis, dashaDetails }: V
                             </svg>
                         </div>
                         <div>
-                            <p className="text-[10px] uppercase tracking-widest font-black text-ink">Next Cycle</p>
-                            <p className="text-[12px] font-semibold text-ink">{nextDasha?.planet || 'Future'} <KnowledgeTooltip term="dasha_system">Dasha</KnowledgeTooltip></p>
+                            <p className="text-[10px] uppercase tracking-widest font-black text-amber-900">Next Cycle</p>
+                            <p className="text-[12px] font-semibold text-amber-900">{nextDasha?.planet || 'Future'} <KnowledgeTooltip term="dasha_system">Dasha</KnowledgeTooltip></p>
                         </div>
                     </div>
                     <div className="px-3 py-1 rounded-full border bg-indigo-600/10 border-indigo-600/20">
