@@ -41,7 +41,7 @@ export default function GlobalHeader() {
     const router = useRouter();
     const { ayanamsa, chartStyle, recentClientIds, updateSettings } = useAstrologerStore();
     const settings = { ayanamsa, chartStyle, recentClientIds };
-    const { user, logout, isLearner, isProfessional } = useAuth();
+    const { user, logout } = useAuth();
     const { isClientSet, clientDetails, clearClientDetails } = useVedicClient();
     const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
     const [isProfileOpen, setIsProfileOpen] = React.useState(false);
@@ -153,7 +153,7 @@ export default function GlobalHeader() {
                         <Menu className="w-5 h-5 text-white" />
                     </button>
 
-                    <Link href={isLearner ? "/learn" : "/dashboard"} className="group flex items-center gap-1 -ml-3">
+                    <Link href="/dashboard" className="group flex items-center gap-1 -ml-3">
                         <div className="relative flex items-center py-1">
                             <Image
                                 src="/Logo.png"
@@ -190,31 +190,23 @@ export default function GlobalHeader() {
                     <div className="header-divider hidden md:block" />
 
                     <nav className="hidden md:flex items-center gap-0.5" role="navigation" aria-label="Main navigation">
-                        {isProfessional && (
-                            <>
-                                <NavLink href="/dashboard" label="Dashboard" active={isActive("/dashboard")} />
-                                <NavLink href={isClientSet ? "/vedic-astrology/customize" : "/vedic-astrology?redirect=/vedic-astrology/customize"} label="Workbench" active={isActive("/vedic-astrology/customize")} onClick={handleProtectedClick} isLocked={!isClientSet} />
-                                <NavLink href={isClientSet ? "/vedic-astrology/overview" : "/vedic-astrology"} label="Vedic Astrology" active={isActive("/vedic-astrology/vedic-tab")} onClick={handleVedicClick} isLocked={!isClientSet} />
-                                <NavLink href={isClientSet ? "/vedic-astrology/kp" : "/vedic-astrology/kp"} label="KP" active={isActive("/vedic-astrology/kp-tab")} onClick={handleKPClick} isLocked={!isClientSet} />
-                                <NavLink href="/vedic-astrology/panchanga" label="Panchang" active={isActive("/vedic-astrology/panchanga")} onClick={handleProtectedClick} isLocked={!isClientSet} />
-                                <NavLink href="/muhurta" label="Muhurta" active={isActive("/muhurta")} onClick={handleProtectedClick} isLocked={!isClientSet} />
-                                <NavLink 
-                                    href="#" 
-                                    label="More" 
-                                    active={isActive("/matchmaking") || isActive("/numerology") || isActive("/calendar")}
-                                    subItems={[
-                                        { name: "Matchmaking", path: "/matchmaking", icon: Heart },
-                                        { name: "Numerology", path: "/numerology", icon: Hash },
-                                        { name: "Calendar", path: "/calendar", icon: Calendar },
-                                    ]}
-                                />
-                            </>
-                        )}
-                        {isLearner && (
-                            <>
-                                <NavLink href="/learn" label="Learn" active={isActive("/learn")} />
-                            </>
-                        )}
+                        <NavLink href="/dashboard" label="Dashboard" active={isActive("/dashboard")} />
+                        <NavLink href={isClientSet ? "/vedic-astrology/customize" : "/vedic-astrology?redirect=/vedic-astrology/customize"} label="Workbench" active={isActive("/vedic-astrology/customize")} onClick={handleProtectedClick} isLocked={!isClientSet} />
+                        <NavLink href={isClientSet ? "/vedic-astrology/overview" : "/vedic-astrology"} label="Vedic Astrology" active={isActive("/vedic-astrology/vedic-tab")} onClick={handleVedicClick} isLocked={!isClientSet} />
+                        <NavLink href={isClientSet ? "/vedic-astrology/kp" : "/vedic-astrology/kp"} label="KP" active={isActive("/vedic-astrology/kp-tab")} onClick={handleKPClick} isLocked={!isClientSet} />
+                        <NavLink href="/vedic-astrology/panchanga" label="Panchang" active={isActive("/vedic-astrology/panchanga")} onClick={handleProtectedClick} isLocked={!isClientSet} />
+                        <NavLink href="/muhurta" label="Muhurta" active={isActive("/muhurta")} onClick={handleProtectedClick} isLocked={!isClientSet} />
+                        <NavLink href="/learn" label="Learn" active={isActive("/learn")} />
+                        <NavLink 
+                            href="#" 
+                            label="More" 
+                            active={isActive("/matchmaking") || isActive("/numerology") || isActive("/calendar")}
+                            subItems={[
+                                { name: "Matchmaking", path: "/matchmaking", icon: Heart },
+                                { name: "Numerology", path: "/numerology", icon: Hash },
+                                { name: "Calendar", path: "/calendar", icon: Calendar },
+                            ]}
+                        />
                     </nav>
                 </div>
 
@@ -222,48 +214,44 @@ export default function GlobalHeader() {
                 <div className="flex items-center gap-3 lg:gap-4">
                     {/* Client chip removed — replaced by ClientSwitcherBar below */}
 
-                    {isProfessional && (
-                        <>
-                            {/* Ayanamsa & Time chip */}
-                            <div className="hidden lg:flex items-center gap-2.5 px-3 py-1.5 rounded-lg"
-                                style={{
-                                    background: 'rgba(255,255,255,0.06)',
-                                    border: '1px solid rgba(208,140,96,0.18)',
-                                }}>
-                                <span className="text-[11px] font-semibold tracking-wider text-white">{settings.ayanamsa}</span>
-                                <div className="w-[1px] h-3.5 bg-white/15" />
-                                <div className="flex items-center gap-1.5">
-                                    <Clock className="w-3 h-3 text-white" />
-                                    <span className="text-[11px] font-mono font-semibold text-white tracking-wide" suppressHydrationWarning>
-                                        {mounted ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "--:--"}
-                                    </span>
-                                </div>
-                            </div>
+                    {/* Ayanamsa & Time chip */}
+                    <div className="hidden lg:flex items-center gap-2.5 px-3 py-1.5 rounded-lg"
+                        style={{
+                            background: 'rgba(255,255,255,0.06)',
+                            border: '1px solid rgba(208,140,96,0.18)',
+                        }}>
+                        <span className="text-[11px] font-semibold tracking-wider text-white">{settings.ayanamsa}</span>
+                        <div className="w-[1px] h-3.5 bg-white/15" />
+                        <div className="flex items-center gap-1.5">
+                            <Clock className="w-3 h-3 text-white" />
+                            <span className="text-[11px] font-mono font-semibold text-white tracking-wide" suppressHydrationWarning>
+                                {mounted ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "--:--"}
+                            </span>
+                        </div>
+                    </div>
 
-                            <div className="header-divider hidden lg:block" />
+                    <div className="header-divider hidden lg:block" />
 
-                            {/* Action buttons */}
-                            <div className="flex items-center gap-1">
-                                <button
-                                    className="header-icon-btn"
-                                    aria-label="Notifications"
-                                    title="Notifications"
-                                >
-                                    <Bell className="w-[18px] h-[18px] text-white" />
-                                </button>
-                                <button
-                                    onClick={() => setIsSettingsOpen(true)}
-                                    className="header-icon-btn group"
-                                    aria-label="Ayanamsa & chart settings"
-                                    title="Ayanamsa & chart settings"
-                                >
-                                    <Settings className="w-[18px] h-[18px] text-white group-hover:rotate-45 transition-transform duration-500" />
-                                </button>
-                            </div>
+                    {/* Action buttons */}
+                    <div className="flex items-center gap-1">
+                        <button
+                            className="header-icon-btn"
+                            aria-label="Notifications"
+                            title="Notifications"
+                        >
+                            <Bell className="w-[18px] h-[18px] text-white" />
+                        </button>
+                        <button
+                            onClick={() => setIsSettingsOpen(true)}
+                            className="header-icon-btn group"
+                            aria-label="Ayanamsa & chart settings"
+                            title="Ayanamsa & chart settings"
+                        >
+                            <Settings className="w-[18px] h-[18px] text-white group-hover:rotate-45 transition-transform duration-500" />
+                        </button>
+                    </div>
 
-                            <div className="header-divider" />
-                        </>
-                    )}
+                    <div className="header-divider" />
 
                     {/* User Profile Dropdown */}
                     <div className="relative">
@@ -318,12 +306,10 @@ export default function GlobalHeader() {
                                             <User className="w-4 h-4 text-copper-dark" />
                                             <span>My Profile</span>
                                         </Link>
-                                        {isProfessional && (
-                                            <Link href="/settings" role="menuitem" className="flex items-center gap-3 px-4 py-3 text-[13px] text-ink hover:bg-bg-hover rounded-xl transition-colors font-medium" onClick={() => setIsProfileOpen(false)}>
-                                                <Settings className="w-4 h-4 text-copper-dark" />
-                                                <span>Settings</span>
-                                            </Link>
-                                        )}
+                                        <Link href="/settings" role="menuitem" className="flex items-center gap-3 px-4 py-3 text-[13px] text-ink hover:bg-bg-hover rounded-xl transition-colors font-medium" onClick={() => setIsProfileOpen(false)}>
+                                            <Settings className="w-4 h-4 text-copper-dark" />
+                                            <span>Settings</span>
+                                        </Link>
                                         <div className="h-[1px] bg-border-divider/40 my-2 mx-3" role="separator" />
                                         <button
                                             role="menuitem"
@@ -341,10 +327,9 @@ export default function GlobalHeader() {
                 </div>
             </div>
 
-            {/* Client Switcher Bar — only for professionals */}
-            {isProfessional && <ClientSwitcherBar />}
+            <ClientSwitcherBar />
 
-            {isSettingsOpen && isProfessional && (
+            {isSettingsOpen && (
                 <GlobalSettingsModal onClose={() => setIsSettingsOpen(false)} router={router} />
             )}
 

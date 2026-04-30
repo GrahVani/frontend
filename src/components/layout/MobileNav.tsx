@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { X, LayoutDashboard, Users, Star, Clock, Heart, Calendar, ChevronDown, Settings, Hash, Sparkles, UserCheck, FlaskConical, Lock } from "lucide-react";
+import { X, LayoutDashboard, Users, Star, Clock, Heart, Calendar, ChevronDown, Settings, Hash, Sparkles, UserCheck, FlaskConical, Lock, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
 import { SidebarItem } from "@/components/layout/SectionSidebar";
@@ -44,6 +44,7 @@ export default function MobileNav({ onClose }: { onClose: () => void }) {
         { href: isClientSet ? "/vedic-astrology/kp" : "/vedic-astrology/kp", label: "KP", icon: Star },
         { href: "/vedic-astrology/panchanga", label: "Panchang", icon: Sparkles },
         { href: "/muhurta", label: "Muhurta", icon: Clock, subItems: MUHURTA_Sidebar },
+        { href: "/learn", label: "Learn", icon: BookOpen },
         { href: "/numerology", label: "Numerology", icon: Hash, subItems: NUMEROLOGY_SYSTEMS },
         { href: "/matchmaking", label: "Matchmaking", icon: Heart, subItems: MATCHMAKING_Sidebar },
         { href: "/calendar", label: "Calendar", icon: Calendar, subItems: CALENDAR_Sidebar },
