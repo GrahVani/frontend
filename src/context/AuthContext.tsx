@@ -26,8 +26,6 @@ interface AuthContextType {
     logout: () => Promise<void>;
     refreshProfile: () => Promise<void>;
     isAuthenticated: boolean;
-    isLearner: boolean;
-    isProfessional: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -66,8 +64,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         logout,
         refreshProfile: handleRefreshProfile,
         isAuthenticated: !!user,
-        isLearner: user?.role === "learner",
-        isProfessional: user?.role === "user" || user?.role === "admin" || user?.role === "moderator",
     }), [user, loading, login, logout, handleRefreshProfile]);
 
     return (

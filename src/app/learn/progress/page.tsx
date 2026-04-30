@@ -44,7 +44,7 @@ export default function LearnProgressPage() {
     );
   }
 
-  const firstName = user?.name?.split(" ")[0] || "Learner";
+  const firstName = user?.name?.split(" ")[0] || "Student";
   const lessonsCompleted = data?.lessonsCompleted || 0;
   const averageScore = data?.averageScore || 0;
   const totalLessons = 12; // Placeholder - should come from API

@@ -82,7 +82,7 @@ export default function LearnPage() {
     );
   }
 
-  const firstName = user?.name?.split(" ")[0] || "Learner";
+  const firstName = user?.name?.split(" ")[0] || "Student";
   const currentLevel = dashboard?.lessonsCompleted && dashboard.lessonsCompleted > 5 ? "Level 2" : "Level 1";
   const streakDays = 3; // TODO: calculate from progress data
 
