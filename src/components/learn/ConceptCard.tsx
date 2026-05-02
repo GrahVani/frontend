@@ -1,0 +1,110 @@
+"use client";
+
+import React, { useState } from "react";
+import {
+  Orbit, Moon, Calculator, ArrowUp, ArrowDown, Table, TrendingUp,
+  Sparkles, ChevronDown, ChevronUp, Lightbulb, AlertTriangle,
+  Compass, Sun, Flame, Triangle, EyeOff, Eye, Swords, GitBranch,
+  Briefcase, Clock, Crown, Coins, MessageCircle, Grid, Clipboard,
+  Heart, Gem, BookOpen, Layers, Glasses
+} from "lucide-react";
+
+const ICON_MAP: Record<string, React.ElementType> = {
+  Orbit, Moon, Calculator, ArrowUp, ArrowDown, Table, TrendingUp,
+  Compass, Sun, Flame, Triangle, EyeOff, Eye, Swords, GitBranch,
+  Briefcase, Clock, Crown, Coins, MessageCircle, Grid, Clipboard,
+  Heart, Gem, BookOpen, Layers, Glasses, Sparkles,
+};
+
+interface Concept {
+  id: number;
+  title: string;
+  description: string;
+  icon?: string;
+  keyTakeaway?: string;
+  proTip?: string;
+  commonMistake?: string;
+}
+
+interface ConceptCardProps {
+  concept: Concept;
+  index: number;
+}
+
+export default function ConceptCard({ concept, index }: ConceptCardProps) {
+  const [expanded, setExpanded] = useState(false);
+  const Icon = ICON_MAP[concept.icon || ""] || Sparkles;
+
+  return (
+    <div className="bg-white rounded-2xl border border-amber-200/60 overflow-hidden hover:shadow-md transition-shadow duration-300">
+      <div className="p-6">
+        {/* Header */}
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center shrink-0 border border-amber-200/50">
+            <Icon className="w-6 h-6 text-amber-700" />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-xs font-bold text-amber-500 uppercase tracking-wider">
+                Concept {index + 1}
+              </span>
+            </div>
+            <h3 className="text-lg font-bold text-amber-900">{concept.title}</h3>
+          </div>
+        </div>
+
+        {/* Description */}
+        <div className={`mt-4 text-amber-800 leading-relaxed ${expanded ? "" : "line-clamp-3"}`}>
+          {concept.description}
+        </div>
+
+        {/* Expand/Collapse */}
+        {concept.description.length > 150 && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="mt-2 text-sm font-medium text-amber-600 hover:text-amber-800 flex items-center gap-1 transition-colors"
+          >
+            {expanded ? (
+              <>Show less <ChevronUp className="w-4 h-4" /></>
+            ) : (
+              <>Read more <ChevronDown className="w-4 h-4" /></>
+            )}
+          </button>
+        )}
+
+        {/* Key Takeaway */}
+        {concept.keyTakeaway && (
+          <div className="mt-4 p-3 bg-amber-50/80 rounded-xl border border-amber-100 flex items-start gap-2">
+            <Sparkles className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+            <div>
+              <span className="text-xs font-bold text-amber-600 uppercase tracking-wide">Key Takeaway</span>
+              <p className="text-sm text-amber-800 font-medium mt-0.5">{concept.keyTakeaway}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Pro Tip */}
+        {concept.proTip && (
+          <div className="mt-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 flex items-start gap-2">
+            <Lightbulb className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
+            <div>
+              <span className="text-xs font-bold text-green-700 uppercase tracking-wide">Pro Tip</span>
+              <p className="text-sm text-green-900 mt-0.5">{concept.proTip}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Common Mistake */}
+        {concept.commonMistake && (
+          <div className="mt-3 p-3 bg-gradient-to-r from-red-50 to-orange-50 rounded-xl border border-red-200 flex items-start gap-2">
+            <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+            <div>
+              <span className="text-xs font-bold text-red-600 uppercase tracking-wide">Common Mistake</span>
+              <p className="text-sm text-red-900 mt-0.5">{concept.commonMistake}</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
