@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { ChevronRight, Calendar, AlertCircle } from 'lucide-react';
@@ -27,20 +27,55 @@ const FIXED_DURATIONS: Record<string, number> = {
 };
 
 export default function ShasthihayaniDasha({ periods, isApplicable = true, onDrillDown }: ShasthihayaniDashaProps) {
+    const [selectedCycle, setSelectedCycle] = useState<number | string>(1);
 
-    // SHASTRA RULE: Render only one complete 60-year cycle.
-    const shastraPeriods: DashaNode[] = [];
-    let moonFound = false;
-    for (const p of periods) {
-        shastraPeriods.push(p);
-        if (p.planet === 'Moon') {
-            moonFound = true;
-            break;
+    // Group periods by cycle dynamically (8 planets per cycle for Shasthihayani)
+    const cycles = useMemo(() => {
+        const grouped: Record<string | number, DashaNode[]> = {};
+        if (!Array.isArray(periods)) return grouped;
+        periods.forEach((p: DashaNode, idx: number) => {
+            const cNum = (p.raw?.cycle || p.raw?.cycle_number || Math.floor(idx / 8) + 1) as string | number;
+            if (!grouped[cNum]) grouped[cNum] = [];
+            grouped[cNum].push(p);
+        });
+        return grouped;
+    }, [periods]);
+
+    const availableCycles = useMemo(() => {
+        return Object.keys(cycles).sort((a, b) => {
+            const numA = Number(a);
+            const numB = Number(b);
+            if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+            return a.localeCompare(b);
+        });
+    }, [cycles]);
+
+    const activeCycleNum = useMemo(() => {
+        if (!availableCycles.length) return "1";
+        for (const cKey of availableCycles) {
+            const cyclePeriods = cycles[cKey as any];
+            if (cyclePeriods && Array.isArray(cyclePeriods) && cyclePeriods.some((p: DashaNode) => p.isCurrent)) {
+                return cKey;
+            }
         }
-    }
+        return availableCycles[0];
+    }, [cycles, availableCycles]);
+
+    // Auto-select active cycle on load
+    React.useEffect(() => {
+        if (activeCycleNum !== undefined && cycles[activeCycleNum as any]) {
+            setSelectedCycle(activeCycleNum);
+        } else if (availableCycles.length > 0) {
+            setSelectedCycle(availableCycles[0]);
+        }
+    }, [activeCycleNum, cycles, availableCycles]);
+
+    if (availableCycles.length === 0) return null;
+
+    const currentCyclePeriods = cycles[selectedCycle as any] || [];
 
     return (
-        <div className="space-y-6 animate-in fade-in duration-700">
+        <div className="space-y-4 animate-in fade-in duration-700">
             {/* Applicability Banner */}
             {!isApplicable && (
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3 mx-4 mt-2">
@@ -52,7 +87,26 @@ export default function ShasthihayaniDasha({ periods, isApplicable = true, onDri
                 </div>
             )}
 
-
+            {/* Cycle Navigation */}
+            <div className="flex flex-wrap gap-2 items-center px-4 pt-2">
+                <div className="flex bg-amber-50/50 rounded-lg p-0.5 gap-1 border border-amber-200/60 backdrop-blur-sm overflow-x-auto scrollbar-hide">
+                    {availableCycles.map((c: string | number) => {
+                        const isActive = String(selectedCycle) === String(c);
+                        return (
+                            <button
+                                key={c}
+                                onClick={() => setSelectedCycle(c as any)}
+                                className={cn(
+                                    "px-3 py-1.5 rounded-md text-[12px] font-bold transition-all",
+                                    isActive ? "bg-white text-amber-900 shadow-sm border border-amber-200/50" : "text-amber-600 hover:text-amber-900"
+                                )}
+                            >
+                                Cycle {c}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
 
             {/* Table */}
             <div className="">
@@ -67,7 +121,7 @@ export default function ShasthihayaniDasha({ periods, isApplicable = true, onDri
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-amber-200/40 font-medium font-sans bg-white/60">
-                        {shastraPeriods.map((mahadasha, mIdx) => {
+                        {currentCyclePeriods.map((mahadasha: DashaNode, mIdx: number) => {
                             const uniqueId = `shasthi-${mahadasha.planet}-${mIdx}`;
                             const canDrill = mahadasha.canDrillFurther || (mahadasha.sublevel && mahadasha.sublevel.length > 0);
                             const isBalance = mIdx === 0 && (mahadasha.type === "Balance" || mahadasha.isBalance);
@@ -136,15 +190,6 @@ export default function ShasthihayaniDasha({ periods, isApplicable = true, onDri
                     </tbody>
                 </table>
             </div>
-
-            {/* Shastra Rule Footer */}
-            {!moonFound && periods.length > 0 && (
-                <div className="text-center pt-2">
-                    <p className="text-[12px] font-semibold text-amber-500 uppercase tracking-widest italic">
-                        Timeline truncated as per Shastra rules (Single 60-Year Cycle)
-                    </p>
-                </div>
-            )}
         </div>
     );
 }

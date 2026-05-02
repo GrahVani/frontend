@@ -131,7 +131,7 @@ export const DEFAULT_WIDGET_THEME: WidgetTheme = {
     autoScale: true,
     // Astrologer defaults
     planetDisplayMode: 'name',
-    planetFontSize: 14,
+    planetFontSize: 18,
     planetFontWeight: '600',
     // showDegrees: undefined by default - will be determined by chart type (D1 shows degrees, others don't)
     degreeFormat: 'short',
@@ -453,15 +453,15 @@ export const CHART_CATALOG: CustomizeChartItem[] = [
 
     // KP SYSTEM MODULES
     { id: 'kp_planets', name: 'Planets', description: 'Planetary positions with stellar star and sub lords', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.kp_module },
-    { id: 'kp_cusps', name: 'Cuspal Chart', description: 'Visual chart displaying the 12 house cusps', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 400, height: 400 } },
-    { id: 'kp_house_significations', name: 'House Significations', description: 'Thematic significations of houses in KP system', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.kp_module },
-    { id: 'kp_planetary_significators', name: 'Planetary Significators', description: 'Mapping of planets to the houses they signify', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.kp_module },
-    { id: 'kp_bhava_details', name: 'Bhava Details', description: 'Technical bhava analysis including signs and sub-lords', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.kp_module },
-    { id: 'kp_interlinks', name: 'Interlinks', description: 'Planetary interlink analysis and connection chains', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.kp_module },
-    { id: 'kp_advanced_ssl', name: 'Advanced SSL', description: 'Advanced SSL connection analysis and strength', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.kp_module },
-    { id: 'kp_nakshatra_nadi', name: 'Nakshatra Nadi', description: 'Detailed Nadi coordinates for planets and houses', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.kp_module },
-    { id: 'kp_fortuna', name: 'Pars Fortuna', description: 'Part of Fortune calculation for success points', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 250, height: 200 } },
-    { id: 'kp_ruling_planets', name: 'Ruling Planets', description: 'Real-time strong planets for the current moment', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 250, height: 200 } },
+    { id: 'kp_cusps', name: 'Cuspal Chart', description: 'Visual chart displaying the 12 house cusps', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: { width: 520, height: 520, minWidth: 320, minHeight: 320, maxWidth: 900, maxHeight: 900 } },
+    { id: 'kp_house_significations', name: 'House Significations', description: 'Thematic significations of houses in KP system', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: { width: 900, height: 534, minWidth: 600, minHeight: 400, maxWidth: 1200, maxHeight: 900 } },
+    { id: 'kp_planetary_significators', name: 'Planetary Significators', description: 'Mapping of planets to the houses they signify', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: { width: 900, height: 499, minWidth: 600, minHeight: 400, maxWidth: 1200, maxHeight: 900 } },
+    { id: 'kp_bhava_details', name: 'Bhava Details', description: 'Technical bhava analysis including signs and sub-lords', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: { width: 900, height: 524, minWidth: 600, minHeight: 400, maxWidth: 1200, maxHeight: 900 } },
+    { id: 'kp_interlinks', name: 'Interlinks', description: 'Planetary interlink analysis and connection chains', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: { ...WIDGET_DIMENSION_PRESETS.kp_module, width: 832, height: 511 } },
+    { id: 'kp_advanced_ssl', name: 'Advanced SSL', description: 'Advanced SSL connection analysis and strength', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: { ...WIDGET_DIMENSION_PRESETS.kp_module, width: 900, height: 580 } },
+    { id: 'kp_nakshatra_nadi', name: 'Nakshatra Nadi', description: 'Detailed Nadi coordinates for planets and houses', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: { ...WIDGET_DIMENSION_PRESETS.kp_module, width: 850, height: 600 } },
+    { id: 'kp_fortuna', name: 'Pars Fortuna', description: 'Part of Fortune calculation for success points', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 752, height: 464 } },
+    { id: 'kp_ruling_planets', name: 'Ruling Planets', description: 'Real-time strong planets for the current moment', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: { ...DEFAULT_DIMENSIONS, width: 769, height: 478 } },
     { id: 'kp_ashtakavarga', name: 'Ashtakavarga (KP)', description: 'Ashtakavarga calculation within the KP system', category: 'kp_module', requiredSystem: 'kp', defaultDimensions: WIDGET_DIMENSION_PRESETS.ashtakavarga },
 ];
 

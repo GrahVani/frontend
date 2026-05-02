@@ -80,25 +80,25 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
                     </div>
                     <div className="min-w-0">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                            <h3 className="font-bold text-[14px] leading-tight text-amber-900">
+                            <h3 className="font-bold text-[16px] leading-tight text-amber-900">
                                 {gem_data.stone}
                             </h3>
                             {priority && (
-                                <span className="inline-flex items-center justify-center w-5 h-5 text-[10px] font-black rounded-full bg-amber-500 text-white shadow-sm shrink-0 ml-1">
+                                <span className="inline-flex items-center justify-center w-5 h-5 text-[11px] font-black rounded-full bg-amber-500 text-white shadow-sm shrink-0 ml-1">
                                     P{priority}
                                 </span>
                             )}
                         </div>
-                        <p className="text-[10px] font-semibold tracking-wider uppercase mt-0.2"
+                        <p className="text-[12px] font-semibold tracking-wide mt-0.2"
                             style={{ color: colors.text }}>
-                            FOR {planet.toUpperCase()}
+                            For {planet}
                         </p>
                     </div>
                 </div>
 
                 {/* Nature Badge */}
                 <div className={cn(
-                    "px-2 py-0.5 rounded-lg text-[8px] font-bold uppercase tracking-wider flex items-center gap-1 shrink-0 border",
+                    "px-2 py-0.5 rounded-lg text-[11px] font-bold tracking-wide flex items-center gap-1 shrink-0 border",
                     analysis.nature === 'Benefic'
                         ? "bg-emerald-50 border-emerald-200 text-emerald-700"
                         : analysis.nature === 'Neutral'
@@ -126,7 +126,7 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
                         <Info className={cn("w-3 h-3 shrink-0",
                             isRecommended ? "text-amber-700" : "text-red-400"
                         )} />
-                        <span className="text-[8px] font-bold uppercase tracking-[0.12em] text-amber-700/55">
+                        <span className="text-[11px] font-bold tracking-wide text-amber-700/55">
                             Rationale
                         </span>
                     </div>
@@ -140,22 +140,22 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
                     <div className="p-2 rounded-xl bg-white border border-amber-200/60">
                         <div className="flex items-center gap-1 mb-1">
                             <Hand className="w-2.5 h-2.5 text-amber-500" />
-                            <p className="text-[8px] font-bold uppercase tracking-[0.1em] text-amber-700/55">
+                            <p className="text-[11px] font-bold tracking-wide text-amber-700/55">
                                 Metal & finger
                             </p>
                         </div>
-                        <p className="text-[11px] font-semibold text-amber-900">
+                        <p className="text-[13px] font-semibold text-amber-900">
                             {gem_data.metal} — {gem_data.finger}
                         </p>
                     </div>
                     <div className="p-2 rounded-xl bg-white border border-amber-200/60">
                         <div className="flex items-center gap-1 mb-1">
                             <Home className="w-2.5 h-2.5 text-amber-500" />
-                            <p className="text-[8px] font-bold uppercase tracking-[0.1em] text-amber-700/55">
+                            <p className="text-[11px] font-bold tracking-wide text-amber-700/55">
                                 Placement
                             </p>
                         </div>
-                        <p className="text-[11px] font-semibold text-amber-900">
+                        <p className="text-[13px] font-semibold text-amber-900">
                             {position.sign} in {position.house}{getOrdinal(position.house)}
                         </p>
                     </div>
@@ -171,7 +171,7 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
                     {rulerships.length > 0 && (
                         <div className="flex items-center gap-1 px-2 py-0.5 bg-sky-50 rounded-lg border border-sky-100/60">
                             <MapPin className="w-2.5 h-2.5 text-sky-500" />
-                            <span className="text-[9px] font-bold text-sky-700">
+                            <span className="text-[11px] font-bold text-sky-700">
                                 H-{rulerships.join(', ')}
                             </span>
                         </div>
@@ -179,7 +179,7 @@ export default function GemstoneAnalysisCard({ gemstone, isRecommended, priority
                     {dasha_status.is_active && (
                         <div className="flex items-center gap-1 px-2 py-0.5 bg-amber-50 rounded-lg border border-amber-100/60">
                             <Zap className="w-2.5 h-2.5 text-amber-500" />
-                            <span className="text-[9px] font-bold text-amber-700">
+                            <span className="text-[11px] font-bold text-amber-700">
                                 {dasha_status.period}
                             </span>
                         </div>

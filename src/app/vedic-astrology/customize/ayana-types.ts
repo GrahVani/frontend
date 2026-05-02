@@ -302,7 +302,7 @@ export const AYANAMSA_HIERARCHY: AyanamsaOption[] = [
                 id: 'cat-true-chitra',
                 name: 'True Chitra Dasha Systems',
                 widgets: [
-                    { id: 'prana' }, { id: 'ashtottari' }, { id: 'tribhagi' }, { id: 'tribhagi_40' },
+                    { id: 'vimshottari' }, { id: 'prana' }, { id: 'ashtottari' }, { id: 'tribhagi' }, { id: 'tribhagi_40' },
                     { id: 'shodashottari' }, { id: 'dwadashottari' }, { id: 'dwisaptati' },
                     { id: 'shastihayani' }, { id: 'shattrimshatsama' }, { id: 'panchottari' },
                     { id: 'satabdika' }, { id: 'chaturshitisama' }

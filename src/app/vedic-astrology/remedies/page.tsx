@@ -221,7 +221,8 @@ function RemedyDataView({ data, type }: { data: Record<string, unknown>; type: s
 // Main Remedies Page (Upaya)
 // ============================================================================
 export default function RemediesPage() {
-    const { clientDetails, processedCharts, isLoadingCharts, isRefreshingCharts } = useVedicClient();
+    const { clientDetails, processedCharts, isLoadingCharts, isRefreshingCharts, openClients } = useVedicClient();
+    const hasClientBar = openClients.length > 0;
     const { ayanamsa } = useAstrologerStore();
     const [activeTab, setActiveTab] = useState('gemstone');
     const [error, setError] = useState<string | null>(null);
@@ -276,10 +277,10 @@ export default function RemediesPage() {
     const isFixedLayoutTab = ['mantra', 'yantra', 'vedic_remedies', 'lal_kitab'].includes(activeTab);
 
     return (
-        <div className={cn("min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 animate-in fade-in duration-500", isFixedLayoutTab ? "h-[calc(100vh-140px)] overflow-hidden flex flex-col gap-2" : "space-y-6 pb-10")}>
+        <div className={cn("bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 animate-in fade-in duration-500", isFixedLayoutTab ? "flex flex-col gap-2" : "min-h-screen space-y-6 pb-10")}>
 
             {/* Remedy Type Tabs */}
-            <div className="flex flex-wrap gap-2 p-1 bg-white rounded-xl border border-amber-200/60 shadow-sm">
+            <div className={cn("sticky z-30 bg-white/95 backdrop-blur-sm rounded-xl border border-amber-200/60 shadow-sm p-1 flex flex-wrap gap-2", hasClientBar ? "top-36" : "top-[104px]")}>
                 {REMEDY_TABS.map((tab) => (
                     <button
                         key={tab.id}

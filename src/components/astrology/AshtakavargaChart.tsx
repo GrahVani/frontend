@@ -63,8 +63,8 @@ export default function AshtakavargaChart({ type = 'sarva', ascendantSign, house
     ];
 
     return (
-        <div className={cn("flex flex-col items-center w-full", className)}>
-            <svg viewBox="0 0 280 280" className="w-full max-w-[380px] drop-shadow-sm transition-all duration-300">
+        <div className={cn("flex flex-col items-center justify-center w-full h-full", className)}>
+            <svg viewBox="0 0 280 280" className="w-full h-full max-w-[480px] max-h-[480px] drop-shadow-sm transition-all duration-300">
                 {/* Background */}
                 <rect x="0" y="0" width="280" height="280" fill="var(--surface-warm)" />
 

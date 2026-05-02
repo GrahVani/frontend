@@ -33,7 +33,7 @@ const SIGN_NAMES = ZODIAC_SIGNS;
 // House Groups for astrological analysis
 const HOUSE_GROUPS = {
     dharma: { houses: [1, 5, 9], name: 'dharma', displayName: 'Dharma', desc: 'Purpose & luck', color: 'bg-purple-100 text-purple-800', termKey: 'house_dharma' },
-    artha: { houses: [2, 6, 10], name: 'artha', displayName: 'Artha', desc: 'Wealth & career', color: 'bg-amber-100 text-ink', termKey: 'house_artha' },
+    artha: { houses: [2, 6, 10], name: 'artha', displayName: 'Artha', desc: 'Wealth & career', color: 'bg-amber-100 text-amber-900', termKey: 'house_artha' },
     kama: { houses: [3, 7, 11], name: 'kama', displayName: 'Kama', desc: 'Desires & gains', color: 'bg-pink-100 text-pink-800', termKey: 'house_kama' },
     moksha: { houses: [4, 8, 12], name: 'moksha', displayName: 'Moksha', desc: 'Liberation', color: 'bg-blue-100 text-blue-800', termKey: 'house_moksha' }
 };
@@ -145,9 +145,9 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                                     {isSarva ? 'Planet' : planet?.substring(0, 4)}
                                 </th>
                                 {SIGNS.map(s => (
-                                    <th key={s} className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1 text-center w-8 border-r border-primary text-ink font-medium")}>{s}</th>
+                                    <th key={s} className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1 text-center w-8 border-r border-primary text-amber-900 font-medium")}>{s}</th>
                                 ))}
-                                <th className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1.5 text-center bg-surface-warm w-10")}>Tot</th>
+                                <th className={cn(TYPOGRAPHY.tableHeader, "py-3 px-1.5 text-center bg-amber-50 w-10")}>Tot</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -163,7 +163,7 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                                 SIGNS.forEach(s => { rowTot += getVal(rd, s); });
 
                                 return (
-                                    <tr key={p} className={cn("border-b border-primary", idx % 2 === 1 && "bg-surface-warm/30")}>
+                                    <tr key={p} className={cn("border-b border-primary", idx % 2 === 1 && "bg-amber-50/30")}>
                                         <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-2 font-medium border-r border-primary")}>
                                             <PlanetRowLabel name={p} abbrev={p.substring(0, 3)} />
                                         </td>
@@ -178,16 +178,16 @@ export default function AshtakavargaMatrix({ type, planet, data, className }: Ma
                                                 </td>
                                             );
                                         })}
-                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1.5 text-center font-medium bg-surface-warm")}>{rowTot}</td>
+                                        <td className={cn(TYPOGRAPHY.dateAndDuration, "py-2.5 px-1.5 text-center font-medium bg-amber-50")}>{rowTot}</td>
                                     </tr>
                                 );
                             })}
                         </tbody>
                         <tfoot>
-                            <tr className="bg-surface-warm border-t border-primary">
+                            <tr className="bg-amber-50 border-t border-primary">
                                 <td className={cn(TYPOGRAPHY.label, "py-3 px-2 border-r border-primary mb-0")}>
                                     <div className="flex items-center gap-1.5">
-                                        <Star className="w-3.5 h-3.5 text-gold-dark" />
+                                        <Star className="w-3.5 h-3.5 text-amber-700" />
                                         <KnowledgeTooltip term="ashtakavarga_sav" unstyled>SAV</KnowledgeTooltip>
                                     </div>
                                 </td>

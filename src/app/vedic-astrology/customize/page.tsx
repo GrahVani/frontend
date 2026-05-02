@@ -422,13 +422,6 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                 const showAyanamsa = w >= 320;
                 const isCompact = w < 300;
 
-                // Dynamic title max-width: leave room for controls
-                const titleMaxWidth = isCompact
-                    ? Math.max(40, w - 80)
-                    : showDimensionControls
-                        ? Math.max(30, w * 0.18)
-                        : Math.max(40, w * 0.38);
-
                 return (
                     <div
                         className="flex items-center justify-between px-2.5 shrink-0 cursor-move relative z-10 overflow-hidden border-b"
@@ -442,14 +435,13 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                         <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
                             {/* Title — bold, dark, prominent */}
                             <span
-                                className="font-medium truncate shrink-0 tracking-wide"
+                                className="font-medium truncate flex-1 min-w-0 tracking-wide"
                                 style={{
                                     color: '#451a03',
                                     fontSize: Math.min(
                                         (theme.headerFontSize ?? 12) * finalScale.scale,
                                         isCompact ? 10 : Math.max(11, dimensions.width / 25)
                                     ),
-                                    maxWidth: titleMaxWidth,
                                 }}
                                 title={displayTitle}
                             >

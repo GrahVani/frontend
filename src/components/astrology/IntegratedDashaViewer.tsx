@@ -4,6 +4,8 @@ import { clientApi } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { PLANET_COLORS, SIGN_COLORS } from '@/lib/astrology-constants';
+import { getPlanetSymbol } from '@/lib/planet-symbols';
+import { PLANET_SVG_FILLS } from '@/design-tokens/colors';
 import {
     processDashaResponse, DashaNode, generateVimshottariSubperiods, calculateDuration
 } from '@/lib/dasha-utils';
@@ -106,7 +108,9 @@ export default function IntegratedDashaViewer({
         const grouped: Record<number, DashaNode[]> = {};
         const planetsPerCycle = getPlanetsPerCycle(dashaType);
         dashaTree.forEach((p, idx) => {
-            const cNum = (p.raw?.cycle as number) || Math.floor(idx / planetsPerCycle) + 1;
+            let cNum = (p.raw?.cycle as number) || Math.floor(idx / planetsPerCycle) + 1;
+            // Sanitize: ensure valid positive integer
+            cNum = Number.isFinite(cNum) && cNum > 0 ? Math.floor(cNum) : Math.floor(idx / planetsPerCycle) + 1;
             if (!grouped[cNum]) grouped[cNum] = [];
             grouped[cNum].push(p);
         });
@@ -114,7 +118,10 @@ export default function IntegratedDashaViewer({
     }, [dashaTree, isCycleBased, currentLevel, dashaType]);
 
     const availableCycles = useMemo(() => {
-        return Object.keys(cycles).map(Number).sort((a, b) => a - b);
+        return Object.keys(cycles)
+            .map(Number)
+            .filter(n => Number.isFinite(n) && n > 0)
+            .sort((a, b) => a - b);
     }, [cycles]);
 
     const activeCycleNum = useMemo(() => {
@@ -352,6 +359,7 @@ export default function IntegratedDashaViewer({
                                 const isClickable = (currentLevel === 0 || period.canDrillFurther || (isAshtottari && currentLevel < 2) || (allowMathematicalDrillDown && currentLevel < (isKP ? 2 : 4)));
                                 const nameStr = period.planet || period.lord || "";
                                 const pName = isChara ? String(period.raw?.sign_name || nameStr) : (PLANET_ABBREVIATIONS[nameStr] || nameStr.substring(0, 2));
+                                const displayName = isChara ? String(period.raw?.sign_name || nameStr) : nameStr;
 
                                 return (
                                     <div
@@ -369,19 +377,24 @@ export default function IntegratedDashaViewer({
                                             ) : (
                                                 <div className="w-2 flex-shrink-0" />
                                             )}
-                                            <div className="flex items-baseline gap-0.5 truncate overflow-hidden">
+                                            <div className="flex items-baseline gap-1 truncate overflow-hidden">
                                                 {selectedPath.length > 0 && (
                                                     <span className="!text-primary font-semibold shrink-0 tracking-tighter mr-0.5 !text-[11px] font-mono">{pathPrefix}</span>
                                                 )}
-                                                <span className={cn(
-                                                    "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold border shadow-sm shrink-0",
-                                                    PLANET_COLORS[period.planet || period.lord || ''] || "bg-white text-primary border-gold-primary/20"
-                                                )}>
-                                                    {pName}
+                                                <span className="inline-flex items-center gap-1 shrink-0">
+                                                    <span
+                                                        className="text-[13px] font-serif leading-none"
+                                                        style={{ color: PLANET_SVG_FILLS[nameStr] || '#92400E' }}
+                                                    >
+                                                        {getPlanetSymbol(nameStr)}
+                                                    </span>
+                                                    <span className="text-[11px] font-semibold text-primary">
+                                                        {displayName}
+                                                    </span>
                                                 </span>
                                             </div>
                                             {period.isCurrent && (
-                                                <span className="ml-auto px-1 py-0.5 bg-green-500/20 border border-green-500/30 rounded-full leading-none text-green-700 font-bold text-[8px] shrink-0">
+                                                <span className="px-1 py-0.5 bg-green-500/20 border border-green-500/30 rounded-full leading-none text-green-700 font-bold text-[8px] shrink-0">
                                                     A
                                                 </span>
                                             )}

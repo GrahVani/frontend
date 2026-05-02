@@ -33,8 +33,8 @@ export function useClientCharts(clientId?: string) {
             const lahiriDashas: string[] = [];
             // List of lagna charts that should also be aliased from Lahiri for KP
             const LAGNA_CHARTS = ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9'];
-            // Dasha charts that should be aliased from Lahiri for KP
-            const DASHA_CHARTS = ['vimshottari', 'tribhagi', 'ashtottari', 'shodashottari', 'dwadashottari', 'panchottari', 'satabdika', 'chaturashiti', 'dwisaptati', 'shashtihayani', 'shattrimshata', 'kalachakra', 'chara'];
+            // Dasha charts that should be aliased from Lahiri for all supporting ayanamsas
+            const DASHA_CHARTS = ['vimshottari', 'tribhagi', 'ashtottari', 'shodashottari', 'dwadashottari', 'panchottari', 'satabdika', 'chaturshitisama', 'dwisaptati', 'shastihayani', 'shattrimshatsama', 'kalachakra', 'chara'];
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic chart record from API
             data.forEach((c: any) => {
@@ -66,10 +66,18 @@ export function useClientCharts(clientId?: string) {
                 lookup[kpKey] = lookup[`${chartType}_lahiri`];
             });
 
-            // Auto-alias Lahiri Dasha charts as KP
+            // Auto-alias Lahiri Dasha charts to all dasha-supporting ayanamsas
+            // (KP, Raman, Yukteswar, Bhasin) when native data is unavailable
+            const DASHA_AYANAMSA_TARGETS = ['kp', 'raman', 'yukteswar', 'bhasin'];
             lahiriDashas.forEach(dashaType => {
-                const kpKey = `${dashaType}_kp`;
-                lookup[kpKey] = lookup[`${dashaType}_lahiri`];
+                const lahiriKey = `${dashaType}_lahiri`;
+                if (!lookup[lahiriKey]) return;
+                DASHA_AYANAMSA_TARGETS.forEach(target => {
+                    const targetKey = `${dashaType}_${target}`;
+                    if (!lookup[targetKey]) {
+                        lookup[targetKey] = lookup[lahiriKey];
+                    }
+                });
             });
 
             return lookup;

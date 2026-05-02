@@ -145,7 +145,7 @@ export default function ClientProfilePage() {
     const { linkFamily, unlinkFamily } = useFamilyMutations();
     const [searchRel, setSearchRel] = useState("");
     const [addingFamily, setAddingFamily] = useState(false);
-    const { data: searchResults } = useClients({ search: searchRel, limit: 10 });
+    const { data: searchResults } = useClients({ search: searchRel, limit: 10 }, { enabled: searchRel.trim().length > 0 });
     const availableClients = (searchResults?.clients || [])
         .filter(c => c.id !== clientId && !familyLinks.some(l => l.relatedClientId === c.id))
         .map(deriveNames);

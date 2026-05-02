@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { ChevronRight, Calendar, AlertCircle } from 'lucide-react';
@@ -15,9 +15,82 @@ interface ChaturshitisamaDashaProps {
 
 
 export default function ChaturshitisamaDasha({ periods, onDrillDown }: ChaturshitisamaDashaProps) {
+    const [selectedCycle, setSelectedCycle] = useState<number | string>(1);
+
+    // Group periods by cycle dynamically (7 planets per cycle for Chaturshitisama)
+    const cycles = useMemo(() => {
+        const grouped: Record<string | number, DashaNode[]> = {};
+        if (!Array.isArray(periods)) return grouped;
+        periods.forEach((p: DashaNode, idx: number) => {
+            const cNum = (p.raw?.cycle || p.raw?.cycle_number || Math.floor(idx / 7) + 1) as string | number;
+            if (!grouped[cNum]) grouped[cNum] = [];
+            grouped[cNum].push(p);
+        });
+        return grouped;
+    }, [periods]);
+
+    const availableCycles = useMemo(() => {
+        return Object.keys(cycles).sort((a, b) => {
+            const numA = Number(a);
+            const numB = Number(b);
+            if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+            return a.localeCompare(b);
+        });
+    }, [cycles]);
+
+    const activeCycleNum = useMemo(() => {
+        if (!availableCycles.length) return "1";
+        for (const cKey of availableCycles) {
+            const cyclePeriods = cycles[cKey as any];
+            if (cyclePeriods && Array.isArray(cyclePeriods) && cyclePeriods.some((p: DashaNode) => p.isCurrent)) {
+                return cKey;
+            }
+        }
+        return availableCycles[0];
+    }, [cycles, availableCycles]);
+
+    // Auto-select active cycle on load
+    React.useEffect(() => {
+        if (activeCycleNum !== undefined && cycles[activeCycleNum as any]) {
+            setSelectedCycle(activeCycleNum);
+        } else if (availableCycles.length > 0) {
+            setSelectedCycle(availableCycles[0]);
+        }
+    }, [activeCycleNum, cycles, availableCycles]);
+
+    if (availableCycles.length === 0) return null;
+
+    const currentCyclePeriods = cycles[selectedCycle as any] || [];
 
     return (
-        <div className="space-y-3 animate-in fade-in duration-700">
+        <div className="space-y-4 animate-in fade-in duration-700">
+            {/* Cycle Navigation */}
+            <div className="flex flex-wrap gap-2 items-center px-4 pt-2">
+                <div className="flex bg-amber-50/50 rounded-lg p-0.5 gap-1 border border-amber-200/60 backdrop-blur-sm overflow-x-auto scrollbar-hide">
+                    {availableCycles.map((c: string | number) => {
+                        const isActive = String(selectedCycle) === String(c);
+                        const cyclePeriods = cycles[c as any] || [];
+                        const startYear = cyclePeriods.length > 0 ? formatDateDisplay(cyclePeriods[0].startDate).split(' ').pop() : '';
+                        const endYear = cyclePeriods.length > 0 ? formatDateDisplay(cyclePeriods[cyclePeriods.length - 1].endDate).split(' ').pop() : '';
+
+                        return (
+                            <button
+                                key={c}
+                                onClick={() => setSelectedCycle(c as any)}
+                                className={cn(
+                                    "px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 whitespace-nowrap",
+                                    isActive
+                                        ? "bg-amber-600 text-white shadow-sm"
+                                        : "text-amber-800 hover:bg-amber-100/60"
+                                )}
+                            >
+                                Cycle {c} <span className="opacity-60 font-normal ml-1">({startYear}-{endYear})</span>
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+
             {/* Table */}
             <div className="">
                 <table className="w-full border-separate border-spacing-0">
@@ -31,7 +104,7 @@ export default function ChaturshitisamaDasha({ periods, onDrillDown }: Chaturshi
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-amber-200/40 font-medium bg-white/60">
-                        {periods.map((mahadasha, mIdx) => {
+                        {currentCyclePeriods.map((mahadasha: DashaNode, mIdx: number) => {
                             const canDrill = mahadasha.canDrillFurther || (mahadasha.sublevel && mahadasha.sublevel.length > 0);
                             const isBalance = mahadasha.raw?.dasha_balance_at_birth != null && mIdx === 0;
 

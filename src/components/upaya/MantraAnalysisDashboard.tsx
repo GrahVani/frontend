@@ -202,7 +202,7 @@ export default function MantraAnalysisDashboard({ data }: MantraAnalysisDashboar
     };
 
     return (
-        <div className={cn("h-full overflow-hidden flex flex-col", styles.dashboardContainer)} style={{ margin: 0, borderRadius: '1rem' }}>
+        <div className={cn("h-[510px] overflow-hidden flex flex-col", styles.dashboardContainer)} style={{ margin: 0, borderRadius: '1rem' }}>
             {/* Header */}
             <div className="flex items-center justify-between border-b border-amber-300/60 px-5 py-3 shrink-0 bg-amber-50/50">
                 <div className="flex items-center gap-3">

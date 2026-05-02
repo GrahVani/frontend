@@ -76,7 +76,8 @@ import { parseChartData } from '@/lib/chart-helpers';
 
 export default function AshtakavargaPage() {
     const queryClient = useQueryClient();
-    const { clientDetails, processedCharts, isLoadingCharts } = useVedicClient();
+    const { clientDetails, processedCharts, isLoadingCharts, openClients } = useVedicClient();
+    const hasClientBar = openClients.length > 0;
     const { ayanamsa, chartStyle, recentClientIds } = useAstrologerStore();
     const settings = { ayanamsa, chartStyle, recentClientIds };
     const [activeTab, setActiveTab] = useState<'sarva' | 'bhinna' | 'shodasha' | 'temporal' | 'samudaya'>('sarva');
@@ -231,7 +232,7 @@ export default function AshtakavargaPage() {
 
     return (
         <div className="space-y-3 animate-in fade-in duration-500 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 -mx-4 -mt-4 px-4 py-4">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className={cn("sticky z-50 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 py-3 -mx-4 px-4 border-b border-amber-100 flex flex-col md:flex-row md:items-center justify-between gap-3", hasClientBar ? "top-[144px]" : "top-[104px]")}>
                 <div>
                     <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] font-bold")}>
                         Ashtakavarga systems
@@ -320,17 +321,17 @@ export default function AshtakavargaPage() {
                                         )}
                                     </div>
 
-                                    <div className="p-3 grid grid-cols-1 lg:grid-cols-[5fr_12fr] gap-5 items-start">
-                                        <div className="space-y-1.5">
+                                    <div className="p-3 grid grid-cols-1 lg:grid-cols-[5fr_12fr] gap-5 items-stretch">
+                                        <div className="space-y-1.5 flex flex-col h-full">
                                             <h3 className={cn(TYPOGRAPHY.label, "text-amber-900 flex items-center gap-2")}>
                                                 <MapIcon className="w-3.5 h-3.5" /> House distribution
                                             </h3>
-                                            <div className="flex justify-start w-full max-w-lg mx-auto lg:mx-0">
+                                            <div className="flex justify-start w-full flex-1 items-center">
                                                 <AshtakavargaChart
                                                     type={activeTab === 'sarva' ? 'sarva' : 'bhinna'}
                                                     ascendantSign={data?.ascendant || 1}
                                                     houseValues={houseValues}
-                                                    className="items-start"
+                                                    className="h-full w-full"
                                                 />
                                             </div>
                                         </div>

@@ -23,11 +23,11 @@ const ERA_NAMES: Record<number, string> = {
 };
 
 export default function TribhagiDasha({ periods, onDrillDown }: TribhagiDashaProps) {
-    const [selectedCycle, setSelectedCycle] = useState<number>(1);
+    const [selectedCycle, setSelectedCycle] = useState<number | string>(1);
 
     // Group periods by cycle dynamically
     const cycles = useMemo(() => {
-        const grouped: Record<number, DashaNode[]> = {};
+        const grouped: Record<string | number, DashaNode[]> = {};
         periods.forEach((p, idx) => {
             const cNum = (p.raw?.cycle as number) || Math.floor(idx / 9) + 1;
             if (!grouped[cNum]) grouped[cNum] = [];
@@ -37,23 +37,36 @@ export default function TribhagiDasha({ periods, onDrillDown }: TribhagiDashaPro
     }, [periods]);
 
     const availableCycles = useMemo(() => {
-        return Object.keys(cycles).map(Number).sort((a, b) => a - b);
+        return Object.keys(cycles).sort((a, b) => {
+            const numA = Number(a);
+            const numB = Number(b);
+            if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+            return a.localeCompare(b);
+        });
     }, [cycles]);
 
     const activeCycleNum = useMemo(() => {
-        for (const cNum of availableCycles) {
-            if (cycles[cNum].some(p => p.isCurrent)) return cNum;
+        if (!availableCycles.length) return "1";
+        for (const cKey of availableCycles) {
+            const cyclePeriods = cycles[cKey as any];
+            if (cyclePeriods && Array.isArray(cyclePeriods) && cyclePeriods.some(p => p.isCurrent)) {
+                return cKey;
+            }
         }
-        return availableCycles.length > 0 ? availableCycles[0] : 1;
+        return availableCycles[0];
     }, [cycles, availableCycles]);
 
     React.useEffect(() => {
-        if (activeCycleNum) setSelectedCycle(activeCycleNum);
-    }, [activeCycleNum]);
+        if (activeCycleNum !== undefined && cycles[activeCycleNum as any]) {
+            setSelectedCycle(activeCycleNum);
+        } else if (availableCycles.length > 0) {
+            setSelectedCycle(availableCycles[0]);
+        }
+    }, [activeCycleNum, cycles, availableCycles]);
 
     if (availableCycles.length === 0) return null;
 
-    const currentCyclePeriods = cycles[selectedCycle] || [];
+    const currentCyclePeriods = cycles[selectedCycle as any] || [];
 
     return (
         <div className="space-y-3 animate-in fade-in duration-700">
@@ -61,8 +74,8 @@ export default function TribhagiDasha({ periods, onDrillDown }: TribhagiDashaPro
             <div className="flex flex-wrap gap-2 items-center px-4 pt-2">
                 <div className="flex bg-amber-50/50 rounded-lg p-0.5 gap-1 border border-amber-200/60 backdrop-blur-sm overflow-x-auto scrollbar-hide">
                     {availableCycles.map((c) => {
-                        const isActive = selectedCycle === c;
-                        const cyclePeriods = cycles[c];
+                        const isActive = String(selectedCycle) === String(c);
+                        const cyclePeriods = cycles[c as any] || [];
                         const startYear = cyclePeriods.length > 0 ? formatDateDisplay(cyclePeriods[0].startDate).split(' ').pop() : '';
                         const endYear = cyclePeriods.length > 0 ? formatDateDisplay(cyclePeriods[cyclePeriods.length - 1].endDate).split(' ').pop() : '';
 
@@ -88,7 +101,7 @@ export default function TribhagiDasha({ periods, onDrillDown }: TribhagiDashaPro
                 <div className="ml-auto hidden sm:flex items-center gap-2">
                     <h3 className="text-[10px] font-bold text-amber-700 flex items-center gap-2 uppercase tracking-wider bg-amber-50 px-2 py-1 rounded-md border border-amber-200/60">
                         <Milestone className="w-3 h-3 text-amber-600" />
-                        {ERA_NAMES[selectedCycle] || `Cycle ${selectedCycle}`}
+                        {ERA_NAMES[Number(selectedCycle)] || `Cycle ${selectedCycle}`}
                     </h3>
                 </div>
             </div>
@@ -96,7 +109,7 @@ export default function TribhagiDasha({ periods, onDrillDown }: TribhagiDashaPro
             <div className="flex items-center justify-end sm:hidden px-4">
                 <h3 className="text-[10px] font-bold text-amber-700 flex items-center gap-2 uppercase tracking-wider">
                     <Milestone className="w-3.5 h-3.5 text-amber-600" />
-                    {ERA_NAMES[selectedCycle] || `Cycle ${selectedCycle}`}
+                    {ERA_NAMES[Number(selectedCycle)] || `Cycle ${selectedCycle}`}
                 </h3>
             </div>
 
