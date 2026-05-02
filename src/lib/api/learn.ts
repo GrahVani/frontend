@@ -34,8 +34,16 @@ export interface Lesson {
   updatedAt: string;
 }
 
+export interface LessonSection {
+  id: number;
+  type: string;
+  title: string;
+  content: string;
+}
+
 export interface LessonContent {
   intro: string;
+  sections?: LessonSection[];
   concepts: Concept[];
   quiz: QuizQuestion[];
 }
@@ -44,15 +52,32 @@ export interface Concept {
   id: number;
   title: string;
   description: string;
+  icon?: string;
+  keyTakeaway?: string;
+  proTip?: string;
+  commonMistake?: string;
 }
 
-export interface QuizQuestion {
+export interface MatchingPair {
+  left: string;
+  right: string;
+}
+
+export interface SubQuestion {
   questionId: number;
   question: string;
   options: Record<string, string>;
   correctAnswer: string;
   explanation: string;
+  whyWrong?: Record<string, string>;
 }
+
+export type QuizQuestion =
+  | { questionId: number; type: "multiple_choice"; question: string; options: Record<string, string>; correctAnswer: string; explanation: string; whyWrong?: Record<string, string>; conceptRef?: number; memoryAid?: string; hint?: string; difficulty?: string }
+  | { questionId: number; type: "true_false"; question: string; correctAnswer: "true" | "false"; explanation: string; conceptRef?: number; memoryAid?: string; hint?: string; difficulty?: string }
+  | { questionId: number; type: "matching"; question: string; pairs: MatchingPair[]; conceptRef?: number; memoryAid?: string; difficulty?: string }
+  | { questionId: number; type: "fill_blank"; question: string; correctAnswer: string; acceptableAnswers?: string[]; explanation: string; conceptRef?: number; memoryAid?: string; hint?: string; difficulty?: string }
+  | { questionId: number; type: "case_study"; question: string; scenario: string; subQuestions: SubQuestion[]; conceptRef?: number; memoryAid?: string; difficulty?: string };
 
 export interface QuizAnswer {
   questionId: number;

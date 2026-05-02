@@ -6,19 +6,10 @@ import { useAuth } from "@/context/AuthContext";
 import { learnApi, type Course } from "@/lib/api";
 import type { LessonSummary, DashboardData } from "@/lib/api/learn";
 import {
-  BookOpen,
-  Trophy,
-  Target,
-  Flame,
-  ChevronRight,
-  Star,
-  Zap,
-  GraduationCap,
-  Play,
-  Lock,
-  CheckCircle2,
-  Clock,
-  TrendingUp,
+  BookOpen, Trophy, Target, Flame, ChevronRight, Star, Zap,
+  GraduationCap, Play, Lock, CheckCircle2, Clock, TrendingUp,
+  Map, Rocket, Crown, Gem, Calculator, Eye, Sun, Moon,
+  Compass, Shield, Sparkles
 } from "lucide-react";
 
 interface CourseWithProgress extends Course {
@@ -27,11 +18,50 @@ interface CourseWithProgress extends Course {
   progressPercent?: number;
 }
 
+const MODULE_ICONS: Record<string, React.ElementType> = {
+  FOUNDATIONS: Sun,
+  COMPUTATION: Calculator,
+  SYNTHESIS: Compass,
+  TIMING: Clock,
+  QUANTIFICATION: Target,
+  PRO_SYSTEMS: Rocket,
+  APPLIED: Shield,
+  ANNUAL: CalendarIcon,
+  REMEDIES: Gem,
+  MASTER: Crown,
+};
+
+function CalendarIcon(props: any) {
+  return <Target {...props} />;
+}
+
+const LEVEL_CONFIG: Record<string, { label: string; color: string; bg: string; border: string; ring: string }> = {
+  LEVEL_1: { label: "Beginner", color: "text-emerald-700", bg: "bg-emerald-50", border: "border-emerald-200", ring: "ring-emerald-500" },
+  LEVEL_2: { label: "Intermediate", color: "text-blue-700", bg: "bg-blue-50", border: "border-blue-200", ring: "ring-blue-500" },
+  LEVEL_3: { label: "Advanced", color: "text-purple-700", bg: "bg-purple-50", border: "border-purple-200", ring: "ring-purple-500" },
+  LEVEL_4: { label: "Professional", color: "text-amber-700", bg: "bg-amber-50", border: "border-amber-200", ring: "ring-amber-500" },
+};
+
+const CATEGORY_COLORS: Record<string, string> = {
+  FOUNDATIONS: "bg-orange-100 text-orange-700 border-orange-200",
+  COMPUTATION: "bg-blue-100 text-blue-700 border-blue-200",
+  SYNTHESIS: "bg-purple-100 text-purple-700 border-purple-200",
+  TIMING: "bg-indigo-100 text-indigo-700 border-indigo-200",
+  QUANTIFICATION: "bg-teal-100 text-teal-700 border-teal-200",
+  PRO_SYSTEMS: "bg-rose-100 text-rose-700 border-rose-200",
+  APPLIED: "bg-cyan-100 text-cyan-700 border-cyan-200",
+  ANNUAL: "bg-violet-100 text-violet-700 border-violet-200",
+  REMEDIES: "bg-pink-100 text-pink-700 border-pink-200",
+  MASTER: "bg-amber-100 text-amber-700 border-amber-200",
+};
+
 export default function LearnPage() {
   const { user } = useAuth();
   const [courses, setCourses] = useState<CourseWithProgress[]>([]);
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activeLevel, setActiveLevel] = useState<string | null>(null);
+  const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     Promise.all([
@@ -40,17 +70,21 @@ export default function LearnPage() {
     ])
       .then(([coursesRes, dashboardRes]) => {
         if (coursesRes.success) {
-          const enriched = coursesRes.data.map((course) => ({
+          const levelOrder = ["LEVEL_1", "LEVEL_2", "LEVEL_3", "LEVEL_4"];
+          const sorted = [...coursesRes.data].sort(
+            (a, b) => levelOrder.indexOf(a.level) - levelOrder.indexOf(b.level)
+          );
+          const enriched = sorted.map((course) => ({
             ...course,
             totalLessons: course.lessons.length,
             completedLessons: 0,
             progressPercent: 0,
           }));
           setCourses(enriched);
+          if (enriched.length > 0) setActiveLevel(enriched[0].level);
         }
         if (dashboardRes.success && dashboardRes.data) {
           setDashboard(dashboardRes.data);
-          // Merge progress into courses
           setCourses((prev) =>
             prev.map((course) => {
               const completedCount = course.lessons.filter((lesson) =>
@@ -71,6 +105,15 @@ export default function LearnPage() {
       .finally(() => setLoading(false));
   }, [user]);
 
+  const toggleModule = (courseId: string) => {
+    setExpandedModules(prev => {
+      const next = new Set(prev);
+      if (next.has(courseId)) next.delete(courseId);
+      else next.add(courseId);
+      return next;
+    });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
@@ -83,258 +126,223 @@ export default function LearnPage() {
   }
 
   const firstName = user?.name?.split(" ")[0] || "Student";
-  const currentLevel = dashboard?.lessonsCompleted && dashboard.lessonsCompleted > 5 ? "Level 2" : "Level 1";
-  const streakDays = 3; // TODO: calculate from progress data
+  const streakDays = 3;
+  const totalLessons = courses.reduce((sum, c) => sum + c.lessons.length, 0);
+  const completedLessons = courses.reduce((sum, c) => sum + (c.completedLessons || 0), 0);
+  const overallProgress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+
+  const allLessons = courses.flatMap((c) => c.lessons.map((l) => ({ ...l, courseTitle: c.title, courseLevel: c.level, courseId: c.id })));
+  const nextLesson = dashboard
+    ? allLessons.find((l) => !dashboard.progress?.some((p) => p.lesson.title === l.title && p.status === "COMPLETED"))
+    : allLessons[0];
+
+  const coursesByLevel = courses.reduce((acc, course) => {
+    if (!acc[course.level]) acc[course.level] = [];
+    acc[course.level].push(course);
+    return acc;
+  }, {} as Record<string, CourseWithProgress[]>);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
-      {/* Welcome Hero */}
+      {/* Hero */}
       <div className="bg-gradient-to-r from-amber-900 via-amber-800 to-orange-900 text-white shadow-lg">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex items-start justify-between">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <GraduationCap className="w-5 h-5 text-amber-300" />
-                <span className="text-amber-300 text-sm font-semibold tracking-wide uppercase">
-                  Grahvani Learning
-                </span>
+                <span className="text-amber-300 text-sm font-semibold tracking-wide uppercase">Grahvani Learning Academy</span>
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">
-                Welcome back, {firstName}!
-              </h1>
+              <h1 className="text-3xl md:text-4xl font-bold mb-2">Welcome back, {firstName}!</h1>
               <p className="text-amber-200 text-lg max-w-xl">
-                Continue your journey into Vedic astrology. Every chart you read brings you closer to mastery.
+                Your journey from curious beginner to professional astrologer. {completedLessons} of {totalLessons} lessons completed.
               </p>
             </div>
-            <div className="hidden md:flex items-center gap-4">
-              <div className="text-center px-4 py-2 bg-white/10 rounded-xl backdrop-blur-sm">
-                <Flame className="w-6 h-6 text-orange-400 mx-auto mb-1" />
-                <div className="text-2xl font-bold">{streakDays}</div>
-                <div className="text-xs text-amber-300">Day Streak</div>
-              </div>
-              <div className="text-center px-4 py-2 bg-white/10 rounded-xl backdrop-blur-sm">
-                <Star className="w-6 h-6 text-yellow-400 mx-auto mb-1" />
-                <div className="text-2xl font-bold">{dashboard?.averageScore || 0}%</div>
-                <div className="text-xs text-amber-300">Avg Score</div>
-              </div>
+            <div className="flex items-center gap-4">
+              <StatBadge icon={<Flame className="w-6 h-6 text-orange-400" />} value={streakDays} label="Day Streak" />
+              <StatBadge icon={<Star className="w-6 h-6 text-yellow-400" />} value={`${dashboard?.averageScore || 0}%`} label="Avg Score" />
+              <StatBadge icon={<Target className="w-6 h-6 text-green-400" />} value={`${overallProgress}%`} label="Progress" />
+            </div>
+          </div>
+          <div className="mt-6">
+            <div className="flex items-center justify-between text-sm mb-2">
+              <span className="text-amber-300">Your Journey to Mastery</span>
+              <span className="text-amber-300 font-bold">{completedLessons} / {totalLessons} lessons</span>
+            </div>
+            <div className="h-3 bg-white/10 rounded-full overflow-hidden">
+              <div className="h-full rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 transition-all duration-1000" style={{ width: `${overallProgress}%` }} />
             </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Stats Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-          <StatCard
-            icon={<BookOpen className="w-5 h-5" />}
-            label="Lessons Completed"
-            value={dashboard?.lessonsCompleted || 0}
-            color="bg-blue-50 text-blue-700 border-blue-200"
-          />
-          <StatCard
-            icon={<Target className="w-5 h-5" />}
-            label="Average Score"
-            value={`${dashboard?.averageScore || 0}%`}
-            color="bg-green-50 text-green-700 border-green-200"
-          />
-          <StatCard
-            icon={<Zap className="w-5 h-5" />}
-            label="Current Level"
-            value={currentLevel}
-            color="bg-purple-50 text-purple-700 border-purple-200"
-          />
-          <StatCard
-            icon={<Trophy className="w-5 h-5" />}
-            label="Courses"
-            value={courses.length}
-            color="bg-amber-50 text-amber-700 border-amber-200"
-          />
-        </div>
-
         {/* Continue Learning */}
-        {dashboard && dashboard.lessonsCompleted > 0 && (
+        {nextLesson && (
           <div className="mb-10">
             <div className="flex items-center gap-2 mb-4">
               <Play className="w-5 h-5 text-amber-700" />
               <h2 className="text-xl font-bold text-amber-900">Continue Learning</h2>
             </div>
-            <div className="bg-white rounded-2xl border border-amber-200/60 p-6 shadow-sm">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl">
-                  {courses[0]?.lessons[0]?.sequenceOrder || 1}
+            <div className="bg-white rounded-2xl border border-amber-200/60 p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl shrink-0">
+                  {nextLesson.sequenceOrder}
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm text-amber-600 mb-1">Next up in {courses[0]?.title}</p>
-                  <p className="text-lg font-bold text-amber-900">
-                    {courses[0]?.lessons.find((l) => !dashboard.progress.some((p) => p.lesson.title === l.title))?.title ||
-                      courses[0]?.lessons[0]?.title}
-                  </p>
+                  <p className="text-sm text-amber-600 mb-1">Next up in {nextLesson.courseTitle}</p>
+                  <p className="text-lg font-bold text-amber-900">{nextLesson.title}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${LEVEL_CONFIG[nextLesson.courseLevel]?.bg} ${LEVEL_CONFIG[nextLesson.courseLevel]?.color}`}>
+                      {LEVEL_CONFIG[nextLesson.courseLevel]?.label}
+                    </span>
+                  </div>
                 </div>
-                <Link
-                  href={`/learn/lesson/${courses[0]?.lessons.find((l) => !dashboard.progress.some((p) => p.lesson.title === l.title))?.id || courses[0]?.lessons[0]?.id}`}
-                  className="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-colors flex items-center gap-2"
-                >
+                <Link href={`/learn/lesson/${nextLesson.id}`} className="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-colors flex items-center gap-2 shrink-0">
                   <Play className="w-4 h-4" />
-                  Resume
+                  {completedLessons > 0 ? "Resume" : "Start Learning"}
                 </Link>
               </div>
             </div>
           </div>
         )}
 
-        {/* Courses */}
-        <div className="mb-6">
+        {/* 10-Module Roadmap */}
+        <div className="mb-10">
           <div className="flex items-center gap-2 mb-6">
-            <BookOpen className="w-5 h-5 text-amber-700" />
-            <h2 className="text-xl font-bold text-amber-900">Your Courses</h2>
-            <span className="ml-auto text-sm text-amber-600">
-              {courses.length} course{courses.length !== 1 ? "s" : ""} available
-            </span>
+            <Map className="w-5 h-5 text-amber-700" />
+            <h2 className="text-xl font-bold text-amber-900">Your Learning Path</h2>
+            <span className="ml-auto text-sm text-amber-600">{courses.length} modules • {totalLessons} lessons</span>
           </div>
 
-          <div className="grid gap-6">
-            {courses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
+          {/* Level Filter Tabs */}
+          <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
+            {["LEVEL_1", "LEVEL_2", "LEVEL_3", "LEVEL_4"].map((level) => {
+              const config = LEVEL_CONFIG[level];
+              const count = coursesByLevel[level]?.length || 0;
+              const isActive = activeLevel === level;
+              return (
+                <button
+                  key={level}
+                  onClick={() => setActiveLevel(isActive ? null : level)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
+                    isActive ? `${config.bg} ${config.color} ${config.border} border-2` : "bg-white text-gray-600 border border-gray-200 hover:border-amber-300"
+                  }`}
+                >
+                  <div className={`w-2 h-2 rounded-full ${config.ring.replace("ring-", "bg-")}`} />
+                  {config.label}
+                  <span className="text-xs opacity-70">({count})</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Module Cards */}
+          <div className="space-y-4">
+            {courses
+              .filter((c) => !activeLevel || c.level === activeLevel)
+              .map((course) => {
+                const config = LEVEL_CONFIG[course.level];
+                const isExpanded = expandedModules.has(course.id);
+                const progress = course.progressPercent || 0;
+                const isCompleted = progress === 100;
+                const Icon = MODULE_ICONS[course.category] || BookOpen;
+                const catStyle = CATEGORY_COLORS[course.category] || "bg-gray-100 text-gray-700 border-gray-200";
+
+                return (
+                  <div key={course.id} className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
+                    {/* Module Header */}
+                    <button
+                      onClick={() => toggleModule(course.id)}
+                      className="w-full p-5 text-left"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${config.bg} ${config.color}`}>
+                          <Icon className="w-7 h-7" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${catStyle}`}>
+                              {course.category}
+                            </span>
+                            <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${config.bg} ${config.color}`}>
+                              {config.label}
+                            </span>
+                            {isCompleted && (
+                              <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3" /> Completed
+                              </span>
+                            )}
+                          </div>
+                          <h3 className="text-lg font-bold text-amber-900">{course.title}</h3>
+                          <p className="text-sm text-amber-600 mt-1">{course.description}</p>
+                          <div className="flex items-center gap-4 mt-3">
+                            <div className="flex-1 h-2 bg-amber-100 rounded-full overflow-hidden max-w-[200px]">
+                              <div className={`h-full rounded-full transition-all ${isCompleted ? "bg-green-500" : "bg-amber-500"}`} style={{ width: `${progress}%` }} />
+                            </div>
+                            <span className="text-xs text-amber-500 font-medium">{course.completedLessons || 0}/{course.lessons.length} lessons</span>
+                            <ChevronRight className={`w-4 h-4 text-amber-400 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
+                          </div>
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* Lessons */}
+                    {isExpanded && (
+                      <div className="px-5 pb-5 animate-in slide-in-from-top-2 duration-300">
+                        <div className="grid gap-2">
+                          {course.lessons.map((lesson: LessonSummary) => (
+                            <Link
+                              key={lesson.id}
+                              href={`/learn/lesson/${lesson.id}`}
+                              className="flex items-center justify-between p-3 rounded-xl bg-amber-50/50 hover:bg-amber-100/50 border border-amber-100 hover:border-amber-200 transition-all group"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-sm">
+                                  {lesson.sequenceOrder}
+                                </div>
+                                <span className="text-sm text-amber-900 font-medium">{lesson.title}</span>
+                              </div>
+                              <ChevronRight className="w-4 h-4 text-amber-400 group-hover:text-amber-600 transition-colors" />
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
           </div>
         </div>
 
-        {/* Learning Path Preview */}
-        <div className="mt-12 bg-white rounded-2xl border border-amber-200/60 p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="w-5 h-5 text-amber-700" />
-            <h2 className="text-xl font-bold text-amber-900">Your Learning Path</h2>
-          </div>
-          <div className="flex items-center gap-2">
-            {["Level 1: Foundations", "Level 2: Birth Chart", "Level 3: Prediction", "Level 4: Mastery"].map(
-              (level, idx) => (
-                <React.Fragment key={level}>
-                  <div
-                    className={`px-4 py-2 rounded-xl text-sm font-semibold ${idx === 0
-                        ? "bg-amber-600 text-white"
-                        : "bg-amber-100 text-amber-600"
-                      }`}
-                  >
-                    {level}
-                  </div>
-                  {idx < 3 && <ChevronRight className="w-4 h-4 text-amber-400" />}
-                </React.Fragment>
-              )
-            )}
-          </div>
-          <p className="text-amber-600 text-sm mt-4">
-            Complete all Level 1 courses to unlock Level 2. Each level builds on the previous one.
-          </p>
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <StatCard icon={<BookOpen className="w-5 h-5" />} label="Lessons Completed" value={completedLessons} color="bg-blue-50 text-blue-700 border-blue-200" />
+          <StatCard icon={<Target className="w-5 h-5" />} label="Average Score" value={`${dashboard?.averageScore || 0}%`} color="bg-green-50 text-green-700 border-green-200" />
+          <StatCard icon={<Zap className="w-5 h-5" />} label="Current Streak" value={`${streakDays} days`} color="bg-purple-50 text-purple-700 border-purple-200" />
+          <StatCard icon={<Trophy className="w-5 h-5" />} label="Total XP" value={(dashboard?.averageScore || 0) * completedLessons} color="bg-amber-50 text-amber-700 border-amber-200" />
         </div>
       </div>
     </div>
   );
 }
 
-function StatCard({
-  icon,
-  label,
-  value,
-  color,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string | number;
-  color: string;
-}) {
+function StatBadge({ icon, value, label }: { icon: React.ReactNode; value: string | number; label: string }) {
+  return (
+    <div className="text-center px-4 py-3 bg-white/10 rounded-xl backdrop-blur-sm min-w-[80px]">
+      <div className="mx-auto mb-1">{icon}</div>
+      <div className="text-2xl font-bold">{value}</div>
+      <div className="text-xs text-amber-300">{label}</div>
+    </div>
+  );
+}
+
+function StatCard({ icon, label, value, color }: { icon: React.ReactNode; label: string; value: string | number; color: string }) {
   return (
     <div className={`rounded-2xl border p-4 ${color}`}>
       <div className="mb-2">{icon}</div>
       <div className="text-2xl font-bold mb-1">{value}</div>
       <div className="text-xs opacity-80">{label}</div>
-    </div>
-  );
-}
-
-function CourseCard({ course }: { course: CourseWithProgress }) {
-  const progress = course.progressPercent || 0;
-  const isCompleted = progress === 100;
-  const isStarted = progress > 0;
-
-  return (
-    <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-      <div className="p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="px-2.5 py-0.5 bg-amber-100 text-amber-800 text-xs font-semibold rounded-full">
-                {course.level.replace("LEVEL_", "Level ")}
-              </span>
-              {isCompleted && (
-                <span className="px-2.5 py-0.5 bg-green-100 text-green-800 text-xs font-semibold rounded-full flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" />
-                  Completed
-                </span>
-              )}
-              {!isStarted && (
-                <span className="px-2.5 py-0.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full flex items-center gap-1">
-                  <Lock className="w-3 h-3" />
-                  Not Started
-                </span>
-              )}
-            </div>
-            <h3 className="text-xl font-bold text-amber-900">{course.title}</h3>
-            <p className="text-amber-600 mt-1 text-sm">{course.description}</p>
-          </div>
-          <div className="ml-4 flex flex-col items-center">
-            <div className="relative w-16 h-16">
-              <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-                <path
-                  className="text-amber-100"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                />
-                <path
-                  className={isCompleted ? "text-green-500" : "text-amber-500"}
-                  strokeDasharray={`${progress}, 100`}
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-xs font-bold text-amber-800">{progress}%</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Progress bar */}
-        <div className="w-full bg-amber-100 rounded-full h-2 mb-4">
-          <div
-            className={`h-2 rounded-full transition-all ${isCompleted ? "bg-green-500" : "bg-amber-500"}`}
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-
-        {/* Lessons */}
-        <div className="space-y-2">
-          {course.lessons.map((lesson: LessonSummary) => (
-            <Link
-              key={lesson.id}
-              href={`/learn/lesson/${lesson.id}`}
-              className="flex items-center justify-between p-3 rounded-xl bg-amber-50/50 hover:bg-amber-100/50 border border-amber-100 hover:border-amber-200 transition-all group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-sm">
-                  {lesson.sequenceOrder}
-                </div>
-                <span className="text-amber-900 font-medium">{lesson.title}</span>
-              </div>
-              <ChevronRight className="w-4 h-4 text-amber-400 group-hover:text-amber-600 transition-colors" />
-            </Link>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

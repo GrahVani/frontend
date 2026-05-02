@@ -1,40 +1,64 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle, XCircle, BookOpen } from "lucide-react";
+import {
+  ArrowLeft, BookOpen, GraduationCap, Sparkles,
+  Layers, BrainCircuit, Target, ChevronRight,
+  ScrollText, Lightbulb, CheckCircle2
+} from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { learnApi, type Lesson } from "@/lib/api";
+import ConceptCard from "@/components/learn/ConceptCard";
+import InteractiveQuiz from "@/components/learn/InteractiveQuiz";
+import LessonSection from "@/components/learn/LessonSection";
+
+interface LessonSectionType {
+  id: number;
+  type: string;
+  title: string;
+  content: string;
+}
 
 interface Concept {
   id: number;
   title: string;
   description: string;
+  icon?: string;
+  keyTakeaway?: string;
+  proTip?: string;
+  commonMistake?: string;
 }
 
-interface QuizQuestion {
-  questionId: number;
-  question: string;
-  options: Record<string, string>;
-  correctAnswer: string;
-  explanation: string;
-}
+type QuizQuestion =
+  | { questionId: number; type: "multiple_choice"; question: string; options: Record<string, string>; correctAnswer: string; explanation: string; whyWrong?: Record<string, string>; conceptRef?: number; memoryAid?: string; hint?: string; difficulty?: string }
+  | { questionId: number; type: "true_false"; question: string; correctAnswer: "true" | "false"; explanation: string; conceptRef?: number; memoryAid?: string; hint?: string; difficulty?: string }
+  | { questionId: number; type: "matching"; question: string; pairs: { left: string; right: string }[]; conceptRef?: number; memoryAid?: string; difficulty?: string }
+  | { questionId: number; type: "fill_blank"; question: string; correctAnswer: string; acceptableAnswers?: string[]; explanation: string; conceptRef?: number; memoryAid?: string; hint?: string; difficulty?: string }
+  | { questionId: number; type: "case_study"; question: string; scenario: string; subQuestions: { questionId: number; question: string; options: Record<string, string>; correctAnswer: string; explanation: string; whyWrong?: Record<string, string> }[]; conceptRef?: number; memoryAid?: string; difficulty?: string };
 
 interface LessonContent {
   intro: string;
+  sections?: LessonSectionType[];
   concepts: Concept[];
   quiz: QuizQuestion[];
 }
+
+type TabType = "overview" | "sections" | "concepts" | "quiz";
 
 export default function LessonPage() {
   const { id } = useParams();
   const { user } = useAuth();
   const [lesson, setLesson] = useState<Lesson | null>(null);
-  const [answers, setAnswers] = useState<Record<number, string>>({});
-  const [submitted, setSubmitted] = useState(false);
-  const [result, setResult] = useState<{ score: number; correctAnswers: number; totalQuestions: number } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<TabType>("overview");
+  const [completedSections, setCompletedSections] = useState<Set<number>>(new Set());
+
+  const overviewRef = useRef<HTMLDivElement>(null);
+  const sectionsRef = useRef<HTMLDivElement>(null);
+  const conceptsRef = useRef<HTMLDivElement>(null);
+  const quizRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     learnApi.getLesson(id as string)
@@ -45,155 +69,223 @@ export default function LessonPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const handleAnswer = (questionId: number, answer: string) => {
-    if (submitted) return;
-    setAnswers((prev) => ({ ...prev, [questionId]: answer }));
+  const scrollToRef = (ref: React.RefObject<HTMLDivElement | null>, tab: TabType) => {
+    setActiveTab(tab);
+    ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const handleSubmit = async () => {
-    if (!user || !lesson) return;
-
-    const answersArray = Object.entries(answers).map(([questionId, answer]) => ({
-      questionId: parseInt(questionId),
-      answer
-    }));
-
-    try {
-      const res = await learnApi.submitLesson(id as string, user.id, answersArray);
-      if (res.success) {
-        setResult(res.data);
-        setSubmitted(true);
-      }
-    } catch (err) {
-      console.error("Submit failed:", err);
-    }
+  const markSectionComplete = (sectionId: number) => {
+    setCompletedSections(prev => new Set(prev).add(sectionId));
   };
 
-  if (loading) return <div className="text-center py-20 text-amber-700">Loading lesson...</div>;
-  if (!lesson) return <div className="text-center py-20 text-red-600">Lesson not found</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-amber-200 border-t-amber-600 rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-amber-700 font-medium">Loading lesson...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!lesson) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
+        <div className="text-center">
+          <p className="text-red-600 text-lg font-medium">Lesson not found</p>
+          <Link href="/learn" className="text-amber-600 hover:text-amber-800 text-sm mt-2 inline-block">
+            Back to Courses
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const content = lesson.contentJson as unknown as LessonContent;
+  const hasSections = content.sections && content.sections.length > 0;
+  const sectionProgress = hasSections ? Math.round((completedSections.size / content.sections!.length) * 100) : 0;
+
+  const tabs: { id: TabType; label: string; icon: React.ElementType; ref: React.RefObject<HTMLDivElement | null> }[] = [
+    { id: "overview", label: "Overview", icon: ScrollText, ref: overviewRef },
+    ...(hasSections ? [{ id: "sections" as TabType, label: `Sections (${content.sections?.length})`, icon: Layers, ref: sectionsRef }] : []),
+    { id: "concepts", label: `Concepts (${content.concepts.length})`, icon: Lightbulb, ref: conceptsRef },
+    { id: "quiz", label: `Practice (${content.quiz.length})`, icon: BrainCircuit, ref: quizRef },
+  ];
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-4xl mx-auto pb-20">
       {/* Header */}
       <div className="mb-6">
-        <Link href="/learn" className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-800 text-sm mb-4">
+        <Link href="/learn" className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-800 text-sm mb-4 transition-colors">
           <ArrowLeft className="w-4 h-4" />
-          Back to Courses
+          Back to Learning Path
         </Link>
-        <h1 className="text-2xl font-bold text-amber-900">{lesson.title}</h1>
+        <div className="flex items-center gap-2 mb-2">
+          <GraduationCap className="w-5 h-5 text-amber-500" />
+          <span className="text-xs font-bold text-amber-500 uppercase tracking-wider">Lesson {lesson.sequenceOrder}</span>
+        </div>
+        <h1 className="text-3xl font-bold text-amber-900">{lesson.title}</h1>
+        {hasSections && (
+          <div className="mt-3 flex items-center gap-3">
+            <div className="flex-1 h-2 bg-amber-100 rounded-full overflow-hidden max-w-[200px]">
+              <div className="h-full bg-green-500 rounded-full transition-all" style={{ width: `${sectionProgress}%` }} />
+            </div>
+            <span className="text-xs text-amber-600 font-medium">
+              {completedSections.size}/{content.sections?.length} sections viewed
+            </span>
+          </div>
+        )}
       </div>
 
-      {/* Introduction */}
-      <div className="bg-white rounded-2xl border border-amber-200/60 p-6 mb-6">
-        <div className="flex items-center gap-2 mb-3">
-          <BookOpen className="w-5 h-5 text-amber-600" />
-          <span className="text-sm font-semibold text-amber-700 uppercase tracking-wide">Introduction</span>
+      {/* Sub-Header Navigation */}
+      <div className="sticky top-20 z-30 mb-8">
+        <div className="bg-white/90 backdrop-blur-md rounded-2xl border border-amber-200/60 shadow-sm p-2">
+          <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => scrollToRef(tab.ref, tab.id)}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
+                    isActive
+                      ? "bg-amber-600 text-white shadow-md"
+                      : "text-amber-700 hover:bg-amber-50"
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {tab.label}
+                  {tab.id === "sections" && completedSections.size > 0 && (
+                    <span className="ml-1 w-5 h-5 rounded-full bg-green-500 text-white text-[10px] flex items-center justify-center">
+                      {completedSections.size}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
-        <p className="text-amber-800 leading-relaxed">{content.intro}</p>
       </div>
+
+      {/* Overview Section */}
+      <div ref={overviewRef} className="mb-10 scroll-mt-32">
+        <div className="flex items-center gap-2 mb-4">
+          <ScrollText className="w-5 h-5 text-amber-600" />
+          <h2 className="text-xl font-bold text-amber-900">Lesson Overview</h2>
+        </div>
+        <div className="bg-gradient-to-br from-amber-900 via-amber-800 to-orange-900 text-white rounded-2xl p-6 shadow-lg">
+          <div className="flex items-center gap-2 mb-3">
+            <BookOpen className="w-5 h-5 text-amber-300" />
+            <span className="text-sm font-semibold text-amber-300 uppercase tracking-wide">Introduction</span>
+          </div>
+          <p className="text-amber-100 leading-relaxed text-lg">{content.intro}</p>
+
+          {/* Lesson roadmap */}
+          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+            {hasSections && (
+              <div className="bg-white/10 rounded-xl p-3 text-center">
+                <Layers className="w-5 h-5 text-amber-300 mx-auto mb-1" />
+                <div className="text-lg font-bold">{content.sections?.length}</div>
+                <div className="text-[10px] text-amber-300">Sections</div>
+              </div>
+            )}
+            <div className="bg-white/10 rounded-xl p-3 text-center">
+              <Lightbulb className="w-5 h-5 text-amber-300 mx-auto mb-1" />
+              <div className="text-lg font-bold">{content.concepts.length}</div>
+              <div className="text-[10px] text-amber-300">Key Concepts</div>
+            </div>
+            <div className="bg-white/10 rounded-xl p-3 text-center">
+              <BrainCircuit className="w-5 h-5 text-amber-300 mx-auto mb-1" />
+              <div className="text-lg font-bold">{content.quiz.length}</div>
+              <div className="text-[10px] text-amber-300">Questions</div>
+            </div>
+            <div className="bg-white/10 rounded-xl p-3 text-center">
+              <Target className="w-5 h-5 text-amber-300 mx-auto mb-1" />
+              <div className="text-lg font-bold">{content.quiz.filter(q => q.type === 'case_study').length}</div>
+              <div className="text-[10px] text-amber-300">Case Studies</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sections */}
+      {hasSections && (
+        <div ref={sectionsRef} className="mb-10 scroll-mt-32">
+          <div className="flex items-center gap-2 mb-4">
+            <Layers className="w-5 h-5 text-amber-600" />
+            <h2 className="text-xl font-bold text-amber-900">Detailed Sections</h2>
+            <span className="ml-auto text-sm text-amber-500 font-medium">
+              {content.sections?.length} parts
+            </span>
+          </div>
+          <div className="space-y-4">
+            {content.sections?.map((section, idx) => (
+              <div
+                key={section.id}
+                onClick={() => markSectionComplete(section.id)}
+                className="relative"
+              >
+                <LessonSection section={section} index={idx} />
+                {completedSections.has(section.id) && (
+                  <div className="absolute top-4 right-12">
+                    <CheckCircle2 className="w-5 h-5 text-green-500" />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Concepts */}
-      <div className="space-y-4 mb-8">
-        {content.concepts.map((concept) => (
-          <div key={concept.id} className="bg-white rounded-2xl border border-amber-200/60 p-6">
-            <h3 className="text-lg font-bold text-amber-900 mb-2">{concept.title}</h3>
-            <p className="text-amber-700 leading-relaxed">{concept.description}</p>
-          </div>
-        ))}
+      <div ref={conceptsRef} className="mb-10 scroll-mt-32">
+        <div className="flex items-center gap-2 mb-4">
+          <Sparkles className="w-5 h-5 text-amber-600" />
+          <h2 className="text-xl font-bold text-amber-900">Key Concepts</h2>
+          <span className="ml-auto text-sm text-amber-500 font-medium">
+            {content.concepts.length} concepts
+          </span>
+        </div>
+        <div className="space-y-4">
+          {content.concepts.map((concept, idx) => (
+            <ConceptCard key={concept.id} concept={concept} index={idx} />
+          ))}
+        </div>
       </div>
 
       {/* Quiz */}
-      <div className="bg-white rounded-2xl border border-amber-200/60 p-6">
-        <h2 className="text-xl font-bold text-amber-900 mb-4">Knowledge Check</h2>
-        <div className="space-y-6">
-          {content.quiz.map((q, idx) => (
-            <div key={q.questionId} className="border-b border-amber-100 last:border-0 pb-6 last:pb-0">
-              <p className="font-medium text-amber-900 mb-3">
-                {idx + 1}. {q.question}
-              </p>
-              <div className="space-y-2">
-                {Object.entries(q.options).map(([key, value]) => {
-                  const isSelected = answers[q.questionId] === key;
-                  const isCorrect = q.correctAnswer === key;
-                  const showCorrect = submitted && isCorrect;
-                  const showWrong = submitted && isSelected && !isCorrect;
-
-                  return (
-                    <button
-                      key={key}
-                      onClick={() => handleAnswer(q.questionId, key)}
-                      disabled={submitted}
-                      className={`w-full text-left p-3 rounded-xl border transition-all ${
-                        showCorrect
-                          ? "bg-green-50 border-green-300 text-green-800"
-                          : showWrong
-                          ? "bg-red-50 border-red-300 text-red-800"
-                          : isSelected
-                          ? "bg-amber-100 border-amber-300 text-amber-900"
-                          : "bg-amber-50/30 border-amber-100 hover:bg-amber-50 text-amber-800"
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                          showCorrect ? "bg-green-500 text-white" :
-                          showWrong ? "bg-red-500 text-white" :
-                          isSelected ? "bg-amber-500 text-white" :
-                          "bg-amber-200 text-amber-700"
-                        }`}>
-                          {showCorrect ? <CheckCircle className="w-4 h-4" /> :
-                           showWrong ? <XCircle className="w-4 h-4" /> :
-                           key}
-                        </span>
-                        <span>{value}</span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-              {submitted && (
-                <p className={`mt-2 text-sm ${answers[q.questionId] === q.correctAnswer ? "text-green-600" : "text-red-600"}`}>
-                  {q.explanation}
-                </p>
-              )}
-            </div>
-          ))}
+      <div ref={quizRef} className="mb-10 scroll-mt-32">
+        <div className="flex items-center gap-2 mb-4">
+          <BrainCircuit className="w-5 h-5 text-amber-600" />
+          <h2 className="text-xl font-bold text-amber-900">Test Your Knowledge</h2>
+          <span className="ml-auto text-sm text-amber-500 font-medium">
+            {content.quiz.length} questions
+          </span>
         </div>
+        <InteractiveQuiz
+          quiz={content.quiz}
+          concepts={content.concepts}
+          lessonId={id as string}
+        />
+      </div>
 
-        {/* Submit / Result */}
-        {!submitted ? (
-          <button
-            onClick={handleSubmit}
-            disabled={Object.keys(answers).length !== content.quiz.length}
-            className="mt-6 w-full py-3 bg-amber-600 hover:bg-amber-700 disabled:bg-amber-300 text-white font-semibold rounded-xl transition-colors"
-          >
-            Submit Answers ({Object.keys(answers).length}/{content.quiz.length})
-          </button>
-        ) : (
-          <div className="mt-6 text-center">
-            <div className={`text-3xl font-bold mb-2 ${result && result.score >= 70 ? "text-green-600" : "text-amber-600"}`}>
-              {result?.score}%
-            </div>
-            <p className="text-amber-700 mb-4">
-              You got {result?.correctAnswers} out of {result?.totalQuestions} correct!
-            </p>
-            <div className="flex gap-3 justify-center">
-              <button
-                onClick={() => { setSubmitted(false); setAnswers({}); setResult(null); }}
-                className="px-6 py-2 bg-amber-100 hover:bg-amber-200 text-amber-800 font-medium rounded-xl transition-colors"
-              >
-                Retry
-              </button>
-              <Link
-                href="/learn"
-                className="px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl transition-colors"
-              >
-                Back to Courses
-              </Link>
-            </div>
+      {/* Next Lesson Navigation */}
+      <div className="mt-12 p-6 bg-white rounded-2xl border border-amber-200/60 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-amber-600 mb-1">Ready for more?</p>
+            <p className="text-lg font-bold text-amber-900">Continue your learning journey</p>
           </div>
-        )}
+          <Link
+            href="/learn"
+            className="flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-colors"
+          >
+            Back to Learning Path
+            <ChevronRight className="w-4 h-4" />
+                  </Link>
+        </div>
       </div>
     </div>
   );
