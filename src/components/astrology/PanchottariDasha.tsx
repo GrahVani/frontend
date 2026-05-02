@@ -15,13 +15,13 @@ interface PanchottariDashaProps {
 
 
 export default function PanchottariDasha({ periods, onDrillDown }: PanchottariDashaProps) {
-    const [selectedCycle, setSelectedCycle] = useState<number>(1);
+    const [selectedCycle, setSelectedCycle] = useState<number | string>(1);
 
     // Group periods by cycle dynamically (7 planets per cycle for Panchottari)
     const cycles = useMemo(() => {
-        const grouped: Record<number, DashaNode[]> = {};
+        const grouped: Record<string | number, DashaNode[]> = {};
         periods.forEach((p: DashaNode, idx: number) => {
-            const cNum = Math.floor(idx / 7) + 1;
+            const cNum = (p.raw?.cycle || p.raw?.cycle_number || Math.floor(idx / 7) + 1) as string | number;
             if (!grouped[cNum]) grouped[cNum] = [];
             grouped[cNum].push(p);
         });
@@ -29,33 +29,46 @@ export default function PanchottariDasha({ periods, onDrillDown }: PanchottariDa
     }, [periods]);
 
     const availableCycles = useMemo(() => {
-        return Object.keys(cycles).map(Number).sort((a: number, b: number) => a - b);
+        return Object.keys(cycles).sort((a, b) => {
+            const numA = Number(a);
+            const numB = Number(b);
+            if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+            return a.localeCompare(b);
+        });
     }, [cycles]);
 
     const activeCycleNum = useMemo(() => {
-        for (const cNum of availableCycles) {
-            if (cycles[cNum].some((p: DashaNode) => p.isCurrent)) return cNum;
+        if (!availableCycles.length) return "1";
+        for (const cKey of availableCycles) {
+            const cyclePeriods = cycles[cKey as any];
+            if (cyclePeriods && Array.isArray(cyclePeriods) && cyclePeriods.some((p: DashaNode) => p.isCurrent)) {
+                return cKey;
+            }
         }
-        return availableCycles.length > 0 ? availableCycles[0] : 1;
+        return availableCycles[0];
     }, [cycles, availableCycles]);
 
     // Auto-select active cycle on load
     React.useEffect(() => {
-        if (activeCycleNum) setSelectedCycle(activeCycleNum);
-    }, [activeCycleNum]);
+        if (activeCycleNum !== undefined && cycles[activeCycleNum as any]) {
+            setSelectedCycle(activeCycleNum);
+        } else if (availableCycles.length > 0) {
+            setSelectedCycle(availableCycles[0]);
+        }
+    }, [activeCycleNum, cycles, availableCycles]);
 
     if (availableCycles.length === 0) return null;
 
-    const currentCyclePeriods = cycles[selectedCycle] || [];
+    const currentCyclePeriods = cycles[selectedCycle as any] || [];
 
     return (
         <div className="space-y-4 animate-in fade-in duration-700">
             {/* Cycle Navigation */}
             <div className="flex flex-wrap gap-2 items-center px-4 pt-2">
                 <div className="flex bg-amber-50/50 rounded-lg p-0.5 gap-1 border border-amber-200/60 backdrop-blur-sm overflow-x-auto scrollbar-hide">
-                    {availableCycles.map((c: number) => {
-                        const isActive = selectedCycle === c;
-                        const cyclePeriods = cycles[c];
+                    {availableCycles.map((c: string | number) => {
+                        const isActive = String(selectedCycle) === String(c);
+                        const cyclePeriods = cycles[c as any] || [];
                         const startYear = cyclePeriods.length > 0 ? formatDateDisplay(cyclePeriods[0].startDate).split(' ').pop() : '';
                         const endYear = cyclePeriods.length > 0 ? formatDateDisplay(cyclePeriods[cyclePeriods.length - 1].endDate).split(' ').pop() : '';
 

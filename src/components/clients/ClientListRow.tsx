@@ -25,6 +25,10 @@ export default function ClientListRow({ client, onSelect, onEdit, onDelete }: Cl
     const phone = client.phone || client.phonePrimary;
 
     const handleClick = useCallback(() => {
+        if (!client.id) {
+            console.error('[ClientListRow] Cannot navigate: client.id is missing', client);
+            return;
+        }
         if (onSelect) {
             onSelect(client);
             return;

@@ -114,7 +114,7 @@ export default function LessonPage() {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto pb-20">
+    <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-20">
       {/* Header */}
       <div className="mb-6">
         <Link href="/learn" className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-800 text-sm mb-4 transition-colors">

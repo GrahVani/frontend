@@ -16,14 +16,18 @@ export const useAuthTokenStore = create<AuthTokenState>((set) => ({
   isRefreshing: false,
 
   setTokens: (accessToken, refreshToken) => {
-    // Store refresh token in localStorage for page refresh recovery
+    // Store both tokens in localStorage for page refresh recovery
     if (typeof window !== "undefined") {
+      localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
     }
     set({ accessToken, refreshToken });
   },
 
   setAccessToken: (accessToken) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("accessToken", accessToken);
+    }
     set({ accessToken });
   },
 

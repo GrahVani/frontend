@@ -59,9 +59,9 @@ interface ClientFormProps {
 // Section header for each form group
 function SectionHeader({ icon: Icon, title }: { icon: React.ElementType; title: string }) {
     return (
-        <div className="flex items-center gap-2 mb-4 pb-2 border-b border-amber-200/60">
+        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-amber-200/60">
             <Icon className="w-5 h-5 text-amber-600" />
-            <h2 className={cn(TYPOGRAPHY.sectionTitle, "!text-[18px] !font-bold !text-amber-900 !mb-0")}>{title}</h2>
+            <h2 className="text-[16px] font-bold text-amber-900">{title}</h2>
         </div>
     );
 }
@@ -69,7 +69,7 @@ function SectionHeader({ icon: Icon, title }: { icon: React.ElementType; title: 
 // Label component used throughout
 function FieldLabel({ children, required }: { children: React.ReactNode; required?: boolean }) {
     return (
-        <label className={cn(TYPOGRAPHY.label, "block !text-[11px] !font-bold !text-amber-700 uppercase tracking-widest !mb-1")}>
+        <label className="block text-[13px] font-semibold text-amber-800 mb-1.5">
             {children} {required && <span className="text-red-600">*</span>}
         </label>
     );
@@ -630,8 +630,8 @@ export default function ClientForm({ mode = 'create', initialData, onSuccess }: 
             )}
 
             {/* ─── Navigation & Submit (C-016: sticky submit bar) ─── */}
-            <div className="sticky bottom-0 backdrop-blur-md bg-white/70 border-t border-amber-200/60 pt-4 pb-4 mt-8 -mx-4 px-4 sm:-mx-6 sm:px-6 z-10">
-                <div className="flex items-center justify-between gap-4">
+            <div className="sticky bottom-0 backdrop-blur-md bg-white/80 border-t border-amber-200/60 pt-3 pb-3 mt-6 -mx-5 px-5 sm:-mx-6 sm:px-6 z-10">
+                <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto">
                     {/* Back button */}
                     {step > 0 ? (
                         <button

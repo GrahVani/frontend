@@ -388,7 +388,7 @@ export default function CompactWidgetPanel({
                         title="Chart Display" 
                         isOpen={openSections.display} 
                         onToggle={() => toggleSection('display')}
-                        badge={`${theme.chartStyle || 'North Indian'} • ${theme.planetFontSize || 14}px`}
+                        badge={`${theme.chartStyle || 'North Indian'} • ${theme.planetFontSize || 18}px`}
                         icon={Eye}
                     >
                         <div className="space-y-4">
@@ -481,7 +481,7 @@ export default function CompactWidgetPanel({
 
                             <NumberStepper
                                 label="Planet Text Size"
-                                value={theme.planetFontSize || 14}
+                                value={theme.planetFontSize || 18}
                                 min={10}
                                 max={24}
                                 onChange={(s) => updateTheme({ planetFontSize: s })}

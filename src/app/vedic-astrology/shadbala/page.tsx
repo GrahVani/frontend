@@ -477,13 +477,13 @@ function SubBalaBreakdownCard({ planet, axes, values, theme, idx }: {
                     const isNegative = val < 0;
                     return (
                         <div key={axis.key} className="flex items-center gap-2">
-                            <span className={cn(TYPOGRAPHY.label, "w-[65px] shrink-0 text-right font-normal lowercase text-[10px] text-amber-700")}>
+                            <span className={cn(TYPOGRAPHY.label, "w-[80px] shrink-0 text-right font-normal lowercase text-[12px] text-amber-700")}>
                                 {axis.label}
                             </span>
                             <AnimatedBar value={val} maxVal={localMax} color={theme.color} isNegative={isNegative} height="h-[5px]" />
                             <span className={cn(
                                 TYPOGRAPHY.subValue,
-                                "w-[34px] text-right tabular-nums text-[8.5px]",
+                                "w-[42px] text-right tabular-nums text-[11px]",
                                 isNegative ? "text-rose-500" : "text-amber-800"
                             )}>
                                 {val.toFixed(1)}
@@ -640,7 +640,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
             <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
                 <div className="p-3 border-b border-amber-200/60 bg-amber-50/30 flex items-center gap-2">
                     <Table2 className="w-3.5 h-3.5 text-indigo-500" />
-                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[10px] leading-none opacity-80 uppercase tracking-widest")}>Shadbala Summary</h3>
+                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[12px] leading-none font-semibold text-amber-900")}>Shadbala Summary</h3>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -651,7 +651,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-600 font-normal lowercase tracking-wide text-[9px]")}>Complete Strength Matrix</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-700 font-medium text-[10px]")}>Complete Strength Matrix</span>
                 </div>
                 <DataGrid
                     columns={[
@@ -754,7 +754,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
             <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
                 <div className="p-3 border-b border-amber-200/60 flex items-center gap-2">
                     <Activity className="w-3.5 h-3.5 text-emerald-600" />
-                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[10px] leading-none opacity-80 uppercase tracking-widest")}>Ishta & Kashta Phala</h3>
+                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[12px] leading-none font-semibold text-amber-900")}>Ishta & Kashta Phala</h3>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -765,7 +765,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-600 font-normal lowercase tracking-wide text-[9px]")}>Auspicious Ratio</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-700 font-medium text-[10px]")}>Auspicious Ratio</span>
                 </div>
                 <div className="p-5">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-4">
@@ -830,7 +830,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
             <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
                 <div className="p-3 border-b border-amber-200/60 flex items-center gap-2">
                     <Compass className="w-3.5 h-3.5 text-amber-500" />
-                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[10px] leading-none opacity-80 uppercase tracking-widest")}>Six-Fold Strength Profile</h3>
+                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[12px] leading-none font-semibold text-amber-900")}>Six-Fold Strength Profile</h3>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -841,7 +841,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-600 font-normal lowercase tracking-wide text-[9px]")}>Systemic Potency</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-700 font-medium text-[10px]")}>Systemic Potency</span>
                 </div>
                 <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                     {sortedPlanets.map((p, idx) => {
@@ -892,7 +892,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                                                 <TooltipProvider>
                                                     <Tooltip>
                                                         <TooltipTrigger asChild>
-                                                            <span className={cn(TYPOGRAPHY.label, "w-[58px] shrink-0 text-right font-normal lowercase text-[10px] text-amber-700 cursor-help")}>
+                                                            <span className={cn(TYPOGRAPHY.label, "w-[72px] shrink-0 text-right font-normal lowercase text-[12px] text-amber-700 cursor-help")}>
                                                                 {bala.label}
                                                             </span>
                                                         </TooltipTrigger>
@@ -904,7 +904,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                                                 <AnimatedBar value={bala.value} maxVal={localMax} color={theme.color} isNegative={isNegative} />
                                                 <span className={cn(
                                                     TYPOGRAPHY.subValue,
-                                                    "w-[30px] text-right tabular-nums text-[9.5px] font-bold",
+                                                    "w-[36px] text-right tabular-nums text-[11px] font-bold",
                                                     isNegative ? "text-rose-500" : "text-amber-800"
                                                 )}>
                                                     {bala.value.toFixed(0)}
@@ -925,7 +925,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
             <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
                 <div className="p-3 border-b border-amber-200/60 flex items-center gap-2">
                     <Shield className="w-3.5 h-3.5 text-amber-600" />
-                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[10px] leading-none opacity-80 uppercase tracking-widest")}>Sthana Bala Breakdown</h3>
+                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[12px] leading-none font-semibold text-amber-900")}>Sthana Bala Breakdown</h3>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -936,7 +936,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-600 font-normal lowercase tracking-wide text-[9px]")}>Positional Details</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-700 font-medium text-[10px]")}>Positional Details</span>
                 </div>
                 <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                     {sortedPlanets.map((p, idx) => (
@@ -958,7 +958,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
             <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
                 <div className="p-3 border-b border-amber-200/60 flex items-center gap-2">
                     <Clock className="w-3.5 h-3.5 text-indigo-500" />
-                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[10px] leading-none opacity-80 uppercase tracking-widest")}>Kala Bala Breakdown</h3>
+                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[12px] leading-none font-semibold text-amber-900")}>Kala Bala Breakdown</h3>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -969,7 +969,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-600 font-normal lowercase tracking-wide text-[9px]")}>Temporal Details</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-700 font-medium text-[10px]")}>Temporal Details</span>
                 </div>
                 <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                     {sortedPlanets.map((p, idx) => (
@@ -991,7 +991,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
             <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
                 <div className="p-3 border-b border-amber-200/60 flex items-center gap-2">
                     <Target className="w-3.5 h-3.5 text-blue-600" />
-                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[10px] leading-none opacity-80 uppercase tracking-widest")}>Required Strength %</h3>
+                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[12px] leading-none font-semibold text-amber-900")}>Required Strength %</h3>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -1002,7 +1002,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-600 font-normal lowercase tracking-wide text-[9px]")}>Efficiency Ratio</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-700 font-medium text-[10px]")}>Efficiency Ratio</span>
                 </div>
                 <div className="p-4 space-y-2">
                     {sortedPlanets.map((p, idx) => {
@@ -1046,9 +1046,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                                     <div
                                         className="absolute top-0 bottom-0 w-0.5 bg-copper-900/30 z-10"
                                         style={{ left: `${thresholdPos}%` }}
-                                    >
-                                        <span className="absolute -top-3.5 -translate-x-1/2 text-[7px] font-bold text-copper-900/60 uppercase tracking-tighter">Min. Required</span>
-                                    </div>
+                                    />
                                 </div>
                                 <span className={cn(
                                     TYPOGRAPHY.value,
@@ -1069,7 +1067,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
             <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
                 <div className="p-3 border-b border-amber-200/60 flex items-center gap-2">
                     <BarChart2 className="w-3.5 h-3.5 text-amber-500" />
-                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[10px] leading-none opacity-80 uppercase tracking-widest")}>Rupa Strength Overview</h3>
+                    <h3 className={cn(TYPOGRAPHY.label, "md:text-[12px] leading-none font-semibold text-amber-900")}>Rupa Strength Overview</h3>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -1080,7 +1078,7 @@ export function ShadbalaDashboard({ displayData }: { displayData: ShadbalaData }
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-600 font-normal lowercase tracking-wide text-[9px]")}>Vigor Gauges</span>
+                    <span className={cn(TYPOGRAPHY.label, "ml-auto text-amber-700 font-medium text-[10px]")}>Vigor Gauges</span>
                 </div>
                 <div className="p-4 flex flex-wrap items-center justify-center gap-2 md:gap-4">
                     {sortedPlanets.map((p) => {

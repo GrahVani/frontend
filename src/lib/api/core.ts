@@ -215,12 +215,32 @@ export async function apiFetch<T = unknown>(url: string, options: RequestInit = 
                                 if (retryResponse.status === 204) return {} as T;
                                 return retryResponse.json();
                             }
+                            // Log retry failure for debugging — don't blindly clear tokens on non-401 retry failures
+                            if (retryResponse.status !== 401) {
+                                console.error(`[apiFetch] Retry failed with status ${retryResponse.status} for ${url}`);
+                                const retryErrorData = await retryResponse.json().catch(async () => {
+                                    const textBody = await retryResponse.text().catch(() => '');
+                                    return textBody ? { message: textBody } : {};
+                                });
+                                throw new ApiError(
+                                    retryErrorData.error?.message || retryErrorData.message || `API Error: ${retryResponse.status} ${retryResponse.statusText}`,
+                                    retryResponse.status,
+                                    retryErrorData.error?.code || retryErrorData.code,
+                                    retryErrorData.error?.details || retryErrorData.details
+                                );
+                            }
                         }
-                    } catch {
+                    } catch (refreshErr) {
+                        // If retry threw an ApiError (non-401), re-throw it without clearing tokens
+                        if (refreshErr instanceof ApiError) {
+                            throw refreshErr;
+                        }
                         // Refresh itself failed — fall through to clear tokens
+                        console.error(`[apiFetch] Token refresh failed for ${url}:`, refreshErr);
                     }
 
-                    // API-003 FIX: Explicitly throw after clearing tokens instead of falling through
+                    // API-003 FIX: Clear tokens and redirect to login on persistent 401
+                    console.error(`[apiFetch] Persistent 401 for ${url} — clearing session`);
                     useAuthTokenStore.getState().clearTokens();
                     if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
                         window.history.replaceState({}, '', `/login?expired=true&redirect=${encodeURIComponent(window.location.pathname)}`);

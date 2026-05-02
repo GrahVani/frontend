@@ -13,7 +13,7 @@ export interface ClientQueryParams {
     myClientsOnly?: boolean;
 }
 
-export function useClients(params: ClientQueryParams = {}) {
+export function useClients(params: ClientQueryParams = {}, options?: { enabled?: boolean }) {
     return useQuery({
         queryKey: queryKeys.clients.list(params),
         queryFn: async () => {
@@ -21,6 +21,7 @@ export function useClients(params: ClientQueryParams = {}) {
         },
         placeholderData: (previousData) => previousData,
         staleTime: 1000 * 60,
+        enabled: options?.enabled !== false,
     });
 }
 

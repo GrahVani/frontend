@@ -27,42 +27,55 @@ const FIXED_DURATIONS: Record<string, number> = {
 };
 
 export default function ShattrimshatsamaDasha({ periods, isApplicable = true, onDrillDown }: ShattrimshatsamaDashaProps) {
-    const [selectedCycle, setSelectedCycle] = useState<number>(1);
+    const [selectedCycle, setSelectedCycle] = useState<number | string>(1);
 
-    // Group periods by cycle dynamically
+    // Group periods by cycle dynamically (8 planets per cycle for Shattrimshatsama)
     const cycles = useMemo(() => {
-        const grouped: Record<number, DashaNode[]> = {};
-        periods.forEach((p, idx) => {
+        const grouped: Record<string | number, DashaNode[]> = {};
+        if (!Array.isArray(periods)) return grouped;
+        periods.forEach((p: DashaNode, idx: number) => {
             const cNum = (p.raw?.cycle || p.raw?.cycle_number || Math.floor(idx / 8) + 1) as string | number;
-            const cycleKey: number = typeof cNum === 'string' ? parseInt(cNum, 10) : cNum;
-            if (!grouped[cycleKey]) grouped[grouped[cycleKey] ? cycleKey : cycleKey] = []; // Fixed duplicate check logic
-            if (!grouped[cycleKey]) grouped[cycleKey] = [];
-            grouped[cycleKey].push(p);
+            if (!grouped[cNum]) grouped[cNum] = [];
+            grouped[cNum].push(p);
         });
         return grouped;
     }, [periods]);
 
     const availableCycles = useMemo(() => {
-        return Object.keys(cycles).map(Number).sort((a, b) => a - b);
+        return Object.keys(cycles).sort((a, b) => {
+            const numA = Number(a);
+            const numB = Number(b);
+            if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+            return a.localeCompare(b);
+        });
     }, [cycles]);
 
     const activeCycleNum = useMemo(() => {
-        for (const cNum of availableCycles) {
-            if (cycles[cNum].some(p => p.isCurrent)) return cNum;
+        if (!availableCycles.length) return "1";
+        for (const cKey of availableCycles) {
+            const cyclePeriods = cycles[cKey as any];
+            if (cyclePeriods && Array.isArray(cyclePeriods) && cyclePeriods.some((p: DashaNode) => p.isCurrent)) {
+                return cKey;
+            }
         }
-        return availableCycles.length > 0 ? availableCycles[0] : 1;
+        return availableCycles[0];
     }, [cycles, availableCycles]);
 
+    // Auto-select active cycle on load
     React.useEffect(() => {
-        if (activeCycleNum) setSelectedCycle(activeCycleNum);
-    }, [activeCycleNum]);
+        if (activeCycleNum !== undefined && cycles[activeCycleNum as any]) {
+            setSelectedCycle(activeCycleNum);
+        } else if (availableCycles.length > 0) {
+            setSelectedCycle(availableCycles[0]);
+        }
+    }, [activeCycleNum, cycles, availableCycles]);
 
     if (availableCycles.length === 0) return null;
 
-    const finalPeriods = (cycles[selectedCycle] || []).slice(0, 8);
+    const currentCyclePeriods = cycles[selectedCycle as any] || [];
 
     return (
-        <div className="space-y-3 animate-in fade-in duration-700">
+        <div className="space-y-4 animate-in fade-in duration-700">
             {/* Applicability Warning */}
             {!isApplicable && (
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2 mx-4 mt-2">
@@ -74,20 +87,20 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true, on
                 </div>
             )}
 
-            {/* Cycle Toggle Navigation */}
+            {/* Cycle Navigation */}
             {availableCycles.length > 1 && (
-                <div className="px-4 pt-2">
-                    <div className="flex bg-amber-50/50 rounded-lg p-0.5 gap-1 border border-amber-200/60 backdrop-blur-sm overflow-x-auto scrollbar-hide w-fit max-w-full">
-                        {availableCycles.map((c) => {
-                            const isActive = selectedCycle === c;
-                            const cyclePeriods = cycles[c];
+                <div className="flex flex-wrap gap-2 items-center px-4 pt-2">
+                    <div className="flex bg-amber-50/50 rounded-lg p-0.5 gap-1 border border-amber-200/60 backdrop-blur-sm overflow-x-auto scrollbar-hide">
+                        {availableCycles.map((c: string | number) => {
+                            const isActive = String(selectedCycle) === String(c);
+                            const cyclePeriods = cycles[c as any] || [];
                             const startYear = cyclePeriods.length > 0 ? formatDateDisplay(cyclePeriods[0].startDate).split(' ').pop() : '';
                             const endYear = cyclePeriods.length > 0 ? formatDateDisplay(cyclePeriods[cyclePeriods.length - 1].endDate).split(' ').pop() : '';
 
                             return (
                                 <button
                                     key={c}
-                                    onClick={() => setSelectedCycle(c)}
+                                    onClick={() => setSelectedCycle(c as any)}
                                     className={cn(
                                         "flex items-center gap-2 px-2 py-1 rounded-md transition-all duration-200 whitespace-nowrap",
                                         isActive
@@ -118,7 +131,7 @@ export default function ShattrimshatsamaDasha({ periods, isApplicable = true, on
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-amber-200/40 font-medium font-sans bg-white/60">
-                        {finalPeriods.map((mahadasha, mIdx) => {
+                        {currentCyclePeriods.map((mahadasha, mIdx) => {
                             const uniqueId = `shattrim-${mahadasha.planet}-${mIdx}`;
                             const canDrill = mahadasha.canDrillFurther || (mahadasha.sublevel && mahadasha.sublevel.length > 0);
                             const isBalance = mIdx === 0;

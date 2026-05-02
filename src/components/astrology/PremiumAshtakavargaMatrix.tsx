@@ -327,8 +327,8 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
                             className={cn(
                                 "whitespace-nowrap px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider transition-all duration-300",
                                 selectedPlanet === p
-                                    ? "bg-gold-primary text-white shadow-sm"
-                                    : "bg-surface-warm/40 text-ink/40 hover:bg-surface-warm hover:text-ink/60"
+                                    ? "bg-amber-600 text-white shadow-sm"
+                                    : "bg-amber-50/40 text-amber-900/40 hover:bg-amber-50 hover:text-amber-900/60"
                             )}
                         >
                             {p}
@@ -338,62 +338,62 @@ export default function PremiumAshtakavargaMatrix({ type, planet: propPlanet, da
             )}
 
             <div className="flex-1 overflow-auto custom-scrollbar-slim">
-                <table className="w-full h-full border-collapse border border-ink/20">
-                    <thead className="sticky top-0 z-20 bg-surface-warm">
-                        <tr className="border-b border-ink/20">
-                            <th className="w-10 p-1 text-[9px] font-black uppercase text-ink text-left border-r border-ink/20">PL</th>
+                <table className="w-full h-full border-collapse border border-amber-900/20">
+                    <thead className="sticky top-0 z-20 bg-amber-50">
+                        <tr className="border-b border-amber-900/20">
+                            <th className="w-10 p-1 text-[9px] font-black uppercase text-amber-900 text-left border-r border-amber-900/20">PL</th>
                             {SIGNS.map(s => (
-                                <th key={s} className="w-7 p-1 text-center border-r border-ink/20 last:border-r-0">
-                                    <span className="text-[9px] font-black text-ink">{s}</span>
+                                <th key={s} className="w-7 p-1 text-center border-r border-amber-900/20 last:border-r-0">
+                                    <span className="text-[9px] font-black text-amber-900">{s}</span>
                                 </th>
                             ))}
-                            <th className="w-8 p-1 text-[9px] font-black uppercase text-ink text-center">T</th>
+                            <th className="w-8 p-1 text-[9px] font-black uppercase text-amber-900 text-center">T</th>
                         </tr>
                     </thead>
                     <tbody>
                         {rows.map((rowName) => {
                             const rowData = matrix[rowName] || {};
                             let rowTot = SIGNS.reduce((acc, s) => acc + (rowData[s] || 0), 0);
-                            const meta = PLANET_METADATA[rowName] || { label: rowName.substring(0, 2).toUpperCase(), color: 'text-ink' };
+                            const meta = PLANET_METADATA[rowName] || { label: rowName.substring(0, 2).toUpperCase(), color: 'text-amber-900' };
 
                             return (
-                                <tr key={rowName} className="border-b border-ink/10 last:border-b-0">
-                                    <td className="p-1 px-1.5 min-w-[40px] border-r border-ink/20">
+                                <tr key={rowName} className="border-b border-amber-900/10 last:border-b-0">
+                                    <td className="p-1 px-1.5 min-w-[40px] border-r border-amber-900/20">
                                         <span className={cn("text-[10px] font-bold", meta.color)}>{meta.label}</span>
                                     </td>
                                     {SIGNS.map(s => {
                                         const v = rowData[s] || 0;
                                         return (
-                                            <td key={s} className="p-1 text-center border-r border-ink/10 last:border-r-0">
-                                                <span className="text-[9px] font-bold text-ink">{v}</span>
+                                            <td key={s} className="p-1 text-center border-r border-amber-900/10 last:border-r-0">
+                                                <span className="text-[9px] font-bold text-amber-900">{v}</span>
                                             </td>
                                         );
                                     })}
-                                    <td className="p-1 text-center font-bold text-[9px] text-ink">
+                                    <td className="p-1 text-center font-bold text-[9px] text-amber-900">
                                         {rowTot}
                                     </td>
                                 </tr>
                             );
                         })}
                     </tbody>
-                    <tfoot className="sticky bottom-0 z-10 border-t border-ink/20 bg-surface-warm">
+                    <tfoot className="sticky bottom-0 z-10 border-t border-amber-900/20 bg-amber-50">
                         <tr>
-                            <td className="p-1 px-1.5 border-r border-ink/20">
-                                <span className="text-[9px] font-black uppercase text-ink">TT</span>
+                            <td className="p-1 px-1.5 border-r border-amber-900/20">
+                                <span className="text-[9px] font-black uppercase text-amber-900">TT</span>
                             </td>
                             {SIGNS.map(s => {
                                 const tot = columnTotals[s];
                                 return (
-                                    <td key={s} className="p-1 text-center border-r border-ink/10 last:border-r-0">
+                                    <td key={s} className="p-1 text-center border-r border-amber-900/10 last:border-r-0">
                                         <span className={cn(
                                             "text-[9px] font-bold",
-                                            isSarva && tot >= 30 ? "text-emerald-700" : isSarva && tot < 22 ? "text-red-600" : "text-ink"
+                                            isSarva && tot >= 30 ? "text-emerald-700" : isSarva && tot < 22 ? "text-red-600" : "text-amber-900"
                                         )}>{tot}</span>
                                     </td>
                                 )
                             })}
                             <td className="p-1 text-center">
-                                <span className="text-[9px] font-black text-gold-dark">
+                                <span className="text-[9px] font-black text-amber-700">
                                     {Object.values(columnTotals).reduce((a, b) => a + b, 0)}
                                 </span>
                             </td>

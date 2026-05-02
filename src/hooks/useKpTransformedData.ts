@@ -229,7 +229,8 @@ export function useKpTransformedData(input: KpTransformedDataInput) {
                         degree: p.longitude?.split('°')[0] + '°' || "0°",
                         isRetro: p.is_retro || false,
                         house: p.house,
-                        // @ts-ignore
+                        chartLabel: p.chart_label || `${name.substring(0, 2)}(${p.sign_index || signNameToId[normalizedSign] || 1})`,
+                        // @ts-ignore - extending Planet interface for KP display
                         starLord: p.star_lord || p.nakshatra_lord || '',
                         // @ts-ignore
                         subLord: p.sub_lord || '',
@@ -270,6 +271,24 @@ export function useKpTransformedData(input: KpTransformedDataInput) {
         const rawCusps = (planetsCuspsQuery.data?.data as any)?.house_cusps;
         if (rawCusps) {
             return Object.entries(rawCusps).map(([key, c]: [string, any]) => ({
+                cusp: parseInt(key),
+                sign: c.sign,
+                signId: signNameToId[c.sign] || 1,
+                degree: parseDms(c.longitude),
+                degreeFormatted: c.longitude,
+                nakshatra: c.nakshatra,
+                nakshatraLord: c.star_lord,
+                subLord: c.sub_lord,
+            })).sort((a, b) => a.cusp - b.cusp);
+        }
+
+        // Fallback to kp_planets_cusps_kp processed chart
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const kpCuspsRaw = (processedCharts['kp_planets_cusps_kp']?.chartData as any)?.data || processedCharts['kp_planets_cusps_kp']?.chartData;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const kpHouseCusps = kpCuspsRaw?.house_cusps as Record<string, any> | undefined;
+        if (kpHouseCusps) {
+            return Object.entries(kpHouseCusps).map(([key, c]) => ({
                 cusp: parseInt(key),
                 sign: c.sign,
                 signId: signNameToId[c.sign] || 1,

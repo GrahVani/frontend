@@ -57,9 +57,9 @@ const HouseSignificatorsTable = dynamic(() => import('@/components/kp').then(m =
 const RulingPlanetsWidget = dynamic(() => import('@/components/kp').then(m => ({ default: m.RulingPlanetsWidget })));
 const BhavaDetailsTable = dynamic(() => import('@/components/kp').then(m => ({ default: m.BhavaDetailsTable })));
 const KpFortunaView = dynamic(() => import('@/components/kp').then(m => ({ default: m.KpFortunaView })));
-const KpAdvancedSslView = dynamic(() => import('@/components/kp').then(m => ({ default: m.KpAdvancedSslView })));
-const KpNakshatraNadiFocusedView = dynamic(() => import('@/components/kp').then(m => ({ default: m.KpNakshatraNadiFocusedView })));
-const KpFocusedCuspView = dynamic(() => import('@/components/kp').then(m => ({ default: m.KpFocusedCuspView })));
+
+
+
 const PremiumAshtakavargaMatrix = dynamic(() => import('@/components/astrology/PremiumAshtakavargaMatrix'));
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -674,15 +674,17 @@ export function TransitWidget(props: WidgetBoxProps) {
 // DASHA WIDGET CONTENT (no card wrapper - for use in ResizableWidgetBox)
 // ═══════════════════════════════════════════════════════════════════════════════
 function DashaWidgetContent({ widget, clientId, activeSystem }: { widget: CustomizeChartItem; clientId: string; activeSystem: string }) {
-    const { processedCharts, isLoadingCharts } = useVedicClient();
+    const isVimshottari = widget.id === 'vimshottari';
 
-    // Fetch from database (processedCharts) - key pattern: {dashaType}_{ayanamsa}
-    const dashaKey = `${widget.id}_${activeSystem.toLowerCase()}`;
-    const dashaRaw = processedCharts[dashaKey]?.chartData;
-    const dashaData = dashaRaw?.data || dashaRaw;
-    const loading = !dashaData && isLoadingCharts;
+    // Dynamically fetch dasha data via API for real-time accuracy across all ayanamsas
+    // processedCharts rarely contains dasha data — the backend serves dashas via dedicated endpoints
+    const vimshottariQuery = useDasha(clientId, 'deep', activeSystem);
+    const otherDashaQuery = useOtherDasha(clientId, widget.id, activeSystem, 'mahadasha');
 
-    if (loading) {
+    const dashaData = isVimshottari ? vimshottariQuery.data : otherDashaQuery.data;
+    const isLoading = isVimshottari ? vimshottariQuery.isLoading : otherDashaQuery.isLoading;
+
+    if (isLoading) {
         return (
             <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <Loader2 className="w-8 h-8 text-purple-500 animate-spin mb-3" />
@@ -763,6 +765,396 @@ export function RemedyWidget(props: WidgetBoxProps) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// FULL INTERLINKS VIEW — All 12 cusps at once (workbench default)
+// ═══════════════════════════════════════════════════════════════════════════════
+const ZODIAC_SYMBOLS_FULL = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
+const PLANET_SYMBOLS_FULL: Record<string, string> = {
+    'Sun': '☉', 'Moon': '☽', 'Mars': '♂', 'Mercury': '☿', 'Jupiter': '♃',
+    'Venus': '♀', 'Saturn': '♄', 'Rahu': '☊', 'Ketu': '☋',
+    'Su': '☉', 'Mo': '☽', 'Ma': '♂', 'Me': '☿', 'Ju': '♃',
+    'Ve': '♀', 'Sa': '♄', 'Ra': '☊', 'Ke': '☋'
+};
+const HOUSE_TOPICS_FULL: Record<number, string> = {
+    1: 'Self', 2: 'Wealth', 3: 'Siblings', 4: 'Home',
+    5: 'Children', 6: 'Health', 7: 'Marriage', 8: 'Longevity',
+    9: 'Fortune', 10: 'Career', 11: 'Gains', 12: 'Loss'
+};
+
+interface KpFullInterlinksViewProps {
+    promises: any[];
+    cusps?: any[];
+}
+
+function KpFullInterlinksView({ promises, cusps = [] }: KpFullInterlinksViewProps) {
+    const arr: any[] = Array.isArray(promises) ? promises : Object.values(promises || {});
+
+    return (
+        <div className="space-y-3 animate-in fade-in duration-500">
+            {/* Legend */}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-2 py-1.5 bg-amber-100/60 rounded-lg border border-amber-300/50">
+                <span className="text-[10px] font-bold text-amber-900 uppercase tracking-wider">Legend</span>
+                <span className="text-[10px] text-amber-900 font-medium">SL = Sign Lord</span>
+                <span className="text-[10px] text-amber-900 font-medium">STL = Star Lord</span>
+                <span className="text-[10px] text-amber-900 font-medium">SubL = Sub Lord</span>
+                <span className="text-[10px] text-amber-900 font-medium">SSL = Sub-Sub Lord</span>
+                <span className="text-[10px] text-emerald-700 font-bold">Fav = Favorable</span>
+                <span className="text-[10px] text-rose-700 font-bold">Adv = Adverse</span>
+            </div>
+            {Array.from({ length: 12 }, (_, i) => i + 1).map(cuspNum => {
+                const promise = arr.find((p: any) => p.houseNumber === cuspNum);
+                const cuspInfo = cusps.find((c: any) => c.cusp === cuspNum);
+                const signIdx = (cuspInfo?.signId || cuspNum) - 1;
+                const signSymbol = ZODIAC_SYMBOLS_FULL[signIdx] || '♈';
+                const degree = cuspInfo?.degreeFormatted || `${(cuspInfo?.degree || 0).toFixed(2)}°`;
+                const chain = promise?.chain;
+
+                return (
+                    <div key={cuspNum} className="bg-white rounded-lg p-3 border border-amber-200/60 shadow-sm">
+                        {/* Header Row */}
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                                <span className="text-[20px]">{signSymbol}</span>
+                                <div>
+                                    <span className="text-[13px] font-semibold text-amber-900">{cuspNum}H · {HOUSE_TOPICS_FULL[cuspNum]}</span>
+                                    <span className="text-[11px] text-amber-700/60 ml-2">{degree}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Lord Chain */}
+                        {chain && (
+                            <div className="flex flex-wrap items-center gap-1 mb-2">
+                                {[
+                                    { label: 'SL', full: 'Sign Lord', planet: chain.signLord?.planet },
+                                    { label: 'STL', full: 'Star Lord', planet: chain.starLord?.planet },
+                                    { label: 'SubL', full: 'Sub Lord', planet: chain.subLord?.planet, highlight: true },
+                                    { label: 'SSL', full: 'Sub-Sub Lord', planet: chain.subSubLord?.planet },
+                                ].map((item, idx) => (
+                                    <React.Fragment key={item.label}>
+                                        {idx > 0 && <span className="text-amber-300 text-[10px]">→</span>}
+                                        <div
+                                            title={`${item.full}: ${item.planet}`}
+                                            className={cn(
+                                                "flex items-center gap-1 px-2 py-1 rounded-md text-[11px] cursor-help",
+                                                item.highlight
+                                                    ? "bg-amber-600 text-white font-medium"
+                                                    : "bg-amber-50 text-amber-800 border border-amber-200/60"
+                                            )}
+                                        >
+                                            <span className="text-[13px]">{PLANET_SYMBOLS_FULL[item.planet] || '☉'}</span>
+                                            <span>{item.planet}</span>
+                                            <span className="opacity-60 text-[9px] ml-0.5">{item.label}</span>
+                                        </div>
+                                    </React.Fragment>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Links */}
+                        {promise && (
+                            <div className="flex flex-wrap items-center gap-3">
+                                {(promise.positiveHouses || []).length > 0 && (
+                                    <div className="flex items-center gap-1" title="Favorable houses">
+                                        <span className="text-[10px] font-semibold text-emerald-600 uppercase tracking-wide cursor-help">Fav</span>
+                                        <div className="flex gap-1">
+                                            {promise.positiveHouses.map((h: number) => (
+                                                <span key={h} title={`House ${h}`} className="inline-flex items-center justify-center w-6 h-6 bg-emerald-50 text-emerald-700 font-medium rounded text-[11px] border border-emerald-200 cursor-help">
+                                                    {h}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                {(promise.negativeHouses || []).length > 0 && (
+                                    <div className="flex items-center gap-1" title="Adverse houses">
+                                        <span className="text-[10px] font-semibold text-rose-600 uppercase tracking-wide cursor-help">Adv</span>
+                                        <div className="flex gap-1">
+                                            {promise.negativeHouses.map((h: number) => (
+                                                <span key={h} title={`House ${h}`} className="inline-flex items-center justify-center w-6 h-6 bg-rose-50 text-rose-700 font-medium rounded text-[11px] border border-rose-200 cursor-help">
+                                                    {h}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                {(promise.positiveHouses || []).length === 0 && (promise.negativeHouses || []).length === 0 && (
+                                    <span className="text-[11px] text-amber-700/30">No links</span>
+                                )}
+                            </div>
+                        )}
+
+                        {!promise && (
+                            <div className="text-[11px] text-amber-700/30">No interlink data</div>
+                        )}
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FULL ADVANCED SSL VIEW — All 12 cusps at once (workbench default)
+// ═══════════════════════════════════════════════════════════════════════════════
+const SSL_ZODIAC_SYMBOLS = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
+const SSL_PLANET_SYMBOLS: Record<string, string> = {
+    'Sun': '☉', 'Moon': '☽', 'Mars': '♂', 'Mercury': '☿', 'Jupiter': '♃',
+    'Venus': '♀', 'Saturn': '♄', 'Rahu': '☊', 'Ketu': '☋',
+    'Su': '☉', 'Mo': '☽', 'Ma': '♂', 'Me': '☿', 'Ju': '♃',
+    'Ve': '♀', 'Sa': '♄', 'Ra': '☊', 'Ke': '☋'
+};
+const SSL_HOUSE_TOPICS: Record<number, string> = {
+    1: 'Self', 2: 'Wealth', 3: 'Siblings', 4: 'Home',
+    5: 'Children', 6: 'Health', 7: 'Marriage', 8: 'Longevity',
+    9: 'Fortune', 10: 'Career', 11: 'Gains', 12: 'Loss'
+};
+
+interface KpFullAdvancedSslViewProps {
+    promises: any[];
+    cusps?: any[];
+}
+
+function KpFullAdvancedSslView({ promises, cusps = [] }: KpFullAdvancedSslViewProps) {
+    const arr: any[] = Array.isArray(promises) ? promises : Object.values(promises || {});
+
+    const getAnalysis = (promise: any) => {
+        const positiveCount = promise?.positiveHouses?.length || 0;
+        const negativeCount = promise?.negativeHouses?.length || 0;
+        const total = positiveCount + negativeCount;
+        const ratio = total > 0 ? (positiveCount / total) * 100 : 50;
+        if (ratio >= 70) return { level: 'Very Strong', color: 'bg-emerald-600 text-white' };
+        if (ratio >= 50) return { level: 'Strong', color: 'bg-emerald-500 text-white' };
+        if (ratio >= 30) return { level: 'Moderate', color: 'bg-amber-500 text-white' };
+        if (ratio > 0) return { level: 'Weak', color: 'bg-orange-500 text-white' };
+        if (negativeCount > 0) return { level: 'Denied', color: 'bg-rose-500 text-white' };
+        return { level: 'Neutral', color: 'bg-gray-400 text-white' };
+    };
+
+    return (
+        <div className="space-y-3 animate-in fade-in duration-500">
+            {/* Legend */}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-2 py-1.5 bg-amber-100/60 rounded-lg border border-amber-300/50">
+                <span className="text-[10px] font-bold text-amber-900 uppercase tracking-wider">Legend</span>
+                <span className="text-[10px] text-amber-900 font-medium">SL = Sign Lord</span>
+                <span className="text-[10px] text-amber-900 font-medium">STL = Star Lord</span>
+                <span className="text-[10px] text-amber-900 font-medium">SubL = Sub Lord</span>
+                <span className="text-[10px] text-amber-900 font-medium">SSL = Sub-Sub Lord</span>
+                <span className="text-[10px] text-emerald-700 font-bold">Sup = Supporting</span>
+                <span className="text-[10px] text-rose-700 font-bold">Opp = Opposing</span>
+            </div>
+            {Array.from({ length: 12 }, (_, i) => i + 1).map(cuspNum => {
+                const promise = arr.find((p: any) => p.houseNumber === cuspNum);
+                const cuspInfo = cusps.find((c: any) => c.cusp === cuspNum);
+                const signIdx = (cuspInfo?.signId || cuspNum) - 1;
+                const signSymbol = SSL_ZODIAC_SYMBOLS[signIdx] || '♈';
+                const degree = cuspInfo?.degreeFormatted || `${(cuspInfo?.degree || 0).toFixed(2)}°`;
+                const chain = promise?.chain;
+                const analysis = getAnalysis(promise);
+
+                return (
+                    <div key={cuspNum} className="bg-white rounded-lg p-3 border border-amber-200/60 shadow-sm">
+                        {/* Header Row */}
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                                <span className="text-[20px]">{signSymbol}</span>
+                                <div>
+                                    <span className="text-[13px] font-semibold text-amber-900">{cuspNum}H · {SSL_HOUSE_TOPICS[cuspNum]}</span>
+                                    <span className="text-[11px] text-amber-700/60 ml-2">{degree}</span>
+                                </div>
+                            </div>
+                            {promise && (
+                                <span className={cn("px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider", analysis.color)}>
+                                    {analysis.level}
+                                </span>
+                            )}
+                        </div>
+
+                        {/* SSL Chain */}
+                        {chain && (
+                            <div className="flex flex-wrap items-center gap-1 mb-2">
+                                {[
+                                    { label: 'SL', full: 'Sign Lord', planet: chain.signLord?.planet },
+                                    { label: 'STL', full: 'Star Lord', planet: chain.starLord?.planet },
+                                    { label: 'SubL', full: 'Sub Lord', planet: chain.subLord?.planet },
+                                    { label: 'SSL', full: 'Sub-Sub Lord', planet: chain.subSubLord?.planet, highlight: true },
+                                ].map((item, idx) => (
+                                    <React.Fragment key={item.label}>
+                                        {idx > 0 && <span className="text-amber-300 text-[10px]">→</span>}
+                                        <div
+                                            title={`${item.full}: ${item.planet}`}
+                                            className={cn(
+                                                "flex items-center gap-1 px-2 py-1 rounded-md text-[11px] cursor-help",
+                                                item.highlight
+                                                    ? "bg-gradient-to-br from-amber-500 to-amber-700 text-white font-medium shadow-sm"
+                                                    : "bg-amber-50 text-amber-800 border border-amber-200/60"
+                                            )}
+                                        >
+                                            <span className="text-[13px]">{SSL_PLANET_SYMBOLS[item.planet] || '☉'}</span>
+                                            <span>{item.planet}</span>
+                                            <span className="opacity-60 text-[9px] ml-0.5">{item.label}</span>
+                                        </div>
+                                    </React.Fragment>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Links */}
+                        {promise && (
+                            <div className="flex flex-wrap items-center gap-3">
+                                {(promise.positiveHouses || []).length > 0 && (
+                                    <div className="flex items-center gap-1" title="Supporting houses">
+                                        <span className="text-[10px] font-semibold text-emerald-600 uppercase tracking-wide cursor-help">Sup</span>
+                                        <div className="flex gap-1">
+                                            {promise.positiveHouses.map((h: number) => (
+                                                <span key={h} title={`House ${h}`} className="inline-flex items-center justify-center w-6 h-6 bg-emerald-500 text-white font-medium rounded text-[11px] shadow-sm cursor-help">
+                                                    {h}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                {(promise.negativeHouses || []).length > 0 && (
+                                    <div className="flex items-center gap-1" title="Opposing houses">
+                                        <span className="text-[10px] font-semibold text-rose-600 uppercase tracking-wide cursor-help">Opp</span>
+                                        <div className="flex gap-1">
+                                            {promise.negativeHouses.map((h: number) => (
+                                                <span key={h} className="inline-flex items-center justify-center w-6 h-6 bg-rose-500 text-white font-medium rounded text-[11px] shadow-sm">
+                                                    {h}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                {(promise.positiveHouses || []).length === 0 && (promise.negativeHouses || []).length === 0 && (
+                                    <span className="text-[11px] text-amber-700/30">No links</span>
+                                )}
+                            </div>
+                        )}
+
+                        {!promise && (
+                            <div className="text-[11px] text-amber-700/30">No SSL data</div>
+                        )}
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FULL NAKSHATRA NADI VIEW — All planets & cusps at once (workbench default)
+// ═══════════════════════════════════════════════════════════════════════════════
+const NADI_ZODIAC_SYMBOLS = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
+const NADI_PLANET_SYMBOLS: Record<string, string> = {
+    'Sun': '☉', 'Moon': '☽', 'Mars': '♂', 'Mercury': '☿', 'Jupiter': '♃',
+    'Venus': '♀', 'Saturn': '♄', 'Rahu': '☊', 'Ketu': '☋',
+    'Su': '☉', 'Mo': '☽', 'Ma': '♂', 'Me': '☿', 'Ju': '♃',
+    'Ve': '♀', 'Sa': '♄', 'Ra': '☊', 'Ke': '☋'
+};
+const NADI_SIGN_IDS: Record<string, number> = {
+    'Aries': 1, 'Taurus': 2, 'Gemini': 3, 'Cancer': 4, 'Leo': 5, 'Virgo': 6,
+    'Libra': 7, 'Scorpio': 8, 'Sagittarius': 9, 'Capricorn': 10, 'Aquarius': 11, 'Pisces': 12,
+};
+
+interface KpFullNakshatraNadiViewProps {
+    nadiData: any;
+}
+
+function KpFullNakshatraNadiView({ nadiData }: KpFullNakshatraNadiViewProps) {
+    const planets: any[] = Array.isArray(nadiData?.planets)
+        ? nadiData.planets
+        : Object.values(nadiData?.planets || {});
+    const cusps: any[] = Array.isArray(nadiData?.cusps)
+        ? nadiData.cusps
+        : Object.values(nadiData?.cusps || {});
+
+    const renderItem = (item: any, isPlanet: boolean, index: number) => {
+        const name = isPlanet ? item.name : (item.label || `Cusp ${item.house || ''}`);
+        const sign = item.sign || 'Aries';
+        const signId = NADI_SIGN_IDS[sign] || 1;
+        const signSymbol = NADI_ZODIAC_SYMBOLS[signId - 1] || '♈';
+        const planetSymbol = isPlanet ? (NADI_PLANET_SYMBOLS[item.name] || '☉') : null;
+        const longitude = item.longitude || '0°0\'0"';
+        const nakshatra = item.nakshatraName || item.nakshatra || '-';
+        const starLord = item.nakshatraLord || item.star_lord || '-';
+        const subLord = item.subLord || item.sub_lord || '-';
+
+        return (
+            <div key={`${isPlanet ? 'p' : 'c'}-${index}-${name}`} className="flex items-center gap-3 bg-white rounded-lg p-2.5 border border-amber-200/60 shadow-sm">
+                {/* Name + Sign */}
+                <div className="flex items-center gap-2 min-w-[110px] shrink-0">
+                    {planetSymbol && (
+                        <span className="text-[18px] text-amber-900 font-serif">{planetSymbol}</span>
+                    )}
+                    <div>
+                        <span className="text-[12px] font-semibold text-amber-900 block leading-tight">{name}</span>
+                        {item.isRetro && (
+                            <span className="text-[9px] bg-rose-100 text-rose-700 px-1 rounded font-medium">R</span>
+                        )}
+                    </div>
+                </div>
+
+                {/* Sign */}
+                <div className="flex items-center gap-1 min-w-[60px] shrink-0" title={sign}>
+                    <span className="text-[16px]">{signSymbol}</span>
+                    <span className="text-[11px] text-amber-800 font-medium">{sign.substring(0, 3)}</span>
+                </div>
+
+                {/* Longitude */}
+                <div className="min-w-[80px] shrink-0 text-[11px] text-amber-800 font-mono font-medium" title="Longitude">
+                    {longitude}
+                </div>
+
+                {/* Nakshatra */}
+                <div className="min-w-[100px] shrink-0" title={`Nakshatra lord: ${starLord}`}>
+                    <span className="text-[11px] text-amber-900 font-medium">{nakshatra}</span>
+                    <span className="text-[10px] text-amber-700/60 block">STL: {starLord}</span>
+                </div>
+
+                {/* Sub Lord */}
+                <div className="ml-auto shrink-0" title="Sub Lord">
+                    <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-gradient-to-br from-amber-500 to-amber-700 text-white shadow-sm">
+                        <span className="text-[13px]">{NADI_PLANET_SYMBOLS[subLord] || '☉'}</span>
+                        <span className="text-[11px] font-semibold">{subLord}</span>
+                        <span className="text-[9px] opacity-80">SubL</span>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    return (
+        <div className="space-y-4 animate-in fade-in duration-500">
+            {/* Planets */}
+            {planets.length > 0 && (
+                <div>
+                    <div className="flex items-center gap-2 mb-2 px-1">
+                        <span className="text-[12px] font-bold text-amber-900 uppercase tracking-wider">Planetary Nadi</span>
+                        <span className="text-[10px] text-amber-700/50 font-medium">{planets.length} grahas</span>
+                    </div>
+                    <div className="space-y-2">
+                        {planets.map((p: any, i: number) => renderItem(p, true, i))}
+                    </div>
+                </div>
+            )}
+
+            {/* Cusps */}
+            {cusps.length > 0 && (
+                <div>
+                    <div className="flex items-center gap-2 mb-2 px-1">
+                        <span className="text-[12px] font-bold text-amber-900 uppercase tracking-wider">Cuspal Nadi (Bhavas)</span>
+                        <span className="text-[10px] text-amber-700/50 font-medium">{cusps.length} cusps</span>
+                    </div>
+                    <div className="space-y-2">
+                        {cusps.map((c: any, i: number) => renderItem(c, false, i))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // KP MODULE WIDGET CONTENT (no card wrapper - for use in ResizableWidgetBox)
 // ═══════════════════════════════════════════════════════════════════════════════
 function KpModuleWidgetContent({ widget, activeSystem }: { widget: CustomizeChartItem; activeSystem: string }) {
@@ -804,6 +1196,8 @@ function KpModuleWidgetContent({ widget, activeSystem }: { widget: CustomizeChar
                                 signId: c.signId,
                             }))}
                             className="w-full h-full"
+                            planetFontSize={18}
+                            signNumberFontSize={18}
                         />
                     </div>
                 </div>
@@ -836,14 +1230,14 @@ function KpModuleWidgetContent({ widget, activeSystem }: { widget: CustomizeChar
         case 'kp_interlinks':
             return (
                 <div className="h-full overflow-auto p-4 shrink-0">
-                    <KpFocusedCuspView promises={transformed.interlinksData} cusps={transformed.cuspData} />
+                    <KpFullInterlinksView promises={transformed.interlinksData} cusps={transformed.cuspData} />
                 </div>
             );
 
         case 'kp_advanced_ssl':
             return (
                 <div className="h-full overflow-auto p-4 flex-1">
-                    <KpAdvancedSslView promises={transformed.sslData} cusps={transformed.cuspData} />
+                    <KpFullAdvancedSslView promises={transformed.sslData} cusps={transformed.cuspData} />
                 </div>
             );
 
@@ -856,7 +1250,7 @@ function KpModuleWidgetContent({ widget, activeSystem }: { widget: CustomizeChar
             );
             return (
                 <div className="h-full overflow-auto p-4">
-                    <KpNakshatraNadiFocusedView data={{ nadiData: transformed.nadiData }} />
+                    <KpFullNakshatraNadiView nadiData={transformed.nadiData} />
                 </div>
             );
 

@@ -18,7 +18,8 @@ import DailyTransitView from '@/components/transits/DailyTransitView';
 type GocharTab = 'gochar' | 'daily_transit';
 
 export default function TransitsPage() {
-    const { clientDetails, processedCharts, isLoadingCharts, isRefreshingCharts, refreshCharts, isGeneratingCharts } = useVedicClient();
+    const { clientDetails, processedCharts, isLoadingCharts, isRefreshingCharts, refreshCharts, isGeneratingCharts, openClients } = useVedicClient();
+    const hasClientBar = openClients.length > 0;
     const { ayanamsa, chartStyle, recentClientIds } = useAstrologerStore();
     const settings = { ayanamsa, chartStyle, recentClientIds };
 
@@ -103,9 +104,9 @@ export default function TransitsPage() {
     }
 
     return (
-        <div className="space-y-4 animate-in fade-in duration-500 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 -mx-4 -mt-4 px-4 py-6">
+        <div className="space-y-4 animate-in fade-in duration-500 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 -mx-4 -mt-4 px-4 pb-6 pt-0">
             {/* Page Heading + Tab Switcher */}
-            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
+            <div className={cn("sticky z-30 bg-amber-50/95 backdrop-blur-sm py-3 border-b border-amber-200/30 mb-4 flex flex-col sm:flex-row sm:items-start justify-between gap-4", hasClientBar ? "top-36" : "top-[104px]")}>
                 <div>
                     <h1 className="text-[28px] font-bold text-amber-900">Transit Analysis</h1>
                     <p className="text-[16px] text-amber-600 mt-1">Current planetary positions and their influences</p>

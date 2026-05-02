@@ -75,8 +75,7 @@ export function resolveEndDate(p: RawDashaPeriod): string {
 /**
  * Recursively find the first available array in a nested object.
  * Essential for systems like Tribhagi where dasha periods are buried deep.
- */
-export function extractPeriodsArray(data: RawDashaPeriod | RawDashaPeriod[]): RawDashaPeriod[] {
+ */export function extractPeriodsArray(data: RawDashaPeriod | RawDashaPeriod[]): RawDashaPeriod[] {
     if (!data) return [];
     if (Array.isArray(data)) return data;
 
@@ -90,8 +89,65 @@ export function extractPeriodsArray(data: RawDashaPeriod | RawDashaPeriod[]): Ra
         }
 
         // Panchottari
-        if (data.panchottari_dasha && data.panchottari_dasha.mahadashas) {
-            return data.panchottari_dasha.mahadashas;
+        const pData = data.panchottari_dasha || data.panchottari;
+        if (pData) {
+            if (pData.mahadashas) return pData.mahadashas;
+            if (Array.isArray(pData)) return pData;
+        }
+
+        // Shodashottari
+        const sData = data.shodashottari_dasha || data.shodashottari;
+        if (sData) {
+            if (sData.mahadashas) return sData.mahadashas;
+            if (sData.timeline) return sData.timeline;
+            if (Array.isArray(sData)) return sData;
+        }
+
+        // Dwadashottari
+        const dData = data.dwadashottari_dasha || data.dwadashottari;
+        if (dData) {
+            if (dData.mahadashas) return dData.mahadashas;
+            if (Array.isArray(dData)) return dData;
+        }
+
+        // Ashtottari
+        const aData = data.ashtottari_dasha || data.ashtottari || data.ashtottari_antar;
+        if (aData) {
+            if (aData.mahadashas) return aData.mahadashas;
+            if (Array.isArray(aData)) return aData;
+        }
+
+        // Chaturshitisama
+        const cData = data.chaturshitisama_dasha || data.chaturshitisama || data.calculate_chaturshitisama_dasha;
+        if (cData) {
+            if (cData.mahadashas) return cData.mahadashas;
+            if (Array.isArray(cData)) return cData;
+        }
+
+        // Satabdika
+        const satData = data.satabdika_dasha || data.satabdika || data.shatabdika_dasha;
+        if (satData) {
+            if (satData.mahadashas) return satData.mahadashas;
+            if (satData.periods) return satData.periods;
+            if (Array.isArray(satData)) return satData;
+        }
+
+        // True Chitra specialized dashas
+        if (data.dwisaptati_sama && Array.isArray(data.dwisaptati_sama)) return data.dwisaptati_sama;
+        if (data.dwisaptati && Array.isArray(data.dwisaptati)) return data.dwisaptati;
+        // Shasthihayani
+        const shasthiData = data.shasthihayani_dasha || data.shastihayani_dasha || data.shastihayani || data.dasha_calculation;
+        if (shasthiData) {
+            if (shasthiData.lifespan_sequence) return shasthiData.lifespan_sequence;
+            if (shasthiData.mahadashas) return shasthiData.mahadashas;
+            if (Array.isArray(shasthiData)) return shasthiData;
+        }
+
+        // Shattrimshatsama
+        const stData = data.shattrimshatsama_dasha || data.shattrimshatsama;
+        if (stData) {
+            if (stData.mahadashas) return stData.mahadashas;
+            if (Array.isArray(stData)) return stData;
         }
 
         // Dwisaptati (144 yr) — MUST be before Chaturshitisama as both use dasha_table
@@ -108,7 +164,7 @@ export function extractPeriodsArray(data: RawDashaPeriod | RawDashaPeriod[]): Ra
         }
 
         // Chaturshitisama (84 yr)
-        if (data.mahadashas && data.mahadashas.data && data.mahadashas.data.dasha_table && (data.mahadashas.data.meta?.system_years === 84 || data.mahadashas.meta?.system_years === 84)) {
+        if (data.mahadashas && data.mahadashas.data && data.mahadashas.data.dasha_table && (data.mahadashas.data.meta?.system_years === 84 || data.mahadashas.data.meta?.system_years === 84)) {
             return data.mahadashas.data.dasha_table.map((m: RawDashaPeriod) => ({
                 planet: m.mahadasha_lord, startDate: m.mahadasha_beginning, endDate: m.mahadasha_ending,
                 duration: m.duration, raw: m,
@@ -131,6 +187,21 @@ export function extractPeriodsArray(data: RawDashaPeriod | RawDashaPeriod[]): Ra
         // True Chitra Ashtottari: nested inside ashtottari_data.dasha_sequence
         if (data.ashtottari_data && data.ashtottari_data.dasha_sequence && Array.isArray(data.ashtottari_data.dasha_sequence)) {
             return data.ashtottari_data.dasha_sequence;
+        }
+
+        // True Chitra Tribhagi: Can be a flat array or an array of cycles
+        if (data.tribhagi_dasha && Array.isArray(data.tribhagi_dasha)) {
+            // Check if it's an array of cycle objects (each containing a mahadashas array)
+            if (data.tribhagi_dasha.length > 0 && (data.tribhagi_dasha[0].mahadashas || data.tribhagi_dasha[0].periods)) {
+                return data.tribhagi_dasha.flatMap((cycle: any, idx: number) => {
+                    const periods = cycle.mahadashas || cycle.periods || [];
+                    return periods.map((m: any) => ({
+                        ...m,
+                        cycle: cycle.cycle_number || cycle.cycle || idx + 1
+                    }));
+                });
+            }
+            return data.tribhagi_dasha;
         }
 
         // True Chitra Prana Dasha (returns vimshottari_dasha key with recursive sub_periods)
@@ -174,7 +245,8 @@ export function extractPeriodsArray(data: RawDashaPeriod | RawDashaPeriod[]): Ra
 
         // Exhaustive key search
         const keysToTry = [
-            'mahadashas', 'periods', 'tribhagi_timeline', 'tribhagi_dashas_janma',
+            'astronomical_data', 'dasha_details', 'dashas', 'mahadashas', 'periods', 'lifespan_sequence', 'dasha_calculation',
+            'tribhagi_timeline', 'tribhagi_dashas_janma',
             'tribhagi_dasha', 'tribhagi', 'tribhagi_40', 'tribhagi-40', 'tribhagi_40_years',
             'panchottari_dasha', 'panchottari', 'ashtottari_dasha', 'ashtottari_antar',
             'ashtottari_pd', 'ashtottari_pratyantardasha', 'ashtottari', 'ashthottari',

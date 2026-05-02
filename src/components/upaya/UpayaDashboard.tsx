@@ -46,13 +46,13 @@ export default function UpayaDashboard({ data, className, compact }: UpayaDashbo
 
     return (
         <div className={cn(
-            compact ? "space-y-4 pb-4" : "min-h-screen p-4 lg:p-6 space-y-8 pb-20",
+            compact ? "space-y-4 pb-4" : "space-y-4 pb-4",
             "animate-in fade-in duration-700",
             className
         )}>
 
             {/* 2. Main High-Impact Recommendations Section */}
-            <div className={compact ? "space-y-3" : "space-y-6"}>
+            <div className={compact ? "space-y-3" : "space-y-3"}>
                 <div className="flex items-center gap-3 px-2">
                     <BadgeCheck className={cn(compact ? "w-5 h-5" : "w-6 h-6", "text-emerald-600")} />
                     <h3 className={cn(TYPOGRAPHY.sectionTitle, compact ? "text-[16px] font-black" : "text-[20px] font-black")}>Recommended <KnowledgeTooltip term="general_gemstone">gemstones</KnowledgeTooltip></h3>
@@ -84,7 +84,7 @@ export default function UpayaDashboard({ data, className, compact }: UpayaDashbo
 
             {/* 3. Cautionary Guidance Section (Not Recommended) */}
             {notRecommended.length > 0 && (
-                <div className={cn(compact ? "space-y-3 pt-4" : "space-y-6 pt-6")}>
+                <div className={cn(compact ? "space-y-3 pt-4" : "space-y-3 pt-3")}>
                     <div className="flex items-center gap-3 px-2">
                         <ShieldAlert className={cn(compact ? "w-5 h-5" : "w-6 h-6", "text-red-600")} />
                         <h3 className={cn(TYPOGRAPHY.sectionTitle, compact ? "text-[16px] font-black" : "text-[20px] font-black")}>Caution: avoid these <KnowledgeTooltip term="general_gemstone">gemstones</KnowledgeTooltip></h3>
@@ -110,8 +110,8 @@ export default function UpayaDashboard({ data, className, compact }: UpayaDashbo
             {/* 4. Technical Insight Panels (Chart & Vigor) - Integrated if available */}
             {(data.chart_details || data.planetary_strength_analysis) && (
                 <div className={cn(
-                    "grid gap-8",
-                    compact ? "grid-cols-1 pt-4" : "grid-cols-1 lg:grid-cols-2 pt-8"
+                    "grid gap-4",
+                    compact ? "grid-cols-1 pt-4" : "grid-cols-1 lg:grid-cols-2 pt-4"
                 )}>
                     <ChartAlignmentPanel
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- polymorphic API response
