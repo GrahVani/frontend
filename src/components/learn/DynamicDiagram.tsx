@@ -30,34 +30,36 @@ interface DynamicDiagramProps {
   size?: number;
 }
 
-export default function DynamicDiagram({ diagramType, title, subtitle, size = 520 }: DynamicDiagramProps) {
+export default function DynamicDiagram({ diagramType, title, subtitle, size = 560 }: DynamicDiagramProps) {
   const caption = DIAGRAM_CAPTIONS[diagramType];
 
   return (
-    <div className="my-6">
+    <div className="my-6 flex flex-col items-center justify-center">
       {caption && (
-        <p className="text-xs text-amber-700 bg-amber-50/80 px-4 py-2 rounded-t-xl text-center italic border border-amber-100 border-b-0">
+        <p className="text-xs text-amber-700 bg-amber-50/80 px-4 py-2 rounded-t-xl text-center italic border border-amber-100 border-b-0 w-full max-w-[680px]">
           {caption}
         </p>
       )}
-      <div className={caption ? "rounded-b-xl" : "rounded-xl"}>
-        {diagramType === "zodiac-wheel" || diagramType === "rashi-tattvas" || diagramType === "rashi-modalities" ? (
-          <ZodiacWheel size={size} />
-        ) : diagramType === "planet-orbit" || diagramType === "navagraha-pantheon" ? (
-          <PlanetOrbit size={size} />
-        ) : diagramType === "house-chart" || diagramType === "bhava-structural" ? (
-          <HouseChart size={size} />
-        ) : diagramType === "nakshatra-wheel" ? (
-          <NakshatraWheel size={size} />
-        ) : diagramType === "ayanamsa-drift" ? (
-          <AyanamsaDrift size={size} />
-        ) : diagramType === "panchang-limbs" ? (
-          <PanchangLimbs size={size} />
-        ) : diagramType === "drishti-chart" ? (
-          <DrishtiChart size={size} />
-        ) : (
-          <ConceptIllustration title={title || diagramType} subtitle={subtitle || caption} size={size} />
-        )}
+      <div className={`w-full flex items-center justify-center ${caption ? "rounded-b-xl" : "rounded-xl"}`}>
+        <div className="w-full max-w-[680px]">
+          {diagramType === "zodiac-wheel" || diagramType === "rashi-tattvas" || diagramType === "rashi-modalities" ? (
+            <ZodiacWheel size={size} />
+          ) : diagramType === "planet-orbit" || diagramType === "navagraha-pantheon" ? (
+            <PlanetOrbit size={size} />
+          ) : diagramType === "house-chart" || diagramType === "bhava-structural" ? (
+            <HouseChart size={size} />
+          ) : diagramType === "nakshatra-wheel" ? (
+            <NakshatraWheel size={size} />
+          ) : diagramType === "ayanamsa-drift" ? (
+            <AyanamsaDrift size={size} />
+          ) : diagramType === "panchang-limbs" ? (
+            <PanchangLimbs size={size} />
+          ) : diagramType === "drishti-chart" ? (
+            <DrishtiChart size={size} />
+          ) : (
+            <ConceptIllustration title={title || diagramType} subtitle={subtitle || caption} size={size} />
+          )}
+        </div>
       </div>
     </div>
   );
