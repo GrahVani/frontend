@@ -1309,6 +1309,29 @@ select {
   }
 }
 
+/* ============================================ */
+/* INTERACTIVE LEARNING DIAGRAM ANIMATIONS      */
+/* ============================================ */
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 60s linear infinite;
+}
+
+.animate-spin-slow:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin-slow {
+    animation: none !important;
+  }
+}
+
 /* 
   Widget Table Stretch - Makes tables fill available height
   Applied to table containers within widgets to prevent whitespace

@@ -16,6 +16,7 @@ interface CourseWithProgress extends Course {
   completedLessons?: number;
   totalLessons?: number;
   progressPercent?: number;
+  moduleNumber?: number;
 }
 
 const MODULE_ICONS: Record<string, React.ElementType> = {
@@ -74,11 +75,12 @@ export default function LearnPage() {
           const sorted = [...coursesRes.data].sort(
             (a, b) => levelOrder.indexOf(a.level) - levelOrder.indexOf(b.level)
           );
-          const enriched = sorted.map((course) => ({
+          const enriched = sorted.map((course, index) => ({
             ...course,
             totalLessons: course.lessons.length,
             completedLessons: 0,
             progressPercent: 0,
+            moduleNumber: index + 1,
           }));
           setCourses(enriched);
           if (enriched.length > 0) setActiveLevel(enriched[0].level);
@@ -274,7 +276,7 @@ export default function LearnPage() {
                               </span>
                             )}
                           </div>
-                          <h3 className="text-lg font-bold text-amber-900">{course.title}</h3>
+                          <h3 className="text-lg font-bold text-amber-900">Module {course.moduleNumber}: {course.title}</h3>
                           <p className="text-sm text-amber-600 mt-1">{course.description}</p>
                           <div className="flex items-center gap-4 mt-3">
                             <div className="flex-1 h-2 bg-amber-100 rounded-full overflow-hidden max-w-[200px]">
