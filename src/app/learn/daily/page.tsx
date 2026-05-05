@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { learnApi } from "@/lib/api";
 import Link from "next/link";
 import {
   Sun,
@@ -157,6 +159,8 @@ const guidedReading = {
 
 /* ─── Main Page ─── */
 export default function DailyPage() {
+  const { user } = useAuth();
+  const [profile, setProfile] = useState<{ currentStreak: number; totalPoints: number } | null>(null);
   const [tasks, setTasks] = useState<DailyTask[]>([
     { id: "t1", type: "concept-card", title: "Daily Concept Cards", description: "Review 3 flashcards with spaced repetition", durationMin: 3, astroPoints: 30, completed: false },
     { id: "t2", type: "knowledge-check", title: "Knowledge Check", description: "3-question quiz on today's theme", durationMin: 3, astroPoints: 30, completed: false },
@@ -166,8 +170,17 @@ export default function DailyPage() {
     { id: "t6", type: "guided-reading", title: "Guided Reading", description: "Short lesson on Venus transits", durationMin: 4, astroPoints: 40, completed: false },
   ]);
 
-  const streakDays = 3;
-  const totalPoints = tasks.reduce((s, t) => s + (t.completed ? t.astroPoints : 0), 0);
+  useEffect(() => {
+    if (!user) return;
+    learnApi.getProfile(user.id)
+      .then((res) => {
+        if (res.success) setProfile(res.data);
+      })
+      .catch((err) => console.error("Failed to fetch profile:", err));
+  }, [user]);
+
+  const streakDays = profile?.currentStreak || 0;
+  const totalPoints = profile?.totalPoints || 0;
   const maxPoints = tasks.reduce((s, t) => s + t.astroPoints, 0);
   const allCompleted = tasks.every((t) => t.completed);
 

@@ -8,6 +8,7 @@ import {
   Briefcase, Clock, Crown, Coins, MessageCircle, Grid, Clipboard,
   Heart, Gem, BookOpen, Layers, Glasses
 } from "lucide-react";
+import DynamicDiagram from "./DynamicDiagram";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Orbit, Moon, Calculator, ArrowUp, ArrowDown, Table, TrendingUp,
@@ -15,6 +16,12 @@ const ICON_MAP: Record<string, React.ElementType> = {
   Briefcase, Clock, Crown, Coins, MessageCircle, Grid, Clipboard,
   Heart, Gem, BookOpen, Layers, Glasses, Sparkles,
 };
+
+interface ConceptMedia {
+  type: string;
+  diagramType?: string;
+  caption?: string;
+}
 
 interface Concept {
   id: number;
@@ -24,14 +31,16 @@ interface Concept {
   keyTakeaway?: string;
   proTip?: string;
   commonMistake?: string;
+  media?: ConceptMedia;
 }
 
 interface ConceptCardProps {
   concept: Concept;
   index: number;
+  showDiagram?: boolean;
 }
 
-export default function ConceptCard({ concept, index }: ConceptCardProps) {
+export default function ConceptCard({ concept, index, showDiagram = true }: ConceptCardProps) {
   const [expanded, setExpanded] = useState(false);
   const Icon = ICON_MAP[concept.icon || ""] || Sparkles;
 
@@ -102,6 +111,25 @@ export default function ConceptCard({ concept, index }: ConceptCardProps) {
               <span className="text-xs font-bold text-red-600 uppercase tracking-wide">Common Mistake</span>
               <p className="text-sm text-red-900 mt-0.5">{concept.commonMistake}</p>
             </div>
+          </div>
+        )}
+
+        {/* Interactive Diagram — only if this concept uniquely owns it */}
+        {showDiagram && concept.media?.type === "diagram" && concept.media.diagramType && (
+          <div className="mt-5">
+            <DynamicDiagram
+              diagramType={concept.media.diagramType}
+              title={concept.title}
+              subtitle={concept.media.caption}
+            />
+          </div>
+        )}
+
+        {/* Diagram reference badge — shown when diagram is rendered elsewhere */}
+        {!showDiagram && concept.media?.type === "diagram" && concept.media.diagramType && (
+          <div className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-100">
+            <span>📊</span>
+            <span>Explained in the visual reference above</span>
           </div>
         )}
       </div>

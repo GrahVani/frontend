@@ -6,13 +6,20 @@ import Link from "next/link";
 import {
   ArrowLeft, BookOpen, GraduationCap, Sparkles,
   Layers, BrainCircuit, Target, ChevronRight,
-  ScrollText, Lightbulb, CheckCircle2
+  ScrollText, Lightbulb, CheckCircle2, Eye
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { learnApi, type Lesson } from "@/lib/api";
 import ConceptCard from "@/components/learn/ConceptCard";
+import DynamicDiagram from "@/components/learn/DynamicDiagram";
 import InteractiveQuiz from "@/components/learn/InteractiveQuiz";
 import LessonSection, { type Section } from "@/components/learn/LessonSection";
+
+interface ConceptMedia {
+  type: string;
+  diagramType?: string;
+  caption?: string;
+}
 
 interface Concept {
   id: number;
@@ -22,6 +29,7 @@ interface Concept {
   keyTakeaway?: string;
   proTip?: string;
   commonMistake?: string;
+  media?: ConceptMedia;
 }
 
 type QuizQuestion =
@@ -241,10 +249,84 @@ export default function LessonPage() {
             {content.concepts.length} concepts
           </span>
         </div>
+
+        {/* Visual Reference — deduplicated diagrams shared by multiple concepts */}
+        {(() => {
+          const sectionDiagramTypes = new Set(
+            (content.sections || []).map((s) => s.diagramType).filter(Boolean)
+          );
+
+          // Group concepts by diagram type
+          const conceptGroups = new Map<string, Concept[]>();
+          content.concepts.forEach((c) => {
+            const dt = c.media?.diagramType;
+            if (!dt) return;
+            if (!conceptGroups.has(dt)) conceptGroups.set(dt, []);
+            conceptGroups.get(dt)!.push(c);
+          });
+
+          // Shared diagrams: used by >1 concept AND not already in a section
+          const sharedDiagrams = Array.from(conceptGroups.entries()).filter(
+            ([dt, concepts]) => concepts.length > 1 && !sectionDiagramTypes.has(dt)
+          );
+
+          if (sharedDiagrams.length === 0) return null;
+
+          return (
+            <div className="mb-6 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl border border-amber-200/60 p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <Eye className="w-4 h-4 text-amber-600" />
+                <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wide">Visual Reference</h3>
+                <span className="ml-auto text-xs text-amber-500 font-medium">
+                  {sharedDiagrams.length} diagram{sharedDiagrams.length > 1 ? "s" : ""}
+                </span>
+              </div>
+              <div className="space-y-6">
+                {sharedDiagrams.map(([dt, concepts]) => (
+                  <div key={dt}>
+                    <p className="text-xs text-amber-600 mb-2 font-medium">
+                      Applies to:{" "}
+                      {concepts.map((c) => c.title).join(", ")}
+                    </p>
+                    <DynamicDiagram diagramType={dt} title={concepts[0]?.title} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+
         <div className="space-y-4">
-          {content.concepts.map((concept, idx) => (
-            <ConceptCard key={concept.id} concept={concept} index={idx} />
-          ))}
+          {(() => {
+            const sectionDiagramTypes = new Set(
+              (content.sections || []).map((s) => s.diagramType).filter(Boolean)
+            );
+
+            const conceptGroups = new Map<string, Concept[]>();
+            content.concepts.forEach((c) => {
+              const dt = c.media?.diagramType;
+              if (!dt) return;
+              if (!conceptGroups.has(dt)) conceptGroups.set(dt, []);
+              conceptGroups.get(dt)!.push(c);
+            });
+
+            return content.concepts.map((concept, idx) => {
+              const dt = concept.media?.diagramType;
+              // Show diagram inline only if:
+              // 1. It has a diagramType
+              // 2. It's NOT already shown in a section
+              // 3. It's NOT shared by multiple concepts (shown in Visual Reference)
+              const showDiagram = !!dt && !sectionDiagramTypes.has(dt) && (conceptGroups.get(dt)?.length ?? 0) <= 1;
+              return (
+                <ConceptCard
+                  key={concept.id}
+                  concept={concept}
+                  index={idx}
+                  showDiagram={showDiagram}
+                />
+              );
+            });
+          })()}
         </div>
       </div>
 

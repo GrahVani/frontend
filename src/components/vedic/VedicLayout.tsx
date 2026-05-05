@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from "@/lib/utils";
 import PageContainer from "@/components/layout/PageContainer";
 import { useVedicClient } from "@/context/VedicClientContext";
@@ -79,8 +79,14 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
     ayanamsa: string;
     hasClientBar: boolean;
 }) {
-    const searchParams = useSearchParams();
+    const [searchParams, setSearchParams] = React.useState<URLSearchParams | null>(null);
     const [isMoreOpen, setIsMoreOpen] = React.useState(false);
+
+    React.useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setSearchParams(new URLSearchParams(window.location.search));
+        }
+    }, []);
     const moreRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
@@ -141,11 +147,11 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                         const pathMatches = pathname === fullPurePath;
                         let paramsMatch = true;
                         itemParams.forEach((value, key) => {
-                            if (searchParams.get(key) !== value) paramsMatch = false;
+                            if ((searchParams ?? new URLSearchParams('')).get(key) !== value) paramsMatch = false;
                         });
                         isActive = pathMatches && paramsMatch;
                     } else if (pathname === href) {
-                        if (Array.from(searchParams.keys()).length > 0 && pathname === href) {
+                        if (searchParams && Array.from(searchParams.keys()).length > 0 && pathname === href) {
                             isActive = false;
                         } else {
                             isActive = true;
