@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft, BookOpen, GraduationCap, Sparkles,
   Layers, BrainCircuit, Target, ChevronRight,
-  ScrollText, Lightbulb, CheckCircle2, Eye
+  ScrollText, Lightbulb, CheckCircle2, Eye, Lock, Play
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { learnApi, type Lesson } from "@/lib/api";
+import { learnApi, type Lesson, type LessonProgressData } from "@/lib/api";
 import ConceptCard from "@/components/learn/ConceptCard";
 import DynamicDiagram from "@/components/learn/DynamicDiagram";
 import InteractiveQuiz from "@/components/learn/InteractiveQuiz";
@@ -52,6 +52,7 @@ export default function LessonPage() {
   const { id } = useParams();
   const { user } = useAuth();
   const [lesson, setLesson] = useState<Lesson | null>(null);
+  const [lessonProgress, setLessonProgress] = useState<LessonProgressData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>("overview");
   const [completedSections, setCompletedSections] = useState<Set<number>>(new Set());
@@ -62,22 +63,49 @@ export default function LessonPage() {
   const quizRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    learnApi.getLesson(id as string)
-      .then((res: { success: boolean; data: Lesson }) => {
+    const lessonId = id as string;
+    const promises: Promise<any>[] = [
+      learnApi.getLesson(lessonId).then((res: { success: boolean; data: Lesson }) => {
         if (res.success) setLesson(res.data);
-      })
+      }),
+    ];
+
+    if (user) {
+      promises.push(
+        learnApi.getLessonProgress(lessonId, user.id).then((res: { success: boolean; data: LessonProgressData }) => {
+          if (res.success) {
+            setLessonProgress(res.data);
+            if (res.data.sectionsViewed?.length > 0) {
+              setCompletedSections(new Set(res.data.sectionsViewed));
+            }
+          }
+        })
+      );
+    }
+
+    Promise.all(promises)
       .catch((err: Error) => console.error("Failed to fetch lesson:", err))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, user]);
 
   const scrollToRef = (ref: React.RefObject<HTMLDivElement | null>, tab: TabType) => {
     setActiveTab(tab);
     ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const markSectionComplete = (sectionId: number) => {
-    setCompletedSections(prev => new Set(prev).add(sectionId));
-  };
+  const markSectionComplete = useCallback((sectionId: number) => {
+    setCompletedSections(prev => {
+      if (prev.has(sectionId)) return prev;
+      const next = new Set(prev).add(sectionId);
+      // Persist to backend if user is logged in
+      if (user) {
+        learnApi.trackSectionView(id as string, user.id, sectionId).catch((err: Error) => {
+          console.error("Failed to track section view:", err);
+        });
+      }
+      return next;
+    });
+  }, [id, user]);
 
   if (loading) {
     return (
@@ -114,6 +142,9 @@ export default function LessonPage() {
     { id: "quiz", label: `Practice (${content.quiz.length})`, icon: BrainCircuit, ref: quizRef },
   ];
 
+  const isLocked = lessonProgress?.status === "locked";
+  const isCompleted = lessonProgress?.status === "completed";
+
   return (
     <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-20">
       {/* Header */}
@@ -125,6 +156,16 @@ export default function LessonPage() {
         <div className="flex items-center gap-2 mb-2">
           <GraduationCap className="w-5 h-5 text-amber-500" />
           <span className="text-xs font-bold text-amber-500 uppercase tracking-wider">Lesson {lesson.sequenceOrder}</span>
+          {isCompleted && (
+            <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200 flex items-center gap-1">
+              <CheckCircle2 className="w-3 h-3" /> Completed
+            </span>
+          )}
+          {isLocked && (
+            <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200 flex items-center gap-1">
+              <Lock className="w-3 h-3" /> Locked
+            </span>
+          )}
         </div>
         <h1 className="text-3xl font-bold text-amber-900">{lesson.title}</h1>
         {hasSections && (
@@ -135,6 +176,11 @@ export default function LessonPage() {
             <span className="text-xs text-amber-600 font-medium">
               {completedSections.size}/{content.sections?.length} sections viewed
             </span>
+            {lessonProgress && lessonProgress.bestScore > 0 && (
+              <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 border border-purple-200">
+                Best: {lessonProgress.bestScore}%
+              </span>
+            )}
           </div>
         )}
       </div>
@@ -208,6 +254,32 @@ export default function LessonPage() {
               <div className="text-[10px] text-amber-300">Case Studies</div>
             </div>
           </div>
+
+          {/* Progress summary if data exists */}
+          {lessonProgress && (
+            <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="bg-white/10 rounded-xl p-3 text-center">
+                <Target className="w-5 h-5 text-amber-300 mx-auto mb-1" />
+                <div className="text-lg font-bold">{lessonProgress.score}%</div>
+                <div className="text-[10px] text-amber-300">Current Score</div>
+              </div>
+              <div className="bg-white/10 rounded-xl p-3 text-center">
+                <BrainCircuit className="w-5 h-5 text-amber-300 mx-auto mb-1" />
+                <div className="text-lg font-bold">{lessonProgress.attemptsCount}</div>
+                <div className="text-[10px] text-amber-300">Attempts</div>
+              </div>
+              <div className="bg-white/10 rounded-xl p-3 text-center">
+                <CheckCircle2 className="w-5 h-5 text-amber-300 mx-auto mb-1" />
+                <div className="text-lg font-bold">{lessonProgress.bestScore}%</div>
+                <div className="text-[10px] text-amber-300">Best Score</div>
+              </div>
+              <div className="bg-white/10 rounded-xl p-3 text-center">
+                <Layers className="w-5 h-5 text-amber-300 mx-auto mb-1" />
+                <div className="text-lg font-bold">{lessonProgress.sectionProgressPercentage}%</div>
+                <div className="text-[10px] text-amber-300">Section Progress</div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -250,13 +322,12 @@ export default function LessonPage() {
           </span>
         </div>
 
-        {/* Visual Reference — deduplicated diagrams shared by multiple concepts */}
+        {/* Visual Reference */}
         {(() => {
           const sectionDiagramTypes = new Set(
             (content.sections || []).map((s) => s.diagramType).filter(Boolean)
           );
 
-          // Group concepts by diagram type
           const conceptGroups = new Map<string, Concept[]>();
           content.concepts.forEach((c) => {
             const dt = c.media?.diagramType;
@@ -265,7 +336,6 @@ export default function LessonPage() {
             conceptGroups.get(dt)!.push(c);
           });
 
-          // Shared diagrams: used by >1 concept AND not already in a section
           const sharedDiagrams = Array.from(conceptGroups.entries()).filter(
             ([dt, concepts]) => concepts.length > 1 && !sectionDiagramTypes.has(dt)
           );
@@ -312,10 +382,6 @@ export default function LessonPage() {
 
             return content.concepts.map((concept, idx) => {
               const dt = concept.media?.diagramType;
-              // Show diagram inline only if:
-              // 1. It has a diagramType
-              // 2. It's NOT already shown in a section
-              // 3. It's NOT shared by multiple concepts (shown in Visual Reference)
               const showDiagram = !!dt && !sectionDiagramTypes.has(dt) && (conceptGroups.get(dt)?.length ?? 0) <= 1;
               return (
                 <ConceptCard
@@ -339,11 +405,26 @@ export default function LessonPage() {
             {content.quiz.length} questions
           </span>
         </div>
-        <InteractiveQuiz
-          quiz={content.quiz}
-          concepts={content.concepts}
-          lessonId={id as string}
-        />
+        {isLocked ? (
+          <div className="bg-gray-50 rounded-2xl border border-gray-200 p-8 text-center">
+            <Lock className="w-10 h-10 text-gray-400 mx-auto mb-3" />
+            <h3 className="text-lg font-bold text-gray-700 mb-2">Lesson Locked</h3>
+            <p className="text-gray-500 mb-4">Complete the previous lessons to unlock this one.</p>
+            <Link
+              href="/learn"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-colors"
+            >
+              <Play className="w-4 h-4" />
+              Go to Learning Path
+            </Link>
+          </div>
+        ) : (
+          <InteractiveQuiz
+            quiz={content.quiz}
+            concepts={content.concepts}
+            lessonId={id as string}
+          />
+        )}
       </div>
 
       {/* Next Lesson Navigation */}
@@ -359,7 +440,7 @@ export default function LessonPage() {
           >
             Back to Learning Path
             <ChevronRight className="w-4 h-4" />
-                  </Link>
+          </Link>
         </div>
       </div>
     </div>

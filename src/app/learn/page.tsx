@@ -15,7 +15,9 @@ import {
 interface CourseWithProgress extends Course {
   completedLessons?: number;
   totalLessons?: number;
-  progressPercent?: number;
+  progressPercentage?: number;
+  averageScore?: number;
+  status?: string;
   moduleNumber?: number;
 }
 
@@ -65,46 +67,41 @@ export default function LearnPage() {
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    Promise.all([
-      learnApi.getCourses(),
-      user ? learnApi.getDashboard(user.id) : Promise.resolve({ success: true, data: null }),
-    ])
-      .then(([coursesRes, dashboardRes]) => {
+    const fetchData = async () => {
+      try {
+        const coursesRes = await learnApi.getCourses(user?.id);
         if (coursesRes.success) {
           const levelOrder = ["LEVEL_1", "LEVEL_2", "LEVEL_3", "LEVEL_4"];
           const sorted = [...coursesRes.data].sort(
             (a, b) => levelOrder.indexOf(a.level) - levelOrder.indexOf(b.level)
           );
-          const enriched = sorted.map((course, index) => ({
+          const enriched: CourseWithProgress[] = sorted.map((course, index) => ({
             ...course,
-            totalLessons: course.lessons.length,
-            completedLessons: 0,
-            progressPercent: 0,
+            totalLessons: course.totalLessons ?? course.lessons.length,
+            completedLessons: course.completedLessons ?? 0,
+            progressPercentage: course.progressPercentage ?? 0,
+            averageScore: course.averageScore ?? 0,
+            status: course.status ?? (index === 0 ? "available" : "locked"),
             moduleNumber: index + 1,
           }));
           setCourses(enriched);
           if (enriched.length > 0) setActiveLevel(enriched[0].level);
         }
-        if (dashboardRes.success && dashboardRes.data) {
-          setDashboard(dashboardRes.data);
-          setCourses((prev) =>
-            prev.map((course) => {
-              const completedCount = course.lessons.filter((lesson) =>
-                dashboardRes.data?.progress?.some(
-                  (p) => p.lessonId === lesson.id && p.status === "COMPLETED"
-                )
-              ).length;
-              return {
-                ...course,
-                completedLessons: completedCount,
-                progressPercent: Math.round((completedCount / course.lessons.length) * 100),
-              };
-            })
-          );
+
+        if (user) {
+          const dashboardRes = await learnApi.getDashboard(user.id);
+          if (dashboardRes.success && dashboardRes.data) {
+            setDashboard(dashboardRes.data);
+          }
         }
-      })
-      .catch((err: Error) => console.error("Failed to fetch learning data:", err))
-      .finally(() => setLoading(false));
+      } catch (err) {
+        console.error("Failed to fetch learning data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [user]);
 
   const toggleModule = (courseId: string) => {
@@ -260,7 +257,7 @@ export default function LearnPage() {
               .map((course) => {
                 const config = LEVEL_CONFIG[course.level];
                 const isExpanded = expandedModules.has(course.id);
-                const progress = course.progressPercent || 0;
+                const progress = course.progressPercentage || 0;
                 const isCompleted = progress === 100;
                 const Icon = MODULE_ICONS[course.category] || BookOpen;
                 const catStyle = CATEGORY_COLORS[course.category] || "bg-gray-100 text-gray-700 border-gray-200";
@@ -290,7 +287,7 @@ export default function LearnPage() {
                               </span>
                             )}
                           </div>
-                          <h3 className="text-lg font-bold text-amber-900">Module {course.moduleNumber}: {course.title}</h3>
+                          <h3 className="text-lg font-bold text-amber-900">Module {course.moduleNumber}: {course.title.replace(/^Module\s+\d+:\s*/, "")}</h3>
                           <p className="text-sm text-amber-600 mt-1">{course.description}</p>
                           <div className="flex items-center gap-4 mt-3">
                             <div className="flex-1 h-2 bg-amber-100 rounded-full overflow-hidden max-w-[200px]">

@@ -13,6 +13,13 @@ export interface Course {
   createdAt: string;
   updatedAt: string;
   lessons: LessonSummary[];
+  // Dynamic progress fields (populated when userId is provided)
+  completedLessons?: number;
+  totalLessons?: number;
+  progressPercentage?: number;
+  averageScore?: number;
+  status?: string;
+  moduleNumber?: number;
 }
 
 export interface LessonSummary {
@@ -101,6 +108,27 @@ export interface BadgeItem {
   pointsReward?: number;
 }
 
+export interface LessonProgressData {
+  lessonId: string;
+  courseId: string;
+  status: string;
+  completionPercentage: number;
+  score: number;
+  sectionProgressPercentage: number;
+  sectionsViewed: number[];
+  totalSections: number;
+  quizAttempts: Array<{
+    id: string;
+    score: number;
+    totalQuestions: number;
+    correctAnswers: number;
+    pointsEarned: number;
+    completedAt: string | null;
+  }>;
+  bestScore: number;
+  attemptsCount: number;
+}
+
 export interface DashboardData {
   lessonsCompleted: number;
   totalLessons: number;
@@ -130,14 +158,23 @@ export interface ProgressItem {
 }
 
 export const learnApi = {
-  getCourses: (): Promise<{ success: boolean; data: Course[] }> =>
-    apiFetch(`${LEARN_BASE}/courses`),
+  getCourses: (userId?: string): Promise<{ success: boolean; data: Course[] }> =>
+    apiFetch(`${LEARN_BASE}/courses${userId ? `?userId=${userId}` : ""}`),
 
   getCourse: (id: string): Promise<{ success: boolean; data: Course }> =>
     apiFetch(`${LEARN_BASE}/courses/${id}`),
 
   getLesson: (id: string): Promise<{ success: boolean; data: Lesson }> =>
     apiFetch(`${LEARN_BASE}/lessons/${id}`),
+
+  getLessonProgress: (lessonId: string, userId: string): Promise<{ success: boolean; data: LessonProgressData }> =>
+    apiFetch(`${LEARN_BASE}/lessons/${lessonId}/progress?userId=${userId}`),
+
+  trackSectionView: (lessonId: string, userId: string, sectionId: number): Promise<{ success: boolean; data: any }> =>
+    apiFetch(`${LEARN_BASE}/lessons/${lessonId}/section-view`, {
+      method: 'POST',
+      body: JSON.stringify({ userId, sectionId }),
+    }),
 
   submitLesson: (lessonId: string, userId: string, answers: QuizAnswer[]): Promise<{ success: boolean; data: SubmitResponse }> =>
     apiFetch(`${LEARN_BASE}/lessons/${lessonId}/submit`, {
