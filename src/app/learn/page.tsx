@@ -91,7 +91,7 @@ export default function LearnPage() {
             prev.map((course) => {
               const completedCount = course.lessons.filter((lesson) =>
                 dashboardRes.data?.progress?.some(
-                  (p) => p.lesson.title === lesson.title && p.status === "COMPLETED"
+                  (p) => p.lessonId === lesson.id && p.status === "COMPLETED"
                 )
               ).length;
               return {
@@ -128,14 +128,20 @@ export default function LearnPage() {
   }
 
   const firstName = user?.name?.split(" ")[0] || "Student";
-  const streakDays = 3;
+  const streakDays = dashboard?.currentStreak || 0;
+  const longestStreak = dashboard?.longestStreak || 0;
   const totalLessons = courses.reduce((sum, c) => sum + c.lessons.length, 0);
   const completedLessons = courses.reduce((sum, c) => sum + (c.completedLessons || 0), 0);
   const overallProgress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+  const skillScore = dashboard?.skillScore || 0;
+  const title = dashboard?.title || "Jyotish Novice";
+  const currentTier = dashboard?.currentTier || 1;
+  const totalPoints = dashboard?.totalPoints || 0;
+  const modulesCompleted = dashboard?.totalModulesCompleted || 0;
 
   const allLessons = courses.flatMap((c) => c.lessons.map((l) => ({ ...l, courseTitle: c.title, courseLevel: c.level, courseId: c.id })));
   const nextLesson = dashboard
-    ? allLessons.find((l) => !dashboard.progress?.some((p) => p.lesson.title === l.title && p.status === "COMPLETED"))
+    ? allLessons.find((l) => !dashboard.progress?.some((p) => p.lessonId === l.id && p.status === "COMPLETED"))
     : allLessons[0];
 
   const coursesByLevel = courses.reduce((acc, course) => {
@@ -164,6 +170,7 @@ export default function LearnPage() {
               <StatBadge icon={<Flame className="w-6 h-6 text-orange-400" />} value={streakDays} label="Day Streak" />
               <StatBadge icon={<Star className="w-6 h-6 text-yellow-400" />} value={`${dashboard?.averageScore || 0}%`} label="Avg Score" />
               <StatBadge icon={<Target className="w-6 h-6 text-green-400" />} value={`${overallProgress}%`} label="Progress" />
+              <StatBadge icon={<Trophy className="w-6 h-6 text-amber-400" />} value={totalPoints} label="Total XP" />
             </div>
           </div>
           <div className="mt-6">
@@ -192,7 +199,14 @@ export default function LearnPage() {
                   {nextLesson.sequenceOrder}
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm text-amber-600 mb-1">Next up in {nextLesson.courseTitle}</p>
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    <p className="text-sm text-amber-600">Next up in {nextLesson.courseTitle}</p>
+                    {dashboard && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 border border-amber-200">
+                        {title} · Tier {currentTier}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-lg font-bold text-amber-900">{nextLesson.title}</p>
                   <div className="flex items-center gap-2 mt-1">
                     <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${LEVEL_CONFIG[nextLesson.courseLevel]?.bg} ${LEVEL_CONFIG[nextLesson.courseLevel]?.color}`}>
@@ -322,7 +336,11 @@ export default function LearnPage() {
           <StatCard icon={<BookOpen className="w-5 h-5" />} label="Lessons Completed" value={completedLessons} color="bg-blue-50 text-blue-700 border-blue-200" />
           <StatCard icon={<Target className="w-5 h-5" />} label="Average Score" value={`${dashboard?.averageScore || 0}%`} color="bg-green-50 text-green-700 border-green-200" />
           <StatCard icon={<Zap className="w-5 h-5" />} label="Current Streak" value={`${streakDays} days`} color="bg-purple-50 text-purple-700 border-purple-200" />
-          <StatCard icon={<Trophy className="w-5 h-5" />} label="Total XP" value={(dashboard?.averageScore || 0) * completedLessons} color="bg-amber-50 text-amber-700 border-amber-200" />
+          <StatCard icon={<Trophy className="w-5 h-5" />} label="Total XP" value={totalPoints} color="bg-amber-50 text-amber-700 border-amber-200" />
+          <StatCard icon={<Sparkles className="w-5 h-5" />} label="Skill Score" value={skillScore} color="bg-rose-50 text-rose-700 border-rose-200" />
+          <StatCard icon={<Crown className="w-5 h-5" />} label="Title" value={title} color="bg-indigo-50 text-indigo-700 border-indigo-200" />
+          <StatCard icon={<Flame className="w-5 h-5" />} label="Longest Streak" value={`${longestStreak} days`} color="bg-orange-50 text-orange-700 border-orange-200" />
+          <StatCard icon={<Rocket className="w-5 h-5" />} label="Modules Done" value={modulesCompleted} color="bg-teal-50 text-teal-700 border-teal-200" />
         </div>
       </div>
     </div>

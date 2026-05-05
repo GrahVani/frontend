@@ -50,8 +50,7 @@ export default function CalendarPage() {
                             days={days || []}
                             year={year}
                             month={month - 1}
-                            selectedDate={selectedDate}
-                            onDayClick={(date) => setSelectedDate(date)}
+                            onDayClick={(day) => setSelectedDate(day.date)}
                             onMonthChange={(y, m) => { setYear(y); setMonth(m + 1); }}
                         />
                     )}

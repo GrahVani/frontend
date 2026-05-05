@@ -5,20 +5,14 @@ import {
   BookOpen, Languages, Cog, Code, Lightbulb, ChevronDown, ChevronUp,
   Sparkles, Terminal, Binary, GitBranch, Eye, Zap
 } from "lucide-react";
-import InteractiveDiagram from "./InteractiveDiagram";
-import type { Hotspot, Layer } from "./InteractiveDiagram";
+import DynamicDiagram from "./DynamicDiagram";
 
 export interface Section {
   id: number;
   type: string;
   title: string;
   content: string;
-  imageUrl?: string;
-  imageCaption?: string;
-  imageMode?: "lightbox" | "hotspots" | "layers" | "animated";
-  hotspots?: Hotspot[];
-  layers?: Layer[];
-  animationClass?: string;
+  diagramType?: string;
 }
 
 interface LessonSectionProps {
@@ -203,15 +197,10 @@ export default function LessonSection({ section, index }: LessonSectionProps) {
           </div>
 
           {/* Interactive Diagram */}
-          {section.imageUrl && (
-            <InteractiveDiagram
-              imageUrl={section.imageUrl}
-              alt={section.title}
-              caption={section.imageCaption}
-              mode={section.imageMode || "lightbox"}
-              hotspots={section.hotspots}
-              layers={section.layers}
-              animationClass={section.animationClass}
+          {section.diagramType && (
+            <DynamicDiagram
+              diagramType={section.diagramType}
+              title={section.title}
             />
           )}
 

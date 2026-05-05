@@ -91,14 +91,38 @@ export interface SubmitResponse {
   status: string;
 }
 
+export interface BadgeItem {
+  badgeCode: string;
+  name: string;
+  description: string;
+  rarity: string;
+  iconUrl: string | null;
+  earnedAt?: string;
+  pointsReward?: number;
+}
+
 export interface DashboardData {
   lessonsCompleted: number;
+  totalLessons: number;
   averageScore: number;
+  totalPoints: number;
+  currentStreak: number;
+  longestStreak: number;
+  skillScore: number;
+  currentTier: number;
+  title: string;
+  nextTierProgress: number;
+  totalModulesCompleted: number;
+  badges: {
+    earned: BadgeItem[];
+    available: BadgeItem[];
+  };
   progress: ProgressItem[];
 }
 
 export interface ProgressItem {
   id: string;
+  lessonId: string;
   status: string;
   score: number | null;
   completedAt: string | null;
@@ -123,4 +147,10 @@ export const learnApi = {
 
   getDashboard: (userId: string): Promise<{ success: boolean; data: DashboardData }> =>
     apiFetch(`${LEARN_BASE}/dashboard?userId=${userId}`),
+
+  getLeaderboard: (period: string, userId?: string): Promise<{ success: boolean; data: { period: string; myRank: number | null; totalParticipants: number; topUsers: Array<{ rank: number; userId: string; displayName: string; points: number; score?: number; tier?: string; avatar?: string }> } }> =>
+    apiFetch(`${LEARN_BASE}/gamification/leaderboard?period=${period}${userId ? `&userId=${userId}` : ''}`),
+
+  getProfile: (userId: string): Promise<{ success: boolean; data: { skillScore: number; currentTier: number; currentLevel: string; currentStreak: number; longestStreak: number; totalPoints: number; totalLessonsCompleted: number; totalModulesCompleted: number; title: string; nextTierProgress: number; weakAreas: string[]; strongAreas: string[] } }> =>
+    apiFetch(`${LEARN_BASE}/gamification/profile/${userId}`),
 };

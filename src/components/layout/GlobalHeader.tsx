@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Settings, Clock, ChevronDown, Menu, Bell, Heart, Hash, Calendar } from "lucide-react";
 import { useAstrologerStore } from "@/store/useAstrologerStore";
@@ -47,8 +47,13 @@ export default function GlobalHeader() {
     const [isProfileOpen, setIsProfileOpen] = React.useState(false);
     const [isMobileNavOpen, setIsMobileNavOpen] = React.useState(false);
     const toast = useToast();
-    const searchParams = useSearchParams();
-    const redirectParam = searchParams.get('redirect');
+    const [redirectParam, setRedirectParam] = React.useState<string | null>(null);
+
+    React.useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setRedirectParam(new URLSearchParams(window.location.search).get('redirect'));
+        }
+    }, []);
 
     const [mounted, setMounted] = React.useState(false);
 
