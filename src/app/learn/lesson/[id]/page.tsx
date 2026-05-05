@@ -12,14 +12,7 @@ import { useAuth } from "@/context/AuthContext";
 import { learnApi, type Lesson } from "@/lib/api";
 import ConceptCard from "@/components/learn/ConceptCard";
 import InteractiveQuiz from "@/components/learn/InteractiveQuiz";
-import LessonSection from "@/components/learn/LessonSection";
-
-interface LessonSectionType {
-  id: number;
-  type: string;
-  title: string;
-  content: string;
-}
+import LessonSection, { type Section } from "@/components/learn/LessonSection";
 
 interface Concept {
   id: number;
@@ -40,7 +33,7 @@ type QuizQuestion =
 
 interface LessonContent {
   intro: string;
-  sections?: LessonSectionType[];
+  sections?: Section[];
   concepts: Concept[];
   quiz: QuizQuestion[];
 }

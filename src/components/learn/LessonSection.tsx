@@ -5,12 +5,20 @@ import {
   BookOpen, Languages, Cog, Code, Lightbulb, ChevronDown, ChevronUp,
   Sparkles, Terminal, Binary, GitBranch, Eye, Zap
 } from "lucide-react";
+import InteractiveDiagram from "./InteractiveDiagram";
+import type { Hotspot, Layer } from "./InteractiveDiagram";
 
-interface Section {
+export interface Section {
   id: number;
   type: string;
   title: string;
   content: string;
+  imageUrl?: string;
+  imageCaption?: string;
+  imageMode?: "lightbox" | "hotspots" | "layers" | "animated";
+  hotspots?: Hotspot[];
+  layers?: Layer[];
+  animationClass?: string;
 }
 
 interface LessonSectionProps {
@@ -69,7 +77,7 @@ const SECTION_STYLES: Record<string, {
 };
 
 function formatContent(content: string): React.ReactNode {
-  const lines = content.split("\\n").filter(l => l.trim());
+  const lines = content.split("\n").filter(l => l.trim());
   const elements: React.ReactNode[] = [];
   let inList = false;
   let listItems: string[] = [];
@@ -193,6 +201,19 @@ export default function LessonSection({ section, index }: LessonSectionProps) {
           <div className="prose prose-amber max-w-none">
             {formatContent(section.content)}
           </div>
+
+          {/* Interactive Diagram */}
+          {section.imageUrl && (
+            <InteractiveDiagram
+              imageUrl={section.imageUrl}
+              alt={section.title}
+              caption={section.imageCaption}
+              mode={section.imageMode || "lightbox"}
+              hotspots={section.hotspots}
+              layers={section.layers}
+              animationClass={section.animationClass}
+            />
+          )}
 
           {/* Interactive footer per section type */}
           {section.type === "software_logic" && (
