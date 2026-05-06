@@ -322,7 +322,7 @@ export default function LessonPage() {
           </span>
         </div>
 
-        {/* Visual Reference */}
+        {/* Compute diagram grouping once */}
         {(() => {
           const sectionDiagramTypes = new Set(
             (content.sections || []).map((s) => s.diagramType).filter(Boolean)
@@ -337,63 +337,57 @@ export default function LessonPage() {
           });
 
           const sharedDiagrams = Array.from(conceptGroups.entries()).filter(
-            ([dt, concepts]) => concepts.length > 1 && !sectionDiagramTypes.has(dt)
+            ([dt, concepts]) => concepts.length > 1 && !sectionDiagramTypes.has(dt) && dt !== "concept-illustration"
           );
 
-          if (sharedDiagrams.length === 0) return null;
+          const sharedDiagramTypes = new Set(sharedDiagrams.map(([dt]) => dt));
 
           return (
-            <div className="mb-6 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl border border-amber-200/60 p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <Eye className="w-4 h-4 text-amber-600" />
-                <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wide">Visual Reference</h3>
-                <span className="ml-auto text-xs text-amber-500 font-medium">
-                  {sharedDiagrams.length} diagram{sharedDiagrams.length > 1 ? "s" : ""}
-                </span>
-              </div>
-              <div className="space-y-6">
-                {sharedDiagrams.map(([dt, concepts]) => (
-                  <div key={dt}>
-                    <p className="text-xs text-amber-600 mb-2 font-medium">
-                      Applies to:{" "}
-                      {concepts.map((c) => c.title).join(", ")}
-                    </p>
-                    <DynamicDiagram diagramType={dt} title={concepts[0]?.title} />
+            <>
+              {/* Visual Reference */}
+              {sharedDiagrams.length > 0 && (
+                <div className="mb-6 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl border border-amber-200/60 p-5">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Eye className="w-4 h-4 text-amber-600" />
+                    <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wide">Visual Reference</h3>
+                    <span className="ml-auto text-xs text-amber-500 font-medium">
+                      {sharedDiagrams.length} diagram{sharedDiagrams.length > 1 ? "s" : ""}
+                    </span>
                   </div>
-                ))}
+                  <div className="space-y-6">
+                    {sharedDiagrams.map(([dt, concepts]) => (
+                      <div key={dt}>
+                        <p className="text-xs text-amber-600 mb-2 font-medium">
+                          Applies to:{" "}
+                          {concepts.map((c) => c.title).join(", ")}
+                        </p>
+                        <DynamicDiagram diagramType={dt} title={concepts[0]?.title} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Concept Cards */}
+              <div className="space-y-4">
+                {content.concepts.map((concept, idx) => {
+                  const dt = concept.media?.diagramType;
+                  const showDiagram = !!dt && dt !== "concept-illustration" && !sectionDiagramTypes.has(dt) && (conceptGroups.get(dt)?.length ?? 0) <= 1;
+                  const showReference = !!dt && sharedDiagramTypes.has(dt);
+                  return (
+                    <ConceptCard
+                      key={concept.id}
+                      concept={concept}
+                      index={idx}
+                      showDiagram={showDiagram}
+                      showReference={showReference}
+                    />
+                  );
+                })}
               </div>
-            </div>
+            </>
           );
         })()}
-
-        <div className="space-y-4">
-          {(() => {
-            const sectionDiagramTypes = new Set(
-              (content.sections || []).map((s) => s.diagramType).filter(Boolean)
-            );
-
-            const conceptGroups = new Map<string, Concept[]>();
-            content.concepts.forEach((c) => {
-              const dt = c.media?.diagramType;
-              if (!dt) return;
-              if (!conceptGroups.has(dt)) conceptGroups.set(dt, []);
-              conceptGroups.get(dt)!.push(c);
-            });
-
-            return content.concepts.map((concept, idx) => {
-              const dt = concept.media?.diagramType;
-              const showDiagram = !!dt && !sectionDiagramTypes.has(dt) && (conceptGroups.get(dt)?.length ?? 0) <= 1;
-              return (
-                <ConceptCard
-                  key={concept.id}
-                  concept={concept}
-                  index={idx}
-                  showDiagram={showDiagram}
-                />
-              );
-            });
-          })()}
-        </div>
       </div>
 
       {/* Quiz */}

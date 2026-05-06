@@ -1,16 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Sparkles, Lightbulb, ArrowRight } from "lucide-react";
 
-const PALETTES: Record<string, { primary: string; bg: string; light: string; accent: string }> = {
-  "zodiac": { primary: "#d97706", bg: "#fffbeb", light: "#fef3c7", accent: "#f59e0b" },
-  "planet": { primary: "#dc2626", bg: "#fef2f2", light: "#fee2e2", accent: "#ef4444" },
-  "house": { primary: "#7c3aed", bg: "#f5f3ff", light: "#ede9fe", accent: "#8b5cf6" },
-  "nakshatra": { primary: "#059669", bg: "#ecfdf5", light: "#d1fae5", accent: "#10b981" },
-  "ayanamsa": { primary: "#0891b2", bg: "#ecfeff", light: "#cffafe", accent: "#06b6d4" },
-  "panchang": { primary: "#c2410c", bg: "#fff7ed", light: "#ffedd5", accent: "#ea580c" },
-  "drishti": { primary: "#4f46e5", bg: "#eef2ff", light: "#e0e7ff", accent: "#6366f1" },
-  "default": { primary: "#d97706", bg: "#fffbeb", light: "#fef3c7", accent: "#f59e0b" },
+const PALETTES: Record<string, { from: string; to: string; accent: string; border: string; text: string }> = {
+  "zodiac": { from: "#fef3c7", to: "#fffbeb", accent: "#f59e0b", border: "#fcd34d", text: "#b45309" },
+  "planet": { from: "#fee2e2", to: "#fef2f2", accent: "#ef4444", border: "#fca5a5", text: "#b91c1c" },
+  "house": { from: "#ede9fe", to: "#f5f3ff", accent: "#8b5cf6", border: "#c4b5fd", text: "#6d28d9" },
+  "nakshatra": { from: "#d1fae5", to: "#ecfdf5", accent: "#10b981", border: "#6ee7b7", text: "#047857" },
+  "ayanamsa": { from: "#cffafe", to: "#ecfeff", accent: "#06b6d4", border: "#67e8f9", text: "#0e7490" },
+  "panchang": { from: "#ffedd5", to: "#fff7ed", accent: "#ea580c", border: "#fdba74", text: "#c2410c" },
+  "drishti": { from: "#e0e7ff", to: "#eef2ff", accent: "#6366f1", border: "#a5b4fc", text: "#4338ca" },
+  "yoga": { from: "#fce7f3", to: "#fdf2f8", accent: "#ec4899", border: "#f9a8d4", text: "#be185d" },
+  "dignity": { from: "#dbeafe", to: "#eff6ff", accent: "#3b82f6", border: "#93c5fd", text: "#1d4ed8" },
+  "transit": { from: "#f3e8ff", to: "#faf5ff", accent: "#a855f7", border: "#d8b4fe", text: "#7e22ce" },
+  "default": { from: "#f1f5f9", to: "#f8fafc", accent: "#64748b", border: "#cbd5e1", text: "#334155" },
 };
 
 function getPalette(title: string) {
@@ -20,95 +24,167 @@ function getPalette(title: string) {
   if (t.includes("house") || t.includes("bhava")) return PALETTES.house;
   if (t.includes("nakshatra")) return PALETTES.nakshatra;
   if (t.includes("ayanamsa")) return PALETTES.ayanamsa;
-  if (t.includes("panchang") || t.includes("tithi") || t.includes("nakshatra")) return PALETTES.panchang;
+  if (t.includes("panchang") || t.includes("tithi")) return PALETTES.panchang;
   if (t.includes("drishti") || t.includes("aspect")) return PALETTES.drishti;
+  if (t.includes("yoga")) return PALETTES.yoga;
+  if (t.includes("dignity") || t.includes("exalt")) return PALETTES.dignity;
+  if (t.includes("transit") || t.includes("gochara")) return PALETTES.transit;
   return PALETTES.default;
 }
 
-function getInitials(title: string) {
-  return title
-    .replace(/[^a-zA-Z\s]/g, "")
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 3)
-    .map((w) => w[0]?.toUpperCase())
-    .join("")
-    .slice(0, 3);
+function getIcon(title: string) {
+  const t = title.toLowerCase();
+  if (t.includes("definition")) return "BookOpen";
+  if (t.includes("logic")) return "Lightbulb";
+  if (t.includes("use case")) return "Target";
+  if (t.includes("software")) return "Code";
+  return "Sparkles";
 }
 
 export default function ConceptIllustration({
   title,
   subtitle,
-  size = 480,
+  size = 640,
 }: {
   title: string;
   subtitle?: string;
   size?: number;
 }) {
-  // Guard: don't render if title is just the diagram type keyword
+  const [hovered, setHovered] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const isRawKeyword = /^[a-z]+-[a-z]+$/.test(title) && title.length < 25;
   const displayTitle = isRawKeyword ? "Interactive Concept" : title;
   const displaySubtitle = subtitle && subtitle !== "Interactive concept visualization." ? subtitle : "Tap to explore this concept in detail.";
 
+  // Skip rendering for generic structural labels that have no visual meaning
+  const genericLabels = ["the definition", "the logic", "the concept", "the use case", "software logic"];
+  const isGenericLabel = genericLabels.some(l => displayTitle.toLowerCase().startsWith(l));
+  if (isGenericLabel) {
+    return (
+      <div className="w-full max-w-[640px] mx-auto p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-100 text-center">
+        <p className="text-xs text-gray-400 italic">Interactive concept visualization available in the lesson content above.</p>
+      </div>
+    );
+  }
+
   const colors = getPalette(displayTitle);
-  const initials = getInitials(displayTitle);
   const words = displayTitle.replace(/["']/g, "").split(" ").filter(Boolean);
+  const mainWord = words[0] || "Concept";
+  const restWords = words.slice(1).join(" ") || "";
 
   return (
-    <svg viewBox={`0 0 ${size} ${size * 0.55}`} className="w-full h-auto max-w-[520px] mx-auto">
-      <defs>
-        <filter id="ciShadow" x="-10%" y="-10%" width="120%" height="120%">
-          <feDropShadow dx="0" dy="3" stdDeviation="5" floodOpacity="0.12" />
-        </filter>
-        <linearGradient id="ciGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor={colors.bg} />
-          <stop offset="100%" stopColor={colors.light} />
-        </linearGradient>
-        <linearGradient id="ciBar" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor={colors.primary} />
-          <stop offset="100%" stopColor={colors.accent} />
-        </linearGradient>
-      </defs>
+    <div
+      className={`relative w-full max-w-[640px] mx-auto transition-all duration-500 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div
+        className="relative rounded-3xl border p-6 sm:p-8 overflow-hidden transition-all duration-300"
+        style={{
+          background: `linear-gradient(135deg, ${colors.from}, ${colors.to})`,
+          borderColor: colors.border,
+          boxShadow: hovered
+            ? `0 20px 60px -15px ${colors.accent}30, 0 0 0 1px ${colors.border}60`
+            : `0 4px 24px -8px ${colors.accent}20, 0 0 0 1px ${colors.border}40`,
+        }}
+      >
+        {/* Animated background particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(6)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full opacity-20 animate-pulse"
+              style={{
+                width: `${20 + i * 15}px`,
+                height: `${20 + i * 15}px`,
+                background: colors.accent,
+                left: `${10 + i * 15}%`,
+                top: `${15 + (i % 3) * 25}%`,
+                animationDelay: `${i * 0.5}s`,
+                animationDuration: `${3 + i * 0.5}s`,
+              }}
+            />
+          ))}
+        </div>
 
-      {/* Card background */}
-      <rect x={size * 0.03} y={size * 0.03} width={size * 0.94} height={size * 0.49} rx={size * 0.035} fill="url(#ciGrad)" stroke={colors.primary} strokeWidth="1.5" filter="url(#ciShadow)" />
+        {/* Glass overlay */}
+        <div
+          className="absolute inset-0 rounded-3xl pointer-events-none"
+          style={{
+            background: "linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.05) 100%)",
+            backdropFilter: "blur(1px)",
+          }}
+        />
 
-      {/* Decorative orbs */}
-      <circle cx={size * 0.15} cy={size * 0.15} r={size * 0.09} fill={colors.primary} opacity="0.06" />
-      <circle cx={size * 0.85} cy={size * 0.38} r={size * 0.11} fill={colors.accent} opacity="0.05" />
+        <div className="relative z-10">
+          {/* Top row: icon + category badge */}
+          <div className="flex items-center justify-between mb-5">
+            <div
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider"
+              style={{ background: `${colors.accent}15`, color: colors.text, border: `1px solid ${colors.border}` }}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              Vedic Astrology
+            </div>
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-extrabold"
+              style={{ background: `${colors.accent}15`, color: colors.text, border: `2px solid ${colors.border}` }}
+            >
+              {mainWord[0]?.toUpperCase()}
+            </div>
+          </div>
 
-      {/* Left accent bar */}
-      <rect x={size * 0.03} y={size * 0.10} width={size * 0.018} height={size * 0.35} rx={size * 0.009} fill="url(#ciBar)" />
+          {/* Title */}
+          <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 leading-tight mb-2">
+            {mainWord}
+            {restWords && (
+              <span className="block text-lg sm:text-xl font-semibold mt-1" style={{ color: colors.text }}>
+                {restWords}
+              </span>
+            )}
+          </h3>
 
-      {/* Initials circle */}
-      <circle cx={size * 0.76} cy={size * 0.20} r={size * 0.10} fill="#fff" stroke={colors.primary} strokeWidth="2" />
-      <text x={size * 0.76} y={size * 0.20} textAnchor="middle" dominantBaseline="central" fontSize={size * 0.065} fontWeight="800" fill={colors.primary}>
-        {initials}
-      </text>
+          {/* Subtitle */}
+          <p className="text-sm text-gray-500 leading-relaxed mb-6 max-w-[90%]">
+            {displaySubtitle.length > 100 ? displaySubtitle.slice(0, 100) + "..." : displaySubtitle}
+          </p>
 
-      {/* Title */}
-      <text x={size * 0.1} y={size * 0.17} fontSize={size * 0.05} fontWeight="800" fill="#1f2937">
-        {words[0] || "Concept"}
-      </text>
-      {words[1] && (
-        <text x={size * 0.1} y={size * 0.24} fontSize={size * 0.035} fontWeight="600" fill={colors.primary}>
-          {words.slice(1).join(" ")}
-        </text>
-      )}
+          {/* Action bar */}
+          <div className="flex items-center gap-3">
+            <div
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200"
+              style={{
+                background: colors.accent,
+                color: "#fff",
+                boxShadow: hovered ? `0 8px 24px -8px ${colors.accent}80` : "none",
+                transform: hovered ? "translateX(4px)" : "translateX(0)",
+              }}
+            >
+              <Lightbulb className="w-4 h-4" />
+              Explore Concept
+              <ArrowRight className="w-4 h-4" />
+            </div>
+            <div className="flex items-center gap-1.5 text-xs text-gray-400">
+              <div className="w-1.5 h-1.5 rounded-full" style={{ background: colors.accent }} />
+              Interactive Diagram
+            </div>
+          </div>
+        </div>
 
-      {/* Subtitle */}
-      <text x={size * 0.1} y={size * 0.32} fontSize={size * 0.026} fill="#6b7280">
-        {displaySubtitle.length > 55 ? displaySubtitle.slice(0, 55) + "..." : displaySubtitle}
-      </text>
-
-      {/* Bottom line */}
-      <line x1={size * 0.1} y1={size * 0.40} x2={size * 0.55} y2={size * 0.40} stroke={colors.primary} strokeWidth="2.5" strokeLinecap="round" opacity="0.3" />
-
-      {/* Bottom tag */}
-      <rect x={size * 0.1} y={size * 0.42} width={size * 0.24} height={size * 0.055} rx={size * 0.027} fill={colors.primary} opacity="0.9" />
-      <text x={size * 0.22} y={size * 0.447} textAnchor="middle" dominantBaseline="central" fontSize={size * 0.022} fontWeight="600" fill="#fff">
-        Vedic Astrology
-      </text>
-    </svg>
+        {/* Bottom decorative line */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-1 rounded-b-3xl transition-all duration-300"
+          style={{
+            background: `linear-gradient(90deg, ${colors.accent}60, ${colors.accent}, ${colors.accent}60)`,
+            opacity: hovered ? 1 : 0.5,
+          }}
+        />
+      </div>
+    </div>
   );
 }

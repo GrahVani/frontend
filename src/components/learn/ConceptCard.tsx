@@ -38,9 +38,10 @@ interface ConceptCardProps {
   concept: Concept;
   index: number;
   showDiagram?: boolean;
+  showReference?: boolean;
 }
 
-export default function ConceptCard({ concept, index, showDiagram = true }: ConceptCardProps) {
+export default function ConceptCard({ concept, index, showDiagram = true, showReference = false }: ConceptCardProps) {
   const [expanded, setExpanded] = useState(false);
   const Icon = ICON_MAP[concept.icon || ""] || Sparkles;
 
@@ -125,8 +126,8 @@ export default function ConceptCard({ concept, index, showDiagram = true }: Conc
           </div>
         )}
 
-        {/* Diagram reference badge — shown when diagram is rendered elsewhere */}
-        {!showDiagram && concept.media?.type === "diagram" && concept.media.diagramType && (
+        {/* Diagram reference badge — shown when diagram is rendered in Visual Reference */}
+        {showReference && !showDiagram && concept.media?.type === "diagram" && concept.media.diagramType && (
           <div className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-100">
             <span>📊</span>
             <span>Explained in the visual reference above</span>
