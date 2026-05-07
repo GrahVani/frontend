@@ -3,6 +3,7 @@
 import React from "react";
 import ZodiacWheel from "./diagrams/ZodiacWheel";
 import PlanetOrbit from "./diagrams/PlanetOrbit";
+import NavagrahaWheel from "./diagrams/NavagrahaWheel";
 import HouseChart from "./diagrams/HouseChart";
 import NakshatraWheel from "./diagrams/NakshatraWheel";
 import AyanamsaDrift from "./diagrams/AyanamsaDrift";
@@ -32,7 +33,7 @@ export const DIAGRAM_CAPTIONS: Record<string, string> = {
   "zodiac-wheel": "Tap any sign to explore its element, modality, and planetary lord.",
   "rashi-tattvas": "The Four Tattvas (Elements) that govern the 12 Rashis.",
   "rashi-modalities": "The Three Modalities (Mobilities) that describe how each sign's energy moves.",
-  "planet-orbit": "Tap each planet to discover its nature, element, and significations (Karakatwas).",
+  "planet-orbit": "Click any planet in the Solar Court to explore its role, significations, and dignity states.",
   "concept-illustration": "Interactive concept visualization.",
   "house-chart": "Tap each house to learn its domain, Sanskrit name, and structural group.",
   "nakshatra-wheel": "The 27 Nakshatras divided into 4 Padas each = 108 total divisions.",
@@ -80,8 +81,8 @@ export default function DynamicDiagram({ diagramType, title, subtitle, size = 56
         <div className="w-full max-w-[680px]">
           {diagramType === "zodiac-wheel" || diagramType === "rashi-tattvas" || diagramType === "rashi-modalities" ? (
             <ZodiacWheel size={size} />
-          ) : diagramType === "planet-orbit" || diagramType === "navagraha-pantheon" ? (
-            <PlanetOrbit size={size} />
+          ) : diagramType === "planet-orbit" || diagramType === "navagraha-pantheon" || diagramType === "navagraha-wheel" ? (
+            <NavagrahaWheel size={size} />
           ) : diagramType === "house-chart" || diagramType === "bhava-structural" ? (
             <HouseChart size={size} />
           ) : diagramType === "nakshatra-wheel" ? (
