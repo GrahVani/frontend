@@ -77,10 +77,11 @@ function formatContent(content: string): React.ReactNode {
   let listItems: string[] = [];
 
   const flushList = () => {
-    if (listItems.length > 0) {
+    const validItems = listItems.filter(item => item.trim());
+    if (validItems.length > 0) {
       elements.push(
         <ul key={`list-${elements.length}`} className="space-y-2 my-3 ml-4">
-          {listItems.map((item, i) => (
+          {validItems.map((item, i) => (
             <li key={i} className="flex items-start gap-2 text-sm text-gray-700 leading-relaxed">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 shrink-0" />
               <span dangerouslySetInnerHTML={{ __html: formatInline(item) }} />
@@ -88,9 +89,9 @@ function formatContent(content: string): React.ReactNode {
           ))}
         </ul>
       );
-      listItems = [];
-      inList = false;
     }
+    listItems = [];
+    inList = false;
   };
 
   lines.forEach((line, idx) => {

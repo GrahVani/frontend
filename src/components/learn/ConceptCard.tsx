@@ -41,6 +41,30 @@ interface ConceptCardProps {
   showReference?: boolean;
 }
 
+/** Format concept description: parse markdown bold/italic and convert `* text` bullets to proper list items */
+function formatConceptText(text: string): string {
+  // Split by `* ` bullet markers and handle inline formatting
+  const parts = text.split(/(?:^|\s)\*\s+/);
+  if (parts.length > 1) {
+    // First part is intro text (before any bullets), rest are bullet items
+    const intro = parts[0].trim();
+    const bullets = parts.slice(1).map(b => b.trim()).filter(Boolean);
+    const introHtml = intro ? `<p>${formatInline(intro)}</p>` : '';
+    const listHtml = bullets.length > 0
+      ? `<ul style="list-style:disc;padding-left:1.25rem;margin-top:0.5rem">${bullets.map(b => `<li style="margin-bottom:0.25rem">${formatInline(b)}</li>`).join('')}</ul>`
+      : '';
+    return introHtml + listHtml;
+  }
+  return formatInline(text);
+}
+
+function formatInline(text: string): string {
+  return text
+    .replace(/\*\*\*([^*]+)\*\*\*/g, '<strong>$1</strong>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+}
+
 export default function ConceptCard({ concept, index, showDiagram = true, showReference = false }: ConceptCardProps) {
   const [expanded, setExpanded] = useState(false);
   const Icon = ICON_MAP[concept.icon || ""] || Sparkles;
@@ -64,9 +88,9 @@ export default function ConceptCard({ concept, index, showDiagram = true, showRe
         </div>
 
         {/* Description */}
-        <div className={`mt-4 text-amber-800 leading-relaxed ${expanded ? "" : "line-clamp-3"}`}>
-          {concept.description}
-        </div>
+        <div className={`mt-4 text-amber-800 leading-relaxed ${expanded ? "" : "line-clamp-3"}`}
+          dangerouslySetInnerHTML={{ __html: formatConceptText(concept.description) }}
+        />
 
         {/* Expand/Collapse */}
         {concept.description.length > 150 && (

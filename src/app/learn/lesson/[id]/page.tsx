@@ -14,6 +14,13 @@ import ConceptCard from "@/components/learn/ConceptCard";
 import DynamicDiagram from "@/components/learn/DynamicDiagram";
 import InteractiveQuiz from "@/components/learn/InteractiveQuiz";
 import LessonSection, { type Section } from "@/components/learn/LessonSection";
+import Lesson1Interactive from "@/components/learn/module1/Lesson1Interactive";
+import Lesson2Interactive from "@/components/learn/module1/Lesson2Interactive";
+import Lesson3Interactive from "@/components/learn/module1/Lesson3Interactive";
+import Lesson4Interactive from "@/components/learn/module1/Lesson4Interactive";
+import Lesson5Interactive from "@/components/learn/module2/Lesson5Interactive";
+import Lesson6Interactive from "@/components/learn/module2/Lesson6Interactive";
+import Lesson7Interactive from "@/components/learn/module2/Lesson7Interactive";
 
 interface ConceptMedia {
   type: string;
@@ -129,6 +136,48 @@ export default function LessonPage() {
         </div>
       </div>
     );
+  }
+
+  // ─── Lesson 1 Interactive Experience ───
+  const isLesson1 = lesson.sequenceOrder === 1 && lesson.title.includes("Celestial Geometry");
+  if (isLesson1) {
+    return <Lesson1Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Lesson 2 Interactive Experience ───
+  const isLesson2 = lesson.sequenceOrder === 2 && lesson.title.includes("Navagraha");
+  if (isLesson2) {
+    return <Lesson2Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Lesson 3 Interactive Experience ───
+  const isLesson3 = lesson.sequenceOrder === 3 && lesson.title.includes("Bhava");
+  if (isLesson3) {
+    return <Lesson3Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Lesson 4 Interactive Experience ───
+  const isLesson4 = lesson.sequenceOrder === 4 && lesson.title.includes("Nakshatra");
+  if (isLesson4) {
+    return <Lesson4Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 2: Lesson 1 (Ayanamsa) Interactive Experience ───
+  const isLesson5 = lesson.sequenceOrder === 1 && lesson.title.includes("Ayanamsa");
+  if (isLesson5) {
+    return <Lesson5Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 2: Lesson 2 (Panchang) Interactive Experience ───
+  const isLesson6 = lesson.sequenceOrder === 2 && lesson.title.includes("Panchang");
+  if (isLesson6) {
+    return <Lesson6Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 2: Lesson 3 (Drishti) Interactive Experience ───
+  const isLesson7 = lesson.sequenceOrder === 3 && lesson.title.includes("Drishti");
+  if (isLesson7) {
+    return <Lesson7Interactive lesson={lesson} lessonProgress={lessonProgress} />;
   }
 
   const content = lesson.contentJson as unknown as LessonContent;
