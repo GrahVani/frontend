@@ -224,7 +224,7 @@ export default function HouseChart({ size = 560 }: { size?: number }) {
               key={g.label}
               onClick={() => setActiveGroup(activeGroup === g.key ? "none" : g.key)}
               className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 shadow-sm border transition-all duration-200 ${activeGroup === g.key ? "ring-2 scale-105" : "bg-white border-gray-100 hover:border-gray-300"}`}
-              style={activeGroup === g.key ? { backgroundColor: g.bg, borderColor: g.color, ringColor: g.color } : {}}
+              style={activeGroup === g.key ? { backgroundColor: g.bg, borderColor: g.color } : {}}
             >
               <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: g.color }} />
               <span className="text-[11px] font-semibold" style={activeGroup === g.key ? { color: g.color } : { color: "#374151" }}>{g.label}</span>

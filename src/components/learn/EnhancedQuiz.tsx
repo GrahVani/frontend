@@ -195,7 +195,7 @@ export default function EnhancedQuiz({ questions, lessonId, moduleId, onComplete
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showExplanations, setShowExplanations] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [answers, setAnswers] = useState<Record<string, { index: number; timeSpentMs: number }>>({});
   const [questionStartTime, setQuestionStartTime] = useState<number>(Date.now());
   const [result, setResult] = useState<QuizResult | null>(null);
 
@@ -239,7 +239,7 @@ export default function EnhancedQuiz({ questions, lessonId, moduleId, onComplete
 
     setSelectedOption(index);
     setIsCorrect(correct);
-    setAnswers(prev => ({ ...prev, [currentQuestion.id]: index }));
+    setAnswers(prev => ({ ...prev, [currentQuestion.id]: { index, timeSpentMs: timeSpent } }));
 
     if (correct) {
       const newStreak = streak + 1;
@@ -274,11 +274,11 @@ export default function EnhancedQuiz({ questions, lessonId, moduleId, onComplete
 
       if (user) {
         const answersArray = Object.entries(answers).map(([qid, ans]) => ({
-          questionId: qid,
-          selectedOptionIndex: ans,
-          timeSpentSeconds: 0,
+          questionId: parseInt(qid),
+          answer: String(ans.index),
+          timeSpentSeconds: Math.round(ans.timeSpentMs / 1000),
         }));
-        learnApi.submitLesson(lessonId, user.id, answersArray as any)
+        learnApi.submitLesson(lessonId, user.id, answersArray)
           .catch((err: Error) => console.error("Submit failed:", err));
       }
     } else {

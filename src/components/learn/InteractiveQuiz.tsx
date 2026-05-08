@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { learnApi } from "@/lib/api";
 import QuizProgress from "./QuizProgress";
@@ -130,8 +130,9 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
   const [submitted, setSubmitted] = useState(false);
   const [result, setResult] = useState<{ score: number; correctAnswers: number; totalQuestions: number } | null>(null);
 
-  // Answer tracking
-  const [answers, setAnswers] = useState<Record<number, string>>({});
+  // Answer tracking (includes time spent per question in ms)
+  const [answers, setAnswers] = useState<Record<number, { answer: string; timeSpentMs: number }>>({});
+  const questionStartTime = useRef<number>(Date.now());
 
   // Current question state
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -156,8 +157,9 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
   const isLastQuestion = currentIndex === quiz.length - 1;
   const totalPossible = useMemo(() => getTotalPossibleScore(quiz), [quiz]);
 
-  // Initialize matching shuffle when question changes
+  // Initialize state when question changes
   React.useEffect(() => {
+    questionStartTime.current = Date.now();
     if (currentQuestion?.type === "matching") {
       const left = shuffleArray(currentQuestion.pairs.map((p) => p.left));
       const right = shuffleArray(currentQuestion.pairs.map((p) => p.right));
@@ -196,7 +198,8 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
   const handleMultipleChoice = useCallback((option: string) => {
     if (showFeedback || finished || currentQuestion.type !== "multiple_choice") return;
     setSelectedOption(option);
-    setAnswers((prev) => ({ ...prev, [currentQuestion.questionId]: option }));
+    const timeSpent = Date.now() - questionStartTime.current;
+    setAnswers((prev) => ({ ...prev, [currentQuestion.questionId]: { answer: option, timeSpentMs: timeSpent } }));
     if (option === currentQuestion.correctAnswer) addCorrect();
     else addWrong();
     setShowFeedback(true);
@@ -205,7 +208,8 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
   const handleTrueFalse = useCallback((answer: "true" | "false") => {
     if (showFeedback || finished || currentQuestion.type !== "true_false") return;
     setSelectedOption(answer);
-    setAnswers((prev) => ({ ...prev, [currentQuestion.questionId]: answer }));
+    const timeSpent = Date.now() - questionStartTime.current;
+    setAnswers((prev) => ({ ...prev, [currentQuestion.questionId]: { answer, timeSpentMs: timeSpent } }));
     if (answer === currentQuestion.correctAnswer) addCorrect();
     else addWrong();
     setShowFeedback(true);
@@ -236,7 +240,8 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
             break;
           }
         }
-        setAnswers((prev) => ({ ...prev, [currentQuestion.questionId]: JSON.stringify(newMatched) }));
+        const timeSpent = Date.now() - questionStartTime.current;
+        setAnswers((prev) => ({ ...prev, [currentQuestion.questionId]: { answer: JSON.stringify(newMatched), timeSpentMs: timeSpent } }));
         if (allCorrect) addCorrect();
         else addWrong();
         setShowFeedback(true);
@@ -251,7 +256,8 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
     const acceptable = (currentQuestion.acceptableAnswers || []).map((a) => a.toLowerCase());
     const isAnsCorrect = userAnswer === correct || acceptable.includes(userAnswer);
 
-    setAnswers((prev) => ({ ...prev, [currentQuestion.questionId]: fillInput.trim() }));
+    const timeSpent = Date.now() - questionStartTime.current;
+    setAnswers((prev) => ({ ...prev, [currentQuestion.questionId]: { answer: fillInput.trim(), timeSpentMs: timeSpent } }));
     if (isAnsCorrect) addCorrect();
     else addWrong();
     setShowFeedback(true);
@@ -292,7 +298,8 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
       if (selectedOption && finalAnswers.length < currentQuestion.subQuestions.length) {
         finalAnswers.push(selectedOption);
       }
-      setAnswers((prev) => ({ ...prev, [currentQuestion.questionId]: JSON.stringify(finalAnswers) }));
+      const timeSpent = Date.now() - questionStartTime.current;
+      setAnswers((prev) => ({ ...prev, [currentQuestion.questionId]: { answer: JSON.stringify(finalAnswers), timeSpentMs: timeSpent } }));
     }
 
     if (isLastQuestion) {
@@ -300,7 +307,8 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
       if (user) {
         const answersArray = Object.entries(answers).map(([qid, ans]) => ({
           questionId: parseInt(qid),
-          answer: ans,
+          answer: ans.answer,
+          timeSpentSeconds: Math.round(ans.timeSpentMs / 1000),
         }));
         learnApi.submitLesson(lessonId, user.id, answersArray)
           .then((res: { success: boolean; data?: { score: number; correctAnswers: number; totalQuestions: number } }) => {
