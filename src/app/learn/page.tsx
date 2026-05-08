@@ -127,9 +127,9 @@ export default function LearnPage() {
   const firstName = user?.name?.split(" ")[0] || "Student";
   const streakDays = dashboard?.currentStreak || 0;
   const longestStreak = dashboard?.longestStreak || 0;
-  const totalLessons = courses.reduce((sum, c) => sum + c.lessons.length, 0);
-  const completedLessons = courses.reduce((sum, c) => sum + (c.completedLessons || 0), 0);
-  const overallProgress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+  const totalLessons = dashboard?.totalLessons || courses.reduce((sum, c) => sum + c.lessons.length, 0);
+  const completedLessons = dashboard?.lessonsCompleted || courses.reduce((sum, c) => sum + (c.completedLessons || 0), 0);
+  const overallProgress = dashboard?.overallProgress || (totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0);
   const skillScore = dashboard?.skillScore || 0;
   const title = dashboard?.title || "Jyotish Novice";
   const currentTier = dashboard?.currentTier || 1;
@@ -258,7 +258,7 @@ export default function LearnPage() {
                 const config = LEVEL_CONFIG[course.level];
                 const isExpanded = expandedModules.has(course.id);
                 const progress = course.progressPercentage || 0;
-                const isCompleted = progress === 100;
+                const isCompleted = course.status === "completed";
                 const Icon = MODULE_ICONS[course.category] || BookOpen;
                 const catStyle = CATEGORY_COLORS[course.category] || "bg-gray-100 text-gray-700 border-gray-200";
 

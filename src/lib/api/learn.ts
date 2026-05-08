@@ -89,6 +89,7 @@ export type QuizQuestion =
 export interface QuizAnswer {
   questionId: number;
   answer: string;
+  timeSpentSeconds?: number;
 }
 
 export interface SubmitResponse {
@@ -106,6 +107,7 @@ export interface BadgeItem {
   iconUrl: string | null;
   earnedAt?: string;
   pointsReward?: number;
+  progress?: { current: number; target: number; percent: number };
 }
 
 export interface LessonProgressData {
@@ -131,8 +133,10 @@ export interface LessonProgressData {
 
 export interface DashboardData {
   lessonsCompleted: number;
+  attemptedLessons: number;
   totalLessons: number;
   averageScore: number;
+  overallProgress: number;
   totalPoints: number;
   currentStreak: number;
   longestStreak: number;
@@ -140,10 +144,16 @@ export interface DashboardData {
   currentTier: number;
   title: string;
   nextTierProgress: number;
+  nextTierThreshold: number;
+  prevTierThreshold: number;
+  pointsToNextTier: number;
   totalModulesCompleted: number;
+  perfectLessons: number;
+  tierThresholds: number[];
+  tierNames: Record<number, string>;
   badges: {
     earned: BadgeItem[];
-    available: BadgeItem[];
+    upcoming: BadgeItem[];
   };
   progress: ProgressItem[];
 }
@@ -190,4 +200,7 @@ export const learnApi = {
 
   getProfile: (userId: string): Promise<{ success: boolean; data: { skillScore: number; currentTier: number; currentLevel: string; currentStreak: number; longestStreak: number; totalPoints: number; totalLessonsCompleted: number; totalModulesCompleted: number; title: string; nextTierProgress: number; weakAreas: string[]; strongAreas: string[] } }> =>
     apiFetch(`${LEARN_BASE}/gamification/profile/${userId}`),
+
+  getModuleProgress: (userId: string): Promise<{ success: boolean; data: { modules: Array<{ moduleId: string; title: string; status: string; progressPercentage: number; lessonsCompleted: number; totalLessons: number; averageScore: number }> } }> =>
+    apiFetch(`${LEARN_BASE}/gamification/modules/${userId}`),
 };
