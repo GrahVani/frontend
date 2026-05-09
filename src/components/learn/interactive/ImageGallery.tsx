@@ -108,8 +108,8 @@ export default function ImageGallery({ images, className = "" }: ImageGalleryPro
               </div>
             </div>
             {img.caption && (
-              <div className="p-3 bg-gradient-to-r from-amber-50 to-orange-50">
-                <p className="text-xs font-medium text-amber-800 text-center leading-snug">
+              <div className="p-3 bg-gray-50 border-t border-gray-100">
+                <p className="text-xs font-medium text-gray-700 text-center leading-snug">
                   {img.caption}
                 </p>
               </div>

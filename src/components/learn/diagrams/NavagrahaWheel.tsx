@@ -117,7 +117,7 @@ interface NavagrahaWheelProps {
   size?: number;
 }
 
-export default function NavagrahaWheel({ size = 660 }: NavagrahaWheelProps) {
+export default function NavagrahaWheel({ size = 780 }: NavagrahaWheelProps) {
   const [selected, setSelected] = useState<PlanetData | null>(null);
   const cx = size / 2;
   const cy = size / 2;
@@ -134,15 +134,15 @@ export default function NavagrahaWheel({ size = 660 }: NavagrahaWheelProps) {
   const centerRadius = 30 * scale;
 
   return (
-    <div className="w-full flex flex-col items-center">
-      {/* Title — above SVG */}
+    <div className="w-full">
+      {/* Title — above layout */}
       <div className="text-center mb-2">
         <h3 className="text-xl font-extrabold text-amber-900 tracking-tight">The Solar Court</h3>
         <p className="text-xs text-amber-600">Click any planet to explore its role, significations & dignity</p>
       </div>
 
-      {/* Ring Legend — below title, above wheel */}
-      <div className="flex items-center gap-4 mb-3 text-[10px] font-bold uppercase tracking-wider">
+      {/* Ring Legend — below title, above layout */}
+      <div className="flex items-center justify-center gap-4 mb-3 text-[10px] font-bold uppercase tracking-wider">
         <span className="flex items-center gap-1">
           <span className="w-3 h-[2px] bg-amber-400 rounded" /> <span className="text-amber-600">Luminaries</span>
         </span>
@@ -154,13 +154,16 @@ export default function NavagrahaWheel({ size = 660 }: NavagrahaWheelProps) {
         </span>
       </div>
 
-      {/* SVG Wheel */}
-      <svg
-        viewBox={`0 0 ${size} ${size}`}
-        className="w-full max-w-[660px] h-auto"
-        role="img"
-        aria-label="Navagraha Solar Court Diagram"
-      >
+      {/* Main Layout: Wheel Left + Detail Right */}
+      <div className="flex flex-col lg:flex-row gap-5 items-start">
+        {/* Left: SVG Wheel */}
+        <div className="flex-1 flex justify-center min-w-0">
+          <svg
+            viewBox={`0 0 ${size} ${size}`}
+            className="w-full h-auto"
+            role="img"
+            aria-label="Navagraha Solar Court Diagram"
+          >
         <defs>
           <filter id="nv-glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="4" result="blur" />
@@ -337,93 +340,105 @@ export default function NavagrahaWheel({ size = 660 }: NavagrahaWheelProps) {
           <text x={125 * scale} y={3 * scale} fontSize={8 * scale} fill="#9E9E9E" fontWeight="600">Neutral</text>
         </g>
       </svg>
-
-      {/* ─── Detail Panel ─── */}
-      {selected && (
-        <div
-          className="mt-4 w-full max-w-[660px] rounded-2xl border-2 overflow-hidden shadow-lg animate-in slide-in-from-bottom-4 duration-300"
-          style={{ borderColor: selected.color + "40", backgroundColor: selected.bgColor }}
-        >
-          {/* Header */}
-          <div
-            className="p-4 flex items-center gap-3"
-            style={{ background: `linear-gradient(135deg, ${selected.color}15, ${selected.color}08)` }}
-          >
-            <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold border-2"
-              style={{ borderColor: selected.color, color: selected.color, backgroundColor: selected.bgColor }}
-            >
-              {selected.symbol}
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h3 className="text-lg font-bold" style={{ color: selected.color }}>
-                  {selected.sanskrit} ({selected.english})
-                </h3>
-                <span
-                  className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border"
-                  style={{
-                    color: selected.nature === "benefic" ? "#2E7D32" : selected.nature === "malefic" ? "#C62828" : "#757575",
-                    borderColor: selected.nature === "benefic" ? "#A5D6A7" : selected.nature === "malefic" ? "#EF9A9A" : "#E0E0E0",
-                    backgroundColor: selected.nature === "benefic" ? "#E8F5E9" : selected.nature === "malefic" ? "#FFEBEE" : "#F5F5F5",
-                  }}
-                >
-                  {selected.nature}
-                </span>
-              </div>
-              <p className="text-sm font-medium" style={{ color: selected.color + "CC" }}>
-                {selected.role}
-              </p>
-            </div>
-            <button
-              onClick={() => setSelected(null)}
-              className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-white/50 transition-colors"
-              aria-label="Close detail panel"
-            >
-              ✕
-            </button>
-          </div>
-
-          {/* Description */}
-          <div className="px-4 pb-3">
-            <p className="text-sm text-gray-700 leading-relaxed">{selected.description}</p>
-          </div>
-
-          {/* Karakatwas */}
-          <div className="px-4 pb-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: selected.color }}>
-              Karakatwas (Significations)
-            </h4>
-            <div className="flex flex-wrap gap-1.5">
-              {selected.karakatwas.map((k, i) => (
-                <span
-                  key={i}
-                  className="text-xs px-2.5 py-1 rounded-full font-medium border"
-                  style={{ color: selected.color, borderColor: selected.color + "30", backgroundColor: selected.color + "08" }}
-                >
-                  {k}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Dignity */}
-          <div className="px-4 pb-4 grid grid-cols-3 gap-2">
-            <div className="p-2.5 rounded-xl bg-white/70 border border-gray-100">
-              <div className="text-[10px] font-bold text-green-700 uppercase tracking-wide mb-0.5">Exaltation</div>
-              <div className="text-xs font-semibold text-gray-800">{selected.exaltation}</div>
-            </div>
-            <div className="p-2.5 rounded-xl bg-white/70 border border-gray-100">
-              <div className="text-[10px] font-bold text-red-700 uppercase tracking-wide mb-0.5">Debilitation</div>
-              <div className="text-xs font-semibold text-gray-800">{selected.debilitation}</div>
-            </div>
-            <div className="p-2.5 rounded-xl bg-white/70 border border-gray-100">
-              <div className="text-[10px] font-bold text-blue-700 uppercase tracking-wide mb-0.5">Own Sign(s)</div>
-              <div className="text-xs font-semibold text-gray-800">{selected.ownSigns.join(", ")}</div>
-            </div>
-          </div>
         </div>
-      )}
+
+        {/* Right: Detail Panel */}
+        <div className="lg:w-72 shrink-0">
+          {selected ? (
+            <div
+              className="w-full rounded-2xl border-2 overflow-hidden shadow-lg animate-in slide-in-from-right-4 duration-300"
+              style={{ borderColor: selected.color + "40", backgroundColor: selected.bgColor }}
+            >
+              {/* Header */}
+              <div
+                className="p-4 flex items-center gap-3"
+                style={{ background: `linear-gradient(135deg, ${selected.color}15, ${selected.color}08)` }}
+              >
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold border-2 shrink-0"
+                  style={{ borderColor: selected.color, color: selected.color, backgroundColor: selected.bgColor }}
+                >
+                  {selected.symbol}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="text-lg font-bold" style={{ color: selected.color }}>
+                      {selected.sanskrit} ({selected.english})
+                    </h3>
+                    <span
+                      className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border"
+                      style={{
+                        color: selected.nature === "benefic" ? "#2E7D32" : selected.nature === "malefic" ? "#C62828" : "#757575",
+                        borderColor: selected.nature === "benefic" ? "#A5D6A7" : selected.nature === "malefic" ? "#EF9A9A" : "#E0E0E0",
+                        backgroundColor: selected.nature === "benefic" ? "#E8F5E9" : selected.nature === "malefic" ? "#FFEBEE" : "#F5F5F5",
+                      }}
+                    >
+                      {selected.nature}
+                    </span>
+                  </div>
+                  <p className="text-sm font-medium" style={{ color: selected.color + "CC" }}>
+                    {selected.role}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setSelected(null)}
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-white/50 transition-colors shrink-0"
+                  aria-label="Close detail panel"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Description */}
+              <div className="px-4 pb-3">
+                <p className="text-sm text-gray-700 leading-relaxed">{selected.description}</p>
+              </div>
+
+              {/* Karakatwas */}
+              <div className="px-4 pb-3">
+                <h4 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: selected.color }}>
+                  Karakatwas (Significations)
+                </h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {selected.karakatwas.map((k, i) => (
+                    <span
+                      key={i}
+                      className="text-xs px-2.5 py-1 rounded-full font-medium border"
+                      style={{ color: selected.color, borderColor: selected.color + "30", backgroundColor: selected.color + "08" }}
+                    >
+                      {k}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Dignity */}
+              <div className="px-4 pb-4 grid grid-cols-1 gap-2">
+                <div className="p-2.5 rounded-xl bg-white/70 border border-gray-100">
+                  <div className="text-[10px] font-bold text-green-700 uppercase tracking-wide mb-0.5">Exaltation</div>
+                  <div className="text-xs font-semibold text-gray-800">{selected.exaltation}</div>
+                </div>
+                <div className="p-2.5 rounded-xl bg-white/70 border border-gray-100">
+                  <div className="text-[10px] font-bold text-red-700 uppercase tracking-wide mb-0.5">Debilitation</div>
+                  <div className="text-xs font-semibold text-gray-800">{selected.debilitation}</div>
+                </div>
+                <div className="p-2.5 rounded-xl bg-white/70 border border-gray-100">
+                  <div className="text-[10px] font-bold text-blue-700 uppercase tracking-wide mb-0.5">Own Sign(s)</div>
+                  <div className="text-xs font-semibold text-gray-800">{selected.ownSigns.join(", ")}</div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="w-full h-full min-h-[200px] rounded-2xl border-2 border-dashed border-amber-200 bg-amber-50/50 flex flex-col items-center justify-center text-center p-6">
+              <div className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center mb-3">
+                <span className="text-2xl">☉</span>
+              </div>
+              <p className="text-sm font-semibold text-amber-800">Select a Planet</p>
+              <p className="text-xs text-amber-600 mt-1">Click any planet in the Solar Court to view its role, significations, and dignity states.</p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

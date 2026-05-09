@@ -3,9 +3,12 @@
 import React, { useState } from "react";
 import {
   BookOpen, Languages, Cog, Code, Lightbulb, ChevronDown, ChevronUp,
-  Sparkles, Terminal, Binary, GitBranch, Eye, Zap
+  Sparkles, Terminal, Binary, GitBranch, Eye, Zap, Compass, HelpCircle
 } from "lucide-react";
 import DynamicDiagram from "./DynamicDiagram";
+import TTSButton from "./interactive/TTSButton";
+import ForwardReferenceBanner, { type ForwardReference } from "./interactive/ForwardReferenceBanner";
+import AnticipatedQuestions, { type AnticipatedQuestion } from "./interactive/AnticipatedQuestions";
 
 export interface Section {
   id: number;
@@ -13,6 +16,9 @@ export interface Section {
   title: string;
   content: string;
   diagramType?: string;
+  forwardReference?: ForwardReference;
+  practicalUsage?: string;
+  anticipatedQuestions?: AnticipatedQuestion[];
 }
 
 interface LessonSectionProps {
@@ -24,49 +30,100 @@ const SECTION_STYLES: Record<string, {
   icon: React.ElementType;
   bg: string;
   border: string;
+  leftBorder: string;
   titleColor: string;
   badge: string;
   badgeColor: string;
+  iconBg: string;
+  iconColor: string;
 }> = {
   definition: {
     icon: BookOpen,
-    bg: "bg-gradient-to-br from-blue-50 to-indigo-50",
-    border: "border-blue-200",
-    titleColor: "text-blue-900",
+    bg: "bg-white",
+    border: "border-amber-200/60",
+    leftBorder: "border-l-blue-500",
+    titleColor: "text-amber-900",
     badge: "DEFINITION",
-    badgeColor: "bg-blue-100 text-blue-700",
+    badgeColor: "bg-blue-50 text-blue-700",
+    iconBg: "bg-blue-100",
+    iconColor: "text-blue-700",
   },
   etymology: {
     icon: Languages,
-    bg: "bg-gradient-to-br from-purple-50 to-fuchsia-50",
-    border: "border-purple-200",
-    titleColor: "text-purple-900",
+    bg: "bg-white",
+    border: "border-amber-200/60",
+    leftBorder: "border-l-purple-500",
+    titleColor: "text-amber-900",
     badge: "ETYMOLOGY",
-    badgeColor: "bg-purple-100 text-purple-700",
+    badgeColor: "bg-purple-50 text-purple-700",
+    iconBg: "bg-purple-100",
+    iconColor: "text-purple-700",
   },
   mechanics: {
     icon: Cog,
-    bg: "bg-gradient-to-br from-amber-50 to-orange-50",
-    border: "border-amber-200",
+    bg: "bg-white",
+    border: "border-amber-200/60",
+    leftBorder: "border-l-amber-500",
     titleColor: "text-amber-900",
     badge: "MECHANICS",
-    badgeColor: "bg-amber-100 text-amber-700",
+    badgeColor: "bg-amber-50 text-amber-700",
+    iconBg: "bg-amber-100",
+    iconColor: "text-amber-700",
   },
   software_logic: {
     icon: Code,
-    bg: "bg-gradient-to-br from-slate-50 to-gray-50",
-    border: "border-slate-200",
-    titleColor: "text-slate-900",
+    bg: "bg-white",
+    border: "border-amber-200/60",
+    leftBorder: "border-l-slate-500",
+    titleColor: "text-amber-900",
     badge: "SOFTWARE LOGIC",
-    badgeColor: "bg-slate-200 text-slate-700",
+    badgeColor: "bg-slate-100 text-slate-700",
+    iconBg: "bg-slate-200",
+    iconColor: "text-slate-700",
   },
   content: {
     icon: Sparkles,
-    bg: "bg-gradient-to-br from-emerald-50 to-teal-50",
-    border: "border-emerald-200",
-    titleColor: "text-emerald-900",
+    bg: "bg-white",
+    border: "border-amber-200/60",
+    leftBorder: "border-l-emerald-500",
+    titleColor: "text-amber-900",
     badge: "CONCEPT",
-    badgeColor: "bg-emerald-100 text-emerald-700",
+    badgeColor: "bg-emerald-50 text-emerald-700",
+    iconBg: "bg-emerald-100",
+    iconColor: "text-emerald-700",
+  },
+  practical_application: {
+    icon: Compass,
+    bg: "bg-white",
+    border: "border-amber-200/60",
+    leftBorder: "border-l-cyan-500",
+    titleColor: "text-amber-900",
+    badge: "PRACTICAL USE",
+    badgeColor: "bg-cyan-50 text-cyan-700",
+    iconBg: "bg-cyan-100",
+    iconColor: "text-cyan-700",
+  },
+  context_builder: {
+    icon: HelpCircle,
+    bg: "bg-white",
+    border: "border-amber-200/60",
+    leftBorder: "border-l-violet-500",
+    titleColor: "text-amber-900",
+    badge: "WHY THIS MATTERS",
+    badgeColor: "bg-violet-50 text-violet-700",
+    iconBg: "bg-violet-100",
+    iconColor: "text-violet-700",
+  },
+  important_note: {
+    icon: Lightbulb,
+    bg: "bg-white",
+    border: "border-amber-200/60",
+    leftBorder: "border-l-amber-500",
+    titleColor: "text-amber-900",
+    badge: "IMPORTANT NOTE",
+    badgeColor: "bg-amber-50 text-amber-700",
+    iconBg: "bg-amber-100",
+    iconColor: "text-amber-700",
   },
 };
 
@@ -163,29 +220,29 @@ export default function LessonSection({ section, index }: LessonSectionProps) {
   const Icon = style.icon;
 
   return (
-    <div className={`rounded-2xl border ${style.border} ${style.bg} overflow-hidden transition-all duration-300 hover:shadow-md`}>
+    <div className={`rounded-2xl border border-l-4 ${style.border} ${style.leftBorder} ${style.bg} overflow-hidden transition-all duration-300 hover:shadow-md`}>
       {/* Header */}
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full p-5 flex items-start gap-4 text-left"
       >
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.badgeColor.replace("text-", "bg-").replace("100", "200")}`}>
-          <Icon className={`w-5 h-5 ${style.titleColor}`} />
+        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.iconBg}`}>
+          <Icon className={`w-5 h-5 ${style.iconColor}`} />
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
             <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${style.badgeColor}`}>
               {style.badge}
             </span>
-            <span className="text-xs text-gray-400">Section {index + 1}</span>
+            <span className="text-xs text-gray-500">Section {index + 1}</span>
           </div>
-          <h3 className={`text-base font-bold ${style.titleColor}`}>{section.title}</h3>
+          <h3 className="text-base font-bold text-amber-900">{section.title}</h3>
         </div>
         <div className="shrink-0 mt-1">
           {expanded ? (
-            <ChevronUp className="w-4 h-4 text-gray-400" />
+            <ChevronUp className="w-4 h-4 text-gray-500" />
           ) : (
-            <ChevronDown className="w-4 h-4 text-gray-400" />
+            <ChevronDown className="w-4 h-4 text-gray-500" />
           )}
         </div>
       </button>
@@ -193,9 +250,45 @@ export default function LessonSection({ section, index }: LessonSectionProps) {
       {/* Content */}
       {expanded && (
         <div className="px-5 pb-5 animate-in fade-in slide-in-from-top-2 duration-300">
+          {/* TTS & Header Actions */}
+          <div className="flex items-center justify-between mb-3">
+            <TTSButton text={`${section.title}. ${section.content}`} size="sm" />
+          </div>
+
           <div className="prose prose-amber max-w-none">
             {formatContent(section.content)}
           </div>
+
+          {/* Forward Reference Banner */}
+          {section.forwardReference && (
+            <ForwardReferenceBanner
+              reference={section.forwardReference}
+              className="mt-4"
+            />
+          )}
+
+          {/* Practical Usage */}
+          {section.practicalUsage && (
+            <div className="mt-4 p-3.5 bg-cyan-50/60 rounded-xl border border-cyan-200">
+              <div className="flex items-center gap-2 text-[10px] text-cyan-700 uppercase tracking-wider mb-1">
+                <Compass className="w-3 h-3" />
+                Practical Application
+              </div>
+              <p className="text-sm text-cyan-900 font-medium leading-relaxed">
+                {section.practicalUsage}
+              </p>
+            </div>
+          )}
+
+          {/* Anticipated Questions */}
+          {section.anticipatedQuestions && section.anticipatedQuestions.length > 0 && (
+            <div className="mt-4">
+              <AnticipatedQuestions
+                questions={section.anticipatedQuestions}
+                title="Clarifying Notes"
+              />
+            </div>
+          )}
 
           {/* Interactive Diagram */}
           {section.diagramType && (
@@ -207,12 +300,12 @@ export default function LessonSection({ section, index }: LessonSectionProps) {
 
           {/* Interactive footer per section type */}
           {section.type === "software_logic" && (
-            <div className="mt-4 p-3 bg-slate-800 rounded-xl">
-              <div className="flex items-center gap-2 text-[10px] text-slate-400 uppercase tracking-wider mb-2">
+            <div className="mt-4 p-3 bg-slate-50 rounded-xl border border-slate-200 border-l-4 border-l-slate-500">
+              <div className="flex items-center gap-2 text-[10px] text-slate-600 uppercase tracking-wider mb-2">
                 <Binary className="w-3 h-3" />
                 Execution Flow
               </div>
-              <div className="flex items-center gap-2 text-xs text-green-400 font-mono">
+              <div className="flex items-center gap-2 text-xs text-slate-700 font-mono">
                 <GitBranch className="w-3 h-3" />
                 <span>IF condition_met THEN execute_prediction()</span>
               </div>
@@ -220,24 +313,24 @@ export default function LessonSection({ section, index }: LessonSectionProps) {
           )}
 
           {section.type === "etymology" && (
-            <div className="mt-4 p-3 bg-purple-100/50 rounded-xl border border-purple-200">
-              <div className="flex items-center gap-2 text-[10px] text-purple-600 uppercase tracking-wider mb-1">
+            <div className="mt-4 p-3 bg-gray-50 rounded-xl border border-gray-200 border-l-4 border-l-purple-500">
+              <div className="flex items-center gap-2 text-[10px] text-purple-700 uppercase tracking-wider mb-1">
                 <Languages className="w-3 h-3" />
                 Sanskrit Root
               </div>
-              <p className="text-sm text-purple-900 font-medium">
+              <p className="text-sm text-gray-800 font-medium">
                 Understanding the original Sanskrit deepens your intuitive grasp of this concept.
               </p>
             </div>
           )}
 
           {section.type === "mechanics" && (
-            <div className="mt-4 p-3 bg-amber-100/50 rounded-xl border border-amber-200">
+            <div className="mt-4 p-3 bg-gray-50 rounded-xl border border-gray-200 border-l-4 border-l-amber-500">
               <div className="flex items-center gap-2 text-[10px] text-amber-700 uppercase tracking-wider mb-1">
                 <Zap className="w-3 h-3" />
                 Pro Insight
               </div>
-              <p className="text-sm text-amber-900 font-medium">
+              <p className="text-sm text-gray-800 font-medium">
                 This is the engine room. Master this section and your predictions become precise.
               </p>
             </div>

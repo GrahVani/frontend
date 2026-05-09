@@ -19,6 +19,7 @@ import CalloutBlock from "@/components/learn/interactive/CalloutBlock";
 import ReadingTime from "@/components/learn/interactive/ReadingTime";
 import Flashcard from "@/components/learn/interactive/Flashcard";
 import KnowledgeCheck from "@/components/learn/interactive/KnowledgeCheck";
+import TTSButton from "@/components/learn/interactive/TTSButton";
 
 import RecapSection from "@/components/learn/interactive/RecapSection";
 import LessonSection, { type Section } from "@/components/learn/LessonSection";
@@ -50,17 +51,17 @@ interface Lesson1InteractiveProps {
 const SECTION_IDS = ["hero", "sec-overview", "sec-definition", "sec-etymology", "sec-mechanics", "sec-knowledge", "sec-concepts", "sec-flashcards", "sec-recap", "sec-quiz", "sec-next"];
 
 const SIDEBAR_SECTIONS: SidebarSection[] = [
-  { id: "hero", label: "Introduction", type: "overview" },
-  { id: "sec-overview", label: "Overview", type: "overview" },
-  { id: "sec-definition", label: "Definition", type: "definition" },
-  { id: "sec-etymology", label: "Etymology", type: "etymology" },
-  { id: "sec-mechanics", label: "Mechanics", type: "mechanics" },
-  { id: "sec-knowledge", label: "Knowledge Check", type: "quiz" },
-  { id: "sec-concepts", label: "Key Concepts", type: "concepts" },
-  { id: "sec-flashcards", label: "Flashcards", type: "recap" },
-  { id: "sec-recap", label: "Recap", type: "recap" },
-  { id: "sec-quiz", label: "Practice Quiz", type: "quiz" },
-  { id: "sec-next", label: "Continue", type: "overview" },
+  { id: "hero", label: "Introduction", type: "overview", group: "Start" },
+  { id: "sec-overview", label: "Overview", type: "overview", group: "Start" },
+  { id: "sec-definition", label: "Definition", type: "definition", group: "Learn" },
+  { id: "sec-etymology", label: "Etymology", type: "etymology", group: "Learn" },
+  { id: "sec-mechanics", label: "Mechanics", type: "mechanics", group: "Learn" },
+  { id: "sec-knowledge", label: "Knowledge Check", type: "quiz", group: "Practice" },
+  { id: "sec-concepts", label: "Key Concepts", type: "concepts", group: "Practice" },
+  { id: "sec-flashcards", label: "Flashcards", type: "flashcards", group: "Practice" },
+  { id: "sec-recap", label: "Recap", type: "recap", group: "Finish" },
+  { id: "sec-quiz", label: "Practice Quiz", type: "practice", group: "Finish" },
+  { id: "sec-next", label: "Continue", type: "continue", group: "Finish" },
 ];
 
 
@@ -160,7 +161,7 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Lesson1In
           <div className="flex-1 min-w-0 pr-4 sm:pr-6 lg:pr-8">
 
             {/* ─── HERO ─── */}
-            <section id="hero" className="mb-10 scroll-mt-32">
+            <section id="hero" className="mb-6 scroll-mt-32">
               <Link href="/learn" className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-800 text-sm mb-4 transition-colors">
                 <ArrowLeft className="w-4 h-4" /> Back to Learning Path
               </Link>
@@ -169,8 +170,8 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Lesson1In
                 <div className="flex items-center gap-2 mb-2 flex-wrap">
                   <GraduationCap className="w-5 h-5 text-amber-500" />
                   <span className="text-xs font-bold text-amber-500 uppercase tracking-wider">Lesson {lesson.sequenceOrder}</span>
-                  <span className="text-xs text-amber-300">·</span>
-                  <span className="text-xs font-medium text-amber-400">Module 1: Foundations</span>
+                  <span className="text-xs text-amber-400">·</span>
+                  <span className="text-xs font-medium text-amber-600">Module 1: Foundations</span>
                   {isCompleted && (
                     <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200 flex items-center gap-1">
                       <CheckCircle2 className="w-3 h-3" /> Completed
@@ -187,8 +188,8 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Lesson1In
 
                 <div className="flex items-center gap-4 flex-wrap">
                   <ReadingTime text={allText} />
-                  <span className="text-amber-200">·</span>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600">
+                  <span className="text-amber-300">·</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700">
                     <Layers className="w-3.5 h-3.5" /> {content.sections?.length || 0} Sections
                   </span>
                   <span className="text-amber-200">·</span>
@@ -219,51 +220,56 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Lesson1In
             </section>
 
             {/* ─── KEY TAKEAWAYS OVERVIEW ─── */}
-            <section id="sec-overview" className="mb-10 scroll-mt-32">
-              <motion.div {...fadeUp} className="bg-gradient-to-br from-amber-900 via-amber-800 to-orange-900 text-white rounded-2xl p-6 sm:p-8 shadow-lg">
-                <div className="flex items-center gap-2 mb-4">
-                  <BookOpen className="w-5 h-5 text-amber-300" />
-                  <span className="text-sm font-semibold text-amber-300 uppercase tracking-wide">Introduction</span>
+            <section id="sec-overview" className="mb-6 scroll-mt-32">
+              <motion.div {...fadeUp} className="bg-white rounded-2xl border border-amber-200/80 shadow-sm p-6 sm:p-8">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
+                      <BookOpen className="w-4 h-4 text-amber-700" />
+                    </div>
+                    <span className="text-sm font-semibold text-amber-800 uppercase tracking-wide">Introduction</span>
+                  </div>
+                  <TTSButton text={content.intro} size="sm" label="Listen" />
                 </div>
-                <p className="text-amber-100 leading-relaxed text-lg mb-6" dangerouslySetInnerHTML={{ __html: formatMarkdown(content.intro) }} />
+                <p className="text-amber-900 leading-relaxed text-lg mb-6" dangerouslySetInnerHTML={{ __html: formatMarkdown(content.intro) }} />
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div className="bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm">
-                    <Globe className="w-5 h-5 text-amber-300 mx-auto mb-1" />
-                    <div className="text-lg font-bold">360°</div>
-                    <div className="text-[10px] text-amber-300">Full Circle</div>
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 rounded-xl p-3 text-center">
+                    <Globe className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                    <div className="text-lg font-bold text-amber-900">360°</div>
+                    <div className="text-[10px] font-medium text-amber-600">Full Circle</div>
                   </div>
-                  <div className="bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm">
-                    <Compass className="w-5 h-5 text-amber-300 mx-auto mb-1" />
-                    <div className="text-lg font-bold">12</div>
-                    <div className="text-[10px] text-amber-300">Rashis (Signs)</div>
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 rounded-xl p-3 text-center">
+                    <Compass className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                    <div className="text-lg font-bold text-amber-900">12</div>
+                    <div className="text-[10px] font-medium text-amber-600">Rashis (Signs)</div>
                   </div>
-                  <div className="bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm">
-                    <Target className="w-5 h-5 text-amber-300 mx-auto mb-1" />
-                    <div className="text-lg font-bold">30°</div>
-                    <div className="text-[10px] text-amber-300">Per Rashi</div>
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 rounded-xl p-3 text-center">
+                    <Target className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                    <div className="text-lg font-bold text-amber-900">30°</div>
+                    <div className="text-[10px] font-medium text-amber-600">Per Rashi</div>
                   </div>
-                  <div className="bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm">
-                    <Sparkles className="w-5 h-5 text-amber-300 mx-auto mb-1" />
-                    <div className="text-lg font-bold">4</div>
-                    <div className="text-[10px] text-amber-300">Elements</div>
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 rounded-xl p-3 text-center">
+                    <Sparkles className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                    <div className="text-lg font-bold text-amber-900">4</div>
+                    <div className="text-[10px] font-medium text-amber-600">Elements</div>
                   </div>
                 </div>
 
                 {lessonProgress && lessonProgress.bestScore > 0 && (
-                  <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-4 flex-wrap">
-                    <span className="text-xs text-amber-300">Previous attempt:</span>
-                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-400/20 text-purple-200 border border-purple-400/30">
+                  <div className="mt-5 pt-4 border-t border-amber-100 flex items-center gap-4 flex-wrap">
+                    <span className="text-xs text-amber-600 font-medium">Previous attempt:</span>
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
                       Best: {lessonProgress.bestScore}%
                     </span>
-                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-200 border border-amber-400/30">
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
                       {lessonProgress.attemptsCount} attempt{lessonProgress.attemptsCount !== 1 ? "s" : ""}
                     </span>
                   </div>
                 )}
               </motion.div>
 
-              <CalloutBlock variant="important" className="mt-5">
+              <CalloutBlock variant="important" className="mt-4">
                 This lesson covers the <strong>foundational coordinate system</strong> of Vedic Astrology.
                 Every prediction, every chart analysis, and every timing technique you will ever learn is built on top of this 12-sign framework.
                 Master this, and everything else becomes logical.
@@ -272,7 +278,7 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Lesson1In
 
             {/* ─── SECTION 1: DEFINITION ─── */}
             {content.sections?.[0] && (
-              <section id="sec-definition" className="mb-10 scroll-mt-32">
+              <section id="sec-definition" className="mb-6 scroll-mt-32">
                 <motion.div {...fadeUp}>
                   <div onClick={() => markSectionComplete(content.sections![0].id)} className="relative">
                     <LessonSection section={content.sections![0]} index={0} />
@@ -291,7 +297,7 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Lesson1In
 
             {/* ─── SECTION 2: ETYMOLOGY ─── */}
             {content.sections?.[1] && (
-              <section id="sec-etymology" className="mb-10 scroll-mt-32">
+              <section id="sec-etymology" className="mb-6 scroll-mt-32">
                 <motion.div {...fadeUp}>
                   <div onClick={() => markSectionComplete(content.sections![1].id)} className="relative">
                     <LessonSection section={content.sections![1]} index={1} />
@@ -305,7 +311,7 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Lesson1In
 
             {/* ─── SECTION 3: MECHANICS ─── */}
             {content.sections?.[2] && (
-              <section id="sec-mechanics" className="mb-10 scroll-mt-32">
+              <section id="sec-mechanics" className="mb-6 scroll-mt-32">
                 <motion.div {...fadeUp}>
                   <div onClick={() => markSectionComplete(content.sections![2].id)} className="relative">
                     <LessonSection section={content.sections![2]} index={2} />
@@ -327,7 +333,7 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Lesson1In
 
 
             {/* ─── KNOWLEDGE CHECK ─── */}
-            <section id="sec-knowledge" className="mb-10 scroll-mt-32">
+            <section id="sec-knowledge" className="mb-6 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <KnowledgeCheck
                   questions={KNOWLEDGE_CHECKS}
@@ -337,7 +343,7 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Lesson1In
             </section>
 
             {/* ─── CONCEPTS ─── */}
-            <section id="sec-concepts" className="mb-10 scroll-mt-32">
+            <section id="sec-concepts" className="mb-6 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
                   <Sparkles className="w-5 h-5 text-amber-600" />
@@ -361,7 +367,7 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Lesson1In
             </section>
 
             {/* ─── FLASHCARDS ─── */}
-            <section id="sec-flashcards" className="mb-10 scroll-mt-32">
+            <section id="sec-flashcards" className="mb-6 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
                   <Lightbulb className="w-5 h-5 text-amber-600" />
@@ -373,12 +379,12 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Lesson1In
             </section>
 
             {/* ─── RECAP ─── */}
-            <section id="sec-recap" className="mb-10 scroll-mt-32">
+            <section id="sec-recap" className="mb-6 scroll-mt-32">
               <RecapSection items={recapItems} title="What You Learned in This Lesson" />
             </section>
 
             {/* ─── QUIZ ─── */}
-            <section id="sec-quiz" className="mb-10 scroll-mt-32">
+            <section id="sec-quiz" className="mb-6 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
                   <BrainCircuit className="w-5 h-5 text-amber-600" />
@@ -403,12 +409,12 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Lesson1In
             {/* ─── NEXT LESSON CTA ─── */}
             <section id="sec-next" className="scroll-mt-32">
               <motion.div {...fadeUp}>
-                <div className="p-6 sm:p-8 bg-gradient-to-r from-amber-50 via-white to-orange-50 rounded-2xl border-2 border-amber-200/60 shadow-sm">
+                <div className="p-6 sm:p-8 bg-white rounded-2xl border-2 border-amber-200/60 shadow-sm">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                       <p className="text-sm text-amber-600 mb-1 font-medium">🎉 Lesson Complete!</p>
-                      <p className="text-xl font-bold text-amber-900">Continue to The Navagraha</p>
-                      <p className="text-sm text-amber-600 mt-1">Next: Learn about the 9 planetary variables that govern the chart.</p>
+                      <p className="text-xl font-bold text-gray-900">Continue to The Navagraha</p>
+                      <p className="text-sm text-gray-500 mt-1">Next: Learn about the 9 planetary variables that govern the chart.</p>
                     </div>
                     <Link
                       href="/learn"

@@ -7,8 +7,8 @@ import NavagrahaWheel from "./diagrams/NavagrahaWheel";
 import HouseChart from "./diagrams/HouseChart";
 import NakshatraWheel from "./diagrams/NakshatraWheel";
 import AyanamsaDrift from "./diagrams/AyanamsaDrift";
-import PanchangLimbs from "./diagrams/PanchangLimbs";
-import DrishtiChart from "./diagrams/DrishtiChart";
+import SoliLunarTithiDial from "./module2/SoliLunarTithiDial";
+import DrishtiAspectExplorer from "./module2/DrishtiAspectExplorer";
 import YogaChart from "./diagrams/YogaChart";
 import DignityChart from "./diagrams/DignityChart";
 import SynthesisWheel from "./diagrams/SynthesisWheel";
@@ -38,8 +38,8 @@ export const DIAGRAM_CAPTIONS: Record<string, string> = {
   "house-chart": "Tap each house to learn its domain, Sanskrit name, and structural group.",
   "nakshatra-wheel": "The 27 Nakshatras divided into 4 Padas each = 108 total divisions.",
   "ayanamsa-drift": "The Ayanamsa drift: the gap between Tropical and Sidereal zodiacs caused by axial precession.",
-  "panchang-limbs": "Tap each limb to learn how it is computed and what it signifies.",
-  "drishti-chart": "Tap the special-aspect planets to learn their unique sight patterns.",
+  "panchang-limbs": "Drag the Moon to see how angular distance creates each Tithi. Every 12° = 1 Tithi.",
+  "drishti-chart": "Select a planet and house to explore its Drishti using inclusive Vedic counting.",
   "yoga-chart": "Tap any yoga category to learn its blueprint and formation rules.",
   "dignity-chart": "Tap a planet to see its exaltation, debilitation, and own signs.",
   "synthesis-wheel": "The Trinity of Execution: Bhava, Graha, and Rashi synthesis.",
@@ -73,12 +73,12 @@ export default function DynamicDiagram({ diagramType, title, subtitle, size = 56
   return (
     <div className="my-6 flex flex-col items-center justify-center">
       {caption && (
-        <p className="text-xs text-amber-700 bg-amber-50/80 px-4 py-2 rounded-t-xl text-center italic border border-amber-100 border-b-0 w-full max-w-[680px]">
+        <p className="text-xs text-amber-700 bg-amber-50/80 px-4 py-2 rounded-t-xl text-center italic border border-amber-100 border-b-0 w-full max-w-[1200px]">
           {caption}
         </p>
       )}
       <div className={`w-full flex items-center justify-center ${caption ? "rounded-b-xl" : "rounded-xl"}`}>
-        <div className="w-full max-w-[680px]">
+        <div className="w-full max-w-[1000px]">
           {diagramType === "zodiac-wheel" || diagramType === "rashi-tattvas" || diagramType === "rashi-modalities" ? (
             <ZodiacWheel size={size} />
           ) : diagramType === "planet-orbit" || diagramType === "navagraha-pantheon" || diagramType === "navagraha-wheel" ? (
@@ -90,9 +90,9 @@ export default function DynamicDiagram({ diagramType, title, subtitle, size = 56
           ) : diagramType === "ayanamsa-drift" ? (
             <AyanamsaDrift size={size} />
           ) : diagramType === "panchang-limbs" ? (
-            <PanchangLimbs size={size} />
+            <SoliLunarTithiDial />
           ) : diagramType === "drishti-chart" ? (
-            <DrishtiChart size={size} />
+            <DrishtiAspectExplorer />
           ) : diagramType === "yoga-chart" ? (
             <YogaChart size={size} />
           ) : diagramType === "dignity-chart" ? (
