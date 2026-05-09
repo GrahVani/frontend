@@ -84,7 +84,7 @@ function buildNakshatras(): NakshatraData[] {
 
 const NAKSHATRAS = buildNakshatras();
 
-export default function NakshatraWheel({ size = 560 }: { size?: number }) {
+export default function NakshatraWheel({ size = 640 }: { size?: number }) {
   const [selected, setSelected] = useState<NakshatraData | null>(null);
   const [selectedPada, setSelectedPada] = useState<PadaData | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
@@ -167,7 +167,8 @@ export default function NakshatraWheel({ size = 560 }: { size?: number }) {
                   const padaPath = `M ${pInnerStart.x} ${pInnerStart.y} L ${pStart.x} ${pStart.y} A ${midR} ${midR} 0 0 0 ${pEnd.x} ${pEnd.y} L ${pInnerEnd.x} ${pInnerEnd.y} Z`;
                   const isPHovered = hoveredPada?.n === i && hoveredPada?.p === pi;
                   const isPSelected = selected?.name === n.name && selectedPada?.pada === p.pada;
-                  const labelPos = polarToCartesian(pMidAngle, (midR + innerR) / 2);
+                  const padaRadiusOffset = [ -10, 10, -10, 10 ];
+                  const labelPos = polarToCartesian(pMidAngle, (midR + innerR) / 2 + padaRadiusOffset[pi]);
 
                   return (
                     <g key={pi}>
@@ -186,9 +187,9 @@ export default function NakshatraWheel({ size = 560 }: { size?: number }) {
                         y={labelPos.y}
                         textAnchor="middle"
                         dominantBaseline="central"
-                        fontSize={size * 0.014}
+                        fontSize={size * 0.022}
                         fontWeight={isPHovered || isPSelected ? "700" : "500"}
-                        fill={isPHovered || isPSelected ? color : "#a8a29e"}
+                        fill="#000000"
                         style={{ pointerEvents: "none" }}
                       >
                         {p.pada}
@@ -206,9 +207,9 @@ export default function NakshatraWheel({ size = 560 }: { size?: number }) {
                       y={labelPos.y}
                       textAnchor="middle"
                       dominantBaseline="central"
-                      fontSize={isHovered || isSelected ? size * 0.022 : size * 0.018}
+                      fontSize={isHovered || isSelected ? size * 0.032 : size * 0.026}
                       fontWeight={isHovered || isSelected ? "700" : "600"}
-                      fill={isHovered || isSelected ? color : "#78350f"}
+                      fill="#000000"
                       style={{ pointerEvents: "none" }}
                     >
                       {n.symbol}
@@ -225,9 +226,9 @@ export default function NakshatraWheel({ size = 560 }: { size?: number }) {
                       y={namePos.y}
                       textAnchor="middle"
                       dominantBaseline="central"
-                      fontSize={size * 0.012}
+                      fontSize={size * 0.020}
                       fontWeight="500"
-                      fill={isHovered || isSelected ? color : "#a8a29e"}
+                      fill="#000000"
                       style={{ pointerEvents: "none" }}
                     >
                       {n.name.slice(0, 6)}
@@ -240,9 +241,9 @@ export default function NakshatraWheel({ size = 560 }: { size?: number }) {
 
           {/* Center hub */}
           <circle cx={cx} cy={cy} r={innerR - 4} fill="#fff" stroke="#d4a373" strokeWidth="1.5" />
-          <text x={cx} y={cy - 12} textAnchor="middle" dominantBaseline="central" fontSize={size * 0.045} fontWeight="800" fill="#d97706">108</text>
-          <text x={cx} y={cy + 10} textAnchor="middle" dominantBaseline="central" fontSize={size * 0.024} fill="#a16207">Padas</text>
-          <text x={cx} y={cy + 28} textAnchor="middle" dominantBaseline="central" fontSize={size * 0.016} fill="#d97706" opacity="0.7">27 × 4</text>
+          <text x={cx} y={cy - 14} textAnchor="middle" dominantBaseline="central" fontSize={size * 0.055} fontWeight="800" fill="#000000">108</text>
+          <text x={cx} y={cy + 12} textAnchor="middle" dominantBaseline="central" fontSize={size * 0.032} fill="#000000">Padas</text>
+          <text x={cx} y={cy + 32} textAnchor="middle" dominantBaseline="central" fontSize={size * 0.024} fill="#000000" opacity="0.8">27 × 4</text>
         </svg>
 
         {/* Info bar */}

@@ -42,7 +42,7 @@ function SingleFlashcard({ card }: { card: FlashcardData }) {
       >
         {/* Front */}
         <div
-          className="absolute inset-0 rounded-2xl border-2 border-amber-200 bg-gradient-to-br from-amber-50 via-white to-orange-50 p-6 flex flex-col items-center justify-center text-center shadow-lg"
+          className="absolute inset-0 rounded-2xl border-2 border-amber-200 bg-white p-6 flex flex-col items-center justify-center text-center shadow-lg"
           style={{ backfaceVisibility: "hidden" }}
         >
           {card.category && (
@@ -50,8 +50,8 @@ function SingleFlashcard({ card }: { card: FlashcardData }) {
               {card.category}
             </span>
           )}
-          <p className="text-lg font-bold text-amber-900 leading-snug">{card.front}</p>
-          <p className="text-xs text-amber-400 mt-4 flex items-center gap-1.5">
+          <p className="text-lg font-bold text-gray-900 leading-snug">{card.front}</p>
+          <p className="text-xs text-gray-400 mt-4 flex items-center gap-1.5">
             <RotateCcw className="w-3 h-3" />
             Tap to reveal
           </p>
@@ -59,7 +59,7 @@ function SingleFlashcard({ card }: { card: FlashcardData }) {
 
         {/* Back */}
         <div
-          className="absolute inset-0 rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-teal-50 p-6 flex flex-col items-center justify-center text-center shadow-lg"
+          className="absolute inset-0 rounded-2xl border-2 border-emerald-200 bg-white p-6 flex flex-col items-center justify-center text-center shadow-lg"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           {card.category && (
@@ -67,10 +67,10 @@ function SingleFlashcard({ card }: { card: FlashcardData }) {
               Answer
             </span>
           )}
-          <p className="text-base font-medium text-emerald-900 leading-relaxed">
+          <p className="text-base font-medium text-gray-900 leading-relaxed">
             {card.back}
           </p>
-          <p className="text-xs text-emerald-400 mt-4 flex items-center gap-1.5">
+          <p className="text-xs text-gray-400 mt-4 flex items-center gap-1.5">
             <RotateCcw className="w-3 h-3" />
             Tap to flip back
           </p>

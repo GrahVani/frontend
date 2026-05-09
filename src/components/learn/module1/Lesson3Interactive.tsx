@@ -49,18 +49,18 @@ interface Lesson3InteractiveProps {
 const SECTION_IDS = ["hero", "sec-overview", "sec-definition", "sec-distinction", "sec-domains", "sec-groupings", "sec-knowledge", "sec-concepts", "sec-flashcards", "sec-recap", "sec-quiz", "sec-next"];
 
 const SIDEBAR_SECTIONS: SidebarSection[] = [
-  { id: "hero", label: "Introduction", type: "overview" },
-  { id: "sec-overview", label: "Overview", type: "overview" },
-  { id: "sec-definition", label: "What is a Bhava?", type: "definition" },
-  { id: "sec-distinction", label: "Bhavas vs Rashis", type: "mechanics" },
-  { id: "sec-domains", label: "The 12 Domains", type: "mechanics" },
-  { id: "sec-groupings", label: "Structural Groupings", type: "mechanics" },
-  { id: "sec-knowledge", label: "Knowledge Check", type: "quiz" },
-  { id: "sec-concepts", label: "Key Concepts", type: "concepts" },
-  { id: "sec-flashcards", label: "Flashcards", type: "recap" },
-  { id: "sec-recap", label: "Recap", type: "recap" },
-  { id: "sec-quiz", label: "Practice Quiz", type: "quiz" },
-  { id: "sec-next", label: "Continue", type: "overview" },
+  { id: "hero", label: "Introduction", type: "overview", group: "Start" },
+  { id: "sec-overview", label: "Overview", type: "overview", group: "Start" },
+  { id: "sec-definition", label: "What is a Bhava?", type: "definition", group: "Learn" },
+  { id: "sec-distinction", label: "Bhavas vs Rashis", type: "mechanics", group: "Learn" },
+  { id: "sec-domains", label: "The 12 Domains", type: "mechanics", group: "Learn" },
+  { id: "sec-groupings", label: "Structural Groupings", type: "mechanics", group: "Learn" },
+  { id: "sec-knowledge", label: "Knowledge Check", type: "quiz", group: "Practice" },
+  { id: "sec-concepts", label: "Key Concepts", type: "concepts", group: "Practice" },
+  { id: "sec-flashcards", label: "Flashcards", type: "flashcards", group: "Practice" },
+  { id: "sec-recap", label: "Recap", type: "recap", group: "Finish" },
+  { id: "sec-quiz", label: "Practice Quiz", type: "practice", group: "Finish" },
+  { id: "sec-next", label: "Continue", type: "continue", group: "Finish" },
 ];
 
 const FLASHCARDS = [
@@ -159,7 +159,7 @@ export default function Lesson3Interactive({ lesson, lessonProgress }: Lesson3In
           <div className="flex-1 min-w-0 pr-4 sm:pr-6 lg:pr-8">
 
             {/* ─── HERO ─── */}
-            <section id="hero" className="mb-10 scroll-mt-32">
+            <section id="hero" className="mb-6 scroll-mt-32">
               <Link href="/learn" className="inline-flex items-center gap-1 text-teal-600 hover:text-teal-800 text-sm mb-4 transition-colors">
                 <ArrowLeft className="w-4 h-4" /> Back to Learning Path
               </Link>
@@ -218,44 +218,44 @@ export default function Lesson3Interactive({ lesson, lessonProgress }: Lesson3In
             </section>
 
             {/* ─── KEY TAKEAWAYS OVERVIEW ─── */}
-            <section id="sec-overview" className="mb-10 scroll-mt-32">
-              <motion.div {...fadeUp} className="bg-gradient-to-br from-teal-900 via-emerald-900 to-green-900 text-white rounded-2xl p-6 sm:p-8 shadow-lg">
+            <section id="sec-overview" className="mb-6 scroll-mt-32">
+              <motion.div {...fadeUp} className="bg-white border border-amber-200/80 rounded-2xl p-6 sm:p-8 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
-                  <BookOpen className="w-5 h-5 text-emerald-300" />
-                  <span className="text-sm font-semibold text-emerald-300 uppercase tracking-wide">Introduction</span>
+                  <BookOpen className="w-5 h-5 text-amber-600" />
+                  <span className="text-sm font-semibold text-amber-600 uppercase tracking-wide">Introduction</span>
                 </div>
-                <p className="text-emerald-100 leading-relaxed text-lg mb-6" dangerouslySetInnerHTML={{ __html: formatMarkdown(content.intro) }} />
+                <p className="text-gray-700 leading-relaxed text-lg mb-6" dangerouslySetInnerHTML={{ __html: formatMarkdown(content.intro) }} />
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div className="bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm">
-                    <Home className="w-5 h-5 text-emerald-300 mx-auto mb-1" />
-                    <div className="text-lg font-bold">12</div>
-                    <div className="text-[10px] text-emerald-300">Bhavas (Houses)</div>
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center">
+                    <Home className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                    <div className="text-lg font-bold text-gray-900">12</div>
+                    <div className="text-[10px] text-amber-600">Bhavas (Houses)</div>
                   </div>
-                  <div className="bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm">
-                    <Anchor className="w-5 h-5 text-emerald-300 mx-auto mb-1" />
-                    <div className="text-lg font-bold">Lagna</div>
-                    <div className="text-[10px] text-emerald-300">Ascendant Anchor</div>
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center">
+                    <Anchor className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                    <div className="text-lg font-bold text-gray-900">Lagna</div>
+                    <div className="text-[10px] text-amber-600">Ascendant Anchor</div>
                   </div>
-                  <div className="bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm">
-                    <LayoutGrid className="w-5 h-5 text-emerald-300 mx-auto mb-1" />
-                    <div className="text-lg font-bold">4</div>
-                    <div className="text-[10px] text-emerald-300">Structural Groups</div>
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center">
+                    <LayoutGrid className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                    <div className="text-lg font-bold text-gray-900">4</div>
+                    <div className="text-[10px] text-amber-600">Structural Groups</div>
                   </div>
-                  <div className="bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm">
-                    <PieChart className="w-5 h-5 text-emerald-300 mx-auto mb-1" />
-                    <div className="text-lg font-bold">360°</div>
-                    <div className="text-[10px] text-emerald-300">Full Circle</div>
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center">
+                    <PieChart className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                    <div className="text-lg font-bold text-gray-900">360°</div>
+                    <div className="text-[10px] text-amber-600">Full Circle</div>
                   </div>
                 </div>
 
                 {lessonProgress && lessonProgress.bestScore > 0 && (
-                  <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-4 flex-wrap">
-                    <span className="text-xs text-emerald-300">Previous attempt:</span>
-                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-400/20 text-purple-200 border border-purple-400/30">
+                  <div className="mt-4 pt-4 border-t border-gray-200 flex items-center gap-4 flex-wrap">
+                    <span className="text-xs text-gray-500">Previous attempt:</span>
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
                       Best: {lessonProgress.bestScore}%
                     </span>
-                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-200 border border-amber-400/30">
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
                       {lessonProgress.attemptsCount} attempt{lessonProgress.attemptsCount !== 1 ? "s" : ""}
                     </span>
                   </div>
@@ -271,7 +271,7 @@ export default function Lesson3Interactive({ lesson, lessonProgress }: Lesson3In
 
             {/* ─── SECTION 1: DEFINITION — What is a Bhava? ─── */}
             {content.sections?.[0] && (
-              <section id="sec-definition" className="mb-10 scroll-mt-32">
+              <section id="sec-definition" className="mb-6 scroll-mt-32">
                 <motion.div {...fadeUp}>
                   <div onClick={() => markSectionComplete(content.sections![0].id)} className="relative">
                     <LessonSection section={content.sections![0]} index={0} />
@@ -291,7 +291,7 @@ export default function Lesson3Interactive({ lesson, lessonProgress }: Lesson3In
 
             {/* ─── SECTION 2: DISTINCTION — Bhavas vs Rashis ─── */}
             {content.sections?.[1] && (
-              <section id="sec-distinction" className="mb-10 scroll-mt-32">
+              <section id="sec-distinction" className="mb-6 scroll-mt-32">
                 <motion.div {...fadeUp}>
                   <div onClick={() => markSectionComplete(content.sections![1].id)} className="relative">
                     <LessonSection section={content.sections![1]} index={1} />
@@ -316,7 +316,7 @@ export default function Lesson3Interactive({ lesson, lessonProgress }: Lesson3In
 
             {/* ─── SECTION 3: DOMAINS — The 12 Domains ─── */}
             {content.sections?.[2] && (
-              <section id="sec-domains" className="mb-10 scroll-mt-32">
+              <section id="sec-domains" className="mb-6 scroll-mt-32">
                 <motion.div {...fadeUp}>
                   <div onClick={() => markSectionComplete(content.sections![2].id)} className="relative">
                     <LessonSection section={content.sections![2]} index={2} />
@@ -336,7 +336,7 @@ export default function Lesson3Interactive({ lesson, lessonProgress }: Lesson3In
 
             {/* ─── SECTION 4: GROUPINGS — Structural Groupings ─── */}
             {content.sections?.[3] && (
-              <section id="sec-groupings" className="mb-10 scroll-mt-32">
+              <section id="sec-groupings" className="mb-6 scroll-mt-32">
                 <motion.div {...fadeUp}>
                   <div onClick={() => markSectionComplete(content.sections![3].id)} className="relative">
                     <LessonSection section={content.sections![3]} index={3} />
@@ -361,7 +361,7 @@ export default function Lesson3Interactive({ lesson, lessonProgress }: Lesson3In
             )}
 
             {/* ─── KNOWLEDGE CHECK ─── */}
-            <section id="sec-knowledge" className="mb-10 scroll-mt-32">
+            <section id="sec-knowledge" className="mb-6 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <KnowledgeCheck
                   questions={KNOWLEDGE_CHECKS}
@@ -371,7 +371,7 @@ export default function Lesson3Interactive({ lesson, lessonProgress }: Lesson3In
             </section>
 
             {/* ─── CONCEPTS ─── */}
-            <section id="sec-concepts" className="mb-10 scroll-mt-32">
+            <section id="sec-concepts" className="mb-6 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
                   <Sparkles className="w-5 h-5 text-teal-600" />
@@ -395,7 +395,7 @@ export default function Lesson3Interactive({ lesson, lessonProgress }: Lesson3In
             </section>
 
             {/* ─── FLASHCARDS ─── */}
-            <section id="sec-flashcards" className="mb-10 scroll-mt-32">
+            <section id="sec-flashcards" className="mb-6 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
                   <Lightbulb className="w-5 h-5 text-teal-600" />
@@ -407,12 +407,12 @@ export default function Lesson3Interactive({ lesson, lessonProgress }: Lesson3In
             </section>
 
             {/* ─── RECAP ─── */}
-            <section id="sec-recap" className="mb-10 scroll-mt-32">
+            <section id="sec-recap" className="mb-6 scroll-mt-32">
               <RecapSection items={recapItems} title="What You Learned in This Lesson" />
             </section>
 
             {/* ─── QUIZ ─── */}
-            <section id="sec-quiz" className="mb-10 scroll-mt-32">
+            <section id="sec-quiz" className="mb-6 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
                   <BrainCircuit className="w-5 h-5 text-teal-600" />
@@ -437,12 +437,12 @@ export default function Lesson3Interactive({ lesson, lessonProgress }: Lesson3In
             {/* ─── NEXT LESSON CTA ─── */}
             <section id="sec-next" className="scroll-mt-32">
               <motion.div {...fadeUp}>
-                <div className="p-6 sm:p-8 bg-gradient-to-r from-teal-50 via-white to-emerald-50 rounded-2xl border-2 border-teal-200/60 shadow-sm">
+                <div className="p-6 sm:p-8 bg-white rounded-2xl border-2 border-amber-200/60 shadow-sm">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
-                      <p className="text-sm text-teal-600 mb-1 font-medium">🎉 Lesson Complete!</p>
-                      <p className="text-xl font-bold text-teal-900">Continue to The Nakshatras</p>
-                      <p className="text-sm text-teal-600 mt-1">Next: Learn about the 27 Lunar Mansions that provide the microscopic DNA of the chart.</p>
+                      <p className="text-sm text-amber-600 mb-1 font-medium">🎉 Lesson Complete!</p>
+                      <p className="text-xl font-bold text-gray-900">Continue to The Nakshatras</p>
+                      <p className="text-sm text-gray-500 mt-1">Next: Learn about the 27 Lunar Mansions that provide the microscopic DNA of the chart.</p>
                     </div>
                     <Link
                       href="/learn"

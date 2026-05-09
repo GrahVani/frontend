@@ -69,7 +69,7 @@ export default function ZodiacWheel({ size = 520 }: { size?: number }) {
   return (
     <div className="relative w-full max-w-[640px] mx-auto select-none">
       {/* Modern card container */}
-      <div className="rounded-3xl bg-gradient-to-br from-[#fdfcfa] to-[#f5f2ee] border border-amber-100/80 shadow-lg shadow-amber-900/5 p-4 sm:p-6">
+      <div className="p-2 sm:p-4">
         {/* Title */}
         <div className="text-center mb-3">
           <h2 className="text-xl sm:text-2xl font-bold text-amber-600 tracking-tight">Bha-Chakra</h2>
@@ -88,7 +88,7 @@ export default function ZodiacWheel({ size = 520 }: { size?: number }) {
 
           {/* Background rings */}
           <circle cx={cx} cy={cy} r={outerR + 2} fill="none" stroke="#d4a373" strokeWidth="2.5" />
-          <circle cx={cx} cy={cy} r={outerR} fill="#fffbeb" stroke="#d4a373" strokeWidth="1" />
+          <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="#d4a373" strokeWidth="1" />
           <circle cx={cx} cy={cy} r={midR} fill="none" stroke="#d4a373" strokeWidth="1" strokeDasharray="4 4" opacity="0.5" />
 
           {/* 12 Interactive Segments */}

@@ -60,7 +60,7 @@ export default function KnowledgeCheck({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5 }}
-      className={`rounded-2xl border-2 border-dashed border-amber-300 bg-gradient-to-br from-amber-50/50 to-orange-50/50 p-5 sm:p-6 ${className}`}
+      className={`rounded-2xl border-2 border-dashed border-amber-300 bg-white shadow-sm p-5 sm:p-6 ${className}`}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
@@ -71,7 +71,7 @@ export default function KnowledgeCheck({
           </h3>
         </div>
         {questions.length > 1 && (
-          <span className="text-xs font-medium text-amber-500">
+          <span className="text-xs font-medium text-amber-600">
             {currentIndex + 1} / {questions.length}
           </span>
         )}
@@ -106,7 +106,7 @@ export default function KnowledgeCheck({
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.25 }}
         >
-          <p className="text-base font-semibold text-amber-900 mb-4 leading-relaxed">
+          <p className="text-base font-semibold text-gray-900 mb-4 leading-relaxed">
             {question.question}
           </p>
 
@@ -171,10 +171,10 @@ export default function KnowledgeCheck({
                 className="overflow-hidden"
               >
                 <div
-                  className={`mt-4 p-4 rounded-xl border ${
+                  className={`mt-4 p-4 rounded-xl border border-gray-200/60 border-l-4 ${
                     isCorrect
-                      ? "bg-emerald-50 border-emerald-200"
-                      : "bg-amber-50 border-amber-200"
+                      ? "border-l-emerald-400 bg-gray-50"
+                      : "border-l-amber-400 bg-gray-50"
                   }`}
                 >
                   <div className="flex items-start gap-2">
@@ -202,7 +202,7 @@ export default function KnowledgeCheck({
                 {currentIndex < questions.length - 1 && (
                   <button
                     onClick={handleNext}
-                    className="mt-3 flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-amber-700 bg-amber-100 hover:bg-amber-200 rounded-xl transition-colors ml-auto"
+                    className="mt-3 flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-amber-700 bg-white border border-amber-200 hover:bg-amber-50 rounded-xl transition-colors ml-auto shadow-sm"
                   >
                     Next
                     <ChevronRight className="w-4 h-4" />

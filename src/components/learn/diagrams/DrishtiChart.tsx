@@ -22,7 +22,7 @@ const ASPECTS: AspectData[] = [
   { planet: "Jupiter", sanskrit: "Guru", color: "#f97316", bg: "#fff7ed", aspects: [5, 7, 9], special: "5th, 7th & 9th", description: "Jupiter, the great benefic, blesses the 5th, 7th, and 9th houses with wisdom, expansion, and fortune." },
   { planet: "Saturn", sanskrit: "Shani", color: "#475569", bg: "#f1f5f9", aspects: [3, 7, 10], special: "3rd, 7th & 10th", description: "Saturn, the great malefic, casts its restrictive gaze on the 3rd, 7th, and 10th houses, bringing discipline and delay." },
   { planet: "Rahu", sanskrit: "Rahu", color: "#7c3aed", bg: "#f5f3ff", aspects: [5, 7, 9], special: "5th, 7th & 9th", description: "Rahu (the North Node) mimics Jupiter's aspects, casting illusion and obsession on the 5th, 7th, and 9th." },
-  { planet: "Ketu", sanskrit: "Ketu", color: "#0891b2", bg: "#f0fdfa", aspects: [5, 7, 9], special: "5th, 7th & 9th", description: "Ketu (the South Node) also mimics Jupiter, bringing detachment and spiritual insight to the 5th, 7th, and 9th." },
+  { planet: "Ketu", sanskrit: "Ketu", color: "#0891b2", bg: "#f0fdfa", aspects: [], special: undefined, description: "Ketu (the South Node) has no head — therefore blind. It casts NO Drishti. This is the exception every student must memorize." },
 ];
 
 export default function DrishtiChart({ size = 600 }: { size?: number }) {
@@ -237,7 +237,7 @@ export default function DrishtiChart({ size = 600 }: { size?: number }) {
               </div>
               <div>
                 <h3 className="text-lg font-bold text-gray-900">{selected.planet}</h3>
-                <p className="text-sm font-medium" style={{ color: selected.color }}>{selected.sanskrit} · {selected.special || "7th Aspect Only"}</p>
+                <p className="text-sm font-medium" style={{ color: selected.color }}>{selected.sanskrit} · {selected.aspects.length === 0 ? "No Aspects" : selected.special || "7th Aspect Only"}</p>
               </div>
             </div>
 

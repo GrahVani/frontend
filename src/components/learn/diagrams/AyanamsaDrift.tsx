@@ -1,162 +1,244 @@
 "use client";
 
-import React, { useState } from "react";
-import { X } from "lucide-react";
+import React, { useState, useCallback } from "react";
+import { RotateCcw } from "lucide-react";
 
-interface EpochData {
-  year: number;
-  label: string;
-  ayanamsa: string;
-  ayaNum: number;
-  description: string;
-}
-
-const EPOCHS: EpochData[] = [
-  { year: 285, label: "Alignment Era", ayanamsa: "0°", ayaNum: 0, description: "Tropical and Sidereal zodiacs were perfectly aligned. The vernal equinox marked 0° Aries in both systems." },
-  { year: 1000, label: "Medieval Period", ayanamsa: "~15°", ayaNum: 15, description: "Significant drift accumulated. Western and Vedic astrology began diverging visibly in their calculations." },
-  { year: 1500, label: "Renaissance", ayanamsa: "~22°", ayaNum: 22, description: "The drift was clearly visible. Different ayanamsa systems (Lahiri, Raman, Krishnamurti) emerged to handle the gap." },
-  { year: 2025, label: "Modern Era", ayanamsa: "~24°-25°", ayaNum: 24.5, description: "Current gap: Lahiri ~24.1°, Raman ~22.9°, Krishnamurti ~23.6°. Software must subtract this offset from Tropical coordinates." },
-  { year: 4000, label: "Far Future", ayanamsa: "~48°", ayaNum: 48, description: "Projected drift if current precession rate (~50 arc-seconds/year) continues. Entire signs will have shifted." },
+const SIGNS = [
+  { abbr: "ARI", full: "Aries",       color: "#ef4444", bg: "#fef2f2" },
+  { abbr: "TAU", full: "Taurus",      color: "#a16207", bg: "#fefce8" },
+  { abbr: "GEM", full: "Gemini",      color: "#16a34a", bg: "#f0fdf4" },
+  { abbr: "CAN", full: "Cancer",      color: "#0891b2", bg: "#ecfeff" },
+  { abbr: "LEO", full: "Leo",         color: "#ea580c", bg: "#fff7ed" },
+  { abbr: "VIR", full: "Virgo",       color: "#65a30d", bg: "#f7fee7" },
+  { abbr: "LIB", full: "Libra",       color: "#e879a0", bg: "#fdf2f8" },
+  { abbr: "SCO", full: "Scorpio",     color: "#dc2626", bg: "#fef2f2" },
+  { abbr: "SAG", full: "Sagittarius", color: "#7c3aed", bg: "#f5f3ff" },
+  { abbr: "CAP", full: "Capricorn",   color: "#4b5563", bg: "#f3f4f6" },
+  { abbr: "AQU", full: "Aquarius",    color: "#2563eb", bg: "#eff6ff" },
+  { abbr: "PIS", full: "Pisces",      color: "#0d9488", bg: "#f0fdfa" },
 ];
 
-export default function AyanamsaDrift({ size = 600 }: { size?: number }) {
-  const [selected, setSelected] = useState<EpochData | null>(null);
-  const [hovered, setHovered] = useState<number | null>(null);
-  const W = size;
-  const H = size * 0.70;
-  const padX = W * 0.07;
-  const padY = H * 0.16;
-  const chartW = W - padX * 2;
-  const chartH = H - padY * 2;
+// Wedge colors for visual distinction
+const WEDGE_COLORS = [
+  "#fca5a5", "#fde68a", "#86efac", "#67e8f9",
+  "#fdba74", "#bef264", "#f9a8d4", "#fca5a5",
+  "#c4b5fd", "#d1d5db", "#93c5fd", "#99f6e4",
+];
 
-  const minYear = 0;
-  const maxYear = 4000;
-  const maxAya = 55;
+const INNER_COLORS = [
+  "#ef4444", "#ca8a04", "#22c55e", "#06b6d4",
+  "#f97316", "#84cc16", "#ec4899", "#dc2626",
+  "#8b5cf6", "#6b7280", "#3b82f6", "#14b8a6",
+];
 
-  const toX = (year: number) => padX + ((year - minYear) / (maxYear - minYear)) * chartW;
-  const toY = (deg: number) => padY + chartH - (deg / maxAya) * chartH;
+export default function AyanamsaDrift({ size = 560 }: { size?: number }) {
+  const [offset, setOffset] = useState(0); // degrees of Ayanamsa offset
 
-  const points = EPOCHS.map((e) => `${toX(e.year)},${toY(e.ayaNum)}`).join(" ");
+  const S = size;
+  const cx = S / 2, cy = S / 2;
+  const outerR = S * 0.44;
+  const outerInnerR = S * 0.34;
+  const innerR = S * 0.33;
+  const innerInnerR = S * 0.18;
+  const centerR = S * 0.06;
+
+  // A planet position to demonstrate the offset effect
+  const planetTropicalDeg = 15; // 15° Aries in tropical
+
+  // Compute sidereal position
+  const planetSiderealDeg = ((planetTropicalDeg - offset) % 360 + 360) % 360;
+  const tropSign = Math.floor(planetTropicalDeg / 30);
+  const tropDeg = Math.floor(planetTropicalDeg % 30);
+  const sidSign = Math.floor(planetSiderealDeg / 30);
+  const sidDeg = Math.floor(planetSiderealDeg % 30);
+
+  const sameSign = tropSign === sidSign;
+
+  // Helper: polar to cartesian (0° = top/12 o'clock, clockwise)
+  const polar = (angleDeg: number, r: number) => {
+    const rad = ((angleDeg - 90) * Math.PI) / 180;
+    return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  };
+
+  // Arc path for a wedge
+  const wedgePath = (startDeg: number, endDeg: number, rOuter: number, rInner: number) => {
+    const p1 = polar(startDeg, rOuter);
+    const p2 = polar(endDeg, rOuter);
+    const p3 = polar(endDeg, rInner);
+    const p4 = polar(startDeg, rInner);
+    const large = endDeg - startDeg > 180 ? 1 : 0;
+    return `M${p1.x},${p1.y} A${rOuter},${rOuter} 0 ${large} 1 ${p2.x},${p2.y} L${p3.x},${p3.y} A${rInner},${rInner} 0 ${large} 0 ${p4.x},${p4.y} Z`;
+  };
+
+  // Text along arc - we'll use simple positioned text with rotation
+  const labelPos = (index: number, r: number, offsetDeg: number = 0) => {
+    const angle = index * 30 + 15 + offsetDeg; // center of the 30° wedge
+    const pos = polar(angle, r);
+    // Rotate text so it reads outward from center
+    // For bottom half (90-270°), flip 180° so text isn't upside down
+    let rotation = angle;
+    if (angle > 90 && angle < 270) {
+      rotation = angle + 180;
+    }
+    return { ...pos, rotation };
+  };
+
+  const handleSliderChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setOffset(parseFloat(e.target.value));
+  }, []);
 
   return (
     <div className="relative w-full max-w-[680px] mx-auto select-none">
-      <div className="rounded-3xl bg-gradient-to-br from-[#fdfcfa] via-[#ecfeff] to-[#cffafe] border border-cyan-200/50 shadow-xl shadow-cyan-900/5 p-5 sm:p-7">
-        {/* Title */}
-        <div className="text-center mb-4">
-          <h2 className="text-xl sm:text-2xl font-bold text-cyan-700 tracking-tight">Axial Precession & Ayanamsa Drift</h2>
-          <p className="text-xs sm:text-sm text-cyan-500/80 mt-1">Tap any era to see the gap between Tropical and Sidereal zodiacs</p>
+      <div className="rounded-3xl bg-gradient-to-br from-[#fdfcfa] via-[#f0f9ff] to-[#ecfeff] border border-cyan-200/50 shadow-xl shadow-cyan-900/5 p-4 sm:p-6">
+        {/* Header */}
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-cyan-800">Ayanamsa & The Dual Zodiac</h2>
+            <p className="text-xs mt-1 font-semibold" style={{ color: sameSign ? "#16a34a" : "#dc2626" }}>
+              {sameSign
+                ? `The planet remains in ${SIGNS[tropSign].full} for both systems.`
+                : `Tropical: ${SIGNS[tropSign].full} → Sidereal: ${SIGNS[sidSign].full} (shifted!)`
+              }
+            </p>
+          </div>
+          <div className="text-right text-[11px] font-mono">
+            <div className="flex gap-4 font-bold text-gray-500 mb-0.5">
+              <span>OFFSET</span><span>TROPICAL</span><span>SIDEREAL</span>
+            </div>
+            <div className="flex gap-4 font-extrabold">
+              <span className="text-cyan-700">{offset.toFixed(1)}°</span>
+              <span className="text-amber-700">{tropDeg}° {SIGNS[tropSign].abbr}</span>
+              <span className="text-indigo-700">{sidDeg}° {SIGNS[sidSign].abbr}</span>
+            </div>
+          </div>
         </div>
 
-        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto">
+        {/* SVG Wheel */}
+        <svg viewBox={`0 0 ${S} ${S}`} className="w-full h-auto">
           <defs>
-            <filter id="adShadow" x="-10%" y="-10%" width="120%" height="120%">
-              <feDropShadow dx="0" dy="2" stdDeviation="4" floodOpacity="0.08" />
+            <filter id="ayWheelShadow">
+              <feDropShadow dx="0" dy="1" stdDeviation="3" floodColor="#0e7490" floodOpacity="0.1" />
             </filter>
-            <linearGradient id="adArea" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.15" />
-              <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.02" />
-            </linearGradient>
-            <linearGradient id="adLine" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#0891b2" />
-              <stop offset="50%" stopColor="#06b6d4" />
-              <stop offset="100%" stopColor="#22d3ee" />
-            </linearGradient>
           </defs>
 
-          {/* Background glow */}
-          <rect x={padX} y={padY} width={chartW} height={chartH} rx={12} fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1" />
-
-          {/* Grid lines */}
-          {[0, 10, 20, 30, 40, 50].map((deg) => (
-            <g key={deg}>
-              <line x1={padX} y1={toY(deg)} x2={W - padX} y2={toY(deg)} stroke="#e2e8f0" strokeWidth={1} />
-              <text x={padX - 10} y={toY(deg)} textAnchor="end" dominantBaseline="central" fontSize={W * 0.018} fill="#94a3b8" fontWeight="600">{deg}°</text>
-            </g>
-          ))}
-
-          {/* X axis labels */}
-          {[0, 1000, 2000, 3000, 4000].map((year) => (
-            <text key={year} x={toX(year)} y={H - padY * 0.25} textAnchor="middle" fontSize={W * 0.018} fill="#94a3b8" fontWeight="600">
-              {year === 0 ? "0 AD" : `${year} AD`}
-            </text>
-          ))}
-
-          {/* Axis labels */}
-          <text x={padX} y={padY * 0.45} fontSize={W * 0.02} fontWeight="700" fill="#0891b2">Ayanamsa (degrees)</text>
-          <text x={W - padX} y={H - padY * 0.55} textAnchor="end" fontSize={W * 0.02} fontWeight="700" fill="#0891b2">Year (AD)</text>
-
-          {/* Area under curve */}
-          <polygon points={`${toX(0)},${toY(0)} ${points} ${toX(4000)},${toY(0)}`} fill="url(#adArea)" />
-
-          {/* Drift curve */}
-          <polyline points={points} fill="none" stroke="url(#adLine)" strokeWidth={3.5} strokeLinecap="round" strokeLinejoin="round" filter="url(#adShadow)" />
-
-          {/* Glow line */}
-          <polyline points={points} fill="none" stroke="#22d3ee" strokeWidth={8} strokeLinecap="round" strokeLinejoin="round" opacity="0.15" />
-
-          {/* Epoch dots */}
-          {EPOCHS.map((epoch, i) => {
-            const x = toX(epoch.year);
-            const y = toY(epoch.ayaNum);
-            const isActive = selected?.year === epoch.year;
-            const isHover = hovered === i;
+          {/* ── OUTER RING: Fixed Tropical Zodiac ── */}
+          {SIGNS.map((sign, i) => {
+            const startAngle = i * 30;
+            const endAngle = (i + 1) * 30;
+            const lbl = labelPos(i, (outerR + outerInnerR) / 2);
             return (
-              <g key={epoch.year} onClick={() => setSelected(epoch)} onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)} style={{ cursor: "pointer" }}>
-                {/* Outer glow */}
-                {(isActive || isHover) && (
-                  <circle cx={x} cy={y} r={14} fill="#06b6d4" opacity="0.15" />
-                )}
-                <circle cx={x} cy={y} r={isActive ? 9 : isHover ? 7 : 5} fill={isActive ? "#0891b2" : "#fff"} stroke="#0891b2" strokeWidth={2.5} />
-                {/* Year label on hover/active */}
-                {(isActive || isHover) && (
-                  <g>
-                    <rect x={x - 30} y={y - 38} width={60} height={22} rx={6} fill="#0891b2" opacity="0.95" />
-                    <text x={x} y={y - 26} textAnchor="middle" dominantBaseline="central" fontSize={10} fontWeight="700" fill="#fff">{epoch.ayanamsa}</text>
-                  </g>
-                )}
+              <g key={`outer-${i}`}>
+                <path d={wedgePath(startAngle, endAngle, outerR, outerInnerR)}
+                  fill={WEDGE_COLORS[i]} fillOpacity="0.5"
+                  stroke="#fff" strokeWidth="1.5" />
+                <text x={lbl.x} y={lbl.y}
+                  textAnchor="middle" dominantBaseline="central"
+                  fontSize={S * 0.032} fontWeight="800" fill={sign.color}
+                  transform={`rotate(${lbl.rotation},${lbl.x},${lbl.y})`}>
+                  {sign.abbr}
+                </text>
               </g>
             );
           })}
+
+          {/* ── INNER RING: Rotating Sidereal Zodiac ── */}
+          {SIGNS.map((sign, i) => {
+            const startAngle = i * 30 + offset;
+            const endAngle = (i + 1) * 30 + offset;
+            const lbl = labelPos(i, (innerR + innerInnerR) / 2, offset);
+            return (
+              <g key={`inner-${i}`}>
+                <path d={wedgePath(startAngle, endAngle, innerR, innerInnerR)}
+                  fill={INNER_COLORS[i]} fillOpacity="0.7"
+                  stroke="#fff" strokeWidth="1" />
+                <text x={lbl.x} y={lbl.y}
+                  textAnchor="middle" dominantBaseline="central"
+                  fontSize={S * 0.026} fontWeight="700" fill="#fff"
+                  transform={`rotate(${lbl.rotation},${lbl.x},${lbl.y})`}>
+                  {sign.abbr}
+                </text>
+              </g>
+            );
+          })}
+
+          {/* Ring labels */}
+          <text x={cx} y={cy - outerR - S * 0.02} textAnchor="middle"
+            fontSize={S * 0.02} fontWeight="700" fill="#64748b" letterSpacing="0.05em">
+            FIXED TROPICAL ZODIAC (OUTER)
+          </text>
+          <text x={cx} y={cy - innerR + S * 0.04} textAnchor="middle"
+            fontSize={S * 0.017} fontWeight="600" fill="#475569" letterSpacing="0.03em">
+            ROTATING SIDEREAL ZODIAC (INNER)
+          </text>
+
+          {/* Center circle */}
+          <circle cx={cx} cy={cy} r={centerR} fill="#0f172a" stroke="#334155" strokeWidth="1" />
+          <circle cx={cx} cy={cy} r={2} fill="#22d3ee" />
+
+          {/* Planet marker line - from center to outer edge at tropical position */}
+          {(() => {
+            const tropPos = polar(planetTropicalDeg, outerR + 4);
+            const tropInner = polar(planetTropicalDeg, centerR);
+            const sidPos = polar(planetSiderealDeg + offset, innerInnerR);
+            return (
+              <g>
+                {/* Tropical line (dashed, goes from center through both rings) */}
+                <line x1={tropInner.x} y1={tropInner.y} x2={tropPos.x} y2={tropPos.y}
+                  stroke="#3b82f6" strokeWidth="2" strokeDasharray="5 3" opacity="0.7" />
+                {/* Planet dot on outer ring */}
+                <circle cx={tropPos.x} cy={tropPos.y} r={S * 0.015}
+                  fill="#3b82f6" stroke="#fff" strokeWidth="2" filter="url(#ayWheelShadow)" />
+              </g>
+            );
+          })()}
+
+          {/* Aries 0° marker on outer ring */}
+          {(() => {
+            const p1 = polar(0, outerR);
+            const p2 = polar(0, outerR + S * 0.03);
+            return (
+              <g>
+                <line x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke="#ef4444" strokeWidth="2" />
+                <text x={p2.x + 2} y={p2.y - 4} fontSize={S * 0.018} fontWeight="700" fill="#ef4444">0° ♈</text>
+              </g>
+            );
+          })()}
         </svg>
 
-        {/* Timeline bar below */}
-        <div className="mt-4 flex items-center justify-between bg-white/70 backdrop-blur-sm rounded-xl border border-cyan-100 p-3">
-          {EPOCHS.map((e, i) => (
-            <button
-              key={e.year}
-              onClick={() => setSelected(selected?.year === e.year ? null : e)}
-              className="flex flex-col items-center gap-1 transition-all duration-200"
-            >
-              <div
-                className={`w-3 h-3 rounded-full transition-all ${selected?.year === e.year ? "scale-125" : ""}`}
-                style={{ background: selected?.year === e.year ? "#0891b2" : "#cbd5e1" }}
-              />
-              <span className={`text-[10px] font-semibold ${selected?.year === e.year ? "text-cyan-700" : "text-gray-400"}`}>
-                {e.year === 0 ? "0 AD" : `${e.year}`}
-              </span>
-            </button>
-          ))}
+        {/* Ayanamsa Offset Slider */}
+        <div className="mt-4 flex items-center gap-3 bg-white/80 backdrop-blur-sm rounded-xl border border-cyan-100 p-3 sm:p-4">
+          <label className="text-xs font-bold text-gray-500 whitespace-nowrap">Ayanamsa Offset (°)</label>
+          <input
+            type="range"
+            min="0" max="30" step="0.5"
+            value={offset}
+            onChange={handleSliderChange}
+            className="flex-1 h-2 rounded-full appearance-none cursor-pointer"
+            style={{
+              background: `linear-gradient(to right, #0891b2 ${(offset / 30) * 100}%, #e2e8f0 ${(offset / 30) * 100}%)`,
+            }}
+          />
+          <div className="w-12 text-center text-sm font-extrabold text-cyan-800 bg-cyan-50 rounded-lg py-1 border border-cyan-200">
+            {offset.toFixed(0)}
+          </div>
+          <button
+            onClick={() => setOffset(0)}
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-gray-500 hover:text-cyan-700 bg-gray-50 hover:bg-cyan-50 rounded-lg border border-gray-200 hover:border-cyan-200 transition-colors"
+          >
+            <RotateCcw className="w-3 h-3" />
+            Reset (0°)
+          </button>
+        </div>
+
+        {/* Explanation */}
+        <div className="mt-3 text-center">
+          <p className="text-[11px] text-gray-500 leading-relaxed">
+            Drag the slider to see how the <strong className="text-amber-700">Sidereal zodiac (inner)</strong> shifts
+            relative to the <strong className="text-cyan-700">Tropical zodiac (outer)</strong>.
+            At <strong>~24°</strong> (current Lahiri Ayanamsa), most planets shift back by nearly one whole sign.
+          </p>
         </div>
       </div>
-
-      {/* Info card */}
-      {selected && (
-        <div className="absolute inset-0 flex items-center justify-center z-20 p-3">
-          <div className="absolute inset-0 bg-black/20 backdrop-blur-sm rounded-3xl" onClick={() => setSelected(null)} />
-          <div className="relative bg-white rounded-2xl border-2 shadow-2xl p-5 w-full max-w-[380px] animate-in zoom-in-95 duration-200" style={{ borderColor: "#0891b2" }}>
-            <button onClick={() => setSelected(null)} className="absolute right-3 top-3 p-1.5 rounded-lg hover:bg-gray-100 transition-colors">
-              <X className="w-4 h-4 text-gray-400" />
-            </button>
-
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-bold text-cyan-700">{selected.label}</span>
-              <span className="text-xs font-semibold text-cyan-600 bg-cyan-50 px-2 py-0.5 rounded-full">{selected.year === 0 ? "0 AD" : `${selected.year} AD`}</span>
-            </div>
-            <div className="text-3xl font-extrabold text-cyan-800 mb-2">{selected.ayanamsa}</div>
-            <p className="text-sm text-slate-600 leading-relaxed">{selected.description}</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

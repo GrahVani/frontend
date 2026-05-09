@@ -48,18 +48,18 @@ interface Lesson5InteractiveProps {
 const SECTION_IDS = ["hero", "sec-overview", "sec-definition", "sec-etymology", "sec-mechanics", "sec-computation", "sec-knowledge", "sec-concepts", "sec-flashcards", "sec-recap", "sec-quiz", "sec-next"];
 
 const SIDEBAR_SECTIONS: SidebarSection[] = [
-  { id: "hero", label: "Introduction", type: "overview" },
-  { id: "sec-overview", label: "Overview", type: "overview" },
-  { id: "sec-definition", label: "What is Ayanamsa?", type: "definition" },
-  { id: "sec-etymology", label: "Etymology", type: "etymology" },
-  { id: "sec-mechanics", label: "The Drift", type: "mechanics" },
-  { id: "sec-computation", label: "Computation", type: "mechanics" },
-  { id: "sec-knowledge", label: "Knowledge Check", type: "quiz" },
-  { id: "sec-concepts", label: "Key Concepts", type: "concepts" },
-  { id: "sec-flashcards", label: "Flashcards", type: "recap" },
-  { id: "sec-recap", label: "Recap", type: "recap" },
-  { id: "sec-quiz", label: "Practice Quiz", type: "quiz" },
-  { id: "sec-next", label: "Continue", type: "overview" },
+  { id: "hero", label: "Introduction", type: "overview", group: "Start" },
+  { id: "sec-overview", label: "Overview", type: "overview", group: "Start" },
+  { id: "sec-definition", label: "What is Ayanamsa?", type: "definition", group: "Learn" },
+  { id: "sec-etymology", label: "Etymology", type: "etymology", group: "Learn" },
+  { id: "sec-mechanics", label: "The Drift", type: "mechanics", group: "Learn" },
+  { id: "sec-computation", label: "Computation", type: "mechanics", group: "Learn" },
+  { id: "sec-knowledge", label: "Knowledge Check", type: "quiz", group: "Practice" },
+  { id: "sec-concepts", label: "Key Concepts", type: "concepts", group: "Practice" },
+  { id: "sec-flashcards", label: "Flashcards", type: "flashcards", group: "Practice" },
+  { id: "sec-recap", label: "Recap", type: "recap", group: "Finish" },
+  { id: "sec-quiz", label: "Practice Quiz", type: "practice", group: "Finish" },
+  { id: "sec-next", label: "Continue", type: "continue", group: "Finish" },
 ];
 
 const FLASHCARDS = [
@@ -157,7 +157,7 @@ export default function Lesson5Interactive({ lesson, lessonProgress }: Lesson5In
           <div className="flex-1 min-w-0 pr-4 sm:pr-6 lg:pr-8">
 
             {/* ─── HERO ─── */}
-            <section id="hero" className="mb-10 scroll-mt-32">
+            <section id="hero" className="mb-6 scroll-mt-32">
               <Link href="/learn" className="inline-flex items-center gap-1 text-rose-600 hover:text-rose-800 text-sm mb-4 transition-colors">
                 <ArrowLeft className="w-4 h-4" /> Back to Learning Path
               </Link>
@@ -215,40 +215,40 @@ export default function Lesson5Interactive({ lesson, lessonProgress }: Lesson5In
             </section>
 
             {/* ─── OVERVIEW ─── */}
-            <section id="sec-overview" className="mb-10 scroll-mt-32">
-              <motion.div {...fadeUp} className="bg-gradient-to-br from-rose-900 via-red-900 to-orange-900 text-white rounded-2xl p-6 sm:p-8 shadow-lg">
+            <section id="sec-overview" className="mb-6 scroll-mt-32">
+              <motion.div {...fadeUp} className="bg-white border border-amber-200/80 rounded-2xl p-6 sm:p-8 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
-                  <BookOpen className="w-5 h-5 text-rose-300" />
-                  <span className="text-sm font-semibold text-rose-300 uppercase tracking-wide">Introduction</span>
+                  <BookOpen className="w-5 h-5 text-amber-600" />
+                  <span className="text-sm font-semibold text-amber-600 uppercase tracking-wide">Introduction</span>
                 </div>
-                <p className="text-rose-100 leading-relaxed text-lg mb-6" dangerouslySetInnerHTML={{ __html: formatMarkdown(content.intro) }} />
+                <p className="text-gray-700 leading-relaxed text-lg mb-6" dangerouslySetInnerHTML={{ __html: formatMarkdown(content.intro) }} />
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div className="bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm">
-                    <Compass className="w-5 h-5 text-rose-300 mx-auto mb-1" />
-                    <div className="text-lg font-bold">~24°</div>
-                    <div className="text-[10px] text-rose-300">Current Drift</div>
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center">
+                    <Compass className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                    <div className="text-lg font-bold text-gray-900">~24°</div>
+                    <div className="text-[10px] text-amber-600">Current Drift</div>
                   </div>
-                  <div className="bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm">
-                    <RotateCcw className="w-5 h-5 text-rose-300 mx-auto mb-1" />
-                    <div className="text-lg font-bold">50.3"</div>
-                    <div className="text-[10px] text-rose-300">Per Year</div>
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center">
+                    <RotateCcw className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                    <div className="text-lg font-bold text-gray-900">50.3"</div>
+                    <div className="text-[10px] text-amber-600">Per Year</div>
                   </div>
-                  <div className="bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm">
-                    <Ruler className="w-5 h-5 text-rose-300 mx-auto mb-1" />
-                    <div className="text-lg font-bold">1°</div>
-                    <div className="text-[10px] text-rose-300">Every 72 Years</div>
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center">
+                    <Ruler className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                    <div className="text-lg font-bold text-gray-900">1°</div>
+                    <div className="text-[10px] text-amber-600">Every 72 Years</div>
                   </div>
-                  <div className="bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm">
-                    <Zap className="w-5 h-5 text-rose-300 mx-auto mb-1" />
-                    <div className="text-lg font-bold">285 AD</div>
-                    <div className="text-[10px] text-rose-300">Zero Point</div>
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center">
+                    <Zap className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                    <div className="text-lg font-bold text-gray-900">285 AD</div>
+                    <div className="text-[10px] text-amber-600">Zero Point</div>
                   </div>
                 </div>
 
                 {lessonProgress && lessonProgress.bestScore > 0 && (
                   <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-4 flex-wrap">
-                    <span className="text-xs text-rose-300">Previous attempt:</span>
+                    <span className="text-xs text-amber-600">Previous attempt:</span>
                     <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-400/20 text-purple-200 border border-purple-400/30">
                       Best: {lessonProgress.bestScore}%
                     </span>
@@ -268,7 +268,7 @@ export default function Lesson5Interactive({ lesson, lessonProgress }: Lesson5In
 
             {/* ─── SECTION 1: DEFINITION ─── */}
             {content.sections?.[0] && (
-              <section id="sec-definition" className="mb-10 scroll-mt-32">
+              <section id="sec-definition" className="mb-6 scroll-mt-32">
                 <motion.div {...fadeUp}>
                   <div onClick={() => markSectionComplete(content.sections![0].id)} className="relative">
                     <LessonSection section={content.sections![0]} index={0} />
@@ -288,7 +288,7 @@ export default function Lesson5Interactive({ lesson, lessonProgress }: Lesson5In
 
             {/* ─── SECTION 2: ETYMOLOGY ─── */}
             {content.sections?.[1] && (
-              <section id="sec-etymology" className="mb-10 scroll-mt-32">
+              <section id="sec-etymology" className="mb-6 scroll-mt-32">
                 <motion.div {...fadeUp}>
                   <div onClick={() => markSectionComplete(content.sections![1].id)} className="relative">
                     <LessonSection section={content.sections![1]} index={1} />
@@ -307,7 +307,7 @@ export default function Lesson5Interactive({ lesson, lessonProgress }: Lesson5In
 
             {/* ─── SECTION 3: MECHANICS — The Drift ─── */}
             {content.sections?.[2] && (
-              <section id="sec-mechanics" className="mb-10 scroll-mt-32">
+              <section id="sec-mechanics" className="mb-6 scroll-mt-32">
                 <motion.div {...fadeUp}>
                   <div onClick={() => markSectionComplete(content.sections![2].id)} className="relative">
                     <LessonSection section={content.sections![2]} index={2} />
@@ -326,7 +326,7 @@ export default function Lesson5Interactive({ lesson, lessonProgress }: Lesson5In
 
             {/* ─── SECTION 4: COMPUTATION ─── */}
             {content.sections?.[3] && (
-              <section id="sec-computation" className="mb-10 scroll-mt-32">
+              <section id="sec-computation" className="mb-6 scroll-mt-32">
                 <motion.div {...fadeUp}>
                   <div onClick={() => markSectionComplete(content.sections![3].id)} className="relative">
                     <LessonSection section={content.sections![3]} index={3} />
@@ -348,14 +348,14 @@ export default function Lesson5Interactive({ lesson, lessonProgress }: Lesson5In
             )}
 
             {/* ─── KNOWLEDGE CHECK ─── */}
-            <section id="sec-knowledge" className="mb-10 scroll-mt-32">
+            <section id="sec-knowledge" className="mb-6 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <KnowledgeCheck questions={KNOWLEDGE_CHECKS} title="Check Your Understanding" />
               </motion.div>
             </section>
 
             {/* ─── CONCEPTS ─── */}
-            <section id="sec-concepts" className="mb-10 scroll-mt-32">
+            <section id="sec-concepts" className="mb-6 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
                   <Sparkles className="w-5 h-5 text-rose-600" />
@@ -373,7 +373,7 @@ export default function Lesson5Interactive({ lesson, lessonProgress }: Lesson5In
             </section>
 
             {/* ─── FLASHCARDS ─── */}
-            <section id="sec-flashcards" className="mb-10 scroll-mt-32">
+            <section id="sec-flashcards" className="mb-6 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
                   <Lightbulb className="w-5 h-5 text-rose-600" />
@@ -385,12 +385,12 @@ export default function Lesson5Interactive({ lesson, lessonProgress }: Lesson5In
             </section>
 
             {/* ─── RECAP ─── */}
-            <section id="sec-recap" className="mb-10 scroll-mt-32">
+            <section id="sec-recap" className="mb-6 scroll-mt-32">
               <RecapSection items={recapItems} title="What You Learned in This Lesson" />
             </section>
 
             {/* ─── QUIZ ─── */}
-            <section id="sec-quiz" className="mb-10 scroll-mt-32">
+            <section id="sec-quiz" className="mb-6 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
                   <BrainCircuit className="w-5 h-5 text-rose-600" />
@@ -415,12 +415,12 @@ export default function Lesson5Interactive({ lesson, lessonProgress }: Lesson5In
             {/* ─── NEXT LESSON CTA ─── */}
             <section id="sec-next" className="scroll-mt-32">
               <motion.div {...fadeUp}>
-                <div className="p-6 sm:p-8 bg-gradient-to-r from-rose-50 via-white to-orange-50 rounded-2xl border-2 border-rose-200/60 shadow-sm">
+                <div className="p-6 sm:p-8 bg-white rounded-2xl border-2 border-amber-200/60 shadow-sm">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
-                      <p className="text-sm text-rose-600 mb-1 font-medium">🎉 Lesson Complete!</p>
-                      <p className="text-xl font-bold text-rose-900">Continue to The Panchang Engine</p>
-                      <p className="text-sm text-rose-600 mt-1">Next: Build the temporal calculation engine that measures the quality of time.</p>
+                      <p className="text-sm text-amber-600 mb-1 font-medium">🎉 Lesson Complete!</p>
+                      <p className="text-xl font-bold text-gray-900">Continue to The Panchang Engine</p>
+                      <p className="text-sm text-gray-500 mt-1">Next: Build the temporal calculation engine that measures the quality of time.</p>
                     </div>
                     <Link href="/learn" className="flex items-center gap-2 px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-xl transition-colors shadow-md shadow-rose-600/20 shrink-0">
                       Continue Learning <ChevronRight className="w-4 h-4" />

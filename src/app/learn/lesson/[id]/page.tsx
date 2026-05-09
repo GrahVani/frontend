@@ -21,6 +21,35 @@ import Lesson4Interactive from "@/components/learn/module1/Lesson4Interactive";
 import Lesson5Interactive from "@/components/learn/module2/Lesson5Interactive";
 import Lesson6Interactive from "@/components/learn/module2/Lesson6Interactive";
 import Lesson7Interactive from "@/components/learn/module2/Lesson7Interactive";
+import Lesson8Interactive from "@/components/learn/module3/Lesson8Interactive";
+import Lesson9Interactive from "@/components/learn/module3/Lesson9Interactive";
+import Lesson10Interactive from "@/components/learn/module3/Lesson10Interactive";
+import Lesson11Interactive from "@/components/learn/module3/Lesson11Interactive";
+import Lesson12Interactive from "@/components/learn/module4/Lesson12Interactive";
+import Lesson13Interactive from "@/components/learn/module4/Lesson13Interactive";
+import Lesson14Interactive from "@/components/learn/module4/Lesson14Interactive";
+import Lesson15Interactive from "@/components/learn/module4/Lesson15Interactive";
+import Lesson16Interactive from "@/components/learn/module5/Lesson16Interactive";
+import Lesson17Interactive from "@/components/learn/module5/Lesson17Interactive";
+import Lesson18Interactive from "@/components/learn/module5/Lesson18Interactive";
+import Lesson19Interactive from "@/components/learn/module6/Lesson19Interactive";
+import Lesson20Interactive from "@/components/learn/module6/Lesson20Interactive";
+import Lesson21Interactive from "@/components/learn/module6/Lesson21Interactive";
+import Lesson22Interactive from "@/components/learn/module6/Lesson22Interactive";
+import Lesson23Interactive from "@/components/learn/module7/Lesson23Interactive";
+import Lesson24Interactive from "@/components/learn/module7/Lesson24Interactive";
+import Lesson25Interactive from "@/components/learn/module7/Lesson25Interactive";
+import Lesson26Interactive from "@/components/learn/module7/Lesson26Interactive";
+import Lesson27Interactive from "@/components/learn/module8/Lesson27Interactive";
+import Lesson28Interactive from "@/components/learn/module8/Lesson28Interactive";
+import Lesson29Interactive from "@/components/learn/module8/Lesson29Interactive";
+import Lesson30Interactive from "@/components/learn/module9/Lesson30Interactive";
+import Lesson31Interactive from "@/components/learn/module9/Lesson31Interactive";
+import Lesson32Interactive from "@/components/learn/module9/Lesson32Interactive";
+import Lesson33Interactive from "@/components/learn/module9/Lesson33Interactive";
+import Lesson34Interactive from "@/components/learn/module10/Lesson34Interactive";
+import Lesson35Interactive from "@/components/learn/module10/Lesson35Interactive";
+import Lesson36Interactive from "@/components/learn/module10/Lesson36Interactive";
 
 interface ConceptMedia {
   type: string;
@@ -138,6 +167,11 @@ export default function LessonPage() {
     );
   }
 
+  // Emergency fallback: if title contains Panchang at any sequence, route to Lesson6
+  if (lesson.title.toLowerCase().includes("panchang")) {
+    return <Lesson6Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
   // ─── Lesson 1 Interactive Experience ───
   const isLesson1 = lesson.sequenceOrder === 1 && lesson.title.includes("Celestial Geometry");
   if (isLesson1) {
@@ -151,7 +185,7 @@ export default function LessonPage() {
   }
 
   // ─── Lesson 3 Interactive Experience ───
-  const isLesson3 = lesson.sequenceOrder === 3 && lesson.title.includes("Bhava");
+  const isLesson3 = lesson.sequenceOrder === 3 && lesson.title.includes("12 Bhavas");
   if (isLesson3) {
     return <Lesson3Interactive lesson={lesson} lessonProgress={lessonProgress} />;
   }
@@ -169,7 +203,7 @@ export default function LessonPage() {
   }
 
   // ─── Module 2: Lesson 2 (Panchang) Interactive Experience ───
-  const isLesson6 = lesson.sequenceOrder === 2 && lesson.title.includes("Panchang");
+  const isLesson6 = Number(lesson.sequenceOrder) === 2 && lesson.title.toLowerCase().includes("panchang");
   if (isLesson6) {
     return <Lesson6Interactive lesson={lesson} lessonProgress={lessonProgress} />;
   }
@@ -178,6 +212,180 @@ export default function LessonPage() {
   const isLesson7 = lesson.sequenceOrder === 3 && lesson.title.includes("Drishti");
   if (isLesson7) {
     return <Lesson7Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 3: Lesson 1 (Core Yogas) Interactive Experience ───
+  const isLesson8 = lesson.sequenceOrder === 1 && lesson.title.includes("Yoga");
+  if (isLesson8) {
+    return <Lesson8Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 3: Lesson 2 (Planetary Dignity & Avasthas) ───
+  const isLesson9 = lesson.sequenceOrder === 2 && lesson.title.includes("Dignity");
+  if (isLesson9) {
+    return <Lesson9Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 3: Lesson 3 (Bhavat Bhavam) ───
+  const isLesson10 = lesson.sequenceOrder === 3 && lesson.title.includes("Bhavat");
+  if (isLesson10) {
+    return <Lesson10Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 3: Lesson 4 (Trinity of Execution) ───
+  const isLesson11 = lesson.sequenceOrder === 4 && lesson.title.includes("Trinity");
+  if (isLesson11) {
+    return <Lesson11Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 4: Lesson 1 (Vimshottari Dasha) ───
+  const isLesson12 = lesson.sequenceOrder === 1 && lesson.title.includes("Vimshottari");
+  if (isLesson12) {
+    return <Lesson12Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 4: Lesson 2 (Gochara) ───
+  const isLesson13 = lesson.sequenceOrder === 2 && lesson.title.includes("Gochara");
+  if (isLesson13) {
+    return <Lesson13Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 4: Lesson 3 (Double Transit Theory) ───
+  const isLesson14 = lesson.sequenceOrder === 3 && lesson.title.includes("Double");
+  if (isLesson14) {
+    return <Lesson14Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 4: Lesson 4 (Dasha + Gochara Synthesis) ───
+  const isLesson15 = lesson.sequenceOrder === 4 && lesson.title.includes("Synthesis");
+  if (isLesson15) {
+    return <Lesson15Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 5: Lesson 1 (Varga Chakras) ───
+  const isLesson16 = lesson.sequenceOrder === 1 && lesson.title.includes("Varga");
+  if (isLesson16) {
+    return <Lesson16Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 5: Lesson 2 (Ashtakavarga) ───
+  const isLesson17 = lesson.sequenceOrder === 2 && lesson.title.includes("Ashtakavarga");
+  if (isLesson17) {
+    return <Lesson17Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 5: Lesson 3 (Shadbala) ───
+  const isLesson18 = lesson.sequenceOrder === 3 && lesson.title.includes("Shadbala");
+  if (isLesson18) {
+    return <Lesson18Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 6: Lesson 1 (Jaimini Sutras) ───
+  const isLesson19 = lesson.sequenceOrder === 1 && lesson.title.includes("Jaimini");
+  if (isLesson19) {
+    return <Lesson19Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 6: Lesson 2 (Krishnamurti Paddhati / KP System) ───
+  const isLesson20 = lesson.sequenceOrder === 2 && lesson.title.includes("Krishnamurti");
+  if (isLesson20) {
+    return <Lesson20Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 6: Lesson 3 (Tajik System / Varshaphala) ───
+  const isLesson21 = lesson.sequenceOrder === 3 && lesson.title.includes("Varshaphala");
+  if (isLesson21) {
+    return <Lesson21Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 6: Lesson 4 (Prashna Shastra / Horary) ───
+  const isLesson22 = lesson.sequenceOrder === 4 && lesson.title.includes("Prashna");
+  if (isLesson22) {
+    return <Lesson22Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 7: Lesson 1 (Muhurtha) ───
+  const isLesson23 = lesson.sequenceOrder === 1 && lesson.title.includes("Muhurtha");
+  if (isLesson23) {
+    return <Lesson23Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 7: Lesson 2 (Nama Nakshatra) ───
+  const isLesson24 = lesson.sequenceOrder === 2 && lesson.title.includes("Nama");
+  if (isLesson24) {
+    return <Lesson24Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 7: Lesson 3 (Synastry & Koota Milan) ───
+  const isLesson25 = lesson.sequenceOrder === 3 && lesson.title.includes("Synastry");
+  if (isLesson25) {
+    return <Lesson25Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 7: Lesson 4 (Astro-Remediation) ───
+  const isLesson26 = lesson.sequenceOrder === 4 && lesson.title.includes("Remediation");
+  if (isLesson26) {
+    return <Lesson26Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 8: Lesson 1 (Varsha Pravesh) ───
+  const isLesson27 = lesson.sequenceOrder === 1 && lesson.title.includes("Varsha");
+  if (isLesson27) {
+    return <Lesson27Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 8: Lesson 2 (Pancha Vargiya Bala) ───
+  const isLesson28 = lesson.sequenceOrder === 2 && lesson.title.includes("Pancha");
+  if (isLesson28) {
+    return <Lesson28Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 8: Lesson 3 (Tajik Yogas) ───
+  const isLesson29 = lesson.sequenceOrder === 3 && lesson.title.includes("Yogas");
+  if (isLesson29) {
+    return <Lesson29Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 9: Lesson 1 (Ratna Vidya) ───
+  const isLesson30 = lesson.sequenceOrder === 1 && lesson.title.includes("Ratna");
+  if (isLesson30) {
+    return <Lesson30Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 9: Lesson 2 (Mantra Shastra) ───
+  const isLesson31 = lesson.sequenceOrder === 2 && lesson.title.includes("Mantra");
+  if (isLesson31) {
+    return <Lesson31Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 9: Lesson 3 (Dana & Seva) ───
+  const isLesson32 = lesson.sequenceOrder === 3 && lesson.title.includes("Dana");
+  if (isLesson32) {
+    return <Lesson32Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 9: Lesson 4 (Yantra & Modern Anchors) ───
+  const isLesson33 = lesson.sequenceOrder === 4 && lesson.title.includes("Yantra");
+  if (isLesson33) {
+    return <Lesson33Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 10: Lesson 1 (Ayanamsa Variations) ───
+  const isLesson34 = lesson.sequenceOrder === 1 && lesson.title.includes("Variations");
+  if (isLesson34) {
+    return <Lesson34Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 10: Lesson 2 (Bridging Vedic & Western) ───
+  const isLesson35 = lesson.sequenceOrder === 2 && lesson.title.includes("Bridging");
+  if (isLesson35) {
+    return <Lesson35Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 10: Lesson 3 (The Master Dashboard) ───
+  const isLesson36 = lesson.sequenceOrder === 3 && lesson.title.includes("Dashboard");
+  if (isLesson36) {
+    return <Lesson36Interactive lesson={lesson} lessonProgress={lessonProgress} />;
   }
 
   const content = lesson.contentJson as unknown as LessonContent;
@@ -216,7 +424,7 @@ export default function LessonPage() {
             </span>
           )}
         </div>
-        <h1 className="text-3xl font-bold text-amber-900">{lesson.title}</h1>
+        <h1 className="text-3xl font-bold text-gray-900">{lesson.title}</h1>
         {hasSections && (
           <div className="mt-3 flex items-center gap-3">
             <div className="flex-1 h-2 bg-amber-100 rounded-full overflow-hidden max-w-[200px]">
@@ -266,66 +474,66 @@ export default function LessonPage() {
       </div>
 
       {/* Overview Section */}
-      <div ref={overviewRef} className="mb-10 scroll-mt-32">
+      <div ref={overviewRef} className="mb-6 scroll-mt-32">
         <div className="flex items-center gap-2 mb-4">
           <ScrollText className="w-5 h-5 text-amber-600" />
-          <h2 className="text-xl font-bold text-amber-900">Lesson Overview</h2>
+          <h2 className="text-xl font-bold text-gray-900">Lesson Overview</h2>
         </div>
-        <div className="bg-gradient-to-br from-amber-900 via-amber-800 to-orange-900 text-white rounded-2xl p-6 shadow-lg">
+        <div className="bg-white border border-amber-200/80 rounded-2xl p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-3">
-            <BookOpen className="w-5 h-5 text-amber-300" />
-            <span className="text-sm font-semibold text-amber-300 uppercase tracking-wide">Introduction</span>
+            <BookOpen className="w-5 h-5 text-amber-600" />
+            <span className="text-sm font-semibold text-amber-600 uppercase tracking-wide">Introduction</span>
           </div>
-          <p className="text-amber-100 leading-relaxed text-lg">{content.intro}</p>
+          <p className="text-gray-700 leading-relaxed text-lg">{content.intro}</p>
 
           {/* Lesson roadmap */}
           <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
             {hasSections && (
-              <div className="bg-white/10 rounded-xl p-3 text-center">
-                <Layers className="w-5 h-5 text-amber-300 mx-auto mb-1" />
-                <div className="text-lg font-bold">{content.sections?.length}</div>
-                <div className="text-[10px] text-amber-300">Sections</div>
+              <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+                <Layers className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                <div className="text-lg font-bold text-gray-900">{content.sections?.length}</div>
+                <div className="text-[10px] text-amber-600">Sections</div>
               </div>
             )}
-            <div className="bg-white/10 rounded-xl p-3 text-center">
-              <Lightbulb className="w-5 h-5 text-amber-300 mx-auto mb-1" />
-              <div className="text-lg font-bold">{content.concepts.length}</div>
-              <div className="text-[10px] text-amber-300">Key Concepts</div>
+            <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+              <Lightbulb className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+              <div className="text-lg font-bold text-gray-900">{content.concepts.length}</div>
+              <div className="text-[10px] text-amber-600">Key Concepts</div>
             </div>
-            <div className="bg-white/10 rounded-xl p-3 text-center">
-              <BrainCircuit className="w-5 h-5 text-amber-300 mx-auto mb-1" />
-              <div className="text-lg font-bold">{content.quiz.length}</div>
-              <div className="text-[10px] text-amber-300">Questions</div>
+            <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+              <BrainCircuit className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+              <div className="text-lg font-bold text-gray-900">{content.quiz.length}</div>
+              <div className="text-[10px] text-amber-600">Questions</div>
             </div>
-            <div className="bg-white/10 rounded-xl p-3 text-center">
-              <Target className="w-5 h-5 text-amber-300 mx-auto mb-1" />
-              <div className="text-lg font-bold">{content.quiz.filter(q => q.type === 'case_study').length}</div>
-              <div className="text-[10px] text-amber-300">Case Studies</div>
+            <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+              <Target className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+              <div className="text-lg font-bold text-gray-900">{content.quiz.filter(q => q.type === 'case_study').length}</div>
+              <div className="text-[10px] text-amber-600">Case Studies</div>
             </div>
           </div>
 
           {/* Progress summary if data exists */}
           {lessonProgress && (
             <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="bg-white/10 rounded-xl p-3 text-center">
-                <Target className="w-5 h-5 text-amber-300 mx-auto mb-1" />
-                <div className="text-lg font-bold">{lessonProgress.score}%</div>
-                <div className="text-[10px] text-amber-300">Current Score</div>
+              <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+                <Target className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                <div className="text-lg font-bold text-gray-900">{lessonProgress.score}%</div>
+                <div className="text-[10px] text-amber-600">Current Score</div>
               </div>
-              <div className="bg-white/10 rounded-xl p-3 text-center">
-                <BrainCircuit className="w-5 h-5 text-amber-300 mx-auto mb-1" />
-                <div className="text-lg font-bold">{lessonProgress.attemptsCount}</div>
-                <div className="text-[10px] text-amber-300">Attempts</div>
+              <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+                <BrainCircuit className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                <div className="text-lg font-bold text-gray-900">{lessonProgress.attemptsCount}</div>
+                <div className="text-[10px] text-amber-600">Attempts</div>
               </div>
-              <div className="bg-white/10 rounded-xl p-3 text-center">
-                <CheckCircle2 className="w-5 h-5 text-amber-300 mx-auto mb-1" />
-                <div className="text-lg font-bold">{lessonProgress.bestScore}%</div>
-                <div className="text-[10px] text-amber-300">Best Score</div>
+              <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+                <CheckCircle2 className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                <div className="text-lg font-bold text-gray-900">{lessonProgress.bestScore}%</div>
+                <div className="text-[10px] text-amber-600">Best Score</div>
               </div>
-              <div className="bg-white/10 rounded-xl p-3 text-center">
-                <Layers className="w-5 h-5 text-amber-300 mx-auto mb-1" />
-                <div className="text-lg font-bold">{lessonProgress.sectionProgressPercentage}%</div>
-                <div className="text-[10px] text-amber-300">Section Progress</div>
+              <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+                <Layers className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                <div className="text-lg font-bold text-gray-900">{lessonProgress.sectionProgressPercentage}%</div>
+                <div className="text-[10px] text-amber-600">Section Progress</div>
               </div>
             </div>
           )}
@@ -334,11 +542,11 @@ export default function LessonPage() {
 
       {/* Sections */}
       {hasSections && (
-        <div ref={sectionsRef} className="mb-10 scroll-mt-32">
+        <div ref={sectionsRef} className="mb-6 scroll-mt-32">
           <div className="flex items-center gap-2 mb-4">
             <Layers className="w-5 h-5 text-amber-600" />
-            <h2 className="text-xl font-bold text-amber-900">Detailed Sections</h2>
-            <span className="ml-auto text-sm text-amber-500 font-medium">
+            <h2 className="text-xl font-bold text-gray-900">Detailed Sections</h2>
+            <span className="ml-auto text-sm text-gray-500 font-medium">
               {content.sections?.length} parts
             </span>
           </div>
@@ -362,11 +570,11 @@ export default function LessonPage() {
       )}
 
       {/* Concepts */}
-      <div ref={conceptsRef} className="mb-10 scroll-mt-32">
+      <div ref={conceptsRef} className="mb-6 scroll-mt-32">
         <div className="flex items-center gap-2 mb-4">
           <Sparkles className="w-5 h-5 text-amber-600" />
-          <h2 className="text-xl font-bold text-amber-900">Key Concepts</h2>
-          <span className="ml-auto text-sm text-amber-500 font-medium">
+          <h2 className="text-xl font-bold text-gray-900">Key Concepts</h2>
+          <span className="ml-auto text-sm text-gray-500 font-medium">
             {content.concepts.length} concepts
           </span>
         </div>
@@ -395,18 +603,18 @@ export default function LessonPage() {
             <>
               {/* Visual Reference */}
               {sharedDiagrams.length > 0 && (
-                <div className="mb-6 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl border border-amber-200/60 p-5">
+                <div className="mb-6 bg-white rounded-2xl border border-amber-200/60 shadow-sm p-5">
                   <div className="flex items-center gap-2 mb-4">
                     <Eye className="w-4 h-4 text-amber-600" />
-                    <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wide">Visual Reference</h3>
-                    <span className="ml-auto text-xs text-amber-500 font-medium">
+                    <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">Visual Reference</h3>
+                    <span className="ml-auto text-xs text-amber-600 font-medium">
                       {sharedDiagrams.length} diagram{sharedDiagrams.length > 1 ? "s" : ""}
                     </span>
                   </div>
                   <div className="space-y-6">
                     {sharedDiagrams.map(([dt, concepts]) => (
                       <div key={dt}>
-                        <p className="text-xs text-amber-600 mb-2 font-medium">
+                        <p className="text-xs text-gray-500 mb-2 font-medium">
                           Applies to:{" "}
                           {concepts.map((c) => c.title).join(", ")}
                         </p>
@@ -440,11 +648,11 @@ export default function LessonPage() {
       </div>
 
       {/* Quiz */}
-      <div ref={quizRef} className="mb-10 scroll-mt-32">
+      <div ref={quizRef} className="mb-6 scroll-mt-32">
         <div className="flex items-center gap-2 mb-4">
           <BrainCircuit className="w-5 h-5 text-amber-600" />
-          <h2 className="text-xl font-bold text-amber-900">Test Your Knowledge</h2>
-          <span className="ml-auto text-sm text-amber-500 font-medium">
+          <h2 className="text-xl font-bold text-gray-900">Test Your Knowledge</h2>
+          <span className="ml-auto text-sm text-gray-500 font-medium">
             {content.quiz.length} questions
           </span>
         </div>
@@ -475,7 +683,7 @@ export default function LessonPage() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-amber-600 mb-1">Ready for more?</p>
-            <p className="text-lg font-bold text-amber-900">Continue your learning journey</p>
+            <p className="text-lg font-bold text-gray-900">Continue your learning journey</p>
           </div>
           <Link
             href="/learn"

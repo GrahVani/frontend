@@ -402,7 +402,7 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
         )}
 
         <div className="flex justify-center gap-4 mb-6">
-          <div className="px-4 py-2 bg-amber-50 rounded-xl border border-amber-100">
+          <div className="px-4 py-2 bg-white rounded-xl border border-gray-200/60 shadow-sm">
             <div className="flex items-center gap-1.5 text-amber-700">
               <Target className="w-4 h-4" />
               <span className="text-sm font-bold">{score}/{totalPossible}</span>
@@ -462,7 +462,7 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
                       ? "bg-red-50 border-red-400 text-red-900 shadow-sm"
                       : isSelected
                       ? "bg-amber-100 border-amber-400 text-amber-900"
-                      : "bg-amber-50/30 border-amber-100 hover:bg-amber-50 hover:border-amber-300 text-amber-800"
+                      : "bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-gray-800"
                   } ${showFeedback ? "cursor-default" : "cursor-pointer hover:scale-[1.01]"}`}
                 >
                   <div className="flex items-center gap-4">
@@ -500,7 +500,7 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
                       ? "bg-red-50 border-red-400 text-red-900 shadow-sm"
                       : isSelected
                       ? "bg-amber-100 border-amber-400 text-amber-900"
-                      : "bg-amber-50/30 border-amber-100 hover:bg-amber-50 hover:border-amber-300 text-amber-800"
+                      : "bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-gray-800"
                   } ${showFeedback ? "cursor-default" : "cursor-pointer hover:scale-[1.02]"}`}
                 >
                   <div className="flex flex-col items-center gap-2">
@@ -527,7 +527,7 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
             {/* Matched pairs */}
             {Object.keys(matchedPairs).length > 0 && (
               <div className="space-y-2">
-                <p className="text-sm font-semibold text-amber-700">Matched:</p>
+                <p className="text-sm font-semibold text-gray-700">Matched:</p>
                 <div className="flex flex-wrap gap-2">
                   {Object.entries(matchedPairs).map(([left, right]) => {
                     const isCorrect = currentQuestion.pairs.some((p) => p.left === left && p.right === right);
@@ -558,7 +558,7 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
                       className={`w-full p-3 rounded-xl border-2 text-left text-sm font-medium transition-all ${
                         selectedLeft === item
                           ? "bg-amber-100 border-amber-500 text-amber-900"
-                          : "bg-amber-50/30 border-amber-100 hover:bg-amber-50 hover:border-amber-300 text-amber-800"
+                          : "bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-gray-800"
                       }`}
                     >
                       {item}
@@ -577,7 +577,7 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
                       className={`w-full p-3 rounded-xl border-2 text-left text-sm transition-all ${
                         !selectedLeft
                           ? "bg-gray-50 border-gray-100 text-gray-400 cursor-not-allowed"
-                          : "bg-amber-50/30 border-amber-100 hover:bg-amber-50 hover:border-amber-300 text-amber-800 cursor-pointer"
+                          : "bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-gray-800 cursor-pointer"
                       }`}
                     >
                       {item}
@@ -612,7 +612,7 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
                     ? isCorrect
                       ? "bg-green-50 border-green-400 text-green-900"
                       : "bg-red-50 border-red-400 text-red-900"
-                    : "bg-amber-50/30 border-amber-200 focus:border-amber-400 focus:outline-none text-amber-900 placeholder:text-amber-300"
+                    : "bg-white border-gray-200 focus:border-amber-400 focus:outline-none text-gray-900 placeholder:text-gray-400"
                 }`}
               />
               <button
@@ -642,9 +642,9 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
         return (
           <div className="space-y-5">
             {/* Scenario box */}
-            <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200">
+            <div className="p-4 bg-white rounded-xl border border-gray-200/60 border-l-4 border-l-indigo-400 shadow-sm">
               <p className="text-xs font-bold text-indigo-600 uppercase tracking-wide mb-2">Case Study Scenario</p>
-              <p className="text-sm text-indigo-900 leading-relaxed">{currentQuestion.scenario}</p>
+              <p className="text-sm text-gray-700 leading-relaxed">{currentQuestion.scenario}</p>
             </div>
 
             {/* Sub-question progress */}
@@ -661,7 +661,7 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
               <p className="text-sm text-amber-500 font-medium mb-3">
                 Question {currentSubIndex + 1} of {currentQuestion.subQuestions.length}
               </p>
-              <p className="text-base font-medium text-amber-900 mb-4">{subQ.question}</p>
+              <p className="text-base font-medium text-gray-900 mb-4">{subQ.question}</p>
 
               <div className="space-y-3">
                 {Object.entries(subQ.options).map(([key, value]) => {
@@ -682,7 +682,7 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
                           ? "bg-red-50 border-red-400 text-red-900 shadow-sm"
                           : isSelected
                           ? "bg-amber-100 border-amber-400 text-amber-900"
-                          : "bg-amber-50/30 border-amber-100 hover:bg-amber-50 hover:border-amber-300 text-amber-800"
+                          : "bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-gray-800"
                       } ${showFeedback ? "cursor-default" : "cursor-pointer hover:scale-[1.01]"}`}
                     >
                       <div className="flex items-center gap-4">
@@ -800,7 +800,7 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
       <div className="mb-2">
         <div className="flex items-center gap-2 mb-4 flex-wrap">
           <Trophy className="w-5 h-5 text-amber-600" />
-          <h2 className="text-xl font-bold text-amber-900">Knowledge Check</h2>
+          <h2 className="text-xl font-bold text-gray-900">Knowledge Check</h2>
           <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
             currentQuestion.difficulty === "easy"
               ? "bg-green-100 text-green-700"
@@ -819,7 +819,7 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
           </span>
         </div>
 
-        <p className="text-lg font-medium text-amber-900 mb-6 leading-relaxed">
+        <p className="text-lg font-medium text-gray-900 mb-6 leading-relaxed">
           {currentQuestion.question}
         </p>
 
