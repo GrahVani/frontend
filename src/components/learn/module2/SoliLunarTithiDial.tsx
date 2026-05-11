@@ -72,7 +72,7 @@ export default function SoliLunarTithiDial() {
   const reset = useCallback(() => setMoonDeg(60), []);
 
   return (
-    <div className="w-full bg-gradient-to-br from-amber-50 via-white to-indigo-50 rounded-2xl border border-amber-200/80 shadow-lg p-4 sm:p-6">
+    <div className="w-full bg-white py-4 sm:py-6 px-0">
       {/* Header */}
       <div className="text-center mb-4">
         <h3 className="text-xl sm:text-2xl font-bold text-amber-900">Soli-Lunar Tithi Dial</h3>
@@ -102,8 +102,8 @@ export default function SoliLunarTithiDial() {
       </div>
 
       {/* SVG Dial */}
-      <div className="relative flex justify-center mb-4">
-        <svg viewBox="0 0 500 500" className="w-full max-w-[420px] h-auto">
+      <div className="relative w-full mb-4">
+        <svg viewBox="0 0 500 500" className="w-full h-auto max-h-[520px] mx-auto">
           {/* Background circles */}
           <circle cx={cx} cy={cy} r={radius} fill="#fafafa" stroke="#e5e7eb" strokeWidth={1.5} />
           <circle cx={cx} cy={cy} r={radius * 0.65} fill="none" stroke="#f3f4f6" strokeWidth={1} strokeDasharray="4 4" />

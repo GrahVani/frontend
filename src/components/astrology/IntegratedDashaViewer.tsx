@@ -378,20 +378,22 @@ export default function IntegratedDashaViewer({
                                                 <div className="w-2 flex-shrink-0" />
                                             )}
                                             <div className="flex items-baseline gap-1 truncate overflow-hidden">
-                                                {selectedPath.length > 0 && (
-                                                    <span className="!text-primary font-semibold shrink-0 tracking-tighter mr-0.5 !text-[11px] font-mono">{pathPrefix}</span>
-                                                )}
-                                                <span className="inline-flex items-center gap-1 shrink-0">
-                                                    <span
-                                                        className="text-[13px] font-serif leading-none"
-                                                        style={{ color: PLANET_SVG_FILLS[nameStr] || '#92400E' }}
-                                                    >
-                                                        {getPlanetSymbol(nameStr)}
+                                                <div className="flex items-center">
+                                                    {selectedPath.length > 0 && (
+                                                        <span className="!text-primary font-normal shrink-0 tracking-tighter !text-[11px] font-mono">{pathPrefix}</span>
+                                                    )}
+                                                    <span className="inline-flex items-center gap-1 shrink-0">
+                                                        <span
+                                                            className="text-[13px] font-serif leading-none"
+                                                            style={{ color: PLANET_SVG_FILLS[nameStr] || '#92400E' }}
+                                                        >
+                                                            {getPlanetSymbol(nameStr)}
+                                                        </span>
+                                                        <span className="text-[11px] font-bold text-primary">
+                                                            {displayName}
+                                                        </span>
                                                     </span>
-                                                    <span className="text-[11px] font-semibold text-primary">
-                                                        {displayName}
-                                                    </span>
-                                                </span>
+                                                </div>
                                             </div>
                                             {period.isCurrent && (
                                                 <span className="px-1 py-0.5 bg-green-500/20 border border-green-500/30 rounded-full leading-none text-green-700 font-bold text-[8px] shrink-0">

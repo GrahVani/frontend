@@ -219,13 +219,15 @@ function DashaDrillRow({ node, depth, pathPrefix, onDrill }: { node: DashaNode; 
                         ) : (
                             <span className="w-2.5 inline-block" />
                         )}
-                        {depth > 0 && (
-                            <span className={cn(TYPOGRAPHY.planetName, "font-serif text-amber-700 shrink-0 tracking-tighter")}>{pathPrefix}</span>
-                        )}
-                        <span className={cn(TYPOGRAPHY.planetName, "font-serif tracking-tighter flex items-center gap-1")} style={{ color: PLANET_SVG_FILLS[node.planet] || '#92400E' }}>
-                            <span className="text-[16px]">{PLANET_SYMBOLS[node.planet] || ''}</span>
-                            <span className="text-[16px] font-semibold">{PLANET_ABBREVIATIONS[node.planet] || node.planet}</span>
-                        </span>
+                        <div className="flex items-center">
+                            {depth > 0 && (
+                                <span className={cn(TYPOGRAPHY.planetName, "font-serif text-amber-700 shrink-0 tracking-tighter")}>{pathPrefix}</span>
+                            )}
+                            <span className={cn(TYPOGRAPHY.planetName, "font-serif tracking-tighter flex items-center gap-1")} style={{ color: PLANET_SVG_FILLS[node.planet] || '#92400E' }}>
+                                <span className="text-[16px]">{PLANET_SYMBOLS[node.planet] || ''}</span>
+                                <span className="text-[16px] font-semibold">{PLANET_ABBREVIATIONS[node.planet] || node.planet}</span>
+                            </span>
+                        </div>
                         {isActive && (
                             <span className={cn("ml-1 px-1.5 py-0.5 bg-emerald-100 border border-emerald-200 rounded-full leading-none", TYPOGRAPHY.breadcrumb, "text-emerald-700 font-bold text-[9px]")}>
                                 A

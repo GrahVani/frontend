@@ -29,9 +29,9 @@ import {
     Sparkle,
 } from 'lucide-react';
 
-import { 
-    usePanchang, 
-    type PanchangDetail 
+import {
+    usePanchang,
+    type PanchangDetail
 } from "@/hooks/queries/usePanchang";
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { KnowledgeTooltip } from '@/components/knowledge';
@@ -91,7 +91,7 @@ function DailyPanchangCard({ detail, label, icon, accent, term }: {
             <div className="relative p-5">
                 <div className="flex items-center gap-2.5 mb-3">
                     <span className="text-[24px] leading-none" style={{ color: accent }}>{icon}</span>
-                    <span className="text-[10px] font-bold tracking-[0.12em] uppercase" style={{ color: accent }}>
+                    <span className="text-[13px] font-bold leading-none" style={{ color: accent }}>
                         {term ? <KnowledgeTooltip term={term} unstyled>{label}</KnowledgeTooltip> : label}
                     </span>
                     {typeof detail.number === 'number' && (
@@ -139,16 +139,20 @@ function BirthPanchangaCard({
         <div className={cn("bg-gradient-to-br rounded-xl p-4 border transition-all hover:shadow-md group", gradient, borderColor)}>
             <div className="flex items-start justify-between mb-3">
                 <div>
-                    <p className={TYPOGRAPHY.label}>{label}</p>
-                    <p className={cn(TYPOGRAPHY.subValue, "text-ink mt-0.5")}>{sanskrit}</p>
+                    {/* LABEL — bright colored caption */}
+                    <p className={cn("font-sans text-[13px] font-bold mb-0.5 leading-none", iconColor)}>{label}</p>
+                    <p className="font-sans text-[10px] font-medium text-stone-400 mt-1 leading-none">{sanskrit}</p>
                 </div>
                 <div className="p-1.5 bg-white/80 rounded-lg shadow-xs group-hover:shadow-sm transition-shadow">
                     <Icon className={cn("w-4 h-4", iconColor)} />
                 </div>
             </div>
-            <p className={TYPOGRAPHY.value}>{value}</p>
-            {subValue && ( <p className={TYPOGRAPHY.subValue}>{subValue}</p> )}
-            <p className={cn(TYPOGRAPHY.subValue, "text-ink mt-2 whitespace-normal leading-snug")}>{description}</p>
+            {/* VALUE — prominent, dark, clearly the "primary content" */}
+            <p className="font-serif text-[17px] font-bold text-stone-900 leading-tight">{value}</p>
+            {/* SUBVALUE — secondary detail, distinct from value */}
+            {subValue && (<p className="font-sans text-[12px] font-medium text-stone-600/80 mt-0.5">{subValue}</p>)}
+            {/* DESCRIPTION — tertiary detail */}
+            <p className="font-sans text-[11px] font-medium text-stone-500/70 mt-2 whitespace-normal leading-snug">{description}</p>
         </div>
     );
 }
@@ -249,16 +253,16 @@ export default function PanchangaOverviewPage() {
                             <BirthPanchangaCard label="Vara" sanskrit="वार" value={panchanga.vara?.name || '—'} description="Planetary ruler of birth day" icon={Sun} gradient="from-orange-50 to-amber-50" iconColor="text-orange-500" borderColor="border-orange-200" />
                         </div>
                     ) : <Loader2 className="animate-spin mx-auto text-gold-primary" />}
-                    
+
                     {times && (
                         <div className="grid grid-cols-2 gap-4">
                             <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-amber-50/80 to-transparent rounded-xl border border-amber-200/30">
                                 <Sunrise className="w-5 h-5 text-amber-500" />
-                                <div><p className={TYPOGRAPHY.label}>Sunrise</p><p className={TYPOGRAPHY.value}>{times.sunrise?.time || '—'}</p></div>
+                                <div><p className="font-sans text-[13px] font-bold text-amber-600 mb-0.5 leading-none">Sunrise</p><p className="font-serif text-[17px] font-bold text-stone-900 leading-tight">{times.sunrise?.time || '—'}</p></div>
                             </div>
                             <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-indigo-50/80 to-transparent rounded-xl border border-indigo-200/30">
                                 <Sunset className="w-5 h-5 text-indigo-500" />
-                                <div><p className={TYPOGRAPHY.label}>Sunset</p><p className={TYPOGRAPHY.value}>{times.sunset?.time || '—'}</p></div>
+                                <div><p className="font-sans text-[13px] font-bold text-indigo-600 mb-0.5 leading-none">Sunset</p><p className="font-serif text-[17px] font-bold text-stone-900 leading-tight">{times.sunset?.time || '—'}</p></div>
                             </div>
                         </div>
                     )}
@@ -272,7 +276,7 @@ export default function PanchangaOverviewPage() {
                         <KnowledgeTooltip term="avakhada_chakra" unstyled>Avakhada Chakra</KnowledgeTooltip>
                     </h3>
                 </div>
-                
+
                 {avakhadaLoading ? (
                     <div className="p-12 text-center"><Loader2 className="w-8 h-8 animate-spin mx-auto text-gold-primary" /></div>
                 ) : avakhadaData && (

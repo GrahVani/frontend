@@ -53,14 +53,14 @@ export default function VargaSlicerExplorer() {
   const fadeUp = { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.3 } };
 
   return (
-    <div className="w-full max-w-[780px] mx-auto select-none">
-      <div className="rounded-3xl bg-gradient-to-br from-slate-50 via-emerald-50/20 to-teal-50/10 border border-emerald-200/50 shadow-2xl shadow-emerald-900/5 p-6 sm:p-8">
+    <div className="w-full select-none">
+      <div className="py-4 sm:py-6">
         {/* Header */}
         <div className="text-center mb-5">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-700 to-teal-700">
             Varga Slicer
           </h2>
-          <p className="text-sm text-emerald-500/80 mt-2 font-medium">
+          <p className="text-base text-emerald-700 mt-2 font-semibold">
             See how a 30° sign is divided into microscopic compartments.
           </p>
         </div>
@@ -79,7 +79,7 @@ export default function VargaSlicerExplorer() {
               style={activeVarga === i ? { background: v.lightColor, borderColor: `${v.color}50`, color: v.color } : {}}
             >
               <div>{v.name}</div>
-              <div className={`text-[9px] font-medium ${activeVarga === i ? "opacity-70" : "text-gray-400"}`}>D-{v.divisor}</div>
+              <div className={`text-xs font-semibold ${activeVarga === i ? "opacity-80" : "text-gray-500"}`}>D-{v.divisor}</div>
             </button>
           ))}
         </div>
@@ -89,7 +89,7 @@ export default function VargaSlicerExplorer() {
           <div className="p-3 rounded-2xl bg-white border border-emerald-100 shadow-sm">
             <div className="flex items-center gap-1.5 mb-2">
               <Star className="w-3.5 h-3.5 text-emerald-600" />
-              <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">D-1 Sign</span>
+              <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider">D-1 Sign</span>
             </div>
             <select
               value={selectedSign}
@@ -103,7 +103,7 @@ export default function VargaSlicerExplorer() {
           </div>
           <div className="p-3 rounded-2xl bg-white border border-emerald-100 shadow-sm">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">Exact Degree</span>
+              <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider">Exact Degree</span>
               <span className="text-sm font-extrabold text-emerald-700">{degree.toFixed(2)}°</span>
             </div>
             <input
@@ -115,7 +115,7 @@ export default function VargaSlicerExplorer() {
               onChange={(e) => setDegree(Number(e.target.value))}
               className="w-full accent-emerald-600"
             />
-            <div className="flex justify-between text-[9px] text-gray-400 mt-0.5">
+            <div className="flex justify-between text-xs text-gray-600 mt-1">
               <span>0°</span><span>15°</span><span>30°</span>
             </div>
           </div>
@@ -126,7 +126,7 @@ export default function VargaSlicerExplorer() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Scissors className="w-4 h-4 text-emerald-600" />
-              <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider">{varga.name} Slices</span>
+              <span className="text-sm font-bold text-emerald-800 uppercase tracking-wider">{varga.name} Slices</span>
             </div>
             <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: varga.lightColor, color: varga.color }}>
               {varga.divisor} slices × {varga.sliceSize} each
@@ -142,7 +142,7 @@ export default function VargaSlicerExplorer() {
               return (
                 <div
                   key={i}
-                  className="absolute top-0 h-full flex items-center justify-center text-[9px] font-bold border-r border-white/50 transition-colors"
+                  className="absolute top-0 h-full flex items-center justify-center text-xs font-bold border-r border-white/50 transition-colors"
                   style={{
                     left: `${left}%`,
                     width: `${width}%`,
@@ -163,7 +163,7 @@ export default function VargaSlicerExplorer() {
             </div>
           </div>
 
-          <div className="flex justify-between text-[10px] text-gray-400 font-medium">
+          <div className="flex justify-between text-xs text-gray-600 font-semibold">
             <span>0°</span><span>10°</span><span>20°</span><span>30°</span>
           </div>
 
@@ -174,12 +174,12 @@ export default function VargaSlicerExplorer() {
             </div>
             <div>
               <div className="text-sm font-bold text-gray-800">Slice {sliceIndex + 1} of {varga.divisor}</div>
-              <div className="text-[11px] text-gray-500">
+              <div className="text-sm text-gray-700">
                 Range: {sliceStart.toFixed(2)}° — {sliceEnd.toFixed(2)}° · Size: {varga.sliceSize}
               </div>
             </div>
             <div className="ml-auto text-right">
-              <div className="text-xs font-bold text-gray-500">Varga Sign</div>
+              <div className="text-sm font-bold text-gray-700">Varga Sign</div>
               <div className="text-sm font-extrabold" style={{ color: varga.color }}>
                 {SIGNS[getVargaSign(d1Sign, sliceIndex, varga) - 1].slice(0, 3)}
               </div>
@@ -192,11 +192,11 @@ export default function VargaSlicerExplorer() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider">Validation Checksum</span>
+              <span className="text-sm font-bold text-emerald-800 uppercase tracking-wider">Validation Checksum</span>
             </div>
             <button
               onClick={() => setShowChecksum(!showChecksum)}
-              className="text-[10px] font-bold px-2 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors"
+              className="text-xs font-bold px-2 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100 transition-colors"
             >
               {showChecksum ? "Hide" : "Show"} Example
             </button>
@@ -207,20 +207,20 @@ export default function VargaSlicerExplorer() {
               <motion.div {...fadeUp}>
                 <div className="grid grid-cols-3 gap-3 mb-3">
                   <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-center">
-                    <div className="text-[10px] font-bold text-amber-600 uppercase mb-1">D-1 Rashi</div>
-                    <div className="text-lg font-extrabold text-gray-800">{SIGNS[selectedSign]}</div>
-                    <div className="text-[10px] text-gray-500">{degree.toFixed(1)}°</div>
+                    <div className="text-xs font-bold text-amber-700 uppercase mb-1">D-1 Rashi</div>
+                    <div className="text-lg font-extrabold text-gray-900">{SIGNS[selectedSign]}</div>
+                    <div className="text-xs text-gray-700">{degree.toFixed(1)}°</div>
                   </div>
                   <div className="flex items-center justify-center">
                     <ArrowRight className="w-5 h-5 text-gray-300" />
                   </div>
                   <div className="p-3 rounded-xl bg-pink-50 border border-pink-200 text-center">
-                    <div className="text-[10px] font-bold text-pink-600 uppercase mb-1">D-9 Navamsha</div>
-                    <div className="text-lg font-extrabold text-gray-800">{SIGNS[d9Sign - 1]}</div>
-                    <div className="text-[10px] text-gray-500">Slice {d9Slice + 1}</div>
+                    <div className="text-xs font-bold text-pink-700 uppercase mb-1">D-9 Navamsha</div>
+                    <div className="text-lg font-extrabold text-gray-900">{SIGNS[d9Sign - 1]}</div>
+                    <div className="text-xs text-gray-700">Slice {d9Slice + 1}</div>
                   </div>
                 </div>
-                <p className="text-xs text-gray-600 leading-relaxed">
+                <p className="text-sm text-gray-800 leading-relaxed">
                   A planet at {degree.toFixed(1)}° in {SIGNS[selectedSign]} appears strong in D-1. 
                   But its D-9 placement in <strong>{SIGNS[d9Sign - 1]}</strong> reveals the 
                   <em>true underlying strength</em>. Professional software must check both charts before predicting.
@@ -230,7 +230,7 @@ export default function VargaSlicerExplorer() {
           </AnimatePresence>
 
           {!showChecksum && (
-            <p className="text-xs text-gray-400 italic">Click "Show Example" to see how D-1 and D-9 can disagree.</p>
+            <p className="text-sm text-gray-600 italic">Click "Show Example" to see how D-1 and D-9 can disagree.</p>
           )}
         </div>
 
@@ -239,8 +239,8 @@ export default function VargaSlicerExplorer() {
           <motion.div {...fadeUp} className="mb-5 p-4 rounded-2xl bg-red-50 border border-red-200 flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
             <div>
-              <div className="text-sm font-bold text-red-700">D-60 Critical Warning</div>
-              <p className="text-xs text-red-600/80 leading-relaxed mt-1">
+              <div className="text-base font-bold text-red-800">D-60 Critical Warning</div>
+              <p className="text-sm text-red-800 leading-relaxed mt-1">
                 Because D-60 uses 0°30' slices, it changes <strong>every 2 minutes of clock time</strong>. 
                 Your software must warn users: if birth time is not accurate to the minute, D-60 analysis is completely invalid.
               </p>
@@ -258,19 +258,19 @@ export default function VargaSlicerExplorer() {
               style={{ background: activeVarga === i ? v.lightColor : "#fff", borderColor: activeVarga === i ? `${v.color}40` : "#f1f5f9" }}
             >
               <div className="flex items-center gap-2 mb-1.5">
-                <div className="w-6 h-6 rounded-md flex items-center justify-center text-white text-[10px] font-bold" style={{ background: v.color }}>D-{v.divisor}</div>
-                <span className="text-xs font-bold text-gray-800">{v.name}</span>
+                <div className="w-7 h-7 rounded-md flex items-center justify-center text-white text-xs font-bold" style={{ background: v.color }}>D-{v.divisor}</div>
+                <span className="text-sm font-bold text-gray-900">{v.name}</span>
               </div>
-              <div className="text-[10px] text-gray-500 mb-1">{v.sliceSize} per slice</div>
-              <div className="text-[10px] font-medium" style={{ color: v.color }}>{v.useCase}</div>
+              <div className="text-xs text-gray-600 mb-1">{v.sliceSize} per slice</div>
+              <div className="text-xs font-semibold" style={{ color: v.color }}>{v.useCase}</div>
             </button>
           ))}
         </div>
 
         {/* Senior astrologer note */}
-        <div className="mt-4 flex items-start gap-3 p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200/40">
-          <Info className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
-          <p className="text-xs text-emerald-800/80 leading-relaxed">
+        <div className="mt-4 flex items-start gap-3 p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+          <Info className="w-5 h-5 text-emerald-700 mt-0.5 shrink-0" />
+          <p className="text-sm text-emerald-900 leading-relaxed">
             <strong>Professional Note:</strong> Never predict from D-1 alone. A Sun exalted at 29°50' in Aries 
             looks like a king in the main chart — but in D-9 it falls into Libra (debilitated). 
             The software must output: <em>"Surface confidence exists, but structural support is broken. 

@@ -114,11 +114,11 @@ export default function HybridBiWheelExplorer() {
 
   const outerInfo = OUTER_PLANET_INFO[selectedOuter];
 
-  // Bi-wheel SVG params
-  const cx = 160;
-  const cy = 160;
-  const rInner = 90;
-  const rOuter = 130;
+  // Bi-wheel SVG params — enlarged for readability
+  const cx = 210;
+  const cy = 210;
+  const rInner = 135;
+  const rOuter = 190;
 
   return (
     <div className="bg-white rounded-2xl border border-amber-200/80 shadow-sm overflow-hidden">
@@ -184,33 +184,33 @@ export default function HybridBiWheelExplorer() {
               <h4 className="text-sm font-bold text-slate-800">
                 {showProgressions ? `Natal + Progressed (Age ${age})` : "Natal Chart"}
               </h4>
-              <div className="flex items-center gap-3 text-[10px]">
-                <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded-full bg-slate-700" />
+              <div className="flex items-center gap-3 text-xs text-slate-800 font-medium">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-3 h-3 rounded-full bg-slate-700" />
                   Natal
                 </span>
                 {showProgressions && (
-                  <span className="flex items-center gap-1">
-                    <span className="w-2.5 h-2.5 rounded-full bg-violet-500" />
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-3 h-3 rounded-full bg-violet-500" />
                     Progressed
                   </span>
                 )}
                 {westernOverlay && (
-                  <span className="flex items-center gap-1">
-                    <span className="w-2.5 h-2.5 rounded-full border-2 border-dashed border-cyan-500" />
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-3 h-3 rounded-full border-2 border-dashed border-cyan-500" />
                     Outer
                   </span>
                 )}
               </div>
             </div>
             <div className="flex justify-center">
-              <svg width="320" height="320" viewBox="0 0 320 320">
+              <svg width="100%" height="420" viewBox="0 0 420 420">
                 {/* Sign segments on outer ring */}
                 {Array.from({ length: 12 }).map((_, i) => {
                   const startAngle = (i * 30 - 90) * (Math.PI / 180);
                   const endAngle = ((i + 1) * 30 - 90) * (Math.PI / 180);
-                  const r1 = rOuter + 10;
-                  const r2 = rOuter - 15;
+                  const r1 = rOuter + 18;
+                  const r2 = rOuter - 22;
                   const x1 = cx + r1 * Math.cos(startAngle);
                   const y1 = cy + r1 * Math.sin(startAngle);
                   const x2 = cx + r1 * Math.cos(endAngle);
@@ -220,15 +220,15 @@ export default function HybridBiWheelExplorer() {
                   const x4 = cx + r2 * Math.cos(startAngle);
                   const y4 = cy + r2 * Math.sin(startAngle);
                   const midAngle = ((i + 0.5) * 30 - 90) * (Math.PI / 180);
-                  const tx = cx + (rOuter - 2) * Math.cos(midAngle);
-                  const ty = cy + (rOuter - 2) * Math.sin(midAngle);
+                  const tx = cx + (rOuter - 4) * Math.cos(midAngle);
+                  const ty = cy + (rOuter - 4) * Math.sin(midAngle);
                   return (
                     <g key={i}>
                       <path
                         d={`M ${x1} ${y1} A ${r1} ${r1} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${r2} ${r2} 0 0 0 ${x4} ${y4} Z`}
-                        fill={SIGN_COLORS[i] + "15"}
+                        fill={SIGN_COLORS[i] + "18"}
                         stroke={SIGN_COLORS[i]}
-                        strokeWidth="0.8"
+                        strokeWidth="1"
                       />
                       <text
                         x={tx}
@@ -236,7 +236,7 @@ export default function HybridBiWheelExplorer() {
                         textAnchor="middle"
                         dominantBaseline="middle"
                         fill="#000000"
-                        fontSize="7"
+                        fontSize="10"
                         fontWeight="bold"
                       >
                         {SIGNS[i].slice(0, 3)}
@@ -246,15 +246,15 @@ export default function HybridBiWheelExplorer() {
                 })}
 
                 {/* Wheel circles */}
-                <circle cx={cx} cy={cy} r={rOuter} fill="none" stroke="#000000" strokeWidth="1" />
-                <circle cx={cx} cy={cy} r={rInner} fill="none" stroke="#000000" strokeWidth="1.5" />
-                <circle cx={cx} cy={cy} r={rInner - 25} fill="none" stroke="#cbd5e1" strokeWidth="0.5" strokeDasharray="3,3" />
+                <circle cx={cx} cy={cy} r={rOuter} fill="none" stroke="#000000" strokeWidth="1.5" />
+                <circle cx={cx} cy={cy} r={rInner} fill="none" stroke="#000000" strokeWidth="2" />
+                <circle cx={cx} cy={cy} r={rInner - 35} fill="none" stroke="#94a3b8" strokeWidth="1" strokeDasharray="4,4" />
 
                 {/* House cusp lines */}
                 {Array.from({ length: 12 }).map((_, i) => {
                   const angle = (i * 30 - 90) * (Math.PI / 180);
-                  const x = cx + rOuter * Math.cos(angle);
-                  const y = cy + rOuter * Math.sin(angle);
+                  const x = cx + (rOuter + 18) * Math.cos(angle);
+                  const y = cy + (rOuter + 18) * Math.sin(angle);
                   return (
                     <line
                       key={i}
@@ -263,8 +263,8 @@ export default function HybridBiWheelExplorer() {
                       x2={x}
                       y2={y}
                       stroke="#000000"
-                      strokeWidth={i % 3 === 0 ? "1" : "0.5"}
-                      opacity={0.4}
+                      strokeWidth={i % 3 === 0 ? "1.2" : "0.7"}
+                      opacity={0.35}
                     />
                   );
                 })}
@@ -272,13 +272,13 @@ export default function HybridBiWheelExplorer() {
                 {/* Natal planets (inner wheel) */}
                 {NATAL_PLANETS.map((p, idx) => {
                   const angle = (p.vedicDeg - 90) * (Math.PI / 180);
-                  const r = rInner - 15 - idx * 6;
+                  const r = rInner - 22 - idx * 9;
                   const px = cx + r * Math.cos(angle);
                   const py = cy + r * Math.sin(angle);
                   return (
                     <g key={`natal-${p.name}`}>
-                      <circle cx={px} cy={py} r={5} fill={p.color} stroke="#ffffff" strokeWidth="1.5" />
-                      <text x={px} y={py + 1} textAnchor="middle" dominantBaseline="middle" fill="#ffffff" fontSize="6" fontWeight="bold">
+                      <circle cx={px} cy={py} r={7} fill={p.color} stroke="#ffffff" strokeWidth="2" />
+                      <text x={px} y={py + 1} textAnchor="middle" dominantBaseline="middle" fill="#ffffff" fontSize="8" fontWeight="bold">
                         {p.icon}
                       </text>
                     </g>
@@ -288,13 +288,13 @@ export default function HybridBiWheelExplorer() {
                 {/* Progressed planets (outer ring) */}
                 {showProgressions && progressedPlanets.map((p, idx) => {
                   const angle = (p.progDeg - 90) * (Math.PI / 180);
-                  const r = rOuter - 8 - idx * 4;
+                  const r = rOuter - 12 - idx * 6;
                   const px = cx + r * Math.cos(angle);
                   const py = cy + r * Math.sin(angle);
                   return (
                     <g key={`prog-${p.name}`}>
-                      <circle cx={px} cy={py} r={4.5} fill="#8b5cf6" stroke="#ffffff" strokeWidth="1.5" />
-                      <text x={px} y={py + 1} textAnchor="middle" dominantBaseline="middle" fill="#ffffff" fontSize="5" fontWeight="bold">
+                      <circle cx={px} cy={py} r={6} fill="#8b5cf6" stroke="#ffffff" strokeWidth="2" />
+                      <text x={px} y={py + 1} textAnchor="middle" dominantBaseline="middle" fill="#ffffff" fontSize="7" fontWeight="bold">
                         {p.icon}
                       </text>
                     </g>
@@ -304,16 +304,20 @@ export default function HybridBiWheelExplorer() {
                 {/* Outer planets (dashed outer ring) */}
                 {westernOverlay && OUTER_PLANETS.map((p) => {
                   const angle = (p.vedicDeg - 90) * (Math.PI / 180);
-                  const r = rOuter + 5;
+                  const r = rOuter + 14;
                   const px = cx + r * Math.cos(angle);
                   const py = cy + r * Math.sin(angle);
+                  // Offset label to avoid overlap
+                  const labelR = rOuter + 32;
+                  const lx = cx + labelR * Math.cos(angle);
+                  const ly = cy + labelR * Math.sin(angle);
                   return (
                     <g key={`outer-${p.name}`}>
-                      <circle cx={px} cy={py} r={6} fill={p.color} stroke="#ffffff" strokeWidth="2" strokeDasharray="2,2" />
-                      <text x={px} y={py + 1} textAnchor="middle" dominantBaseline="middle" fill="#ffffff" fontSize="7" fontWeight="bold">
+                      <circle cx={px} cy={py} r={8} fill={p.color} stroke="#ffffff" strokeWidth="2.5" />
+                      <text x={px} y={py + 1} textAnchor="middle" dominantBaseline="middle" fill="#ffffff" fontSize="9" fontWeight="bold">
                         {p.icon}
                       </text>
-                      <text x={px} y={py - 10} textAnchor="middle" fill="#000000" fontSize="7" fontWeight="bold">
+                      <text x={lx} y={ly} textAnchor="middle" dominantBaseline="middle" fill="#000000" fontSize="10" fontWeight="bold">
                         {p.name}
                       </text>
                     </g>
@@ -321,8 +325,8 @@ export default function HybridBiWheelExplorer() {
                 })}
 
                 {/* Center */}
-                <circle cx={cx} cy={cy} r={3} fill="#000000" />
-                <text x={cx} y={cy + 12} textAnchor="middle" fill="#000000" fontSize="7" fontWeight="bold">Natal</text>
+                <circle cx={cx} cy={cy} r={4} fill="#000000" />
+                <text x={cx} y={cy + 16} textAnchor="middle" fill="#000000" fontSize="10" fontWeight="bold">Natal</text>
               </svg>
             </div>
           </div>
@@ -340,7 +344,7 @@ export default function HybridBiWheelExplorer() {
                     <button
                       key={op}
                       onClick={() => setSelectedOuter(op)}
-                      className={`flex-1 py-1.5 px-2 rounded-lg text-[10px] font-bold border transition-all ${
+                      className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold border transition-all ${
                         selectedOuter === op
                           ? "bg-cyan-600 text-white border-cyan-600"
                           : "bg-white text-slate-700 border-slate-200 hover:border-cyan-300"
@@ -352,16 +356,16 @@ export default function HybridBiWheelExplorer() {
                 </div>
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] text-slate-600">Orbit</span>
+                    <span className="text-xs text-slate-700">Orbit</span>
                     <span className="text-xs font-bold text-slate-800">{outerInfo.orbit}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] text-slate-600">Meaning</span>
+                    <span className="text-xs text-slate-700">Meaning</span>
                     <span className="text-xs font-bold text-slate-800 text-right max-w-[140px]">{outerInfo.meaning}</span>
                   </div>
                   <div className="pt-1.5 border-t border-cyan-200/50">
-                    <span className="text-[10px] text-cyan-700 font-semibold">Trigger:</span>
-                    <p className="text-[10px] text-slate-700 mt-0.5">{outerInfo.trigger}</p>
+                    <span className="text-xs text-cyan-800 font-semibold">Trigger:</span>
+                    <p className="text-xs text-slate-800 mt-0.5">{outerInfo.trigger}</p>
                   </div>
                 </div>
               </div>
@@ -373,7 +377,7 @@ export default function HybridBiWheelExplorer() {
                 <h4 className="text-xs font-bold text-violet-800 uppercase mb-2 flex items-center gap-1.5">
                   <Zap className="w-3.5 h-3.5" /> Secondary Progressions
                 </h4>
-                <p className="text-[10px] text-slate-700 mb-2">
+                <p className="text-xs text-slate-800 mb-2">
                   <strong>1 Day = 1 Year</strong>. The sky {age} days after birth symbolizes age {age}.
                 </p>
                 <div className="space-y-1 max-h-[140px] overflow-y-auto">
@@ -381,12 +385,12 @@ export default function HybridBiWheelExplorer() {
                     <div key={p.name} className="flex items-center justify-between px-2 py-1 bg-white rounded-md border border-violet-100">
                       <div className="flex items-center gap-1.5">
                         <span className="text-xs">{p.icon}</span>
-                        <span className="text-[10px] font-bold text-slate-700">{p.name}</span>
+                        <span className="text-xs font-bold text-slate-800">{p.name}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-slate-500">{getSign(p.vedicDeg).slice(0, 3)}</span>
+                        <span className="text-xs text-slate-700">{getSign(p.vedicDeg).slice(0, 3)}</span>
                         <ChevronRight className="w-3 h-3 text-violet-400" />
-                        <span className="text-[10px] font-bold" style={{ color: getSignColor(p.progDeg) }}>
+                        <span className="text-xs font-bold" style={{ color: getSignColor(p.progDeg) }}>
                           {getSign(p.progDeg).slice(0, 3)}
                         </span>
                       </div>
@@ -411,8 +415,8 @@ export default function HybridBiWheelExplorer() {
                     >
                       <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
                       <div>
-                        <p className="text-[10px] font-bold text-green-800">{alert.type}</p>
-                        <p className="text-[10px] text-slate-700">
+                        <p className="text-xs font-bold text-green-900">{alert.type}</p>
+                        <p className="text-xs text-slate-800">
                           {alert.planet}: Natal {alert.natalSign} ↔ Progressed {alert.progSign}
                         </p>
                       </div>
@@ -420,15 +424,15 @@ export default function HybridBiWheelExplorer() {
                   ))}
                   <div className="flex items-center gap-1.5 mt-2 p-2 bg-indigo-50 rounded-lg border border-indigo-200">
                     <Star className="w-3.5 h-3.5 text-indigo-600" />
-                    <p className="text-[10px] font-bold text-indigo-800">
+                    <p className="text-xs font-bold text-indigo-900">
                       Hybrid Consensus: Both engines agree
                     </p>
                   </div>
                 </div>
               ) : (
                 <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg border border-slate-200">
-                  <AlertCircle className="w-4 h-4 text-slate-400" />
-                  <p className="text-[10px] text-slate-600">No major consensus at age {age}. Try ages 28–32.</p>
+                  <AlertCircle className="w-4 h-4 text-slate-600" />
+                  <p className="text-xs text-slate-700">No major consensus at age {age}. Try ages 28–32.</p>
                 </div>
               )}
             </div>
@@ -436,21 +440,21 @@ export default function HybridBiWheelExplorer() {
             {/* Planet Table */}
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
               <div className="px-3 py-2 bg-slate-50 border-b border-slate-200">
-                <span className="text-[10px] font-semibold text-slate-700 uppercase">Planetary Positions</span>
+                <span className="text-xs font-semibold text-slate-800 uppercase">Planetary Positions</span>
               </div>
               <div className="divide-y divide-slate-100 max-h-[180px] overflow-y-auto">
                 {allPlanets.map((p) => (
                   <div key={p.name} className="px-3 py-1.5 flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <span className="text-xs">{p.icon}</span>
-                      <span className={`text-[10px] font-semibold ${p.isOuter ? "text-cyan-700" : "text-slate-700"}`}>
+                      <span className={`text-xs font-semibold ${p.isOuter ? "text-cyan-800" : "text-slate-800"}`}>
                         {p.name}
                       </span>
                       {p.isOuter && (
-                        <span className="px-1 py-0.5 bg-cyan-100 text-cyan-700 text-[8px] font-bold rounded">OUTER</span>
+                        <span className="px-1.5 py-0.5 bg-cyan-100 text-cyan-800 text-[10px] font-bold rounded">OUTER</span>
                       )}
                     </div>
-                    <span className="text-[10px] font-bold" style={{ color: getSignColor(p.vedicDeg) }}>
+                    <span className="text-xs font-bold" style={{ color: getSignColor(p.vedicDeg) }}>
                       {getSign(p.vedicDeg)}
                     </span>
                   </div>

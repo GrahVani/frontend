@@ -908,14 +908,16 @@ function KundaliContent({
                                             const style = signElementColors[chip.value] || { bg: 'bg-amber-50', border: 'border-amber-200/50', text: 'text-amber-800', iconBg: 'bg-amber-100' };
                                             return (
                                                 <div key={chip.key}
-                                                    className={cn("px-2 py-1 rounded-lg transition-colors flex items-center gap-1.5 border", style.bg, style.border)}>
-                                                    <span className="text-[11px] font-medium text-amber-700/70">{chip.label} :</span>
-                                                    <span className={cn("flex items-center gap-1 text-[12px] font-semibold", style.text)}>
-                                                        <span className={cn("w-5 h-5 rounded flex items-center justify-center text-[10px] font-serif", style.iconBg)}>
-                                                            {signSymbols[chip.value] || ''}
+                                                    className={cn("px-3 py-1.5 rounded-xl transition-all hover:shadow-md flex items-center gap-3 border bg-white/50 backdrop-blur-sm", style.border)}>
+                                                    <div className="flex flex-col min-w-[50px]">
+                                                        <span className="text-[11px] font-bold text-amber-800/80 leading-none mb-1">{chip.label}</span>
+                                                        <span className={cn("text-[14px] font-serif font-bold leading-none", style.text)}>
+                                                            {chip.value}
                                                         </span>
-                                                        {chip.value}
-                                                    </span>
+                                                    </div>
+                                                    <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center text-[18px] shadow-sm shrink-0", style.bg, style.text)}>
+                                                        {signSymbols[chip.value] || ''}
+                                                    </div>
                                                 </div>
                                             );
                                         });
