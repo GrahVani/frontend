@@ -44,24 +44,24 @@ export default function PlanetaryTable({ planets, className, rowClassName, varia
         planet: "w-32",
         sign: "w-32",
         degree: "w-24",
-        nakshatra: "w-38",
+        nakshatra: "w-40",
         pada: "w-16",
         house: "w-16",
-        gap: "gap-x-9"
+        gap: "gap-x-6"
     } : {
-        planet: "w-20",
-        sign: "w-20",
-        degree: "w-18",
-        nakshatra: "w-28",
-        pada: "w-12",
-        house: "w-12",
-        gap: "gap-x-7"
+        planet: "w-28",
+        sign: "w-28",
+        degree: "w-20",
+        nakshatra: "w-30",
+        pada: "w-14",
+        house: "w-14",
+        gap: "gap-x-3"
     };
 
     return (
-        <div className={cn("w-full", className)} role="table" aria-label="Planetary positions table">
+        <div className={cn("w-full overflow-x-auto", className)} role="table" aria-label="Planetary positions table">
             {/* Header */}
-            <div className={cn("flex py-1.5 px-3 border-b border-amber-200/50", colWidths.gap, TYPOGRAPHY.tableHeader)} role="row">
+            <div className={cn("flex py-1.5 px-3 border-b border-amber-200/50 min-w-max", colWidths.gap, TYPOGRAPHY.tableHeader)} role="row">
                 <div className={cn(colWidths.planet, "shrink-0")} role="columnheader">Planet</div>
                 <div className={cn(colWidths.sign, "shrink-0")} role="columnheader">Sign</div>
                 <div className={cn(colWidths.degree, "shrink-0")} role="columnheader">Degree</div>
@@ -76,14 +76,14 @@ export default function PlanetaryTable({ planets, className, rowClassName, varia
                     <div
                         key={p.planet}
                         className={cn(
-                            "flex items-center px-3 font-sans text-[16px] border-b border-amber-200/40 last:border-0 hover:bg-amber-50 transition-colors leading-normal",
+                            "flex items-center px-3 font-sans text-[16px] border-b border-amber-200/40 last:border-0 hover:bg-amber-50 transition-colors leading-normal min-w-max",
                             colWidths.gap,
                             rowClassName || "py-1.5",
                             i % 2 === 0 ? "bg-transparent" : "bg-amber-50/50"
                         )}
                     >
                         {/* Planet Name */}
-                        <div className={cn(colWidths.planet, "shrink-0 truncate flex items-center gap-1.5", TYPOGRAPHY.planetName)} title={p.planet}>
+                        <div className={cn(colWidths.planet, "shrink-0 flex items-center gap-1.5 whitespace-nowrap", TYPOGRAPHY.planetName)} title={p.planet}>
                             <span
                                 className="text-[18px] font-serif"
                                 style={{ color: PLANET_SVG_FILLS[p.planet] || '#92400E' }}
@@ -95,7 +95,7 @@ export default function PlanetaryTable({ planets, className, rowClassName, varia
                         </div>
 
                         {/* Sign */}
-                        <div className={cn(colWidths.sign, "shrink-0 truncate font-regular flex items-center gap-1.5", TYPOGRAPHY.planetName)} title={p.sign}>
+                        <div className={cn(colWidths.sign, "shrink-0 font-regular flex items-center gap-1.5 whitespace-nowrap", TYPOGRAPHY.planetName)} title={p.sign}>
                             <span
                                 className="text-[16px] font-serif opacity-80"
                                 style={{ color: SIGN_ELEMENT_COLORS[p.sign] || '#B45309' }}

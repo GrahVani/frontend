@@ -116,14 +116,14 @@ export default function DashaGocharaSynthesisExplorer() {
   const fadeUp = { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.3 } };
 
   return (
-    <div className="w-full max-w-[780px] mx-auto select-none">
-      <div className="rounded-3xl bg-gradient-to-br from-slate-50 via-violet-50/20 to-purple-50/10 border border-violet-200/50 shadow-2xl shadow-violet-900/5 p-6 sm:p-8">
+    <div className="w-full select-none">
+      <div className="py-4 sm:py-6">
         {/* Header */}
         <div className="text-center mb-6">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-700 to-purple-700">
             Dasha + Gochara Synthesis Engine
           </h2>
-          <p className="text-sm text-violet-500/80 mt-2 font-medium">
+          <p className="text-base text-violet-700 mt-2 font-semibold">
             The ultimate predictive algorithm: Promise + Trigger = Manifestation.
           </p>
         </div>
@@ -134,54 +134,54 @@ export default function DashaGocharaSynthesisExplorer() {
           <div className="p-3 rounded-2xl bg-white border border-violet-100 shadow-sm">
             <div className="flex items-center gap-1.5 mb-2">
               <Target className="w-3.5 h-3.5 text-violet-600" />
-              <span className="text-[10px] font-bold text-violet-700 uppercase tracking-wider">Target</span>
+              <span className="text-xs font-bold text-violet-800 uppercase tracking-wider">Target</span>
             </div>
             <select
               value={selectedDomain.id}
               onChange={(e) => setSelectedDomain(DOMAINS.find(d => d.id === e.target.value) || DOMAINS[0])}
-              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm font-bold text-gray-700 outline-none focus:border-violet-400 cursor-pointer"
+              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm font-bold text-gray-800 outline-none focus:border-violet-400 cursor-pointer"
             >
               {DOMAINS.map(d => (
                 <option key={d.id} value={d.id}>{d.icon} {d.name}</option>
               ))}
             </select>
-            <div className="text-[10px] text-gray-400 mt-1">House {selectedDomain.house} · Lord: {selectedDomain.lord}</div>
+            <div className="text-xs text-gray-600 mt-1 font-medium">House {selectedDomain.house} · Lord: {selectedDomain.lord}</div>
           </div>
 
           {/* Dasha preset */}
           <div className="p-3 rounded-2xl bg-white border border-amber-100 shadow-sm">
             <div className="flex items-center gap-1.5 mb-2">
               <Clock className="w-3.5 h-3.5 text-amber-600" />
-              <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider">Dasha Period</span>
+              <span className="text-xs font-bold text-amber-800 uppercase tracking-wider">Dasha Period</span>
             </div>
             <select
               value={dashaPreset}
               onChange={(e) => setDashaPreset(Number(e.target.value))}
-              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm font-bold text-gray-700 outline-none focus:border-amber-400 cursor-pointer"
+              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm font-bold text-gray-800 outline-none focus:border-amber-400 cursor-pointer"
             >
               {DASHA_PRESETS.map((d, i) => (
                 <option key={i} value={i}>{d.md}-{d.ad}</option>
               ))}
             </select>
-            <div className="text-[10px] text-gray-400 mt-1">{dp.label}</div>
+            <div className="text-xs text-gray-600 mt-1 font-medium">{dp.label}</div>
           </div>
 
           {/* Gochara preset */}
           <div className="p-3 rounded-2xl bg-white border border-sky-100 shadow-sm">
             <div className="flex items-center gap-1.5 mb-2">
               <Orbit className="w-3.5 h-3.5 text-sky-600" />
-              <span className="text-[10px] font-bold text-sky-700 uppercase tracking-wider">Gochara</span>
+              <span className="text-xs font-bold text-sky-800 uppercase tracking-wider">Gochara</span>
             </div>
             <select
               value={gocharaPreset}
               onChange={(e) => setGocharaPreset(Number(e.target.value))}
-              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm font-bold text-gray-700 outline-none focus:border-sky-400 cursor-pointer"
+              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm font-bold text-gray-800 outline-none focus:border-sky-400 cursor-pointer"
             >
               {GOCHARA_PRESETS.map((g, i) => (
                 <option key={i} value={i}>{g.label}</option>
               ))}
             </select>
-            <div className="text-[10px] text-gray-400 mt-1">Jupiter H{gp.jupiter} · Saturn H{gp.saturn}</div>
+            <div className="text-xs text-gray-600 mt-1 font-medium">Jupiter H{gp.jupiter} · Saturn H{gp.saturn}</div>
           </div>
         </div>
 
@@ -220,12 +220,12 @@ export default function DashaGocharaSynthesisExplorer() {
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-bold text-gray-800">Step {step.num}: {step.title}</span>
                       {isPast && (
-                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${step.pass ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${step.pass ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
                           {step.pass ? "PASS" : "FAIL"}
                         </span>
                       )}
                     </div>
-                    <div className="text-[11px] text-gray-500 font-medium truncate">{step.result}</div>
+                    <div className="text-sm text-gray-700 font-semibold truncate">{step.result}</div>
                   </div>
                   <ChevronRight className={`w-4 h-4 text-gray-400 shrink-0 transition-transform ${isOpen ? "rotate-90" : ""}`} />
                 </button>
@@ -241,17 +241,17 @@ export default function DashaGocharaSynthesisExplorer() {
                     >
                       <div className="px-3.5 pb-3.5 pt-0">
                         <div className="pl-11">
-                          <p className="text-xs text-gray-600 leading-relaxed mb-2">{step.detail}</p>
+                          <p className="text-sm text-gray-800 leading-relaxed mb-2">{step.detail}</p>
 
                           {step.num === 2 && (
                             <div className="flex flex-wrap gap-1.5">
                               {dp.houses.map(h => (
                                 <span
                                   key={h}
-                                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                  className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                                     h === selectedDomain.house || h === selectedDomain.lordSign
-                                      ? "bg-amber-100 text-amber-700 border border-amber-200"
-                                      : "bg-gray-100 text-gray-500"
+                                      ? "bg-amber-100 text-amber-800 border border-amber-300"
+                                      : "bg-gray-100 text-gray-600"
                                   }`}
                                 >
                                   House {h} {h === selectedDomain.house ? "(TARGET)" : h === selectedDomain.lordSign ? "(LORD)" : ""}
@@ -263,20 +263,20 @@ export default function DashaGocharaSynthesisExplorer() {
                           {step.num === 3 && (
                             <div className="space-y-1.5">
                               <div className="flex items-center gap-2">
-                                <span className="text-[10px] font-bold text-orange-600 w-16">Jupiter</span>
+                                <span className="text-xs font-bold text-orange-700 w-16">Jupiter</span>
                                 <div className="flex gap-1">
                                   {jupiterAspects.map(h => (
-                                    <span key={h} className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${h === selectedDomain.house || h === selectedDomain.lordSign ? "bg-orange-100 text-orange-700 border border-orange-200" : "bg-gray-100 text-gray-500"}`}>
+                                    <span key={h} className={`text-xs font-bold px-2 py-0.5 rounded-full ${h === selectedDomain.house || h === selectedDomain.lordSign ? "bg-orange-100 text-orange-800 border border-orange-300" : "bg-gray-100 text-gray-600"}`}>
                                       H{h}
                                     </span>
                                   ))}
                                 </div>
                               </div>
                               <div className="flex items-center gap-2">
-                                <span className="text-[10px] font-bold text-slate-600 w-16">Saturn</span>
+                                <span className="text-xs font-bold text-slate-700 w-16">Saturn</span>
                                 <div className="flex gap-1">
                                   {saturnAspects.map(h => (
-                                    <span key={h} className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${h === selectedDomain.house || h === selectedDomain.lordSign ? "bg-slate-200 text-slate-700 border border-slate-300" : "bg-gray-100 text-gray-500"}`}>
+                                    <span key={h} className={`text-xs font-bold px-2 py-0.5 rounded-full ${h === selectedDomain.house || h === selectedDomain.lordSign ? "bg-slate-200 text-slate-800 border border-slate-400" : "bg-gray-100 text-gray-600"}`}>
                                       H{h}
                                     </span>
                                   ))}
@@ -317,7 +317,7 @@ export default function DashaGocharaSynthesisExplorer() {
             )}
           </div>
 
-          <p className="text-sm text-gray-700 leading-relaxed max-w-md mx-auto">
+          <p className="text-base text-gray-800 leading-relaxed max-w-lg mx-auto">
             {allPass
               ? `All three gates are OPEN. The ${selectedDomain.name.toLowerCase()} event has the Dasha promise, the Double Transit trigger, and the fast transit catalyst. The window is active.`
               : !dashaPromise
@@ -339,8 +339,8 @@ export default function DashaGocharaSynthesisExplorer() {
                 >
                   {step.pass ? <CheckCircle2 className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
                 </div>
-                <div className="text-[9px] font-bold text-gray-500 hidden sm:block">{step.title.split(" ")[0]}</div>
-                {step.num < 4 && <ArrowRight className="w-3 h-3 text-gray-300" />}
+                <div className="text-xs font-bold text-gray-600 hidden sm:block">{step.title.split(" ")[0]}</div>
+                {step.num < 4 && <ArrowRight className="w-3.5 h-3.5 text-gray-400" />}
               </div>
             ))}
           </div>
@@ -349,22 +349,22 @@ export default function DashaGocharaSynthesisExplorer() {
         {/* Formula bar */}
         <div className="mt-5 bg-gradient-to-r from-amber-100 via-violet-100 to-emerald-100 rounded-xl p-4 text-center border border-gray-100">
           <div className="flex items-center justify-center gap-2 text-sm font-bold flex-wrap">
-            <span className="px-3 py-1 rounded-lg bg-amber-500 text-white text-xs">Dasha Promise</span>
-            <span className="text-gray-400">+</span>
-            <span className="px-3 py-1 rounded-lg bg-violet-500 text-white text-xs">Gochara Trigger</span>
-            <span className="text-gray-400">+</span>
-            <span className="px-3 py-1 rounded-lg bg-emerald-500 text-white text-xs">Fast Catalyst</span>
-            <span className="text-gray-400">=</span>
-            <span className={`px-3 py-1 rounded-lg text-white text-xs ${allPass ? "bg-green-500" : "bg-red-400"}`}>
+            <span className="px-3 py-1 rounded-lg bg-amber-600 text-white text-sm font-bold">Dasha Promise</span>
+            <span className="text-gray-500">+</span>
+            <span className="px-3 py-1 rounded-lg bg-violet-600 text-white text-sm font-bold">Gochara Trigger</span>
+            <span className="text-gray-500">+</span>
+            <span className="px-3 py-1 rounded-lg bg-emerald-600 text-white text-sm font-bold">Fast Catalyst</span>
+            <span className="text-gray-500">=</span>
+            <span className={`px-3 py-1 rounded-lg text-white text-sm font-bold ${allPass ? "bg-green-600" : "bg-red-500"}`}>
               {allPass ? "Manifestation" : "Blocked"}
             </span>
           </div>
         </div>
 
         {/* Senior astrologer note */}
-        <div className="mt-4 flex items-start gap-3 p-4 rounded-2xl bg-violet-50/60 border border-violet-200/40">
-          <Info className="w-4 h-4 text-violet-500 mt-0.5 shrink-0" />
-          <p className="text-xs text-violet-800/80 leading-relaxed">
+        <div className="mt-4 flex items-start gap-3 p-4 rounded-xl bg-violet-50 border border-violet-200">
+          <Info className="w-5 h-5 text-violet-700 mt-0.5 shrink-0" />
+          <p className="text-sm text-violet-900 leading-relaxed">
             <strong>Professional Note:</strong> The greatest value your software provides is filtering false positives. 
             A user sees Jupiter transiting their 2nd House of Wealth and gets excited — but if they're running a 
             Rahu-Saturn period connected to the 12th House of Loss, the software must warn: 

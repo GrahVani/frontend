@@ -163,15 +163,14 @@ function ShadbalaBarChart({ planets }: { planets: ShadbalaPlanet[] }) {
 
             {/* Virupas Label at side */}
             <text
-                x={marginL - 12} y={marginT + chartH / 2}
+                x={marginL - 14} y={marginT + chartH / 2}
                 textAnchor="middle"
-                fontSize={10}
-                fill="#9C7A2F"
-                fontWeight="700"
-                transform={`rotate(-90, ${marginL - 12}, ${marginT + chartH / 2})`}
-                opacity={0.8}
+                fontSize={12}
+                fill="black"
+                fontWeight="600"
+                transform={`rotate(-90, ${marginL - 14}, ${marginT + chartH / 2})`}
             >
-                VIRUPAS
+                Virupas
             </text>
         </svg>
     );
@@ -328,7 +327,6 @@ export default function KundliAnalyticsPanel() {
                         <BarChart3 className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                         <h2 className={cn(TYPOGRAPHY.sectionTitle, "truncate")}>Shadbala strength</h2>
                     </div>
-                    <span className="text-[9px] text-ink/30 tracking-wider whitespace-nowrap shrink-0">LAHIRI ONLY</span>
                 </div>
                 <div className="flex-1 bg-surface-warm overflow-hidden">
                     {loading ? (
@@ -355,7 +353,6 @@ export default function KundliAnalyticsPanel() {
                         <Grid3X3 className="w-3.5 h-3.5 text-purple-600 shrink-0" />
                         <h2 className={cn(TYPOGRAPHY.sectionTitle, "truncate")}>Sarvashtakavarga</h2>
                     </div>
-                    <span className="text-[9px] text-ink/30 tracking-wider whitespace-nowrap shrink-0">LAHIRI ONLY</span>
                 </div>
                 <div className="flex-1 p-3 bg-surface-warm min-h-[180px] flex flex-col xl:flex-row items-stretch gap-6 overflow-hidden">
                     {loading ? (
@@ -375,8 +372,8 @@ export default function KundliAnalyticsPanel() {
 
                             {/* Right Side: Matrix Table */}
                             <div className="flex-1 w-full overflow-hidden flex flex-col justify-start">
-                                <div className="text-[10px] text-ink/40 font-medium mb-1.5 px-1 uppercase tracking-wider flex items-center gap-2">
-                                    <div className="w-1 h-1 rounded-full bg-purple-400" />
+                                <div className="text-[12px] text-black font-semibold mb-1.5 px-1 flex items-center gap-2">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
                                     Bindu Matrix
                                 </div>
                                 <div className="overflow-x-auto custom-scrollbar rounded-xl border border-primary/10 bg-white/30 flex-1">

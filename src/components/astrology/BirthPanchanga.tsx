@@ -21,13 +21,13 @@ import { PLANET_SVG_FILLS } from '@/design-tokens/colors';
 
 /** Vara (weekday) → ruling planet color */
 const VARA_COLORS: Record<string, { hex: string; bg: string; border: string; label: string }> = {
-    'Sunday':    { hex: PLANET_SVG_FILLS['Sun'] || '#F97316',     bg: 'bg-orange-50',    border: 'border-orange-200/60',    label: 'text-orange-700' },
-    'Monday':    { hex: PLANET_SVG_FILLS['Moon'] || '#2563EB',    bg: 'bg-blue-50',      border: 'border-blue-200/60',      label: 'text-blue-700' },
-    'Tuesday':   { hex: PLANET_SVG_FILLS['Mars'] || '#EF4444',    bg: 'bg-red-50',       border: 'border-red-200/60',       label: 'text-red-700' },
-    'Wednesday': { hex: PLANET_SVG_FILLS['Mercury'] || '#10B981', bg: 'bg-emerald-50',   border: 'border-emerald-200/60',   label: 'text-emerald-700' },
-    'Thursday':  { hex: PLANET_SVG_FILLS['Jupiter'] || '#EAB308', bg: 'bg-yellow-50',    border: 'border-yellow-200/60',    label: 'text-yellow-700' },
-    'Friday':    { hex: PLANET_SVG_FILLS['Venus'] || '#D946EF',   bg: 'bg-fuchsia-50',   border: 'border-fuchsia-200/60',   label: 'text-fuchsia-700' },
-    'Saturday':  { hex: PLANET_SVG_FILLS['Saturn'] || '#4338CA',  bg: 'bg-indigo-50',    border: 'border-indigo-200/60',    label: 'text-indigo-700' },
+    'Sunday': { hex: PLANET_SVG_FILLS['Sun'] || '#F97316', bg: 'bg-orange-50', border: 'border-orange-200/60', label: 'text-orange-700' },
+    'Monday': { hex: PLANET_SVG_FILLS['Moon'] || '#2563EB', bg: 'bg-blue-50', border: 'border-blue-200/60', label: 'text-blue-700' },
+    'Tuesday': { hex: PLANET_SVG_FILLS['Mars'] || '#EF4444', bg: 'bg-red-50', border: 'border-red-200/60', label: 'text-red-700' },
+    'Wednesday': { hex: PLANET_SVG_FILLS['Mercury'] || '#10B981', bg: 'bg-emerald-50', border: 'border-emerald-200/60', label: 'text-emerald-700' },
+    'Thursday': { hex: '#92400E', bg: 'bg-yellow-50', border: 'border-yellow-200/60', label: 'text-amber-800' },
+    'Friday': { hex: PLANET_SVG_FILLS['Venus'] || '#D946EF', bg: 'bg-fuchsia-50', border: 'border-fuchsia-200/60', label: 'text-fuchsia-700' },
+    'Saturday': { hex: PLANET_SVG_FILLS['Saturn'] || '#4338CA', bg: 'bg-indigo-50', border: 'border-indigo-200/60', label: 'text-indigo-700' },
 };
 
 interface PanchangaItemProps {
@@ -46,27 +46,31 @@ function PanchangaItem({ label, value, subValue, icon: Icon, color, termKey, noB
     const colorPrefix = color.replace('text-', '').split('-')[0]; // e.g. "indigo"
     const bgTint = `bg-${colorPrefix}-50`;
     const borderTint = `border-${colorPrefix}-200/40`;
-    const valueColor = `text-${colorPrefix}-800`;
-    const subValueColor = `text-${colorPrefix}-600/70`;
 
     return (
         <div className={cn(
-            "bg-white p-2.5 rounded-xl flex items-center gap-2.5 shadow-sm group hover:shadow-md transition-all",
+            "bg-white p-3 rounded-xl flex items-start gap-3 shadow-sm group hover:shadow-md transition-all",
             !noBorder && "border",
             !noBorder ? borderTint : "border-transparent"
         )}>
-            <div className={cn("p-2 rounded-xl shrink-0 shadow-xs transition-colors", bgTint, color)}>
+            <div className={cn("p-2 rounded-xl shrink-0 shadow-xs transition-colors mt-0.5", bgTint, color)}>
                 <Icon className="w-4 h-4" />
             </div>
             <div className="min-w-0 flex-1">
-                <div className={cn(TYPOGRAPHY.label, "text-amber-800/70 flex flex-wrap items-center gap-x-1 min-w-0")}>
+                {/* LABEL — bright colored caption per-category */}
+                <p className={cn("font-sans text-[13px] font-bold mb-1 leading-none", `text-${colorPrefix}-600`)}>
                     {termKey ? <KnowledgeTooltip term={termKey}>{label}</KnowledgeTooltip> : label}
-                </div>
-                <p className={cn(TYPOGRAPHY.value, valueColor, "leading-tight break-words")}>
+                </p>
+                {/* VALUE — prominent, dark, clearly the "primary content" */}
+                <p className="font-serif text-[15px] font-bold text-stone-900 leading-tight">
                     {value}
                 </p>
+                {/* SUBVALUE — secondary detail, distinctly lighter and smaller than value */}
                 {subValue && (
-                    <p className={cn(TYPOGRAPHY.subValue, subValueColor)}>
+                    <p className={cn(
+                        "font-sans text-[11px] font-medium mt-0.5 leading-none",
+                        `text-${colorPrefix}-600/80`
+                    )}>
                         {subValue}
                     </p>
                 )}
@@ -103,89 +107,91 @@ export default function BirthPanchanga({ data }: { data: BirthPanchangaData | nu
 
     return (
         <KnowledgeBatchProvider>
-        <div className="space-y-2">
-            <div className="grid grid-cols-2 gap-2">
-                <PanchangaItem
-                    label="Tithi"
-                    value={tithi.name}
-                    subValue={tithi.paksha}
-                    icon={Moon}
-                    color="text-indigo-400"
-                    termKey="tithi"
-                />
-                <PanchangaItem
-                    label="Nakshatra"
-                    value={nakshatra.name}
-                    subValue={`Pada ${nakshatra.pada}`}
-                    icon={Zap}
-                    color="text-amber-400"
-                    termKey="nakshatra"
-                />
-                <PanchangaItem
-                    label="Yoga"
-                    value={yoga.name}
-                    icon={RefreshCcw}
-                    color="text-teal-400"
-                    termKey="yoga_panchanga"
-                    noBorder
-                />
-                <PanchangaItem
-                    label="Karana"
-                    value={karana.name}
-                    icon={CalendarDays}
-                    color="text-rose-400"
-                    termKey="karana"
-                    noBorder
-                />
-            </div>
+            <div className="space-y-2">
+                <div className="grid grid-cols-2 gap-2">
+                    <PanchangaItem
+                        label="Tithi"
+                        value={tithi.name}
+                        subValue={tithi.paksha}
+                        icon={Moon}
+                        color="text-indigo-400"
+                        termKey="tithi"
+                    />
+                    <PanchangaItem
+                        label="Nakshatra"
+                        value={nakshatra.name}
+                        subValue={`Pada ${nakshatra.pada}`}
+                        icon={Zap}
+                        color="text-amber-400"
+                        termKey="nakshatra"
+                    />
+                    <PanchangaItem
+                        label="Yoga"
+                        value={yoga.name}
+                        icon={RefreshCcw}
+                        color="text-teal-400"
+                        termKey="yoga_panchanga"
+                        noBorder
+                    />
+                    <PanchangaItem
+                        label="Karana"
+                        value={karana.name}
+                        icon={CalendarDays}
+                        color="text-rose-400"
+                        termKey="karana"
+                        noBorder
+                    />
+                </div>
 
-            <div className="grid grid-cols-2 gap-2">
-                <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-amber-200/40 shadow-sm">
-                    <div className="p-2 rounded-xl bg-amber-50 text-amber-600 shrink-0">
-                        <Sunrise className="w-4 h-4" />
+                {/* Sunrise / Sunset — same hierarchy pattern */}
+                <div className="grid grid-cols-2 gap-2">
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-white border border-amber-200/40 shadow-sm">
+                        <div className="p-2 rounded-xl bg-amber-50 text-amber-600 shrink-0">
+                            <Sunrise className="w-4 h-4" />
+                        </div>
+                        <div className="min-w-0">
+                            <p className="font-sans text-[13px] font-bold text-amber-600 mb-1 leading-none">Sunrise</p>
+                            <p className="font-serif text-[15px] font-bold text-stone-900 leading-tight">{times.sunrise.time}</p>
+                        </div>
                     </div>
-                    <div className="min-w-0">
-                        <p className={cn(TYPOGRAPHY.label, "text-amber-800/70")}>Sunrise</p>
-                        <p className={cn(TYPOGRAPHY.value, "text-amber-900")}>{times.sunrise.time}</p>
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-white border border-indigo-200/40 shadow-sm">
+                        <div className="p-2 rounded-xl bg-indigo-50 text-indigo-500 shrink-0">
+                            <Sunset className="w-4 h-4" />
+                        </div>
+                        <div className="min-w-0">
+                            <p className="font-sans text-[13px] font-bold text-indigo-600 mb-1 leading-none">Sunset</p>
+                            <p className="font-serif text-[15px] font-bold text-stone-900 leading-tight">{times.sunset.time}</p>
+                        </div>
                     </div>
                 </div>
-                <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-indigo-200/40 shadow-sm">
-                    <div className="p-2 rounded-xl bg-indigo-50 text-indigo-500 shrink-0">
-                        <Sunset className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0">
-                        <p className={cn(TYPOGRAPHY.label, "text-indigo-800/70")}>Sunset</p>
-                        <p className={cn(TYPOGRAPHY.value, "text-indigo-900")}>{times.sunset.time}</p>
-                    </div>
-                </div>
-            </div>
 
-            <div className="pt-1">
-                {(() => {
-                    const varaStyle = VARA_COLORS[vara.name];
-                    if (varaStyle) {
+                {/* Birth Vara — same hierarchy pattern */}
+                <div className="pt-1">
+                    {(() => {
+                        const varaStyle = VARA_COLORS[vara.name];
+                        if (varaStyle) {
+                            return (
+                                <div className={cn("text-center py-2.5 rounded-xl border shadow-sm flex items-center justify-center gap-2", varaStyle.bg, varaStyle.border)}>
+                                    <span className={cn("font-sans text-[13px] font-bold", varaStyle.label)}>
+                                        <KnowledgeTooltip term="vara">Birth vara</KnowledgeTooltip> :
+                                    </span>
+                                    <span className="font-serif text-[15px] font-bold" style={{ color: varaStyle.hex }}>
+                                        {vara.name}
+                                    </span>
+                                </div>
+                            );
+                        }
                         return (
-                            <div className={cn("text-center py-2 rounded-xl border shadow-sm flex items-center justify-center gap-2", varaStyle.bg, varaStyle.border)}>
-                                <span className={cn(TYPOGRAPHY.label, "mb-0", varaStyle.label)}>
+                            <div className="text-center bg-amber-50/40 py-2.5 rounded-xl border border-amber-200/40">
+                                <span className="font-sans text-[13px] font-bold text-amber-700 mr-2">
                                     <KnowledgeTooltip term="vara">Birth vara</KnowledgeTooltip> :
                                 </span>
-                                <span className={cn(TYPOGRAPHY.value, "font-semibold")} style={{ color: varaStyle.hex }}>
-                                    {vara.name}
-                                </span>
+                                <span className="font-serif text-[15px] font-bold text-stone-900">{vara.name}</span>
                             </div>
                         );
-                    }
-                    return (
-                        <div className="text-center bg-amber-50/40 py-2 rounded-xl border border-amber-200/40">
-                            <span className={cn(TYPOGRAPHY.label, "mb-0 mr-2 text-amber-800/70")}>
-                                <KnowledgeTooltip term="vara">Birth vara</KnowledgeTooltip> :
-                            </span>
-                            <span className={cn(TYPOGRAPHY.value, "text-amber-900")}>{vara.name}</span>
-                        </div>
-                    );
-                })()}
+                    })()}
+                </div>
             </div>
-        </div>
         </KnowledgeBatchProvider>
     );
 }
