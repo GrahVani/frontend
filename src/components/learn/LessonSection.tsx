@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import {
   BookOpen, Languages, Cog, Code, Lightbulb, ChevronDown, ChevronUp,
-  Sparkles, Terminal, Binary, GitBranch, Eye, Zap, Compass, HelpCircle
+  Sparkles, Terminal, Binary, GitBranch, Zap, Compass, HelpCircle
 } from "lucide-react";
 import DynamicDiagram from "./DynamicDiagram";
 import TTSButton from "./interactive/TTSButton";
@@ -125,12 +125,77 @@ const SECTION_STYLES: Record<string, {
     iconBg: "bg-amber-100",
     iconColor: "text-amber-700",
   },
+  algorithm: {
+    icon: Terminal,
+    bg: "bg-white",
+    border: "border-indigo-200/60",
+    leftBorder: "border-l-indigo-500",
+    titleColor: "text-indigo-900",
+    badge: "ALGORITHM",
+    badgeColor: "bg-indigo-50 text-indigo-700",
+    iconBg: "bg-indigo-100",
+    iconColor: "text-indigo-700",
+  },
+  logic_gate: {
+    icon: Binary,
+    bg: "bg-white",
+    border: "border-violet-200/60",
+    leftBorder: "border-l-violet-500",
+    titleColor: "text-violet-900",
+    badge: "LOGIC GATE",
+    badgeColor: "bg-violet-50 text-violet-700",
+    iconBg: "bg-violet-100",
+    iconColor: "text-violet-700",
+  },
+  case_debug: {
+    icon: Code,
+    bg: "bg-white",
+    border: "border-slate-200/60",
+    leftBorder: "border-l-slate-500",
+    titleColor: "text-slate-900",
+    badge: "DEBUG CASE",
+    badgeColor: "bg-slate-100 text-slate-700",
+    iconBg: "bg-slate-200",
+    iconColor: "text-slate-700",
+  },
+  synthesis: {
+    icon: GitBranch,
+    bg: "bg-white",
+    border: "border-amber-200/60",
+    leftBorder: "border-l-amber-500",
+    titleColor: "text-amber-900",
+    badge: "SYNTHESIS",
+    badgeColor: "bg-amber-50 text-amber-700",
+    iconBg: "bg-amber-100",
+    iconColor: "text-amber-700",
+  },
+  exception_handler: {
+    icon: Zap,
+    bg: "bg-white",
+    border: "border-teal-200/60",
+    leftBorder: "border-l-teal-500",
+    titleColor: "text-teal-900",
+    badge: "EXCEPTION",
+    badgeColor: "bg-teal-50 text-teal-700",
+    iconBg: "bg-teal-100",
+    iconColor: "text-teal-700",
+  },
+  chain_trace: {
+    icon: GitBranch,
+    bg: "bg-white",
+    border: "border-cyan-200/60",
+    leftBorder: "border-l-cyan-500",
+    titleColor: "text-cyan-900",
+    badge: "CHAIN TRACE",
+    badgeColor: "bg-cyan-50 text-cyan-700",
+    iconBg: "bg-cyan-100",
+    iconColor: "text-cyan-700",
+  },
 };
 
 function formatContent(content: string): React.ReactNode {
   const lines = content.split("\n").filter(l => l.trim());
   const elements: React.ReactNode[] = [];
-  let inList = false;
   let listItems: string[] = [];
 
   const flushList = () => {
@@ -148,7 +213,6 @@ function formatContent(content: string): React.ReactNode {
       );
     }
     listItems = [];
-    inList = false;
   };
 
   lines.forEach((line, idx) => {
@@ -171,7 +235,6 @@ function formatContent(content: string): React.ReactNode {
 
     // Bullet points
     if (trimmed.startsWith("* ") || trimmed.startsWith("- ")) {
-      inList = true;
       listItems.push(trimmed.substring(2));
       return;
     }

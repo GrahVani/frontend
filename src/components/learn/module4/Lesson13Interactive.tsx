@@ -144,14 +144,14 @@ export default function Lesson13Interactive({ lesson, lessonProgress }: Lesson13
             completedSections={completedSections}
             onNavigate={scrollTo}
             progress={Math.max(progress, sectionProgress)}
-            className="w-64 shrink-0"
+            className="w-64 shrink-0 sticky top-4 self-start h-fit"
           />
 
           {/* Main Content */}
           <div className="flex-1 min-w-0">
             {/* ─── HERO ─── */}
             <section id="hero" className="mb-6 scroll-mt-32">
-              <Link href="/learn" className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-800 text-sm mb-4 transition-colors">
+              <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-800 text-sm mb-4 transition-colors">
                 <ArrowLeft className="w-4 h-4" /> Back to Learning Path
               </Link>
               <div className="flex items-center gap-2 mb-2">
@@ -303,7 +303,7 @@ export default function Lesson13Interactive({ lesson, lessonProgress }: Lesson13
                     <Lock className="w-10 h-10 text-gray-400 mx-auto mb-3" />
                     <h3 className="text-lg font-bold text-gray-700 mb-2">Lesson Locked</h3>
                     <p className="text-gray-500 mb-4">Complete the previous lessons to unlock this one.</p>
-                    <Link href="/learn" className="inline-flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-colors">
+                    <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="inline-flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-colors">
                       <Play className="w-4 h-4" /> Go to Learning Path
                     </Link>
                   </div>
@@ -323,7 +323,7 @@ export default function Lesson13Interactive({ lesson, lessonProgress }: Lesson13
                       <p className="text-xl font-bold text-gray-900">Continue to Module 5: Micro-Analysis & Quantification</p>
                       <p className="text-sm text-gray-500 mt-1">Next: Learn how to quantify planetary strength and micro-analyze chart components.</p>
                     </div>
-                    <Link href="/learn" className="flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-colors shadow-md shadow-amber-600/20 shrink-0">
+                    <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-colors shadow-md shadow-amber-600/20 shrink-0">
                       Continue Learning <ChevronRight className="w-4 h-4" />
                     </Link>
                   </div>

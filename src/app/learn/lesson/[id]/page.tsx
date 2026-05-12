@@ -50,6 +50,15 @@ import Lesson33Interactive from "@/components/learn/module9/Lesson33Interactive"
 import Lesson34Interactive from "@/components/learn/module10/Lesson34Interactive";
 import Lesson35Interactive from "@/components/learn/module10/Lesson35Interactive";
 import Lesson36Interactive from "@/components/learn/module10/Lesson36Interactive";
+import Lesson37Interactive from "@/components/learn/module11/Lesson37Interactive";
+import Lesson38Interactive from "@/components/learn/module11/Lesson38Interactive";
+import Lesson39Interactive from "@/components/learn/module11/Lesson39Interactive";
+import Lesson40Interactive from "@/components/learn/module12/Lesson40Interactive";
+import Lesson41Interactive from "@/components/learn/module12/Lesson41Interactive";
+import Lesson42Interactive from "@/components/learn/module12/Lesson42Interactive";
+import Lesson43Interactive from "@/components/learn/module13/Lesson43Interactive";
+import Lesson44Interactive from "@/components/learn/module13/Lesson44Interactive";
+import Lesson45Interactive from "@/components/learn/module13/Lesson45Interactive";
 
 interface ConceptMedia {
   type: string;
@@ -386,6 +395,60 @@ export default function LessonPage() {
   const isLesson36 = lesson.sequenceOrder === 3 && lesson.title.includes("Dashboard");
   if (isLesson36) {
     return <Lesson36Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 11: Lesson 1 (Ashtottari Dasha) ───
+  const isLesson37 = lesson.sequenceOrder === 1 && lesson.title.includes("Ashtottari");
+  if (isLesson37) {
+    return <Lesson37Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 11: Lesson 2 (Yogini Dasha) ───
+  const isLesson38 = lesson.sequenceOrder === 2 && lesson.title.includes("Yogini");
+  if (isLesson38) {
+    return <Lesson38Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 11: Lesson 3 (Kalachakra Dasha) ───
+  const isLesson39 = lesson.sequenceOrder === 3 && lesson.title.includes("Kalachakra");
+  if (isLesson39) {
+    return <Lesson39Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 12: Lesson 1 (Baladi Avasthas) ───
+  const isLesson40 = lesson.sequenceOrder === 1 && lesson.title.includes("Baladi");
+  if (isLesson40) {
+    return <Lesson40Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 12: Lesson 2 (Lajjitadi Avasthas) ───
+  const isLesson41 = lesson.sequenceOrder === 2 && lesson.title.includes("Lajjitadi");
+  if (isLesson41) {
+    return <Lesson41Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 12: Lesson 3 (Neecha Bhanga) ───
+  const isLesson42 = lesson.sequenceOrder === 3 && lesson.title.includes("Neecha Bhanga");
+  if (isLesson42) {
+    return <Lesson42Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 13: Lesson 1 (Bhavat Bhavam) ───
+  const isLesson43 = lesson.sequenceOrder === 1 && lesson.title.includes("Bhavat Bhavam");
+  if (isLesson43) {
+    return <Lesson43Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 13: Lesson 2 (Dispositor Theory) ───
+  const isLesson44 = lesson.sequenceOrder === 2 && lesson.title.includes("Dispositor");
+  if (isLesson44) {
+    return <Lesson44Interactive lesson={lesson} lessonProgress={lessonProgress} />;
+  }
+
+  // ─── Module 13: Lesson 3 (Karako Bhava Nashaya) ───
+  const isLesson45 = lesson.sequenceOrder === 3 && lesson.title.includes("Karako Bhava");
+  if (isLesson45) {
+    return <Lesson45Interactive lesson={lesson} lessonProgress={lessonProgress} />;
   }
 
   const content = lesson.contentJson as unknown as LessonContent;

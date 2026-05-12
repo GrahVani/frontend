@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  BookOpen,
   LayoutList,
   BookText,
   Languages,
@@ -165,7 +164,7 @@ export default function LessonSidebar({
     <>
       {/* Desktop sidebar */}
       <div className={`hidden lg:block ${className}`}>
-        <div className="sticky top-32 space-y-3">
+        <div className="max-h-[calc(100vh-2rem)] overflow-y-auto no-scrollbar space-y-3 pr-1 pb-4">
           {/* Progress card */}
           <div className="bg-white rounded-xl border border-gray-200/70 p-3.5 shadow-sm">
             <div className="flex items-center justify-between mb-2">
