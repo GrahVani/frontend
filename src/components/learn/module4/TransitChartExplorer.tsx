@@ -69,14 +69,14 @@ export default function TransitChartExplorer() {
   const fadeUp = { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -6 }, transition: { duration: 0.25 } };
 
   return (
-    <div className="w-full max-w-[780px] mx-auto select-none">
-      <div className="rounded-3xl bg-gradient-to-br from-slate-50 via-sky-50/30 to-cyan-50/20 border border-sky-200/50 shadow-2xl shadow-sky-900/5 p-6 sm:p-8">
+    <div className="w-full select-none">
+      <div className="py-4 sm:py-6">
         {/* Header */}
         <div className="text-center mb-6">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-700 to-cyan-700">
             Gochara Transit Explorer
           </h2>
-          <p className="text-sm text-sky-500/80 mt-2 font-medium">
+          <p className="text-base text-sky-700 mt-2 font-semibold">
             Real-time planetary movement overlaid on the natal chart.
           </p>
         </div>
@@ -86,7 +86,7 @@ export default function TransitChartExplorer() {
           {/* Chandra Lagna selector */}
           <div className="flex items-center gap-2 bg-white rounded-xl px-3 py-2 border border-sky-200 shadow-sm">
             <Moon className="w-4 h-4 text-sky-600" />
-            <span className="text-[10px] font-bold text-sky-600 uppercase tracking-wider">Natal Moon</span>
+            <span className="text-xs font-bold text-sky-700 uppercase tracking-wider">Natal Moon</span>
             <select
               value={moonSign}
               onChange={(e) => setMoonSign(Number(e.target.value))}
@@ -100,7 +100,7 @@ export default function TransitChartExplorer() {
 
           {/* Saturn transit selector */}
           <div className="flex items-center gap-2 bg-white rounded-xl px-3 py-2 border border-slate-200 shadow-sm">
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Saturn Transit</span>
+            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Saturn Transit</span>
             <select
               value={saturnTransit}
               onChange={(e) => setSaturnTransit(Number(e.target.value))}
@@ -116,13 +116,13 @@ export default function TransitChartExplorer() {
           <div className="flex items-center bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <button
               onClick={() => setVelocityFilter("all")}
-              className={`px-3 py-2 text-xs font-bold transition-colors ${velocityFilter === "all" ? "bg-sky-600 text-white" : "text-gray-600 hover:bg-gray-50"}`}
+              className={`px-3 py-2 text-sm font-bold transition-colors ${velocityFilter === "all" ? "bg-sky-700 text-white" : "text-gray-700 hover:bg-gray-50"}`}
             >
               All Planets
             </button>
             <button
               onClick={() => setVelocityFilter("slow")}
-              className={`px-3 py-2 text-xs font-bold transition-colors flex items-center gap-1 ${velocityFilter === "slow" ? "bg-sky-600 text-white" : "text-gray-600 hover:bg-gray-50"}`}
+              className={`px-3 py-2 text-sm font-bold transition-colors flex items-center gap-1 ${velocityFilter === "slow" ? "bg-sky-700 text-white" : "text-gray-700 hover:bg-gray-50"}`}
             >
               <Gauge className="w-3 h-3" /> Slow Only
             </button>
@@ -133,11 +133,11 @@ export default function TransitChartExplorer() {
         <div className="mb-5 p-4 rounded-2xl bg-white border border-sky-100 shadow-sm">
           <div className="flex items-center gap-2 mb-3">
             <Eye className="w-4 h-4 text-sky-600" />
-            <span className="text-xs font-bold text-sky-700 uppercase tracking-wider">Chandra Lagna View</span>
-            <span className="text-[10px] text-gray-400 ml-auto">Natal Moon = House 1</span>
+            <span className="text-sm font-bold text-sky-800 uppercase tracking-wider">Chandra Lagna View</span>
+            <span className="text-xs text-gray-600 ml-auto font-semibold">Natal Moon = House 1</span>
           </div>
 
-          <div className="relative w-full max-w-[360px] mx-auto aspect-square">
+          <div className="relative w-full max-w-[480px] mx-auto aspect-square">
             <svg viewBox="0 0 360 360" className="w-full h-full">
               <defs>
                 <filter id="ttGlow" x="-20%" y="-20%" width="140%" height="140%">
@@ -182,7 +182,7 @@ export default function TransitChartExplorer() {
                       H{chandraHouse}
                     </text>
                     {/* Sign label */}
-                    <text x={mx} y={my + 14} textAnchor="middle" fontSize={8} fill="#cbd5e1">
+                    <text x={mx} y={my + 16} textAnchor="middle" fontSize={10} fill="#64748b">
                       {SIGNS[i]?.slice(0, 3)}
                     </text>
                   </g>
@@ -198,7 +198,7 @@ export default function TransitChartExplorer() {
                   <g>
                     <circle cx={mx} cy={my} r={18} fill="#fff" stroke="#94a3b8" strokeWidth="2" filter="url(#ttGlow)" />
                     <text x={mx} y={my} textAnchor="middle" dominantBaseline="central" fontSize={14} fill="#94a3b8">☽</text>
-                    <text x={mx} y={my + 26} textAnchor="middle" fontSize={9} fontWeight={700} fill="#94a3b8">Moon</text>
+                    <text x={mx} y={my + 28} textAnchor="middle" fontSize={10} fontWeight={700} fill="#475569">Moon</text>
                   </g>
                 );
               })()}
@@ -212,28 +212,28 @@ export default function TransitChartExplorer() {
                   <g>
                     <circle cx={sx} cy={sy} r={18} fill="#fff" stroke="#475569" strokeWidth="2.5" filter="url(#ttGlow)" />
                     <text x={sx} y={sy} textAnchor="middle" dominantBaseline="central" fontSize={14} fill="#475569">♄</text>
-                    <text x={sx} y={sy + 26} textAnchor="middle" fontSize={9} fontWeight={700} fill="#475569">Saturn</text>
+                    <text x={sx} y={sy + 28} textAnchor="middle" fontSize={10} fontWeight={700} fill="#1e293b">Saturn</text>
                   </g>
                 );
               })()}
 
               {/* Center */}
               <circle cx={180} cy={180} r={28} fill="#fff" stroke="#0ea5e9" strokeWidth="2" />
-              <text x={180} y={176} textAnchor="middle" fontSize={10} fontWeight={800} fill="#0ea5e9">Chandra</text>
-              <text x={180} y={190} textAnchor="middle" fontSize={9} fill="#38bdf8">Lagna</text>
+              <text x={180} y={176} textAnchor="middle" fontSize={11} fontWeight={800} fill="#0369a1">Chandra</text>
+              <text x={180} y={190} textAnchor="middle" fontSize={10} fill="#0284c7">Lagna</text>
             </svg>
           </div>
 
           {/* Legend */}
           <div className="flex flex-wrap items-center justify-center gap-2 mt-3">
-            <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full bg-blue-50 text-blue-600 border border-blue-200">
+            <span className="flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
               <Moon className="w-3 h-3" /> Moon = H1
             </span>
-            <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full bg-slate-50 text-slate-600 border border-slate-200">
+            <span className="flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full bg-slate-50 text-slate-700 border border-slate-200">
               <span className="w-2 h-2 rounded-full bg-slate-600" /> Saturn Transit
             </span>
             {isSadeSatiActive && (
-              <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full bg-red-50 text-red-600 border border-red-200 animate-pulse">
+              <span className="flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full bg-red-50 text-red-700 border border-red-200 animate-pulse">
                 <AlertTriangle className="w-3 h-3" /> Sade Sati Phase {sadeSatiPhase}
               </span>
             )}
@@ -247,7 +247,7 @@ export default function TransitChartExplorer() {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 text-red-500" />
-                  <span className="text-xs font-bold text-red-700 uppercase tracking-wider">Sade Sati Tracker</span>
+                  <span className="text-sm font-bold text-red-800 uppercase tracking-wider">Sade Sati Tracker</span>
                 </div>
                 <button onClick={() => setShowSadeSati(false)} className="text-gray-400 hover:text-gray-600">
                   <ChevronUp className="w-4 h-4" />
@@ -270,10 +270,10 @@ export default function TransitChartExplorer() {
                       <div className={`text-sm font-extrabold mb-1 ${isActive ? "text-red-600" : "text-gray-400"}`}>
                         Phase {phase}
                       </div>
-                      <div className={`text-[10px] font-medium ${isActive ? "text-red-500" : "text-gray-400"}`}>
+                      <div className={`text-xs font-semibold ${isActive ? "text-red-700" : "text-gray-500"}`}>
                         {houseDesc}
                       </div>
-                      <div className={`text-[9px] mt-1 ${isActive ? "text-red-400" : "text-gray-400"}`}>
+                      <div className={`text-xs mt-1 ${isActive ? "text-red-600" : "text-gray-500"}`}>
                         {phase === 1 ? "Loss & Separation" : phase === 2 ? "Peak Challenge" : "Recovery & Rebuild"}
                       </div>
                     </div>
@@ -282,7 +282,7 @@ export default function TransitChartExplorer() {
               </div>
 
               <div className="mt-3 p-3 rounded-xl bg-red-50/50 border border-red-100">
-                <p className="text-[11px] text-red-800/80 leading-relaxed">
+                <p className="text-sm text-red-900 leading-relaxed">
                   <strong>Sade Sati</strong> is the 7.5-year period when Saturn transits the 12th, 1st, and 2nd houses 
                   from the natal Moon. It forces intense psychological maturity, restructuring, and often hardship. 
                   Currently {isSadeSatiActive ? <strong className="text-red-600">ACTIVE</strong> : "not active"} for this Moon sign.
@@ -296,15 +296,15 @@ export default function TransitChartExplorer() {
         <div className="mb-5 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm">
           <div className="flex items-center gap-2 mb-3">
             <Gauge className="w-4 h-4 text-sky-600" />
-            <span className="text-xs font-bold text-sky-700 uppercase tracking-wider">Velocity Filter</span>
+            <span className="text-sm font-bold text-sky-800 uppercase tracking-wider">Velocity Filter</span>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex-1 p-3 rounded-xl bg-gray-50 border border-gray-100">
               <div className="flex items-center gap-1.5 mb-1">
                 <Zap className="w-3 h-3 text-amber-500" />
-                <span className="text-[10px] font-bold text-gray-600 uppercase">Fast = Noise</span>
+                <span className="text-xs font-bold text-gray-700 uppercase">Fast = Noise</span>
               </div>
-              <p className="text-[11px] text-gray-500">Moon (2.5 days), Mercury/Venus/Sun (~30 days). Daily moods, minor events.</p>
+              <p className="text-sm text-gray-700">Moon (2.5 days), Mercury/Venus/Sun (~30 days). Daily moods, minor events.</p>
             </div>
             <div className="text-gray-300">
               <ArrowRight className="w-4 h-4" />
@@ -312,9 +312,9 @@ export default function TransitChartExplorer() {
             <div className="flex-1 p-3 rounded-xl bg-sky-50 border border-sky-100">
               <div className="flex items-center gap-1.5 mb-1">
                 <Star className="w-3 h-3 text-sky-600" />
-                <span className="text-[10px] font-bold text-sky-700 uppercase">Slow = Triggers</span>
+                <span className="text-xs font-bold text-sky-800 uppercase">Slow = Triggers</span>
               </div>
-              <p className="text-[11px] text-sky-700/70">Jupiter (1yr), Rahu/Ketu (1.5yrs), Saturn (2.5yrs). Major life events.</p>
+              <p className="text-sm text-sky-800">Jupiter (1yr), Rahu/Ketu (1.5yrs), Saturn (2.5yrs). Major life events.</p>
             </div>
           </div>
         </div>
@@ -341,15 +341,15 @@ export default function TransitChartExplorer() {
                   {p.icon}
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-gray-800">{p.planet}</div>
-                  <div className="text-[9px] text-gray-400">{p.sanskrit}</div>
+                  <div className="text-sm font-bold text-gray-900">{p.planet}</div>
+                  <div className="text-xs text-gray-600 font-semibold">{p.sanskrit}</div>
                 </div>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${p.speed === "slow" ? "bg-sky-100 text-sky-700" : "bg-amber-50 text-amber-600"}`}>
+                <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${p.speed === "slow" ? "bg-sky-100 text-sky-800" : "bg-amber-50 text-amber-700"}`}>
                   {p.speed}
                 </span>
-                <span className="text-[9px] text-gray-400 font-medium">{p.periodLabel}</span>
+                <span className="text-xs text-gray-600 font-medium">{p.periodLabel}</span>
               </div>
             </button>
           ))}
@@ -364,11 +364,11 @@ export default function TransitChartExplorer() {
                   {selectedPlanet.icon}
                 </div>
                 <div>
-                  <h3 className="text-sm font-extrabold text-gray-900">{selectedPlanet.planet} Transit</h3>
-                  <p className="text-[11px] text-gray-500">{selectedPlanet.sanskrit} · {selectedPlanet.periodLabel} per sign</p>
-                  <p className="text-xs text-gray-700 leading-relaxed mt-1">{selectedPlanet.description}</p>
+                  <h3 className="text-base font-extrabold text-gray-900">{selectedPlanet.planet} Transit</h3>
+                  <p className="text-sm text-gray-700 font-semibold">{selectedPlanet.sanskrit} · {selectedPlanet.periodLabel} per sign</p>
+                  <p className="text-sm text-gray-800 leading-relaxed mt-1">{selectedPlanet.description}</p>
                   <div className="mt-2 flex items-center gap-2">
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${selectedPlanet.speed === "slow" ? "bg-sky-100 text-sky-700" : "bg-amber-50 text-amber-600"}`}>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${selectedPlanet.speed === "slow" ? "bg-sky-100 text-sky-800" : "bg-amber-50 text-amber-700"}`}>
                       {selectedPlanet.speed === "slow" ? "🎯 Major Event Trigger" : "🌊 Background Noise"}
                     </span>
                   </div>
@@ -379,9 +379,9 @@ export default function TransitChartExplorer() {
         </AnimatePresence>
 
         {/* Senior astrologer note */}
-        <div className="mt-4 flex items-start gap-3 p-4 rounded-2xl bg-sky-50/60 border border-sky-200/40">
-          <Info className="w-4 h-4 text-sky-500 mt-0.5 shrink-0" />
-          <p className="text-xs text-sky-800/80 leading-relaxed">
+        <div className="mt-4 flex items-start gap-3 p-4 rounded-xl bg-sky-50 border border-sky-200">
+          <Info className="w-5 h-5 text-sky-700 mt-0.5 shrink-0" />
+          <p className="text-sm text-sky-900 leading-relaxed">
             <strong>Professional Note:</strong> When reading Gochara, always anchor to Chandra Lagna (natal Moon). 
             A transit hitting the Ascendant is secondary. Saturn transiting over the Moon sign is the peak of Sade Sati 
             (Phase 2) — the most psychologically intense period. Jupiter's transit to the Moon sign brings emotional healing 

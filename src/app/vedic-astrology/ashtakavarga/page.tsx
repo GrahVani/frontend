@@ -420,7 +420,7 @@ function SamudayaTab({
     const [samSettings, setSamSettings] = useState<Record<string, SamSettings>>({});
 
     const getDivSettings = (key: string): DivSettings =>
-        divSettings[key] ?? { show: false, planetSize: 18, houseSize: 14, degreeSize: 9, showDegrees: false };
+        divSettings[key] ?? { show: false, planetSize: 22, houseSize: 14, degreeSize: 9, showDegrees: false };
     const getSamSettings = (key: string): SamSettings =>
         samSettings[key] ?? { show: false, scoreSize: 22, houseSize: 14 };
 
@@ -431,7 +431,7 @@ function SamudayaTab({
         setSamSettings(prev => ({ ...prev, [key]: { ...getSamSettings(key), ...patch } }));
     };
 
-    const resetDivDefaults = (key: string) => updateDivSettings(key, { planetSize: 18, houseSize: 14, degreeSize: 9, showDegrees: false, show: false });
+    const resetDivDefaults = (key: string) => updateDivSettings(key, { planetSize: 22, houseSize: 14, degreeSize: 9, showDegrees: false, show: false });
     const resetSamDefaults = (key: string) => updateSamSettings(key, { scoreSize: 22, houseSize: 14, show: false });
 
     const SIGN_MAP_LOCAL: Record<string, number> = {

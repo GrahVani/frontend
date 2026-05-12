@@ -60,14 +60,14 @@ export default function JaiminiKarakasExplorer() {
   const fadeUp = { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.3 } };
 
   return (
-    <div className="w-full max-w-[780px] mx-auto select-none">
-      <div className="rounded-3xl bg-gradient-to-br from-slate-50 via-indigo-50/20 to-violet-50/10 border border-indigo-200/50 shadow-2xl shadow-indigo-900/5 p-6 sm:p-8">
+    <div className="w-full select-none">
+      <div className="py-4 sm:py-6">
         {/* Header */}
         <div className="text-center mb-5">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-700 to-violet-700">
             Jaimini Chara Karakas
           </h2>
-          <p className="text-sm text-indigo-500/80 mt-2 font-medium">
+          <p className="text-base text-indigo-700 mt-2 font-semibold">
             Sign-centric engine — variable significators based on exact planetary degrees.
           </p>
         </div>
@@ -76,7 +76,7 @@ export default function JaiminiKarakasExplorer() {
         <div className="mb-5 p-4 rounded-2xl bg-white border border-indigo-100 shadow-sm">
           <div className="flex items-center gap-2 mb-3">
             <Sparkles className="w-4 h-4 text-indigo-600" />
-            <span className="text-xs font-bold text-indigo-700 uppercase tracking-wider">Degree-Based Sorting</span>
+            <span className="text-sm font-bold text-indigo-800 uppercase tracking-wider">Degree-Based Sorting</span>
           </div>
           <div className="space-y-1.5">
             {sortedPlanets.map((sp, i) => {
@@ -91,15 +91,15 @@ export default function JaiminiKarakasExplorer() {
                     borderColor: selectedKaraka === i ? karaka.color : "#f1f5f9",
                   }}
                 >
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] font-bold shrink-0`} style={{ background: sp.color }}>
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0`} style={{ background: sp.color }}>
                     {i + 1}
                   </div>
-                  <div className="w-20 text-xs font-bold text-gray-700 text-left">{sp.planet}</div>
+                  <div className="w-20 text-sm font-bold text-gray-800 text-left">{sp.planet}</div>
                   <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div className="h-full rounded-full" style={{ width: `${(sp.degree / 30) * 100}%`, background: sp.color }} />
                   </div>
                   <div className="text-xs font-extrabold text-gray-600 w-12 text-right">{sp.degree.toFixed(1)}°</div>
-                  <div className="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0" style={{ background: karaka.lightColor, color: karaka.color }}>
+                  <div className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0" style={{ background: karaka.lightColor, color: karaka.color }}>
                     {karaka.role}
                   </div>
                 </button>
@@ -122,13 +122,13 @@ export default function JaiminiKarakasExplorer() {
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-sm font-extrabold text-gray-900">{currentKaraka.role}</span>
-                  <span className="text-[10px] font-bold text-gray-400">({currentKaraka.sanskrit})</span>
+                  <span className="text-base font-extrabold text-gray-900">{currentKaraka.role}</span>
+                  <span className="text-xs font-bold text-gray-600">({currentKaraka.sanskrit})</span>
                 </div>
-                <p className="text-xs text-gray-600 leading-relaxed">{currentKaraka.description}</p>
+                <p className="text-sm text-gray-800 leading-relaxed">{currentKaraka.description}</p>
                 <div className="mt-2 flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-gray-500">Assigned to:</span>
-                  <span className="text-xs font-extrabold px-2 py-0.5 rounded-full bg-white border border-gray-200" style={{ color: assignedPlanet.color }}>
+                  <span className="text-xs font-bold text-gray-700">Assigned to:</span>
+                  <span className="text-sm font-extrabold px-2 py-0.5 rounded-full bg-white border border-gray-300" style={{ color: assignedPlanet.color }}>
                     {assignedPlanet.planet} ({assignedPlanet.degree.toFixed(1)}°)
                   </span>
                 </div>
@@ -142,11 +142,11 @@ export default function JaiminiKarakasExplorer() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Eye className="w-4 h-4 text-indigo-600" />
-              <span className="text-xs font-bold text-indigo-700 uppercase tracking-wider">Rashi Drishti (Sign Aspects)</span>
+              <span className="text-sm font-bold text-indigo-800 uppercase tracking-wider">Rashi Drishti (Sign Aspects)</span>
             </div>
             <button
               onClick={() => setShowDrishti(!showDrishti)}
-              className="text-[10px] font-bold px-2 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition-colors"
+              className="text-xs font-bold px-2 py-1 rounded-lg bg-indigo-50 text-indigo-800 border border-indigo-300 hover:bg-indigo-100 transition-colors"
             >
               {showDrishti ? "Hide" : "Show"} Wheel
             </button>
@@ -160,7 +160,7 @@ export default function JaiminiKarakasExplorer() {
                     <button
                       key={i}
                       onClick={() => setSelectedSign(i)}
-                      className={`px-2 py-1 rounded-lg text-[10px] font-bold transition-all border ${selectedSign === i ? "shadow-sm" : ""}`}
+                      className={`px-2 py-1 rounded-lg text-xs font-bold transition-all border ${selectedSign === i ? "shadow-sm" : ""}`}
                       style={{
                         background: selectedSign === i ? `${signModality?.color}15` : "#fff",
                         borderColor: selectedSign === i ? signModality?.color : "#e2e8f0",
@@ -175,7 +175,7 @@ export default function JaiminiKarakasExplorer() {
                 {/* Modality legend */}
                 <div className="flex items-center gap-3 mb-3">
                   {MODALITIES.map(m => (
-                    <span key={m.name} className="flex items-center gap-1 text-[10px] font-bold" style={{ color: m.color }}>
+                    <span key={m.name} className="flex items-center gap-1 text-xs font-bold" style={{ color: m.color }}>
                       <span className="w-2 h-2 rounded-full" style={{ background: m.color }} />
                       {m.name}
                     </span>
@@ -184,18 +184,18 @@ export default function JaiminiKarakasExplorer() {
 
                 {/* Selected sign info */}
                 <div className="p-3 rounded-xl bg-indigo-50/60 border border-indigo-100">
-                  <div className="text-xs font-bold text-indigo-700 mb-1">
+                  <div className="text-sm font-bold text-indigo-800 mb-1">
                     {SIGN_NAMES[selectedSign]} is a <span style={{ color: signModality?.color }}>{signModality?.name}</span> sign
                   </div>
-                  <p className="text-[11px] text-gray-600 leading-relaxed">
+                  <p className="text-sm text-gray-800 leading-relaxed">
                     {signModality?.name === "Movable" && "Movable signs aspect ALL Fixed Signs (except the one directly adjacent)."}
                     {signModality?.name === "Fixed" && "Fixed signs aspect ALL Movable Signs (except the one directly adjacent)."}
                     {signModality?.name === "Dual" && "Dual signs aspect ALL other Dual Signs."}
                   </p>
                   <div className="flex items-center gap-2 mt-2">
-                    <span className="text-[10px] font-bold text-gray-500">Aspects:</span>
+                    <span className="text-xs font-bold text-gray-700">Aspects:</span>
                     {aspectedSigns.map(s => (
-                      <span key={s} className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-white border border-gray-200 text-gray-700">
+                      <span key={s} className="text-xs font-bold px-2 py-0.5 rounded-full bg-white border border-gray-300 text-gray-800">
                         {SIGN_NAMES[s]}
                       </span>
                     ))}
@@ -210,16 +210,16 @@ export default function JaiminiKarakasExplorer() {
         <div className="mb-4 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm">
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="w-4 h-4 text-violet-600" />
-            <span className="text-xs font-bold text-violet-700 uppercase tracking-wider">Karakamsha Architecture</span>
+            <span className="text-sm font-bold text-violet-800 uppercase tracking-wider">Karakamsha Architecture</span>
           </div>
-          <p className="text-xs text-gray-600 leading-relaxed mb-2">
+          <p className="text-sm text-gray-800 leading-relaxed mb-2">
             The Atmakaraka's sign in the <strong>Navamsha (D-9)</strong> becomes the Karakamsha Lagna — 
             the soul's true center of destiny. The software must generate predictions from this sign, 
             not just the standard D-1 Ascendant.
           </p>
           <div className="flex items-center gap-2 p-2 rounded-xl bg-violet-50 border border-violet-100">
             <ArrowRight className="w-4 h-4 text-violet-500 shrink-0" />
-            <span className="text-xs text-violet-700">
+            <span className="text-sm text-violet-800">
               <strong>Step 1:</strong> Find Atmakaraka ({sortedPlanets[0].planet}) → 
               <strong> Step 2:</strong> Locate its D-9 sign → 
               <strong> Step 3:</strong> Treat that sign as Lagna for soul-level predictions.
@@ -228,9 +228,9 @@ export default function JaiminiKarakasExplorer() {
         </div>
 
         {/* Senior astrologer note */}
-        <div className="flex items-start gap-3 p-4 rounded-2xl bg-indigo-50/60 border border-indigo-200/40">
-          <Info className="w-4 h-4 text-indigo-500 mt-0.5 shrink-0" />
-          <p className="text-xs text-indigo-800/80 leading-relaxed">
+        <div className="flex items-start gap-3 p-4 rounded-xl bg-indigo-50 border border-indigo-200">
+          <Info className="w-5 h-5 text-indigo-700 mt-0.5 shrink-0" />
+          <p className="text-sm text-indigo-900 leading-relaxed">
             <strong>Professional Note:</strong> Jaimini is the second opinion. When Parashari predicts an event, 
             boot up Jaimini to verify. If Atmakaraka and Darakaraka are in mutual Rashi Drishti, marriage is 
             confirmed. If not, Parashari's prediction may be premature. Never rely on a single system.

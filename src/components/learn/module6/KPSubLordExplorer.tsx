@@ -76,14 +76,14 @@ export default function KPSubLordExplorer() {
   const fadeUp = { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.3 } };
 
   return (
-    <div className="w-full max-w-[780px] mx-auto select-none">
-      <div className="rounded-3xl bg-gradient-to-br from-slate-50 via-cyan-50/20 to-sky-50/10 border border-cyan-200/50 shadow-2xl shadow-cyan-900/5 p-6 sm:p-8">
+    <div className="w-full select-none">
+      <div className="py-4 sm:py-6">
         {/* Header */}
         <div className="text-center mb-5">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-700 to-sky-700">
             KP Sub-Lord Engine
           </h2>
-          <p className="text-sm text-cyan-500/80 mt-2 font-medium">
+          <p className="text-base text-cyan-700 mt-2 font-semibold">
             3-tier hierarchy: Planet → Star Lord → Sub Lord. The Sub Lord decides Yes or No.
           </p>
         </div>
@@ -98,7 +98,7 @@ export default function KPSubLordExplorer() {
               { label: "→", color: "#cbd5e1", icon: null },
               { label: "Sub Lord", desc: "The Decider", color: "#0e7490", icon: <Zap className="w-4 h-4" /> },
             ].map((item, i) => (
-              <div key={i} className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold ${item.icon ? "border" : ""}`}
+              <div key={i} className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-bold ${item.icon ? "border" : ""}`}
                 style={item.icon ? { background: `${item.color}12`, borderColor: `${item.color}30`, color: item.color } : { color: item.color }}
               >
                 {item.icon}
@@ -115,7 +115,7 @@ export default function KPSubLordExplorer() {
         <div className="mb-4">
           <div className="flex items-center gap-2 mb-2">
             <Layers className="w-4 h-4 text-cyan-600" />
-            <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">27 Nakshatras</span>
+            <span className="text-sm font-bold text-slate-800 uppercase tracking-wider">27 Nakshatras</span>
           </div>
           <div className="grid grid-cols-9 gap-1">
             {NAKSHATRAS.map((nak, i) => {
@@ -133,7 +133,7 @@ export default function KPSubLordExplorer() {
                   }}
                   title={nak}
                 >
-                  <span className="text-[10px] opacity-70">{lord.slice(0, 2)}</span>
+                  <span className="text-xs opacity-70">{lord.slice(0, 2)}</span>
                   <span>{i + 1}</span>
                 </button>
               );
@@ -162,14 +162,14 @@ export default function KPSubLordExplorer() {
                         borderColor: isP ? LORD_COLORS[subLord] : "#e2e8f0",
                       }}
                     >
-                      <div className="text-xs text-gray-500">Pad {pada + 1}</div>
+                      <div className="text-sm text-gray-600">Pad {pada + 1}</div>
                       <div className="text-sm font-extrabold" style={{ color: LORD_COLORS[subLord] }}>{subLord}</div>
-                      <div className="text-[11px] text-gray-500">Sub-Lord</div>
+                      <div className="text-sm text-gray-600">Sub-Lord</div>
                     </button>
                   );
                 })}
               </div>
-              <p className="text-[11px] text-gray-500 leading-relaxed">
+              <p className="text-sm text-gray-700 leading-relaxed">
                 Each Nakshatra (13°20') divides into 4 Padas. Each Pada slices further into 9 unequal Sub-Lords 
                 based on Vimshottari Dasha proportions. The Sub-Lord is the ultimate decider of event manifestation.
               </p>
@@ -181,14 +181,14 @@ export default function KPSubLordExplorer() {
         <div className="mb-5 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm">
           <div className="flex items-center gap-2 mb-3">
             <GitBranch className="w-4 h-4 text-cyan-600" />
-            <span className="text-xs font-bold text-cyan-700 uppercase tracking-wider">Yes/No Prediction Engine</span>
+            <span className="text-sm font-bold text-cyan-800 uppercase tracking-wider">Yes/No Prediction Engine</span>
           </div>
           <div className="flex flex-wrap gap-2 mb-3">
             {YES_NO_EXAMPLES.map((ex, i) => (
               <button
                 key={i}
                 onClick={() => setActiveExample(i)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${activeExample === i ? "bg-cyan-600 text-white border-cyan-600 shadow-sm" : "bg-white text-gray-600 border-gray-200 hover:border-cyan-300"}`}
+                className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all border ${activeExample === i ? "bg-cyan-600 text-white border-cyan-600 shadow-sm" : "bg-white text-gray-700 border-gray-300 hover:border-cyan-400"}`}
               >
                 {ex.query}
               </button>
@@ -211,8 +211,8 @@ export default function KPSubLordExplorer() {
                 <div className="flex-1">
                   <div className="text-sm font-bold text-gray-800">{YES_NO_EXAMPLES[activeExample].house}</div>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-white border border-gray-200">Star: {YES_NO_EXAMPLES[activeExample].starLord}</span>
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-white border border-gray-200">Sub: {YES_NO_EXAMPLES[activeExample].subLord}</span>
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-white border border-gray-300">Star: {YES_NO_EXAMPLES[activeExample].starLord}</span>
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-white border border-gray-300">Sub: {YES_NO_EXAMPLES[activeExample].subLord}</span>
                   </div>
                 </div>
                 <div className="text-right">
@@ -229,17 +229,17 @@ export default function KPSubLordExplorer() {
                   )}
                 </div>
               </div>
-              <p className="text-xs text-gray-600 leading-relaxed">
+              <p className="text-sm text-gray-700 leading-relaxed">
                 {YES_NO_EXAMPLES[activeExample].explanation}
               </p>
               <div className="flex items-center gap-1.5 mt-2">
-                <span className="text-[10px] font-bold text-gray-400">Signifies:</span>
+                <span className="text-xs font-bold text-gray-600">Signifies:</span>
                 {YES_NO_EXAMPLES[activeExample].signifies.map(h => (
-                  <span key={h} className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-white border border-gray-200 text-gray-600">
+                  <span key={h} className="text-xs font-bold px-2 py-0.5 rounded-full bg-white border border-gray-300 text-gray-700">
                     H{h}
                   </span>
                 ))}
-                <span className="text-[9px] text-gray-400">({YES_NO_EXAMPLES[activeExample].houses})</span>
+                <span className="text-xs text-gray-600">({YES_NO_EXAMPLES[activeExample].houses})</span>
               </div>
             </motion.div>
           </AnimatePresence>
@@ -249,28 +249,28 @@ export default function KPSubLordExplorer() {
         <div className="p-4 rounded-2xl bg-cyan-50/60 border border-cyan-100">
           <div className="flex items-center gap-2 mb-2">
             <Star className="w-4 h-4 text-cyan-600" />
-            <span className="text-xs font-bold text-cyan-700 uppercase tracking-wider">Ruling Planets (RPs)</span>
+            <span className="text-sm font-bold text-cyan-800 uppercase tracking-wider">Ruling Planets (RPs)</span>
           </div>
-          <p className="text-xs text-gray-600 leading-relaxed mb-2">
+          <p className="text-sm text-gray-700 leading-relaxed mb-2">
             The "divine checksum." RPs are the lords of the exact moment the chart is calculated: 
             Day Lord, Ascendant Sign Lord, Moon Star Lord, Moon Sign Lord, and Ascendant Star Lord.
           </p>
           <div className="flex flex-wrap gap-2">
             {["Day Lord", "Asc Lord", "Moon Star", "Moon Sign", "Asc Star"].map(rp => (
-              <span key={rp} className="px-2 py-1 rounded-lg bg-white border border-cyan-200 text-[10px] font-bold text-cyan-700">
+              <span key={rp} className="px-2 py-1 rounded-lg bg-white border border-cyan-300 text-xs font-bold text-cyan-800">
                 {rp}
               </span>
             ))}
           </div>
-          <p className="text-[10px] text-cyan-600 mt-2">
+          <p className="text-sm text-cyan-700 mt-2">
             If a planet is NOT on this committee, it cannot execute a major life event today.
           </p>
         </div>
 
         {/* Senior astrologer note */}
-        <div className="mt-4 flex items-start gap-3 p-4 rounded-2xl bg-cyan-50/60 border border-cyan-200/40">
-          <Info className="w-4 h-4 text-cyan-500 mt-0.5 shrink-0" />
-          <p className="text-xs text-cyan-800/80 leading-relaxed">
+        <div className="mt-4 flex items-start gap-3 p-4 rounded-xl bg-cyan-50 border border-cyan-200">
+          <Info className="w-5 h-5 text-cyan-700 mt-0.5 shrink-0" />
+          <p className="text-sm text-cyan-900 leading-relaxed">
             <strong>Professional Note:</strong> KP gives unambiguous Yes/No answers. Standard astrology says 
             "Jupiter is transiting your 10th house — good for career." KP says: "The 10th cusp Sub-Lord is Saturn 
             signifying 6 and 12 — NO, you will not get this job." The Sub-Lord is the final gatekeeper.

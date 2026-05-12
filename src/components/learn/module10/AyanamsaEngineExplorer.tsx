@@ -215,7 +215,7 @@ export default function AyanamsaEngineExplorer() {
               onChange={(e) => setYear(Number(e.target.value))}
               className="w-full accent-amber-600 h-2 bg-amber-100 rounded-lg appearance-none cursor-pointer"
             />
-            <div className="flex justify-between text-[10px] text-slate-500 mt-1">
+            <div className="flex justify-between text-xs text-slate-700 mt-1">
               <span>1850</span>
               <span>2000</span>
               <span>2100</span>
@@ -244,7 +244,7 @@ export default function AyanamsaEngineExplorer() {
         <div className="bg-slate-50 rounded-xl border border-slate-200 p-4">
           <div className="flex items-center justify-between mb-3">
             <h4 className="text-sm font-bold text-slate-800">Ayanamsa Drift Over Time</h4>
-            <div className="flex items-center gap-3 text-[10px]">
+            <div className="flex items-center gap-3 text-xs">
               {MODELS.map((m) => (
                 <span key={m.id} className="flex items-center gap-1">
                   <span
@@ -389,7 +389,7 @@ export default function AyanamsaEngineExplorer() {
             <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-200 p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-semibold text-amber-700 uppercase">Current Ayanamsa ({year})</span>
-                <span className="text-xs text-slate-500">Model: {modelInfo.label}</span>
+                <span className="text-xs text-slate-700">Model: {modelInfo.label}</span>
               </div>
               <div className="text-3xl font-bold text-gray-900">{ayanamsaVal.toFixed(2)}°</div>
               <div className="text-xs text-slate-700 mt-1">{degToDms(ayanamsaVal)}</div>
@@ -419,7 +419,7 @@ export default function AyanamsaEngineExplorer() {
                       <span className="text-xs font-bold" style={{ color: p.signColor }}>
                         {p.sign}
                       </span>
-                      <span className="text-[10px] text-slate-600 font-mono">
+                      <span className="text-xs text-slate-700 font-mono">
                         {p.siderealDeg.toFixed(1)}°
                       </span>
                     </div>
@@ -442,8 +442,8 @@ export default function AyanamsaEngineExplorer() {
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="text-xs font-bold" style={{ color: m.signColor }}>{m.sign}</span>
-                      <span className="text-[10px] text-slate-600 font-mono">{m.siderealDeg.toFixed(1)}°</span>
-                      <span className="text-[10px] text-slate-500">A:{m.ayanamsa.toFixed(1)}°</span>
+                      <span className="text-xs text-slate-700 font-mono">{m.siderealDeg.toFixed(1)}°</span>
+                      <span className="text-xs text-slate-700">A:{m.ayanamsa.toFixed(1)}°</span>
                     </div>
                   </div>
                 ))}
@@ -484,12 +484,12 @@ export default function AyanamsaEngineExplorer() {
                           </p>
                           <div className="flex flex-wrap gap-1.5">
                             {signChanges.map((name) => (
-                              <span key={name} className="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded-md">
+                              <span key={name} className="px-2 py-0.5 bg-red-100 text-red-800 text-xs font-bold rounded-md">
                                 {name}
                               </span>
                             ))}
                           </div>
-                          <div className="mt-2 text-[10px] text-slate-600 space-y-1">
+                          <div className="mt-2 text-xs text-slate-700 space-y-1">
                             <div className="flex items-center gap-1.5">
                               <ArrowRight className="w-3 h-3 text-red-500" />
                               <span>All 16 Varga charts must be recalculated</span>

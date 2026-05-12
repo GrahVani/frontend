@@ -156,7 +156,7 @@ export default function Lesson34Interactive({ lesson, lessonProgress }: Lesson34
             {content.sections?.map((section, idx) => (
               <section key={section.id} id={`sec-${section.type}`} className="mb-6 scroll-mt-32">
                 <motion.div {...fadeUp}>
-                  <div onClick={() => markSectionComplete(String(section.id))} className="relative"><LessonSection section={{ ...section, diagramType: undefined }} index={idx} />{completedSections.has(String(section.id)) && <div className="absolute top-4 right-12"><CheckCircle2 className="w-5 h-5 text-green-500" /></div>}</div>
+                  <div onClick={() => markSectionComplete(String(section.id))} className="relative"><LessonSection section={section} index={idx} />{completedSections.has(String(section.id)) && <div className="absolute top-4 right-12"><CheckCircle2 className="w-5 h-5 text-green-500" /></div>}</div>
                 </motion.div>
                 {idx === 2 && (
                   <motion.div {...fadeUp} className="mt-4">
@@ -171,7 +171,11 @@ export default function Lesson34Interactive({ lesson, lessonProgress }: Lesson34
             <section id="sec-concepts" className="mb-6 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4"><Lightbulb className="w-5 h-5 text-amber-600" /><h2 className="text-xl font-bold text-gray-900">Key Concepts</h2><span className="ml-auto text-sm text-gray-500 font-medium">{content.concepts.length} concepts</span></div>
-                <div className="space-y-4">{content.concepts.map((concept, idx) => <ConceptCard key={String(concept.id)} concept={concept} index={idx} showDiagram={false} showReference={false} />)}</div>
+                <div className="space-y-4">{content.concepts.map((concept, idx) => {
+                  const diagramType = concept.media?.diagramType;
+                  const isFirstWithDiagram = diagramType ? content.concepts.findIndex((c) => c.media?.diagramType === diagramType) === idx : false;
+                  return <ConceptCard key={String(concept.id)} concept={concept} index={idx} showDiagram={isFirstWithDiagram} showReference={!isFirstWithDiagram && !!diagramType} />;
+                })}</div>
               </motion.div>
             </section>
 

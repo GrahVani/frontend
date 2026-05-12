@@ -60,14 +60,14 @@ export default function ShadbalaScorerExplorer() {
   const fadeUp = { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.3 } };
 
   return (
-    <div className="w-full max-w-[780px] mx-auto select-none">
-      <div className="rounded-3xl bg-gradient-to-br from-slate-50 via-rose-50/20 to-orange-50/10 border border-rose-200/50 shadow-2xl shadow-rose-900/5 p-6 sm:p-8">
+    <div className="w-full select-none">
+      <div className="py-4 sm:py-6">
         {/* Header */}
         <div className="text-center mb-5">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-700 to-orange-700">
             Shadbala Scorer
           </h2>
-          <p className="text-sm text-rose-500/80 mt-2 font-medium">
+          <p className="text-base text-rose-700 mt-2 font-semibold">
             Six-fold strength algorithm — the true power ranking of every planet.
           </p>
         </div>
@@ -78,7 +78,7 @@ export default function ShadbalaScorerExplorer() {
             <button
               key={pl.planet}
               onClick={() => { setSelectedPlanet(i); setShowDetails(false); }}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all border ${selectedPlanet === i ? "shadow-md scale-105" : "hover:scale-[1.02]"}`}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-bold transition-all border ${selectedPlanet === i ? "shadow-md scale-105" : "hover:scale-[1.02]"}`}
               style={{
                 background: selectedPlanet === i ? `${pl.color}15` : "#fff",
                 borderColor: selectedPlanet === i ? pl.color : "#e2e8f0",
@@ -105,23 +105,23 @@ export default function ShadbalaScorerExplorer() {
             </div>
             <div className="flex-1">
               <div className="text-lg font-extrabold text-gray-900">{p.planet}</div>
-              <div className="text-xs text-gray-500">Shadbala Total Score</div>
+              <div className="text-sm text-gray-700">Shadbala Total Score</div>
             </div>
             <div className="text-right">
               <div className="text-3xl font-extrabold" style={{ color: p.color }}>{total}</div>
-              <div className="text-xs text-gray-400">Shashtiamsa</div>
+              <div className="text-sm text-gray-600">Shashtiamsa</div>
             </div>
             <div className="text-right pl-3 border-l border-gray-100">
               <div className="text-2xl font-extrabold text-gray-800">{rupa}</div>
-              <div className="text-xs text-gray-400">Rupas</div>
+              <div className="text-sm text-gray-600">Rupas</div>
             </div>
           </div>
 
           {/* Strength threshold bar */}
           <div className="mb-1">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] font-bold text-gray-400 uppercase">Strength Threshold</span>
-              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isStrong ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}`}>
+              <span className="text-xs font-bold text-gray-600 uppercase">Strength Threshold</span>
+              <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${isStrong ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"}`}>
                 {isStrong ? "STRONG ✓" : "WEAK ✗"}
               </span>
             </div>
@@ -134,9 +134,9 @@ export default function ShadbalaScorerExplorer() {
                 style={{ background: isStrong ? "linear-gradient(90deg, #22c55e, #10b981)" : "linear-gradient(90deg, #ef4444, #f97316)" }}
               />
             </div>
-            <div className="flex justify-between text-[9px] text-gray-400 mt-0.5">
+            <div className="flex justify-between text-xs text-gray-600 mt-1">
               <span>0</span>
-              <span className="font-bold text-gray-500">5 Rupa (300)</span>
+              <span className="font-bold text-gray-800">5 Rupa (300)</span>
               <span>10 Rupa (600)</span>
             </div>
           </div>
@@ -144,7 +144,7 @@ export default function ShadbalaScorerExplorer() {
           {/* Toggle details */}
           <button
             onClick={() => setShowDetails(!showDetails)}
-            className="mt-3 w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-gray-50 border border-gray-200 text-xs font-bold text-gray-600 hover:bg-gray-100 transition-colors"
+            className="mt-3 w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-gray-50 border border-gray-200 text-sm font-bold text-gray-700 hover:bg-gray-100 transition-colors"
           >
             {showDetails ? "Hide" : "Show"} 6 Criteria Breakdown
           </button>
@@ -163,8 +163,8 @@ export default function ShadbalaScorerExplorer() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-0.5">
-                            <span className="text-[11px] font-bold text-gray-700">{bala.name}</span>
-                            <span className="text-[11px] font-extrabold" style={{ color: bala.color }}>{score}</span>
+                            <span className="text-sm font-bold text-gray-800">{bala.name}</span>
+                            <span className="text-sm font-extrabold" style={{ color: bala.color }}>{score}</span>
                           </div>
                           <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                             <div className="h-full rounded-full transition-all duration-500" style={{ width: `${(score / maxScore) * 100}%`, background: bala.color }} />
@@ -174,7 +174,7 @@ export default function ShadbalaScorerExplorer() {
                     );
                   })}
                 </div>
-                <p className="text-[10px] text-gray-500 mt-2 leading-relaxed">
+                <p className="text-xs text-gray-700 mt-2 leading-relaxed">
                   {BALAS.map((b, i) => `${b.sanskrit}: ${p.scores[i]}`).join(" · ")}
                 </p>
               </motion.div>
@@ -186,7 +186,7 @@ export default function ShadbalaScorerExplorer() {
         <div className="mb-5 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm">
           <div className="flex items-center gap-2 mb-3">
             <Crown className="w-4 h-4 text-amber-500" />
-            <span className="text-xs font-bold text-amber-700 uppercase tracking-wider">Planetary Power Ranking</span>
+            <span className="text-sm font-bold text-amber-800 uppercase tracking-wider">Planetary Power Ranking</span>
           </div>
           <div className="space-y-1.5">
             {ranked.map((pl, i) => {
@@ -197,18 +197,18 @@ export default function ShadbalaScorerExplorer() {
                   key={pl.planet}
                   className={`flex items-center gap-3 px-3 py-2 rounded-xl border transition-all ${isKing ? "bg-amber-50 border-amber-200" : "bg-white border-gray-100"}`}
                 >
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${isKing ? "bg-amber-500 text-white" : "bg-gray-100 text-gray-500"}`}>
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${isKing ? "bg-amber-600 text-white" : "bg-gray-100 text-gray-600"}`}>
                     {i + 1}
                   </div>
                   <div className="w-3 h-3 rounded-full shrink-0" style={{ background: pl.color }} />
-                  <span className="text-xs font-bold text-gray-800 w-16">{pl.planet}</span>
+                  <span className="text-sm font-bold text-gray-900 w-16">{pl.planet}</span>
                   <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div className="h-full rounded-full" style={{ width: `${(pl.total / ranked[0].total) * 100}%`, background: pl.color }} />
                   </div>
                   <span className="text-xs font-extrabold text-gray-700 w-10 text-right">{pl.total}</span>
-                  <span className="text-[10px] font-bold text-gray-400 w-12 text-right">{plRupa} R</span>
+                  <span className="text-xs font-bold text-gray-700 w-12 text-right">{plRupa} R</span>
                   {isKing && (
-                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700 shrink-0">KING</span>
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 shrink-0">KING</span>
                   )}
                 </div>
               );
@@ -237,20 +237,20 @@ export default function ShadbalaScorerExplorer() {
           {BALAS.map((bala) => (
             <div key={bala.id} className="p-3 rounded-xl border" style={{ background: bala.lightColor, borderColor: `${bala.color}20` }}>
               <div className="flex items-center gap-1.5 mb-1">
-                <div className="w-5 h-5 rounded-md flex items-center justify-center text-white text-[9px]" style={{ background: bala.color }}>
+                <div className="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs" style={{ background: bala.color }}>
                   {bala.icon}
                 </div>
-                <span className="text-[10px] font-bold text-gray-700">{bala.name}</span>
+                <span className="text-xs font-bold text-gray-800">{bala.name}</span>
               </div>
-              <p className="text-[9px] text-gray-500 leading-relaxed">{bala.description}</p>
+              <p className="text-xs text-gray-700 leading-relaxed">{bala.description}</p>
             </div>
           ))}
         </div>
 
         {/* Senior astrologer note */}
-        <div className="flex items-start gap-3 p-4 rounded-2xl bg-rose-50/60 border border-rose-200/40">
-          <Info className="w-4 h-4 text-rose-500 mt-0.5 shrink-0" />
-          <p className="text-xs text-rose-800/80 leading-relaxed">
+        <div className="flex items-start gap-3 p-4 rounded-xl bg-rose-50 border border-rose-200">
+          <Info className="w-5 h-5 text-rose-700 mt-0.5 shrink-0" />
+          <p className="text-sm text-rose-900 leading-relaxed">
             <strong>Professional Note:</strong> When a user runs a "Sun-Saturn" Dasha, check Shadbala first. 
             If Saturn scores 150% and the Sun only 80%, Saturn dominates — regardless of the Sun's sign placement. 
             The user will experience delays and hard work. Never guess which planet wins a conflict. Compute it.

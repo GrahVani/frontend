@@ -6,7 +6,6 @@ import { ChevronRight, Loader2 } from 'lucide-react';
 import { DashaNode, calculateDuration, generateVimshottariSubperiods, parseApiDate } from '@/lib/dasha-utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { KnowledgeTooltip } from '@/components/knowledge';
-import { PLANET_SVG_FILLS } from '@/design-tokens/colors';
 
 interface VimshottariTreeGridProps {
     data: DashaNode[];
@@ -14,11 +13,6 @@ interface VimshottariTreeGridProps {
     className?: string;
     maxDepth?: number;
 }
-
-const PLANET_SYMBOLS: Record<string, string> = {
-    'Sun': '☉', 'Moon': '☽', 'Mars': '♂', 'Mercury': '☿', 'Jupiter': '♃',
-    'Venus': '♀', 'Saturn': '♄', 'Rahu': '☊', 'Ketu': '☋',
-};
 
 const PLANET_ABBREVIATIONS: Record<string, string> = {
     'Sun': 'Su', 'Moon': 'Mo', 'Mars': 'Ma', 'Mercury': 'Me', 'Jupiter': 'Ju',
@@ -110,13 +104,11 @@ export default function VimshottariTreeGrid({ data, isLoading, className, maxDep
                         <button
                             onClick={() => setNavPath(navPath.slice(0, i + 1))}
                             className={cn(
-                                "px-1.5 py-0.5 rounded hover:bg-amber-100 transition-colors leading-compact font-serif flex items-center gap-1",
+                                "px-1.5 py-0.5 rounded hover:bg-amber-100 transition-colors leading-compact font-serif flex items-center gap-1 text-black text-[18px]",
                                 i === navPath.length - 1 ? "font-bold" : "",
                                 TYPOGRAPHY.breadcrumb
                             )}
-                            style={{ color: PLANET_SVG_FILLS[node.planet] || '#92400E' }}
                         >
-                            <span className="text-[13px] font-serif">{PLANET_SYMBOLS[node.planet] || ''}</span>
                             <span>{PLANET_ABBREVIATIONS[node.planet] || node.planet}</span>
                         </button>
                     </React.Fragment>
@@ -183,8 +175,6 @@ function DashaDrillRow({ node, depth, pathPrefix, onDrill, maxDepth = 4 }: { nod
         return calculateDuration(node.startDate, node.endDate);
     }, [node.startDate, node.endDate]);
 
-    const planetColor = PLANET_SVG_FILLS[node.planet] || '#92400E';
-
     return (
         <tr
             onClick={isDrillable ? onDrill : undefined}
@@ -204,13 +194,14 @@ function DashaDrillRow({ node, depth, pathPrefix, onDrill, maxDepth = 4 }: { nod
                             // Spacer for alignment if no chevron
                             <span className="w-2.5 inline-block" />
                         )}
-                        {depth > 0 && (
-                            <span className={cn(TYPOGRAPHY.planetName, "font-serif text-amber-700 shrink-0 tracking-tighter")}>{pathPrefix}</span>
-                        )}
-                        <span className={cn(TYPOGRAPHY.planetName, "font-serif tracking-tighter flex items-center gap-1")} style={{ color: planetColor }}>
-                            <span className="text-[16px]">{PLANET_SYMBOLS[node.planet] || ''}</span>
-                            <span className="text-[16px] font-semibold">{PLANET_ABBREVIATIONS[node.planet] || node.planet}</span>
-                        </span>
+                        <div className="flex items-center">
+                            {depth > 0 && (
+                                <span className={cn(TYPOGRAPHY.planetName, "font-serif text-black shrink-0 tracking-tighter")}>{pathPrefix}</span>
+                            )}
+                            <span className={cn(TYPOGRAPHY.planetName, "font-serif tracking-tighter flex items-center gap-1 text-black")}>
+                                <span>{PLANET_ABBREVIATIONS[node.planet] || node.planet}</span>
+                            </span>
+                        </div>
                         {isActive && (
                             <span className={cn("ml-1 px-1.5 py-0.5 bg-emerald-100 border border-emerald-200 rounded-full leading-none", TYPOGRAPHY.breadcrumb, "text-emerald-700 font-bold text-[9px]")}>
                                 A

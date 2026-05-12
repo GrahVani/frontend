@@ -78,7 +78,7 @@ export default function DynamicDiagram({ diagramType, title, subtitle, size = 56
         </p>
       )}
       <div className={`w-full flex items-center justify-center ${caption ? "rounded-b-xl" : "rounded-xl"}`}>
-        <div className="w-full max-w-[1000px]">
+        <div className="w-full">
           {diagramType === "zodiac-wheel" || diagramType === "rashi-tattvas" || diagramType === "rashi-modalities" ? (
             <ZodiacWheel size={size} />
           ) : diagramType === "planet-orbit" || diagramType === "navagraha-pantheon" || diagramType === "navagraha-wheel" ? (

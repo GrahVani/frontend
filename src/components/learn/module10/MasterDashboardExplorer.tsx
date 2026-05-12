@@ -136,7 +136,7 @@ export default function MasterDashboardExplorer() {
             disabled={running}
             className={`flex items-center gap-2 px-8 py-3 rounded-xl text-sm font-bold shadow-lg transition-all ${
               running
-                ? "bg-slate-300 text-slate-500 cursor-not-allowed"
+                ? "bg-slate-300 text-slate-600 cursor-not-allowed"
                 : "bg-gradient-to-r from-amber-600 to-orange-600 text-white hover:shadow-xl hover:scale-[1.02]"
             }`}
           >
@@ -192,7 +192,7 @@ export default function MasterDashboardExplorer() {
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-2">
                         <span
-                          className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white ${
+                          className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white ${
                             isDone
                               ? gate.status === "passed"
                                 ? "bg-green-500"
@@ -218,11 +218,11 @@ export default function MasterDashboardExplorer() {
                         </span>
                         <span className="text-xs font-bold text-slate-800">{gate.name}</span>
                       </div>
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white border border-slate-200 text-slate-600">
+                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-white border border-slate-200 text-slate-700">
                         {gate.engine}
                       </span>
                     </div>
-                    <p className="text-[10px] text-slate-700 mb-1">{gate.input}</p>
+                    <p className="text-xs text-slate-800 mb-1">{gate.input}</p>
                     {isDone && (
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
@@ -230,13 +230,13 @@ export default function MasterDashboardExplorer() {
                         className="pt-1.5 border-t border-slate-200/60"
                       >
                         <div className="flex items-center gap-1.5">
-                          <ArrowRight className="w-3 h-3 text-slate-400" />
-                          <span className="text-[10px] font-bold text-slate-800">{gate.output || "—"}</span>
+                          <ArrowRight className="w-3 h-3 text-slate-500" />
+                          <span className="text-xs font-bold text-slate-900">{gate.output || "—"}</span>
                         </div>
                         {gate.window && (
                           <div className="flex items-center gap-1.5 mt-0.5">
-                            <Clock className="w-3 h-3 text-slate-400" />
-                            <span className="text-[10px] text-slate-600">{gate.window}</span>
+                            <Clock className="w-3 h-3 text-slate-500" />
+                            <span className="text-xs text-slate-700">{gate.window}</span>
                           </div>
                         )}
                       </motion.div>
@@ -304,14 +304,14 @@ export default function MasterDashboardExplorer() {
                     </p>
                     <div className="flex items-center gap-2 pt-1 border-t border-slate-100">
                       <ShieldCheck className="w-4 h-4 text-indigo-600" />
-                      <span className="text-[10px] text-slate-700">
+                      <span className="text-xs text-slate-800">
                         <strong>Consensus Alert:</strong> Parashari (Dasha) and KP systems agree. 
                         All three gates passed. Confidence level: HIGH.
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Star className="w-4 h-4 text-amber-600" />
-                      <span className="text-[10px] text-slate-700">
+                      <span className="text-xs text-slate-800">
                         <strong>Remediation:</strong> Complete Jupiter Bija Mantra 48 hours prior to stabilize 11H frequency.
                       </span>
                     </div>
@@ -322,7 +322,7 @@ export default function MasterDashboardExplorer() {
                       <AlertCircle className="w-4 h-4 text-amber-600" />
                       <span className="text-xs font-bold text-amber-800">Consensus Partial / Blocked</span>
                     </div>
-                    <p className="text-[10px] text-slate-700">
+                    <p className="text-xs text-slate-800">
                       Not all gates passed. The dashboard flags the conflict with weighted probabilities.
                       Review individual gate results above for specific blockers.
                     </p>
@@ -372,7 +372,7 @@ export default function MasterDashboardExplorer() {
                     <circle cx="130" cy="130" r="2" fill="#000000" />
                   </svg>
                 </div>
-                <div className="flex justify-center gap-4 mt-2 text-[10px]">
+                <div className="flex justify-center gap-4 mt-2 text-xs">
                   <span className="flex items-center gap-1">
                     <span className="w-2.5 h-2.5 rounded-full bg-green-500 opacity-40" /> Agreement
                   </span>

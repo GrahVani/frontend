@@ -164,15 +164,15 @@ export default function LearnPage() {
 
   const firstName = user?.name?.split(" ")[0] || "Student";
   const streakDays = dashboard?.currentStreak || 0;
-  const longestStreak = dashboard?.longestStreak || 0;
+
   const totalLessons = dashboard?.totalLessons || courses.reduce((sum, c) => sum + c.lessons.length, 0);
   const completedLessons = dashboard?.lessonsCompleted || courses.reduce((sum, c) => sum + (c.completedLessons || 0), 0);
   const overallProgress = dashboard?.overallProgress || (totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0);
-  const skillScore = dashboard?.skillScore || 0;
+
   const title = dashboard?.title || "Jyotish Novice";
   const currentTier = dashboard?.currentTier || 1;
   const totalPoints = dashboard?.totalPoints || 0;
-  const modulesCompleted = dashboard?.totalModulesCompleted || 0;
+
 
   const allLessons = courses.flatMap((c) => c.lessons.map((l) => ({ ...l, courseTitle: c.title, courseLevel: c.level, courseId: c.id })));
   const nextLesson = dashboard
@@ -366,17 +366,7 @@ export default function LearnPage() {
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard icon={<BookOpen className="w-5 h-5" />} label="Lessons Completed" value={completedLessons} color="bg-blue-50 text-blue-700 border-blue-200" />
-          <StatCard icon={<Target className="w-5 h-5" />} label="Average Score" value={`${dashboard?.averageScore || 0}%`} color="bg-green-50 text-green-700 border-green-200" />
-          <StatCard icon={<Zap className="w-5 h-5" />} label="Current Streak" value={`${streakDays} days`} color="bg-purple-50 text-purple-700 border-purple-200" />
-          <StatCard icon={<Trophy className="w-5 h-5" />} label="Total XP" value={totalPoints} color="bg-amber-50 text-amber-700 border-amber-200" />
-          <StatCard icon={<Sparkles className="w-5 h-5" />} label="Skill Score" value={skillScore} color="bg-rose-50 text-rose-700 border-rose-200" />
-          <StatCard icon={<Crown className="w-5 h-5" />} label="Title" value={title} color="bg-indigo-50 text-indigo-700 border-indigo-200" />
-          <StatCard icon={<Flame className="w-5 h-5" />} label="Longest Streak" value={`${longestStreak} days`} color="bg-orange-50 text-orange-700 border-orange-200" />
-          <StatCard icon={<Rocket className="w-5 h-5" />} label="Modules Done" value={modulesCompleted} color="bg-teal-50 text-teal-700 border-teal-200" />
-        </div>
+
       </div>
     </div>
   );
@@ -392,12 +382,4 @@ function StatBadge({ icon, value, label }: { icon: React.ReactNode; value: strin
   );
 }
 
-function StatCard({ icon, label, value, color }: { icon: React.ReactNode; label: string; value: string | number; color: string }) {
-  return (
-    <div className={`rounded-2xl border p-4 ${color}`}>
-      <div className="mb-2">{icon}</div>
-      <div className="text-2xl font-bold mb-1">{value}</div>
-      <div className="text-xs opacity-80">{label}</div>
-    </div>
-  );
-}
+
