@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { learnApi, type Course } from "@/lib/api";
 import type { LessonSummary, DashboardData } from "@/lib/api/learn";
@@ -63,6 +64,8 @@ export default function LearnPage() {
   const [courses, setCourses] = useState<CourseWithProgress[]>([]);
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [activeLevel, setActiveLevel] = useState<string | null>(null);
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
 
@@ -85,7 +88,18 @@ export default function LearnPage() {
             moduleNumber: index + 1,
           }));
           setCourses(enriched);
-          if (enriched.length > 0) setActiveLevel(enriched[0].level);
+          // Restore level from URL, or default to first available
+          const levelFromUrl = searchParams.get('level');
+          if (levelFromUrl && LEVEL_CONFIG[levelFromUrl]) {
+            setActiveLevel(levelFromUrl);
+          } else if (enriched.length > 0) {
+            setActiveLevel(enriched[0].level);
+          }
+          // Restore expanded modules from URL
+          const expandFromUrl = searchParams.get('expand');
+          if (expandFromUrl) {
+            setExpandedModules(new Set(expandFromUrl.split(',').filter(Boolean)));
+          }
         }
 
         if (user) {
@@ -102,7 +116,31 @@ export default function LearnPage() {
     };
 
     fetchData();
-  }, [user]);
+  }, [user, searchParams]);
+
+  // Sync activeLevel to URL (replace, not push — avoids history pollution)
+  useEffect(() => {
+    if (activeLevel === null) return;
+    const currentLevel = searchParams.get('level');
+    if (currentLevel === activeLevel) return;
+    const current = new URLSearchParams(searchParams.toString());
+    current.set('level', activeLevel);
+    router.replace(`/learn?${current.toString()}`, { scroll: false });
+  }, [activeLevel, searchParams, router]);
+
+  // Sync expandedModules to URL
+  useEffect(() => {
+    const currentExpand = searchParams.get('expand');
+    const expectedExpand = expandedModules.size > 0 ? Array.from(expandedModules).join(',') : null;
+    if (currentExpand === expectedExpand) return;
+    const current = new URLSearchParams(searchParams.toString());
+    if (expandedModules.size > 0) {
+      current.set('expand', Array.from(expandedModules).join(','));
+    } else {
+      current.delete('expand');
+    }
+    router.replace(`/learn?${current.toString()}`, { scroll: false });
+  }, [expandedModules, searchParams, router]);
 
   const toggleModule = (courseId: string) => {
     setExpandedModules(prev => {
