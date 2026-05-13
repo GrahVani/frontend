@@ -4,7 +4,8 @@ import React, { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowLeft, GraduationCap, ChevronRight, BookOpen, Sparkles,
-  BrainCircuit, Gauge, Zap } from "lucide-react";
+  BrainCircuit, Gauge, Zap, CheckCircle2, Lock, Lightbulb, Layers,
+  ArrowRight, ArrowLeft as ArrowLeftIcon } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { learnApi, type Lesson, type LessonProgressData } from "@/lib/api";
 import { useScrollSpy } from "@/hooks/useScrollSpy";
@@ -17,11 +18,9 @@ import ReadingTime from "@/components/learn/interactive/ReadingTime";
 import RecapSection from "@/components/learn/interactive/RecapSection";
 import LessonSection, { type Section } from "@/components/learn/LessonSection";
 import ConceptCard from "@/components/learn/ConceptCard";
-import InteractiveQuiz from "@/components/learn/InteractiveQuiz";
+import InteractiveQuiz, { type QuizQuestion } from "@/components/learn/InteractiveQuiz";
 
-import {
-  DebugComparator,
-  FormulaBlock } from "@/components/learn/intermediate";
+import { DebugComparator } from "@/components/learn/intermediate";
 
 // ─── Types ────────────────────────────────────────────────────
 interface ConceptMedia { type: string; diagramType?: string; caption?: string; }
@@ -29,7 +28,7 @@ interface Concept {
   id: number; title: string; description: string; icon?: string;
   keyTakeaway?: string; proTip?: string; commonMistake?: string; media?: ConceptMedia;
 }
-interface LessonContent { intro: string; sections?: Section[]; concepts: Concept[]; quiz: unknown[]; }
+interface LessonContent { intro: string; sections?: Section[]; concepts: Concept[]; quiz: QuizQuestion[]; }
 
 interface Lesson40InteractiveProps {
   lesson: Lesson;
@@ -37,17 +36,26 @@ interface Lesson40InteractiveProps {
 }
 
 // ─── Static Data ──────────────────────────────────────────────
-const SECTION_IDS = ["hero", "sec-overview", "sec-definition", "sec-algorithm", "sec-knowledge", "sec-concepts", "sec-simulator", "sec-debug", "sec-recap", "sec-quiz", "sec-next"];
+const SECTION_IDS = [
+  "hero", "sec-overview",
+  "sec-c1", "sec-c2", "sec-c3", "sec-c4", "sec-c5",
+  "sec-algorithm", "sec-simulator", "sec-debug",
+  "sec-knowledge", "sec-concepts", "sec-recap", "sec-quiz", "sec-next",
+];
 
 const SIDEBAR_SECTIONS: SidebarSection[] = [
   { id: "hero", label: "Introduction", type: "overview", group: "Start" },
   { id: "sec-overview", label: "Overview", type: "overview", group: "Start" },
-  { id: "sec-definition", label: "Definition", type: "definition", group: "Learn" },
-  { id: "sec-algorithm", label: "Odd/Even Algorithm", type: "mechanics", group: "Learn" },
+  { id: "sec-c1", label: "Definition", type: "definition", group: "Learn" },
+  { id: "sec-c2", label: "Etymology", type: "etymology", group: "Learn" },
+  { id: "sec-c3", label: "Odd/Even Reversal", type: "mechanics", group: "Learn" },
+  { id: "sec-c4", label: "Exalted but Dead", type: "case_debug", group: "Learn" },
+  { id: "sec-c5", label: "Synthesis", type: "synthesis", group: "Learn" },
+  { id: "sec-algorithm", label: "Algorithm Reference", type: "mechanics", group: "Learn" },
+  { id: "sec-simulator", label: "Power Throttle Gauge", type: "practice", group: "Practice" },
+  { id: "sec-debug", label: "Amateur vs Pro", type: "practice", group: "Practice" },
   { id: "sec-knowledge", label: "Knowledge Check", type: "quiz", group: "Practice" },
   { id: "sec-concepts", label: "Key Concepts", type: "concepts", group: "Practice" },
-  { id: "sec-simulator", label: "Power Throttle Gauge", type: "practice", group: "Practice" },
-  { id: "sec-debug", label: "Exalted but Dead", type: "practice", group: "Practice" },
   { id: "sec-recap", label: "Recap", type: "recap", group: "Finish" },
   { id: "sec-quiz", label: "Practice Quiz", type: "practice", group: "Finish" },
   { id: "sec-next", label: "Continue", type: "continue", group: "Finish" },
@@ -65,6 +73,127 @@ const AVASTHA_DATA = [
   { name: "Vriddha", label: "Old", power: 10, rangeOdd: "18°-24°", rangeEven: "6°-12°", color: "#8b5cf6", desc: "Wisdom remains, execution fails" },
   { name: "Mrita", label: "Dead", power: 0, rangeOdd: "24°-30°", rangeEven: "0°-6°", color: "#ef4444", desc: "Complete exhaustion, no manifestation" },
 ];
+
+// ─── Baladi Degree Ruler ──────────────────────────────────────
+function BaladiDegreeRuler() {
+  const [hoveredZone, setHoveredZone] = useState<string | null>(null);
+
+  const zones = [
+    { start: 0, end: 6, oddIdx: 0, evenIdx: 4 },
+    { start: 6, end: 12, oddIdx: 1, evenIdx: 3 },
+    { start: 12, end: 18, oddIdx: 2, evenIdx: 2 },
+    { start: 18, end: 24, oddIdx: 3, evenIdx: 1 },
+    { start: 24, end: 30, oddIdx: 4, evenIdx: 0 },
+  ];
+
+  return (
+    <div className="bg-white rounded-2xl border border-amber-200/80 shadow-sm p-5 sm:p-6">
+      <div className="flex items-center gap-2 mb-1">
+        <Zap className="w-5 h-5 text-amber-600" />
+        <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wider">Baladi Degree Ruler — Odd vs Even</h3>
+      </div>
+      <p className="text-xs text-gray-500 mb-4">
+        The center (12°-18°) is always Yuva (100%). The extremes swap based on sign parity.
+        Hover any zone to highlight the reversal.
+      </p>
+
+      {/* Odd Sign Row */}
+      <div className="mb-4">
+        <div className="flex items-center gap-2 mb-2">
+          <ArrowRight className="w-4 h-4 text-teal-600" />
+          <span className="text-xs font-bold text-teal-700 uppercase">Odd Sign (Vishama) — Forward Flow</span>
+        </div>
+        <div className="flex h-14 rounded-xl overflow-hidden border border-gray-200">
+          {zones.map((z, i) => {
+            const avastha = AVASTHA_DATA[z.oddIdx];
+            const isHovered = hoveredZone === `odd-${i}`;
+            return (
+              <motion.div
+                key={`odd-${i}`}
+                className="relative flex-1 flex flex-col items-center justify-center cursor-pointer transition-all"
+                style={{
+                  backgroundColor: isHovered ? avastha.color + "40" : avastha.color + "18",
+                  borderRight: i < zones.length - 1 ? `1px solid ${avastha.color}30` : "none",
+                }}
+                onMouseEnter={() => setHoveredZone(`odd-${i}`)}
+                onMouseLeave={() => setHoveredZone(null)}
+                whileHover={{ scale: 1.02 }}
+              >
+                <span className="text-[10px] font-bold" style={{ color: avastha.color }}>
+                  {avastha.name}
+                </span>
+                <span className="text-xs font-bold text-gray-800">{avastha.power}%</span>
+                <span className="text-[9px] text-gray-500">{z.start}°-{z.end}°</span>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Center divider with degree markers */}
+      <div className="flex items-center gap-2 mb-4">
+        <div className="flex-1 h-px bg-gray-200" />
+        <div className="flex gap-4 text-[10px] text-gray-400 font-mono">
+          <span>0°</span>
+          <span>6°</span>
+          <span>12°</span>
+          <span>18°</span>
+          <span>24°</span>
+          <span>30°</span>
+        </div>
+        <div className="flex-1 h-px bg-gray-200" />
+      </div>
+
+      {/* Even Sign Row */}
+      <div>
+        <div className="flex items-center gap-2 mb-2">
+          <ArrowLeftIcon className="w-4 h-4 text-rose-600" />
+          <span className="text-xs font-bold text-rose-700 uppercase">Even Sign (Sama) — Reverse Flow</span>
+        </div>
+        <div className="flex h-14 rounded-xl overflow-hidden border border-gray-200">
+          {zones.map((z, i) => {
+            const avastha = AVASTHA_DATA[z.evenIdx];
+            const isHovered = hoveredZone === `even-${i}`;
+            const mirrorZone = zones.findIndex((zz) => zz.start === z.start);
+            const isMirrorHovered = hoveredZone === `odd-${mirrorZone}`;
+            return (
+              <motion.div
+                key={`even-${i}`}
+                className="relative flex-1 flex flex-col items-center justify-center cursor-pointer transition-all"
+                style={{
+                  backgroundColor: isHovered || isMirrorHovered ? avastha.color + "40" : avastha.color + "18",
+                  borderRight: i < zones.length - 1 ? `1px solid ${avastha.color}30` : "none",
+                }}
+                onMouseEnter={() => setHoveredZone(`even-${i}`)}
+                onMouseLeave={() => setHoveredZone(null)}
+                whileHover={{ scale: 1.02 }}
+              >
+                <span className="text-[10px] font-bold" style={{ color: avastha.color }}>
+                  {avastha.name}
+                </span>
+                <span className="text-xs font-bold text-gray-800">{avastha.power}%</span>
+                <span className="text-[9px] text-gray-500">{z.start}°-{z.end}°</span>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Legend */}
+      <div className="mt-4 pt-3 border-t border-gray-100">
+        <div className="grid grid-cols-5 gap-2">
+          {AVASTHA_DATA.map((a) => (
+            <div key={a.name} className="text-center">
+              <div className="w-3 h-3 rounded-full mx-auto mb-1" style={{ backgroundColor: a.color }} />
+              <div className="text-[10px] font-bold text-gray-700">{a.name}</div>
+              <div className="text-[9px] text-gray-500">{a.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // ─── Power Throttle Gauge Sub-component ───────────────────────
 function PowerThrottleGauge() {
@@ -256,54 +385,99 @@ export default function Lesson40Interactive({ lesson, lessonProgress }: Lesson40
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
+  const isLocked = lessonProgress?.status === "locked";
+  const isCompleted = lessonProgress?.status === "completed";
+  const hasSections = content.sections && content.sections.length > 0;
+  const sectionProgress = hasSections
+    ? Math.round((completedSections.size / content.sections!.length) * 100)
+    : 0;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50/30 to-slate-100">
+    <>
       <ScrollProgress />
 
-      <section id="hero" className="relative bg-gradient-to-br from-teal-900 via-slate-900 to-cyan-950 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-64 h-64 rounded-full bg-teal-500 blur-3xl" />
-          <div className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-cyan-500 blur-3xl" />
-        </div>
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-16 relative">
-          <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="inline-flex items-center gap-1 text-teal-300 hover:text-white text-sm mb-6 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Learning Path
-          </Link>
-          <div className="flex items-center gap-2 mb-3">
-            <GraduationCap className="w-5 h-5 text-teal-400" />
-            <span className="text-teal-400 text-sm font-semibold tracking-wide uppercase">Intermediate — Module 12.1</span>
-          </div>
-          <h1 className="text-3xl md:text-5xl font-bold mb-4 max-w-3xl">{lesson.title}</h1>
-          <p className="text-teal-200 text-lg max-w-2xl leading-relaxed">{content.intro}</p>
-          <div className="mt-6 flex items-center gap-4 text-sm text-teal-300">
-            <ReadingTime text={allText} />
-            <span className="flex items-center gap-1"><Gauge className="w-4 h-4" /> Power Throttle</span>
-          </div>
-        </div>
-      </section>
-
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="mx-auto pb-20">
         <div className="flex gap-8">
-          <div className="hidden lg:block w-72 shrink-0 sticky top-4 self-start h-fit">
-            <LessonSidebar
-              sections={SIDEBAR_SECTIONS}
-              activeSection={activeSection}
-              completedSections={completedSections}
-              onNavigate={scrollToSection}
-              progress={progress}
-            />
-          </div>
+          {/* Sidebar */}
+          <LessonSidebar
+            sections={SIDEBAR_SECTIONS}
+            activeSection={activeSection}
+            completedSections={completedSections}
+            onNavigate={scrollToSection}
+            progress={Math.max(progress, sectionProgress)}
+            className="w-64 shrink-0 sticky top-4 self-start h-fit"
+          />
 
-          <div className="flex-1 min-w-0">
-            <section id="sec-overview" className="mb-10 scroll-mt-32">
-              <motion.div {...fadeUp} className="bg-white rounded-2xl border border-teal-200/60 p-6 shadow-sm">
-                <div className="flex items-center gap-2 mb-4">
-                  <BookOpen className="w-5 h-5 text-teal-600" />
-                  <h2 className="text-xl font-bold text-gray-900">Lesson Overview</h2>
+          {/* Main Content */}
+          <div className="flex-1 min-w-0 pr-4 sm:pr-6 lg:pr-8">
+
+            {/* ─── HERO ─── */}
+            <section id="hero" className="mb-6 scroll-mt-32">
+              <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="inline-flex items-center gap-1 text-teal-600 hover:text-teal-800 text-sm mb-4 transition-colors">
+                <ArrowLeft className="w-4 h-4" /> Back to Learning Path
+              </Link>
+
+              <motion.div {...fadeUp}>
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <GraduationCap className="w-5 h-5 text-teal-500" />
+                  <span className="text-xs font-bold text-teal-500 uppercase tracking-wider">Lesson {lesson.sequenceOrder}</span>
+                  <span className="text-xs text-teal-300">·</span>
+                  <span className="text-xs font-medium text-teal-400">Module 12: Planetary States & Exception Handling</span>
+                  {isCompleted && (
+                    <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> Completed
+                    </span>
+                  )}
+                  {isLocked && (
+                    <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200 flex items-center gap-1">
+                      <Lock className="w-3 h-3" /> Locked
+                    </span>
+                  )}
                 </div>
-                <p className="text-gray-700 leading-relaxed text-lg">{content.intro}</p>
-                <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-3">
+
+                <h1 className="text-3xl sm:text-4xl font-bold text-teal-900 mb-3">{lesson.title}</h1>
+
+                <div className="flex items-center gap-4 flex-wrap">
+                  <ReadingTime text={allText} />
+                  <span className="text-teal-200">·</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-teal-600">
+                    <Layers className="w-3.5 h-3.5" /> {content.sections?.length || 0} Sections
+                  </span>
+                  <span className="text-teal-200">·</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-teal-600">
+                    <Lightbulb className="w-3.5 h-3.5" /> {content.concepts.length} Concepts
+                  </span>
+                  <span className="text-teal-200">·</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-teal-600">
+                    <BrainCircuit className="w-3.5 h-3.5" /> {content.quiz.length} Questions
+                  </span>
+                </div>
+
+                {hasSections && (
+                  <div className="mt-4 flex items-center gap-3">
+                    <div className="flex-1 h-2 bg-teal-100 rounded-full overflow-hidden max-w-[250px]">
+                      <motion.div
+                        className="h-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${sectionProgress}%` }}
+                        transition={{ duration: 0.6 }}
+                      />
+                    </div>
+                    <span className="text-xs text-teal-600 font-medium">{completedSections.size}/{content.sections?.length} viewed</span>
+                  </div>
+                )}
+              </motion.div>
+            </section>
+
+            {/* ─── OVERVIEW ─── */}
+            <section id="sec-overview" className="mb-6 scroll-mt-32">
+              <motion.div {...fadeUp} className="bg-white border border-amber-200/80 rounded-2xl p-6 sm:p-8 shadow-sm">
+                <div className="flex items-center gap-2 mb-4">
+                  <BookOpen className="w-5 h-5 text-amber-600" />
+                  <span className="text-sm font-semibold text-amber-800 uppercase tracking-wide">Lesson Overview</span>
+                </div>
+                <p className="text-gray-700 leading-relaxed text-lg mb-6">{content.intro}</p>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                   {AVASTHA_DATA.map((a) => (
                     <div
                       key={a.name}
@@ -319,47 +493,24 @@ export default function Lesson40Interactive({ lesson, lessonProgress }: Lesson40
               </motion.div>
             </section>
 
-            {/* Sections */}
-            {content.sections?.map((section, idx) => (
+            {/* Content Sections — unique IDs based on section.id */}
+            {content.sections?.map((section) => (
               <section
                 key={section.id}
-                id={idx === 0 ? "sec-definition" : idx === 1 ? "sec-etymology" : idx === 2 ? "sec-algorithm" : idx === 3 ? "sec-debug" : idx === 4 ? "sec-synthesis" : `sec-${idx}`}
+                id={`sec-c${section.id}`}
                 className="mb-6 scroll-mt-32"
                 onClick={() => markSectionComplete(section.id)}
               >
                 <motion.div {...fadeUp}>
-                  <LessonSection section={section} index={idx} />
+                  <LessonSection section={section} index={section.id - 1} />
                 </motion.div>
               </section>
             ))}
 
-            {/* Algorithm Formula */}
+            {/* Baladi Degree Ruler */}
             <section id="sec-algorithm" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
-                <div className="flex items-center gap-2 mb-4">
-                  <Zap className="w-5 h-5 text-teal-600" />
-                  <h2 className="text-xl font-bold text-gray-900">The Odd/Even Reversal Algorithm</h2>
-                </div>
-                <FormulaBlock
-                  formula={`ODD SIGNS (Vishama: Aries, Gemini, Leo, Libra, Sagittarius, Aquarius):
-─────────────────────────────────────────────────────────────
-0°  - 6°   = Bala   (Infant)   → 25%  power
-6°  - 12°  = Kumara (Youth)    → 50%  power
-12° - 18°  = Yuva   (Adult)    → 100% power
-18° - 24°  = Vriddha (Old)     → 10%  power
-24° - 30°  = Mrita  (Dead)     → 0%   power
-
-EVEN SIGNS (Sama: Taurus, Cancer, Virgo, Scorpio, Capricorn, Pisces):
-─────────────────────────────────────────────────────────────
-0°  - 6°   = Mrita  (Dead)     → 0%   power
-6°  - 12°  = Vriddha (Old)     → 10%  power
-12° - 18°  = Yuva   (Adult)    → 100% power
-18° - 24°  = Kumara (Youth)    → 50%  power
-24° - 30°  = Bala   (Infant)   → 25%  power
-
-CRITICAL: Always check Vishama/Sama BEFORE calculating Avastha!`}
-                  label="Baladi Algorithm"
-                />
+                <BaladiDegreeRuler />
               </motion.div>
             </section>
 
@@ -438,24 +589,26 @@ CRITICAL: Always check Vishama/Sama BEFORE calculating Avastha!`}
               </motion.div>
             </section>
 
-            {/* Next */}
-            <section id="sec-next" className="mb-12 scroll-mt-32">
-              <motion.div {...fadeUp} className="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-2xl p-6 text-white shadow-lg">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div>
-                    <p className="text-teal-200 text-sm mb-1">Next in Module 12</p>
-                    <p className="text-xl font-bold">Lajjitadi Avasthas — The Mood Engine</p>
-                    <p className="text-teal-200 text-sm mt-1">Decode the psychological mood of every planet: Proud, Starving, Ashamed, Delighted, Agitated, Thirsty.</p>
+            {/* ─── NEXT LESSON CTA ─── */}
+            <section id="sec-next" className="scroll-mt-32">
+              <motion.div {...fadeUp}>
+                <div className="p-6 sm:p-8 bg-white rounded-2xl border-2 border-amber-200/60 shadow-sm">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm text-amber-600 mb-1 font-medium">Next in Module 12</p>
+                      <p className="text-xl font-bold text-gray-900">Lajjitadi Avasthas — The Mood Engine</p>
+                      <p className="text-sm text-gray-500 mt-1">Decode the psychological mood of every planet: Proud, Starving, Ashamed, Delighted, Agitated, Thirsty.</p>
+                    </div>
+                    <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="flex items-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl transition-colors shadow-md shadow-teal-600/20 shrink-0">
+                      Continue <ChevronRight className="w-4 h-4" />
+                    </Link>
                   </div>
-                  <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="px-6 py-3 bg-white text-teal-700 font-semibold rounded-xl hover:bg-teal-50 transition-colors shrink-0 flex items-center gap-2">
-                    Continue <ChevronRight className="w-4 h-4" />
-                  </Link>
                 </div>
               </motion.div>
             </section>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

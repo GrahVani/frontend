@@ -33,7 +33,7 @@ interface MatchingPair {
   right: string;
 }
 
-type QuizQuestion =
+export type QuizQuestion =
   | {
       questionId: number;
       type: "multiple_choice";
