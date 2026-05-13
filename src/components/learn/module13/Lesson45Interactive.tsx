@@ -4,7 +4,8 @@ import React, { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowLeft, GraduationCap, ChevronRight, BookOpen, Sparkles,
-  BrainCircuit, AlertTriangle, XCircle, CheckCircle, Zap } from "lucide-react";
+  BrainCircuit, AlertTriangle, XCircle, CheckCircle, Zap,
+  CheckCircle2, Lock, Lightbulb, Layers, Crown } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { learnApi, type Lesson, type LessonProgressData } from "@/lib/api";
 import { useScrollSpy } from "@/hooks/useScrollSpy";
@@ -17,7 +18,7 @@ import ReadingTime from "@/components/learn/interactive/ReadingTime";
 import RecapSection from "@/components/learn/interactive/RecapSection";
 import LessonSection, { type Section } from "@/components/learn/LessonSection";
 import ConceptCard from "@/components/learn/ConceptCard";
-import InteractiveQuiz from "@/components/learn/InteractiveQuiz";
+import InteractiveQuiz, { type QuizQuestion } from "@/components/learn/InteractiveQuiz";
 
 import {
   DebugComparator,
@@ -29,7 +30,7 @@ interface Concept {
   id: number; title: string; description: string; icon?: string;
   keyTakeaway?: string; proTip?: string; commonMistake?: string;
 }
-interface LessonContent { intro: string; sections?: Section[]; concepts: Concept[]; quiz: unknown[]; }
+interface LessonContent { intro: string; sections?: Section[]; concepts: Concept[]; quiz: QuizQuestion[]; }
 
 interface Lesson45InteractiveProps {
   lesson: Lesson;
@@ -37,17 +38,25 @@ interface Lesson45InteractiveProps {
 }
 
 // ─── Static Data ──────────────────────────────────────────────
-const SECTION_IDS = ["hero","sec-overview","sec-definition","sec-paradoxes","sec-knowledge","sec-concepts","sec-paradox-grid","sec-debug","sec-recap","sec-quiz","sec-next"];
+const SECTION_IDS = [
+  "hero", "sec-overview",
+  "sec-c1", "sec-c2", "sec-c3", "sec-c4", "sec-c5",
+  "sec-paradox-grid", "sec-debug",
+  "sec-knowledge", "sec-concepts", "sec-recap", "sec-quiz", "sec-next",
+];
 
 const SIDEBAR_SECTIONS: SidebarSection[] = [
   { id: "hero", label: "Introduction", type: "overview", group: "Start" },
   { id: "sec-overview", label: "Overview", type: "overview", group: "Start" },
-  { id: "sec-definition", label: "Definition", type: "definition", group: "Learn" },
-  { id: "sec-paradoxes", label: "The 5 Paradoxes", type: "mechanics", group: "Learn" },
+  { id: "sec-c1", label: "Definition", type: "definition", group: "Learn" },
+  { id: "sec-c2", label: "Etymology", type: "etymology", group: "Learn" },
+  { id: "sec-c3", label: "The 5 Paradoxes", type: "mechanics", group: "Learn" },
+  { id: "sec-c4", label: "Why Apps Love Exaltation", type: "case_debug", group: "Learn" },
+  { id: "sec-c5", label: "Synthesis", type: "synthesis", group: "Learn" },
+  { id: "sec-paradox-grid", label: "Paradox Grid", type: "practice", group: "Practice" },
+  { id: "sec-debug", label: "Amateur vs Pro", type: "practice", group: "Practice" },
   { id: "sec-knowledge", label: "Knowledge Check", type: "quiz", group: "Practice" },
   { id: "sec-concepts", label: "Key Concepts", type: "concepts", group: "Practice" },
-  { id: "sec-paradox-grid", label: "Paradox Grid", type: "practice", group: "Practice" },
-  { id: "sec-debug", label: "Why Apps Love Exaltation", type: "practice", group: "Practice" },
   { id: "sec-recap", label: "Recap", type: "recap", group: "Finish" },
   { id: "sec-quiz", label: "Practice Quiz", type: "practice", group: "Finish" },
   { id: "sec-next", label: "Continue", type: "continue", group: "Finish" },
@@ -68,6 +77,73 @@ const PARADOX_RULES: ParadoxRule[] = [
   { planet: "Mercury", house: 4, houseName: "Education / Home", effect: "Over-analyzes family dynamics. Education becomes rote memorization.", severity: "low" },
   { planet: "Saturn", house: 8, houseName: "Longevity / Transformation", effect: "Extreme longevity but painful transformations. Fear of death.", severity: "critical" },
 ];
+
+const KARAKA_DATA = [
+  { planet: "Sun", planetEn: "Surya", houses: ["1st (Self)", "5th (Children)", "9th (Father)"], color: "bg-amber-500", light: "bg-amber-50", border: "border-amber-200", text: "text-amber-700" },
+  { planet: "Moon", planetEn: "Chandra", houses: ["4th (Mother/Home)"], color: "bg-slate-400", light: "bg-slate-50", border: "border-slate-200", text: "text-slate-700" },
+  { planet: "Mars", planetEn: "Mangala", houses: ["3rd (Courage/Siblings)", "6th (Enemies/Disease)"], color: "bg-red-500", light: "bg-red-50", border: "border-red-200", text: "text-red-700" },
+  { planet: "Mercury", planetEn: "Budha", houses: ["4th (Education)", "6th (Service)", "10th (Career)"], color: "bg-emerald-500", light: "bg-emerald-50", border: "border-emerald-200", text: "text-emerald-700" },
+  { planet: "Jupiter", planetEn: "Guru", houses: ["2nd (Wealth)", "5th (Children)", "9th (Fortune)", "11th (Gains)"], color: "bg-yellow-500", light: "bg-yellow-50", border: "border-yellow-200", text: "text-yellow-700" },
+  { planet: "Venus", planetEn: "Shukra", houses: ["7th (Marriage)"], color: "bg-pink-500", light: "bg-pink-50", border: "border-pink-200", text: "text-pink-700" },
+  { planet: "Saturn", planetEn: "Shani", houses: ["6th (Disease)", "8th (Longevity)", "10th (Career)", "12th (Loss)"], color: "bg-indigo-500", light: "bg-indigo-50", border: "border-indigo-200", text: "text-indigo-700" },
+];
+
+// ─── Karaka Reference Table ───────────────────────────────────
+function KarakaReferenceTable() {
+  const [hoveredPlanet, setHoveredPlanet] = useState<string | null>(null);
+
+  return (
+    <div className="bg-white rounded-2xl border border-amber-200/80 shadow-sm p-5 sm:p-6">
+      <div className="flex items-center gap-2 mb-1">
+        <Crown className="w-5 h-5 text-amber-600" />
+        <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wider">Karaka (Significator) Reference</h3>
+      </div>
+      <p className="text-xs text-gray-500 mb-4">
+        Each planet is a natural significator (Karaka) for specific houses. When placed in those houses,
+        Karako Bhava Nashaya may trigger. Hover any row to highlight.
+      </p>
+
+      <div className="space-y-2">
+        {KARAKA_DATA.map((k) => {
+          const isHovered = hoveredPlanet === k.planet;
+          return (
+            <motion.div
+              key={k.planet}
+              className={`flex flex-wrap items-center gap-2 sm:gap-4 rounded-xl border-2 p-3 transition-all cursor-default ${k.light} ${k.border} ${
+                isHovered ? "shadow-md scale-[1.01]" : ""
+              }`}
+              onMouseEnter={() => setHoveredPlanet(k.planet)}
+              onMouseLeave={() => setHoveredPlanet(null)}
+            >
+              <div className="flex items-center gap-2 min-w-[100px]">
+                <div className={`w-3 h-3 rounded-full ${k.color}`} />
+                <div>
+                  <div className={`text-xs font-bold ${k.text}`}>{k.planet}</div>
+                  <div className="text-[10px] text-gray-500">{k.planetEn}</div>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {k.houses.map((h) => (
+                  <span
+                    key={h}
+                    className={`text-[10px] font-semibold px-2 py-0.5 rounded-md bg-white border ${k.border} ${k.text}`}
+                  >
+                    {h}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      <div className="mt-3 pt-3 border-t border-gray-100 text-[10px] text-gray-500">
+        <span className="font-bold">Rule:</span> If a planet sits in ANY of its Karaka houses, it becomes an "overload" candidate.
+        Exaltation or own sign placement intensifies the effect.
+      </div>
+    </div>
+  );
+}
 
 // ─── Karaka House Checker ─────────────────────────────────────
 function KarakaHouseChecker() {
@@ -190,29 +266,89 @@ export default function Lesson45Interactive({ lesson, lessonProgress }: Lesson45
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/30 to-slate-100">
-      <ScrollProgress />
-      <section id="hero" className="relative bg-gradient-to-br from-amber-900 via-slate-900 to-orange-950 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-64 h-64 rounded-full bg-amber-500 blur-3xl" />
-          <div className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-orange-500 blur-3xl" />
-        </div>
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-16 relative">
-          <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="inline-flex items-center gap-1 text-amber-300 hover:text-white text-sm mb-6 transition-colors"><ArrowLeft className="w-4 h-4" />Back to Learning Path</Link>
-          <div className="flex items-center gap-2 mb-3"><GraduationCap className="w-5 h-5 text-amber-400" /><span className="text-amber-400 text-sm font-semibold tracking-wide uppercase">Intermediate — Module 13.3</span></div>
-          <h1 className="text-3xl md:text-5xl font-bold mb-4 max-w-3xl">{lesson.title}</h1>
-          <p className="text-amber-200 text-lg max-w-2xl leading-relaxed">{content.intro}</p>
-          <div className="mt-6 flex items-center gap-4 text-sm text-amber-300"><ReadingTime text={allText} /><span className="flex items-center gap-1"><AlertTriangle className="w-4 h-4" /> Paradox Handler</span></div>
-        </div>
-      </section>
+  const isLocked = lessonProgress?.status === "locked";
+  const isCompleted = lessonProgress?.status === "completed";
+  const hasSections = content.sections && content.sections.length > 0;
+  const sectionProgress = hasSections
+    ? Math.round((completedSections.size / content.sections!.length) * 100)
+    : 0;
 
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  return (
+    <>
+      <ScrollProgress />
+
+      <div className="mx-auto pb-20">
         <div className="flex gap-8">
-          <div className="hidden lg:block w-72 shrink-0 sticky top-4 self-start h-fit">
-            <LessonSidebar sections={SIDEBAR_SECTIONS} activeSection={activeSection} completedSections={completedSections} onNavigate={scrollToSection} progress={progress} />
-          </div>
-          <div className="flex-1 min-w-0">
+          {/* Sidebar */}
+          <LessonSidebar
+            sections={SIDEBAR_SECTIONS}
+            activeSection={activeSection}
+            completedSections={completedSections}
+            onNavigate={scrollToSection}
+            progress={Math.max(progress, sectionProgress)}
+            className="w-64 shrink-0 sticky top-4 self-start h-fit"
+          />
+
+          {/* Main Content */}
+          <div className="flex-1 min-w-0 pr-4 sm:pr-6 lg:pr-8">
+
+            {/* ─── HERO ─── */}
+            <section id="hero" className="mb-6 scroll-mt-32">
+              <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-800 text-sm mb-4 transition-colors">
+                <ArrowLeft className="w-4 h-4" /> Back to Learning Path
+              </Link>
+
+              <motion.div {...fadeUp}>
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <GraduationCap className="w-5 h-5 text-amber-500" />
+                  <span className="text-xs font-bold text-amber-500 uppercase tracking-wider">Lesson {lesson.sequenceOrder}</span>
+                  <span className="text-xs text-amber-300">·</span>
+                  <span className="text-xs font-medium text-amber-400">Module 13: Chart Synthesis & Logic Traps</span>
+                  {isCompleted && (
+                    <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> Completed
+                    </span>
+                  )}
+                  {isLocked && (
+                    <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200 flex items-center gap-1">
+                      <Lock className="w-3 h-3" /> Locked
+                    </span>
+                  )}
+                </div>
+
+                <h1 className="text-3xl sm:text-4xl font-bold text-amber-900 mb-3">{lesson.title}</h1>
+
+                <div className="flex items-center gap-4 flex-wrap">
+                  <ReadingTime text={allText} />
+                  <span className="text-amber-200">·</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600">
+                    <Layers className="w-3.5 h-3.5" /> {content.sections?.length || 0} Sections
+                  </span>
+                  <span className="text-amber-200">·</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600">
+                    <Lightbulb className="w-3.5 h-3.5" /> {content.concepts.length} Concepts
+                  </span>
+                  <span className="text-amber-200">·</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600">
+                    <BrainCircuit className="w-3.5 h-3.5" /> {content.quiz.length} Questions
+                  </span>
+                </div>
+
+                {hasSections && (
+                  <div className="mt-4 flex items-center gap-3">
+                    <div className="flex-1 h-2 bg-amber-100 rounded-full overflow-hidden max-w-[250px]">
+                      <motion.div
+                        className="h-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${sectionProgress}%` }}
+                        transition={{ duration: 0.6 }}
+                      />
+                    </div>
+                    <span className="text-xs text-amber-600 font-medium">{completedSections.size}/{content.sections?.length} viewed</span>
+                  </div>
+                )}
+              </motion.div>
+            </section>
             <section id="sec-overview" className="mb-10 scroll-mt-32">
               <motion.div {...fadeUp} className="bg-white rounded-2xl border border-amber-200/60 p-6 shadow-sm">
                 <div className="flex items-center gap-2 mb-4"><BookOpen className="w-5 h-5 text-amber-600" /><h2 className="text-xl font-bold text-gray-900">Lesson Overview</h2></div>
@@ -226,15 +362,26 @@ export default function Lesson45Interactive({ lesson, lessonProgress }: Lesson45
               </motion.div>
             </section>
 
-            {content.sections?.map((section, idx) => (
-              <section key={section.id} id={idx === 0 ? "sec-definition" : idx === 1 ? "sec-etymology" : idx === 2 ? "sec-paradoxes" : idx === 3 ? "sec-debug" : idx === 4 ? "sec-synthesis" : `sec-${idx}`} className="mb-6 scroll-mt-32" onClick={() => markSectionComplete(section.id)}>
-                <motion.div {...fadeUp}><LessonSection section={section} index={idx} /></motion.div>
+            {content.sections?.map((section) => (
+              <section
+                key={section.id}
+                id={`sec-c${section.id}`}
+                className="mb-6 scroll-mt-32"
+                onClick={() => markSectionComplete(section.id)}
+              >
+                <motion.div {...fadeUp}>
+                  <LessonSection section={section} index={section.id - 1} />
+                </motion.div>
               </section>
             ))}
 
             <section id="sec-paradox-grid" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp} className="space-y-6">
-                <div className="flex items-center gap-2 mb-2"><AlertTriangle className="w-5 h-5 text-amber-600" /><h2 className="text-xl font-bold text-gray-900">The Paradox Grid</h2></div>
+                <KarakaReferenceTable />
+                <div className="flex items-center gap-2 mb-2">
+                  <AlertTriangle className="w-5 h-5 text-amber-600" />
+                  <h2 className="text-xl font-bold text-gray-900">The Paradox Grid</h2>
+                </div>
                 <ParadoxArrayChecker rules={PARADOX_RULES} />
                 <KarakaHouseChecker />
               </motion.div>
@@ -284,21 +431,24 @@ export default function Lesson45Interactive({ lesson, lessonProgress }: Lesson45
               </motion.div>
             </section>
 
-            <section id="sec-next" className="mb-12 scroll-mt-32">
-              <motion.div {...fadeUp} className="bg-gradient-to-r from-amber-600 to-orange-600 rounded-2xl p-6 text-white shadow-lg">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div>
-                    <p className="text-amber-200 text-sm mb-1">Module 13 Complete</p>
-                    <p className="text-xl font-bold">You have completed Intermediate Astrology!</p>
-                    <p className="text-amber-200 text-sm mt-1">Next: Advanced Level — Divisional Charts, Transit Timing, and Predictive Synthesis.</p>
+            {/* ─── NEXT LESSON CTA ─── */}
+            <section id="sec-next" className="scroll-mt-32">
+              <motion.div {...fadeUp}>
+                <div className="p-6 sm:p-8 bg-white rounded-2xl border-2 border-amber-200/60 shadow-sm">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm text-amber-600 mb-1 font-medium">Module 13 Complete</p>
+                      <p className="text-xl font-bold text-gray-900">You have completed Intermediate Astrology!</p>
+                      <p className="text-sm text-gray-500 mt-1">Next: Advanced Level — Divisional Charts, Transit Timing, and Predictive Synthesis.</p>
+                    </div>
+                    <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-colors shadow-md shadow-amber-600/20 shrink-0">Return to Dashboard <ChevronRight className="w-4 h-4" /></Link>
                   </div>
-                  <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="px-6 py-3 bg-white text-amber-700 font-semibold rounded-xl hover:bg-amber-50 transition-colors shrink-0 flex items-center gap-2">Return to Dashboard <ChevronRight className="w-4 h-4" /></Link>
                 </div>
               </motion.div>
             </section>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

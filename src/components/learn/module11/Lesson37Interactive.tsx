@@ -3,8 +3,8 @@
 import React, { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowLeft, GraduationCap, ChevronRight, BookOpen, Layers,
-  Sparkles, BrainCircuit, Target, Clock, Sun, Moon, Shield, Zap,
+import { ArrowLeft, GraduationCap, CheckCircle2, Lock, ChevronRight, BookOpen, Layers,
+  Sparkles, BrainCircuit, Target, Lightbulb, Clock, Sun, Moon, Shield, Zap,
   Calculator } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { learnApi, type Lesson, type LessonProgressData } from "@/lib/api";
@@ -18,13 +18,12 @@ import KnowledgeCheck from "@/components/learn/interactive/KnowledgeCheck";
 import RecapSection from "@/components/learn/interactive/RecapSection";
 import LessonSection, { type Section } from "@/components/learn/LessonSection";
 import ConceptCard from "@/components/learn/ConceptCard";
-import InteractiveQuiz from "@/components/learn/InteractiveQuiz";
+import InteractiveQuiz, { type QuizQuestion } from "@/components/learn/InteractiveQuiz";
 
 import {
   AlgorithmStepper,
   LogicGateVisualizer,
   DebugComparator,
-  FormulaBlock,
   type AlgorithmStep } from "@/components/learn/intermediate";
 
 // ─── Types ────────────────────────────────────────────────────
@@ -33,7 +32,7 @@ interface Concept {
   id: number; title: string; description: string; icon?: string;
   keyTakeaway?: string; proTip?: string; commonMistake?: string; media?: ConceptMedia;
 }
-interface LessonContent { intro: string; sections?: Section[]; concepts: Concept[]; quiz: unknown[]; }
+interface LessonContent { intro: string; sections?: Section[]; concepts: Concept[]; quiz: QuizQuestion[]; }
 
 interface Lesson37InteractiveProps {
   lesson: Lesson;
@@ -117,6 +116,99 @@ const GATE_GATES = [
 // ─── Helpers ──────────────────────────────────────────────────
 const fadeUp = { initial: { opacity: 0, y: 20 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: "-40px" as const }, transition: { duration: 0.5 } };
 
+// ─── Visual Ashtottari Data ───────────────────────────────────
+const ASHTOTTARI_PLANETS = [
+  { id: "surya", name: "Surya", en: "Sun", years: 6, color: "bg-orange-500", text: "text-orange-700", light: "bg-orange-50", border: "border-orange-200" },
+  { id: "chandra", name: "Chandra", en: "Moon", years: 15, color: "bg-slate-400", text: "text-slate-700", light: "bg-slate-50", border: "border-slate-200" },
+  { id: "mangala", name: "Mangala", en: "Mars", years: 8, color: "bg-red-500", text: "text-red-700", light: "bg-red-50", border: "border-red-200" },
+  { id: "budha", name: "Budha", en: "Mercury", years: 17, color: "bg-emerald-500", text: "text-emerald-700", light: "bg-emerald-50", border: "border-emerald-200" },
+  { id: "shani", name: "Shani", en: "Saturn", years: 10, color: "bg-indigo-500", text: "text-indigo-700", light: "bg-indigo-50", border: "border-indigo-200" },
+  { id: "guru", name: "Guru", en: "Jupiter", years: 19, color: "bg-amber-500", text: "text-amber-700", light: "bg-amber-50", border: "border-amber-200" },
+  { id: "rahu", name: "Rahu", en: "Rahu", years: 12, color: "bg-violet-500", text: "text-violet-700", light: "bg-violet-50", border: "border-violet-200" },
+  { id: "shukra", name: "Shukra", en: "Venus", years: 21, color: "bg-pink-500", text: "text-pink-700", light: "bg-pink-50", border: "border-pink-200" },
+];
+
+const NAKSHATRA_ALLOCATION = [
+  { planet: "Surya", nakshatras: ["Krittika", "Uttara Phalguni", "Uttara Ashadha"], color: "bg-orange-100 text-orange-800 border-orange-300" },
+  { planet: "Chandra", nakshatras: ["Rohini", "Hasta", "Shravana"], color: "bg-slate-100 text-slate-800 border-slate-300" },
+  { planet: "Mangala", nakshatras: ["Mrigashira", "Chitra", "Dhanishta"], color: "bg-red-100 text-red-800 border-red-300" },
+  { planet: "Budha", nakshatras: ["Ardra", "Swati", "Shatabhisha"], color: "bg-emerald-100 text-emerald-800 border-emerald-300" },
+  { planet: "Shani", nakshatras: ["Pushya", "Anuradha", "Uttara Bhadrapada"], color: "bg-indigo-100 text-indigo-800 border-indigo-300" },
+  { planet: "Guru", nakshatras: ["Punarvasu", "Vishakha", "Purva Bhadrapada"], color: "bg-amber-100 text-amber-800 border-amber-300" },
+  { planet: "Rahu", nakshatras: ["Ashlesha", "Jyeshtha", "Revati"], color: "bg-violet-100 text-violet-800 border-violet-300" },
+  { planet: "Shukra", nakshatras: ["Bharani", "Purva Phalguni", "Purva Ashadha"], color: "bg-pink-100 text-pink-800 border-pink-300" },
+];
+
+const EXCLUDED_NAKSHATRAS = ["Ashwini", "Magha", "Mula"];
+
+function AshtottariTimeline() {
+  const total = ASHTOTTARI_PLANETS.reduce((s, p) => s + p.years, 0);
+  return (
+    <div className="bg-white rounded-2xl border border-amber-200/80 shadow-sm p-5 sm:p-6">
+      <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wider mb-4">Ashtottari Varsha-vibhaga (108-Year Timeline)</h3>
+      <div className="space-y-3">
+        {ASHTOTTARI_PLANETS.map((p) => {
+          const pct = (p.years / total) * 100;
+          return (
+            <div key={p.id} className="flex items-center gap-3">
+              <div className="w-20 sm:w-24 shrink-0">
+                <div className="text-xs font-bold text-gray-900">{p.name}</div>
+                <div className="text-[10px] text-gray-500">{p.en}</div>
+              </div>
+              <div className="flex-1 h-8 bg-gray-100 rounded-lg overflow-hidden relative">
+                <motion.div
+                  className={`h-full ${p.color} rounded-lg`}
+                  initial={{ width: 0 }}
+                  whileInView={{ width: `${pct}%` }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                />
+                <span className="absolute inset-0 flex items-center px-2 text-xs font-bold text-white drop-shadow-md">
+                  {p.years} yrs ({pct.toFixed(1)}%)
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+        <span className="text-xs text-gray-500">Sequence: Surya → Chandra → Mangala → Budha → Shani → Guru → Rahu → Shukra</span>
+        <span className="text-xs font-bold text-amber-700">Total: 108 Varsha</span>
+      </div>
+    </div>
+  );
+}
+
+function NakshatraAllocationGrid() {
+  return (
+    <div className="bg-white rounded-2xl border border-amber-200/80 shadow-sm p-5 sm:p-6">
+      <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wider mb-1">Nakshatra Allocation (Janma Nakshatra → Starting Dasha)</h3>
+      <p className="text-xs text-gray-500 mb-4">Each planet rules 3 nakshatras. Birth nakshatra determines the first Mahadasha. Ashwini, Magha, and Mula belong to Ketu — excluded from Ashtottari.</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {NAKSHATRA_ALLOCATION.map((group) => (
+          <div key={group.planet} className={`rounded-xl border-2 p-3 ${group.color}`}>
+            <div className="text-xs font-bold uppercase tracking-wider mb-1.5 opacity-80">{group.planet}</div>
+            <div className="space-y-1">
+              {group.nakshatras.map((n) => (
+                <div key={n} className="text-xs font-medium">• {n}</div>
+              ))}
+            </div>
+          </div>
+        ))}
+        <div className="rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-3">
+          <div className="text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-500">Excluded (Ketu)</div>
+          <div className="space-y-1">
+            {EXCLUDED_NAKSHATRAS.map((n) => (
+              <div key={n} className="text-xs font-medium text-gray-500 line-through">• {n}</div>
+            ))}
+          </div>
+          <div className="text-[10px] text-red-600 mt-1.5 font-medium">→ Falls back to Vimshottari</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function getAllText(content: LessonContent): string {
   const parts = [content.intro];
   content.sections?.forEach((s) => parts.push(s.content));
@@ -155,77 +247,118 @@ export default function Lesson37Interactive({ lesson, lessonProgress }: Lesson37
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
+  const isLocked = lessonProgress?.status === "locked";
+  const isCompleted = lessonProgress?.status === "completed";
+  const hasSections = content.sections && content.sections.length > 0;
+  const sectionProgress = hasSections
+    ? Math.round((completedSections.size / content.sections!.length) * 100)
+    : 0;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-slate-100">
+    <>
       <ScrollProgress />
 
-      {/* Hero */}
-      <section id="hero" className="relative bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-64 h-64 rounded-full bg-indigo-500 blur-3xl" />
-          <div className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-violet-500 blur-3xl" />
-        </div>
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-16 relative">
-          <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="inline-flex items-center gap-1 text-indigo-300 hover:text-white text-sm mb-6 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Learning Path
-          </Link>
-          <div className="flex items-center gap-2 mb-3">
-            <GraduationCap className="w-5 h-5 text-indigo-400" />
-            <span className="text-indigo-400 text-sm font-semibold tracking-wide uppercase">Intermediate — Module 11.1</span>
-          </div>
-          <h1 className="text-3xl md:text-5xl font-bold mb-4 max-w-3xl">{lesson.title}</h1>
-          <p className="text-indigo-200 text-lg max-w-2xl leading-relaxed">{content.intro}</p>
-          <div className="mt-6 flex items-center gap-4 text-sm text-indigo-300">
-            <ReadingTime text={allText} />
-            <span className="flex items-center gap-1"><Target className="w-4 h-4" /> Intermediate Level</span>
-          </div>
-        </div>
-      </section>
-
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="mx-auto pb-20">
         <div className="flex gap-8">
           {/* Sidebar */}
-          <div className="hidden lg:block w-72 shrink-0 sticky top-4 self-start h-fit">
-            <LessonSidebar
-              sections={SIDEBAR_SECTIONS}
-              activeSection={activeSection}
-              completedSections={completedSections}
-              onNavigate={scrollToSection}
-              progress={progress}
-            />
-          </div>
+          <LessonSidebar
+            sections={SIDEBAR_SECTIONS}
+            activeSection={activeSection}
+            completedSections={completedSections}
+            onNavigate={scrollToSection}
+            progress={Math.max(progress, sectionProgress)}
+            className="w-64 shrink-0 sticky top-4 self-start h-fit"
+          />
 
           {/* Main Content */}
-          <div className="flex-1 min-w-0">
-            {/* Overview */}
-            <section id="sec-overview" className="mb-10 scroll-mt-32">
-              <motion.div {...fadeUp} className="bg-white rounded-2xl border border-indigo-200/60 p-6 shadow-sm">
-                <div className="flex items-center gap-2 mb-4">
-                  <BookOpen className="w-5 h-5 text-indigo-600" />
-                  <h2 className="text-xl font-bold text-gray-900">Lesson Overview</h2>
+          <div className="flex-1 min-w-0 pr-4 sm:pr-6 lg:pr-8">
+
+            {/* ─── HERO ─── */}
+            <section id="hero" className="mb-6 scroll-mt-32">
+              <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="inline-flex items-center gap-1 text-violet-600 hover:text-violet-800 text-sm mb-4 transition-colors">
+                <ArrowLeft className="w-4 h-4" /> Back to Learning Path
+              </Link>
+
+              <motion.div {...fadeUp}>
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <GraduationCap className="w-5 h-5 text-violet-500" />
+                  <span className="text-xs font-bold text-violet-500 uppercase tracking-wider">Lesson {lesson.sequenceOrder}</span>
+                  <span className="text-xs text-violet-300">·</span>
+                  <span className="text-xs font-medium text-violet-400">Module 11: Conditional Dashas</span>
+                  {isCompleted && (
+                    <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> Completed
+                    </span>
+                  )}
+                  {isLocked && (
+                    <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200 flex items-center gap-1">
+                      <Lock className="w-3 h-3" /> Locked
+                    </span>
+                  )}
                 </div>
-                <p className="text-gray-700 leading-relaxed text-lg">{content.intro}</p>
-                <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <div className="bg-gradient-to-br from-indigo-50 to-violet-50 rounded-xl p-3 text-center border border-indigo-200">
-                    <Clock className="w-5 h-5 text-indigo-600 mx-auto mb-1" />
+
+                <h1 className="text-3xl sm:text-4xl font-bold text-violet-900 mb-3">{lesson.title}</h1>
+
+                <div className="flex items-center gap-4 flex-wrap">
+                  <ReadingTime text={allText} />
+                  <span className="text-violet-200">·</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-violet-600">
+                    <Layers className="w-3.5 h-3.5" /> {content.sections?.length || 0} Sections
+                  </span>
+                  <span className="text-violet-200">·</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-violet-600">
+                    <Lightbulb className="w-3.5 h-3.5" /> {content.concepts.length} Concepts
+                  </span>
+                  <span className="text-violet-200">·</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-violet-600">
+                    <BrainCircuit className="w-3.5 h-3.5" /> {content.quiz.length} Questions
+                  </span>
+                </div>
+
+                {hasSections && (
+                  <div className="mt-4 flex items-center gap-3">
+                    <div className="flex-1 h-2 bg-violet-100 rounded-full overflow-hidden max-w-[250px]">
+                      <motion.div
+                        className="h-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${sectionProgress}%` }}
+                        transition={{ duration: 0.6 }}
+                      />
+                    </div>
+                    <span className="text-xs text-violet-600 font-medium">{completedSections.size}/{content.sections?.length} viewed</span>
+                  </div>
+                )}
+              </motion.div>
+            </section>
+
+            {/* ─── OVERVIEW ─── */}
+            <section id="sec-overview" className="mb-6 scroll-mt-32">
+              <motion.div {...fadeUp} className="bg-white border border-amber-200/80 rounded-2xl p-6 sm:p-8 shadow-sm">
+                <div className="flex items-center gap-2 mb-4">
+                  <BookOpen className="w-5 h-5 text-amber-600" />
+                  <span className="text-sm font-semibold text-amber-800 uppercase tracking-wide">Lesson Overview</span>
+                </div>
+                <p className="text-gray-700 leading-relaxed text-lg mb-6">{content.intro}</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+                    <Clock className="w-5 h-5 text-amber-600 mx-auto mb-1" />
                     <div className="text-lg font-bold text-gray-900">108</div>
-                    <div className="text-[10px] text-indigo-600">Varsha Total</div>
+                    <div className="text-[10px] text-amber-600">Varsha Total</div>
                   </div>
-                  <div className="bg-gradient-to-br from-indigo-50 to-violet-50 rounded-xl p-3 text-center border border-indigo-200">
-                    <Sun className="w-5 h-5 text-indigo-600 mx-auto mb-1" />
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+                    <Sun className="w-5 h-5 text-amber-600 mx-auto mb-1" />
                     <div className="text-lg font-bold text-gray-900">8</div>
-                    <div className="text-[10px] text-indigo-600">Grahas Used</div>
+                    <div className="text-[10px] text-amber-600">Grahas Used</div>
                   </div>
-                  <div className="bg-gradient-to-br from-indigo-50 to-violet-50 rounded-xl p-3 text-center border border-indigo-200">
-                    <Moon className="w-5 h-5 text-indigo-600 mx-auto mb-1" />
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+                    <Moon className="w-5 h-5 text-amber-600 mx-auto mb-1" />
                     <div className="text-lg font-bold text-gray-900">2</div>
-                    <div className="text-[10px] text-indigo-600">Boolean Checks</div>
+                    <div className="text-[10px] text-amber-600">Boolean Checks</div>
                   </div>
-                  <div className="bg-gradient-to-br from-indigo-50 to-violet-50 rounded-xl p-3 text-center border border-indigo-200">
-                    <Shield className="w-5 h-5 text-indigo-600 mx-auto mb-1" />
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+                    <Shield className="w-5 h-5 text-amber-600 mx-auto mb-1" />
                     <div className="text-lg font-bold text-gray-900">1</div>
-                    <div className="text-[10px] text-indigo-600">Override Rule</div>
+                    <div className="text-[10px] text-amber-600">Override Rule</div>
                   </div>
                 </div>
               </motion.div>
@@ -257,8 +390,8 @@ export default function Lesson37Interactive({ lesson, lessonProgress }: Lesson37
             <section id="sec-algorithm-gate" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
-                  <Calculator className="w-5 h-5 text-indigo-600" />
-                  <h2 className="text-xl font-bold text-gray-900">Interactive: Activation Gate Algorithm</h2>
+                  <Calculator className="w-5 h-5 text-violet-600" />
+                  <h2 className="text-xl font-bold text-violet-900">Interactive: Activation Gate Algorithm</h2>
                 </div>
                 <AlgorithmStepper
                   steps={ACTIVATION_GATE_STEPS}
@@ -271,8 +404,8 @@ export default function Lesson37Interactive({ lesson, lessonProgress }: Lesson37
             <section id="sec-simulator" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
-                  <Zap className="w-5 h-5 text-indigo-600" />
-                  <h2 className="text-xl font-bold text-gray-900">Interactive: Gate Simulator</h2>
+                  <Zap className="w-5 h-5 text-violet-600" />
+                  <h2 className="text-xl font-bold text-violet-900">Interactive: Gate Simulator</h2>
                 </div>
                 <p className="text-sm text-gray-600 mb-4">
                   Toggle the variables below to see how the Activation Gate evaluates in real time.
@@ -290,31 +423,17 @@ export default function Lesson37Interactive({ lesson, lessonProgress }: Lesson37
               </motion.div>
             </section>
 
-            {/* 108-Year Matrix Formula */}
+            {/* 108-Year Matrix — Visual Timeline */}
             <section id="sec-algorithm-matrix" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
-                  <Layers className="w-5 h-5 text-indigo-600" />
-                  <h2 className="text-xl font-bold text-gray-900">The 108-Year Matrix</h2>
+                  <Layers className="w-5 h-5 text-violet-600" />
+                  <h2 className="text-xl font-bold text-violet-900">The 108-Year Matrix</h2>
                 </div>
-                <FormulaBlock
-                  formula={`Ashtottari Varsha-vibhaga (Year Distribution):
-─────────────────────────────────────
-Surya (Sun)      : 6 Varsha
-Chandra (Moon)   : 15 Varsha
-Mangala (Mars)   : 8 Varsha
-Budha (Mercury)  : 17 Varsha
-Shani (Saturn)   : 10 Varsha
-Guru (Jupiter)   : 19 Varsha
-Rahu             : 12 Varsha
-Shukra (Venus)   : 21 Varsha
-─────────────────────────────────────
-TOTAL            : 108 Varsha
-
-Krama (Sequence):
-Surya → Chandra → Mangala → Budha → Shani → Guru → Rahu → Shukra`}
-                  label="Ashtottari Matrix"
-                />
+                <AshtottariTimeline />
+                <div className="mt-4">
+                  <NakshatraAllocationGrid />
+                </div>
               </motion.div>
             </section>
 
@@ -340,8 +459,8 @@ Surya → Chandra → Mangala → Budha → Shani → Guru → Rahu → Shukra`}
             <section id="sec-knowledge" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
-                  <BrainCircuit className="w-5 h-5 text-indigo-600" />
-                  <h2 className="text-xl font-bold text-gray-900">Knowledge Check</h2>
+                  <BrainCircuit className="w-5 h-5 text-violet-600" />
+                  <h2 className="text-xl font-bold text-violet-900">Knowledge Check</h2>
                 </div>
                 <KnowledgeCheck questions={KNOWLEDGE_CHECKS} />
               </motion.div>
@@ -351,8 +470,8 @@ Surya → Chandra → Mangala → Budha → Shani → Guru → Rahu → Shukra`}
             <section id="sec-concepts" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
-                  <Sparkles className="w-5 h-5 text-indigo-600" />
-                  <h2 className="text-xl font-bold text-gray-900">Key Concepts</h2>
+                  <Sparkles className="w-5 h-5 text-violet-600" />
+                  <h2 className="text-xl font-bold text-violet-900">Key Concepts</h2>
                 </div>
                 <div className="space-y-4">
                   {content.concepts.map((concept, idx) => (
@@ -379,8 +498,8 @@ Surya → Chandra → Mangala → Budha → Shani → Guru → Rahu → Shukra`}
             <section id="sec-quiz" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
-                  <BrainCircuit className="w-5 h-5 text-indigo-600" />
-                  <h2 className="text-xl font-bold text-gray-900">Test Your Knowledge</h2>
+                  <BrainCircuit className="w-5 h-5 text-violet-600" />
+                  <h2 className="text-xl font-bold text-violet-900">Test Your Knowledge</h2>
                 </div>
                 <InteractiveQuiz
                   quiz={content.quiz}
@@ -390,27 +509,27 @@ Surya → Chandra → Mangala → Budha → Shani → Guru → Rahu → Shukra`}
               </motion.div>
             </section>
 
-            {/* Next Lesson */}
-            <section id="sec-next" className="mb-12 scroll-mt-32">
-              <motion.div {...fadeUp} className="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl p-6 text-white shadow-lg">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div>
-                    <p className="text-indigo-200 text-sm mb-1">Next in Module 11</p>
-                    <p className="text-xl font-bold">Yogini Dasha — The 36-Year Microscope</p>
-                    <p className="text-indigo-200 text-sm mt-1">Learn the high-frequency 36-year loop that reveals micro-storms hidden by Vimshottari.</p>
+            {/* ─── NEXT LESSON CTA ─── */}
+            <section id="sec-next" className="scroll-mt-32">
+              <motion.div {...fadeUp}>
+                <div className="p-6 sm:p-8 bg-white rounded-2xl border-2 border-amber-200/60 shadow-sm">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm text-amber-600 mb-1 font-medium">Next in Module 11</p>
+                      <p className="text-xl font-bold text-gray-900">Yogini Dasha — The 36-Year Microscope</p>
+                      <p className="text-sm text-gray-500 mt-1">Learn the high-frequency 36-year loop that reveals micro-storms hidden by Vimshottari.</p>
+                    </div>
+                    <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-colors shadow-md shadow-amber-600/20 shrink-0">
+                      Continue <ChevronRight className="w-4 h-4" />
+                    </Link>
                   </div>
-                  <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }}
-                    className="px-6 py-3 bg-white text-indigo-700 font-semibold rounded-xl hover:bg-indigo-50 transition-colors shrink-0 flex items-center gap-2"
-                  >
-                    Continue
-                    <ChevronRight className="w-4 h-4" />
-                  </Link>
                 </div>
               </motion.div>
             </section>
+
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

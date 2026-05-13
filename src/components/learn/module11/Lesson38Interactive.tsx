@@ -3,8 +3,8 @@
 import React, { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowLeft, GraduationCap, ChevronRight, BookOpen, BrainCircuit,
-  RotateCcw, Calculator, Grid, AlertTriangle, Zap } from "lucide-react";
+import { ArrowLeft, GraduationCap, CheckCircle2, Lock, ChevronRight, BookOpen, BrainCircuit,
+  RotateCcw, Calculator, Grid, AlertTriangle, Zap, Layers, Lightbulb } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { learnApi, type Lesson, type LessonProgressData } from "@/lib/api";
 import { useScrollSpy } from "@/hooks/useScrollSpy";
@@ -16,7 +16,7 @@ import KnowledgeCheck from "@/components/learn/interactive/KnowledgeCheck";
 import ReadingTime from "@/components/learn/interactive/ReadingTime";
 import RecapSection from "@/components/learn/interactive/RecapSection";
 import LessonSection, { type Section } from "@/components/learn/LessonSection";
-import InteractiveQuiz from "@/components/learn/InteractiveQuiz";
+import InteractiveQuiz, { type QuizQuestion } from "@/components/learn/InteractiveQuiz";
 
 import {
   AlgorithmStepper,
@@ -29,7 +29,7 @@ interface Concept {
   id: number; title: string; description: string; icon?: string;
   keyTakeaway?: string; proTip?: string; commonMistake?: string; media?: ConceptMedia;
 }
-interface LessonContent { intro: string; sections?: Section[]; concepts: Concept[]; quiz: unknown[]; }
+interface LessonContent { intro: string; sections?: Section[]; concepts: Concept[]; quiz: QuizQuestion[]; }
 
 interface Lesson38InteractiveProps {
   lesson: Lesson;
@@ -99,6 +99,89 @@ const YOGINIS = [
 
 // ─── Helpers ──────────────────────────────────────────────────
 const fadeUp = { initial: { opacity: 0, y: 20 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: "-40px" as const }, transition: { duration: 0.5 } };
+
+// ─── Visual Yogini Data ───────────────────────────────────────
+const YOGINI_DATA = [
+  { num: 1, name: "Mangala", ruler: "Chandra", rulerEn: "Moon", years: 1, color: "bg-emerald-500", text: "text-emerald-800", light: "bg-emerald-50", border: "border-emerald-300", nakshatras: "Ardra, Punarvasu, Pushya" },
+  { num: 2, name: "Pingala", ruler: "Surya", rulerEn: "Sun", years: 2, color: "bg-orange-500", text: "text-orange-800", light: "bg-orange-50", border: "border-orange-300", nakshatras: "Ashlesha, Magha, P. Phalguni" },
+  { num: 3, name: "Dhanya", ruler: "Guru", rulerEn: "Jupiter", years: 3, color: "bg-blue-500", text: "text-blue-800", light: "bg-blue-50", border: "border-blue-300", nakshatras: "U. Phalguni, Hasta, Chitra" },
+  { num: 4, name: "Bhramari", ruler: "Mangala", rulerEn: "Mars", years: 4, color: "bg-red-500", text: "text-red-800", light: "bg-red-50", border: "border-red-300", nakshatras: "Swati, Vishakha, Anuradha" },
+  { num: 5, name: "Bhadrika", ruler: "Budha", rulerEn: "Mercury", years: 5, color: "bg-indigo-500", text: "text-indigo-800", light: "bg-indigo-50", border: "border-indigo-300", nakshatras: "Jyeshtha, Mula, P. Ashadha" },
+  { num: 6, name: "Ulka", ruler: "Shani", rulerEn: "Saturn", years: 6, color: "bg-slate-500", text: "text-slate-800", light: "bg-slate-50", border: "border-slate-300", nakshatras: "U. Ashadha, Shravana, Dhanishta" },
+  { num: 7, name: "Siddha", ruler: "Shukra", rulerEn: "Venus", years: 7, color: "bg-pink-500", text: "text-pink-800", light: "bg-pink-50", border: "border-pink-300", nakshatras: "Shatabhisha, P. Bhadrapada, U. Bhadrapada" },
+  { num: 8, name: "Sankata", ruler: "Rahu", rulerEn: "Rahu", years: 8, color: "bg-rose-500", text: "text-rose-900", light: "bg-rose-50", border: "border-rose-400", nakshatras: "Revati, Ashwini, Bharani" },
+];
+
+function YoginiCycleDiagram() {
+  const total = YOGINI_DATA.reduce((s, y) => s + y.years, 0);
+  return (
+    <div className="bg-white rounded-2xl border border-amber-200/80 shadow-sm p-5 sm:p-6">
+      <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wider mb-1">Yogini Chakra — 36 Year Cycle</h3>
+      <p className="text-xs text-gray-500 mb-4">Each segment shows the Yogini&apos;s proportional share of the 36-year loop. The cycle repeats at ages 0, 36, 72, and 108.</p>
+      <div className="space-y-2.5">
+        {YOGINI_DATA.map((y) => {
+          const pct = (y.years / total) * 100;
+          return (
+            <div key={y.name} className="flex items-center gap-3">
+              <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0" style={{ backgroundColor: "transparent" }}>
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white ${y.color}`}>{y.num}</span>
+              </div>
+              <div className="w-20 sm:w-28 shrink-0">
+                <div className="text-xs font-bold text-gray-900">{y.name}</div>
+                <div className="text-[10px] text-gray-500">{y.rulerEn}</div>
+              </div>
+              <div className="flex-1 h-6 bg-gray-100 rounded-full overflow-hidden relative">
+                <motion.div
+                  className={`h-full ${y.color} rounded-full`}
+                  initial={{ width: 0 }}
+                  whileInView={{ width: `${pct}%` }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                />
+              </div>
+              <div className="w-16 text-right shrink-0">
+                <span className="text-xs font-bold text-gray-900">{y.years} yrs</span>
+                <span className="text-[10px] text-gray-500 ml-1">({pct.toFixed(1)}%)</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+        <span className="text-xs text-gray-500">Full cycle repeats every 36 years</span>
+        <span className="text-xs font-bold text-amber-700">Total: 36 Varsha</span>
+      </div>
+    </div>
+  );
+}
+
+function NakshatraToYoginiMap() {
+  // Pre-calculate mapping for nakshatras 1-27 using (n + 3) mod 8
+  const mapping = Array.from({ length: 27 }, (_, i) => {
+    const n = i + 1;
+    const rem = ((n + 3) % 8);
+    const yoginiIdx = rem === 0 ? 7 : rem - 1;
+    return { n, yogini: YOGINI_DATA[yoginiIdx] };
+  });
+
+  return (
+    <div className="bg-white rounded-2xl border border-amber-200/80 shadow-sm p-5 sm:p-6">
+      <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wider mb-1">Nakshatra → Yogini Lookup Table</h3>
+      <p className="text-xs text-gray-500 mb-4">Formula: (Nakshatra # + 3) mod 8 = Starting Yogini. Find your birth nakshatra to see which Yogini runs first.</p>
+      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
+        {mapping.map(({ n, yogini }) => (
+          <div key={n} className={`rounded-lg border p-2 ${yogini.light} ${yogini.border}`}>
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold text-white ${yogini.color}`}>{yogini.num}</span>
+              <span className="text-[10px] font-bold text-gray-700">#{n}</span>
+            </div>
+            <div className="text-[10px] font-medium text-gray-900 truncate">{yogini.name}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function getAllText(content: LessonContent): string {
   const parts = [content.intro];
@@ -232,73 +315,118 @@ export default function Lesson38Interactive({ lesson, lessonProgress }: Lesson38
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
+  const isLocked = lessonProgress?.status === "locked";
+  const isCompleted = lessonProgress?.status === "completed";
+  const hasSections = content.sections && content.sections.length > 0;
+  const sectionProgress = hasSections
+    ? Math.round((completedSections.size / content.sections!.length) * 100)
+    : 0;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-slate-100">
+    <>
       <ScrollProgress />
 
-      <section id="hero" className="relative bg-gradient-to-br from-indigo-900 via-slate-900 to-violet-950 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 right-10 w-64 h-64 rounded-full bg-violet-500 blur-3xl" />
-          <div className="absolute bottom-10 left-10 w-96 h-96 rounded-full bg-indigo-500 blur-3xl" />
-        </div>
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-16 relative">
-          <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="inline-flex items-center gap-1 text-indigo-300 hover:text-white text-sm mb-6 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Learning Path
-          </Link>
-          <div className="flex items-center gap-2 mb-3">
-            <GraduationCap className="w-5 h-5 text-indigo-400" />
-            <span className="text-indigo-400 text-sm font-semibold tracking-wide uppercase">Intermediate — Module 11.2</span>
-          </div>
-          <h1 className="text-3xl md:text-5xl font-bold mb-4 max-w-3xl">{lesson.title}</h1>
-          <p className="text-indigo-200 text-lg max-w-2xl leading-relaxed">{content.intro}</p>
-          <div className="mt-6 flex items-center gap-4 text-sm text-indigo-300">
-            <ReadingTime text={allText} />
-            <span className="flex items-center gap-1"><RotateCcw className="w-4 h-4" /> Loops every 36 years</span>
-          </div>
-        </div>
-      </section>
-
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="mx-auto pb-20">
         <div className="flex gap-8">
-          <div className="hidden lg:block w-72 shrink-0 sticky top-4 self-start h-fit">
-            <LessonSidebar
-              sections={SIDEBAR_SECTIONS}
-              activeSection={activeSection}
-              completedSections={completedSections}
-              onNavigate={scrollToSection}
-              progress={progress}
-            />
-          </div>
+          {/* Sidebar */}
+          <LessonSidebar
+            sections={SIDEBAR_SECTIONS}
+            activeSection={activeSection}
+            completedSections={completedSections}
+            onNavigate={scrollToSection}
+            progress={Math.max(progress, sectionProgress)}
+            className="w-64 shrink-0 sticky top-4 self-start h-fit"
+          />
 
-          <div className="flex-1 min-w-0">
-            <section id="sec-overview" className="mb-10 scroll-mt-32">
-              <motion.div {...fadeUp} className="bg-white rounded-2xl border border-indigo-200/60 p-6 shadow-sm">
-                <div className="flex items-center gap-2 mb-4">
-                  <BookOpen className="w-5 h-5 text-indigo-600" />
-                  <h2 className="text-xl font-bold text-gray-900">Lesson Overview</h2>
+          {/* Main Content */}
+          <div className="flex-1 min-w-0 pr-4 sm:pr-6 lg:pr-8">
+
+            {/* ─── HERO ─── */}
+            <section id="hero" className="mb-6 scroll-mt-32">
+              <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="inline-flex items-center gap-1 text-violet-600 hover:text-violet-800 text-sm mb-4 transition-colors">
+                <ArrowLeft className="w-4 h-4" /> Back to Learning Path
+              </Link>
+
+              <motion.div {...fadeUp}>
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <GraduationCap className="w-5 h-5 text-violet-500" />
+                  <span className="text-xs font-bold text-violet-500 uppercase tracking-wider">Lesson {lesson.sequenceOrder}</span>
+                  <span className="text-xs text-violet-300">·</span>
+                  <span className="text-xs font-medium text-violet-400">Module 11: Conditional Dashas</span>
+                  {isCompleted && (
+                    <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> Completed
+                    </span>
+                  )}
+                  {isLocked && (
+                    <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200 flex items-center gap-1">
+                      <Lock className="w-3 h-3" /> Locked
+                    </span>
+                  )}
                 </div>
-                <p className="text-gray-700 leading-relaxed text-lg">{content.intro}</p>
-                <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <div className="bg-gradient-to-br from-indigo-50 to-violet-50 rounded-xl p-3 text-center border border-indigo-200">
-                    <RotateCcw className="w-5 h-5 text-indigo-600 mx-auto mb-1" />
+
+                <h1 className="text-3xl sm:text-4xl font-bold text-violet-900 mb-3">{lesson.title}</h1>
+
+                <div className="flex items-center gap-4 flex-wrap">
+                  <ReadingTime text={allText} />
+                  <span className="text-violet-200">·</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-violet-600">
+                    <Layers className="w-3.5 h-3.5" /> {content.sections?.length || 0} Sections
+                  </span>
+                  <span className="text-violet-200">·</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-violet-600">
+                    <Lightbulb className="w-3.5 h-3.5" /> {content.concepts.length} Concepts
+                  </span>
+                  <span className="text-violet-200">·</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-violet-600">
+                    <BrainCircuit className="w-3.5 h-3.5" /> {content.quiz.length} Questions
+                  </span>
+                </div>
+
+                {hasSections && (
+                  <div className="mt-4 flex items-center gap-3">
+                    <div className="flex-1 h-2 bg-violet-100 rounded-full overflow-hidden max-w-[250px]">
+                      <motion.div
+                        className="h-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${sectionProgress}%` }}
+                        transition={{ duration: 0.6 }}
+                      />
+                    </div>
+                    <span className="text-xs text-violet-600 font-medium">{completedSections.size}/{content.sections?.length} viewed</span>
+                  </div>
+                )}
+              </motion.div>
+            </section>
+
+            {/* ─── OVERVIEW ─── */}
+            <section id="sec-overview" className="mb-6 scroll-mt-32">
+              <motion.div {...fadeUp} className="bg-white border border-amber-200/80 rounded-2xl p-6 sm:p-8 shadow-sm">
+                <div className="flex items-center gap-2 mb-4">
+                  <BookOpen className="w-5 h-5 text-amber-600" />
+                  <span className="text-sm font-semibold text-amber-800 uppercase tracking-wide">Lesson Overview</span>
+                </div>
+                <p className="text-gray-700 leading-relaxed text-lg mb-6">{content.intro}</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+                    <RotateCcw className="w-5 h-5 text-amber-600 mx-auto mb-1" />
                     <div className="text-lg font-bold text-gray-900">36</div>
-                    <div className="text-[10px] text-indigo-600">Varsha Cycle</div>
+                    <div className="text-[10px] text-amber-600">Varsha Cycle</div>
                   </div>
-                  <div className="bg-gradient-to-br from-indigo-50 to-violet-50 rounded-xl p-3 text-center border border-indigo-200">
-                    <Grid className="w-5 h-5 text-indigo-600 mx-auto mb-1" />
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+                    <Grid className="w-5 h-5 text-amber-600 mx-auto mb-1" />
                     <div className="text-lg font-bold text-gray-900">8</div>
-                    <div className="text-[10px] text-indigo-600">Yoginis</div>
+                    <div className="text-[10px] text-amber-600">Yoginis</div>
                   </div>
-                  <div className="bg-gradient-to-br from-indigo-50 to-violet-50 rounded-xl p-3 text-center border border-indigo-200">
-                    <Calculator className="w-5 h-5 text-indigo-600 mx-auto mb-1" />
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+                    <Calculator className="w-5 h-5 text-amber-600 mx-auto mb-1" />
                     <div className="text-lg font-bold text-gray-900">+3</div>
-                    <div className="text-[10px] text-indigo-600">Parashari Offset</div>
+                    <div className="text-[10px] text-amber-600">Parashari Offset</div>
                   </div>
-                  <div className="bg-gradient-to-br from-indigo-50 to-violet-50 rounded-xl p-3 text-center border border-indigo-200">
-                    <Zap className="w-5 h-5 text-indigo-600 mx-auto mb-1" />
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
+                    <Zap className="w-5 h-5 text-amber-600 mx-auto mb-1" />
                     <div className="text-lg font-bold text-gray-900">MOD 8</div>
-                    <div className="text-[10px] text-indigo-600">Formula</div>
+                    <div className="text-[10px] text-amber-600">Formula</div>
                   </div>
                 </div>
               </motion.div>
@@ -318,31 +446,16 @@ export default function Lesson38Interactive({ lesson, lessonProgress }: Lesson38
               </section>
             ))}
 
-            {/* 8 Yogini Grid */}
+            {/* 8 Yogini Cycle Diagram */}
             <section id="sec-concepts" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
-                  <Grid className="w-5 h-5 text-indigo-600" />
-                  <h2 className="text-xl font-bold text-gray-900">The 8 Yogini-Shakti Frequencies</h2>
+                  <Grid className="w-5 h-5 text-violet-600" />
+                  <h2 className="text-xl font-bold text-violet-900">The 8 Yogini-Shakti Frequencies</h2>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {YOGINIS.map((y, idx) => (
-                    <motion.div
-                      key={y.name}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: idx * 0.08 }}
-                      className={`p-4 rounded-xl border-2 ${y.color}`}
-                    >
-                      <div className="flex items-center justify-between mb-1">
-                        <h4 className="font-bold">{idx + 1}. {y.name}</h4>
-                        <span className="text-lg font-bold">{y.years}y</span>
-                      </div>
-                      <p className="text-xs opacity-80">Ruler: {y.ruler}</p>
-                      <p className="text-sm mt-1 font-medium">{y.energy}</p>
-                    </motion.div>
-                  ))}
+                <YoginiCycleDiagram />
+                <div className="mt-4">
+                  <NakshatraToYoginiMap />
                 </div>
               </motion.div>
             </section>
@@ -351,8 +464,8 @@ export default function Lesson38Interactive({ lesson, lessonProgress }: Lesson38
             <section id="sec-algorithm" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
-                  <Calculator className="w-5 h-5 text-indigo-600" />
-                  <h2 className="text-xl font-bold text-gray-900">Interactive: Modulus-8 Engine</h2>
+                  <Calculator className="w-5 h-5 text-violet-600" />
+                  <h2 className="text-xl font-bold text-violet-900">Interactive: Modulus-8 Engine</h2>
                 </div>
                 <AlgorithmStepper steps={YOGINI_STEPS} title="Yogini Sesa-ganana" />
               </motion.div>
@@ -387,8 +500,8 @@ export default function Lesson38Interactive({ lesson, lessonProgress }: Lesson38
             <section id="sec-knowledge" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
-                  <BrainCircuit className="w-5 h-5 text-indigo-600" />
-                  <h2 className="text-xl font-bold text-gray-900">Knowledge Check</h2>
+                  <BrainCircuit className="w-5 h-5 text-violet-600" />
+                  <h2 className="text-xl font-bold text-violet-900">Knowledge Check</h2>
                 </div>
                 <KnowledgeCheck questions={KNOWLEDGE_CHECKS} />
               </motion.div>
@@ -411,31 +524,34 @@ export default function Lesson38Interactive({ lesson, lessonProgress }: Lesson38
             <section id="sec-quiz" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
-                  <BrainCircuit className="w-5 h-5 text-indigo-600" />
-                  <h2 className="text-xl font-bold text-gray-900">Test Your Knowledge</h2>
+                  <BrainCircuit className="w-5 h-5 text-violet-600" />
+                  <h2 className="text-xl font-bold text-violet-900">Test Your Knowledge</h2>
                 </div>
                 <InteractiveQuiz quiz={content.quiz} concepts={content.concepts} lessonId={lesson.id} />
               </motion.div>
             </section>
 
-            {/* Next */}
-            <section id="sec-next" className="mb-12 scroll-mt-32">
-              <motion.div {...fadeUp} className="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl p-6 text-white shadow-lg">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div>
-                    <p className="text-indigo-200 text-sm mb-1">Next in Module 11</p>
-                    <p className="text-xl font-bold">Kalachakra Dasha — The Wheel of Time</p>
-                    <p className="text-indigo-200 text-sm mt-1">Master the quantum physics engine of Jyotish with non-linear jumps and Deha-Jiva anchors.</p>
+            {/* ─── NEXT LESSON CTA ─── */}
+            <section id="sec-next" className="scroll-mt-32">
+              <motion.div {...fadeUp}>
+                <div className="p-6 sm:p-8 bg-white rounded-2xl border-2 border-amber-200/60 shadow-sm">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm text-amber-600 mb-1 font-medium">Next in Module 11</p>
+                      <p className="text-xl font-bold text-gray-900">Kalachakra Dasha — The Wheel of Time</p>
+                      <p className="text-sm text-gray-500 mt-1">Master the quantum physics engine of Jyotish with non-linear jumps and Deha-Jiva anchors.</p>
+                    </div>
+                    <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-colors shadow-md shadow-amber-600/20 shrink-0">
+                      Continue <ChevronRight className="w-4 h-4" />
+                    </Link>
                   </div>
-                  <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="px-6 py-3 bg-white text-indigo-700 font-semibold rounded-xl hover:bg-indigo-50 transition-colors shrink-0 flex items-center gap-2">
-                    Continue <ChevronRight className="w-4 h-4" />
-                  </Link>
                 </div>
               </motion.div>
             </section>
+
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
