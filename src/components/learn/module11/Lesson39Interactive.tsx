@@ -19,6 +19,7 @@ import RecapSection from "@/components/learn/interactive/RecapSection";
 import LessonSection, { type Section } from "@/components/learn/LessonSection";
 import ConceptCard from "@/components/learn/ConceptCard";
 import InteractiveQuiz, { type QuizQuestion } from "@/components/learn/InteractiveQuiz";
+import KalachakraCycleWheel from "@/components/learn/diagrams/KalachakraCycleWheel";
 
 import { DebugComparator } from "@/components/learn/intermediate";
 
@@ -66,8 +67,9 @@ const SIDEBAR_SECTIONS: SidebarSection[] = [
 ];
 
 const KNOWLEDGE_CHECKS = [
-  { id: "kc1", question: "Kalachakra Dasha tracks life progression through which entities?", options: ["9 Grahas", "12 Rashis", "27 Nakshatras", "108 Padas"], correctIndex: 1, explanation: "Kalachakra is Rashi-gatika — sign-based, not Graha-based." },
-  { id: "kc2", question: "Which Gati signifies total life upheaval?", options: ["Mandooka (Frog)", "Markata (Monkey)", "Simhavalokana (Lion)", "None of the above"], correctIndex: 2, explanation: "Simhavalokana Gati is the Lion's Glance — a massive leap across the zodiac causing total destruction or unprecedented rise." },
+  { id: "kc1", question: "Kālachakra Dasha tracks life progression through which entities?", options: ["9 Grahas", "12 Rāśis", "27 Nakshatras", "108 Padas"], correctIndex: 1, explanation: "Kālachakra is Rāśi-gatika — sign-based, not Graha-based. Life progresses through the 12 signs, unlike Vimśottari/Yoginī which are planet-based. The starting sign and direction depend on the Navāṁśa pada of the birth nakshatra." },
+  { id: "kc2", question: "Which Gati signifies total life upheaval?", options: ["Mandūka (Frog)", "Markaṭa (Monkey)", "Siṁhavalokana (Lion)", "None of the above"], correctIndex: 2, explanation: "Siṁhavalokana Gati is the Lion's Glance — a backward-looking transition at specific group boundaries in the Kālachakra sequence that causes major life restructuring. It is the most dramatic of the three Gati types." },
+  { id: "kc3", question: "What determines whether a native's path is Savya or Apasavya?", options: ["Day or night birth", "Moon sign", "Navāṁśa pāda of birth nakshatra", "Ascendant lord"], correctIndex: 2, explanation: "The Navāṁśa (D-9) pāda of the Janma Nakshatra determines both the starting sign AND whether the path is Savya (clockwise) or Apasavya (reverse). This is why Kālachakra requires precise birth-time data." },
 ];
 
 // ─── Kalachakra Data ──────────────────────────────────────────
@@ -87,41 +89,41 @@ const KALACHAKRA_SIGNS = [
 ];
 
 const SAVYA_ORDER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-const APASAVYA_ORDER = [1, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
+const APASAVYA_ORDER = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
 
 const GATI_TYPES = [
   {
-    name: "Mandooka Gati",
+    name: "Mandūka Gati",
     subtitle: "The Frog Jump",
     icon: "🐸",
-    math: "Skips ONE sign",
-    example: { from: 6, to: 4, skipped: 5, label: "Virgo → Cancer (skips Leo)" },
+    math: "Skips one sign in the sequence at a group boundary",
+    example: { from: 6, to: 4, skipped: 5, label: "Virgo → Cancer (skips Leo at group transition)" },
     severity: "Mid-Level",
-    prediction: "Sudden distress, rapid location change, jarring relationship shift",
+    prediction: "Sudden contextual shift: abrupt change in environment, location, or relationships at the group boundary",
     color: "bg-amber-50 border-amber-300 text-amber-900",
     badge: "bg-amber-200 text-amber-800",
     arrowColor: "text-amber-500",
   },
   {
-    name: "Markata Gati",
+    name: "Markaṭa Gati",
     subtitle: "The Monkey Jump",
     icon: "🐒",
-    math: "Jumps BACKWARD one sign",
-    example: { from: 5, to: 4, skipped: null, label: "Leo → Cancer (backward)" },
+    math: "Reverses direction by one sign (backward step)",
+    example: { from: 5, to: 4, skipped: null, label: "Leo → Cancer (reversal at boundary)" },
     severity: "Reversal Alert",
-    prediction: "Sudden instability, loss of position, return to previous life state",
+    prediction: "Sudden instability: reversal of gains, return to a previous life state, loss of forward momentum",
     color: "bg-orange-50 border-orange-300 text-orange-900",
     badge: "bg-orange-200 text-orange-800",
     arrowColor: "text-orange-500",
   },
   {
-    name: "Simhavalokana Gati",
+    name: "Siṁhavalokana Gati",
     subtitle: "The Lion's Glance",
     icon: "🦁",
-    math: "MASSIVE leap across zodiac",
-    example: { from: 12, to: 8, skipped: null, label: "Pisces → Scorpio (4 signs)" },
+    math: "Backward-looking leap across multiple signs at a major group boundary",
+    example: { from: 12, to: 8, skipped: null, label: "Pisces → Scorpio (4-sign leap at group boundary)" },
     severity: "CRITICAL",
-    prediction: "Total life upheaval — near-death OR absolute power. Old life destroyed instantly.",
+    prediction: "Major life restructuring: the Lion looks backward across vast territory. Signals either a profound crisis or a fundamental transformation of life direction.",
     color: "bg-red-50 border-red-400 text-red-900",
     badge: "bg-red-200 text-red-800",
     arrowColor: "text-red-500",
@@ -148,8 +150,8 @@ function KalachakraPathDiagram() {
     <div className="bg-white rounded-2xl border border-amber-200/80 shadow-sm p-5 sm:p-6">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wider">Kalachakra Path Arrays</h3>
-          <p className="text-xs text-gray-500 mt-0.5">12-Rashi sequence with year allocations. Same sign always carries the same years regardless of path direction.</p>
+          <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wider">Kālachakra Path Arrays</h3>
+          <p className="text-xs text-gray-500 mt-0.5">12-Rāśi sequence with year allocations. Signs owned by the same lord carry the same years. The path direction (Savya/Apasavya) depends on the Navāṁśa pāda of the birth nakshatra.</p>
         </div>
         <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
           <button
@@ -241,9 +243,9 @@ function KalachakraPathDiagram() {
 
       <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
         <span className="text-xs text-gray-500">
-          Signs owned by same planet share years: Mars=7, Venus=16, Mercury=9, Moon=21, Sun=5, Jupiter=10, Saturn=4
+          Lord → years: Mars=7, Venus=16, Mercury=9, Moon=21, Sun=5, Jupiter=10, Saturn=4
         </span>
-        <span className="text-xs font-bold text-amber-700">Total: 118 Varsha</span>
+        <span className="text-xs font-bold text-amber-700">Sum: 118 Varsha (one full path)</span>
       </div>
     </div>
   );
@@ -278,7 +280,7 @@ function GatiJumpVisualizer() {
   return (
     <div className="bg-white rounded-2xl border border-amber-200/80 shadow-sm p-5 sm:p-6">
       <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wider mb-1">Gati Jump Visualizer</h3>
-      <p className="text-xs text-gray-500 mb-4">Click a Gati type to see how the sequence breaks on the zodiac wheel. Highlighted signs show the jump endpoints.</p>
+      <p className="text-xs text-gray-500 mb-4">Click a Gati type to see how the sequence transitions at group boundaries. Highlighted signs show the jump endpoints.</p>
 
       <div className="flex gap-2 mb-4">
         {GATI_TYPES.map((gati, idx) => (
@@ -394,8 +396,8 @@ function DehaJivaVisualizer() {
         animate={{ opacity: 1, y: 0 }}
         className={`p-4 rounded-xl border-2 ${
           activeTab === "deha"
-            ? "bg-violet-50 border-violet-200"
-            : "bg-violet-50 border-violet-200"
+            ? "bg-rose-50 border-rose-200"
+            : "bg-indigo-50 border-indigo-200"
         }`}
       >
         {activeTab === "deha" ? (
@@ -405,22 +407,22 @@ function DehaJivaVisualizer() {
                 <span className="text-lg">🫀</span>
               </div>
               <div>
-                <h4 className="font-bold text-violet-900">Deha — The Body</h4>
-                <p className="text-xs text-violet-600">Starting sign of Kalachakra sequence</p>
+                <h4 className="font-bold text-rose-900">Deha — The Body</h4>
+                <p className="text-xs text-rose-600">Starting sign of Kālachakra sequence (determined by Navāṁśa pāda)</p>
               </div>
             </div>
             <ul className="space-y-2 mt-3">
-              <li className="flex items-start gap-2 text-sm text-violet-800">
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-500 mt-2 shrink-0" />
+              <li className="flex items-start gap-2 text-sm text-rose-800">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-2 shrink-0" />
                 Dictates physical health and vitality
               </li>
-              <li className="flex items-start gap-2 text-sm text-violet-800">
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-500 mt-2 shrink-0" />
-                When malefics transit Deha → physical crisis alert
+              <li className="flex items-start gap-2 text-sm text-rose-800">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-2 shrink-0" />
+                When malefics transit Deha sign → physical crisis alert
               </li>
-              <li className="flex items-start gap-2 text-sm text-violet-800">
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-500 mt-2 shrink-0" />
-                Represents the vessel that carries the soul
+              <li className="flex items-start gap-2 text-sm text-rose-800">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-2 shrink-0" />
+                Represents the vessel (body) that carries the soul through life
               </li>
             </ul>
           </div>
@@ -431,22 +433,22 @@ function DehaJivaVisualizer() {
                 <span className="text-lg">🔥</span>
               </div>
               <div>
-                <h4 className="font-bold text-violet-900">Jiva — The Soul</h4>
-                <p className="text-xs text-violet-600">Ending sign of Kalachakra sequence</p>
+                <h4 className="font-bold text-indigo-900">Jīva — The Soul</h4>
+                <p className="text-xs text-indigo-600">Ending sign of Kālachakra sequence (destination of the life journey)</p>
               </div>
             </div>
             <ul className="space-y-2 mt-3">
-              <li className="flex items-start gap-2 text-sm text-violet-800">
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-500 mt-2 shrink-0" />
+              <li className="flex items-start gap-2 text-sm text-indigo-800">
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-2 shrink-0" />
                 Dictates inner happiness and spiritual state
               </li>
-              <li className="flex items-start gap-2 text-sm text-violet-800">
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-500 mt-2 shrink-0" />
-                When malefics transit Jiva → psychological crisis alert
+              <li className="flex items-start gap-2 text-sm text-indigo-800">
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-2 shrink-0" />
+                When malefics transit Jīva sign → psychological crisis alert
               </li>
-              <li className="flex items-start gap-2 text-sm text-violet-800">
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-500 mt-2 shrink-0" />
-                Represents the ultimate trajectory of the native&apos;s life
+              <li className="flex items-start gap-2 text-sm text-indigo-800">
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-2 shrink-0" />
+                Represents the ultimate trajectory and soul purpose of the native&apos;s life
               </li>
             </ul>
           </div>
@@ -579,6 +581,30 @@ export default function Lesson39Interactive({ lesson, lessonProgress }: Lesson39
                   <span className="text-sm font-semibold text-amber-800 uppercase tracking-wide">Lesson Overview</span>
                 </div>
                 <p className="text-gray-700 leading-relaxed text-lg mb-6">{content.intro}</p>
+
+                {/* Pada-dependency infographic */}
+                <div className="bg-gradient-to-r from-violet-50 via-purple-50 to-indigo-50 rounded-xl p-4 border border-violet-200/60 mb-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg">📰</span>
+                    <span className="text-xs font-bold text-violet-700 uppercase tracking-wider">Why Kālachakra Requires D-9 Navāṁśa</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3 mb-2">
+                    <div className="bg-white/70 rounded-lg p-2.5 text-center border border-violet-100">
+                      <div className="text-lg font-bold text-violet-800">27 × 4</div>
+                      <div className="text-[10px] text-violet-600">= 108 Pādas</div>
+                    </div>
+                    <div className="bg-white/70 rounded-lg p-2.5 text-center border border-violet-100">
+                      <div className="text-lg font-bold text-violet-800">Pāda →</div>
+                      <div className="text-[10px] text-violet-600">Starting Sign + Direction</div>
+                    </div>
+                    <div className="bg-white/70 rounded-lg p-2.5 text-center border border-violet-100">
+                      <div className="text-lg font-bold text-violet-800">D-9</div>
+                      <div className="text-[10px] text-violet-600">Birth Time Sensitive</div>
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-violet-600 text-center italic">Each of the 108 pādas maps to a specific starting sign and Savya/Apasavya direction. Even a few minutes of birth time error can change the pāda → changing the entire Kālachakra sequence.</p>
+                </div>
+
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
                     <RotateCcw className="w-5 h-5 text-amber-600 mx-auto mb-1" />
@@ -618,9 +644,20 @@ export default function Lesson39Interactive({ lesson, lessonProgress }: Lesson39
               </section>
             ))}
 
-            {/* ─── PATH DIAGRAM ─── */}
+            {/* ─── CYCLE WHEEL + PATH DIAGRAM ─── */}
             <section id="sec-paths" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
+                <div className="flex items-center gap-2 mb-4">
+                  <RotateCcw className="w-5 h-5 text-violet-600" />
+                  <h2 className="text-xl font-bold text-violet-900">Savya & Apasavya Paths</h2>
+                </div>
+
+                {/* Cycle Wheel — primary visual */}
+                <div className="mb-6">
+                  <KalachakraCycleWheel size={520} />
+                </div>
+
+                {/* Path arrays — complementary */}
                 <KalachakraPathDiagram />
               </motion.div>
             </section>
@@ -683,16 +720,16 @@ export default function Lesson39Interactive({ lesson, lessonProgress }: Lesson39
             <section id="sec-debug" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <DebugComparator
-                  scenario="A native asks: 'Why did I suddenly quit my 10-year career and move to India at age 34?'"
+                  scenario="A native with Janma Nakshatra Rohiṇī (4th pāda, Apasavya path) asks: 'Why did I suddenly quit my 10-year career and relocate to India at age 34?'"
                   amateurOutput={{
                     title: "Standard Dasha Prediction",
-                    prediction: "Your current Dasha lord is Mercury in the 10th house. This should bring career stability and intellectual growth. The move is irrational and against your chart.",
+                    prediction: "Your current Vimśottari lord is Budha (Mercury) in the 10th house. This should bring career stability and intellectual growth. The sudden relocation appears irrational and goes against your chart's indications.",
                     riskLevel: "medium" }}
                   professionalOutput={{
-                    title: "Grahvani Kalachakra Detection",
-                    prediction: "SIMHAVALOKANA GATI DETECTED at age 34. Your Kalachakra timeline made a Lion's Glance leap from your 10th house (career) sign to your 9th house (Dharma/long travel) sign. This is not irrational — it is mathematically programmed total life upheaval. The old career HAD to be destroyed for the new life to begin.",
-                    overrideReason: "Kalachakra's non-linear Gati detection reveals quantum leaps that linear Dashas (Vimshottari/Yogini) cannot model." }}
-                  whyItMatters="Without Kalachakra, your software calls major life transformations 'irrational' or 'unpredictable.' With Kalachakra, you can warn the native YEARS in advance: 'Age 34: Total restructuring programmed. Prepare for teleportation.'"
+                    title: "Grahvani Kālachakra Detection",
+                    prediction: "SIṀHAVALOKANA GATI DETECTED at age 34. Your Kālachakra timeline made a Lion's Glance transition from the 10th house (career/karma) sign to the 9th house (Dharma/long travel) sign. This is a programmed group-boundary leap in the Kālachakra sequence — the career dissolution and relocation are structurally embedded in the timeline.",
+                    overrideReason: "Kālachakra's non-linear Gati transitions reveal group-boundary leaps that linear Dashas (Vimśottari/Yoginī) cannot model. The relocation was mathematically predictable." }}
+                  whyItMatters="Without Kālachakra, your software labels major life transformations as 'unpredictable.' With Kālachakra, you can identify these Siṁhavalokana Gati transitions years in advance and advise the native to prepare for structural life change."
                 />
               </motion.div>
             </section>
@@ -727,11 +764,11 @@ export default function Lesson39Interactive({ lesson, lessonProgress }: Lesson39
             <section id="sec-recap" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <RecapSection title="Lesson Recap" items={[
-                  { id: 1, title: "Kalachakra is Rashi-gatika (sign-base...", summary: "Kalachakra is Rashi-gatika (sign-based), not Graha-based." },
-                  { id: 2, title: "Savya = clockwise path. Apasavya = co...", summary: "Savya = clockwise path. Apasavya = counter-clockwise path." },
-                  { id: 3, title: "Deha = starting sign (physical health...", summary: "Deha = starting sign (physical health). Jiva = ending sign (soul trajectory)." },
-                  { id: 4, title: "Three Gatis: Mandooka (skip 1), Marka...", summary: "Three Gatis: Mandooka (skip 1), Markata (backward 1), Simhavalokana (massive leap)." },
-                  { id: 5, title: "Requires D-9 Navamsha data — most bir...", summary: "Requires D-9 Navamsha data — most birth-time sensitive Dasha in Jyotish." }
+                  { id: 1, title: "Kālachakra is Rāśi-gatika (sign-based)...", summary: "Kālachakra is Rāśi-gatika (sign-based), not Graha-based. Life progresses through the 12 Rāśis." },
+                  { id: 2, title: "Savya = clockwise. Apasavya = reverse...", summary: "Savya = clockwise path. Apasavya = reverse path. Determined by the Navāṁśa pāda of the birth nakshatra." },
+                  { id: 3, title: "Deha = starting sign. Jīva = ending si...", summary: "Deha = starting sign (physical health). Jīva = ending sign (soul trajectory). Together they anchor the native's dual existence." },
+                  { id: 4, title: "Three Gatis at group boundaries...", summary: "Three Gatis: Mandūka (skip at boundary), Markaṭa (backward step), Siṁhavalokana (major backward leap)." },
+                  { id: 5, title: "Requires D-9 Navāṁśa data...", summary: "Requires precise D-9 Navāṁśa data — the most birth-time sensitive Dasha in Jyotiṣa. Each of the 108 pādas produces a different sequence." }
                 ]} />
               </motion.div>
             </section>

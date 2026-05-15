@@ -27,6 +27,9 @@ import NamaNakshatra from "./diagrams/NamaNakshatra";
 import OrbChart from "./diagrams/OrbChart";
 import Muhurtha from "./diagrams/Muhurtha";
 import PlanetGeometry from "./diagrams/PlanetGeometry";
+import AshtottariCycleWheel from "./diagrams/AshtottariCycleWheel";
+import YoginiCycleWheel from "./diagrams/YoginiCycleWheel";
+import KalachakraCycleWheel from "./diagrams/KalachakraCycleWheel";
 import ConceptIllustration from "./diagrams/ConceptIllustration";
 
 export const DIAGRAM_CAPTIONS: Record<string, string> = {
@@ -58,6 +61,7 @@ export const DIAGRAM_CAPTIONS: Record<string, string> = {
   "orb-chart": "Deeptamsha: each planet's orb of influence — the degree range where aspects activate.",
   "planet-geometry": "Planetary Geometric Primitives: the sacred shapes governed by each planet's elemental nature.",
   "muhurtha": "Muhurtha: 30 time-windows per day. Select auspicious Muhurthas while avoiding Rahu Kaalam & Yamagandam.",
+  "ashtottari-cycle": "Ashtottari Dasha: 8 Graha × 108 Varsha cycle. Tap any arc to explore Mahadasha period and ruled nakshatras.",
 };
 
 interface DynamicDiagramProps {
@@ -129,6 +133,12 @@ export default function DynamicDiagram({ diagramType, title, subtitle, size = 56
             <PlanetGeometry size={size} />
           ) : diagramType === "muhurtha" ? (
             <Muhurtha size={size} />
+          ) : diagramType === "ashtottari-cycle" ? (
+            <AshtottariCycleWheel size={size} />
+          ) : diagramType === "yogini-cycle" ? (
+            <YoginiCycleWheel size={size} />
+          ) : diagramType === "kalachakra-cycle" ? (
+            <KalachakraCycleWheel size={size} />
           ) : (
             <ConceptIllustration title={title || diagramType} subtitle={subtitle || caption} size={size} />
           )}
