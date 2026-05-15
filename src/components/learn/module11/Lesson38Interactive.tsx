@@ -17,6 +17,7 @@ import ReadingTime from "@/components/learn/interactive/ReadingTime";
 import RecapSection from "@/components/learn/interactive/RecapSection";
 import LessonSection, { type Section } from "@/components/learn/LessonSection";
 import InteractiveQuiz, { type QuizQuestion } from "@/components/learn/InteractiveQuiz";
+import YoginiCycleWheel from "@/components/learn/diagrams/YoginiCycleWheel";
 
 import {
   AlgorithmStepper,
@@ -37,16 +38,17 @@ interface Lesson38InteractiveProps {
 }
 
 // ─── Static Data ──────────────────────────────────────────────
-const SECTION_IDS = ["hero", "sec-overview", "sec-definition", "sec-algorithm", "sec-knowledge", "sec-concepts", "sec-simulator", "sec-debug", "sec-recap", "sec-quiz", "sec-next"];
+const SECTION_IDS = ["hero", "sec-overview", "sec-definition", "sec-cycle-wheel", "sec-modulus-engine", "sec-knowledge", "sec-concepts", "sec-simulator", "sec-debug", "sec-recap", "sec-quiz", "sec-next"];
 
 const SIDEBAR_SECTIONS: SidebarSection[] = [
   { id: "hero", label: "Introduction", type: "overview", group: "Start" },
   { id: "sec-overview", label: "Overview", type: "overview", group: "Start" },
   { id: "sec-definition", label: "Definition", type: "definition", group: "Learn" },
-  { id: "sec-algorithm", label: "Modulus-8 Engine", type: "mechanics", group: "Learn" },
+  { id: "sec-cycle-wheel", label: "8 Yoginī Cycle", type: "mechanics", group: "Learn" },
+  { id: "sec-modulus-engine", label: "Modulus-8 Engine", type: "mechanics", group: "Learn" },
   { id: "sec-knowledge", label: "Knowledge Check", type: "quiz", group: "Practice" },
   { id: "sec-concepts", label: "Key Concepts", type: "concepts", group: "Practice" },
-  { id: "sec-simulator", label: "Yogini Calculator", type: "practice", group: "Practice" },
+  { id: "sec-simulator", label: "Yoginī Calculator", type: "practice", group: "Practice" },
   { id: "sec-debug", label: "Macro vs Micro", type: "practice", group: "Practice" },
   { id: "sec-recap", label: "Recap", type: "recap", group: "Finish" },
   { id: "sec-quiz", label: "Practice Quiz", type: "practice", group: "Finish" },
@@ -54,8 +56,9 @@ const SIDEBAR_SECTIONS: SidebarSection[] = [
 ];
 
 const KNOWLEDGE_CHECKS = [
-  { id: "kc1", question: "What is the total duration of one Yogini Dasha cycle?", options: ["120 years", "108 years", "36 years", "27 years"], correctIndex: 2, explanation: "The 8 Yoginis sum to 36 years: 1+2+3+4+5+6+7+8 = 36." },
-  { id: "kc2", question: "Which Yogini corresponds to remainder 0 in the Modulus-8 calculation?", options: ["Mangala", "Siddha", "Sankata", "Bhadrika"], correctIndex: 2, explanation: "Remainder 0 maps to Sankata (Rahu, 8 years) — the most dangerous Yogini. This is the 'zero-trap.'" },
+  { id: "kc1", question: "What is the total duration of one Yoginī Dasha cycle?", options: ["120 years", "108 years", "36 years", "27 years"], correctIndex: 2, explanation: "The 8 Yoginīs sum to 36 years: 1+2+3+4+5+6+7+8 = 36. The cycle then repeats (age 0→36→72→108). Three full Yoginī cycles = one Ashtottari cycle (108 years)." },
+  { id: "kc2", question: "Which Yoginī corresponds to remainder 0 in the Modulus-8 calculation?", options: ["Maṅgalā", "Siddhā", "Saṅkaṭā", "Bhadrikā"], correctIndex: 2, explanation: "Remainder 0 maps to Saṅkaṭā (Rāhu, 8 years) — the most karmically intense Yoginī. This is the 'zero-trap' that software must handle explicitly to avoid array index errors." },
+  { id: "kc3", question: "Do all 8 Yoginīs rule exactly 3 nakshatras each?", options: ["Yes, 3 each (24 total)", "No, some rule 4 (27 total)", "Yes, 3 each + 3 unassigned", "No, some rule 2"], correctIndex: 1, explanation: "27 nakshatras ÷ 8 Yoginīs = 3.375. So Bhrāmarī, Bhadrikā, and Ulkā each rule 4 nakshatras, while the other 5 rule 3 each. Total: (5×3)+(3×4) = 15+12 = 27." },
 ];
 
 const YOGINI_STEPS: AlgorithmStep[] = [
@@ -102,22 +105,22 @@ const fadeUp = { initial: { opacity: 0, y: 20 }, whileInView: { opacity: 1, y: 0
 
 // ─── Visual Yogini Data ───────────────────────────────────────
 const YOGINI_DATA = [
-  { num: 1, name: "Mangala", ruler: "Chandra", rulerEn: "Moon", years: 1, color: "bg-emerald-500", text: "text-emerald-800", light: "bg-emerald-50", border: "border-emerald-300", nakshatras: "Ardra, Punarvasu, Pushya" },
-  { num: 2, name: "Pingala", ruler: "Surya", rulerEn: "Sun", years: 2, color: "bg-orange-500", text: "text-orange-800", light: "bg-orange-50", border: "border-orange-300", nakshatras: "Ashlesha, Magha, P. Phalguni" },
-  { num: 3, name: "Dhanya", ruler: "Guru", rulerEn: "Jupiter", years: 3, color: "bg-blue-500", text: "text-blue-800", light: "bg-blue-50", border: "border-blue-300", nakshatras: "U. Phalguni, Hasta, Chitra" },
-  { num: 4, name: "Bhramari", ruler: "Mangala", rulerEn: "Mars", years: 4, color: "bg-red-500", text: "text-red-800", light: "bg-red-50", border: "border-red-300", nakshatras: "Swati, Vishakha, Anuradha" },
-  { num: 5, name: "Bhadrika", ruler: "Budha", rulerEn: "Mercury", years: 5, color: "bg-indigo-500", text: "text-indigo-800", light: "bg-indigo-50", border: "border-indigo-300", nakshatras: "Jyeshtha, Mula, P. Ashadha" },
-  { num: 6, name: "Ulka", ruler: "Shani", rulerEn: "Saturn", years: 6, color: "bg-slate-500", text: "text-slate-800", light: "bg-slate-50", border: "border-slate-300", nakshatras: "U. Ashadha, Shravana, Dhanishta" },
-  { num: 7, name: "Siddha", ruler: "Shukra", rulerEn: "Venus", years: 7, color: "bg-pink-500", text: "text-pink-800", light: "bg-pink-50", border: "border-pink-300", nakshatras: "Shatabhisha, P. Bhadrapada, U. Bhadrapada" },
-  { num: 8, name: "Sankata", ruler: "Rahu", rulerEn: "Rahu", years: 8, color: "bg-rose-500", text: "text-rose-900", light: "bg-rose-50", border: "border-rose-400", nakshatras: "Revati, Ashwini, Bharani" },
+  { num: 1, name: "Maṅgalā", ruler: "Chandra", rulerEn: "Moon", years: 1, color: "bg-emerald-500", text: "text-emerald-800", light: "bg-emerald-50", border: "border-emerald-300", nakshatras: "Ārdrā (6), Chitrā (14), Śravaṇa (22)" },
+  { num: 2, name: "Piṅgalā", ruler: "Sūrya", rulerEn: "Sun", years: 2, color: "bg-orange-500", text: "text-orange-800", light: "bg-orange-50", border: "border-orange-300", nakshatras: "Punarvasu (7), Svātī (15), Dhaniṣṭhā (23)" },
+  { num: 3, name: "Dhanyā", ruler: "Guru", rulerEn: "Jupiter", years: 3, color: "bg-blue-500", text: "text-blue-800", light: "bg-blue-50", border: "border-blue-300", nakshatras: "Puṣya (8), Viśākhā (16), Śatabhiṣā (24)" },
+  { num: 4, name: "Bhrāmarī", ruler: "Maṅgala", rulerEn: "Mars", years: 4, color: "bg-red-500", text: "text-red-800", light: "bg-red-50", border: "border-red-300", nakshatras: "Aśvinī (1), Āśleṣā (9), Anurādhā (17), P. Bhādra (25)" },
+  { num: 5, name: "Bhadrikā", ruler: "Budha", rulerEn: "Mercury", years: 5, color: "bg-indigo-500", text: "text-indigo-800", light: "bg-indigo-50", border: "border-indigo-300", nakshatras: "Bharaṇī (2), Maghā (10), Jyeṣṭhā (18), U. Bhādra (26)" },
+  { num: 6, name: "Ulkā", ruler: "Śani", rulerEn: "Saturn", years: 6, color: "bg-slate-500", text: "text-slate-800", light: "bg-slate-50", border: "border-slate-300", nakshatras: "Kṛttikā (3), P. Phālgunī (11), Mūlā (19), Revatī (27)" },
+  { num: 7, name: "Siddhā", ruler: "Śukra", rulerEn: "Venus", years: 7, color: "bg-pink-500", text: "text-pink-800", light: "bg-pink-50", border: "border-pink-300", nakshatras: "Rohiṇī (4), U. Phālgunī (12), P. Āṣāḍhā (20)" },
+  { num: 8, name: "Saṅkaṭā", ruler: "Rāhu", rulerEn: "Rahu", years: 8, color: "bg-rose-500", text: "text-rose-900", light: "bg-rose-50", border: "border-rose-400", nakshatras: "Mṛgaśīrṣā (5), Hastā (13), U. Āṣāḍhā (21)" },
 ];
 
 function YoginiCycleDiagram() {
   const total = YOGINI_DATA.reduce((s, y) => s + y.years, 0);
   return (
     <div className="bg-white rounded-2xl border border-amber-200/80 shadow-sm p-5 sm:p-6">
-      <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wider mb-1">Yogini Chakra — 36 Year Cycle</h3>
-      <p className="text-xs text-gray-500 mb-4">Each segment shows the Yogini&apos;s proportional share of the 36-year loop. The cycle repeats at ages 0, 36, 72, and 108.</p>
+      <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wider mb-1">Yoginī Varsha-vibhāga — 36-Year Timeline</h3>
+      <p className="text-xs text-gray-500 mb-4">Each bar shows the Yoginī&apos;s proportional share of the 36-year loop. Note: Bhrāmarī, Bhadrikā, and Ulkā each rule 4 nakshatras; the others rule 3.</p>
       <div className="space-y-2.5">
         {YOGINI_DATA.map((y) => {
           const pct = (y.years / total) * 100;
@@ -166,8 +169,8 @@ function NakshatraToYoginiMap() {
 
   return (
     <div className="bg-white rounded-2xl border border-amber-200/80 shadow-sm p-5 sm:p-6">
-      <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wider mb-1">Nakshatra → Yogini Lookup Table</h3>
-      <p className="text-xs text-gray-500 mb-4">Formula: (Nakshatra # + 3) mod 8 = Starting Yogini. Find your birth nakshatra to see which Yogini runs first.</p>
+      <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wider mb-1">Nakshatra → Yoginī Lookup Table</h3>
+      <p className="text-xs text-gray-500 mb-4">Formula: (Nakshatra # + 3) MOD 8 = Starting Yoginī. Note: 27 ÷ 8 ≠ whole number, so Bhrāmarī, Bhadrikā, and Ulkā each get 4 nakshatras.</p>
       <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
         {mapping.map(({ n, yogini }) => (
           <div key={n} className={`rounded-lg border p-2 ${yogini.light} ${yogini.border}`}>
@@ -250,7 +253,7 @@ function YoginiCalculator() {
             </div>
             <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
               <span className="text-[10px] text-slate-500 uppercase">Step 3</span>
-              <p className="text-sm font-mono font-semibold">{step2} mod 8 = {remainder}</p>
+              <p className="text-sm font-mono font-semibold">{step2} mod 8 = {step3}{step3 === 0 ? " → position 8" : ""}</p>
             </div>
           </div>
 
@@ -436,7 +439,7 @@ export default function Lesson38Interactive({ lesson, lessonProgress }: Lesson38
             {content.sections?.map((section, idx) => (
               <section
                 key={section.id}
-                id={idx === 0 ? "sec-definition" : idx === 1 ? "sec-etymology" : idx === 2 ? "sec-algorithm" : `sec-${idx}`}
+                id={idx === 0 ? "sec-definition" : idx === 1 ? "sec-etymology" : idx === 2 ? "sec-content-algo" : `sec-${idx}`}
                 className="mb-6 scroll-mt-32"
                 onClick={() => markSectionComplete(section.id)}
               >
@@ -446,13 +449,20 @@ export default function Lesson38Interactive({ lesson, lessonProgress }: Lesson38
               </section>
             ))}
 
-            {/* 8 Yogini Cycle Diagram */}
-            <section id="sec-concepts" className="mb-8 scroll-mt-32">
+            {/* 8 Yoginī Cycle Wheel + Diagrams */}
+            <section id="sec-cycle-wheel" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
                   <Grid className="w-5 h-5 text-violet-600" />
-                  <h2 className="text-xl font-bold text-violet-900">The 8 Yogini-Shakti Frequencies</h2>
+                  <h2 className="text-xl font-bold text-violet-900">The 8 Yoginī-Śakti Frequencies</h2>
                 </div>
+
+                {/* Cycle Wheel — primary visual */}
+                <div className="mb-6">
+                  <YoginiCycleWheel size={520} />
+                </div>
+
+                {/* Bar Timeline — complementary */}
                 <YoginiCycleDiagram />
                 <div className="mt-4">
                   <NakshatraToYoginiMap />
@@ -461,13 +471,13 @@ export default function Lesson38Interactive({ lesson, lessonProgress }: Lesson38
             </section>
 
             {/* Algorithm Stepper */}
-            <section id="sec-algorithm" className="mb-8 scroll-mt-32">
+            <section id="sec-modulus-engine" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
                   <Calculator className="w-5 h-5 text-violet-600" />
                   <h2 className="text-xl font-bold text-violet-900">Interactive: Modulus-8 Engine</h2>
                 </div>
-                <AlgorithmStepper steps={YOGINI_STEPS} title="Yogini Sesa-ganana" />
+                <AlgorithmStepper steps={YOGINI_STEPS} title="Yoginī Śeṣa-gaṇanā" />
               </motion.div>
             </section>
 
@@ -482,16 +492,16 @@ export default function Lesson38Interactive({ lesson, lessonProgress }: Lesson38
             <section id="sec-debug" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <DebugComparator
-                  scenario="A user is running a 16-year Jupiter Mahadasha (prosperity) but experiencing a terrible year of legal trouble and depression. They ask: 'If my chart is so good, why is my life falling apart RIGHT NOW?'"
+                  scenario="A user with Janma Nakshatra Maghā (#10) is running a 19-year Guru Mahādashā (prosperity) in Vimshottari but experiencing a terrible year of legal trouble and depression. They ask: 'If my chart shows prosperity, why is my life falling apart RIGHT NOW?'"
                   amateurOutput={{
                     title: "Vimshottari Only Prediction",
-                    prediction: "Your Jupiter period is excellent. Expect prosperity and wisdom. Current troubles are temporary and insignificant.",
+                    prediction: "Your Guru (Jupiter) Mahādashā is excellent. Expect continued prosperity and wisdom. Current troubles are minor and temporary — the big picture is highly favorable.",
                     riskLevel: "medium" }}
                   professionalOutput={{
-                    title: "Grahvani Yogini + Vimshottari Synthesis",
-                    prediction: "Your macro-climate (Vimshottari) is highly prosperous (Jupiter). However, you are currently passing through the micro-storm of Sankata Yogini (Rahu). This is a temporary, intense 8-year psychological bottleneck. The underlying foundation is secure, but you must endure this short-term turbulence.",
-                    overrideReason: "Yogini Dasha reveals the micro-weather that Vimshottari's 20-year window cannot detect." }}
-                  whyItMatters="Without Yogini, your software cannot answer the most frustrating question in Jyotish: 'If my chart is so good, why is my life terrible RIGHT NOW?' Yogini is the microscope that reveals the hidden storms."
+                    title: "Grahvani Yoginī + Vimshottari Synthesis",
+                    prediction: "Macro-climate (Vimshottari): Guru Mahādashā — prosperity foundation intact. Micro-weather (Yoginī): Maghā → (10+3) MOD 8 = 5 → Bhadrikā starting. At current age, the cycle has rotated into Saṅkaṭā (Rāhu, 8 years) — an intense psychological bottleneck. The underlying foundation is secure, but this Yoginī sub-cycle demands karmic reckoning.",
+                    overrideReason: "Yoginī Dasha reveals the 36-year micro-frequency that Vimshottari's 19-year Guru window cannot resolve. The crisis is REAL but TEMPORARY within the prosperity macro." }}
+                  whyItMatters="Without Yoginī, your software cannot answer the most frustrating question in Jyotiṣa: 'If my chart is favorable, why is my life difficult RIGHT NOW?' Yoginī is the microscope that reveals hidden storms within prosperous decades."
                 />
               </motion.div>
             </section>

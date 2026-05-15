@@ -19,6 +19,8 @@ import RecapSection from "@/components/learn/interactive/RecapSection";
 import LessonSection, { type Section } from "@/components/learn/LessonSection";
 import ConceptCard from "@/components/learn/ConceptCard";
 import InteractiveQuiz, { type QuizQuestion } from "@/components/learn/InteractiveQuiz";
+import AshtottariCycleWheel from "@/components/learn/diagrams/AshtottariCycleWheel";
+import ActivationGateFlowchart from "./ActivationGateFlowchart";
 
 import {
   AlgorithmStepper,
@@ -40,13 +42,14 @@ interface Lesson37InteractiveProps {
 }
 
 // ─── Static Data ──────────────────────────────────────────────
-const SECTION_IDS = ["hero", "sec-overview", "sec-definition", "sec-etymology", "sec-algorithm-gate", "sec-algorithm-matrix", "sec-knowledge", "sec-concepts", "sec-simulator", "sec-debug", "sec-recap", "sec-quiz", "sec-next"];
+const SECTION_IDS = ["hero", "sec-overview", "sec-definition", "sec-etymology", "sec-flowchart", "sec-algorithm-gate", "sec-algorithm-matrix", "sec-knowledge", "sec-concepts", "sec-simulator", "sec-debug", "sec-recap", "sec-quiz", "sec-next"];
 
 const SIDEBAR_SECTIONS: SidebarSection[] = [
   { id: "hero", label: "Introduction", type: "overview", group: "Start" },
   { id: "sec-overview", label: "Overview", type: "overview", group: "Start" },
   { id: "sec-definition", label: "Definition", type: "definition", group: "Learn" },
   { id: "sec-etymology", label: "Etymology", type: "etymology", group: "Learn" },
+  { id: "sec-flowchart", label: "Decision Flowchart", type: "mechanics", group: "Learn" },
   { id: "sec-algorithm-gate", label: "Activation Gate", type: "mechanics", group: "Learn" },
   { id: "sec-algorithm-matrix", label: "108-Year Matrix", type: "mechanics", group: "Learn" },
   { id: "sec-knowledge", label: "Knowledge Check", type: "quiz", group: "Practice" },
@@ -59,9 +62,9 @@ const SIDEBAR_SECTIONS: SidebarSection[] = [
 ];
 
 const KNOWLEDGE_CHECKS = [
-  { id: "kc1", question: "What is the total lifespan of Ashtottari Dasha?", options: ["120 Varsha", "108 Varsha", "36 Varsha", "27 Varsha"], correctIndex: 1, explanation: "Ashtottari = 108 years. Vimshottari = 120 years. Yogini = 36 years." },
-  { id: "kc2", question: "Which Graha is completely excluded from Ashtottari?", options: ["Rahu", "Ketu", "Saturn", "Mercury"], correctIndex: 1, explanation: "Ketu is Nishkasitah (deleted) from Ashtottari. Only 8 Grahas are used." },
-  { id: "kc3", question: "A native born at 3 PM during Krishna Paksha. Which engine fires?", options: ["Vimshottari", "Ashtottari", "Yogini", "Kalachakra"], correctIndex: 1, explanation: "3 PM = Diva (day). Krishna Paksha = waning. Diva + Krishna = Ashtottari Activation Gate TRUE." },
+  { id: "kc1", question: "What is the total lifespan of Ashtottari Dasha?", options: ["120 Varsha", "108 Varsha", "36 Varsha", "27 Varsha"], correctIndex: 1, explanation: "Ashtottari = 108 years. Vimshottari = 120 years. Yogini = 36 years. 108 is sacred: 27 Nakshatras × 4 Pādas = 108 divisions of the zodiac." },
+  { id: "kc2", question: "Which Graha is completely excluded from Ashtottari?", options: ["Rahu", "Ketu", "Saturn", "Mercury"], correctIndex: 1, explanation: "Ketu is Niṣkāsitah (excluded) from Ashtottari. Only 8 Grahas operate. Ketu's 3 nakshatras (Aśvinī, Maghā, Mūlā) are also excluded — births in those nakshatras fall back to Vimshottari." },
+  { id: "kc3", question: "A native born at 3 PM during Krishna Paksha. Which engine fires?", options: ["Vimshottari", "Ashtottari", "Yogini", "Kalachakra"], correctIndex: 1, explanation: "3 PM = Diva (day). Krishna Paksha = waning. Under the Diva/Paksha variant rule: Diva + Krishna = Ashtottari Activation Gate TRUE. Note: BPHS also prescribes Ashtottari when Rāhu occupies a Kendra or Trikona from the Lagna Lord." },
 ];
 
 const ACTIVATION_GATE_STEPS: AlgorithmStep[] = [
@@ -183,7 +186,7 @@ function NakshatraAllocationGrid() {
   return (
     <div className="bg-white rounded-2xl border border-amber-200/80 shadow-sm p-5 sm:p-6">
       <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wider mb-1">Nakshatra Allocation (Janma Nakshatra → Starting Dasha)</h3>
-      <p className="text-xs text-gray-500 mb-4">Each planet rules 3 nakshatras. Birth nakshatra determines the first Mahadasha. Ashwini, Magha, and Mula belong to Ketu — excluded from Ashtottari.</p>
+      <p className="text-xs text-gray-500 mb-4">Each planet rules 3 nakshatras (24 total). Birth nakshatra determines the starting Mahādashā. Aśvinī, Maghā, and Mūlā belong to Ketu in Vimshottari — since Ketu is deleted from Ashtottari, there is no starting dasha for these nakshatras. Births in these 3 nakshatras use Vimshottari instead.</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {NAKSHATRA_ALLOCATION.map((group) => (
           <div key={group.planet} className={`rounded-xl border-2 p-3 ${group.color}`}>
@@ -202,7 +205,7 @@ function NakshatraAllocationGrid() {
               <div key={n} className="text-xs font-medium text-gray-500 line-through">• {n}</div>
             ))}
           </div>
-          <div className="text-[10px] text-red-600 mt-1.5 font-medium">→ Falls back to Vimshottari</div>
+          <div className="text-[10px] text-red-600 mt-1.5 font-medium">→ No starting Mahādashā possible — falls back to Vimshottari</div>
         </div>
       </div>
     </div>
@@ -339,6 +342,35 @@ export default function Lesson37Interactive({ lesson, lessonProgress }: Lesson37
                   <span className="text-sm font-semibold text-amber-800 uppercase tracking-wide">Lesson Overview</span>
                 </div>
                 <p className="text-gray-700 leading-relaxed text-lg mb-6">{content.intro}</p>
+                {/* ── Sacred 108 Infographic ── */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                  <div className="sm:col-span-4 bg-gradient-to-r from-violet-50 via-purple-50 to-indigo-50 rounded-xl p-4 border border-violet-200/60">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-lg">🕉️</span>
+                      <span className="text-xs font-bold text-violet-700 uppercase tracking-wider">Why 108? — The Sacred Number</span>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      <div className="bg-white/70 rounded-lg p-2.5 text-center border border-violet-100">
+                        <div className="text-lg font-bold text-violet-800">27 × 4</div>
+                        <div className="text-[10px] text-violet-600">Nakshatras × Pādas</div>
+                      </div>
+                      <div className="bg-white/70 rounded-lg p-2.5 text-center border border-violet-100">
+                        <div className="text-lg font-bold text-violet-800">108</div>
+                        <div className="text-[10px] text-violet-600">Japa Mālā Beads</div>
+                      </div>
+                      <div className="bg-white/70 rounded-lg p-2.5 text-center border border-violet-100">
+                        <div className="text-lg font-bold text-violet-800">108</div>
+                        <div className="text-[10px] text-violet-600">Upanishads</div>
+                      </div>
+                      <div className="bg-white/70 rounded-lg p-2.5 text-center border border-violet-100">
+                        <div className="text-lg font-bold text-violet-800">12 × 9</div>
+                        <div className="text-[10px] text-violet-600">Rāshis × Grahas</div>
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-violet-600 mt-2 text-center italic">Ashtottari maps the entire life to 108 years — a microcosm of the zodiac&apos;s 108 nakshatra pādas.</p>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 text-center border border-amber-200">
                     <Clock className="w-5 h-5 text-amber-600 mx-auto mb-1" />
@@ -371,9 +403,9 @@ export default function Lesson37Interactive({ lesson, lessonProgress }: Lesson37
                 id={
                   idx === 0 ? "sec-definition" :
                   idx === 1 ? "sec-etymology" :
-                  idx === 2 ? "sec-algorithm-gate" :
-                  idx === 3 ? "sec-algorithm-matrix" :
-                  idx === 4 ? "sec-debug" :
+                  idx === 2 ? "sec-content-gate" :
+                  idx === 3 ? "sec-content-matrix" :
+                  idx === 4 ? "sec-content-debug" :
                   idx === 5 ? "sec-synthesis" :
                   `sec-${idx}`
                 }
@@ -386,6 +418,25 @@ export default function Lesson37Interactive({ lesson, lessonProgress }: Lesson37
               </section>
             ))}
 
+            {/* Decision Flowchart — Visual decision tree */}
+            <section id="sec-flowchart" className="mb-8 scroll-mt-32">
+              <motion.div {...fadeUp}>
+                <div className="flex items-center gap-2 mb-4">
+                  <Lightbulb className="w-5 h-5 text-amber-600" />
+                  <h2 className="text-xl font-bold text-violet-900">Decision Flowchart: When Does Ashtottari Fire?</h2>
+                </div>
+                <div className="bg-amber-50/50 rounded-xl border border-amber-200/60 p-4 mb-4">
+                  <p className="text-sm text-amber-800 leading-relaxed">
+                    <strong>Note:</strong> Classical texts describe <strong>two</strong> conditions for Ashtottari activation. 
+                    The <strong>primary rule</strong> from Bṛhat Parāśara Horā Śāstra (BPHS) checks Rāhu&apos;s position relative to the 
+                    Lagna Lord. A <strong>secondary variant</strong> used in some traditions checks the time of birth (Diva/Ratri) 
+                    and lunar phase (Śukla/Kṛṣṇa Paksha).
+                  </p>
+                </div>
+                <ActivationGateFlowchart />
+              </motion.div>
+            </section>
+
             {/* Algorithm Stepper */}
             <section id="sec-algorithm-gate" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
@@ -393,9 +444,13 @@ export default function Lesson37Interactive({ lesson, lessonProgress }: Lesson37
                   <Calculator className="w-5 h-5 text-violet-600" />
                   <h2 className="text-xl font-bold text-violet-900">Interactive: Activation Gate Algorithm</h2>
                 </div>
+                <p className="text-sm text-gray-600 mb-4">
+                  Step through the Diva/Paksha variant of the activation gate below. 
+                  This is the secondary rule used in some South Indian traditions.
+                </p>
                 <AlgorithmStepper
                   steps={ACTIVATION_GATE_STEPS}
-                  title="Ashtottari Pravesh Dvara"
+                  title="Ashtottari Praveśa Dvāra (Diva/Paksha Variant)"
                 />
               </motion.div>
             </section>
@@ -423,13 +478,20 @@ export default function Lesson37Interactive({ lesson, lessonProgress }: Lesson37
               </motion.div>
             </section>
 
-            {/* 108-Year Matrix — Visual Timeline */}
+            {/* 108-Year Matrix — Visual Timeline + Cycle Wheel */}
             <section id="sec-algorithm-matrix" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <div className="flex items-center gap-2 mb-4">
                   <Layers className="w-5 h-5 text-violet-600" />
                   <h2 className="text-xl font-bold text-violet-900">The 108-Year Matrix</h2>
                 </div>
+
+                {/* Cycle Wheel — primary visual */}
+                <div className="mb-6">
+                  <AshtottariCycleWheel size={520} />
+                </div>
+
+                {/* Bar Timeline — complementary view */}
                 <AshtottariTimeline />
                 <div className="mt-4">
                   <NakshatraAllocationGrid />
@@ -441,16 +503,16 @@ export default function Lesson37Interactive({ lesson, lessonProgress }: Lesson37
             <section id="sec-debug" className="mb-8 scroll-mt-32">
               <motion.div {...fadeUp}>
                 <DebugComparator
-                  scenario="A user is 35 years old and consulting your software for a career forecast. They were born during the day with a waning moon."
+                  scenario="A user born during daytime (Diva), Krishna Paksha, with Janma Nakshatra Rohiṇī (Moon's nakshatra). They are consulting your software for a career forecast at age 35."
                   amateurOutput={{
                     title: "Vimshottari Only Prediction",
-                    prediction: "You are in a severe 19-year Saturn period. Expect delays, struggle, and heavy manual labor. Career advancement is unlikely.",
+                    prediction: "Running only Vimshottari: the software calculates Moon Mahādashā (10 years) → Mars Mahādashā at this age. The career forecast emphasizes conflict, aggression, and competitive struggles.",
                     riskLevel: "high" }}
                   professionalOutput={{
                     title: "Grahvani Ashtottari Override",
-                    prediction: "CRITICAL OVERRIDE: Ashtottari Engine Active. You are actually in a massive 19-year Jupiter period. Expect explosive wealth, teaching opportunities, and executive expansion.",
-                    overrideReason: "User born Diva + Krishna Paksha → Activation Gate TRUE → Vimshottari overridden → 108-year sequence calculated" }}
-                  whyItMatters="Without the conditional logic gate, your software would give the user the EXACT OPPOSITE prediction — turning a period of fortune into a period of fear. This is why amateur astrology apps fail professionals."
+                    prediction: "Activation Gate fires (Diva + Krishna Paksha). Ashtottari engine: Rohiṇī → Chandra starting dasha (15 years) → Maṅgala (8 years) → Budha Mahādashā active at age 35. Career forecast emphasizes communication, intellect, and business expansion under Mercury.",
+                    overrideReason: "Diva + Kṛṣṇa Paksha → Gate TRUE → 108-year timeline with different Mahādashā sequence → entirely different planetary period at age 35" }}
+                  whyItMatters="The Mahādashā running at any given age depends entirely on which dasha system is active. Without the conditional gate, your software may assign the wrong planetary period — leading to fundamentally different predictions and remedial advice."
                 />
               </motion.div>
             </section>
