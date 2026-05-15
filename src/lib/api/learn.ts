@@ -2,6 +2,27 @@ import { apiFetch, AUTH_URL } from './core';
 
 const LEARN_BASE = `${AUTH_URL}/learn`;
 
+export interface LessonSummary {
+  id: string;
+  title: string;
+  sequenceOrder: number;
+  lessonType: string;
+  targetMinutes?: number;
+  mcqCount?: number;
+  bloomLevels?: string[];
+  hasPrerequisites?: boolean;
+}
+
+export interface ChapterSummary {
+  id: string;
+  number: number;
+  slug: string;
+  title: string;
+  sequenceOrder: number;
+  lessonCount: number;
+  lessons: LessonSummary[];
+}
+
 export interface Course {
   id: string;
   title: string;
@@ -10,33 +31,45 @@ export interface Course {
   category: string;
   thumbnailUrl: string | null;
   isPublished: boolean;
-  createdAt: string;
-  updatedAt: string;
+  sequenceOrder: number;
+  moduleNumber: number;
+  tierNumber: number;
+  tierTitle: string;
+  totalLessons: number;
+  totalMinutes: number;
+  totalMcqs: number;
   lessons: LessonSummary[];
+  chapters: ChapterSummary[];
   // Dynamic progress fields (populated when userId is provided)
   completedLessons?: number;
-  totalLessons?: number;
   progressPercentage?: number;
   averageScore?: number;
   status?: string;
-  moduleNumber?: number;
-}
-
-export interface LessonSummary {
-  id: string;
-  title: string;
-  sequenceOrder: number;
-  lessonType: string;
 }
 
 export interface Lesson {
   id: string;
-  courseId: string;
+  slug: string;
+  courseId: string; // chapterId in new schema, kept for compat
   title: string;
   sequenceOrder: number;
   lessonType: string;
-  contentJson: LessonContent;
+  contentJson: LessonContent; // transitional — parsed from bodyMarkdown
+  bodyMarkdown?: string; // raw 12-section markdown
   isPublished: boolean;
+  tier: number;
+  module: number;
+  chapter: number;
+  prerequisites: string[];
+  bloomLevels: string[];
+  streams: string[];
+  learningOutcomes?: string[];
+  primarySources?: Array<{ ref: string; note?: string }>;
+  modernSources?: Array<{ ref: string; note?: string }>;
+  targetMinutesTotal?: number;
+  targetMinutesReading?: number;
+  interactiveEnabled: boolean;
+  interactiveType?: string;
   createdAt: string;
   updatedAt: string;
 }
