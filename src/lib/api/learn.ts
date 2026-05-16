@@ -70,6 +70,8 @@ export interface Lesson {
   targetMinutesReading?: number;
   interactiveEnabled: boolean;
   interactiveType?: string;
+  interactiveFallback?: string;
+  lastUpdated?: string;
   createdAt: string;
   updatedAt: string;
 }
