@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, lazy, Suspense } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -12,6 +12,16 @@ import { useAuth } from "@/context/AuthContext";
 import { learnApi, type Lesson, type LessonProgressData } from "@/lib/api";
 import MarkdownContent from "@/components/learn/MarkdownContent";
 import InteractiveQuiz from "@/components/learn/InteractiveQuiz";
+
+// ─── Interactive Lesson Components (lazy-loaded) ───
+const INTERACTIVE_MAP: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> = {
+  "m1-ch1-l1": lazy(() => import("@/components/learn/module1/chapter1/Lesson1Interactive")),
+};
+
+function getInteractiveKey(lesson: Lesson): string | null {
+  const key = `m${lesson.module}-ch${lesson.chapter}-l${lesson.sequenceOrder}`;
+  return INTERACTIVE_MAP[key] ? key : null;
+}
 
 type TabType = "content" | "concepts" | "quiz";
 
@@ -77,6 +87,25 @@ export default function LessonPage() {
     );
   }
 
+  // ─── Check for interactive lesson override ───
+  const interactiveKey = getInteractiveKey(lesson);
+  if (interactiveKey) {
+    const InteractiveComponent = INTERACTIVE_MAP[interactiveKey];
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
+        <div className="w-full py-6">
+          <Suspense fallback={
+            <div className="flex items-center justify-center py-20">
+              <div className="w-12 h-12 border-4 border-amber-200 border-t-amber-600 rounded-full animate-spin" />
+            </div>
+          }>
+            <InteractiveComponent lesson={lesson} lessonProgress={lessonProgress} />
+          </Suspense>
+        </div>
+      </div>
+    );
+  }
+
   const content = lesson.contentJson;
   const isLocked = lessonProgress?.status === "locked";
   const isCompleted = lessonProgress?.status === "COMPLETED" || lessonProgress?.status === "completed";
@@ -104,7 +133,7 @@ export default function LessonPage() {
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
       {/* ═══════════════ HEADER ═══════════════ */}
       <div className="bg-white border-b border-amber-200/60">
-        <div className="max-w-[1100px] mx-auto px-6 py-6">
+        <div className="max-w-[1400px] mx-auto py-6">
           {/* Breadcrumb */}
           <Link
             href="/learn"
@@ -181,7 +210,7 @@ export default function LessonPage() {
 
       {/* ═══════════════ TABS ═══════════════ */}
       <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-amber-200/40">
-        <div className="max-w-[1100px] mx-auto px-6">
+        <div className="max-w-[1400px] mx-auto">
           <div className="flex items-center gap-1 overflow-x-auto">
             <TabButton
               id="content"
@@ -211,7 +240,7 @@ export default function LessonPage() {
       </div>
 
       {/* ═══════════════ CONTENT AREA ═══════════════ */}
-      <div className="max-w-[1100px] mx-auto px-6 py-8 pb-20">
+      <div className="max-w-[1400px] mx-auto py-8 pb-20">
         {/* ── Content Tab ── */}
         {activeTab === "content" && (
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">

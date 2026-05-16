@@ -238,7 +238,7 @@ export default function LearnPage() {
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
       {/* ═══════════════════════ HERO ═══════════════════════ */}
       <div className="bg-gradient-to-r from-amber-900 via-amber-800 to-orange-900 text-white shadow-lg">
-        <div className="max-w-[1400px] mx-auto px-6 py-10">
+        <div className="max-w-[1400px] mx-auto py-10">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
             <div>
               <div className="flex items-center gap-2 mb-3">
@@ -276,7 +276,7 @@ export default function LearnPage() {
         </div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-6 py-10">
+      <div className="max-w-[1400px] mx-auto py-10">
         {/* ═══════════════════ CONTINUE LEARNING ═══════════════════ */}
         {nextLesson && (
           <div className="mb-12">

@@ -409,7 +409,7 @@ export default function Lesson40Interactive({ lesson, lessonProgress }: Lesson40
           />
 
           {/* Main Content */}
-          <div className="flex-1 min-w-0 pr-4 sm:pr-6 lg:pr-8">
+          <div className="flex-1 min-w-0 ">
 
             {/* ─── HERO ─── */}
             <section id="hero" className="mb-6 scroll-mt-32">
