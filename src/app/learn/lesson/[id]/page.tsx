@@ -6,7 +6,7 @@ import Link from "next/link";
 import {
   ArrowLeft, BookOpen, GraduationCap, BrainCircuit,
   Lightbulb, CheckCircle2, Lock, Play, Clock, FileQuestion,
-  ChevronRight, Trophy, BarChart3, ScrollText
+  ChevronRight, Trophy, BarChart3, ScrollText, Monitor
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { learnApi, type Lesson, type LessonProgressData } from "@/lib/api";
@@ -84,6 +84,18 @@ export default function LessonPage() {
   const quiz = content.quiz || [];
   const hasQuiz = quiz.length > 0;
 
+  // Split bodyMarkdown at §7 (interactive component section)
+  // §7 contains instructions for using an interactive component — not plain content.
+  // When interactiveEnabled is true but no component exists, we render a placeholder card.
+  const section7Match = lesson.bodyMarkdown?.match(/(# §7[\s\S]*?)(?=\n# §8|\n# §9|$)/);
+  const hasInteractiveSection = !!section7Match && lesson.interactiveEnabled;
+  const preInteractiveMd = hasInteractiveSection
+    ? lesson.bodyMarkdown?.slice(0, lesson.bodyMarkdown.indexOf(section7Match[0])) || lesson.bodyMarkdown || ""
+    : lesson.bodyMarkdown || "";
+  const postInteractiveMd = hasInteractiveSection
+    ? lesson.bodyMarkdown?.slice(lesson.bodyMarkdown.indexOf(section7Match[0]) + section7Match[0].length) || ""
+    : "";
+
   // Extract metadata for header
   const targetMinutes = lesson.targetMinutesTotal || lesson.targetMinutesReading || 25;
   const mcqCount = quiz.length;
@@ -137,6 +149,11 @@ export default function LessonPage() {
                 {lesson.bloomLevels && lesson.bloomLevels.length > 0 && (
                   <span className="text-sm text-gray-500 flex items-center gap-1">
                     <BarChart3 className="w-4 h-4" /> {lesson.bloomLevels.join(", ")}
+                  </span>
+                )}
+                {lesson.lastUpdated && (
+                  <span className="text-sm text-gray-400">
+                    Updated {new Date(lesson.lastUpdated).toLocaleDateString("en-IN", { year: "numeric", month: "short", day: "numeric" })}
                   </span>
                 )}
                 {lessonProgress && lessonProgress.bestScore > 0 && (
@@ -222,10 +239,39 @@ export default function LessonPage() {
 
               {/* Main markdown content */}
               <article className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-6 md:p-8">
+                {/* Pre-§7 content */}
                 <MarkdownContent
-                  content={lesson.bodyMarkdown || ""}
+                  content={preInteractiveMd}
                   className="lesson-markdown"
                 />
+
+                {/* §7 Interactive placeholder — instructions are not plain content */}
+                {hasInteractiveSection && (
+                  <div className="my-8 rounded-xl border-2 border-dashed border-amber-300 bg-amber-50/40 p-6 text-center">
+                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-amber-100 text-amber-600 mb-3">
+                      <Monitor className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-base font-bold text-amber-800 mb-1">
+                      Interactive Component
+                    </h3>
+                    <p className="text-sm text-amber-700 mb-2">
+                      {lesson.interactiveType?.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+                    </p>
+                    {lesson.interactiveFallback && (
+                      <p className="text-xs text-amber-600 max-w-md mx-auto">
+                        {lesson.interactiveFallback}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* Post-§7 content */}
+                {postInteractiveMd && (
+                  <MarkdownContent
+                    content={postInteractiveMd}
+                    className="lesson-markdown"
+                  />
+                )}
               </article>
             </div>
 
