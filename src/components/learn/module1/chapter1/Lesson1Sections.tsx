@@ -410,18 +410,23 @@ export function VsVedantaSection({ comparison }: { comparison: ParsedComparison 
 export function NonCoverageSection({ items }: { items: string[] }) {
   const [open, setOpen] = useState(false);
   return (
-    <motion.div {...fade} className="bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden">
-      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-100/80 transition-colors">
+    <motion.div {...fade} className="bg-white rounded-2xl border border-amber-200/70 shadow-sm overflow-hidden">
+      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between p-4 text-left hover:bg-amber-50/50 transition-colors">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-gray-200 flex items-center justify-center"><AlertTriangle className="w-3.5 h-3.5 text-gray-500" /></div>
-          <h2 className="text-sm font-bold text-gray-700">What This Lesson Does NOT Teach</h2>
+          <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center"><AlertTriangle className="w-4 h-4 text-amber-600" /></div>
+          <h2 className="text-base font-bold text-amber-900">What This Lesson Does NOT Teach</h2>
         </div>
-        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
+        <ChevronDown className={`w-4 h-4 text-amber-400 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <div className="px-4 pb-4 space-y-2 border-t border-gray-200 pt-3 animate-in fade-in slide-in-from-top-2 duration-300">
+        <div className="px-4 pb-4 space-y-3 border-t border-amber-100 pt-4 animate-in fade-in slide-in-from-top-2 duration-300">
           {items.map((item, i) => (
-            <p key={i} className="text-xs text-gray-600 flex gap-2 items-start"><span className="text-gray-300">✕</span>{item}</p>
+            <div key={i} className="flex gap-3 items-start p-3 rounded-xl bg-amber-50/40 border border-amber-100/60">
+              <span className="w-5 h-5 rounded-full bg-amber-200 flex items-center justify-center shrink-0 mt-0.5">
+                <span className="text-amber-700 text-xs font-bold">✕</span>
+              </span>
+              <p className="text-sm text-gray-700 leading-relaxed">{item}</p>
+            </div>
           ))}
         </div>
       )}
@@ -548,7 +553,7 @@ function MemoryCard({ item, index }: { item: string; index: number }) {
       className={`relative rounded-xl border p-3.5 transition-all duration-300 ${
         gotIt
           ? "bg-gradient-to-r from-emerald-50/80 to-green-50/40 border-emerald-300/60"
-          : `bg-gradient-to-r ${meta.lightColor}/80 to-white ${meta.borderColor}/50 hover:shadow-sm`
+          : "bg-white border-gray-200 hover:shadow-sm"
       }`}
     >
       {/* Horizontal layout: Icon | Content | Toggle */}
@@ -562,7 +567,7 @@ function MemoryCard({ item, index }: { item: string; index: number }) {
               {gotIt ? "Memorized" : meta.label}
             </span>
           </div>
-          <p className={`text-sm leading-relaxed ${gotIt ? "text-emerald-900/80" : "text-gray-800"}`} dangerouslySetInnerHTML={{ __html: formatted }} />
+          <p className={`text-sm leading-relaxed font-semibold ${gotIt ? "text-emerald-900/80" : "text-gray-800"}`} dangerouslySetInnerHTML={{ __html: formatted }} />
         </div>
         <button
           onClick={() => setGotIt(!gotIt)}
@@ -599,7 +604,7 @@ export function RememberSection({ items }: { items: string[] }) {
       </div>
 
       {/* Cards */}
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {items.map((item, i) => (
           <MemoryCard key={i} item={item} index={i} />
         ))}
@@ -811,32 +816,85 @@ export function SummarySection({ paragraphs, insights }: { paragraphs: string[];
 }
 
 // ─── §12 Citations — Further Reading ─────────────────────────
+const CITATION_META: Record<string, { label: string; icon: LucideIcon; color: string; bg: string; border: string; accent: string }> = {
+  primary:  { label: "Primary Classical Sources", icon: ScrollText, color: "text-amber-800", bg: "bg-amber-50", border: "border-amber-200", accent: "bg-amber-400" },
+  modern:   { label: "Modern Translations", icon: BookOpen, color: "text-sky-800", bg: "bg-sky-50", border: "border-sky-200", accent: "bg-sky-400" },
+  further:  { label: "Going Deeper (Optional)", icon: Star, color: "text-violet-800", bg: "bg-violet-50", border: "border-violet-200", accent: "bg-violet-400" },
+};
+
 export function CitationsSection({ citations }: { citations: ParsedCitations }) {
   const [open, setOpen] = useState(false);
+
   return (
-    <motion.div {...fade} className="bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden">
-      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-100/80 transition-colors">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-gray-200 flex items-center justify-center"><BookOpen className="w-3.5 h-3.5 text-gray-600" /></div>
-          <h2 className="text-sm font-bold text-gray-700">Citations &amp; Further Reading</h2>
+    <motion.div {...fade} className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
+      {/* Header */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between p-4 text-left hover:bg-amber-50/40 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center">
+            <BookOpen className="w-4 h-4 text-amber-700" />
+          </div>
+          <div>
+            <h2 className="text-base font-bold text-amber-900">Citations &amp; Further Reading</h2>
+            <p className="text-xs text-gray-500">Primary sources, translations &amp; next lessons</p>
+          </div>
         </div>
-        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
+        <ChevronDown className={`w-5 h-5 text-amber-400 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
       </button>
+
       {open && (
-        <div className="px-4 pb-4 space-y-4 border-t border-gray-200 pt-3 animate-in fade-in slide-in-from-top-2 duration-300">
-          {(["primary", "modern", "further"] as const).map((key) => (
-            <div key={key}>
-              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1.5">{key === "primary" ? "Primary Classical Sources" : key === "modern" ? "Modern Translations" : "Going Deeper (Optional)"}</p>
-              {citations[key].map((c, i) => (
-                <div key={i} className="flex gap-2 items-start mb-1.5"><span className="text-gray-300 text-xs mt-0.5">•</span><div><p className="text-xs text-gray-700 font-medium">{c.ref}</p>{c.note && <p className="text-[10px] text-gray-500">{c.note}</p>}</div></div>
-              ))}
-            </div>
-          ))}
+        <div className="px-4 pb-5 border-t border-amber-100 pt-4 space-y-5 animate-in fade-in slide-in-from-top-2 duration-300">
+          {/* Primary / Modern / Further */}
+          {(["primary", "modern", "further"] as const).map((key) => {
+            const meta = CITATION_META[key];
+            const Icon = meta.icon;
+            return (
+              <div key={key}>
+                <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${meta.bg} ${meta.border} border mb-2.5`}>
+                  <Icon className={`w-3.5 h-3.5 ${meta.color}`} />
+                  <span className={`text-[11px] font-bold uppercase tracking-wider ${meta.color}`}>{meta.label}</span>
+                </div>
+                <div className="space-y-2">
+                  {citations[key].map((c, i) => (
+                    <div
+                      key={i}
+                      className="relative pl-3 pr-3 py-2.5 rounded-xl bg-gray-50/60 border border-gray-100 hover:bg-gray-50 hover:border-gray-200 transition-colors"
+                    >
+                      <div className={`absolute left-0 top-3 bottom-3 w-1 rounded-full ${meta.accent}`} />
+                      <p className="text-sm font-semibold text-gray-800">{c.ref}</p>
+                      {c.note && <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{c.note}</p>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Cross-references */}
           {citations.crossRefs.length > 0 && (
-            <div><p className="text-[10px] font-bold text-amber-600 uppercase tracking-wide mb-1.5">Cross-references in this curriculum</p>
-              {citations.crossRefs.map((c, i) => (
-                <div key={i} className="flex gap-2 items-start mb-1.5"><span className="text-amber-300 text-xs mt-0.5">&rarr;</span><div><p className="text-xs text-amber-700 font-medium">{c.ref}</p>{c.note && <p className="text-[10px] text-gray-500">{c.note}</p>}</div></div>
-              ))}
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-orange-50 border border-orange-200 mb-2.5">
+                <ArrowRight className="w-3.5 h-3.5 text-orange-700" />
+                <span className="text-[11px] font-bold uppercase tracking-wider text-orange-700">Cross-references in this curriculum</span>
+              </div>
+              <div className="grid grid-cols-1 gap-2">
+                {citations.crossRefs.map((c, i) => (
+                  <div
+                    key={i}
+                    className="flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-orange-50/60 to-amber-50/40 border border-orange-200/50 hover:shadow-sm transition-shadow"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-white border border-orange-200 flex items-center justify-center shrink-0">
+                      <ArrowRight className="w-4 h-4 text-orange-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-orange-800">{c.ref}</p>
+                      {c.note && <p className="text-xs text-gray-600 mt-0.5 leading-relaxed">{c.note}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

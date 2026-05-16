@@ -138,7 +138,7 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
         <h3 className="text-xl font-extrabold text-amber-900 tracking-tight">
           The Six Vedangas — Limbs of the Veda
         </h3>
-        <p className="text-xs text-amber-600">
+        <p className="text-sm text-gray-600">
           Click any limb to explore its role, body metaphor &amp; key texts
         </p>
       </div>
@@ -147,12 +147,12 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
       <div className="flex items-center justify-center gap-3 mb-3 text-[10px] font-bold uppercase tracking-wider flex-wrap">
         <span className="flex items-center gap-1">
           <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-          <span className="text-amber-700">
+          <span className="text-gray-800">
             Jyotisa = Eye (highlighted)
           </span>
         </span>
         <span className="text-gray-300">·</span>
-        <span className="text-gray-500">
+        <span className="text-gray-700">
           Each Vedanga = A body part of the Vedic Purusha
         </span>
       </div>
@@ -260,7 +260,7 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
               dominantBaseline="central"
               fontSize={13 * scale}
               fontWeight="900"
-              fill="#E65100"
+              fill="#333"
               letterSpacing="2"
             >
               VEDA
@@ -374,9 +374,9 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
                     x={pos.x}
                     y={labelY}
                     textAnchor="middle"
-                    fontSize={10 * scale}
+                    fontSize={14 * scale}
                     fontWeight="800"
-                    fill={v.color}
+                    fill="#1a1a1a"
                   >
                     {v.sanskrit}
                   </text>
@@ -386,8 +386,8 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
                       labelY + (isTopHalf ? -11 * scale : 11 * scale)
                     }
                     textAnchor="middle"
-                    fontSize={7.5 * scale}
-                    fill="#666"
+                    fontSize={11 * scale}
+                    fill="#333"
                   >
                     {v.english}
                   </text>
@@ -397,11 +397,10 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
                       labelY + (isTopHalf ? -22 * scale : 22 * scale)
                     }
                     textAnchor="middle"
-                    fontSize={7 * scale}
+                    fontSize={10 * scale}
                     fontWeight="600"
                     fontStyle="italic"
-                    fill={v.color}
-                    opacity={0.7}
+                    fill="#444"
                   >
                     {v.bodyPart}
                   </text>
@@ -440,8 +439,7 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <h3
-                      className="text-lg font-bold"
-                      style={{ color: selected.color }}
+                      className="text-lg font-bold text-gray-900"
                     >
                       {selected.sanskrit}
                     </h3>
@@ -457,8 +455,7 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
                     </span>
                   </div>
                   <p
-                    className="text-sm font-medium mt-0.5"
-                    style={{ color: selected.color + "CC" }}
+                    className="text-sm font-medium mt-0.5 text-gray-700"
                   >
                     {selected.bodyPart}
                   </p>
@@ -475,8 +472,7 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
               {/* Function */}
               <div className="px-4 py-3 bg-white/40 border-y border-gray-100/50">
                 <div
-                  className="text-[10px] font-bold uppercase tracking-wider mb-1"
-                  style={{ color: selected.color }}
+                  className="text-xs font-bold uppercase tracking-wider mb-1 text-gray-600"
                 >
                   Primary Function
                 </div>
@@ -508,7 +504,7 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
               {selected.isHighlighted && (
                 <div className="px-4 pb-4">
                   <div className="p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
-                    <div className="text-[10px] font-bold text-amber-700 uppercase tracking-wide mb-1 flex items-center gap-1">
+                    <div className="text-xs font-bold text-gray-700 uppercase tracking-wide mb-1 flex items-center gap-1">
                       <span>👁️</span> Why &ldquo;The Eye&rdquo;?
                     </div>
                     <p className="text-xs text-amber-800 leading-relaxed">
@@ -527,10 +523,10 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
               <div className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center mb-3">
                 <span className="text-2xl">👁️</span>
               </div>
-              <p className="text-sm font-semibold text-amber-800">
+              <p className="text-base font-semibold text-gray-800">
                 Select a Vedanga
               </p>
-              <p className="text-xs text-amber-600 mt-1">
+              <p className="text-sm text-gray-600 mt-1">
                 Click any limb in the wheel to explore its role, body
                 metaphor, and key texts.
               </p>

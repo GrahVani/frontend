@@ -2,14 +2,14 @@
 import React, { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowLeft, GraduationCap, CheckCircle2, Lock, ChevronRight, BookOpen, Layers, Sparkles, BrainCircuit, Eye, Lightbulb, Play, BookMarked, Clock, GitCompare, ScrollText } from "lucide-react";
+import { GraduationCap, CheckCircle2, Lock, ChevronRight, BookOpen, Layers, Sparkles, BrainCircuit, Eye, Lightbulb, Play, BookMarked, Clock, GitCompare, ScrollText } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { learnApi, type Lesson, type LessonProgressData } from "@/lib/api";
 import { useScrollSpy } from "@/hooks/useScrollSpy";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 import ScrollProgress from "@/components/learn/interactive/ScrollProgress";
 import LessonSidebar from "@/components/learn/interactive/LessonSidebar";
-import ReadingTime from "@/components/learn/interactive/ReadingTime";
+import LessonHeader from "@/components/learn/interactive/LessonHeader";
 import TTSButton from "@/components/learn/interactive/TTSButton";
 import Flashcard from "@/components/learn/interactive/Flashcard";
 import KnowledgeCheck from "@/components/learn/interactive/KnowledgeCheck";
@@ -66,65 +66,58 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Props) {
     <>
       <ScrollProgress />
       <div className="mx-auto pb-20">
-        <div className="flex gap-8">
-          <LessonSidebar sections={buildSidebarSections(parsed)} activeSection={activeSection} completedSections={completedSections} onNavigate={scrollTo} progress={progress} className="w-64 shrink-0 sticky top-4 self-start h-fit" />
+        <div className="flex gap-6">
+          {/* Sidebar */}
+          <LessonSidebar sections={buildSidebarSections(parsed)} activeSection={activeSection} completedSections={completedSections} onNavigate={scrollTo} progress={progress} showProgress={false} className="w-64 shrink-0 sticky top-4 self-start h-fit" />
 
-          <div className="flex-1 min-w-0  space-y-6">
+          {/* Main column */}
+          <div className="flex-1 min-w-0 space-y-5">
+            {/* Sticky header inside main column */}
+            <div className="sticky top-0 z-30 bg-gradient-to-br from-amber-50/95 via-orange-50/95 to-yellow-50/95 backdrop-blur-md -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 py-1">
+              <LessonHeader
+                title={lesson.title}
+                lessonNumber={lesson.sequenceOrder}
+                moduleNumber={lesson.module}
+                chapterNumber={lesson.chapter}
+                chapterTitle="What Jyotiṣa Is"
+                isCompleted={isCompleted}
+                isLocked={isLocked}
+                allText={allText}
+                conceptCount={content.concepts.length}
+                quizCount={content.quiz.length}
+                bestScore={lessonProgress?.bestScore || 0}
+                attemptsCount={lessonProgress?.attemptsCount || 0}
+                progress={progress}
+              />
+            </div>
+            {/* Intro card */}
+            <motion.div {...fadeUp} className="mt-4 relative overflow-hidden bg-gradient-to-br from-white via-amber-50/30 to-orange-50/20 rounded-2xl border border-amber-200/60 shadow-sm p-5 sm:p-6">
+              {/* Decorative accent */}
+              <div className="absolute top-0 right-0 w-24 h-24 bg-amber-100/30 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+              <div className="flex items-center gap-2 mb-4 relative">
+                <div className="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center"><BookOpen className="w-3.5 h-3.5 text-amber-700" /></div>
+                <span className="text-sm font-semibold text-amber-800 uppercase tracking-wide">Introduction</span>
+                <span className="ml-auto"><TTSButton text={introHook} size="sm" label="Listen" /></span>
+              </div>
 
-            {/* ═══ HERO ═══ */}
-            <section id="hero" className="scroll-mt-32">
-              <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-800 text-sm mb-4 transition-colors">
-                <ArrowLeft className="w-4 h-4" /> Back to Learning Path
-              </Link>
-              <motion.div {...fadeUp}>
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  <GraduationCap className="w-5 h-5 text-amber-500" />
-                  <span className="text-xs font-bold text-amber-500 uppercase tracking-wider">Lesson {lesson.sequenceOrder}</span>
-                  <span className="text-xs text-amber-400">·</span>
-                  <span className="text-xs font-medium text-amber-600">Module 01 · Ch.1 — What Jyotiṣa Is</span>
-                  {isCompleted && <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Completed</span>}
-                  {isLocked && <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200 flex items-center gap-1"><Lock className="w-3 h-3" /> Locked</span>}
-                </div>
-                <h1 className="text-3xl sm:text-4xl font-bold text-amber-900 mb-3">{lesson.title}</h1>
-                <div className="flex items-center gap-4 flex-wrap">
-                  <ReadingTime text={allText} />
-                  <span className="text-amber-300">·</span>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700"><Layers className="w-3.5 h-3.5" /> 8 Sections</span>
-                  <span className="text-amber-200">·</span>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600"><Lightbulb className="w-3.5 h-3.5" /> {content.concepts.length} Concepts</span>
-                  <span className="text-amber-200">·</span>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600"><BrainCircuit className="w-3.5 h-3.5" /> {content.quiz.length} Questions</span>
-                </div>
-              </motion.div>
-              {/* Intro card */}
-              <motion.div {...fadeUp} className="mt-4 relative overflow-hidden bg-gradient-to-br from-white via-amber-50/30 to-orange-50/20 rounded-2xl border border-amber-200/60 shadow-sm p-5 sm:p-6">
-                {/* Decorative accent */}
-                <div className="absolute top-0 right-0 w-24 h-24 bg-amber-100/30 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
-                <div className="flex items-center gap-2 mb-4 relative">
-                  <div className="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center"><BookOpen className="w-3.5 h-3.5 text-amber-700" /></div>
-                  <span className="text-sm font-semibold text-amber-800 uppercase tracking-wide">Introduction</span>
-                  <span className="ml-auto"><TTSButton text={introHook} size="sm" label="Listen" /></span>
-                </div>
+              {/* Key question - highlighted */}
+              <div className="relative mb-4 p-4 bg-amber-50/80 rounded-xl border border-amber-200/50">
+                <p className="text-amber-900 leading-relaxed text-[15px]">
+                  When you open a Vedic-astrology textbook and read <em>&ldquo;Jyotisa is the eye of the Veda&rdquo;</em>, what does that <strong>mean</strong>?
+                </p>
+              </div>
 
-                {/* Key question - highlighted */}
-                <div className="relative mb-4 p-4 bg-amber-50/80 rounded-xl border border-amber-200/50">
-                  <p className="text-amber-900 leading-relaxed text-[15px]">
-                    When you open a Vedic-astrology textbook and read <em>&ldquo;Jyotisa is the eye of the Veda&rdquo;</em>, what does that <strong>mean</strong>?
-                  </p>
+              {/* Answer - structured */}
+              <div className="relative space-y-3">
+                <p className="text-gray-700 leading-relaxed text-[15px]">
+                  The answer is structural: Jyotisa is <strong className="text-amber-800">one of six disciplines</strong> the Vedic tradition treats as essential infrastructure for the Veda itself.
+                </p>
+                <div className="flex items-center gap-3 p-3 bg-white rounded-xl border border-amber-100 shadow-sm">
+                  <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center shrink-0"><Sparkles className="w-4 h-4 text-amber-600" /></div>
+                  <p className="text-sm text-amber-900 font-medium">They are called <em>Vedangas</em> — <strong>limbs of the Veda</strong>. Today we place Jyotisa within its proper textual home.</p>
                 </div>
-
-                {/* Answer - structured */}
-                <div className="relative space-y-3">
-                  <p className="text-gray-700 leading-relaxed text-[15px]">
-                    The answer is structural: Jyotisa is <strong className="text-amber-800">one of six disciplines</strong> the Vedic tradition treats as essential infrastructure for the Veda itself.
-                  </p>
-                  <div className="flex items-center gap-3 p-3 bg-white rounded-xl border border-amber-100 shadow-sm">
-                    <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center shrink-0"><Sparkles className="w-4 h-4 text-amber-600" /></div>
-                    <p className="text-sm text-amber-900 font-medium">They are called <em>Vedangas</em> — <strong>limbs of the Veda</strong>. Today we place Jyotisa within its proper textual home.</p>
-                  </div>
-                </div>
-              </motion.div>
-            </section>
+              </div>
+            </motion.div>
 
             {/* ═══ WHAT YOU'LL LEARN ═══ */}
             <section id="sec-overview" className="scroll-mt-32">
@@ -133,10 +126,10 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Props) {
                 {lesson.learningOutcomes && lesson.learningOutcomes.length > 0 && (
                   <div className="mb-5">
                     <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">By the end of this lesson, you will be able to:</h3>
-                    <div className="space-y-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {lesson.learningOutcomes.map((o: string, i: number) => (
                         <div key={i} className="flex items-start gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-amber-50/50 hover:border-amber-200/50 transition-colors">
-                          <span className="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">{i+1}</span>
+                          <span className="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">{i + 1}</span>
                           <span className="text-sm text-gray-700 leading-relaxed">{o}</span>
                         </div>
                       ))}
