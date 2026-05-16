@@ -4,7 +4,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  ArrowLeft, GraduationCap, CheckCircle2, Lock, ChevronRight,
+  CheckCircle2, Lock, ChevronRight,
   BookOpen, Layers, Sparkles, BrainCircuit, Target,
   Lightbulb, Play, Compass, Globe,
 } from "lucide-react";
@@ -15,8 +15,8 @@ import { useReadingProgress } from "@/hooks/useReadingProgress";
 
 import ScrollProgress from "@/components/learn/interactive/ScrollProgress";
 import LessonSidebar, { type SidebarSection } from "@/components/learn/interactive/LessonSidebar";
+import LessonHeader from "@/components/learn/interactive/LessonHeader";
 import CalloutBlock from "@/components/learn/interactive/CalloutBlock";
-import ReadingTime from "@/components/learn/interactive/ReadingTime";
 import Flashcard from "@/components/learn/interactive/Flashcard";
 import KnowledgeCheck from "@/components/learn/interactive/KnowledgeCheck";
 import TTSButton from "@/components/learn/interactive/TTSButton";
@@ -161,63 +161,20 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Lesson1In
           <div className="flex-1 min-w-0 ">
 
             {/* ─── HERO ─── */}
-            <section id="hero" className="mb-6 scroll-mt-32">
-              <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-800 text-sm mb-4 transition-colors">
-                <ArrowLeft className="w-4 h-4" /> Back to Learning Path
-              </Link>
-
-              <motion.div {...fadeUp}>
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  <GraduationCap className="w-5 h-5 text-amber-500" />
-                  <span className="text-xs font-bold text-amber-500 uppercase tracking-wider">Lesson {lesson.sequenceOrder}</span>
-                  <span className="text-xs text-amber-400">·</span>
-                  <span className="text-xs font-medium text-amber-600">Module 1: Foundations</span>
-                  {isCompleted && (
-                    <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200 flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3" /> Completed
-                    </span>
-                  )}
-                  {isLocked && (
-                    <span className="ml-2 text-xs font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Locked
-                    </span>
-                  )}
-                </div>
-
-                <h1 className="text-3xl sm:text-4xl font-bold text-amber-900 mb-3">{lesson.title}</h1>
-
-                <div className="flex items-center gap-4 flex-wrap">
-                  <ReadingTime text={allText} />
-                  <span className="text-amber-300">·</span>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700">
-                    <Layers className="w-3.5 h-3.5" /> {content.sections?.length || 0} Sections
-                  </span>
-                  <span className="text-amber-200">·</span>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600">
-                    <Lightbulb className="w-3.5 h-3.5" /> {content.concepts.length} Concepts
-                  </span>
-                  <span className="text-amber-200">·</span>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600">
-                    <BrainCircuit className="w-3.5 h-3.5" /> {content.quiz.length} Questions
-                  </span>
-                </div>
-
-                {/* Progress bar */}
-                {hasSections && (
-                  <div className="mt-4 flex items-center gap-3">
-                    <div className="flex-1 h-2 bg-amber-100 rounded-full overflow-hidden max-w-[250px]">
-                      <motion.div
-                        className="h-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${sectionProgress}%` }}
-                        transition={{ duration: 0.6 }}
-                      />
-                    </div>
-                    <span className="text-xs text-amber-600 font-medium">{completedSections.size}/{content.sections?.length} viewed</span>
-                  </div>
-                )}
-              </motion.div>
-            </section>
+            <LessonHeader
+              title={lesson.title}
+              lessonNumber={lesson.sequenceOrder}
+              moduleNumber={lesson.module}
+              chapterNumber={lesson.chapter}
+              chapterTitle={lesson.chapter > 0 ? `What Jyotiṣa Is` : undefined}
+              isCompleted={isCompleted}
+              isLocked={isLocked}
+              allText={allText}
+              conceptCount={content.concepts.length}
+              quizCount={content.quiz.length}
+              bestScore={lessonProgress?.bestScore || 0}
+              attemptsCount={lessonProgress?.attemptsCount || 0}
+            />
 
             {/* ─── KEY TAKEAWAYS OVERVIEW ─── */}
             <section id="sec-overview" className="mb-6 scroll-mt-32">

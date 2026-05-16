@@ -93,7 +93,7 @@ export default function LessonPage() {
     const InteractiveComponent = INTERACTIVE_MAP[interactiveKey];
     return (
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
-        <div className="w-full py-6">
+        <div className="w-full pb-6">
           <Suspense fallback={
             <div className="flex items-center justify-center py-20">
               <div className="w-12 h-12 border-4 border-amber-200 border-t-amber-600 rounded-full animate-spin" />
