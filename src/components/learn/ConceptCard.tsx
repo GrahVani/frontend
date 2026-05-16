@@ -6,7 +6,7 @@ import {
   Sparkles, ChevronDown, ChevronUp, Lightbulb, AlertTriangle,
   Compass, Sun, Flame, Triangle, EyeOff, Eye, Swords, GitBranch,
   Briefcase, Clock, Crown, Coins, MessageCircle, Grid, Clipboard,
-  Heart, Gem, BookOpen, Layers, Glasses, ArrowRight
+  Heart, Gem, BookOpen, Layers, Glasses, ArrowRight, CheckCircle2, Circle
 } from "lucide-react";
 import DynamicDiagram from "./DynamicDiagram";
 import TTSButton from "./interactive/TTSButton";
@@ -72,48 +72,77 @@ function formatInline(text: string): string {
 
 export default function ConceptCard({ concept, index, showDiagram = true, showReference = false }: ConceptCardProps) {
   const [expanded, setExpanded] = useState(false);
+  const [completed, setCompleted] = useState(false);
   const Icon = ICON_MAP[concept.icon || ""] || Sparkles;
 
   return (
-    <div className="bg-white rounded-2xl border border-amber-200/60 overflow-hidden hover:shadow-md transition-shadow duration-300">
-      <div className="p-6">
-        {/* Header */}
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center shrink-0 border border-amber-200/50">
-            <Icon className="w-6 h-6 text-amber-700" />
+    <div className={`rounded-xl border overflow-hidden transition-all duration-300 ${
+      completed
+        ? "bg-gradient-to-br from-emerald-50/60 to-white border-emerald-300/60 shadow-sm hover:shadow-md"
+        : "bg-white border-amber-200/60 hover:shadow-md"
+    }`}>
+      <div className="p-4 sm:p-5">
+        {/* Horizontal Header: Icon | Title+Meta | Toggle */}
+        <div className="flex items-start gap-3">
+          <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border transition-colors ${
+            completed
+              ? "bg-gradient-to-br from-emerald-100 to-green-100 border-emerald-200/60"
+              : "bg-gradient-to-br from-amber-100 to-orange-100 border-amber-200/50"
+          }`}>
+            <Icon className={`w-5 h-5 ${completed ? "text-emerald-700" : "text-amber-700"}`} />
           </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-bold text-amber-500 uppercase tracking-wider">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="text-base font-bold text-gray-900">{concept.title}</h3>
+              {completed && (
+                <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200">
+                  Understood
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-2 mt-0.5">
+              <span className={`text-[10px] font-bold uppercase tracking-wider ${completed ? "text-emerald-600" : "text-amber-500"}`}>
                 Concept {index + 1}
               </span>
+              <span className="text-gray-300">·</span>
+              <TTSButton
+                text={`${concept.title}. ${concept.description}`}
+                size="sm"
+                label="Listen"
+              />
             </div>
-            <h3 className="text-lg font-bold text-gray-900">{concept.title}</h3>
           </div>
+          {/* Completion Toggle */}
+          <button
+            onClick={() => setCompleted(!completed)}
+            className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all ${
+              completed
+                ? "bg-emerald-500 text-white shadow-sm shadow-emerald-200 hover:bg-emerald-600"
+                : "bg-gray-100 text-gray-400 hover:bg-amber-100 hover:text-amber-600"
+            }`}
+            title={completed ? "Mark as not understood" : "Mark as understood"}
+          >
+            {completed ? <CheckCircle2 className="w-4 h-4" /> : <Circle className="w-4 h-4" />}
+          </button>
         </div>
 
-        {/* TTS & Description */}
-        <div className="flex items-center justify-between mt-4 mb-2">
-          <TTSButton
-            text={`${concept.title}. ${concept.description}`}
-            size="sm"
-            label="Listen"
+        {/* Description — horizontal flow */}
+        <div className="mt-2.5">
+          <div className={`text-sm text-gray-700 leading-relaxed ${expanded ? "" : "line-clamp-2"}`}
+            dangerouslySetInnerHTML={{ __html: formatConceptText(concept.description) }}
           />
         </div>
-        <div className={`text-gray-700 leading-relaxed ${expanded ? "" : "line-clamp-3"}`}
-          dangerouslySetInnerHTML={{ __html: formatConceptText(concept.description) }}
-        />
 
         {/* Expand/Collapse */}
-        {concept.description.length > 150 && (
+        {concept.description.length > 120 && (
           <button
             onClick={() => setExpanded(!expanded)}
-            className="mt-2 text-sm font-medium text-amber-600 hover:text-amber-800 flex items-center gap-1 transition-colors"
+            className="mt-1.5 text-xs font-medium text-amber-600 hover:text-amber-800 flex items-center gap-1 transition-colors"
           >
             {expanded ? (
-              <>Show less <ChevronUp className="w-4 h-4" /></>
+              <>Show less <ChevronUp className="w-3.5 h-3.5" /></>
             ) : (
-              <>Read more <ChevronDown className="w-4 h-4" /></>
+              <>Read more <ChevronDown className="w-3.5 h-3.5" /></>
             )}
           </button>
         )}

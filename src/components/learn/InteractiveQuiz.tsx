@@ -444,38 +444,40 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
       case "multiple_choice":
         return (
           <div className="space-y-3">
-            {Object.entries(currentQuestion.options).map(([key, value]) => {
-              const isSelected = selectedOption === key;
-              const isCorrectOption = currentQuestion.correctAnswer === key;
-              const showCorrect = showFeedback && isCorrectOption;
-              const showWrong = showFeedback && isSelected && !isCorrectOption;
+            {Object.entries(currentQuestion.options)
+              .sort(([a], [b]) => a.localeCompare(b))
+              .map(([key, value]) => {
+                const isSelected = selectedOption === key;
+                const isCorrectOption = currentQuestion.correctAnswer === key;
+                const showCorrect = showFeedback && isCorrectOption;
+                const showWrong = showFeedback && isSelected && !isCorrectOption;
 
-              return (
-                <button
-                  key={key}
-                  onClick={() => handleMultipleChoice(key)}
-                  disabled={showFeedback}
-                  className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-300 ${
-                    showCorrect
-                      ? "bg-green-50 border-green-400 text-green-900 shadow-sm"
-                      : showWrong
-                      ? "bg-red-50 border-red-400 text-red-900 shadow-sm"
-                      : isSelected
-                      ? "bg-amber-100 border-amber-400 text-amber-900"
-                      : "bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-gray-800"
-                  } ${showFeedback ? "cursor-default" : "cursor-pointer hover:scale-[1.01]"}`}
-                >
-                  <div className="flex items-center gap-4">
-                    <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 transition-all ${
-                      showCorrect ? "bg-green-500 text-white" : showWrong ? "bg-red-500 text-white" : isSelected ? "bg-amber-500 text-white" : "bg-amber-200 text-amber-700"
-                    }`}>
-                      {showCorrect ? "✓" : showWrong ? "✕" : key}
-                    </span>
-                    <span className="text-base font-medium">{value}</span>
-                  </div>
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={key}
+                    onClick={() => handleMultipleChoice(key)}
+                    disabled={showFeedback}
+                    className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-300 ${
+                      showCorrect
+                        ? "bg-green-50 border-green-400 text-green-900 shadow-sm"
+                        : showWrong
+                        ? "bg-red-50 border-red-400 text-red-900 shadow-sm"
+                        : isSelected
+                        ? "bg-amber-100 border-amber-400 text-amber-900"
+                        : "bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-gray-800"
+                    } ${showFeedback ? "cursor-default" : "cursor-pointer hover:scale-[1.01]"}`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 transition-all ${
+                        showCorrect ? "bg-green-500 text-white" : showWrong ? "bg-red-500 text-white" : isSelected ? "bg-amber-500 text-white" : "bg-amber-200 text-amber-700"
+                      }`}>
+                        {showCorrect ? "✓" : showWrong ? "✕" : key}
+                      </span>
+                      <span className="text-base font-medium">{value}</span>
+                    </div>
+                  </button>
+                );
+              })}
           </div>
         );
 
@@ -664,38 +666,40 @@ export default function InteractiveQuiz({ quiz, concepts, lessonId }: Interactiv
               <p className="text-base font-medium text-gray-900 mb-4">{subQ.question}</p>
 
               <div className="space-y-3">
-                {Object.entries(subQ.options).map(([key, value]) => {
-                  const isSelected = selectedOption === key;
-                  const isCorrectOption = subQ.correctAnswer === key;
-                  const showCorrect = showFeedback && isCorrectOption;
-                  const showWrong = showFeedback && isSelected && !isCorrectOption;
+                {Object.entries(subQ.options)
+                  .sort(([a], [b]) => a.localeCompare(b))
+                  .map(([key, value]) => {
+                    const isSelected = selectedOption === key;
+                    const isCorrectOption = subQ.correctAnswer === key;
+                    const showCorrect = showFeedback && isCorrectOption;
+                    const showWrong = showFeedback && isSelected && !isCorrectOption;
 
-                  return (
-                    <button
-                      key={key}
-                      onClick={() => handleCaseStudySubAnswer(key)}
-                      disabled={showFeedback}
-                      className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-300 ${
-                        showCorrect
-                          ? "bg-green-50 border-green-400 text-green-900 shadow-sm"
-                          : showWrong
-                          ? "bg-red-50 border-red-400 text-red-900 shadow-sm"
-                          : isSelected
-                          ? "bg-amber-100 border-amber-400 text-amber-900"
-                          : "bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-gray-800"
-                      } ${showFeedback ? "cursor-default" : "cursor-pointer hover:scale-[1.01]"}`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
-                          showCorrect ? "bg-green-500 text-white" : showWrong ? "bg-red-500 text-white" : isSelected ? "bg-amber-500 text-white" : "bg-amber-200 text-amber-700"
-                        }`}>
-                          {showCorrect ? "✓" : showWrong ? "✕" : key}
-                        </span>
-                        <span className="text-sm font-medium">{value}</span>
-                      </div>
-                    </button>
-                  );
-                })}
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => handleCaseStudySubAnswer(key)}
+                        disabled={showFeedback}
+                        className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-300 ${
+                          showCorrect
+                            ? "bg-green-50 border-green-400 text-green-900 shadow-sm"
+                            : showWrong
+                            ? "bg-red-50 border-red-400 text-red-900 shadow-sm"
+                            : isSelected
+                            ? "bg-amber-100 border-amber-400 text-amber-900"
+                            : "bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-gray-800"
+                        } ${showFeedback ? "cursor-default" : "cursor-pointer hover:scale-[1.01]"}`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
+                            showCorrect ? "bg-green-500 text-white" : showWrong ? "bg-red-500 text-white" : isSelected ? "bg-amber-500 text-white" : "bg-amber-200 text-amber-700"
+                          }`}>
+                            {showCorrect ? "✓" : showWrong ? "✕" : key}
+                          </span>
+                          <span className="text-sm font-medium">{value}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
               </div>
             </div>
           </div>
