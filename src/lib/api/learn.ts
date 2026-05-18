@@ -52,6 +52,10 @@ export interface Lesson {
   slug: string;
   courseId: string; // chapterId in new schema, kept for compat
   title: string;
+  /** Sanskrit/Hindi title in Devanagari script */
+  titleDevanagari?: string;
+  /** Brief descriptive subtitle */
+  subtitle?: string;
   sequenceOrder: number;
   lessonType: string;
   contentJson: LessonContent; // transitional — parsed from bodyMarkdown
@@ -61,8 +65,12 @@ export interface Lesson {
   module: number;
   chapter: number;
   prerequisites: string[];
+  /** Canonical paths to lessons that follow this one */
+  postrequisites?: string[];
   bloomLevels: string[];
   streams: string[];
+  /** Whether this lesson is stream-neutral (applies to all astrological schools) */
+  streamNeutrality?: boolean;
   learningOutcomes?: string[];
   primarySources?: Array<{ ref: string; note?: string }>;
   modernSources?: Array<{ ref: string; note?: string }>;
@@ -71,6 +79,24 @@ export interface Lesson {
   interactiveEnabled: boolean;
   interactiveType?: string;
   interactiveFallback?: string;
+  /** Number of MCQ questions for this lesson */
+  mcqCount?: number;
+  /** Accessibility: lesson contains Devanagari script */
+  hasDevanagari?: boolean;
+  /** Accessibility: lesson contains diagrams */
+  hasDiagrams?: boolean;
+  /** Accessibility: lesson has audio pronunciation */
+  hasAudio?: boolean;
+  /** US grade level reading difficulty */
+  estimatedReadingGrade?: number;
+  /** Content version */
+  version?: string;
+  /** List of authors */
+  authors?: string[];
+  /** Technical reviewer name */
+  technicalReviewer?: string;
+  /** Pedagogical reviewer name */
+  pedagogicalReviewer?: string;
   lastUpdated?: string;
   createdAt: string;
   updatedAt: string;

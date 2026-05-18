@@ -16,6 +16,8 @@ import {
 /* ─── Types ─── */
 export interface LessonHeaderProps {
   title: string;
+  /** Sanskrit/Hindi title in Devanagari script */
+  titleDevanagari?: string;
   lessonNumber: number;
   moduleNumber: number;
   chapterNumber: number;
@@ -95,6 +97,7 @@ function ProgressRing({
 /* ─── Component ─── */
 export default function LessonHeader({
   title,
+  titleDevanagari,
   lessonNumber,
   moduleNumber,
   chapterNumber,
@@ -165,6 +168,12 @@ export default function LessonHeader({
           <h1 className="text-lg sm:text-xl lg:text-2xl font-extrabold text-amber-950 leading-snug tracking-tight">
             {title}
           </h1>
+          {/* Devanagari Title */}
+          {titleDevanagari && (
+            <p className="text-base sm:text-lg text-amber-700 font-medium mt-0.5 leading-tight">
+              {titleDevanagari}
+            </p>
+          )}
         </div>
 
 

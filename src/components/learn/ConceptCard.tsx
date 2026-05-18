@@ -75,6 +75,9 @@ export default function ConceptCard({ concept, index, showDiagram = true, showRe
   const [completed, setCompleted] = useState(false);
   const Icon = ICON_MAP[concept.icon || ""] || Sparkles;
 
+  // Horizontal layout: use CSS grid for the card itself
+  const cardLayout = "flex flex-col sm:flex-row gap-3";
+
   return (
     <div className={`rounded-xl border overflow-hidden transition-all duration-300 ${
       completed
@@ -100,11 +103,11 @@ export default function ConceptCard({ concept, index, showDiagram = true, showRe
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-2 mt-0.5">
+            <div className="flex items-center gap-2 mt-0.5 flex-wrap">
               <span className={`text-[10px] font-bold uppercase tracking-wider ${completed ? "text-emerald-600" : "text-amber-500"}`}>
                 Concept {index + 1}
               </span>
-              <span className="text-gray-300">·</span>
+              <span className="text-gray-300 hidden sm:inline">·</span>
               <TTSButton
                 text={`${concept.title}. ${concept.description}`}
                 size="sm"

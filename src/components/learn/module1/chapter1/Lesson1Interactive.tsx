@@ -58,9 +58,10 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Props) {
     );
   }, [lesson.bodyMarkdown, lesson.primarySources, lesson.modernSources]);
 
+  // Use backend data for intro hook, fallback to parsed content
   const introHook = parsed?.hookText
     ? parsed.hookText.split(".").slice(0, 2).join(".") + "."
-    : "Jyotisa is one of six classical Vedangas — limbs of the Veda. This lesson places it within its proper textual home.";
+    : lesson.subtitle || "Jyotisa is one of six classical Vedangas — limbs of the Veda. This lesson places it within its proper textual home.";
 
   return (
     <>
@@ -76,10 +77,11 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Props) {
             <div className="sticky top-0 z-30 bg-gradient-to-br from-amber-50/95 via-orange-50/95 to-yellow-50/95 backdrop-blur-md -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 py-1">
               <LessonHeader
                 title={lesson.title}
+                titleDevanagari={lesson.titleDevanagari}
                 lessonNumber={lesson.sequenceOrder}
                 moduleNumber={lesson.module}
                 chapterNumber={lesson.chapter}
-                chapterTitle="What Jyotiṣa Is"
+                chapterTitle={lesson.subtitle || "What Jyotiṣa Is"}
                 isCompleted={isCompleted}
                 isLocked={isLocked}
                 allText={allText}
@@ -213,7 +215,24 @@ export default function Lesson1Interactive({ lesson, lessonProgress }: Props) {
               <motion.div {...fadeUp}>
                 <div className="p-6 sm:p-8 bg-white rounded-2xl border-2 border-amber-200/60 shadow-sm">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div><p className="text-sm text-amber-600 mb-1 font-medium">🎉 Lesson Complete!</p><p className="text-xl font-bold text-gray-900">Continue to Next Lesson</p><p className="text-sm text-gray-500 mt-1">Next: The Six Vedangas and Their Relationship</p></div>
+                    <div>
+                      <p className="text-sm text-amber-600 mb-1 font-medium">🎉 Lesson Complete!</p>
+                      <p className="text-xl font-bold text-gray-900">Continue to Next Lesson</p>
+                      {lesson.postrequisites && lesson.postrequisites.length > 0 ? (
+                        <div className="mt-2">
+                          <p className="text-sm text-gray-500">Next lessons in this path:</p>
+                          <div className="flex flex-wrap gap-2 mt-1">
+                            {lesson.postrequisites.map((postreq, idx) => (
+                              <span key={idx} className="text-xs px-2 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 font-medium">
+                                {postreq}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-500 mt-1">Next: The Six Vedangas and Their Relationship</p>
+                      )}
+                    </div>
                     <Link href="/learn" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }} className="flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-colors shadow-md shadow-amber-600/20 shrink-0">Continue Learning<ChevronRight className="w-4 h-4" /></Link>
                   </div>
                 </div>
