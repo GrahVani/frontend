@@ -19,7 +19,72 @@ import type {
 } from "@/lib/lesson-parser";
 
 const fade = { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: "-40px" as `${number}px` }, transition: { duration: 0.45 } };
-function fmt(t: string) { return t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/\*([^*]+)\*/g, '<em>$1</em>').replace(/`([^`]+)`/g, '<code class="text-amber-700 bg-amber-50 px-1 rounded text-xs">$1</code>'); }
+
+/**
+ * InlineMarkdown — renders inline markdown (*italic*, **bold**, `code`) as React elements.
+ * Handles nesting: **bold *italic* text** works correctly.
+ * Replaces the old `fmt()` HTML-string approach for safety + nesting support.
+ */
+function InlineMarkdown({ text, className = "" }: { text: string; className?: string }) {
+  return <span className={className}>{renderMarkdownNodes(text)}</span>;
+}
+
+function renderMarkdownNodes(text: string): React.ReactNode[] {
+  const nodes: React.ReactNode[] = [];
+  const pattern = /(\*\*[\s\S]*?\*\*|\*[\s\S]*?\*|`[\s\S]*?`)/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  let key = 0;
+
+  while ((match = pattern.exec(text)) !== null) {
+    const start = match.index;
+    const full = match[1];
+
+    if (start > lastIndex) {
+      nodes.push(<span key={key++}>{text.slice(lastIndex, start)}</span>);
+    }
+
+    if (full.startsWith("**") && full.endsWith("**") && full.length >= 4) {
+      const inner = full.slice(2, -2);
+      nodes.push(
+        <strong key={key++} className="font-semibold text-amber-950">
+          {renderMarkdownNodes(inner)}
+        </strong>
+      );
+    } else if (full.startsWith("`") && full.endsWith("`") && full.length >= 2) {
+      nodes.push(
+        <code key={key++} className="text-amber-700 bg-amber-50 px-1 py-0.5 rounded text-[11px] font-mono">
+          {full.slice(1, -1)}
+        </code>
+      );
+    } else if (full.startsWith("*") && full.endsWith("*") && full.length >= 2 && !full.startsWith("**")) {
+      const inner = full.slice(1, -1);
+      nodes.push(
+        <em key={key++} className="italic text-amber-900/90">
+          {renderMarkdownNodes(inner)}
+        </em>
+      );
+    }
+
+    lastIndex = pattern.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    nodes.push(<span key={key++}>{text.slice(lastIndex)}</span>);
+  }
+  if (nodes.length === 0) {
+    nodes.push(<span key={key++}>{text}</span>);
+  }
+  return nodes;
+}
+
+/** HTML-string version for chaining with additional regex replacements (e.g. Sanskrit badges). */
+function renderMarkdownToHtml(text: string): string {
+  return text
+    .replace(/\*\*([\s\S]*?)\*\*/g, '<strong class="font-semibold text-amber-950">$1</strong>')
+    .replace(/`([^`]+)`/g, '<code class="text-amber-700 bg-amber-50 px-1 py-0.5 rounded text-[11px] font-mono">$1</code>')
+    .replace(/(?<!\*)\*(?!\*)([^*]+)\*(?!\*)/g, '<em class="italic text-amber-900/90">$1</em>');
+}
 
 // ─── Reusable Atoms ───────────────────────────────────────────
 type CalloutVariant = "insight" | "remember" | "pro-tip" | "key-takeaway" | "common-mistake" | "fun-fact";
@@ -100,7 +165,7 @@ export function HookSection({ hookText }: { hookText: string }) {
             <div className="w-7 h-7 rounded-full bg-amber-200/60 flex items-center justify-center shrink-0 mt-0.5">
               <span className="text-xs font-bold text-amber-800">{i + 1}</span>
             </div>
-            <p className="text-amber-900 leading-relaxed text-[15px] sm:text-base font-medium" dangerouslySetInnerHTML={{ __html: fmt(q) }} />
+            <p className="text-amber-900 leading-relaxed text-[15px] sm:text-base font-medium"><InlineMarkdown text={q} /></p>
           </motion.div>
         ))}
       </div>
@@ -145,7 +210,7 @@ export function HookSection({ hookText }: { hookText: string }) {
                   <div className="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center shrink-0 text-xs font-bold">
                     {String.fromCharCode(65 + i)}
                   </div>
-                  <p className="text-amber-900 leading-relaxed text-sm" dangerouslySetInnerHTML={{ __html: fmt(a) }} />
+                  <p className="text-amber-900 leading-relaxed text-sm"><InlineMarkdown text={a} /></p>
                 </motion.div>
               ))}
             </div>
@@ -425,7 +490,7 @@ export function NonCoverageSection({ items }: { items: string[] }) {
               <span className="w-5 h-5 rounded-full bg-amber-200 flex items-center justify-center shrink-0 mt-0.5">
                 <span className="text-amber-700 text-xs font-bold">✕</span>
               </span>
-              <p className="text-sm text-gray-700 leading-relaxed">{item}</p>
+              <p className="text-sm text-gray-700 leading-relaxed"><InlineMarkdown text={item} /></p>
             </div>
           ))}
         </div>
@@ -449,9 +514,35 @@ export function SlokasSection({ slokas }: { slokas: ParsedSloka[] }) {
             <p className="text-xs font-bold text-amber-800 uppercase tracking-wide">{s.authority}</p>
           </div>
           <div className="p-5 space-y-4">
-            <div><p className="text-[10px] font-bold text-gray-400 uppercase mb-1">IAST Transliteration</p><p className="text-gray-700 italic text-sm leading-relaxed whitespace-pre-line">{s.iast}</p></div>
-            <div className="bg-amber-50/50 rounded-xl p-3 border border-amber-100"><p className="text-[10px] font-bold text-amber-700 uppercase mb-1">English{s.source ? ` (${s.source})` : ""}</p><p className="text-sm text-gray-800 leading-relaxed">{s.english}</p></div>
-            {s.commentary && <div className="border-t border-gray-100 pt-3"><p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Commentary</p><p className="text-xs text-gray-600 leading-relaxed">{s.commentary}</p></div>}
+            {/* Devanagari — sacred Sanskrit text */}
+            {s.devanagari && (
+              <div className="bg-gradient-to-r from-amber-50/80 to-orange-50/60 rounded-xl p-4 border border-amber-200/60">
+                <p className="text-[10px] font-bold text-amber-800 uppercase mb-2 flex items-center gap-1.5">
+                  <span className="w-4 h-4 rounded bg-amber-200 flex items-center justify-center text-[8px]">सं</span>
+                  Devanagari (देवनागरी)
+                </p>
+                <p className="text-amber-900 text-base leading-relaxed whitespace-pre-line font-medium" style={{ fontFamily: '"Noto Sans Devanagari", "Kohinoor Devanagari", "Sanskrit 2003", serif' }}>
+                  {s.devanagari}
+                </p>
+              </div>
+            )}
+            {/* IAST Transliteration */}
+            <div>
+              <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">IAST Transliteration</p>
+              <p className="text-gray-700 italic text-sm leading-relaxed whitespace-pre-line">{s.iast}</p>
+            </div>
+            {/* English Translation */}
+            <div className="bg-amber-50/50 rounded-xl p-3 border border-amber-100">
+              <p className="text-[10px] font-bold text-amber-700 uppercase mb-1">English{s.source ? ` (${s.source})` : ""}</p>
+              <p className="text-sm text-gray-800 leading-relaxed"><InlineMarkdown text={s.english} /></p>
+            </div>
+            {/* Commentary */}
+            {s.commentary && (
+              <div className="border-t border-gray-100 pt-3">
+                <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Commentary</p>
+                <p className="text-xs text-gray-600 leading-relaxed"><InlineMarkdown text={s.commentary} /></p>
+              </div>
+            )}
           </div>
         </div>
       ))}
@@ -475,8 +566,12 @@ export function WorkedExamplesSection({ examples }: { examples: ParsedWorkedExam
               <span className="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-bold shrink-0">{i+1}</span>
               <h3 className="text-sm font-bold text-gray-800">{ex.title}</h3>
             </div>
-            <p className="text-xs text-gray-500 mb-2 italic ml-[34px]">{ex.scenario}</p>
-            <p className="text-sm text-gray-700 leading-relaxed ml-[34px]">{ex.analysis}</p>
+            {ex.scenario && (
+              <p className="text-xs text-gray-500 mb-2 italic ml-[34px]"><InlineMarkdown text={ex.scenario} /></p>
+            )}
+            {ex.analysis && ex.analysis !== ex.scenario && (
+              <p className="text-sm text-gray-700 leading-relaxed ml-[34px]"><InlineMarkdown text={ex.analysis} /></p>
+            )}
           </div>
         ))}
       </div>
@@ -499,15 +594,15 @@ export function MistakesSection({ mistakes }: { mistakes: ParsedMistake[] }) {
           <button onClick={() => setOpenIdx(openIdx === i ? null : i)} className="w-full flex items-center justify-between p-4 text-left hover:bg-red-50/30 transition-colors">
             <span className="text-sm font-semibold text-gray-800 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
-              {m.title}
+              <InlineMarkdown text={m.title} />
             </span>
             <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${openIdx === i ? "rotate-180" : ""}`} />
           </button>
           {openIdx === i && (
             <div className="px-4 pb-4 border-t border-red-50 pt-3 space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-300">
-              <div className="p-2.5 rounded-lg bg-red-50/50 border border-red-100"><p className="text-[10px] font-bold text-red-600 uppercase mb-0.5">What happens</p><p className="text-xs text-gray-700 leading-relaxed">{m.what}</p></div>
-              <div className="p-2.5 rounded-lg bg-amber-50/50 border border-amber-100"><p className="text-[10px] font-bold text-amber-600 uppercase mb-0.5">Why it happens</p><p className="text-xs text-gray-700 leading-relaxed">{m.why}</p></div>
-              <div className="p-2.5 rounded-lg bg-emerald-50 border border-emerald-100"><p className="text-[10px] font-bold text-emerald-700 uppercase mb-0.5">How to avoid</p><p className="text-xs text-gray-700 leading-relaxed">{m.fix}</p></div>
+              <div className="p-2.5 rounded-lg bg-red-50/50 border border-red-100"><p className="text-[10px] font-bold text-red-600 uppercase mb-0.5">What happens</p><p className="text-xs text-gray-700 leading-relaxed"><InlineMarkdown text={m.what} /></p></div>
+              <div className="p-2.5 rounded-lg bg-amber-50/50 border border-amber-100"><p className="text-[10px] font-bold text-amber-600 uppercase mb-0.5">Why it happens</p><p className="text-xs text-gray-700 leading-relaxed"><InlineMarkdown text={m.why} /></p></div>
+              <div className="p-2.5 rounded-lg bg-emerald-50 border border-emerald-100"><p className="text-[10px] font-bold text-emerald-700 uppercase mb-0.5">How to avoid</p><p className="text-xs text-gray-700 leading-relaxed"><InlineMarkdown text={m.fix} /></p></div>
             </div>
           )}
         </div>
@@ -540,7 +635,7 @@ function MemoryCard({ item, index }: { item: string; index: number }) {
   const Icon = meta.icon;
 
   // Extract Sanskrit terms as inline badges
-  const formatted = fmt(item)
+  const formatted = renderMarkdownToHtml(item)
     .replace(/(Śikṣā|Kalpa|Vyākaraṇa|Nirukta|Chandas|Jyotiṣa|Vedāṅga|Vedānta|Pāṇinīya|Lagadha)/g, '<span class="inline-flex items-center px-1 py-0.5 rounded bg-white/80 border text-[11px] font-semibold mx-0.5">$1</span>')
     .replace(/(cakṣuḥ|caksuh)/g, '<span class="inline-flex items-center px-1 py-0.5 rounded bg-amber-50 border border-amber-200 text-amber-800 text-[11px] font-semibold mx-0.5">$1</span>');
 

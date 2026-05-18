@@ -116,35 +116,12 @@ const BODY_PART_META: Record<string, { color: string; icon: string }> = {
   "Eye": { color: "#E65100", icon: "👁️" },
 };
 
-// ─── Diacritics → ASCII mapping ──────────────────────────────────
-const DIACRITICS_MAP: Record<string, string> = {
-  "ṣ": "s", "Ṣ": "S", "ā": "a", "Ā": "A", "ṅ": "n", "Ṅ": "N",
-  "ī": "i", "Ī": "I", "ū": "u", "Ū": "U", "ś": "s", "Ś": "S",
-  "ṇ": "n", "Ṇ": "N", "ṛ": "r", "Ṛ": "R", "ṭ": "t", "Ṭ": "T",
-  "ḍ": "d", "Ḍ": "D", "ḥ": "h", "Ḥ": "H", "ṃ": "m", "Ṃ": "M",
-  "ñ": "n", "Ñ": "N", "ḷ": "l", "Ḷ": "L",
-};
-const DIACRITICS_RE = new RegExp(`[${Object.keys(DIACRITICS_MAP).join("")}]`, "g");
-const DEVANAGARI_RE = /[\u0900-\u097F]+/g;
-
-function stripDiacritics(text: string): string {
-  return text
-    .replace(DEVANAGARI_RE, "")
-    .replace(DIACRITICS_RE, (ch) => DIACRITICS_MAP[ch] || ch)
-    .replace(/\s{2,}/g, " ")
-    .trim();
-}
-
-function sanitizeStrings<T>(obj: T): T {
-  if (typeof obj === "string") return stripDiacritics(obj) as unknown as T;
-  if (Array.isArray(obj)) return obj.map(sanitizeStrings) as unknown as T;
-  if (obj && typeof obj === "object") {
-    const out: Record<string, unknown> = {};
-    for (const [k, v] of Object.entries(obj)) out[k] = sanitizeStrings(v);
-    return out as T;
-  }
-  return obj;
-}
+/**
+ * NOTE: Previously this file had stripDiacritics() and sanitizeStrings() which
+ * destroyed Sanskrit diacritics (ṣ→s, ā→a, etc.) and removed all Devanagari.
+ * For a Vedic astrology platform, preserving exact Sanskrit spelling is critical.
+ * These functions have been removed. All text is preserved as-is from the API.
+ */
 
 // ─── Helpers ─────────────────────────────────────────────────────
 
@@ -276,7 +253,13 @@ function parseVedangaTable(content: string): ParsedVedanga[] {
     const bodyPartRaw = cells[3].replace(/\*\*/g, "").trim();
     const func = cells[4].replace(/\*\*/g, "").replace(/\*/g, "").trim();
 
-    const meta = VEDANGA_META[stripDiacritics(name)] || { color: "#666", icon: "•" };
+    // Helper to strip diacritics for lookup only (preserves original in output)
+    const lookupName = name.replace(/[ṣṢāĀṅṄīĪūŪśŚṇṆṛṚṭṬḍḌḥḤṃṂñÑḷḶ]/g, (ch) => {
+      const map: Record<string, string> = { "ṣ": "s", "Ṣ": "S", "ā": "a", "Ā": "A", "ṅ": "n", "Ṅ": "N", "ī": "i", "Ī": "I", "ū": "u", "Ū": "U", "ś": "s", "Ś": "S", "ṇ": "n", "Ṇ": "N", "ṛ": "r", "Ṛ": "R", "ṭ": "t", "Ṭ": "T", "ḍ": "d", "Ḍ": "D", "ḥ": "h", "Ḥ": "H", "ṃ": "m", "Ṃ": "M", "ñ": "n", "Ñ": "N", "ḷ": "l", "Ḷ": "L" };
+      return map[ch] || ch;
+    }).replace(/[\u0900-\u097F]+/g, "").replace(/\s{2,}/g, " ").trim();
+
+    const meta = VEDANGA_META[lookupName] || { color: "#666", icon: "•" };
     const bodyPart = bodyPartRaw;
 
     result.push({
@@ -287,7 +270,7 @@ function parseVedangaTable(content: string): ParsedVedanga[] {
       bodyIcon: meta.icon,
       function: func,
       color: meta.color,
-      highlight: stripDiacritics(name) === "Jyotisa",
+      highlight: lookupName === "Jyotisa",
     });
   }
 
@@ -371,7 +354,7 @@ function parseSlokas(content: string): ParsedSloka[] {
     const authorityMatch = block.match(/\*\*Classical authority\s*[—-]\s*(.+?)\*\*/i);
     const devanagariMatch = block.match(/\*\*देवनागरी[^*]*\*\*\n+([\s\S]+?)\n\*\*IAST\*\*/);
     const iastMatch = block.match(/\*\*IAST\*\*\n+([\s\S]+?)\n\*\*English/);
-    const englishMatch = block.match(/\*\*English\s*\(([^)]+)\)\*\*\n+>\s*"?([^"]+)"?/);
+    const englishMatch = block.match(/\*\*English\s*\(([^)]+)\)\*\*\n+([\s\S]+?)(?=\n\*\*Brief commentary\*\*|$)/);
     const commentaryMatch = block.match(/\*\*Brief commentary\*\*\n+([\s\S]+)/);
 
     const authority = authorityMatch ? authorityMatch[1].trim() : `Sloka ${i + 1}`;
@@ -418,7 +401,7 @@ function parseWorkedExamples(content: string): ParsedWorkedExample[] {
     // Split into scenario (first sentence/paragraph) and analysis (rest)
     const lines = sectionContent.split("\n").filter((l) => l.trim());
     const scenario = lines[0]?.trim() || "";
-    const analysis = lines.slice(1).join(" ").trim() || scenario;
+    const analysis = lines.slice(1).join(" ").trim();
 
     examples.push({
       title: positions[i].title,
@@ -517,7 +500,9 @@ export function parseLessonBody(
   apiPrimarySources: Array<{ ref: string; note?: string }> = [],
   apiModernSources: Array<{ ref: string; note?: string }> = []
 ): ParsedLessonBody {
-  const sections = splitIntoSections(markdown);
+  // Normalize Windows CRLF → LF so all downstream regex patterns work consistently
+  const normalized = markdown.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  const sections = splitIntoSections(normalized);
 
   // Find sections by number
   const s1 = sections.find((s) => s.num === 1);
@@ -556,7 +541,7 @@ export function parseLessonBody(
     sectionTitles[s.num] = s.title;
   }
 
-  return sanitizeStrings({
+  return {
     sectionTitles,
     subsectionTitles,
     hookText: s1 ? parseHook(s1.content) : "",
@@ -577,5 +562,5 @@ export function parseLessonBody(
           apiModernSources.map((s) => ({ ref: s.ref, note: s.note || "" }))
         )
       : { primary: [], modern: [], further: [], crossRefs: [] },
-  });
+  };
 }
