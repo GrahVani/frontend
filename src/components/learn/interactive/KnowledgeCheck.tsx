@@ -191,7 +191,7 @@ export default function KnowledgeCheck({
                       >
                         {isCorrect ? "Correct!" : "Not quite — here's why:"}
                       </p>
-                      <p className="text-sm text-gray-700 leading-relaxed">
+                      <p className="text-sm font-medium text-black leading-relaxed">
                         {question.explanation}
                       </p>
                     </div>

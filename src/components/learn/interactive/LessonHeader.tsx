@@ -10,8 +10,9 @@ import {
   BrainCircuit,
   BookOpen,
   GraduationCap,
-  Target,
+  Sparkles,
 } from "lucide-react";
+import { learningTokens } from "@/design-tokens";
 
 /* ─── Types ─── */
 export interface LessonHeaderProps {
@@ -39,59 +40,30 @@ function getWordCount(text: string) {
 function getReadingMinutes(text: string, wpm = 200) {
   return Math.max(1, Math.ceil(getWordCount(text) / wpm));
 }
-
-/* ─── Circular Progress Ring ─── */
-function ProgressRing({
-  progress,
-  size = 48,
-  stroke = 4,
-}: {
-  progress: number;
-  size?: number;
-  stroke?: number;
-}) {
-  const radius = (size - stroke) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference * (1 - progress / 100);
-  const isComplete = progress >= 100;
-
-  return (
-    <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
-      <svg width={size} height={size} className="-rotate-90">
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          className="stroke-gray-200"
-          strokeWidth={stroke}
-        />
-        <motion.circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          className={isComplete ? "stroke-emerald-500" : "stroke-amber-500"}
-          strokeWidth={stroke}
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          initial={{ strokeDashoffset: circumference }}
-          animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        {isComplete ? (
-          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-        ) : (
-          <>
-            <span className="text-[11px] font-extrabold text-gray-700 leading-none">{progress}</span>
-            <span className="text-[7px] font-bold text-gray-400 leading-none">%</span>
-          </>
-        )}
-      </div>
-    </div>
-  );
+export function sanitizeTitle(text: string | undefined): string {
+  if (!text) return "";
+  return text
+    .replace(/ṣ/g, "sh")
+    .replace(/Ṣ/g, "Sh")
+    .replace(/ś/g, "sh")
+    .replace(/Ś/g, "Sh")
+    .replace(/ṅ/g, "n")
+    .replace(/ā/g, "a")
+    .replace(/Ā/g, "A")
+    .replace(/ī/g, "i")
+    .replace(/Ī/g, "I")
+    .replace(/ū/g, "u")
+    .replace(/Ū/g, "U")
+    .replace(/ṛ/g, "ri")
+    .replace(/Ṛ/g, "Ri")
+    .replace(/ṇ/g, "n")
+    .replace(/ñ/g, "ny")
+    .replace(/ṭ/g, "t")
+    .replace(/Ṭ/g, "T")
+    .replace(/ḍ/g, "d")
+    .replace(/Ḍ/g, "D")
+    .replace(/ṁ/g, "m")
+    .replace(/ḥ/g, "h");
 }
 
 /* ─── Component ─── */
@@ -112,6 +84,8 @@ export default function LessonHeader({
   progress = 0,
 }: LessonHeaderProps) {
   const minutes = useMemo(() => getReadingMinutes(allText), [allText]);
+  const cleanTitle = useMemo(() => sanitizeTitle(title), [title]);
+  const cleanChapterTitle = useMemo(() => sanitizeTitle(chapterTitle), [chapterTitle]);
 
   return (
     <motion.div
@@ -119,79 +93,96 @@ export default function LessonHeader({
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="py-2"
+      className="py-2 px-1"
     >
-      <div className="flex items-center gap-3">
-        {/* Left content */}
-        <div className="flex-1 min-w-0">
-          {/* Breadcrumbs + meta */}
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1">
-            <div className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 uppercase tracking-wide">
-              <GraduationCap className="w-3 h-3" />
-              Lesson {lessonNumber}
-            </div>
-            <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-600">
-              <BookOpen className="w-3 h-3" />
-              Module {String(moduleNumber).padStart(2, "0")}
-              {chapterNumber > 0 && (
-                <>
-                  <span className="text-amber-300">·</span>
-                  Ch.{chapterNumber}
-                </>
-              )}
-              {chapterTitle && <span className="text-amber-400">— {chapterTitle}</span>}
-            </div>
-
-            <div className="hidden sm:flex items-center gap-2 text-[10px] text-gray-400">
-              <span className="flex items-center gap-0.5"><Clock className="w-3 h-3" /> {minutes} min</span>
-              <span>·</span>
-              <span className="flex items-center gap-0.5"><Lightbulb className="w-3 h-3" /> {conceptCount}</span>
-              <span>·</span>
-              <span className="flex items-center gap-0.5"><BrainCircuit className="w-3 h-3" /> {quizCount}</span>
-            </div>
-
-            <div className="flex-1" />
-
-            {isCompleted && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-200/60">
-                <CheckCircle2 className="w-3 h-3" /> Completed
+      {/* Top Breadcrumb and Status Row */}
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-2.5 pb-2.5 border-b border-[#E7D6B8]/30">
+        {/* Path Breadcrumbs */}
+        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-sm font-semibold text-[#4A3020]">
+          <span className="flex items-center gap-1 font-bold">
+            Module {moduleNumber}
+          </span>
+          <span className="text-[#E7D6B8]">/</span>
+          {chapterNumber > 0 && (
+            <>
+              <span className="font-semibold text-[#5C3D26]">
+                Chapter {chapterNumber}
               </span>
-            )}
-            {isLocked && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full border border-gray-200/60">
-                <Lock className="w-3 h-3" /> Locked
+              <span className="text-[#E7D6B8]">/</span>
+            </>
+          )}
+          <span className="flex items-center gap-1 bg-[#FFE0B2]/60 text-[#795548] px-3 py-0.5 rounded-md font-bold tracking-wide text-xs">
+            Lesson {lessonNumber}
+          </span>
+          {chapterTitle && (
+            <>
+              <span className="text-[#E7D6B8] hidden sm:inline">|</span>
+              <span className="text-[#5C3D26] font-semibold hidden sm:inline max-w-[550px] truncate" title={cleanChapterTitle}>
+                {cleanChapterTitle}
               </span>
-            )}
-          </div>
-
-          {/* Title */}
-          <h1 className="text-lg sm:text-xl lg:text-2xl font-extrabold text-amber-950 leading-snug tracking-tight">
-            {title}
-          </h1>
-          {/* Devanagari Title */}
-          {titleDevanagari && (
-            <p className="text-base sm:text-lg text-amber-700 font-medium mt-0.5 leading-tight">
-              {titleDevanagari}
-            </p>
+            </>
           )}
         </div>
 
-
+        {/* Completion Badges */}
+        <div className="flex items-center gap-2">
+          {isCompleted && (
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1B5E20] bg-[#E8F5E9] px-3 py-1 rounded-full border border-[#C8E6C9]">
+              <CheckCircle2 className="w-4 h-4" /> Completed
+            </span>
+          )}
+          {isLocked && (
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5C3D26] bg-[#FFF3E0] px-3 py-1 rounded-full border border-[#FFE0B2]">
+              <Lock className="w-4 h-4" /> Locked
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Previous attempt — compact row */}
-      {bestScore > 0 && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="mt-1.5 flex items-center gap-2 text-[10px] text-gray-500"
-        >
-          <span className="font-medium">Best: {bestScore}%</span>
-          <span className="text-gray-300">·</span>
-          <span>{attemptsCount} attempt{attemptsCount !== 1 ? "s" : ""}</span>
-        </motion.div>
-      )}
+      {/* Main Title Section */}
+      <div className="space-y-1">
+        <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1A0A05] leading-tight tracking-tight">
+          {cleanTitle}
+        </h1>
+        {titleDevanagari && (
+          <p className="text-base sm:text-lg lg:text-xl text-[#8B5A2B] font-semibold mt-0.5 tracking-wide font-devanagari">
+            {titleDevanagari}
+          </p>
+        )}
+      </div>
+
+      {/* Bottom Metadata & Stats Row */}
+      <div className="flex flex-wrap items-center justify-between gap-3 mt-3 pt-2.5 border-t border-[#E7D6B8]/30">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Minutes Badge */}
+          <span className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-bold text-[#4A3020] bg-[#FFF3E0]/60 px-3 py-1 rounded-md border border-[#FFE0B2]/40">
+            <Clock className="w-4 h-4 text-[#E65100]" /> {minutes} min read
+          </span>
+          {/* Concepts Badge */}
+          <span className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-bold text-[#4A3020] bg-[#FFF3E0]/60 px-3 py-1 rounded-md border border-[#FFE0B2]/40">
+            <Lightbulb className="w-4 h-4 text-[#E65100]" /> {conceptCount} Concepts
+          </span>
+          {/* Quiz Badge */}
+          <span className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-bold text-[#4A3020] bg-[#FFF3E0]/60 px-3 py-1 rounded-md border border-[#FFE0B2]/40">
+            <BrainCircuit className="w-4 h-4 text-[#E65100]" /> {quizCount} Quiz Qs
+          </span>
+        </div>
+
+        {/* Previous attempt — compact row */}
+        {bestScore > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="flex items-center gap-1.5 text-xs sm:text-[13px] text-[#5C3D26] font-bold bg-[#FEFAEA] px-3 py-1 rounded-md border border-[#E7D6B8]/50"
+          >
+            <Sparkles className="w-4 h-4 text-[#C9A24D]" />
+            <span>Best Score: <strong className="text-[#2D2419]">{bestScore}%</strong></span>
+            <span className="text-[#E7D6B8]">·</span>
+            <span className="font-semibold">{attemptsCount} attempt{attemptsCount !== 1 ? "s" : ""}</span>
+          </motion.div>
+        )}
+      </div>
     </motion.div>
   );
 }

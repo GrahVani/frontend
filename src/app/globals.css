@@ -171,6 +171,7 @@
   /* --- Typography Families --- */
   --font-family-serif: 'Spectral', 'Crimson Pro', 'Lora', Georgia, serif;
   --font-family-sans: 'Inter', 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-devanagari: var(--font-devanagari), 'Tiro Devanagari Hindi', 'Nirmala UI', serif;
 
   /* --- Font Size Scale --- */
   --font-size-xl: 1.25rem;
@@ -332,6 +333,7 @@
   /* --- Font Families --- */
   --font-serif: var(--font-family-serif);
   --font-sans: var(--font-family-sans);
+  --font-devanagari: var(--font-family-devanagari);
 
   /* --- Font Sizes --- */
   --font-size-xl: var(--font-size-xl);
@@ -825,7 +827,8 @@ body::before {
 
 .learn-card {
   background-color: white;
-  border: 1px solid rgba(217, 119, 6, 0.2); /* amber-600/20 */
+  border: 1px solid rgba(217, 119, 6, 0.2);
+  /* amber-600/20 */
   border-radius: 1.5rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 }
@@ -896,7 +899,8 @@ body::before {
 /* Sits between GlobalHeader and SubHeader      */
 /* ============================================ */
 .bg-client-bar {
-  background: linear-gradient(180deg, #78350f 0%, #78350f 100%); /* Same as top bar bottom */
+  background: linear-gradient(180deg, #78350f 0%, #78350f 100%);
+  /* Same as top bar bottom */
   backdrop-filter: blur(20px) saturate(1.5);
   -webkit-backdrop-filter: blur(20px) saturate(1.5);
   border-bottom: 1px solid rgba(251, 191, 36, 0.1);
@@ -979,6 +983,30 @@ body::before {
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* Custom scrollbar — matches warm theme */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 162, 77, 0.4) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(201, 162, 77, 0.4);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 162, 77, 0.6);
 }
 
 /* Hide scrollbar in calendar dropdowns (year/month select) */
@@ -1314,8 +1342,13 @@ select {
 /* ============================================ */
 
 @keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .animate-spin-slow {
@@ -1389,6 +1422,7 @@ select {
   flex: 1;
   padding: 8px;
 }
+
 /* ──────────────────────────── Lesson Markdown Styles ──────────────────────────── */
 
 .lesson-markdown {

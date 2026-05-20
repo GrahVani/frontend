@@ -57,8 +57,8 @@ function SingleFlashcard({ card }: { card: FlashcardData }) {
               {card.category}
             </span>
           )}
-          <p className="text-base font-bold text-gray-900 leading-snug">{card.front}</p>
-          <p className="text-xs text-gray-400 mt-3 flex items-center gap-1.5">
+          <p className="text-[15px] sm:text-base font-bold text-black leading-snug">{card.front}</p>
+          <p className="text-[11px] font-medium text-black mt-3 flex items-center gap-1.5">
             <RotateCcw className="w-3 h-3" />
             Tap to reveal
           </p>
@@ -83,17 +83,17 @@ function SingleFlashcard({ card }: { card: FlashcardData }) {
                   <span className="w-6 h-6 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-[11px] font-bold shrink-0">
                     {i + 1}
                   </span>
-                  <span className="text-xs font-semibold text-gray-800 leading-snug">{item}</span>
+                  <span className="text-xs font-bold text-black leading-snug">{item}</span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm font-semibold text-gray-900 leading-relaxed text-center px-1">
+            <p className="text-sm font-medium text-black leading-relaxed text-center px-1">
               {card.back}
             </p>
           )}
 
-          <p className="text-[10px] text-gray-400 mt-2 flex items-center gap-1 shrink-0">
+          <p className="text-[11px] font-medium text-black mt-2 flex items-center gap-1 shrink-0">
             <RotateCcw className="w-3 h-3" />
             Tap to flip back
           </p>

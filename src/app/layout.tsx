@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, Spectral } from "next/font/google";
+import { Playfair_Display, Inter, Spectral, Tiro_Devanagari_Hindi } from "next/font/google";
 import "./globals.css";
 import GlobalHeader from "@/components/layout/GlobalHeader";
 import MonitoringInit from "@/components/MonitoringInit";
@@ -23,6 +23,13 @@ const spectral = Spectral({
   variable: "--font-serif",
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
+  display: 'swap',
+});
+
+const tiroDevanagari = Tiro_Devanagari_Hindi({
+  variable: "--font-devanagari",
+  weight: "400",
+  subsets: ["devanagari", "latin"],
   display: 'swap',
 });
 
@@ -80,7 +87,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${spectral.variable} ${playfair.variable} ${inter.variable} antialiased flex flex-col min-h-screen`}>
+      <body className={`${spectral.variable} ${playfair.variable} ${inter.variable} ${tiroDevanagari.variable} antialiased flex flex-col min-h-screen`}>
         <QueryProvider>
           <AuthProvider>
             <VedicClientProvider>

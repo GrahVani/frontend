@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 
-// ─── Vedāṅga Data ──────────────────────────────────────────────
+// ─── Vedanga Data ──────────────────────────────────────────────
 interface VedangaData {
   id: string;
   sanskrit: string;
@@ -21,17 +21,17 @@ interface VedangaData {
 const VEDANGAS: VedangaData[] = [
   {
     id: "shiksha",
-    sanskrit: "Śikṣā",
+    sanskrit: "Shiksha",
     english: "Phonetics",
     symbol: "👃",
-    bodyPart: "Nose (Nāsikā)",
+    bodyPart: "Nose (Nasika)",
     color: "#C62828",
     bgColor: "#FFEBEE",
     angle: 0,
     function: "Correct pronunciation of Vedic mantras",
     description:
-      "Śikṣā is the science of phonetics and pronunciation — teaching how each syllable of the Veda must be articulated. Without correct pronunciation, the meaning and spiritual power of mantras is lost. It is compared to the nose of the Vedic Puruṣa because breathing is essential for correct speech.",
-    keyText: "Pāṇinīya Śikṣā, Prātiśākhyas",
+      "Shiksha is the science of phonetics and pronunciation — teaching how each syllable of the Veda must be articulated. Without correct pronunciation, the meaning and spiritual power of mantras is lost. It is compared to the nose of the Vedic Purusha because breathing is essential for correct speech.",
+    keyText: "Paniniya Shiksha, Pratishakhyas",
   },
   {
     id: "kalpa",
@@ -44,12 +44,12 @@ const VEDANGAS: VedangaData[] = [
     angle: 60,
     function: "Systematic procedure for Vedic rituals",
     description:
-      "Kalpa is the manual of ritual — prescribing the exact procedure, sequence, and rules for performing yajñas (sacrifices), saṁskāras (rites of passage), and daily observances. It is the hands of the Veda because rituals are performed with hands.",
-    keyText: "Śrauta Sūtras, Gṛhya Sūtras, Dharma Sūtras",
+      "Kalpa is the manual of ritual — prescribing the exact procedure, sequence, and rules for performing yajnas (sacrifices), samskaras (rites of passage), and daily observances. It is the hands of the Veda because rituals are performed with hands.",
+    keyText: "Shrauta Sutras, Grihya Sutras, Dharma Sutras",
   },
   {
     id: "vyakarana",
-    sanskrit: "Vyākaraṇa",
+    sanskrit: "Vyakarana",
     english: "Grammar",
     symbol: "📖",
     bodyPart: "Mouth (Mukha)",
@@ -58,50 +58,50 @@ const VEDANGAS: VedangaData[] = [
     angle: 120,
     function: "Correct grammatical structure of Vedic language",
     description:
-      "Vyākaraṇa is the science of grammar — the analytical backbone of the Sanskrit language. Pāṇini's Aṣṭādhyāyī is its masterwork. It is the mouth of the Veda because all expression flows through correct grammar.",
-    keyText: "Aṣṭādhyāyī (Pāṇini), Mahābhāṣya (Patañjali)",
+      "Vyakarana is the science of grammar — the analytical backbone of the Sanskrit language. Panini's Ashtadhyayi is its masterwork. It is the mouth of the Veda because all expression flows through correct grammar.",
+    keyText: "Ashtadhyayi (Panini), Mahabhashya (Patanjali)",
   },
   {
     id: "nirukta",
     sanskrit: "Nirukta",
     english: "Etymology",
     symbol: "👂",
-    bodyPart: "Ears (Śrotra)",
+    bodyPart: "Ears (Shrotra)",
     color: "#6A1B9A",
     bgColor: "#F3E5F5",
     angle: 180,
     function: "Meaning and derivation of Vedic words",
     description:
-      "Nirukta is the science of etymology — decoding the deep meaning of Vedic words by tracing them to their root dhātus (verb roots). Yāska's Nirukta is the foundational text. It is the ears of the Veda because understanding comes through deep listening.",
-    keyText: "Nirukta (Yāska)",
+      "Nirukta is the science of etymology — decoding the deep meaning of Vedic words by tracing them to their root dhatus (verb roots). Yaska's Nirukta is the foundational text. It is the ears of the Veda because understanding comes through deep listening.",
+    keyText: "Nirukta (Yaska)",
   },
   {
     id: "chandas",
     sanskrit: "Chandas",
     english: "Meter / Prosody",
     symbol: "🦶",
-    bodyPart: "Feet (Pādau)",
+    bodyPart: "Feet (Padau)",
     color: "#2E7D32",
     bgColor: "#E8F5E9",
     angle: 240,
     function: "Rhythmic structure of Vedic hymns",
     description:
-      "Chandas is the science of poetic meter — the rhythmic skeleton of every Vedic verse. Meters like Gāyatrī (24 syllables), Triṣṭubh (44 syllables), and Jagatī (48 syllables) define the structure. It is the feet of the Veda because meter gives movement and cadence to recitation.",
-    keyText: "Chandaḥ-sūtra (Piṅgala)",
+      "Chandas is the science of poetic meter — the rhythmic skeleton of every Vedic verse. Meters like Gayatri (24 syllables), Trishtubh (44 syllables), and Jagati (48 syllables) define the structure. It is the feet of the Veda because meter gives movement and cadence to recitation.",
+    keyText: "Chandah-sutra (Pinggala)",
   },
   {
     id: "jyotisha",
-    sanskrit: "Jyotiṣa",
+    sanskrit: "Jyotisha",
     english: "Astronomy / Astrology",
     symbol: "👁️",
-    bodyPart: "Eyes (Cakṣuḥ)",
+    bodyPart: "Eyes (Cakshuh)",
     color: "#E65100",
     bgColor: "#FFF8E1",
     angle: 300,
     function: "Determining correct time for rituals",
     description:
-      "Jyotiṣa is the 'Eye of the Veda' (vedasya cakṣuḥ) — the science of time-reckoning, astronomy, and astrology. Its primary Vedic function was to calculate the correct muhūrta (auspicious moment) for performing yajñas. Without Jyotiṣa, you cannot know WHEN to perform a ritual. It sees what other limbs cannot — the dimension of time.",
-    keyText: "Vedāṅga Jyotiṣa (Lagadha), Sūrya Siddhānta",
+      "Jyotisha is the 'Eye of the Veda' (vedasya cakshuh) — the science of time-reckoning, astronomy, and astrology. Its primary Vedic function was to calculate the correct muhurta (auspicious moment) for performing yajnas. Without Jyotisha, you cannot know WHEN to perform a ritual. It sees what other limbs cannot — the dimension of time.",
+    keyText: "Vedanga Jyotisha (Lagadha), Surya Siddhanta",
     isHighlighted: true,
   },
 ];
@@ -138,7 +138,7 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
         <h3 className="text-xl font-extrabold text-amber-900 tracking-tight">
           The Six Vedangas — Limbs of the Veda
         </h3>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-black">
           Click any limb to explore its role, body metaphor &amp; key texts
         </p>
       </div>
@@ -147,12 +147,12 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
       <div className="flex items-center justify-center gap-3 mb-3 text-[10px] font-bold uppercase tracking-wider flex-wrap">
         <span className="flex items-center gap-1">
           <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-          <span className="text-gray-800">
+          <span className="text-black">
             Jyotisa = Eye (highlighted)
           </span>
         </span>
         <span className="text-gray-300">·</span>
-        <span className="text-gray-700">
+        <span className="text-black">
           Each Vedanga = A body part of the Vedic Purusha
         </span>
       </div>
@@ -220,7 +220,7 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
               strokeDasharray="6 4"
             />
 
-            {/* Connection lines from center to each Vedāṅga */}
+            {/* Connection lines from center to each Vedanga */}
             {VEDANGAS.map((v) => {
               const pos = getPosition(v.angle);
               return (
@@ -262,19 +262,26 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
               fontWeight="900"
               fill="#333"
               letterSpacing="2"
+              style={{ fontFamily: "Inter, sans-serif" }}
             >
               VEDA
             </text>
 
-            {/* Vedāṅga Nodes */}
+            {/* Vedanga Nodes */}
             {VEDANGAS.map((v) => {
               const pos = getPosition(v.angle);
               const isSelected = selected?.id === v.id;
               const angleRad = (v.angle - 90) * (Math.PI / 180);
               const isTopHalf = Math.sin(angleRad) < 0;
-              const labelY = isTopHalf
-                ? pos.y - nodeRadius - 8 * scale
-                : pos.y + nodeRadius + 14 * scale;
+              const sanskritY = isTopHalf
+                ? pos.y - nodeRadius - 44 * scale
+                : pos.y + nodeRadius + 18 * scale;
+              const englishY = isTopHalf
+                ? pos.y - nodeRadius - 25 * scale
+                : pos.y + nodeRadius + 37 * scale;
+              const bodyPartY = isTopHalf
+                ? pos.y - nodeRadius - 6 * scale
+                : pos.y + nodeRadius + 56 * scale;
 
               return (
                 <g
@@ -291,7 +298,7 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
                     }
                   }}
                 >
-                  {/* Jyotiṣa special outer glow */}
+                  {/* Jyotisha special outer glow */}
                   {v.isHighlighted && (
                     <circle
                       cx={pos.x}
@@ -372,35 +379,34 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
                   {/* Labels */}
                   <text
                     x={pos.x}
-                    y={labelY}
+                    y={sanskritY}
                     textAnchor="middle"
-                    fontSize={14 * scale}
+                    fontSize={16 * scale}
                     fontWeight="800"
                     fill="#1a1a1a"
+                    style={{ fontFamily: "Inter, sans-serif" }}
                   >
                     {v.sanskrit}
                   </text>
                   <text
                     x={pos.x}
-                    y={
-                      labelY + (isTopHalf ? -11 * scale : 11 * scale)
-                    }
+                    y={englishY}
                     textAnchor="middle"
-                    fontSize={11 * scale}
-                    fill="#333"
+                    fontSize={13 * scale}
+                    fill="#000000"
+                    style={{ fontFamily: "Inter, sans-serif" }}
                   >
                     {v.english}
                   </text>
                   <text
                     x={pos.x}
-                    y={
-                      labelY + (isTopHalf ? -22 * scale : 22 * scale)
-                    }
+                    y={bodyPartY}
                     textAnchor="middle"
-                    fontSize={10 * scale}
+                    fontSize={12 * scale}
                     fontWeight="600"
                     fontStyle="italic"
-                    fill="#444"
+                    fill="#000000"
+                    style={{ fontFamily: "Inter, sans-serif" }}
                   >
                     {v.bodyPart}
                   </text>
@@ -439,7 +445,7 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <h3
-                      className="text-lg font-bold text-gray-900"
+                      className="text-lg font-bold text-black"
                     >
                       {selected.sanskrit}
                     </h3>
@@ -455,7 +461,7 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
                     </span>
                   </div>
                   <p
-                    className="text-sm font-medium mt-0.5 text-gray-700"
+                    className="text-sm font-medium mt-0.5 text-black"
                   >
                     {selected.bodyPart}
                   </p>
@@ -472,18 +478,18 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
               {/* Function */}
               <div className="px-4 py-3 bg-white/40 border-y border-gray-100/50">
                 <div
-                  className="text-xs font-bold uppercase tracking-wider mb-1 text-gray-600"
+                  className="text-xs font-bold uppercase tracking-wider mb-1 text-black"
                 >
                   Primary Function
                 </div>
-                <p className="text-sm font-semibold text-gray-800">
+                <p className="text-sm font-semibold text-black">
                   {selected.function}
                 </p>
               </div>
 
               {/* Description */}
               <div className="px-4 py-3">
-                <p className="text-sm text-gray-700 leading-relaxed">
+                <p className="text-sm text-black font-medium leading-relaxed">
                   {selected.description}
                 </p>
               </div>
@@ -491,27 +497,27 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
               {/* Key Text */}
               <div className="px-4 pb-4">
                 <div className="p-3 rounded-xl bg-white/70 border border-gray-100">
-                  <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1">
+                  <div className="text-[10px] font-bold text-black uppercase tracking-wide mb-1">
                     Key Text(s)
                   </div>
-                  <div className="text-xs font-semibold text-gray-800">
+                  <div className="text-xs font-semibold text-black">
                     {selected.keyText}
                   </div>
                 </div>
               </div>
 
-              {/* Special badge for Jyotiṣa */}
+              {/* Special badge for Jyotisha */}
               {selected.isHighlighted && (
                 <div className="px-4 pb-4">
                   <div className="p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
-                    <div className="text-xs font-bold text-gray-700 uppercase tracking-wide mb-1 flex items-center gap-1">
+                    <div className="text-xs font-bold text-black uppercase tracking-wide mb-1 flex items-center gap-1">
                       <span>👁️</span> Why &ldquo;The Eye&rdquo;?
                     </div>
                     <p className="text-xs text-amber-800 leading-relaxed">
-                      Without Jyotiṣa, you can recite the mantras (Śikṣā),
-                      parse the grammar (Vyākaraṇa), and know the ritual
+                      Without Jyotisha, you can recite the mantras (Shiksha),
+                      parse the grammar (Vyakarana), and know the ritual
                       sequence (Kalpa) — but you cannot know <strong>when</strong>{" "}
-                      to perform the ritual. Jyotiṣa gives the Veda its sight
+                      to perform the ritual. Jyotisha gives the Veda its sight
                       into time itself.
                     </p>
                   </div>
@@ -523,10 +529,10 @@ export default function VedangaWheel({ size = 620 }: VedangaWheelProps) {
               <div className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center mb-3">
                 <span className="text-2xl">👁️</span>
               </div>
-              <p className="text-base font-semibold text-gray-800">
+              <p className="text-base font-semibold text-black">
                 Select a Vedanga
               </p>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-black mt-1">
                 Click any limb in the wheel to explore its role, body
                 metaphor, and key texts.
               </p>

@@ -3,3 +3,6 @@ export { COLORS, CHART_THEMES, PLANET_COLORS, PLANET_SVG_FILLS, PLANET_BADGE_CLA
 export type { PlanetColorSet, ChartThemePalette } from './colors';
 export { TYPOGRAPHY } from './typography';
 export { SPACING, CONTAINER, SIDEBAR } from './spacing';
+export { learningTokens, resolveTextColor, isLightBg, getRelativeLuminance } from './learningTokens';
+export type { TextTokenName, ColorValue } from './learningTokens';
+
