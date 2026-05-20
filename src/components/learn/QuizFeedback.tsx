@@ -69,7 +69,7 @@ export default function QuizFeedback({
             <span className={`text-xs font-bold uppercase tracking-wide ${isCorrect ? "text-green-600" : "text-red-600"}`}>
               {isCorrect ? "Why this is correct" : "The correct answer"}
             </span>
-            <p className="text-sm text-amber-900 leading-relaxed mt-1">{explanation}</p>
+            <p className="text-[15px] sm:text-base font-medium text-black leading-relaxed mt-1">{explanation}</p>
           </div>
         </div>
       </div>
@@ -83,7 +83,7 @@ export default function QuizFeedback({
               <span className="text-xs font-bold text-amber-600 uppercase tracking-wide">
                 Why your answer ({selectedOption}) was incorrect
               </span>
-              <p className="text-sm text-amber-900 leading-relaxed mt-1">
+              <p className="text-[15px] sm:text-base font-medium text-black leading-relaxed mt-1">
                 {whyWrong[selectedOption]}
               </p>
             </div>
@@ -98,7 +98,7 @@ export default function QuizFeedback({
             <Lightbulb className="w-5 h-5 shrink-0 mt-0.5 text-purple-500" />
             <div>
               <span className="text-xs font-bold text-purple-600 uppercase tracking-wide">Remember This</span>
-              <p className="text-sm text-purple-900 leading-relaxed mt-1 font-medium">{memoryAid}</p>
+              <p className="text-[15px] sm:text-base font-medium text-black leading-relaxed mt-1">{memoryAid}</p>
             </div>
           </div>
         </div>

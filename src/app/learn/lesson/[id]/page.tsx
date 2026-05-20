@@ -236,8 +236,8 @@ export default function LessonPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
       {/* ═══════════════ HEADER ═══════════════ */}
-      <div className="bg-white border-b border-amber-200/60">
-        <div className="max-w-[1400px] mx-auto py-6">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-6 md:p-8">
           {/* Breadcrumb */}
           <Link
             href="/learn"

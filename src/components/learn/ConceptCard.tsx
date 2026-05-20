@@ -96,7 +96,7 @@ export default function ConceptCard({ concept, index, showDiagram = true, showRe
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-base font-bold text-gray-900">{concept.title}</h3>
+              <h3 className="text-base font-bold text-black">{concept.title}</h3>
               {completed && (
                 <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200">
                   Understood
@@ -131,7 +131,7 @@ export default function ConceptCard({ concept, index, showDiagram = true, showRe
 
         {/* Description — horizontal flow */}
         <div className="mt-2.5">
-          <div className={`text-sm text-gray-700 leading-relaxed ${expanded ? "" : "line-clamp-2"}`}
+          <div className={`text-sm text-black font-semibold leading-relaxed ${expanded ? "" : "line-clamp-2"}`}
             dangerouslySetInnerHTML={{ __html: formatConceptText(concept.description) }}
           />
         </div>
