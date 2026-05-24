@@ -1602,3 +1602,287 @@ select {
 html {
   scroll-behavior: smooth;
 }
+
+/* ============================================================================ */
+/* GRAHVANI LEARNING DESIGN SYSTEM — v0.3 brand-aligned                         */
+/* CSS variables + Tailwind theme tokens for the learning module.               */
+/* Mirrors frontend/docs/learning-module/00-design-constitution.md (v0.3        */
+/* amendment: dark-only policy reversed; learning module now uses the canonical */
+/* Grahvani parchment + copper-gold daylight register matching the rest of the  */
+/* product. Manuscript-illumination heritage is the visual ancestor —          */
+/* warm parchment background with gold-leaf and vermilion inks over it).        */
+/* All tokens are namespaced with `gl-` (Grahvani Learning).                    */
+/* ============================================================================ */
+
+:root {
+  /* §4.1 Surfaces — v0.3 parchment daylight register */
+  /* Note: class names retain `night/twilight/manuscript/dawn` heritage. */
+  /* The *meaning* is brand-aligned; a future sweep can rename for clarity. */
+  --gl-night-deep: var(--parchment, #FAEFD8);          /* primary canvas — parchment */
+  --gl-night-top: var(--softwhite, #FEFAEA);            /* canvas highlight top */
+  --gl-night-bottom: #F0E0BA;                            /* canvas shadow bottom */
+  --gl-twilight-glass: rgba(255, 249, 234, 0.72);       /* frosted cream on parchment */
+  --gl-manuscript-cream: #F5EDD8;                        /* śloka surface */
+  --gl-dawn-from: #F4C77B;                               /* dawn celebration */
+  --gl-dawn-to: #E8A85C;
+
+  /* §4.2 Ink (text on surface) — v0.3 dark inks on warm canvas */
+  --gl-ink-primary: var(--ink, #3E2A1F);                 /* deep ink on parchment */
+  --gl-ink-secondary: var(--text-body, #4A3020);
+  --gl-ink-muted: var(--text-muted, #4F351F);            /* darker — was #5C3D26, ~6.0:1 on parchment */
+  --gl-ink-on-cream-primary: #1A1408;                    /* śloka block primary ink */
+  --gl-ink-on-cream-secondary: #3D3115;                  /* deeper — readability pass 2026-05-22, ~8:1 on parchment */
+  --gl-ink-on-cream-muted: #5C4A2A;                      /* deeper — readability pass 2026-05-22, ~6.5:1 on parchment (was 4.6:1) */
+  --gl-ink-on-dawn-primary: #1A1408;
+  --gl-gold-accent: var(--gold-dark, #9C7A2F);           /* gold reads dark on parchment */
+  --gl-gold-on-cream: #A8821E;
+  --gl-copper: var(--bronze-accent, #8B5A2B);            /* copper accent for skeuomorphic depth */
+  --gl-card-surface: rgba(255, 249, 234, 0.78);          /* frosted cream on parchment */
+  --gl-card-surface-solid: #FFF9F0;                       /* opaque cream card */
+  --gl-grain-overlay: url("/assets/learning/manuscript-grain.svg");
+  --gl-vermilion-accent: #D4502E;
+  --gl-vermilion-on-cream: #A23A1E;
+  --gl-gold-hairline: rgba(156, 122, 47, 0.30);  /* v0.3: visible on parchment */
+
+  /* §4.4 Chapter accents — canonical 4-color rotation through Tier 1 chapters */
+  --gl-ch1-bronze: #C28220;
+  --gl-ch2-vermilion: #A23A1E;
+  --gl-ch3-indigo: #4F6FA8;
+  --gl-ch4-jade: #3A8C5A;
+  --gl-gold: #9C7A2F;
+  --gl-gold-deep: #7A5E1E;
+  --gl-gold-light: #F4C77B;
+  --gl-cream: #FFF9F0;
+  --gl-cream-deep: #FAEFD8;
+
+  /* §4.3 The 9 Grahas */
+  --gl-graha-surya: #E8B845;
+  --gl-graha-candra: #D8DBE8;
+  --gl-graha-mangala: #C8412E;
+  --gl-graha-budha: #3A8C5A;
+  --gl-graha-guru: #E89E2A;
+  --gl-graha-shukra: #A8C8E8;
+  --gl-graha-shani: #2C2C3E;
+  --gl-graha-rahu: #5A5C68;
+  --gl-graha-ketu: #7A3E4A;
+}
+
+@theme {
+  /* Surface utilities */
+  --color-gl-night-deep: var(--gl-night-deep);
+  --color-gl-twilight-glass: var(--gl-twilight-glass);
+  --color-gl-manuscript-cream: var(--gl-manuscript-cream);
+  --color-gl-dawn-from: var(--gl-dawn-from);
+  --color-gl-dawn-to: var(--gl-dawn-to);
+
+  /* Ink utilities */
+  --color-gl-ink-primary: var(--gl-ink-primary);
+  --color-gl-ink-secondary: var(--gl-ink-secondary);
+  --color-gl-ink-muted: var(--gl-ink-muted);
+  --color-gl-ink-on-cream-primary: var(--gl-ink-on-cream-primary);
+  --color-gl-ink-on-cream-secondary: var(--gl-ink-on-cream-secondary);
+  --color-gl-gold: var(--gl-gold-accent);
+  --color-gl-gold-on-cream: var(--gl-gold-on-cream);
+  --color-gl-vermilion: var(--gl-vermilion-accent);
+  --color-gl-vermilion-on-cream: var(--gl-vermilion-on-cream);
+
+  /* Graha utilities */
+  --color-gl-graha-surya: var(--gl-graha-surya);
+  --color-gl-graha-candra: var(--gl-graha-candra);
+  --color-gl-graha-mangala: var(--gl-graha-mangala);
+  --color-gl-graha-budha: var(--gl-graha-budha);
+  --color-gl-graha-guru: var(--gl-graha-guru);
+  --color-gl-graha-shukra: var(--gl-graha-shukra);
+  --color-gl-graha-shani: var(--gl-graha-shani);
+  --color-gl-graha-rahu: var(--gl-graha-rahu);
+  --color-gl-graha-ketu: var(--gl-graha-ketu);
+
+  /* Font families */
+  --font-gl-display: var(--font-devanagari);
+  --font-gl-literary: var(--font-cormorant);
+  --font-gl-body: var(--font-sans);
+}
+
+/* §5.1 Parchment canvas — applied to learn-route wrappers (v0.3) */
+.gl-surface-night {
+  background: radial-gradient(ellipse at top, var(--gl-night-top) 0%, var(--gl-night-deep) 60%, var(--gl-night-bottom) 100%);
+  background-image:
+    radial-gradient(ellipse at top, var(--gl-night-top) 0%, var(--gl-night-deep) 60%, var(--gl-night-bottom) 100%),
+    url("/assets/learning/manuscript-grain.svg");
+  background-blend-mode: multiply;
+  position: relative;
+}
+
+/* §11.2 lesson canvas grid — tight rails, wide reading column. Lives in
+   globals.css (not inline <style>) so the Turbopack CSS pipeline picks it up. */
+.gl-lesson-canvas {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1520px;
+  padding: 28px 24px 64px;
+}
+.gl-lesson-grid {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 1024px) {
+  .gl-lesson-grid {
+    grid-template-columns: 218px minmax(0, 1fr);
+    gap: 32px;
+  }
+}
+@media (min-width: 1280px) {
+  .gl-lesson-grid {
+    grid-template-columns: 218px minmax(0, 1fr) 244px;
+    gap: 36px;
+  }
+}
+@media (min-width: 1536px) {
+  .gl-lesson-grid {
+    grid-template-columns: 224px minmax(0, 1fr) 252px;
+    gap: 40px;
+  }
+}
+
+/* §5.2 Frosted-cream glass cards on parchment (Phase C-Reformed depth) */
+.gl-surface-twilight-glass {
+  background:
+    linear-gradient(180deg, rgba(255, 252, 240, 0.96) 0%, rgba(252, 245, 224, 0.92) 100%),
+    url("/assets/learning/manuscript-grain.svg");
+  background-blend-mode: multiply;
+  background-size: cover, 240px;
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  border: 1px solid rgba(156, 122, 47, 0.35);
+  border-radius: 14px;
+  position: relative;
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.65) inset,
+    0 -1px 0 rgba(139, 90, 43, 0.22) inset,
+    0 6px 16px rgba(62, 42, 31, 0.10),
+    0 18px 40px rgba(62, 42, 31, 0.08),
+    0 36px 80px rgba(62, 42, 31, 0.05);
+}
+/* Gold-leaf top edge — the visual seal that says "Grahvani card" */
+.gl-surface-twilight-glass::before {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: -1px;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(230, 201, 122, 0.55) 20%,
+    rgba(201, 162, 77, 0.95) 50%,
+    rgba(230, 201, 122, 0.55) 80%,
+    transparent 100%
+  );
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+/* §5.3 Manuscript Cream — śloka blocks and worked examples (v0.3 enriched) */
+.gl-surface-manuscript {
+  background:
+    linear-gradient(180deg, #F8F0DA 0%, #F1E5C4 100%),
+    url("/assets/learning/manuscript-grain.svg");
+  background-blend-mode: multiply;
+  border-radius: 10px;
+  padding: 36px 44px;
+  position: relative;
+  border: 1px solid rgba(156, 122, 47, 0.25);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.70) inset,
+    0 -1px 0 rgba(139, 90, 43, 0.12) inset,
+    0 6px 18px rgba(62, 42, 31, 0.10),
+    0 18px 40px rgba(62, 42, 31, 0.06);
+}
+.gl-surface-manuscript::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, #E6C97A 0%, #C9A24D 50%, #9C7A2F 100%);
+  border-radius: 10px 0 0 10px;
+  box-shadow: 1px 0 2px rgba(139, 90, 43, 0.30);
+}
+.gl-surface-manuscript::after {
+  /* subtle gold corner mark — top-right ornament */
+  content: "";
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 24px;
+  height: 24px;
+  background: radial-gradient(circle, rgba(201, 162, 77, 0.20) 0%, transparent 65%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* §5.4 Dawn Accent — mastery celebrations (v0.3 with deeper skeuomorphic seal) */
+.gl-surface-dawn {
+  background:
+    linear-gradient(135deg, var(--gl-dawn-from) 0%, var(--gl-dawn-to) 100%);
+  border-radius: 14px;
+  border: 1px solid rgba(156, 122, 47, 0.45);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 -2px 0 rgba(139, 90, 43, 0.30) inset,
+    0 10px 36px rgba(232, 168, 92, 0.30),
+    0 24px 60px rgba(139, 90, 43, 0.18);
+}
+
+/* Reduced-motion fallback — per §6.4, durations collapse to zero */
+@media (prefers-reduced-motion: reduce) {
+  .gl-surface-night,
+  .gl-surface-twilight-glass,
+  .gl-surface-manuscript,
+  .gl-surface-dawn,
+  .gl-clickable,
+  .gl-motion {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────
+ * Lesson-page utility classes — tokenised UX primitives.
+ * Added 2026-05-22 as part of the HIG-grade audit pass.
+ * ────────────────────────────────────────────────────────── */
+
+/* Accessible focus ring — applied to text inputs, textareas, and
+   custom interactive zones that have outline:none on their base
+   styles. WCAG 2.4.7. */
+.gl-focus-ring:focus-visible {
+  outline: 2px solid var(--gl-gold-accent, #C9A24D);
+  outline-offset: 2px;
+}
+
+/* Clickable affordance — uniform hover lift across the lesson page.
+   Apply to <button>, <a role="button">, citation chips, MCQ option
+   buttons, anything the learner can press. */
+.gl-clickable {
+  cursor: pointer;
+  transition: transform 250ms cubic-bezier(0.32, 0.72, 0.24, 1),
+              filter 250ms cubic-bezier(0.32, 0.72, 0.24, 1),
+              box-shadow 250ms cubic-bezier(0.32, 0.72, 0.24, 1);
+}
+.gl-clickable:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+}
+.gl-clickable:active {
+  transform: translateY(0);
+  filter: brightness(0.98);
+}
+
+/* Anchor-target offset — sections in the lesson body apply this so
+   journey-rail jumps land below the sticky breadcrumb stack. */
+.gl-lesson-anchor {
+  scroll-margin-top: 120px;
+}

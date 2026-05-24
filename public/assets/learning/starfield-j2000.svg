@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080" role="presentation" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+  <!-- Sparse sidereal starfield at J2000 epoch (approximation; positions are stylised).
+       Star magnitudes encoded as radius. Used as a subtle background overlay on .gl-surface-night. -->
+  <g fill="#F2EBD8">
+    <!-- Brighter stars (mag ≤ 1) -->
+    <circle cx="312" cy="248" r="1.8" opacity="0.85"/>
+    <circle cx="824" cy="180" r="1.6" opacity="0.78"/>
+    <circle cx="1480" cy="320" r="1.7" opacity="0.80"/>
+    <circle cx="1664" cy="704" r="1.9" opacity="0.88"/>
+    <circle cx="448" cy="912" r="1.5" opacity="0.74"/>
+    <!-- Medium stars (mag 2-3) -->
+    <circle cx="120" cy="120" r="1.1" opacity="0.65"/>
+    <circle cx="240" cy="480" r="1.0" opacity="0.60"/>
+    <circle cx="384" cy="720" r="1.0" opacity="0.62"/>
+    <circle cx="560" cy="304" r="1.0" opacity="0.58"/>
+    <circle cx="720" cy="624" r="1.1" opacity="0.66"/>
+    <circle cx="912" cy="880" r="1.0" opacity="0.60"/>
+    <circle cx="1056" cy="160" r="1.0" opacity="0.58"/>
+    <circle cx="1184" cy="464" r="1.1" opacity="0.62"/>
+    <circle cx="1280" cy="800" r="1.0" opacity="0.60"/>
+    <circle cx="1392" cy="240" r="1.0" opacity="0.58"/>
+    <circle cx="1568" cy="544" r="1.1" opacity="0.62"/>
+    <circle cx="1776" cy="448" r="1.0" opacity="0.58"/>
+    <!-- Faint stars (mag 4+) -->
+    <circle cx="60" cy="60" r="0.6" opacity="0.40"/>
+    <circle cx="180" cy="220" r="0.6" opacity="0.38"/>
+    <circle cx="280" cy="340" r="0.7" opacity="0.42"/>
+    <circle cx="360" cy="80" r="0.6" opacity="0.38"/>
+    <circle cx="500" cy="200" r="0.6" opacity="0.40"/>
+    <circle cx="620" cy="500" r="0.7" opacity="0.42"/>
+    <circle cx="640" cy="120" r="0.6" opacity="0.38"/>
+    <circle cx="760" cy="320" r="0.7" opacity="0.42"/>
+    <circle cx="780" cy="60" r="0.6" opacity="0.38"/>
+    <circle cx="880" cy="240" r="0.6" opacity="0.40"/>
+    <circle cx="940" cy="540" r="0.7" opacity="0.42"/>
+    <circle cx="980" cy="780" r="0.6" opacity="0.38"/>
+    <circle cx="1020" cy="380" r="0.6" opacity="0.40"/>
+    <circle cx="1120" cy="60" r="0.6" opacity="0.38"/>
+    <circle cx="1140" cy="640" r="0.7" opacity="0.42"/>
+    <circle cx="1220" cy="280" r="0.6" opacity="0.40"/>
+    <circle cx="1300" cy="540" r="0.7" opacity="0.42"/>
+    <circle cx="1340" cy="160" r="0.6" opacity="0.38"/>
+    <circle cx="1420" cy="660" r="0.6" opacity="0.40"/>
+    <circle cx="1460" cy="980" r="0.7" opacity="0.42"/>
+    <circle cx="1500" cy="100" r="0.6" opacity="0.38"/>
+    <circle cx="1540" cy="800" r="0.6" opacity="0.40"/>
+    <circle cx="1620" cy="220" r="0.7" opacity="0.42"/>
+    <circle cx="1680" cy="380" r="0.6" opacity="0.38"/>
+    <circle cx="1740" cy="180" r="0.6" opacity="0.40"/>
+    <circle cx="1800" cy="600" r="0.7" opacity="0.42"/>
+    <circle cx="1860" cy="280" r="0.6" opacity="0.38"/>
+    <circle cx="1880" cy="900" r="0.6" opacity="0.40"/>
+    <circle cx="80" cy="800" r="0.6" opacity="0.38"/>
+    <circle cx="200" cy="1000" r="0.6" opacity="0.40"/>
+    <circle cx="340" cy="540" r="0.7" opacity="0.42"/>
+    <circle cx="480" cy="640" r="0.6" opacity="0.38"/>
+    <circle cx="600" cy="840" r="0.6" opacity="0.40"/>
+    <circle cx="700" cy="980" r="0.7" opacity="0.42"/>
+    <circle cx="800" cy="420" r="0.6" opacity="0.38"/>
+    <circle cx="860" cy="160" r="0.6" opacity="0.40"/>
+    <circle cx="1000" cy="60" r="0.6" opacity="0.38"/>
+  </g>
+</svg>

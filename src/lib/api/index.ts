@@ -43,8 +43,8 @@ export { matchmakingApi } from './matchmaking';
 export { muhuratApi, fetchDailyMuhurta, searchCategoryMuhurta } from './muhurta';
 export { numerologyApi } from './numerology';
 export { knowledgeApi } from './knowledge';
-export { learnApi } from './learn';
-export type { Course, Lesson, LessonContent, QuizQuestion, SubmitResponse, DashboardData, BadgeItem, LessonProgressData } from './learn';
+// learnApi re-export removed 2026-05-21: legacy learn-module archived to
+// src/_archive/learn-legacy/. New learn runtime will register its own API surface.
 
 // Error mapping & stale times
 export { mapApiError } from './error-codes';

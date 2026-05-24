@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, Spectral, Tiro_Devanagari_Hindi } from "next/font/google";
+import { Playfair_Display, Inter, Spectral, Tiro_Devanagari_Hindi, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import GlobalHeader from "@/components/layout/GlobalHeader";
 import MonitoringInit from "@/components/MonitoringInit";
@@ -31,6 +31,14 @@ const tiroDevanagari = Tiro_Devanagari_Hindi({
   weight: "400",
   subsets: ["devanagari", "latin"],
   display: 'swap',
+});
+
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  subsets: ["latin", "latin-ext"],
+  display: 'optional',
 });
 
 export const metadata: Metadata = {
@@ -87,7 +95,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${spectral.variable} ${playfair.variable} ${inter.variable} ${tiroDevanagari.variable} antialiased flex flex-col min-h-screen`}>
+      <body className={`${spectral.variable} ${playfair.variable} ${inter.variable} ${tiroDevanagari.variable} ${cormorant.variable} antialiased flex flex-col min-h-screen`}>
         <QueryProvider>
           <AuthProvider>
             <VedicClientProvider>

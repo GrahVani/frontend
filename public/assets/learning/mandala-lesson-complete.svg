@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Grahvani lesson-mastered mandala mark">
+  <defs>
+    <radialGradient id="lotusGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFE9A8" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#E8C772" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="petalFill" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFE9A8"/>
+      <stop offset="60%" stop-color="#E8C772"/>
+      <stop offset="100%" stop-color="#A8821E"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(64 64)">
+    <!-- Outer glow -->
+    <circle r="60" fill="url(#lotusGlow)"/>
+    <!-- Outer orbital ring -->
+    <circle r="48" fill="none" stroke="#E8C772" stroke-width="1" stroke-opacity="0.45"/>
+    <!-- Eight petals around centre -->
+    <g fill="url(#petalFill)" stroke="#A8821E" stroke-width="0.6" stroke-opacity="0.4">
+      <path d="M 0 -38 Q 8 -22 0 -10 Q -8 -22 0 -38 Z"/>
+      <path d="M 0 -38 Q 8 -22 0 -10 Q -8 -22 0 -38 Z" transform="rotate(45)"/>
+      <path d="M 0 -38 Q 8 -22 0 -10 Q -8 -22 0 -38 Z" transform="rotate(90)"/>
+      <path d="M 0 -38 Q 8 -22 0 -10 Q -8 -22 0 -38 Z" transform="rotate(135)"/>
+      <path d="M 0 -38 Q 8 -22 0 -10 Q -8 -22 0 -38 Z" transform="rotate(180)"/>
+      <path d="M 0 -38 Q 8 -22 0 -10 Q -8 -22 0 -38 Z" transform="rotate(225)"/>
+      <path d="M 0 -38 Q 8 -22 0 -10 Q -8 -22 0 -38 Z" transform="rotate(270)"/>
+      <path d="M 0 -38 Q 8 -22 0 -10 Q -8 -22 0 -38 Z" transform="rotate(315)"/>
+    </g>
+    <!-- Inner ring -->
+    <circle r="10" fill="none" stroke="#E8C772" stroke-width="1.2"/>
+    <!-- Central dot -->
+    <circle r="3" fill="#E8C772"/>
+    <!-- Cardinal dots on outer ring -->
+    <circle cx="0" cy="-48" r="2.4" fill="#E8C772"/>
+    <circle cx="48" cy="0" r="2.4" fill="#E8C772"/>
+    <circle cx="0" cy="48" r="2.4" fill="#E8C772"/>
+    <circle cx="-48" cy="0" r="2.4" fill="#E8C772"/>
+  </g>
+</svg>
