@@ -134,7 +134,25 @@ export const WIDGET_CONTENT_PROFILES: Record<string, ContentCategory> = {
   'd2_iyer': 'chart',
   'd2_somanatha': 'chart',
   'd9_somanatha': 'chart',
-  
+
+  // Specialized Navamsha & Divisional Charts
+  'bhava_navamsha': 'chart',
+  'divajiya_navamsha': 'chart',
+  'kshetra_navamsha': 'chart',
+  'tajika_navamsha': 'chart',
+  'tulya_navamsha': 'chart',
+  'vargottama_navamsha': 'chart',
+  'karmasthana_navamsha': 'chart',
+  'sukhabham_chart': 'chart',
+  'vainashika_navamsha': 'chart',
+  'karmabham_chart': 'chart',
+  'd55_navamsha': 'chart',
+  'd64_khara_navamsha': 'chart',
+  'd81_chart': 'chart',
+  'd88_synastry_chart': 'chart',
+  'd91_labham_chart': 'chart',
+  'antya_chart': 'chart',
+
   // Lagna Charts
   'moon_chart': 'chart',
   'sun_chart': 'chart',

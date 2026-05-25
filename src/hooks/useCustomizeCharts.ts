@@ -257,6 +257,11 @@ export const WIDGET_DIMENSION_PRESETS: Record<string, WidgetDimensions> = {
         minWidth: 280, minHeight: 300, 
         maxWidth: 800, maxHeight: 800 
     },
+    navamsha: { 
+        width: 470, height: 500, 
+        minWidth: 280, minHeight: 300, 
+        maxWidth: 900, maxHeight: 900 
+    },
     
     // Tables - wider for data readability with proper min sizes
     ashtakavarga: { 
@@ -294,9 +299,9 @@ export const WIDGET_DIMENSION_PRESETS: Record<string, WidgetDimensions> = {
     
     // Others - optimized for their specific content
     widget_transit: { 
-        width: 480, height: 320, 
-        minWidth: 380, minHeight: 250, 
-        maxWidth: 900, maxHeight: 600 
+        width: 1400, height: 800, 
+        minWidth: 600, minHeight: 400, 
+        maxWidth: 1920, maxHeight: 1080 
     },
     widget_remedy: { 
         width: 520, height: 450, 
@@ -402,6 +407,24 @@ export const CHART_CATALOG: CustomizeChartItem[] = [
     { id: 'd2_iyer', name: 'D2 Iyer', description: 'Wealth - Iyer variation', category: 'rare_shodash', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.rare_shodash },
     { id: 'd2_somanatha', name: 'D2 Somanatha', description: 'Wealth - Somanatha method', category: 'rare_shodash', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.rare_shodash },
     { id: 'd9_somanatha', name: 'D9 Somanatha', description: 'Spouse - Somanatha method', category: 'rare_shodash', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.rare_shodash },
+
+    // Specialized Navamsha & Divisional Charts (Lahiri-only)
+    { id: 'bhava_navamsha', name: 'Bhava Navamsha', description: 'House-based D9 division for bhava analysis', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
+    { id: 'divajiya_navamsha', name: 'Divajiya Navamsha', description: 'Victory and achievement potential in D9', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
+    { id: 'kshetra_navamsha', name: 'Kshetra Navamsha', description: 'Field and domain analysis in D9', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
+    { id: 'tajika_navamsha', name: 'Tajika Navamsha', description: 'Annual predictive D9 (Tajika method)', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
+    { id: 'tulya_navamsha', name: 'Tulya Navamsha', description: 'Equivalent/balanced D9 analysis', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
+    { id: 'vargottama_navamsha', name: 'Vargottama Navamsha', description: 'Vargottama planet strength in D9', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
+    { id: 'karmasthana_navamsha', name: 'Karmasthana Navamsha', description: 'Karma house analysis in D9', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
+    { id: 'sukhabham_chart', name: 'Sukhabham Chart', description: 'Happiness and pleasure indicators', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
+    { id: 'vainashika_navamsha', name: 'Vainashika Navamsha', description: 'Destruction/transformation D9', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
+    { id: 'karmabham_chart', name: 'Karmabham Chart', description: 'Karmic field and deed analysis', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
+    { id: 'd55_navamsha', name: 'D55 Navamsha', description: 'Advanced 55th divisional chart', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
+    { id: 'd64_khara_navamsha', name: 'D64 Khara Navamsha', description: '64th division — harsh karma analysis', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
+    { id: 'd81_chart', name: 'D81 Chart', description: '81st divisional — subtle karma', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
+    { id: 'd88_synastry_chart', name: 'D88 Synastry', description: '88th division for relationship karma', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
+    { id: 'd91_labham_chart', name: 'D91 Labham Chart', description: '91st division for gains and profits', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
+    { id: 'antya_chart', name: 'Antya Chart', description: 'End-stage and final outcome analysis', category: 'navamsha', lahiriOnly: true, defaultDimensions: WIDGET_DIMENSION_PRESETS.navamsha },
 
     // Lagna Charts
     { id: 'moon_chart', name: 'Chandra Lagna', description: 'Moon ascendant chart', category: 'lagna', defaultDimensions: WIDGET_DIMENSION_PRESETS.lagna },

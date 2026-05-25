@@ -75,6 +75,18 @@ export const AYANAMSA_HIERARCHY: AyanamsaOption[] = [
                 ]
             },
             {
+                id: 'cat-navamsha',
+                name: 'Navamsha & Specialized',
+                widgets: [
+                    { id: 'bhava_navamsha' }, { id: 'divajiya_navamsha' }, { id: 'kshetra_navamsha' },
+                    { id: 'tajika_navamsha' }, { id: 'tulya_navamsha' }, { id: 'vargottama_navamsha' },
+                    { id: 'karmasthana_navamsha' }, { id: 'sukhabham_chart' }, { id: 'vainashika_navamsha' },
+                    { id: 'karmabham_chart' }, { id: 'd55_navamsha' }, { id: 'd64_khara_navamsha' },
+                    { id: 'd81_chart' }, { id: 'd88_synastry_chart' }, { id: 'd91_labham_chart' },
+                    { id: 'antya_chart' }
+                ]
+            },
+            {
                 id: 'cat-dashas',
                 name: 'Dasha Systems',
                 widgets: [

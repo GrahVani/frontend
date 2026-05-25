@@ -19,6 +19,13 @@ import { useVedicClient } from '@/context/VedicClientContext';
 import { useAstrologerStore } from '@/store/useAstrologerStore';
 import { clientApi } from '@/lib/api';
 import { cn } from "@/lib/utils";
+import {
+    useLalKitabHousePosition,
+    useLalKitabPlanetaryPosition,
+    useLalKitabDasha,
+    useLalKitabTeva,
+    useLalKitabVarshphalTimeline,
+} from '@/hooks/queries/useCalculations';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { COLORS } from '@/design-tokens/colors';
 import dynamic from 'next/dynamic';
@@ -27,6 +34,7 @@ const DashboardLoading = () => <div className="flex items-center justify-center 
 const UpayaDashboard = dynamic(() => import('@/components/upaya/UpayaDashboard'), { loading: DashboardLoading });
 const YantraDashboard = dynamic(() => import('@/components/upaya/YantraDashboard'), { loading: DashboardLoading });
 const LalKitabDashboard = dynamic(() => import('@/components/upaya/LalKitabDashboard'), { loading: DashboardLoading });
+const LalKitabEndpointsPanel = dynamic(() => import('@/components/upaya/LalKitabEndpointsPanel'), { loading: DashboardLoading });
 const VedicRemediesDashboard = dynamic(() => import('@/components/upaya/VedicRemediesDashboard'), { loading: DashboardLoading });
 const MantraAnalysisDashboard = dynamic(() => import('@/components/upaya/MantraAnalysisDashboard'), { loading: DashboardLoading });
 
@@ -253,6 +261,13 @@ export default function RemediesPage() {
     const clientId = clientDetails?.id || '';
     const activeRemedyTab = REMEDY_TABS.find(t => t.id === activeTab)!;
 
+    // Lal Kitab new endpoints (5 hooks)
+    const lalKitabHouse = useLalKitabHousePosition(clientId);
+    const lalKitabPlanetary = useLalKitabPlanetaryPosition(clientId);
+    const lalKitabDasha = useLalKitabDasha(clientId);
+    const lalKitabTeva = useLalKitabTeva(clientId);
+    const lalKitabVarshphal = useLalKitabVarshphalTimeline(clientId);
+
     // Data is now fetched from database (processedCharts) - no API calls needed
     // The system automatically fetches remedies when client is loaded
 
@@ -364,16 +379,51 @@ export default function RemediesPage() {
                             {isRefreshingCharts ? 'Loading...' : 'Try again'}
                         </button>
                     </div>
+                ) : activeTab === 'lal_kitab' ? (
+                    <div className="space-y-4">
+                        {/* Existing remedy view (if available in DB) */}
+                        {remedyData ? (
+                            <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm p-1">
+                                <RemedyDataView data={remedyData} type={activeTab} />
+                            </div>
+                        ) : null}
+
+                        {/* New 5 Lal Kitab endpoints panel */}
+                        <LalKitabEndpointsPanel
+                            housePosition={{
+                                data: lalKitabHouse.data,
+                                isLoading: lalKitabHouse.isLoading,
+                                isError: lalKitabHouse.isError,
+                                error: lalKitabHouse.error as Error | null,
+                            }}
+                            planetaryPosition={{
+                                data: lalKitabPlanetary.data,
+                                isLoading: lalKitabPlanetary.isLoading,
+                                isError: lalKitabPlanetary.isError,
+                                error: lalKitabPlanetary.error as Error | null,
+                            }}
+                            dasha={{
+                                data: lalKitabDasha.data,
+                                isLoading: lalKitabDasha.isLoading,
+                                isError: lalKitabDasha.isError,
+                                error: lalKitabDasha.error as Error | null,
+                            }}
+                            teva={{
+                                data: lalKitabTeva.data,
+                                isLoading: lalKitabTeva.isLoading,
+                                isError: lalKitabTeva.isError,
+                                error: lalKitabTeva.error as Error | null,
+                            }}
+                            varshphalTimeline={{
+                                data: lalKitabVarshphal.data,
+                                isLoading: lalKitabVarshphal.isLoading,
+                                isError: lalKitabVarshphal.isError,
+                                error: lalKitabVarshphal.error as Error | null,
+                            }}
+                        />
+                    </div>
                 ) : remedyData ? (
                     <RemedyDataView data={remedyData} type={activeTab} />
-                ) : activeTab === 'lal_kitab' ? (
-                    <div className="flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-amber-200/60 shadow-sm animate-in fade-in">
-                        <Scroll className="w-10 h-10 text-amber-500 mb-4 opacity-70" />
-                        <h3 className={cn(TYPOGRAPHY.sectionTitle, "mb-2 text-amber-900")}>Lal Kitab remedies</h3>
-                        <p className={cn(TYPOGRAPHY.value, "max-w-md text-center mb-6 text-amber-700")}>
-                            Lal Kitab remedies are highly specific. Please select a Planet and a House above to view the precise remedial measures.
-                        </p>
-                    </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-amber-200/60 shadow-sm">
                         <Gem className="w-8 h-8 text-amber-600 mb-3" />

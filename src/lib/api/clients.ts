@@ -208,6 +208,71 @@ export const clientApi = {
             body: JSON.stringify({ chartType: 'avakhada_chakra', ayanamsa: 'universal' }),
         }),
 
+    // ---- Lal Kitab ----
+    getLalKitabHousePosition: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
+            method: 'POST',
+            body: JSON.stringify({ chartType: 'lalkitab_house_position', ayanamsa: 'lahiri' }),
+        }),
+
+    getLalKitabPlanetaryPosition: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
+            method: 'POST',
+            body: JSON.stringify({ chartType: 'lalkitab_planetary_position', ayanamsa: 'lahiri' }),
+        }),
+
+    getLalKitabDasha: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
+            method: 'POST',
+            body: JSON.stringify({ chartType: 'lalkitab_dasha', ayanamsa: 'lahiri' }),
+        }),
+
+    getLalKitabTeva: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
+            method: 'POST',
+            body: JSON.stringify({ chartType: 'lalkitab_teva', ayanamsa: 'lahiri' }),
+        }),
+
+    getLalKitabVarshphalTimeline: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, {
+            method: 'POST',
+            body: JSON.stringify({ chartType: 'lalkitab_varshphal_timeline', ayanamsa: 'lahiri' }),
+        }),
+
+    // ---- Navamsha & Specialized Divisional Charts ----
+    getBhavaNavamsha: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'bhava_navamsha', ayanamsa: 'lahiri' }) }),
+    getDivajiyaNavamsha: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'divajiya_navamsha', ayanamsa: 'lahiri' }) }),
+    getKshetraNavamsha: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'kshetra_navamsha', ayanamsa: 'lahiri' }) }),
+    getTajikaNavamsha: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'tajika_navamsha', ayanamsa: 'lahiri' }) }),
+    getTulyaNavamsha: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'tulya_navamsha', ayanamsa: 'lahiri' }) }),
+    getVargottamaNavamsha: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'vargottama_navamsha', ayanamsa: 'lahiri' }) }),
+    getKarmasthanaNavamsha: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'karmasthana_navamsha', ayanamsa: 'lahiri' }) }),
+    getSukhabhamChart: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'sukhabham_chart', ayanamsa: 'lahiri' }) }),
+    getVainashikaNavamsha: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'vainashika_navamsha', ayanamsa: 'lahiri' }) }),
+    getKarmabhamChart: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'karmabham_chart', ayanamsa: 'lahiri' }) }),
+    getD55Navamsha: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'd55_navamsha', ayanamsa: 'lahiri' }) }),
+    getD64KharaNavamsha: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'd64_khara_navamsha', ayanamsa: 'lahiri' }) }),
+    getD81Chart: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'd81_chart', ayanamsa: 'lahiri' }) }),
+    getD88SynastryChart: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'd88_synastry_chart', ayanamsa: 'lahiri' }) }),
+    getD91LabhamChart: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'd91_labham_chart', ayanamsa: 'lahiri' }) }),
+    getAntyaChart: (clientId: string): Promise<ChartGenerateResponse> =>
+        apiFetch(`${CLIENT_URL}/clients/${clientId}/charts/generate`, { method: 'POST', body: JSON.stringify({ chartType: 'antya_chart', ayanamsa: 'lahiri' }) }),
+
     // ---- System Capabilities ----
     getSystemCapabilities: (system: string): SystemCapabilities => {
         const CAPABILITIES: Record<string, SystemCapabilities> = {
@@ -216,7 +281,8 @@ export const clientApi = {
                     divisional: ['D1', 'D2', 'D3', 'D4', 'D7', 'D9', 'D10', 'D12', 'D16', 'D20', 'D24', 'D27', 'D30', 'D40', 'D45', 'D60'],
                     special: ['sudarshana', 'transit', 'shodasha_varga_signs'],
                     lagna: ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart', 'mandi', 'gulika', 'upapada_lagna', 'swamsha', 'pada_chart'],
-                    rare_shodash: ['d2_somanatha', 'd2_kashinatha', 'd4_vedamsha', 'd6_kaulaka', 'd9_nadhi', 'd9_pada_special', 'd9_somanatha', 'd24_parasidamsha', 'd24_siddhamsha', 'd30_venkatesha', 'd108_nd', 'd108_dn']
+                    rare_shodash: ['d2_somanatha', 'd2_kashinatha', 'd4_vedamsha', 'd6_kaulaka', 'd9_nadhi', 'd9_pada_special', 'd9_somanatha', 'd24_parasidamsha', 'd24_siddhamsha', 'd30_venkatesha', 'd108_nd', 'd108_dn'],
+                    lalkitab: ['lalkitab_house_position', 'lalkitab_planetary_position', 'lalkitab_dasha', 'lalkitab_teva', 'lalkitab_varshphal_timeline']
                 },
                 features: {
                     dasha: ['mahadasha', 'antardasha', 'pratyantardasha', 'sookshma', 'prana'],

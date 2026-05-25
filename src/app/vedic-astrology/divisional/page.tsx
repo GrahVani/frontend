@@ -653,6 +653,7 @@ export default function VedicDivisionalPage() {
                 onClose={() => setCustomizationPanel({ isOpen: false })}
                 selectedChart={customizationPanel.selectedChart}
             />
+
         </div>
     );
 }
