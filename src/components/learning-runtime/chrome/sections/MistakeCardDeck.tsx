@@ -17,7 +17,7 @@ import { AlertTriangle } from "lucide-react";
 import { SectionHeader } from "../SectionHeader";
 import { presentationFor } from "../../lib/section-meta";
 import { renderInline } from "../lib/inline-markdown";
-import type { LessonSection } from "@/lib/learning-runtime/types";
+import type { LessonSection, LessonFrontMatter } from "@/lib/learning-runtime/types";
 
 interface ParsedMistake {
   title: string;
@@ -53,6 +53,7 @@ function parseMistakes(markdown: string): ParsedMistake[] {
 
 interface MistakeCardDeckProps {
   section: LessonSection;
+  frontMatter?: LessonFrontMatter;
 }
 
 const FACES = ["what", "why", "fix"] as const;
@@ -273,7 +274,7 @@ function toRoman(n: number): string {
   return map[n] ?? String(n);
 }
 
-export function MistakeCardDeck({ section }: MistakeCardDeckProps) {
+export function MistakeCardDeck({ section, frontMatter }: MistakeCardDeckProps) {
   const mistakes = parseMistakes(section.body);
 
   return (
@@ -285,7 +286,7 @@ export function MistakeCardDeck({ section }: MistakeCardDeckProps) {
     >
       <div className="text-center mb-6">
         {(() => {
-          const pres = presentationFor(section);
+          const pres = presentationFor(section, frontMatter);
           return (
             <SectionHeader
               eyebrow={pres.eyebrow}

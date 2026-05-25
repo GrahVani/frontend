@@ -34,6 +34,34 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   // L2's §7 = Jyotiṣa-Sāṅga Synthesis Hub (interlock viz + scenario
   // explorer). §4 keeps the petal-row explorer (VedangaRelationshipDiagram).
   "the-six-vedangas-and-their-relationship": "jyotisha-sanga-hub",
+  // L3's §7 = Disambiguation Dojo (Indo-Hellenistic lineage timeline +
+  // ayanāṁśa drift slider + 5-scenario disambiguation drill). §4 keeps
+  // the dimension-explorer (jyotisha-vs-western-vs-pop-comparator).
+  "jyotisha-vs-western-astrology-vs-pop-astrology": "disambiguation-dojo",
+  // L4's §7 = Karma-Prediction Dojo (Cycle-in-Motion overlay viz +
+  // Indication Translator skill drill). §4 keeps the per-karma-type
+  // explorer (karma-typology-explorer).
+  "philosophy-of-karma-and-prediction": "karma-prediction-dojo",
+  // L2.1's §7 = Jyotiṣa Citation Dojo (Dating Divergence Atlas +
+  // Citation Discipline Drill). §4 keeps the historical-timeline.
+  "the-historical-timeline-of-jyotisha": "jyotisha-citation-dojo",
+  // L2.2's §7 = BPHS Citation Dojo (Vimśottarī verse cross-reference +
+  // citation drill). §4 keeps the BPHS recension comparator.
+  "parashara-the-foundational-rishi": "bphs-citation-dojo",
+  // L2.3's §7 = Varāhamihira Synthesis Dojo (Author Cross-Dating + Citation
+  // Drill). §4 keeps the skandha-coverage explorer.
+  "varahamihira-the-systematic-codifier": "varahamihira-synthesis-dojo",
+  // L2.4's §7 = Medieval Synthesis Dojo (5-scenario drill on codifier
+  // discipline). §4 keeps the relative-dating explorer.
+  "medieval-codifiers-kalyanavarma-mantresvara": "medieval-synthesis-dojo",
+  // L2.5's §7 = Jaiminī Second-Tradition Dojo (Doctrinal-Pair Atlas across
+  // 6 pairs + 5-scenario tradition-attribution drill). §4 keeps the
+  // parashari-jaimini-parallel-tradition-explorer.
+  "jaimini-and-the-second-tradition": "jaimini-second-tradition-dojo",
+  // L2.6's §7 = Four-Stream Synthesis Dojo (Stream Landscape Matrix +
+  // 5-scenario Evaluative Reasoning Drill — chapter-capstone Bloom-Evaluate).
+  // §4 keeps the four-stream-landscape-explorer.
+  "modern-founders-krishnamurti-and-joshi": "four-stream-synthesis-dojo",
 };
 
 export function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorProps) {
@@ -56,7 +84,7 @@ export function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorP
     >
       <div style={{ textAlign: "center" }}>
         {(() => {
-          const pres = presentationFor(section);
+          const pres = presentationFor(section, fm);
           return (
             <SectionHeader
               eyebrow={pres.eyebrow}

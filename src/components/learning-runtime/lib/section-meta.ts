@@ -6,7 +6,7 @@
  * accent graha hue per the design constitution v0.3 Reform-2.
  */
 
-import type { LessonSection, SectionType } from "@/lib/learning-runtime/types";
+import type { LessonSection, LessonFrontMatter, SectionType } from "@/lib/learning-runtime/types";
 
 export type SectionRole =
   | "hook"
@@ -152,9 +152,86 @@ const SECTION_TYPE_TO_ROLE: Record<SectionType, SectionRole> = {
   unknown: "body",
 };
 
-export function presentationFor(section: LessonSection): SectionPresentation {
+/**
+ * Lesson-specific embodied-title / eyebrow overrides.
+ *
+ * `ROLE_PRESENTATION` carries the section-ROLE defaults (every lesson's §7
+ * has `railLabel: "Explore"` — that's by design). But the embodied titles
+ * MUST be lesson-specific because each lesson's §5 cites a different śloka,
+ * each lesson's §7 hosts a different interactive, each lesson's §8 disarms
+ * a different confusion. Generic embodied titles leak L1's framing onto
+ * every other lesson — exactly the rot the founder caught.
+ *
+ * Add a lesson's slug → section-number → partial override here whenever
+ * the section's specific subject differs from the role default.
+ */
+const LESSON_SECTION_OVERRIDES: Record<
+  string,
+  Record<string, Partial<SectionPresentation>>
+> = {
+  "jyotisha-as-vedanga": {
+    "5": { embodiedTitle: "Pāṇinīya Śikṣā · 41 — the six-limbed Veda" },
+    "7": { embodiedTitle: "Move through history, see the ecosystem" },
+    "8": { embodiedTitle: "Vedāṅga is not Vedānta — and three more traps" },
+  },
+  "the-six-vedangas-and-their-relationship": {
+    "5": { embodiedTitle: "Pāṇinīya Śikṣā · 42 + Vedāṅga Jyotiṣa opening" },
+    "7": { embodiedTitle: "Hub the interlocks, then drill the sāṅga habit" },
+    "8": { embodiedTitle: "Sāṅga is not modular — and the missed couplings" },
+  },
+  "jyotisha-vs-western-astrology-vs-pop-astrology": {
+    "5": { embodiedTitle: "Vedāṅga Jyotiṣa — the tradition's own opening" },
+    "7": { embodiedTitle: "Trace the Indo-Hellenistic lineage, drill the disambiguation" },
+    "8": { embodiedTitle: "Conflations that misread the tradition" },
+  },
+  "philosophy-of-karma-and-prediction": {
+    "5": { embodiedTitle: "Bhagavad Gītā 4.17 — gahanā karmaṇo gatiḥ" },
+    "7": { embodiedTitle: "See visibility vs agency, drill the indication translation" },
+    "8": { embodiedTitle: "Deterministic-specifics — the framework-incoherent trap" },
+  },
+  "the-historical-timeline-of-jyotisha": {
+    "5": { embodiedTitle: "Pingree (1981) — on the academic chronology" },
+    "7": { embodiedTitle: "Trace the dating divergences, drill the citation discipline" },
+    "8": { embodiedTitle: "Recension blindness, dating mixing, translator elision" },
+  },
+  "parashara-the-foundational-rishi": {
+    "5": { embodiedTitle: "BPHS Adhyāya 1.1 — the Parāśara-Maitreya dialogue frame" },
+    "7": { embodiedTitle: "Walk one canonical verse across recensions, drill BPHS citation" },
+    "8": { embodiedTitle: "Collapsing the duality, over-attributing antiquity, vague \"per BPHS\"" },
+  },
+  "varahamihira-the-systematic-codifier": {
+    "5": { embodiedTitle: "Bṛhat Saṁhitā 1.1 — the encyclopaedic project's self-declaration" },
+    "7": { embodiedTitle: "See the chronological anchor at work, drill the both-anchors framework" },
+    "8": { embodiedTitle: "Over-applying BPHS-style recension worry, mis-using citation networks" },
+  },
+  "medieval-codifiers-kalyanavarma-mantresvara": {
+    "5": { embodiedTitle: "Phaladīpikā 1.1 — Mantreśvara's pedagogical declaration" },
+    "7": { embodiedTitle: "Drill the codifier discipline — 5 scenarios on dating + citation" },
+    "8": { embodiedTitle: "Flattening the three layers, dismissing codifier authority, ignoring chain length" },
+  },
+  "jaimini-and-the-second-tradition": {
+    "5": { embodiedTitle: "Jaiminī Sūtra 1.1.1 — the second tradition's opening verse" },
+    "7": { embodiedTitle: "Pair the doctrines, then drill the tradition-attribution discipline" },
+    "8": { embodiedTitle: "Subordinating Jaiminī, mixing aspect-systems, collapsing the cross-text identity" },
+  },
+  "modern-founders-krishnamurti-and-joshi": {
+    "5": { embodiedTitle: "KP Reader Vol I — K.S. Krishnamurti's foundational sub-lord doctrine" },
+    "7": { embodiedTitle: "Survey the four-stream matrix, then drill the chapter-capstone Bloom-Evaluate" },
+    "8": { embodiedTitle: "Mere-innovations, competing-schools, Sanskrit-criterion, cross-stream-critique-without-fluency" },
+  },
+};
+
+export function presentationFor(
+  section: LessonSection,
+  frontMatter?: LessonFrontMatter,
+): SectionPresentation {
   const role = SECTION_TYPE_TO_ROLE[section.type];
-  return { role, ...ROLE_PRESENTATION[role] };
+  const base = { role, ...ROLE_PRESENTATION[role] };
+  if (frontMatter) {
+    const override = LESSON_SECTION_OVERRIDES[frontMatter.slug]?.[section.number];
+    if (override) return { ...base, ...override };
+  }
+  return base;
 }
 
 /** Rough reading-time estimate from section body length. ~240 wpm baseline. */

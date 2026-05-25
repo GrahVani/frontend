@@ -30,6 +30,14 @@ import {
 import { VedangaBodyMap } from "@/components/learning-runtime/interactive/vedanga-body-map";
 import { VedangaVsVedantaComparator } from "@/components/learning-runtime/interactive/vedanga-vs-vedanta-comparator";
 import { VedangaRelationshipDiagram } from "@/components/learning-runtime/interactive/vedanga-relationship-diagram";
+import { JyotishaVsWesternVsPopComparator } from "@/components/learning-runtime/interactive/jyotisha-vs-western-vs-pop-comparator";
+import { KarmaTypologyExplorer } from "@/components/learning-runtime/interactive/karma-typology-explorer";
+import { HistoricalTimeline } from "@/components/learning-runtime/interactive/historical-timeline";
+import { BphsRecensionComparator } from "@/components/learning-runtime/interactive/bphs-recension-comparator";
+import { VarahamihiraSkandhaCoverageExplorer } from "@/components/learning-runtime/interactive/varahamihira-skandha-coverage-explorer";
+import { MedievalCodifierRelativeDatingExplorer } from "@/components/learning-runtime/interactive/medieval-codifier-relative-dating-explorer";
+import { ParashariJaiminiParallelTraditionExplorer } from "@/components/learning-runtime/interactive/parashari-jaimini-parallel-tradition-explorer";
+import { FourStreamLandscapeExplorer } from "@/components/learning-runtime/interactive/four-stream-landscape-explorer";
 import { SectionDivider } from "@/components/learning-runtime/chrome/SectionDivider";
 import { RevealSection } from "@/components/learning-runtime/chrome/RevealSection";
 import { LessonTimeTracker } from "@/components/learning-runtime/LessonTimeTracker";
@@ -256,6 +264,305 @@ export default async function LessonPage({
               <VedangaRelationshipDiagram />
             </div>
           );
+        } else if (fm.slug === "modern-founders-krishnamurti-and-joshi") {
+          reflectionPrompts = [
+            "Of the 11 distinctive contributions you just saw (5 KP + 6 Lal Kitab), which ORIGINATION strikes you as the boldest doctrinal move — the one least derivable from anything in the prior classical landscape — and what does it tell you about what the modern-primary doctrine actually authorises?",
+            "Where do YOU sit on the three modern-primary criteria (origination + practitioner lineage + empirical results)? Are there other modern Vedic-astrology authors you'd nominate as candidates — and which criterion do they meet (or fail)?",
+            "Try restating the four-stream landscape in your own words: how does \"complementary, not competing\" change what you'll do when you next read a single-stream practitioner critiquing another stream?",
+          ];
+          scenes = (
+            <div data-l26-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                The Four-Stream Classical Landscape Completed
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                Two modern primaries — KP and Lal Kitab — complete the
+                four-stream landscape (Parāśari + Jaiminī + KP + Lal Kitab).
+                Below: the four-stream hero, the modern-primary vs
+                modern-revival distinction, K.S. Krishnamurti's five
+                distinctive KP contributions, Pandit Roop Chand Joshi's six
+                distinctive Lal Kitab contributions, and the three modern-
+                primary status criteria with per-stream evidence.
+              </p>
+              <FourStreamLandscapeExplorer />
+            </div>
+          );
+        } else if (fm.slug === "jaimini-and-the-second-tradition") {
+          reflectionPrompts = [
+            "Of the five distinctive Jaiminī doctrines (Cara Rāśi Daśās, Ārūḍha Lagna, rāśi-aspects, cara kārakas, Jaiminī yogas), which one's GENUINELY UNIQUE status surprised you most — and what does that imply for what you'd lose if Jaiminī were treated as a sub-school of Parāśari?",
+            "Where do YOU sit on the same-Jaiminī identity question (Jyotiṣa Jaiminī = Mīmāṁsā Jaiminī or two different people)? When you next cite the Jaiminī Sūtra, what's the honest framing you'll use?",
+            "Try restating in your own words: what is the difference between PARALLEL traditions and SUBORDINATE traditions — and why does parallel-not-subordinate change how you read every classical Jyotiṣa citation?",
+          ];
+          scenes = (
+            <div data-l25-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                Jaiminī and the Parallel Second Tradition
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                Parāśari and Jaiminī run alongside each other across three
+                millennia of classical Jyotiṣa — structurally parallel,
+                doctrinally complementary. Below: the diptych framing, the
+                four-layer side-by-side lineage, the sūtra-vs-verse genre
+                contrast, the five genuinely-distinctive Jaiminī doctrines,
+                and the same-Jaiminī identity question held open.
+              </p>
+              <ParashariJaiminiParallelTraditionExplorer />
+            </div>
+          );
+        } else if (fm.slug === "medieval-codifiers-kalyanavarma-mantresvara") {
+          reflectionPrompts = [
+            "Of the four medieval codifiers, whose distinctive contribution (yoga catalogue / practitioner pedagogy / comprehensive synthesis / praśna foundation) feels most operationally useful to you — and why?",
+            "Where do YOU sit in the codifier vs originator framing? When you cite a classical author going forward, will you treat their role as transmitting, refining, or originating? What changes?",
+            "Try restating the three-layer lineage in your own words: foundational ṛṣi-core → systematic codifier → medieval codifiers. What does each layer contribute that the others don't?",
+          ];
+          scenes = (
+            <div data-l24-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                Kalyāṇavarmā, Mantreśvara, and the Medieval Codifiers
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                Four medieval codifiers refining and synthesising the
+                Parāśara + Varāhamihira foundation. Below: the three-layer
+                Parāśari-tradition lineage, the four codifier plates with
+                bracketed dating + citation evidence + distinctive
+                contribution, and the compounding-uncertainty visualisation.
+              </p>
+              <MedievalCodifierRelativeDatingExplorer />
+            </div>
+          );
+        } else if (fm.slug === "varahamihira-the-systematic-codifier") {
+          reflectionPrompts = [
+            "Of Varāhamihira's three texts (Bṛhat Jātaka, Bṛhat Saṁhitā, Pañcasiddhāntikā), which one's existence surprised you most — and what does it tell you about the breadth of classical Jyotiṣa scholarship?",
+            "When you next encounter a date claim for a classical Jyotiṣa author (e.g., \"Kalyāṇavarmā ~800 CE\"), what's the FIRST question you'll ask about how that date was arrived at?",
+            "Try restating the both-anchors framework in your own words: how can Parāśara AND Varāhamihira both be authoritative without one displacing the other?",
+          ];
+          scenes = (
+            <div data-l23-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                Varāhamihira, the Systematic Codifier
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                The most-reliably-dateable classical Jyotiṣa author and the
+                only one to codify across all three skandhas. Below: the
+                date-anchor hero, his three primary texts, the astronomical-
+                position dating methodology, and the both-anchors framework
+                pairing him with Parāśara.
+              </p>
+              <VarahamihiraSkandhaCoverageExplorer />
+            </div>
+          );
+        } else if (fm.slug === "parashara-the-foundational-rishi") {
+          reflectionPrompts = [
+            "Of the ten BPHS prakaraṇa-divisions, which one's PURPOSE surprised you most — and what does it tell you about BPHS's encyclopaedic ambition?",
+            "How will you change the way you cite BPHS in your own writing now that you've seen the recension layering? What will you say differently?",
+            "Try restating in your own words: how can BPHS be BOTH foundational-authoritative AND recensionally-medieval at the same time — without contradiction?",
+          ];
+          scenes = (
+            <div data-l22-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                Parāśara, BPHS, and the Recension Problem
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                One name spans two layers: the pre-classical Maharṣi Parāśara
+                whom tradition attests, and the medieval-recensional Bṛhat
+                Parāśara Horā Śāstra we actually read. Below: the duality
+                framing, the ten major prakaraṇa-divisions, and the citation
+                discipline that respects both layers.
+              </p>
+              <BphsRecensionComparator />
+            </div>
+          );
+        } else if (fm.slug === "the-historical-timeline-of-jyotisha") {
+          reflectionPrompts = [
+            "Of the twelve authors on the timeline, which one's DATING DIVERGENCE between traditional and academic surprised you most — and what does it imply about how you should hear classical citations going forward?",
+            "Of the four citation-discipline moves (source / date / recension / translator), which one do you think you'll find HARDEST to apply consistently — and why?",
+            "Try restating in your own words: why does the MODERN PRIMARY carve-out matter — what would be lost if KP and Lal Kitab were lumped in with 'modern derivative'?",
+          ];
+          scenes = (
+            <div data-l21-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                Three Millennia, Twelve Anchors
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                The major authors and texts of Indian Jyotiṣa, placed on the
+                academic-Indology chronological axis. Each marker is
+                clickable. Toggle the traditional-dating overlay to see where
+                the lineage chronology and the academic-Indology chronology
+                disagree — sometimes by centuries, sometimes by millennia.
+              </p>
+              <HistoricalTimeline />
+            </div>
+          );
+        } else if (fm.slug === "philosophy-of-karma-and-prediction") {
+          reflectionPrompts = [
+            "Of the four karma types, which one's MAPPING onto Jyotiṣa's predictive scope surprised you most — and what does that imply about how you should hear classical chart-readings?",
+            "Where do YOU sit between deterministic prediction (\"the chart tells you what will happen\") and full agency (\"nothing is given\")? What does the four-fold framework do to that intuition?",
+            "Try restating in your own words: why is indication-with-confidence-tier framing more honest than deterministic prediction — given what the chart can and cannot read?",
+          ];
+          scenes = (
+            <div data-l4-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                The Four-Fold Karma and What Jyotiṣa Reads
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                Saṁcita, Prārabdha, Āgāmī, Kriyamāṇa — four karma types around
+                a single agent at the cycle's centre. Tap any node to read
+                what the type is, what Jyotiṣa can see of it, and how much
+                agency the agent has over it. The pattern teaches WHY
+                deterministic prediction is incoherent with the framework.
+              </p>
+              <KarmaTypologyExplorer />
+            </div>
+          );
+        } else if (fm.slug === "jyotisha-vs-western-astrology-vs-pop-astrology") {
+          reflectionPrompts = [
+            "Of the six dimensions, which one was the biggest surprise — where did you realise you'd been carrying an incorrect mental model about one of the traditions?",
+            "When you encounter \"astrology\" in casual conversation tomorrow, what's the FIRST clarifying question you'll ask before engaging substantively?",
+            "Where do you think classical Hellenistic Western astrology actually has MORE in common with Vedic Jyotiṣa than modern psychological Western does? What does that tell you about the lineage?",
+          ];
+          scenes = (
+            <div data-l3-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                What Jyotiṣa Is — and Is Not
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                Three astrology traditions, six discriminating dimensions.
+                The painting on the left grounds the visual register — the
+                panel on the right is the explore surface. Pick a dimension
+                to see how each tradition handles it, then read the
+                convergence and divergence callouts beneath.
+              </p>
+              <JyotishaVsWesternVsPopComparator />
+            </div>
+          );
         }
 
         return <ConceptTheatre section={sec4} reflectionPrompts={reflectionPrompts} scenes={scenes} />;
@@ -285,7 +592,7 @@ export default async function LessonPage({
       {sec8 && (
         <RevealSection>
           <SectionDivider accentHex={presentationFor(sec8).accentHex} />
-          <MistakeCardDeck section={sec8} />
+          <MistakeCardDeck section={sec8} frontMatter={fm} />
         </RevealSection>
       )}
 

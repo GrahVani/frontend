@@ -70,7 +70,7 @@ function parseAllSlokas(markdown: string): ParsedSloka[] {
 export function SlokaBlock({ section, frontMatter }: SlokaBlockProps) {
   const slokas = parseAllSlokas(section.body);
   const useRecitationFrame = frontMatter?.slug === "jyotisha-as-vedanga";
-  const pres = presentationFor(section);
+  const pres = presentationFor(section, frontMatter);
 
   return (
     <section

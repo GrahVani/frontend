@@ -27,6 +27,46 @@ interface LessonJourneyRailProps {
   activeSectionNumber: string | null;
 }
 
+/** Convert a kebab-case slug into a Title Case phrase for display.
+ * `"what-jyotisha-is"` → `"What Jyotiṣa Is"`. Specific Sanskrit terms get a
+ * pass-through map so diacritics are preserved. */
+function humanizeSlug(slug: string): string {
+  const SANSKRIT_MAP: Record<string, string> = {
+    jyotisha: "Jyotiṣa",
+    vedanga: "Vedāṅga",
+    vedangas: "Vedāṅgas",
+    saṅga: "Sāṅga",
+    samhita: "Saṁhitā",
+    parashari: "Parāśarī",
+    parashara: "Parāśara",
+    panchanga: "Pañcāṅga",
+    panchang: "Pañcāṅga",
+    karma: "Karma",
+    moksha: "Mokṣa",
+    dasha: "Daśā",
+    nakshatra: "Nakṣatra",
+    rashi: "Rāśi",
+    bhava: "Bhāva",
+    graha: "Graha",
+    grahas: "Grahas",
+    ayanamsha: "Ayanāṁśa",
+  };
+  return slug
+    .split("-")
+    .map((word) => {
+      const lower = word.toLowerCase();
+      if (SANSKRIT_MAP[lower]) return SANSKRIT_MAP[lower];
+      // Short stopwords stay lowercase mid-phrase
+      if (["of", "and", "is", "the", "in", "to", "vs", "or", "a"].includes(lower)) {
+        return lower;
+      }
+      return lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
+    .join(" ")
+    // Capitalise the first character of the whole phrase even if it was a stopword
+    .replace(/^./, (c) => c.toUpperCase());
+}
+
 export function LessonJourneyRail({
   sections,
   frontMatter,
@@ -114,8 +154,24 @@ export function LessonJourneyRail({
             marginBottom: "6px",
           }}
         >
-          Tier {frontMatter.tier} · Module {frontMatter.module} · Chapter {frontMatter.chapter}
+          Tier {frontMatter.tier} · Module {frontMatter.module} · Chapter {frontMatter.chapter} · Lesson {frontMatter.sequence}
         </p>
+        {/* Humanised chapter context — derived from chapterSlug so the card
+            shows WHICH chapter, not just "Chapter 1". */}
+        {frontMatter.chapterSlug && (
+          <p
+            style={{
+              fontFamily: "var(--font-cormorant), serif",
+              fontStyle: "italic",
+              fontSize: "13px",
+              color: "var(--gl-ink-muted)",
+              marginBottom: "8px",
+              lineHeight: 1.3,
+            }}
+          >
+            {humanizeSlug(frontMatter.chapterSlug)}
+          </p>
+        )}
         <p
           style={{
             fontFamily: "var(--font-cormorant), serif",
@@ -127,6 +183,23 @@ export function LessonJourneyRail({
         >
           {frontMatter.title.split(":")[0]}
         </p>
+        {/* Colon-suffix subtitle — restored so the lesson's distinguishing
+            sub-content (e.g. "Saṁcita, Prārabdha, Āgāmī, Kriyamāṇa") is
+            visible, not lost to truncation. */}
+        {frontMatter.title.includes(":") && (
+          <p
+            style={{
+              fontFamily: "var(--font-cormorant), serif",
+              fontStyle: "italic",
+              fontSize: "13.5px",
+              color: "var(--gl-ink-secondary)",
+              marginTop: "3px",
+              lineHeight: 1.4,
+            }}
+          >
+            {frontMatter.title.split(":").slice(1).join(":").trim()}
+          </p>
+        )}
         {frontMatter.titleDevanagari && (
           <p
             lang="sa"
@@ -134,7 +207,7 @@ export function LessonJourneyRail({
               fontFamily: "var(--font-devanagari), serif",
               fontSize: "14px",
               color: "var(--gl-gold-accent)",
-              marginTop: "4px",
+              marginTop: "6px",
               lineHeight: 1.4,
             }}
           >

@@ -60,9 +60,9 @@ export function SectionAwareMarginalia({
       case "worked-example":
         return <WorkedExampleHintPanel accentHex={pres.accentHex} />;
       case "interactive":
-        return <InteractiveHintPanel accentHex={pres.accentHex} />;
+        return <InteractiveHintPanel accentHex={pres.accentHex} frontMatter={frontMatter} />;
       case "mistakes":
-        return <MistakesTakeawayPanel accentHex={pres.accentHex} />;
+        return <MistakesTakeawayPanel accentHex={pres.accentHex} frontMatter={frontMatter} />;
       case "anchors":
         return <AnchorsSrPreviewPanel accentHex={pres.accentHex} />;
       case "practice":
@@ -432,9 +432,138 @@ function WorkedExampleHintPanel({ accentHex }: { accentHex: string }) {
 
 /* ──────────── §7 Interactive — hint ──────────── */
 
-function InteractiveHintPanel({ accentHex }: { accentHex: string }) {
+/**
+ * Lesson-aware content for the §7 interactive marginalia. Each lesson's §7
+ * flagship has its own affordances, so the right-rail hint MUST name them
+ * specifically — generic guidance is the rot the founder caught.
+ */
+const INTERACTIVE_HINTS: Record<
+  string,
+  { eyebrow: string; headline: string; bullets: string[] }
+> = {
+  "jyotisha-as-vedanga": {
+    eyebrow: "Manipulation teaches",
+    headline:
+      "Drag, tap, and scrub. The orbital model teaches by what it lets you do — not by what it labels.",
+    bullets: [
+      "· Tap the orbital limbs",
+      "· Drag the time slider",
+      "· Jump to a scholar by name",
+    ],
+  },
+  "the-six-vedangas-and-their-relationship": {
+    eyebrow: "Hub teaches by interlock",
+    headline:
+      "Click each spoke to see how Jyotiṣa couples with that Vedāṅga in modern practice.",
+    bullets: [
+      "· Click any node to read its interlock detail",
+      "· Toggle the modern-practice overlay",
+      "· Switch tabs to the Sāṅga Scenarios drill",
+    ],
+  },
+  "jyotisha-vs-western-astrology-vs-pop-astrology": {
+    eyebrow: "Disambiguation discipline",
+    headline:
+      "Tradition is classified by format and depth — not just terminology. The drill tests this directly.",
+    bullets: [
+      "· Open the Indo-Hellenistic Lineage tab for shared roots",
+      "· Drag the ayanāṁśa drift slider through history",
+      "· Switch to the Disambiguation Drill for 5 scenarios",
+    ],
+  },
+  "philosophy-of-karma-and-prediction": {
+    eyebrow: "Substrate vs agency",
+    headline:
+      "The cycle's lesson: the chart reads ONE corner most clearly (prārabdha); the agent acts in ANOTHER (kriyamāṇa).",
+    bullets: [
+      "· Toggle the 'what Jyotiṣa sees' lens — prārabdha lights up",
+      "· Toggle the 'agency window' lens — kriyamāṇa lights up",
+      "· Switch tabs to drill the deterministic-to-indication translation",
+    ],
+  },
+  "the-historical-timeline-of-jyotisha": {
+    eyebrow: "Cite what you cite",
+    headline:
+      "Twelve anchors across three millennia. The honest move: name the source, the date, the recension, the translator.",
+    bullets: [
+      "· Tap any marker for full dating + recension status",
+      "· Toggle the traditional-dating overlay to see divergences",
+      "· Switch to the Citation Drill for 5 scenarios",
+    ],
+  },
+  "parashara-the-foundational-rishi": {
+    eyebrow: "Two layers in one name",
+    headline:
+      "Maharṣi Parāśara is BOTH the pre-classical ṛṣi tradition attests AND the medieval-recensional BPHS we actually read. Cite both honestly.",
+    bullets: [
+      "· Tap any prakaraṇa-plate for adhyāya range + recension notes",
+      "· Switch to the Verse Cross-Reference tab for the canonical Vimśottarī verse",
+      "· The 5-scenario drill tests BPHS-specific citation discipline",
+    ],
+  },
+  "varahamihira-the-systematic-codifier": {
+    eyebrow: "The chronological anchor",
+    headline:
+      "Varāhamihira is the only classical Jyotiṣa author whose dating is internally secure. Every other classical author is bracketed relative to him.",
+    bullets: [
+      "· Tap any of the three skandha plates for chapter coverage",
+      "· Read the astronomical-position dating methodology — 4 operational steps",
+      "· Switch to the Author Cross-Dating tab to see the citation network",
+    ],
+  },
+  "medieval-codifiers-kalyanavarma-mantresvara": {
+    eyebrow: "Layer three — codifier discipline",
+    headline:
+      "Four medieval codifiers refining the Parāśara + Varāhamihira foundation — each with distinctive emphasis, each dated by citation-network bracketing.",
+    bullets: [
+      "· Tap any codifier plate for citation evidence + distinctive contribution",
+      "· Read the compounding-uncertainty visualization — brackets widen with chain length",
+      "· The drill tests medieval-codifier dating + citation discipline",
+    ],
+  },
+  "jaimini-and-the-second-tradition": {
+    eyebrow: "Parallel — not subordinate",
+    headline:
+      "Parāśari and Jaiminī run alongside each other. Different time-engines, different aspect-systems, different significator schemas — both honoured.",
+    bullets: [
+      "· Read the diptych hero — equal-weight column layout teaches the parallelism",
+      "· Tap any doctrine plate for the operational distinction vs Parāśari",
+      "· Switch to the Doctrinal-Pair Atlas + Attribution Drill in §7",
+    ],
+  },
+  "modern-founders-krishnamurti-and-joshi": {
+    eyebrow: "Four streams — landscape completed",
+    headline:
+      "Modern-primary status is a high bar (origination + practitioner lineage + empirical results). Only KP and Lal Kitab unambiguously meet all three.",
+    bullets: [
+      "· Read the 4-column hero — Parāśari + Jaiminī (classical) + KP + Lal Kitab (modern-primary)",
+      "· Tap any KP contribution for the classical-antecedent status",
+      "· Tap any Lal Kitab contribution for the same",
+      "· Switch to the Landscape Matrix + Evaluative Drill in §7",
+    ],
+  },
+};
+
+function InteractiveHintPanel({
+  accentHex,
+  frontMatter,
+}: {
+  accentHex: string;
+  frontMatter: LessonFrontMatter;
+}) {
+  const hint =
+    INTERACTIVE_HINTS[frontMatter.slug] ?? {
+      eyebrow: "Manipulation teaches",
+      headline:
+        "The interactive teaches by what it lets you do — not by what it labels.",
+      bullets: [],
+    };
   return (
-    <MarginCard eyebrow="Manipulation teaches" ornament={<Sparkles size={11} />} accentHex={accentHex}>
+    <MarginCard
+      eyebrow={hint.eyebrow}
+      ornament={<Sparkles size={11} />}
+      accentHex={accentHex}
+    >
       <p
         style={{
           fontFamily: "var(--font-cormorant), serif",
@@ -442,34 +571,111 @@ function InteractiveHintPanel({ accentHex }: { accentHex: string }) {
           fontSize: "16px",
           color: "var(--gl-ink-primary)",
           lineHeight: 1.5,
-          marginBottom: "10px",
+          marginBottom: hint.bullets.length > 0 ? "10px" : "0",
         }}
       >
-        Drag, tap, and scrub. The model teaches by what it lets you do — not by what it labels.
+        {hint.headline}
       </p>
-      <ul
-        style={{
-          listStyle: "none",
-          padding: 0,
-          margin: 0,
-          fontSize: "14px",
-          color: "var(--gl-ink-secondary)",
-          lineHeight: 1.7,
-        }}
-      >
-        <li>· Tap the orbital limbs</li>
-        <li>· Drag the time slider</li>
-        <li>· Jump to a scholar by name</li>
-      </ul>
+      {hint.bullets.length > 0 && (
+        <ul
+          style={{
+            listStyle: "none",
+            padding: 0,
+            margin: 0,
+            fontSize: "14px",
+            color: "var(--gl-ink-secondary)",
+            lineHeight: 1.7,
+          }}
+        >
+          {hint.bullets.map((b, i) => (
+            <li key={i}>{b}</li>
+          ))}
+        </ul>
+      )}
     </MarginCard>
   );
 }
 
 /* ──────────── §8 Mistakes — key takeaway sticker ──────────── */
 
-function MistakesTakeawayPanel({ accentHex }: { accentHex: string }) {
+/**
+ * Lesson-aware "the one mistake to internalise" content. Each lesson has its
+ * own single most-important confusion to disarm; generic content is rot.
+ */
+const MISTAKES_TAKEAWAYS: Record<
+  string,
+  { headline: string; gloss: string }
+> = {
+  "jyotisha-as-vedanga": {
+    headline: "Vedāṅga is not Vedānta.",
+    gloss:
+      "Limbs of the Veda — not the Veda's end. Two entirely different epistemic categories.",
+  },
+  "the-six-vedangas-and-their-relationship": {
+    headline: "Sāṅga is not modular.",
+    gloss:
+      "The six Vedāṅgas are a coordinated system — Vyākaraṇa belongs to TWO clusters (recitation + meaning). Studying one limb in isolation misses the interlock.",
+  },
+  "jyotisha-vs-western-astrology-vs-pop-astrology": {
+    headline: "Disambiguation is recognition + respect.",
+    gloss:
+      "Vedic and Western are cousins with shared Indo-Hellenistic lineage; pop is categorically different (1930-vintage entertainment format). Confusing the three — in either direction — is the practitioner-discipline error.",
+  },
+  "philosophy-of-karma-and-prediction": {
+    headline: "Indication, not determination.",
+    gloss:
+      "The chart reads prārabdha (committed) and sees āgāmī partially (formation patterns) — but cannot foreclose kriyamāṇa (current real-time choices). Deterministic prediction violates the framework; indication-with-confidence-tier respects it.",
+  },
+  "the-historical-timeline-of-jyotisha": {
+    headline: "Cite what you cite — not what sounds ancient.",
+    gloss:
+      "Vague gestures to \"classical tradition\" hide the recension problem, mix chronologies, and elide translator interpretive choices. The four moves — source, date, recension, translator — are what separate a system-aware scholar from silent confusion.",
+  },
+  "parashara-the-foundational-rishi": {
+    headline: "Hold both Parāśara layers — never collapse them.",
+    gloss:
+      "The pre-classical Parāśara figure (tradition) and the medieval-recension BPHS (academic) are both real. Treating BPHS as the unmediated word of the ṛṣi over-claims antiquity; dismissing it as recent under-claims authority. The honest middle is recension specification + acknowledgement of doctrinal substrate.",
+  },
+  "varahamihira-the-systematic-codifier": {
+    headline: "Honour both anchors — collapse neither.",
+    gloss:
+      "Parāśara = lineage authority (foundational ṛṣi, encyclopaedic horā). Varāhamihira = evidence authority (dateable, recension-stable, three-skandha-spanning). They complement, not compete. Citation discipline differs by anchor type; both serve the curriculum's authority structure.",
+  },
+  "medieval-codifiers-kalyanavarma-mantresvara": {
+    headline: "Three layers, cumulative authorities, distinct disciplines.",
+    gloss:
+      "Codifier authority is real — refining, synthesising, and pedagogical structuring add value distinct from originating. Don't flatten the three-layer lineage into undifferentiated tradition; don't dismiss the medieval codifiers as \"mere\" synthesisers. Each layer carries its own appropriate citation discipline.",
+  },
+  "jaimini-and-the-second-tradition": {
+    headline: "Two traditions, parallel — not subordinate.",
+    gloss:
+      "Jaiminī is not a sub-school of Parāśari; Parāśari is not a refinement of Jaiminī. They are STRUCTURALLY PARALLEL (foundational ṛṣi, codifiers, medieval commentary, modern revival) and DOCTRINALLY COMPLEMENTARY (graha vs rāśi, nakṣatra vs rāśi cycles, fixed vs variable significators). Honest practice draws on both with explicit citation of which tradition each tool comes from.",
+  },
+  "modern-founders-krishnamurti-and-joshi": {
+    headline: "Modern-primary is a high bar — and a real one.",
+    gloss:
+      "Four traps collapse the four-stream landscape: treating KP/LK as \"mere innovations\" (factually inaccurate — they originate frameworks not derivable from classical); treating the streams as competing schools (category-error — they operate at different doctrinal-layers); applying Sanskrit-classical as the across-stream authority criterion (over-extends a within-stream criterion); critiquing one stream using another's internal criteria (multi-stream-honesty violation). Modern-primary recognises KP and Lal Kitab as first-party authoritative within their stream — origination + practitioner lineage + empirical results, all three required.",
+  },
+};
+
+function MistakesTakeawayPanel({
+  accentHex,
+  frontMatter,
+}: {
+  accentHex: string;
+  frontMatter: LessonFrontMatter;
+}) {
+  const takeaway =
+    MISTAKES_TAKEAWAYS[frontMatter.slug] ?? {
+      headline: "The single confusion to disarm.",
+      gloss: "See the §8 mistakes deck for the lesson's most-load-bearing error.",
+    };
   return (
-    <MarginCard eyebrow="The one to internalise" ornament={<AlertTriangle size={11} />} accentHex={accentHex}>
+    <MarginCard
+      eyebrow="The one to internalise"
+      ornament={<AlertTriangle size={11} />}
+      accentHex={accentHex}
+    >
       <p
         style={{
           fontFamily: "var(--font-cormorant), serif",
@@ -481,7 +687,7 @@ function MistakesTakeawayPanel({ accentHex }: { accentHex: string }) {
         }}
       >
         <strong style={{ fontStyle: "normal", color: accentHex, fontWeight: 600 }}>
-          Vedāṅga is not Vedānta.
+          {takeaway.headline}
         </strong>
       </p>
       <p
@@ -492,7 +698,7 @@ function MistakesTakeawayPanel({ accentHex }: { accentHex: string }) {
           fontFamily: "var(--font-cormorant), serif",
         }}
       >
-        Limbs of the Veda — not the Veda&apos;s end. Two entirely different epistemic categories.
+        {takeaway.gloss}
       </p>
     </MarginCard>
   );
