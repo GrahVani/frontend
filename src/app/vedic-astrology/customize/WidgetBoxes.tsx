@@ -4,7 +4,9 @@ import React, { useState, useEffect, useMemo } from 'react';
 import {
     X, Loader2, AlertCircle, Sparkles, Layers, Shield, Gem, Star, Table2, Map as MapIcon
 } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import { clientApi } from '@/lib/api';
+import CompactNorthIndianChart from '@/components/astrology/NorthIndianChart/CompactNorthIndianChart';
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/design-tokens/typography";
 import type { CustomizeChartItem, WidgetSize } from '@/hooks/useCustomizeCharts';
@@ -31,7 +33,9 @@ const KarakaDashboard = dynamic(() => import('@/app/vedic-astrology/chara-karaka
 const YogaAnalysisView = dynamic(() => import('@/components/astrology/YogaAnalysis'));
 const DoshaAnalysis = dynamic(() => import('@/components/astrology/DoshaAnalysis'));
 const DailyTransitView = dynamic(() => import('@/components/transits/DailyTransitView'));
+const TransitWorkbenchView = dynamic(() => import('@/components/transits/TransitWorkbenchView'));
 const UpayaDashboard = dynamic(() => import('@/components/upaya/UpayaDashboard'));
+const RemedyWorkbenchView = dynamic(() => import('@/components/upaya/RemedyWorkbenchView'));
 
 // KP Hooks
 import {
@@ -184,7 +188,7 @@ function WidgetCard({
         <div className={cn(
             "bg-[#FDFBF7] border border-amber-200/60 rounded p-1 shadow-sm relative group hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden",
             className
-        )} style={{ height: 'calc((100vh - 200px) / 2)', minHeight: scaleConfig.minHeight }}
+        )} style={{ height: '100%', minHeight: scaleConfig.minHeight }}
             data-widget-size={size}
         >
             {/* High-Density Header — Premium Redesign */}
@@ -657,7 +661,7 @@ export function DoshaWidget(props: WidgetBoxProps) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// TRANSIT WIDGET
+// TRANSIT WIDGET (with card wrapper - for dashboard use)
 // ═══════════════════════════════════════════════════════════════════════════════
 export function TransitWidget(props: WidgetBoxProps) {
     const { widget, onRemove, clientId } = props;
@@ -667,6 +671,17 @@ export function TransitWidget(props: WidgetBoxProps) {
                 <DailyTransitView clientId={clientId} />
             </div>
         </WidgetCard>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TRANSIT WIDGET CONTENT (no card wrapper - for use in ResizableWidgetBox)
+// ═══════════════════════════════════════════════════════════════════════════════
+function TransitWidgetContent({ clientId }: { clientId: string }) {
+    return (
+        <div className="h-full w-full overflow-hidden">
+            <TransitWorkbenchView clientId={clientId} />
+        </div>
     );
 }
 
@@ -730,7 +745,7 @@ export function DashaWidget(props: WidgetBoxProps) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// REMEDY WIDGET
+// REMEDY WIDGET (with card wrapper - for dashboard use)
 // ═══════════════════════════════════════════════════════════════════════════════
 export function RemedyWidget(props: WidgetBoxProps) {
     const { widget, onRemove, clientId, activeSystem } = props;
@@ -761,6 +776,38 @@ export function RemedyWidget(props: WidgetBoxProps) {
                 </div>
             )}
         </WidgetCard>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// REMEDY WIDGET CONTENT (no card wrapper - for use in ResizableWidgetBox)
+// ═══════════════════════════════════════════════════════════════════════════════
+function RemedyWidgetContent({ activeSystem }: { activeSystem: string }) {
+    const { processedCharts, isLoadingCharts } = useVedicClient();
+
+    const remedyKey = `remedy_gemstone_${(activeSystem || 'lahiri').toLowerCase()}`;
+    const remedyRaw = processedCharts[remedyKey]?.chartData;
+    const data = remedyRaw?.data || remedyRaw;
+    const loading = !data && isLoadingCharts;
+
+    if (loading) {
+        return (
+            <div className="h-full flex flex-col items-center justify-center">
+                <Loader2 className="w-10 h-10 text-amber-600 animate-spin mb-3" />
+                <p className="text-sm text-amber-700 font-medium">Loading remedies...</p>
+            </div>
+        );
+    }
+
+    if (data) {
+        return <RemedyWorkbenchView data={data} />;
+    }
+
+    return (
+        <div className="h-full flex flex-col items-center justify-center p-6 text-center">
+            <Gem className="w-10 h-10 text-amber-600/30 mb-3" />
+            <p className="text-sm text-amber-700">Remedy data unavailable</p>
+        </div>
     );
 }
 
@@ -1563,6 +1610,126 @@ function AshtakavargaWidgetContent({ widget, activeSystem }: { widget: Customize
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// NAVAMSHA CHART WIDGET - Fetches on-demand and renders as a chart wheel
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const NAVAMSHA_API_MAP: Record<string, (clientId: string) => Promise<Record<string, unknown>>> = {
+    'bhava_navamsha': clientApi.getBhavaNavamsha,
+    'divajiya_navamsha': clientApi.getDivajiyaNavamsha,
+    'kshetra_navamsha': clientApi.getKshetraNavamsha,
+    'tajika_navamsha': clientApi.getTajikaNavamsha,
+    'tulya_navamsha': clientApi.getTulyaNavamsha,
+    'vargottama_navamsha': clientApi.getVargottamaNavamsha,
+    'karmasthana_navamsha': clientApi.getKarmasthanaNavamsha,
+    'sukhabham_chart': clientApi.getSukhabhamChart,
+    'vainashika_navamsha': clientApi.getVainashikaNavamsha,
+    'karmabham_chart': clientApi.getKarmabhamChart,
+    'd55_navamsha': clientApi.getD55Navamsha,
+    'd64_khara_navamsha': clientApi.getD64KharaNavamsha,
+    'd81_chart': clientApi.getD81Chart,
+    'd88_synastry_chart': clientApi.getD88SynastryChart,
+    'd91_labham_chart': clientApi.getD91LabhamChart,
+    'antya_chart': clientApi.getAntyaChart,
+};
+
+interface NavamshaWidgetContentProps {
+    widget: CustomizeChartItem;
+    clientId: string;
+}
+
+function NavamshaWidgetContent({ widget, clientId }: NavamshaWidgetContentProps) {
+    const apiMethod = NAVAMSHA_API_MAP[widget.id];
+
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['navamsha', widget.id, clientId],
+        queryFn: async () => {
+            if (!clientId || !apiMethod) throw new Error('Invalid navamsha configuration');
+            return await apiMethod(clientId);
+        },
+        enabled: !!clientId && !!apiMethod,
+        staleTime: 1000 * 60 * 60,
+    });
+
+    const chartData = useMemo(() => {
+        if (!data) return null;
+        // The response is a chart record; the astro payload is nested inside chartData
+        const payload = (data as any).chartData || data;
+        const inner = (payload as any).data || payload;
+        return inner;
+    }, [data]);
+
+    const ascendantSign = useMemo(() => {
+        if (!chartData) return 1;
+        const asc = (chartData as any).ascendant;
+        if (!asc) return 1;
+        const signName = asc.sign || asc.sign_name || 'Aries';
+        return signNameToId[signName] || 1;
+    }, [chartData]);
+
+    const planets = useMemo(() => {
+        if (!chartData) return [];
+        const positions = (chartData as any).planetary_positions;
+        if (!positions || typeof positions !== 'object') return [];
+
+        return Object.entries(positions).map(([name, info]: [string, any]) => {
+            const signName = info?.sign || info?.sign_name || 'Aries';
+            const signId = signNameToId[signName] || 1;
+            return {
+                name,
+                signId,
+                degree: info?.degrees || info?.degree || '',
+                isRetro: !!(info?.retrograde === 'R' || info?.retrograde === true),
+                house: info?.house || 0,
+                nakshatra: info?.nakshatra || '',
+                pada: info?.pada || 0,
+            };
+        });
+    }, [chartData]);
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-full gap-3">
+                <Loader2 className="w-8 h-8 text-amber-600 animate-spin" />
+                <p className="text-sm font-medium text-amber-800">Calculating {widget.name}...</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center h-full gap-3 p-6">
+                <AlertCircle className="w-8 h-8 text-red-500" />
+                <p className="text-sm font-bold text-red-800 text-center">Failed to load {widget.name}</p>
+                <p className="text-xs text-red-600 text-center">{(error as Error)?.message || 'Unknown error'}</p>
+            </div>
+        );
+    }
+
+    if (!chartData || planets.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center h-full gap-3">
+                <Sparkles className="w-8 h-8 text-amber-400" />
+                <p className="text-sm text-amber-700">No data available for {widget.name}</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="w-full h-full flex items-center justify-center p-2">
+            <CompactNorthIndianChart
+                ascendantSign={ascendantSign}
+                planets={planets}
+                className="w-full h-full"
+                showDegrees={true}
+                planetDisplayMode="both"
+                showHouseNumbers={true}
+                colorTheme="classic"
+            />
+        </div>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // CONTENT RENDERER - Returns only the inner content (no card wrapper)
 // For use inside ResizableWidgetBox
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1619,9 +1786,11 @@ export function renderWidgetContent(
         case 'widget_dosha':
             return <DoshaWidget {...props} />;
         case 'widget_transit':
-            return <TransitWidget {...props} />;
+            return <TransitWidgetContent clientId={clientId} />;
         case 'widget_remedy':
-            return <RemedyWidget {...props} />;
+            return <RemedyWidgetContent activeSystem={widgetAyanamsa} />;
+        case 'navamsha':
+            return <NavamshaWidgetContent widget={item} clientId={clientId} />;
         case 'kp_module':
             return <KpModuleWidgetContent widget={item} activeSystem={widgetAyanamsa} />;
         default:

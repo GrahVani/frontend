@@ -118,11 +118,6 @@ const SMART_DEFAULTS: Record<string, WidgetDimensions> = {
     },
 
     // Others
-    widget_transit: {
-        width: 480, height: 320,
-        minWidth: 380, minHeight: 250,
-        maxWidth: 900, maxHeight: 600
-    },
     widget_remedy: {
         width: 520, height: 450,
         minWidth: 400, minHeight: 350,
@@ -147,6 +142,11 @@ const SMART_DEFAULTS: Record<string, WidgetDimensions> = {
         width: 480, height: 420,
         minWidth: 380, minHeight: 320,
         maxWidth: 900, maxHeight: 800
+    },
+    widget_transit: {
+        width: 1400, height: 800,
+        minWidth: 600, minHeight: 400,
+        maxWidth: 1920, maxHeight: 1080
     },
 };
 
@@ -980,6 +980,7 @@ export default function CustomizePage() {
                                             onUpdateDimensions={(dims) => updateDimensions(item.instanceId, dims)}
                                             onUpdateTheme={(theme) => updateTheme(item.instanceId, theme)}
                                             isLoading={isLoadingCharts}
+                                            autoScale={item.category !== 'widget_transit' && item.category !== 'widget_remedy'}
                                         >
                                             {renderWidgetContent({
                                                 ...item,
@@ -1003,13 +1004,18 @@ export default function CustomizePage() {
                                             isLoading={isLoadingCharts}
                                             onGenerate={async () => {
                                                 setGeneratingCharts(prev => new Set(prev).add(item.id));
-                                                await clientApi.generateChart(clientId, item.id, item.ayanamsa || activeSystem);
-                                                await refreshCharts();
-                                                setGeneratingCharts(prev => {
-                                                    const next = new Set(prev);
-                                                    next.delete(item.id);
-                                                    return next;
-                                                });
+                                                try {
+                                                    await clientApi.generateChart(clientId, item.id, item.ayanamsa || activeSystem);
+                                                    await refreshCharts();
+                                                } catch (err) {
+                                                    console.error(`Failed to generate chart ${item.id}:`, err);
+                                                } finally {
+                                                    setGeneratingCharts(prev => {
+                                                        const next = new Set(prev);
+                                                        next.delete(item.id);
+                                                        return next;
+                                                    });
+                                                }
                                             }}
                                         >
                                             <div className="w-full h-full p-2">

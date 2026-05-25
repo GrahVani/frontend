@@ -166,6 +166,7 @@ export interface SystemCapabilities {
         special: string[];
         lagna: string[];
         rare_shodash?: string[];
+        lalkitab?: string[];
     };
     features: {
         dasha: string[];

@@ -128,6 +128,33 @@ export const queryKeys = {
         search: (q: string, domain?: string) => ['knowledge', 'search', q, domain] as const,
         stats: ['knowledge', 'stats'] as const,
     },
+    // Lal Kitab
+    lalKitab: {
+        housePosition: (clientId: string) => ['lalKitab', 'housePosition', clientId] as const,
+        planetaryPosition: (clientId: string) => ['lalKitab', 'planetaryPosition', clientId] as const,
+        dasha: (clientId: string) => ['lalKitab', 'dasha', clientId] as const,
+        teva: (clientId: string) => ['lalKitab', 'teva', clientId] as const,
+        varshphalTimeline: (clientId: string) => ['lalKitab', 'varshphalTimeline', clientId] as const,
+    },
+    navamsha: {
+        bhava: (clientId: string) => ['navamsha', 'bhava', clientId] as const,
+        divajiya: (clientId: string) => ['navamsha', 'divajiya', clientId] as const,
+        kshetra: (clientId: string) => ['navamsha', 'kshetra', clientId] as const,
+        tajika: (clientId: string) => ['navamsha', 'tajika', clientId] as const,
+        tulya: (clientId: string) => ['navamsha', 'tulya', clientId] as const,
+        vargottama: (clientId: string) => ['navamsha', 'vargottama', clientId] as const,
+        karmasthana: (clientId: string) => ['navamsha', 'karmasthana', clientId] as const,
+        sukhabham: (clientId: string) => ['navamsha', 'sukhabham', clientId] as const,
+        vainashika: (clientId: string) => ['navamsha', 'vainashika', clientId] as const,
+        karmabham: (clientId: string) => ['navamsha', 'karmabham', clientId] as const,
+        d55: (clientId: string) => ['navamsha', 'd55', clientId] as const,
+        d64Khara: (clientId: string) => ['navamsha', 'd64Khara', clientId] as const,
+        d81: (clientId: string) => ['navamsha', 'd81', clientId] as const,
+        d88Synastry: (clientId: string) => ['navamsha', 'd88Synastry', clientId] as const,
+        d91Labham: (clientId: string) => ['navamsha', 'd91Labham', clientId] as const,
+        antya: (clientId: string) => ['navamsha', 'antya', clientId] as const,
+    },
+
     // Grantha Report Engine
     grantha: {
         blueprints: {
