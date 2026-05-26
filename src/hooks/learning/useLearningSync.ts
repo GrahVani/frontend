@@ -172,10 +172,12 @@ export function useLearningSync(): LearningSyncStatus {
         // Fire-and-forget daily-login point. Backend dedupes per day.
         try {
           await postDailyLogin(userId);
-        } catch {
+        } catch (e) {
+          console.warn("[useLearningSync] daily-login failed, queued for retry:", e);
           enqueue({ kind: "daily-login", payload: { userId }, enqueuedAt: Date.now(), attempts: 0 });
         }
-      } catch {
+      } catch (e) {
+        console.error("[useLearningSync] fetchDashboard failed:", e);
         setIsReachable(false);
       }
       void drainQueue();

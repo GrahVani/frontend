@@ -33,6 +33,9 @@ import { FourStreamLandscapeExplorer } from "./four-stream-landscape-explorer";
 import { FourStreamSynthesisDojo } from "./four-stream-synthesis-dojo";
 import { ThreeSkandhaCurriculumMap } from "./three-skandha-curriculum-map";
 import { ThreeSkandhaSynthesisDojo } from "./three-skandha-synthesis-dojo";
+import { TithiAngleVisualizer } from "./tithi-angle-visualizer";
+import { TithiCalculatorDojo } from "./tithi-calculator-dojo";
+import { TithiDeityWheel } from "./tithi-deity-wheel";
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
 
@@ -119,6 +122,21 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // Lesson 3.1's §7 flagship: Three Skandha Synthesis Dojo — two-tab
   // (Stream × Skandha Matrix + 5-scenario Evaluative Drill).
   "three-skandha-synthesis-dojo": ThreeSkandhaSynthesisDojo,
+  // Lesson 3.1.1's §4 explorer: Tithi Angle Visualizer — circular Sun-Moon
+  // orbit with 12° segment overlay + real-time tithi computation + pakṣa
+  // indicator + pañcāṅga reading panel.
+  "tithi-angle-visualizer": TithiAngleVisualizer,
+  // Lesson 3.1.1's §7 flagship: Tithi Calculator Dojo — step-by-step formula
+  // breakdown with editable Sun/Moon longitudes + preset scenarios + elapsed
+  // fraction visualisation.
+  "tithi-calculator-dojo": TithiCalculatorDojo,
+  // Lesson 3.1.2's §7 flagship: Tithi-Deity Wheel — circular 30-tithi visual
+  // explorer with click-for-attributes, quality-filter highlight, and
+  // festival-major badge system.
+  "tithi-deity-wheel": TithiDeityWheel,
+  // Alias: the M3-C1-L1 front matter declares `component: pancanga-builder`;
+  // until the full pancanga-builder is built, route it to the tithi dojo.
+  "pancanga-builder": TithiCalculatorDojo,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {
