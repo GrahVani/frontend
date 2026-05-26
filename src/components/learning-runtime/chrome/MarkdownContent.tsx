@@ -218,8 +218,9 @@ export function MarkdownContent({ children, surface = "dark", noTopMargin = fals
               <table
                 style={{
                   width: "100%",
+                  tableLayout: "fixed",
                   borderCollapse: "collapse",
-                  fontSize: "16px",
+                  fontSize: "14px",
                   background: isDark ? "rgba(255,255,255,0.02)" : "transparent",
                   borderRadius: "8px",
                   overflow: "hidden",
@@ -241,14 +242,15 @@ export function MarkdownContent({ children, surface = "dark", noTopMargin = fals
           th: ({ children }: { children?: ReactNode }) => (
             <th
               style={{
-                padding: "12px 16px",
+                padding: "10px 12px",
                 textAlign: "left",
                 fontWeight: 600,
                 color: gold,
-                fontSize: "14px",
+                fontSize: "13px",
                 textTransform: "uppercase",
                 letterSpacing: "0.06em",
                 borderBottom: `1px solid var(--gl-gold-hairline)`,
+                lineHeight: 1.3,
               }}
             >
               {children}
@@ -257,9 +259,12 @@ export function MarkdownContent({ children, surface = "dark", noTopMargin = fals
           td: ({ children }: { children?: ReactNode }) => (
             <td
               style={{
-                padding: "12px 16px",
+                padding: "7px 10px",
                 borderBottom: `1px solid ${isDark ? "rgba(255,255,255,0.06)" : "rgba(168,130,30,0.10)"}`,
                 verticalAlign: "top",
+                lineHeight: 1.45,
+                wordWrap: "break-word",
+                overflowWrap: "break-word",
               }}
             >
               {children}

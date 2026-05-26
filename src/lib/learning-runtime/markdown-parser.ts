@@ -22,7 +22,7 @@ import { classifySection, type LessonSection } from "./types";
  * The leading `#` may be repeated (e.g., `## §4.1 …`) but for the canonical
  * twelve-section template we expect single `#`.
  */
-const SECTION_HEADING_RE = /^#+\s+§(\d+(?:\.\d+)?)\s+(.+?)\s*$/gm;
+const SECTION_HEADING_RE = /^#+\s+§(\d+(?:\.\d+)?)\.?\s+(.+?)\s*$/gm;
 
 /**
  * Split a markdown body into typed sections. The input is the lesson's body
@@ -59,7 +59,7 @@ export function splitSections(bodyMarkdown: string): LessonSection[] {
     const bodyEnd = next ? next.headingStart : bodyMarkdown.length;
     const rawBody = bodyMarkdown.slice(bodyStart, bodyEnd).trim();
 
-    const { group, type } = classifySection(cur.number);
+    const { group, type } = classifySection(cur.number, cur.title);
 
     sections.push({
       number: cur.number,

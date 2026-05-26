@@ -65,6 +65,12 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   // L3.1's §7 = Three Skandha Synthesis Dojo (Stream × Skandha Matrix +
   // 5-scenario Evaluative Drill). §4 keeps the three-skandha-curriculum-map.
   "three-skandhas-overview": "three-skandha-synthesis-dojo",
+  // M3-C1-L1's §7 = Tithi Calculator Dojo (step-by-step formula breakdown +
+  // editable longitudes + preset scenarios). §4 keeps the tithi-angle-visualizer.
+  "tithi-as-12-degrees-of-sun-moon-angle": "tithi-calculator-dojo",
+  // M3-C1-L2's §7 = Tithi-Deity Wheel (circular 30-tithi visual explorer with
+  // click-for-attributes + quality-filter + festival-major badges).
+  "the-15-shukla-tithis": "tithi-deity-wheel",
 };
 
 export function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorProps) {

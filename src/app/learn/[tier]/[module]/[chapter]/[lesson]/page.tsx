@@ -39,10 +39,12 @@ import { MedievalCodifierRelativeDatingExplorer } from "@/components/learning-ru
 import { ParashariJaiminiParallelTraditionExplorer } from "@/components/learning-runtime/interactive/parashari-jaimini-parallel-tradition-explorer";
 import { FourStreamLandscapeExplorer } from "@/components/learning-runtime/interactive/four-stream-landscape-explorer";
 import { ThreeSkandhaCurriculumMap } from "@/components/learning-runtime/interactive/three-skandha-curriculum-map";
+import { TithiAngleVisualizer } from "@/components/learning-runtime/interactive/tithi-angle-visualizer";
 import { SectionDivider } from "@/components/learning-runtime/chrome/SectionDivider";
 import { RevealSection } from "@/components/learning-runtime/chrome/RevealSection";
 import { LessonTimeTracker } from "@/components/learning-runtime/LessonTimeTracker";
 import { presentationFor } from "@/components/learning-runtime/lib/section-meta";
+import { MarkdownContent } from "@/components/learning-runtime/chrome/MarkdownContent";
 import Link from "next/link";
 
 interface LessonRouteParams {
@@ -566,6 +568,42 @@ export default async function LessonPage({
               <ThreeSkandhaCurriculumMap />
             </div>
           );
+        } else if (fm.slug === "tithi-as-12-degrees-of-sun-moon-angle") {
+          reflectionPrompts = [
+            "At what elongation does the transition from śukla to kṛṣṇa pakṣa occur, and why is it astronomically significant?",
+            "If a birth occurs at 16:00 on a day whose pañcāṅga-tithi is Śukla Caturthī but whose tithi-end-time was 14:42, what tithi do you record in the natal chart — and why?",
+            "Try restating in your own words: why must true (spaṣṭa) longitudes be used instead of mean longitudes for tithi computation?",
+          ];
+          scenes = (
+            <div data-l311-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                The 12° Sun-Moon Engine
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                The tithi is the first limb of the pañcāṅga — computed from the
+                angular separation of the Moon from the Sun, 12° per tithi.
+                Drag the slider to see how the tithi changes as the Moon
+                advances, and read the pañcāṅga interpretation at each moment.
+              </p>
+              <TithiAngleVisualizer />
+            </div>
+          );
         } else if (fm.slug === "jyotisha-vs-western-astrology-vs-pop-astrology") {
           reflectionPrompts = [
             "Of the six dimensions, which one was the biggest surprise — where did you realise you'd been carrying an incorrect mental model about one of the traditions?",
@@ -671,6 +709,26 @@ export default async function LessonPage({
           <Continuation section={sec12} frontMatter={fm} />
         </RevealSection>
       )}
+
+      {/* Sections beyond §12 — rendered as generic markdown (M3 lessons use §13-§14) */}
+      {sections
+        .filter((s) => {
+          const n = Number(s.number);
+          return !Number.isNaN(n) && n >= 13;
+        })
+        .map((extraSec) => (
+          <RevealSection key={extraSec.number}>
+            <SectionDivider accentHex={presentationFor(extraSec).accentHex} />
+            <section
+              className="mx-auto py-5"
+              style={{ maxWidth: "880px", scrollMarginTop: "120px" }}
+            >
+              <div className="gl-surface-twilight-glass p-8">
+                <MarkdownContent noTopMargin>{extraSec.body}</MarkdownContent>
+              </div>
+            </section>
+          </RevealSection>
+        ))}
     </LessonShell>
   );
 }

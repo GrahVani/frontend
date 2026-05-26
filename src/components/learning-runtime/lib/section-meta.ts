@@ -219,6 +219,14 @@ const LESSON_SECTION_OVERRIDES: Record<
     "7": { embodiedTitle: "Survey the four-stream matrix, then drill the chapter-capstone Bloom-Evaluate" },
     "8": { embodiedTitle: "Mere-innovations, competing-schools, Sanskrit-criterion, cross-stream-critique-without-fluency" },
   },
+  "tithi-as-12-degrees-of-sun-moon-angle": {
+    "7": { embodiedTitle: "Sūrya Siddhānta Spaṣṭādhyāya — true-longitude computational mechanics" },
+    "8": { embodiedTitle: "Mean vs true longitudes, pañcāṅga vs instantaneous, premature muhūrta judgment, forgetting tithi-first status" },
+  },
+  "the-15-shukla-tithis": {
+    "7": { embodiedTitle: "Bṛhat Saṁhitā Adhyāya 100 — the 30-tithi deity-quality wheel" },
+    "8": { embodiedTitle: "Name-number confusion, forgetting special names, misattributing deities, treating correspondences as faith claims" },
+  },
 };
 
 export function presentationFor(

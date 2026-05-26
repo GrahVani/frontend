@@ -158,8 +158,105 @@ export const SECTION_METADATA: Record<string, { group: SectionGroup; type: Secti
   "12": { group: "Finish", type: "continuation" },
 };
 
-export function classifySection(number: string): { group: SectionGroup; type: SectionType } {
+export function classifySection(number: string, title?: string): { group: SectionGroup; type: SectionType } {
   // Sub-sections (e.g., "3.1") inherit from their parent major.
   const major = number.split(".")[0];
-  return SECTION_METADATA[major] ?? { group: "Learn", type: "unknown" };
+  const meta = SECTION_METADATA[major];
+
+  // Title-based heuristics for curriculum files that use different § numbering
+  // (e.g., M3 uses §1-§14 with different semantics than M1's §1-§12).
+  if (title && meta) {
+    const lower = title.toLowerCase();
+    // Sloka detection: classical citation, śloka, source, authority
+    if (
+      lower.includes("śloka") ||
+      lower.includes("sloka") ||
+      lower.includes("source") ||
+      lower.includes("authority") ||
+      lower.includes("classical citation") ||
+      lower.includes("sūrya siddhānta") ||
+      lower.includes("muhūrta cintāmaṇi")
+    ) {
+      return { group: "Learn", type: "sloka" };
+    }
+    // Interactive detection
+    if (
+      lower.includes("interactive") ||
+      lower.includes("pancanga-builder") ||
+      lower.includes("calculator") ||
+      lower.includes("explorer") ||
+      lower.includes("visualizer")
+    ) {
+      return { group: "Learn", type: "interactive" };
+    }
+    // Mistakes detection
+    if (lower.includes("mistake") || lower.includes("trap") || lower.includes("watch out")) {
+      return { group: "Practice", type: "common-mistakes" };
+    }
+    // Remember detection
+    if (lower.includes("remember") || lower.includes("things to remember") || lower.includes("anchor")) {
+      return { group: "Practice", type: "things-to-remember" };
+    }
+    // MCQ / practice detection
+    if (
+      lower.includes("test yourself") ||
+      lower.includes("mcq") ||
+      lower.includes("self-check") ||
+      lower.includes("mastery checkpoint") ||
+      lower.includes("practice")
+    ) {
+      return { group: "Practice", type: "mcq" };
+    }
+    // Summary detection
+    if (lower.includes("summary") || lower.includes("90 seconds") || lower.includes("recap")) {
+      return { group: "Finish", type: "summary" };
+    }
+    // Continuation / bibliography detection
+    if (
+      lower.includes("citation") ||
+      lower.includes("bibliography") ||
+      lower.includes("further reading") ||
+      lower.includes("cross-reference") ||
+      lower.includes("next-lesson")
+    ) {
+      return { group: "Finish", type: "continuation" };
+    }
+    // Hook detection
+    if (
+      lower.includes("hook") ||
+      lower.includes("why this lesson matters") ||
+      lower.includes("why this matters")
+    ) {
+      return { group: "Start", type: "hook" };
+    }
+    // Outcomes detection
+    if (
+      lower.includes("outcome") ||
+      lower.includes("able to do") ||
+      lower.includes("you will be able")
+    ) {
+      return { group: "Start", type: "outcomes" };
+    }
+    // Prerequisites detection
+    if (lower.includes("prereq") || lower.includes("should know") || lower.includes("before")) {
+      return { group: "Start", type: "prerequisites" };
+    }
+    // Worked example detection
+    if (lower.includes("worked") || lower.includes("example") || lower.includes("recognition")) {
+      return { group: "Learn", type: "worked-example" };
+    }
+    // Body detection (fallback for teaching sections)
+    if (
+      lower.includes("body") ||
+      lower.includes("teaching") ||
+      lower.includes("core") ||
+      lower.includes("formula") ||
+      lower.includes("workflow") ||
+      lower.includes("computation")
+    ) {
+      return { group: "Learn", type: "body" };
+    }
+  }
+
+  return meta ?? { group: "Learn", type: "unknown" };
 }
