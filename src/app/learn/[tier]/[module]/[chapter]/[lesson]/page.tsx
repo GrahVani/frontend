@@ -38,6 +38,7 @@ import { VarahamihiraSkandhaCoverageExplorer } from "@/components/learning-runti
 import { MedievalCodifierRelativeDatingExplorer } from "@/components/learning-runtime/interactive/medieval-codifier-relative-dating-explorer";
 import { ParashariJaiminiParallelTraditionExplorer } from "@/components/learning-runtime/interactive/parashari-jaimini-parallel-tradition-explorer";
 import { FourStreamLandscapeExplorer } from "@/components/learning-runtime/interactive/four-stream-landscape-explorer";
+import { ThreeSkandhaCurriculumMap } from "@/components/learning-runtime/interactive/three-skandha-curriculum-map";
 import { SectionDivider } from "@/components/learning-runtime/chrome/SectionDivider";
 import { RevealSection } from "@/components/learning-runtime/chrome/RevealSection";
 import { LessonTimeTracker } from "@/components/learning-runtime/LessonTimeTracker";
@@ -526,6 +527,45 @@ export default async function LessonPage({
               <KarmaTypologyExplorer />
             </div>
           );
+        } else if (fm.slug === "three-skandhas-overview") {
+          reflectionPrompts = [
+            "Of the three skandhas, which one's modern operational distribution surprised you most — and what does that imply about how you should value gaṇita study?",
+            "Where do YOU think the curriculum should have placed more saṁhitā coverage? What would be lost if saṁhitā were reduced further?",
+            "Try restating in your own words: why is gaṇita called 'foundational-substrate' rather than 'most important'?",
+          ];
+          scenes = (
+            <div data-l31-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                The Three Skandhas and the Curriculum Map
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                The classical three-fold organisation of Jyotiṣa — Gaṇita
+                (mathematical-astronomy), Horā (natal-and-predictive
+                astrology), and Saṁhitā (mundane astrology + adjacent
+                encyclopaedic disciplines). The painting on the left shows
+                the triangular relationship; the panel on the right lets you
+                explore each skandha's texts, modules, and stream-specific
+                emphasis.
+              </p>
+              <ThreeSkandhaCurriculumMap />
+            </div>
+          );
         } else if (fm.slug === "jyotisha-vs-western-astrology-vs-pop-astrology") {
           reflectionPrompts = [
             "Of the six dimensions, which one was the biggest surprise — where did you realise you'd been carrying an incorrect mental model about one of the traditions?",
@@ -565,7 +605,15 @@ export default async function LessonPage({
           );
         }
 
-        return <ConceptTheatre section={sec4} reflectionPrompts={reflectionPrompts} scenes={scenes} />;
+        // For three-skandhas-overview, the markdown §4 body contains an ASCII-art
+        // triangle that duplicates the interactive SVG scene. Strip it so only
+        // the interactive visual renders.
+        const sec4Cleaned =
+          fm.slug === "three-skandhas-overview" && sec4
+            ? { ...sec4, body: sec4.body.replace(/```[\s\S]*?```/g, "") }
+            : sec4;
+
+        return <ConceptTheatre section={sec4Cleaned} reflectionPrompts={reflectionPrompts} scenes={scenes} />;
       })()}
 
       {sec5 && (
