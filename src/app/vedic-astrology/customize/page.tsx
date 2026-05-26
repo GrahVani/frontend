@@ -415,10 +415,7 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
             }}
         >
             {showHeader && (() => {
-                // Responsive breakpoints based on actual widget width
                 const w = dimensions.width;
-                const showDimensionControls = w >= 380;
-                const showZoomControl = w >= 450;
                 const showAyanamsa = w >= 320;
                 const isCompact = w < 300;
 
@@ -431,7 +428,7 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                             height: theme.headerHeight ?? 38,
                         }}
                     >
-                        {/* Left side: Title + dimension/zoom controls */}
+                        {/* Left side: Title */}
                         <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
                             {/* Title — bold, dark, prominent */}
                             <span
@@ -447,76 +444,6 @@ const ResizableWidgetBox = React.memo(function ResizableWidgetBox({
                             >
                                 {displayTitle}
                             </span>
-
-                            {/* W/H Controls — warm gold pill, high contrast */}
-                            {showDimensionControls && (
-                                <div className="flex items-center gap-0.5 px-1.5 py-1 rounded-lg border border-[#C9B896] shrink-0">
-                                    {/* Width */}
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ width: dimensions.width - 10 }); }}
-                                        className="w-5 h-5 flex items-center justify-center rounded hover:bg-[#D4C4A8] active:scale-90 transition-all"
-                                    >
-                                        <Minus className="w-3 h-3 text-[#6B5B4E]" />
-                                    </button>
-                                    <span className="text-[10px] font-medium text-[#5A4A3A] text-center uppercase whitespace-nowrap min-w-[42px] tracking-wide">
-                                        W: {dimensions.width}
-                                    </span>
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ width: dimensions.width + 10 }); }}
-                                        className="w-5 h-5 flex items-center justify-center rounded hover:bg-[#D4C4A8] active:scale-90 transition-all"
-                                    >
-                                        <Plus className="w-3 h-3 text-[#6B5B4E]" />
-                                    </button>
-
-                                    <div className="w-px h-3.5 bg-[#C9B896] mx-1" />
-
-                                    {/* Height */}
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ height: dimensions.height - 10 }); }}
-                                        className="w-5 h-5 flex items-center justify-center rounded hover:bg-[#D4C4A8] active:scale-90 transition-all"
-                                    >
-                                        <Minus className="w-3 h-3 text-[#6B5B4E]" />
-                                    </button>
-                                    <span className="text-[10px] font-medium text-[#5A4A3A] text-center uppercase whitespace-nowrap min-w-[42px] tracking-wide">
-                                        H: {dimensions.height}
-                                    </span>
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); onUpdateDimensions({ height: dimensions.height + 10 }); }}
-                                        className="w-5 h-5 flex items-center justify-center rounded hover:bg-[#D4C4A8] active:scale-90 transition-all"
-                                    >
-                                        <Plus className="w-3 h-3 text-[#6B5B4E]" />
-                                    </button>
-                                </div>
-                            )}
-
-                            {/* Zoom Control — vibrant primary pill */}
-                            {showZoomControl && (
-                                <div className="flex items-center gap-0.5 px-1.5 py-1 rounded-lg border border-primary/30 shrink-0">
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            const currentScale = theme.contentTextScale ?? 1;
-                                            onUpdateTheme({ contentTextScale: Math.max(0.5, currentScale - 0.05) });
-                                        }}
-                                        className="w-5 h-5 flex items-center justify-center rounded hover:bg-primary/20 active:scale-90 transition-all"
-                                    >
-                                        <Minus className="w-3 h-3 text-primary" />
-                                    </button>
-                                    <span className="text-[10px] font-medium text-primary whitespace-nowrap text-center min-w-[32px] tracking-wide">
-                                        {finalScale.scalePercentage}%
-                                    </span>
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            const currentScale = theme.contentTextScale ?? 1;
-                                            onUpdateTheme({ contentTextScale: Math.min(2, currentScale + 0.05) });
-                                        }}
-                                        className="w-5 h-5 flex items-center justify-center rounded hover:bg-primary/20 active:scale-90 transition-all"
-                                    >
-                                        <Plus className="w-3 h-3 text-primary" />
-                                    </button>
-                                </div>
-                            )}
                         </div>
 
                         {/* Right side: Ayanamsa + Settings + Close — always visible */}

@@ -62,6 +62,9 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   // 5-scenario Evaluative Reasoning Drill — chapter-capstone Bloom-Evaluate).
   // §4 keeps the four-stream-landscape-explorer.
   "modern-founders-krishnamurti-and-joshi": "four-stream-synthesis-dojo",
+  // L3.1's §7 = Three Skandha Synthesis Dojo (Stream × Skandha Matrix +
+  // 5-scenario Evaluative Drill). §4 keeps the three-skandha-curriculum-map.
+  "three-skandhas-overview": "three-skandha-synthesis-dojo",
 };
 
 export function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorProps) {

@@ -31,6 +31,8 @@ import { ParashariJaiminiParallelTraditionExplorer } from "./parashari-jaimini-p
 import { JaiminiSecondTraditionDojo } from "./jaimini-second-tradition-dojo";
 import { FourStreamLandscapeExplorer } from "./four-stream-landscape-explorer";
 import { FourStreamSynthesisDojo } from "./four-stream-synthesis-dojo";
+import { ThreeSkandhaCurriculumMap } from "./three-skandha-curriculum-map";
+import { ThreeSkandhaSynthesisDojo } from "./three-skandha-synthesis-dojo";
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
 
@@ -111,6 +113,12 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // deep-dive across 4 streams + 5-scenario Evaluative Reasoning Drill).
   // This is the Chapter-2 capstone Bloom-Evaluate practice surface.
   "four-stream-synthesis-dojo": FourStreamSynthesisDojo,
+  // Lesson 3.1's §4 explorer: Three Skandha Curriculum Map — L2 pattern
+  // (triangle painting LEFT + clickable skandha rows RIGHT).
+  "three-skandha-curriculum-map": ThreeSkandhaCurriculumMap,
+  // Lesson 3.1's §7 flagship: Three Skandha Synthesis Dojo — two-tab
+  // (Stream × Skandha Matrix + 5-scenario Evaluative Drill).
+  "three-skandha-synthesis-dojo": ThreeSkandhaSynthesisDojo,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {
