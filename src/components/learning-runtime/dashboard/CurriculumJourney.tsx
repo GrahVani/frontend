@@ -22,7 +22,7 @@
 
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useCallback } from "react";
 import Link from "next/link";
 import { Flame, Check, Lock, ArrowRight, Award, Layers, BookOpen, Target, TrendingUp, Sparkles, Clock } from "lucide-react";
 import { useProgressStore } from "@/lib/learning-runtime/progress-store";
@@ -151,7 +151,20 @@ export function CurriculumJourney({ tiers }: CurriculumJourneyProps) {
   // (We intentionally don't call getReviewDeck() directly to avoid lying about reactivity.)
 
   const tier1 = tiers.find((t) => t.sequence === 1);
-  const focusModule = tier1?.modules.find((m) => m.totalAuthoredLessons > 0) ?? tier1?.modules[0];
+  // Always default to Module 1 when the Learn page opens.
+  // The user can click any unlocked module card in the grid to switch focus.
+  const defaultModule = tier1?.modules[0];
+  const [selectedModuleSlug, setSelectedModuleSlug] = useState<string | null>(null);
+  const focusModule = (selectedModuleSlug
+    ? tier1?.modules.find((m) => m.slug === selectedModuleSlug)
+    : defaultModule
+  ) ?? defaultModule;
+
+  const handleSelectModule = useCallback((slug: string) => {
+    setSelectedModuleSlug(slug);
+    // Scroll to the top of the module focus section smoothly
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const focusLessons = useMemo(() => {
     if (!focusModule) return [];
@@ -252,7 +265,7 @@ export function CurriculumJourney({ tiers }: CurriculumJourneyProps) {
       </ScrollReveal>
 
       <ScrollReveal offsetPx={40}>
-        <ModuleGrid tier={tier1} focusModuleSlug={focusModule.slug} lessons={lessons} />
+        <ModuleGrid tier={tier1} focusModuleSlug={focusModule.slug} lessons={lessons} onSelectModule={handleSelectModule} />
       </ScrollReveal>
 
       <ScrollReveal>
@@ -2378,10 +2391,12 @@ function ModuleGrid({
   tier,
   focusModuleSlug,
   lessons,
+  onSelectModule,
 }: {
   tier: CurriculumTier;
   focusModuleSlug: string;
   lessons: Record<string, { masteryStatus?: string } | undefined>;
+  onSelectModule: (slug: string) => void;
 }) {
   return (
     <section style={{ padding: "72px 32px", background: "rgba(252, 230, 184, 0.18)", borderTop: `1px solid ${GOLD}22`, borderBottom: `1px solid ${GOLD}22` }}>
@@ -2398,29 +2413,66 @@ function ModuleGrid({
           </p>
         </header>
 
-        <div className="gl-module-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
-          {tier.modules.map((m, idx) => {
-            const palette = paletteForModule(idx);
-            const masteredInModule = m.chapters
-              .flatMap((c) => c.lessons)
-              .filter((l) => lessons[l.canonicalSlug]?.masteryStatus === "Mastered").length;
-            const isCurrent = m.slug === focusModuleSlug;
-            const isFirst = idx === 0;
-            const isLocked = !isCurrent && !isFirst;
-            const isComplete = masteredInModule === m.totalLessons && m.totalLessons > 0;
-            return (
-              <ScrollReveal key={m.slug} delayMs={(idx % 3) * 80} offsetPx={32}>
-                <ModuleCard
-                  module={m}
-                  palette={palette}
-                  masteredInModule={masteredInModule}
-                  state={isComplete ? "complete" : isCurrent ? "current" : isLocked ? "locked" : "unlocked"}
-                  lessons={lessons}
-                />
-              </ScrollReveal>
-            );
-          })}
-        </div>
+        {/* ═══ MODULE 1 — always visible, featured slot ═══ */}
+        {(() => {
+          const m = tier.modules[0];
+          if (!m) return null;
+          const palette = paletteForModule(0);
+          const masteredInModule = m.chapters
+            .flatMap((c) => c.lessons)
+            .filter((l) => lessons[l.canonicalSlug]?.masteryStatus === "Mastered").length;
+          const isComplete = masteredInModule === m.totalLessons && m.totalLessons > 0;
+          return (
+            <div style={{ maxWidth: "480px", margin: "0 auto 32px" }}>
+              <ModuleCard
+                module={m}
+                palette={palette}
+                masteredInModule={masteredInModule}
+                state={isComplete ? "complete" : "current"}
+                lessons={lessons}
+                isFocused={m.slug === focusModuleSlug}
+                onSelect={() => onSelectModule(m.slug)}
+              />
+            </div>
+          );
+        })()}
+
+        {/* ═══ MODULES 2+ — revealed on scroll ═══ */}
+        <ScrollReveal offsetPx={60}>
+          <div className="gl-module-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
+            {tier.modules.slice(1).map((m, idx) => {
+              const gridIdx = idx + 1;
+              const palette = paletteForModule(gridIdx);
+              const masteredInModule = m.chapters
+                .flatMap((c) => c.lessons)
+                .filter((l) => lessons[l.canonicalSlug]?.masteryStatus === "Mastered").length;
+              const isCurrent = m.slug === focusModuleSlug;
+              const isComplete = masteredInModule === m.totalLessons && m.totalLessons > 0;
+              // Sequential unlock: module N is unlocked if all previous modules are fully mastered.
+              const priorModules = tier.modules.slice(0, gridIdx);
+              const allPriorComplete = priorModules.every((pm) => {
+                const mastered = pm.chapters
+                  .flatMap((c) => c.lessons)
+                  .filter((l) => lessons[l.canonicalSlug]?.masteryStatus === "Mastered").length;
+                return mastered === pm.totalLessons && pm.totalLessons > 0;
+              });
+              const isLocked = !allPriorComplete;
+              return (
+                <ScrollReveal key={m.slug} delayMs={(idx % 3) * 100} offsetPx={28}>
+                  <ModuleCard
+                    module={m}
+                    palette={palette}
+                    masteredInModule={masteredInModule}
+                    state={isComplete ? "complete" : isCurrent ? "current" : isLocked ? "locked" : "unlocked"}
+                    lessons={lessons}
+                    isFocused={m.slug === focusModuleSlug}
+                    onSelect={() => onSelectModule(m.slug)}
+                  />
+                </ScrollReveal>
+              );
+            })}
+          </div>
+        </ScrollReveal>
         <style>{`
           @media (max-width: 1100px) {
             .gl-module-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -2440,12 +2492,16 @@ function ModuleCard({
   masteredInModule,
   state,
   lessons: _lessons,
+  isFocused,
+  onSelect,
 }: {
   module: CurriculumModule;
   palette: ModulePaletteEntry;
   masteredInModule: number;
   state: "complete" | "current" | "unlocked" | "locked";
   lessons: Record<string, { masteryStatus?: string } | undefined>;
+  isFocused?: boolean;
+  onSelect?: () => void;
 }) {
   const pct = m.totalLessons > 0 ? (masteredInModule / m.totalLessons) * 100 : 0;
   const canEnter = state === "current" || state === "unlocked" || state === "complete";
@@ -2461,7 +2517,7 @@ function ModuleCard({
   const cardStyle: React.CSSProperties = {
     position: "relative",
     background: "linear-gradient(180deg, #FFFCF0 0%, rgba(252, 245, 224, 0.96) 100%)",
-    border: isCurrent ? `2.5px solid ${accent}` : `1.5px solid ${accent}55`,
+    border: isFocused ? `2.5px solid ${accent}` : isCurrent ? `2.5px solid ${accent}` : `1.5px solid ${accent}55`,
     borderRadius: "20px",
     overflow: "hidden",
     boxShadow: isCurrent
@@ -2658,11 +2714,17 @@ function ModuleCard({
     </article>
   );
 
-  if (canEnter && m.totalAuthoredLessons > 0) {
+  if (canEnter && m.totalAuthoredLessons > 0 && onSelect) {
     return (
-      <Link href={`/learn/tier-1/module-${m.sequence}/chapter-1/lesson-1`} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={(e) => { e.preventDefault(); onSelect(); }}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect(); } }}
+        style={{ textDecoration: "none", color: "inherit", display: "block", cursor: "pointer" }}
+      >
         {Inner}
-      </Link>
+      </div>
     );
   }
   // Locked / unauthored — render the card directly. The hover popover was removed:
