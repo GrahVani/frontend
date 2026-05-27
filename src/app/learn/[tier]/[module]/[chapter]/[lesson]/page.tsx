@@ -40,6 +40,8 @@ import { ParashariJaiminiParallelTraditionExplorer } from "@/components/learning
 import { FourStreamLandscapeExplorer } from "@/components/learning-runtime/interactive/four-stream-landscape-explorer";
 import { ThreeSkandhaCurriculumMap } from "@/components/learning-runtime/interactive/three-skandha-curriculum-map";
 import { TithiAngleVisualizer } from "@/components/learning-runtime/interactive/tithi-angle-visualizer";
+import { TithiContextMatcher } from "@/components/learning-runtime/interactive/tithi-context-matcher";
+import { ShuklaTithiStrip } from "@/components/learning-runtime/interactive/shukla-tithi-strip";
 import { SectionDivider } from "@/components/learning-runtime/chrome/SectionDivider";
 import { RevealSection } from "@/components/learning-runtime/chrome/RevealSection";
 import { LessonTimeTracker } from "@/components/learning-runtime/LessonTimeTracker";
@@ -602,6 +604,71 @@ export default async function LessonPage({
                 advances, and read the pañcāṅga interpretation at each moment.
               </p>
               <TithiAngleVisualizer />
+              <div className="mt-10">
+                <h3
+                  className="mb-3"
+                  style={{
+                    fontFamily: "var(--font-cormorant), serif",
+                    fontSize: "26px",
+                    fontWeight: 500,
+                    color: "var(--gl-gold-accent)",
+                  }}
+                >
+                  Pañcāṅga-tithi vs Astronomical-instantaneous
+                </h3>
+                <p
+                  className="text-base italic mb-4"
+                  style={{
+                    fontFamily: "var(--font-cormorant), serif",
+                    color: "var(--gl-ink-secondary)",
+                    lineHeight: 1.55,
+                    maxWidth: "680px",
+                  }}
+                >
+                  The same 12° formula produces two operationally distinct tithis
+                  depending on when you apply it. Read each scenario and choose
+                  which tithi type a practitioner would use — wrong choices teach
+                  via correction.
+                </p>
+                <TithiContextMatcher />
+              </div>
+            </div>
+          );
+        } else if (fm.slug === "the-15-shukla-tithis") {
+          reflectionPrompts = [
+            "Which śukla tithi's deity association surprised you most — and what does it tell you about how tithi-deity correspondences encode cultural significance?",
+            "Why do you think Pratipadā and Pūrṇimā have special names while tithis 2–14 follow a numeral pattern? What does this tell you about how the tradition frames beginnings and endings?",
+            "Try reciting the 15 śukla tithis in order from memory — which three give you the most trouble, and why?",
+          ];
+          scenes = (
+            <div data-l312-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                The 15 Śukla Tithis in Sequence
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                Scroll through the strip below — each card shows the tithi
+                name, Devanāgarī, deity, and quality. Tap any card to reveal
+                its operational significance and festival associations. Filter
+                by quality to see the mod-5 pattern (Nandā 1/6/11, Bhadrā
+                2/7/12, Jayā 3/8/13, Riktā 4/9/14, Pūrṇā 5/10/15).
+              </p>
+              <ShuklaTithiStrip />
             </div>
           );
         } else if (fm.slug === "jyotisha-vs-western-astrology-vs-pop-astrology") {

@@ -22,12 +22,12 @@ interface ParsedAnchor {
 function parseAnchors(markdown: string): ParsedAnchor[] {
   const entries: ParsedAnchor[] = [];
 
-  // Pattern 1: > 💡 **Remember:** text (blockquote-style)
-  const lightbulbMatches = Array.from(
-    markdown.matchAll(/>\s*💡\s*\*\*[^*]+:\*\*\s*([^\n]+(?:\n>\s*[^*\n][^\n]*)*)/g),
+  // Pattern 1: > 💡 **Remember:** text OR > **Remember:** text (blockquote-style, with or without emoji)
+  const bqMatches = Array.from(
+    markdown.matchAll(/>\s*(?:💡\s*)?\*\*[^*]+:\*\*\s*([^\n]+(?:\n>\s*[^*\n][^\n]*)*)/g),
   );
-  if (lightbulbMatches.length > 0) {
-    for (const m of lightbulbMatches) {
+  if (bqMatches.length > 0) {
+    for (const m of bqMatches) {
       entries.push({ text: m[1].replace(/^>\s?/gm, "").trim() });
     }
     return entries;
