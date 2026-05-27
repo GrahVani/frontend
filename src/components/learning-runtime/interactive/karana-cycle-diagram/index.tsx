@@ -1,74 +1,277 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { IAST, Devanagari } from "../../chrome/typography";
 
-const CARA_KARANAS = [
-  { name: "Bava", dev: "बव", deity: "Indra", nature: "Auspicious for beginnings" },
-  { name: "Bālava", dev: "बालव", deity: "Brahmā", nature: "Auspicious for learning" },
-  { name: "Kaulava", dev: "कौलव", deity: "Kubera", nature: "Auspicious for commerce" },
-  { name: "Taitila", dev: "तैतिल", deity: "Viṣṇu", nature: "Auspicious for construction" },
-  { name: "Gara", dev: "गर", deity: "Varuṇa", nature: "Mixed — caution advised" },
-  { name: "Vaṇija", dev: "वणिज", deity: "Vāyu", nature: "Auspicious for trade" },
-  { name: "Vṛṣṭi", dev: "वृष्टि", deity: "Indra", nature: "Auspicious for agriculture" },
+const GOLD = "#C28220";
+const JADE = "#2d7d46";
+const VERMILION = "#A23A1E";
+const AMBER = "#B8860B";
+
+type KaranaType = "cara" | "sthira";
+
+interface KaranaDef {
+  name: string;
+  devanagari: string;
+  deity: string;
+  nature: string;
+  type: KaranaType;
+  positions?: string;
+  cycleDescription?: string;
+}
+
+const CARA_KARANAS: KaranaDef[] = [
+  { name: "Bava", devanagari: "बव", deity: "Indra", nature: "Auspicious for beginnings", type: "cara", cycleDescription: "Positions 1, 8, 15, 22, 29, 36, 43, 50" },
+  { name: "Bālava", devanagari: "बालव", deity: "Brahmā", nature: "Auspicious for learning", type: "cara", cycleDescription: "Positions 2, 9, 16, 23, 30, 37, 44, 51" },
+  { name: "Kaulava", devanagari: "कौलव", deity: "Kubera", nature: "Auspicious for commerce", type: "cara", cycleDescription: "Positions 3, 10, 17, 24, 31, 38, 45, 52" },
+  { name: "Taitila", devanagari: "तैतिल", deity: "Viṣṇu", nature: "Auspicious for construction", type: "cara", cycleDescription: "Positions 4, 11, 18, 25, 32, 39, 46, 53" },
+  { name: "Gara", devanagari: "गर", deity: "Varuṇa", nature: "Mixed — caution advised", type: "cara", cycleDescription: "Positions 5, 12, 19, 26, 33, 40, 47, 54" },
+  { name: "Vaṇija", devanagari: "वणिज", deity: "Vāyu", nature: "Auspicious for trade", type: "cara", cycleDescription: "Positions 6, 13, 20, 27, 34, 41, 48, 55" },
+  { name: "Viṣṭi", devanagari: "विष्टि", deity: "Indra", nature: "Inauspicious — Bhadrā/Viṣṭi to avoid", type: "cara", cycleDescription: "Positions 7, 14, 21, 28, 35, 42, 49, 56" },
 ];
 
-const STHIRA_KARANAS = [
-  { name: "Śakuni", dev: "शकुनि", deity: "Garuda", nature: "Inauspicious — avoid new ventures" },
-  { name: "Catuṣpāda", dev: "चतुष्पाद", deity: "Vāmadeva", nature: "Inauspicious — avoid journeys" },
-  { name: "Nāga", dev: "नाग", deity: "Nāgas", nature: "Inauspicious — avoid important acts" },
-  { name: "Kimstughna", dev: "किंस्तुघ्न", deity: "Kubera", nature: "Inauspicious — only for routine" },
+const STHIRA_KARANAS: KaranaDef[] = [
+  { name: "Śakuni", devanagari: "शकुनि", deity: "Garuḍa", nature: "Inauspicious — avoid new ventures", type: "sthira", positions: "2nd half of 2nd tithi (position 4 in month)" },
+  { name: "Catuṣpāda", devanagari: "चतुष्पाद", deity: "Vāmadeva", nature: "Inauspicious — avoid journeys", type: "sthira", positions: "2nd half of 7th tithi (position 14)" },
+  { name: "Nāga", devanagari: "नाग", deity: "Nāgas", nature: "Inauspicious — avoid important acts", type: "sthira", positions: "2nd half of 12th tithi (position 24)" },
+  { name: "Kimstughna", devanagari: "किंस्तुघ्न", deity: "Kubera", nature: "Inauspicious — only for routine", type: "sthira", positions: "2nd half of 15th tithi (position 30)" },
 ];
 
-export function KaranaCycleDiagram() {
-  const [filter, setFilter] = useState<"all" | "cara" | "sthira">("all");
-  const [selected, setSelected] = useState<string | null>(null);
+const ALL_KARANAS = [...CARA_KARANAS, ...STHIRA_KARANAS];
 
-  const allKaranas = [
-    ...CARA_KARANAS.map((k) => ({ ...k, type: "cara" as const })),
-    ...STHIRA_KARANAS.map((k) => ({ ...k, type: "sthira" as const })),
-  ];
+const TYPE_META: Record<KaranaType, { color: string; bg: string; border: string; label: string }> = {
+  cara: { color: JADE, bg: "#E8F5EE", border: "#A8D4B8", label: "Cara — Moving / Repeating" },
+  sthira: { color: VERMILION, bg: "#FDE8E5", border: "#E8AFA8", label: "Sthira — Fixed / Stationary" },
+};
 
-  const filtered = filter === "all" ? allKaranas : allKaranas.filter((k) => k.type === filter);
+const CYCLE_60: { idx: number; name: string; type: KaranaType }[] = (() => {
+  const arr: { idx: number; name: string; type: KaranaType }[] = [];
+  const caraOrder = CARA_KARANAS.map((k) => k.name);
+  for (let i = 0; i < 60; i++) arr.push({ idx: i, name: caraOrder[i % 7], type: "cara" });
+  const sthiraNames = STHIRA_KARANAS.map((k) => k.name);
+  for (let i = 0; i < 4; i++) arr[56 + i] = { idx: 56 + i, name: sthiraNames[i], type: "sthira" };
+  return arr;
+})();
+
+/* ─── Large 60-Position Cycle Wheel ─── */
+function CycleWheel({ selectedName, filter, onSelect }: { selectedName: string | null; filter: "all" | KaranaType; onSelect: (name: string) => void }) {
+  const W = 520;
+  const H = 520;
+  const CX = W / 2;
+  const CY = H / 2;
+  const R_OUT = 220;
+  const R_IN = 72;
+
+  const matchingNames = useMemo(() => {
+    if (filter === "all") return new Set(ALL_KARANAS.map((k) => k.name));
+    return new Set(ALL_KARANAS.filter((k) => k.type === filter).map((k) => k.name));
+  }, [filter]);
+
+  const getSegmentPath = (idx: number, total: number) => {
+    const startAngle = idx * (360 / total) - 90;
+    const endAngle = (idx + 1) * (360 / total) - 90;
+    const toRad = (d: number) => d * Math.PI / 180;
+    const x1 = CX + R_OUT * Math.cos(toRad(startAngle));
+    const y1 = CY + R_OUT * Math.sin(toRad(startAngle));
+    const x2 = CX + R_OUT * Math.cos(toRad(endAngle));
+    const y2 = CY + R_OUT * Math.sin(toRad(endAngle));
+    const xi1 = CX + R_IN * Math.cos(toRad(startAngle));
+    const yi1 = CY + R_IN * Math.sin(toRad(startAngle));
+    const xi2 = CX + R_IN * Math.cos(toRad(endAngle));
+    const yi2 = CY + R_IN * Math.sin(toRad(endAngle));
+    return `M ${xi1} ${yi1} L ${x1} ${y1} A ${R_OUT} ${R_OUT} 0 0 1 ${x2} ${y2} L ${xi2} ${yi2} A ${R_IN} ${R_IN} 0 0 0 ${xi1} ${yi1} Z`;
+  };
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-2 flex-wrap">
-        {(["all", "cara", "sthira"] as const).map((f) => (
-          <button key={f} onClick={() => setFilter(f)}
-            className="px-3 py-1 rounded text-xs font-medium transition-all capitalize"
-            style={{ background: filter === f ? (f === "cara" ? "rgba(58,120,180,0.3)" : f === "sthira" ? "rgba(184,92,0,0.3)" : "var(--gl-gold-accent)") : "var(--gl-surface-card)", color: filter === f ? (f === "cara" ? "#6ab4ff" : f === "sthira" ? "#daa520" : "#0a0a0f") : "var(--gl-ink-primary)", border: `1px solid ${filter === f ? (f === "cara" ? "#6ab4ff" : f === "sthira" ? "#daa520" : "var(--gl-gold-accent)") : "var(--gl-border-subtle)"}` }}>
-            {f} ({f === "all" ? 11 : f === "cara" ? 7 : 4})
-          </button>
-        ))}
-      </div>
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" style={{ maxWidth: "100%", display: "block" }}>
+      <defs>
+        <filter id="kcShadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy={2} stdDeviation={3} floodColor="#6B4423" floodOpacity="0.12" /></filter>
+      </defs>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        {filtered.map((k) => (
-          <button key={k.name} onClick={() => setSelected(selected === k.name ? null : k.name)}
-            className="p-3 rounded text-left transition-all"
-            style={{
-              background: selected === k.name ? (k.type === "cara" ? "rgba(58,120,180,0.12)" : "rgba(184,92,0,0.12)") : "var(--gl-surface-card)",
-              border: `1px solid ${selected === k.name ? (k.type === "cara" ? "#6ab4ff" : "#daa520") : "var(--gl-border-subtle)"}`,
-            }}>
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-semibold" style={{ color: k.type === "cara" ? "#6ab4ff" : "#daa520" }}>{k.name}</span>
-              <span className="text-xs px-1 rounded" style={{ background: k.type === "cara" ? "rgba(58,120,180,0.2)" : "rgba(184,92,0,0.2)", color: k.type === "cara" ? "#6ab4ff" : "#daa520" }}>{k.type}</span>
-            </div>
-            <div className="text-xs mt-1" style={{ color: "var(--gl-ink-muted)" }}>{k.dev}</div>
-            {selected === k.name && (
-              <div className="mt-2 text-xs" style={{ color: "var(--gl-ink-secondary)" }}>
-                <div><strong>Deity:</strong> {k.deity}</div>
-                <div><strong>Nature:</strong> {k.nature}</div>
-              </div>
+      <circle cx={CX} cy={CY} r={R_OUT + 10} fill="none" stroke="var(--gl-gold-hairline)" strokeWidth={1} opacity={0.3} />
+
+      {CYCLE_60.map((pos) => {
+        const isSelected = selectedName === pos.name;
+        const isMatch = matchingNames.has(pos.name);
+        const meta = TYPE_META[pos.type];
+        const midAngle = pos.idx * (360 / 60) + (360 / 120) - 90;
+        const lx = CX + (R_OUT + R_IN) / 2 * Math.cos(midAngle * Math.PI / 180);
+        const ly = CY + (R_OUT + R_IN) / 2 * Math.sin(midAngle * Math.PI / 180);
+        const showLabel = pos.idx % 5 === 0 || pos.type === "sthira";
+
+        const fill = isSelected ? meta.bg : isMatch ? "var(--gl-card-surface-solid, #FFF9F0)" : "#F0F1F5";
+        const stroke = isSelected ? meta.border : isMatch ? meta.border : "#D8D8D8";
+        const sw = isSelected ? 2.5 : isMatch ? 1 : 0.5;
+        const textFill = isSelected ? meta.color : isMatch ? meta.color : "#C0C0C0";
+        const textSize = pos.type === "sthira" ? 9 : 7;
+        const cursor = isMatch ? "pointer" : "default";
+
+        return (
+          <g key={pos.idx} style={{ cursor }} onClick={() => isMatch && onSelect(pos.name)}>
+            <path d={getSegmentPath(pos.idx, 60)} fill={fill} stroke={stroke} strokeWidth={sw} style={{ transition: "all 0.2s ease" }} />
+            {showLabel && (
+              <text x={lx} y={ly + 3} textAnchor="middle" fill={textFill} fontSize={textSize} fontWeight={pos.type === "sthira" ? 800 : 600} style={{ pointerEvents: "none", fontFamily: "var(--font-sans), sans-serif", transition: "all 0.2s ease" }}>
+                {pos.type === "sthira" ? pos.name.slice(0, 4) : `${pos.idx + 1}`}
+              </text>
             )}
-          </button>
-        ))}
+          </g>
+        );
+      })}
+
+      {/* Centre hub */}
+      <circle cx={CX} cy={CY} r={R_IN - 10} fill="var(--gl-card-surface-solid, #FFF9F0)" stroke={GOLD} strokeWidth={2} filter="url(#kcShadow)" />
+      <text x={CX} y={CY - 6} textAnchor="middle" fill="var(--gl-ink-primary)" fontSize={14} fontWeight={800} style={{ fontFamily: "var(--font-sans), sans-serif" }}>60 Karaṇas</text>
+      <text x={CX} y={CY + 12} textAnchor="middle" fill="var(--gl-ink-secondary)" fontSize={10} fontWeight={700}>30 Tithis x 2</text>
+    </svg>
+  );
+}
+
+/* ─── Large Cara cycle repeating pattern SVG ─── */
+function CaraPatternSVG() {
+  const W = 600;
+  const H = 90;
+  const slotW = 68;
+  const gap = 6;
+  const totalW = 7 * (slotW + gap) - gap;
+  const startX = (W - totalW) / 2;
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" style={{ maxWidth: "100%" }}>
+      <text x={W / 2} y={16} textAnchor="middle" fill={GOLD} fontSize={12} fontWeight={800} style={{ textTransform: "uppercase", letterSpacing: "0.1em" }}>Cara Repeating Cycle — 8 repetitions across 60 positions</text>
+      {CARA_KARANAS.map((k, i) => (
+        <g key={k.name}>
+          <rect x={startX + i * (slotW + gap)} y={24} width={slotW} height={52} rx={6} fill="#E8F5EE" stroke="#A8D4B8" strokeWidth={1.5} />
+          <text x={startX + i * (slotW + gap) + slotW / 2} y={48} textAnchor="middle" fill={JADE} fontSize={12} fontWeight={700}><IAST>{k.name}</IAST></text>
+          <text x={startX + i * (slotW + gap) + slotW / 2} y={64} textAnchor="middle" fill={JADE} fontSize={9} opacity={0.7}>{k.devanagari}</text>
+        </g>
+      ))}
+      {/* Repeat arrow */}
+      <path d={`M ${startX + totalW + 8} 50 L ${startX + totalW + 22} 50`} stroke={GOLD} strokeWidth={2} markerEnd="url(#cpArr)" />
+      <defs><marker id="cpArr" markerWidth={6} markerHeight={4} refX={5} refY={2} orient="auto"><polygon points="0 0, 6 2, 0 4" fill={GOLD} /></marker></defs>
+    </svg>
+  );
+}
+
+export function KaranaCycleDiagram() {
+  const [filter, setFilter] = useState<"all" | KaranaType>("all");
+  const [selected, setSelected] = useState<string | null>(null);
+  const [showCycle, setShowCycle] = useState(false);
+
+  const filtered = filter === "all" ? ALL_KARANAS : ALL_KARANAS.filter((k) => k.type === filter);
+  const selKarana = ALL_KARANAS.find((k) => k.name === selected) || null;
+
+  useEffect(() => {
+    if (filter !== "all" && selected) {
+      const current = ALL_KARANAS.find((k) => k.name === selected);
+      if (current?.type !== filter) {
+        const firstMatch = ALL_KARANAS.find((k) => k.type === filter);
+        if (firstMatch) setSelected(firstMatch.name);
+      }
+    }
+  }, [filter]);
+
+  const filterCounts = { all: 11, cara: 7, sthira: 4 };
+
+  return (
+    <div className="w-full" style={{ background: "var(--gl-surface-card, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)", borderRadius: "16px", padding: "20px" }} data-interactive="karana-cycle-diagram">
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold" style={{ color: "var(--gl-ink-primary)" }}><IAST>The 11 Karaṇas: 7 Cara + 4 Sthira</IAST></h2>
+        <p className="text-sm mt-1" style={{ color: "var(--gl-ink-muted)" }}>Browse karaṇas by type, explore the 60-position monthly cycle, and click any karaṇa for details.</p>
       </div>
 
-      <div className="p-3 rounded text-sm" style={{ background: "rgba(0,0,0,0.2)", color: "var(--gl-ink-secondary)" }}>
-        <strong>Cycle pattern:</strong> 7 Cara karaṇas repeat throughout the lunar month (positions 1–7, 8–14, etc.). 
-        4 Sthira karaṇas occupy the final positions of the 60-karaṇa cycle (positions 57–60). 
-        The sthira karaṇas are generally less favorable for new beginnings.
+      {/* Filter bar */}
+      <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+        {(["all", "cara", "sthira"] as const).map((f) => {
+          const active = filter === f;
+          const meta = f === "all" ? null : TYPE_META[f];
+          return (
+            <button key={f} onClick={() => setFilter(f)} className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all" style={{ background: active ? (meta?.color ?? GOLD) : "var(--gl-card-surface-solid)", color: active ? "#fff" : (meta?.color ?? GOLD), border: `1.5px solid ${active ? (meta?.color ?? GOLD) : "var(--gl-gold-hairline)"}`, cursor: "pointer", whiteSpace: "nowrap" }}>
+              {f} ({filterCounts[f]})
+            </button>
+          );
+        })}
+        <button onClick={() => setShowCycle((s) => !s)} className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ml-auto" style={{ background: showCycle ? "#FDF6E3" : "var(--gl-card-surface-solid)", color: showCycle ? GOLD : "var(--gl-ink-primary)", border: `1.5px solid ${showCycle ? GOLD : "var(--gl-gold-hairline)"}`, cursor: "pointer", whiteSpace: "nowrap" }}>
+          {showCycle ? "Hide Cycle" : "60-Position Cycle"}
+        </button>
+      </div>
+
+      {/* 60-Position Cycle Wheel — large, full width */}
+      {showCycle && (
+        <div className="rounded-xl p-4 mb-4" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1.5px solid var(--gl-gold-hairline)" }}>
+          <CycleWheel selectedName={selected} filter={filter} onSelect={(name) => setSelected(selected === name ? null : name)} />
+          <div className="flex justify-center gap-6 mt-3">
+            <span className="flex items-center gap-2 text-sm" style={{ color: JADE }}><span className="inline-block rounded-full" style={{ width: 12, height: 12, background: JADE }} />Cara (repeating)</span>
+            <span className="flex items-center gap-2 text-sm" style={{ color: VERMILION }}><span className="inline-block rounded-full" style={{ width: 12, height: 12, background: VERMILION }} />Sthira (fixed at end)</span>
+          </div>
+          <p className="text-xs mt-2 text-center" style={{ color: "var(--gl-ink-muted)" }}>Click any segment to explore the karaṇa. Sthira positions (57–60) are highlighted with labels.</p>
+        </div>
+      )}
+
+      {/* Cara pattern bar — large, full width */}
+      <div className="rounded-xl p-4 mb-4" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1.5px solid var(--gl-gold-hairline)" }}>
+        <CaraPatternSVG />
+      </div>
+
+      {/* Karaṇa Card Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
+        {filtered.map((k) => {
+          const tm = TYPE_META[k.type];
+          const isSelected = selected === k.name;
+          return (
+            <button key={k.name} onClick={() => setSelected(isSelected ? null : k.name)} className="p-3 rounded-lg text-left transition-all" style={{ background: isSelected ? tm.bg : "var(--gl-card-surface-solid)", border: `2px solid ${isSelected ? tm.border : "var(--gl-gold-hairline)"}`, cursor: "pointer" }}>
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-sm font-semibold" style={{ color: isSelected ? tm.color : "var(--gl-ink-primary)" }}><IAST>{k.name}</IAST></span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded font-bold uppercase" style={{ background: tm.bg, color: tm.color }}>{k.type}</span>
+              </div>
+              <Devanagari size="sm">{k.devanagari}</Devanagari>
+              {isSelected && (
+                <div className="mt-2 pt-2 text-xs space-y-1" style={{ borderTop: "1px solid var(--gl-gold-hairline)", color: "var(--gl-ink-secondary)" }}>
+                  <div><strong style={{ color: GOLD }}>Deity:</strong> {k.deity}</div>
+                  <div><strong style={{ color: GOLD }}>Nature:</strong> {k.nature}</div>
+                  {k.type === "cara" && k.cycleDescription && <div className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>{k.cycleDescription}</div>}
+                  {k.type === "sthira" && k.positions && <div className="text-xs" style={{ color: "var(--gl-ink-muted)" }}><strong>Fixed at:</strong> {k.positions}</div>}
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Selected Detail Panel */}
+      {selKarana && (
+        <div className="rounded-xl p-4 mb-4" style={{ background: TYPE_META[selKarana.type].bg, border: `2px solid ${TYPE_META[selKarana.type].border}` }}>
+          <div className="flex items-center gap-3 mb-3">
+            <span className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold" style={{ background: "var(--gl-card-surface-solid)", color: TYPE_META[selKarana.type].color, border: `1.5px solid ${TYPE_META[selKarana.type].border}` }}>
+              {selKarana.devanagari.charAt(0)}
+            </span>
+            <div>
+              <h3 className="text-lg font-bold" style={{ color: TYPE_META[selKarana.type].color }}><IAST>{selKarana.name}</IAST></h3>
+              <div className="text-xs" style={{ color: "var(--gl-ink-secondary)" }}>{selKarana.devanagari} · {TYPE_META[selKarana.type].label}</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+            <div className="p-2.5 rounded-lg" style={{ background: "var(--gl-card-surface-solid)", border: `1px solid ${TYPE_META[selKarana.type].border}` }}>
+              <p className="text-[10px] uppercase mb-1" style={{ color: TYPE_META[selKarana.type].color, letterSpacing: "0.06em", fontWeight: 700 }}>Deity</p>
+              <p style={{ color: "var(--gl-ink-primary)" }}>{selKarana.deity}</p>
+            </div>
+            <div className="p-2.5 rounded-lg" style={{ background: "var(--gl-card-surface-solid)", border: `1px solid ${TYPE_META[selKarana.type].border}` }}>
+              <p className="text-[10px] uppercase mb-1" style={{ color: TYPE_META[selKarana.type].color, letterSpacing: "0.06em", fontWeight: 700 }}>Nature</p>
+              <p style={{ color: "var(--gl-ink-primary)" }}>{selKarana.nature}</p>
+            </div>
+            <div className="p-2.5 rounded-lg" style={{ background: "var(--gl-card-surface-solid)", border: `1px solid ${TYPE_META[selKarana.type].border}` }}>
+              <p className="text-[10px] uppercase mb-1" style={{ color: TYPE_META[selKarana.type].color, letterSpacing: "0.06em", fontWeight: 700 }}>Type</p>
+              <p style={{ color: "var(--gl-ink-primary)" }}>{selKarana.type === "cara" ? "Repeating cycle" : "Fixed position"}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Pattern Explanation */}
+      <div className="p-4 rounded-lg text-sm" style={{ background: "#F0F1F5", color: "var(--gl-ink-secondary)", border: "1px dashed var(--gl-gold-hairline)" }}>
+        <strong style={{ color: GOLD }}>Cycle Pattern:</strong>{" "}
+        The 7 Cara karaṇas repeat throughout the lunar month (positions 1–7, 8–14, 15–21, 22–28, 29–35, 36–42, 43–49, 50–56).
+        The 4 Sthira karaṇas occupy the final positions of the 60-karaṇa cycle (positions 57–60).
+        Each tithi has 2 karaṇas (1st half + 2nd half). The sthira karaṇas are generally less favourable for new beginnings.
       </div>
     </div>
   );

@@ -36,9 +36,9 @@ const PAKSHA_MAP: Record<number, { shukla: string[]; krishna: string[] }> = {
 };
 
 const PAKSHA_COLORS = {
-  shukla: { bg: "rgba(232,184,69,0.12)", stroke: "rgba(184,134,11,0.40)", label: "Śukla-pakṣa activities" },
-  krishna: { bg: "rgba(162,58,30,0.10)", stroke: "rgba(162,58,30,0.35)", label: "Kṛṣṇa-pakṣa activities" },
-  both: { bg: "rgba(74,124,89,0.08)", stroke: "rgba(74,124,89,0.30)", label: "Both pakṣas" },
+  shukla: { bg: "#FDF6E3", stroke: "#D4B896", label: "Śukla-pakṣa activities" },
+  krishna: { bg: "#FDE8E5", stroke: "#E8AFA8", label: "Kṛṣṇa-pakṣa activities" },
+  both: { bg: "#E8F5EE", stroke: "#A8D4B8", label: "Both pakṣas" },
 };
 
 function getPakshaClass(n: typeof NAKSHATRAS[number]): "shukla" | "krishna" | "both" {
@@ -68,29 +68,34 @@ export function NakshatraDeityRulerWheel() {
     );
   }, [rulerFilter, ganaFilter]);
 
-  const CX = 320;
-  const CY = 320;
-  const R_INNER = 110;
-  const R_MID = 220;
-  const R_OUTER = 280;
+  const CX = 200;
+  const CY = 200;
+  const R_INNER = 68;
+  const R_MID = 138;
+  const R_OUTER = 175;
 
   return (
-    <div className="space-y-5">
-      <div style={{ textAlign: "center" }}>
-        <p className="text-xs uppercase mb-2" style={{ color: "var(--gl-gold-accent)", letterSpacing: "0.16em", fontWeight: 700 }}>
-          A-Atlas · Explore Mode
-        </p>
-        <h3 style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "26px", fontWeight: 500, color: "var(--gl-gold-accent)" }}>
-          Nakṣatra Deity & Ruler Wheel
-        </h3>
-        <p className="text-base italic mt-2 mx-auto" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-secondary)", maxWidth: 560, lineHeight: 1.5 }}>
-          Hover or click a segment to explore the deity, ruling planet, and
-          symbolic animal of each lunar mansion.
+    <div
+      className="w-full"
+      style={{
+        background: "var(--gl-surface-card, var(--gl-card-surface, #FFF9F0))",
+        border: "1px solid var(--gl-border-subtle, var(--gl-gold-hairline))",
+        borderRadius: "16px",
+        padding: "20px",
+      }}
+      data-interactive="nakshatra-deity-ruler-wheel"
+    >
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold" style={{ color: "var(--gl-ink-primary)" }}>
+          <IAST>Nakṣatra Deity &amp; Ruler Wheel</IAST>
+        </h2>
+        <p className="text-sm mt-1" style={{ color: "var(--gl-ink-muted)" }}>
+          Hover or click a segment to explore the deity, ruling planet, and symbolic animal.
         </p>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-2 items-center">
+      <div className="flex flex-wrap gap-1.5 items-center mb-4">
         <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--gl-ink-muted)" }}>Filter:</span>
         {["all", "sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn", "rahu", "ketu"].map((k) => {
           const rc = k === "all" ? null : RULER_COLORS[k];
@@ -98,9 +103,9 @@ export function NakshatraDeityRulerWheel() {
             <button
               key={k}
               onClick={() => setRulerFilter(k)}
-              className="px-3 py-1 rounded-full text-xs font-medium transition-all gl-clickable"
+              className="px-2 py-0.5 rounded-full text-xs font-medium transition-all"
               style={{
-                background: rulerFilter === k ? (rc ? rc.bg : "rgba(156,122,47,0.18)") : "rgba(255,249,234,0.5)",
+                background: rulerFilter === k ? (rc ? rc.bg : "#FDF6E3") : "var(--gl-card-surface-solid)",
                 color: rulerFilter === k ? (rc ? rc.text : "var(--gl-gold-accent)") : "var(--gl-ink-muted)",
                 border: "1px solid var(--gl-gold-hairline)",
               }}
@@ -115,9 +120,9 @@ export function NakshatraDeityRulerWheel() {
             <button
               key={g}
               onClick={() => setGanaFilter(g)}
-              className="px-3 py-1 rounded-full text-xs font-medium transition-all gl-clickable"
+              className="px-2 py-0.5 rounded-full text-xs font-medium transition-all"
               style={{
-                background: ganaFilter === g ? (gs ? gs.bg : "rgba(156,122,47,0.18)") : "rgba(255,249,234,0.5)",
+                background: ganaFilter === g ? (gs ? gs.bg : "#FDF6E3") : "var(--gl-card-surface-solid)",
                 color: ganaFilter === g ? (gs ? gs.text : "var(--gl-gold-accent)") : "var(--gl-ink-muted)",
                 border: "1px solid var(--gl-gold-hairline)",
               }}
@@ -128,32 +133,30 @@ export function NakshatraDeityRulerWheel() {
         })}
         <button
           onClick={() => setPakshaOverlay((p) => !p)}
-          className="px-3 py-1 rounded-full text-xs font-medium transition-all gl-clickable"
+          className="px-2 py-0.5 rounded-full text-xs font-medium transition-all"
           style={{
-            background: pakshaOverlay ? "rgba(74,124,89,0.12)" : "rgba(255,249,234,0.5)",
-            color: pakshaOverlay ? "#4A7C59" : "var(--gl-ink-muted)",
+            background: pakshaOverlay ? "#E8F5EE" : "var(--gl-card-surface-solid)",
+            color: pakshaOverlay ? "#2d7d46" : "var(--gl-ink-muted)",
             border: "1px solid var(--gl-gold-hairline)",
           }}
         >
-          {pakshaOverlay ? "✓ Pakṣa overlay" : "Pakṣa overlay"}
+          {pakshaOverlay ? "Pakṣa ON" : "Pakṣa overlay"}
         </button>
       </div>
 
       {/* Wheel + Detail */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <div className="lg:col-span-2 rounded-xl p-4" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
-          <svg viewBox="0 0 640 640" className="w-full h-auto" style={{ maxWidth: 620, display: "block", margin: "0 auto" }}>
+      <div className="flex flex-col xl:flex-row gap-4">
+        <div className="flex-1 rounded-xl p-3" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
+          <svg viewBox="0 0 400 400" className="w-full h-auto" style={{ maxWidth: "100%", display: "block", margin: "0 auto" }}>
             <defs>
               <filter id="nswShadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#6B4423" floodOpacity="0.14" />
+                <feDropShadow dx="0" dy={1} stdDeviation={2} floodColor="#6B4423" floodOpacity="0.1" />
               </filter>
             </defs>
 
-            {/* Outer decorative ring */}
-            <circle cx={CX} cy={CY} r={R_OUTER + 16} fill="none" stroke="var(--gl-gold-hairline)" strokeWidth={1} opacity={0.3} />
-            <circle cx={CX} cy={CY} r={R_OUTER + 6} fill="none" stroke="var(--gl-gold-hairline)" strokeWidth={0.5} opacity={0.2} strokeDasharray="4 4" />
+            <circle cx={CX} cy={CY} r={R_OUTER + 10} fill="none" stroke="var(--gl-gold-hairline)" strokeWidth={1} opacity={0.3} />
+            <circle cx={CX} cy={CY} r={R_OUTER + 4} fill="none" stroke="var(--gl-gold-hairline)" strokeWidth={0.5} opacity={0.2} strokeDasharray="3 3" />
 
-            {/* 27 segments */}
             {NAKSHATRAS.map((n) => {
               const startAngle = (n.num - 1) * (360 / 27);
               const endAngle = n.num * (360 / 27);
@@ -173,14 +176,14 @@ export function NakshatraDeityRulerWheel() {
               const pk = getPakshaClass(n);
               const pkStyle = PAKSHA_COLORS[pk];
 
-              let fill = isSelected ? rc.bg : "rgba(255,249,234,0.35)";
+              let fill = isSelected ? rc.bg : "var(--gl-card-surface-solid, #FFF9F0)";
               let stroke = isSelected ? rc.border : "var(--gl-gold-hairline)";
-              let strokeW = isSelected ? 2.2 : 0.6;
+              let strokeW = isSelected ? 1.5 : 0.5;
 
               if (pakshaOverlay && !isSelected) {
                 fill = pkStyle.bg;
                 stroke = pkStyle.stroke;
-                strokeW = 0.8;
+                strokeW = 0.6;
               }
 
               const midAngle = (startAngle + endAngle) / 2;
@@ -204,85 +207,68 @@ export function NakshatraDeityRulerWheel() {
                     d={`M ${xi1} ${yi1} L ${x1} ${y1} A ${R_OUTER} ${R_OUTER} 0 0 1 ${x2} ${y2} L ${xi2} ${yi2} A ${R_INNER} ${R_INNER} 0 0 0 ${xi1} ${yi1} Z`}
                     fill={fill}
                     stroke={isHovered && !isSelected ? rc.border : stroke}
-                    strokeWidth={isHovered && !isSelected ? 1.8 : strokeW}
+                    strokeWidth={isHovered && !isSelected ? 1.5 : strokeW}
                     style={{ transition: "all 0.2s ease" }}
                   />
-                  <text
-                    x={nx} y={ny + 3}
-                    textAnchor="middle"
-                    fill={isSelected ? rc.text : "var(--gl-ink-muted)"}
-                    fontSize={9}
-                    fontWeight={isSelected ? 700 : 500}
-                    style={{ fontFamily: "var(--font-sans), sans-serif", pointerEvents: "none" }}
-                  >
+                  <text x={nx} y={ny + 3} textAnchor="middle" fill={isSelected ? rc.text : "var(--gl-ink-muted)"} fontSize={8} fontWeight={isSelected ? 700 : 500} style={{ fontFamily: "var(--font-sans), sans-serif", pointerEvents: "none" }}>
                     {n.num}
                   </text>
-                  <text
-                    x={px} y={py + 3}
-                    textAnchor="middle"
-                    fill={isSelected ? rc.text : rc.text}
-                    fontSize={10}
-                    fontWeight={isSelected ? 800 : 600}
-                    opacity={isSelected ? 1 : 0.7}
-                    style={{ fontFamily: "var(--font-sans), sans-serif", pointerEvents: "none" }}
-                  >
+                  <text x={px} y={py + 3} textAnchor="middle" fill={rc.text} fontSize={9} fontWeight={isSelected ? 700 : 600} opacity={isSelected ? 1 : 0.7} style={{ fontFamily: "var(--font-sans), sans-serif", pointerEvents: "none" }}>
                     {n.ruler[0]}
                   </text>
                 </g>
               );
             })}
 
-            {/* Inner ring divider */}
             <circle cx={CX} cy={CY} r={R_MID} fill="none" stroke="var(--gl-gold-hairline)" strokeWidth={0.5} opacity={0.3} />
             <circle cx={CX} cy={CY} r={R_INNER} fill="none" stroke="var(--gl-gold-hairline)" strokeWidth={0.5} opacity={0.3} />
 
-            {/* Center mandala */}
             <g>
-              <circle cx={CX} cy={CY} r={R_INNER - 8} fill="var(--gl-card-surface-solid, #FFF9F0)" stroke="var(--gl-gold-hairline)" strokeWidth={1} />
-              <g opacity={0.15}>
-                <circle cx={CX} cy={CY} r={R_INNER - 24} fill="none" stroke="var(--gl-gold-accent)" strokeWidth={1}>
+              <circle cx={CX} cy={CY} r={R_INNER - 6} fill="var(--gl-card-surface-solid, #FFF9F0)" stroke="var(--gl-gold-hairline)" strokeWidth={1} />
+              <g opacity={0.12}>
+                <circle cx={CX} cy={CY} r={R_INNER - 18} fill="none" stroke="var(--gl-gold-accent)" strokeWidth={1}>
                   <animateTransform attributeName="transform" type="rotate" from={`0 ${CX} ${CY}`} to={`360 ${CX} ${CY}`} dur="60s" repeatCount="indefinite" />
                 </circle>
                 {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => {
-                  const x1 = CX + (R_INNER - 36) * Math.cos((a - 90) * (Math.PI / 180));
-                  const y1 = CY + (R_INNER - 36) * Math.sin((a - 90) * (Math.PI / 180));
-                  const x2 = CX + (R_INNER - 20) * Math.cos((a - 90) * (Math.PI / 180));
-                  const y2 = CY + (R_INNER - 20) * Math.sin((a - 90) * (Math.PI / 180));
+                  const x1 = CX + (R_INNER - 28) * Math.cos((a - 90) * (Math.PI / 180));
+                  const y1 = CY + (R_INNER - 28) * Math.sin((a - 90) * (Math.PI / 180));
+                  const x2 = CX + (R_INNER - 16) * Math.cos((a - 90) * (Math.PI / 180));
+                  const y2 = CY + (R_INNER - 16) * Math.sin((a - 90) * (Math.PI / 180));
                   return <line key={a} x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--gl-gold-accent)" strokeWidth={1} />;
                 })}
               </g>
-              <text x={CX} y={CY - 4} textAnchor="middle" fill="var(--gl-gold-accent)" fontSize={12} fontWeight={700} style={{ fontFamily: "var(--font-sans), sans-serif" }}>27 NAKṢATRAS</text>
-              <text x={CX} y={CY + 12} textAnchor="middle" fill="var(--gl-ink-muted)" fontSize={9} style={{ fontFamily: "var(--font-sans), sans-serif" }}>Click to explore</text>
+              <text x={CX} y={CY - 4} textAnchor="middle" fill="var(--gl-gold-accent)" fontSize={10} fontWeight={700} style={{ fontFamily: "var(--font-sans), sans-serif" }}>27 NAKṢATRAS</text>
+              <text x={CX} y={CY + 10} textAnchor="middle" fill="var(--gl-ink-muted)" fontSize={8} style={{ fontFamily: "var(--font-sans), sans-serif" }}>Click to explore</text>
             </g>
           </svg>
         </div>
 
         {/* Detail panel */}
-        <div className="rounded-xl p-5 space-y-4" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
+        <div className="w-full xl:w-72 shrink-0 rounded-xl p-4 space-y-3" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
           {displayN ? (
             <>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--gl-gold-accent)" }}>Nakṣatra {displayN.num}/27</p>
-                  <h4 className="text-2xl font-semibold" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-primary)" }}>
+                  <h4 className="text-xl font-semibold" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-primary)" }}>
                     <IAST>{displayN.name}</IAST>
                   </h4>
                 </div>
-                <Devanagari size="lg">{displayN.devanagari}</Devanagari>
+                <Devanagari size="md">{displayN.devanagari}</Devanagari>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-lg p-3 text-center" style={{ background: RULER_COLORS[displayN.rulerKey].bg, border: `1px solid ${RULER_COLORS[displayN.rulerKey].border}` }}>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-lg p-2.5 text-center" style={{ background: RULER_COLORS[displayN.rulerKey].bg, border: `1px solid ${RULER_COLORS[displayN.rulerKey].border}` }}>
                   <div className="text-xs uppercase tracking-wide mb-1" style={{ color: "var(--gl-ink-muted)" }}>Ruler</div>
                   <div className="text-sm font-semibold" style={{ color: RULER_COLORS[displayN.rulerKey].text }}>{displayN.ruler}</div>
                 </div>
-                <div className="rounded-lg p-3 text-center" style={{ background: GANA_STYLE[displayN.gana].bg, border: `1px solid ${GANA_STYLE[displayN.gana].text}` }}>
+                <div className="rounded-lg p-2.5 text-center" style={{ background: GANA_STYLE[displayN.gana].bg, border: `1px solid ${GANA_STYLE[displayN.gana].text}` }}>
                   <div className="text-xs uppercase tracking-wide mb-1" style={{ color: "var(--gl-ink-muted)" }}>Gana</div>
                   <div className="text-sm font-semibold" style={{ color: GANA_STYLE[displayN.gana].text }}>{displayN.gana}</div>
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <p className="text-sm" style={{ color: "var(--gl-ink-secondary)" }}><span style={{ color: "var(--gl-ink-muted)" }}>Deity:</span> {displayN.deity}</p>
                 <p className="text-sm" style={{ color: "var(--gl-ink-secondary)" }}><span style={{ color: "var(--gl-ink-muted)" }}>Symbol:</span> {displayN.symbol}</p>
                 <p className="text-sm" style={{ color: "var(--gl-ink-secondary)" }}><span style={{ color: "var(--gl-ink-muted)" }}>Yoni:</span> {displayN.yoni}</p>
@@ -293,7 +279,7 @@ export function NakshatraDeityRulerWheel() {
                 <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: "var(--gl-gold-accent)" }}>Naming Syllables</p>
                 <div className="grid grid-cols-4 gap-2">
                   {displayN.syllables.map((s, i) => (
-                    <div key={i} className="rounded-lg p-2 text-center" style={{ background: "rgba(255,255,255,0.5)", border: "1px solid var(--gl-gold-hairline)" }}>
+                    <div key={i} className="rounded-lg p-2 text-center" style={{ background: "var(--gl-card-surface-solid)", border: "1px solid var(--gl-gold-hairline)" }}>
                       <div className="text-xs font-bold" style={{ color: "var(--gl-gold-accent)" }}>Pāda {i + 1}</div>
                       <div className="text-sm" style={{ color: "var(--gl-ink-primary)" }}>{s}</div>
                     </div>
@@ -314,7 +300,7 @@ export function NakshatraDeityRulerWheel() {
               <p className="text-sm italic" style={{ color: "var(--gl-ink-secondary)" }}>{displayN.meaning}</p>
             </>
           ) : (
-            <div className="text-center py-10">
+            <div className="text-center py-8">
               <p className="text-sm italic" style={{ color: "var(--gl-ink-muted)" }}>Hover or click a segment on the wheel to see details.</p>
             </div>
           )}
@@ -323,7 +309,7 @@ export function NakshatraDeityRulerWheel() {
 
       {/* Pakṣa legend */}
       {pakshaOverlay && (
-        <div className="flex flex-wrap gap-4 justify-center">
+        <div className="flex flex-wrap gap-4 justify-center mt-4">
           {Object.entries(PAKSHA_COLORS).map(([key, style]) => (
             <div key={key} className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full" style={{ background: style.bg, border: `1px solid ${style.stroke}` }} />

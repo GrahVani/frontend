@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Devanagari, IAST } from "../../chrome/typography";
 
 /* ─── Data ─── */
@@ -60,11 +60,11 @@ const VARA_DB: VaraData[] = [
 ];
 
 const FILTER_OPTIONS = [
-  { key: "all", label: "All Varas" },
-  { key: "fire", label: "Fire (Agni)" },
-  { key: "earth", label: "Earth (Prthvi)" },
-  { key: "air", label: "Air (Vayu)" },
-  { key: "water", label: "Water (Jala)" },
+  { key: "all", label: "All" },
+  { key: "fire", label: "Fire" },
+  { key: "earth", label: "Earth" },
+  { key: "air", label: "Air" },
+  { key: "water", label: "Water" },
   { key: "luminary", label: "Luminaries" },
   { key: "benefic", label: "Benefics" },
   { key: "malefic", label: "Malefics" },
@@ -72,10 +72,24 @@ const FILTER_OPTIONS = [
 
 type FilterKey = (typeof FILTER_OPTIONS)[number]["key"];
 
+const ELEMENT_META: Record<string, { color: string; bg: string }> = {
+  fire: { color: "#C8412E", bg: "#FDE8E5" },
+  earth: { color: "#3A8C5A", bg: "#E8F5EE" },
+  air: { color: "#B8860B", bg: "#FDF6E3" },
+  water: { color: "#4F6FA8", bg: "#EBF0FA" },
+};
+
+const TYPE_META: Record<string, { color: string; bg: string; label: string }> = {
+  luminary: { color: "#C9A24A", bg: "#FDF6E3", label: "Luminary" },
+  benefic: { color: "#2d7d46", bg: "#E8F5EE", label: "Benefic" },
+  malefic: { color: "#A23A1E", bg: "#FDE8E5", label: "Malefic" },
+};
+
 /* ─── Wheel ─── */
 export function VaraGrahaWheel() {
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number>(0);
   const [filter, setFilter] = useState<FilterKey>("all");
+  const [hovered, setHovered] = useState<number | null>(null);
 
   const getOpacity = (v: VaraData) => {
     if (filter === "all") return 1;
@@ -85,13 +99,24 @@ export function VaraGrahaWheel() {
     return v.type === filter ? 1 : 0.18;
   };
 
-  const selectedVara = selected !== null ? VARA_DB.find((v) => v.index === selected) ?? null : null;
+  const selectedVara = VARA_DB.find((v) => v.index === selected) ?? VARA_DB[0];
 
-  const CX = 300;
-  const CY = 300;
-  const R_OUTER = 220;
-  const R_INNER = 90;
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent, idx: number) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setSelected(idx);
+      }
+    },
+    []
+  );
+
+  const CX = 200;
+  const CY = 200;
+  const R_OUTER = 160;
+  const R_INNER = 65;
   const R_LABEL = (R_OUTER + R_INNER) / 2;
+  const R_SYMBOL = (R_INNER + R_LABEL) / 2;
 
   const getSegmentPath = (idx: number) => {
     const startAngle = idx * (360 / 7) - 90;
@@ -110,11 +135,11 @@ export function VaraGrahaWheel() {
   return (
     <div
       className="w-full"
-      style={{ background: "var(--gl-surface-card, var(--gl-card-surface, rgba(255,249,234,0.78)))", border: "1px solid var(--gl-border-subtle, var(--gl-gold-hairline))", borderRadius: "16px", padding: "24px" }}
+      style={{ background: "var(--gl-surface-card, var(--gl-card-surface, #FFF9F0))", border: "1px solid var(--gl-border-subtle, var(--gl-gold-hairline))", borderRadius: "16px", padding: "20px" }}
       data-interactive="vara-graha-wheel"
     >
-      <div className="mb-5">
-        <h2 className="text-xl font-semibold" style={{ color: "var(--gl-ink-primary)" }}>
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold" style={{ color: "var(--gl-ink-primary)" }}>
           <IAST>Vara-Graha Wheel</IAST>
         </h2>
         <p className="text-sm mt-1" style={{ color: "var(--gl-ink-muted)" }}>
@@ -122,17 +147,17 @@ export function VaraGrahaWheel() {
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex flex-wrap gap-1.5 mb-4" role="group" aria-label="Filter varas by element or type">
         {FILTER_OPTIONS.map((opt) => (
           <button
             key={opt.key}
             onClick={() => setFilter(opt.key)}
-            className="px-3 py-1.5 text-xs font-medium rounded-full transition-all"
+            aria-pressed={filter === opt.key}
+            className="px-2.5 py-1 text-xs font-medium rounded-full transition-all"
             style={{
               background: filter === opt.key ? "var(--gl-gold-accent)" : "transparent",
               color: filter === opt.key ? "#fff" : "var(--gl-ink-secondary)",
               border: "1px solid var(--gl-gold-hairline)",
-              opacity: filter === opt.key ? 1 : 0.8,
             }}
           >
             {opt.label}
@@ -140,94 +165,111 @@ export function VaraGrahaWheel() {
         ))}
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6 items-start">
+      <div className="flex flex-col xl:flex-row gap-5 items-start">
         <div className="flex-1 w-full flex justify-center">
-          <svg viewBox="0 0 600 600" className="w-full h-auto" style={{ maxWidth: 480 }}>
+          <svg viewBox="0 0 400 400" className="w-full h-auto" style={{ maxWidth: 320 }}>
             <defs>
               <filter id="vwShadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#6B4423" floodOpacity="0.14" />
+                <feDropShadow dx="0" dy="2" stdDeviation={3} floodColor="#6B4423" floodOpacity="0.12" />
               </filter>
             </defs>
-            <circle cx={CX} cy={CY} r={R_OUTER + 14} fill="none" stroke="var(--gl-gold-hairline)" strokeWidth={1} opacity={0.4} />
-            <circle cx={CX} cy={CY} r={R_OUTER + 6} fill="none" stroke="var(--gl-gold-hairline)" strokeWidth={0.5} opacity={0.3} strokeDasharray="4 4" />
+            <circle cx={CX} cy={CY} r={R_OUTER + 10} fill="none" stroke="var(--gl-gold-hairline)" strokeWidth={1} opacity={0.4} />
+            <circle cx={CX} cy={CY} r={R_OUTER + 4} fill="none" stroke="var(--gl-gold-hairline)" strokeWidth={0.5} opacity={0.3} strokeDasharray="3 3" />
+
             {VARA_DB.map((v) => {
               const opacity = getOpacity(v);
               const isSelected = selected === v.index;
+              const isHovered = hovered === v.index;
               const midAngle = v.index * (360 / 7) + (360 / 14) - 90;
               const lx = CX + R_LABEL * Math.cos((midAngle * Math.PI) / 180);
               const ly = CY + R_LABEL * Math.sin((midAngle * Math.PI) / 180);
+              const sx = CX + R_SYMBOL * Math.cos((midAngle * Math.PI) / 180);
+              const sy = CY + R_SYMBOL * Math.sin((midAngle * Math.PI) / 180);
+
               return (
-                <g key={v.index} style={{ cursor: "pointer", opacity, transition: "opacity 0.3s ease" }} onClick={() => setSelected(v.index)}>
+                <g
+                  key={v.index}
+                  style={{ cursor: "pointer", opacity, transition: "opacity 0.3s ease" }}
+                  onClick={() => setSelected(v.index)}
+                  onMouseEnter={() => setHovered(v.index)}
+                  onMouseLeave={() => setHovered(null)}
+                  onKeyDown={(e) => handleKeyDown(e, v.index)}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`${v.english}, ruled by ${v.graha}`}
+                >
                   <path
                     d={getSegmentPath(v.index)}
-                    fill={isSelected ? `${v.grahaColor}22` : `${v.grahaColor}10`}
+                    fill={isSelected ? `${v.grahaColor}28` : isHovered ? `${v.grahaColor}1A` : `${v.grahaColor}0D`}
                     stroke={isSelected ? v.grahaColor : "var(--gl-gold-hairline)"}
                     strokeWidth={isSelected ? 2.5 : 1}
                     filter="url(#vwShadow)"
                     style={{ transition: "all 0.25s ease" }}
                   />
-                  <text x={lx} y={ly - 10} textAnchor="middle" fill="var(--gl-ink-primary)" fontSize={22} fontWeight={700} style={{ pointerEvents: "none", fontFamily: "serif" }}>
+                  <text x={sx} y={sy - 1} textAnchor="middle" fill={v.grahaColor} fontSize={16} fontWeight={700} style={{ pointerEvents: "none", fontFamily: "serif" }}>
                     {v.grahaSymbol}
                   </text>
-                  <text x={lx} y={ly + 12} textAnchor="middle" fill="var(--gl-ink-primary)" fontSize={11} fontWeight={isSelected ? 700 : 500} style={{ pointerEvents: "none", fontFamily: "var(--font-sans), sans-serif" }}>
+                  <text x={lx} y={ly + 10} textAnchor="middle" fill="var(--gl-ink-primary)" fontSize={11} fontWeight={isSelected ? 700 : 500} style={{ pointerEvents: "none", fontFamily: "var(--font-sans), sans-serif" }}>
                     {v.english}
                   </text>
+                  <circle cx={lx + 24} cy={ly - 4} r={2.5} fill={ELEMENT_META[v.element].color} opacity={0.8} style={{ pointerEvents: "none" }} />
                 </g>
               );
             })}
-            <circle cx={CX} cy={CY} r={R_INNER - 8} fill="var(--gl-card-surface-solid, #FFF9F0)" stroke="var(--gl-gold-accent)" strokeWidth={2} filter="url(#vwShadow)" />
-            <text x={CX} y={CY - 6} textAnchor="middle" fill="var(--gl-graha-surya)" fontSize={28} fontWeight={700} style={{ fontFamily: "serif" }}>☉</text>
-            <text x={CX} y={CY + 14} textAnchor="middle" fill="var(--gl-ink-secondary)" fontSize={11} fontWeight={600} style={{ fontFamily: "var(--font-sans), sans-serif" }}>Surya</text>
-            <text x={CX} y={CY + 28} textAnchor="middle" fill="var(--gl-ink-muted)" fontSize={9} style={{ fontFamily: "var(--font-sans), sans-serif" }}>Week begins</text>
+
+            <circle cx={CX} cy={CY} r={R_INNER - 6} fill="var(--gl-card-surface-solid, #FFF9F0)" stroke="var(--gl-gold-accent)" strokeWidth={2} filter="url(#vwShadow)" />
+            <text x={CX} y={CY - 6} textAnchor="middle" fill="var(--gl-graha-surya)" fontSize={22} fontWeight={700} style={{ fontFamily: "serif" }}>☉</text>
+            <text x={CX} y={CY + 10} textAnchor="middle" fill="var(--gl-ink-secondary)" fontSize={11} fontWeight={600} style={{ fontFamily: "var(--font-sans), sans-serif" }}>Surya</text>
+            <text x={CX} y={CY + 22} textAnchor="middle" fill="var(--gl-ink-muted)" fontSize={9} style={{ fontFamily: "var(--font-sans), sans-serif" }}>Week begins</text>
           </svg>
         </div>
 
-        <div className="w-full lg:w-80 shrink-0">
-          {selectedVara ? (
-            <div className="rounded-xl p-5" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold" style={{ background: `${selectedVara.grahaColor}18`, color: selectedVara.grahaColor }}>
-                  {selectedVara.grahaSymbol}
-                </span>
-                <div>
-                  <div className="text-lg font-semibold" style={{ color: "var(--gl-ink-primary)" }}>
-                    <IAST>{selectedVara.name}</IAST>
-                  </div>
-                  <div className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>{selectedVara.english}</div>
+        <div className="w-full xl:w-72 shrink-0">
+          <div className="rounded-xl p-4" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
+            <div className="flex items-center gap-3 mb-3">
+              <span className="w-9 h-9 rounded-full flex items-center justify-center text-lg font-bold" style={{ background: `${selectedVara.grahaColor}18`, color: selectedVara.grahaColor }}>
+                {selectedVara.grahaSymbol}
+              </span>
+              <div>
+                <div className="text-base font-semibold" style={{ color: "var(--gl-ink-primary)" }}>
+                  <IAST>{selectedVara.name}</IAST>
                 </div>
-              </div>
-              <div className="mb-4">
-                <Devanagari size="lg">{selectedVara.devanagari}</Devanagari>
-              </div>
-              <div className="space-y-3 text-sm">
-                <DetailRow label="Ruling Planet" value={selectedVara.graha} />
-                <DetailRow label="Deity" value={selectedVara.deity} />
-                <DetailRow label="Direction" value={selectedVara.direction} />
-                <DetailRow label="Element" value={`${selectedVara.elementSanskrit} (${selectedVara.element})`} />
-                <DetailRow label="Color" value={selectedVara.color} />
-                <DetailRow label="Type" value={selectedVara.type.charAt(0).toUpperCase() + selectedVara.type.slice(1)} />
-              </div>
-              <div className="mt-4 pt-3" style={{ borderTop: "1px solid var(--gl-gold-hairline)" }}>
-                <p className="text-xs italic" style={{ color: "var(--gl-ink-muted)" }}>
-                  The <IAST>{selectedVara.name}</IAST> is ruled by{" "}
-                  <span style={{ color: selectedVara.grahaColor, fontWeight: 600 }}>{selectedVara.graha}</span>,
-                  a {selectedVara.type} associated with {selectedVara.element}.
-                </p>
+                <div className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>{selectedVara.english}</div>
               </div>
             </div>
-          ) : (
-            <div className="rounded-xl p-6 text-center" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px dashed var(--gl-gold-hairline)" }}>
-              <p className="text-sm" style={{ color: "var(--gl-ink-muted)" }}>Click a segment on the wheel to view its full attributes.</p>
+            <div className="mb-3">
+              <Devanagari size="md">{selectedVara.devanagari}</Devanagari>
             </div>
-          )}
+            <div className="flex gap-2 mb-3">
+              <span className="px-2 py-0.5 rounded text-[11px] font-semibold" style={{ background: ELEMENT_META[selectedVara.element].bg, color: ELEMENT_META[selectedVara.element].color }}>
+                {selectedVara.elementSanskrit}
+              </span>
+              <span className="px-2 py-0.5 rounded text-[11px] font-semibold" style={{ background: TYPE_META[selectedVara.type].bg, color: TYPE_META[selectedVara.type].color }}>
+                {TYPE_META[selectedVara.type].label}
+              </span>
+            </div>
+            <div className="space-y-2.5 text-sm">
+              <DetailRow label="Ruling Planet" value={selectedVara.graha} />
+              <DetailRow label="Deity" value={selectedVara.deity} />
+              <DetailRow label="Direction" value={selectedVara.direction} />
+              <DetailRow label="Element" value={`${selectedVara.elementSanskrit} (${selectedVara.element})`} />
+              <DetailRow label="Color" value={selectedVara.color} />
+              <DetailRow label="Type" value={TYPE_META[selectedVara.type].label} />
+            </div>
+            <div className="mt-3 pt-3" style={{ borderTop: "1px solid var(--gl-gold-hairline)" }}>
+              <p className="text-xs italic" style={{ color: "var(--gl-ink-muted)" }}>
+                The <IAST>{selectedVara.name}</IAST> is ruled by <span style={{ color: selectedVara.grahaColor, fontWeight: 600 }}>{selectedVara.graha}</span>, a {selectedVara.type} associated with {selectedVara.element}.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-4 justify-center">
+      <div className="mt-5 flex flex-wrap gap-4 justify-center">
         {[
           { label: "Fire", key: "fire", color: "#C8412E" },
           { label: "Earth", key: "earth", color: "#3A8C5A" },
-          { label: "Air", key: "air", color: "#7A5E1E" },
+          { label: "Air", key: "air", color: "#B8860B" },
           { label: "Water", key: "water", color: "#4F6FA8" },
         ].map((el) => (
           <div key={el.key} className="flex items-center gap-2">

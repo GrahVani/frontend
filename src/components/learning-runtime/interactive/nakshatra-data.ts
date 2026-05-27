@@ -45,19 +45,19 @@ export const NAKSHATRAS: NakshatraData[] = [
 ];
 
 export const RULER_COLORS: Record<string, { text: string; bg: string; border: string; glow: string }> = {
-  sun:     { text: "#B8860B", bg: "rgba(232,184,69,0.12)", border: "rgba(184,134,11,0.35)", glow: "rgba(232,184,69,0.25)" },
-  moon:    { text: "#708090", bg: "rgba(216,219,232,0.22)", border: "rgba(112,128,144,0.35)", glow: "rgba(216,219,232,0.30)" },
-  mars:    { text: "#C8412E", bg: "rgba(200,65,46,0.10)", border: "rgba(200,65,46,0.30)", glow: "rgba(200,65,46,0.20)" },
-  mercury: { text: "#2E8B57", bg: "rgba(58,140,90,0.10)", border: "rgba(46,139,87,0.30)", glow: "rgba(58,140,90,0.20)" },
-  jupiter: { text: "#DAA520", bg: "rgba(232,158,42,0.10)", border: "rgba(218,165,32,0.35)", glow: "rgba(232,158,42,0.20)" },
-  venus:   { text: "#888888", bg: "rgba(220,220,220,0.18)", border: "rgba(136,136,136,0.35)", glow: "rgba(220,220,220,0.25)" },
-  saturn:  { text: "#4A6FA8", bg: "rgba(74,111,168,0.10)", border: "rgba(74,111,168,0.30)", glow: "rgba(74,111,168,0.20)" },
-  rahu:    { text: "#5A5A5A", bg: "rgba(90,90,90,0.10)", border: "rgba(90,90,90,0.30)", glow: "rgba(90,90,90,0.15)" },
-  ketu:    { text: "#7A5E5E", bg: "rgba(122,94,94,0.10)", border: "rgba(122,94,94,0.30)", glow: "rgba(122,94,94,0.15)" },
+  sun:     { text: "#B8860B", bg: "#FDF6E3", border: "#E8D5A3", glow: "#F5E6C8" },
+  moon:    { text: "#708090", bg: "#F0F1F5", border: "#B8C0CC", glow: "#E2E5EB" },
+  mars:    { text: "#C8412E", bg: "#FDE8E5", border: "#E8AFA8", glow: "#FAD4CD" },
+  mercury: { text: "#2E8B57", bg: "#E8F5EE", border: "#A8D4B8", glow: "#D4EDD9" },
+  jupiter: { text: "#DAA520", bg: "#FDF6E3", border: "#E8D5A3", glow: "#F5E6C8" },
+  venus:   { text: "#888888", bg: "#F5F5F5", border: "#C8C8C8", glow: "#EBEBEB" },
+  saturn:  { text: "#4A6FA8", bg: "#EBF0FA", border: "#B0C4DE", glow: "#D6E0F0" },
+  rahu:    { text: "#5A5A5A", bg: "#F0F0F0", border: "#C0C0C0", glow: "#E0E0E0" },
+  ketu:    { text: "#7A5E5E", bg: "#F5F0F0", border: "#C8B8B8", glow: "#E8DCDC" },
 };
 
 export const GANA_STYLE: Record<string, { text: string; bg: string }> = {
-  deva:     { text: "#4A7C59", bg: "rgba(74,124,89,0.10)" },
-  manuṣya:  { text: "#8B6914", bg: "rgba(183,137,31,0.10)" },
-  rākṣasa:  { text: "#A23A1E", bg: "rgba(162,58,30,0.10)" },
+  deva:     { text: "#2d7d46", bg: "#E8F5EE" },
+  manuṣya:  { text: "#B8860B", bg: "#FDF6E3" },
+  rākṣasa:  { text: "#A23A1E", bg: "#FDE8E5" },
 };

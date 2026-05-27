@@ -147,6 +147,13 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   "lineage-matters-worked-example": "lineage-matters-synthesis-dojo",
 };
 
+/** Slugs whose §7 interactive needs extra horizontal space (e.g. large SVG wheel + sidebar). */
+const WIDE_LAYOUT_SLUGS = new Set([
+  "the-15-shukla-tithis",
+  "the-15-krishna-tithis",
+  "nakshatra-deity-and-ruling-planet-at-pancanga-level",
+]);
+
 export function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorProps) {
   const componentType = fm.interactive?.componentType;
   const specFile = fm.interactive?.specFile;
@@ -158,12 +165,14 @@ export function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorP
     ? resolveInteractive(overrideKey)
     : Resolved;
 
+  const useWideLayout = WIDE_LAYOUT_SLUGS.has(fm.slug);
+
   return (
     <section
       id={`sec-${section.number}`}
       aria-labelledby={`sec-${section.number}-h`}
       className="mx-auto py-5"
-      style={{ maxWidth: "960px", scrollMarginTop: "120px" }}
+      style={{ maxWidth: useWideLayout ? "1140px" : "960px", scrollMarginTop: "120px" }}
     >
       <div style={{ textAlign: "center" }}>
         {(() => {
