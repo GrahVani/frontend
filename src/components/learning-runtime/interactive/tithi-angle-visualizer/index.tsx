@@ -59,6 +59,13 @@ function tithiForSegment(segIndex: number) {
   return { paksha, displayNum, name: db?.name ?? "—", deity: db?.deity ?? "—" };
 }
 
+/* ─── Design token helpers ─── */
+const GOLD = "#C28220";
+const RUST = "#A23A1E";
+const GOLD_LIGHT = "rgba(232,158,42,0.12)";
+const RUST_LIGHT = "rgba(212,80,46,0.12)";
+const GOLD_BORDER = "rgba(194,130,32,0.45)";
+
 /* ─── Orbital visualiser ─── */
 function OrbitDiagram({ angle, onAngleChange }: { angle: number; onAngleChange: (a: number) => void }) {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -70,13 +77,13 @@ function OrbitDiagram({ angle, onAngleChange }: { angle: number; onAngleChange: 
   const R_INNER = 56;
   const SUN_R = 20;
   const MOON_R = 11;
+  const LABEL_R = (R_INNER + R) / 2 + 8;
 
   const currentSegment = Math.floor(((angle % 360) + 360) % 360 / 12);
   const segmentMidAngle = currentSegment * 12 + 6;
   const moonX = R * Math.cos((segmentMidAngle - 90) * (Math.PI / 180));
   const moonY = R * Math.sin((segmentMidAngle - 90) * (Math.PI / 180));
 
-  // Hover preview position
   const previewSeg = hoveredSeg ?? currentSegment;
   const previewAngle = previewSeg * 12 + 6;
   const previewX = R * Math.cos((previewAngle - 90) * (Math.PI / 180));
@@ -161,17 +168,14 @@ function OrbitDiagram({ angle, onAngleChange }: { angle: number; onAngleChange: 
           <clipPath id="sunClip">
             <circle cx={260} cy={260} r={SUN_R} />
           </clipPath>
-          <clipPath id="moonClip">
-            <circle cx={260 + moonX} cy={260 + moonY} r={MOON_R} />
-          </clipPath>
         </defs>
 
         {/* Background ambient glow */}
-        <circle cx={260} cy={260} r={R + 55} fill="url(#sunGlow)" opacity={0.10} />
+        <circle cx={260} cy={260} r={R + 55} fill="url(#sunGlow)" opacity={0.08} />
 
-        {/* Outer decorative rings — perfectly contained */}
-        <circle cx={260} cy={260} r={R_OUTER} fill="none" stroke="#C9A24D" strokeWidth={1.4} opacity={0.55} />
-        <circle cx={260} cy={260} r={R_OUTER - 6} fill="none" stroke="#C9A24D" strokeWidth={0.6} opacity={0.40} strokeDasharray="4 4" />
+        {/* Outer decorative rings */}
+        <circle cx={260} cy={260} r={R_OUTER} fill="none" stroke="#C9A24D" strokeWidth={1.4} opacity={0.50} />
+        <circle cx={260} cy={260} r={R_OUTER - 6} fill="none" stroke="#C9A24D" strokeWidth={0.6} opacity={0.35} strokeDasharray="4 4" />
 
         {/* 30 segment wedges */}
         {Array.from({ length: 30 }, (_, i) => {
@@ -189,19 +193,41 @@ function OrbitDiagram({ angle, onAngleChange }: { angle: number; onAngleChange: 
               key={i}
               d={`M 260 260 L ${x1} ${y1} A ${R} ${R} 0 0 1 ${x2} ${y2} Z`}
               fill={isActive
-                ? (isShukla ? "rgba(232,158,42,0.32)" : "rgba(212,80,46,0.26)")
+                ? (isShukla ? "rgba(232,158,42,0.30)" : "rgba(212,80,46,0.24)")
                 : isHovered
-                  ? (isShukla ? "rgba(232,158,42,0.16)" : "rgba(212,80,46,0.12)")
+                  ? (isShukla ? "rgba(232,158,42,0.14)" : "rgba(212,80,46,0.10)")
                   : "transparent"}
-              stroke={isActive ? "#C28220" : isHovered ? (isShukla ? "rgba(194,130,32,0.70)" : "rgba(162,58,30,0.60)") : isShukla ? "rgba(156,122,47,0.35)" : "rgba(162,58,30,0.28)"}
-              strokeWidth={isActive ? 2.5 : isHovered ? 1.8 : 0.8}
+              stroke={isActive ? GOLD : isHovered ? (isShukla ? "rgba(194,130,32,0.65)" : "rgba(162,58,30,0.55)") : isShukla ? "rgba(156,122,47,0.30)" : "rgba(162,58,30,0.24)"}
+              strokeWidth={isActive ? 2.5 : isHovered ? 1.8 : 0.7}
               style={{ transition: "all 0.2s ease", cursor: "pointer" }}
               onMouseEnter={() => setHoveredSeg(i)}
             />
           );
         })}
 
-        {/* Radial lines from inner ring to outer ring */}
+        {/* Segment number labels */}
+        {Array.from({ length: 30 }, (_, i) => {
+          const midAngle = i * 12 + 6;
+          const lx = 260 + LABEL_R * Math.cos((midAngle - 90) * (Math.PI / 180));
+          const ly = 260 + LABEL_R * Math.sin((midAngle - 90) * (Math.PI / 180));
+          const isActive = i === currentSegment;
+          const isShukla = i < 15;
+          return (
+            <text
+              key={`label-${i}`}
+              x={lx} y={ly + 3}
+              textAnchor="middle"
+              fill={isActive ? (isShukla ? "#7A4E10" : "#8A2E1E") : isShukla ? "rgba(107,68,35,0.45)" : "rgba(122,44,30,0.40)"}
+              fontSize={isActive ? 11 : 9}
+              fontWeight={isActive ? 900 : 700}
+              style={{ fontFamily: "var(--font-sans), sans-serif", pointerEvents: "none", transition: "all 0.15s ease" }}
+            >
+              {i + 1}
+            </text>
+          );
+        })}
+
+        {/* Radial lines */}
         {Array.from({ length: 30 }, (_, i) => {
           const a = i * 12;
           const isMajor = i % 5 === 0;
@@ -215,8 +241,8 @@ function OrbitDiagram({ angle, onAngleChange }: { angle: number; onAngleChange: 
             <line
               key={`line-${i}`}
               x1={x1} y1={y1} x2={x2} y2={y2}
-              stroke={isMajor ? "rgba(156,122,47,0.65)" : "rgba(156,122,47,0.35)"}
-              strokeWidth={isMajor ? 1.6 : 0.9}
+              stroke={isMajor ? "rgba(156,122,47,0.55)" : "rgba(156,122,47,0.28)"}
+              strokeWidth={isMajor ? 1.4 : 0.8}
             />
           );
         })}
@@ -235,24 +261,24 @@ function OrbitDiagram({ angle, onAngleChange }: { angle: number; onAngleChange: 
             <line
               key={`tick-${i}`}
               x1={x1} y1={y1} x2={x2} y2={y2}
-              stroke={isMajor ? "#7A5E20" : "rgba(107,68,35,0.50)"}
-              strokeWidth={isMajor ? 2.2 : 1.2}
+              stroke={isMajor ? "#7A5E20" : "rgba(107,68,35,0.45)"}
+              strokeWidth={isMajor ? 2 : 1}
             />
           );
         })}
 
         {/* Orbit path */}
-        <circle cx={260} cy={260} r={R} fill="none" stroke="rgba(107,68,35,0.50)" strokeWidth={1.6} strokeDasharray="4 4" />
+        <circle cx={260} cy={260} r={R} fill="none" stroke="rgba(107,68,35,0.45)" strokeWidth={1.4} strokeDasharray="4 4" />
 
         {/* Inner mandala rings */}
-        <circle cx={260} cy={260} r={R_INNER} fill="none" stroke="#B08A3A" strokeWidth={1.2} strokeOpacity={0.70} />
-        <circle cx={260} cy={260} r={R_INNER - 14} fill="none" stroke="#B08A3A" strokeWidth={0.7} strokeOpacity={0.45} />
+        <circle cx={260} cy={260} r={R_INNER} fill="none" stroke="#B08A3A" strokeWidth={1.2} strokeOpacity={0.60} />
+        <circle cx={260} cy={260} r={R_INNER - 14} fill="none" stroke="#B08A3A" strokeWidth={0.7} strokeOpacity={0.40} />
 
-        {/* Pakṣa labels — plain text, clear gap from wheel */}
-        <text x={260} y={14} textAnchor="middle" fill="#7A5E20" fontSize={13} fontWeight={800} letterSpacing={0.16} style={{ fontFamily: "var(--font-sans), sans-serif", textTransform: "uppercase" }}>
+        {/* Pakṣa labels */}
+        <text x={260} y={16} textAnchor="middle" fill="#7A5E20" fontSize={13} fontWeight={800} letterSpacing={0.16} style={{ fontFamily: "var(--font-sans), sans-serif", textTransform: "uppercase" }}>
           Śukla Pakṣa · 1–15
         </text>
-        <text x={260} y={508} textAnchor="middle" fill="#8A2E1E" fontSize={13} fontWeight={800} letterSpacing={0.16} style={{ fontFamily: "var(--font-sans), sans-serif", textTransform: "uppercase" }}>
+        <text x={260} y={510} textAnchor="middle" fill="#8A2E1E" fontSize={13} fontWeight={800} letterSpacing={0.16} style={{ fontFamily: "var(--font-sans), sans-serif", textTransform: "uppercase" }}>
           Kṛṣṇa Pakṣa · 16–30
         </text>
 
@@ -262,10 +288,8 @@ function OrbitDiagram({ angle, onAngleChange }: { angle: number; onAngleChange: 
         <text x={260} y={260 + R_OUTER - 6} textAnchor="middle" fill="#A23A1E" fontSize={10} fontWeight={700} style={{ fontFamily: "var(--font-sans), sans-serif" }}>180°</text>
         <text x={260 - R_OUTER + 14} y={264} textAnchor="middle" fill="#A23A1E" fontSize={10} fontWeight={700} style={{ fontFamily: "var(--font-sans), sans-serif" }}>270°</text>
 
-        {/* ── SUN — image with circular clip + fallback glyph underneath ── */}
-        {/* Halo behind sun */}
-        <circle cx={260} cy={260} r={SUN_R + 14} fill="url(#sunGlow)" opacity={0.35} filter="url(#sunHalo)" />
-        {/* Sun image (clipped to circle) */}
+        {/* ── SUN ── */}
+        <circle cx={260} cy={260} r={SUN_R + 14} fill="url(#sunGlow)" opacity={0.30} filter="url(#sunHalo)" />
         <image
           href="/assets/learning/tithi-sun-mandala.png"
           x={260 - SUN_R}
@@ -276,59 +300,23 @@ function OrbitDiagram({ angle, onAngleChange }: { angle: number; onAngleChange: 
           preserveAspectRatio="xMidYMid slice"
           style={{ pointerEvents: "none" }}
         />
-        {/* Fallback glyph — visible only if image fails to load */}
-        <text x={260} y={260 + 5} textAnchor="middle" fill="#3E2A1F" fontSize={14} fontWeight={800} style={{ fontFamily: "serif", pointerEvents: "none", opacity: 0 }}>☉</text>
-        {/* Sun border ring */}
         <circle cx={260} cy={260} r={SUN_R} fill="none" stroke="#C28220" strokeWidth={1.4} opacity={0.70} />
         <circle cx={260} cy={260} r={SUN_R + 3} fill="none" stroke="#C28220" strokeWidth={0.7} opacity={0.40} />
 
-        {/* ── PREVIEW DOT (hovered segment midpoint) ── */}
-        {hoveredSeg !== null && hoveredSeg !== currentSegment && (
-          <circle
-            cx={260 + previewX}
-            cy={260 + previewY}
-            r={5}
-            fill="rgba(232,158,42,0.55)"
-            stroke="#C28220"
-            strokeWidth={1}
-            strokeDasharray="2 2"
-            style={{ transition: "all 0.15s ease", pointerEvents: "none" }}
-          />
-        )}
-
-        {/* ── MOON at active segment midpoint ── */}
-        {/* Moon glow */}
-        <circle cx={260 + moonX} cy={260 + moonY} r={MOON_R + 10} fill={currentSegment < 15 ? "rgba(232,158,42,0.30)" : "rgba(212,80,46,0.24)"} filter="url(#sunHalo)" />
-        {/* Moon body — use glyph image if available, else stylized circle */}
-        <image
-          href="/assets/learning/tithi-moon-glyph.png"
-          x={260 + moonX - MOON_R}
-          y={260 + moonY - MOON_R}
-          width={MOON_R * 2}
-          height={MOON_R * 2}
-          clipPath="url(#moonClip)"
-          preserveAspectRatio="xMidYMid slice"
-          style={{ pointerEvents: "none" }}
-          onError={(e) => { (e.target as SVGImageElement).style.display = "none"; }}
-        />
-        <circle cx={260 + moonX} cy={260 + moonY} r={MOON_R} fill="url(#moonGrad)" stroke={currentSegment < 15 ? "#C28220" : "#A23A1E"} strokeWidth={2.2} filter="url(#softShadow)" />
-        {/* Moon glyph text fallback */}
-        <text x={260 + moonX} y={260 + moonY + 4} textAnchor="middle" fill="#3E2A1F" fontSize={12} fontWeight={800} style={{ fontFamily: "serif", pointerEvents: "none" }}>☽</text>
-
-        {/* ── Elongation arc ── */}
+        {/* ── Elongation arc (between Sun and inner ring, visible) ── */}
         {angle > 0 && (
           <>
             <path
-              d={`M 260 ${260 - 50} A 50 50 0 ${angle > 180 ? 1 : 0} 1 ${260 + 50 * Math.sin(angle * Math.PI / 180)} ${260 - 50 * Math.cos(angle * Math.PI / 180)}`}
+              d={`M 260 ${260 - (R_INNER + 10)} A ${R_INNER + 10} ${R_INNER + 10} 0 ${angle > 180 ? 1 : 0} 1 ${260 + (R_INNER + 10) * Math.sin(angle * Math.PI / 180)} ${260 - (R_INNER + 10) * Math.cos(angle * Math.PI / 180)}`}
               fill="none"
               stroke="#E89E2A"
               strokeWidth={2}
               strokeDasharray="4 2"
-              opacity={0.9}
+              opacity={0.85}
             />
             <text
-              x={260 + 64 * Math.sin(angle * Math.PI / 180)}
-              y={260 - 64 * Math.cos(angle * Math.PI / 180)}
+              x={260 + (R_INNER + 26) * Math.sin(angle * Math.PI / 180)}
+              y={260 - (R_INNER + 26) * Math.cos(angle * Math.PI / 180)}
               fill="#E89E2A"
               fontSize={12}
               fontWeight={700}
@@ -339,49 +327,134 @@ function OrbitDiagram({ angle, onAngleChange }: { angle: number; onAngleChange: 
           </>
         )}
 
-        {/* Elongation line */}
-        <line x1={260} y1={260} x2={260 + moonX} y2={260 + moonY} stroke="rgba(194,130,32,0.55)" strokeWidth={1.6} strokeDasharray="4 3" />
+        {/* ── PREVIEW DOT ── */}
+        {hoveredSeg !== null && hoveredSeg !== currentSegment && (
+          <circle
+            cx={260 + previewX}
+            cy={260 + previewY}
+            r={5}
+            fill="rgba(232,158,42,0.50)"
+            stroke="#C28220"
+            strokeWidth={1}
+            strokeDasharray="2 2"
+            style={{ transition: "all 0.15s ease", pointerEvents: "none" }}
+          />
+        )}
 
-        {/* Active segment midpoint dot */}
-        <circle cx={260 + moonX} cy={260 + moonY} r={3.5} fill="#C28220" />
+        {/* ── MOON (animated with CSS transform on group) ── */}
+        <g
+          style={{
+            transform: `translate(${moonX}px, ${moonY}px)`,
+            transition: "transform 0.4s cubic-bezier(0.32, 0.72, 0.24, 1)",
+            transformOrigin: "260px 260px",
+          }}
+        >
+          {/* Moon glow */}
+          <circle cx={260} cy={260} r={MOON_R + 10} fill={currentSegment < 15 ? "rgba(232,158,42,0.28)" : "rgba(212,80,46,0.22)"} filter="url(#sunHalo)" style={{ transition: "fill 0.3s ease" }} />
+          {/* Moon body */}
+          <image
+            href="/assets/learning/tithi-moon-glyph.png"
+            x={260 - MOON_R}
+            y={260 - MOON_R}
+            width={MOON_R * 2}
+            height={MOON_R * 2}
+            clipPath={`circle(${MOON_R}px at ${260}px ${260}px)`}
+            preserveAspectRatio="xMidYMid slice"
+            style={{ pointerEvents: "none" }}
+            onError={(e) => { (e.target as SVGImageElement).style.display = "none"; }}
+          />
+          <circle cx={260} cy={260} r={MOON_R} fill="url(#moonGrad)" stroke={currentSegment < 15 ? GOLD : RUST} strokeWidth={2.2} filter="url(#softShadow)" style={{ transition: "stroke 0.3s ease" }} />
+          {/* Moon glyph text fallback */}
+          <text x={260} y={260 + 4} textAnchor="middle" fill="#3E2A1F" fontSize={12} fontWeight={800} style={{ fontFamily: "serif", pointerEvents: "none" }}>☽</text>
+          {/* Active midpoint dot */}
+          <circle cx={260} cy={260} r={3.5} fill={GOLD} />
+        </g>
+
+        {/* Elongation line (static from center, but Moon moves) */}
+        <line x1={260} y1={260} x2={260 + moonX} y2={260 + moonY} stroke="rgba(194,130,32,0.50)" strokeWidth={1.4} strokeDasharray="4 3" style={{ transition: "all 0.4s cubic-bezier(0.32, 0.72, 0.24, 1)" }} />
       </svg>
 
-      {/* ── HOVER TOOLTIP (HTML overlay, absolute positioned) ── */}
+      {/* Hover tooltip */}
       {hoveredSeg !== null && tooltipPos && (
         <div
+          className="hidden sm:block"
           style={{
             position: "absolute",
-            left: tooltipPos.x + 16,
+            left: Math.min(tooltipPos.x + 16, (svgRef.current?.clientWidth ?? 520) - 170),
             top: tooltipPos.y - 10,
             pointerEvents: "none",
             zIndex: 10,
-            background: "rgba(255, 252, 240, 0.96)",
-            border: "1px solid rgba(156,122,47,0.25)",
-            borderRadius: "8px",
-            padding: "8px 12px",
-            boxShadow: "0 4px 16px rgba(62,42,31,0.15)",
-            minWidth: 140,
+            background: "var(--gl-card-surface-solid, #FFF9F0)",
+            border: "1px solid var(--gl-gold-hairline)",
+            borderRadius: 10,
+            padding: "10px 14px",
+            boxShadow: "0 4px 16px rgba(62,42,31,0.14)",
+            minWidth: 150,
           }}
         >
-          {(() => {
-            const t = tithiForSegment(hoveredSeg);
-            return (
-              <div>
-                <p style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.14em", color: t.paksha === "śukla" ? "#9C7A2F" : "#A23A1E", fontWeight: 700, fontFamily: "var(--font-sans), sans-serif", marginBottom: "3px" }}>
-                  {t.paksha === "śukla" ? "Śukla" : "Kṛṣṇa"} {t.displayNum}/15
-                </p>
-                <p style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "15px", fontWeight: 600, color: "var(--gl-ink-primary)", lineHeight: 1.2 }}>
-                  <IAST>{t.name}</IAST>
-                </p>
-                <p style={{ fontSize: "11px", color: "var(--gl-ink-muted)", marginTop: "2px" }}>
-                  Deity: <IAST>{t.deity}</IAST>
-                </p>
-              </div>
-            );
-          })()}
+          <SegmentTooltip segIndex={hoveredSeg} />
         </div>
       )}
     </div>
+  );
+}
+
+function SegmentTooltip({ segIndex }: { segIndex: number }) {
+  const t = tithiForSegment(segIndex);
+  return (
+    <div>
+      <p style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: 0.14, color: t.paksha === "śukla" ? "#9C7A2F" : "#A23A1E", fontWeight: 700, fontFamily: "var(--font-sans), sans-serif", marginBottom: 4 }}>
+        {t.paksha === "śukla" ? "Śukla" : "Kṛṣṇa"} {t.displayNum}/15 · Tithi {segIndex + 1}/30
+      </p>
+      <p style={{ fontFamily: "var(--font-cormorant), serif", fontSize: 16, fontWeight: 600, color: "var(--gl-ink-primary)", lineHeight: 1.2 }}>
+        <IAST>{t.name}</IAST>
+      </p>
+      <p style={{ fontSize: 11, color: "var(--gl-ink-muted)", marginTop: 3 }}>
+        Deity: <IAST>{t.deity}</IAST>
+      </p>
+    </div>
+  );
+}
+
+/* ─── Reusable card component ─── */
+function DataCard({
+  children,
+  accent,
+  borderLeft,
+  padding = "18px 20px",
+}: {
+  children: React.ReactNode;
+  accent?: string;
+  borderLeft?: string;
+  padding?: string;
+}) {
+  return (
+    <div
+      className="gl-surface-twilight-glass"
+      style={{
+        padding,
+        borderLeft: borderLeft ? borderLeft : undefined,
+        borderTop: accent ? `3px solid ${accent}` : undefined,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function SectionLabel({ children, accent }: { children: React.ReactNode; accent?: string }) {
+  return (
+    <p style={{
+      fontSize: 11,
+      textTransform: "uppercase",
+      letterSpacing: "0.18em",
+      color: accent ?? "var(--gl-ink-muted)",
+      fontWeight: 700,
+      fontFamily: "var(--font-sans), system-ui, sans-serif",
+      marginBottom: 12,
+    }}>
+      {children}
+    </p>
   );
 }
 
@@ -432,148 +505,89 @@ export function TithiAngleVisualizer() {
     { label: "Amāvāsyā", angle: 354, paksha: "kṛṣṇa", desc: "New moon — conjunction" },
   ];
 
+  const pakshaColor = tithi.paksha === "śukla" ? GOLD : RUST;
+  const pakshaBg = tithi.paksha === "śukla" ? "rgba(232,158,42,0.14)" : "rgba(212,80,46,0.12)";
+  const pakshaBorder = tithi.paksha === "śukla" ? "rgba(194,130,32,0.45)" : "rgba(162,58,30,0.40)";
+
   return (
-    <div className="my-6" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-      {/* ───── TOP — Header strip with decorative mandala image ───── */}
+    <div className="my-6 flex flex-col gap-4">
+      {/* Header strip */}
       <header
-        className="gl-surface-twilight-glass"
-        style={{
-          padding: "16px 22px",
-          display: "grid",
-          gridTemplateColumns: "auto auto 1fr 1.4fr",
-          gap: "20px",
-          alignItems: "center",
-          borderLeft: `4px solid ${tithi.paksha === "śukla" ? "#C28220" : "#A23A1E"}`,
-          transition: "border-color 320ms cubic-bezier(0.32, 0.72, 0.24, 1)",
-        }}
+        className="gl-surface-twilight-glass flex flex-wrap items-center gap-4 p-4"
+        style={{ borderLeft: `4px solid ${pakshaColor}`, transition: "border-color 320ms cubic-bezier(0.32, 0.72, 0.24, 1)" }}
       >
-        {/* Decorative Sun-Moon mandala — cropped cleanly to circle */}
-        <div
-          style={{
-            position: "relative",
-            flexShrink: 0,
-            width: 48,
-            height: 48,
-            borderRadius: "50%",
-            overflow: "hidden",
-            boxShadow: "0 2px 8px rgba(107,68,35,0.15)",
-          }}
-        >
+        {/* Decorative mandala */}
+        <div className="relative flex-shrink-0 w-12 h-12 rounded-full overflow-hidden" style={{ boxShadow: "0 2px 8px rgba(107,68,35,0.15)" }}>
           <img
             src="/assets/learning/tithi-sun-mandala.png"
             alt="Sūrya-Candra mandala"
-            width={48}
-            height={48}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center",
-              display: "block",
-            }}
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.display = "none";
-            }}
+            className="w-full h-full object-cover"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
-          {/* Fallback gradient if image fails */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background: "linear-gradient(135deg, #F5C842 0%, #E89E2A 50%, #C47A1A 100%)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "20px",
-              zIndex: -1,
-            }}
-          >
-            ☉☽
-          </div>
+          <div className="absolute inset-0 flex items-center justify-center text-xl -z-10" style={{ background: "linear-gradient(135deg, #F5C842 0%, #E89E2A 50%, #C47A1A 100%)" }}>☉☽</div>
         </div>
 
         {/* Pakṣa pill */}
         <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "6px 14px",
-            borderRadius: "999px",
-            background: tithi.paksha === "śukla" ? "rgba(232, 158, 42, 0.14)" : "rgba(212, 80, 46, 0.12)",
-            border: `1px solid ${tithi.paksha === "śukla" ? "rgba(194, 130, 32, 0.45)" : "rgba(162, 58, 30, 0.40)"}`,
-            transition: "all 320ms cubic-bezier(0.32, 0.72, 0.24, 1)",
-            flexShrink: 0,
-          }}
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full flex-shrink-0"
+          style={{ background: pakshaBg, border: `1px solid ${pakshaBorder}`, transition: "all 320ms cubic-bezier(0.32, 0.72, 0.24, 1)" }}
         >
-          <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: tithi.paksha === "śukla" ? "#C28220" : "#A23A1E" }} />
-          <span style={{ fontSize: "11.5px", textTransform: "uppercase", letterSpacing: "0.18em", color: tithi.paksha === "śukla" ? "#C28220" : "#A23A1E", fontWeight: 700, fontFamily: "var(--font-sans), system-ui, sans-serif" }}>
+          <span className="w-1.5 h-1.5 rounded-full" style={{ background: pakshaColor }} />
+          <span className="text-xs font-bold uppercase tracking-widest" style={{ color: pakshaColor, fontFamily: "var(--font-sans), system-ui, sans-serif" }}>
             {tithi.paksha === "śukla" ? "Śukla Pakṣa" : "Kṛṣṇa Pakṣa"}
           </span>
         </div>
 
-        {/* Tithi number + name */}
-        <div>
-          <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.18em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), system-ui, sans-serif", marginBottom: "4px" }}>
+        {/* Tithi info */}
+        <div className="flex-1 min-w-[200px]">
+          <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "var(--gl-ink-muted)", fontFamily: "var(--font-sans), system-ui, sans-serif" }}>
             Current Tithi
           </p>
-          <p style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 500, fontSize: "22px", color: tithi.paksha === "śukla" ? "#C28220" : "#A23A1E", lineHeight: 1.2, transition: "color 320ms cubic-bezier(0.32, 0.72, 0.24, 1)" }}>
-            {tithi.tithiName} <span style={{ fontSize: "16px", color: "var(--gl-ink-muted)" }}>({tithi.displayNumber}/15)</span>
+          <p className="text-xl font-medium" style={{ fontFamily: "var(--font-cormorant), serif", color: pakshaColor, lineHeight: 1.2, transition: "color 320ms cubic-bezier(0.32, 0.72, 0.24, 1)" }}>
+            {tithi.tithiName} <span className="text-base" style={{ color: "var(--gl-ink-muted)" }}>({tithi.displayNumber}/15)</span>
           </p>
-          <p style={{ fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", fontSize: "13.5px", color: "var(--gl-ink-secondary)", marginTop: "2px" }}>
+          <p className="text-sm italic mt-0.5" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-secondary)" }}>
             Deity: <IAST>{tithi.deity}</IAST> · Quality: <IAST>{tithi.quality}</IAST>
           </p>
         </div>
 
-        {/* Live formula context */}
+        {/* Formula box */}
         <div
+          className="flex-1 min-w-[240px] rounded-lg p-3"
           style={{
-            background: tithi.paksha === "śukla" ? "rgba(232, 158, 42, 0.08)" : "rgba(212, 80, 46, 0.06)",
-            border: `1px solid ${tithi.paksha === "śukla" ? "rgba(194, 130, 32, 0.30)" : "rgba(162, 58, 30, 0.25)"}`,
-            borderLeft: `3px solid ${tithi.paksha === "śukla" ? "#C28220" : "#A23A1E"}`,
-            padding: "12px 14px",
-            borderRadius: "0 8px 8px 0",
+            background: tithi.paksha === "śukla" ? "rgba(232,158,42,0.08)" : "rgba(212,80,46,0.06)",
+            border: `1px solid ${tithi.paksha === "śukla" ? "rgba(194,130,32,0.30)" : "rgba(162,58,30,0.25)"}`,
+            borderLeft: `3px solid ${pakshaColor}`,
             transition: "all 320ms cubic-bezier(0.32, 0.72, 0.24, 1)",
           }}
         >
-          <p style={{ fontSize: "10.5px", textTransform: "uppercase", letterSpacing: "0.18em", color: tithi.paksha === "śukla" ? "#C28220" : "#A23A1E", fontWeight: 700, fontFamily: "var(--font-sans), system-ui, sans-serif", marginBottom: "4px" }}>
+          <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: pakshaColor, fontFamily: "var(--font-sans), system-ui, sans-serif" }}>
             Live Formula
           </p>
-          <p style={{ fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", fontSize: "14.5px", color: "var(--gl-ink-primary)", lineHeight: 1.55 }}>
-            Tithi = ⌊{tithi.elongation}° ÷ 12°⌋ + 1 = <strong style={{ color: tithi.paksha === "śukla" ? "#C28220" : "#A23A1E" }}>{tithi.tithiNumber}</strong> · Elapsed: <strong style={{ color: tithi.paksha === "śukla" ? "#C28220" : "#A23A1E" }}>{Math.round(tithi.elapsedFraction * 100)}%</strong>
+          <p className="text-sm italic leading-relaxed" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-primary)" }}>
+            Tithi = ⌊{tithi.elongation}° ÷ 12°⌋ + 1 ={" "}
+            <strong style={{ color: pakshaColor }}>{tithi.tithiNumber}</strong>
+            <span className="mx-1.5" style={{ color: "var(--gl-ink-muted)" }}>·</span>
+            Elapsed: <strong style={{ color: pakshaColor }}>{Math.round(tithi.elapsedFraction * 100)}%</strong>
           </p>
         </div>
       </header>
 
-      {/* ───── MIDDLE — Two-column: Diagram + Data cards ───── */}
-      <div
-        className="gl-surface-twilight-glass"
-        style={{
-          padding: "28px 24px",
-          display: "grid",
-          gridTemplateColumns: "1fr 360px",
-          gap: "28px",
-          alignItems: "start",
-        }}
-      >
+      {/* Two-column: Diagram + Data cards — RESPONSIVE */}
+      <div className="gl-surface-twilight-glass p-5 lg:p-7 flex flex-col lg:grid lg:grid-cols-[1fr_340px] gap-6 lg:gap-7 items-start">
         {/* LEFT — Orbital diagram */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+        <div className="flex flex-col items-center gap-4 w-full">
           <OrbitDiagram angle={angle} onAngleChange={setAngle} />
 
-          {/* Controls — precise stepping + direct entry */}
-          <div style={{ width: "100%", maxWidth: 460, display: "flex", flexDirection: "column", gap: "10px" }}>
-            {/* Row 1: − slider + */}
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          {/* Controls */}
+          <div className="w-full max-w-md flex flex-col gap-2.5">
+            {/* Slider row */}
+            <div className="flex items-center gap-2.5">
               <button
                 onClick={() => stepAngle(-1)}
                 title="Previous tithi (← arrow key)"
-                style={{
-                  width: "36px", height: "36px", borderRadius: "50%",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  background: "rgba(232,158,42,0.12)", border: "1.5px solid rgba(194,130,32,0.45)",
-                  color: "#9C7A2F", fontSize: "18px", fontWeight: 800,
-                  cursor: "pointer", transition: "all 180ms ease", flexShrink: 0,
-                }}
+                className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-lg font-extrabold transition-all"
+                style={{ background: GOLD_LIGHT, border: `1.5px solid ${GOLD_BORDER}`, color: "#9C7A2F" }}
               >
                 −
               </button>
@@ -583,31 +597,27 @@ export function TithiAngleVisualizer() {
                 max={359}
                 value={angle}
                 onChange={(e) => { setAngle(Number(e.target.value)); setDegreeInput(String(Math.round(Number(e.target.value)))); }}
-                style={{ flex: 1, accentColor: tithi.paksha === "śukla" ? "#C28220" : "#A23A1E", cursor: "pointer" }}
+                className="flex-1"
+                style={{ accentColor: pakshaColor, cursor: "pointer" }}
               />
               <button
                 onClick={() => stepAngle(1)}
                 title="Next tithi (→ arrow key)"
-                style={{
-                  width: "36px", height: "36px", borderRadius: "50%",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  background: "rgba(232,158,42,0.12)", border: "1.5px solid rgba(194,130,32,0.45)",
-                  color: "#9C7A2F", fontSize: "18px", fontWeight: 800,
-                  cursor: "pointer", transition: "all 180ms ease", flexShrink: 0,
-                }}
+                className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-lg font-extrabold transition-all"
+                style={{ background: GOLD_LIGHT, border: `1.5px solid ${GOLD_BORDER}`, color: "#9C7A2F" }}
               >
                 +
               </button>
             </div>
-            {/* Row 2: degree labels */}
-            <div style={{ display: "flex", justifyContent: "space-between", padding: "0 46px" }}>
-              <span style={{ fontSize: "12.5px", fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", color: "var(--gl-ink-muted)" }}>0°</span>
-              <span style={{ fontSize: "12.5px", fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", color: "var(--gl-ink-muted)" }}>180°</span>
-              <span style={{ fontSize: "12.5px", fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", color: "var(--gl-ink-muted)" }}>360°</span>
+            {/* Degree labels */}
+            <div className="flex justify-between px-11">
+              <span className="text-sm italic" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-muted)" }}>0°</span>
+              <span className="text-sm italic" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-muted)" }}>180°</span>
+              <span className="text-sm italic" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-muted)" }}>360°</span>
             </div>
-            {/* Row 3: direct degree entry */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
-              <span style={{ fontSize: "12px", color: "var(--gl-ink-muted)", fontFamily: "var(--font-sans), sans-serif", fontWeight: 600 }}>Go to degree:</span>
+            {/* Direct entry */}
+            <div className="flex items-center justify-center gap-2.5">
+              <span className="text-xs font-semibold" style={{ color: "var(--gl-ink-muted)", fontFamily: "var(--font-sans), sans-serif" }}>Go to degree:</span>
               <input
                 type="number"
                 min={0}
@@ -615,23 +625,14 @@ export function TithiAngleVisualizer() {
                 value={degreeInput}
                 onChange={(e) => setDegreeInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") goToDegree(); }}
-                style={{
-                  width: "64px", padding: "6px 10px", borderRadius: "8px",
-                  border: "1.5px solid rgba(156,122,47,0.35)", background: "rgba(255,252,240,0.85)",
-                  color: "var(--gl-ink-primary)", fontSize: "14px", fontWeight: 700,
-                  fontFamily: "var(--font-sans), sans-serif", textAlign: "center",
-                }}
+                className="w-16 px-2.5 py-1.5 rounded-lg text-sm font-bold text-center outline-none"
+                style={{ background: "rgba(255,252,240,0.85)", border: "1.5px solid rgba(156,122,47,0.35)", color: "var(--gl-ink-primary)", fontFamily: "var(--font-sans), sans-serif" }}
               />
-              <span style={{ fontSize: "14px", color: "var(--gl-ink-secondary)", fontWeight: 600 }}>°</span>
+              <span className="text-sm font-semibold" style={{ color: "var(--gl-ink-secondary)" }}>°</span>
               <button
                 onClick={goToDegree}
-                style={{
-                  padding: "6px 16px", borderRadius: "8px",
-                  background: "rgba(232,158,42,0.15)", border: "1.5px solid rgba(194,130,32,0.45)",
-                  color: "#9C7A2F", fontSize: "12px", fontWeight: 700,
-                  fontFamily: "var(--font-sans), sans-serif", letterSpacing: "0.08em",
-                  textTransform: "uppercase", cursor: "pointer", transition: "all 180ms ease",
-                }}
+                className="px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all"
+                style={{ background: "rgba(232,158,42,0.15)", border: `1.5px solid ${GOLD_BORDER}`, color: "#9C7A2F", fontFamily: "var(--font-sans), sans-serif" }}
               >
                 Go
               </button>
@@ -639,11 +640,9 @@ export function TithiAngleVisualizer() {
           </div>
 
           {/* Presets */}
-          <div style={{ width: "100%", maxWidth: 460 }}>
-            <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.18em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), system-ui, sans-serif", marginBottom: "10px" }}>
-              Festival Presets
-            </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+          <div className="w-full max-w-md">
+            <SectionLabel>Festival Presets</SectionLabel>
+            <div className="flex flex-wrap gap-2">
               {presets.map((p) => {
                 const isActive = Math.abs(angle - p.angle) < 6;
                 return (
@@ -651,21 +650,12 @@ export function TithiAngleVisualizer() {
                     key={p.label}
                     onClick={() => { setAngle(p.angle); setDegreeInput(String(p.angle)); }}
                     title={p.desc}
+                    className="px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide whitespace-nowrap transition-all"
                     style={{
-                      padding: "6px 14px",
-                      borderRadius: "999px",
                       background: isActive ? (p.paksha === "śukla" ? "rgba(232,158,42,0.18)" : "rgba(212,80,46,0.14)") : "rgba(232,158,42,0.05)",
-                      border: isActive
-                        ? `1.5px solid ${p.paksha === "śukla" ? "#C28220" : "#A23A1E"}`
-                        : "1px solid rgba(156,122,47,0.22)",
-                      color: isActive ? (p.paksha === "śukla" ? "#8A5E1A" : "#A23A1E") : "#9C7A2F",
+                      border: isActive ? `1.5px solid ${p.paksha === "śukla" ? GOLD : RUST}` : "1px solid rgba(156,122,47,0.22)",
+                      color: isActive ? (p.paksha === "śukla" ? "#8A5E1A" : RUST) : "#9C7A2F",
                       fontFamily: "var(--font-sans), system-ui, sans-serif",
-                      fontSize: "12px",
-                      fontWeight: isActive ? 700 : 600,
-                      letterSpacing: "0.06em",
-                      cursor: "pointer",
-                      transition: "all 180ms cubic-bezier(0.32, 0.72, 0.24, 1)",
-                      whiteSpace: "nowrap",
                     }}
                   >
                     {p.label}
@@ -675,139 +665,134 @@ export function TithiAngleVisualizer() {
             </div>
           </div>
 
-          {/* Mini legend */}
+          {/* Tip */}
           <div
-            style={{
-              width: "100%",
-              maxWidth: 460,
-              padding: "10px 14px",
-              borderRadius: "8px",
-              background: "rgba(156,122,47,0.08)",
-              border: "1px solid rgba(156,122,47,0.22)",
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-            }}
+            className="w-full max-w-md rounded-lg p-2.5 flex items-center gap-2.5"
+            style={{ background: "rgba(156,122,47,0.08)", border: "1px solid rgba(156,122,47,0.22)" }}
           >
-            <span style={{ fontSize: "16px" }}>🌙</span>
-            <p style={{ fontSize: "12px", color: "var(--gl-ink-secondary)", lineHeight: 1.5, fontFamily: "var(--font-cormorant), serif", fontStyle: "italic" }}>
-              <strong>Tip:</strong> The Moon snaps to segment midpoints. Drag the slider or click the orbit to explore.
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9C7A2F" strokeWidth={2} strokeLinecap="round">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 16v-4M12 8h.01" />
+            </svg>
+            <p className="text-xs leading-relaxed italic" style={{ color: "var(--gl-ink-secondary)", fontFamily: "var(--font-cormorant), serif" }}>
+              <strong>Tip:</strong> The Moon smoothly animates between segment midpoints. Drag the slider or click the orbit to explore.
             </p>
           </div>
         </div>
 
         {/* RIGHT — Data cards */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div className="flex flex-col gap-4 w-full">
           {/* Tithi progress card */}
-          <div className="gl-surface-twilight-glass" style={{ padding: "18px 20px", borderLeft: `4px solid ${tithi.paksha === "śukla" ? "#C28220" : "#A23A1E"}` }}>
-            <div style={{ display: "flex", alignItems: "baseline", gap: "12px", marginBottom: "8px" }}>
-              <span style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "44px", fontWeight: 600, color: tithi.paksha === "śukla" ? "#C28220" : "#A23A1E", lineHeight: 1 }}>
+          <DataCard borderLeft={`4px solid ${pakshaColor}`}>
+            <div className="flex items-baseline gap-3 mb-2">
+              <span className="text-5xl font-semibold" style={{ fontFamily: "var(--font-cormorant), serif", color: pakshaColor, lineHeight: 1, transition: "color 320ms ease" }}>
                 {tithi.displayNumber}
               </span>
-              <span style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "18px", color: "var(--gl-ink-muted)" }}>/ 15</span>
+              <span className="text-lg" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-muted)" }}>/ 15</span>
             </div>
-            <p style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "18px", fontWeight: 500, color: "var(--gl-ink-primary)", marginBottom: "4px" }}>
+            <p className="text-lg font-medium mb-1" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-primary)" }}>
               <IAST>{tithi.tithiName}</IAST>
             </p>
-            <p style={{ fontSize: "13px", color: "var(--gl-ink-secondary)", marginBottom: "14px" }}>
+            <p className="text-sm mb-3.5" style={{ color: "var(--gl-ink-secondary)" }}>
               Absolute tithi <strong>{tithi.tithiNumber}</strong> / 30
             </p>
             {/* Progress bar */}
-            <div style={{ position: "relative", height: "10px", borderRadius: "999px", overflow: "hidden", background: "rgba(156,122,47,0.18)", marginBottom: "8px" }}>
+            <div className="relative h-2.5 rounded-full overflow-hidden mb-2" style={{ background: "rgba(156,122,47,0.18)" }}>
               <div
+                className="absolute top-0 left-0 h-full rounded-full"
                 style={{
-                  position: "absolute", top: 0, left: 0, height: "100%", borderRadius: "999px",
                   width: `${tithi.elapsedFraction * 100}%`,
-                  background: tithi.paksha === "śukla" ? "#C28220" : "#A23A1E",
-                  transition: "width 0.15s linear",
+                  background: pakshaColor,
+                  transition: "width 0.15s linear, background 320ms ease",
                 }}
               />
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11.5px", color: "var(--gl-ink-muted)" }}>
+            <div className="flex justify-between text-xs" style={{ color: "var(--gl-ink-muted)" }}>
               <span>{Math.round(tithi.elapsedFraction * 100)}% elapsed</span>
               <span>{tithi.remainingPct}% until next (~{tithi.remainingDeg}°)</span>
             </div>
-          </div>
+          </DataCard>
 
           {/* Astronomical data — 2×2 grid */}
-          <div className="gl-surface-twilight-glass" style={{ padding: "18px 20px" }}>
-            <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.18em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), system-ui, sans-serif", marginBottom: "12px" }}>
-              Astronomical Data
-            </p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-              <div style={{ padding: "12px", borderRadius: "8px", background: "rgba(232,158,42,0.10)", border: "1px solid rgba(156,122,47,0.25)" }}>
-                <p style={{ fontSize: "11px", color: "var(--gl-ink-secondary)", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>Sun-Moon Angle</p>
-                <p style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "22px", fontWeight: 600, color: "var(--gl-ink-primary)" }}>{tithi.elongation}°</p>
-              </div>
-              <div style={{ padding: "12px", borderRadius: "8px", background: "rgba(232,158,42,0.10)", border: "1px solid rgba(156,122,47,0.25)" }}>
-                <p style={{ fontSize: "11px", color: "var(--gl-ink-secondary)", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>12° Segments</p>
-                <p style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "22px", fontWeight: 600, color: "var(--gl-ink-primary)" }}>{Math.floor(tithi.elongation / 12)}</p>
-              </div>
-              <div style={{ padding: "12px", borderRadius: "8px", background: "rgba(232,158,42,0.10)", border: "1px solid rgba(156,122,47,0.25)" }}>
-                <p style={{ fontSize: "11px", color: "var(--gl-ink-secondary)", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>Quality</p>
-                <p style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "16px", fontWeight: 600, color: "var(--gl-ink-primary)" }}><IAST>{tithi.quality}</IAST></p>
-              </div>
-              <div style={{ padding: "12px", borderRadius: "8px", background: "rgba(232,158,42,0.10)", border: "1px solid rgba(156,122,47,0.25)" }}>
-                <p style={{ fontSize: "11px", color: "var(--gl-ink-secondary)", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>Ruling Deity</p>
-                <p style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "16px", fontWeight: 600, color: "var(--gl-ink-primary)" }}><IAST>{tithi.deity}</IAST></p>
-              </div>
+          <DataCard>
+            <SectionLabel>Astronomical Data</SectionLabel>
+            <div className="grid grid-cols-2 gap-2.5">
+              {[
+                { label: "Sun-Moon Angle", value: `${tithi.elongation}°`, accent: pakshaColor },
+                { label: "12° Segments", value: String(Math.floor(tithi.elongation / 12)), accent: pakshaColor },
+                { label: "Quality", value: <IAST>{tithi.quality}</IAST>, accent: pakshaColor, small: true },
+                { label: "Ruling Deity", value: <IAST>{tithi.deity}</IAST>, accent: pakshaColor, small: true },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-lg p-3"
+                  style={{
+                    background: tithi.paksha === "śukla" ? "rgba(232,158,42,0.10)" : "rgba(212,80,46,0.08)",
+                    border: `1px solid ${tithi.paksha === "śukla" ? "rgba(156,122,47,0.25)" : "rgba(162,58,30,0.22)"}`,
+                    transition: "all 320ms ease",
+                  }}
+                >
+                  <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: "var(--gl-ink-secondary)" }}>{item.label}</p>
+                  <p className={`font-semibold ${item.small ? "text-base" : "text-xl"}`} style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-primary)" }}>
+                    {item.value}
+                  </p>
+                </div>
+              ))}
             </div>
-          </div>
+          </DataCard>
 
           {/* Pañcāṅga reading */}
-          <div className="gl-surface-twilight-glass" style={{ padding: "18px 20px" }}>
-            <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.18em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), system-ui, sans-serif", marginBottom: "12px" }}>
-              Pañcāṅga Reading
-            </p>
-            <div style={{ padding: "12px 14px", borderRadius: "8px", background: "rgba(232,158,42,0.10)", border: `1px solid ${tithi.paksha === "śukla" ? "rgba(194,130,32,0.30)" : "rgba(162,58,30,0.25)"}`, borderLeft: `3px solid ${tithi.paksha === "śukla" ? "#C28220" : "#A23A1E"}`, marginBottom: "10px" }}>
-              <p style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "16px", fontWeight: 500, color: "var(--gl-ink-primary)" }}>
+          <DataCard>
+            <SectionLabel>Pañcāṅga Reading</SectionLabel>
+            <div
+              className="rounded-lg p-3 mb-2.5"
+              style={{
+                background: tithi.paksha === "śukla" ? "rgba(232,158,42,0.10)" : "rgba(212,80,46,0.08)",
+                border: `1px solid ${tithi.paksha === "śukla" ? "rgba(194,130,32,0.30)" : "rgba(162,58,30,0.25)"}`,
+                borderLeft: `3px solid ${pakshaColor}`,
+                transition: "all 320ms ease",
+              }}
+            >
+              <p className="text-base font-medium" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-primary)" }}>
                 <IAST>{tithi.paksha === "śukla" ? "Śukla" : "Kṛṣṇa"}</IAST> <IAST>{tithi.tithiName}</IAST>
-                <span style={{ color: "var(--gl-ink-muted)", fontSize: "14px" }}> ({tithi.displayNumber}/15)</span>
+                <span className="text-sm ml-1" style={{ color: "var(--gl-ink-muted)" }}>({tithi.displayNumber}/15)</span>
               </p>
             </div>
-            <p style={{ fontSize: "12.5px", color: "var(--gl-ink-muted)", lineHeight: 1.6, fontFamily: "var(--font-cormorant), serif", fontStyle: "italic" }}>
+            <p className="text-sm italic leading-relaxed" style={{ color: "var(--gl-ink-muted)", fontFamily: "var(--font-cormorant), serif" }}>
               At sunrise on this day, the pañcāṅga would list this tithi as the primary limb.
               The tithi ends when the Moon advances another {tithi.remainingDeg}° beyond the current {tithi.elongation}° separation.
             </p>
-          </div>
+          </DataCard>
 
           {/* Operational distinction */}
-          <div className="gl-surface-twilight-glass" style={{ padding: "18px 20px" }}>
-            <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.18em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), system-ui, sans-serif", marginBottom: "12px" }}>
-              Operational Distinction
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
-                <span style={{ flexShrink: 0, width: "22px", height: "22px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: 800, background: "rgba(232,158,42,0.15)", color: "#9C7A2F", fontFamily: "var(--font-sans), sans-serif" }}>P</span>
+          <DataCard>
+            <SectionLabel>Operational Distinction</SectionLabel>
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-2.5 items-start">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-extrabold" style={{ background: "rgba(232,158,42,0.15)", color: "#9C7A2F", fontFamily: "var(--font-sans), sans-serif" }}>P</span>
                 <div>
-                  <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--gl-ink-primary)", marginBottom: "2px" }}>Pañcāṅga-tithi</p>
-                  <p style={{ fontSize: "12px", color: "var(--gl-ink-muted)", lineHeight: 1.5 }}>
+                  <p className="text-sm font-bold mb-0.5" style={{ color: "var(--gl-ink-primary)" }}>Pañcāṅga-tithi</p>
+                  <p className="text-xs leading-relaxed" style={{ color: "var(--gl-ink-muted)" }}>
                     Sunrise-anchored. Used for <strong>daily ritual, festival-day determination, vrata observance</strong>.
                   </p>
                 </div>
               </div>
-              <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
-                <span style={{ flexShrink: 0, width: "22px", height: "22px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: 800, background: "rgba(212,80,46,0.12)", color: "#A23A1E", fontFamily: "var(--font-sans), sans-serif" }}>I</span>
+              <div className="flex gap-2.5 items-start">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-extrabold" style={{ background: "rgba(212,80,46,0.12)", color: "#A23A1E", fontFamily: "var(--font-sans), sans-serif" }}>I</span>
                 <div>
-                  <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--gl-ink-primary)", marginBottom: "2px" }}>Instantaneous-tithi</p>
-                  <p style={{ fontSize: "12px", color: "var(--gl-ink-muted)", lineHeight: 1.5 }}>
+                  <p className="text-sm font-bold mb-0.5" style={{ color: "var(--gl-ink-primary)" }}>Instantaneous-tithi</p>
+                  <p className="text-xs leading-relaxed" style={{ color: "var(--gl-ink-muted)" }}>
                     At this precise clock-moment. Used for <strong>natal-chart recording, muhūrta-election</strong>.
                   </p>
                 </div>
               </div>
             </div>
-          </div>
+          </DataCard>
         </div>
       </div>
 
-      {/* ───── BOTTOM — Instruction text ───── */}
-      <p
-        className="text-xs italic text-center"
-        style={{
-          fontFamily: "var(--font-cormorant), serif",
-          color: "var(--gl-ink-muted)",
-        }}
-      >
+      {/* Instruction */}
+      <p className="text-xs italic text-center" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-muted)" }}>
         Click the orbit ring or drag the slider to set Moon position. Use − / + buttons or ← → arrow keys to step between tithis.
         Type a degree and press Go for direct entry. Hover over any segment to preview its tithi. Tap a festival preset to jump to a canonical tithi.
       </p>

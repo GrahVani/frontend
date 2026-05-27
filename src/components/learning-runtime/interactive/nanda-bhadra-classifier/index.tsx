@@ -145,8 +145,8 @@ const TITHI_NAMES = [
 /* ─── SVG Wheel helpers ─── */
 const CX = 300;
 const CY = 300;
-const R_OUTER = 220;
-const R_INNER = 90;
+const R_OUTER = 248;
+const R_INNER = 102;
 const R_LABEL = (R_OUTER + R_INNER) / 2;
 
 function getSegmentPath(idx: number, total: number) {
@@ -210,7 +210,7 @@ export function NandaBhadraClassifier() {
               setSelectedEvent(null);
               setSelectedTithi(null);
             }}
-            className="px-4 py-2 rounded text-sm font-medium transition-all"
+            className="px-4 py-2 rounded-lg text-sm font-bold transition-all"
             style={{
               background: mode === m ? "var(--gl-gold-accent)" : "var(--gl-surface-card)",
               color: mode === m ? "#0a0a0f" : "var(--gl-ink-primary)",
@@ -224,10 +224,10 @@ export function NandaBhadraClassifier() {
 
       {/* ─── Quality mode with SVG wheel ─── */}
       {mode === "quality" && (
-        <div className="flex flex-col lg:flex-row gap-6 items-start">
+        <div className="flex flex-col lg:grid lg:grid-cols-[1fr_280px] gap-5 items-start">
           {/* SVG Wheel */}
-          <div className="flex-1 w-full flex justify-center">
-            <svg viewBox="0 0 600 600" className="w-full h-auto" style={{ maxWidth: 480 }}>
+          <div className="w-full flex justify-center rounded-xl p-4" style={{ background: "rgba(156,122,47,0.04)", border: "1px solid rgba(156,122,47,0.12)" }}>
+            <svg viewBox="0 0 600 600" className="w-full h-auto" style={{ maxWidth: 540 }}>
               <defs>
                 <filter id="nbShadow" x="-20%" y="-20%" width="140%" height="140%">
                   <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#6B4423" floodOpacity="0.14" />
@@ -257,12 +257,12 @@ export function NandaBhadraClassifier() {
                     />
                     <text
                       x={lx}
-                      y={ly - 10}
+                      y={ly - 14}
                       textAnchor="middle"
-                      fill="var(--gl-ink-primary)"
-                      fontSize={22}
+                      fill={isSelected ? q.color : "var(--gl-ink-primary)"}
+                      fontSize={26}
                       fontWeight={700}
-                      style={{ pointerEvents: "none", fontFamily: "serif" }}
+                      style={{ pointerEvents: "none", fontFamily: "serif", transition: "all 0.25s ease" }}
                     >
                       {q.symbol}
                     </text>
@@ -270,20 +270,21 @@ export function NandaBhadraClassifier() {
                       x={lx}
                       y={ly + 10}
                       textAnchor="middle"
-                      fill="var(--gl-ink-primary)"
-                      fontSize={11}
-                      fontWeight={isSelected ? 700 : 500}
-                      style={{ pointerEvents: "none", fontFamily: "var(--font-sans), sans-serif" }}
+                      fill={isSelected ? q.color : "var(--gl-ink-primary)"}
+                      fontSize={13}
+                      fontWeight={isSelected ? 800 : 600}
+                      style={{ pointerEvents: "none", fontFamily: "var(--font-sans), sans-serif", transition: "all 0.25s ease" }}
                     >
                       {q.name}
                     </text>
                     <text
                       x={lx}
-                      y={ly + 24}
+                      y={ly + 26}
                       textAnchor="middle"
-                      fill="var(--gl-ink-muted)"
-                      fontSize={10}
-                      style={{ pointerEvents: "none", fontFamily: "var(--font-sans), sans-serif" }}
+                      fill={isSelected ? q.color : "var(--gl-ink-muted)"}
+                      fontSize={11}
+                      fontWeight={isSelected ? 700 : 500}
+                      style={{ pointerEvents: "none", fontFamily: "var(--font-devanagari), serif", transition: "all 0.25s ease" }}
                     >
                       {q.devanagari}
                     </text>
@@ -295,7 +296,7 @@ export function NandaBhadraClassifier() {
               <circle
                 cx={CX}
                 cy={CY}
-                r={R_INNER - 8}
+                r={R_INNER - 10}
                 fill="var(--gl-card-surface-solid, #FFF9F0)"
                 stroke="var(--gl-gold-accent)"
                 strokeWidth={2}
@@ -303,22 +304,22 @@ export function NandaBhadraClassifier() {
               />
               <text
                 x={CX}
-                y={CY - 8}
+                y={CY - 10}
                 textAnchor="middle"
-                fill="var(--gl-ink-primary)"
-                fontSize={13}
-                fontWeight={700}
+                fill="var(--gl-gold-accent)"
+                fontSize={14}
+                fontWeight={800}
                 style={{ fontFamily: "var(--font-sans), sans-serif" }}
               >
                 5-fold
               </text>
               <text
                 x={CX}
-                y={CY + 8}
+                y={CY + 6}
                 textAnchor="middle"
                 fill="var(--gl-ink-secondary)"
-                fontSize={10}
-                fontWeight={600}
+                fontSize={11}
+                fontWeight={700}
                 style={{ fontFamily: "var(--font-sans), sans-serif" }}
               >
                 Quality
@@ -329,26 +330,30 @@ export function NandaBhadraClassifier() {
                 textAnchor="middle"
                 fill="var(--gl-ink-muted)"
                 fontSize={9}
-                style={{ fontFamily: "monospace" }}
+                fontWeight={600}
+                letterSpacing={0.08}
+                style={{ fontFamily: "var(--font-sans), sans-serif" }}
               >
                 mod-5 cycle
               </text>
             </svg>
           </div>
 
-          {/* Detail panel */}
-          <div className="w-full lg:w-80 shrink-0">
+          {/* Detail panel — compact sidebar */}
+          <div className="w-full lg:w-[280px] shrink-0">
             {selectedQualityData ? (
               <div
-                className="rounded-xl p-5 space-y-4"
+                className="rounded-xl p-4 space-y-3"
                 style={{
                   background: "var(--gl-card-surface-solid, #FFF9F0)",
-                  border: `1px solid ${selectedQualityData.border}`,
+                  border: `1.5px solid ${selectedQualityData.border}`,
+                  boxShadow: `0 2px 12px ${selectedQualityData.color}15`,
                 }}
               >
-                <div className="flex items-center gap-3">
+                {/* Header */}
+                <div className="flex items-center gap-2.5 pb-3" style={{ borderBottom: `1px solid ${selectedQualityData.border}40` }}>
                   <span
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold"
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-lg font-bold flex-shrink-0"
                     style={{
                       background: selectedQualityData.bg,
                       color: selectedQualityData.color,
@@ -356,43 +361,47 @@ export function NandaBhadraClassifier() {
                   >
                     {selectedQualityData.symbol}
                   </span>
-                  <div>
-                    <div className="text-lg font-semibold" style={{ color: "var(--gl-ink-primary)" }}>
+                  <div className="min-w-0">
+                    <div className="text-base font-bold leading-tight" style={{ color: selectedQualityData.color, fontFamily: "var(--font-cormorant), serif" }}>
                       <IAST>{selectedQualityData.name}</IAST>
                     </div>
-                    <div className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>
+                    <div className="text-xs leading-tight truncate" style={{ color: "var(--gl-ink-muted)", fontFamily: "var(--font-cormorant), serif", fontStyle: "italic" }}>
                       {selectedQualityData.meaning}
                     </div>
                   </div>
                 </div>
 
-                <div className="text-sm" style={{ color: "var(--gl-ink-secondary)" }}>
-                  <span className="font-semibold" style={{ color: "var(--gl-gold-accent)" }}>Positions:</span>{" "}
-                  {selectedQualityData.positions.join(", ")} (pakṣa-internal)
+                {/* Positions */}
+                <div className="flex items-center gap-2 text-xs" style={{ color: "var(--gl-ink-secondary)" }}>
+                  <span className="font-bold uppercase tracking-wider" style={{ color: "var(--gl-gold-accent)" }}>Positions</span>
+                  <span className="font-mono font-bold" style={{ color: selectedQualityData.color }}>{selectedQualityData.positions.join(", ")}</span>
+                  <span style={{ color: "var(--gl-ink-muted)" }}>(pakṣa)</span>
                 </div>
 
+                {/* Events */}
                 <div>
-                  <h4 className="text-xs font-semibold mb-2" style={{ color: "var(--gl-gold-accent)" }}>
+                  <h4 className="text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: "var(--gl-gold-accent)" }}>
                     Appropriate Events
                   </h4>
                   <ul className="space-y-1">
                     {selectedQualityData.events.map((e, i) => (
-                      <li key={i} className="text-xs flex items-start gap-2">
-                        <span style={{ color: selectedQualityData.color }}>•</span>
+                      <li key={i} className="text-xs flex items-start gap-1.5 leading-relaxed">
+                        <span className="flex-shrink-0 mt-0.5" style={{ color: selectedQualityData.color }}>•</span>
                         <span style={{ color: "var(--gl-ink-primary)" }}>{e}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
+                {/* Festivals */}
                 <div>
-                  <h4 className="text-xs font-semibold mb-2" style={{ color: "var(--gl-gold-accent)" }}>
+                  <h4 className="text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: "var(--gl-gold-accent)" }}>
                     Festival Anchors
                   </h4>
                   <ul className="space-y-1">
                     {selectedQualityData.festivals.map((f, i) => (
-                      <li key={i} className="text-xs flex items-start gap-2">
-                        <span style={{ color: selectedQualityData.color }}>★</span>
+                      <li key={i} className="text-xs flex items-start gap-1.5 leading-relaxed">
+                        <span className="flex-shrink-0 mt-0.5" style={{ color: selectedQualityData.color }}>★</span>
                         <span style={{ color: "var(--gl-ink-primary)" }}>{f}</span>
                       </li>
                     ))}
@@ -401,27 +410,31 @@ export function NandaBhadraClassifier() {
 
                 {selectedQualityData.key === "rikta" && (
                   <div
-                    className="mt-2 p-3 rounded text-xs"
+                    className="p-2.5 rounded-lg text-xs leading-relaxed"
                     style={{
-                      background: "rgba(168,50,50,0.08)",
-                      border: "1px solid #a83232",
-                      color: "#d4a0a0",
+                      background: "rgba(168,50,50,0.10)",
+                      border: "1.5px solid rgba(168,50,50,0.50)",
+                      color: "#a83232",
                     }}
                   >
-                    <strong>Contextual-quality discipline:</strong> Riktā is generally inauspicious for new ventures, but contextually highly auspicious for specific deity-observances. Always check the event context before applying general quality rules.
+                    <strong>Contextual override:</strong> Riktā is generally avoided, yet sacred for specific deity observances.
                   </div>
                 )}
               </div>
             ) : (
               <div
-                className="rounded-xl p-6 text-center"
+                className="rounded-xl p-5 text-center space-y-3"
                 style={{
                   background: "var(--gl-card-surface-solid, #FFF9F0)",
                   border: "1px dashed var(--gl-gold-hairline)",
                 }}
               >
-                <p className="text-sm" style={{ color: "var(--gl-ink-muted)" }}>
-                  Click a segment on the wheel to view its full attributes.
+                <svg width="40" height="40" viewBox="0 0 48 48" style={{ margin: "0 auto", opacity: 0.35 }}>
+                  <circle cx="24" cy="24" r="18" fill="none" stroke="#9C7A2F" strokeWidth={1.5} strokeDasharray="4 3" />
+                  <circle cx="24" cy="24" r="6" fill="#9C7A2F" />
+                </svg>
+                <p className="text-sm font-medium" style={{ color: "var(--gl-ink-muted)", fontFamily: "var(--font-cormorant), serif", fontStyle: "italic" }}>
+                  Click a segment on the wheel to explore its attributes.
                 </p>
               </div>
             )}
@@ -509,14 +522,14 @@ function EventMatcher({
             })}
           </div>
           {EVENT_CATEGORIES[selectedEvent].note?.includes("Contextual") && (
-            <div className="mt-3 p-3 rounded text-sm" style={{ background: "rgba(168,50,50,0.08)", border: "1px solid #a83232", color: "#d4a0a0" }}>
+            <div className="mt-3 p-3 rounded-lg text-sm" style={{ background: "rgba(168,50,50,0.10)", border: "1.5px solid rgba(168,50,50,0.50)", color: "#a83232" }}>
               <strong>Contextual-quality discipline:</strong> Riktā is generally inauspicious for new ventures,
               but contextually highly auspicious for specific deity-observances.
               Always check the event context before applying general quality rules.
             </div>
           )}
           {EVENT_CATEGORIES[selectedEvent].note?.includes("pairing") && (
-            <div className="mt-3 p-3 rounded text-sm" style={{ background: "rgba(107,63,160,0.08)", border: "1px solid #6b3fa0", color: "#c4a0d4" }}>
+            <div className="mt-3 p-3 rounded-lg text-sm" style={{ background: "rgba(107,63,160,0.10)", border: "1.5px solid rgba(107,63,160,0.50)", color: "#6b3fa0" }}>
               <strong>Quality pairing:</strong> This event benefits from combining two complementary qualities.
               Multi-day festivals often span multiple quality categories.
             </div>
@@ -609,7 +622,7 @@ function QualityDetail({ quality }: { quality: QualityDef }) {
         </div>
       </div>
 
-      <div className="text-xs p-3 rounded" style={{ background: "rgba(0,0,0,0.2)", color: "var(--gl-ink-secondary)" }}>
+      <div className="text-sm p-3 rounded-lg" style={{ background: "rgba(156,122,47,0.10)", border: "1px solid rgba(156,122,47,0.25)", color: "var(--gl-ink-secondary)" }}>
         <strong>Tithi positions:</strong> {quality.positions.join(", ")} (pakṣa-internal).
         Same quality in both śukla and kṛṣṇa pakṣas at the same position.
       </div>
