@@ -33,6 +33,21 @@ import { FourStreamLandscapeExplorer } from "./four-stream-landscape-explorer";
 import { FourStreamSynthesisDojo } from "./four-stream-synthesis-dojo";
 import { ThreeSkandhaCurriculumMap } from "./three-skandha-curriculum-map";
 import { ThreeSkandhaSynthesisDojo } from "./three-skandha-synthesis-dojo";
+import { SevenSubBranchesExplorer } from "./seven-sub-branches-explorer";
+import { SevenSubBranchesSynthesisDojo } from "./seven-sub-branches-synthesis-dojo";
+import { GrahvaniCoverageMatrixExplorer } from "./grahvani-coverage-matrix-explorer";
+import { GrahvaniCoverageSynthesisDojo } from "./grahvani-coverage-synthesis-dojo";
+import { RegionalSchoolsExplorer } from "./regional-schools-explorer";
+import { RegionalSchoolsSynthesisDojo } from "./regional-schools-synthesis-dojo";
+import { LineageThreadsNetworkExplorer } from "./lineage-threads-network-explorer";
+import { LineageThreadsSynthesisDojo } from "./lineage-threads-synthesis-dojo";
+import { ThreeLineageComparisonChartAnalyzer } from "./three-lineage-comparison-chart-analyzer";
+import { LineageMattersSynthesisDojo } from "./lineage-matters-synthesis-dojo";
+import { PrecessionVisualizer } from "./precession-visualizer";
+import { ZodiacReferenceFrameExplorer } from "./zodiac-reference-frame-explorer";
+import { ZodiacTraditionReasoningComparator } from "./zodiac-tradition-reasoning-comparator";
+import { TropicalSiderealConversionCalculator } from "./tropical-sidereal-conversion-calculator";
+import { AyanamshaDefinitionExplorer } from "./ayanamsha-definition-explorer";
 import { TithiAngleVisualizer } from "./tithi-angle-visualizer";
 import { TithiCalculatorDojo } from "./tithi-calculator-dojo";
 import { PancangaBuilder } from "./pancanga-builder";
@@ -145,6 +160,59 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // Lesson 3.1's §7 flagship: Three Skandha Synthesis Dojo — two-tab
   // (Stream × Skandha Matrix + 5-scenario Evaluative Drill).
   "three-skandha-synthesis-dojo": ThreeSkandhaSynthesisDojo,
+  // Lesson 3.2's §4 explorer: Seven Sub-Branches Explorer — L2 pattern
+  // (manuscript diagram LEFT + clickable sub-branch rows RIGHT).
+  "seven-sub-branches-explorer": SevenSubBranchesExplorer,
+  // Lesson 3.2's §7 flagship: Seven Sub-Branches Synthesis Dojo — two-tab
+  // (Stream × Sub-Branch Matrix + 5-scenario Evaluative Drill).
+  "seven-sub-branches-synthesis-dojo": SevenSubBranchesSynthesisDojo,
+  // Lesson 3.3's §4 explorer: Grahvani Coverage Matrix Explorer — L2 pattern
+  // (navigational map LEFT + stream-filtered coverage cards RIGHT).
+  "grahvani-coverage-matrix-explorer": GrahvaniCoverageMatrixExplorer,
+  // Lesson 3.3's §7 flagship: Grahvani Coverage Synthesis Dojo — two-tab
+  // (Full 4×7 Coverage Matrix + 5-scenario Evaluative Drill).
+  "grahvani-coverage-synthesis-dojo": GrahvaniCoverageSynthesisDojo,
+  // Lesson 4.1's §4 explorer: Regional Schools Explorer — L2 pattern
+  // (map image LEFT + tabbed school explorer RIGHT with stream concentrations).
+  "regional-schools-explorer": RegionalSchoolsExplorer,
+  // Lesson 4.1's §7 flagship: Regional Schools Synthesis Dojo — two-tab
+  // (6×4 Regional Schools Matrix + teacher lookup + 5-scenario Evaluative Drill).
+  "regional-schools-synthesis-dojo": RegionalSchoolsSynthesisDojo,
+  // Lesson 4.2's §4 explorer: Lineage Threads Network Explorer — L2 pattern
+  // (network diagram LEFT + tabbed lineage explorer RIGHT with sub-lineages).
+  "lineage-threads-network-explorer": LineageThreadsNetworkExplorer,
+  // Lesson 4.2's §7 flagship: Lineage Threads Synthesis Dojo — two-tab
+  // (Lineage Comparison Matrix + 5-scenario Evaluative Drill).
+  "lineage-threads-synthesis-dojo": LineageThreadsSynthesisDojo,
+  // Lesson 4.3's §4 explorer: Three-Lineage Comparison Chart Analyzer — L2 pattern
+  // (chart diagram LEFT + tabbed three-lineage analyzer RIGHT + convergence/divergence toggle).
+  "three-lineage-comparison-chart-analyzer": ThreeLineageComparisonChartAnalyzer,
+  // Lesson 4.3's §7 flagship: Lineage Matters Synthesis Dojo — two-tab
+  // (Integrated Synthesis View + 5-scenario Evaluative Drill).
+  "lineage-matters-synthesis-dojo": LineageMattersSynthesisDojo,
+  // Lesson 2.1.1's §7 interactive: Zodiac Reference Frame Explorer —
+  // Earth-centered diagram showing sidereal vs tropical zodiacs with
+  // clickable hotspots (sidereal zero, tropical zero, vernal equinox,
+  // summer solstice, ayanāṁśa gap, Spica, Earth's axis, ecliptic,
+  // celestial equator).
+  "zodiac-reference-frame-explorer": ZodiacReferenceFrameExplorer,
+  // Lesson 2.1.2's §7 interactive: Precession Visualizer — clickable SVG
+  // diagram with epoch slider, by-hand calculator, and classical-vs-modern
+  // comparison tabs.
+  "precession-visualizer": PrecessionVisualizer,
+  // Lesson 2.1.3's §7 interactive: Zodiac Tradition Reasoning Comparator —
+  // side-by-side comparison of Vedic-sidereal vs Western-tropical reasoning
+  // across four dimensions (doctrinal, observational, historical, comparative).
+  "zodiac-tradition-reasoning-comparator": ZodiacTraditionReasoningComparator,
+  // Lesson 2.1.4's §7 interactive: Tropical-Sidereal Conversion Calculator —
+  // birth-date Sun-sign calculator + longitude converter showing graha-in-rāśi
+  // shifts, daśā consequences, and nakṣatra alignment effects.
+  "tropical-sidereal-conversion-calculator": TropicalSiderealConversionCalculator,
+  // Lesson 2.2.1's §7 interactive: Ayanāṁśa Definition Explorer —
+  // 4-tab interactive: Definition (visual gap diagram + conversion calculator),
+  // Etymology (Sanskrit compound breakdown), 7 Conventions (comparison table),
+  // Stream Matcher (stream → ayanāṁśa mapping).
+  "ayanamsha-definition-explorer": AyanamshaDefinitionExplorer,
   // Lesson 3.1.1's §4 explorer: Tithi Angle Visualizer — circular Sun-Moon
   // orbit with 12° segment overlay + real-time tithi computation + pakṣa
   // indicator + pañcāṅga reading panel.
