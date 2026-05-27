@@ -42,6 +42,11 @@ import { ThreeSkandhaCurriculumMap } from "@/components/learning-runtime/interac
 import { TithiAngleVisualizer } from "@/components/learning-runtime/interactive/tithi-angle-visualizer";
 import { TithiContextMatcher } from "@/components/learning-runtime/interactive/tithi-context-matcher";
 import { ShuklaTithiStrip } from "@/components/learning-runtime/interactive/shukla-tithi-strip";
+import { SevenSubBranchesExplorer } from "@/components/learning-runtime/interactive/seven-sub-branches-explorer";
+import { GrahvaniCoverageMatrixExplorer } from "@/components/learning-runtime/interactive/grahvani-coverage-matrix-explorer";
+import { RegionalSchoolsExplorer } from "@/components/learning-runtime/interactive/regional-schools-explorer";
+import { LineageThreadsNetworkExplorer } from "@/components/learning-runtime/interactive/lineage-threads-network-explorer";
+import { ThreeLineageComparisonChartAnalyzer } from "@/components/learning-runtime/interactive/three-lineage-comparison-chart-analyzer";
 import { SectionDivider } from "@/components/learning-runtime/chrome/SectionDivider";
 import { RevealSection } from "@/components/learning-runtime/chrome/RevealSection";
 import { LessonTimeTracker } from "@/components/learning-runtime/LessonTimeTracker";
@@ -671,6 +676,206 @@ export default async function LessonPage({
               <ShuklaTithiStrip />
             </div>
           );
+        } else if (fm.slug === "seven-sub-branches") {
+          reflectionPrompts = [
+            "Which sub-branch surprised you most in how much curriculum coverage it receives — or doesn't receive? What does that imply about how you should allocate your study time?",
+            "Where do YOU think the honest framing of 'seven as convention' helps the learner — and where might it create unnecessary doubt?",
+            "Try restating in your own words: why is Bṛhat Saṁhitā primary for multiple saṁhitā sub-branches, while no single text dominates all horā sub-branches?",
+          ];
+          scenes = (
+            <div data-l32-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                The Seven Sub-Branches and the Curriculum Map
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                The finer topical organisation that subdivides the three skandhas
+                — Jātaka, Praśna, Muhūrta (horā); Nimitta, Vāstu, Saṁhitā-Detailed
+                (saṁhitā); and Āyurveda-Jyotiṣa (cross-cutting). The painting on the
+                left shows the seven-fold arrangement by skandha; the panel on the
+                right lets you explore each sub-branch's scope, texts, modules, and
+                stream-specific emphasis.
+              </p>
+              <SevenSubBranchesExplorer />
+            </div>
+          );
+        } else if (fm.slug === "where-grahvani-sits-in-the-skandha-map") {
+          reflectionPrompts = [
+            "Which cell of the 4 × 3 × 7 coverage matrix surprised you most in how the curriculum distributed its depth — and what does that tell you about the curriculum's operational priorities?",
+            "Of the seven categories of intentional non-coverage, which one do you think will be most relevant to YOUR learning path — and what's your plan for engaging the cross-references?",
+            "Try restating in your own words: why is 'modern-teaching-synthesis' a MORE honest self-positioning than 'modern-primary' would be for this curriculum?",
+          ];
+          scenes = (
+            <div data-l33-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                Where Grahvani Sits in the Skandha-Map
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                The curriculum's self-localisation within the full Jyotiṣa landscape
+                — 4 streams × 3 skandhas × 7 sub-branches. The painting on the left
+                shows the curriculum as a navigational chart within the vast ocean of
+                śāstra; the panel on the right lets you explore coverage depth per
+                stream, what the curriculum intentionally doesn't cover, and why.
+              </p>
+              <GrahvaniCoverageMatrixExplorer />
+            </div>
+          );
+        } else if (fm.slug === "regional-schools-and-lineages") {
+          reflectionPrompts = [
+            "Of the six regional schools, which one's stream-concentration pattern surprised you most — and what does it tell you about how geography shapes doctrinal emphasis?",
+            "A Punjabi Parāśari practitioner and a Tamil Nadu Parāśari practitioner share the same stream — but what specific regional-school differences would you expect in their teaching language, cultural framing, and cross-stream references?",
+            "Try restating in your own words: why is the regional-school organisational level NECESSARY alongside streams + skandhas + sub-branches? What would be lost without it?",
+          ];
+          scenes = (
+            <div data-l41-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                Six Regional Schools Across the Four-Stream Landscape
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                The geographic-cultural-linguistic organisational level that
+                cross-cuts the four-stream landscape. The map on the left
+                shows the six schools across India and the global diaspora;
+                the panel on the right lets you explore each school's
+                geographic centres, languages, stream concentrations, and
+                distinctive practitioner-community features. Toggle the
+                cross-regional practice overlay to see how modern
+                globalisation connects the schools.
+              </p>
+              <RegionalSchoolsExplorer />
+            </div>
+          );
+        } else if (fm.slug === "modern-lineage-threads") {
+          reflectionPrompts = [
+            "Of the eight lineage threads, which one's relationship to its regional school surprised you most — and what does it tell you about how lineages operate within broader regional contexts?",
+            "A learner trained through BVB Delhi and another through SJC both study Jaiminī revival material. What specific lineage-level differences would you expect in their methodological emphases, teaching infrastructure, and practitioner-community norms?",
+            "Try restating in your own words: why is the lineage-thread organisational level NECESSARY alongside streams + skandhas + sub-branches + regional schools? What would be lost without it?",
+          ];
+          scenes = (
+            <div data-l42-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                Eight Modern Lineage Threads
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                The specific teacher-student-network organisations that
+                produce operational practitioner training pathways — more
+                granular than regional schools, more concrete than streams.
+                The network diagram on the left shows the eight lineage
+                threads with their founders and cross-connections; the panel
+                on the right lets you explore each lineage's founder,
+                regional school, stream emphasis, teaching infrastructure,
+                distinctive features, and cross-references. Toggle the
+                cross-cutting patterns overlay to see multi-region and
+                multi-stream lineage operation.
+              </p>
+              <LineageThreadsNetworkExplorer />
+            </div>
+          );
+        } else if (fm.slug === "lineage-matters-worked-example") {
+          reflectionPrompts = [
+            "The three approaches converge on broad-strokes thematic interpretation (marriage-challenge + career-strength + strong-lagna). Where do YOU sit on the reliability question — does convergence across lineages convince you of analytical reliability, or do you need additional evidence?",
+            "Of the three approaches' unique contributions (KP event-timing precision; BVB deepest classical engagement; Western-Vedic-fusion cross-cultural translation + broader integration), which one would be most valuable to YOUR learning path — and what's your plan for accessing it?",
+            "Try restating in your own words: what is the difference between 'synthesis' and 'collapse' — and why does the synthesis discipline prevent multi-lineage practice from diluting single-lineage operational accuracy?",
+          ];
+          scenes = (
+            <div data-l43-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                Same Chart, Three Lineages — Convergence, Divergence, Synthesis
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                The chapter-capstone + module-capstone worked example:
+                an anonymised demonstration chart analysed through three
+                lineage approaches — Tamil Nadu KP teaching lineage, BVB
+                Delhi Parāśari + Jaiminī revival, and Western-Vedic-fusion
+                (SJC/AIVS-style). The chart on the left shows the
+                demonstration chart; the panel on the right lets you explore
+                each lineage's chart-erection conventions, primary
+                analytical lens, distinctive predictive judgments, and
+                remedial recommendations. Toggle the convergence +
+                divergence + unique contributions comparison to see the
+                full three-way analytical pattern.
+              </p>
+              <ThreeLineageComparisonChartAnalyzer />
+            </div>
+          );
         } else if (fm.slug === "jyotisha-vs-western-astrology-vs-pop-astrology") {
           reflectionPrompts = [
             "Of the six dimensions, which one was the biggest surprise — where did you realise you'd been carrying an incorrect mental model about one of the traditions?",
@@ -713,10 +918,21 @@ export default async function LessonPage({
         // For three-skandhas-overview, the markdown §4 body contains an ASCII-art
         // triangle that duplicates the interactive SVG scene. Strip it so only
         // the interactive visual renders.
+        // For where-grahvani-sits-in-the-skandha-map, the markdown §4 body contains
+        // a large pipe-table coverage matrix that duplicates the interactive explorer.
+        // Strip table rows (lines starting with |) so only the interactive renders.
         const sec4Cleaned =
           fm.slug === "three-skandhas-overview" && sec4
             ? { ...sec4, body: sec4.body.replace(/```[\s\S]*?```/g, "") }
-            : sec4;
+            : fm.slug === "where-grahvani-sits-in-the-skandha-map" && sec4
+              ? { ...sec4, body: sec4.body.replace(/^[|].*$/gm, "").replace(/\n{3,}/g, "\n\n") }
+              : fm.slug === "regional-schools-and-lineages" && sec4
+                ? { ...sec4, body: sec4.body.replace(/^[|].*$/gm, "").replace(/\n{3,}/g, "\n\n") }
+                : fm.slug === "modern-lineage-threads" && sec4
+                  ? { ...sec4, body: sec4.body.replace(/^[|].*$/gm, "").replace(/\n{3,}/g, "\n\n") }
+                  : fm.slug === "lineage-matters-worked-example" && sec4
+                    ? { ...sec4, body: sec4.body.replace(/^[|].*$/gm, "").replace(/\n{3,}/g, "\n\n") }
+                    : sec4;
 
         return <ConceptTheatre section={sec4Cleaned} reflectionPrompts={reflectionPrompts} scenes={scenes} />;
       })()}

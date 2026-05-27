@@ -130,6 +130,21 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   // M3-C5-L3's §7 = Bhadra Avoidance Integrator — Bhadra (Viṣṭi) calculator
   // with day-of-week selector and activity-avoidance cards.
   "bhadra-vishti-karana-and-its-avoidance": "bhadra-avoidance-integrator",
+  // L3.2's §7 = Seven Sub-Branches Synthesis Dojo (Stream × Sub-Branch Matrix +
+  // 5-scenario Evaluative Drill). §4 keeps the seven-sub-branches-explorer.
+  "seven-sub-branches": "seven-sub-branches-synthesis-dojo",
+  // L3.3's §7 = Grahvani Coverage Synthesis Dojo (Full 4×7 Coverage Matrix +
+  // 5-scenario Evaluative Drill). §4 keeps the grahvani-coverage-matrix-explorer.
+  "where-grahvani-sits-in-the-skandha-map": "grahvani-coverage-synthesis-dojo",
+  // L4.1's §7 = Regional Schools Synthesis Dojo (6×4 Regional Schools Matrix +
+  // teacher lookup + 5-scenario Evaluative Drill). §4 keeps the regional-schools-explorer.
+  "regional-schools-and-lineages": "regional-schools-synthesis-dojo",
+  // L4.2's §7 = Lineage Threads Synthesis Dojo (Lineage Comparison Matrix +
+  // 5-scenario Evaluative Drill). §4 keeps the lineage-threads-network-explorer.
+  "modern-lineage-threads": "lineage-threads-synthesis-dojo",
+  // L4.3's §7 = Lineage Matters Synthesis Dojo (Integrated Synthesis View +
+  // 5-scenario Evaluative Drill). §4 keeps the three-lineage-comparison-chart-analyzer.
+  "lineage-matters-worked-example": "lineage-matters-synthesis-dojo",
 };
 
 /** Slugs whose §7 interactive needs extra horizontal space (e.g. large SVG wheel + sidebar). */

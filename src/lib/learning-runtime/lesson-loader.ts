@@ -31,10 +31,14 @@ const CURRICULUM_ROOT = path.resolve(process.cwd(), "..", "curriculum");
 
 /**
  * Pad a URL number to two digits. "1" → "01", "12" → "12".
- * Strips any non-digit prefix so callers can pass "module-1" or "1".
+ * Extracts the leading numeric portion, ignoring any non-digit prefix
+ * and anything after the first number. This prevents filenames that
+ * contain numbers in their descriptive slug (e.g.
+ * "lesson-04-the-23-degree-gap...") from concatenating extra digits.
  */
 function padTwo(segment: string): string {
-  const num = segment.replace(/[^\d]/g, "");
+  const match = segment.match(/^\D*(\d+)/);
+  const num = match ? match[1] : segment;
   return num.padStart(2, "0");
 }
 
