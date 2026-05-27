@@ -71,6 +71,65 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   // M3-C1-L2's §7 = Tithi-Deity Wheel (circular 30-tithi visual explorer with
   // click-for-attributes + quality-filter + festival-major badges).
   "the-15-shukla-tithis": "tithi-deity-wheel",
+  // M3-C1-L3's §7 = Tithi-Deity Wheel (continuation — kṛṣṇa pakṣa focus;
+  // same component, learners explore the bottom-half kṛṣṇa segments).
+  "the-15-krishna-tithis": "krishna-festival-timeline",
+  // M3-C1-L4's §7 = Nandā-Bhadrā-Jayā-Riktā-Pūrṇā Classifier —
+  // quality-event matcher with contextual-quality discipline.
+  "nanda-bhadra-jaya-rikta-purna": "nanda-bhadra-jaya-rikta-purna-classifier",
+  // M3-C1-L5's §7 = Amānta-Pūrṇimānta Converter — pakṣa-month converter
+  // with festival cross-reference and regional identifier.
+  "amanta-vs-purnimanta": "amanta-purnimanta-converter",
+  // M3-C1-L6's §7 = Tithi-Muhūrta Introductory Judgment — scenario-based
+  // quality trainer with multi-element synthesis preview.
+  "tithi-quality-and-muhurta-introduction": "tithi-muhurta-introductory-judgment",
+  // M3-C2-L1's §7 = Vāra-Graha Wheel — 7-segment circular explorer.
+  "the-7-varas-and-their-lords": "vara-graha-wheel",
+  // M3-C2-L2's §7 = Chaldean Planetary Horā Explorer — Chaldean order +
+  // horā sequence generator with 24-mod-7 principle.
+  "why-this-order-of-weekdays": "chaldean-planetary-hora-explorer",
+  // M3-C2-L3's §7 = Choghadiyā & Rāhu Kālam Calculator — 16-segment
+  // quality tables + visual timeline + inauspicious-window highlight.
+  "chogadiya-and-rahu-kalam": "choghadiya-rahukalam-calculator",
+  // M3-C2-L4's §7 = Vāra-Event Pairing Explorer — event-category cards +
+  // recommended-vāra panels + planetary friendship visualization.
+  "vara-in-muhurta-which-weekday-for-which-event": "vara-event-pairing-explorer",
+  // M3-C3-L1's §7 = Moon-Nakṣatra Calculator — formula breakdown +
+  // editable longitude + preset scenarios + circular visualisation.
+  "nakshatra-as-13-deg-20-min": "moon-nakshatra-calculator",
+  // M3-C3-L2's §4 explorer = Nakṣatra Strip — horizontal scrollable
+  // enumeration of all 27 nakṣatras (uses registry for §7 continuity).
+  "the-27-nakshatras-at-glance": "nakshatra-strip",
+  // M3-C3-L3's §7 = Nakṣatra Deity & Ruler Wheel — circular 27-segment
+  // explorer with inner-name / outer-planet rings and filter pills.
+  "nakshatra-deity-and-ruling-planet-at-pancanga-level": "nakshatra-deity-ruler-wheel",
+  // M3-C3-L4's §7 = Daily Nakṣatra Pañcāṅga Reader — simulated today's
+  // pañcāṅga with time-slider and activity-suitability grid.
+  "the-daily-nakshatra-and-its-use": "daily-nakshatra-pancanga-reader",
+  // M3-C4-L1's §7 = Yoga vs Chart-Yoga Comparison — two-column comparison
+  // table + 8-statement discrimination drill.
+  "time-yoga-vs-chart-yoga-clearing-up-confusion": "yoga-vs-chart-yoga-comparison",
+  // M3-C4-L2's §7 = Time-Yoga Calculator — Sun+Moon longitude sum with
+  // step-by-step formula breakdown and 27-segment circular visualisation.
+  "time-yoga-as-sun-plus-moon-longitude": "time-yoga-calculator",
+  // M3-C4-L3's §7 = Yoga Wheel 27 — circular 27-segment explorer with
+  // nature colour-coding, filter pills, and table view toggle.
+  "the-27-time-yogas": "yoga-wheel-27",
+  // M3-C4-L4's §7 = Inauspicious Yoga Avoidance Calculator — focus on
+  // 6 inauspicious yogas with severity ranking and mitigation guide.
+  "the-inauspicious-yogas-to-avoid": "inauspicious-yoga-avoidance-calculator",
+  // M3-C4-L5's §7 = Yoga Muhūrta Screening Integrator — multi-element
+  // muhūrta screening tool with 5-element dashboard.
+  "yoga-in-muhurta-introduction": "yoga-muhurta-screening-integrator",
+  // M3-C5-L1's §7 = Karaṇa Calculator — half-tithi computation with
+  // step-by-step breakdown and tithi-bar visual.
+  "karana-as-half-tithi": "karana-calculator",
+  // M3-C5-L2's §7 = Karaṇa Cycle Diagram — circular 11-karaṇa explorer
+  // with Cara/Sthira colour-coding and filter pills.
+  "the-11-karanas-7-cara-4-sthira": "karana-cycle-diagram",
+  // M3-C5-L3's §7 = Bhadra Avoidance Integrator — Bhadra (Viṣṭi) calculator
+  // with day-of-week selector and activity-avoidance cards.
+  "bhadra-vishti-karana-and-its-avoidance": "bhadra-avoidance-integrator",
 };
 
 export function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorProps) {

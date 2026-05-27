@@ -68,7 +68,7 @@ function WheelDiagram({ activeFilter, selectedTithi, onSelect }: {
 }) {
   const CX = 320;
   const CY = 320;
-  const R_INNER = 70;
+  const R_INNER = 68;
   const R_OUTER = 250;
 
   const getOpacity = (t: TithiData) => {
@@ -78,7 +78,7 @@ function WheelDiagram({ activeFilter, selectedTithi, onSelect }: {
   };
 
   const getFill = (t: TithiData, isActive: boolean) => {
-    if (isActive) return t.paksha === "śukla" ? "rgba(232,158,42,0.22)" : "rgba(212,80,46,0.18)";
+    if (isActive) return t.paksha === "śukla" ? "rgba(232,158,42,0.24)" : "rgba(212,80,46,0.20)";
     return t.paksha === "śukla" ? "rgba(232,158,42,0.07)" : "rgba(212,80,46,0.06)";
   };
 
@@ -88,15 +88,12 @@ function WheelDiagram({ activeFilter, selectedTithi, onSelect }: {
   };
 
   return (
-    <svg viewBox="0 0 640 640" className="w-full h-auto" style={{ maxWidth: 720, display: "block", margin: "0 auto" }}>
+    <svg viewBox="0 0 640 640" className="w-full h-auto" style={{ maxWidth: 560, display: "block", margin: "0 auto" }}>
       <defs>
         <filter id="wheelShadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#6B4423" floodOpacity="0.18" />
         </filter>
       </defs>
-
-      {/* Background ambient glow */}
-      <circle cx={CX} cy={CY} r={R_OUTER + 40} fill="url(#sunGlow)" opacity={0.03} />
 
       {/* Outer decorative ring */}
       <circle cx={CX} cy={CY} r={R_OUTER + 16} fill="none" stroke="#E8DCC8" strokeWidth={1} opacity={0.35} />
@@ -165,17 +162,17 @@ function WheelDiagram({ activeFilter, selectedTithi, onSelect }: {
   );
 }
 
-/* ─── Detail panel ─── */
+/* ─── Detail panel — vertical stack for sidebar readability ─── */
 function DetailPanel({ tithi }: { tithi: TithiData | null }) {
   if (!tithi) {
     return (
-      <div className="gl-surface-twilight-glass" style={{ padding: "48px 32px", textAlign: "center", minHeight: 200, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "16px" }}>
-        <span style={{ fontSize: "48px" }}>🌙</span>
-        <p style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "22px", fontStyle: "italic", color: "var(--gl-ink-muted)" }}>
+      <div className="gl-surface-twilight-glass" style={{ padding: "40px 24px", textAlign: "center", minHeight: 280, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "14px" }}>
+        <span style={{ fontSize: "44px" }}>🌙</span>
+        <p style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "20px", fontStyle: "italic", color: "var(--gl-ink-muted)" }}>
           Click any segment on the wheel to explore its attributes.
         </p>
-        <p style={{ fontSize: "14px", color: "var(--gl-ink-muted)", maxWidth: 320, lineHeight: 1.5 }}>
-          Try the quality filters above to highlight tithis by their 5-fold classification.
+        <p style={{ fontSize: "13px", color: "var(--gl-ink-muted)", maxWidth: 280, lineHeight: 1.5 }}>
+          Try the quality filters to highlight tithis by their 5-fold classification.
         </p>
       </div>
     );
@@ -183,65 +180,72 @@ function DetailPanel({ tithi }: { tithi: TithiData | null }) {
 
   const qm = QUALITY_META[tithi.quality] ?? { color: "#9C7A2F", bg: "rgba(156,122,47,0.10)", meaning: "" };
   const isFestivalMajor = FESTIVAL_MAJOR.has(tithi.number);
+  const accentColor = tithi.paksha === "śukla" ? "#C28220" : "#A23A1E";
 
   return (
-    <div className="gl-surface-twilight-glass" style={{ padding: "28px 32px", borderLeft: `4px solid ${tithi.paksha === "śukla" ? "#C28220" : "#A23A1E"}` }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "18px", flexWrap: "wrap", gap: "8px" }}>
-        <span style={{ fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.16em", fontWeight: 700, color: tithi.paksha === "śukla" ? "#9C7A2F" : "#A23A1E", fontFamily: "var(--font-sans), sans-serif" }}>
+    <div className="gl-surface-twilight-glass" style={{ padding: "24px", borderTop: `4px solid ${accentColor}` }}>
+      {/* Pakṣa + festival badge row */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px", flexWrap: "wrap", gap: "6px" }}>
+        <span style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.16em", fontWeight: 700, color: accentColor, fontFamily: "var(--font-sans), sans-serif" }}>
           {tithi.paksha === "śukla" ? "Śukla Pakṣa" : "Kṛṣṇa Pakṣa"} · {tithi.pakshaNumber}/15
         </span>
         {isFestivalMajor && (
-          <span style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 700, color: "#C28220", background: "rgba(232,158,42,0.12)", padding: "4px 12px", borderRadius: "999px", border: "1px solid rgba(194,130,32,0.30)" }}>
+          <span style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 700, color: "#C28220", background: "rgba(232,158,42,0.12)", padding: "3px 10px", borderRadius: "999px", border: "1px solid rgba(194,130,32,0.30)" }}>
             Festival-major
           </span>
         )}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "24px" }}>
-        {/* Column 1 — Name + Quality */}
-        <div>
-          <p style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "36px", fontWeight: 600, color: "var(--gl-ink-primary)", lineHeight: 1.1 }}>
-            <IAST>{tithi.name}</IAST>
-          </p>
-          <p style={{ fontFamily: "var(--font-devanagari), serif", fontSize: "22px", color: "var(--gl-ink-secondary)", marginTop: "6px" }}>
-            {tithi.devanagari}
-          </p>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "7px 16px", borderRadius: "999px", background: qm.bg, border: `1px solid ${qm.color}44`, marginTop: "14px" }}>
-            <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: qm.color }} />
-            <span style={{ fontSize: "15px", fontWeight: 700, color: qm.color, fontFamily: "var(--font-cormorant), serif" }}>
-              <IAST>{tithi.quality}</IAST>
-            </span>
-            <span style={{ fontSize: "13px", color: "var(--gl-ink-muted)", fontFamily: "var(--font-cormorant), serif", fontStyle: "italic" }}>
-              ({qm.meaning})
-            </span>
-          </div>
-        </div>
+      {/* Tithi Name */}
+      <p style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "32px", fontWeight: 600, color: "var(--gl-ink-primary)", lineHeight: 1.1 }}>
+        <IAST>{tithi.name}</IAST>
+      </p>
+      <p style={{ fontFamily: "var(--font-devanagari), serif", fontSize: "20px", color: "var(--gl-ink-secondary)", marginTop: "4px", marginBottom: "12px" }}>
+        {tithi.devanagari}
+      </p>
 
-        {/* Column 2 — Deity + Significance */}
-        <div>
-          <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.14em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), sans-serif", marginBottom: "6px" }}>
-            Presiding Deity
-          </p>
-          <p style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "20px", fontWeight: 500, color: "var(--gl-ink-primary)", marginBottom: "16px" }}>
-            <IAST>{tithi.deity}</IAST>
-          </p>
-          <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.14em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), sans-serif", marginBottom: "6px" }}>
-            Operational Significance
-          </p>
-          <p style={{ fontSize: "15px", color: "var(--gl-ink-secondary)", lineHeight: 1.55, fontFamily: "var(--font-cormorant), serif", fontStyle: "italic" }}>
-            {tithi.significance}
-          </p>
-        </div>
+      {/* Quality badge */}
+      <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "6px 14px", borderRadius: "999px", background: qm.bg, border: `1px solid ${qm.color}44`, marginBottom: "20px" }}>
+        <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: qm.color }} />
+        <span style={{ fontSize: "14px", fontWeight: 700, color: qm.color, fontFamily: "var(--font-cormorant), serif" }}>
+          <IAST>{tithi.quality}</IAST>
+        </span>
+        <span style={{ fontSize: "12px", color: "var(--gl-ink-muted)", fontFamily: "var(--font-cormorant), serif", fontStyle: "italic" }}>
+          ({qm.meaning})
+        </span>
+      </div>
 
-        {/* Column 3 — Festivals */}
-        <div>
-          <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.14em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), sans-serif", marginBottom: "6px" }}>
-            Festival Anchors
-          </p>
-          <p style={{ fontSize: "15px", color: "var(--gl-ink-primary)", lineHeight: 1.55, fontFamily: "var(--font-cormorant), serif" }}>
-            {tithi.festivals}
-          </p>
-        </div>
+      {/* Divider */}
+      <div style={{ height: "1px", background: "linear-gradient(to right, transparent, rgba(156,122,47,0.25) 30%, rgba(156,122,47,0.25) 70%, transparent)", marginBottom: "16px" }} />
+
+      {/* Presiding Deity */}
+      <div style={{ marginBottom: "16px" }}>
+        <p style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.14em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), sans-serif", marginBottom: "5px" }}>
+          Presiding Deity
+        </p>
+        <p style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "19px", fontWeight: 500, color: "var(--gl-ink-primary)" }}>
+          <IAST>{tithi.deity}</IAST>
+        </p>
+      </div>
+
+      {/* Operational Significance */}
+      <div style={{ marginBottom: "16px" }}>
+        <p style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.14em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), sans-serif", marginBottom: "5px" }}>
+          Operational Significance
+        </p>
+        <p style={{ fontSize: "14px", color: "var(--gl-ink-secondary)", lineHeight: 1.55, fontFamily: "var(--font-cormorant), serif", fontStyle: "italic" }}>
+          {tithi.significance}
+        </p>
+      </div>
+
+      {/* Festival Anchors */}
+      <div>
+        <p style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.14em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), sans-serif", marginBottom: "5px" }}>
+          Festival Anchors
+        </p>
+        <p style={{ fontSize: "14px", color: "var(--gl-ink-primary)", lineHeight: 1.55, fontFamily: "var(--font-cormorant), serif" }}>
+          {tithi.festivals}
+        </p>
       </div>
     </div>
   );
@@ -250,18 +254,18 @@ function DetailPanel({ tithi }: { tithi: TithiData | null }) {
 /* ─── Quality bar ─── */
 function QualityBar() {
   return (
-    <div className="gl-surface-twilight-glass" style={{ padding: "18px 24px" }}>
-      <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.16em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), sans-serif", marginBottom: "14px" }}>
+    <div className="gl-surface-twilight-glass" style={{ padding: "16px 20px" }}>
+      <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.16em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), sans-serif", marginBottom: "12px" }}>
         5-Fold Quality Quick-Reference
       </p>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
         {Object.entries(QUALITY_META).map(([name, meta]) => (
-          <div key={name} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 16px", borderRadius: "8px", background: meta.bg, border: `1px solid ${meta.color}33` }}>
-            <span style={{ width: "12px", height: "12px", borderRadius: "50%", background: meta.color, flexShrink: 0 }} />
-            <span style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "17px", fontWeight: 600, color: "var(--gl-ink-primary)" }}>
+          <div key={name} style={{ display: "flex", alignItems: "center", gap: "8px", padding: "7px 14px", borderRadius: "8px", background: meta.bg, border: `1px solid ${meta.color}33` }}>
+            <span style={{ width: "11px", height: "11px", borderRadius: "50%", background: meta.color, flexShrink: 0 }} />
+            <span style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "16px", fontWeight: 600, color: "var(--gl-ink-primary)" }}>
               <IAST>{name}</IAST>
             </span>
-            <span style={{ fontSize: "13px", color: "var(--gl-ink-muted)", fontFamily: "var(--font-cormorant), serif", fontStyle: "italic" }}>
+            <span style={{ fontSize: "12px", color: "var(--gl-ink-muted)", fontFamily: "var(--font-cormorant), serif", fontStyle: "italic" }}>
               {meta.meaning}
             </span>
           </div>
@@ -289,44 +293,44 @@ export function TithiDeityWheel() {
   ];
 
   return (
-    <div className="my-6" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+    <div className="my-6" style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
       {/* Header strip */}
-      <header className="gl-surface-twilight-glass" style={{ padding: "18px 24px", display: "grid", gridTemplateColumns: "auto 1fr", gap: "20px", alignItems: "center", borderLeft: "4px solid #C28220" }}>
+      <header className="gl-surface-twilight-glass" style={{ padding: "16px 20px", display: "grid", gridTemplateColumns: "auto 1fr", gap: "16px", alignItems: "center", borderLeft: "4px solid #C28220" }}>
         <div style={{ position: "relative", flexShrink: 0 }}>
-          <img src="/assets/learning/tithi-moon-glyph.png" alt="Sūrya-Candra mandala" width={48} height={48}
+          <img src="/assets/learning/tithi-moon-glyph.png" alt="Sūrya-Candra mandala" width={44} height={44}
             style={{ borderRadius: "50%", objectFit: "cover", objectPosition: "center", border: "2px solid rgba(201,162,77,0.35)", boxShadow: "0 2px 8px rgba(107,68,35,0.15)" }}
             onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
-          <div style={{ width: 48, height: 48, borderRadius: "50%", background: "linear-gradient(135deg, #F5C842 0%, #E89E2A 50%, #C47A1A 100%)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "20px", position: "absolute", top: 0, left: 0, zIndex: -1 }}>☉☽</div>
+          <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #F5C842 0%, #E89E2A 50%, #C47A1A 100%)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px", position: "absolute", top: 0, left: 0, zIndex: -1 }}>☉☽</div>
         </div>
         <div>
-          <p style={{ fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.18em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), system-ui, sans-serif", marginBottom: "4px" }}>
+          <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.18em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), system-ui, sans-serif", marginBottom: "3px" }}>
             Tithi-Deity Wheel
           </p>
-          <p style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 500, fontSize: "22px", color: "#C28220", lineHeight: 1.2 }}>
+          <p style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 500, fontSize: "20px", color: "#C28220", lineHeight: 1.2 }}>
             30 Tithis · 15 Deities · 5 Qualities
           </p>
-          <p style={{ fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", fontSize: "14px", color: "var(--gl-ink-secondary)", marginTop: "2px" }}>
+          <p style={{ fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", fontSize: "13px", color: "var(--gl-ink-secondary)", marginTop: "2px" }}>
             Click any segment. Filter by quality or festival-major tithis.
           </p>
         </div>
       </header>
 
       {/* Filter pills */}
-      <div className="gl-surface-twilight-glass" style={{ padding: "16px 20px" }}>
-        <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.16em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), sans-serif", marginBottom: "12px" }}>
+      <div className="gl-surface-twilight-glass" style={{ padding: "14px 18px" }}>
+        <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.16em", color: "var(--gl-ink-muted)", fontWeight: 700, fontFamily: "var(--font-sans), sans-serif", marginBottom: "10px" }}>
           Highlight by Quality
         </p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
           {filters.map((f) => {
             const isActive = filter === f.key;
             return (
               <button key={f.key} onClick={() => setFilter(f.key)} style={{
-                padding: "7px 16px", borderRadius: "999px",
+                padding: "6px 14px", borderRadius: "999px",
                 background: isActive ? `${f.color}18` : "rgba(156,122,47,0.05)",
                 border: isActive ? `1.5px solid ${f.color}` : "1px solid rgba(156,122,47,0.20)",
                 color: isActive ? f.color : "#9C7A2F",
-                fontFamily: "var(--font-sans), system-ui, sans-serif", fontSize: "13px", fontWeight: isActive ? 700 : 600,
+                fontFamily: "var(--font-sans), system-ui, sans-serif", fontSize: "12px", fontWeight: isActive ? 700 : 600,
                 letterSpacing: "0.06em", cursor: "pointer", transition: "all 180ms cubic-bezier(0.32, 0.72, 0.24, 1)", whiteSpace: "nowrap",
               }}>
                 {f.label}
@@ -336,13 +340,19 @@ export function TithiDeityWheel() {
         </div>
       </div>
 
-      {/* Full-width wheel */}
-      <div className="gl-surface-twilight-glass" style={{ padding: "28px 20px" }}>
-        <WheelDiagram activeFilter={filter} selectedTithi={selected} onSelect={setSelected} />
-      </div>
+      {/* ═══ MAIN TWO-COLUMN LAYOUT ═══ */}
+      {/* Desktop (lg+): side-by-side grid  •  Mobile: stacked */}
+      <div className="flex flex-col lg:grid lg:grid-cols-[1fr_380px] gap-3.5">
+        {/* LEFT — Wheel */}
+        <div className="gl-surface-twilight-glass" style={{ padding: "20px 16px" }}>
+          <WheelDiagram activeFilter={filter} selectedTithi={selected} onSelect={setSelected} />
+        </div>
 
-      {/* Full-width detail panel */}
-      <DetailPanel tithi={selectedTithi} />
+        {/* RIGHT — Detail Panel (always visible beside the wheel on desktop) */}
+        <div>
+          <DetailPanel tithi={selectedTithi} />
+        </div>
+      </div>
 
       {/* Quality bar */}
       <QualityBar />

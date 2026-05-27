@@ -42,17 +42,31 @@ function todayRequest(overrides?: Partial<PanchangRequest>): PanchangRequest {
 
 /** Direct Astro Engine fetch — no auth token, no gateway proxy */
 async function panchangFetch(path: string, body: string): Promise<PanchangResponse> {
-    const response = await fetch(`${ASTRO_ENGINE_URL}${path}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body,
-    });
+    try {
+        const response = await fetch(`${ASTRO_ENGINE_URL}${path}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body,
+        });
 
-    if (!response.ok) {
-        throw new Error(`Panchang API error: ${response.status} ${response.statusText}`);
+        if (!response.ok) {
+            // Return a graceful failure instead of throwing — lets UI handle empty state
+            return {
+                success: false,
+                data: {},
+                cached: false,
+            };
+        }
+
+        return response.json();
+    } catch (networkError) {
+        // Network failure (service down, CORS, etc.) — return graceful failure
+        return {
+            success: false,
+            data: {},
+            cached: false,
+        };
     }
-
-    return response.json();
 }
 
 export const panchangApi = {

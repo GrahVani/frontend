@@ -227,6 +227,10 @@ const LESSON_SECTION_OVERRIDES: Record<
     "7": { embodiedTitle: "Bṛhat Saṁhitā Adhyāya 100 — the 30-tithi deity-quality wheel" },
     "8": { embodiedTitle: "Name-number confusion, forgetting special names, misattributing deities, treating correspondences as faith claims" },
   },
+  "the-15-krishna-tithis": {
+    "7": { embodiedTitle: "Bṛhat Saṁhitā Adhyāya 100 — the 30-tithi deity-quality wheel (kṛṣṇa pakṣa focus)" },
+    "8": { embodiedTitle: "Universal inauspiciousness fallacy, Mahā-Śivarātri vs monthly confusion, Pitṛ Pakṣa overgeneralisation, Amāvāsyā darkness bias" },
+  },
 };
 
 export function presentationFor(

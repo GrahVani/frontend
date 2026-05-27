@@ -27,13 +27,23 @@ interface ParsedMistake {
   raw: string;
 }
 
-/** Parse one or more mistake entries from §8's markdown body. */
+/** Parse one or more mistake entries from §8's markdown body.
+ *  Supports three formats:
+ *  1. Blockquote: `> **Common mistake #N: Title**` with `> **What happens:**` etc.
+ *  2. Blockquote without emoji: `> **Common mistake #N: Title**`
+ *  3. Heading fallback: `### Mistake #N — *Title*` (title + body as "what")
+ */
 function parseMistakes(markdown: string): ParsedMistake[] {
   const entries: ParsedMistake[] = [];
-  // Split on horizontal rules or on each `> ⚠️ **Common mistake #N:**` heading start
-  const blocks = markdown.split(/(?=>\s*⚠️\s*\*\*Common mistake)/g).filter((b) => b.trim().length > 0);
-  for (const block of blocks) {
-    const titleMatch = block.match(/⚠️\s*\*\*Common mistake[^*]*:\s*([^*\n]+)\*\*/i);
+
+  // Try blockquote format first (with or without ⚠️ emoji)
+  const bqBlocks = markdown
+    .split(/(?=(?:^|\n)>\s*(?:⚠️\s*)?\*\*Common mistake)/g)
+    .filter((b) => b.trim().length > 0);
+
+  for (const block of bqBlocks) {
+    // Match title: optional ⚠️, then **Common mistake #N: Title** or **Common mistake — Title**
+    const titleMatch = block.match(/(?:⚠️\s*)?\*\*Common mistake.*?[:\-—]\s*([^*\n]+)\*\*/i);
     const whatMatch = block.match(/\*\*What happens:\*\*\s*([\s\S]+?)(?=\n>\s*\*\*Why|\n>\s*\*\*How|\n\n|$)/i);
     const whyMatch = block.match(/\*\*Why it happens:\*\*\s*([\s\S]+?)(?=\n>\s*\*\*How|\n\n|$)/i);
     const fixMatch = block.match(/\*\*How to avoid:\*\*\s*([\s\S]+?)(?=\n\n|$)/i);
@@ -48,6 +58,26 @@ function parseMistakes(markdown: string): ParsedMistake[] {
       });
     }
   }
+
+  // If no blockquote entries found, try heading format: `### Mistake #N — *Title*`
+  if (entries.length === 0) {
+    const headingPattern = /###\s+Mistake\s+#(\d+)\s*[-—:]\s*\*([^*]+)\*/g;
+    const headings = Array.from(markdown.matchAll(headingPattern));
+    for (let i = 0; i < headings.length; i++) {
+      const [, num, title] = headings[i];
+      const startIdx = headings[i].index!;
+      const endIdx = i + 1 < headings.length ? headings[i + 1].index! : markdown.length;
+      const body = markdown.slice(startIdx + headings[i][0].length, endIdx).trim();
+      entries.push({
+        title: `${title.trim()}`,
+        what: body.replace(/^>\s?/gm, "").trim(),
+        why: undefined,
+        fix: undefined,
+        raw: headings[i][0] + "\n" + body,
+      });
+    }
+  }
+
   return entries;
 }
 
