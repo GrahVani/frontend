@@ -135,7 +135,7 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   "seven-sub-branches": "seven-sub-branches-synthesis-dojo",
   // L3.3's §7 = Grahvani Coverage Synthesis Dojo (Full 4×7 Coverage Matrix +
   // 5-scenario Evaluative Drill). §4 keeps the grahvani-coverage-matrix-explorer.
-  "where-grahvani-sits-in-the-skandha-map": "grahvani-coverage-synthesis-dojo",
+  "where-grahvani-sits-in-the-skandha-map": "grahvani-coverage-matrix-explorer",
   // L4.1's §7 = Regional Schools Synthesis Dojo (6×4 Regional Schools Matrix +
   // teacher lookup + 5-scenario Evaluative Drill). §4 keeps the regional-schools-explorer.
   "regional-schools-and-lineages": "regional-schools-synthesis-dojo",

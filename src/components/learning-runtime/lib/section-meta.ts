@@ -231,6 +231,12 @@ const LESSON_SECTION_OVERRIDES: Record<
     "7": { embodiedTitle: "Bṛhat Saṁhitā Adhyāya 100 — the 30-tithi deity-quality wheel (kṛṣṇa pakṣa focus)" },
     "8": { embodiedTitle: "Universal inauspiciousness fallacy, Mahā-Śivarātri vs monthly confusion, Pitṛ Pakṣa overgeneralisation, Amāvāsyā darkness bias" },
   },
+  "the-four-yugas-and-the-mahayuga": {
+    "5": { embodiedTitle: "Saṁdhyā + saṁdhyāṁśa — twilight sub-structure of each yuga" },
+    "6": { embodiedTitle: "Bṛhat Saṁhitā 8 + Mahābhārata Vana Parva 188 + Manusmṛti 1.69-71" },
+    "7": { embodiedTitle: "Yuga Proportion Visualiser — 4:3:2:1 interactive explorer" },
+    "8": { embodiedTitle: "Four traps in the yuga-cycle framework" },
+  },
 };
 
 export function presentationFor(

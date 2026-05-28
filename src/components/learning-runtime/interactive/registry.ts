@@ -46,8 +46,23 @@ import { LineageMattersSynthesisDojo } from "./lineage-matters-synthesis-dojo";
 import { PrecessionVisualizer } from "./precession-visualizer";
 import { ZodiacReferenceFrameExplorer } from "./zodiac-reference-frame-explorer";
 import { ZodiacTraditionReasoningComparator } from "./zodiac-tradition-reasoning-comparator";
+import ZodiacTraditionComparator from "./zodiac-tradition-comparator";
 import { TropicalSiderealConversionCalculator } from "./tropical-sidereal-conversion-calculator";
 import { AyanamshaDefinitionExplorer } from "./ayanamsha-definition-explorer";
+import { LahiriAyanamshaExplorer } from "./lahiri-ayanamsha-explorer";
+import { LahiriByHandStepByStepCalculator } from "./lahiri-by-hand-step-by-step-calculator";
+import { KrishnamurtiAyanamshaExplorer } from "./krishnamurti-ayanamsha-explorer";
+import { YugaProportionVisualiser } from "./yuga-proportion-visualiser";
+import { YugaCycleExplorer } from "./yuga-cycle-explorer";
+import { TraditionalVsAcademicDatingComparator } from "./traditional-vs-academic-dating-comparator";
+import { YugaDependenceClassifier } from "./yuga-dependence-classifier";
+import { DayTypeComparator } from "./day-type-comparator";
+import { SunriseAtAnyLatitude } from "./sunrise-at-any-latitude";
+import { SiderealDayExplorer } from "./sidereal-day-explorer";
+import { TithiFromSunMoon } from "./tithi-from-sun-moon";
+import { SankrantiTracker } from "./sankranti-tracker";
+import { ComparativeAyanamshaExplorer } from "./comparative-ayanamsha-explorer";
+import { AyanamshaDecisionFrameworkFlowchart } from "./ayanamsha-decision-framework-flowchart";
 import { TithiAngleVisualizer } from "./tithi-angle-visualizer";
 import { TithiCalculatorDojo } from "./tithi-calculator-dojo";
 import { PancangaBuilder } from "./pancanga-builder";
@@ -74,6 +89,9 @@ import { YogaMuhurtaScreeningIntegrator } from "./yoga-muhurta-screening-integra
 import { KaranaCalculator } from "./karana-calculator";
 import { KaranaCycleDiagram } from "./karana-cycle-diagram";
 import { BhadraAvoidanceIntegrator } from "./bhadra-avoidance-integrator";
+import { SamvatConverterVikramaShaka } from "./samvat-converter-vikrama-shaka";
+import { RegionalCalendarExplorer } from "./regional-calendar-explorer";
+import { CalendarConverter } from "./calendar-converter";
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
 
@@ -204,6 +222,7 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // side-by-side comparison of Vedic-sidereal vs Western-tropical reasoning
   // across four dimensions (doctrinal, observational, historical, comparative).
   "zodiac-tradition-reasoning-comparator": ZodiacTraditionReasoningComparator,
+  "zodiac-tradition-comparator": ZodiacTraditionComparator as any,
   // Lesson 2.1.4's §7 interactive: Tropical-Sidereal Conversion Calculator —
   // birth-date Sun-sign calculator + longitude converter showing graha-in-rāśi
   // shifts, daśā consequences, and nakṣatra alignment effects.
@@ -213,6 +232,51 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // Etymology (Sanskrit compound breakdown), 7 Conventions (comparison table),
   // Stream Matcher (stream → ayanāṁśa mapping).
   "ayanamsha-definition-explorer": AyanamshaDefinitionExplorer,
+  "lahiri-ayanamsha-explorer": LahiriAyanamshaExplorer,
+  "lahiri-by-hand-step-by-step-calculator": LahiriByHandStepByStepCalculator,
+  "krishnamurti-ayanamsha-explorer": KrishnamurtiAyanamshaExplorer,
+  // Lesson 2.2.5's §7 interactive: Comparative Ayanāṁśa Explorer — side-by-side
+  // comparison of all 7 conventions, convention detail profiles, alignment-epoch
+  // timeline, practitioner-community mapping, and multi-ayanāṁśa honesty discipline.
+  "comparative-ayanamsha-explorer": ComparativeAyanamshaExplorer,
+  // Lesson 2.2.6's §7 interactive: Ayanāṁśa Decision Framework Flowchart —
+  // scenario → decision mapping, per-context rules table, multi-lineage synthesis,
+  // do-not-mix visualiser, software verification, and Chapter 2 capstone panel.
+  "ayanamsha-decision-framework-flowchart": AyanamshaDecisionFrameworkFlowchart,
+  // Lesson 2.3.1's §9 interactive: Yuga Proportion Visualiser — three-mode
+  // proportional bar visualiser (proportion / absolute-duration / saṁdhyā)
+  // with hover/click detail panels and embedded formative checkpoints.
+  "yuga-proportion-visualiser": YugaProportionVisualiser,
+  // Lesson 2.3.2's §10 interactive: Yuga Cycle Explorer — three-zoom-level
+  // visual scrubber (Mahā-Yuga / Manvantara / Kalpa) with human/divya toggle,
+  // present-epoch marker, and modern cosmology benchmarks.
+  "yuga-cycle-explorer": YugaCycleExplorer,
+  // Lesson 2.3.3's §9 interactive: Traditional vs Academic Dating Comparator —
+  // three-position side-by-side (Traditional Vedic / Yukteshwar / Academic-Indology)
+  // with synthesis honesty dial.
+  "traditional-vs-academic-dating-comparator": TraditionalVsAcademicDatingComparator,
+  // Lesson 2.3.4's §10 interactive: Yuga Dependence Classifier — scenario-based
+  // yuga-dependent vs yuga-independent classification drill with three difficulty levels.
+  "yuga-dependence-classifier": YugaDependenceClassifier,
+  // Lesson 2.4.1's §9 interactive: Day-Type Comparator — side-by-side comparison
+  // of four day-types (sāvana / sidereal / lunar / solar) with operational-scope quiz.
+  "day-type-comparator": DayTypeComparator,
+  // Lesson 2.4.2's §10 interactive: Sunrise at Any Latitude — 7-step sunrise
+  // computation calculator with edge-case detection (polar day/night) and
+  // worked-example library (Mumbai, Delhi, Singapore).
+  "sunrise-at-any-latitude": SunriseAtAnyLatitude,
+  // Lesson 2.4.3's §8 interactive: Sidereal Day Explorer — top-down Earth view
+  // with time-scrubber, differential visualisation (~3m 56s), annual accumulation,
+  // and operational-context picker.
+  "sidereal-day-explorer": SiderealDayExplorer,
+  // Lesson 2.4.4's §10 interactive: Tithi from Sun-Moon — longitude scrubbers,
+  // circular elongation arc visualisation, tithi computation, variable-duration
+  // mode, and edge-case detection (kṣaya/vṛddhi tithi).
+  "tithi-from-sun-moon": TithiFromSunMoon,
+  // Lesson 2.4.5's §10 interactive: Saṅkrānti Tracker — Sun's annual journey
+  // through 12 rāśis with Uttarāyaṇa/Dakṣiṇāyana distinction, sidereal-vs-tropical
+  // toggle, multi-century drift visualisation, and festival overlay.
+  "sankranti-tracker": SankrantiTracker,
   // Lesson 3.1.1's §4 explorer: Tithi Angle Visualizer — circular Sun-Moon
   // orbit with 12° segment overlay + real-time tithi computation + pakṣa
   // indicator + pañcāṅga reading panel.
@@ -307,6 +371,15 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // calculator with day-of-week selector, activity-avoidance cards, classical
   // source panel, and comparison with other inauspicious periods.
   "bhadra-avoidance-integrator": BhadraAvoidanceIntegrator,
+  // Lesson 2.5.1's §7 interactive: Samvat Converter — Vikrama ↔ Śaka ↔ CE
+  // interactive year-conversion calculator with boundary detection + convention toggles.
+  "samvat-converter-vikrama-shaka": SamvatConverterVikramaShaka,
+  // Lesson 2.5.2's §7 interactive: Regional Calendar Explorer — side-by-side
+  // rendering of Tamil + Kerala + Bengali + Assamese + Odia regional calendars.
+  "regional-calendar-explorer": RegionalCalendarExplorer,
+  // Lesson 2.5.3's §7 interactive: Calendar Converter — comprehensive cross-system
+  // date-conversion across Vikrama / Śaka / Kollam / Gregorian + JDN cross-validation.
+  "calendar-converter": CalendarConverter,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {

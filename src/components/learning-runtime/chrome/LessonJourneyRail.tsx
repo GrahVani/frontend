@@ -342,7 +342,7 @@ export function LessonJourneyRail({
                     transition: "color 250ms",
                   }}
                 >
-                  {presentation.railLabel}
+                  {section.number.includes(".") ? section.title : presentation.railLabel}
                 </span>
                 <span
                   style={{
