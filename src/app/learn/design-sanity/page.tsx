@@ -13,6 +13,7 @@
  */
 
 import { grahas, rashis } from "@/design-tokens/grahvani-learning";
+import ZodiacTraditionComparator from "@/components/learning-runtime/interactive/zodiac-tradition-comparator";
 
 export default function DesignSanityPage() {
   return (
@@ -257,6 +258,17 @@ export default function DesignSanityPage() {
               ज्योतिषं वेदस्य चक्षुः · Jyotiṣa as Vedāṅga
             </p>
           </div>
+        </section>
+
+        {/* §6 — Interactive Components */}
+        <section className="space-y-3">
+          <h2
+            className="text-2xl text-[var(--gl-gold-accent)] px-2"
+            style={{ fontFamily: "var(--font-cormorant)" }}
+          >
+            §6 · Interactive Components (Zodiac Tradition Comparator)
+          </h2>
+          <ZodiacTraditionComparator />
         </section>
 
         {/* Footer note */}

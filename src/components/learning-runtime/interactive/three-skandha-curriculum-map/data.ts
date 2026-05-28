@@ -26,6 +26,12 @@ export interface StreamEmphasis {
   primaryTexts: string[];
 }
 
+export interface Topic {
+  id: string;
+  name: string;
+  description: string;
+}
+
 export interface SkandhaNode {
   slug: "ganita" | "hora" | "samhita";
   iast: string;
@@ -48,6 +54,8 @@ export interface SkandhaNode {
   nodeColor: string;
   /** Deep colour for emphasis text. */
   nodeColorDeep: string;
+  /** Sub-topics within this skandha. */
+  topics: Topic[];
 }
 
 export const SKANDHA_NODES: SkandhaNode[] = [
@@ -84,6 +92,11 @@ export const SKANDHA_NODES: SkandhaNode[] = [
     positionLabel: "Foundational substrate",
     nodeColor: "#4F6FA8",
     nodeColorDeep: "#2F4778",
+    topics: [
+      { id: "astronomy", name: "Mathematical Astronomy", description: "Computation of planetary positions and eclipse paths." },
+      { id: "chart-math", name: "Chart-erection Mathematics", description: "Calculation of lagna, bhāva-cusps, and divisional charts." },
+      { id: "calendar", name: "Calendrical Computation", description: "Pañcāṅga generation and saṅkrānti timings." }
+    ],
   },
   {
     slug: "hora",
@@ -147,6 +160,12 @@ export const SKANDHA_NODES: SkandhaNode[] = [
     positionLabel: "Centre of modern practice",
     nodeColor: "#A23A1E",
     nodeColorDeep: "#7A2A14",
+    topics: [
+      { id: "natal", name: "Natal Astrology (Jātaka)", description: "Reading individual life-patterns from the birth chart." },
+      { id: "timing", name: "Predictive Timing (Daśās)", description: "Applying planetary periods to time events." },
+      { id: "horary", name: "Horary Astrology (Praśna)", description: "Answering specific questions from a chart for the moment." },
+      { id: "electional", name: "Electional Astrology (Muhūrta)", description: "Selecting auspicious times for actions." }
+    ],
   },
   {
     slug: "samhita",
@@ -180,6 +199,12 @@ export const SKANDHA_NODES: SkandhaNode[] = [
     positionLabel: "Encyclopaedic breadth",
     nodeColor: "#3A8C5A",
     nodeColorDeep: "#2A6A40",
+    topics: [
+      { id: "mundane", name: "Mundane Astrology", description: "Predictions for nations, leaders, and civic events." },
+      { id: "omens", name: "Omens & Portents", description: "Interpretation of terrestrial and atmospheric signs." },
+      { id: "vastu", name: "Architecture (Vāstu)", description: "Spatial arrangement and structural auspiciousness." },
+      { id: "weather", name: "Weather Prediction", description: "Forecasting rainfall and agricultural cycles." }
+    ],
   },
 ];
 
