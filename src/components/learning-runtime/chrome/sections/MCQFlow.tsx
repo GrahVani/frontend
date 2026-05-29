@@ -15,7 +15,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Check, X, FileQuestion, ChevronRight, Clock } from "lucide-react";
+import { Check, X, FileQuestion, ChevronRight, Clock, RotateCcw } from "lucide-react";
 import type { LessonSection, LessonFrontMatter } from "@/lib/learning-runtime/types";
 import type { McqBank, McqQuestion } from "@/lib/learning-runtime/mcq-types";
 import { useProgressStore, COOLDOWN_HOURS, PASS_THRESHOLD } from "@/lib/learning-runtime/progress-store";
@@ -37,6 +37,7 @@ type FlowPhase = "idle" | "cooldown" | "answering" | "completed-pass";
 export function MCQFlow({ section, frontMatter: fm, bank }: MCQFlowProps) {
   const lessonSlug = fm.slug;
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
+  const resetLesson = useProgressStore((s) => s.resetLesson);
   const isOnCooldown = useProgressStore((s) => s.isOnCooldown);
   const cooldownRemainingMs = useProgressStore((s) => s.cooldownRemainingMs);
   const lesson = useProgressStore((s) => s.lessons[lessonSlug]);
@@ -46,6 +47,7 @@ export function MCQFlow({ section, frontMatter: fm, bank }: MCQFlowProps) {
   /** Per-question chosen-option id. */
   const [selections, setSelections] = useState<Record<string, string>>({});
   const [hydrated, setHydrated] = useState(false);
+  const [showReview, setShowReview] = useState(false);
 
   // Hydrate phase from store after mount so SSR doesn't differ from CSR
   useEffect(() => {
@@ -91,6 +93,14 @@ export function MCQFlow({ section, frontMatter: fm, bank }: MCQFlowProps) {
     setCurrentIdx(0);
     setSelections({});
     setPhase("answering");
+  };
+
+  const handlePracticeAgain = () => {
+    resetLesson(lessonSlug);
+    setCurrentIdx(0);
+    setSelections({});
+    setShowReview(false);
+    setPhase("idle");
   };
 
   const finishQuiz = async () => {
@@ -204,7 +214,20 @@ export function MCQFlow({ section, frontMatter: fm, bank }: MCQFlowProps) {
       )}
 
       {hydrated && phase === "completed-pass" && lesson && (
-        <PassScreen bank={bank} lastAttempt={lesson.attempts[lesson.attempts.length - 1]} />
+        showReview ? (
+          <ReviewScreen
+            bank={bank}
+            onBack={() => setShowReview(false)}
+            onPracticeAgain={handlePracticeAgain}
+          />
+        ) : (
+          <PassScreen
+            bank={bank}
+            lastAttempt={lesson.attempts[lesson.attempts.length - 1]}
+            onPracticeAgain={handlePracticeAgain}
+            onReview={() => setShowReview(true)}
+          />
+        )
       )}
     </section>
   );
@@ -924,14 +947,299 @@ function ExplanationCard({
   );
 }
 
+/* ───────────────── Review screen ───────────────────────────── */
+
+function ReviewScreen({
+  bank,
+  onBack,
+  onPracticeAgain,
+}: {
+  bank: McqBank;
+  onBack: () => void;
+  onPracticeAgain: () => void;
+}) {
+  return (
+    <div>
+      {/* Header */}
+      <div
+        className="gl-surface-dawn p-6 text-center mb-4"
+        style={{ borderRadius: "14px" }}
+      >
+        <p
+          style={{
+            fontFamily: "var(--font-cormorant), serif",
+            fontSize: "28px",
+            fontWeight: 500,
+            color: "var(--gl-ink-on-dawn-primary)",
+            marginBottom: "4px",
+          }}
+        >
+          Review Mode
+        </p>
+        <p
+          style={{
+            fontFamily: "var(--font-cormorant), serif",
+            fontStyle: "italic",
+            fontSize: "16px",
+            color: "var(--gl-ink-on-dawn-primary)",
+            opacity: 0.72,
+          }}
+        >
+          All questions shown with correct answers and explanations.
+        </p>
+        <div className="mt-4 flex items-center justify-center gap-3 flex-wrap">
+          <button
+            onClick={onBack}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all hover:opacity-90"
+            style={{
+              background: "var(--gl-card-surface-solid, #FFF9F0)",
+              color: "var(--gl-ink-primary)",
+              border: "1.5px solid var(--gl-gold-hairline)",
+              cursor: "pointer",
+            }}
+          >
+            <ChevronRight size={16} style={{ transform: "rotate(180deg)" }} />
+            Back to Results
+          </button>
+          <button
+            onClick={onPracticeAgain}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all hover:opacity-90"
+            style={{
+              background: "var(--gl-card-surface-solid, #FFF9F0)",
+              color: "var(--gl-ink-primary)",
+              border: "1.5px solid var(--gl-gold-hairline)",
+              cursor: "pointer",
+            }}
+          >
+            <RotateCcw size={16} />
+            Practice Again
+          </button>
+        </div>
+      </div>
+
+      {/* Questions list */}
+      <div className="space-y-6">
+        {bank.questions.map((q, idx) => {
+          const correctOption = q.options.find((o) => o.isCorrect) ?? null;
+          return (
+            <div
+              key={q.id}
+              className="gl-surface-twilight-glass"
+              style={{
+                padding: "28px 32px 24px",
+                position: "relative",
+                overflow: "hidden",
+                borderRadius: "14px",
+              }}
+            >
+              {/* Question number badge */}
+              <div className="flex items-center gap-3 mb-4">
+                <span
+                  className="inline-flex items-center justify-center text-xs font-bold"
+                  style={{
+                    width: "28px",
+                    height: "28px",
+                    borderRadius: "50%",
+                    background: SHANI_INDIGO,
+                    color: "#fff",
+                  }}
+                >
+                  {idx + 1}
+                </span>
+                <span
+                  style={{
+                    fontSize: "12px",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.12em",
+                    color: SHANI_INDIGO,
+                    fontWeight: 600,
+                  }}
+                >
+                  {q.bloomLevel ?? ""}
+                  {q.bloomLevel && q.difficulty && (
+                    <span style={{ opacity: 0.5, margin: "0 4px" }}>·</span>
+                  )}
+                  <span style={{ fontWeight: 500 }}>{q.difficulty ?? ""}</span>
+                </span>
+              </div>
+
+              <p
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "22px",
+                  fontWeight: 500,
+                  color: "var(--gl-ink-primary)",
+                  lineHeight: 1.4,
+                  marginBottom: "16px",
+                }}
+              >
+                {renderInline(q.stem)}
+              </p>
+              {q.stemDevanagari && (
+                <p
+                  lang="sa"
+                  style={{
+                    fontFamily: "var(--font-devanagari), serif",
+                    fontSize: "18px",
+                    color: "var(--gl-ink-secondary)",
+                    marginBottom: "16px",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {q.stemDevanagari}
+                </p>
+              )}
+
+              <div className="space-y-2.5">
+                {q.options.map((opt) => (
+                  <div
+                    key={opt.id}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "14px",
+                      padding: "12px 16px",
+                      borderRadius: "12px",
+                      border: `1px solid ${opt.isCorrect ? "#3A8C5A" : "rgba(156, 122, 47, 0.35)"}`,
+                      background: opt.isCorrect
+                        ? "rgba(58, 140, 90, 0.06)"
+                        : "rgba(255, 249, 234, 0.55)",
+                      opacity: opt.isCorrect ? 1 : 0.6,
+                    }}
+                  >
+                    <span
+                      style={{
+                        flexShrink: 0,
+                        width: "28px",
+                        height: "28px",
+                        borderRadius: "50%",
+                        background: opt.isCorrect ? "#3A8C5A" : "rgba(255, 252, 240, 0.95)",
+                        border: `1.5px solid ${opt.isCorrect ? "#3A8C5A" : "rgba(156, 122, 47, 0.40)"}`,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "13px",
+                        fontWeight: 700,
+                        color: opt.isCorrect ? "#FFF9F0" : SHANI_INDIGO,
+                      }}
+                    >
+                      {opt.id}
+                    </span>
+                    <span
+                      style={{
+                        fontFamily:
+                          "var(--font-sans), system-ui, sans-serif",
+                        fontSize: "15px",
+                        lineHeight: 1.6,
+                        color: "var(--gl-ink-primary)",
+                        flex: 1,
+                      }}
+                    >
+                      {renderInline(opt.text)}
+                    </span>
+                    {opt.isCorrect && (
+                      <Check
+                        size={18}
+                        strokeWidth={2.5}
+                        style={{ color: "#3A8C5A", flexShrink: 0 }}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Explanation */}
+              {correctOption && (
+                <div
+                  className="mt-4 p-4 rounded-lg"
+                  style={{
+                    background: "rgba(58, 140, 90, 0.06)",
+                    borderLeft: "3px solid #3A8C5A",
+                  }}
+                >
+                  <p
+                    style={{
+                      color: "#3A8C5A",
+                      letterSpacing: "0.12em",
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      textTransform: "uppercase",
+                      marginBottom: "6px",
+                      fontFamily:
+                        "var(--font-sans), system-ui, sans-serif",
+                    }}
+                  >
+                    Correct answer · {correctOption.id}
+                  </p>
+                  <p
+                    style={{
+                      fontFamily:
+                        "var(--font-sans), system-ui, sans-serif",
+                      fontSize: "15px",
+                      lineHeight: 1.7,
+                      color: "var(--gl-ink-primary)",
+                    }}
+                  >
+                    {renderInline(correctOption.explanation)}
+                  </p>
+                </div>
+              )}
+
+              {q.primarySources.length > 0 && (
+                <ul
+                  className="pt-3 mt-3 border-t"
+                  style={{
+                    borderColor: "var(--gl-gold-hairline)",
+                    listStyle: "none",
+                    padding: 0,
+                  }}
+                >
+                  <p
+                    style={{
+                      color: "var(--gl-ink-muted)",
+                      letterSpacing: "0.16em",
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      textTransform: "uppercase",
+                      marginBottom: "8px",
+                      fontFamily:
+                        "var(--font-sans), system-ui, sans-serif",
+                    }}
+                  >
+                    Sources
+                  </p>
+                  {q.primarySources.map((s, i) => (
+                    <Citation key={`p-${i}`} reference={s.ref} note={s.note} />
+                  ))}
+                  {q.modernSources.map((s, i) => (
+                    <Citation
+                      key={`m-${i}`}
+                      reference={s.ref}
+                      note={s.note}
+                    />
+                  ))}
+                </ul>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 /* ───────────────── Pass screen ─────────────────────────────── */
 
 function PassScreen({
   bank,
   lastAttempt,
+  onPracticeAgain,
+  onReview,
 }: {
   bank: McqBank;
   lastAttempt: import("@/lib/learning-runtime/progress-store").AttemptRecord | undefined;
+  onPracticeAgain: () => void;
+  onReview: () => void;
 }) {
   const score = lastAttempt?.scorePct ?? 100;
   const correct = bank.questions.length - (lastAttempt?.wrongQuestionIds.length ?? 0);
@@ -978,6 +1286,35 @@ function PassScreen({
           The {lastAttempt.wrongQuestionIds.length} {lastAttempt.wrongQuestionIds.length === 1 ? "question" : "questions"} you missed will return to you in spaced repetition over the coming days.
         </p>
       )}
+
+      <div className="mt-6 flex items-center justify-center gap-3 flex-wrap">
+        <button
+          onClick={onReview}
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all hover:opacity-90"
+          style={{
+            background: "var(--gl-card-surface-solid, #FFF9F0)",
+            color: "var(--gl-ink-primary)",
+            border: "1.5px solid var(--gl-gold-hairline)",
+            cursor: "pointer",
+          }}
+        >
+          <FileQuestion size={16} />
+          Review Answers
+        </button>
+        <button
+          onClick={onPracticeAgain}
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all hover:opacity-90"
+          style={{
+            background: "var(--gl-card-surface-solid, #FFF9F0)",
+            color: "var(--gl-ink-primary)",
+            border: "1.5px solid var(--gl-gold-hairline)",
+            cursor: "pointer",
+          }}
+        >
+          <RotateCcw size={16} />
+          Practice Again
+        </button>
+      </div>
     </div>
   );
 }
