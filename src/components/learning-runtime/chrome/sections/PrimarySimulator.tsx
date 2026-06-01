@@ -7,7 +7,7 @@
  */
 
 import { MarkdownContent } from "../MarkdownContent";
-import { resolveInteractive } from "../../interactive/registry";
+import { INTERACTIVE_REGISTRY } from "../../interactive/registry";
 import { SectionHeader } from "../SectionHeader";
 import { presentationFor } from "../../lib/section-meta";
 import { Sparkles } from "lucide-react";
@@ -64,7 +64,6 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   // §4 keeps the four-stream-landscape-explorer.
   "modern-founders-krishnamurti-and-joshi": "four-stream-synthesis-dojo",
   // L3.1's §7 = Three Skandha Synthesis Dojo (Stream × Skandha Matrix +
-  // 5-scenario Evaluative Drill). §4 keeps the three-skandha-curriculum-map.
   "three-skandhas-overview": "three-skandha-synthesis-dojo",
   // M3-C1-L1's §7 = Tithi Calculator Dojo (step-by-step formula breakdown +
   // editable longitudes + preset scenarios). §4 keeps the tithi-angle-visualizer.
@@ -132,10 +131,8 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   // with day-of-week selector and activity-avoidance cards.
   "bhadra-vishti-karana-and-its-avoidance": "bhadra-avoidance-integrator",
   // L3.2's §7 = Seven Sub-Branches Synthesis Dojo (Stream × Sub-Branch Matrix +
-  // 5-scenario Evaluative Drill). §4 keeps the seven-sub-branches-explorer.
   "seven-sub-branches": "seven-sub-branches-synthesis-dojo",
   // L3.3's §7 = Grahvani Coverage Synthesis Dojo (Full 4×7 Coverage Matrix +
-  // 5-scenario Evaluative Drill). §4 keeps the grahvani-coverage-matrix-explorer.
   "where-grahvani-sits-in-the-skandha-map": "grahvani-coverage-matrix-explorer",
   // L4.1's §7 = Regional Schools Synthesis Dojo (6×4 Regional Schools Matrix +
   // teacher lookup + 5-scenario Evaluative Drill). §4 keeps the regional-schools-explorer.
@@ -179,6 +176,21 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
 
 /** Slugs whose §7 interactive needs extra horizontal space (e.g. large SVG wheel + sidebar). */
 const WIDE_LAYOUT_SLUGS = new Set([
+  "the-four-yugas-and-the-mahayuga",
+  "manvantara-and-kalpa-the-cosmic-scale",
+  "where-are-we-now",
+  "does-yuga-position-affect-your-chart",
+  "the-four-day-types",
+  "savana-day-and-civil-time",
+  "sidereal-day-and-its-uses",
+  "the-tithi-as-lunar-day",
+  "solar-day-and-sankranti",
+  "regional-schools-and-lineages",
+  "modern-lineage-threads",
+  "lineage-matters-worked-example",
+  "budha-the-prince-and-intellect",
+  "budha-and-the-doctrine-of-association",
+  "budha-combustion-sensitivity",
   "the-15-shukla-tithis",
   "the-15-krishna-tithis",
   "nakshatra-deity-and-ruling-planet-at-pancanga-level",
@@ -188,12 +200,10 @@ export function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorP
   const componentType = fm.interactive?.componentType;
   const specFile = fm.interactive?.specFile;
   const enabled = fm.interactive?.enabled ?? false;
-  const Resolved = resolveInteractive(componentType);
 
   const overrideKey = SECTION_7_OVERRIDES[fm.slug];
-  const InteractiveComponent = overrideKey
-    ? resolveInteractive(overrideKey)
-    : Resolved;
+  const interactiveKey = overrideKey ?? componentType;
+  const InteractiveComponent = interactiveKey ? INTERACTIVE_REGISTRY[interactiveKey] ?? null : null;
 
   const useWideLayout = WIDE_LAYOUT_SLUGS.has(fm.slug);
 

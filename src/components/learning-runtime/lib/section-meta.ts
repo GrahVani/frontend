@@ -82,7 +82,7 @@ const ROLE_PRESENTATION: Record<SectionRole, Omit<SectionPresentation, "role">> 
     railLabel: "In practice",
     eyebrow: "In practice",
     embodiedTitle: "Worked through, step by step",
-    accentHex: "#A8C8E8", // Śukra
+    accentHex: "#5A7FA8", // Śukra — readable sky-blue (was #A8C8E8, too faint on parchment)
     accentName: "shukra",
     baseMinutes: 4,
   },
@@ -90,7 +90,7 @@ const ROLE_PRESENTATION: Record<SectionRole, Omit<SectionPresentation, "role">> 
     railLabel: "Explore",
     eyebrow: "Explore",
     embodiedTitle: "Move through history, see the ecosystem",
-    accentHex: "#D8DBE8", // Candra pearl
+    accentHex: "#4A6FA5", // Candra — readable indigo (was #D8DBE8, invisible on parchment)
     accentName: "candra",
     baseMinutes: 5,
   },
@@ -130,7 +130,7 @@ const ROLE_PRESENTATION: Record<SectionRole, Omit<SectionPresentation, "role">> 
     railLabel: "Where this came from",
     eyebrow: "Where this came from",
     embodiedTitle: "Sources & further reading",
-    accentHex: "#A8C8E8", // Śukra connection
+    accentHex: "#5A7FA8", // Śukra connection — readable sky-blue (was #A8C8E8)
     accentName: "shukra",
     baseMinutes: 1,
   },
