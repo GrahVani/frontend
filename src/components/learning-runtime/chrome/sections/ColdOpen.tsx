@@ -256,8 +256,8 @@ export function ColdOpen({ frontMatter: fm, section }: ColdOpenProps) {
             style={{
               fontFamily: "var(--font-cormorant), serif",
               fontStyle: "italic",
-              fontSize: "14px",
-              color: "var(--gl-ink-muted)",
+              fontSize: "15px",
+              color: "var(--gl-ink-secondary)",
               textDecoration: "none",
               letterSpacing: "0.04em",
             }}
@@ -266,9 +266,9 @@ export function ColdOpen({ frontMatter: fm, section }: ColdOpenProps) {
             <span
               aria-hidden="true"
               style={{
-                width: "1px",
+                width: "1.5px",
                 height: "32px",
-                background: "linear-gradient(to bottom, #9C7A2F, transparent)",
+                background: "linear-gradient(to bottom, var(--gl-gold-accent), transparent)",
               }}
             />
           </a>

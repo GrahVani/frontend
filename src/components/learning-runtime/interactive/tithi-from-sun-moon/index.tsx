@@ -1,275 +1,517 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Moon, Sun, AlertTriangle, Info, RotateCcw } from "lucide-react";
+import { useMemo, useState } from "react";
+import { AlertTriangle, Clock, Info, Moon, RotateCcw, Sun } from "lucide-react";
 
 const GOLD = "#C28220";
-const INDIGO = "#4A6FA5";
-const VERMILION = "#A23A1E";
-const JADE = "#2F8C5A";
+const BLUE = "#3867A6";
+const RUST = "#A23A1E";
+const GREEN = "#2F8C5A";
 const INK_PRIMARY = "var(--gl-ink-primary)";
 const INK_SECONDARY = "var(--gl-ink-secondary)";
 const INK_MUTED = "var(--gl-ink-muted)";
 
+type Mode = "compute" | "duration" | "sunrise";
+
 const TITHI_NAMES = [
-  "Pratipadā","Dvitīyā","Tṛtīyā","Caturthī","Pañcamī","Ṣaṣṭhī","Saptamī","Aṣṭamī","Navamī","Daśamī",
-  "Ekādaśī","Dvādaśī","Trayodaśī","Caturdaśī","Pūrṇimā / Amāvāsyā",
+  "Pratipada",
+  "Dvitiya",
+  "Tritiya",
+  "Caturthi",
+  "Pancami",
+  "Sasthi",
+  "Saptami",
+  "Astami",
+  "Navami",
+  "Dasami",
+  "Ekadasi",
+  "Dvadasi",
+  "Trayodasi",
+  "Caturdasi",
+  "Purnima / Amavasya",
 ];
 
 const SPECIAL_TITHIS = [
-  { n: 1, name: "Pratipadā", note: "New cycle begins" },
-  { n: 6, name: "Ṣaṣṭhī", note: "Skanda Ṣaṣṭhī" },
-  { n: 8, name: "Aṣṭamī", note: "Kṛṣṇa Janmāṣṭamī (Kṛṣṇa pakṣa)" },
-  { n: 9, name: "Navamī", note: "Rāma Navamī (Śukla)" },
-  { n: 11, name: "Ekādaśī", note: "Fasting day — most important tithi" },
-  { n: 14, name: "Caturdaśī", note: "Śivarātri (Kṛṣṇa)" },
-  { n: 15, name: "Pūrṇimā / Amāvāsyā", note: "Full moon / New moon" },
+  { n: 1, name: "Pratipada", note: "Paksha begins" },
+  { n: 4, name: "Caturthi", note: "Ganesa observances" },
+  { n: 8, name: "Astami", note: "Major vrata and festival tithi" },
+  { n: 9, name: "Navami", note: "Rama Navami pattern" },
+  { n: 11, name: "Ekadasi", note: "Fasting discipline" },
+  { n: 14, name: "Caturdasi", note: "Sivaratri pattern" },
+  { n: 15, name: "Purnima / Amavasya", note: "Full or new moon boundary" },
 ];
 
-function computeTithi(sun: number, moon: number) {
-  let elongation = moon - sun;
-  while (elongation < 0) elongation += 360;
-  while (elongation >= 360) elongation -= 360;
+const EDGE_SCENARIOS = [
+  {
+    key: "normal",
+    label: "Ordinary day",
+    sunriseA: 132,
+    instant: 139,
+    sunriseB: 146,
+    duration: 23.6,
+    note: "One transition happens in the civil day, so the sunrise tithi and later instant tithi may differ.",
+  },
+  {
+    key: "ksaya",
+    label: "Ksaya skip",
+    sunriseA: 96,
+    instant: 109,
+    sunriseB: 121,
+    duration: 19.4,
+    note: "A short tithi can begin and end between two sunrises, so no sunrise names it as the day's tithi.",
+  },
+  {
+    key: "vrddhi",
+    label: "Vrddhi double",
+    sunriseA: 204,
+    instant: 210,
+    sunriseB: 215,
+    duration: 25.8,
+    note: "A long tithi can cover two consecutive sunrises, so the same tithi is repeated in the pancanga.",
+  },
+];
 
-  const tithiIndex = Math.floor(elongation / 12);
-  const tithiNumber = tithiIndex + 1;
-  const elapsed = (elongation % 12) / 12;
-  const paksha = tithiNumber <= 15 ? "śukla" : "kṛṣṇa";
-  const nameIndex = tithiNumber <= 15 ? tithiNumber - 1 : tithiNumber - 16;
-  const name = TITHI_NAMES[Math.min(nameIndex, 14)];
-
-  return { elongation, tithiNumber, tithiIndex, elapsed, paksha, name };
+function wrap360(value: number) {
+  return ((value % 360) + 360) % 360;
 }
 
-function CircularTithiSVG({ sunDeg, moonDeg }: { sunDeg: number; moonDeg: number }) {
-  const W = 260;
-  const H = 260;
-  const cx = W / 2;
-  const cy = H / 2;
-  const R = 90;
+function computeTithi(sunLongitude: number, moonLongitude: number) {
+  const elongation = wrap360(moonLongitude - sunLongitude);
+  const quotient = elongation / 12;
+  const absoluteNumber = Math.floor(quotient) + 1;
+  const paksha = absoluteNumber <= 15 ? "Shukla" : "Krishna";
+  const pakshaNumber = absoluteNumber <= 15 ? absoluteNumber : absoluteNumber - 15;
+  const name = TITHI_NAMES[pakshaNumber - 1];
+  const elapsed = quotient - Math.floor(quotient);
+  const remainingDeg = 12 - (elongation % 12 || 12);
 
-  const sunRad = ((sunDeg - 90) * Math.PI) / 180;
-  const moonRad = ((moonDeg - 90) * Math.PI) / 180;
+  return {
+    elongation,
+    quotient,
+    absoluteNumber,
+    paksha,
+    pakshaNumber,
+    name,
+    elapsed,
+    remainingDeg,
+  };
+}
 
-  const sunX = cx + R * Math.cos(sunRad);
-  const sunY = cy + R * Math.sin(sunRad);
-  const moonX = cx + R * Math.cos(moonRad);
-  const moonY = cy + R * Math.sin(moonRad);
+function polar(cx: number, cy: number, radius: number, degree: number) {
+  const angle = ((degree - 90) * Math.PI) / 180;
+  return {
+    x: cx + radius * Math.cos(angle),
+    y: cy + radius * Math.sin(angle),
+  };
+}
 
-  // Tithi segment arc
-  const { tithiIndex, elapsed } = computeTithi(sunDeg, moonDeg);
-  const segStart = sunDeg + tithiIndex * 12;
-  const segEnd = sunDeg + (tithiIndex + 1) * 12;
+function arcPath(cx: number, cy: number, radius: number, startDeg: number, endDeg: number) {
+  const start = polar(cx, cy, radius, startDeg);
+  const end = polar(cx, cy, radius, endDeg);
+  const sweep = Math.max(0, endDeg - startDeg);
+  const largeArc = sweep > 180 ? 1 : 0;
+  return `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArc} 1 ${end.x} ${end.y}`;
+}
 
-  function arcPath(startDeg: number, endDeg: number, radius: number) {
-    const start = ((startDeg - 90) * Math.PI) / 180;
-    const end = ((endDeg - 90) * Math.PI) / 180;
-    const largeArc = endDeg - startDeg > 180 ? 1 : 0;
-    return `M ${cx} ${cy} L ${cx + radius * Math.cos(start)} ${cy + radius * Math.sin(start)} A ${radius} ${radius} 0 ${largeArc} 1 ${cx + radius * Math.cos(end)} ${cy + radius * Math.sin(end)} Z`;
-  }
+function TithiWheel({ sunLongitude, moonLongitude }: { sunLongitude: number; moonLongitude: number }) {
+  const size = 430;
+  const center = size / 2;
+  const radius = 164;
+  const innerRadius = 116;
+  const tithi = computeTithi(sunLongitude, moonLongitude);
+  const activeColor = tithi.paksha === "Shukla" ? GOLD : BLUE;
+  const activeStart = sunLongitude + (tithi.absoluteNumber - 1) * 12;
+  const sun = polar(center, center, radius, sunLongitude);
+  const moon = polar(center, center, radius, moonLongitude);
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto max-w-[260px] mx-auto">
-      {/* Background circle */}
-      <circle cx={cx} cy={cy} r={R} fill="none" stroke={`${INK_MUTED}20`} strokeWidth={1} />
-      <circle cx={cx} cy={cy} r={R - 20} fill="none" stroke={`${INK_MUTED}20`} strokeWidth={1} />
+    <svg
+      viewBox={`0 0 ${size} ${size}`}
+      role="img"
+      aria-label="Circular tithi diagram showing Sun longitude, Moon longitude, and the current 12 degree tithi arc"
+      className="mx-auto h-auto w-full max-w-[430px]"
+    >
+      <circle cx={center} cy={center} r={radius} fill="none" stroke={`${INK_MUTED}26`} />
+      <circle cx={center} cy={center} r={innerRadius} fill="none" stroke={`${INK_MUTED}18`} />
 
-      {/* Tithi segment highlight */}
-      <path d={arcPath(segStart, segStart + 12, R)} fill={`${GOLD}15`} stroke={GOLD} strokeWidth={1.5} />
+      <path d={arcPath(center, center, radius - 16, sunLongitude, sunLongitude + 180)} fill="none" stroke={`${GOLD}42`} strokeWidth={26} />
+      <path d={arcPath(center, center, radius - 16, sunLongitude + 180, sunLongitude + 360)} fill="none" stroke={`${BLUE}34`} strokeWidth={26} />
+      <path d={arcPath(center, center, radius - 2, activeStart, activeStart + 12)} fill="none" stroke={activeColor} strokeWidth={8} strokeLinecap="round" />
+      <path d={arcPath(center, center, innerRadius, sunLongitude, sunLongitude + tithi.elongation)} fill="none" stroke={GREEN} strokeWidth={4} strokeDasharray="5 5" />
+      <path d={arcPath(center, center, innerRadius - 16, activeStart, activeStart + tithi.elapsed * 12)} fill="none" stroke={RUST} strokeWidth={10} strokeLinecap="round" />
 
-      {/* Elapsed portion */}
-      <path d={arcPath(segStart, segStart + elapsed * 12, R - 20)} fill={`${GOLD}30`} />
-
-      {/* 12° tick marks */}
-      {Array.from({ length: 30 }, (_, i) => {
-        const a = ((sunDeg + i * 12 - 90) * Math.PI) / 180;
+      {Array.from({ length: 30 }, (_, index) => {
+        const degree = sunLongitude + index * 12;
+        const outer = polar(center, center, radius, degree);
+        const inner = polar(center, center, radius - (index % 5 === 0 ? 15 : 8), degree);
         return (
           <line
-            key={i}
-            x1={cx + (R - 5) * Math.cos(a)}
-            y1={cy + (R - 5) * Math.sin(a)}
-            x2={cx + R * Math.cos(a)}
-            y2={cy + R * Math.sin(a)}
-            stroke={i % 5 === 0 ? `${INK_MUTED}60` : `${INK_MUTED}30`}
-            strokeWidth={i % 5 === 0 ? 1.5 : 1}
+            key={index}
+            x1={inner.x}
+            y1={inner.y}
+            x2={outer.x}
+            y2={outer.y}
+            stroke={index + 1 === tithi.absoluteNumber ? activeColor : `${INK_MUTED}55`}
+            strokeWidth={index + 1 === tithi.absoluteNumber ? 2.5 : index % 5 === 0 ? 1.5 : 1}
           />
         );
       })}
 
-      {/* Sun */}
-      <circle cx={sunX} cy={sunY} r={10} fill={GOLD} />
-      <text x={sunX} y={sunY + 22} textAnchor="middle" fill={GOLD} fontSize={10} fontWeight={600}>Sun</text>
+      {[1, 6, 11, 16, 21, 26].map((label) => {
+        const point = polar(center, center, radius + 24, sunLongitude + (label - 1) * 12);
+        return (
+          <text key={label} x={point.x} y={point.y + 4} textAnchor="middle" fill={INK_MUTED} fontSize={11} fontWeight={700}>
+            {label}
+          </text>
+        );
+      })}
 
-      {/* Moon */}
-      <circle cx={moonX} cy={moonY} r={8} fill={INDIGO} />
-      <text x={moonX} y={moonY + 20} textAnchor="middle" fill={INDIGO} fontSize={10} fontWeight={600}>Moon</text>
+      <line x1={center} y1={center} x2={sun.x} y2={sun.y} stroke={`${GOLD}40`} strokeWidth={2} />
+      <line x1={center} y1={center} x2={moon.x} y2={moon.y} stroke={`${BLUE}40`} strokeWidth={2} />
+      <circle cx={center} cy={center} r={6} fill={INK_MUTED} />
 
-      {/* Center */}
-      <circle cx={cx} cy={cy} r={3} fill={INK_MUTED} />
-      <text x={cx} y={cy + 5} textAnchor="middle" fill={INK_MUTED} fontSize={9}>Earth</text>
+      <circle cx={sun.x} cy={sun.y} r={16} fill={`${GOLD}22`} />
+      <circle cx={sun.x} cy={sun.y} r={10} fill={GOLD} />
+      <text x={sun.x} y={sun.y + 30} textAnchor="middle" fill={GOLD} fontSize={12} fontWeight={700}>
+        Sun
+      </text>
+
+      <circle cx={moon.x} cy={moon.y} r={15} fill={`${BLUE}22`} />
+      <circle cx={moon.x} cy={moon.y} r={9} fill={BLUE} />
+      <text x={moon.x} y={moon.y + 28} textAnchor="middle" fill={BLUE} fontSize={12} fontWeight={700}>
+        Moon
+      </text>
+
+      <text x={center} y={center - 10} textAnchor="middle" fill={activeColor} fontSize={18} fontWeight={800}>
+        {tithi.paksha} {tithi.name}
+      </text>
+      <text x={center} y={center + 14} textAnchor="middle" fill={INK_SECONDARY} fontSize={12}>
+        Tithi {tithi.absoluteNumber} / Paksha {tithi.pakshaNumber}
+      </text>
     </svg>
   );
 }
 
+function NumberInput({
+  label,
+  icon,
+  value,
+  color,
+  onChange,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  value: number;
+  color: string;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-2 flex items-center justify-between gap-3 text-sm font-semibold" style={{ color }}>
+        <span className="flex items-center gap-2">
+          {icon}
+          {label}
+        </span>
+        <span className="tabular-nums">{value.toFixed(1)} deg</span>
+      </span>
+      <input
+        type="range"
+        min={0}
+        max={360}
+        step={0.5}
+        value={value}
+        onChange={(event) => onChange(Number(event.target.value))}
+        className="w-full"
+        style={{ accentColor: color }}
+      />
+      <input
+        type="number"
+        min={0}
+        max={360}
+        step={0.5}
+        value={value}
+        onChange={(event) => onChange(wrap360(Number(event.target.value)))}
+        className="mt-2 w-full rounded border px-3 py-2 text-sm"
+        style={{ borderColor: "var(--gl-gold-hairline)", backgroundColor: "var(--gl-surface-2)", color: INK_PRIMARY }}
+      />
+    </label>
+  );
+}
+
 export function TithiFromSunMoon() {
-  const [sunDeg, setSunDeg] = useState(0);
-  const [moonDeg, setMoonDeg] = useState(12);
-  const [mode, setMode] = useState<"compute" | "variable" | "edge">("compute");
+  const [mode, setMode] = useState<Mode>("compute");
+  const [sunLongitude, setSunLongitude] = useState(15);
+  const [moonLongitude, setMoonLongitude] = useState(60.6);
+  const [monthProgress, setMonthProgress] = useState(12.7);
+  const [durationHour, setDurationHour] = useState(23.6);
+  const [edgeKey, setEdgeKey] = useState("normal");
 
-  const tithi = useMemo(() => computeTithi(sunDeg, moonDeg), [sunDeg, moonDeg]);
+  const tithi = useMemo(() => computeTithi(sunLongitude, moonLongitude), [sunLongitude, moonLongitude]);
+  const timeLapse = useMemo(() => {
+    const sun = wrap360(monthProgress * 12.19);
+    const moon = wrap360(sun + monthProgress * 12);
+    return { sun, moon, tithi: computeTithi(sun, moon) };
+  }, [monthProgress]);
+  const activeEdge = EDGE_SCENARIOS.find((scenario) => scenario.key === edgeKey) ?? EDGE_SCENARIOS[0];
+  const sunriseTithi = computeTithi(0, activeEdge.sunriseA);
+  const instantTithi = computeTithi(0, activeEdge.instant);
+  const nextSunriseTithi = computeTithi(0, activeEdge.sunriseB);
+  const durationType = durationHour < 21 ? "ksaya risk" : durationHour > 25 ? "vrddhi risk" : "ordinary";
 
-  const modes = [
-    { key: "compute" as const, label: "Compute" },
-    { key: "variable" as const, label: "Variable Duration" },
-    { key: "edge" as const, label: "Edge Cases" },
+  const modes: Array<{ key: Mode; label: string }> = [
+    { key: "compute", label: "Compute" },
+    { key: "duration", label: "Duration" },
+    { key: "sunrise", label: "Sunrise rule" },
   ];
 
   return (
-    <div className="w-full" style={{ color: INK_PRIMARY }}>
-      {/* Mode toggle */}
-      <div className="flex gap-2 mb-4">
-        {modes.map((m) => (
+    <div className="w-full" data-interactive="tithi-from-sun-moon" style={{ color: INK_PRIMARY }}>
+      <div className="mb-4 flex flex-wrap gap-2">
+        {modes.map((item) => (
           <button
-            key={m.key}
-            onClick={() => setMode(m.key)}
-            className="px-3 py-1.5 rounded-full text-sm font-medium"
+            key={item.key}
+            type="button"
+            onClick={() => setMode(item.key)}
+            className="rounded-full px-4 py-2 text-sm font-semibold transition"
             style={{
-              backgroundColor: mode === m.key ? INDIGO : "var(--gl-surface-2)",
-              color: mode === m.key ? "#fff" : INK_SECONDARY,
+              backgroundColor: mode === item.key ? BLUE : "var(--gl-surface-2)",
+              color: mode === item.key ? "#fff" : INK_SECONDARY,
             }}
           >
-            {m.label}
+            {item.label}
           </button>
         ))}
       </div>
 
-      {/* ─── Compute mode ─── */}
       {mode === "compute" && (
-        <div className="space-y-4">
-          {/* Scrubbers */}
-          <div className="p-4 rounded-lg" style={{ backgroundColor: "var(--gl-surface-1)" }}>
-            <div className="mb-3">
-              <div className="flex items-center justify-between mb-1">
-                <label className="text-xs flex items-center gap-1" style={{ color: GOLD }}>
-                  <Sun size={12} /> Sun longitude
-                </label>
-                <span className="text-sm font-bold">{sunDeg.toFixed(1)}°</span>
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
+          <section className="rounded-lg p-4" style={{ backgroundColor: "var(--gl-surface-1)" }}>
+            <TithiWheel sunLongitude={sunLongitude} moonLongitude={moonLongitude} />
+          </section>
+
+          <section className="space-y-4">
+            <div className="rounded-lg p-4" style={{ backgroundColor: "var(--gl-surface-1)" }}>
+              <div className="mb-4 text-sm font-semibold">Sun-Moon longitudes</div>
+              <div className="grid gap-4">
+                <NumberInput label="Sun longitude" icon={<Sun size={15} />} value={sunLongitude} color={GOLD} onChange={setSunLongitude} />
+                <NumberInput label="Moon longitude" icon={<Moon size={15} />} value={moonLongitude} color={BLUE} onChange={setMoonLongitude} />
               </div>
-              <input type="range" min={0} max={360} step={0.5} value={sunDeg} onChange={(e) => setSunDeg(+e.target.value)} className="w-full accent-[#C28220]" />
             </div>
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="text-xs flex items-center gap-1" style={{ color: INDIGO }}>
-                  <Moon size={12} /> Moon longitude
-                </label>
-                <span className="text-sm font-bold">{moonDeg.toFixed(1)}°</span>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-lg p-4 text-center" style={{ backgroundColor: "var(--gl-surface-1)" }}>
+                <div className="text-xs" style={{ color: INK_MUTED }}>
+                  Tithi
+                </div>
+                <div className="text-3xl font-bold" style={{ color: tithi.paksha === "Shukla" ? GOLD : BLUE }}>
+                  {tithi.absoluteNumber}
+                </div>
+                <div className="text-sm font-semibold" style={{ color: INK_SECONDARY }}>
+                  {tithi.paksha} {tithi.name}
+                </div>
               </div>
-              <input type="range" min={0} max={360} step={0.5} value={moonDeg} onChange={(e) => setMoonDeg(+e.target.value)} className="w-full accent-[#4A6FA5]" />
+              <div className="rounded-lg p-4 text-center" style={{ backgroundColor: "var(--gl-surface-1)" }}>
+                <div className="text-xs" style={{ color: INK_MUTED }}>
+                  Elongation
+                </div>
+                <div className="text-3xl font-bold tabular-nums" style={{ color: GREEN }}>
+                  {tithi.elongation.toFixed(1)} deg
+                </div>
+                <div className="text-sm" style={{ color: INK_SECONDARY }}>
+                  {(tithi.elapsed * 100).toFixed(0)}% elapsed
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Circular visual */}
-          <div className="p-3 rounded-lg" style={{ backgroundColor: "var(--gl-surface-1)" }}>
-            <CircularTithiSVG sunDeg={sunDeg} moonDeg={moonDeg} />
-          </div>
-
-          {/* Tithi result */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <div className="p-3 rounded-lg text-center" style={{ backgroundColor: `${GOLD}10` }}>
-              <div className="text-xs" style={{ color: INK_MUTED }}>Tithi</div>
-              <div className="text-lg font-bold" style={{ color: GOLD }}>{tithi.tithiNumber}</div>
-              <div className="text-xs" style={{ color: INK_SECONDARY }}>{tithi.name}</div>
+            <div className="rounded-lg p-4" style={{ backgroundColor: "var(--gl-surface-1)" }}>
+              <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
+                <Info size={16} style={{ color: GREEN }} />
+                Formula breakdown
+              </div>
+              <div className="space-y-1 text-sm" style={{ color: INK_SECONDARY }}>
+                <div>Elongation = ({moonLongitude.toFixed(1)} - {sunLongitude.toFixed(1)}) mod 360 = {tithi.elongation.toFixed(1)} deg</div>
+                <div>{tithi.elongation.toFixed(1)} / 12 = {tithi.quotient.toFixed(3)}</div>
+                <div>floor({tithi.quotient.toFixed(3)}) + 1 = Tithi {tithi.absoluteNumber}</div>
+              </div>
             </div>
-            <div className="p-3 rounded-lg text-center" style={{ backgroundColor: `${INDIGO}10` }}>
-              <div className="text-xs" style={{ color: INK_MUTED }}>Pakṣa</div>
-              <div className="text-lg font-bold" style={{ color: INDIGO }}>{tithi.paksha === "śukla" ? "Śukla" : "Kṛṣṇa"}</div>
-              <div className="text-xs" style={{ color: INK_SECONDARY }}>{tithi.paksha === "śukla" ? "Waxing" : "Waning"}</div>
-            </div>
-            <div className="p-3 rounded-lg text-center" style={{ backgroundColor: `${JADE}10` }}>
-              <div className="text-xs" style={{ color: INK_MUTED }}>Elongation</div>
-              <div className="text-lg font-bold" style={{ color: JADE }}>{tithi.elongation.toFixed(1)}°</div>
-            </div>
-            <div className="p-3 rounded-lg text-center" style={{ backgroundColor: `${VERMILION}10` }}>
-              <div className="text-xs" style={{ color: INK_MUTED }}>Elapsed</div>
-              <div className="text-lg font-bold" style={{ color: VERMILION }}>{(tithi.elapsed * 100).toFixed(0)}%</div>
-            </div>
-          </div>
-
-          <p className="text-xs" style={{ color: INK_MUTED }}>
-            <Info size={12} className="inline mr-1" />
-            Formula: tithi = floor(elongation / 12°) + 1. Pakṣa: 1–15 = Śukla, 16–30 = Kṛṣṇa.
-          </p>
+          </section>
         </div>
       )}
 
-      {/* ─── Variable duration mode ─── */}
-      {mode === "variable" && (
-        <div className="space-y-3">
-          <p className="text-sm" style={{ color: INK_SECONDARY }}>
-            Tithi duration varies because the Moon's orbital speed changes with its distance from Earth (Kepler's second law). Here are representative durations:
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <div className="p-3 rounded-lg" style={{ backgroundColor: `${JADE}10`, borderLeft: `3px solid ${JADE}` }}>
-              <div className="text-sm font-semibold mb-1" style={{ color: JADE }}>Perigee tithi (fast Moon)</div>
-              <div className="text-xs" style={{ color: INK_SECONDARY }}>Moon closest to Earth → moves fastest → shorter tithi</div>
-              <div className="text-lg font-bold mt-1" style={{ color: JADE }}>~19–20 hours</div>
+      {mode === "duration" && (
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.9fr)]">
+          <section className="rounded-lg p-4" style={{ backgroundColor: "var(--gl-surface-1)" }}>
+            <TithiWheel sunLongitude={timeLapse.sun} moonLongitude={timeLapse.moon} />
+            <label className="mt-4 block">
+              <span className="mb-2 flex items-center justify-between text-sm font-semibold" style={{ color: INK_SECONDARY }}>
+                Synodic month scrubber
+                <span className="tabular-nums">{monthProgress.toFixed(1)} tithis</span>
+              </span>
+              <input
+                type="range"
+                min={0}
+                max={30}
+                step={0.1}
+                value={monthProgress}
+                onChange={(event) => setMonthProgress(Number(event.target.value))}
+                className="w-full accent-[#3867A6]"
+              />
+            </label>
+          </section>
+
+          <section className="space-y-4">
+            <div className="rounded-lg p-4" style={{ backgroundColor: "var(--gl-surface-1)" }}>
+              <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
+                <Clock size={16} style={{ color: RUST }} />
+                Variable duration model
+              </div>
+              <label className="block">
+                <span className="mb-2 flex justify-between text-sm" style={{ color: INK_SECONDARY }}>
+                  Tithi duration
+                  <span className="font-bold tabular-nums" style={{ color: durationType === "ordinary" ? GREEN : RUST }}>
+                    {durationHour.toFixed(1)}h
+                  </span>
+                </span>
+                <input
+                  type="range"
+                  min={19}
+                  max={26}
+                  step={0.1}
+                  value={durationHour}
+                  onChange={(event) => setDurationHour(Number(event.target.value))}
+                  className="w-full accent-[#A23A1E]"
+                />
+              </label>
+              <div className="mt-3 rounded p-3 text-sm" style={{ backgroundColor: durationType === "ordinary" ? `${GREEN}10` : `${RUST}10`, color: INK_SECONDARY }}>
+                {durationType === "ordinary"
+                  ? "Near the mean 23.62h duration, the tithi usually spans one sunrise cleanly."
+                  : durationType === "ksaya risk"
+                    ? "Fast Moon near perigee: the tithi can fit between two sunrises, creating ksaya risk."
+                    : "Slow Moon near apogee: the tithi can cover two sunrises, creating vrddhi risk."}
+              </div>
             </div>
-            <div className="p-3 rounded-lg" style={{ backgroundColor: `${VERMILION}10`, borderLeft: `3px solid ${VERMILION}` }}>
-              <div className="text-sm font-semibold mb-1" style={{ color: VERMILION }}>Apogee tithi (slow Moon)</div>
-              <div className="text-xs" style={{ color: INK_SECONDARY }}>Moon farthest from Earth → moves slowest → longer tithi</div>
-              <div className="text-lg font-bold mt-1" style={{ color: VERMILION }}>~25–26 hours</div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-lg p-4" style={{ backgroundColor: `${GREEN}10`, borderLeft: `3px solid ${GREEN}` }}>
+                <div className="text-sm font-semibold" style={{ color: GREEN }}>
+                  Perigee
+                </div>
+                <p className="mt-1 text-xs" style={{ color: INK_SECONDARY }}>
+                  Moon moves faster, so a 12 degree tithi can compress to about 19-20 hours.
+                </p>
+              </div>
+              <div className="rounded-lg p-4" style={{ backgroundColor: `${RUST}10`, borderLeft: `3px solid ${RUST}` }}>
+                <div className="text-sm font-semibold" style={{ color: RUST }}>
+                  Apogee
+                </div>
+                <p className="mt-1 text-xs" style={{ color: INK_SECONDARY }}>
+                  Moon moves slower, so a 12 degree tithi can stretch to about 25-26 hours.
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="p-3 rounded-lg" style={{ backgroundColor: "var(--gl-surface-1)" }}>
-            <div className="text-sm font-semibold mb-1">Mean duration</div>
-            <div className="text-xs" style={{ color: INK_SECONDARY }}>
-              Lunar synodic month ≈ 29.53 sāvana days ÷ 30 tithis = ~23.62 hours per tithi (mean)
-            </div>
-          </div>
+          </section>
         </div>
       )}
 
-      {/* ─── Edge case mode ─── */}
-      {mode === "edge" && (
-        <div className="space-y-3">
-          <div className="p-3 rounded-lg" style={{ backgroundColor: `${VERMILION}10`, borderLeft: `3px solid ${VERMILION}` }}>
-            <div className="flex items-center gap-2 mb-1">
-              <AlertTriangle size={16} style={{ color: VERMILION }} />
-              <span className="text-sm font-semibold" style={{ color: VERMILION }}>Kṣaya tithi (skipped)</span>
+      {mode === "sunrise" && (
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(320px,1.1fr)]">
+          <section className="rounded-lg p-4" style={{ backgroundColor: "var(--gl-surface-1)" }}>
+            <div className="mb-3 text-sm font-semibold">Choose an edge-case pattern</div>
+            <div className="grid gap-2">
+              {EDGE_SCENARIOS.map((scenario) => (
+                <button
+                  key={scenario.key}
+                  type="button"
+                  onClick={() => setEdgeKey(scenario.key)}
+                  className="rounded px-3 py-2 text-left text-sm font-semibold"
+                  style={{
+                    backgroundColor: edgeKey === scenario.key ? BLUE : "var(--gl-surface-2)",
+                    color: edgeKey === scenario.key ? "#fff" : INK_SECONDARY,
+                  }}
+                >
+                  {scenario.label}
+                </button>
+              ))}
             </div>
-            <p className="text-xs" style={{ color: INK_SECONDARY }}>
-              When a tithi is very short (~19–20h at perigee), it may begin and end between two sunrises. The pañcāṅga omits it from the day count.
-            </p>
-          </div>
-          <div className="p-3 rounded-lg" style={{ backgroundColor: `${JADE}10`, borderLeft: `3px solid ${JADE}` }}>
-            <div className="flex items-center gap-2 mb-1">
-              <AlertTriangle size={16} style={{ color: JADE }} />
-              <span className="text-sm font-semibold" style={{ color: JADE }}>Vṛddhi tithi (doubled)</span>
+            <div className="mt-4 rounded-lg p-3" style={{ backgroundColor: `${GOLD}12`, borderLeft: `3px solid ${GOLD}` }}>
+              <div className="mb-1 flex items-center gap-2 text-sm font-semibold" style={{ color: GOLD }}>
+                <AlertTriangle size={15} />
+                Sunrise convention
+              </div>
+              <p className="text-sm" style={{ color: INK_SECONDARY }}>
+                The pancanga day is named by the tithi prevailing at local sunrise. A birth or ritual moment later in the day may have a different instantaneous tithi.
+              </p>
             </div>
-            <p className="text-xs" style={{ color: INK_SECONDARY }}>
-              When a tithi is very long (~25–26h at apogee), it may span two sunrises. The pañcāṅga lists BOTH tithis for that day.
-            </p>
-          </div>
-          <div className="p-3 rounded-lg" style={{ backgroundColor: "var(--gl-surface-1)" }}>
-            <div className="text-sm font-semibold mb-1">Pañcāṅga sunrise convention</div>
-            <p className="text-xs" style={{ color: INK_SECONDARY }}>
-              The pañcāṅga assigns the tithi prevailing at sunrise as the "tithi of the day." This systematically handles kṣaya and vṛddhi tithis without ambiguity.
-            </p>
-          </div>
+          </section>
+
+          <section className="rounded-lg p-4" style={{ backgroundColor: "var(--gl-surface-1)" }}>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {[
+                { label: "Sunrise", tithi: sunriseTithi, color: GOLD },
+                { label: "Chosen instant", tithi: instantTithi, color: BLUE },
+                { label: "Next sunrise", tithi: nextSunriseTithi, color: GREEN },
+              ].map((item) => (
+                <div key={item.label} className="rounded p-3 text-center" style={{ backgroundColor: `${item.color}12` }}>
+                  <div className="text-xs" style={{ color: INK_MUTED }}>
+                    {item.label}
+                  </div>
+                  <div className="text-lg font-bold" style={{ color: item.color }}>
+                    {item.tithi.paksha} {item.tithi.name}
+                  </div>
+                  <div className="text-xs" style={{ color: INK_SECONDARY }}>
+                    Absolute {item.tithi.absoluteNumber}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 rounded-lg p-4" style={{ backgroundColor: `${edgeKey === "normal" ? GREEN : RUST}10`, borderLeft: `3px solid ${edgeKey === "normal" ? GREEN : RUST}` }}>
+              <div className="text-sm font-semibold" style={{ color: edgeKey === "normal" ? GREEN : RUST }}>
+                {activeEdge.label}: {activeEdge.duration.toFixed(1)}h tithi
+              </div>
+              <p className="mt-1 text-sm" style={{ color: INK_SECONDARY }}>
+                {activeEdge.note}
+              </p>
+            </div>
+          </section>
         </div>
       )}
 
-      {/* Tithi names reference */}
-      <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: "var(--gl-surface-1)" }}>
-        <div className="text-xs font-semibold mb-2" style={{ color: INK_MUTED }}>Special tithis</div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-          {SPECIAL_TITHIS.map((t) => (
-            <div key={t.n} className="text-xs p-1.5 rounded" style={{ backgroundColor: "var(--gl-surface-2)" }}>
-              <span className="font-semibold">{t.n}.</span> {t.name}
-              <div className="text-[10px]" style={{ color: INK_MUTED }}>{t.note}</div>
+      <section className="mt-4 rounded-lg p-4" style={{ backgroundColor: "var(--gl-surface-1)" }}>
+        <div className="mb-3 text-xs font-bold uppercase tracking-[0.08em]" style={{ color: INK_MUTED }}>
+          Special tithi vocabulary
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {SPECIAL_TITHIS.map((item) => (
+            <div key={item.n} className="rounded p-3" style={{ backgroundColor: "var(--gl-surface-2)" }}>
+              <div className="text-sm font-bold" style={{ color: GOLD }}>
+                {item.n}. {item.name}
+              </div>
+              <div className="mt-1 text-xs" style={{ color: INK_SECONDARY }}>
+                {item.note}
+              </div>
             </div>
           ))}
         </div>
+      </section>
+
+      <div className="mt-3 text-center">
+        <button
+          type="button"
+          onClick={() => {
+            setMode("compute");
+            setSunLongitude(15);
+            setMoonLongitude(60.6);
+            setMonthProgress(12.7);
+            setDurationHour(23.6);
+            setEdgeKey("normal");
+          }}
+          className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold"
+          style={{ backgroundColor: "var(--gl-surface-2)", color: INK_SECONDARY }}
+        >
+          <RotateCcw size={13} />
+          Reset
+        </button>
       </div>
     </div>
   );

@@ -42,11 +42,7 @@ import { ThreeSkandhaCurriculumMap } from "@/components/learning-runtime/interac
 import { TithiAngleVisualizer } from "@/components/learning-runtime/interactive/tithi-angle-visualizer";
 import { TithiContextMatcher } from "@/components/learning-runtime/interactive/tithi-context-matcher";
 import { ShuklaTithiStrip } from "@/components/learning-runtime/interactive/shukla-tithi-strip";
-import { SevenSubBranchesExplorer } from "@/components/learning-runtime/interactive/seven-sub-branches-explorer";
 import ZodiacTraditionComparator from "@/components/learning-runtime/interactive/zodiac-tradition-comparator";
-import { RegionalSchoolsExplorer } from "@/components/learning-runtime/interactive/regional-schools-explorer";
-import { LineageThreadsNetworkExplorer } from "@/components/learning-runtime/interactive/lineage-threads-network-explorer";
-import { ThreeLineageComparisonChartAnalyzer } from "@/components/learning-runtime/interactive/three-lineage-comparison-chart-analyzer";
 import { YugaProportionVisualiser } from "@/components/learning-runtime/interactive/yuga-proportion-visualiser";
 import { YugaCycleExplorer } from "@/components/learning-runtime/interactive/yuga-cycle-explorer";
 import { TraditionalVsAcademicDatingComparator } from "@/components/learning-runtime/interactive/traditional-vs-academic-dating-comparator";
@@ -82,6 +78,29 @@ function findSection(sections: LessonSection[], number: string): LessonSection |
 function isSectionEmpty(s: LessonSection): boolean {
   const t = s.body.trim();
   return t.length === 0 || /^\*?\s*N\/A/i.test(t);
+}
+
+/**
+ * The markdown parser records headings like `## §4.1` as child sections, while
+ * the route renders only canonical parent sections in the lesson chrome.
+ * Reattach child markdown so authored subsection content stays visible.
+ */
+function withChildSections(sections: LessonSection[], parent: LessonSection | undefined): LessonSection | undefined {
+  if (!parent) return undefined;
+
+  const childPrefix = `${parent.number}.`;
+  const children = sections.filter((s) => s.number.startsWith(childPrefix));
+  if (children.length === 0) return parent;
+
+  const parts = [
+    parent.body.trim(),
+    ...children.map((child) => [`## §${child.number} ${child.title}`, child.body.trim()].filter(Boolean).join("\n\n")),
+  ].filter(Boolean);
+
+  return {
+    ...parent,
+    body: parts.join("\n\n"),
+  };
 }
 
 export default async function LessonPage({
@@ -156,7 +175,7 @@ export default async function LessonPage({
   const sec1 = findSection(sections, "1");
   const sec2 = findSection(sections, "2");
   const sec3 = findSection(sections, "3");
-  const sec4 = findSection(sections, "4");
+  const sec4 = withChildSections(sections, findSection(sections, "4"));
   const sec5 = findSection(sections, "5");
   const sec6 = findSection(sections, "6");
   const sec7 = findSection(sections, "7");
@@ -321,8 +340,8 @@ export default async function LessonPage({
                 Two modern primaries — KP and Lal Kitab — complete the
                 four-stream landscape (Parāśari + Jaiminī + KP + Lal Kitab).
                 Below: the four-stream hero, the modern-primary vs
-                modern-revival distinction, K.S. Krishnamurti's five
-                distinctive KP contributions, Pandit Roop Chand Joshi's six
+                modern-revival distinction, K.S. Krishnamurti&apos;s five
+                distinctive KP contributions, Pandit Roop Chand Joshi&apos;s six
                 distinctive Lal Kitab contributions, and the three modern-
                 primary status criteria with per-stream evidence.
               </p>
@@ -544,7 +563,7 @@ export default async function LessonPage({
                 }}
               >
                 Saṁcita, Prārabdha, Āgāmī, Kriyamāṇa — four karma types around
-                a single agent at the cycle's centre. Tap any node to read
+                a single agent at the cycle&apos;s centre. Tap any node to read
                 what the type is, what Jyotiṣa can see of it, and how much
                 agency the agent has over it. The pattern teaches WHY
                 deterministic prediction is incoherent with the framework.
@@ -585,7 +604,7 @@ export default async function LessonPage({
                 astrology), and Saṁhitā (mundane astrology + adjacent
                 encyclopaedic disciplines). The painting on the left shows
                 the triangular relationship; the panel on the right lets you
-                explore each skandha's texts, modules, and stream-specific
+                explore each skandha&apos;s texts, modules, and stream-specific
                 emphasis.
               </p>
               <ThreeSkandhaCurriculumMap />
@@ -737,125 +756,18 @@ export default async function LessonPage({
             "A Punjabi Parāśari practitioner and a Tamil Nadu Parāśari practitioner share the same stream — but what specific regional-school differences would you expect in their teaching language, cultural framing, and cross-stream references?",
             "Try restating in your own words: why is the regional-school organisational level NECESSARY alongside streams + skandhas + sub-branches? What would be lost without it?",
           ];
-          scenes = (
-            <div data-l41-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                Six Regional Schools Across the Four-Stream Landscape
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                The geographic-cultural-linguistic organisational level that
-                cross-cuts the four-stream landscape. The map on the left
-                shows the six schools across India and the global diaspora;
-                the panel on the right lets you explore each school's
-                geographic centres, languages, stream concentrations, and
-                distinctive practitioner-community features. Toggle the
-                cross-regional practice overlay to see how modern
-                globalisation connects the schools.
-              </p>
-              <RegionalSchoolsExplorer />
-            </div>
-          );
         } else if (fm.slug === "modern-lineage-threads") {
           reflectionPrompts = [
             "Of the eight lineage threads, which one's relationship to its regional school surprised you most — and what does it tell you about how lineages operate within broader regional contexts?",
             "A learner trained through BVB Delhi and another through SJC both study Jaiminī revival material. What specific lineage-level differences would you expect in their methodological emphases, teaching infrastructure, and practitioner-community norms?",
             "Try restating in your own words: why is the lineage-thread organisational level NECESSARY alongside streams + skandhas + sub-branches + regional schools? What would be lost without it?",
           ];
-          scenes = (
-            <div data-l42-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                Eight Modern Lineage Threads
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                The specific teacher-student-network organisations that
-                produce operational practitioner training pathways — more
-                granular than regional schools, more concrete than streams.
-                The network diagram on the left shows the eight lineage
-                threads with their founders and cross-connections; the panel
-                on the right lets you explore each lineage's founder,
-                regional school, stream emphasis, teaching infrastructure,
-                distinctive features, and cross-references. Toggle the
-                cross-cutting patterns overlay to see multi-region and
-                multi-stream lineage operation.
-              </p>
-              <LineageThreadsNetworkExplorer />
-            </div>
-          );
         } else if (fm.slug === "lineage-matters-worked-example") {
           reflectionPrompts = [
             "The three approaches converge on broad-strokes thematic interpretation (marriage-challenge + career-strength + strong-lagna). Where do YOU sit on the reliability question — does convergence across lineages convince you of analytical reliability, or do you need additional evidence?",
             "Of the three approaches' unique contributions (KP event-timing precision; BVB deepest classical engagement; Western-Vedic-fusion cross-cultural translation + broader integration), which one would be most valuable to YOUR learning path — and what's your plan for accessing it?",
             "Try restating in your own words: what is the difference between 'synthesis' and 'collapse' — and why does the synthesis discipline prevent multi-lineage practice from diluting single-lineage operational accuracy?",
           ];
-          scenes = (
-            <div data-l43-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                Same Chart, Three Lineages — Convergence, Divergence, Synthesis
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                The chapter-capstone + module-capstone worked example:
-                an anonymised demonstration chart analysed through three
-                lineage approaches — Tamil Nadu KP teaching lineage, BVB
-                Delhi Parāśari + Jaiminī revival, and Western-Vedic-fusion
-                (SJC/AIVS-style). The chart on the left shows the
-                demonstration chart; the panel on the right lets you explore
-                each lineage's chart-erection conventions, primary
-                analytical lens, distinctive predictive judgments, and
-                remedial recommendations. Toggle the convergence +
-                divergence + unique contributions comparison to see the
-                full three-way analytical pattern.
-              </p>
-              <ThreeLineageComparisonChartAnalyzer />
-            </div>
-          );
         } else if (fm.slug === "the-four-yugas-and-the-mahayuga") {
           reflectionPrompts = [
             "The 4:3:2:1 proportional structure and the absolute durations (1.728M / 1.296M / 0.864M / 0.432M years) are two ways of describing the same thing. Which representation do you find more memorable, and why?",
@@ -1169,7 +1081,7 @@ export default async function LessonPage({
                   maxWidth: "680px",
                 }}
               >
-                Navigate the Sun's annual journey through the 12 rāśis.
+                Navigate the Sun&apos;s annual journey through the 12 rāśis.
                 Scrub through the year to watch saṅkrānti events, toggle
                 sidereal vs tropical dates, and visualise multi-century drift.
               </p>
@@ -1312,7 +1224,7 @@ export default async function LessonPage({
                   maxWidth: "680px",
                 }}
               >
-                Module 02's most operationally-comprehensive calculative interactive.
+                Module 02&apos;s most operationally-comprehensive calculative interactive.
                 Comprehensive cross-system date conversion with year-boundary
                 auto-detection, Julian-Gregorian transition handling, adhika-māsa
                 identification, and JDN cross-validation.
@@ -1333,13 +1245,7 @@ export default async function LessonPage({
             ? { ...sec4, body: sec4.body.replace(/```[\s\S]*?```/g, "") }
             : fm.slug === "where-grahvani-sits-in-the-skandha-map" && sec4
               ? { ...sec4, body: sec4.body.replace(/^[|].*$/gm, "").replace(/\n{3,}/g, "\n\n") }
-              : fm.slug === "regional-schools-and-lineages" && sec4
-                ? { ...sec4, body: sec4.body.replace(/^[|].*$/gm, "").replace(/\n{3,}/g, "\n\n") }
-                : fm.slug === "modern-lineage-threads" && sec4
-                  ? { ...sec4, body: sec4.body.replace(/^[|].*$/gm, "").replace(/\n{3,}/g, "\n\n") }
-                  : fm.slug === "lineage-matters-worked-example" && sec4
-                    ? { ...sec4, body: sec4.body.replace(/^[|].*$/gm, "").replace(/\n{3,}/g, "\n\n") }
-                    : sec4;
+              : sec4;
 
         return <ConceptTheatre section={sec4Cleaned} reflectionPrompts={reflectionPrompts} scenes={scenes} />;
       })()}
@@ -1426,3 +1332,4 @@ export default async function LessonPage({
 export const metadata = {
   title: "Grahvani · Lesson",
 };
+

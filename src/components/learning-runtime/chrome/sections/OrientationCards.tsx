@@ -49,25 +49,25 @@ export function OrientationCards({
         <div
           style={{
             margin: "0 auto 20px",
-            padding: "12px 22px",
+            padding: "16px 28px",
             maxWidth: "680px",
             background:
-              "linear-gradient(180deg, rgba(255, 252, 240, 0.85) 0%, rgba(250, 239, 216, 0.78) 100%)",
-            border: "1px dashed rgba(58, 140, 90, 0.40)",
-            borderRadius: "999px",
+              "linear-gradient(180deg, rgba(255, 252, 240, 0.95) 0%, rgba(250, 239, 216, 0.92) 100%)",
+            border: "1.5px dashed rgba(42, 108, 68, 0.60)",
+            borderRadius: "28px",
             display: "flex",
             alignItems: "center",
-            gap: "12px",
+            gap: "14px",
             flexWrap: "wrap",
             justifyContent: "center",
           }}
         >
           <BookOpen
-            size={15}
-            style={{ color: "#3A8C5A", flexShrink: 0 }}
+            size={16}
+            style={{ color: "#2A6C44", flexShrink: 0 }}
             aria-hidden="true"
           />
-          {stanceOnly ? (
+          {stanceOnly && !hasRealPrereqs ? (
             <p
               className="text-center italic"
               style={{
@@ -88,8 +88,8 @@ export function OrientationCards({
                 style={{
                   fontSize: "12px",
                   textTransform: "uppercase",
-                  letterSpacing: "0.18em",
-                  color: "#3A8C5A",
+                  letterSpacing: "0.16em",
+                  color: "#2A6C44",
                   fontWeight: 700,
                   fontFamily: "var(--font-sans), system-ui, sans-serif",
                 }}
@@ -101,14 +101,17 @@ export function OrientationCards({
                   <span
                     key={p}
                     style={{
-                      fontSize: "14px",
-                      padding: "4px 12px",
+                      fontSize: "13.5px",
+                      padding: "6px 14px",
                       borderRadius: "999px",
-                      background: "rgba(58, 140, 90, 0.10)",
-                      border: "1px solid rgba(58, 140, 90, 0.35)",
-                      color: "var(--gl-ink-primary)",
-                      fontFamily: "var(--font-cormorant), serif",
-                      fontStyle: "italic",
+                      background: "rgba(42, 108, 68, 0.12)",
+                      border: "1.5px solid rgba(42, 108, 68, 0.60)",
+                      color: "#2A1F15",
+                      fontFamily: "var(--font-sans), system-ui, sans-serif",
+                      fontWeight: 600,
+                      fontStyle: "normal",
+                      letterSpacing: "0.01em",
+                      lineHeight: 1.4,
                     }}
                   >
                     {humaniseSlug(p)}
