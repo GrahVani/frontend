@@ -53,14 +53,14 @@ const CYCLE_60: { idx: number; name: string; type: KaranaType }[] = (() => {
   return arr;
 })();
 
-/* ─── Large 60-Position Cycle Wheel ─── */
+/* ─── Compact 60-Position Cycle Wheel ─── */
 function CycleWheel({ selectedName, filter, onSelect }: { selectedName: string | null; filter: "all" | KaranaType; onSelect: (name: string) => void }) {
-  const W = 520;
-  const H = 520;
+  const W = 360;
+  const H = 360;
   const CX = W / 2;
   const CY = H / 2;
-  const R_OUT = 220;
-  const R_IN = 72;
+  const R_OUT = 150;
+  const R_IN = 50;
 
   const matchingNames = useMemo(() => {
     if (filter === "all") return new Set(ALL_KARANAS.map((k) => k.name));
@@ -83,7 +83,7 @@ function CycleWheel({ selectedName, filter, onSelect }: { selectedName: string |
   };
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" style={{ maxWidth: "100%", display: "block" }}>
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" style={{ maxWidth: "360px", margin: "0 auto", display: "block" }}>
       <defs>
         <filter id="kcShadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy={2} stdDeviation={3} floodColor="#6B4423" floodOpacity="0.12" /></filter>
       </defs>
@@ -120,13 +120,13 @@ function CycleWheel({ selectedName, filter, onSelect }: { selectedName: string |
 
       {/* Centre hub */}
       <circle cx={CX} cy={CY} r={R_IN - 10} fill="var(--gl-card-surface-solid, #FFF9F0)" stroke={GOLD} strokeWidth={2} filter="url(#kcShadow)" />
-      <text x={CX} y={CY - 6} textAnchor="middle" fill="var(--gl-ink-primary)" fontSize={14} fontWeight={800} style={{ fontFamily: "var(--font-sans), sans-serif" }}>60 Karaṇas</text>
-      <text x={CX} y={CY + 12} textAnchor="middle" fill="var(--gl-ink-secondary)" fontSize={10} fontWeight={700}>30 Tithis x 2</text>
+      <text x={CX} y={CY - 4} textAnchor="middle" fill="var(--gl-ink-primary)" fontSize={12} fontWeight={800} style={{ fontFamily: "var(--font-sans), sans-serif" }}>60 Karaṇas</text>
+      <text x={CX} y={CY + 10} textAnchor="middle" fill="var(--gl-ink-secondary)" fontSize={9} fontWeight={700}>30 Tithis x 2</text>
     </svg>
   );
 }
 
-/* ─── Large Cara cycle repeating pattern SVG ─── */
+/* ─── Cara cycle repeating pattern SVG ─── */
 function CaraPatternSVG() {
   const W = 600;
   const H = 90;
@@ -141,7 +141,7 @@ function CaraPatternSVG() {
       {CARA_KARANAS.map((k, i) => (
         <g key={k.name}>
           <rect x={startX + i * (slotW + gap)} y={24} width={slotW} height={52} rx={6} fill="#E8F5EE" stroke="#A8D4B8" strokeWidth={1.5} />
-          <text x={startX + i * (slotW + gap) + slotW / 2} y={48} textAnchor="middle" fill={JADE} fontSize={12} fontWeight={700}><IAST>{k.name}</IAST></text>
+          <text x={startX + i * (slotW + gap) + slotW / 2} y={48} textAnchor="middle" fill={JADE} fontSize={12} fontWeight={700} fontStyle="italic">{k.name}</text>
           <text x={startX + i * (slotW + gap) + slotW / 2} y={64} textAnchor="middle" fill={JADE} fontSize={9} opacity={0.7}>{k.devanagari}</text>
         </g>
       ))}
@@ -149,6 +149,44 @@ function CaraPatternSVG() {
       <path d={`M ${startX + totalW + 8} 50 L ${startX + totalW + 22} 50`} stroke={GOLD} strokeWidth={2} markerEnd="url(#cpArr)" />
       <defs><marker id="cpArr" markerWidth={6} markerHeight={4} refX={5} refY={2} orient="auto"><polygon points="0 0, 6 2, 0 4" fill={GOLD} /></marker></defs>
     </svg>
+  );
+}
+
+/* ─── Reusable detail panel ─── */
+function KaranaDetailPanel({ k }: { k: KaranaDef }) {
+  const tm = TYPE_META[k.type];
+  return (
+    <div className="rounded-xl p-4 h-full" style={{ background: tm.bg, border: `2px solid ${tm.border}` }}>
+      <div className="flex items-center gap-3 mb-3">
+        <span className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold shrink-0" style={{ background: "var(--gl-card-surface-solid)", color: tm.color, border: `1.5px solid ${tm.border}` }}>
+          {k.devanagari.charAt(0)}
+        </span>
+        <div>
+          <h3 className="text-lg font-bold" style={{ color: tm.color }}><IAST>{k.name}</IAST></h3>
+          <div className="text-xs" style={{ color: "var(--gl-ink-secondary)" }}>{k.devanagari} · {tm.label}</div>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-2 text-sm">
+        <div className="p-2.5 rounded-lg" style={{ background: "var(--gl-card-surface-solid)", border: `1px solid ${tm.border}` }}>
+          <p className="text-[10px] uppercase mb-1" style={{ color: tm.color, letterSpacing: "0.06em", fontWeight: 700 }}>Deity</p>
+          <p style={{ color: "var(--gl-ink-primary)" }}>{k.deity}</p>
+        </div>
+        <div className="p-2.5 rounded-lg" style={{ background: "var(--gl-card-surface-solid)", border: `1px solid ${tm.border}` }}>
+          <p className="text-[10px] uppercase mb-1" style={{ color: tm.color, letterSpacing: "0.06em", fontWeight: 700 }}>Nature</p>
+          <p style={{ color: "var(--gl-ink-primary)" }}>{k.nature}</p>
+        </div>
+        <div className="p-2.5 rounded-lg" style={{ background: "var(--gl-card-surface-solid)", border: `1px solid ${tm.border}` }}>
+          <p className="text-[10px] uppercase mb-1" style={{ color: tm.color, letterSpacing: "0.06em", fontWeight: 700 }}>Type</p>
+          <p style={{ color: "var(--gl-ink-primary)" }}>{k.type === "cara" ? "Repeating cycle" : "Fixed position"}</p>
+        </div>
+        {k.type === "cara" && k.cycleDescription && (
+          <div className="text-xs pt-2" style={{ color: "var(--gl-ink-muted)" }}>{k.cycleDescription}</div>
+        )}
+        {k.type === "sthira" && k.positions && (
+          <div className="text-xs pt-2" style={{ color: "var(--gl-ink-muted)" }}><strong>Fixed at:</strong> {k.positions}</div>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -195,19 +233,34 @@ export function KaranaCycleDiagram() {
         </button>
       </div>
 
-      {/* 60-Position Cycle Wheel — large, full width */}
+      {/* Side-by-side: Wheel + Detail Panel */}
       {showCycle && (
-        <div className="rounded-xl p-4 mb-4" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1.5px solid var(--gl-gold-hairline)" }}>
-          <CycleWheel selectedName={selected} filter={filter} onSelect={(name) => setSelected(selected === name ? null : name)} />
-          <div className="flex justify-center gap-6 mt-3">
-            <span className="flex items-center gap-2 text-sm" style={{ color: JADE }}><span className="inline-block rounded-full" style={{ width: 12, height: 12, background: JADE }} />Cara (repeating)</span>
-            <span className="flex items-center gap-2 text-sm" style={{ color: VERMILION }}><span className="inline-block rounded-full" style={{ width: 12, height: 12, background: VERMILION }} />Sthira (fixed at end)</span>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+          {/* Left: Compact wheel */}
+          <div className="rounded-xl p-4" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1.5px solid var(--gl-gold-hairline)" }}>
+            <CycleWheel selectedName={selected} filter={filter} onSelect={(name) => setSelected(selected === name ? null : name)} />
+            <div className="flex justify-center gap-6 mt-3">
+              <span className="flex items-center gap-2 text-sm" style={{ color: JADE }}><span className="inline-block rounded-full" style={{ width: 12, height: 12, background: JADE }} />Cara (repeating)</span>
+              <span className="flex items-center gap-2 text-sm" style={{ color: VERMILION }}><span className="inline-block rounded-full" style={{ width: 12, height: 12, background: VERMILION }} />Sthira (fixed at end)</span>
+            </div>
+            <p className="text-xs mt-2 text-center" style={{ color: "var(--gl-ink-muted)" }}>Click any segment to explore the karaṇa. Sthira positions (57–60) are highlighted with labels.</p>
           </div>
-          <p className="text-xs mt-2 text-center" style={{ color: "var(--gl-ink-muted)" }}>Click any segment to explore the karaṇa. Sthira positions (57–60) are highlighted with labels.</p>
+          {/* Right: Detail or hint */}
+          <div>
+            {selKarana ? (
+              <KaranaDetailPanel k={selKarana} />
+            ) : (
+              <div className="rounded-xl p-6 h-full flex flex-col items-center justify-center text-center" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1.5px solid var(--gl-gold-hairline)" }}>
+                <span className="text-3xl mb-3" style={{ color: GOLD }}>☸</span>
+                <p className="text-sm font-medium" style={{ color: "var(--gl-ink-secondary)" }}>Click any segment on the wheel to see karaṇa details.</p>
+                <p className="text-xs mt-1" style={{ color: "var(--gl-ink-muted)" }}>Sthira segments are labelled with names; Cara segments show position numbers.</p>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
-      {/* Cara pattern bar — large, full width */}
+      {/* Cara pattern bar */}
       <div className="rounded-xl p-4 mb-4" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1.5px solid var(--gl-gold-hairline)" }}>
         <CaraPatternSVG />
       </div>
@@ -237,32 +290,10 @@ export function KaranaCycleDiagram() {
         })}
       </div>
 
-      {/* Selected Detail Panel */}
-      {selKarana && (
-        <div className="rounded-xl p-4 mb-4" style={{ background: TYPE_META[selKarana.type].bg, border: `2px solid ${TYPE_META[selKarana.type].border}` }}>
-          <div className="flex items-center gap-3 mb-3">
-            <span className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold" style={{ background: "var(--gl-card-surface-solid)", color: TYPE_META[selKarana.type].color, border: `1.5px solid ${TYPE_META[selKarana.type].border}` }}>
-              {selKarana.devanagari.charAt(0)}
-            </span>
-            <div>
-              <h3 className="text-lg font-bold" style={{ color: TYPE_META[selKarana.type].color }}><IAST>{selKarana.name}</IAST></h3>
-              <div className="text-xs" style={{ color: "var(--gl-ink-secondary)" }}>{selKarana.devanagari} · {TYPE_META[selKarana.type].label}</div>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-            <div className="p-2.5 rounded-lg" style={{ background: "var(--gl-card-surface-solid)", border: `1px solid ${TYPE_META[selKarana.type].border}` }}>
-              <p className="text-[10px] uppercase mb-1" style={{ color: TYPE_META[selKarana.type].color, letterSpacing: "0.06em", fontWeight: 700 }}>Deity</p>
-              <p style={{ color: "var(--gl-ink-primary)" }}>{selKarana.deity}</p>
-            </div>
-            <div className="p-2.5 rounded-lg" style={{ background: "var(--gl-card-surface-solid)", border: `1px solid ${TYPE_META[selKarana.type].border}` }}>
-              <p className="text-[10px] uppercase mb-1" style={{ color: TYPE_META[selKarana.type].color, letterSpacing: "0.06em", fontWeight: 700 }}>Nature</p>
-              <p style={{ color: "var(--gl-ink-primary)" }}>{selKarana.nature}</p>
-            </div>
-            <div className="p-2.5 rounded-lg" style={{ background: "var(--gl-card-surface-solid)", border: `1px solid ${TYPE_META[selKarana.type].border}` }}>
-              <p className="text-[10px] uppercase mb-1" style={{ color: TYPE_META[selKarana.type].color, letterSpacing: "0.06em", fontWeight: 700 }}>Type</p>
-              <p style={{ color: "var(--gl-ink-primary)" }}>{selKarana.type === "cara" ? "Repeating cycle" : "Fixed position"}</p>
-            </div>
-          </div>
+      {/* Selected Detail Panel — only when cycle is hidden */}
+      {!showCycle && selKarana && (
+        <div className="mb-4">
+          <KaranaDetailPanel k={selKarana} />
         </div>
       )}
 

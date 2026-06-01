@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { IAST, Devanagari } from "../../chrome/typography";
+import { IAST } from "../../chrome/typography";
 
 const GOLD = "#C28220";
 const JADE = "#2d7d46";
@@ -77,12 +77,12 @@ function TithiSplitSVG({ tithiNum, firstKarana, secondKarana }: { tithiNum: numb
 
       {/* First half */}
       <rect x={barX + 2} y={barY + 2} width={halfW - 4} height={barH - 4} rx={8} fill={firstColor} opacity={0.12} />
-      <text x={barX + halfW / 2} y={barY + barH / 2 + 5} textAnchor="middle" fill={firstColor} fontSize={16} fontWeight={800}><IAST>{firstKarana}</IAST></text>
+      <text x={barX + halfW / 2} y={barY + barH / 2 + 5} textAnchor="middle" fill={firstColor} fontSize={16} fontWeight={800} fontStyle="italic">{firstKarana}</text>
       <text x={barX + halfW / 2} y={barY + barH + 18} textAnchor="middle" fill={firstColor} fontSize={11} fontWeight={700}>1st half · #{((tithiNum - 1) * 2 + 1)}</text>
 
       {/* Second half */}
       <rect x={barX + halfW + 2} y={barY + 2} width={halfW - 4} height={barH - 4} rx={8} fill={secondColor} opacity={0.12} />
-      <text x={barX + halfW + halfW / 2} y={barY + barH / 2 + 5} textAnchor="middle" fill={secondColor} fontSize={16} fontWeight={800}><IAST>{secondKarana}</IAST></text>
+      <text x={barX + halfW + halfW / 2} y={barY + barH / 2 + 5} textAnchor="middle" fill={secondColor} fontSize={16} fontWeight={800} fontStyle="italic">{secondKarana}</text>
       <text x={barX + halfW + halfW / 2} y={barY + barH + 18} textAnchor="middle" fill={secondColor} fontSize={11} fontWeight={700}>2nd half · #{((tithiNum - 1) * 2 + 2)}</text>
 
       {/* Degree markers */}
@@ -95,7 +95,7 @@ function TithiSplitSVG({ tithiNum, firstKarana, secondKarana }: { tithiNum: numb
 
 /* ─── Large 11-Karana Type Bar SVG ─── */
 function KaranaBarSVG() {
-  const W = 600;
+  const W = 820;
   const H = 100;
   const cara = KARANAS.slice(0, 7);
   const sthira = KARANAS.slice(7);
@@ -114,7 +114,7 @@ function KaranaBarSVG() {
       {cara.map((k, i) => (
         <g key={k}>
           <rect x={startX + i * (slotW + gap)} y={26} width={slotW} height={48} rx={6} fill="#E8F5EE" stroke="#A8D4B8" strokeWidth={1.5} />
-          <text x={startX + i * (slotW + gap) + slotW / 2} y={48} textAnchor="middle" fill={JADE} fontSize={11} fontWeight={700}><IAST>{k}</IAST></text>
+          <text x={startX + i * (slotW + gap) + slotW / 2} y={48} textAnchor="middle" fill={JADE} fontSize={11} fontWeight={700} fontStyle="italic">{k}</text>
           <text x={startX + i * (slotW + gap) + slotW / 2} y={64} textAnchor="middle" fill={JADE} fontSize={8} opacity={0.7}>{KARANA_TYPES[k]}</text>
         </g>
       ))}
@@ -127,7 +127,7 @@ function KaranaBarSVG() {
       {sthira.map((k, i) => (
         <g key={k}>
           <rect x={startX + caraW + groupGap + i * (slotW + gap)} y={26} width={slotW} height={48} rx={6} fill="#FDE8E5" stroke="#E8AFA8" strokeWidth={1.5} />
-          <text x={startX + caraW + groupGap + i * (slotW + gap) + slotW / 2} y={50} textAnchor="middle" fill={VERMILION} fontSize={10} fontWeight={700}><IAST>{k}</IAST></text>
+          <text x={startX + caraW + groupGap + i * (slotW + gap) + slotW / 2} y={50} textAnchor="middle" fill={VERMILION} fontSize={10} fontWeight={700} fontStyle="italic">{k}</text>
           <text x={startX + caraW + groupGap + i * (slotW + gap) + slotW / 2} y={64} textAnchor="middle" fill={VERMILION} fontSize={8} opacity={0.7}>{KARANA_TYPES[k]}</text>
         </g>
       ))}
