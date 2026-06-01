@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { IAST } from "../../chrome/typography";
 import { RASHIS } from "../rashi-data";
@@ -28,12 +28,12 @@ function shuffleArray<T>(arr: T[]): T[] {
   return a;
 }
 
-type GamePhase = "menu" | "playing" | "cross" | "result" | "review";
+type GamePhase = "learn" | "menu" | "playing" | "cross" | "result" | "review";
 type Difficulty = "apprentice" | "scholar" | "pundit";
 
 export function RashiModalityClassifier() {
   const shouldReduceMotion = useReducedMotion();
-  const [phase, setPhase] = useState<GamePhase>("menu");
+  const [phase, setPhase] = useState<GamePhase>("learn");
   const [difficulty, setDifficulty] = useState<Difficulty>("scholar");
   const [queue, setQueue] = useState<typeof RASHIS>([]);
   const [index, setIndex] = useState(0);
@@ -46,8 +46,17 @@ export function RashiModalityClassifier() {
   const [crossScore, setCrossScore] = useState(0);
   const [questionStartTime, setQuestionStartTime] = useState(0);
   const [responseTimes, setResponseTimes] = useState<number[]>([]);
+  const [timerEnabled, setTimerEnabled] = useState(true);
+  const [timeLeft, setTimeLeft] = useState(10);
 
   const current = queue[index];
+
+  // Group rāśis by modality for Learn mode
+  const modalityCounts = useMemo(() => {
+    const counts: Record<string, number[]> = { Chara: [], Sthira: [], "Dvi-svabhāva": [] };
+    RASHIS.forEach((r) => counts[r.modality].push(r.number));
+    return counts;
+  }, []);
 
   const startGame = useCallback((diff: Difficulty) => {
     setDifficulty(diff);
@@ -64,10 +73,27 @@ export function RashiModalityClassifier() {
     setFeedback(null);
     setResponseTimes([]);
     setQuestionStartTime(Date.now());
+    setTimeLeft(10);
     setPhase("playing");
   }, []);
 
-  const handleGuess = (modality: string) => {
+  const startTargetedGame = useCallback((rashiNum: number) => {
+    setDifficulty("scholar");
+    const otherRashis = RASHIS.filter((r) => r.number !== rashiNum);
+    setQueue([RASHIS[rashiNum - 1], ...shuffleArray(otherRashis)]);
+    setIndex(0);
+    setScore(0);
+    setStreak(0);
+    setBestStreak(0);
+    setWrongAnswers([]);
+    setFeedback(null);
+    setResponseTimes([]);
+    setQuestionStartTime(Date.now());
+    setTimeLeft(10);
+    setPhase("playing");
+  }, []);
+
+  const handleGuess = useCallback((modality: string) => {
     if (!current || feedback) return;
     const elapsed = (Date.now() - questionStartTime) / 1000;
     setResponseTimes((t) => [...t, elapsed]);
@@ -89,9 +115,9 @@ export function RashiModalityClassifier() {
 
     setTimeout(() => {
       setFeedback(null);
-      setQuestionStartTime(Date.now());
       if (index + 1 < queue.length) {
         setIndex((i) => i + 1);
+        setQuestionStartTime(Date.now());
       } else {
         if (difficulty === "pundit") {
           setCrossIndex(0);
@@ -102,7 +128,7 @@ export function RashiModalityClassifier() {
         }
       }
     }, 800);
-  };
+  }, [current, feedback, questionStartTime, streak, index, queue.length, difficulty]);
 
   const handleCrossAnswer = (answer: string) => {
     const q = CROSS_QUESTIONS[crossIndex];
@@ -116,153 +142,370 @@ export function RashiModalityClassifier() {
     }
   };
 
+  // Timer effect
+  useEffect(() => {
+    if (phase !== "playing" || !!feedback || !timerEnabled) return;
+
+    setTimeLeft(10);
+    const startTime = Date.now();
+
+    const interval = setInterval(() => {
+      const elapsed = (Date.now() - startTime) / 1000;
+      const remaining = Math.max(0, 10 - elapsed);
+      setTimeLeft(remaining);
+
+      if (remaining <= 0) {
+        clearInterval(interval);
+        // Timeout handling
+        setStreak(0);
+        setWrongAnswers((w) => [...w, { rashi: current, guessed: "Timed Out", correct: current.modality }]);
+        setFeedback("wrong");
+        setScore((s) => Math.max(0, s - 5));
+
+        setTimeout(() => {
+          setFeedback(null);
+          if (index + 1 < queue.length) {
+            setIndex((i) => i + 1);
+            setQuestionStartTime(Date.now());
+          } else {
+            if (difficulty === "pundit") {
+              setCrossIndex(0);
+              setCrossScore(0);
+              setPhase("cross");
+            } else {
+              setPhase("result");
+            }
+          }
+        }, 1500);
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [phase, index, feedback, timerEnabled, queue.length, difficulty, current]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (phase !== "playing" || !!feedback) return;
+      const keyMap: Record<string, string> = {
+        "1": "Chara",
+        "2": "Sthira",
+        "3": "Dvi-svabhāva",
+      };
+      if (keyMap[e.key]) {
+        e.preventDefault();
+        handleGuess(keyMap[e.key]);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [phase, feedback, handleGuess]);
+
   /* ─── Render phases ─── */
   return (
-    <AnimatePresence mode="wait">
-      {phase === "menu" && (
-        <motion.div
-          key="menu"
-          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
-          transition={{ duration: 0.25 }}
-          className="w-full space-y-4"
-          style={{ fontFamily: "var(--font-sans)" }}
-        >
-          <h3 className="text-lg font-semibold" style={{ fontFamily: "var(--font-cormorant)", color: "var(--gl-gold-accent)" }}>
-            Rāśi Modality Classifier
-          </h3>
-          <p className="text-sm" style={{ color: "var(--gl-ink-secondary)" }}>
-            Test your knowledge of the three modalities: Chara (Cardinal), Sthira (Fixed), and Dvi-svabhāva (Mutable).
-            The 12 rāśis are distributed 4-4-4 across these three modalities.
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {([
-              { key: "apprentice" as const, label: "Apprentice", desc: "4 Chara rāśis only", color: "#6B8E6B" },
-              { key: "scholar" as const, label: "Scholar", desc: "All 12 rāśis", color: "#7BA7C0" },
-              { key: "pundit" as const, label: "Pundit", desc: "All 12 + cross-questions", color: "#A23A1E" },
-            ]).map((d) => (
-              <motion.button
-                key={d.key}
-                onClick={() => startGame(d.key)}
-                className="p-4 rounded-xl text-left transition-all focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
-                whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
-                whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
-                style={{ background: "var(--gl-surface-twilight-glass)", border: `2px solid ${d.color}40` }}
-              >
-                <div className="font-semibold" style={{ color: d.color }}>{d.label}</div>
-                <div className="text-xs mt-1" style={{ color: "var(--gl-ink-secondary)" }}>{d.desc}</div>
-              </motion.button>
-            ))}
-          </div>
-          {/* Reference table */}
-          <div className="mt-3 p-3 rounded-xl" style={{ background: "var(--gl-surface-manuscript)", border: "1px solid var(--gl-gold-hairline)", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
-            <div className="text-xs font-medium mb-2" style={{ color: "var(--gl-ink-muted)" }}>Quick Reference</div>
-            <div className="grid grid-cols-3 gap-2">
-              {MODALITIES.map((m) => (
-                <div key={m.key} className="text-xs p-2 rounded" style={{ background: `${m.color}12`, border: `1px solid ${m.color}30`, color: m.color }}>
-                  <strong>{m.icon} {m.label}</strong>
-                  <div style={{ color: "var(--gl-ink-secondary)" }}>{m.description}</div>
-                  <div className="mt-1 flex gap-1 flex-wrap">
-                    {RASHIS.filter((r) => r.modality === m.key).map((r) => (
-                      <span key={r.number} style={{ fontFamily: "var(--font-devanagari)" }}>{r.nameDevanagari}</span>
-                    ))}
+    <div className="w-full space-y-4" style={{ fontFamily: "var(--font-sans)" }}>
+      {/* Mode tabs */}
+      <div className="flex gap-2 flex-wrap items-center">
+        {(["learn", "play", "review"] as const).map((m) => {
+          const isActive = m === "learn" ? phase === "learn" : m === "review" ? phase === "review" : (phase !== "learn" && phase !== "review");
+          return (
+            <motion.button
+              whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
+              key={m}
+              onClick={() => {
+                if (m === "learn") setPhase("learn");
+                else if (m === "review") setPhase("review");
+                else {
+                  if (phase !== "playing" && phase !== "cross" && phase !== "result") {
+                    setPhase("menu");
+                  }
+                }
+              }}
+              className="px-4 py-2 text-sm rounded-lg transition-all font-semibold focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
+              style={{
+                background: isActive ? "var(--gl-gold-accent)" : "var(--gl-surface-manuscript)",
+                color: isActive ? "#1a1a2e" : "var(--gl-ink-primary)",
+                border: "1px solid var(--gl-gold-accent)",
+                opacity: isActive ? 1 : 0.7,
+              }}
+            >
+              {m === "learn" ? "Learn" : m === "play" ? "Play / Quiz" : "Reference Review"}
+            </motion.button>
+          );
+        })}
+      </div>
+
+      <AnimatePresence mode="wait">
+        {phase === "learn" && (
+          <motion.div
+            key="learn"
+            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+            transition={{ duration: 0.25 }}
+            className="w-full space-y-4"
+          >
+            <h3 className="text-lg font-semibold" style={{ fontFamily: "var(--font-cormorant)", color: "var(--gl-gold-accent)" }}>
+              Rāśi Modality Classifier
+            </h3>
+            <p className="text-sm" style={{ color: "var(--gl-ink-secondary)" }}>
+              Explore the three modalities: Chara (Cardinal), Sthira (Fixed), and Dvi-svabhāva (Mutable).
+              Click any rāśi card below to launch a play round starting with that sign.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {(Object.entries(modalityCounts) as [string, number[]][]).map(([type, rashiNums]) => {
+                const m = MODALITIES.find((item) => item.key === type)!;
+                return (
+                  <div key={type} className="p-4 rounded-xl space-y-3 flex flex-col" style={{ background: `${m.color}08`, border: `1px solid ${m.color}25` }}>
+                    <div className="flex items-center gap-2 pb-2 border-b" style={{ borderColor: `${m.color}20` }}>
+                      <span className="text-xl">{m.icon}</span>
+                      <div>
+                        <div className="text-base font-bold" style={{ color: m.color, fontFamily: "var(--font-cormorant)" }}>{m.label}</div>
+                        <div className="text-[10px]" style={{ color: "var(--gl-ink-muted)" }}>{m.description}</div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2 flex-1">
+                      {rashiNums.map((n) => {
+                        const r = RASHIS[n - 1];
+                        return (
+                          <motion.button
+                            whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }}
+                            whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
+                            key={n}
+                            onClick={() => startTargetedGame(n)}
+                            className="p-3 rounded-xl text-left transition-all border flex flex-col gap-1 w-full focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
+                            style={{
+                              background: "var(--gl-surface-manuscript)",
+                              border: `1px solid ${r.color}35`,
+                              color: "var(--gl-ink-primary)",
+                            }}
+                          >
+                            <div className="flex items-center justify-between w-full">
+                              <div className="flex items-center gap-2">
+                                <span className="w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs" style={{ background: `${r.color}20`, color: r.color, fontFamily: "var(--font-devanagari)" }}>
+                                  {r.nameDevanagari}
+                                </span>
+                                <span className="font-semibold text-xs"><IAST>{r.nameIAST}</IAST></span>
+                                <span className="text-[10px]" style={{ color: "var(--gl-ink-muted)" }}>({r.nameEnglish})</span>
+                              </div>
+                              <span className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider" style={{ background: `${r.color}15`, color: r.color }}>
+                                {r.element}
+                              </span>
+                            </div>
+                            <div className="text-[10px] italic leading-snug pl-8" style={{ color: "var(--gl-ink-secondary)" }}>
+                              {r.mnemonic}
+                            </div>
+                          </motion.button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
+                );
+              })}
+            </div>
+
+            {/* Difficulty selector quick start */}
+            <div className="p-4 rounded-xl space-y-3" style={{ background: "var(--gl-surface-twilight-glass)", border: "1px solid var(--gl-gold-hairline)" }}>
+              <div className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--gl-ink-muted)" }}>
+                Or start a full graded game:
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {(
+                  [
+                    { key: "apprentice" as const, label: "Apprentice", desc: "4 Chara rāśis only", color: "#6B8E6B" },
+                    { key: "scholar" as const, label: "Scholar", desc: "All 12 rāśis", color: "#7BA7C0" },
+                    { key: "pundit" as const, label: "Pundit", desc: "All 12 + cross-questions", color: "#A23A1E" },
+                  ]
+                ).map((d) => (
+                  <motion.button
+                    key={d.key}
+                    onClick={() => startGame(d.key)}
+                    className="p-3 rounded-lg text-left transition-all focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
+                    whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }}
+                    whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
+                    style={{ background: "var(--gl-surface-manuscript)", border: `1px solid ${d.color}40` }}
+                  >
+                    <div className="font-semibold text-xs" style={{ color: d.color }}>{d.label}</div>
+                    <div className="text-[10px] mt-0.5" style={{ color: "var(--gl-ink-secondary)" }}>{d.desc}</div>
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {phase === "menu" && (
+          <motion.div
+            key="menu"
+            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+            transition={{ duration: 0.25 }}
+            className="w-full space-y-4"
+          >
+            <h3 className="text-lg font-semibold" style={{ fontFamily: "var(--font-cormorant)", color: "var(--gl-gold-accent)" }}>
+              Rāśi Modality Classifier
+            </h3>
+            <p className="text-sm" style={{ color: "var(--gl-ink-secondary)" }}>
+              Test your knowledge of the three modalities: Chara (Cardinal), Sthira (Fixed), and Dvi-svabhāva (Mutable).
+              The 12 rāśis are distributed 4-4-4 across these three modalities.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {([
+                { key: "apprentice" as const, label: "Apprentice", desc: "4 Chara rāśis only", color: "#6B8E6B" },
+                { key: "scholar" as const, label: "Scholar", desc: "All 12 rāśis", color: "#7BA7C0" },
+                { key: "pundit" as const, label: "Pundit", desc: "All 12 + cross-questions", color: "#A23A1E" },
+              ]).map((d) => (
+                <motion.button
+                  key={d.key}
+                  onClick={() => startGame(d.key)}
+                  className="p-4 rounded-xl text-left transition-all focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
+                  whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+                  whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
+                  style={{ background: "var(--gl-surface-twilight-glass)", border: `2px solid ${d.color}40` }}
+                >
+                  <div className="font-semibold" style={{ color: d.color }}>{d.label}</div>
+                  <div className="text-xs mt-1" style={{ color: "var(--gl-ink-secondary)" }}>{d.desc}</div>
+                </motion.button>
               ))}
             </div>
-          </div>
-        </motion.div>
-      )}
-
-      {phase === "playing" && current && (
-        <motion.div
-          key="playing"
-          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
-          transition={{ duration: 0.25 }}
-          className="w-full space-y-4"
-          style={{ fontFamily: "var(--font-sans)" }}
-        >
-          {/* Stats bar */}
-          <div className="flex justify-between items-center text-sm">
-            <div style={{ color: "var(--gl-ink-secondary)" }}>
-              Score: <strong style={{ color: "var(--gl-gold-accent)" }}>{score}</strong>
+            {/* Reference table */}
+            <div className="mt-3 p-3 rounded-xl" style={{ background: "var(--gl-surface-manuscript)", border: "1px solid var(--gl-gold-hairline)", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
+              <div className="text-xs font-medium mb-2" style={{ color: "var(--gl-ink-muted)" }}>Quick Reference</div>
+              <div className="grid grid-cols-3 gap-2">
+                {MODALITIES.map((m) => (
+                  <div key={m.key} className="text-xs p-2 rounded" style={{ background: `${m.color}12`, border: `1px solid ${m.color}30`, color: m.color }}>
+                    <strong>{m.icon} {m.label}</strong>
+                    <div style={{ color: "var(--gl-ink-secondary)" }}>{m.description}</div>
+                    <div className="mt-1 flex gap-1 flex-wrap">
+                      {RASHIS.filter((r) => r.modality === m.key).map((r) => (
+                        <span key={r.number} style={{ fontFamily: "var(--font-devanagari)" }}>{r.nameDevanagari}</span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div style={{ color: "var(--gl-ink-secondary)" }}>
-              {index + 1} / {queue.length}
-            </div>
-            <div style={{ color: streak >= 3 ? "#C9A24D" : "var(--gl-ink-muted)" }}>
-              🔥 Streak: {streak}
-            </div>
-          </div>
+          </motion.div>
+        )}
 
-          {/* Progress bar */}
-          <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "var(--gl-surface-manuscript)" }}>
-            <div
-              className="h-full rounded-full transition-all"
-              style={{ width: `${((index) / queue.length) * 100}%`, background: "var(--gl-gold-accent)" }}
-            />
-          </div>
-
-          {/* Rāśi card */}
-          <div
-            className="p-6 rounded-xl text-center transition-all"
-            style={{
-              background: feedback === "correct" ? "#4A8A4A20" : feedback === "wrong" ? "#A23A1E20" : "var(--gl-surface-twilight-glass)",
-              border: `2px solid ${feedback === "correct" ? "#4A8A4A" : feedback === "wrong" ? "#A23A1E" : "var(--gl-gold-hairline)"}`,
-              boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
-            }}
+        {phase === "playing" && current && (
+          <motion.div
+            key="playing"
+            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+            transition={{ duration: 0.25 }}
+            className="w-full space-y-4"
           >
-            <div
-              className="text-4xl mb-2"
-              style={{ fontFamily: "var(--font-devanagari)", color: "var(--gl-gold-accent)" }}
-            >
-              {current.nameDevanagari}
-            </div>
-            <div className="text-lg font-semibold" style={{ fontFamily: "var(--font-cormorant)", color: "var(--gl-ink-primary)" }}>
-              <IAST>{current.nameIAST}</IAST>
-            </div>
-            <div className="text-xs mt-1" style={{ color: "var(--gl-ink-muted)" }}>
-              {current.element} element · Rāśi #{current.number}
-            </div>
-            {feedback === "wrong" && (
-              <div className="mt-2 text-sm" style={{ color: "#A23A1E" }}>
-                Correct: <strong>{current.modality}</strong>
+            {/* Stats bar */}
+            <div className="flex justify-between items-center text-sm">
+              <div style={{ color: "var(--gl-ink-secondary)" }}>
+                Score: <strong style={{ color: "var(--gl-gold-accent)" }}>{score}</strong>
               </div>
-            )}
-            {feedback === "correct" && (
-              <div className="mt-2 text-sm" style={{ color: "#4A8A4A" }}>
-                Correct! +{streak >= 3 ? 15 : 10} points
+              <div style={{ color: "var(--gl-ink-secondary)" }}>
+                {index + 1} / {queue.length}
               </div>
-            )}
-          </div>
+              <div className="flex items-center gap-4">
+                <div style={{ color: streak >= 3 ? "#C9A24D" : "var(--gl-ink-muted)" }}>
+                  🔥 Streak: {streak}
+                </div>
+                {/* Timer toggle */}
+                <button
+                  onClick={() => setTimerEnabled((e) => !e)}
+                  className="text-xs px-2 py-0.5 rounded border transition-all hover:bg-[var(--gl-surface-manuscript)]"
+                  style={{
+                    background: timerEnabled ? "rgba(201, 162, 77, 0.12)" : "transparent",
+                    borderColor: "var(--gl-gold-hairline)",
+                    color: timerEnabled ? "var(--gl-gold-accent)" : "var(--gl-ink-muted)",
+                  }}
+                >
+                  ⏱️ {timerEnabled ? "Timer: On" : "Timer: Off"}
+                </button>
+              </div>
+            </div>
 
-          {/* Modality buttons */}
-          <div className="grid grid-cols-3 gap-3">
-            {MODALITIES.map((m) => (
-              <motion.button
-                key={m.key}
-                onClick={() => handleGuess(m.key)}
-                disabled={!!feedback}
-                className="p-3 rounded-xl text-center transition-all disabled:opacity-60 focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
-                whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
-                whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
-                style={{
-                  background: `${m.color}15`,
-                  border: `2px solid ${m.color}50`,
-                  color: m.color,
-                }}
+            {/* Timer bar */}
+            {timerEnabled && (
+              <div className="h-1.5 rounded-full overflow-hidden w-full relative" style={{ background: "var(--gl-surface-manuscript)" }}>
+                <div
+                  className="h-full rounded-full transition-all duration-100 ease-linear"
+                  style={{
+                    width: `${(timeLeft / 10) * 100}%`,
+                    background: timeLeft > 3 ? "var(--gl-gold-accent)" : "#A23A1E",
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Progress bar */}
+            <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "var(--gl-surface-manuscript)" }}>
+              <div
+                className="h-full rounded-full transition-all"
+                style={{ width: `${((index) / queue.length) * 100}%`, background: "var(--gl-gold-accent)" }}
+              />
+            </div>
+
+            {/* Rāśi card */}
+            <div
+              className="p-6 rounded-xl text-center transition-all"
+              style={{
+                background: feedback === "correct" ? "#4A8A4A20" : feedback === "wrong" ? "#A23A1E20" : "var(--gl-surface-twilight-glass)",
+                border: `2px solid ${feedback === "correct" ? "#4A8A4A" : feedback === "wrong" ? "#A23A1E" : "var(--gl-gold-hairline)"}`,
+                boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
+              }}
+            >
+              <div
+                className="text-4xl mb-2"
+                style={{ fontFamily: "var(--font-devanagari)", color: "var(--gl-gold-accent)" }}
               >
-                <div className="text-2xl mb-1">{m.icon}</div>
-                <div className="text-xs font-semibold">{m.label}</div>
-                <div className="text-xs opacity-70">{m.description}</div>
-              </motion.button>
-            ))}
-          </div>
-        </motion.div>
-      )}
+                {current.nameDevanagari}
+              </div>
+              <div className="text-lg font-semibold" style={{ fontFamily: "var(--font-cormorant)", color: "var(--gl-ink-primary)" }}>
+                <IAST>{current.nameIAST}</IAST>
+              </div>
+              <div className="text-xs mt-1" style={{ color: "var(--gl-ink-muted)" }}>
+                {current.element} element · Rāśi #{current.number}
+              </div>
+              {feedback === "wrong" && (
+                <div className="mt-2 text-sm" style={{ color: "#A23A1E" }}>
+                  Correct: <strong>{current.modality}</strong>
+                </div>
+              )}
+              {feedback === "correct" && (
+                <div className="mt-2 text-sm" style={{ color: "#4A8A4A" }}>
+                  Correct! +{streak >= 3 ? 15 : 10} points
+                </div>
+              )}
+            </div>
+
+            {/* Modality buttons */}
+            <div className="grid grid-cols-3 gap-3">
+              {MODALITIES.map((m) => (
+                <motion.button
+                  key={m.key}
+                  onClick={() => handleGuess(m.key)}
+                  disabled={!!feedback}
+                  className="p-3 rounded-xl text-center transition-all disabled:opacity-60 focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
+                  whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+                  whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
+                  style={{
+                    background: `${m.color}15`,
+                    border: `2px solid ${m.color}50`,
+                    color: m.color,
+                  }}
+                >
+                  <div className="text-2xl mb-1">{m.icon}</div>
+                  <div className="text-xs font-semibold">{m.label}</div>
+                  <div className="text-xs opacity-70">{m.description}</div>
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
       {phase === "cross" && (
         <motion.div
@@ -448,5 +691,6 @@ export function RashiModalityClassifier() {
         </motion.div>
       )}
     </AnimatePresence>
+    </div>
   );
 }
