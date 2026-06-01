@@ -103,6 +103,14 @@ import { RashiStreamComparator } from "./rashi-stream-comparator";
 import { RashiProfileExplorer } from "./rashi-profile-explorer";
 import { QuadrantTriadVisualizer } from "./quadrant-triad-visualizer";
 import { TrikonaPairExplorer } from "./trikona-pair-explorer";
+import { DignityWheel } from "./dignity-wheel";
+import { BudhaDignityWheel } from "./budha-dignity-wheel";
+import { AssociationClassifier } from "./association-classifier";
+import { CombustionCalculator } from "./combustion-calculator";
+import { FriendshipMatrix } from "./friendship-matrix";
+import { PakshabalaSlider } from "./pakshabala-slider";
+import { KarakaRouter } from "./karaka-router";
+import { FriendshipDignityGrid } from "./friendship-dignity-grid";
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
 
@@ -233,7 +241,7 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // side-by-side comparison of Vedic-sidereal vs Western-tropical reasoning
   // across four dimensions (doctrinal, observational, historical, comparative).
   "zodiac-tradition-reasoning-comparator": ZodiacTraditionReasoningComparator,
-  "zodiac-tradition-comparator": ZodiacTraditionComparator as any,
+  "zodiac-tradition-comparator": ZodiacTraditionComparator,
   // Lesson 2.1.4's §7 interactive: Tropical-Sidereal Conversion Calculator —
   // birth-date Sun-sign calculator + longitude converter showing graha-in-rāśi
   // shifts, daśā consequences, and nakṣatra alignment effects.
@@ -403,6 +411,24 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "rashi-profile-explorer": RashiProfileExplorer,
   "quadrant-triad-visualizer": QuadrantTriadVisualizer,
   "trikona-pair-explorer": TrikonaPairExplorer,
+  // Lesson 5.1.2's §7 interactive: Dignity Wheel — clickable 12-rashi
+  // dignity map with degree cues, friendship overlay, and Sun-Moon comparison.
+  "dignity-wheel": DignityWheel,
+  "budha-dignity-wheel": BudhaDignityWheel,
+  "association-classifier": AssociationClassifier,
+  "combustion-calculator": CombustionCalculator,
+  // Lesson 5.1.4's §7 interactive: Friendship Matrix — directed graha
+  // relationship grid with mirror-cell comparison and Sun-Moon polarity axes.
+  "friendship-matrix": FriendshipMatrix,
+  // Lesson 5.1.5's §7 interactive: Pakshabala Slider — tithi scrubber with
+  // inverse Sun/Moon virupa bars and a dignity-combination preview.
+  "pakshabala-slider": PakshabalaSlider,
+  // Lesson 5.2.2's §7 interactive: Karaka Router — question-driven Mars
+  // register selector with house-side confirmation and tie-breaker feedback.
+  "karaka-router": KarakaRouter,
+  // Lesson 5.2.3's §7 interactive: Friendship Dignity Grid — Mars across
+  // the 12 signs with sign-lord relation, degree control, and dignity override.
+  "friendship-dignity-grid": FriendshipDignityGrid,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {

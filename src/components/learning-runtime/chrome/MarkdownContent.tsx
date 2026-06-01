@@ -199,20 +199,51 @@ export function MarkdownContent({ children, surface = "dark", noTopMargin = fals
               }}
             />
           ),
-          code: ({ children }: { children?: ReactNode }) => (
-            <code
+          pre: ({ children }: { children?: ReactNode }) => (
+            <pre
               style={{
                 fontFamily: "ui-monospace, SFMono-Regular, monospace",
-                fontSize: "0.92em",
-                padding: "2px 6px",
-                background: isDark ? "rgba(232,199,114,0.10)" : "rgba(168,130,30,0.10)",
-                borderRadius: "4px",
-                color: gold,
+                fontSize: "0.88em",
+                lineHeight: 1.6,
+                padding: "16px 20px",
+                margin: "20px 0",
+                background: isDark ? "rgba(232,199,114,0.08)" : "rgba(168,130,30,0.08)",
+                borderRadius: "8px",
+                border: `1px solid ${isDark ? "rgba(232,199,114,0.12)" : "rgba(168,130,30,0.15)"}`,
+                color: primary,
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word",
+                overflowWrap: "break-word",
+                overflowX: "hidden",
               }}
             >
               {children}
-            </code>
+            </pre>
           ),
+          code: ({ children, className }: { children?: ReactNode; className?: string }) => {
+            // Fenced code blocks are wrapped in <pre>, so this inline renderer
+            // only fires for backtick-inline code *or* the inner <code> of a
+            // fenced block. When inside <pre>, inherit styling from parent.
+            const isBlock = className?.startsWith("language-");
+            return (
+              <code
+                className={className}
+                style={{
+                  fontFamily: "ui-monospace, SFMono-Regular, monospace",
+                  fontSize: isBlock ? "inherit" : "0.92em",
+                  padding: isBlock ? "0" : "2px 6px",
+                  background: isBlock ? "transparent" : (isDark ? "rgba(232,199,114,0.10)" : "rgba(168,130,30,0.10)"),
+                  borderRadius: isBlock ? "0" : "4px",
+                  color: gold,
+                  whiteSpace: isBlock ? "pre-wrap" : undefined,
+                  wordBreak: isBlock ? "break-word" : undefined,
+                  overflowWrap: isBlock ? "break-word" : undefined,
+                }}
+              >
+                {children}
+              </code>
+            );
+          },
           table: ({ children }: { children?: ReactNode }) => (
             <div style={{ overflowX: "auto", margin: "20px 0" }}>
               <table

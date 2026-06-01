@@ -1,392 +1,334 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { MapPin, Users, BookOpen, Link2, Network, ArrowRight } from "lucide-react";
-import { LINEAGES, EMPHASIS_META, CROSS_CUTTING_PATTERNS, type LineageThread } from "./data";
+import { useMemo, useState } from "react";
+import { BookOpen, GitBranch, GraduationCap, Layers3, Network, RotateCcw, Users } from "lucide-react";
 
+const GOLD = "var(--gl-gold-on-cream, #A8821E)";
+const CARD = "var(--gl-card-surface-solid, #FFF9F0)";
+const SOFT = "var(--gl-manuscript-cream, #F5EDD8)";
+const HAIRLINE = "var(--gl-gold-hairline, rgba(156, 122, 47, 0.30))";
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
 const INK_MUTED = "var(--gl-ink-on-cream-muted)";
 
-export function LineageThreadsNetworkExplorer() {
-  const [activeLineage, setActiveLineage] = useState<string>("bvb-delhi");
-  const [showPatterns, setShowPatterns] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
+type View = "lineages" | "streams" | "regions" | "engagement";
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  }, []);
+const LINEAGES = [
+  {
+    id: "bvb",
+    short: "BVB",
+    name: "BVB Delhi",
+    founder: "K.N. Rao within Bharatiya Vidya Bhavan",
+    region: "North Indian, Delhi centre",
+    reach: "Broad reach",
+    color: "#4F6FA8",
+    x: 45,
+    y: 31,
+    streams: ["Parashari strong", "Jaimini revival strong"],
+    infrastructure: ["Multi-year institutional programs", "Indian-context Hindi/English teaching", "Second-generation BVB teachers"],
+    features: ["Empirical chart-research emphasis", "Jaimini revival through Chara Dasha teaching", "Institutional practitioner network"],
+  },
+  {
+    id: "sjc",
+    short: "SJC",
+    name: "Sri Jagannath Center",
+    founder: "Sanjay Rath",
+    region: "Western-Vedic-fusion plus Indian engagement",
+    reach: "Broad reach",
+    color: "var(--gl-vermilion-on-cream, #A23A1E)",
+    x: 31,
+    y: 24,
+    streams: ["Parashari strong", "Jaimini revival strong", "KP/Lal Kitab selective"],
+    infrastructure: ["PJC structured course", "Global branches", "Online and in-person programs"],
+    features: ["Global Jaimini revival centre", "Structured multi-level training", "Cross-stream references without collapse"],
+  },
+  {
+    id: "kp",
+    short: "KP",
+    name: "KP Teaching Lineages",
+    founder: "K.S. Krishnamurti and direct-disciple lines",
+    region: "South Indian, Tamil Nadu centre",
+    reach: "Broad reach",
+    color: "#3A6F8C",
+    x: 61,
+    y: 69,
+    streams: ["KP centre", "Parashari moderate"],
+    infrastructure: ["KP Reader I-VI", "Subramaniam, Hariharan, Tin Win lines", "KP publications and conferences"],
+    features: ["Multiple parallel sub-lineages", "Ruling planet and sub-lord precision", "Tamil Nadu-rooted global training"],
+  },
+  {
+    id: "lal",
+    short: "Lal",
+    name: "Lal Kitab Regional Lineages",
+    founder: "Pandit Roop Chand Joshi and regional teachers",
+    region: "North Indian, Punjab centre",
+    reach: "Broad reach",
+    color: "#7A3E4A",
+    x: 35,
+    y: 42,
+    streams: ["Lal Kitab centre", "Parashari selective"],
+    infrastructure: ["Urdu primary corpus", "Hindi/Punjabi commentary lines", "Regional practitioner teachers"],
+    features: ["Remedial framework transmission", "Punjabi/North-Indian cultural embedding", "Diaspora extension"],
+  },
+  {
+    id: "aivs",
+    short: "AIVS",
+    name: "American Institute of Vedic Studies",
+    founder: "David Frawley",
+    region: "Western-Vedic-fusion, USA centre",
+    reach: "Broad reach",
+    color: "#3A8C5A",
+    x: 20,
+    y: 55,
+    streams: ["Parashari strong", "Jaimini/KP light"],
+    infrastructure: ["AIVS courses", "Books across Jyotisha, Ayurveda, Yoga", "Global online learners"],
+    features: ["Vedic-tradition integration", "Cross-cultural accessibility", "Astrology taught in broader Vedic frame"],
+  },
+  {
+    id: "defouw",
+    short: "D/S",
+    name: "Defouw-Svoboda",
+    founder: "Hart Defouw and Robert Svoboda",
+    region: "Western-Vedic-fusion, USA and cross-regional",
+    reach: "Broad reach",
+    color: "#9C7A2F",
+    x: 24,
+    y: 72,
+    streams: ["Parashari strong", "Jaimini moderate"],
+    infrastructure: ["Light on Life", "Courses and workshops", "English-medium synthesis"],
+    features: ["Introductory English corpus", "Practical Parashari framing", "Widely used in Western teaching contexts"],
+  },
+  {
+    id: "sutton",
+    short: "Sutton",
+    name: "Komilla Sutton",
+    founder: "Komilla Sutton",
+    region: "Western-Vedic-fusion, UK and Europe",
+    reach: "Concentrated",
+    color: "#7A5E1E",
+    x: 20,
+    y: 37,
+    streams: ["Parashari strong", "Jaimini moderate"],
+    infrastructure: ["UK/European courses", "Published teaching corpus", "Workshops"],
+    features: ["European-context accessibility", "Parashari plus selective Jaimini", "Cross-cultural teaching style"],
+  },
+  {
+    id: "pundit",
+    short: "Pundit",
+    name: "Sanskrit-pundit Regional Lineages",
+    founder: "Multi-generational teacher-student succession",
+    region: "Distributed across Indian regional schools",
+    reach: "Regional reach",
+    color: "#6F6656",
+    x: 58,
+    y: 49,
+    streams: ["Classical Parashari strong", "Jaimini moderate"],
+    infrastructure: ["Regional teacher-student succession", "Sanskrit and regional-language teaching", "Community recognition"],
+    features: ["No single modern founder", "Deep classical textual continuity", "Differently structured but real lineage form"],
+  },
+];
 
-  const lineage = LINEAGES.find((l) => l.slug === activeLineage)!;
+const PATTERNS = [
+  ["Cross-region", "SJC, KP, AIVS, Defouw-Svoboda, and Sutton reach students beyond their origin context."],
+  ["Multi-stream", "BVB and SJC teach Parashari with substantial Jaimini revival emphasis."],
+  ["Practitioner mobility", "Modern learners often combine foundational, intermediate, and specialised training across lineages."],
+];
+
+function NetworkSvg({
+  activeId,
+  showStreams,
+  showRegions,
+  onSelect,
+}: {
+  activeId: string;
+  showStreams: boolean;
+  showRegions: boolean;
+  onSelect: (id: string) => void;
+}) {
+  const active = LINEAGES.find((lineage) => lineage.id === activeId) ?? LINEAGES[0];
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* TOP — network diagram */}
-      <div className="relative w-full rounded-xl overflow-hidden gl-surface-twilight-glass aspect-video">
-        <Image
-          src="/assets/learning/lesson-figures/modern-lineage-threads/figure-lineage-threads-network.png"
-          alt="Network diagram of eight modern Vedic astrology lineage threads"
-          fill
-          className="object-cover"
-          sizes="100vw"
-          priority
+    <svg viewBox="0 0 760 430" role="img" aria-label="Network of eight modern Jyotisha lineage threads" className="h-auto w-full">
+      <defs>
+        <filter id="lineage-shadow" x="-40%" y="-40%" width="180%" height="180%">
+          <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#7A5E1E" floodOpacity="0.18" />
+        </filter>
+      </defs>
+      <rect x="0" y="0" width="760" height="430" rx="8" fill={CARD} stroke={HAIRLINE} />
+      <rect x="18" y="18" width="724" height="394" rx="7" fill={SOFT} opacity="0.45" />
+
+      {LINEAGES.filter((lineage) => lineage.id !== activeId).map((lineage) => (
+        <line
+          key={lineage.id}
+          x1={`${active.x}%`}
+          y1={`${active.y}%`}
+          x2={`${lineage.x}%`}
+          y2={`${lineage.y}%`}
+          stroke={showRegions ? "rgba(156, 122, 47, 0.30)" : "rgba(92, 74, 42, 0.18)"}
+          strokeWidth={showRegions ? 2 : 1}
+          strokeDasharray={showRegions ? "6 7" : undefined}
         />
-      </div>
+      ))}
 
-      {/* BOTTOM — lineage explorer */}
-      <div className="flex flex-col gap-4">
-        <p
-          className="uppercase"
-          style={{
-            color: "#7A5E1E",
-            letterSpacing: "0.16em",
-            fontWeight: 700,
-            fontSize: "11px",
-            fontFamily: "var(--font-sans), system-ui, sans-serif",
-            marginBottom: "4px",
-          }}
-        >
-          Eight modern lineage threads
-        </p>
-        <p
-          style={{
-            fontFamily: "var(--font-cormorant), serif",
-            fontSize: "20px",
-            fontWeight: 500,
-            color: INK_PRIMARY,
-            lineHeight: 1.4,
-            marginBottom: "8px",
-          }}
-        >
-          Modern lineage threads
-        </p>
+      {showStreams && (
+        <g>
+          <rect x="470" y="42" width="250" height="112" rx="8" fill="rgba(156, 122, 47, 0.09)" stroke={HAIRLINE} />
+          <text x="490" y="68" fill={GOLD} fontSize="13" fontWeight="800">Stream emphasis overlay</text>
+          <text x="490" y="94" fill={INK_SECONDARY} fontSize="12">KP: KP lineages</text>
+          <text x="490" y="116" fill={INK_SECONDARY} fontSize="12">Lal Kitab: Punjabi/North lines</text>
+          <text x="490" y="138" fill={INK_SECONDARY} fontSize="12">Jaimini revival: BVB + SJC</text>
+        </g>
+      )}
 
-        {/* Lineage tabs */}
-        <div className="flex flex-wrap gap-2">
-          {LINEAGES.map((l) => (
-            <button
-              key={l.slug}
-              type="button"
-              onClick={() => setActiveLineage(l.slug)}
-              className="gl-focus-ring gl-clickable"
-              aria-pressed={activeLineage === l.slug}
-              style={{
-                padding: "5px 10px",
-                borderRadius: "6px",
-                border: "none",
-                background: activeLineage === l.slug ? `${l.color}18` : "rgba(255,255,255,0.03)",
-                color: activeLineage === l.slug ? l.color : INK_SECONDARY,
-                fontFamily: "var(--font-sans), system-ui, sans-serif",
-                fontSize: "12px",
-                fontWeight: 600,
-                cursor: "pointer",
-                transition: reducedMotion ? "none" : "all 200ms ease",
-              }}
-            >
-              {l.shortName}
-            </button>
-          ))}
-        </div>
-
-        {/* Lineage detail card */}
-        <LineageDetailCard lineage={lineage} reducedMotion={reducedMotion} />
-
-        {/* Cross-cutting patterns toggle */}
-        <button
-          type="button"
-          onClick={() => setShowPatterns((v) => !v)}
-          className="gl-focus-ring gl-clickable"
-          style={{
-            padding: "10px 14px",
-            borderRadius: "8px",
-            border: "1px dashed rgba(156,122,47,0.35)",
-            background: "transparent",
-            color: "#9C7A2F",
-            fontFamily: "var(--font-sans), system-ui, sans-serif",
-            fontSize: "13px",
-            fontWeight: 600,
-            cursor: "pointer",
-            textAlign: "left",
-            marginTop: "4px",
-          }}
-        >
-          <Network size={14} className="inline mr-2" style={{ verticalAlign: "text-bottom" }} />
-          {showPatterns ? "Hide" : "Show"} cross-cutting lineage patterns
-        </button>
-
-        {showPatterns && (
-          <div className="flex flex-col gap-3">
-            {CROSS_CUTTING_PATTERNS.map((pattern, i) => (
-              <div
-                key={i}
-                style={{
-                  padding: "12px 14px",
-                  borderRadius: "8px",
-                  background: "rgba(156,122,47,0.06)",
-                  border: "1px solid rgba(156,122,47,0.15)",
-                }}
-              >
-                <p
-                  style={{
-                    fontFamily: "var(--font-sans), system-ui, sans-serif",
-                    fontSize: "12px",
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.08em",
-                    color: "#9C7A2F",
-                    marginBottom: "6px",
-                  }}
-                >
-                  {pattern.title}
-                </p>
-                <div className="flex flex-col gap-1.5">
-                  {pattern.examples.map((ex, j) => (
-                    <div key={j} className="flex items-start gap-2">
-                      <ArrowRight size={11} style={{ color: "#9C7A2F", marginTop: "3px", flexShrink: 0 }} />
-                      <p style={{ fontSize: "12px", color: INK_SECONDARY, lineHeight: 1.5, fontFamily: "var(--font-sans), system-ui, sans-serif" }}>
-                        {ex}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
+      {LINEAGES.map((lineage) => {
+        const isActive = lineage.id === activeId;
+        return (
+          <g
+            key={lineage.id}
+            role="button"
+            tabIndex={0}
+            aria-label={`${lineage.name} lineage`}
+            onClick={() => onSelect(lineage.id)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onSelect(lineage.id);
+              }
+            }}
+            className="cursor-pointer"
+          >
+            <circle cx={`${lineage.x}%`} cy={`${lineage.y}%`} r={isActive ? 28 : 21} fill={isActive ? lineage.color : CARD} stroke={lineage.color} strokeWidth="3" filter={isActive ? "url(#lineage-shadow)" : undefined} />
+            <text x={`${lineage.x}%`} y={`${lineage.y + 9}%`} textAnchor="middle" fill={isActive ? "#FFF9F0" : lineage.color} fontSize="11" fontWeight="800">
+              {lineage.short}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
   );
 }
 
-function LineageDetailCard({ lineage, reducedMotion }: { lineage: LineageThread; reducedMotion: boolean }) {
+export function LineageThreadsNetworkExplorer() {
+  const [activeId, setActiveId] = useState("bvb");
+  const [view, setView] = useState<View>("lineages");
+  const active = useMemo(() => LINEAGES.find((lineage) => lineage.id === activeId) ?? LINEAGES[0], [activeId]);
+
   return (
-    <div
-      style={{
-        padding: "16px",
-        borderRadius: "10px",
-        background: "rgba(255,255,255,0.02)",
-        border: `1px solid ${lineage.color}25`,
-        transition: reducedMotion ? "none" : "all 200ms ease",
-      }}
-    >
-      <div className="flex items-center justify-between mb-3">
-        <h3
-          style={{
-            fontFamily: "var(--font-cormorant), serif",
-            fontSize: "20px",
-            fontWeight: 600,
-            color: lineage.color,
-          }}
-        >
-          {lineage.name}
-        </h3>
-        <span
-          style={{
-            fontSize: "10px",
-            fontWeight: 700,
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-            padding: "3px 10px",
-            borderRadius: "999px",
-            background: lineage.reach === "broad" ? "rgba(58,140,90,0.12)" : lineage.reach === "concentrated" ? "rgba(79,111,168,0.10)" : "rgba(120,120,120,0.08)",
-            color: lineage.reach === "broad" ? "#3A8C5A" : lineage.reach === "concentrated" ? "#4F6FA8" : "#888888",
-            fontFamily: "var(--font-sans), system-ui, sans-serif",
-          }}
-        >
-          {lineage.reach === "broad" ? "Broad reach" : lineage.reach === "concentrated" ? "Concentrated" : "Regional"}
-        </span>
-      </div>
-
-      {/* Founder */}
-      <div className="flex items-start gap-2 mb-2">
-        <Users size={14} style={{ color: INK_MUTED, marginTop: "3px", flexShrink: 0 }} />
-        <p style={{ fontSize: "13px", color: INK_SECONDARY, lineHeight: 1.5, fontFamily: "var(--font-sans), system-ui, sans-serif" }}>
-          <span style={{ color: INK_MUTED }}>Founder:</span>{" "}
-          <span style={{ color: INK_PRIMARY, fontWeight: 500 }}>{lineage.founder}</span>
-        </p>
-      </div>
-
-      {/* Regional school */}
-      <div className="flex items-start gap-2 mb-3">
-        <MapPin size={14} style={{ color: INK_MUTED, marginTop: "3px", flexShrink: 0 }} />
-        <p style={{ fontSize: "12px", color: INK_SECONDARY, lineHeight: 1.5, fontFamily: "var(--font-sans), system-ui, sans-serif" }}>
-          <span style={{ color: INK_MUTED }}>Regional school:</span>{" "}
-          {lineage.regionalSchool}
-        </p>
-      </div>
-
-      {/* Stream emphases */}
-      <p
-        style={{
-          fontSize: "10px",
-          fontWeight: 700,
-          textTransform: "uppercase",
-          letterSpacing: "0.08em",
-          color: INK_MUTED,
-          marginBottom: "8px",
-          fontFamily: "var(--font-sans), system-ui, sans-serif",
-        }}
-      >
-        Stream emphasis
-      </p>
-      <div className="flex flex-col gap-2 mb-4">
-        {lineage.streamEmphases.map((se) => {
-          const meta = EMPHASIS_META[se.level];
-          return (
-            <div
-              key={se.streamSlug}
-              style={{
-                padding: "8px 10px",
-                borderRadius: "6px",
-                background: meta.bg,
-                borderLeft: `3px solid ${meta.color}`,
-              }}
-            >
-              <div className="flex items-center justify-between">
-                <span
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: 600,
-                    color: INK_PRIMARY,
-                    fontFamily: "var(--font-sans), system-ui, sans-serif",
-                  }}
-                >
-                  {se.streamName}
-                </span>
-                <span
-                  style={{
-                    fontSize: "10px",
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.06em",
-                    padding: "2px 8px",
-                    borderRadius: "999px",
-                    background: `${meta.color}20`,
-                    color: meta.color,
-                    fontFamily: "var(--font-sans), system-ui, sans-serif",
-                  }}
-                >
-                  {meta.label}
-                </span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Teaching infrastructure */}
-      <p
-        style={{
-          fontSize: "10px",
-          fontWeight: 700,
-          textTransform: "uppercase",
-          letterSpacing: "0.08em",
-          color: INK_MUTED,
-          marginBottom: "8px",
-          fontFamily: "var(--font-sans), system-ui, sans-serif",
-        }}
-      >
-        Teaching infrastructure
-      </p>
-      <div className="flex flex-col gap-2 mb-4">
-        {lineage.teachingInfrastructure.map((item, i) => (
-          <div key={i} className="flex items-start gap-2">
-            <BookOpen size={12} style={{ color: lineage.color, marginTop: "3px", flexShrink: 0, opacity: 0.7 }} />
-            <p style={{ fontSize: "12px", color: INK_SECONDARY, lineHeight: 1.5, fontFamily: "var(--font-sans), system-ui, sans-serif" }}>
-              {item}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Distinctive features */}
-      <p
-        style={{
-          fontSize: "10px",
-          fontWeight: 700,
-          textTransform: "uppercase",
-          letterSpacing: "0.08em",
-          color: INK_MUTED,
-          marginBottom: "8px",
-          fontFamily: "var(--font-sans), system-ui, sans-serif",
-        }}
-      >
-        Distinctive features
-      </p>
-      <div className="flex flex-col gap-2 mb-4">
-        {lineage.distinctiveFeatures.map((feat, i) => (
-          <div key={i} className="flex items-start gap-2">
-            <Link2 size={12} style={{ color: lineage.color, marginTop: "3px", flexShrink: 0, opacity: 0.7 }} />
-            <p style={{ fontSize: "12px", color: INK_SECONDARY, lineHeight: 1.5, fontFamily: "var(--font-sans), system-ui, sans-serif" }}>
-              {feat}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Sub-lineages (if any) */}
-      {lineage.subLineages && (
-        <div className="mb-4">
-          <p
+    <div className="w-full" data-interactive="lineage-threads-network-explorer" style={{ color: INK_PRIMARY }}>
+      <div className="mb-4 flex flex-wrap gap-2">
+        {[
+          ["lineages", "Lineages", <Network key="icon" size={15} />],
+          ["streams", "Stream overlay", <GitBranch key="icon" size={15} />],
+          ["regions", "Regional reach", <Layers3 key="icon" size={15} />],
+          ["engagement", "Engagement", <GraduationCap key="icon" size={15} />],
+        ].map(([key, label, icon]) => (
+          <button
+            key={key as string}
+            type="button"
+            onClick={() => setView(key as View)}
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold"
             style={{
-              fontSize: "10px",
-              fontWeight: 700,
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-              color: INK_MUTED,
-              marginBottom: "8px",
-              fontFamily: "var(--font-sans), system-ui, sans-serif",
+              backgroundColor: view === key ? GOLD : "transparent",
+              color: view === key ? "#FFF9F0" : INK_SECONDARY,
+              border: view === key ? `1px solid ${GOLD}` : "1px solid transparent",
             }}
           >
-            Sub-lineages
-          </p>
-          <div className="flex flex-col gap-2">
-            {lineage.subLineages.map((sl, i) => (
-              <div
-                key={i}
-                style={{
-                  padding: "8px 10px",
-                  borderRadius: "6px",
-                  background: "rgba(79,111,168,0.06)",
-                  borderLeft: "3px solid #4F6FA8",
-                }}
-              >
-                <p style={{ fontSize: "12px", fontWeight: 600, color: INK_PRIMARY, fontFamily: "var(--font-sans), system-ui, sans-serif" }}>
-                  {sl.name}
-                </p>
-                <p style={{ fontSize: "11px", color: INK_SECONDARY, lineHeight: 1.45, fontFamily: "var(--font-sans), system-ui, sans-serif" }}>
-                  <span style={{ color: INK_MUTED }}>Lead:</span> {sl.lead} · {sl.note}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+            {icon}
+            {label}
+          </button>
+        ))}
+      </div>
 
-      {/* Cross-references */}
-      <div className="pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-        <p
-          style={{
-            fontSize: "10px",
-            fontWeight: 700,
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-            color: INK_MUTED,
-            marginBottom: "6px",
-            fontFamily: "var(--font-sans), system-ui, sans-serif",
-          }}
-        >
-          Cross-references for engagement
-        </p>
-        <div className="flex flex-col gap-1">
-          {lineage.crossReferences.map((cr, i) => (
-            <p key={i} style={{ fontSize: "11px", color: INK_SECONDARY, lineHeight: 1.5, fontFamily: "var(--font-sans), system-ui, sans-serif" }}>
-              · {cr}
-            </p>
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(330px,0.95fr)]">
+        <section className="gl-surface-twilight-glass p-3" style={{ borderRadius: "8px" }}>
+          <NetworkSvg activeId={activeId} showStreams={view === "streams"} showRegions={view === "regions"} onSelect={setActiveId} />
+        </section>
+
+        <section className="space-y-4">
+          {view !== "engagement" ? (
+            <>
+              <div className="gl-surface-twilight-glass p-4" style={{ borderLeft: `3px solid ${active.color}`, borderRadius: "8px" }}>
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <h3 className="text-2xl font-bold" style={{ color: active.color }}>{active.name}</h3>
+                    <p className="text-sm" style={{ color: INK_SECONDARY }}>{active.region}</p>
+                  </div>
+                  <span className="rounded-full px-3 py-1 text-xs font-bold" style={{ backgroundColor: "rgba(156, 122, 47, 0.12)", color: active.color, border: `1px solid ${HAIRLINE}` }}>{active.reach}</span>
+                </div>
+                <div className="mt-4 rounded p-3" style={{ backgroundColor: SOFT, border: `1px solid ${HAIRLINE}` }}>
+                  <div className="text-xs font-bold uppercase tracking-[0.08em]" style={{ color: INK_MUTED }}>Founder / context</div>
+                  <div className="mt-1 text-sm" style={{ color: INK_SECONDARY }}>{active.founder}</div>
+                </div>
+                <div className="mt-3 grid gap-2">
+                  {active.streams.map((stream) => (
+                    <div key={stream} className="rounded p-3 text-sm font-semibold" style={{ backgroundColor: "rgba(156, 122, 47, 0.08)", border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}>{stream}</div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="gl-surface-twilight-glass p-4" style={{ borderRadius: "8px" }}>
+                <div className="mb-3 flex items-center gap-2 text-sm font-semibold"><BookOpen size={16} style={{ color: GOLD }} /> Teaching infrastructure</div>
+                <div className="space-y-2">
+                  {active.infrastructure.map((item) => (
+                    <div key={item} className="rounded p-3 text-sm" style={{ backgroundColor: SOFT, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}>{item}</div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="gl-surface-twilight-glass p-4" style={{ borderRadius: "8px" }}>
+                <div className="mb-3 flex items-center gap-2 text-sm font-semibold"><Users size={16} style={{ color: GOLD }} /> Distinctive lineage features</div>
+                <div className="space-y-2">
+                  {active.features.map((item) => (
+                    <div key={item} className="rounded p-3 text-sm" style={{ backgroundColor: CARD, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}>{item}</div>
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="gl-surface-twilight-glass p-4" style={{ borderRadius: "8px" }}>
+              <div className="mb-3 flex items-center gap-2 text-sm font-semibold"><GraduationCap size={16} style={{ color: GOLD }} /> Curriculum vs lineage engagement</div>
+              <div className="space-y-3">
+                {[
+                  ["Curriculum engagement", "Cross-stream and cross-region literacy; modern-teaching synthesis; not lineage credentialing."],
+                  ["Lineage engagement", "Direct teacher-student pathway; lineage-internal methods, recognition, and practitioner community."],
+                  ["Best pathway", "For serious practice, curriculum plus lineage engagement is complementary rather than competitive."],
+                ].map(([label, text]) => (
+                  <div key={label} className="rounded p-3" style={{ backgroundColor: SOFT, border: `1px solid ${HAIRLINE}` }}>
+                    <div className="text-sm font-bold" style={{ color: GOLD }}>{label}</div>
+                    <p className="mt-1 text-sm" style={{ color: INK_SECONDARY }}>{text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+      </div>
+
+      <section className="gl-surface-twilight-glass mt-4 p-4" style={{ borderRadius: "8px" }}>
+        <div className="mb-3 text-xs font-bold uppercase tracking-[0.08em]" style={{ color: INK_MUTED }}>Cross-cutting lineage patterns</div>
+        <div className="grid gap-2 md:grid-cols-3">
+          {PATTERNS.map(([label, text]) => (
+            <div key={label} className="rounded p-3" style={{ backgroundColor: CARD, border: `1px solid ${HAIRLINE}` }}>
+              <div className="text-sm font-bold" style={{ color: GOLD }}>{label}</div>
+              <div className="mt-1 text-xs" style={{ color: INK_SECONDARY }}>{text}</div>
+            </div>
           ))}
         </div>
+      </section>
+
+      <div className="mt-3 text-center">
+        <button
+          type="button"
+          onClick={() => {
+            setActiveId("bvb");
+            setView("lineages");
+          }}
+          className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold"
+          style={{ backgroundColor: "transparent", border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}
+        >
+          <RotateCcw size={13} />
+          Reset
+        </button>
       </div>
     </div>
   );
