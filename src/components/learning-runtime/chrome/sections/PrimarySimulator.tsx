@@ -12,6 +12,7 @@ import { SectionHeader } from "../SectionHeader";
 import { presentationFor } from "../../lib/section-meta";
 import { Sparkles } from "lucide-react";
 import type { LessonSection, LessonFrontMatter } from "@/lib/learning-runtime/types";
+import { LessonProvider } from "../../interactive/rashi-attribute-wheel";
 
 interface PrimarySimulatorProps {
   section: LessonSection;
@@ -145,6 +146,35 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   // L4.3's §7 = Lineage Matters Synthesis Dojo (Integrated Synthesis View +
   // 5-scenario Evaluative Drill). §4 keeps the three-lineage-comparison-chart-analyzer.
   "lineage-matters-worked-example": "lineage-matters-synthesis-dojo",
+  // ─── Module 04: Rāśi System ───
+  // Chapter 1 — Rāśi Mechanics
+  "rashi-as-30-degree-segment": "rashi-boundary-wheel",
+  "the-12-rashi-boundaries": "rashi-boundary-wheel",
+  "why-crossing-a-rashi-boundary-matters": "boundary-crossing-demonstrator",
+  // Chapter 2 — Meṣa, Vṛṣabha, Mithuna
+  "the-per-rashi-template": "rashi-attribute-wheel",
+  "mesha-aries-the-fiery-cardinal": "rashi-profile-explorer",
+  "vrishabha-taurus-the-earthen-fixed": "rashi-profile-explorer",
+  "mithuna-gemini-the-airy-mutable": "rashi-profile-explorer",
+  // Chapter 3 — Karka, Siṁha, Kanyā
+  "karka-cancer-the-watery-cardinal": "rashi-profile-explorer",
+  "simha-leo-the-fiery-fixed": "rashi-profile-explorer",
+  "kanya-virgo-the-earthen-mutable": "rashi-profile-explorer",
+  // Chapter 4 — Tulā, Vṛścika, Dhanus
+  "tula-libra-the-airy-cardinal": "rashi-profile-explorer",
+  "vrishchika-scorpio-the-watery-fixed": "rashi-profile-explorer",
+  "dhanus-sagittarius-the-fiery-mutable": "rashi-profile-explorer",
+  // Chapter 5 — Makara, Kumbha, Mīna
+  "makara-capricorn-the-earthen-cardinal": "rashi-profile-explorer",
+  "kumbha-aquarius-the-airy-fixed": "rashi-profile-explorer",
+  "meena-pisces-the-watery-mutable": "rashi-profile-explorer",
+  // Chapter 6 — Rāśi Groupings and Synthesis
+  "chara-sthira-dvi-svabhava": "rashi-modality-classifier",
+  "kendra-panaphara-apoklima": "quadrant-triad-visualizer",
+  "dvi-trikona-5-9-pair-grid": "trikona-pair-explorer",
+  "sirsha-prishtha-ubhaya-udaya": "rashi-rising-classifier",
+  "rashi-across-streams": "rashi-stream-comparator",
+  "four-worked-interpretive-examples": "chart-planet-positioner",
 };
 
 /** Slugs whose §7 interactive needs extra horizontal space (e.g. large SVG wheel + sidebar). */
@@ -191,8 +221,10 @@ export function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorP
       </div>
 
       {enabled && InteractiveComponent ? (
-        /* No wrapping card — the interactive's own internal composition reads as the section surface. */
-        <InteractiveComponent />
+        /* Wrap in LessonProvider so interactives can read the lesson slug for context-aware defaults. */
+        <LessonProvider value={{ slug: fm.slug }}>
+          <InteractiveComponent />
+        </LessonProvider>
       ) : enabled && componentType ? (
         <div
           className="gl-surface-twilight-glass p-8 text-center"

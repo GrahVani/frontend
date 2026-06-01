@@ -92,6 +92,17 @@ import { BhadraAvoidanceIntegrator } from "./bhadra-avoidance-integrator";
 import { SamvatConverterVikramaShaka } from "./samvat-converter-vikrama-shaka";
 import { RegionalCalendarExplorer } from "./regional-calendar-explorer";
 import { CalendarConverter } from "./calendar-converter";
+import { RashiBoundaryWheel } from "./rashi-boundary-wheel";
+import { BoundaryCrossingDemonstrator } from "./boundary-crossing-demonstrator";
+import { RashiAttributeWheel } from "./rashi-attribute-wheel";
+import { RashiModalityClassifier } from "./rashi-modality-classifier";
+import { KendraTrikonaGroupingVisualizer } from "./kendra-trikona-grouping-visualizer";
+import { ChartPlanetPositioner } from "./chart-planet-positioner";
+import { RashiRisingClassifier } from "./rashi-rising-classifier";
+import { RashiStreamComparator } from "./rashi-stream-comparator";
+import { RashiProfileExplorer } from "./rashi-profile-explorer";
+import { QuadrantTriadVisualizer } from "./quadrant-triad-visualizer";
+import { TrikonaPairExplorer } from "./trikona-pair-explorer";
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
 
@@ -380,6 +391,18 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // Lesson 2.5.3's §7 interactive: Calendar Converter — comprehensive cross-system
   // date-conversion across Vikrama / Śaka / Kollam / Gregorian + JDN cross-validation.
   "calendar-converter": CalendarConverter,
+  // ─── Module 04: Rāśi System interactives ───
+  "rashi-boundary-wheel": RashiBoundaryWheel,
+  "boundary-crossing-demonstrator": BoundaryCrossingDemonstrator,
+  "rashi-attribute-wheel": RashiAttributeWheel,
+  "rashi-modality-classifier": RashiModalityClassifier,
+  "kendra-trikona-grouping-visualizer": KendraTrikonaGroupingVisualizer,
+  "chart-planet-positioner": ChartPlanetPositioner,
+  "rashi-rising-classifier": RashiRisingClassifier,
+  "rashi-stream-comparator": RashiStreamComparator,
+  "rashi-profile-explorer": RashiProfileExplorer,
+  "quadrant-triad-visualizer": QuadrantTriadVisualizer,
+  "trikona-pair-explorer": TrikonaPairExplorer,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {

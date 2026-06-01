@@ -49,33 +49,33 @@ const LIMB_CHECK = [
   { name: "Karaṇa", rule: "AVOID Bhadrā (Viṣṭi)", status: "warn" as const },
 ];
 
-/* ─── Large Bhadrā Danger Clock SVG ─── */
+/* ─── Compact Bhadrā Danger Clock SVG ─── */
 function DangerClock({ activeDay, onSelect }: { activeDay: number; onSelect: (i: number) => void }) {
-  const W = 520;
-  const H = 420;
+  const W = 320;
+  const H = 300;
   const CX = W / 2;
-  const CY = H / 2 + 10;
-  const R = 160;
-  const R_LABEL = 200;
+  const CY = H / 2 + 4;
+  const R = 100;
+  const R_LABEL = 128;
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" style={{ maxWidth: "100%" }}>
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" style={{ maxWidth: "320px", margin: "0 auto", display: "block" }}>
       <defs>
         <filter id="dcShadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy={2} stdDeviation={3} floodColor="#6B4423" floodOpacity="0.12" /></filter>
         <radialGradient id="dcGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#FFF9F0" /><stop offset="100%" stopColor="#FDF6E3" /></radialGradient>
       </defs>
 
       {/* Background disc */}
-      <circle cx={CX} cy={CY} r={R + 30} fill="url(#dcGrad)" stroke={GOLD} strokeWidth={1} strokeOpacity={0.25} filter="url(#dcShadow)" />
-      <circle cx={CX} cy={CY} r={R + 12} fill="none" stroke={GOLD} strokeWidth={1} strokeDasharray="6 4" opacity={0.3} />
+      <circle cx={CX} cy={CY} r={R + 24} fill="url(#dcGrad)" stroke={GOLD} strokeWidth={1} strokeOpacity={0.25} filter="url(#dcShadow)" />
+      <circle cx={CX} cy={CY} r={R + 8} fill="none" stroke={GOLD} strokeWidth={1} strokeDasharray="6 4" opacity={0.3} />
 
       {/* Connection lines from center to each day */}
       {DAYS.map((_, i) => {
         const angle = (i * (360 / 7) - 90) * Math.PI / 180;
-        const x1 = CX + 40 * Math.cos(angle);
-        const y1 = CY + 40 * Math.sin(angle);
-        const x2 = CX + (R - 8) * Math.cos(angle);
-        const y2 = CY + (R - 8) * Math.sin(angle);
+        const x1 = CX + 28 * Math.cos(angle);
+        const y1 = CY + 28 * Math.sin(angle);
+        const x2 = CX + (R - 6) * Math.cos(angle);
+        const y2 = CY + (R - 6) * Math.sin(angle);
         return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={GOLD} strokeWidth={0.8} opacity={0.2} />;
       })}
 
@@ -91,15 +91,15 @@ function DangerClock({ activeDay, onSelect }: { activeDay: number; onSelect: (i:
         return (
           <g key={day.name} style={{ cursor: "pointer" }} onClick={() => onSelect(i)}>
             {/* Outer glow for active */}
-            {isActive && <circle cx={x} cy={y} r={28} fill={AMBER} opacity={0.12} />}
+            {isActive && <circle cx={x} cy={y} r={22} fill={AMBER} opacity={0.12} />}
             {/* Node circle */}
-            <circle cx={x} cy={y} r={isActive ? 24 : 18} fill={isActive ? AMBER : "#FFF9F0"} stroke={isActive ? AMBER : day.color} strokeWidth={isActive ? 3 : 2} filter="url(#dcShadow)" style={{ transition: "all 0.3s ease" }} />
+            <circle cx={x} cy={y} r={isActive ? 20 : 16} fill={isActive ? AMBER : "#FFF9F0"} stroke={isActive ? AMBER : day.color} strokeWidth={isActive ? 3 : 2} filter="url(#dcShadow)" style={{ transition: "all 0.3s ease" }} />
             {/* Planet symbol */}
-            <text x={x} y={y + 5} textAnchor="middle" fill={isActive ? "#fff" : day.color} fontSize={isActive ? 18 : 14} fontWeight={800} style={{ pointerEvents: "none", fontFamily: "var(--font-sans), sans-serif", transition: "all 0.3s ease" }}>
+            <text x={x} y={y + 5} textAnchor="middle" fill={isActive ? "#fff" : day.color} fontSize={isActive ? 16 : 12} fontWeight={800} style={{ pointerEvents: "none", fontFamily: "var(--font-sans), sans-serif", transition: "all 0.3s ease" }}>
               {day.symbol}
             </text>
             {/* Day name label */}
-            <text x={lx} y={ly + 4} textAnchor="middle" fill={isActive ? AMBER : "var(--gl-ink-secondary)"} fontSize={isActive ? 12 : 10} fontWeight={isActive ? 700 : 500} style={{ pointerEvents: "none", fontFamily: "var(--font-sans), sans-serif", transition: "all 0.3s ease" }}>
+            <text x={lx} y={ly + 4} textAnchor="middle" fill={isActive ? AMBER : "var(--gl-ink-secondary)"} fontSize={isActive ? 11 : 9} fontWeight={isActive ? 700 : 500} style={{ pointerEvents: "none", fontFamily: "var(--font-sans), sans-serif", transition: "all 0.3s ease" }}>
               {day.short}
             </text>
           </g>
@@ -107,11 +107,11 @@ function DangerClock({ activeDay, onSelect }: { activeDay: number; onSelect: (i:
       })}
 
       {/* Center warning hub */}
-      <circle cx={CX} cy={CY} r={44} fill="#FDE8E5" stroke={AMBER} strokeWidth={2.5} filter="url(#dcShadow)" />
+      <circle cx={CX} cy={CY} r={36} fill="#FDE8E5" stroke={AMBER} strokeWidth={2.5} filter="url(#dcShadow)" />
       {/* Warning triangle */}
-      <polygon points={`${CX},${CY - 18} ${CX + 16},${CY + 14} ${CX - 16},${CY + 14}`} fill="none" stroke={AMBER} strokeWidth={2.5} strokeLinejoin="round" />
-      <text x={CX} y={CY + 10} textAnchor="middle" fill={AMBER} fontSize={20} fontWeight={900} style={{ fontFamily: "var(--font-sans), sans-serif" }}>!</text>
-      <text x={CX} y={CY + 26} textAnchor="middle" fill={AMBER} fontSize={8} fontWeight={700} style={{ textTransform: "uppercase", letterSpacing: "0.08em" }}>Bhadrā</text>
+      <polygon points={`${CX},${CY - 14} ${CX + 13},${CY + 11} ${CX - 13},${CY + 11}`} fill="none" stroke={AMBER} strokeWidth={2.5} strokeLinejoin="round" />
+      <text x={CX} y={CY + 8} textAnchor="middle" fill={AMBER} fontSize={18} fontWeight={900} style={{ fontFamily: "var(--font-sans), sans-serif" }}>!</text>
+      <text x={CX} y={CY + 22} textAnchor="middle" fill={AMBER} fontSize={7} fontWeight={700} style={{ textTransform: "uppercase", letterSpacing: "0.08em" }}>Bhadrā</text>
     </svg>
   );
 }
@@ -125,15 +125,15 @@ function LimbMandala() {
     { abbr: "Yo", label: "Yoga", color: "#2E8B57" },
     { abbr: "Kr", label: "Karaṇa", color: AMBER },
   ];
-  const W = 280;
-  const H = 280;
+  const W = 240;
+  const H = 240;
   const CX = W / 2;
   const CY = H / 2;
-  const R = 90;
+  const R = 76;
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" style={{ maxWidth: 240, display: "block", margin: "0 auto" }}>
-      <circle cx={CX} cy={CY} r={R + 12} fill="none" stroke="var(--gl-gold-hairline)" strokeWidth={1} opacity={0.3} />
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" style={{ maxWidth: "200px", display: "block", margin: "0 auto" }}>
+      <circle cx={CX} cy={CY} r={R + 10} fill="none" stroke="var(--gl-gold-hairline)" strokeWidth={1} opacity={0.3} />
       {limbs.map((limb, i) => {
         const angle = (i * 72 - 90) * Math.PI / 180;
         const x = CX + R * Math.cos(angle);
@@ -141,13 +141,13 @@ function LimbMandala() {
         return (
           <g key={limb.abbr}>
             <line x1={CX} y1={CY} x2={x} y2={y} stroke="var(--gl-gold-hairline)" strokeWidth={1} opacity={0.35} />
-            <circle cx={x} cy={y} r={22} fill="#FFF9F0" stroke={limb.color} strokeWidth={1.5} />
-            <text x={x} y={y + 4} textAnchor="middle" fill={limb.color} fontSize={11} fontWeight={800}>{limb.abbr}</text>
+            <circle cx={x} cy={y} r={18} fill="#FFF9F0" stroke={limb.color} strokeWidth={1.5} />
+            <text x={x} y={y + 4} textAnchor="middle" fill={limb.color} fontSize={10} fontWeight={800}>{limb.abbr}</text>
           </g>
         );
       })}
-      <circle cx={CX} cy={CY} r={32} fill="#FFF9F0" stroke={GOLD} strokeWidth={2} />
-      <text x={CX} y={CY + 4} textAnchor="middle" fill={GOLD} fontSize={11} fontWeight={800}>Pañcāṅga</text>
+      <circle cx={CX} cy={CY} r={26} fill="#FFF9F0" stroke={GOLD} strokeWidth={2} />
+      <text x={CX} y={CY + 4} textAnchor="middle" fill={GOLD} fontSize={10} fontWeight={800}>Pañcāṅga</text>
     </svg>
   );
 }
@@ -168,40 +168,63 @@ export function BhadraAvoidanceIntegrator() {
         <p className="text-sm mt-1" style={{ color: "var(--gl-ink-muted)" }}>Click any day on the danger clock to see when Bhadrā occurs. Module 03 capstone integration.</p>
       </div>
 
-      {/* Main Danger Clock — full width, large SVG */}
-      <div className="rounded-xl p-4 mb-4" style={{ background: "#FFF9F0", border: "1.5px solid var(--gl-gold-hairline)" }}>
-        <DangerClock activeDay={day} onSelect={setDay} />
-      </div>
+      {/* Side-by-side: Danger Clock + Day Details */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+        {/* Left: Compact Danger Clock */}
+        <div className="rounded-xl p-4" style={{ background: "#FFF9F0", border: "1.5px solid var(--gl-gold-hairline)" }}>
+          <DangerClock activeDay={day} onSelect={setDay} />
+          <div className="flex justify-center gap-4 mt-2 flex-wrap">
+            {DAYS.map((dItem, i) => (
+              <button
+                key={dItem.name}
+                onClick={() => setDay(i)}
+                className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full transition-all"
+                style={{
+                  background: i === day ? AMBER : "var(--gl-card-surface-solid)",
+                  color: i === day ? "#fff" : dItem.color,
+                  border: `1px solid ${i === day ? AMBER : "var(--gl-gold-hairline)"}`,
+                  cursor: "pointer",
+                }}
+              >
+                {dItem.short}
+              </button>
+            ))}
+          </div>
+        </div>
 
-      {/* Detail row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-4">
-        <div className="rounded-xl p-4" style={{ background: "#FDF6E3", border: "2px solid #E8D5A3" }}>
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg" style={{ background: "#FDE8E5", color: AMBER, border: `2px solid ${AMBER}`, fontWeight: 800 }}>!</div>
-            <div>
-              <h3 className="text-base font-bold" style={{ color: AMBER }}><IAST>Bhadrā on {d.name}</IAST></h3>
-              <p className="text-xs" style={{ color: "var(--gl-ink-secondary)" }}>{d.dev} · Ruled by {d.graha}</p>
+        {/* Right: Day Details stacked */}
+        <div className="space-y-3">
+          {/* Bhadrā Summary */}
+          <div className="rounded-xl p-4" style={{ background: "#FDF6E3", border: "2px solid #E8D5A3" }}>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-9 h-9 rounded-full flex items-center justify-center text-base shrink-0" style={{ background: "#FDE8E5", color: AMBER, border: `2px solid ${AMBER}`, fontWeight: 800 }}>!</div>
+              <div>
+                <h3 className="text-sm font-bold" style={{ color: AMBER }}><IAST>Bhadrā on {d.name}</IAST></h3>
+                <p className="text-[10px]" style={{ color: "var(--gl-ink-secondary)" }}>{d.dev} · Ruled by {d.graha}</p>
+              </div>
+            </div>
+            <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase mb-2" style={{ background: AMBER, color: "#fff" }}>High Severity</span>
+            <p className="text-xs italic" style={{ color: "var(--gl-ink-secondary)", lineHeight: 1.5 }}>Bhadrā (Viṣṭi) is the most inauspicious karaṇa — associated with obstruction, delay, and difficulty. Classical texts advise against initiating any important activity during this period.</p>
+          </div>
+
+          {/* Period Details */}
+          <div className="rounded-xl p-3" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
+            <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: GOLD }}>Period Details</p>
+            <div className="space-y-1 text-xs">
+              <div><strong style={{ color: "var(--gl-ink-primary)" }}>When:</strong> <span style={{ color: "var(--gl-ink-secondary)" }}>{b.period}</span></div>
+              <div><strong style={{ color: "var(--gl-ink-primary)" }}>Context:</strong> <span style={{ color: "var(--gl-ink-secondary)" }}>{b.tithiContext}</span></div>
+              <div><strong style={{ color: "var(--gl-ink-primary)" }}>Karaṇas:</strong> <span style={{ color: "var(--gl-ink-secondary)" }}>{b.karanaName}</span></div>
             </div>
           </div>
-          <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase mb-3" style={{ background: AMBER, color: "#fff" }}>High Severity</span>
-          <p className="text-sm italic" style={{ color: "var(--gl-ink-secondary)", lineHeight: 1.5 }}>Bhadrā (Viṣṭi) is the most inauspicious karaṇa — associated with obstruction, delay, and difficulty. Classical texts advise against initiating any important activity during this period.</p>
-        </div>
 
-        <div className="rounded-xl p-4" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
-          <p className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: GOLD }}>Period Details</p>
-          <div className="space-y-2 text-sm">
-            <div><strong style={{ color: "var(--gl-ink-primary)" }}>When:</strong> <span style={{ color: "var(--gl-ink-secondary)" }}>{b.period}</span></div>
-            <div><strong style={{ color: "var(--gl-ink-primary)" }}>Context:</strong> <span style={{ color: "var(--gl-ink-secondary)" }}>{b.tithiContext}</span></div>
-            <div><strong style={{ color: "var(--gl-ink-primary)" }}>Karaṇas:</strong> <span style={{ color: "var(--gl-ink-secondary)" }}>{b.karanaName}</span></div>
-          </div>
-        </div>
-
-        <div className="rounded-xl p-4" style={{ background: "#FDE8E5", border: "1.5px solid #E8AFA8" }}>
-          <p className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: VERMILION }}>Activities to Avoid</p>
-          <div className="flex flex-wrap gap-1.5">
-            {AVOID_ACTIVITIES.map((a, i) => (
-              <span key={i} className="px-2 py-0.5 rounded-full text-[10px] font-medium" style={{ background: "#E8AFA8", color: VERMILION }}>{a}</span>
-            ))}
+          {/* Activities to Avoid */}
+          <div className="rounded-xl p-3" style={{ background: "#FDE8E5", border: "1.5px solid #E8AFA8" }}>
+            <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: VERMILION }}>Activities to Avoid</p>
+            <div className="flex flex-wrap gap-1">
+              {AVOID_ACTIVITIES.map((a, i) => (
+                <span key={i} className="px-2 py-0.5 rounded-full text-[10px] font-medium" style={{ background: "#E8AFA8", color: VERMILION }}>{a}</span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

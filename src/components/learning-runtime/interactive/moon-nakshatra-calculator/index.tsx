@@ -25,16 +25,7 @@ function toDms(deg: number) {
   return { d, m, s };
 }
 
-const PRESETS = [
-  { label: "Rohiṇī", lon: 53.33, desc: "Moon's favourite nakṣatra" },
-  { label: "Maghā", lon: 126.67, desc: "Pitṛ-devatā; royal power" },
-  { label: "Mūla", lon: 240.00, desc: "Root of destruction & renewal" },
-  { label: "Pūrvāṣāḍhā", lon: 253.33, desc: "Invincible victory" },
-  { label: "Revatī", lon: 346.67, desc: "Last nakṣatra; Pūṣan" },
-  { label: "Aśvinī", lon: 10.00, desc: "Healing twins; start of the ecliptic" },
-];
-
-function NakshatraWheel({ highlightIndex }: { highlightIndex: number }) {
+function NakshatraWheel({ highlightIndex, currentLon, sunLon }: { highlightIndex: number; currentLon: number; sunLon?: number }) {
   const CX = 200;
   const CY = 200;
   const R = 170;
@@ -83,14 +74,45 @@ function NakshatraWheel({ highlightIndex }: { highlightIndex: number }) {
         );
       })}
       {(() => {
-        const mid = highlightIndex * (360 / 27) + (360 / 54);
-        const mx = CX + (R - 14) * Math.cos((mid - 90) * (Math.PI / 180));
-        const my = CY + (R - 14) * Math.sin((mid - 90) * (Math.PI / 180));
+        const moonAngle = currentLon;
+        const mx = CX + (R - 14) * Math.cos((moonAngle - 90) * (Math.PI / 180));
+        const my = CY + (R - 14) * Math.sin((moonAngle - 90) * (Math.PI / 180));
         return (
-          <circle cx={mx} cy={my} r={4} fill="var(--gl-gold-accent)" opacity={0.9}>
-            <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite" />
-            <animate attributeName="opacity" values="0.9;0.5;0.9" dur="2s" repeatCount="indefinite" />
-          </circle>
+          <g>
+            <circle cx={mx} cy={my} r={4} fill="var(--gl-gold-accent)" opacity={0.9}>
+              <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.9;0.5;0.9" dur="2s" repeatCount="indefinite" />
+            </circle>
+          </g>
+        );
+      })()}
+      {sunLon !== undefined && (() => {
+        const sunAngle = sunLon;
+        const sx = CX + (R - 26) * Math.cos((sunAngle - 90) * (Math.PI / 180));
+        const sy = CY + (R - 26) * Math.sin((sunAngle - 90) * (Math.PI / 180));
+        
+        const elongation = ((currentLon - sunLon) % 360 + 360) % 360;
+        const largeArcFlag = elongation > 180 ? 1 : 0;
+        
+        const arcR = R - 20;
+        const arcStartX = CX + arcR * Math.cos((sunAngle - 90) * (Math.PI / 180));
+        const arcStartY = CY + arcR * Math.sin((sunAngle - 90) * (Math.PI / 180));
+        const arcEndX = CX + arcR * Math.cos((currentLon - 90) * (Math.PI / 180));
+        const arcEndY = CY + arcR * Math.sin((currentLon - 90) * (Math.PI / 180));
+        
+        return (
+          <g>
+            <path
+              d={`M ${arcStartX} ${arcStartY} A ${arcR} ${arcR} 0 ${largeArcFlag} 1 ${arcEndX} ${arcEndY}`}
+              fill="none"
+              stroke="#e67e22"
+              strokeWidth={1}
+              strokeDasharray="3 3"
+              opacity={0.4}
+            />
+            <circle cx={sx} cy={sy} r={4} fill="#e67e22" opacity={0.9} />
+            <circle cx={sx} cy={sy} r={6} fill="none" stroke="#e67e22" strokeWidth={1.5} opacity={0.8} />
+          </g>
         );
       })()}
       <circle cx={CX} cy={CY} r={R_INNER - 3} fill="var(--gl-card-surface-solid, #FFF9F0)" stroke="var(--gl-gold-hairline)" strokeWidth={1} />
@@ -157,6 +179,15 @@ export function MoonNakshatraCalculator() {
     },
   ];
 
+  if (tithiContext) {
+    steps.push({
+      label: "Context — Tithi (Lunar Phase)",
+      math: `Elongation = (λ_Moon - λ_Sun) mod 360 = ${tithiContext.elongation.toFixed(2)}°`,
+      subst: `Tithi = ⌊${tithiContext.elongation.toFixed(2)}° / 12°⌋ + 1 = ${tithiContext.tithiNum}`,
+      note: `This places the Moon in the ${tithiContext.paksha} pakṣa, day ${tithiContext.displayNum} of 15.`,
+    });
+  }
+
   return (
     <div
       className="w-full"
@@ -212,12 +243,35 @@ export function MoonNakshatraCalculator() {
           </div>
         )}
 
-        <div className="flex flex-wrap gap-2 mt-4">
-          {PRESETS.map((p) => (
-            <button key={p.label} onClick={() => { setDeg(Math.floor(p.lon)); setMin(Math.round((p.lon % 1) * 60)); }} className="px-3 py-1.5 rounded-full text-xs font-medium transition-all" style={{ background: "#FDF6E3", border: "1px solid var(--gl-gold-hairline)", color: "var(--gl-ink-secondary)" }} title={p.desc}>
-              {p.label}
-            </button>
-          ))}
+        <div className="mt-4 pt-4" style={{ borderTop: "1px dashed var(--gl-gold-hairline)" }}>
+          <label className="block text-xs font-semibold mb-2" style={{ color: "var(--gl-ink-muted)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+            Quick Jump to Nakṣatra
+          </label>
+          <div className="relative">
+            <select 
+              className="w-full px-3 py-2 rounded-lg text-sm outline-none appearance-none cursor-pointer transition-all"
+              style={{ background: "#FDF6E3", border: "1px solid var(--gl-gold-hairline)", color: "var(--gl-ink-primary)", fontWeight: 500 }}
+              value={result.index}
+              onChange={(e) => {
+                const idx = Number(e.target.value);
+                if (idx >= 0) {
+                  const startLon = idx * (40 / 3);
+                  const midLon = startLon + (20 / 3);
+                  setDeg(Math.floor(midLon));
+                  setMin(Math.round((midLon % 1) * 60));
+                }
+              }}
+            >
+              {NAKSHATRAS.map((n, idx) => (
+                <option key={n.num} value={idx}>
+                  {n.num}. {n.name} ({n.devanagari}) — {n.meaning.split(" — ")[0]}
+                </option>
+              ))}
+            </select>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-xs" style={{ color: "var(--gl-gold-accent)" }}>
+              ▼
+            </div>
+          </div>
         </div>
       </div>
 
@@ -263,7 +317,7 @@ export function MoonNakshatraCalculator() {
           )}
         </div>
         <div className="rounded-xl p-4 flex items-center justify-center" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
-          <NakshatraWheel highlightIndex={result.index} />
+          <NakshatraWheel highlightIndex={result.index} currentLon={moonLon} sunLon={showSun ? (sunDeg + sunMin / 60) : undefined} />
         </div>
       </div>
 
