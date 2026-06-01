@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { IAST } from "../../chrome/typography";
 import { RASHIS } from "../rashi-data";
 
@@ -32,6 +32,7 @@ type GamePhase = "menu" | "playing" | "cross" | "result" | "review";
 type Difficulty = "apprentice" | "scholar" | "pundit";
 
 export function RashiModalityClassifier() {
+  const shouldReduceMotion = useReducedMotion();
   const [phase, setPhase] = useState<GamePhase>("menu");
   const [difficulty, setDifficulty] = useState<Difficulty>("scholar");
   const [queue, setQueue] = useState<typeof RASHIS>([]);
@@ -43,6 +44,8 @@ export function RashiModalityClassifier() {
   const [wrongAnswers, setWrongAnswers] = useState<Array<{ rashi: typeof RASHIS[0]; guessed: string; correct: string }>>([]);
   const [crossIndex, setCrossIndex] = useState(0);
   const [crossScore, setCrossScore] = useState(0);
+  const [questionStartTime, setQuestionStartTime] = useState(0);
+  const [responseTimes, setResponseTimes] = useState<number[]>([]);
 
   const current = queue[index];
 
@@ -59,14 +62,19 @@ export function RashiModalityClassifier() {
     setBestStreak(0);
     setWrongAnswers([]);
     setFeedback(null);
+    setResponseTimes([]);
+    setQuestionStartTime(Date.now());
     setPhase("playing");
   }, []);
 
   const handleGuess = (modality: string) => {
     if (!current || feedback) return;
+    const elapsed = (Date.now() - questionStartTime) / 1000;
+    setResponseTimes((t) => [...t, elapsed]);
     const correct = current.modality === modality;
+    const speedBonus = elapsed < 2 ? 5 : 0;
     if (correct) {
-      setScore((s) => s + 10 + (streak >= 2 ? 5 : 0));
+      setScore((s) => s + 10 + (streak >= 2 ? 5 : 0) + speedBonus);
       setStreak((s) => {
         const ns = s + 1;
         setBestStreak((b) => Math.max(b, ns));
@@ -81,6 +89,7 @@ export function RashiModalityClassifier() {
 
     setTimeout(() => {
       setFeedback(null);
+      setQuestionStartTime(Date.now());
       if (index + 1 < queue.length) {
         setIndex((i) => i + 1);
       } else {
@@ -113,9 +122,9 @@ export function RashiModalityClassifier() {
       {phase === "menu" && (
         <motion.div
           key="menu"
-          initial={{ opacity: 0, y: 12 }}
+          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
+          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
           transition={{ duration: 0.25 }}
           className="w-full space-y-4"
           style={{ fontFamily: "var(--font-sans)" }}
@@ -136,9 +145,9 @@ export function RashiModalityClassifier() {
               <motion.button
                 key={d.key}
                 onClick={() => startGame(d.key)}
-                className="p-4 rounded-xl text-left transition-all"
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
+                className="p-4 rounded-xl text-left transition-all focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
+                whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+                whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
                 style={{ background: "var(--gl-surface-twilight-glass)", border: `2px solid ${d.color}40` }}
               >
                 <div className="font-semibold" style={{ color: d.color }}>{d.label}</div>
@@ -169,9 +178,9 @@ export function RashiModalityClassifier() {
       {phase === "playing" && current && (
         <motion.div
           key="playing"
-          initial={{ opacity: 0, y: 12 }}
+          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
+          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
           transition={{ duration: 0.25 }}
           className="w-full space-y-4"
           style={{ fontFamily: "var(--font-sans)" }}
@@ -237,9 +246,9 @@ export function RashiModalityClassifier() {
                 key={m.key}
                 onClick={() => handleGuess(m.key)}
                 disabled={!!feedback}
-                className="p-3 rounded-xl text-center transition-all disabled:opacity-60"
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
+                className="p-3 rounded-xl text-center transition-all disabled:opacity-60 focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
+                whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+                whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
                 style={{
                   background: `${m.color}15`,
                   border: `2px solid ${m.color}50`,
@@ -258,9 +267,9 @@ export function RashiModalityClassifier() {
       {phase === "cross" && (
         <motion.div
           key="cross"
-          initial={{ opacity: 0, y: 12 }}
+          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
+          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
           transition={{ duration: 0.25 }}
           className="w-full space-y-4"
           style={{ fontFamily: "var(--font-sans)" }}
@@ -281,9 +290,9 @@ export function RashiModalityClassifier() {
                       <motion.button
                         key={opt}
                         onClick={() => handleCrossAnswer(opt)}
-                        className="p-3 rounded-lg text-sm text-left transition-all"
-                        whileHover={{ scale: 1.04 }}
-                        whileTap={{ scale: 0.96 }}
+                        className="p-3 rounded-lg text-sm text-left transition-all focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
+                        whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+                        whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
                         style={{ background: "var(--gl-surface-manuscript)", border: "1px solid var(--gl-gold-hairline)", color: "var(--gl-ink-primary)" }}
                       >
                         {opt}
@@ -300,9 +309,9 @@ export function RashiModalityClassifier() {
       {phase === "result" && (
         <motion.div
           key="result"
-          initial={{ opacity: 0, y: 12 }}
+          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
+          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
           transition={{ duration: 0.25 }}
           className="w-full space-y-4"
           style={{ fontFamily: "var(--font-sans)" }}
@@ -312,6 +321,19 @@ export function RashiModalityClassifier() {
             const finalScore = score + crossScore;
             const accuracy = Math.round((finalScore / (total * 10)) * 100);
             const stars = accuracy >= 90 ? 3 : accuracy >= 70 ? 2 : accuracy >= 50 ? 1 : 0;
+            const avgTime = responseTimes.length > 0 ? (responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length).toFixed(1) : "—";
+            const fastCount = responseTimes.filter((t) => t < 2).length;
+
+            // Weak-spot analysis: find confusion patterns
+            const confusionMap: Record<string, number> = {};
+            wrongAnswers.forEach((w) => {
+              const key = `${w.rashi.element}: guessed ${w.guessed} instead of ${w.correct}`;
+              confusionMap[key] = (confusionMap[key] || 0) + 1;
+            });
+            const topConfusions = Object.entries(confusionMap)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 3)
+              .filter(([, count]) => count > 0);
 
             return (
               <>
@@ -325,7 +347,23 @@ export function RashiModalityClassifier() {
                   <div className="text-sm mt-2" style={{ color: "var(--gl-ink-secondary)" }}>
                     Score: <strong>{finalScore}</strong> · Accuracy: <strong>{accuracy}%</strong> · Best streak: <strong>{bestStreak}</strong>
                   </div>
+                  <div className="text-xs mt-2 flex gap-3 justify-center" style={{ color: "var(--gl-ink-muted)" }}>
+                    <span>⏱ Avg: <strong>{avgTime}s</strong></span>
+                    <span>⚡ Fast (&lt;2s): <strong>{fastCount}/{responseTimes.length}</strong></span>
+                  </div>
                 </div>
+
+                {topConfusions.length > 0 && (
+                  <div className="p-3 rounded-xl" style={{ background: "#A23A1E08", border: "1px solid #A23A1E20" }}>
+                    <div className="text-sm font-medium mb-1" style={{ color: "#A23A1E" }}>🔍 Weak Spots Identified</div>
+                    {topConfusions.map(([pattern, count], i) => (
+                      <div key={i} className="text-xs py-1" style={{ color: "var(--gl-ink-secondary)" }}>
+                        • {pattern} ({count}×)
+                      </div>
+                    ))}
+                    <div className="text-xs mt-1" style={{ color: "var(--gl-ink-muted)" }}>Tip: Focus on these patterns in your next round.</div>
+                  </div>
+                )}
 
                 {wrongAnswers.length > 0 && (
                   <div className="space-y-2">
@@ -345,18 +383,18 @@ export function RashiModalityClassifier() {
                 <div className="flex gap-2">
                   <motion.button
                     onClick={() => setPhase("review")}
-                    className="flex-1 px-4 py-2 rounded-lg text-sm"
-                    whileHover={{ scale: 1.04 }}
-                    whileTap={{ scale: 0.96 }}
+                    className="flex-1 px-4 py-2 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
+                    whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+                    whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
                     style={{ background: "var(--gl-surface-manuscript)", border: "1px solid var(--gl-gold-hairline)", color: "var(--gl-ink-primary)" }}
                   >
                     Review All
                   </motion.button>
                   <motion.button
                     onClick={() => startGame(difficulty)}
-                    className="flex-1 px-4 py-2 rounded-lg text-sm"
-                    whileHover={{ scale: 1.04 }}
-                    whileTap={{ scale: 0.96 }}
+                    className="flex-1 px-4 py-2 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
+                    whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+                    whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
                     style={{ background: "var(--gl-gold-accent)", color: "#1a1a2e" }}
                   >
                     Play Again
@@ -371,9 +409,9 @@ export function RashiModalityClassifier() {
       {phase === "review" && (
         <motion.div
           key="review"
-          initial={{ opacity: 0, y: 12 }}
+          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
+          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
           transition={{ duration: 0.25 }}
           className="w-full space-y-3"
           style={{ fontFamily: "var(--font-sans)" }}
@@ -400,9 +438,9 @@ export function RashiModalityClassifier() {
           </div>
           <motion.button
             onClick={() => setPhase("menu")}
-            className="px-4 py-2 rounded-lg text-sm"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
+            className="px-4 py-2 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
+            whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
             style={{ background: "var(--gl-gold-accent)", color: "#1a1a2e" }}
           >
             Back to Menu

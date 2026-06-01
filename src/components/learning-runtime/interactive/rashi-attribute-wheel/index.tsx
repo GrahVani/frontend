@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo, createContext, useContext, Fragment, type ReactNode } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useMemo, createContext, useContext, Fragment, useEffect, type ReactNode } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { IAST } from "../../chrome/typography";
 import {
   RASHIS, getDignitiesForRashi, MULA_TRIKONA_REDIRECTS, OPPOSITE_PAIRS,
@@ -61,9 +61,11 @@ function RashiWheel({
   const cy = 150;
   const r = 128;
   const innerR = 72;
+  const shouldReduceMotion = useReducedMotion();
+  const [focusedSegment, setFocusedSegment] = useState<number | null>(null);
 
   return (
-    <svg viewBox="0 0 300 300" className="w-full" style={{ maxWidth: 300 }}>
+    <svg viewBox="0 0 300 300" className="w-full" style={{ maxWidth: 300 }} role="img" aria-label="Interactive 12-segment Zodiac Wheel showing sign attributes">
       <defs>
         {/* Inner hub gradient to match Module 4 Chapter 1 Lesson 1 */}
         <radialGradient id="hubGrad" cx={cx} cy={cy} r={innerR} gradientUnits="userSpaceOnUse">
@@ -101,6 +103,7 @@ function RashiWheel({
         const isCompare = compare === rashi.number;
         const isHovered = hovered === rashi.number;
         const isHighlighted = highlightGroup?.includes(rashi.number);
+        const isFocused = focusedSegment === rashi.number;
 
         const path = describeArc(cx, cy, r, startAngle, endAngle);
         const m = midAngle(startAngle, endAngle);
@@ -115,19 +118,44 @@ function RashiWheel({
         const strokeW = isSelected ? 2.5 : isHovered ? 2 : 1;
 
         return (
-          <g key={rashi.number}>
+          <g
+            key={rashi.number}
+            role="button"
+            tabIndex={0}
+            aria-pressed={isSelected || isCompare}
+            aria-label={`${rashi.nameDevanagari} ${rashi.nameIAST} (${rashi.nameEnglish}) segment, spanning from ${startAngle} to ${endAngle} degrees`}
+            style={{ cursor: "pointer", outline: "none" }}
+            onClick={() => onSelect(rashi.number)}
+            onMouseEnter={() => onHover(rashi.number)}
+            onMouseLeave={() => onHover(null)}
+            onFocus={() => setFocusedSegment(rashi.number)}
+            onBlur={() => setFocusedSegment(null)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                onSelect(rashi.number);
+                e.preventDefault();
+              }
+            }}
+          >
             <path
               d={path}
               fill={baseFill}
               stroke={stroke}
               strokeWidth={strokeW}
-              style={{ cursor: "pointer", transition: "all 0.2s ease" }}
-              onClick={() => onSelect(rashi.number)}
-              onMouseEnter={() => onHover(rashi.number)}
-              onMouseLeave={() => onHover(null)}
+              style={{ pointerEvents: "auto", transition: shouldReduceMotion ? undefined : "all 0.2s ease" }}
             />
+            {isFocused && (
+              <path
+                d={path}
+                fill="none"
+                stroke="var(--gl-gold-accent)"
+                strokeWidth={2}
+                strokeDasharray="3 3"
+                style={{ pointerEvents: "none" }}
+              />
+            )}
             {/* Inner cutout */}
-            <path d={describeArc(cx, cy, innerR, startAngle, endAngle)} fill="url(#hubGrad)" opacity={1} />
+            <path d={describeArc(cx, cy, innerR, startAngle, endAngle)} fill="url(#hubGrad)" opacity={1} style={{ pointerEvents: "none" }} />
             <text x={labelPos.x} y={labelPos.y - 3} textAnchor="middle" dominantBaseline="middle" fill={isSelected ? "#fff" : "var(--gl-ink-primary)"} fontSize={10} fontFamily="var(--font-devanagari)" style={{ pointerEvents: "none", fontWeight: isSelected ? 700 : 400 }}>
               {rashi.nameDevanagari}
             </text>
@@ -154,10 +182,34 @@ export function RashiAttributeWheel() {
   const [hovered, setHovered] = useState<number | null>(null);
   const [showAxis, setShowAxis] = useState(false);
   const [showRedirects, setShowRedirects] = useState(true);
+  const shouldReduceMotion = useReducedMotion();
 
   const rashi = useMemo(() => RASHIS.find((r) => r.number === selected)!, [selected]);
   const compareRashi = useMemo(() => (compare ? (RASHIS.find((r) => r.number === compare) ?? null) : null), [compare]);
   const dignities = useMemo(() => getDignitiesForRashi(selected), [selected]);
+
+  /* Keyboard navigation */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (activeTab === "attributes" || activeTab === "compare") {
+        if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+          const prev = ((selected - 2 + 12) % 12) + 1;
+          setSelected(prev);
+          if (activeTab === "compare" && compare !== null) {
+            setCompare(prev);
+          }
+        } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+          const next = (selected % 12) + 1;
+          setSelected(next);
+          if (activeTab === "compare" && compare !== null) {
+            setCompare(next);
+          }
+        }
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selected, activeTab, compare]);
 
   const handleWheelClick = (n: number) => {
     if (activeTab === "compare" && selected !== n) {
@@ -178,14 +230,16 @@ export function RashiAttributeWheel() {
       ) : null}
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-4 flex-wrap">
+      <div className="flex gap-2 mb-4 flex-wrap" role="tablist" aria-label="Zodiac visualizer modes">
         {(["attributes", "compare", "grid", "kalapurusa"] as const).map((t) => (
           <motion.button
             key={t}
+            role="tab"
+            aria-selected={activeTab === t}
             onClick={() => { setActiveTab(t); if (t !== "compare") setCompare(null); }}
             className="px-4 py-2 text-sm rounded-lg transition-all"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
+            whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
             style={{
               background: activeTab === t ? "var(--gl-gold-accent)" : "var(--gl-surface-manuscript)",
               color: activeTab === t ? "#1a1a2e" : "var(--gl-ink-primary)",
@@ -199,8 +253,8 @@ export function RashiAttributeWheel() {
         <motion.button
           onClick={() => setShowAxis((s) => !s)}
           className="px-3 py-2 text-sm rounded-lg transition-all"
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.96 }}
+          whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+          whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
           style={{
             background: showAxis ? "#C9A24D25" : "var(--gl-surface-manuscript)",
             color: showAxis ? "#C9A24D" : "var(--gl-ink-muted)",
@@ -354,6 +408,7 @@ function AttributeCard({ rashi, dignities, showRedirects }: { rashi: RashiData; 
 
 /* ─── Compare Panel ─── */
 function ComparePanel({ rashiA, rashiB, onSelectB }: { rashiA: RashiData; rashiB: RashiData | null; onSelectB: (n: number) => void }) {
+  const shouldReduceMotion = useReducedMotion();
   const rows = [
     { label: "Lord", key: "lord" as const },
     { label: "Element", key: "element" as const },
@@ -428,8 +483,8 @@ function ComparePanel({ rashiA, rashiB, onSelectB }: { rashiA: RashiData; rashiB
               key={label}
               onClick={() => onSelectB(pair[1])}
               className="px-2.5 py-1.5 rounded-lg text-xs transition-all"
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
+              whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
               style={{ background: "var(--gl-surface-manuscript)", border: "1px solid var(--gl-gold-hairline)", color: "var(--gl-ink-secondary)" }}
             >
               {label}: {r1.nameDevanagari}↔{r2.nameDevanagari}
@@ -445,6 +500,7 @@ function ComparePanel({ rashiA, rashiB, onSelectB }: { rashiA: RashiData; rashiB
 function ElementGridPanel({ onSelectRashi }: { onSelectRashi: (n: number) => void }) {
   const elements = ["Fire", "Earth", "Air", "Water"] as const;
   const modalities = ["Chara", "Sthira", "Dvi-svabhāva"] as const;
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <div className="space-y-3">
@@ -460,13 +516,23 @@ function ElementGridPanel({ onSelectRashi }: { onSelectRashi: (n: number) => voi
             {modalities.map((mod) => {
               const found = RASHIS.filter((r) => r.element === el && r.modality === mod);
               const color = ELEMENT_COLORS[el].text;
+              const hasItem = found.length > 0;
               return (
                 <motion.div
                   key={`${el}-${mod}`}
-                  className="p-2 rounded-lg text-center cursor-pointer"
-                  whileHover={{ scale: 1.03 }}
+                  role={hasItem ? "button" : undefined}
+                  tabIndex={hasItem ? 0 : undefined}
+                  aria-label={hasItem ? `Select ${found[0].nameIAST} for ${el} ${mod}` : undefined}
+                  className="p-2 rounded-lg text-center cursor-pointer focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
+                  whileHover={shouldReduceMotion ? undefined : { scale: 1.03 }}
                   style={{ background: `${color}12`, border: `1px solid ${color}35`, minHeight: 56 }}
                   onClick={() => found[0] && onSelectRashi(found[0].number)}
+                  onKeyDown={(e) => {
+                    if (hasItem && (e.key === "Enter" || e.key === " ")) {
+                      onSelectRashi(found[0].number);
+                      e.preventDefault();
+                    }
+                  }}
                 >
                   {found.map((r) => (
                     <div key={r.number} className="text-xs font-medium" style={{ color }}>
@@ -488,6 +554,7 @@ function ElementGridPanel({ onSelectRashi }: { onSelectRashi: (n: number) => voi
 
 /* ─── Kālapuruṣa Panel ─── */
 function KalapurusaPanel({ selected, onSelect, hovered, onHover }: { selected: number; onSelect: (n: number) => void; hovered: number | null; onHover: (n: number | null) => void }) {
+  const shouldReduceMotion = useReducedMotion();
   const bodyParts = [
     { num: 1, part: "Head", y: 12 },
     { num: 2, part: "Face/Neck", y: 24 },
@@ -509,7 +576,7 @@ function KalapurusaPanel({ selected, onSelect, hovered, onHover }: { selected: n
         The cosmic body (Kālapuruṣa): head-to-feet progression. Click any body region or rāśi in the list.
       </div>
       <div className="flex gap-4">
-        <svg viewBox="0 0 80 156" className="flex-shrink-0" style={{ width: 80, height: 156 }}>
+        <svg viewBox="0 0 80 156" className="flex-shrink-0" style={{ width: 80, height: 156 }} role="img" aria-label="Diagram showing correspondence of signs to parts of the cosmic body">
           <ellipse cx={40} cy={14} rx={14} ry={16} fill="none" stroke="var(--gl-gold-accent)" strokeOpacity={0.35} strokeWidth={1} />
           <line x1={40} y1={30} x2={40} y2={70} stroke="var(--gl-gold-accent)" strokeOpacity={0.35} strokeWidth={1} />
           <line x1={22} y1={42} x2={58} y2={42} stroke="var(--gl-gold-accent)" strokeOpacity={0.35} strokeWidth={1} />
@@ -528,19 +595,28 @@ function KalapurusaPanel({ selected, onSelect, hovered, onHover }: { selected: n
             );
           })}
         </svg>
-        <div className="flex-1 space-y-1">
+        <div className="flex-1 space-y-1" role="listbox" aria-label="Body part correspondences">
           {bodyParts.map((bp) => {
             const rashi = RASHIS[bp.num - 1];
             const isActive = selected === bp.num;
             return (
               <motion.div
                 key={bp.num}
-                className="flex items-center gap-2 p-1.5 rounded cursor-pointer"
-                whileHover={{ scale: 1.02 }}
+                role="option"
+                aria-selected={isActive}
+                tabIndex={0}
+                className="flex items-center gap-2 p-1.5 rounded cursor-pointer focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
+                whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }}
                 style={{ background: isActive ? `${rashi.color}12` : "transparent", borderLeft: isActive ? `3px solid ${rashi.color}` : "3px solid transparent" }}
                 onClick={() => onSelect(bp.num)}
                 onMouseEnter={() => onHover(bp.num)}
                 onMouseLeave={() => onHover(null)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    onSelect(bp.num);
+                    e.preventDefault();
+                  }
+                }}
               >
                 <span className="text-xs font-mono w-5" style={{ color: "var(--gl-ink-muted)" }}>{bp.num}</span>
                 <span className="text-xs" style={{ fontFamily: "var(--font-devanagari)", color: isActive ? rashi.color : "var(--gl-ink-primary)" }}>{rashi.nameDevanagari}</span>

@@ -1,7 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useState, useMemo } from "react";
 import { IAST } from "../../chrome/typography";
 import { RASHIS, ELEMENT_COLORS } from "../rashi-data";
@@ -14,6 +13,7 @@ const ELEMENT_TRIKONAS = [
 ];
 
 export function TrikonaPairExplorer() {
+  const shouldReduceMotion = useReducedMotion();
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
   const [selectedRashi, setSelectedRashi] = useState<number>(1);
   const [drillMode, setDrillMode] = useState(false);
@@ -73,14 +73,16 @@ export function TrikonaPairExplorer() {
   return (
     <div className="w-full space-y-4" style={{ fontFamily: "var(--font-sans)" }}>
       {/* Element trikoṇa cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" role="grid" aria-label="Elemental trikoṇa groups">
         {ELEMENT_TRIKONAS.map((et) => (
           <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
+            whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
             key={et.element}
             onClick={() => { setSelectedElement(et.element); setSelectedRashi(et.rashis[0]); }}
-            className="p-3 rounded-xl text-left transition-all hover:scale-[1.02]"
+            role="gridcell"
+            aria-selected={selectedElement === et.element}
+            className="p-3 rounded-xl text-left transition-all focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
             style={{
               background: selectedElement === et.element ? `${et.color}20` : `${et.color}08`,
               border: `1px solid ${selectedElement === et.element ? et.color : `${et.color}30`}`,
@@ -104,11 +106,11 @@ export function TrikonaPairExplorer() {
         <span className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>Select reference rāśi:</span>
         {RASHIS.map((r) => (
           <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
+            whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
             key={r.number}
             onClick={() => setSelectedRashi(r.number)}
-            className="px-2 py-1 rounded text-xs transition-all"
+            className="px-2 py-1 rounded text-xs transition-all focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
             style={{
               background: selectedRashi === r.number ? `${r.color}25` : "var(--gl-surface-manuscript)",
               color: selectedRashi === r.number ? r.color : "var(--gl-ink-secondary)",
@@ -153,10 +155,10 @@ export function TrikonaPairExplorer() {
 
       {/* Drill */}
       <motion.button
-        whileHover={{ scale: 1.04 }}
-        whileTap={{ scale: 0.96 }}
+        whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+        whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
         onClick={() => { setDrillMode((m) => !m); if (!drillMode) generateDrill(); }}
-        className="px-4 py-2 rounded-lg text-sm transition-all"
+        className="px-4 py-2 rounded-lg text-sm transition-all focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
         style={{ background: drillMode ? "var(--gl-gold-accent)" : "var(--gl-surface-manuscript)", color: drillMode ? "#1a1a2e" : "var(--gl-ink-primary)", border: "1px solid var(--gl-gold-accent)" }}
       >
         {drillMode ? "Hide Trikoṇa Drill" : "🎯 Trikoṇa Partner Drill"}
@@ -174,12 +176,12 @@ export function TrikonaPairExplorer() {
               const correct = opt === drillQuestion.a;
               return (
                 <motion.button
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
+                  whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+                  whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
                   key={opt}
                   onClick={() => handleDrillGuess(opt)}
                   disabled={answered}
-                  className="p-3 rounded-lg text-sm text-left transition-all"
+                  className="p-3 rounded-lg text-sm text-left transition-all focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
                   style={{
                     background: answered && correct ? "#6B8E6B20" : answered && drillAnswer === opt ? "#A23A1E20" : "var(--gl-surface-manuscript)",
                     border: `1px solid ${answered && correct ? "#6B8E6B" : answered && drillAnswer === opt ? "#A23A1E" : "var(--gl-border-subtle)"}`,
@@ -192,7 +194,7 @@ export function TrikonaPairExplorer() {
             })}
           </div>
           {drillAnswer && (
-            <motion.button onClick={generateDrill} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} className="px-4 py-2 rounded-lg text-sm" style={{ background: "var(--gl-gold-accent)", color: "#1a1a2e" }}>
+            <motion.button onClick={generateDrill} whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }} whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }} className="px-4 py-2 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none" style={{ background: "var(--gl-gold-accent)", color: "#1a1a2e" }}>
               Next →
             </motion.button>
           )}

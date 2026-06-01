@@ -1,7 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import { IAST } from "../../chrome/typography";
 
@@ -133,12 +132,27 @@ const QUIZ_QUESTIONS = [
 ];
 
 export function RashiStreamComparator() {
+  const shouldReduceMotion = useReducedMotion();
   const [selectedStream, setSelectedStream] = useState("parashari");
   const [selectedTopic, setSelectedTopic] = useState("rashi-system");
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizAnswer, setQuizAnswer] = useState<string | null>(null);
   const [quizScore, setQuizScore] = useState({ correct: 0, total: 0 });
   const [showQuiz, setShowQuiz] = useState(false);
+
+  // Track explored cells as "{streamKey}_{topicKey}"
+  const [exploredCells, setExploredCells] = useState<string[]>(["parashari_rashi-system"]);
+
+  const markCellExplored = (streamKey: string, topicKey: string) => {
+    const key = `${streamKey}_${topicKey}`;
+    setExploredCells((prev) => (prev.includes(key) ? prev : [...prev, key]));
+  };
+
+  const selectCell = (streamKey: string, topicKey: string) => {
+    setSelectedStream(streamKey);
+    setSelectedTopic(topicKey);
+    markCellExplored(streamKey, topicKey);
+  };
 
   const stream = STREAMS.find((s) => s.key === selectedStream)!;
   const topic = TOPICS.find((t) => t.key === selectedTopic)!;
@@ -158,17 +172,48 @@ export function RashiStreamComparator() {
     setQuizIndex((i) => (i + 1) % QUIZ_QUESTIONS.length);
   };
 
+  // Criteria: at least 15 unique combinations explored and at least 4 quiz questions answered correctly
+  const isCompleted = exploredCells.length >= 15 && quizScore.correct >= 4;
+
   return (
     <div className="w-full space-y-4" style={{ fontFamily: "var(--font-sans)" }}>
+      {/* Completion Status Panel */}
+      <div 
+        className="p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs transition-all"
+        style={{ 
+          background: isCompleted ? "rgba(107, 142, 107, 0.08)" : "var(--gl-surface-twilight-glass)", 
+          border: `1px solid ${isCompleted ? "#6B8E6B" : "var(--gl-gold-hairline)"}` 
+        }}
+      >
+        <div>
+          <div className="font-semibold text-sm flex items-center gap-1.5 animate-pulse" style={{ color: isCompleted ? "#6B8E6B" : "var(--gl-gold-accent)" }}>
+            {isCompleted ? "✓ Interactive Lesson Completed!" : "🎯 Interactive Lesson Objectives"}
+          </div>
+          <div className="mt-1" style={{ color: "var(--gl-ink-secondary)" }}>
+            Explore at least 15 stream-topic combinations (currently {exploredCells.length}/30) and score 4/5 or higher on the quiz.
+          </div>
+        </div>
+        <div className="flex gap-4 font-medium sm:text-right flex-shrink-0">
+          <div>
+            <span style={{ color: "var(--gl-ink-muted)" }}>Explored:</span>{" "}
+            <span style={{ color: exploredCells.length >= 15 ? "#6B8E6B" : "var(--gl-gold-accent)" }}>{exploredCells.length} / 30</span>
+          </div>
+          <div>
+            <span style={{ color: "var(--gl-ink-muted)" }}>Quiz Score:</span>{" "}
+            <span style={{ color: quizScore.correct >= 4 ? "#6B8E6B" : "var(--gl-ink-muted)" }}>{quizScore.correct} / {Math.max(5, quizScore.total)}</span>
+          </div>
+        </div>
+      </div>
+
       {/* Stream selector */}
       <div className="flex gap-2 flex-wrap">
         {STREAMS.map((s) => (
           <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
+            whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
             key={s.key}
-            onClick={() => setSelectedStream(s.key)}
-            className="px-3 py-2 rounded-lg text-xs text-left transition-all hover:scale-[1.02]"
+            onClick={() => selectCell(s.key, selectedTopic)}
+            className="px-3 py-2 rounded-lg text-xs text-left transition-all"
             style={{
               background: selectedStream === s.key ? `${s.color}25` : "var(--gl-surface-manuscript)",
               border: `1px solid ${selectedStream === s.key ? s.color : "var(--gl-border-subtle)"}`,
@@ -187,10 +232,10 @@ export function RashiStreamComparator() {
       <div className="flex gap-2 flex-wrap">
         {TOPICS.map((t) => (
           <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
+            whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
             key={t.key}
-            onClick={() => setSelectedTopic(t.key)}
+            onClick={() => selectCell(selectedStream, t.key)}
             className="px-3 py-1.5 rounded-lg text-xs transition-all"
             style={{
               background: selectedTopic === t.key ? "var(--gl-gold-accent)" : "var(--gl-surface-manuscript)",
@@ -204,7 +249,7 @@ export function RashiStreamComparator() {
       </div>
 
       {/* Detail panel */}
-      <div className="p-4 rounded-xl space-y-3" style={{ background: "var(--gl-surface-twilight-glass)", border: `1px solid ${conv.color}40` }}>
+      <div className="p-4 rounded-xl space-y-3 animate-fade-in" style={{ background: "var(--gl-surface-twilight-glass)", border: `1px solid ${conv.color}40` }}>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full" style={{ background: conv.color }} />
           <span className="font-semibold text-sm" style={{ color: conv.color, fontFamily: "var(--font-cormorant)" }}>
@@ -221,33 +266,40 @@ export function RashiStreamComparator() {
 
       {/* Full matrix summary */}
       <div className="overflow-x-auto">
-        <table className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
+        <table role="grid" aria-label="Streams and Topics Comparison Matrix" className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
           <thead>
-            <tr>
-              <th className="text-left p-2" style={{ color: "var(--gl-ink-muted)", borderBottom: "1px solid var(--gl-border-subtle)" }}>Stream \ Topic</th>
+            <tr role="row">
+              <th role="columnheader" className="text-left p-2" style={{ color: "var(--gl-ink-muted)", borderBottom: "1px solid var(--gl-border-subtle)" }}>Stream \ Topic</th>
               {TOPICS.map((t) => (
-                <th key={t.key} className="text-center p-2" style={{ color: "var(--gl-gold-accent)", borderBottom: "1px solid var(--gl-border-subtle)", minWidth: 80 }}>{t.label}</th>
+                <th role="columnheader" key={t.key} className="text-center p-2" style={{ color: "var(--gl-gold-accent)", borderBottom: "1px solid var(--gl-border-subtle)", minWidth: 80 }}>{t.label}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {STREAMS.map((s) => (
-              <tr key={s.key}>
-                <td className="p-2 font-medium" style={{ color: s.color, borderBottom: "1px solid var(--gl-border-subtle)" }}>
+              <tr role="row" key={s.key}>
+                <th role="rowheader" className="p-2 font-medium text-left" style={{ color: s.color, borderBottom: "1px solid var(--gl-border-subtle)" }}>
                   <span style={{ fontFamily: "var(--font-devanagari)" }}>{s.devanagari}</span> {s.name}
-                </td>
+                </th>
                 {TOPICS.map((t) => {
                   const c = t.data[s.key as keyof typeof t.data].convergence;
                   const cm = CONVERGENCE_META[c];
+                  const isCellSelected = selectedStream === s.key && selectedTopic === t.key;
                   return (
-                    <td key={t.key} className="p-2 text-center" style={{ borderBottom: "1px solid var(--gl-border-subtle)" }}>
+                    <td role="gridcell" key={t.key} className="p-2 text-center" style={{ borderBottom: "1px solid var(--gl-border-subtle)" }}>
                       <motion.button
-                        whileHover={{ scale: 1.04 }}
-                        whileTap={{ scale: 0.96 }}
-                        onClick={() => { setSelectedStream(s.key); setSelectedTopic(t.key); }}
-                        className="w-6 h-6 rounded-full inline-flex items-center justify-center text-xs font-bold transition-all hover:scale-110"
-                        style={{ background: cm.bg, color: cm.color, border: `1px solid ${cm.color}40` }}
-                        title={`${s.name} · ${t.label}: ${cm.label}`}
+                        whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+                        whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
+                        onClick={() => selectCell(s.key, t.key)}
+                        className="w-6 h-6 rounded-full inline-flex items-center justify-center text-xs font-bold transition-all"
+                        style={{ 
+                          background: cm.bg, 
+                          color: cm.color, 
+                          border: isCellSelected ? `2px solid ${s.color}` : `1px solid ${cm.color}40`,
+                          boxShadow: isCellSelected ? `0 0 8px ${s.color}` : "none",
+                        }}
+                        aria-label={`${s.name} ${t.label} convergence: ${cm.label}`}
+                        aria-selected={isCellSelected}
                       >
                         {c === "base" ? "★" : c === "same" ? "✓" : c === "divergent" ? "~" : "✕"}
                       </motion.button>
@@ -260,7 +312,7 @@ export function RashiStreamComparator() {
         </table>
       </div>
 
-      <div className="flex gap-3 text-xs" style={{ color: "var(--gl-ink-muted)" }}>
+      <div className="flex gap-3 text-xs flex-wrap" style={{ color: "var(--gl-ink-muted)" }}>
         <span><span style={{ color: "#C9A24D" }}>★</span> Reference</span>
         <span><span style={{ color: "#6B8E6B" }}>✓</span> Convergent</span>
         <span><span style={{ color: "#7BA7C0" }}>~</span> Divergent</span>
@@ -269,8 +321,8 @@ export function RashiStreamComparator() {
 
       {/* Mini quiz toggle */}
       <motion.button
-        whileHover={{ scale: 1.04 }}
-        whileTap={{ scale: 0.96 }}
+        whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+        whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
         onClick={() => setShowQuiz((s) => !s)}
         className="px-4 py-2 rounded-lg text-sm transition-all"
         style={{ background: showQuiz ? "var(--gl-gold-accent)" : "var(--gl-surface-manuscript)", color: showQuiz ? "#1a1a2e" : "var(--gl-ink-primary)", border: "1px solid var(--gl-gold-accent)" }}
@@ -293,8 +345,8 @@ export function RashiStreamComparator() {
               const isCorrect = opt === QUIZ_QUESTIONS[quizIndex].a;
               return (
                 <motion.button
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
+                  whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+                  whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
                   key={opt}
                   onClick={() => handleQuizGuess(opt)}
                   disabled={isAnswered}
@@ -312,8 +364,8 @@ export function RashiStreamComparator() {
           </div>
           {quizAnswer && (
             <motion.button
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
+              whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
               onClick={nextQuiz}
               className="px-4 py-2 rounded-lg text-sm"
               style={{ background: "var(--gl-gold-accent)", color: "#1a1a2e" }}
