@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { IAST } from "../../chrome/typography";
 import { RASHIS, polarToCartesian, describeArc, midAngle, type RashiData } from "../rashi-data";
 
@@ -130,11 +130,12 @@ function StepByStepFormula({ longitude }: { longitude: number }) {
 
 /* ─── Main component ─── */
 export function RashiBoundaryWheel() {
+  const shouldReduceMotion = useReducedMotion();
   const [selected, setSelected] = useState<number | null>(1);
   const [longitude, setLongitude] = useState<number>(15);
   const [showBoundaries, setShowBoundaries] = useState(true);
   const [hovered, setHovered] = useState<number | null>(null);
-  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+  const [focusedSegment, setFocusedSegment] = useState<number | null>(null);
 
   const computedRashi = useMemo(() => {
     const idx = Math.floor(longitude / 30);
@@ -187,8 +188,8 @@ export function RashiBoundaryWheel() {
           return (
             <motion.button
               key={p.label}
-              whileHover={{ scale: 1.06 }}
-              whileTap={{ scale: 0.96 }}
+              whileHover={shouldReduceMotion ? undefined : { scale: 1.06 }}
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
               onClick={() => {
                 setLongitude(p.deg);
                 setSelected(Math.floor(p.deg / 30) + 1);
@@ -257,8 +258,8 @@ export function RashiBoundaryWheel() {
           style={{ accentColor: "var(--gl-gold-accent)" }}
         />
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
+          whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
           onClick={() => setShowBoundaries((s) => !s)}
           className="px-4 py-1.5 rounded-lg text-xs font-semibold"
           style={{
@@ -313,6 +314,8 @@ export function RashiBoundaryWheel() {
           <svg
             viewBox="0 0 420 420"
             className="w-full"
+            role="img"
+            aria-label="Interactive 12-segment Sidereal Zodiac Wheel representing rashi boundaries"
             style={{ maxWidth: 420, filter: "drop-shadow(0 12px 32px rgba(0,0,0,0.12))" }}
           >
             <defs>
@@ -459,6 +462,7 @@ export function RashiBoundaryWheel() {
               const endAngle = rashi.endDegree;
               const isSelected = selected === rashi.number;
               const isHovered = hovered === rashi.number;
+              const isFocused = focusedSegment === rashi.number;
               const isActiveComputed = computedRashi + 1 === rashi.number;
 
               const path = describeArc(CX, CY, R_OUTER, startAngle, endAngle);
@@ -473,7 +477,25 @@ export function RashiBoundaryWheel() {
               const strokeWidth = isSelected ? 3 : isHovered ? 2 : 1;
 
               return (
-                <g key={rashi.number}>
+                <g 
+                  key={rashi.number}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={isSelected}
+                  aria-label={`${rashi.nameDevanagari} ${rashi.nameIAST} (${rashi.nameEnglish}) segment, spanning from ${rashi.startDegree} to ${rashi.endDegree} degrees`}
+                  style={{ cursor: "pointer", outline: "none" }}
+                  onClick={() => handleSegmentClick(rashi)}
+                  onMouseEnter={() => handleSegmentHover(rashi)}
+                  onMouseLeave={() => handleSegmentHover(null)}
+                  onFocus={() => setFocusedSegment(rashi.number)}
+                  onBlur={() => setFocusedSegment(null)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      handleSegmentClick(rashi);
+                      e.preventDefault();
+                    }
+                  }}
+                >
                   {/* Segment path */}
                   <motion.path
                     d={path}
@@ -481,15 +503,24 @@ export function RashiBoundaryWheel() {
                     stroke={strokeColor}
                     strokeWidth={strokeWidth}
                     filter={isSelected ? "url(#glow)" : undefined}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => handleSegmentClick(rashi)}
-                    onMouseEnter={() => handleSegmentHover(rashi)}
-                    onMouseLeave={() => handleSegmentHover(null)}
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }}
                     transition={{ duration: 0.2 }}
                     /* Note: SVG transform-origin needs to be set via CSS for Framer */
                     initial={false}
+                    style={{ pointerEvents: "auto" }}
                   />
+
+                  {/* Focused segment outline */}
+                  {isFocused && (
+                    <path
+                      d={path}
+                      fill="none"
+                      stroke="var(--gl-gold-accent)"
+                      strokeWidth={2}
+                      strokeDasharray="3 3"
+                      style={{ pointerEvents: "none" }}
+                    />
+                  )}
 
                   {/* Devanagari name */}
                   <text
@@ -626,8 +657,8 @@ export function RashiBoundaryWheel() {
           {/* ── Nav buttons ── */}
           <div className="flex gap-3 mt-4 justify-center">
             <motion.button
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.92 }}
+              whileHover={shouldReduceMotion ? undefined : { scale: 1.08 }}
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.92 }}
               onClick={() => {
                 const prev = selected === null ? 1 : ((selected - 2 + 12) % 12) + 1;
                 setSelected(prev);
@@ -643,8 +674,8 @@ export function RashiBoundaryWheel() {
               ← Prev
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.92 }}
+              whileHover={shouldReduceMotion ? undefined : { scale: 1.08 }}
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.92 }}
               onClick={() => {
                 const next = selected === null ? 1 : (selected % 12) + 1;
                 setSelected(next);
@@ -663,7 +694,7 @@ export function RashiBoundaryWheel() {
 
           {/* Keyboard hint */}
           <p className="text-center mt-2 text-[10px]" style={{ color: "var(--gl-ink-muted)" }}>
-            Use ← → arrow keys to navigate
+            Use ← → arrow keys or Tab/Enter to navigate segments
           </p>
         </div>
 
@@ -726,7 +757,7 @@ export function RashiBoundaryWheel() {
                   ].map((a) => (
                     <motion.div
                       key={a.label}
-                      whileHover={{ scale: 1.03 }}
+                      whileHover={shouldReduceMotion ? undefined : { scale: 1.03 }}
                       className="p-3 rounded-xl transition-colors"
                       style={{
                         background: "var(--gl-surface-manuscript)",

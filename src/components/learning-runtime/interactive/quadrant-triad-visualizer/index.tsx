@@ -1,8 +1,7 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-
-import { useState, useMemo } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useState, useMemo, useEffect } from "react";
 import { IAST } from "../../chrome/typography";
 import { RASHIS } from "../rashi-data";
 
@@ -15,6 +14,7 @@ const QUADRANT_META: Record<Quadrant, { label: string; devanagari: string; color
 };
 
 export function QuadrantTriadVisualizer() {
+  const shouldReduceMotion = useReducedMotion();
   const [referenceRashi, setReferenceRashi] = useState(1);
   const [selectedQuadrant, setSelectedQuadrant] = useState<Quadrant>("kendra");
   const [drillMode, setDrillMode] = useState(false);
@@ -56,6 +56,28 @@ export function QuadrantTriadVisualizer() {
     setDrillScore((s) => ({ correct: s.correct + (correct ? 1 : 0), total: s.total + 1 }));
   };
 
+  // Keyboard navigation: 1/2/3 select quadrant, Arrow keys change reference
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (drillMode) return;
+      if (e.key === "1") {
+        setSelectedQuadrant("kendra");
+      } else if (e.key === "2") {
+        setSelectedQuadrant("panaphara");
+      } else if (e.key === "3") {
+        setSelectedQuadrant("apoklima");
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        setReferenceRashi((r) => (r % 12) + 1);
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setReferenceRashi((r) => (r === 1 ? 12 : r - 1));
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [drillMode]);
+
   // Triple coincidence check
   const isTripleCoincidence = referenceRashi === 1; // From Meṣa: kendra=chara, panaphara=sthira, apoklima=dvi-svabhāva
 
@@ -66,11 +88,11 @@ export function QuadrantTriadVisualizer() {
         <span className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>Reference rāśi (count from):</span>
         {RASHIS.map((r) => (
           <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
+            whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
             key={r.number}
             onClick={() => { setReferenceRashi(r.number); setDrillMode(false); }}
-            className="px-2 py-1 rounded text-xs transition-all"
+            className="px-2 py-1 rounded text-xs transition-all focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
             style={{
               background: referenceRashi === r.number ? `${r.color}25` : "var(--gl-surface-manuscript)",
               color: referenceRashi === r.number ? r.color : "var(--gl-ink-secondary)",
@@ -89,14 +111,16 @@ export function QuadrantTriadVisualizer() {
       )}
 
       {/* Quadrant selector */}
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex gap-2 flex-wrap" role="radiogroup" aria-label="Quadrant selector">
         {(Object.entries(QUADRANT_META) as [Quadrant, typeof QUADRANT_META["kendra"]][]).map(([key, meta]) => (
           <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
+            whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
             key={key}
             onClick={() => { setSelectedQuadrant(key); setDrillMode(false); }}
-            className="px-3 py-2 rounded-lg text-xs text-left transition-all flex-1 min-w-[100px]"
+            role="radio"
+            aria-checked={selectedQuadrant === key}
+            className="px-3 py-2 rounded-lg text-xs text-left transition-all flex-1 min-w-[100px] focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
             style={{
               background: selectedQuadrant === key ? `${meta.color}25` : "var(--gl-surface-manuscript)",
               border: `1px solid ${selectedQuadrant === key ? meta.color : "var(--gl-border-subtle)"}`,
@@ -138,10 +162,10 @@ export function QuadrantTriadVisualizer() {
 
       {/* Counting drill */}
       <motion.button
-        whileHover={{ scale: 1.04 }}
-        whileTap={{ scale: 0.96 }}
+        whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+        whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
         onClick={() => { setDrillMode((m) => !m); if (!drillMode) generateDrill(); }}
-        className="px-4 py-2 rounded-lg text-sm transition-all"
+        className="px-4 py-2 rounded-lg text-sm transition-all focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
         style={{ background: drillMode ? "var(--gl-gold-accent)" : "var(--gl-surface-manuscript)", color: drillMode ? "#1a1a2e" : "var(--gl-ink-primary)", border: "1px solid var(--gl-gold-accent)" }}
       >
         {drillMode ? "Hide Counting Drill" : "🎯 Active Counting Drill"}
@@ -159,12 +183,12 @@ export function QuadrantTriadVisualizer() {
               const correct = opt === drillQuestion.a;
               return (
                 <motion.button
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
+                  whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+                  whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
                   key={opt}
                   onClick={() => handleDrillGuess(opt)}
                   disabled={answered}
-                  className="p-3 rounded-lg text-sm text-left transition-all"
+                  className="p-3 rounded-lg text-sm text-left transition-all focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
                   style={{
                     background: answered && correct ? "#6B8E6B20" : answered && drillAnswer === opt ? "#A23A1E20" : "var(--gl-surface-manuscript)",
                     border: `1px solid ${answered && correct ? "#6B8E6B" : answered && drillAnswer === opt ? "#A23A1E" : "var(--gl-border-subtle)"}`,
@@ -177,7 +201,7 @@ export function QuadrantTriadVisualizer() {
             })}
           </div>
           {drillAnswer && (
-            <motion.button onClick={generateDrill} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} className="px-4 py-2 rounded-lg text-sm" style={{ background: "var(--gl-gold-accent)", color: "#1a1a2e" }}>
+            <motion.button onClick={generateDrill} whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }} whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }} className="px-4 py-2 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none" style={{ background: "var(--gl-gold-accent)", color: "#1a1a2e" }}>
               Next →
             </motion.button>
           )}

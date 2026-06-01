@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { IAST } from "../../chrome/typography";
 import { RASHIS, DIGNITIES } from "../rashi-data";
 
@@ -23,6 +23,7 @@ const SCENARIOS: BoundaryScenario[] = [
 ];
 
 export function BoundaryCrossingDemonstrator() {
+  const shouldReduceMotion = useReducedMotion();
   const [scenarioIdx, setScenarioIdx] = useState(0);
   const [degree, setDegree] = useState(29.5);
   const [flash, setFlash] = useState(false);
@@ -69,14 +70,16 @@ export function BoundaryCrossingDemonstrator() {
   return (
     <div className="w-full space-y-5" style={{ fontFamily: "var(--font-sans)" }}>
       {/* Scenario selector */}
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex gap-2 flex-wrap" role="tablist" aria-label="Select boundary crossing scenario">
         {SCENARIOS.map((s, i) => (
           <motion.button
             key={s.label}
+            role="tab"
+            aria-selected={scenarioIdx === i}
             onClick={() => { setScenarioIdx(i); setDegree(29.5); }}
             className="px-2.5 py-1.5 rounded-lg text-xs transition-all"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
+            whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
             style={{
               background: scenarioIdx === i ? "var(--gl-gold-accent)" : "var(--gl-surface-manuscript)",
               color: scenarioIdx === i ? "#1a1a2e" : "var(--gl-ink-secondary)",
@@ -100,6 +103,7 @@ export function BoundaryCrossingDemonstrator() {
           <span>30° {rashiB.nameDevanagari}</span>
         </div>
         <input
+          id="degree-slider"
           type="range"
           min={0}
           max={60}
@@ -108,6 +112,8 @@ export function BoundaryCrossingDemonstrator() {
           onChange={(e) => setDegree(parseFloat(e.target.value))}
           className="w-full"
           style={{ accentColor: "var(--gl-gold-accent)" }}
+          aria-label="Degree selector from 0 to 60. Boundary is at 30 degrees."
+          aria-valuetext={`${effectiveDegree.toFixed(2)} degrees`}
         />
         <div className="flex justify-between items-center">
           <div className="text-sm" style={{ color: "var(--gl-ink-secondary)" }}>
@@ -130,6 +136,7 @@ export function BoundaryCrossingDemonstrator() {
           flash={flash && isBefore}
           grahaDignity={isBefore && scenario.focusGraha ? focusDignity(scenario.focusGraha, scenario.rashiA, degree) : null}
           focusGraha={scenario.focusGraha}
+          shouldReduceMotion={shouldReduceMotion ?? undefined}
         />
         <Panel
           title="After Boundary"
@@ -139,13 +146,14 @@ export function BoundaryCrossingDemonstrator() {
           flash={flash && !isBefore}
           grahaDignity={!isBefore && scenario.focusGraha ? focusDignity(scenario.focusGraha, scenario.rashiB, degree) : null}
           focusGraha={scenario.focusGraha}
+          shouldReduceMotion={shouldReduceMotion ?? undefined}
         />
       </div>
 
       {/* Categorical change banner */}
       <motion.div
         initial={false}
-        animate={{ scale: [1, 1.01, 1] }}
+        animate={shouldReduceMotion ? {} : { scale: [1, 1.01, 1] }}
         transition={{ duration: 0.3 }}
         className="p-4 rounded-xl text-center text-sm"
         style={{
@@ -178,8 +186,8 @@ export function BoundaryCrossingDemonstrator() {
         <motion.button
           onClick={() => setPrecisionMode((p) => !p)}
           className="px-3 py-1.5 rounded text-xs"
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.96 }}
+          whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+          whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
           style={{
             background: precisionMode ? "var(--gl-gold-accent)" : "var(--gl-surface-manuscript)",
             color: precisionMode ? "#1a1a2e" : "var(--gl-ink-primary)",
@@ -194,9 +202,9 @@ export function BoundaryCrossingDemonstrator() {
         {precisionMode && (
           <motion.div
             key="precision"
-            initial={{ opacity: 0, y: 12 }}
+            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
+            exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
             transition={{ duration: 0.25 }}
             className="p-4 rounded-xl space-y-3"
             style={{ background: "var(--gl-surface-twilight-glass)", border: "1px solid var(--gl-gold-hairline)", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}
@@ -205,8 +213,9 @@ export function BoundaryCrossingDemonstrator() {
               Birth-Time Uncertainty Simulator
             </div>
             <div className="flex items-center gap-3">
-              <label className="text-sm" style={{ color: "var(--gl-ink-secondary)" }}>Birth time error:</label>
+              <label id="birth-time-error-label" htmlFor="birth-time-error-slider" className="text-sm" style={{ color: "var(--gl-ink-secondary)" }}>Birth time error:</label>
               <input
+                id="birth-time-error-slider"
                 type="range"
                 min={0}
                 max={10}
@@ -214,6 +223,8 @@ export function BoundaryCrossingDemonstrator() {
                 value={birthTimeError}
                 onChange={(e) => setBirthTimeError(parseFloat(e.target.value))}
                 className="w-32"
+                aria-labelledby="birth-time-error-label"
+                aria-valuetext={`±${birthTimeError} minutes`}
               />
               <span className="text-sm font-mono" style={{ color: "var(--gl-ink-primary)" }}>±{birthTimeError} min</span>
             </div>
@@ -283,6 +294,7 @@ function Panel({
   flash,
   grahaDignity,
   focusGraha,
+  shouldReduceMotion,
 }: {
   title: string;
   rashi: typeof RASHIS[0];
@@ -291,6 +303,7 @@ function Panel({
   flash: boolean;
   grahaDignity: string | null;
   focusGraha?: string;
+  shouldReduceMotion?: boolean;
 }) {
   return (
     <div
@@ -299,7 +312,7 @@ function Panel({
         background: flash ? "#A23A1E30" : active ? `${rashi.color}12` : "var(--gl-surface-manuscript)",
         border: `2px solid ${flash ? "#A23A1E" : active ? rashi.color : "var(--gl-gold-hairline)"}`,
         opacity: dim ? 0.4 : 1,
-        transform: active ? "scale(1.02)" : "scale(1)",
+        transform: active && !shouldReduceMotion ? "scale(1.02)" : "scale(1)",
         boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
       }}
     >

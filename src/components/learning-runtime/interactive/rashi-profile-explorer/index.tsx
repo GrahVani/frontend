@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useMemo, useContext, useCallback } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useState, useMemo, useContext, useCallback, useEffect } from "react";
 import { IAST } from "../../chrome/typography";
 import {
   RASHIS, getDignitiesForRashi, MULA_TRIKONA_REDIRECTS, OPPOSITE_PAIRS,
@@ -163,10 +163,14 @@ function AttributeConstellationMandala({
   rashi,
   activeNode,
   onNodeClick,
+  focusedNode,
+  setFocusedNode,
 }: {
   rashi: RashiData;
   activeNode: string | null;
   onNodeClick: (key: string | null) => void;
+  focusedNode: string | null;
+  setFocusedNode: (key: string | null) => void;
 }) {
   const cx = 200;
   const cy = 200;
@@ -176,7 +180,7 @@ function AttributeConstellationMandala({
   const connections = activeNode ? (DOCTRINAL_CONNECTIONS[activeNode] ?? []) : [];
 
   return (
-    <svg viewBox="0 0 400 400" className="w-full" style={{ maxWidth: 400 }}>
+    <svg viewBox="0 0 400 400" className="w-full" style={{ maxWidth: 400 }} role="img" aria-label={`Attribute Constellation Mandala for ${rashi.nameIAST}`}>
       <defs>
         {/* Radial gradient for center hub */}
         <radialGradient id="mandalaHub" cx="50%" cy="50%" r="50%">
@@ -272,6 +276,7 @@ function AttributeConstellationMandala({
       {ATTRIBUTE_NODES.map((node) => {
         const pos = polarToCartesian(cx, cy, outerR - 10, node.angle);
         const isActive = activeNode === node.key;
+        const isFocused = focusedNode === node.key;
         const isConnected = connections.includes(node.key);
         const nodeR = isActive ? 28 : isConnected ? 24 : 22;
         const labelPos = polarToCartesian(cx, cy, outerR + 18, node.angle);
@@ -279,12 +284,28 @@ function AttributeConstellationMandala({
         return (
           <g
             key={node.key}
-            style={{ cursor: "pointer" }}
+            role="button"
+            tabIndex={0}
+            aria-pressed={isActive}
+            aria-label={`Attribute node: ${node.label}, value: ${getAttributeValue(rashi, node.key)}`}
+            style={{ cursor: "pointer", outline: "none" }}
             onClick={() => onNodeClick(isActive ? null : node.key)}
+            onFocus={() => setFocusedNode(node.key)}
+            onBlur={() => setFocusedNode(null)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                onNodeClick(isActive ? null : node.key);
+                e.preventDefault();
+              }
+            }}
           >
-            {/* Node glow for active */}
-            {isActive && (
+            {/* Node glow for active or focused */}
+            {(isActive || isFocused) && (
               <circle cx={pos.x} cy={pos.y} r={nodeR + 6} fill={`${rashi.color}15`} filter="url(#nodeGlow)" />
+            )}
+            {/* Focus ring outline */}
+            {isFocused && (
+              <circle cx={pos.x} cy={pos.y} r={nodeR + 4} fill="none" stroke="var(--gl-gold-accent)" strokeWidth={1.5} strokeDasharray="3 3" />
             )}
             {/* Node background */}
             <circle
@@ -296,7 +317,7 @@ function AttributeConstellationMandala({
               style={{ transition: "all 0.3s ease" }}
             />
             {/* Node icon */}
-            <text x={pos.x} y={pos.y - 3} textAnchor="middle" dominantBaseline="middle" fontSize={isActive ? 14 : 12} style={{ pointerEvents: "none" }}>
+            <text x={pos.x} y={pos.y - 3} textAnchor="middle" dominantBaseline="middle" fontSize={isActive ? 14 : 12} fill="var(--gl-ink-primary)" style={{ pointerEvents: "none" }}>
               {node.icon}
             </text>
             {/* Node label */}
@@ -342,7 +363,7 @@ function DignityLandscapeRing({ rashi }: { rashi: RashiData }) {
       <div className="text-sm font-semibold" style={{ fontFamily: "var(--font-cormorant)", color: "var(--gl-gold-accent)" }}>
         Dignity Landscape — {rashi.startDegree}° to {rashi.endDegree}° Sidereal
       </div>
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full" style={{ maxWidth: width }}>
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full" style={{ maxWidth: width }} role="img" aria-label={`Dignity Landscape for ${rashi.nameIAST} spanning from ${rashi.startDegree} to ${rashi.endDegree} degrees`}>
         <defs>
           <linearGradient id="dignityArcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor={`${rashi.color}25`} />
@@ -388,7 +409,7 @@ function DignityLandscapeRing({ rashi }: { rashi: RashiData }) {
                 <circle cx={x} cy={arcY} r={12} fill={`${dc.text}20`} />
                 {/* Marker */}
                 <circle cx={x} cy={arcY} r={7} fill={dc.bg} stroke={dc.text} strokeWidth={2} />
-                <text x={x} y={arcY + 1} textAnchor="middle" dominantBaseline="middle" fontSize={8}>
+                <text x={x} y={arcY + 1} textAnchor="middle" dominantBaseline="middle" fontSize={8} fill="var(--gl-ink-primary)">
                   {d.badge}
                 </text>
                 {/* Label */}
@@ -467,6 +488,7 @@ function DignityLandscapeRing({ rashi }: { rashi: RashiData }) {
 const CLASSICAL_GRAHAS = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"];
 
 function GrahaExpressionSimulator({ rashi }: { rashi: RashiData }) {
+  const shouldReduceMotion = useReducedMotion();
   const [selectedGraha, setSelectedGraha] = useState<string | null>(null);
 
   return (
@@ -489,8 +511,10 @@ function GrahaExpressionSimulator({ rashi }: { rashi: RashiData }) {
             <motion.button
               key={g}
               onClick={() => setSelectedGraha(isActive ? null : g)}
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={shouldReduceMotion ? undefined : { scale: 1.08 }}
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
+              aria-pressed={isActive}
+              aria-label={`Simulate ${g} in ${rashi.nameIAST}`}
               className="flex flex-col items-center gap-1 p-3 rounded-xl transition-all"
               style={{
                 background: isActive ? `${color}20` : "var(--gl-surface-manuscript)",
@@ -595,7 +619,7 @@ function MirrorComparison({ rashi }: { rashi: RashiData }) {
       </div>
 
       {/* Visual comparison SVG */}
-      <svg viewBox="0 0 400 140" className="w-full" style={{ maxWidth: 400 }}>
+      <svg viewBox="0 0 400 140" className="w-full" style={{ maxWidth: 400 }} role="img" aria-label={`180 degree axis mirror comparison between ${rashi.nameIAST} and ${oppositeRashi.nameIAST}`}>
         <defs>
           <radialGradient id="rashiAGrad" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor={`${rashi.color}30`} />
@@ -639,7 +663,7 @@ function MirrorComparison({ rashi }: { rashi: RashiData }) {
 
       {/* Attribute comparison table */}
       <div className="overflow-x-auto rounded-xl" style={{ border: "1px solid var(--gl-gold-hairline)" }}>
-        <table className="w-full text-sm" style={{ borderCollapse: "collapse" }}>
+        <table className="w-full text-sm" style={{ borderCollapse: "collapse" }} aria-label={`Comparison table between ${rashi.nameIAST} and ${oppositeRashi.nameIAST}`}>
           <thead>
             <tr>
               <th className="text-left p-2.5 text-xs" style={{ color: "var(--gl-ink-muted)", borderBottom: "1px solid var(--gl-gold-hairline)", background: "var(--gl-surface-manuscript)" }}>Attribute</th>
@@ -684,11 +708,19 @@ function MirrorComparison({ rashi }: { rashi: RashiData }) {
 }
 
 /* ─── Enhanced Quiz ─── */
-function EnhancedQuiz({ rashi }: { rashi: RashiData }) {
+function EnhancedQuiz({ 
+  rashi,
+  quizScore,
+  setQuizScore
+}: { 
+  rashi: RashiData;
+  quizScore: { correct: number; total: number };
+  setQuizScore: React.Dispatch<React.SetStateAction<{ correct: number; total: number }>>;
+}) {
+  const shouldReduceMotion = useReducedMotion();
   const quiz = useMemo(() => generateQuiz(rashi), [rashi]);
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizAnswer, setQuizAnswer] = useState<string | null>(null);
-  const [quizScore, setQuizScore] = useState({ correct: 0, total: 0 });
 
   const currentQ = quiz[quizIndex];
 
@@ -696,7 +728,7 @@ function EnhancedQuiz({ rashi }: { rashi: RashiData }) {
     if (quizAnswer) return;
     setQuizAnswer(opt);
     setQuizScore((s) => ({ correct: s.correct + (opt === currentQ.answer ? 1 : 0), total: s.total + 1 }));
-  }, [quizAnswer, currentQ]);
+  }, [quizAnswer, currentQ, setQuizScore]);
 
   const nextQ = useCallback(() => {
     setQuizAnswer(null);
@@ -745,8 +777,8 @@ function EnhancedQuiz({ rashi }: { rashi: RashiData }) {
                 key={opt}
                 onClick={() => handleGuess(opt)}
                 disabled={answered}
-                whileHover={!answered ? { scale: 1.03 } : {}}
-                whileTap={!answered ? { scale: 0.97 } : {}}
+                whileHover={!answered && !shouldReduceMotion ? { scale: 1.03 } : {}}
+                whileTap={!answered && !shouldReduceMotion ? { scale: 0.97 } : {}}
                 className="p-3.5 rounded-xl text-sm text-left transition-all"
                 style={{
                   background: answered && correct ? "#6B8E6B15" : answered && isMyAnswer ? "#A23A1E15" : "var(--gl-surface-manuscript)",
@@ -770,6 +802,8 @@ function EnhancedQuiz({ rashi }: { rashi: RashiData }) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={nextQ}
+            whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
             className="mt-4 px-5 py-2.5 rounded-xl text-sm font-medium"
             style={{ background: "var(--gl-gold-accent)", color: "#1a1a2e" }}
           >
@@ -796,19 +830,68 @@ type SectionKey = typeof SECTIONS[number]["key"];
    Main Component — RashiProfileExplorer
    ═══════════════════════════════════════════════════ */
 export function RashiProfileExplorer() {
+  const shouldReduceMotion = useReducedMotion();
   const { slug } = useContext(LessonContext);
   const rashiNum = SLUG_TO_RASHI[slug] ?? 1;
+
   const rashi = useMemo(() => RASHIS[rashiNum - 1], [rashiNum]);
 
   const [activeSection, setActiveSection] = useState<SectionKey>("mandala");
   const [activeNode, setActiveNode] = useState<string | null>(null);
+  const [focusedNode, setFocusedNode] = useState<string | null>(null);
+
+  // Completion states
+  const [visitedSections, setVisitedSections] = useState<string[]>(["mandala"]);
+  const [quizScore, setQuizScore] = useState({ correct: 0, total: 0 });
+
+  const handleSectionChange = (section: SectionKey) => {
+    setActiveSection(section);
+    setVisitedSections((prev) => (prev.includes(section) ? prev : [...prev, section]));
+  };
+
+  // Reset completion trackers when the active Rāśi changes
+  useEffect(() => {
+    setActiveNode(null);
+    setVisitedSections(["mandala"]);
+    setQuizScore({ correct: 0, total: 0 });
+    setActiveSection("mandala");
+  }, [rashiNum]);
 
   const ec = ELEMENT_COLORS[rashi.element];
+  const isCompleted = visitedSections.length === SECTIONS.length && quizScore.correct >= 4;
 
   return (
     <div className="w-full space-y-5" style={{ fontFamily: "var(--font-sans)" }}>
+      {/* Completion Status Panel */}
+      <div 
+        className="p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs transition-all"
+        style={{ 
+          background: isCompleted ? "rgba(107, 142, 107, 0.08)" : "var(--gl-surface-twilight-glass)", 
+          border: `1px solid ${isCompleted ? "#6B8E6B" : "var(--gl-gold-hairline)"}` 
+        }}
+      >
+        <div>
+          <div className="font-semibold text-sm flex items-center gap-1.5 animate-pulse" style={{ color: isCompleted ? "#6B8E6B" : "var(--gl-gold-accent)" }}>
+            {isCompleted ? "✓ Interactive Lesson Completed!" : "🎯 Interactive Lesson Objectives"}
+          </div>
+          <div className="mt-1" style={{ color: "var(--gl-ink-secondary)" }}>
+            Explore all 5 sections of this Rāśi (currently {visitedSections.length}/5) and score 4/5 or higher on the quiz.
+          </div>
+        </div>
+        <div className="flex gap-4 font-medium sm:text-right flex-shrink-0">
+          <div>
+            <span style={{ color: "var(--gl-ink-muted)" }}>Sections Visited:</span>{" "}
+            <span style={{ color: visitedSections.length === SECTIONS.length ? "#6B8E6B" : "var(--gl-gold-accent)" }}>{visitedSections.length} / 5</span>
+          </div>
+          <div>
+            <span style={{ color: "var(--gl-ink-muted)" }}>Quiz Score:</span>{" "}
+            <span style={{ color: quizScore.correct >= 4 ? "#6B8E6B" : "var(--gl-ink-muted)" }}>{quizScore.correct} / {Math.max(5, quizScore.total)}</span>
+          </div>
+        </div>
+      </div>
+
       {/* Identity Header */}
-      <div className="p-5 rounded-2xl flex items-center gap-4" style={{ background: `linear-gradient(135deg, ${rashi.color}08 0%, ${rashi.color}18 100%)`, border: `2px solid ${rashi.color}35`, boxShadow: `0 6px 28px ${rashi.color}12` }}>
+      <div className="p-5 rounded-2xl flex items-center gap-4 animate-fade-in" style={{ background: `linear-gradient(135deg, ${rashi.color}08 0%, ${rashi.color}18 100%)`, border: `2px solid ${rashi.color}35`, boxShadow: `0 6px 28px ${rashi.color}12` }}>
         <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl flex-shrink-0" style={{ background: `${rashi.color}20`, color: rashi.color, fontFamily: "var(--font-devanagari)", border: `2px solid ${rashi.color}40` }}>
           {rashi.nameDevanagari}
         </div>
@@ -826,13 +909,17 @@ export function RashiProfileExplorer() {
       </div>
 
       {/* Section navigation */}
-      <div className="flex gap-2 flex-wrap">
+      <div role="tablist" aria-label="Rāśi Profile Explorer Sections" className="flex gap-2 flex-wrap">
         {SECTIONS.map((s) => (
           <motion.button
             key={s.key}
-            onClick={() => setActiveSection(s.key)}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
+            id={`tab-${s.key}`}
+            role="tab"
+            aria-selected={activeSection === s.key}
+            aria-controls={`panel-${s.key}`}
+            onClick={() => handleSectionChange(s.key)}
+            whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
             className="px-4 py-2.5 text-sm rounded-xl transition-all"
             style={{
               background: activeSection === s.key ? rashi.color : "var(--gl-surface-manuscript)",
@@ -852,6 +939,9 @@ export function RashiProfileExplorer() {
       <AnimatePresence mode="wait">
         <motion.div
           key={activeSection}
+          id={`panel-${activeSection}`}
+          role="tabpanel"
+          aria-labelledby={`tab-${activeSection}`}
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
@@ -863,9 +953,15 @@ export function RashiProfileExplorer() {
               <div className="flex flex-col lg:flex-row gap-6">
                 {/* Mandala SVG */}
                 <div className="flex-shrink-0 mx-auto lg:mx-0" style={{ maxWidth: 400 }}>
-                  <AttributeConstellationMandala rashi={rashi} activeNode={activeNode} onNodeClick={setActiveNode} />
+                  <AttributeConstellationMandala 
+                    rashi={rashi} 
+                    activeNode={activeNode} 
+                    onNodeClick={setActiveNode} 
+                    focusedNode={focusedNode}
+                    setFocusedNode={setFocusedNode}
+                  />
                   <div className="text-xs text-center mt-1" style={{ color: "var(--gl-ink-muted)" }}>
-                    Click any attribute node to explore doctrinal connections
+                    Click or focus and press Enter on any attribute node to explore doctrinal connections
                   </div>
                 </div>
 
@@ -905,7 +1001,7 @@ export function RashiProfileExplorer() {
                                 <motion.button
                                   key={connKey}
                                   onClick={() => setActiveNode(connKey)}
-                                  whileHover={{ scale: 1.05 }}
+                                  whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
                                   className="px-2.5 py-1 rounded-lg text-xs"
                                   style={{ background: `${rashi.color}12`, color: rashi.color, border: `1px solid ${rashi.color}30`, cursor: "pointer" }}
                                 >
@@ -936,7 +1032,8 @@ export function RashiProfileExplorer() {
                             <motion.button
                               key={n.key}
                               onClick={() => setActiveNode(n.key)}
-                              whileHover={{ scale: 1.03 }}
+                              whileHover={shouldReduceMotion ? undefined : { scale: 1.03 }}
+                              whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
                               className="p-2 rounded-lg text-xs text-center"
                               style={{ background: "var(--gl-surface-manuscript)", border: "1px solid var(--gl-gold-hairline)", color: "var(--gl-ink-primary)", cursor: "pointer" }}
                             >
@@ -988,7 +1085,11 @@ export function RashiProfileExplorer() {
 
           {/* ─── Quiz Section ─── */}
           {activeSection === "quiz" && (
-            <EnhancedQuiz rashi={rashi} />
+            <EnhancedQuiz 
+              rashi={rashi} 
+              quizScore={quizScore}
+              setQuizScore={setQuizScore}
+            />
           )}
         </motion.div>
       </AnimatePresence>

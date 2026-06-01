@@ -56,6 +56,7 @@ export const DIGNITIES: Record<number, DignityEntry[]> = {
   ],
   2: [
     { type: "Exalted", graha: "Moon", degree: 3, color: "#C9A24D", badge: "👑" },
+    { type: "Mūla-trikoṇa", graha: "Moon", degreeStart: 3, degreeEnd: 30, color: "#A23A1E", badge: "🔺" },
     { type: "Own-sign", graha: "Venus", color: "#4A7C9B", badge: "●" },
   ],
   3: [
@@ -84,7 +85,6 @@ export const DIGNITIES: Record<number, DignityEntry[]> = {
   ],
   8: [
     { type: "Debilitated", graha: "Moon", degree: 3, color: "#6B6B6B", badge: "⬇️" },
-    { type: "Mūla-trikoṇa", graha: "Mars", degreeStart: 0, degreeEnd: 30, color: "#A23A1E", badge: "🔺" },
     { type: "Own-sign", graha: "Mars", color: "#4A7C9B", badge: "●" },
   ],
   9: [
@@ -108,6 +108,8 @@ export const DIGNITIES: Record<number, DignityEntry[]> = {
 };
 
 export const MULA_TRIKONA_REDIRECTS: Record<string, { fromRashi: number; toRashi: number; graha: string; reason: string }> = {
+  moon: { fromRashi: 4, toRashi: 2, graha: "Moon", reason: "Moon's mūla-trikoṇa is in Vṛṣabha (3°–30°), not Karka" },
+  mars: { fromRashi: 8, toRashi: 1, graha: "Mars", reason: "Mars's mūla-trikoṇa is in Meṣa (0°–12°), not Vṛścika" },
   venus: { fromRashi: 2, toRashi: 7, graha: "Venus", reason: "Venus's mūla-trikoṇa is in Tulā (0°–15°), not Vṛṣabha" },
   mercury: { fromRashi: 3, toRashi: 6, graha: "Mercury", reason: "Mercury's mūla-trikoṇa is in Kanyā (0°–15°), not Mithuna" },
   saturn: { fromRashi: 10, toRashi: 11, graha: "Saturn", reason: "Saturn's mūla-trikoṇa is in Kumbha (0°–20°), not Makara" },
