@@ -14,6 +14,7 @@ import { VedangaVsVedantaComparator } from "./vedanga-vs-vedanta-comparator";
 import { VedicEcosystemOrbital } from "./vedic-ecosystem-orbital";
 import { SlokaRecitationFrame } from "./sloka-recitation-frame";
 import { VedangaRelationshipDiagram } from "./vedanga-relationship-diagram";
+import { RahuKetuComparator } from "./rahu-ketu-comparator";
 import { JyotishaSangaHub } from "./jyotisha-sanga-hub";
 import { JyotishaVsWesternVsPopComparator } from "./jyotisha-vs-western-vs-pop-comparator";
 import { DisambiguationDojo } from "./disambiguation-dojo";
@@ -105,6 +106,21 @@ import { QuadrantTriadVisualizer } from "./quadrant-triad-visualizer";
 import { TrikonaPairExplorer } from "./trikona-pair-explorer";
 import { DignityWheel } from "./dignity-wheel";
 import { BudhaDignityWheel } from "./budha-dignity-wheel";
+import { GuruDignityWheel } from "./guru-dignity-wheel";
+import { ShukraDignityWheel } from "./shukra-dignity-wheel";
+import { ShaniDignityWheel } from "./shani-dignity-wheel";
+import { SaturnLessonMapper } from "./saturn-lesson-mapper";
+import { ShaniAspectDignityGrid } from "./shani-aspect-dignity-grid";
+import { NodeGeometry } from "./node-geometry";
+import { NodeAxisReader } from "./node-axis-reader";
+import { NodeDignityPositions } from "./node-dignity-positions";
+import { UpagrahaList } from "./upagraha-list";
+import { GulikaCalculator } from "./gulika-calculator";
+import { RahuAmplifier } from "./rahu-amplifier";
+import { JupiterEvaluator } from "./jupiter-evaluator";
+import { AspectCaster } from "./aspect-caster";
+import { MythMap } from "./myth-map";
+import { ShukraFriendshipDignityGrid } from "./shukra-friendship-dignity-grid";
 import { AssociationClassifier } from "./association-classifier";
 import { CombustionCalculator } from "./combustion-calculator";
 import { FriendshipMatrix } from "./friendship-matrix";
@@ -415,6 +431,22 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // dignity map with degree cues, friendship overlay, and Sun-Moon comparison.
   "dignity-wheel": DignityWheel,
   "budha-dignity-wheel": BudhaDignityWheel,
+  "guru-dignity-wheel": GuruDignityWheel,
+  "shukra-dignity-wheel": ShukraDignityWheel,
+  "shani-dignity-wheel": ShaniDignityWheel,
+  "saturn-lesson-mapper": SaturnLessonMapper,
+  "shani-aspect-dignity-grid": ShaniAspectDignityGrid,
+  "node-geometry": NodeGeometry,
+  "node-axis-reader": NodeAxisReader,
+  "node-dignity-positions": NodeDignityPositions,
+  "upagraha-list": UpagrahaList,
+  "gulika-calculator": GulikaCalculator,
+  "rahu-amplifier": RahuAmplifier,
+  "rahu-ketu-comparator": RahuKetuComparator,
+  "jupiter-evaluator": JupiterEvaluator,
+  "aspect-caster": AspectCaster,
+  "myth-map": MythMap,
+  "shukra-friendship-dignity-grid": ShukraFriendshipDignityGrid,
   "association-classifier": AssociationClassifier,
   "combustion-calculator": CombustionCalculator,
   // Lesson 5.1.4's §7 interactive: Friendship Matrix — directed graha
