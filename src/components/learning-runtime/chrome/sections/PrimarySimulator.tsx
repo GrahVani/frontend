@@ -63,6 +63,7 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   // 5-scenario Evaluative Reasoning Drill — chapter-capstone Bloom-Evaluate).
   // §4 keeps the four-stream-landscape-explorer.
   "modern-founders-krishnamurti-and-joshi": "four-stream-synthesis-dojo",
+  "shani-the-judge-and-server": "shani-dignity-wheel",
   // L3.1's §7 = Three Skandha Synthesis Dojo (Stream × Skandha Matrix +
   "three-skandhas-overview": "three-skandha-synthesis-dojo",
   // M3-C1-L1's §7 = Tithi Calculator Dojo (step-by-step formula breakdown +
@@ -191,6 +192,20 @@ const WIDE_LAYOUT_SLUGS = new Set([
   "budha-the-prince-and-intellect",
   "budha-and-the-doctrine-of-association",
   "budha-combustion-sensitivity",
+  "guru-the-teacher-and-expander",
+  "guru-as-the-greatest-benefic",
+  "guru-aspects-and-the-9th-house",
+  "shukra-the-minister-and-grace",
+  "shukra-as-asuracharya-and-the-knowledge-of-revival",
+  "shukra-friendships-and-dignities",
+  "shani-the-judge-and-server",
+  "shani-as-the-greatest-malefic-and-greatest-teacher",
+  "shani-friendships-dignities-special-aspects",
+  "the-nodes-as-points-not-planets",
+  "the-svarbhanu-myth-and-its-meaning",
+  "rahu-the-amplifier-and-the-desire-driven",
+  "the-upagrahas-introduction",
+  "computing-gulika-and-mandi",
   "the-15-shukla-tithis",
   "the-15-krishna-tithis",
   "nakshatra-deity-and-ruling-planet-at-pancanga-level",
