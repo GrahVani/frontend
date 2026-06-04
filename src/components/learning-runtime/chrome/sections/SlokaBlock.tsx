@@ -71,6 +71,7 @@ export function SlokaBlock({ section, frontMatter }: SlokaBlockProps) {
   const slokas = parseAllSlokas(section.body);
   const useRecitationFrame = frontMatter?.slug === "jyotisha-as-vedanga";
   const pres = presentationFor(section, frontMatter);
+  const headerTitle = useRecitationFrame || slokas.length > 0 ? pres.embodiedTitle : section.title;
 
   return (
     <section
@@ -82,7 +83,7 @@ export function SlokaBlock({ section, frontMatter }: SlokaBlockProps) {
       <div style={{ textAlign: "center", marginBottom: "12px" }}>
         <SectionHeader
           eyebrow={pres.eyebrow}
-          title={pres.embodiedTitle}
+          title={headerTitle}
           accentHex={pres.accentHex}
           ornament={<ScrollText size={16} />}
           align="center"

@@ -127,31 +127,46 @@ export function YogaVsChartYogaComparison() {
 
   return (
     <div
-      className="w-full"
-      style={{ background: "var(--gl-surface-card, var(--gl-card-surface, #FFF9F0))", border: "1px solid var(--gl-border-subtle, var(--gl-gold-hairline))", borderRadius: "16px", padding: "20px" }}
+      className="w-full p-6 md:p-8"
+      style={{
+        background: "var(--gl-surface-card, var(--gl-card-surface, #FFF9F0))",
+        border: "1px solid var(--gl-border-subtle, var(--gl-gold-hairline))",
+        borderRadius: "16px",
+      }}
       data-interactive="yoga-vs-chart-yoga-comparison"
     >
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold" style={{ color: "var(--gl-ink-primary)" }}><IAST>Time-Yoga vs Chart-Yoga Comparison</IAST></h2>
-        <p className="text-sm mt-1" style={{ color: "var(--gl-ink-muted)" }}>Clearing up the most common confusion in yoga terminology</p>
+      <div className="mb-6">
+        <h2 className="text-2xl font-semibold" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-primary)" }}>
+          <IAST>Time-Yoga vs Chart-Yoga Comparison</IAST>
+        </h2>
+        <p className="text-sm mt-1" style={{ color: "var(--gl-ink-secondary)" }}>
+          Clearing up the most common confusion in yoga terminology
+        </p>
       </div>
 
       {/* Rich SVG Two Worlds Diagram */}
-      <div className="mb-5">
+      <div className="mb-6 rounded-xl p-6" style={{ background: "var(--gl-surface-manuscript)", border: "1px solid var(--gl-gold-hairline)" }}>
         <TwoWorldsSVG />
       </div>
 
       {/* Comparison Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-        <div className="rounded-xl p-4" style={{ background: "#FDF6E3", border: "1px solid #E8D5A3", borderTop: "3px solid #E89E2A" }}>
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-xl font-bold" style={{ color: GOLD }}>☉</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div
+          className="rounded-xl p-6 transition-all duration-300 hover:shadow-md"
+          style={{
+            background: "var(--gl-surface-manuscript)",
+            border: "1px solid var(--gl-gold-hairline)",
+            borderTop: `4px solid ${GOLD}`,
+          }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-2xl font-bold" style={{ color: GOLD }}>☉</span>
             <div>
               <p className="text-xs font-bold uppercase tracking-wider" style={{ color: GOLD }}>Pañcāṅga Level</p>
               <p className="text-lg font-semibold" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-primary)" }}><IAST>Time Yoga</IAST></p>
             </div>
           </div>
-          <ul className="space-y-2 text-sm" style={{ color: "var(--gl-ink-secondary)" }}>
+          <ul className="space-y-3 text-sm" style={{ color: "var(--gl-ink-secondary)" }}>
             <li className="flex items-start gap-2"><span style={{ color: GOLD, fontWeight: 700 }}>☉+☽</span><span>Computed from <strong>Sun + Moon longitude sum</strong></span></li>
             <li className="flex items-start gap-2"><span style={{ color: GOLD, fontWeight: 700 }}>27</span><span>Divided into <strong>27 equal parts</strong> (13°20′ each)</span></li>
             <li className="flex items-start gap-2"><span style={{ color: GOLD, fontWeight: 700 }}>D</span><span><strong>Daily changing</strong> — unique each sunrise</span></li>
@@ -159,15 +174,22 @@ export function YogaVsChartYogaComparison() {
           </ul>
         </div>
 
-        <div className="rounded-xl p-4" style={{ background: "#EBF0FA", border: "1px solid #B0C4DE", borderTop: "3px solid #4F6FA8" }}>
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-xl font-bold" style={{ color: INDIGO }}>♃</span>
+        <div
+          className="rounded-xl p-6 transition-all duration-300 hover:shadow-md"
+          style={{
+            background: "var(--gl-surface-manuscript)",
+            border: "1px solid var(--gl-gold-hairline)",
+            borderTop: `4px solid ${INDIGO}`,
+          }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-2xl font-bold" style={{ color: INDIGO }}>♃</span>
             <div>
               <p className="text-xs font-bold uppercase tracking-wider" style={{ color: INDIGO }}>Natal Level</p>
               <p className="text-lg font-semibold" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--gl-ink-primary)" }}><IAST>Chart Yoga</IAST></p>
             </div>
           </div>
-          <ul className="space-y-2 text-sm" style={{ color: "var(--gl-ink-secondary)" }}>
+          <ul className="space-y-3 text-sm" style={{ color: "var(--gl-ink-secondary)" }}>
             <li className="flex items-start gap-2"><span style={{ color: INDIGO, fontWeight: 700 }}>♃</span><span>Formed by <strong>planetary combinations</strong> in the birth chart</span></li>
             <li className="flex items-start gap-2"><span style={{ color: INDIGO, fontWeight: 700 }}>1k+</span><span>Over <strong>one thousand named yogas</strong> (Rāja, Dhana, etc.)</span></li>
             <li className="flex items-start gap-2"><span style={{ color: INDIGO, fontWeight: 700 }}>F</span><span><strong>Fixed at birth</strong> — permanent for the native</span></li>
@@ -177,23 +199,23 @@ export function YogaVsChartYogaComparison() {
       </div>
 
       {/* Comparison Table */}
-      <div className="rounded-xl p-4 mb-5" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
-        <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: GOLD }}>Six-Dimension Comparison</p>
+      <div className="rounded-xl p-6 mb-6" style={{ background: "var(--gl-surface-manuscript)", border: "1px solid var(--gl-gold-hairline)" }}>
+        <p className="text-xs font-bold uppercase tracking-wider mb-4" style={{ color: "var(--gl-gold-accent)" }}>Six-Dimension Comparison</p>
         <div className="overflow-x-auto">
           <table className="w-full" style={{ fontSize: "13px", borderCollapse: "collapse" }}>
             <thead>
               <tr>
-                <th className="text-left px-3 py-2 text-xs uppercase tracking-wider" style={{ color: GOLD, borderBottom: "2px solid var(--gl-gold-hairline)" }}>Dimension</th>
-                <th className="text-left px-3 py-2 text-xs uppercase tracking-wider" style={{ color: GOLD, borderBottom: "2px solid var(--gl-gold-hairline)" }}>Time Yoga</th>
+                <th className="text-left px-3 py-2 text-xs uppercase tracking-wider" style={{ color: "var(--gl-gold-accent)", borderBottom: "2px solid var(--gl-gold-hairline)" }}>Dimension</th>
+                <th className="text-left px-3 py-2 text-xs uppercase tracking-wider" style={{ color: "var(--gl-gold-accent)", borderBottom: "2px solid var(--gl-gold-hairline)" }}>Time Yoga</th>
                 <th className="text-left px-3 py-2 text-xs uppercase tracking-wider" style={{ color: INDIGO, borderBottom: "2px solid var(--gl-gold-hairline)" }}>Chart Yoga</th>
               </tr>
             </thead>
             <tbody>
               {COMPARISON_ROWS.map((row, i) => (
-                <tr key={i} style={{ background: i % 2 === 0 ? "var(--gl-card-surface-solid)" : "transparent" }}>
-                  <td className="px-3 py-2 font-semibold" style={{ color: "var(--gl-ink-primary)", borderBottom: "1px solid var(--gl-gold-hairline)" }}>{row.dim}</td>
-                  <td className="px-3 py-2" style={{ color: "var(--gl-ink-secondary)", borderBottom: "1px solid var(--gl-gold-hairline)" }}>{row.time}</td>
-                  <td className="px-3 py-2" style={{ color: "var(--gl-ink-secondary)", borderBottom: "1px solid var(--gl-gold-hairline)" }}>{row.chart}</td>
+                <tr key={i} style={{ background: i % 2 === 0 ? "rgba(0,0,0,0.02)" : "transparent" }}>
+                  <td className="px-3 py-2.5 font-semibold" style={{ color: "var(--gl-ink-primary)", borderBottom: "1px solid var(--gl-gold-hairline)" }}>{row.dim}</td>
+                  <td className="px-3 py-2.5" style={{ color: "var(--gl-ink-secondary)", borderBottom: "1px solid var(--gl-gold-hairline)" }}>{row.time}</td>
+                  <td className="px-3 py-2.5" style={{ color: "var(--gl-ink-secondary)", borderBottom: "1px solid var(--gl-gold-hairline)" }}>{row.chart}</td>
                 </tr>
               ))}
             </tbody>
@@ -202,37 +224,44 @@ export function YogaVsChartYogaComparison() {
       </div>
 
       {/* Discrimination Drill */}
-      <div className="rounded-xl p-4" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
+      <div className="rounded-xl p-6" style={{ background: "var(--gl-surface-manuscript)", border: "1px solid var(--gl-gold-hairline)" }}>
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-          <p className="text-xs font-bold uppercase tracking-wider" style={{ color: GOLD }}>Discrimination Drill — 8 Statements</p>
+          <p className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--gl-gold-accent)" }}>Discrimination Drill — 8 Statements</p>
           <div className="flex items-center gap-3">
             <p className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>{correctCount}/{DRILL_ITEMS.length} correct</p>
             <p className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>Click the correct category</p>
           </div>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-3">
           {DRILL_ITEMS.map((item) => {
             const picked = answers[item.id];
             const isRevealed = revealed[item.id];
             const isCorrect = picked === item.answer;
             return (
-              <div key={item.id} className="p-3 rounded-lg" style={{ background: isRevealed ? (isCorrect ? "#E8F5EE" : "#FDE8E5") : "var(--gl-card-surface-solid)", border: isRevealed ? `1.5px solid ${isCorrect ? JADE : VERMILION}` : "1px solid var(--gl-gold-hairline)" }}>
-                <div className="flex items-start justify-between gap-3 flex-wrap">
+              <div
+                key={item.id}
+                className="p-4 rounded-xl transition-all"
+                style={{
+                  background: isRevealed ? (isCorrect ? "rgba(45,125,70,0.08)" : "rgba(168,50,50,0.06)") : "rgba(0,0,0,0.02)",
+                  border: isRevealed ? `1.5px solid ${isCorrect ? JADE : VERMILION}` : "1px solid var(--gl-gold-hairline)",
+                }}
+              >
+                <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div className="flex-1 min-w-[180px]">
                     <p className="text-sm mb-2" style={{ color: "var(--gl-ink-primary)", fontWeight: 500 }}>
                       <span style={{ color: GOLD, fontWeight: 700, marginRight: 8 }}>{item.id}.</span>{item.statement}
                     </p>
                     {isRevealed && (
-                      <div className="text-sm p-2.5 rounded-md mt-2" style={{ background: isCorrect ? "#D4EDD9" : "#FAD4CD", color: isCorrect ? JADE : VERMILION, lineHeight: 1.5 }}>
+                      <div className="text-sm p-3 rounded-md mt-2" style={{ background: isCorrect ? "rgba(45,125,70,0.12)" : "rgba(168,50,50,0.10)", color: isCorrect ? JADE : VERMILION, lineHeight: 1.5 }}>
                         {isCorrect ? "Correct. " : "Not quite. "}{item.correction}
                       </div>
                     )}
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    <button onClick={() => pick(item.id, "time")} disabled={isRevealed} className="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all" style={{ background: picked === "time" ? "#E89E2A" : "#FDF6E3", color: picked === "time" ? "#fff" : GOLD, border: `1.5px solid ${picked === "time" ? "#E89E2A" : "#E8D5A3"}`, cursor: isRevealed ? "default" : "pointer" }}>Time Yoga</button>
-                    <button onClick={() => pick(item.id, "chart")} disabled={isRevealed} className="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all" style={{ background: picked === "chart" ? INDIGO : "#EBF0FA", color: picked === "chart" ? "#fff" : INDIGO, border: `1.5px solid ${picked === "chart" ? INDIGO : "#B0C4DE"}`, cursor: isRevealed ? "default" : "pointer" }}>Chart Yoga</button>
+                    <button onClick={() => pick(item.id, "time")} disabled={isRevealed} className="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all" style={{ background: picked === "time" ? "#E89E2A" : "var(--gl-surface-manuscript)", color: picked === "time" ? "#fff" : GOLD, border: `1.5px solid ${picked === "time" ? "#E89E2A" : "#E8D5A3"}`, cursor: isRevealed ? "default" : "pointer" }}>Time Yoga</button>
+                    <button onClick={() => pick(item.id, "chart")} disabled={isRevealed} className="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all" style={{ background: picked === "chart" ? INDIGO : "var(--gl-surface-manuscript)", color: picked === "chart" ? "#fff" : INDIGO, border: `1.5px solid ${picked === "chart" ? INDIGO : "#B0C4DE"}`, cursor: isRevealed ? "default" : "pointer" }}>Chart Yoga</button>
                     {!isRevealed ? (
-                      <button onClick={() => reveal(item.id)} disabled={!picked} className="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider" style={{ background: picked ? GOLD : "var(--gl-card-surface-solid)", color: picked ? "#fff" : "var(--gl-ink-muted)", border: `1.5px solid ${picked ? GOLD : "var(--gl-gold-hairline)"}`, cursor: picked ? "pointer" : "not-allowed" }}>Check</button>
+                      <button onClick={() => reveal(item.id)} disabled={!picked} className="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider" style={{ background: picked ? GOLD : "var(--gl-surface-manuscript)", color: picked ? "#fff" : "var(--gl-ink-muted)", border: `1.5px solid ${picked ? GOLD : "var(--gl-gold-hairline)"}`, cursor: picked ? "pointer" : "not-allowed" }}>Check</button>
                     ) : (
                       <button onClick={() => reset(item.id)} className="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider" style={{ background: "transparent", color: GOLD, border: `1.5px solid ${GOLD}`, cursor: "pointer" }}>Retry</button>
                     )}
