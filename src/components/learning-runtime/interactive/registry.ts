@@ -127,6 +127,29 @@ import { FriendshipMatrix } from "./friendship-matrix";
 import { PakshabalaSlider } from "./pakshabala-slider";
 import { KarakaRouter } from "./karaka-router";
 import { FriendshipDignityGrid } from "./friendship-dignity-grid";
+import { MulaRootMandala } from "./mula-root-mandala";
+import { PurvaAshadhaRelationshipMap } from "./purva-ashadha-relationship-map";
+import { UttaraAshadhaAttributeUniverse } from "./uttara-ashadha-attribute-universe";
+import { ShravanaDhanishthaConceptConstellation } from "./shravana-dhanishtha-concept-constellation";
+import { ShatabhishajBhadrapadaKnowledgeGalaxy } from "./shatabhishaj-bhadrapada-knowledge-galaxy";
+import { RevatiConstellationDiagram } from "./revati-constellation-diagram";
+import { AnuradhaDevotionNetwork } from "./anuradha-devotion-network";
+import { AshleshaHonestHandlingDojo } from "./ashlesha-honest-handling-dojo";
+import { ChitraCelestialGemLab } from "./chitra-celestial-gem-lab";
+import { GandantaWaterFireJunction } from "./gandanta-water-fire-junction";
+import { JyeshthaSupremacyTalisman } from "./jyeshtha-supremacy-talisman";
+import { MaghaAncestralGatewayLab } from "./magha-ancestral-gateway-lab";
+import { NakshatraProfile } from "./nakshatra-profile";
+import { NakshatraTemplateLab } from "./nakshatra-template-lab";
+import { PurvaUttaraDoctrineExplorer } from "./purva-uttara-doctrine-explorer";
+import { PushyaAuspiciousnessLab } from "./pushya-auspiciousness-lab";
+import { SwatiBreezeNavigator } from "./swati-breeze-navigator";
+import { VishakhaForkedPathExplorer } from "./vishakha-forked-path-explorer";
+import { PadaCalculator } from "./pada-calculator";
+import { PadaNavamshaMapper } from "./pada-navamsha-mapper";
+import { KpSubCalculator } from "./kp-sub-calculator";
+import { TaraBalAWheel } from "./tara-bala-wheel";
+import { StreamComparisonTable } from "./stream-comparison-table";
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
 
@@ -461,6 +484,29 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // Lesson 5.2.3's §7 interactive: Friendship Dignity Grid — Mars across
   // the 12 signs with sign-lord relation, degree control, and dignity override.
   "friendship-dignity-grid": FriendshipDignityGrid,
+  "mula-root-mandala": MulaRootMandala,
+  "purva-ashadha-relationship-map": PurvaAshadhaRelationshipMap,
+  "uttara-ashadha-attribute-universe": UttaraAshadhaAttributeUniverse,
+  "shravana-dhanishtha-concept-constellation": ShravanaDhanishthaConceptConstellation,
+  "shatabhishaj-bhadrapada-knowledge-galaxy": ShatabhishajBhadrapadaKnowledgeGalaxy,
+  "revati-constellation-diagram": RevatiConstellationDiagram,
+  "anuradha-devotion-network": AnuradhaDevotionNetwork,
+  "ashlesha-honest-handling-dojo": AshleshaHonestHandlingDojo,
+  "chitra-celestial-gem-lab": ChitraCelestialGemLab,
+  "gandanta-water-fire-junction": GandantaWaterFireJunction,
+  "jyeshtha-supremacy-talisman": JyeshthaSupremacyTalisman,
+  "magha-ancestral-gateway-lab": MaghaAncestralGatewayLab,
+  "nakshatra-profile": NakshatraProfile,
+  "nakshatra-template-lab": NakshatraTemplateLab,
+  "purva-uttara-doctrine-explorer": PurvaUttaraDoctrineExplorer,
+  "pushya-auspiciousness-lab": PushyaAuspiciousnessLab,
+  "swati-breeze-navigator": SwatiBreezeNavigator,
+  "vishakha-forked-path-explorer": VishakhaForkedPathExplorer,
+  "pada-calculator": PadaCalculator,
+  "pada-navamsha-mapper": PadaNavamshaMapper,
+  "kp-sub-calculator": KpSubCalculator,
+  "tara-bala-wheel": TaraBalAWheel,
+  "stream-comparison-table": StreamComparisonTable,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {

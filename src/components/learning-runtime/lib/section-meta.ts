@@ -219,6 +219,42 @@ const LESSON_SECTION_OVERRIDES: Record<
     "7": { embodiedTitle: "Survey the four-stream matrix, then drill the chapter-capstone Bloom-Evaluate" },
     "8": { embodiedTitle: "Mere-innovations, competing-schools, Sanskrit-criterion, cross-stream-critique-without-fluency" },
   },
+  "the-per-nakshatra-template": {
+    "7": { embodiedTitle: "Build the twelve-slot nakṣatra template" },
+  },
+  "ashwini-the-horse-headed-physicians": {
+    "7": { embodiedTitle: "Explore Aśvinī through the twelve-attribute profile" },
+  },
+  "bharani-the-bearer": {
+    "7": { embodiedTitle: "Explore Bharaṇī through the twelve-attribute profile" },
+  },
+  "krittika-the-cutters-and-fire-feeders": {
+    "7": { embodiedTitle: "Explore Kṛttikā through the twelve-attribute profile" },
+  },
+  "rohini-the-red-and-fertile-favourite-of-chandra": {
+    "7": { embodiedTitle: "Explore Rohiṇī through the twelve-attribute profile" },
+  },
+  "mrigashira-the-deer-head": {
+    "7": { embodiedTitle: "Explore Mṛgaśīrṣa through the twelve-attribute profile" },
+  },
+  "ardra-the-moist-rudra-tear": {
+    "7": { embodiedTitle: "Explore Ārdrā through the twelve-attribute profile" },
+  },
+  "punarvasu-the-return-of-light": {
+    "7": { embodiedTitle: "Explore Punarvasu through the twelve-attribute profile" },
+  },
+  "pushya-the-nourisher": {
+    "7": { embodiedTitle: "Explore Puṣya through the twelve-attribute profile" },
+  },
+  "ashlesha-the-entwiner-naga-domain": {
+    "7": { embodiedTitle: "Explore Aśleṣā through the twelve-attribute profile" },
+  },
+  "the-pushya-nakshatra-as-greatest-auspicious": {
+    "7": { embodiedTitle: "Test Puṣya's auspiciousness by activity" },
+  },
+  "ashlesha-and-snake-shadow-honest-handling": {
+    "7": { embodiedTitle: "Practice Aśleṣā honest-handling language" },
+  },
   "tithi-as-12-degrees-of-sun-moon-angle": {
     "7": { embodiedTitle: "Sūrya Siddhānta Spaṣṭādhyāya — true-longitude computational mechanics" },
     "8": { embodiedTitle: "Mean vs true longitudes, pañcāṅga vs instantaneous, premature muhūrta judgment, forgetting tithi-first status" },

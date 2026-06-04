@@ -11,6 +11,7 @@ import { INTERACTIVE_REGISTRY } from "../../interactive/registry";
 import { SectionHeader } from "../SectionHeader";
 import { presentationFor } from "../../lib/section-meta";
 import { Sparkles } from "lucide-react";
+import { createElement } from "react";
 import type { LessonSection, LessonFrontMatter } from "@/lib/learning-runtime/types";
 import { LessonProvider } from "../../interactive/rashi-attribute-wheel";
 
@@ -173,6 +174,25 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   "sirsha-prishtha-ubhaya-udaya": "rashi-rising-classifier",
   "rashi-across-streams": "rashi-stream-comparator",
   "four-worked-interpretive-examples": "chart-planet-positioner",
+
+  // ─── Module 07: Nakshatras ───
+  // Chapter 1 — The Foundation and First Five Stars
+  "the-12-slot-nakshatra-template-lab": "nakshatra-template-lab",
+  "nakshatra-template-lab": "nakshatra-template-lab",
+  "ashwini-the-horse-headed-physicians": "nakshatra-profile",
+  "bharani-the-bearer": "nakshatra-profile",
+  "krittika-the-cutters-and-fire-feeders": "nakshatra-profile",
+  "rohini-the-red-and-fertile-favourite-of-chandra": "nakshatra-profile",
+  "mrigashira-the-deer-head": "nakshatra-profile",
+
+  // Chapter 2 — The Cancer Boundary
+  "ardra-the-moist-rudra-tear": "nakshatra-profile",
+  "ardra-the-teardrop": "nakshatra-profile",
+  "punarvasu-the-return-of-light": "nakshatra-profile",
+  "punarvasu-the-return-of-the-light": "nakshatra-profile",
+  "pushya-the-nourisher": "nakshatra-profile",
+  "ashlesha-the-entwiner-naga-domain": "nakshatra-profile",
+  "ashlesha-the-entwining-serpent": "nakshatra-profile",
 };
 
 /** Slugs whose §7 interactive needs extra horizontal space (e.g. large SVG wheel + sidebar). */
@@ -209,6 +229,22 @@ const WIDE_LAYOUT_SLUGS = new Set([
   "the-15-shukla-tithis",
   "the-15-krishna-tithis",
   "nakshatra-deity-and-ruling-planet-at-pancanga-level",
+  "the-12-slot-nakshatra-template-lab",
+  "nakshatra-template-lab",
+  "ashwini-the-horse-headed-physicians",
+  "bharani-the-bearer",
+  "krittika-the-cutters-and-fire-feeders",
+  "rohini-the-red-and-fertile-favourite-of-chandra",
+  "mrigashira-the-deer-head",
+  "ardra-the-moist-rudra-tear",
+  "ardra-the-teardrop",
+  "punarvasu-the-return-of-light",
+  "punarvasu-the-return-of-the-light",
+  "pushya-the-nourisher",
+  "ashlesha-the-entwiner-naga-domain",
+  "ashlesha-the-entwining-serpent",
+  "the-pushya-nakshatra-as-greatest-auspicious",
+  "ashlesha-and-snake-shadow-honest-handling",
 ]);
 
 export function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorProps) {
@@ -248,7 +284,7 @@ export function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorP
       {enabled && InteractiveComponent ? (
         /* Wrap in LessonProvider so interactives can read the lesson slug for context-aware defaults. */
         <LessonProvider value={{ slug: fm.slug }}>
-          <InteractiveComponent />
+          {createElement(InteractiveComponent)}
         </LessonProvider>
       ) : enabled && componentType ? (
         <div

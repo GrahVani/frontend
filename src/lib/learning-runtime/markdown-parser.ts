@@ -12,17 +12,13 @@
 import { classifySection, type LessonSection } from "./types";
 
 /**
- * Match `# §N Title` or `# §N.M Title` heading lines.
+ * Match only canonical parent section headings, e.g. `# §4 The lesson`.
  *
- * Examples that match:
- *   # §1 Hook
- *   # §4 Body — the core teaching
- *   # §3.1 What you should know first
- *
- * The leading `#` may be repeated (e.g., `## §4.1 …`) but for the canonical
- * twelve-section template we expect single `#`.
+ * Lesson bodies may contain pedagogical subheadings such as `## §4.1 ...` or
+ * even `# §4.1 ...`. Those must remain inside the parent section body so the
+ * renderer can show their tables and prose in the correct chrome primitive.
  */
-const SECTION_HEADING_RE = /^#+\s+§(\d+(?:\.\d+)?)\.?\s+(.+?)\s*$/gm;
+const SECTION_HEADING_RE = /^#\s+§(\d+)\.?\s+(.+?)\s*$/gm;
 
 /**
  * Split a markdown body into typed sections. The input is the lesson's body
