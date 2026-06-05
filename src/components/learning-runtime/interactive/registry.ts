@@ -98,6 +98,36 @@ import { BoundaryCrossingDemonstrator } from "./boundary-crossing-demonstrator";
 import { RashiAttributeWheel } from "./rashi-attribute-wheel";
 import { RashiModalityClassifier } from "./rashi-modality-classifier";
 import { KendraTrikonaGroupingVisualizer } from "./kendra-trikona-grouping-visualizer";
+import { AngularHouseClassifier } from "./angular-house-classifier";
+import { QualityHouseClassifier } from "./quality-house-classifier";
+import { PurusharthaTrineExplorer } from "./purushartha-trine-explorer";
+import { KarakaTable } from "./karaka-table";
+import { KarakaTenancyLab } from "./karaka-tenancy-lab";
+import { BhavatBhavamDrill } from "./bhavat-bhavam-drill";
+import { BhavaChalitaRefinement } from "./bhava-chalita-refinement";
+import { PlacidusKpConvention } from "./placidus-kp-convention";
+import { BhavaMadhyaSandhi } from "./bhava-madhya-sandhi";
+import { HouseSystemDecisionFramework } from "./house-system-decision-framework";
+import { LalKitabFixedAriesLagna } from "./lal-kitab-fixed-aries-lagna";
+import { VargaExplainer } from "./varga-explainer";
+import { VargaReferenceTable } from "./varga-reference-table";
+import { VargaTemplateCard } from "./varga-template-card";
+import { VargaCalculator } from "./varga-calculator";
+import { MultiVargaComparator } from "./multi-varga-comparator";
+import { TrimshamshaCalculator } from "./trimshamsha-calculator";
+import { EthicalRoutingChecklist } from "./ethical-routing-checklist";
+import { ShashtyamshaCalculator } from "./shashtyamsha-calculator";
+import { D1D60Comparator } from "./d1-d60-comparator";
+import { BirthTimeQualityChecker } from "./birth-time-quality-checker";
+import { VimshopakaCalculator } from "./vimshopaka-calculator";
+import { VargottamaScanner } from "./vargottama-scanner";
+import { D1D9DivergenceReader } from "./d1-d9-divergence-reader";
+import { HoraCalculator } from "./hora-calculator";
+import { DrekkanaCalculator } from "./drekkana-calculator";
+import { DrekkanaSystemComparator } from "./drekkana-system-comparator";
+import { NavamshaCalculator } from "./navamsha-calculator";
+import { NavamshaReader } from "./navamsha-reader";
+import { RashiNavamshaPair } from "./rashi-navamsha-pair";
 import { ChartPlanetPositioner } from "./chart-planet-positioner";
 import { RashiRisingClassifier } from "./rashi-rising-classifier";
 import { RashiStreamComparator } from "./rashi-stream-comparator";
@@ -116,6 +146,16 @@ import { NodeAxisReader } from "./node-axis-reader";
 import { NodeDignityPositions } from "./node-dignity-positions";
 import { UpagrahaList } from "./upagraha-list";
 import { GulikaCalculator } from "./gulika-calculator";
+import { TamkalikaWheel } from "./tamkalika-wheel";
+import { PanchadhaCombiner } from "./panchadha-combiner";
+import { AvasthaPanel } from "./avastha-panel";
+import { StreamComparator } from "./stream-comparator";
+import { StreamComparisonTable } from "./stream-comparison-table";
+import { BhavaWheel } from "./bhava-wheel";
+import { HouseSystemComparator } from "./house-system-comparator";
+import { BhavaTemplateCard } from "./bhava-template-card";
+import { BhavaProfile } from "./bhava-profile";
+import { PreliminaryReadingFlow } from "./preliminary-reading-flow";
 import { RahuAmplifier } from "./rahu-amplifier";
 import { JupiterEvaluator } from "./jupiter-evaluator";
 import { AspectCaster } from "./aspect-caster";
@@ -444,6 +484,36 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "rashi-attribute-wheel": RashiAttributeWheel,
   "rashi-modality-classifier": RashiModalityClassifier,
   "kendra-trikona-grouping-visualizer": KendraTrikonaGroupingVisualizer,
+  "angular-house-classifier": AngularHouseClassifier,
+  "quality-house-classifier": QualityHouseClassifier,
+  "purushartha-trine-explorer": PurusharthaTrineExplorer,
+  "karaka-table": KarakaTable,
+  "karaka-tenancy-lab": KarakaTenancyLab,
+  "bhavat-bhavam-drill": BhavatBhavamDrill,
+  "bhava-chalita-refinement": BhavaChalitaRefinement,
+  "placidus-kp-convention": PlacidusKpConvention,
+  "bhava-madhya-sandhi": BhavaMadhyaSandhi,
+  "house-system-decision-framework": HouseSystemDecisionFramework,
+  "lal-kitab-fixed-aries-lagna": LalKitabFixedAriesLagna,
+  "varga-explainer": VargaExplainer,
+  "varga-reference-table": VargaReferenceTable,
+  "varga-template-card": VargaTemplateCard,
+  "varga-calculator": VargaCalculator,
+  "multi-varga-comparator": MultiVargaComparator,
+  "trimshamsha-calculator": TrimshamshaCalculator,
+  "ethical-routing-checklist": EthicalRoutingChecklist,
+  "shashtyamsha-calculator": ShashtyamshaCalculator,
+  "d1-d60-comparator": D1D60Comparator,
+  "birth-time-quality-checker": BirthTimeQualityChecker,
+  "vimshopaka-calculator": VimshopakaCalculator,
+  "vargottama-scanner": VargottamaScanner,
+  "d1-d9-divergence-reader": D1D9DivergenceReader,
+  "hora-calculator": HoraCalculator,
+  "drekkana-calculator": DrekkanaCalculator,
+  "drekkana-system-comparator": DrekkanaSystemComparator,
+  "navamsha-calculator": NavamshaCalculator,
+  "navamsha-reader": NavamshaReader,
+  "rashi-navamsha-pair": RashiNavamshaPair,
   "chart-planet-positioner": ChartPlanetPositioner,
   "rashi-rising-classifier": RashiRisingClassifier,
   "rashi-stream-comparator": RashiStreamComparator,
@@ -464,6 +534,16 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "node-dignity-positions": NodeDignityPositions,
   "upagraha-list": UpagrahaList,
   "gulika-calculator": GulikaCalculator,
+  "tamkalika-wheel": TamkalikaWheel,
+  "panchadha-combiner": PanchadhaCombiner,
+  "avastha-panel": AvasthaPanel,
+  "stream-comparator": StreamComparator,
+  "stream-comparison-table": StreamComparisonTable,
+  "bhava-wheel": BhavaWheel,
+  "house-system-comparator": HouseSystemComparator,
+  "bhava-template-card": BhavaTemplateCard,
+  "bhava-profile": BhavaProfile,
+  "preliminary-reading-flow": PreliminaryReadingFlow,
   "rahu-amplifier": RahuAmplifier,
   "rahu-ketu-comparator": RahuKetuComparator,
   "jupiter-evaluator": JupiterEvaluator,
