@@ -189,7 +189,34 @@ import { PadaCalculator } from "./pada-calculator";
 import { PadaNavamshaMapper } from "./pada-navamsha-mapper";
 import { KpSubCalculator } from "./kp-sub-calculator";
 import { TaraBalAWheel } from "./tara-bala-wheel";
-import { StreamComparisonTable } from "./stream-comparison-table";
+import { DashaCascadeExplorer } from "./dasha-cascade-explorer";
+import { DashaStartFinder } from "./dasha-start-finder";
+import { DashaBalanceCalculator } from "./dasha-balance-calculator";
+import { DashaBalanceMistakeExplorer } from "./dasha-balance-mistake-explorer";
+import { DashaBalanceCrossCheck } from "./dasha-balance-cross-check";
+import { DashaTableBuilder } from "./dasha-table-builder";
+import { AntardashaTableBuilder } from "./antardasha-table-builder";
+import { DashaLookupDrill } from "./dasha-lookup-drill";
+import { VimshottariRatioCalculator } from "./vimshottari-ratio-calculator";
+import { AshtottariExplorer } from "./ashtottari-explorer";
+import { AshtottariConditionChecker } from "./ashtottari-condition-checker";
+import { YoginiExplorer } from "./yogini-explorer";
+import { DashaClassComparator } from "./dasha-class-comparator";
+import { ConditionalDashaCatalog } from "./conditional-dasha-catalog";
+import { ConditionalCriteriaChecker } from "./conditional-criteria-checker";
+import { DashaDecisionFramework } from "./dasha-decision-framework";
+import { KpVimshottariIntro } from "./kp-vimshottari-intro";
+import { DashaTimeline } from "./dasha-timeline";
+import { DashaSelector } from "./dasha-selector";
+import { BhuktiYogaMatrix } from "./bhukti-yoga-matrix";
+import { KarakaOverlayReader } from "./karaka-overlay-reader";
+import { TwoYesChecker } from "./two-yes-checker";
+import { EventReadingWorkbench } from "./event-reading-workbench";
+import { CaraDashaIntro } from "./cara-dasha-intro";
+import { SthiraDashaIntro } from "./sthira-dasha-intro";
+import { KalachakraOverview } from "./kalachakra-overview";
+import { ParashariJaiminiChooser } from "./parashari-jaimini-chooser";
+import { DashaLandscapeMap } from "./dasha-landscape-map";
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
 
@@ -586,7 +613,79 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "pada-navamsha-mapper": PadaNavamshaMapper,
   "kp-sub-calculator": KpSubCalculator,
   "tara-bala-wheel": TaraBalAWheel,
-  "stream-comparison-table": StreamComparisonTable,
+  // Module 10 Chapter 1 — Vimśottarī Daśā Cycle
+  // Lesson 10.1.1's §7 interactive: Daśā Timeline — 120-year proportional wheel
+  // with 9 clickable lord segments, starting-lord rotation, lifespan overlay,
+  // and linear timeline bar.
+  "dasha-timeline": DashaTimeline,
+  "dasha-start-finder": DashaStartFinder,
+  // Lesson 10.1.3's §7 interactive: Daśā Selector — Universal Default vs Conditional Simulator
+  "dasha-selector": DashaSelector,
+  // Lesson 10.2.1's §7 interactive: Daśā Balance Calculator — four-step
+  // pedagogical calculator with Moon longitude input, nakṣatra identification,
+  // fraction-traversed computation, and balance result with boundary warnings
+  // and subsequent mahādaśā preview.
+  "dasha-balance-calculator": DashaBalanceCalculator,
+  "dasha-cascade-explorer": DashaCascadeExplorer,
+  "vimshottari-ratio-calculator": VimshottariRatioCalculator,
+  "antardasha-table-builder": AntardashaTableBuilder,
+  "dasha-lookup-drill": DashaLookupDrill,
+  "ashtottari-explorer": AshtottariExplorer,
+  "ashtottari-condition-checker": AshtottariConditionChecker,
+  "yogini-explorer": YoginiExplorer,
+  "dasha-class-comparator": DashaClassComparator,
+  "conditional-dasha-catalog": ConditionalDashaCatalog,
+  "conditional-criteria-checker": ConditionalCriteriaChecker,
+  "dasha-decision-framework": DashaDecisionFramework,
+  "kp-vimshottari-intro": KpVimshottariIntro,
+  // Lesson 10.2.2's §7 interactive: Daśā Balance Mistake Explorer —
+  // toggle switches for all 6 common mistakes with side-by-side correct/corrupted
+  // comparison and ±1-day tolerance indicator.
+  "dasha-balance-mistake-explorer": DashaBalanceMistakeExplorer,
+  // Lesson 10.2.3's §7 interactive: Daśā Balance Cross-Check — hand-computed
+  // balance input vs engine output with ±1-day confirmation band and
+  // severity-based diagnosis hints (match/minor/major/critical).
+  "dasha-balance-cross-check": DashaBalanceCrossCheck,
+  // Lesson 10.2.4's §7 interactive: Daśā Table Builder — constructs the full
+  // birth-to-120 mahādaśā table from a balance, with expandable bhukti
+  // subdivisions using the proportion formula (MD × lord) ÷ 120.
+  "dasha-table-builder": DashaTableBuilder,
+  // Lesson 10.4.1's §7 interactive: Bhukti-Yoga Matrix — MD-lord ↔ AD-lord
+  // naisargika friendship sets the baseline quality of a sub-period.
+  // Includes dignity modulator demonstrating "modulator, not override."
+  "bhukti-yoga-matrix": BhuktiYogaMatrix,
+  // Lesson 10.4.2's §7 interactive: Kāraka Overlay Reader — MD-lord's life-phase
+  // quality overlaid with AD-lord's domain-flavour significations.
+  // Detects multi-kāraka clusters and provides same-AD-different-MD comparison.
+  "karaka-overlay-reader": KarakaOverlayReader,
+  // Lesson 10.4.3's §7 interactive: Two-Yes Checker — counts independent
+  // indicator families for a predictive question and flags reliable only
+  // when ≥2 genuinely different lines of evidence agree.
+  "two-yes-checker": TwoYesChecker,
+  // Lesson 10.4.4's §7 interactive: Event Reading Workbench — runs the six-step
+  // workflow end-to-end with functional lordship, bhukti-yoga, kāraka overlay,
+  // and the two-yes gate for any domain + ascendant + MD-AD pair.
+  "event-reading-workbench": EventReadingWorkbench,
+  // Lesson 10.6.1's §7 interactive: Cara Daśā Intro — side-by-side contrast of
+  // Vimśottarī (planet-based, fixed) vs Cara (sign-based, variable) with
+  // modality legend and cross-validation panel.
+  "cara-dasha-intro": CaraDashaIntro,
+  // Lesson 10.6.2's §7 interactive: Sthira Daśā Intro — awareness-level
+  // reference table contrasting Cara and Sthira (both rāśi-based Jaimini,
+  // different rules) with deferral note to Jaimini module (T1-17).
+  "sthira-dasha-intro": SthiraDashaIntro,
+  // Lesson 10.6.3's §7 interactive: Kālacakra Overview — awareness-level
+  // pāda-derived sign daśā explorer with savya/apasavya direction rules,
+  // 108-point nakṣatra-pāda grid, and complexity breakdown.
+  "kalachakra-overview": KalachakraOverview,
+  // Lesson 10.6.4's §7 interactive: Parāśarī-Jaimini Chooser — decision-tool
+  // recommending daśā(s) for any situation with Vimśottarī always anchored.
+  // Includes cross-validation scenarios (convergence / divergence).
+  "parashari-jaimini-chooser": ParashariJaiminiChooser,
+  // Lesson 10.7.5's §7 interactive: Daśā Landscape Map — survey of ~14 systems
+  // grouped by class, five-point discipline overlay, and honest-framing practice.
+  // Closes Module 10.
+  "dasha-landscape-map": DashaLandscapeMap,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {
