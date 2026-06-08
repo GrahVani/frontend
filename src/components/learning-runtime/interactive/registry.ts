@@ -217,6 +217,25 @@ import { SthiraDashaIntro } from "./sthira-dasha-intro";
 import { KalachakraOverview } from "./kalachakra-overview";
 import { ParashariJaiminiChooser } from "./parashari-jaimini-chooser";
 import { DashaLandscapeMap } from "./dasha-landscape-map";
+import { DrishtiStrengthMeter } from "./drishti-strength-meter";
+import { RashiDrishtiGrid } from "./rashi-drishti-grid";
+import { AspectDoctrineComparator } from "./aspect-doctrine-comparator";
+import { TajikaOrbCalculator } from "./tajika-orb-calculator";
+import { TajikaApplyingSeparating } from "./tajika-applying-separating";
+import { TajikaYogaGlossary } from "./tajika-yoga-glossary";
+import { VarshaphalaOverview } from "./varshaphala-overview";
+import { DoctrineSelector } from "./doctrine-selector";
+import { MultiStreamChartComparator } from "./multi-stream-chart-comparator";
+import { SaturnAspectDisambiguator } from "./saturn-aspect-disambiguator";
+import { PmpyDetector } from "./pmpy-detector";
+import { RuchakaValourSimulator } from "./ruchaka-valour-simulator";
+import { BhadraIntellectExplorer } from "./bhadra-intellect-explorer";
+import { HamsaMalavyaSynthesis } from "./hamsa-malavya-synthesis";
+import { ShashaAuthorityAnalyzer } from "./shasha-authority-analyzer";
+import { LunarYogaDetector } from "./lunar-yoga-detector";
+import { KemadrumaChecker } from "./kemadruma-checker";
+import { GajakesariSimulator } from "./gajakesari-simulator";
+import { BudhadityaChecker } from "./budhaditya-checker";
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
 
@@ -686,6 +705,25 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // grouped by class, five-point discipline overlay, and honest-framing practice.
   // Closes Module 10.
   "dasha-landscape-map": DashaLandscapeMap,
+  "drishti-strength-meter": DrishtiStrengthMeter,
+  "rashi-drishti-grid": RashiDrishtiGrid,
+  "aspect-doctrine-comparator": AspectDoctrineComparator,
+  "tajika-orb-calculator": TajikaOrbCalculator,
+  "tajika-applying-separating": TajikaApplyingSeparating,
+  "tajika-yoga-glossary": TajikaYogaGlossary,
+  "varshaphala-overview": VarshaphalaOverview,
+  "doctrine-selector": DoctrineSelector,
+  "multi-stream-chart-comparator": MultiStreamChartComparator,
+  "saturn-aspect-disambiguator": SaturnAspectDisambiguator,
+  "pmpy-detector": PmpyDetector,
+  "ruchaka-valour-simulator": RuchakaValourSimulator,
+  "bhadra-intellect-explorer": BhadraIntellectExplorer,
+  "hamsa-malavya-synthesis": HamsaMalavyaSynthesis,
+  "shasha-authority-analyzer": ShashaAuthorityAnalyzer,
+  "lunar-yoga-detector": LunarYogaDetector,
+  "kemadruma-checker": KemadrumaChecker,
+  "gajakesari-simulator": GajakesariSimulator,
+  "budhaditya-checker": BudhadityaChecker,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {
