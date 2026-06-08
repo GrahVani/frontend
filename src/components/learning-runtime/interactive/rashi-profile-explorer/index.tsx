@@ -24,7 +24,7 @@ const SLUG_TO_RASHI: Record<string, number> = {
   "dhanus-sagittarius-the-fiery-mutable": 9,
   "makara-capricorn-the-earthen-cardinal": 10,
   "kumbha-aquarius-the-airy-fixed": 11,
-  "meena-pisces-the-watery-mutable": 12,
+  "mina-pisces-the-watery-mutable": 12,
 };
 
 /* ─── Per-graha interpretive text (generic pattern, rāśi-aware) ─── */

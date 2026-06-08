@@ -24,6 +24,18 @@ function orbitPoint(angle: number, tilt: number) {
   return { x, y };
 }
 
+// Rotate a point about the diagram centre (the ecliptic pole). Used to precess
+// the whole node-frame so the line of nodes can be shown regressing over time.
+function rotateAround(point: { x: number; y: number }, deg: number) {
+  const r = (deg * Math.PI) / 180;
+  const dx = point.x - 220;
+  const dy = point.y - 220;
+  return {
+    x: 220 + dx * Math.cos(r) - dy * Math.sin(r),
+    y: 220 + dx * Math.sin(r) + dy * Math.cos(r),
+  };
+}
+
 function angularDistance(a: number, b: number) {
   const diff = Math.abs((((a - b) % 360) + 540) % 360 - 180);
   return diff;
@@ -33,10 +45,16 @@ export function NodeGeometry() {
   const [moonLongitude, setMoonLongitude] = useState(0);
   const [tilt, setTilt] = useState(5);
   const [phase, setPhase] = useState<Phase>("new");
-  const nodeAxis = 0;
-  const rahu = orbitPoint(nodeAxis, tilt);
-  const ketu = orbitPoint(180, tilt);
-  const moon = orbitPoint(moonLongitude, tilt);
+  const [months, setMonths] = useState(0);
+  // Mean node regresses ~19.35 deg/year (a full loop of the zodiac ~18.6 years).
+  const NODE_REGRESSION_PER_MONTH = 19.35 / 12;
+  const regressedDeg = months * NODE_REGRESSION_PER_MONTH;
+  const nodeRot = -regressedDeg; // negative = westward = retrograde
+  const rahu = rotateAround(orbitPoint(0, tilt), nodeRot);
+  const ketu = rotateAround(orbitPoint(180, tilt), nodeRot);
+  const moon = rotateAround(orbitPoint(moonLongitude, tilt), nodeRot);
+  // Node positions live at orbit-frame 0/180 and the Moon at moonLongitude in the
+  // same frame, so proximity is rotation-invariant: regression never breaks eclipse logic.
   const nearNode = Math.min(angularDistance(moonLongitude, 0), angularDistance(moonLongitude, 180));
   const eclipseReady = nearNode <= 10 && phase !== "quarter";
   const eclipseType = phase === "new" ? "Solar eclipse condition" : phase === "full" ? "Lunar eclipse condition" : "No eclipse";
@@ -65,6 +83,7 @@ export function NodeGeometry() {
               setMoonLongitude(0);
               setTilt(5);
               setPhase("new");
+              setMonths(0);
             }}
             style={{ display: "inline-flex", alignItems: "center", gap: "0.45rem", border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: "transparent", color: INK_SECONDARY, padding: "0.55rem 0.75rem", fontWeight: 850, cursor: "pointer" }}
           >
@@ -89,7 +108,7 @@ export function NodeGeometry() {
             <rect x="18" y="18" width="404" height="404" rx="18" fill="rgba(255, 251, 241, 0.62)" stroke={HAIRLINE} />
             <ellipse cx="220" cy="220" rx="168" ry="78" fill="none" stroke={SUN} strokeWidth="3" />
             <text x="220" y="127" textAnchor="middle" fill={SUN} fontSize="13" fontWeight="900">Ecliptic: Sun&apos;s path</text>
-            <g transform={`rotate(${tilt * 1.55} 220 220)`}>
+            <g transform={`rotate(${tilt * 1.55 + nodeRot} 220 220)`}>
               <ellipse cx="220" cy="220" rx="156" ry="72" fill="none" stroke={MOON} strokeWidth="3" strokeDasharray="8 6" />
             </g>
             <line x1={rahu.x} y1={rahu.y} x2={ketu.x} y2={ketu.y} stroke="rgba(75,58,35,0.35)" strokeWidth="3" strokeDasharray="7 5" />
@@ -134,6 +153,13 @@ export function NodeGeometry() {
             </div>
           </Panel>
 
+          <Panel title="4. Step time forward (node regression)" icon={<Orbit size={18} aria-hidden="true" />} color={GREEN}>
+            <input type="range" min={0} max={223} step={1} value={months} onChange={(event) => setMonths(Number(event.target.value))} aria-label="Months elapsed (node regression)" style={{ width: "100%", accentColor: GREEN }} />
+            <p style={{ margin: "0.5rem 0 0", color: INK_SECONDARY }}>
+              Time elapsed: {(months / 12).toFixed(1)} years. The node axis has regressed {regressedDeg.toFixed(0)} degrees westward (about 19.35 degrees per year) &mdash; one full loop takes ~18.6 years. Retrograde is the baseline, not a special state.
+            </p>
+          </Panel>
+
           <section style={{ border: `1px solid ${eclipseReady ? GREEN : HAIRLINE}`, borderRadius: 8, background: eclipseReady ? "rgba(47, 125, 85, 0.12)" : SURFACE, padding: "1rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: eclipseReady ? GREEN : INK_MUTED, fontWeight: 900 }}>
               <Eclipse size={19} aria-hidden="true" />
@@ -147,7 +173,7 @@ export function NodeGeometry() {
       <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: "0.8rem" }} aria-label="Node facts">
         <Fact title="Two points" body="The nodes are where the Moon's tilted orbit crosses the ecliptic. No physical body sits there." color={RAHU} />
         <Fact title="One axis" body="Rahu and Ketu are the two ends of one line, so they stay exactly 180 degrees apart." color={KETU} />
-        <Fact title="Always retrograde" body="By mean-node convention the node line regresses, so retrograde is the baseline, not a special state." color={MOON} />
+        <Fact title="Always retrograde" body="By mean-node convention the node line regresses ~19.35 deg/year. Step time forward to watch the whole axis drift westward; retrograde is the baseline, not a special state." color={MOON} />
       </section>
     </div>
   );

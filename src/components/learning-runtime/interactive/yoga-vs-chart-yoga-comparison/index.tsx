@@ -32,7 +32,7 @@ const COMPARISON_ROWS = [
   { dim: "Count", time: "27 divisions (13°20′ each)", chart: "1000+ named yogas" },
   { dim: "Variability", time: "Changes every day", chart: "Fixed at birth for life" },
   { dim: "Usage", time: "Muhūrta selection, daily auspiciousness", chart: "Life-reading, character, destiny" },
-  { dim: "Sources", time: "Sūrya Siddhānta, Pañcāṅga texts", chart: "Bṛhat Parāśara Horā Śāstra, Phaladīpikā" },
+  { dim: "Sources", time: "Muhūrta Cintāmaṇi, Pañcāṅga texts", chart: "Bṛhat Pārāśara Horā Śāstra, Phaladīpikā" },
 ];
 
 function TwoWorldsSVG() {

@@ -264,7 +264,7 @@ const LESSON_SECTION_OVERRIDES: Record<
     "8": { embodiedTitle: "Name-number confusion, forgetting special names, misattributing deities, treating correspondences as faith claims" },
   },
   "the-15-krishna-tithis": {
-    "7": { embodiedTitle: "Bṛhat Saṁhitā Adhyāya 100 — the 30-tithi deity-quality wheel (kṛṣṇa pakṣa focus)" },
+    "7": { embodiedTitle: "Bṛhat Saṁhitā Adhyāya 100 — the kṛṣṇa-pakṣa moon-darkening timeline (Pratipadā → Amāvāsyā)" },
     "8": { embodiedTitle: "Universal inauspiciousness fallacy, Mahā-Śivarātri vs monthly confusion, Pitṛ Pakṣa overgeneralisation, Amāvāsyā darkness bias" },
   },
   "the-four-yugas-and-the-mahayuga": {

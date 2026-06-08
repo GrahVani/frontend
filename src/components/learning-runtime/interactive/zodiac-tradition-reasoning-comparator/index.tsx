@@ -84,7 +84,7 @@ const DIMENSIONS: Dimension[] = [
     vedic: {
       title: "Vedic — Historical Lineage",
       points: [
-        "Vedāṅga Jyotiṣa (pre-classical, ~1400–1200 BCE per academic dating) already uses sidereal reference.",
+        "Vedāṅga Jyotiṣa (pre-classical, ~1400–1200 BCE per traditional dating; ~500–200 BCE per academic-Indology dating) already uses sidereal reference.",
         "Sūrya Siddhānta (classical, ~400–600 CE) formalises the sidereal computational framework.",
         "Varāhamihira's Pañcasiddhāntikā compares five schools — three are sidereal-foundational.",
         "The sidereal commitment predates the ~285 CE alignment epoch by over a millennium.",

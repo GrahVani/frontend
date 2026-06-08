@@ -13,6 +13,15 @@ interface BoundaryScenario {
   description: string;
 }
 
+// Ayanāṁśa systems by their 2026 offset RELATIVE TO LAHIRI (lesson §4.3 + §6 Ex1).
+// Sidereal longitude = tropical − ayanāṁśa, so a SMALLER ayanāṁśa → LARGER sidereal degree.
+// Raman ≈ 22°35′ is ~1.52° below Lahiri ≈ 24°06′ (§6 Ex1) → +1.52° here; KP ≈ 23°51′ → +0.25°.
+const AYANAMSHAS: { name: string; delta: number; color: string }[] = [
+  { name: "Lahiri", delta: 0, color: "#C9A24D" },
+  { name: "KP", delta: 0.25, color: "#6B8E6B" },
+  { name: "Raman", delta: 1.52, color: "#A23A1E" },
+];
+
 const SCENARIOS: BoundaryScenario[] = [
   { label: "Meṣa → Vṛṣabha", rashiA: 1, rashiB: 2, description: "Fire → Earth · Cardinal → Fixed · Mars → Venus · East → South" },
   { label: "Karka → Siṁha", rashiA: 4, rashiB: 5, description: "Water → Fire · Cardinal → Fixed · Moon → Sun · North → East" },
@@ -51,6 +60,13 @@ export function BoundaryCrossingDemonstrator() {
 
   const ayanamsaShift = (birthTimeError / 60) * 0.25; // approx 0.25° per hour
   const uncertain = distanceToBoundary < ayanamsaShift;
+
+  // Where each ayanāṁśa system places the SAME physical planet within this window.
+  const ayanSigns = AYANAMSHAS.map((a) => {
+    const sid = degree + a.delta;
+    return { ...a, sid, sign: sid < 30 ? rashiA : rashiB };
+  });
+  const systemsDisagree = new Set(ayanSigns.map((a) => a.sign.number)).size > 1;
 
   // Dignity flip info
   const focusDignity = (grahaName: string, rashiNum: number, deg: number) => {
@@ -194,7 +210,7 @@ export function BoundaryCrossingDemonstrator() {
             border: "1px solid var(--gl-gold-accent)",
           }}
         >
-          {precisionMode ? "Hide" : "Show"} Birth-Time Uncertainty Simulator
+          {precisionMode ? "Hide" : "Show"} Precision Detail (ayanāṁśa + birth-time)
         </motion.button>
       </div>
 
@@ -209,8 +225,41 @@ export function BoundaryCrossingDemonstrator() {
             className="p-4 rounded-xl space-y-3"
             style={{ background: "var(--gl-surface-twilight-glass)", border: "1px solid var(--gl-gold-hairline)", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}
           >
+            {/* ── Ayanāṁśa systems: same planet, different placement (§4.3 + §6 Ex1) ── */}
             <div className="text-sm font-medium" style={{ color: "var(--gl-gold-accent)", fontFamily: "var(--font-cormorant)" }}>
-              Birth-Time Uncertainty Simulator
+              Ayanāṁśa systems — same planet, different placement
+            </div>
+            <div className="text-xs" style={{ color: "var(--gl-ink-secondary)", lineHeight: 1.6 }}>
+              The same physical planet gets a different sidereal degree under each ayanāṁśa (smaller ayanāṁśa → larger sidereal degree).
+              {systemsDisagree ? (
+                <span style={{ color: "#A23A1E", fontWeight: 600 }}> {" "}⚠️ At {degree.toFixed(2)}° (Lahiri) the systems land in DIFFERENT rāśis — state which ayanāṁśa you use and cross-check.</span>
+              ) : (
+                <span style={{ color: "#6B8E6B" }}> {" "}✓ At {degree.toFixed(2)}° (Lahiri) all three systems agree on the rāśi.</span>
+              )}
+            </div>
+            {/* 3-system marker track (0–60 window, boundary at 30°) */}
+            <div className="relative h-6 rounded-full overflow-hidden" style={{ background: "var(--gl-surface-manuscript)" }}>
+              <div className="absolute top-0 bottom-0 w-0.5" style={{ left: "50%", background: "var(--gl-ink-muted)", opacity: 0.5 }} />
+              {ayanSigns.map((a) => (
+                <div
+                  key={a.name}
+                  className="absolute top-0 bottom-0"
+                  style={{ left: `${Math.min(Math.max((a.sid / 60) * 100, 0), 100)}%`, width: 2, background: a.color }}
+                  title={`${a.name}: ${a.sign.nameIAST} (${a.sid.toFixed(2)}°)`}
+                />
+              ))}
+            </div>
+            <div className="flex gap-3 flex-wrap text-xs">
+              {ayanSigns.map((a) => (
+                <span key={a.name} style={{ color: a.color }}>
+                  ● {a.name}: <IAST>{a.sign.nameIAST}</IAST>
+                </span>
+              ))}
+            </div>
+
+            {/* ── Birth-time uncertainty ── */}
+            <div className="text-sm font-medium pt-2" style={{ color: "var(--gl-gold-accent)", fontFamily: "var(--font-cormorant)", borderTop: "1px solid var(--gl-gold-hairline)" }}>
+              Birth-time uncertainty
             </div>
             <div className="flex items-center gap-3">
               <label id="birth-time-error-label" htmlFor="birth-time-error-slider" className="text-sm" style={{ color: "var(--gl-ink-secondary)" }}>Birth time error:</label>

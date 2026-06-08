@@ -126,3 +126,64 @@ export const DRILL_SCENARIOS: DrillScenario[] = [
     ],
   },
 ];
+
+export interface NonCoverageItem {
+  id: string;
+  title: string;
+  what: string;
+  why: string;
+  crossRefs: string[];
+}
+
+/** The seven intentional non-coverage categories — lesson §4.3. */
+export const NON_COVERAGE_ITEMS: NonCoverageItem[] = [
+  {
+    id: "manual-ganita",
+    title: "Manual gaṇita-by-hand fluency",
+    what: "Performing chart-erection mathematics + planetary-position computation entirely by hand.",
+    why: "Modern computational discharge — Swiss Ephemeris, Astro Engine, and commercial software handle gaṇita for routine practice. Manual fluency is historically required but operationally optional.",
+    crossRefs: ["T2-15 Astronomical Foundations", "Sūrya Siddhānta (Burgess)", "Pañcasiddhāntikā (Neugebauer-Pingree)", "Siddhānta Śiromaṇi (Bhāskara II)"],
+  },
+  {
+    id: "standalone-vastu",
+    title: "Standalone Vāstu specialisation depth",
+    what: "Full operational mastery in Vāstu-Śāstra as a standalone practitioner discipline.",
+    why: "Vāstu has its own substantial separate practitioner community. The curriculum provides intro (T1-22) for Jyotiṣa-integrated literacy; full specialisation requires standalone Vāstu literature.",
+    crossRefs: ["Mayamatam", "Mānasāra", "Samarāṅgaṇa-Sūtradhāra", "Modern Vāstu Shastra training programs"],
+  },
+  {
+    id: "standalone-ayurveda",
+    title: "Standalone Āyurveda integration depth",
+    what: "Full operational integration of Jyotiṣa with Āyurveda corpus mastery.",
+    why: "Āyurveda is a major separate śāstra requiring multi-year parallel training. The curriculum covers the Jyotiṣa side with explicit cross-references.",
+    crossRefs: ["Caraka Saṁhitā", "Suśruta Saṁhitā", "Aṣṭāṅga Hṛdaya", "Modern Āyurveda BAMS training", "Frawley's Ayurvedic Astrology"],
+  },
+  {
+    id: "numerology-tantra",
+    title: "Numerology + tantric ritual + tantra-mantric practice depth",
+    what: "Full operational mastery in numerology, tantric ritual, and tantra-mantric remedial practice.",
+    why: "These adjacent disciplines have their own substantial separate traditions. The curriculum provides intro literacy only.",
+    crossRefs: ["Specialised numerology literature (Cheiro, Sepharial)", "Tantric primaries per sectarian tradition", "Lineage-engagement for tantric practice"],
+  },
+  {
+    id: "lineage-training",
+    title: "Specific stream practitioner-lineage training",
+    what: "Direct engagement with a specific practitioner-lineage at lineage-internal mastery depth.",
+    why: "Lineage-engagement requires direct teacher-disciple relationship + lineage-specific practices. The curriculum is a modern teaching synthesis, not a lineage-tradition-internal system.",
+    crossRefs: ["Sanjay Rath SJC / PJC", "K.N. Rao BVB lineage", "Specific KP teaching lineages", "Specific Lal Kitab regional lineages"],
+  },
+  {
+    id: "adjacent-traditions",
+    title: "Tājika horary, Western Renaissance horary, Hellenistic astrology",
+    what: "Full operational mastery in adjacent astrological traditions historically present in Indian cross-fertilisation.",
+    why: "The curriculum is Vedic-astrology-centric per its mission. Adjacent traditions are acknowledged but not integrated into core coverage.",
+    crossRefs: ["Standalone Tājika literature", "Western Renaissance horary corpus (Lilly, Bonatti, Barclay, Frawley)", "Hellenistic astrology corpus (Project Hindsight, Brennan)"],
+  },
+  {
+    id: "sectarian-tantric",
+    title: "Regional sectarian tantric astrology",
+    what: "Śaiva, Vaiṣṇava, or Śākta tantric astrology integrated with sectarian ritual practice.",
+    why: "Substantial regional and sectarian variations require sectarian-internal engagement. The curriculum provides Hindu-tradition-broadly-respectful framing without sectarian commitment.",
+    crossRefs: ["Śaiva tantric primaries", "Vaiṣṇava tantric primaries", "Śākta tantric primaries", "Sectarian lineage-engagement"],
+  },
+];

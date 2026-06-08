@@ -135,7 +135,8 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   // L3.2's §7 = Seven Sub-Branches Synthesis Dojo (Stream × Sub-Branch Matrix +
   "seven-sub-branches": "seven-sub-branches-synthesis-dojo",
   // L3.3's §7 = Grahvani Coverage Synthesis Dojo (Full 4×7 Coverage Matrix +
-  "where-grahvani-sits-in-the-skandha-map": "grahvani-coverage-matrix-explorer",
+  // Intentional Non-Coverage + Evaluative Drill).
+  "where-grahvani-sits-in-the-skandha-map": "grahvani-coverage-synthesis-dojo",
   // L4.1's §7 = Regional Schools Synthesis Dojo (6×4 Regional Schools Matrix +
   // teacher lookup + 5-scenario Evaluative Drill). §4 keeps the regional-schools-explorer.
   "regional-schools-and-lineages": "regional-schools-synthesis-dojo",
@@ -148,7 +149,7 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   // ─── Module 04: Rāśi System ───
   // Chapter 1 — Rāśi Mechanics
   "rashi-as-30-degree-segment": "rashi-boundary-wheel",
-  "the-12-rashi-boundaries": "rashi-boundary-wheel",
+  "the-12-rashi-boundaries": "rashi-attribute-wheel",
   "why-crossing-a-rashi-boundary-matters": "boundary-crossing-demonstrator",
   // Chapter 2 — Meṣa, Vṛṣabha, Mithuna
   "the-per-rashi-template": "rashi-attribute-wheel",
@@ -166,7 +167,7 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   // Chapter 5 — Makara, Kumbha, Mīna
   "makara-capricorn-the-earthen-cardinal": "rashi-profile-explorer",
   "kumbha-aquarius-the-airy-fixed": "rashi-profile-explorer",
-  "meena-pisces-the-watery-mutable": "rashi-profile-explorer",
+  "mina-pisces-the-watery-mutable": "rashi-profile-explorer",
   // Chapter 6 — Rāśi Groupings and Synthesis
   "chara-sthira-dvi-svabhava": "rashi-modality-classifier",
   "kendra-panaphara-apoklima": "quadrant-triad-visualizer",

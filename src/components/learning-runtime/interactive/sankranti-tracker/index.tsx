@@ -15,25 +15,25 @@ type Mode = "journey" | "compare" | "drift";
 type Convention = "sidereal" | "tropical";
 
 const SANKRANTIS = [
-  { key: "mesha", name: "Mesha", dev: "Mesha", rashi: "Aries", sidereal: "Apr 14", tropical: "Mar 20", degree: 0, festival: "Vaisakhi, Tamil New Year, Vishu, Pohela Boishakh" },
-  { key: "vrishabha", name: "Vrishabha", dev: "Vrishabha", rashi: "Taurus", sidereal: "May 15", tropical: "Apr 20", degree: 30, festival: "Solar month boundary" },
-  { key: "mithuna", name: "Mithuna", dev: "Mithuna", rashi: "Gemini", sidereal: "Jun 15", tropical: "May 21", degree: 60, festival: "Solar month boundary" },
-  { key: "karka", name: "Karka", dev: "Karka", rashi: "Cancer", sidereal: "Jul 16", tropical: "Jun 21", degree: 90, festival: "Dakshinayana begins" },
-  { key: "simha", name: "Simha", dev: "Simha", rashi: "Leo", sidereal: "Aug 17", tropical: "Jul 22", degree: 120, festival: "Malayalam solar year context" },
-  { key: "kanya", name: "Kanya", dev: "Kanya", rashi: "Virgo", sidereal: "Sep 17", tropical: "Aug 23", degree: 150, festival: "Solar month boundary" },
-  { key: "tula", name: "Tula", dev: "Tula", rashi: "Libra", sidereal: "Oct 17", tropical: "Sep 23", degree: 180, festival: "Solar month boundary" },
-  { key: "vrishchika", name: "Vrishchika", dev: "Vrishchika", rashi: "Scorpio", sidereal: "Nov 16", tropical: "Oct 23", degree: 210, festival: "Solar month boundary" },
-  { key: "dhanu", name: "Dhanu", dev: "Dhanu", rashi: "Sagittarius", sidereal: "Dec 16", tropical: "Nov 22", degree: 240, festival: "Solar month boundary" },
-  { key: "makara", name: "Makara", dev: "Makara", rashi: "Capricorn", sidereal: "Jan 14", tropical: "Dec 21", degree: 270, festival: "Pongal, Lohri, Bihu, Uttarayan" },
-  { key: "kumbha", name: "Kumbha", dev: "Kumbha", rashi: "Aquarius", sidereal: "Feb 13", tropical: "Jan 20", degree: 300, festival: "Solar month boundary" },
-  { key: "mina", name: "Mina", dev: "Mina", rashi: "Pisces", sidereal: "Mar 14", tropical: "Feb 19", degree: 330, festival: "Solar year closing month" },
+  { key: "mesha", name: "Meṣa", dev: "मेष", rashi: "Aries", sidereal: "Apr 14", tropical: "Mar 20", degree: 0, festival: "Meṣa Saṅkrānti — traditional solar new year: Vaiśākhī, Tamil Puthandu, Vishu, Pohela Boishakh" },
+  { key: "vrishabha", name: "Vṛṣabha", dev: "वृषभ", rashi: "Taurus", sidereal: "May 15", tropical: "Apr 20", degree: 30, festival: "Solar-month boundary (brief sun-worship observance)" },
+  { key: "mithuna", name: "Mithuna", dev: "मिथुन", rashi: "Gemini", sidereal: "Jun 15", tropical: "May 21", degree: 60, festival: "Solar-month boundary (brief sun-worship observance)" },
+  { key: "karka", name: "Karka", dev: "कर्क", rashi: "Cancer", sidereal: "Jul 16", tropical: "Jun 21", degree: 90, festival: "Karka Saṅkrānti — Dakṣiṇāyana begins (Sun turns southward)" },
+  { key: "simha", name: "Siṁha", dev: "सिंह", rashi: "Leo", sidereal: "Aug 17", tropical: "Jul 22", degree: 120, festival: "Siṁha Saṅkrānti — Malayalam/Kollam solar year begins (Chingam)" },
+  { key: "kanya", name: "Kanyā", dev: "कन्या", rashi: "Virgo", sidereal: "Sep 17", tropical: "Aug 23", degree: 150, festival: "Solar-month boundary (brief sun-worship observance)" },
+  { key: "tula", name: "Tulā", dev: "तुला", rashi: "Libra", sidereal: "Oct 17", tropical: "Sep 23", degree: 180, festival: "Tulā Saṅkrānti — Aippasi (Tamil); autumnal solar-month start" },
+  { key: "vrishchika", name: "Vṛścika", dev: "वृश्चिक", rashi: "Scorpio", sidereal: "Nov 16", tropical: "Oct 23", degree: 210, festival: "Solar-month boundary (brief sun-worship observance)" },
+  { key: "dhanu", name: "Dhanu", dev: "धनु", rashi: "Sagittarius", sidereal: "Dec 16", tropical: "Nov 22", degree: 240, festival: "Solar-month boundary (brief sun-worship observance)" },
+  { key: "makara", name: "Makara", dev: "मकर", rashi: "Capricorn", sidereal: "Jan 14", tropical: "Dec 21", degree: 270, festival: "Makara Saṅkrānti — Uttarāyaṇa begins: Pongal, Lohri, Magh Bihu, Uttarāyan" },
+  { key: "kumbha", name: "Kumbha", dev: "कुम्भ", rashi: "Aquarius", sidereal: "Feb 13", tropical: "Jan 20", degree: 300, festival: "Solar-month boundary (brief sun-worship observance)" },
+  { key: "mina", name: "Mīna", dev: "मीन", rashi: "Pisces", sidereal: "Mar 14", tropical: "Feb 19", degree: 330, festival: "Mīna Saṅkrānti — closing solar month before the new year" },
 ];
 
 const DRIFT_POINTS = [
   { year: 500, date: "Dec 25", offset: 0, note: "Sidereal and tropical frameworks were close enough that Makara aligned near the solstice season." },
   { year: 1000, date: "Jan 1", offset: 7, note: "Precession has moved the sidereal ingress roughly one week later." },
   { year: 1500, date: "Jan 8", offset: 14, note: "The ayanamsha gap becomes calendar-visible." },
-  { year: 2026, date: "Jan 14", offset: 20, note: "Modern Lahiri-era Makara Sankranti is observed around 14 January." },
+  { year: 2026, date: "Jan 14", offset: 20, note: "Modern Lahiri-era Makara Saṅkrānti is observed around 14 January." },
   { year: 2100, date: "Jan 15", offset: 21, note: "The drift continues at about one day per 72 years." },
 ];
 
@@ -91,7 +91,7 @@ function ZodiacWheel({
             <g
               role="button"
               tabIndex={0}
-              aria-label={`${item.name} Sankranti`}
+              aria-label={`${item.name} Saṅkrānti`}
               onClick={() => onSelect(index)}
               onKeyDown={(event) => {
                 if (event.key === "Enter" || event.key === " ") {
@@ -127,10 +127,10 @@ function ZodiacWheel({
         Earth
       </text>
       <text x={center} y={36} textAnchor="middle" fill={GREEN} fontSize={12} fontWeight={800}>
-        Uttarayana: Makara to Mithuna
+        Uttarāyaṇa: Makara → Mithuna
       </text>
       <text x={center} y={size - 24} textAnchor="middle" fill={RUST} fontSize={12} fontWeight={800}>
-        Dakshinayana: Karka to Dhanu
+        Dakṣiṇāyana: Karka → Dhanu
       </text>
     </svg>
   );
@@ -147,11 +147,32 @@ export function SankrantiTracker() {
   const active = SANKRANTIS[selectedIndex];
   const visualActive = SANKRANTIS[activeIndex];
   const drift = useMemo(() => {
-    const yearsSince500 = driftYear - 500;
-    const days = Math.round(yearsSince500 / 72);
+    // Interpolate the offset (days after the 5th-century reference) from the
+    // observed DRIFT_POINTS anchors so the headline agrees with the reference
+    // list and the lesson's dates (500 CE ≈ Dec 25 → 2026 ≈ Jan 14, ~20 days;
+    // the long-run rate is ~1 day per 72 years).
+    const pts = DRIFT_POINTS;
+    let raw: number;
+    if (driftYear <= pts[0].year) raw = pts[0].offset;
+    else if (driftYear >= pts[pts.length - 1].year) raw = pts[pts.length - 1].offset;
+    else {
+      let lo = pts[0];
+      let hi = pts[pts.length - 1];
+      for (let i = 0; i < pts.length - 1; i++) {
+        if (driftYear >= pts[i].year && driftYear <= pts[i + 1].year) {
+          lo = pts[i];
+          hi = pts[i + 1];
+          break;
+        }
+      }
+      const t = (driftYear - lo.year) / (hi.year - lo.year);
+      raw = lo.offset + t * (hi.offset - lo.offset);
+    }
+    const days = Math.round(raw);
     return {
       days,
-      label: days <= 6 ? "late December" : days <= 14 ? "early January" : days <= 20 ? "mid January" : "later January",
+      // Dec 25 + days: ≤6 → late Dec, 7–13 → early Jan, 14–21 → mid Jan (incl. ~Jan 14 Makara), ≥22 → later Jan.
+      label: days <= 6 ? "late December" : days <= 13 ? "early January" : days <= 21 ? "mid January" : "later January",
     };
   }, [driftYear]);
 
@@ -220,14 +241,14 @@ export function SankrantiTracker() {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="text-2xl font-bold" style={{ color: selectedIndex >= 9 || selectedIndex <= 2 ? GREEN : RUST }}>
-                    {active.name} Sankranti
+                    {active.name} Saṅkrānti <span className="text-lg font-semibold" style={{ color: INK_MUTED }}>{active.dev}</span>
                   </div>
                   <div className="text-sm" style={{ color: INK_SECONDARY }}>
-                    Sun enters {active.rashi} at {active.degree} deg sidereal longitude
+                    Sun enters {active.name} ({active.rashi}) at {active.degree}° sidereal longitude
                   </div>
                 </div>
                 <span className="rounded-full px-3 py-1 text-xs font-bold" style={{ backgroundColor: `${selectedIndex >= 9 || selectedIndex <= 2 ? GREEN : RUST}14`, color: selectedIndex >= 9 || selectedIndex <= 2 ? GREEN : RUST }}>
-                  {selectedIndex >= 9 || selectedIndex <= 2 ? "Uttarayana" : "Dakshinayana"}
+                  {selectedIndex >= 9 || selectedIndex <= 2 ? "Uttarāyaṇa" : "Dakṣiṇāyana"}
                 </span>
               </div>
 
@@ -251,10 +272,10 @@ export function SankrantiTracker() {
               <div className="mb-3 text-sm font-semibold">Current solar position</div>
               <div className="rounded p-3" style={{ backgroundColor: `${GOLD}12`, borderLeft: `3px solid ${GOLD}` }}>
                 <div className="text-sm font-bold" style={{ color: GOLD }}>
-                  {visualActive.name} rashi
+                  {visualActive.name} rāśi
                 </div>
                 <div className="text-sm" style={{ color: INK_SECONDARY }}>
-                  Degree {yearProgress.toFixed(0)} sits inside the {visualActive.rashi} segment. A sankranti occurs at every 30 degree boundary.
+                  Degree {yearProgress.toFixed(0)} sits inside the {visualActive.rashi} segment. A saṅkrānti occurs at every 30° boundary.
                 </div>
               </div>
             </div>
@@ -287,11 +308,11 @@ export function SankrantiTracker() {
             </div>
             <div className="mt-4 rounded p-3" style={{ backgroundColor: `${convention === "sidereal" ? GREEN : RUST}12`, borderLeft: `3px solid ${convention === "sidereal" ? GREEN : RUST}` }}>
               <div className="text-sm font-bold" style={{ color: convention === "sidereal" ? GREEN : RUST }}>
-                {convention === "sidereal" ? "Vedic-tradition pancanga use" : "Western tropical ingress use"}
+                {convention === "sidereal" ? "Vedic-tradition pañcāṅga use" : "Western tropical ingress use"}
               </div>
               <p className="mt-1 text-sm" style={{ color: INK_SECONDARY }}>
                 {convention === "sidereal"
-                  ? "Festival timing, solar-month calendars, samhita cycles, and Tajika work use sidereal sankranti."
+                  ? "Festival timing, solar-month calendars, saṁhitā cycles, and Tājika work use the sidereal saṅkrānti."
                   : "Tropical Capricorn ingress belongs to the solstice/equinox-anchored zodiac framework."}
               </p>
             </div>
@@ -351,7 +372,7 @@ export function SankrantiTracker() {
             </label>
             <div className="mt-4 rounded-lg p-4 text-center" style={{ backgroundColor: `${RUST}10` }}>
               <div className="text-xs font-bold uppercase tracking-[0.08em]" style={{ color: INK_MUTED }}>
-                Approximate Makara Sankranti period
+                Approximate Makara Saṅkrānti period
               </div>
               <div className="mt-1 text-3xl font-bold" style={{ color: RUST }}>
                 {drift.label}

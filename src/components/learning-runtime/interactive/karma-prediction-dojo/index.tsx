@@ -3,14 +3,16 @@
  *
  * Two-tab synthesis layer (constitution §10.1):
  *
- *   - Tab 1 "Cycle in Motion"     : the karma-cycle SVG (replicating L4 §4's
- *                                   diagram but with TWO overlay toggles):
- *                                   "what Jyotiṣa sees" (prārabdha brightest,
- *                                   kriyamāṇa dimmest) and "agent agency
- *                                   window" (kriyamāṇa brightest). The
- *                                   overlays make L4's central pedagogy
- *                                   spatial: the chart reads ONE corner
- *                                   strongly; the agent acts in ANOTHER.
+ *   - Tab 1 "Visibility vs Agency": an inverse-axis bar visualisation. For each
+ *                                   of the four karma types, two mirrored bars
+ *                                   grow from the centre — "what Jyotiṣa sees"
+ *                                   (vermilion, left) and "what the agent
+ *                                   controls" (jade, right), driven by the
+ *                                   OVERLAYS intensities (jyotisha-sees +
+ *                                   agency-window). Showing both at once makes
+ *                                   L4's central pedagogy visible: the chart
+ *                                   reads prārabdha most strongly; the agent
+ *                                   acts most freely in kriyamāṇa — inverse axes.
  *
  *   - Tab 2 "Indication Translator": five deterministic statements ("you
  *                                   will get the promotion Friday", "Friday
@@ -1047,7 +1049,7 @@ function TranslatorFeedback({
             marginBottom: "4px",
           }}
         >
-          Primary karma read
+          {scenario.primaryKarma === "beyond-scope" ? "Beyond chart scope" : "Primary karma read"}
         </p>
         <p
           style={{
@@ -1058,8 +1060,14 @@ function TranslatorFeedback({
             margin: 0,
           }}
         >
-          The correct indication framing primarily reads{" "}
-          <strong style={{ fontWeight: 600 }}>{scenario.primaryKarma}</strong> — that is the karma type the chart can honestly access.
+          {scenario.primaryKarma === "beyond-scope" ? (
+            "The honest framing here is refusal — outcomes like these sit outside what the chart claims to read, so no karma type gives it honest access. Naming the limit IS the correct indication."
+          ) : (
+            <>
+              The correct indication framing primarily reads{" "}
+              <strong style={{ fontWeight: 600 }}>{scenario.primaryKarma}</strong> — that is the karma type the chart can honestly access.
+            </>
+          )}
         </p>
       </div>
     </div>

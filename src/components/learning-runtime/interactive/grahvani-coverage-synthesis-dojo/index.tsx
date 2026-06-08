@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Compass, BookOpen, CheckCircle, XCircle, ArrowRight } from "lucide-react";
-import { MATRIX_CELLS, DRILL_SCENARIOS, STREAMS, SUBBRANCHES, type MatrixCell } from "./data";
+import { Compass, BookOpen, CheckCircle, XCircle, ArrowRight, EyeOff } from "lucide-react";
+import { MATRIX_CELLS, DRILL_SCENARIOS, NON_COVERAGE_ITEMS, STREAMS, SUBBRANCHES, type MatrixCell } from "./data";
 
 const GOLD = "#9C7A2F";
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
 const INK_MUTED = "var(--gl-ink-on-cream-muted)";
 
-type Tab = "matrix" | "drill";
+type Tab = "matrix" | "non-coverage" | "drill";
 
 function depthStyle(depth: MatrixCell["depth"]) {
   switch (depth) {
@@ -45,13 +45,56 @@ export function GrahvaniCoverageSynthesisDojo() {
           <Compass size={14} className="mr-1.5" />
           Full Coverage Matrix
         </TabButton>
+        <TabButton active={tab === "non-coverage"} onClick={() => setTab("non-coverage")} reducedMotion={reducedMotion}>
+          <EyeOff size={14} className="mr-1.5" />
+          Intentional Non-Coverage
+        </TabButton>
         <TabButton active={tab === "drill"} onClick={() => setTab("drill")} reducedMotion={reducedMotion}>
           <BookOpen size={14} className="mr-1.5" />
           Evaluative Drill
         </TabButton>
       </div>
 
-      {tab === "matrix" ? <MatrixView reducedMotion={reducedMotion} /> : <DrillView reducedMotion={reducedMotion} />}
+      {tab === "matrix" && <MatrixView reducedMotion={reducedMotion} />}
+      {tab === "non-coverage" && <NonCoverageView reducedMotion={reducedMotion} />}
+      {tab === "drill" && <DrillView reducedMotion={reducedMotion} />}
+    </div>
+  );
+}
+
+function NonCoverageView({ reducedMotion }: { reducedMotion: boolean }) {
+  const [expanded, setExpanded] = useState<string | null>(null);
+  return (
+    <div>
+      <p style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "16px", color: INK_SECONDARY, lineHeight: 1.6, margin: "0 0 16px" }}>
+        Seven categories the curriculum <em>intentionally</em> does not cover at full mastery depth — each a deliberate scope choice with transparent cross-references for depth (lesson §4.3).
+      </p>
+      <div className="flex flex-col gap-2.5">
+        {NON_COVERAGE_ITEMS.map((item) => {
+          const open = expanded === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setExpanded(open ? null : item.id)}
+              className="text-left rounded-lg p-4 w-full"
+              style={{ background: "rgba(120,120,120,0.06)", border: "1px solid rgba(156,122,47,0.20)", cursor: "pointer", transition: reducedMotion ? "none" : "background 0.2s" }}
+              aria-expanded={open}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <span style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "17px", fontWeight: 600, color: INK_PRIMARY }}>{item.title}</span>
+                <ArrowRight size={15} style={{ color: GOLD, transform: open ? "rotate(90deg)" : "none", transition: reducedMotion ? "none" : "transform 0.2s", flexShrink: 0 }} />
+              </div>
+              {open && (
+                <div className="mt-3 flex flex-col gap-2" style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "14.5px", color: INK_SECONDARY, lineHeight: 1.6 }}>
+                  <p><strong style={{ color: INK_PRIMARY }}>What: </strong>{item.what}</p>
+                  <p><strong style={{ color: INK_PRIMARY }}>Why excluded: </strong>{item.why}</p>
+                  <p><strong style={{ color: INK_PRIMARY }}>Cross-references: </strong>{item.crossRefs.join(" · ")}</p>
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -44,12 +44,12 @@ const POSITIONS = [
     icon: Scale,
     anchors: "The Holy Science (1894)",
     currentYuga: "Ascending Dvāpara",
-    startDate: "Kali ended 1699 CE",
+    startDate: "Kali ended 1700 CE",
     durations: "Satya 4,800 / Tretā 3,600 / Dvāpara 2,400 / Kali 1,200 years",
     totalCycle: "24,000 years",
     scope: "Used by Self-Realization Fellowship lineage + related Western-Vedic-fusion practitioners",
     detail:
-      "Sri Yukteshwar Giri's The Holy Science (1894) proposes a 24,000-year total cycle with each yuga lasting approximately 2,400 years (Kali). Per this framework, Kali Yuga ended in 1699 CE and we entered an ascending Dvāpara Yuga. The 180× scale difference from the traditional framework creates dramatically different present-epoch placement.",
+      "Sri Yukteshwar Giri's The Holy Science (1894) proposes a 24,000-year total cycle with each yuga lasting approximately 2,400 years (Kali). Per this framework, Kali Yuga ended in 1700 CE and we entered an ascending Dvāpara Yuga. The 180× scale difference from the traditional framework creates dramatically different present-epoch placement.",
   },
   {
     key: "academic",
@@ -121,7 +121,7 @@ function YugaTimelineSVG() {
   ];
 
   // Yukteshwar bar: Satya(4) + Tretā(3) + Dvāpara(2) + Kali(1) + Asc.Dvāpara(2) + Asc.Tretā(3) + Asc.Satya(4) = 19 parts
-  // NOW is early in Asc.Dvāpara (after Kali ended 1699 CE)
+  // NOW is early in Asc.Dvāpara (after Kali ended 1700 CE)
   const yukParts = [
     { label: "Satya", w: (4 / 19) * barW, color: SATYA },
     { label: "Tretā", w: (3 / 19) * barW, color: TRETA },
@@ -311,7 +311,7 @@ export function TraditionalVsAcademicDatingComparator() {
             <tbody>
               {[
                 { dim: "Current yuga", vals: ["Kali", "Ascending Dvāpara", "Analytical — no endorsement"] },
-                { dim: "Kali start date", vals: ["~3102 BCE", "Ended 1699 CE", "Computational epoch"] },
+                { dim: "Kali start date", vals: ["~3102 BCE", "Ended 1700 CE", "Computational epoch"] },
                 { dim: "Kali duration", vals: ["432,000 years", "~1,200 years", "Studied as textual construct"] },
                 { dim: "Total cycle", vals: ["4.32M years", "24,000 years", "Varies per text"] },
                 { dim: "Primary use", vals: ["Muhūrta + saṁhitā", "SRF lineage practice", "Scholarly analysis"] },
@@ -369,7 +369,7 @@ export function TraditionalVsAcademicDatingComparator() {
       <div className="gl-surface-twilight-glass p-4 flex items-start gap-3">
         <Info size={16} style={{ color: INK_MUTED }} className="mt-0.5 flex-shrink-0" />
         <p className="text-sm" style={{ color: INK_SECONDARY }}>
-          The curriculum does not ask you to &quot;pick the correct position.&quot; It asks you to understand each position on its own terms, recognise their operational contexts, and engage them honestly — following the same multi-ayanāṁśa honesty discipline from Lesson 2.2.6.
+          The curriculum does not ask you to &quot;pick the correct position.&quot; It asks you to understand each position on its own terms, recognise their operational contexts, and engage them honestly — following the same multi-ayanāṁśa honesty discipline from Lesson 2.2.5.
         </p>
       </div>
     </div>

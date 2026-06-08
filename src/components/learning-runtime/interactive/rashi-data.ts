@@ -34,7 +34,7 @@ export interface DignityEntry {
 
 export const RASHIS: RashiData[] = [
   { number: 1, nameDevanagari: "मेष", nameIAST: "Meṣa", nameEnglish: "Aries", startDegree: 0, endDegree: 30, lord: "Mars", element: "Fire", modality: "Chara", gender: "Masculine", bodyPart: "Head", direction: "East", color: "#C9A24D", keywords: "Initiating, aggressive, pioneering", mnemonic: "The ram charges forward — cardinal initiating fire" },
-  { number: 2, nameDevanagari: "वृष", nameIAST: "Vṛṣabha", nameEnglish: "Taurus", startDegree: 30, endDegree: 60, lord: "Venus", element: "Earth", modality: "Sthira", gender: "Feminine", bodyPart: "Face / Neck", direction: "South", color: "#6B8E6B", keywords: "Persistent, sensual, accumulating", mnemonic: "The bull stands its ground — fixed persistent earth" },
+  { number: 2, nameDevanagari: "वृषभ", nameIAST: "Vṛṣabha", nameEnglish: "Taurus", startDegree: 30, endDegree: 60, lord: "Venus", element: "Earth", modality: "Sthira", gender: "Feminine", bodyPart: "Face / Neck", direction: "South", color: "#6B8E6B", keywords: "Persistent, sensual, accumulating", mnemonic: "The bull stands its ground — fixed persistent earth" },
   { number: 3, nameDevanagari: "मिथुन", nameIAST: "Mithuna", nameEnglish: "Gemini", startDegree: 60, endDegree: 90, lord: "Mercury", element: "Air", modality: "Dvi-svabhāva", gender: "Masculine", bodyPart: "Shoulders / Arms", direction: "West", color: "#7BA7C0", keywords: "Adaptive, communicative, curious", mnemonic: "The twins shift and adapt — mutable flexible air" },
   { number: 4, nameDevanagari: "कर्क", nameIAST: "Karka", nameEnglish: "Cancer", startDegree: 90, endDegree: 120, lord: "Moon", element: "Water", modality: "Chara", gender: "Feminine", bodyPart: "Chest / Heart", direction: "North", color: "#5A8A9A", keywords: "Nurturing, protective, emotional", mnemonic: "The crab scuttles sideways but initiates — cardinal water" },
   { number: 5, nameDevanagari: "सिंह", nameIAST: "Siṁha", nameEnglish: "Leo", startDegree: 120, endDegree: 150, lord: "Sun", element: "Fire", modality: "Sthira", gender: "Masculine", bodyPart: "Stomach / Upper-belly", direction: "East", color: "#C9A24D", keywords: "Regal, radiant, authoritative", mnemonic: "The lion holds its territory — fixed radiant fire" },
@@ -56,7 +56,7 @@ export const DIGNITIES: Record<number, DignityEntry[]> = {
   ],
   2: [
     { type: "Exalted", graha: "Moon", degree: 3, color: "#C9A24D", badge: "👑" },
-    { type: "Mūla-trikoṇa", graha: "Moon", degreeStart: 3, degreeEnd: 30, color: "#A23A1E", badge: "🔺" },
+    { type: "Mūla-trikoṇa", graha: "Moon", degreeStart: 4, degreeEnd: 30, color: "#A23A1E", badge: "🔺" },
     { type: "Own-sign", graha: "Venus", color: "#4A7C9B", badge: "●" },
   ],
   3: [
@@ -73,7 +73,7 @@ export const DIGNITIES: Record<number, DignityEntry[]> = {
   ],
   6: [
     { type: "Exalted", graha: "Mercury", degree: 15, color: "#C9A24D", badge: "👑" },
-    { type: "Mūla-trikoṇa", graha: "Mercury", degreeStart: 0, degreeEnd: 15, color: "#A23A1E", badge: "🔺" },
+    { type: "Mūla-trikoṇa", graha: "Mercury", degreeStart: 16, degreeEnd: 20, color: "#A23A1E", badge: "🔺" },
     { type: "Own-sign", graha: "Mercury", color: "#4A7C9B", badge: "●" },
     { type: "Debilitated", graha: "Venus", degree: 27, color: "#6B6B6B", badge: "⬇️" },
   ],
@@ -108,10 +108,10 @@ export const DIGNITIES: Record<number, DignityEntry[]> = {
 };
 
 export const MULA_TRIKONA_REDIRECTS: Record<string, { fromRashi: number; toRashi: number; graha: string; reason: string }> = {
-  moon: { fromRashi: 4, toRashi: 2, graha: "Moon", reason: "Moon's mūla-trikoṇa is in Vṛṣabha (3°–30°), not Karka" },
+  moon: { fromRashi: 4, toRashi: 2, graha: "Moon", reason: "Moon's mūla-trikoṇa is in Vṛṣabha (4°–30°), not Karka" },
   mars: { fromRashi: 8, toRashi: 1, graha: "Mars", reason: "Mars's mūla-trikoṇa is in Meṣa (0°–12°), not Vṛścika" },
   venus: { fromRashi: 2, toRashi: 7, graha: "Venus", reason: "Venus's mūla-trikoṇa is in Tulā (0°–15°), not Vṛṣabha" },
-  mercury: { fromRashi: 3, toRashi: 6, graha: "Mercury", reason: "Mercury's mūla-trikoṇa is in Kanyā (0°–15°), not Mithuna" },
+  mercury: { fromRashi: 3, toRashi: 6, graha: "Mercury", reason: "Mercury's mūla-trikoṇa is in Kanyā (16°–20°), not Mithuna" },
   saturn: { fromRashi: 10, toRashi: 11, graha: "Saturn", reason: "Saturn's mūla-trikoṇa is in Kumbha (0°–20°), not Makara" },
   jupiter: { fromRashi: 12, toRashi: 9, graha: "Jupiter", reason: "Jupiter's mūla-trikoṇa is in Dhanus (0°–10°), not Mīna" },
 };

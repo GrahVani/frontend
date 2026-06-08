@@ -166,9 +166,10 @@ function BoundaryCaseSVG() {
   const ashviniEnd = startX + 13.3333 * pxPerDeg;
   const bharaniEnd = startX + 26.6667 * pxPerDeg;
 
-  // Lahiri Moon at ~13°20′ (boundary), Krishnamurti at ~13°14′ (just inside Aśvinī)
-  const lahiriX = startX + 13.3333 * pxPerDeg;
-  const krishnamurtiX = startX + 13.2333 * pxPerDeg;
+  // Lahiri Moon at 13°16′ (inside Aśvinī); Krishnamurti at 13°22′ (inside Bharaṇī).
+  // KP ayanāṁśa is ~6′ LESS than Lahiri, so the KP sidereal position is ~6′ GREATER.
+  const lahiriX = startX + 13.2667 * pxPerDeg;
+  const krishnamurtiX = startX + 13.3667 * pxPerDeg;
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto">
@@ -187,13 +188,13 @@ function BoundaryCaseSVG() {
       <text x={ashviniEnd} y={stripY - 10} textAnchor="middle" fill={INK_SECONDARY} fontSize={10}>13°20′</text>
 
       {/* Markers */}
-      {/* Krishnamurti marker (inside Aśvinī) */}
+      {/* Krishnamurti marker (inside Bharaṇī) */}
       <polygon points={`${krishnamurtiX},${stripY - 12} ${krishnamurtiX - 5},${stripY - 22} ${krishnamurtiX + 5},${stripY - 22}`} fill={INDIGO} />
-      <text x={krishnamurtiX} y={stripY - 26} textAnchor="middle" fill={INDIGO} fontSize={10} fontWeight={600}>KP: 13°14′</text>
+      <text x={krishnamurtiX} y={stripY - 26} textAnchor="middle" fill={INDIGO} fontSize={10} fontWeight={600}>KP: 13°22′</text>
 
-      {/* Lahiri marker (on boundary → Bharaṇī) */}
+      {/* Lahiri marker (inside Aśvinī) */}
       <polygon points={`${lahiriX},${stripY - 12} ${lahiriX - 5},${stripY - 22} ${lahiriX + 5},${stripY - 22}`} fill={GOLD} />
-      <text x={lahiriX} y={stripY - 26} textAnchor="middle" fill={GOLD} fontSize={10} fontWeight={600}>Lahiri: 13°20′</text>
+      <text x={lahiriX} y={stripY - 26} textAnchor="middle" fill={GOLD} fontSize={10} fontWeight={600}>Lahiri: 13°16′</text>
 
       {/* Gap annotation */}
       <line x1={krishnamurtiX} y1={stripY + stripH + 18} x2={lahiriX} y2={stripY + stripH + 18} stroke={INK_MUTED} strokeWidth={1} />
@@ -527,13 +528,13 @@ export function AyanamshaDecisionFrameworkFlowchart() {
             <div className="p-3 rounded-lg" style={{ backgroundColor: `${GOLD}10`, borderLeft: `3px solid ${GOLD}` }}>
               <div className="font-semibold text-sm mb-1" style={{ color: GOLD }}>Lahiri position</div>
               <p className="text-xs" style={{ color: INK_SECONDARY }}>
-                Moon at 13°20′ Aries → <strong>Bharaṇī nakṣatra</strong> (Venus-lorded) → Vimśottarī starting daśā = <strong>Venus mahā-daśā</strong>
+                Moon at 13°16′ Aries → <strong>Aśvinī nakṣatra</strong> (Ketu-lorded) → Vimśottarī starting daśā = <strong>Ketu mahā-daśā</strong>
               </p>
             </div>
             <div className="p-3 rounded-lg" style={{ backgroundColor: `${INDIGO}10`, borderLeft: `3px solid ${INDIGO}` }}>
               <div className="font-semibold text-sm mb-1" style={{ color: INDIGO }}>Krishnamurti position</div>
               <p className="text-xs" style={{ color: INK_SECONDARY }}>
-                Moon at 13°14′ Aries → <strong>Aśvinī nakṣatra</strong> (Ketu-lorded) → Vimśottarī starting daśā = <strong>Ketu mahā-daśā</strong>
+                Moon at 13°22′ Aries → <strong>Bharaṇī nakṣatra</strong> (Venus-lorded) → Vimśottarī starting daśā = <strong>Venus mahā-daśā</strong>
               </p>
             </div>
           </div>

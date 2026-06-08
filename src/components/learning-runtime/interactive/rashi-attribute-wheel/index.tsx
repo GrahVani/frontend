@@ -5,10 +5,27 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { IAST } from "../../chrome/typography";
 import {
   RASHIS, getDignitiesForRashi, MULA_TRIKONA_REDIRECTS, OPPOSITE_PAIRS,
-  ELEMENT_COLORS, MODALITY_COLORS, DIGNITY_COLORS, GRAHA_SYMBOLS,
+  ELEMENT_COLORS, MODALITY_COLORS, DIGNITY_COLORS, GRAHA_SYMBOLS, GRAHA_COLORS, LORD_PAIRS,
   describeArc, polarToCartesian, midAngle,
   type RashiData,
 } from "../rashi-data";
+
+// Lords in order of increasing distance from the luminaries (lesson §4.3 "fan outward").
+const LORD_FAN_ORDER: { lord: string; step: string }[] = [
+  { lord: "Moon", step: "centre (4)" },
+  { lord: "Sun", step: "centre (5)" },
+  { lord: "Mercury", step: "1 step out" },
+  { lord: "Venus", step: "2 steps" },
+  { lord: "Mars", step: "3 steps" },
+  { lord: "Jupiter", step: "then round" },
+  { lord: "Saturn", step: "opposite" },
+];
+
+// Gender alternates strictly odd→masculine / even→feminine around the wheel (lesson §4.3).
+const GENDER_COLORS: Record<string, string> = {
+  Masculine: "#C9A24D",
+  Feminine: "#8B5FC0",
+};
 
 /* ─── Lesson context for lesson-aware defaults ─── */
 export const LessonContext = createContext<{ slug: string }>({ slug: "" });
@@ -47,6 +64,8 @@ function RashiWheel({
   onHover,
   hovered,
   showAxis,
+  colourByLord,
+  colourByGender,
   highlightGroup,
 }: {
   selected: number;
@@ -55,6 +74,8 @@ function RashiWheel({
   onHover: (n: number | null) => void;
   hovered: number | null;
   showAxis?: boolean;
+  colourByLord?: boolean;
+  colourByGender?: boolean;
   highlightGroup?: number[];
 }) {
   const cx = 150;
@@ -77,6 +98,19 @@ function RashiWheel({
       {/* Background rings */}
       <circle cx={cx} cy={cy} r={r} fill="var(--gl-surface-manuscript)" opacity={0.15} stroke="var(--gl-gold-accent)" strokeOpacity={0.25} strokeWidth={1} />
       <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="var(--gl-gold-accent)" strokeOpacity={0.15} strokeWidth={1} />
+
+      {/* Moon–Sun mirror axis (lesson §4.3) — the 120°↔300° diameter the rulerships mirror about */}
+      {colourByLord && (() => {
+        const a = polarToCartesian(cx, cy, r - 4, 120);
+        const b = polarToCartesian(cx, cy, r - 4, 300);
+        const lbl = polarToCartesian(cx, cy, r + 12, 120);
+        return (
+          <g style={{ pointerEvents: "none" }}>
+            <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#C9A24D" strokeWidth={2} strokeDasharray="5 3" opacity={0.75} />
+            <text x={lbl.x} y={lbl.y} textAnchor="middle" dominantBaseline="middle" fill="#C9A24D" fontSize={7} fontWeight={700}>Moon–Sun axis</text>
+          </g>
+        );
+      })()}
 
       {/* 180° axis lines */}
       {showAxis && OPPOSITE_PAIRS.map((pair) => {
@@ -110,11 +144,15 @@ function RashiWheel({
         const labelPos = polarToCartesian(cx, cy, (r + innerR) / 2, m);
         const numPos = polarToCartesian(cx, cy, (r + innerR) / 2 + 16, m);
 
-        const ec = ELEMENT_COLORS[rashi.element];
+        const segColor = colourByGender
+          ? (GENDER_COLORS[rashi.gender] ?? rashi.color)
+          : colourByLord
+          ? (GRAHA_COLORS[rashi.lord] ?? rashi.color)
+          : rashi.color;
         const baseFill = isSelected || isCompare || isHovered || isHighlighted
-          ? `${rashi.color}35`
-          : `${rashi.color}12`;
-        const stroke = isSelected ? rashi.color : isHovered ? rashi.color : `${rashi.color}45`;
+          ? `${segColor}35`
+          : `${segColor}12`;
+        const stroke = isSelected ? segColor : isHovered ? segColor : `${segColor}45`;
         const strokeW = isSelected ? 2.5 : isHovered ? 2 : 1;
 
         return (
@@ -181,6 +219,8 @@ export function RashiAttributeWheel() {
   const [activeTab, setActiveTab] = useState<"attributes" | "compare" | "grid" | "kalapurusa">("attributes");
   const [hovered, setHovered] = useState<number | null>(null);
   const [showAxis, setShowAxis] = useState(false);
+  const [colourByLord, setColourByLord] = useState(false);
+  const [colourByGender, setColourByGender] = useState(false);
   const [showRedirects, setShowRedirects] = useState(true);
   const shouldReduceMotion = useReducedMotion();
 
@@ -263,24 +303,82 @@ export function RashiAttributeWheel() {
         >
           {showAxis ? "Hide" : "Show"} 180° Axis
         </motion.button>
+        <motion.button
+          onClick={() => { setColourByLord((s) => !s); setColourByGender(false); }}
+          className="px-3 py-2 text-sm rounded-lg transition-all"
+          whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+          whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
+          style={{
+            background: colourByLord ? "#C9A24D25" : "var(--gl-surface-manuscript)",
+            color: colourByLord ? "#C9A24D" : "var(--gl-ink-muted)",
+            border: "1px solid var(--gl-gold-hairline)",
+          }}
+        >
+          {colourByLord ? "Colour: lord ✓" : "Colour by lord"}
+        </motion.button>
+        <motion.button
+          onClick={() => { setColourByGender((s) => !s); setColourByLord(false); }}
+          className="px-3 py-2 text-sm rounded-lg transition-all"
+          whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+          whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
+          style={{
+            background: colourByGender ? "#8B5FC025" : "var(--gl-surface-manuscript)",
+            color: colourByGender ? "#8B5FC0" : "var(--gl-ink-muted)",
+            border: "1px solid var(--gl-gold-hairline)",
+          }}
+        >
+          {colourByGender ? "Colour: gender ✓" : "Colour by gender"}
+        </motion.button>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Wheel */}
         <div className="flex-shrink-0 mx-auto lg:mx-0" style={{ maxWidth: 320 }}>
-          <RashiWheel selected={selected} compare={compare} onSelect={handleWheelClick} onHover={setHovered} hovered={hovered} showAxis={showAxis} />
+          <RashiWheel selected={selected} compare={compare} onSelect={handleWheelClick} onHover={setHovered} hovered={hovered} showAxis={showAxis} colourByLord={colourByLord} colourByGender={colourByGender} />
           {/* Legend */}
-          <div className="flex gap-3 mt-2 flex-wrap justify-center">
-            {["Fire", "Earth", "Air", "Water"].map((el) => {
-              const c = ELEMENT_COLORS[el];
-              return (
-                <div key={el} className="flex items-center gap-1">
-                  <div style={{ width: 10, height: 10, borderRadius: 2, background: c.text }} />
-                  <span className="text-xs" style={{ color: "var(--gl-ink-secondary)" }}>{el}</span>
-                </div>
-              );
-            })}
-          </div>
+          {colourByGender ? (
+            <div className="mt-2">
+              <div className="flex gap-x-4 gap-y-1 flex-wrap justify-center">
+                {["Masculine", "Feminine"].map((g) => (
+                  <div key={g} className="flex items-center gap-1">
+                    <div style={{ width: 10, height: 10, borderRadius: 2, background: GENDER_COLORS[g], border: "1px solid var(--gl-gold-hairline)" }} />
+                    <span className="text-[11px]" style={{ color: "var(--gl-ink-secondary)" }}>{g} {g === "Masculine" ? "(odd #)" : "(even #)"}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[10px] text-center mt-1.5" style={{ color: "var(--gl-ink-muted)" }}>
+                Gender alternates strictly around the wheel — odd-numbered rāśis masculine, even-numbered feminine.
+              </p>
+            </div>
+          ) : colourByLord ? (
+            <div className="mt-2">
+              <div className="flex gap-x-3 gap-y-1 flex-wrap justify-center">
+                {LORD_FAN_ORDER.map(({ lord, step }) => (
+                  <div key={lord} className="flex items-center gap-1" title={step}>
+                    <div style={{ width: 10, height: 10, borderRadius: 2, background: GRAHA_COLORS[lord], border: "1px solid var(--gl-gold-hairline)" }} />
+                    <span className="text-[11px]" style={{ color: "var(--gl-ink-secondary)" }}>
+                      {GRAHA_SYMBOLS[lord]} {lord} <span style={{ color: "var(--gl-ink-muted)" }}>{LORD_PAIRS[lord].join(",")}</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[10px] text-center mt-1.5" style={{ color: "var(--gl-ink-muted)" }}>
+                Five lords own a mirrored pair (1+8, 2+7, 3+6 sum 9; 9+12, 10+11 sum 21); the Sun &amp; Moon hold the centre singly — they fan outward from the Moon–Sun axis in planetary-speed order.
+              </p>
+            </div>
+          ) : (
+            <div className="flex gap-3 mt-2 flex-wrap justify-center">
+              {["Fire", "Earth", "Air", "Water"].map((el) => {
+                const c = ELEMENT_COLORS[el];
+                return (
+                  <div key={el} className="flex items-center gap-1">
+                    <div style={{ width: 10, height: 10, borderRadius: 2, background: c.text }} />
+                    <span className="text-xs" style={{ color: "var(--gl-ink-secondary)" }}>{el}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Detail Panel */}

@@ -93,7 +93,10 @@ function toDMS(decimalDeg: number): string {
 }
 
 function ayanamshaForYear(year: number): number {
-  return (year - 285) / 72;
+  // Curriculum's taught Lahiri simplified formula (2.2.2 §4.4): linear from the
+  // 285 CE zero-point at 50.2388″/year. → 2026 ≈ 24°17′46″ (precise table 24°19′01″,
+  // the ~1′ gap being nutation + higher-order terms, per 2.2.2).
+  return (year - 285) * 50.2388 / 3600;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -109,7 +112,7 @@ export function AyanamshaDefinitionExplorer() {
 
   const ay = useMemo(() => {
     const y = parseInt(convYear, 10);
-    return Number.isNaN(y) ? 24.18 : ayanamshaForYear(y);
+    return Number.isNaN(y) ? ayanamshaForYear(2026) : ayanamshaForYear(y);
   }, [convYear]);
 
   const siderealResult = useMemo(() => {

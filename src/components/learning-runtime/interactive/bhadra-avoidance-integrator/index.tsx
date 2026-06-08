@@ -9,111 +9,96 @@ const VERMILION = "#A23A1E";
 const AMBER = "#B8860B";
 const INDIGO = "#4F6FA8";
 
-const DAYS = [
-  { name: "Sunday", short: "Sun", dev: "भानुवासरः", graha: "Sūrya", symbol: "☉", color: "#B8860B" },
-  { name: "Monday", short: "Mon", dev: "सोमवासरः", graha: "Soma", symbol: "☽", color: "#7A8CB8" },
-  { name: "Tuesday", short: "Tue", dev: "मङ्गलवासरः", graha: "Maṅgala", symbol: "♂", color: "#C8412E" },
-  { name: "Wednesday", short: "Wed", dev: "बुधवासरः", graha: "Budha", symbol: "☿", color: "#3A8C5A" },
-  { name: "Thursday", short: "Thu", dev: "गुरुवासरः", graha: "Guru", symbol: "♃", color: "#E89E2A" },
-  { name: "Friday", short: "Fri", dev: "शुक्रवासरः", graha: "Śukra", symbol: "♀", color: "#5A8CC8" },
-  { name: "Saturday", short: "Sat", dev: "शनिवासरः", graha: "Śani", symbol: "♄", color: "#5A5A7A" },
-];
+type Status = "barred" | "caution" | "usable" | "fitting";
 
-const BHADRA_PERIODS: Record<string, { period: string; tithiContext: string; karanaName: string }> = {
-  Sunday: { period: "2nd half of Pratipadā / 1st half of Dvitīyā", tithiContext: "Tithi 1 to 2 transition", karanaName: "Kimstughna / Bava" },
-  Monday: { period: "2nd half of Saptamī / 1st half of Aṣṭamī", tithiContext: "Tithi 7 to 8 transition", karanaName: "Gara / Viṣṭi" },
-  Tuesday: { period: "2nd half of Caturthī / 1st half of Pañcamī", tithiContext: "Tithi 4 to 5 transition", karanaName: "Vaṇija / Bava" },
-  Wednesday: { period: "2nd half of Daśamī / 1st half of Ekādaśī", tithiContext: "Tithi 10 to 11 transition", karanaName: "Taitila / Gara" },
-  Thursday: { period: "2nd half of Trayodaśī / 1st half of Caturdaśī", tithiContext: "Tithi 13 to 14 transition", karanaName: "Kaulava / Taitila" },
-  Friday: { period: "2nd half of Navamī / 1st half of Daśamī", tithiContext: "Tithi 9 to 10 transition", karanaName: "Bālava / Vaṇija" },
-  Saturday: { period: "2nd half of Ṣaṣṭhī / 1st half of Saptamī", tithiContext: "Tithi 6 to 7 transition", karanaName: "Bava / Bālava" },
+const STATUS_META: Record<Status, { color: string; bg: string; border: string; label: string }> = {
+  barred:  { color: VERMILION, bg: "#FDE8E5", border: "#E8AFA8", label: "Barred" },
+  caution: { color: AMBER,     bg: "#FDF6E3", border: "#E8D5A3", label: "With compensation" },
+  usable:  { color: JADE,      bg: "#E8F5EE", border: "#A8D4B8", label: "Usable" },
+  fitting: { color: JADE,      bg: "#E8F5EE", border: "#A8D4B8", label: "Fitting" },
 };
 
-const AVOID_ACTIVITIES = [
-  "New ventures", "Marriage", "Travel", "Construction", "Important decisions",
-  "Business opening", "Legal matters", "Foundation-laying", "Medical procedures",
+const EVENTS = [
+  { id: "marriage", label: "Marriage / Saṁskāra",    dev: "विवाह",        desc: "Marriage and major saṁskāras — the strictest case (§4.4)." },
+  { id: "onset",    label: "Auspicious onset",        dev: "आरम्भ",        desc: "Business opening, journey, foundation-laying, signing — gentle beginnings (§4.1)." },
+  { id: "surgery",  label: "Sharp / cutting action",  dev: "तीक्ष्ण-कर्म", desc: "Surgery, obstacle-removal, dispelling-malefic rites, (some) litigation (§4.1)." },
+] as const;
+
+const VASAS = [
+  { id: "patala", label: "Pātāla",     dev: "पाताल",     realm: "underworld", note: "lightest — some traditions treat as nearly negligible" },
+  { id: "mrtyu",  label: "Mṛtyu-loka", dev: "मृत्युलोक", realm: "earth",      note: "strictest — the earth-dwelling Bhadrā reaches mortal affairs; full avoidance" },
+  { id: "svarga", label: "Svarga",     dev: "स्वर्ग",     realm: "heaven",     note: "moderate" },
+] as const;
+
+type EventId = typeof EVENTS[number]["id"];
+type VasaId = typeof VASAS[number]["id"];
+
+// The three portions of a Bhadrā window. minutes = relative duration (window ≈ 24 h here).
+// One ghaṭī = 24 min → mukha = 5 × 24 = 120 min, puccha = 3 × 24 = 72 min (§4.2).
+const PORTIONS = [
+  { id: "mukha",  label: "Mukha",  dev: "मुख",  sub: "face · first ~5 ghaṭīs (≈ 2 hrs) · “poison-like”", minutes: 120 },
+  { id: "madhya", label: "Madhya", dev: "मध्य", sub: "middle · the long centre",                          minutes: 1248 },
+  { id: "puccha", label: "Puccha", dev: "पुच्छ", sub: "tail · last ~3 ghaṭīs (≈ 1.2 hrs) · “fearsome”",    minutes: 72 },
+] as const;
+
+type PortionId = typeof PORTIONS[number]["id"];
+
+const WINDOW_START = 360; // 06:00 — an illustrative onset; the real one comes from the pañcāṅga.
+
+function portionStatus(event: EventId, vasa: VasaId, portion: PortionId): Status {
+  if (event === "surgery") return "fitting";   // §4.1 sharp-action exception — fierce energy suits it
+  if (event === "marriage") return "barred";   // §4.4 entire window barred regardless of vāsa-sthāna
+  // onset: mukha & puccha always barred; the long middle is graded by vāsa-sthāna (§4.2 + §4.3)
+  if (portion === "mukha" || portion === "puccha") return "barred";
+  if (vasa === "patala") return "usable";
+  if (vasa === "svarga") return "caution";
+  return "barred"; // mṛtyu-loka — strictest
+}
+
+function verdict(event: EventId, vasa: VasaId): { status: Status; headline: string; detail: string } {
+  if (event === "surgery") return {
+    status: "fitting",
+    headline: "Bhadrā suits sharp action",
+    detail: "Bhadrā's fierce energy fits cutting / transformative work — surgery, obstacle-removal, dispelling-malefic rites, and (some traditions) litigation. The bar on gentle onsets does not apply here.",
+  };
+  if (event === "marriage") return {
+    status: "barred",
+    headline: "Entire window barred — absolute",
+    detail: "For marriage and major saṁskāras the whole Bhadrā window is barred — mukha, madhya and puccha alike — regardless of vāsa-sthāna (even Pātāla), and no auspicious factor compensates.",
+  };
+  const madhya = portionStatus("onset", vasa, "madhya");
+  if (madhya === "usable") return {
+    status: "usable",
+    headline: "Mukha & puccha barred · long middle usable",
+    detail: "Avoid the ~2-hour mukha and the ~1.2-hour puccha. With Bhadrā in Pātāla the long middle is the lightest case — usable for non-marriage onsets with supporting strength.",
+  };
+  if (madhya === "caution") return {
+    status: "caution",
+    headline: "Mukha & puccha barred · middle only with compensation",
+    detail: "Avoid mukha and puccha. With Bhadrā in Svarga (moderate) the long middle is permissible for non-marriage onsets only with compensating strength.",
+  };
+  return {
+    status: "barred",
+    headline: "Full avoidance",
+    detail: "With Bhadrā in Mṛtyu-loka (earth) — the strictest residence — the whole window is avoided for onsets; the earth-dwelling Bhadrā is the one that reaches mortal affairs.",
+  };
+}
+
+const SCREENS = [
+  { n: 1, layer: "Tithi-quality",            ch: 1 },
+  { n: 2, layer: "Vāra-event-pairing",        ch: 2 },
+  { n: 3, layer: "Choghaḍiyā",                ch: 2 },
+  { n: 4, layer: "Rāhu-Kālam",                ch: 2 },
+  { n: 5, layer: "Nakṣatra-quality",          ch: 3 },
+  { n: 6, layer: "Yoga-screening",            ch: 4 },
+  { n: 7, layer: "Karaṇa-screening (Bhadrā)", ch: 5 },
 ];
 
-const INAUSPICIOUS_PERIODS = [
-  { name: "Bhadrā (Viṣṭi)", source: "Karaṇa-based", duration: "~6 hours", severity: "High", severityColor: AMBER, bg: "#FDF6E3", border: "#E8D5A3", avoid: "All new beginnings, marriage, travel, construction", note: "Most inauspicious karaṇa. Occurs daily in rotating tithi-halves." },
-  { name: "Rāhu Kālam", source: "Vāra-based", duration: "~90 min/day", severity: "High", severityColor: VERMILION, bg: "#FDE8E5", border: "#E8AFA8", avoid: "New beginnings, travel, signing contracts", note: "Varies by weekday. Daily inauspicious window." },
-  { name: "Vyatīpāta / Vaidhṛti", source: "Yoga-based", duration: "~24 hours", severity: "Highest", severityColor: "#8B1A1A", bg: "#FDE8E5", border: "#E8AFA8", avoid: "All important acts — complete avoidance", note: "Most dangerous yogas. Postpone everything if possible." },
-  { name: "Riktā Tithi", source: "Tithi-based", duration: "~24 hours", severity: "Medium", severityColor: GOLD, bg: "#FDF6E3", border: "#E8D5A3", avoid: "New ventures (exceptions for worship)", note: "Sacred for Gaṇeśa, Devī, Śiva observances." },
-];
-
-const LIMB_CHECK = [
-  { name: "Tithi", rule: "Avoid Riktā for new ventures", status: "check" as const },
-  { name: "Vāra", rule: "Check weekday suitability", status: "check" as const },
-  { name: "Nakṣatra", rule: "Check activity compatibility", status: "check" as const },
-  { name: "Yoga", rule: "Avoid Vyatīpāta / Vaidhṛti", status: "check" as const },
-  { name: "Karaṇa", rule: "AVOID Bhadrā (Viṣṭi)", status: "warn" as const },
-];
-
-/* ─── Compact Bhadrā Danger Clock SVG ─── */
-function DangerClock({ activeDay, onSelect }: { activeDay: number; onSelect: (i: number) => void }) {
-  const W = 320;
-  const H = 300;
-  const CX = W / 2;
-  const CY = H / 2 + 4;
-  const R = 100;
-  const R_LABEL = 128;
-
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" style={{ maxWidth: "320px", margin: "0 auto", display: "block" }}>
-      <defs>
-        <filter id="dcShadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy={2} stdDeviation={3} floodColor="#6B4423" floodOpacity="0.12" /></filter>
-        <radialGradient id="dcGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#FFF9F0" /><stop offset="100%" stopColor="#FDF6E3" /></radialGradient>
-      </defs>
-
-      {/* Background disc */}
-      <circle cx={CX} cy={CY} r={R + 24} fill="url(#dcGrad)" stroke={GOLD} strokeWidth={1} strokeOpacity={0.25} filter="url(#dcShadow)" />
-      <circle cx={CX} cy={CY} r={R + 8} fill="none" stroke={GOLD} strokeWidth={1} strokeDasharray="6 4" opacity={0.3} />
-
-      {/* Connection lines from center to each day */}
-      {DAYS.map((_, i) => {
-        const angle = (i * (360 / 7) - 90) * Math.PI / 180;
-        const x1 = CX + 28 * Math.cos(angle);
-        const y1 = CY + 28 * Math.sin(angle);
-        const x2 = CX + (R - 6) * Math.cos(angle);
-        const y2 = CY + (R - 6) * Math.sin(angle);
-        return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={GOLD} strokeWidth={0.8} opacity={0.2} />;
-      })}
-
-      {/* Day nodes */}
-      {DAYS.map((day, i) => {
-        const angle = (i * (360 / 7) - 90) * Math.PI / 180;
-        const x = CX + R * Math.cos(angle);
-        const y = CY + R * Math.sin(angle);
-        const lx = CX + R_LABEL * Math.cos(angle);
-        const ly = CY + R_LABEL * Math.sin(angle);
-        const isActive = i === activeDay;
-
-        return (
-          <g key={day.name} style={{ cursor: "pointer" }} onClick={() => onSelect(i)}>
-            {/* Outer glow for active */}
-            {isActive && <circle cx={x} cy={y} r={22} fill={AMBER} opacity={0.12} />}
-            {/* Node circle */}
-            <circle cx={x} cy={y} r={isActive ? 20 : 16} fill={isActive ? AMBER : "#FFF9F0"} stroke={isActive ? AMBER : day.color} strokeWidth={isActive ? 3 : 2} filter="url(#dcShadow)" style={{ transition: "all 0.3s ease" }} />
-            {/* Planet symbol */}
-            <text x={x} y={y + 5} textAnchor="middle" fill={isActive ? "#fff" : day.color} fontSize={isActive ? 16 : 12} fontWeight={800} style={{ pointerEvents: "none", fontFamily: "var(--font-sans), sans-serif", transition: "all 0.3s ease" }}>
-              {day.symbol}
-            </text>
-            {/* Day name label */}
-            <text x={lx} y={ly + 4} textAnchor="middle" fill={isActive ? AMBER : "var(--gl-ink-secondary)"} fontSize={isActive ? 11 : 9} fontWeight={isActive ? 700 : 500} style={{ pointerEvents: "none", fontFamily: "var(--font-sans), sans-serif", transition: "all 0.3s ease" }}>
-              {day.short}
-            </text>
-          </g>
-        );
-      })}
-
-      {/* Center warning hub */}
-      <circle cx={CX} cy={CY} r={36} fill="#FDE8E5" stroke={AMBER} strokeWidth={2.5} filter="url(#dcShadow)" />
-      {/* Warning triangle */}
-      <polygon points={`${CX},${CY - 14} ${CX + 13},${CY + 11} ${CX - 13},${CY + 11}`} fill="none" stroke={AMBER} strokeWidth={2.5} strokeLinejoin="round" />
-      <text x={CX} y={CY + 8} textAnchor="middle" fill={AMBER} fontSize={18} fontWeight={900} style={{ fontFamily: "var(--font-sans), sans-serif" }}>!</text>
-      <text x={CX} y={CY + 22} textAnchor="middle" fill={AMBER} fontSize={7} fontWeight={700} style={{ textTransform: "uppercase", letterSpacing: "0.08em" }}>Bhadrā</text>
-    </svg>
-  );
+function clock(min: number) {
+  const m = ((min % 1440) + 1440) % 1440;
+  const h = Math.floor(m / 60);
+  const mm = m % 60;
+  return `${String(h).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
 }
 
 /* ─── 5-Limb Mandala SVG ─── */
@@ -153,128 +138,140 @@ function LimbMandala() {
 }
 
 export function BhadraAvoidanceIntegrator() {
-  const [day, setDay] = useState(0);
-  const [showComparison, setShowComparison] = useState(false);
+  const [event, setEvent] = useState<EventId>("onset");
+  const [vasa, setVasa] = useState<VasaId>("mrtyu");
   const [showWorkflow, setShowWorkflow] = useState(false);
 
-  const d = DAYS[day];
-  const b = BHADRA_PERIODS[d.name];
+  const ev = EVENTS.find((e) => e.id === event)!;
+  const vs = VASAS.find((v) => v.id === vasa)!;
+  const v = verdict(event, vasa);
+  const vm = STATUS_META[v.status];
+
+  // Running clock offsets across the three portions.
+  let cursor = WINDOW_START;
+  const portionRows = PORTIONS.map((p) => {
+    const start = cursor;
+    cursor += p.minutes;
+    const end = cursor;
+    return { ...p, start, end, status: portionStatus(event, vasa, p.id) };
+  });
+
+  const vasaMuted = event === "marriage" || event === "surgery";
 
   return (
     <div className="w-full" style={{ background: "var(--gl-surface-card, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)", borderRadius: "16px", padding: "20px" }} data-interactive="bhadra-avoidance-integrator">
       {/* Header */}
       <div className="mb-4">
-        <h2 className="text-lg font-semibold" style={{ color: "var(--gl-ink-primary)" }}><IAST>Bhadrā (Viṣṭi) Avoidance Integrator</IAST></h2>
-        <p className="text-sm mt-1" style={{ color: "var(--gl-ink-muted)" }}>Click any day on the danger clock to see when Bhadrā occurs. Module 03 capstone integration.</p>
+        <h2 className="text-lg font-semibold" style={{ color: "var(--gl-ink-primary)" }}><IAST>Bhadrā (Viṣṭi) Avoidance</IAST></h2>
+        <p className="text-sm mt-1" style={{ color: "var(--gl-ink-muted)" }}>Pick an event and a vāsa-sthāna to see how the Bhadrā window applies — the day-level residence and the hour-level mukha/puccha split together. Module 03 capstone, Screen 7.</p>
       </div>
 
-      {/* Side-by-side: Danger Clock + Day Details */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-        {/* Left: Compact Danger Clock */}
-        <div className="rounded-xl p-4" style={{ background: "#FFF9F0", border: "1.5px solid var(--gl-gold-hairline)" }}>
-          <DangerClock activeDay={day} onSelect={setDay} />
-          <div className="flex justify-center gap-4 mt-2 flex-wrap">
-            {DAYS.map((dItem, i) => (
-              <button
-                key={dItem.name}
-                onClick={() => setDay(i)}
-                className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full transition-all"
-                style={{
-                  background: i === day ? AMBER : "var(--gl-card-surface-solid)",
-                  color: i === day ? "#fff" : dItem.color,
-                  border: `1px solid ${i === day ? AMBER : "var(--gl-gold-hairline)"}`,
-                  cursor: "pointer",
-                }}
-              >
-                {dItem.short}
+      {/* Event selector */}
+      <div className="mb-3">
+        <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: GOLD }}>Event</p>
+        <div className="flex flex-wrap gap-2">
+          {EVENTS.map((e) => {
+            const active = e.id === event;
+            return (
+              <button key={e.id} onClick={() => setEvent(e.id)} className="px-3 py-1.5 rounded-full text-xs font-bold transition-all" style={{ background: active ? GOLD : "var(--gl-card-surface-solid)", color: active ? "#fff" : "var(--gl-ink-primary)", border: `1.5px solid ${active ? GOLD : "var(--gl-gold-hairline)"}`, cursor: "pointer" }}>
+                <IAST>{e.label}</IAST>
               </button>
-            ))}
-          </div>
+            );
+          })}
         </div>
+        <p className="text-xs mt-1.5 italic" style={{ color: "var(--gl-ink-muted)" }}>{ev.desc}</p>
+      </div>
 
-        {/* Right: Day Details stacked */}
-        <div className="space-y-3">
-          {/* Bhadrā Summary */}
-          <div className="rounded-xl p-4" style={{ background: "#FDF6E3", border: "2px solid #E8D5A3" }}>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-9 h-9 rounded-full flex items-center justify-center text-base shrink-0" style={{ background: "#FDE8E5", color: AMBER, border: `2px solid ${AMBER}`, fontWeight: 800 }}>!</div>
-              <div>
-                <h3 className="text-sm font-bold" style={{ color: AMBER }}><IAST>Bhadrā on {d.name}</IAST></h3>
-                <p className="text-[10px]" style={{ color: "var(--gl-ink-secondary)" }}>{d.dev} · Ruled by {d.graha}</p>
+      {/* Vāsa-sthāna selector */}
+      <div className="mb-4">
+        <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: GOLD }}>Vāsa-sthāna <span style={{ fontWeight: 500, textTransform: "none" }}>(day-level — which “world” Bhadrā occupies)</span></p>
+        <div className="flex flex-wrap gap-2" style={{ opacity: vasaMuted ? 0.45 : 1 }}>
+          {VASAS.map((vItem) => {
+            const active = vItem.id === vasa;
+            return (
+              <button key={vItem.id} onClick={() => setVasa(vItem.id)} className="px-3 py-1.5 rounded-full text-xs font-bold transition-all" style={{ background: active ? INDIGO : "var(--gl-card-surface-solid)", color: active ? "#fff" : "var(--gl-ink-primary)", border: `1.5px solid ${active ? INDIGO : "var(--gl-gold-hairline)"}`, cursor: "pointer" }}>
+                <IAST>{vItem.label}</IAST> · {vItem.dev}
+              </button>
+            );
+          })}
+        </div>
+        <p className="text-xs mt-1.5 italic" style={{ color: "var(--gl-ink-muted)" }}>
+          {vasaMuted
+            ? (event === "marriage"
+                ? "For marriage the vāsa-sthāna is irrelevant — Bhadrā is barred even in Pātāla."
+                : "For sharp action the bar does not apply, so the residence does not change the verdict.")
+            : `${vs.label} (${vs.realm}) — ${vs.note}.`}
+        </p>
+      </div>
+
+      {/* Verdict banner */}
+      <div className="rounded-xl p-4 mb-4" style={{ background: vm.bg, border: `2px solid ${vm.border}` }}>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase" style={{ background: vm.color, color: "#fff" }}>{vm.label}</span>
+          <h3 className="text-sm font-bold" style={{ color: vm.color }}>{v.headline}</h3>
+        </div>
+        <p className="text-xs" style={{ color: "var(--gl-ink-secondary)", lineHeight: 1.5 }}>{v.detail}</p>
+      </div>
+
+      {/* Proportional window bar */}
+      <div className="mb-2">
+        <div className="flex items-center justify-between mb-1">
+          <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: GOLD }}>The Bhadrā window (≈ 22–25 hrs)</p>
+          <span className="text-[10px]" style={{ color: "var(--gl-ink-muted)" }}>illustrative onset {clock(WINDOW_START)}</span>
+        </div>
+        <div className="flex w-full rounded-lg overflow-hidden" style={{ border: "1px solid var(--gl-gold-hairline)", height: "28px" }}>
+          {portionRows.map((p) => {
+            const sm = STATUS_META[p.status];
+            return (
+              <div key={p.id} title={`${p.label} — ${sm.label}`} style={{ flexGrow: p.minutes, background: sm.bg, borderRight: p.id !== "puccha" ? `1px solid ${sm.border}` : undefined, display: "flex", alignItems: "center", justifyContent: "center", minWidth: 0 }}>
+                <span className="text-[9px] font-bold truncate px-1" style={{ color: sm.color }}>{p.label}</span>
               </div>
-            </div>
-            <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase mb-2" style={{ background: AMBER, color: "#fff" }}>High Severity</span>
-            <p className="text-xs italic" style={{ color: "var(--gl-ink-secondary)", lineHeight: 1.5 }}>Bhadrā (Viṣṭi) is the most inauspicious karaṇa — associated with obstruction, delay, and difficulty. Classical texts advise against initiating any important activity during this period.</p>
-          </div>
-
-          {/* Period Details */}
-          <div className="rounded-xl p-3" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
-            <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: GOLD }}>Period Details</p>
-            <div className="space-y-1 text-xs">
-              <div><strong style={{ color: "var(--gl-ink-primary)" }}>When:</strong> <span style={{ color: "var(--gl-ink-secondary)" }}>{b.period}</span></div>
-              <div><strong style={{ color: "var(--gl-ink-primary)" }}>Context:</strong> <span style={{ color: "var(--gl-ink-secondary)" }}>{b.tithiContext}</span></div>
-              <div><strong style={{ color: "var(--gl-ink-primary)" }}>Karaṇas:</strong> <span style={{ color: "var(--gl-ink-secondary)" }}>{b.karanaName}</span></div>
-            </div>
-          </div>
-
-          {/* Activities to Avoid */}
-          <div className="rounded-xl p-3" style={{ background: "#FDE8E5", border: "1.5px solid #E8AFA8" }}>
-            <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: VERMILION }}>Activities to Avoid</p>
-            <div className="flex flex-wrap gap-1">
-              {AVOID_ACTIVITIES.map((a, i) => (
-                <span key={i} className="px-2 py-0.5 rounded-full text-[10px] font-medium" style={{ background: "#E8AFA8", color: VERMILION }}>{a}</span>
-              ))}
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Toggle buttons */}
-      <div className="flex gap-2 mb-4 flex-wrap">
-        <button onClick={() => setShowComparison((s) => !s)} className="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all" style={{ background: showComparison ? "#FDF6E3" : "var(--gl-card-surface-solid)", color: showComparison ? GOLD : "var(--gl-ink-primary)", border: `1.5px solid ${showComparison ? GOLD : "var(--gl-gold-hairline)"}`, cursor: "pointer" }}>
-          {showComparison ? "Hide" : "Show"} Comparison with Other Inauspicious Periods
-        </button>
+      {/* Portion cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
+        {portionRows.map((p) => {
+          const sm = STATUS_META[p.status];
+          const rolled = p.end >= 1440;
+          return (
+            <div key={p.id} className="rounded-lg p-3" style={{ background: sm.bg, border: `1.5px solid ${sm.border}` }}>
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-sm font-bold" style={{ color: sm.color }}><IAST>{p.label}</IAST> · {p.dev}</span>
+                <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold uppercase" style={{ background: sm.color, color: "#fff" }}>{sm.label}</span>
+              </div>
+              <p className="text-[11px] mb-1" style={{ color: "var(--gl-ink-secondary)" }}>{p.sub}</p>
+              <p className="text-[10px]" style={{ color: "var(--gl-ink-muted)" }}>{clock(p.start)} – {clock(p.end)}{rolled ? " (+1d)" : ""}</p>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Workflow toggle */}
+      <div className="flex mb-4">
         <button onClick={() => setShowWorkflow((s) => !s)} className="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all" style={{ background: showWorkflow ? "#E8F5EE" : "var(--gl-card-surface-solid)", color: showWorkflow ? JADE : "var(--gl-ink-primary)", border: `1.5px solid ${showWorkflow ? JADE : "var(--gl-gold-hairline)"}`, cursor: "pointer" }}>
-          {showWorkflow ? "Hide" : "Show"} 5-Limb Integration Workflow
+          {showWorkflow ? "Hide" : "Show"} Module 03 Screening Workflow
         </button>
       </div>
 
-      {/* Comparison Panel */}
-      {showComparison && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-          {INAUSPICIOUS_PERIODS.map((p, i) => (
-            <div key={i} className="rounded-lg p-4 space-y-2" style={{ background: p.bg, border: `1.5px solid ${p.border}` }}>
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full" style={{ background: p.severityColor }} />
-                <span className="text-sm font-bold" style={{ color: p.severityColor }}>{p.name}</span>
-              </div>
-              <div className="text-xs space-y-1" style={{ color: "var(--gl-ink-secondary)" }}>
-                <div><strong>Source:</strong> {p.source}</div>
-                <div><strong>Duration:</strong> {p.duration}</div>
-                <div><strong>Severity:</strong> {p.severity}</div>
-                <div><strong>Avoid:</strong> {p.avoid}</div>
-              </div>
-              <div className="text-xs pt-2" style={{ borderTop: "1px solid var(--gl-gold-hairline)", color: "var(--gl-ink-muted)" }}>{p.note}</div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Integration Workflow */}
+      {/* Integration workflow — the seven screens */}
       {showWorkflow && (
         <div className="rounded-xl p-4" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
             <div className="xl:col-span-2">
-              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: GOLD }}>Module 03 Integrated Muhūrta Screening — 5-Limb Checklist</p>
-              <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
-                {LIMB_CHECK.map((limb, i) => (
-                  <div key={i} className="p-3 rounded-lg" style={{ background: limb.name === "Karaṇa" ? "#FDF6E3" : "var(--gl-card-surface-solid)", border: `1.5px solid ${limb.name === "Karaṇa" ? AMBER : "var(--gl-gold-hairline)"}` }}>
-                    <div className="text-xs font-bold mb-1" style={{ color: limb.name === "Karaṇa" ? AMBER : "var(--gl-ink-muted)" }}>{limb.name}</div>
-                    <div className="text-xs" style={{ color: "var(--gl-ink-secondary)" }}>{limb.rule}</div>
+              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: GOLD }}>The Seven Screens — five pañcāṅga limbs installed (§4.5)</p>
+              <div className="space-y-1.5">
+                {SCREENS.map((s) => (
+                  <div key={s.n} className="flex items-center gap-3 p-2 rounded-lg" style={{ background: s.n === 7 ? "#FDF6E3" : "var(--gl-card-surface-solid)", border: `1.5px solid ${s.n === 7 ? AMBER : "var(--gl-gold-hairline)"}` }}>
+                    <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0" style={{ background: s.n === 7 ? AMBER : "var(--gl-gold-hairline)", color: s.n === 7 ? "#fff" : "var(--gl-ink-secondary)" }}>{s.n}</span>
+                    <span className="text-xs font-medium flex-grow" style={{ color: s.n === 7 ? AMBER : "var(--gl-ink-primary)" }}><IAST>{s.layer}</IAST></span>
+                    <span className="text-[10px]" style={{ color: "var(--gl-ink-muted)" }}>Ch {s.ch}</span>
                   </div>
                 ))}
               </div>
-              <p className="text-xs mt-3" style={{ color: "var(--gl-ink-muted)" }}>Full practitioner muhūrta requires also checking lagna, horā, and complete pañcāṅga cross-validation.</p>
+              <p className="text-xs mt-3" style={{ color: "var(--gl-ink-muted)" }}>Seven screens is a genuine, usable filter at <em>reference depth</em>. A full client-facing election still adds Module 23's Screens 8–10 — the 21 Mahādoṣas, planetary strength, and tradition method (ten in all).</p>
             </div>
             <div className="flex items-center justify-center"><LimbMandala /></div>
           </div>

@@ -35,7 +35,7 @@ const YOGA_DB: YogaData[] = [
   { number: 15, name: "Vajra", devanagari: "वज्र", nature: "mixed", ruler: "Indra", effects: "Thunderbolt energy; forceful results, mixed" },
   { number: 16, name: "Siddhi", devanagari: "सिद्धि", nature: "auspicious", ruler: "Mitra", effects: "Accomplishment, perfection, magical attainment" },
   { number: 17, name: "Vyatīpāta", devanagari: "व्यतीपात", nature: "inauspicious", ruler: "Ravi", effects: "Great calamity; most dangerous of all yogas" },
-  { number: 18, name: "Variyas", devanagari: "वरियस्", nature: "auspicious", ruler: "Viśvedevā", effects: "Excellence, choice, noble deeds" },
+  { number: 18, name: "Varīyas", devanagari: "वरीयस्", nature: "auspicious", ruler: "Viśvedevā", effects: "Excellence, choice, noble deeds" },
   { number: 19, name: "Parigha", devanagari: "परिघ", nature: "inauspicious", ruler: "Indra", effects: "Obstruction, iron-bar; imprisonment, confinement" },
   { number: 20, name: "Śiva", devanagari: "शिव", nature: "auspicious", ruler: "Pṛthivī", effects: "Auspiciousness, divine grace, spiritual success" },
   { number: 21, name: "Siddha", devanagari: "सिद्ध", nature: "auspicious", ruler: "Pitṛ", effects: "Attainment, perfection, completion of endeavours" },
@@ -187,11 +187,12 @@ export function TimeYogaCalculator() {
     { label: "Step 4 — Nature & Ruler", math: `${yogaData.name} · ${yogaData.nature}`, subst: `Ruler: ${yogaData.ruler} · ${Math.round(elapsedFraction * 100)}% elapsed`, note: "Auspicious yogas favour beginnings; inauspicious yogas warn against new ventures." },
   ];
 
+  // Each preset's (Sun+Moon) sum lands inside the labelled yoga's 13°20′ band.
   const presets = [
-    { label: "Viṣkambha", s: 0, sm: 0, m: 0, mm: 20 },
-    { label: "Preṣṭha", s: 120, sm: 0, m: 165, mm: 20 },
-    { label: "Siddhi", s: 210, sm: 0, m: 255, mm: 20 },
-    { label: "Śubha", s: 180, sm: 0, m: 225, mm: 20 },
+    { label: "Viṣkambha (1)", s: 0, sm: 0, m: 0, mm: 20 },   // sum 0°20′ → yoga 1
+    { label: "Siddhi (16)", s: 100, sm: 0, m: 105, mm: 0 },  // sum 205° → yoga 16
+    { label: "Vyatīpāta (17)", s: 100, sm: 0, m: 120, mm: 0 }, // sum 220° → yoga 17 (inauspicious)
+    { label: "Vaidhṛti (27)", s: 180, sm: 0, m: 173, mm: 0 }, // sum 353° → yoga 27 (inauspicious)
   ];
 
   return (

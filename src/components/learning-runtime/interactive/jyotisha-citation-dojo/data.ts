@@ -29,7 +29,7 @@ export const DIVERGENCE_POINTS: DivergencePoint[] = [
     academicYear: -800,
     traditionalYear: -1300,
     gapYears: 500,
-    note: "Traditional Vedic-era placement vs academic linguistic/astronomical-data analysis pushing later.",
+    note: "Traditional Vedic-era placement (~1400–1200 BCE) vs a wide academic range (~1200–400 BCE — nearly a millennium of uncertainty) from linguistic and astronomical-data analysis.",
   },
   {
     slug: "parashara-bphs",
@@ -149,7 +149,7 @@ export const DRILL_SCENARIOS: DrillScenario[] = [
     id: "s4",
     title: "Translator-edition matters",
     prompt:
-      "A student cites: \"BPHS says X (Sharma translation, 1995)\". Another student cites: \"BPHS says NOT-X (Santhanam translation, 1984)\". They appear to contradict. What's going on?",
+      "A student cites: \"BPHS says X (Sitaram Jha edition)\". Another student cites: \"BPHS says NOT-X (Santhanam translation, 1996)\". They appear to contradict. What's going on?",
     options: [
       {
         id: "a",

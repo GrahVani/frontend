@@ -6,7 +6,7 @@ import { IAST } from "../../chrome/typography";
 /* ─── Data ─── */
 const MONTHS = [
   "Caitra", "Vaiśākha", "Jyaiṣṭha", "Āṣāḍha", "Śrāvaṇa", "Bhādrapada",
-  "Aśvina", "Kārtika", "Mārgaśīrṣa", "Pauṣa", "Māgha", "Phālguna",
+  "Āśvina", "Kārtika", "Mārgaśīrṣa", "Pauṣa", "Māgha", "Phālguna",
 ];
 
 interface FestivalDef {
@@ -19,9 +19,9 @@ interface FestivalDef {
 }
 
 const FESTIVALS: FestivalDef[] = [
-  { name: "Mahā-Śivarātri", amanta: "Māgha Kṛṣṇa Caturdaśī", purnimanta: "Pauṣa Kṛṣṇa Caturdaśī", paksha: "kṛṣṇa", note: "Kṛṣṇa-pakṣa festival shifts to the previous month in Pūrṇimānta", month: "Māgha" },
-  { name: "Janmāṣṭamī", amanta: "Śrāvaṇa Kṛṣṇa Aṣṭamī", purnimanta: "Āṣāḍha Kṛṣṇa Aṣṭamī", paksha: "kṛṣṇa", note: "Kṛṣṇa-pakṣa festival shifts to the previous month in Pūrṇimānta", month: "Śrāvaṇa" },
-  { name: "Diwali / Amāvāsyā", amanta: "Kārtika Kṛṣṇa Amāvāsyā", purnimanta: "Aśvina Kṛṣṇa Amāvāsyā", paksha: "kṛṣṇa", note: "New-moon festival shifts to the previous month in Pūrṇimānta", month: "Kārtika" },
+  { name: "Mahā-Śivarātri", amanta: "Māgha Kṛṣṇa Caturdaśī", purnimanta: "Phālguna Kṛṣṇa Caturdaśī", paksha: "kṛṣṇa", note: "Kṛṣṇa-pakṣa festival shifts to the following month in Pūrṇimānta", month: "Māgha" },
+  { name: "Janmāṣṭamī", amanta: "Śrāvaṇa Kṛṣṇa Aṣṭamī", purnimanta: "Bhādrapada Kṛṣṇa Aṣṭamī", paksha: "kṛṣṇa", note: "Kṛṣṇa-pakṣa festival shifts to the following month in Pūrṇimānta", month: "Śrāvaṇa" },
+  { name: "Diwali / Amāvāsyā", amanta: "Āśvina Kṛṣṇa Amāvāsyā", purnimanta: "Kārtika Kṛṣṇa Amāvāsyā", paksha: "kṛṣṇa", note: "New-moon festival shifts to the following month in Pūrṇimānta", month: "Āśvina" },
   { name: "Holi / Pūrṇimā", amanta: "Phālguna Śukla Pūrṇimā", purnimanta: "Phālguna Śukla Pūrṇimā", paksha: "śukla", note: "Śukla-pakṣa festival keeps the same month name in both conventions", month: "Phālguna" },
   { name: "Rāma Navamī", amanta: "Caitra Śukla Navamī", purnimanta: "Caitra Śukla Navamī", paksha: "śukla", note: "Śukla-pakṣa festival keeps the same month name in both conventions", month: "Caitra" },
   { name: "Gaṇeśa Caturthī", amanta: "Bhādrapada Śukla Caturthī", purnimanta: "Bhādrapada Śukla Caturthī", paksha: "śukla", note: "Śukla-pakṣa festival keeps the same month name in both conventions", month: "Bhādrapada" },
@@ -73,10 +73,12 @@ export function AmantaPurnimantaConverter() {
     if (paksha === "śukla") {
       return { target, month, paksha, shifted: false };
     }
+    // Kṛṣṇa pakṣa: Pūrṇimānta names it for the FOLLOWING month (it opens the
+    // month that ends at the next Pūrṇimā), so Pūrṇimānta = Amānta + 1.
     if (source === "Amānta") {
-      return { target, month: getPrevMonth(month), paksha, shifted: true };
+      return { target, month: getNextMonth(month), paksha, shifted: true };
     }
-    return { target, month: getNextMonth(month), paksha, shifted: true };
+    return { target, month: getPrevMonth(month), paksha, shifted: true };
   }, [month, paksha, source]);
 
   const simulateFestival = (f: FestivalDef) => {
@@ -227,7 +229,7 @@ export function AmantaPurnimantaConverter() {
               >
                 <strong style={{ color: "var(--gl-gold-accent)" }}>Rule of thumb:</strong>{" "}
                 Śukla pakṣa = same month name in both conventions. Kṛṣṇa pakṣa = shift by one month:
-                Amānta → Pūrṇimānta is the <em>previous</em> month; Pūrṇimānta → Amānta is the <em>next</em> month.
+                Amānta → Pūrṇimānta is the <em>following</em> month (+1); Pūrṇimānta → Amānta is the <em>previous</em> month (−1).
               </div>
             </div>
           </div>

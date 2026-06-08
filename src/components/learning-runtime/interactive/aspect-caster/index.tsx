@@ -26,7 +26,7 @@ function polar(cx: number, cy: number, r: number, angle: number) {
 
 export function AspectCaster() {
   const [guruHouse, setGuruHouse] = useState(1);
-  const [lagna, setLagna] = useState<"generic" | "dhanus" | "mina">("generic");
+  const [lagna, setLagna] = useState<"generic" | "mesha" | "karka">("generic");
   const [ninthLordKendra, setNinthLordKendra] = useState(true);
 
   const aspects = useMemo(
@@ -41,7 +41,7 @@ export function AspectCaster() {
   const inNinth = guruHouse === 9;
   const aspectsNinth = aspectHouses.includes(9);
   const alignedHouses = [2, 5, 9].filter((house) => guruHouse === house || aspectHouses.includes(house));
-  const ninthLordByLagna = lagna === "dhanus";
+  const ninthLordByLagna = lagna === "mesha" || lagna === "karka";
   const bhagyaYoga = inNinth && ninthLordByLagna && ninthLordKendra;
 
   const alignmentLabel = inNinth
@@ -184,7 +184,7 @@ export function AspectCaster() {
               </h3>
             </div>
             <div className="grid gap-2 sm:grid-cols-2">
-              {(["generic", "dhanus", "mina"] as const).map((item) => (
+              {(["generic", "mesha", "karka"] as const).map((item) => (
                 <button
                   key={item}
                   type="button"
@@ -208,8 +208,8 @@ export function AspectCaster() {
             </div>
             <p className="mt-3 text-sm font-semibold leading-relaxed" style={{ color: bhagyaYoga ? GREEN : INK_SECONDARY }}>
               {bhagyaYoga
-                ? "Bhāgya yoga lights up: Dhanus lagna makes Guru the 9th-lord, Guru is in the 9th, and the 9th-lord condition cooperates."
-                : "For the lesson example, set Guru in house 9, choose Dhanus lagna, and keep the 9th-lord condition active."}
+                ? "Bhāgya yoga lights up: a Meṣa (or Karka) lagna makes Guru the 9th-lord, Guru is in its own 9th sign, and the 9th-lord condition cooperates."
+                : "For the lesson example, set Guru in house 9, choose Meṣa lagna (its 9th sign is Dhanus, Guru's own sign), and keep the 9th-lord condition active."}
             </p>
           </div>
 

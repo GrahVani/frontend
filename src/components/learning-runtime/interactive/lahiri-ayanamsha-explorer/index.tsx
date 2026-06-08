@@ -41,7 +41,6 @@ const PRECISE_TABLE = [
 
 const MILESTONES = [
   { year: 1906, label: "Born", detail: "Nirmala Chandra Lahiri born in Bengal" },
-  { year: 1930, label: "Ephemeris", detail: "Begins publishing Indian Ephemeris annually" },
   { year: 1952, label: "Committee", detail: "Calendar Reform Committee formed; Lahiri key member" },
   { year: 1955, label: "Adopted", detail: "Committee adopts Lahiri ayanāṁśa as Indian government standard" },
   { year: 1980, label: "Died", detail: "Lahiri passes; standard already dominant across India" },
@@ -410,7 +409,12 @@ export function LahiriAyanamshaExplorer() {
                 <div style={{ background: `${VERMILION}08`, borderRadius: "10px", padding: "14px", textAlign: "center", border: `1px solid ${VERMILION}20` }}>
                   <p style={{ fontSize: "10px", color: INK_MUTED, marginBottom: "4px" }}>Difference</p>
                   <p style={{ fontSize: "18px", fontWeight: 700, color: VERMILION, fontFamily: "monospace" }}>
-                    {activePrecise ? "~1 arc-min" : "—"}
+                    {activePrecise && calcSteps ? (() => {
+                      const m = activePrecise.dms.match(/(\d+)°(\d+)′(\d+)″/);
+                      const precise = m ? Number(m[1]) + Number(m[2]) / 60 + Number(m[3]) / 3600 : NaN;
+                      const diffMin = Math.abs(calcSteps.decimal - precise) * 60;
+                      return Number.isNaN(diffMin) ? "—" : `~${diffMin < 1 ? diffMin.toFixed(1) : Math.round(diffMin)}′`;
+                    })() : "—"}
                   </p>
                 </div>
               </div>

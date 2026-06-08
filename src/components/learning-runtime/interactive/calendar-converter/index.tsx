@@ -17,20 +17,27 @@ const MONTHS = [
   "July","August","September","October","November","December",
 ];
 
+// offset = the CE±value that holds AFTER the year-start; the boundary check
+// subtracts 1 for dates before it. Vikrama/Śaka use the traditional Caitra
+// Śukla Pratipad year-start (~9 Apr for the 2026 baseline; it shifts yearly),
+// NOT the modern-government Śaka 22-March date. Kollam = Siṁha Saṅkrānti
+// (~17 Aug); Bangla Sambat = Pohela Boishakh (~14 Apr).
 const SYSTEMS = [
   { key: "ce", name: "CE (Gregorian)", color: INDIGO, yearStart: { month: 0, day: 1 } },
-  { key: "vikrama", name: "Vikrama Saṁvat", color: GOLD, yearStart: { month: 2, day: 22 }, offset: 57 },
-  { key: "saka", name: "Śaka Saṁvat", color: JADE, yearStart: { month: 2, day: 22 }, offset: -78 },
-  { key: "kollam", name: "Kollam Era", color: VERMILION, yearStart: { month: 7, day: 15 }, offset: -825 },
-  { key: "bengali", name: "Bengali", color: INDIGO, yearStart: { month: 3, day: 14 }, offset: 594 },
+  { key: "vikrama", name: "Vikrama Saṁvat", color: GOLD, yearStart: { month: 3, day: 9 }, offset: 57 },
+  { key: "saka", name: "Śaka Saṁvat", color: JADE, yearStart: { month: 3, day: 9 }, offset: -78 },
+  { key: "kollam", name: "Kollam Era", color: VERMILION, yearStart: { month: 7, day: 17 }, offset: -824 },
+  { key: "bengali", name: "Bangla Sambat", color: INDIGO, yearStart: { month: 3, day: 14 }, offset: -593 },
 ];
 
+// Worked-example library (lesson §6 / §7 "Things to try"); all entered as CE
+// dates after the Caitra year-start so the Śaka equivalent reads cleanly.
 const PRESETS = [
-  { label: "Present", day: 15, month: 4, year: 2026 },
-  { label: "Independence", day: 15, month: 7, year: 1947 },
-  { label: "Millennium", day: 1, month: 0, year: 2000 },
-  { label: "Vikrama epoch", day: 22, month: 2, year: 57 },
-  { label: "Śaka epoch", day: 22, month: 2, year: 78 },
+  { label: "Present (15 May 2026)", day: 15, month: 4, year: 2026 },
+  { label: "Āryabhaṭīya · Śaka 421", day: 1, month: 5, year: 499 },
+  { label: "Brahma Sphuṭa Siddhānta · Śaka 550", day: 1, month: 5, year: 628 },
+  { label: "Muhūrta Cintāmaṇi · Śaka 1522", day: 1, month: 5, year: 1600 },
+  { label: "Independence · 15 Aug 1947", day: 15, month: 7, year: 1947 },
 ];
 
 function isBeforeYearStart(date: Date, startMonth: number, startDay: number) {
@@ -173,8 +180,10 @@ export function CalendarConverter() {
                 <label className="text-xs mb-1.5 block" style={{ color: INK_MUTED }}>Year</label>
                 <input
                   type="number"
+                  min={1}
+                  max={3000}
                   value={year}
-                  onChange={(e) => setYear(+e.target.value)}
+                  onChange={(e) => setYear(Math.max(1, Math.min(3000, +e.target.value || 1)))}
                   className="w-full p-2.5 rounded-lg text-center text-lg font-bold border outline-none focus:border-[#4A6FA5] tabular-nums"
                   style={{
                     backgroundColor: "var(--gl-surface-2, #F5EDD8)",

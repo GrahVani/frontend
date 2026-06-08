@@ -23,39 +23,39 @@ interface VaraData {
 
 const VARA_DB: VaraData[] = [
   {
-    index: 0, name: "Bhanuvara", devanagari: "भानुवासरः", english: "Sunday",
-    graha: "Surya", grahaDevanagari: "सूर्य", grahaSymbol: "☉", grahaColor: "#E8B845",
-    deity: "Surya-Narayana", direction: "East", element: "fire", elementSanskrit: "agni", color: "Golden / Red", type: "luminary",
+    index: 0, name: "Ravivāra", devanagari: "रविवार", english: "Sunday",
+    graha: "Sūrya", grahaDevanagari: "सूर्य", grahaSymbol: "☉", grahaColor: "#E8B845",
+    deity: "Sūrya / Āditya", direction: "East", element: "fire", elementSanskrit: "agni", color: "Golden / Red", type: "luminary",
   },
   {
-    index: 1, name: "Somavara", devanagari: "सोमवासरः", english: "Monday",
+    index: 1, name: "Somavāra", devanagari: "सोमवार", english: "Monday",
     graha: "Candra", grahaDevanagari: "चन्द्र", grahaSymbol: "☽", grahaColor: "#7A8CB8",
-    deity: "Siva / Soma", direction: "North-West", element: "water", elementSanskrit: "jala", color: "White / Silver", type: "luminary",
+    deity: "Śiva / Soma", direction: "North-West", element: "water", elementSanskrit: "jala", color: "White / Silver", type: "luminary",
   },
   {
-    index: 2, name: "Mangalavara", devanagari: "मङ्गलवासरः", english: "Tuesday",
-    graha: "Mangala", grahaDevanagari: "मङ्गल", grahaSymbol: "♂", grahaColor: "#C8412E",
-    deity: "Skanda / Karttikeya", direction: "South", element: "fire", elementSanskrit: "agni", color: "Red / Coral", type: "malefic",
+    index: 2, name: "Maṅgalavāra", devanagari: "मङ्गलवार", english: "Tuesday",
+    graha: "Maṅgala", grahaDevanagari: "मङ्गल", grahaSymbol: "♂", grahaColor: "#C8412E",
+    deity: "Hanumān / Maṅgala", direction: "South", element: "fire", elementSanskrit: "agni", color: "Red / Coral", type: "malefic",
   },
   {
-    index: 3, name: "Budhavara", devanagari: "बुधवासरः", english: "Wednesday",
+    index: 3, name: "Budhavāra", devanagari: "बुधवार", english: "Wednesday",
     graha: "Budha", grahaDevanagari: "बुध", grahaSymbol: "☿", grahaColor: "#3A8C5A",
-    deity: "Visnu / Budha", direction: "North", element: "earth", elementSanskrit: "prthvi", color: "Green", type: "benefic",
+    deity: "Viṣṇu / Budha", direction: "North", element: "earth", elementSanskrit: "pṛthvī", color: "Green", type: "benefic",
   },
   {
-    index: 4, name: "Guruvara", devanagari: "गुरुवासरः", english: "Thursday",
+    index: 4, name: "Guruvāra", devanagari: "गुरुवार", english: "Thursday",
     graha: "Guru", grahaDevanagari: "गुरु", grahaSymbol: "♃", grahaColor: "#E89E2A",
-    deity: "Brhaspati / Visnu", direction: "North-East", element: "air", elementSanskrit: "vayu", color: "Yellow / Gold", type: "benefic",
+    deity: "Bṛhaspati / Viṣṇu", direction: "North-East", element: "air", elementSanskrit: "vāyu", color: "Yellow / Gold", type: "benefic",
   },
   {
-    index: 5, name: "Sukravara", devanagari: "शुक्रवासरः", english: "Friday",
-    graha: "Sukra", grahaDevanagari: "शुक्र", grahaSymbol: "♀", grahaColor: "#5A8CC8",
-    deity: "Indrani / Laksmi", direction: "South-East", element: "water", elementSanskrit: "jala", color: "White / Variegated", type: "benefic",
+    index: 5, name: "Śukravāra", devanagari: "शुक्रवार", english: "Friday",
+    graha: "Śukra", grahaDevanagari: "शुक्र", grahaSymbol: "♀", grahaColor: "#5A8CC8",
+    deity: "Lakṣmī", direction: "South-East", element: "water", elementSanskrit: "jala", color: "White / Variegated", type: "benefic",
   },
   {
-    index: 6, name: "Sanivara", devanagari: "शनिवासरः", english: "Saturday",
-    graha: "Sani", grahaDevanagari: "शनि", grahaSymbol: "♄", grahaColor: "#5A5A7A",
-    deity: "Yama / Sani", direction: "West", element: "air", elementSanskrit: "vayu", color: "Black / Dark Blue", type: "malefic",
+    index: 6, name: "Śanivāra", devanagari: "शनिवार", english: "Saturday",
+    graha: "Śani", grahaDevanagari: "शनि", grahaSymbol: "♄", grahaColor: "#5A5A7A",
+    deity: "Hanumān / Śani", direction: "West", element: "air", elementSanskrit: "vāyu", color: "Black / Dark Blue", type: "malefic",
   },
 ];
 
@@ -140,7 +140,7 @@ export function VaraGrahaWheel() {
     >
       <div className="mb-4">
         <h2 className="text-lg font-semibold" style={{ color: "var(--gl-ink-primary)" }}>
-          <IAST>Vara-Graha Wheel</IAST>
+          <IAST>Vāra-Graha Wheel</IAST>
         </h2>
         <p className="text-sm mt-1" style={{ color: "var(--gl-ink-muted)" }}>
           The 7 Varas and Their Lords — click a segment to explore

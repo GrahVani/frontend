@@ -9,39 +9,49 @@ const CRIMSON = "#8B1A1A";
 const INDIGO = "#4F6FA8";
 const JADE = "#2d7d46";
 
-type Severity = "highest" | "high" | "medium";
+// Lesson §4.1/§4.3 classification: the 4 core inauspicious yogas (2 of which
+// are Mahādoṣas) + the 5 non-core inauspicious yogas, with differentiated
+// stringency. NOT a "highest/high/medium danger" spectrum, and NO remedial
+// mantra/charity system (the lesson teaches differentiated avoidance, not remedies).
+type Severity = "mahadosa" | "core" | "noncore";
 
 interface InauspiciousYoga {
   name: string;
   number: number;
   severity: Severity;
+  sumRange: string;
   description: string;
   avoid: string[];
-  mitigations: string[];
-  traditionalNote: string;
+  note: string;
 }
 
 const INAUSPICIOUS: InauspiciousYoga[] = [
-  { name: "Vyatīpāta", number: 17, severity: "highest", description: "The most dangerous of all 27 yogas. Literally 'falling down' — a calamity-producing yoga.", avoid: ["All new ventures", "Marriage ceremonies", "Journeys", "House warming", "Business opening"], mitigations: ["Worship of Rudra", "Chanting of Mahāmṛtyuñjaya mantra", "Acts of charity to Brahmins"], traditionalNote: "Phaladīpikā: Vyatīpāte vidhir na kartavyaḥ — No rituals should be performed during Vyatīpāta." },
-  { name: "Vaidhṛti", number: 27, severity: "highest", description: "Great obstruction. One of the two yogas that override even otherwise auspicious combinations.", avoid: ["All beginnings", "Legal proceedings", "Medical procedures", "Travels", "Investments"], mitigations: ["Worship of Dharma", "Recitation of Viṣṇu-sahasranāma", "Feeding the poor"], traditionalNote: "Vaidhṛtiṁ tyajet sarvatra — Reject Vaidhṛti in all matters." },
-  { name: "Parigha", number: 19, severity: "high", description: "Iron-bar yoga. Creates obstructions, confinement, and difficulty in movement.", avoid: ["Travels and journeys", "Legal contracts", "Prison-release activities", "Opening locked endeavours"], mitigations: ["Worship of Varuṇa", "Donation of iron implements", "Recitation of Śiva-stuti"], traditionalNote: "Parighaḥ pratibandhakārī — Parigha is a maker of obstacles." },
-  { name: "Śūla", number: 9, severity: "high", description: "Trident yoga. Brings pain, conflict, and sharp, pointed difficulties.", avoid: ["Medical surgeries", "Dispute resolution", "Armed forces activities", "Sharp instrument usage"], mitigations: ["Worship of Nirṛti", "Feeding of cooked food", "Wearing red garments"], traditionalNote: "Śūlaḥ śarīrakleśakaraḥ — Śūla is a producer of bodily pain." },
-  { name: "Gaṇḍa", number: 10, severity: "medium", description: "Knot yoga. Creates obstacles at critical moments; delays and interruptions.", avoid: ["Beginning new courses", "Signing contracts", "Taking oaths", "Starting studies"], mitigations: ["Worship of Yama", "Charity to servants", "Avoiding anger"], traditionalNote: "Gaṇḍaḥ pratyūhahetuḥ — Gaṇḍa is a cause of obstacles." },
-  { name: "Atigaṇḍa", number: 6, severity: "medium", description: "Great knot. Brings disputes, accidents, and unexpected hindrances.", avoid: ["Construction activities", "Vehicle purchases", "Competitive events", "Debates"], mitigations: ["Worship of Rudra", "Recitation of Rudra-sūkta", "Donation of red cloth"], traditionalNote: "Atigaṇḍaḥ kalahaprado — Atigaṇḍa gives rise to quarrels." },
+  // The 2 Mahādoṣas (gravest) — §4.1
+  { name: "Vyatīpāta", number: 17, severity: "mahadosa", sumRange: "213°20′–226°40′", description: "Calamity / 'falling-away'. A Mahādoṣa — one of the 21 grave defects (§4.4).", avoid: ["Marriage", "All saṁskāras", "New ventures", "Journeys", "Business opening"], note: "Absolute avoidance; some traditions reject the whole day, not just the 13°20′ window. No auspicious factor overrides a Mahādoṣa." },
+  { name: "Vaidhṛti", number: 27, severity: "mahadosa", sumRange: "346°40′–360°00′", description: "Disjunction / breaking. A Mahādoṣa — overrides otherwise-auspicious combinations.", avoid: ["Marriage", "All saṁskāras", "Legal proceedings", "Investments", "Travels"], note: "Absolute avoidance; some traditions reject the whole day. No auspicious factor overrides a Mahādoṣa." },
+  // The 2 core (non-Mahādoṣa) — §4.1
+  { name: "Parigha", number: 19, severity: "core", sumRange: "240°00′–253°20′", description: "Iron-bar / barrier — obstruction and confinement. Half-bad: only the first half is the danger.", avoid: ["Auspicious onsets during the first half (Parigha-mukha, 240°00′–246°40′)"], note: "First half = Parigha-mukha (240°00′–246°40′) is worst → avoid; second half (246°40′–253°20′) is permissible in many traditions with supporting auspicious factors. Locate the mukha window, not just the yoga." },
+  { name: "Vajra", number: 15, severity: "core", sumRange: "186°40′–200°00′", description: "Thunderbolt / diamond. Inauspicious-core for gentle onset — but genuinely appropriate for sharp / transformative work.", avoid: ["Marriage", "Vidyārambha", "New business / gentle onset"], note: "Contextual: AVOID for auspicious onset, but APPROPRIATE for surgery, obstacle-removal, and dispelling-malefic rites (fitting its thunderbolt symbolism). Do not read Vajra as auspicious because the word sounds powerful — it is inauspicious-core with a contextual exception." },
+  // The 5 non-core (lighter, tradition-varying) — §4.3
+  { name: "Viṣkambha", number: 1, severity: "noncore", sumRange: "0°00′–13°20′", description: "Obstacle / support / pillar. Generally inauspicious, lighter stringency.", avoid: ["Important onsets (lighter discipline)"], note: "Non-core — usable for non-high-stakes work with auspicious compensation; avoid for marriage and major saṁskāras. Often 'worst at the start'." },
+  { name: "Atigaṇḍa", number: 6, severity: "noncore", sumRange: "66°40′–80°00′", description: "Great obstacle. Generally inauspicious, lighter stringency.", avoid: ["Important onsets (lighter discipline)"], note: "Non-core; the obstacle-named yogas (Atigaṇḍa, Gaṇḍa) can suit obstacle-overcoming / Gaṇeśa contexts. Avoid for marriage and major saṁskāras." },
+  { name: "Śūla", number: 9, severity: "noncore", sumRange: "106°40′–120°00′", description: "Spear / sharp-pain / piercing. Generally inauspicious, lighter stringency.", avoid: ["Important onsets (lighter discipline)"], note: "Non-core — 'worst at the start' rule; avoid for marriage and major saṁskāras." },
+  { name: "Gaṇḍa", number: 10, severity: "noncore", sumRange: "120°00′–133°20′", description: "Obstacle / knot. Generally inauspicious, lighter stringency.", avoid: ["Important onsets (lighter discipline)"], note: "Non-core; can suit obstacle-overcoming / Gaṇeśa contexts. Avoid for marriage and major saṁskāras." },
+  { name: "Vyāghāta", number: 13, severity: "noncore", sumRange: "160°00′–173°20′", description: "Obstruction / striking / interruption. Generally inauspicious, lighter stringency.", avoid: ["Important onsets (lighter discipline)"], note: "Non-core — avoid for marriage and major saṁskāras; usable for lower-stakes work with auspicious compensation." },
 ];
 
-const SEVERITY_META: Record<Severity, { label: string; text: string; bg: string; border: string; bar: string; desc: string }> = {
-  highest: { label: "Highest Danger", text: CRIMSON, bg: "#FDE8E5", border: "#E8AFA8", bar: CRIMSON, desc: "Overrides all other auspicious conditions. Complete avoidance advised." },
-  high: { label: "High Danger", text: VERMILION, bg: "#FDF0EC", border: "#E8B8A8", bar: VERMILION, desc: "Strongly inauspicious. Beginnings should be avoided if possible." },
-  medium: { label: "Medium Danger", text: INDIGO, bg: "#EBF0FA", border: "#B0C4DE", bar: INDIGO, desc: "Caution advised. Not as severe but still unfavourable for new ventures." },
+const SEVERITY_META: Record<Severity, { label: string; text: string; bg: string; border: string; desc: string }> = {
+  mahadosa: { label: "Mahādoṣa", text: CRIMSON, bg: "#FDE8E5", border: "#E8AFA8", desc: "One of the 21 Mahādoṣas — the gravest defect. Absolute avoidance; no auspicious factor overrides it." },
+  core: { label: "Core inauspicious", text: VERMILION, bg: "#FDF0EC", border: "#E8B8A8", desc: "A core inauspicious yoga with a contextual rule (Parigha-mukha half; Vajra's sharp-action exception)." },
+  noncore: { label: "Non-core", text: INDIGO, bg: "#EBF0FA", border: "#B0C4DE", desc: "Generally avoided for important onsets, but with lighter, tradition-varying stringency." },
 };
 
 /* ─── Severity Spectrum SVG ─── */
 function SeveritySpectrum({ severity }: { severity: Severity }) {
   const levels = [
-    { key: "medium" as const, label: "Medium", cx: 48, color: INDIGO },
-    { key: "high" as const, label: "High", cx: 160, color: VERMILION },
-    { key: "highest" as const, label: "Highest", cx: 272, color: CRIMSON },
+    { key: "noncore" as const, label: "Non-core", cx: 48, color: INDIGO },
+    { key: "core" as const, label: "Core", cx: 160, color: VERMILION },
+    { key: "mahadosa" as const, label: "Mahādoṣa", cx: 272, color: CRIMSON },
   ];
 
   return (
@@ -72,9 +82,7 @@ function WarningMandala() {
       <defs>
         <radialGradient id="wmGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#FDE8E5" /><stop offset="100%" stopColor="#FDF0EC" /></radialGradient>
       </defs>
-      {/* Outer ring */}
       <circle cx={60} cy={60} r={55} fill="url(#wmGrad)" stroke={VERMILION} strokeWidth={1.5} strokeOpacity={0.4} />
-      {/* Inner spokes */}
       {[0, 60, 120, 180, 240, 300].map((a, i) => {
         const rad = a * Math.PI / 180;
         const x1 = 60 + 25 * Math.cos(rad);
@@ -83,7 +91,6 @@ function WarningMandala() {
         const y2 = 60 + 50 * Math.sin(rad);
         return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={VERMILION} strokeWidth={1} opacity={0.3} />;
       })}
-      {/* Inner hexagon */}
       <polygon points={(() => {
         const pts = [];
         for (let i = 0; i < 6; i++) {
@@ -92,7 +99,6 @@ function WarningMandala() {
         }
         return pts.join(" ");
       })()} fill="none" stroke={VERMILION} strokeWidth={1.5} opacity={0.5} />
-      {/* Warning triangle */}
       <polygon points="60,22 90,72 30,72" fill="none" stroke={CRIMSON} strokeWidth={2} />
       <text x={60} y={64} textAnchor="middle" fill={CRIMSON} fontSize={20} fontWeight={800}>!</text>
       <circle cx={60} cy={60} r={12} fill="none" stroke={CRIMSON} strokeWidth={1.5} strokeDasharray="3 3" opacity={0.5} />
@@ -113,7 +119,7 @@ export function InauspiciousYogaAvoidanceCalculator() {
     >
       <div className="mb-4">
         <h2 className="text-lg font-semibold" style={{ color: "var(--gl-ink-primary)" }}><IAST>Inauspicious Yoga Avoidance Guide</IAST></h2>
-        <p className="text-sm mt-1" style={{ color: "var(--gl-ink-muted)" }}>The 6 dangerous yogas of the 27. Know them. Avoid them. Mitigate them.</p>
+        <p className="text-sm mt-1" style={{ color: "var(--gl-ink-muted)" }}>The 9 inauspicious time-yogas — 2 Mahādoṣas, 2 core, 5 non-core — handled by differentiated stringency.</p>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
@@ -121,13 +127,13 @@ export function InauspiciousYogaAvoidanceCalculator() {
         <div className="space-y-3">
           {/* Severity Spectrum */}
           <div className="rounded-xl p-4 text-center" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
-            <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: GOLD }}>Severity Spectrum</p>
+            <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: GOLD }}>Stringency Tier</p>
             <SeveritySpectrum severity={selectedYoga.severity} />
           </div>
 
           {/* Selector grid */}
           <div className="rounded-xl p-4" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
-            <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: GOLD }}>Select a Dangerous Yoga</p>
+            <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: GOLD }}>Select an Inauspicious Yoga</p>
             <div className="space-y-2">
               {INAUSPICIOUS.map((yoga) => {
                 const sm = SEVERITY_META[yoga.severity];
@@ -137,7 +143,7 @@ export function InauspiciousYogaAvoidanceCalculator() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-semibold" style={{ color: isActive ? sm.text : "var(--gl-ink-primary)" }}><IAST>{yoga.name}</IAST></p>
-                        <p className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>#{yoga.number} / 27</p>
+                        <p className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>#{yoga.number} / 27 · {yoga.sumRange}</p>
                       </div>
                       <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase" style={{ background: sm.bg, color: sm.text, border: `1px solid ${sm.border}` }}>{sm.label}</span>
                     </div>
@@ -157,16 +163,16 @@ export function InauspiciousYogaAvoidanceCalculator() {
               <div>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase" style={{ background: meta.bg, color: meta.text, border: `1px solid ${meta.border}` }}>{meta.label}</span>
                 <h3 className="text-2xl mt-1" style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 600, color: meta.text }}><IAST>{selectedYoga.name}</IAST></h3>
-                <p className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>Yoga #{selectedYoga.number} of 27</p>
+                <p className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>Yoga #{selectedYoga.number} of 27 · Sun+Moon sum {selectedYoga.sumRange}</p>
               </div>
             </div>
             <p className="text-sm italic mb-3" style={{ color: "var(--gl-ink-secondary)", lineHeight: 1.6 }}>{selectedYoga.description}</p>
-            <p className="text-sm p-2.5 rounded-md" style={{ background: "var(--gl-card-surface-solid)", border: `1px solid ${meta.border}`, color: meta.text, fontStyle: "italic", lineHeight: 1.5 }}>{selectedYoga.traditionalNote}</p>
+            <p className="text-xs p-2.5 rounded-md" style={{ background: "var(--gl-card-surface-solid)", border: `1px solid ${meta.border}`, color: meta.text, lineHeight: 1.5 }}>{meta.desc}</p>
           </div>
 
           {/* Activities to avoid */}
           <div className="rounded-xl p-4" style={{ background: "#FDE8E5", border: "1.5px solid #E8AFA8" }}>
-            <p className="text-xs font-bold uppercase mb-3" style={{ color: CRIMSON, letterSpacing: "0.06em" }}>Activities to Avoid</p>
+            <p className="text-xs font-bold uppercase mb-3" style={{ color: CRIMSON, letterSpacing: "0.06em" }}>Avoid For</p>
             <ul className="space-y-2">
               {selectedYoga.avoid.map((item, i) => (
                 <li key={i} className="flex items-start gap-2">
@@ -177,18 +183,11 @@ export function InauspiciousYogaAvoidanceCalculator() {
             </ul>
           </div>
 
-          {/* Mitigations */}
+          {/* Usage & nuance (lesson §4.1/§4.3 — differentiated discipline, NOT remedies) */}
           <div className="rounded-xl p-4" style={{ background: "#E8F5EE", border: "1.5px solid #A8D4B8" }}>
-            <p className="text-xs font-bold uppercase mb-3" style={{ color: JADE, letterSpacing: "0.06em" }}>Mitigation Measures</p>
-            <ul className="space-y-2">
-              {selectedYoga.mitigations.map((item, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <span className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold" style={{ background: "#A8D4B8", color: JADE }}>OK</span>
-                  <span className="text-sm" style={{ color: "var(--gl-ink-primary)" }}>{item}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="text-xs mt-3 italic" style={{ color: "var(--gl-ink-muted)" }}>Traditional remedial measures as prescribed in Bṛhat Parāśara Horā Śāstra and Phaladīpikā. Consult a qualified jyotiṣī for personalised guidance.</p>
+            <p className="text-xs font-bold uppercase mb-2" style={{ color: JADE, letterSpacing: "0.06em" }}>Stringency &amp; Nuance</p>
+            <p className="text-sm" style={{ color: "var(--gl-ink-primary)", lineHeight: 1.6 }}>{selectedYoga.note}</p>
+            <p className="text-xs mt-3 italic" style={{ color: "var(--gl-ink-muted)" }}>Recognition-layer screening only. A full client-facing election needs Module 23&apos;s complete 21-Mahādoṣa system plus lagna, planetary strength, and chart compatibility.</p>
           </div>
         </div>
       </div>

@@ -243,36 +243,79 @@ function VerseCrossReferenceView() {
 
         {/* Verse body */}
         <div style={{ padding: "26px 36px", textAlign: "center" }}>
-          {/* Devanāgarī */}
-          <p
-            lang="sa"
-            style={{
-              fontFamily: "var(--font-devanagari), serif",
-              fontSize: "26px",
-              color: INK_PRIMARY,
-              lineHeight: 1.7,
-              margin: 0,
-              whiteSpace: "pre-line",
-            }}
-          >
-            {v.sanskritDevanagari}
-          </p>
-          {/* IAST */}
-          <p
-            lang="sa-Latn"
-            style={{
-              fontFamily: "var(--font-cormorant), serif",
-              fontStyle: "italic",
-              fontSize: "17px",
-              color: GOLD_DEEP,
-              lineHeight: 1.65,
-              margin: 0,
-              marginTop: "16px",
-              whiteSpace: "pre-line",
-            }}
-          >
-            {v.iastTransliteration}
-          </p>
+          {v.verbatimAvailable ? (
+            <>
+              {/* Devanāgarī */}
+              <p
+                lang="sa"
+                style={{
+                  fontFamily: "var(--font-devanagari), serif",
+                  fontSize: "26px",
+                  color: INK_PRIMARY,
+                  lineHeight: 1.7,
+                  margin: 0,
+                  whiteSpace: "pre-line",
+                }}
+              >
+                {v.sanskritDevanagari}
+              </p>
+              {/* IAST */}
+              <p
+                lang="sa-Latn"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontStyle: "italic",
+                  fontSize: "17px",
+                  color: GOLD_DEEP,
+                  lineHeight: 1.65,
+                  margin: 0,
+                  marginTop: "16px",
+                  whiteSpace: "pre-line",
+                }}
+              >
+                {v.iastTransliteration}
+              </p>
+            </>
+          ) : (
+            /* The lesson deliberately does not reproduce 46.1's Sanskrit —
+               show the cross-check citation discipline instead of a verse. */
+            <div
+              style={{
+                margin: "0 auto",
+                maxWidth: "640px",
+                padding: "16px 20px",
+                background: `${GOLD_DEEP}10`,
+                border: `1px dashed ${GOLD_DEEP}66`,
+                borderRadius: "10px",
+                textAlign: "left",
+              }}
+            >
+              <p
+                className="uppercase"
+                style={{
+                  fontSize: "11px",
+                  letterSpacing: "0.16em",
+                  color: GOLD_DEEP,
+                  fontWeight: 700,
+                  fontFamily: "var(--font-sans), system-ui, sans-serif",
+                  marginBottom: "6px",
+                }}
+              >
+                Sanskrit not reproduced — cross-check discipline
+              </p>
+              <p
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "15px",
+                  color: INK_PRIMARY,
+                  lineHeight: 1.65,
+                  margin: 0,
+                }}
+              >
+                {v.crossCheckNote}
+              </p>
+            </div>
+          )}
           {/* English */}
           <p
             style={{

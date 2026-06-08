@@ -89,15 +89,15 @@ export const PRESETS: Preset[] = [
     expected: "07:07",
   },
   {
-    id: "reykjavik-polar",
-    label: "Reykjavík — Polar Check",
-    lat: 64.146,
-    lon: -21.942,
-    tz: 0,
+    id: "tromso-polar",
+    label: "Tromsø — Polar Day",
+    lat: 69.65,
+    lon: 18.96,
+    tz: 1,
     year: 2026,
     month: 6,
     day: 21,
-    note: "Near polar day edge case",
+    note: "Above the Arctic Circle: midnight sun (no solution)",
     expected: "polar-day",
   },
   {
@@ -109,8 +109,8 @@ export const PRESETS: Preset[] = [
     year: 2026,
     month: 6,
     day: 21,
-    note: "Expected: ~06:06 ECT",
-    expected: "06:06",
+    note: "Expected: ~06:14 ECT (equatorial, near-constant)",
+    expected: "06:14",
   },
 ];
 
@@ -353,9 +353,14 @@ export function toDMS(dec: number): string {
 }
 
 export function fmtTime(decimalHours: number): string {
-  const h = Math.floor(decimalHours);
-  const m = Math.floor((decimalHours - h) * 60);
-  const s = Math.round(((decimalHours - h) * 60 - m) * 60);
+  // Normalize into [0, 24) so intermediate/over-midnight values never render as
+  // negative ("-1:56:27") or overflow ("25:30:00") clock strings.
+  const norm = ((decimalHours % 24) + 24) % 24;
+  let h = Math.floor(norm);
+  let m = Math.floor((norm - h) * 60);
+  let s = Math.round(((norm - h) * 60 - m) * 60);
+  if (s === 60) { s = 0; m += 1; }
+  if (m === 60) { m = 0; h = (h + 1) % 24; }
   return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 }
 
@@ -403,19 +408,25 @@ export function computeSunrise(
 
   const Hdeg = (Math.acos(cosH) * 180) / Math.PI;
   const Hhours = Hdeg / 15;
-  const apparentSunrise = 12 - Hhours;
-  const longitudeCorrection = lon / 15;
-  const localMeanTime = apparentSunrise - longitudeCorrection;
-  const civilTime = localMeanTime + tz;
+  // Lesson §4.2.3 Step 5: longitude correction = (λ − λ_std)/15, positive
+  // eastward. The standard meridian is λ_std = tz × 15 (e.g. IST tz=5.5 →
+  // 82.5°E). So (λ − λ_std)/15 = lon/15 − tz (Mumbai: 72.83/15 − 5.5 = −0.645h).
+  const longitudeCorrection = lon / 15 - tz;
+  const localApparentNoon = 12 - longitudeCorrection; // 12:00 std − (λ−λ_std)/15
+  const civilTime = localApparentNoon - Hhours; // Step 6: sunrise = noon − H
+  const corrMin = longitudeCorrection * 60;
+  const sgn = (x: number) => (x >= 0 ? "+" : "−");
 
   const steps = [
     { label: "Day of year (N)", value: N.toString() },
     { label: "Solar declination (δ)", value: `${delta.toFixed(2)}°` },
     { label: "Hour angle (H)", value: `${Hdeg.toFixed(2)}° = ${Hhours.toFixed(3)}h` },
-    { label: "Local apparent sunrise", value: fmtTime(apparentSunrise) },
-    { label: "Longitude correction", value: `${lon.toFixed(2)}° / 15 = ${longitudeCorrection.toFixed(3)}h` },
-    { label: "Local mean time", value: fmtTime(localMeanTime) },
-    { label: "Civil time (timezone adjusted)", value: fmtTime(civilTime) },
+    {
+      label: "Longitude correction (λ − λ_std)/15",
+      value: `${sgn(longitudeCorrection)}${Math.abs(longitudeCorrection).toFixed(3)}h (${sgn(corrMin)}${Math.abs(corrMin).toFixed(0)} min)`,
+    },
+    { label: "Local apparent noon", value: fmtTime(localApparentNoon) },
+    { label: "Sunrise = noon − H", value: fmtTime(civilTime) },
   ];
 
   return {
@@ -426,7 +437,7 @@ export function computeSunrise(
     delta,
     Hdeg,
     Hhours,
-    localApparentNoon: 12 + (lon / 15),
+    localApparentNoon,
     longitudeCorrection,
     civilTime,
   };

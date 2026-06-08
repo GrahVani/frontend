@@ -291,6 +291,23 @@ import { VedhaTableLookup } from "./vedha-table-lookup";
 import { VedhaApplicator } from "./vedha-applicator";
 import { CrossStreamTransitIntro } from "./cross-stream-transit-intro";
 import { TransitWorkflowWorkbench } from "./transit-workflow-workbench";
+import { CareerVargaWorkflow } from "./career-varga-workflow";
+import { ChaturthamshaCalculator } from "./chaturthamsha-calculator";
+import { ChaturvimshamshaCalculator } from "./chaturvimshamsha-calculator";
+import { ChildrenVargaWorkflow } from "./children-varga-workflow";
+import { DashamshaCalculator } from "./dashamsha-calculator";
+import { DvadashamshaCalculator } from "./dvadashamsha-calculator";
+import { GajaKesariDetector } from "./gaja-kesari-detector";
+import { GrahaDrishtiWheel } from "./graha-drishti-wheel";
+import { KhavedamshaAkshavedamshaCalculator } from "./khavedamsha-akshavedamsha-calculator";
+import { MarriageVargaWorkflow } from "./marriage-varga-workflow";
+import { SaptamshaCalculator } from "./saptamsha-calculator";
+import { SaptavimshamshaCalculator } from "./saptavimshamsha-calculator";
+import { ShodashamshaCalculator } from "./shodashamsha-calculator";
+import { SpiritualTrioComparator } from "./spiritual-trio-comparator";
+import { SubLordCalculator } from "./sub-lord-calculator";
+import { SubstrateEthicsChecklist } from "./substrate-ethics-checklist";
+import { VimshamshaCalculator } from "./vimshamsha-calculator";
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
 
@@ -883,6 +900,24 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "vedha-applicator": VedhaApplicator,
   "cross-stream-transit-intro": CrossStreamTransitIntro,
   "transit-workflow-workbench": TransitWorkflowWorkbench,
+  // --- merged: components built in the local reconciliation session (not on remote) ---
+  "career-varga-workflow": CareerVargaWorkflow,
+  "chaturthamsha-calculator": ChaturthamshaCalculator,
+  "chaturvimshamsha-calculator": ChaturvimshamshaCalculator,
+  "children-varga-workflow": ChildrenVargaWorkflow,
+  "dashamsha-calculator": DashamshaCalculator,
+  "dvadashamsha-calculator": DvadashamshaCalculator,
+  "gaja-kesari-detector": GajaKesariDetector,
+  "graha-drishti-wheel": GrahaDrishtiWheel,
+  "khavedamsha-akshavedamsha-calculator": KhavedamshaAkshavedamshaCalculator,
+  "marriage-varga-workflow": MarriageVargaWorkflow,
+  "saptamsha-calculator": SaptamshaCalculator,
+  "saptavimshamsha-calculator": SaptavimshamshaCalculator,
+  "shodashamsha-calculator": ShodashamshaCalculator,
+  "spiritual-trio-comparator": SpiritualTrioComparator,
+  "sub-lord-calculator": SubLordCalculator,
+  "substrate-ethics-checklist": SubstrateEthicsChecklist,
+  "vimshamsha-calculator": VimshamshaCalculator,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {

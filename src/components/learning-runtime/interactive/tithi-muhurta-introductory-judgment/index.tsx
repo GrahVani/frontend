@@ -119,10 +119,10 @@ const SCENARIOS: ScenarioDef[] = [
   },
   {
     id: 2,
-    question: "A family approaches you for a marriage muhūrta. Which tithi-quality is most auspicious for wedding ceremonies?",
+    question: "A family approaches you for a marriage muhūrta. The lesson pairs Jayā/Bhadrā for weddings — which of the two carries the victory/triumph connotation that makes it the classic first choice?",
     correct: "jaya",
-    explanation: "Jayā (victorious) tithis carry the energy of triumph and conquest. Marriage is culturally framed as a ceremonial victory — the triumph of union over separation.",
-    teaching: "Marriage is a ceremonial victory. Jayā is the classic choice; Bhadrā adds gentleness and can be paired for a fuller, more nuanced muhūrta.",
+    explanation: "Jayā (victorious) tithis carry the energy of triumph and conquest. Marriage is culturally framed as a ceremonial victory — the triumph of union over separation. (Bhadrā is the co-valid pairing partner; the lesson gives marriage as Jayā/Bhadrā.)",
+    teaching: "Marriage is a ceremonial victory. Jayā is the classic choice; Bhadrā adds gentleness and is paired with it for a fuller, more nuanced muhūrta — the lesson gives the pair as Jayā/Bhadrā.",
     iconViewBox: "0 0 64 64",
     iconPath: "M32 8c-4 8-12 14-12 22 0 8 5.4 14 12 14s12-6 12-14c0-8-8-14-12-22zm0 10c3 4 8 8 8 12 0 4.4-3.6 8-8 8s-8-3.6-8-8c0-4 5-8 8-12zM20 52h24v4H20z",
   },
@@ -436,7 +436,7 @@ export function TithiMuhurtaIntroductoryJudgment() {
               className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded"
               style={{ background: "var(--gl-gold-accent)", color: "#0a0a0f" }}
             >
-              C-Calculator
+              Drill
             </span>
             <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--gl-ink-muted)" }}>
               Apply
@@ -711,7 +711,7 @@ export function TithiMuhurtaIntroductoryJudgment() {
           </p>
           <p className="text-xs mt-2 max-w-md mx-auto" style={{ color: "var(--gl-ink-muted)" }}>
             {score === SCENARIOS.length
-              ? "You have mastered the tithi-quality judgment framework. Proceed to the next lesson to learn how tithi interacts with the other four pañcāṅga limbs."
+              ? "You've completed the introductory tithi-quality drill. Remember the scope: tithi-quality is necessary but NOT sufficient for a real muhūrta — a full election also needs vāra, nakṣatra, yoga, karaṇa, lagna, and hora (deferred to Module 23). This is preparation and pañcāṅga literacy, not client-facing delivery."
               : "Review the teaching notes for missed scenarios. Remember: Nandā for beginnings, Jayā for victory, Bhadrā for foundations, Pūrṇā for completion, and Riktā is context-dependent."}
           </p>
         </div>

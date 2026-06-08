@@ -251,7 +251,7 @@ export const DRILL_SCENARIOS: DrillScenario[] = [
         stream: "Jaiminī",
         skandha: "Horā",
         isCorrect: false,
-        explanation: "Incorrect. While Jaiminī DOES have a distinctive horā contribution (cara-rāśi-daśās), the T1-10 module in the curriculum is Parāśari-Vimśottarī-centric. Jaiminī daśās appear in the Jaiminī stream overview module (T1-16 / T2-17), not in the foundational daśā module. The question asks about T1-10 specifically.",
+        explanation: "Incorrect. While Jaiminī DOES have a distinctive horā contribution (cara-rāśi-daśās), the T1-10 module in the curriculum is Parāśari-Vimśottarī-centric. Jaiminī daśās appear in the Jaiminī stream overview module (T1-17), not in the foundational daśā module. The question asks about T1-10 specifically.",
       },
       {
         id: "D",

@@ -221,7 +221,7 @@ export const PARASHARA_DUALITY = {
   preClassical: {
     label: "Pre-classical ṛṣi-figure",
     description:
-      "Maharṣi Parāśara as he appears in tradition — a Mahābhārata-era ṛṣi, often traditionally dated ~3000 BCE. Attested across Indian classical literature beyond Jyotiṣa (Mahābhārata Śānti Parva, Viṣṇu Purāṇa, etc.). The TRADITIONAL chronology treats him as the historical author of BPHS's core doctrine.",
+      "Maharṣi Parāśara as he appears in tradition — a Mahābhārata-era ṛṣi, often traditionally dated ~3000 BCE. Attested across Indian classical literature beyond Jyotiṣa (the Mahābhārata's Śānti Parva / Parāśara-Gītā, and Purāṇic genealogies). The TRADITIONAL chronology treats him as the historical author of BPHS's core doctrine.",
     color: "#4F6FA8",
     colorDeep: "#2F4778",
   },

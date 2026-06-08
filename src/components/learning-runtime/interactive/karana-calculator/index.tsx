@@ -9,14 +9,14 @@ const VERMILION = "#A23A1E";
 const AMBER = "#B8860B";
 
 const KARANAS = [
-  "Bava", "Bālava", "Kaulava", "Taitila", "Gara", "Vaṇija", "Viṣṭi",
-  "Śakuni", "Catuṣpāda", "Nāga", "Kimstughna",
+  "Bava", "Bālava", "Kaulava", "Taitila", "Garaja", "Vaṇija", "Viṣṭi",
+  "Śakuni", "Catuṣpāda", "Nāga", "Kintughna",
 ];
 
 const KARANA_TYPES: Record<string, "cara" | "sthira"> = {
   Bava: "cara", Bālava: "cara", Kaulava: "cara", Taitila: "cara",
-  Gara: "cara", Vaṇija: "cara", Viṣṭi: "cara",
-  Śakuni: "sthira", Catuṣpāda: "sthira", Nāga: "sthira", Kimstughna: "sthira",
+  Garaja: "cara", Vaṇija: "cara", Viṣṭi: "cara",
+  Śakuni: "sthira", Catuṣpāda: "sthira", Nāga: "sthira", Kintughna: "sthira",
 };
 
 const KARANA_META: Record<string, { deity: string; nature: string; natureColor: string }> = {
@@ -24,13 +24,13 @@ const KARANA_META: Record<string, { deity: string; nature: string; natureColor: 
   Bālava: { deity: "Brahmā", nature: "Auspicious for learning", natureColor: JADE },
   Kaulava: { deity: "Kubera", nature: "Auspicious for commerce", natureColor: JADE },
   Taitila: { deity: "Viṣṇu", nature: "Auspicious for construction", natureColor: JADE },
-  Gara: { deity: "Varuṇa", nature: "Mixed — caution advised", natureColor: AMBER },
+  Garaja: { deity: "Varuṇa", nature: "Mixed — caution advised", natureColor: AMBER },
   Vaṇija: { deity: "Vāyu", nature: "Auspicious for trade", natureColor: JADE },
   Viṣṭi: { deity: "Indra", nature: "Inauspicious — avoid new acts", natureColor: VERMILION },
   Śakuni: { deity: "Garuḍa", nature: "Inauspicious — avoid new ventures", natureColor: VERMILION },
   Catuṣpāda: { deity: "Vāmadeva", nature: "Inauspicious — avoid journeys", natureColor: VERMILION },
   Nāga: { deity: "Nāgas", nature: "Inauspicious — avoid important acts", natureColor: VERMILION },
-  Kimstughna: { deity: "Kubera", nature: "Inauspicious — routine only", natureColor: VERMILION },
+  Kintughna: { deity: "Kubera", nature: "Inauspicious — routine only", natureColor: VERMILION },
 };
 
 const TITHI_NAMES = [
@@ -40,9 +40,9 @@ const TITHI_NAMES = [
 ];
 
 const PRESETS = [
-  { label: "Full Moon", sun: { deg: 120, min: 0 }, moon: { deg: 120, min: 0 } },
-  { label: "New Moon", sun: { deg: 120, min: 0 }, moon: { deg: 120, min: 0 } },
-  { label: "Quarter", sun: { deg: 0, min: 0 }, moon: { deg: 90, min: 0 } },
+  { label: "Full Moon (Pūrṇimā)", sun: { deg: 0, min: 0 }, moon: { deg: 174, min: 0 } },   // elong 174° → tithi 15
+  { label: "New Moon (Amāvāsyā)", sun: { deg: 0, min: 0 }, moon: { deg: 354, min: 0 } },    // elong 354° → tithi 30 (Catuṣpāda + Nāga)
+  { label: "Quarter (Aṣṭamī)", sun: { deg: 0, min: 0 }, moon: { deg: 90, min: 0 } },        // elong 90° → tithi 8
 ];
 
 /* ─── Large Tithi-Karana Split SVG ─── */
@@ -147,17 +147,24 @@ export function KaranaCalculator() {
   const elongationRaw = moonLong - sunLong;
   const elongation = elongationRaw < 0 ? elongationRaw + 360 : elongationRaw;
   const tithiNum = Math.floor(elongation / 12) + 1;
-  const tithiIdx = Math.min(Math.max(tithiNum - 1, 0), 14);
+  // Pakṣa-aware tithi name (tithi 1–15 = Śukla, 16–30 = Kṛṣṇa).
+  const pakshaNum = ((tithiNum - 1) % 15) + 1;
+  const paksha = tithiNum <= 15 ? "Śukla" : "Kṛṣṇa";
+  const tithiName = pakshaNum === 15 ? (paksha === "Śukla" ? "Pūrṇimā" : "Amāvāsyā") : TITHI_NAMES[pakshaNum - 1];
 
   const firstKaranaNum = (tithiNum - 1) * 2 + 1;
   const secondKaranaNum = (tithiNum - 1) * 2 + 2;
 
+  // Canonical 60-position placement (lesson §4.5): position 1 = Kintughna (1st
+  // half of Śukla Pratipadā); positions 2–57 = the 7 cara repeating 8× (Bava…
+  // Viṣṭi); 58 = Śakuni (2nd half of Kṛṣṇa Caturdaśī), 59 = Catuṣpāda + 60 = Nāga
+  // (the two halves of Amāvāsyā). 1 + 56 + 3 = 60.
   const getKaranaName = (n: number) => {
-    if (n === 57) return "Śakuni";
-    if (n === 58) return "Catuṣpāda";
-    if (n === 59) return "Nāga";
-    if (n === 60) return "Kimstughna";
-    return KARANAS[(n - 1) % 7];
+    if (n === 1) return "Kintughna";
+    if (n === 58) return "Śakuni";
+    if (n === 59) return "Catuṣpāda";
+    if (n === 60) return "Nāga";
+    return KARANAS[(n - 2) % 7];
   };
 
   const firstKarana = getKaranaName(firstKaranaNum);
@@ -233,7 +240,7 @@ export function KaranaCalculator() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <div className="rounded-xl p-4 text-center" style={{ background: "#FDF6E3", border: "1px solid #E8D5A3" }}>
           <p className="text-xs mb-1" style={{ color: "var(--gl-ink-muted)", textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 700 }}>Tithi</p>
-          <p className="text-lg font-bold" style={{ color: GOLD }}><IAST>{TITHI_NAMES[tithiIdx]}</IAST></p>
+          <p className="text-lg font-bold" style={{ color: GOLD }}><IAST>{paksha} {tithiName}</IAST></p>
           <p className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>#{tithiNum} of 30</p>
           <p className="text-xs mt-1" style={{ color: "var(--gl-ink-secondary)" }}>Elongation: {elongation.toFixed(2)}°</p>
         </div>
@@ -276,7 +283,7 @@ export function KaranaCalculator() {
       <div className="p-3 rounded-lg text-sm" style={{ background: "#F0F1F5", color: "var(--gl-ink-secondary)", border: "1px dashed var(--gl-gold-hairline)" }}>
         <strong style={{ color: GOLD }}>Formula:</strong>{" "}
         Each tithi has 2 karaṇas. Karaṇa # = (tithi − 1) × 2 + 1 (first) or + 2 (second).
-        Cara karaṇas (Bava–Vaṇija) repeat every 7. Sthira karaṇas (Śakuni–Kimstughna) occupy the last 4 positions of the 60-karaṇa cycle.
+        Cara karaṇas (Bava–Vaṇija) repeat every 7. Sthira karaṇas (Śakuni–Kintughna) occupy the last 4 positions of the 60-karaṇa cycle.
       </div>
     </div>
   );

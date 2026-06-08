@@ -2,126 +2,73 @@
 
 import { useState } from "react";
 import type { ReactNode } from "react";
-import { ArrowRight, BadgeCheck, Calculator, Grid2X2, RotateCcw, Sparkles } from "lucide-react";
-
-type Fixed = "friend" | "neutral" | "enemy";
-type Temporary = "friend" | "enemy";
-
-interface Tier {
-  key: string;
-  sanskrit: string;
-  english: string;
-  score: number;
-  color: string;
-  reading: string;
-}
+import { RotateCcw } from "lucide-react";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
 const INK_MUTED = "var(--gl-ink-on-cream-muted)";
 const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
+const GOLD = "#9C7A2F";
 const GREEN = "#2F7D55";
-const VERMILION = "#A23A1E";
-const GOLD = "#B88421";
-const BLUE = "#356CAB";
-const SATURN = "#4F5664";
+const RED = "#A44135";
 
-const TIERS: Record<string, Tier> = {
-  "friend-friend": {
-    key: "adhi-mitra",
-    sanskrit: "Adhi-mitra",
-    english: "Great friend",
-    score: 2,
-    color: GREEN,
-    reading: "Two layers support each other. This is the most helpful contact.",
-  },
-  "neutral-friend": {
-    key: "mitra",
-    sanskrit: "Mitra",
-    english: "Friend",
-    score: 1,
-    color: "#3A8C5A",
-    reading: "The temporary layer adds support where nature was neutral.",
-  },
-  "friend-enemy": {
-    key: "sama",
-    sanskrit: "Sama",
-    english: "Neutral",
-    score: 0,
-    color: GOLD,
-    reading: "One friendship layer and one enmity layer cancel to balance.",
-  },
-  "enemy-friend": {
-    key: "sama",
-    sanskrit: "Sama",
-    english: "Neutral",
-    score: 0,
-    color: GOLD,
-    reading: "Natural hostility is softened by chart-specific support.",
-  },
-  "neutral-enemy": {
-    key: "shatru",
-    sanskrit: "Shatru",
-    english: "Enemy",
-    score: -1,
-    color: VERMILION,
-    reading: "The temporary layer makes an otherwise neutral contact difficult.",
-  },
-  "enemy-enemy": {
-    key: "adhi-shatru",
-    sanskrit: "Adhi-shatru",
-    english: "Great enemy",
-    score: -2,
-    color: "#8E2E22",
-    reading: "Both layers stress the contact. This is the most difficult tier.",
-  },
+type Naisargika = "friend" | "neutral" | "enemy";
+type Tamkalika = "friend" | "enemy";
+type Tier = "adhimitra" | "mitra" | "sama" | "satru" | "adhisatru";
+
+// Pañcadhā compound: fixed (naisargika) row × temporary (tāmkālika) column → one
+// of five tiers. Equivalent ladder: friend=+1/neutral=0/enemy=−1 (naisargika) plus
+// friend=+1/enemy=−1 (tāmkālika); the sum gives +2 adhimitra … −2 adhiśatru.
+const TABLE: Record<Naisargika, Record<Tamkalika, Tier>> = {
+  friend: { friend: "adhimitra", enemy: "sama" },
+  neutral: { friend: "mitra", enemy: "satru" },
+  enemy: { friend: "sama", enemy: "adhisatru" },
 };
 
-const FIXED_OPTIONS: { key: Fixed; label: string; note: string }[] = [
-  { key: "friend", label: "Fixed friend", note: "Naisargika friend" },
-  { key: "neutral", label: "Fixed neutral", note: "Naisargika neutral" },
-  { key: "enemy", label: "Fixed enemy", note: "Naisargika enemy" },
+const TIERS: Record<Tier, { name: string; gloss: string; score: string; color: string; strong: boolean }> = {
+  adhimitra: { name: "Adhimitra", gloss: "Great friend", score: "+2", color: GREEN, strong: true },
+  mitra: { name: "Mitra", gloss: "Friend", score: "+1", color: GREEN, strong: false },
+  sama: { name: "Sama", gloss: "Neutral", score: "0", color: GOLD, strong: false },
+  satru: { name: "Śatru", gloss: "Enemy", score: "−1", color: RED, strong: false },
+  adhisatru: { name: "Adhiśatru", gloss: "Great enemy", score: "−2", color: RED, strong: true },
+};
+
+const NAISARGIKA_OPTS: { key: Naisargika; label: string; score: string; color: string }[] = [
+  { key: "friend", label: "Friend", score: "+1", color: GREEN },
+  { key: "neutral", label: "Neutral", score: "0", color: GOLD },
+  { key: "enemy", label: "Enemy", score: "−1", color: RED },
 ];
 
-const TEMP_OPTIONS: { key: Temporary; label: string; note: string }[] = [
-  { key: "friend", label: "Temporary friend", note: "2/3/4/10/11/12" },
-  { key: "enemy", label: "Temporary enemy", note: "1/5/6/7/8/9" },
+const TAMKALIKA_OPTS: { key: Tamkalika; label: string; score: string; color: string }[] = [
+  { key: "friend", label: "Friend", score: "+1", color: GREEN },
+  { key: "enemy", label: "Enemy", score: "−1", color: RED },
 ];
-
-const PRESETS = [
-  { label: "Great enemy", fixed: "enemy" as Fixed, temporary: "enemy" as Temporary, note: "Sun-Saturn natural enemy plus temporary enemy houses." },
-  { label: "Cancel to neutral", fixed: "friend" as Fixed, temporary: "enemy" as Temporary, note: "Fixed friend but chart-position pushes back." },
-  { label: "Great friend", fixed: "friend" as Fixed, temporary: "friend" as Temporary, note: "Mercury-Venus style support in both layers." },
-  { label: "Plain friend", fixed: "neutral" as Fixed, temporary: "friend" as Temporary, note: "Nature is neutral; the chart gives support." },
-];
-
-function combine(fixed: Fixed, temporary: Temporary): Tier {
-  return TIERS[`${fixed}-${temporary}`];
-}
 
 export function PanchadhaCombiner() {
-  const [fixed, setFixed] = useState<Fixed>("enemy");
-  const [temporary, setTemporary] = useState<Temporary>("enemy");
-  const result = combine(fixed, temporary);
+  const [naisargika, setNaisargika] = useState<Naisargika>("enemy");
+  const [tamkalika, setTamkalika] = useState<Tamkalika>("enemy");
+
+  const result = TABLE[naisargika][tamkalika];
+  const tier = TIERS[result];
 
   return (
     <div data-interactive="panchadha-combiner" style={{ display: "grid", gap: "1rem", color: INK_PRIMARY }}>
       <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "end", gap: "1rem", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "end", flexWrap: "wrap" }}>
           <div>
             <p style={{ margin: 0, color: INK_MUTED, fontSize: "0.78rem", fontWeight: 900, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-              Panchadha friendship
+              Pañcadhā combiner
             </p>
-            <h2 style={{ margin: "0.2rem 0 0", color: BLUE, fontSize: "1.35rem" }}>
-              Combine fixed nature with temporary chart position
+            <h2 style={{ margin: "0.2rem 0 0", color: GOLD, fontSize: "1.35rem" }}>
+              Fixed × temporary → one of five
             </h2>
           </div>
           <button
             type="button"
             onClick={() => {
-              setFixed("enemy");
-              setTemporary("enemy");
+              setNaisargika("enemy");
+              setTamkalika("enemy");
             }}
             style={{ display: "inline-flex", alignItems: "center", gap: "0.45rem", border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: "transparent", color: INK_SECONDARY, padding: "0.55rem 0.75rem", fontWeight: 850, cursor: "pointer" }}
           >
@@ -131,195 +78,118 @@ export function PanchadhaCombiner() {
         </div>
       </section>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: "1rem", alignItems: "start" }}>
-        <section style={{ display: "grid", gap: "0.85rem" }} aria-label="Compound friendship controls">
-          <Panel title="1. Fixed layer" icon={<Grid2X2 size={18} />} color={BLUE}>
-            <ChoiceGrid>
-              {FIXED_OPTIONS.map((option) => (
-                <ChoiceButton
-                  key={option.key}
-                  active={fixed === option.key}
-                  label={option.label}
-                  note={option.note}
-                  color={option.key === "friend" ? GREEN : option.key === "enemy" ? VERMILION : GOLD}
-                  onClick={() => setFixed(option.key)}
-                />
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1rem", alignItems: "start" }}>
+        {/* Layer selectors */}
+        <section style={{ display: "grid", gap: "0.85rem" }} aria-label="Friendship layer inputs">
+          <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
+            <div style={{ color: INK_MUTED, fontSize: "0.78rem", fontWeight: 900, letterSpacing: "0.06em", textTransform: "uppercase" }}>Naisargika (fixed) layer</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "0.5rem", marginTop: "0.7rem" }}>
+              {NAISARGIKA_OPTS.map((o) => (
+                <button
+                  key={o.key}
+                  type="button"
+                  aria-pressed={naisargika === o.key}
+                  onClick={() => setNaisargika(o.key)}
+                  style={{ border: `1px solid ${naisargika === o.key ? o.color : HAIRLINE}`, borderRadius: 8, background: naisargika === o.key ? o.color : "transparent", color: naisargika === o.key ? "#fff" : INK_SECONDARY, padding: "0.6rem 0.4rem", fontWeight: 850, cursor: "pointer" }}
+                >
+                  {o.label}<br />
+                  <span style={{ fontSize: "0.74rem", opacity: 0.85 }}>{o.score}</span>
+                </button>
               ))}
-            </ChoiceGrid>
-          </Panel>
+            </div>
+          </section>
 
-          <Panel title="2. Temporary layer" icon={<Calculator size={18} />} color={SATURN}>
-            <ChoiceGrid>
-              {TEMP_OPTIONS.map((option) => (
-                <ChoiceButton
-                  key={option.key}
-                  active={temporary === option.key}
-                  label={option.label}
-                  note={option.note}
-                  color={option.key === "friend" ? GREEN : VERMILION}
-                  onClick={() => setTemporary(option.key)}
-                />
+          <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
+            <div style={{ color: INK_MUTED, fontSize: "0.78rem", fontWeight: 900, letterSpacing: "0.06em", textTransform: "uppercase" }}>Tāmkālika (temporary) layer</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "0.5rem", marginTop: "0.7rem" }}>
+              {TAMKALIKA_OPTS.map((o) => (
+                <button
+                  key={o.key}
+                  type="button"
+                  aria-pressed={tamkalika === o.key}
+                  onClick={() => setTamkalika(o.key)}
+                  style={{ border: `1px solid ${tamkalika === o.key ? o.color : HAIRLINE}`, borderRadius: 8, background: tamkalika === o.key ? o.color : "transparent", color: tamkalika === o.key ? "#fff" : INK_SECONDARY, padding: "0.6rem 0.4rem", fontWeight: 850, cursor: "pointer" }}
+                >
+                  {o.label}<br />
+                  <span style={{ fontSize: "0.74rem", opacity: 0.85 }}>{o.score}</span>
+                </button>
               ))}
-            </ChoiceGrid>
-          </Panel>
+            </div>
+            <p style={{ margin: "0.7rem 0 0", color: INK_MUTED, fontSize: "0.82rem", lineHeight: 1.5 }}>Tāmkālika has no neutral &mdash; only friend or enemy.</p>
+          </section>
 
-          <section style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }} aria-label="Worked presets">
-            {PRESETS.map((preset) => (
-              <button
-                key={preset.label}
-                type="button"
-                onClick={() => {
-                  setFixed(preset.fixed);
-                  setTemporary(preset.temporary);
-                }}
-                title={preset.note}
-                style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: "transparent", color: INK_SECONDARY, padding: "0.52rem 0.65rem", fontWeight: 850, cursor: "pointer" }}
-              >
-                {preset.label}
-              </button>
-            ))}
+          <section style={{ border: `1px solid ${tier.color}`, borderRadius: 8, background: `${tier.color}1F`, padding: "1rem" }}>
+            <div style={{ color: INK_MUTED, fontSize: "0.78rem", fontWeight: 900, letterSpacing: "0.06em", textTransform: "uppercase" }}>Compound result</div>
+            <div style={{ display: "flex", alignItems: "baseline", gap: "0.6rem", marginTop: "0.3rem" }}>
+              <span style={{ color: tier.color, fontSize: "1.5rem", fontWeight: 900 }}>{tier.name}</span>
+              <span style={{ color: INK_SECONDARY, fontWeight: 800 }}>{tier.gloss}</span>
+              <span style={{ marginLeft: "auto", color: tier.color, fontWeight: 900, fontSize: "1.1rem" }}>{tier.score}</span>
+            </div>
+            <p style={{ margin: "0.55rem 0 0", color: INK_SECONDARY, lineHeight: 1.6 }}>
+              Fixed <strong>{naisargika}</strong> ({naisItem(naisargika).score}) + temporary <strong>{tamkalika}</strong> ({tamItem(tamkalika).score}) &rarr; <strong>{tier.name}</strong>. The two layers add: like reinforces, opposite cancels toward neutral.
+            </p>
           </section>
         </section>
 
-        <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }} aria-label="Panchadha combination matrix">
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: BLUE, fontWeight: 950, marginBottom: "0.8rem" }}>
-            <Sparkles size={18} aria-hidden="true" />
-            3 x 2 combination matrix
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "128px repeat(2, minmax(0, 1fr))", gap: "0.5rem", alignItems: "stretch" }}>
-            <div />
-            {TEMP_OPTIONS.map((temp) => (
-              <Header key={temp.key} label={temp.label} />
-            ))}
-            {FIXED_OPTIONS.map((fixedOption) => (
-              <Row key={fixedOption.key} fixedOption={fixedOption} activeFixed={fixed} activeTemporary={temporary} onPick={(nextFixed, nextTemporary) => {
-                setFixed(nextFixed);
-                setTemporary(nextTemporary);
-              }} />
-            ))}
-          </div>
-          <p style={{ margin: "0.8rem 0 0", color: INK_MUTED, lineHeight: 1.5 }}>
-            Like layers reinforce; opposite layers cancel. Fixed neutral becomes plain friend or enemy depending on the temporary layer.
-          </p>
+        {/* 3×2 matrix */}
+        <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }} aria-label="Pancadha combination matrix">
+          <div style={{ color: INK_MUTED, fontSize: "0.78rem", fontWeight: 900, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: "0.6rem" }}>The 3 × 2 matrix</div>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr>
+                <th style={{ padding: "0.4rem", fontSize: "0.74rem", color: INK_MUTED, textAlign: "left" }}>fixed ↓ / temp →</th>
+                {TAMKALIKA_OPTS.map((t) => (
+                  <th key={t.key} style={{ padding: "0.4rem", fontSize: "0.8rem", color: tamkalika === t.key ? t.color : INK_SECONDARY, fontWeight: 900, textAlign: "center" }}>{t.label}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {NAISARGIKA_OPTS.map((n) => (
+                <tr key={n.key}>
+                  <td style={{ padding: "0.4rem", fontSize: "0.8rem", color: naisargika === n.key ? n.color : INK_SECONDARY, fontWeight: 900 }}>{n.label}</td>
+                  {TAMKALIKA_OPTS.map((t) => {
+                    const cell = TIERS[TABLE[n.key][t.key]];
+                    const active = naisargika === n.key && tamkalika === t.key;
+                    return (
+                      <td
+                        key={t.key}
+                        style={{
+                          padding: "0.55rem 0.4rem",
+                          textAlign: "center",
+                          border: `1px solid ${active ? cell.color : HAIRLINE}`,
+                          background: active ? `${cell.color}26` : `${cell.color}0D`,
+                          color: cell.color,
+                          fontWeight: active ? 900 : 700,
+                          fontSize: "0.82rem",
+                          boxShadow: active ? `inset 0 0 0 1px ${cell.color}` : "none",
+                        }}
+                      >
+                        {cell.name}
+                        <br />
+                        <span style={{ fontSize: "0.72rem", color: INK_MUTED }}>{cell.score}</span>
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Note>
+            Two of the five — <strong>sama</strong> — sit on the cross-diagonal (fixed-friend + temp-enemy, and fixed-enemy + temp-friend): opposite layers cancel to neutral. The deeper strength use of these tiers (dignity, ṣaḍbala) comes in Module 13.
+          </Note>
         </section>
       </div>
-
-      <section style={{ border: `1px solid ${result.color}55`, borderRadius: 8, background: `${result.color}12`, padding: "1rem" }} aria-label="Compound verdict">
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", gap: "1rem", alignItems: "center" }}>
-          <div>
-            <p style={{ margin: 0, color: INK_MUTED, fontSize: "0.76rem", fontWeight: 950, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-              3. Combine
-            </p>
-            <h3 style={{ margin: "0.2rem 0 0", color: result.color, fontSize: "1.35rem" }}>
-              {result.sanskrit}: {result.english}
-            </h3>
-            <p style={{ margin: "0.55rem 0 0", color: INK_SECONDARY, lineHeight: 1.55 }}>
-              {result.reading}
-            </p>
-          </div>
-          <div style={{ display: "grid", gap: "0.35rem", justifyItems: "center", color: result.color, fontWeight: 950 }}>
-            <span style={{ fontSize: "2.2rem", lineHeight: 1 }}>{result.score > 0 ? `+${result.score}` : result.score}</span>
-            <span>score cue</span>
-          </div>
-        </div>
-      </section>
-
-      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: "0.8rem" }} aria-label="Four step method">
-        <Step title="Fixed" body="Read the directed natural friendship cell from the last lesson." />
-        <Step title="Temporary" body="Count the house-position relation from this chart." />
-        <Step title="Combine" body="Use the matrix: reinforce, cancel, or become plain friend/enemy." />
-        <Step title="Apply" body="Read conjunctions, aspects, or shared houses through the compound tier." />
-      </section>
     </div>
   );
 }
 
-function ChoiceGrid({ children }: { children: ReactNode }) {
-  return <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(145px, 1fr))", gap: "0.6rem" }}>{children}</div>;
+function naisItem(k: Naisargika) {
+  return NAISARGIKA_OPTS.find((o) => o.key === k)!;
+}
+function tamItem(k: Tamkalika) {
+  return TAMKALIKA_OPTS.find((o) => o.key === k)!;
 }
 
-function ChoiceButton({ active, label, note, color, onClick }: { active: boolean; label: string; note: string; color: string; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      style={{
-        border: `1px solid ${active ? color : HAIRLINE}`,
-        borderRadius: 8,
-        background: active ? `${color}18` : "transparent",
-        color: active ? color : INK_SECONDARY,
-        padding: "0.72rem",
-        minHeight: 82,
-        textAlign: "left",
-        fontWeight: 900,
-        cursor: "pointer",
-      }}
-    >
-      <span style={{ display: "block" }}>{label}</span>
-      <span style={{ display: "block", marginTop: "0.25rem", color: INK_MUTED, fontSize: "0.78rem", fontWeight: 750 }}>{note}</span>
-    </button>
-  );
-}
-
-function Header({ label }: { label: string }) {
-  return (
-    <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: "rgba(255,251,241,0.72)", padding: "0.6rem", color: INK_MUTED, fontWeight: 950, textAlign: "center" }}>
-      {label}
-    </div>
-  );
-}
-
-function Row({ fixedOption, activeFixed, activeTemporary, onPick }: { fixedOption: { key: Fixed; label: string }; activeFixed: Fixed; activeTemporary: Temporary; onPick: (fixed: Fixed, temporary: Temporary) => void }) {
-  return (
-    <>
-      <Header label={fixedOption.label} />
-      {TEMP_OPTIONS.map((temp) => {
-        const tier = combine(fixedOption.key, temp.key);
-        const active = activeFixed === fixedOption.key && activeTemporary === temp.key;
-        return (
-          <button
-            key={`${fixedOption.key}-${temp.key}`}
-            type="button"
-            onClick={() => onPick(fixedOption.key, temp.key)}
-            style={{
-              border: `2px solid ${active ? tier.color : `${tier.color}44`}`,
-              borderRadius: 8,
-              background: active ? `${tier.color}20` : SURFACE,
-              color: tier.color,
-              padding: "0.75rem 0.55rem",
-              minHeight: 86,
-              cursor: "pointer",
-              fontWeight: 950,
-            }}
-          >
-            <span style={{ display: "block" }}>{tier.sanskrit}</span>
-            <span style={{ display: "block", marginTop: "0.25rem", color: INK_SECONDARY, fontWeight: 800 }}>{tier.english}</span>
-          </button>
-        );
-      })}
-    </>
-  );
-}
-
-function Panel({ title, icon, color, children }: { title: string; icon: ReactNode; color: string; children: ReactNode }) {
-  return (
-    <section style={{ border: `1px solid ${color}44`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color, fontWeight: 950 }}>{icon}{title}</div>
-      <div style={{ marginTop: "0.75rem" }}>{children}</div>
-    </section>
-  );
-}
-
-function Step({ title, body }: { title: string; body: string }) {
-  return (
-    <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "0.9rem" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", color: BLUE, fontWeight: 950 }}>
-        <BadgeCheck size={16} aria-hidden="true" />
-        {title}
-        <ArrowRight size={14} aria-hidden="true" />
-      </div>
-      <p style={{ margin: "0.4rem 0 0", color: INK_SECONDARY, lineHeight: 1.5 }}>{body}</p>
-    </div>
-  );
+function Note({ children }: { children: ReactNode }) {
+  return <p style={{ margin: "0.8rem 0 0", color: INK_SECONDARY, lineHeight: 1.6, fontSize: "0.88rem" }}>{children}</p>;
 }

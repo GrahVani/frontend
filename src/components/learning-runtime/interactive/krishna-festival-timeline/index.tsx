@@ -17,19 +17,19 @@ interface TithiNode {
 
 const NODES: TithiNode[] = [
   { pakshaNumber: 1,  name: "Pratipadā",   devanagari: "प्रतिपदा",   deity: "Agni",            quality: "Nandā",  significance: "Ancestor worship; Pitṛ Pakṣa opening", festivals: "Pitṛ Pakṣa Pratipadā", illuminationPct: 93, isFestivalMajor: false },
-  { pakshaNumber: 2,  name: "Dvitīyā",     devanagari: "द्वितीया",     deity: "Aśvinī Kumāra",   quality: "Bhadrā", significance: "Health-related actions", festivals: "—", illuminationPct: 87, isFestivalMajor: false },
+  { pakshaNumber: 2,  name: "Dvitīyā",     devanagari: "द्वितीया",     deity: "Brahmā / Vidhātā", quality: "Bhadrā", significance: "Health-related actions", festivals: "—", illuminationPct: 87, isFestivalMajor: false },
   { pakshaNumber: 3,  name: "Tṛtīyā",      devanagari: "तृतीया",      deity: "Gaurī",           quality: "Jayā",   significance: "Victory-anchored actions; marriage muhūrta", festivals: "—", illuminationPct: 80, isFestivalMajor: false },
   { pakshaNumber: 4,  name: "Caturthī",    devanagari: "चतुर्थी",    deity: "Gaṇeśa",          quality: "Riktā",  significance: "Gaṇeśa worship; obstacle removal", festivals: "Saṅkaṭahara Caturthī", illuminationPct: 73, isFestivalMajor: false },
   { pakshaNumber: 5,  name: "Pañcamī",     devanagari: "पञ्चमी",     deity: "Nāga",            quality: "Pūrṇā",  significance: "Learning & completion; serpent worship", festivals: "—", illuminationPct: 67, isFestivalMajor: false },
   { pakshaNumber: 6,  name: "Ṣaṣṭhī",      devanagari: "षष्ठी",      deity: "Kārtikeya",       quality: "Nandā",  significance: "Skanda-vrata", festivals: "—", illuminationPct: 60, isFestivalMajor: false },
   { pakshaNumber: 7,  name: "Saptamī",     devanagari: "सप्तमी",     deity: "Sūrya",           quality: "Bhadrā", significance: "Sun-related observances", festivals: "—", illuminationPct: 53, isFestivalMajor: false },
-  { pakshaNumber: 8,  name: "Aṣṭamī",      devanagari: "अष्टमी",      deity: "Rudra / Śiva",    quality: "Jayā",   significance: "Kṛṣṇa's birth; devotion & celebration", festivals: "Janmāṣṭamī — Kṛṣṇa's birth", illuminationPct: 47, isFestivalMajor: true },
+  { pakshaNumber: 8,  name: "Aṣṭamī",      devanagari: "अष्टमी",      deity: "Rudra / Śiva / Kālī", quality: "Jayā",   significance: "Kṛṣṇa's birth; devotion & celebration", festivals: "Janmāṣṭamī — Kṛṣṇa's birth", illuminationPct: 47, isFestivalMajor: true },
   { pakshaNumber: 9,  name: "Navamī",      devanagari: "नवमी",      deity: "Durgā",           quality: "Riktā",  significance: "Devī worship; inauspicious for ventures", festivals: "Mahānavamī", illuminationPct: 40, isFestivalMajor: false },
   { pakshaNumber: 10, name: "Daśamī",      devanagari: "दशमी",      deity: "Dharma",          quality: "Pūrṇā",  significance: "Completion & dhārmic actions", festivals: "—", illuminationPct: 33, isFestivalMajor: false },
   { pakshaNumber: 11, name: "Ekādaśī",     devanagari: "एकादशी",     deity: "Viṣṇu",           quality: "Nandā",  significance: "Vaiṣṇava fast-day (second monthly)", festivals: "~24 named Ekādaśīs annually", illuminationPct: 27, isFestivalMajor: false },
   { pakshaNumber: 12, name: "Dvādaśī",     devanagari: "द्वादशी",     deity: "Viṣṇu",           quality: "Bhadrā", significance: "Ekādaśī pāraṇa; Viṣṇu observances", festivals: "—", illuminationPct: 20, isFestivalMajor: false },
   { pakshaNumber: 13, name: "Trayodaśī",   devanagari: "त्रयोदशी",   deity: "Kāma / Dharma",   quality: "Jayā",   significance: "Pradoṣa-vrata (Śaiva twilight worship)", festivals: "Pradoṣa (twice monthly)", illuminationPct: 13, isFestivalMajor: false },
-  { pakshaNumber: 14, name: "Caturdaśī",   devanagari: "चतुर्दशी",   deity: "Śiva / Kālī",     quality: "Riktā",  significance: "Mahā-Śivarātri; all-night Śiva worship", festivals: "Mahā-Śivarātri — annual great observance", illuminationPct: 7, isFestivalMajor: true },
+  { pakshaNumber: 14, name: "Caturdaśī",   devanagari: "चतुर्दशी",   deity: "Śiva / Kālī / Bhairavī", quality: "Riktā",  significance: "Mahā-Śivarātri; all-night Śiva worship", festivals: "Mahā-Śivarātri — annual great observance", illuminationPct: 7, isFestivalMajor: true },
   { pakshaNumber: 15, name: "Amāvāsyā",    devanagari: "अमावास्या",   deity: "Pitṛ / Kālī / Soma", quality: "Pūrṇā", significance: "New moon; cycle completion; ancestor worship; Lakṣmī Pūjā", festivals: "Diwali; Mahālaya Amāvāsyā; Mauni; Somavatī", illuminationPct: 0, isFestivalMajor: true },
 ];
 

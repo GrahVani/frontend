@@ -206,11 +206,18 @@ function DayTypeDetailCard({
 }
 
 function DurationBars({ selected }: { selected: DayType["key"] | null }) {
+  // Zoomed window (23h floor → 24h sāvana baseline) so the ~4-minute sidereal
+  // gap and the variable lunar tithi are perceptible. A strict-from-zero scale
+  // collapses sāvana/sidereal/solar to indistinguishable full-width bars.
+  const MIN_SEC = 82800; // 23h
   return (
     <div className="space-y-3">
       {DAY_TYPES.map((dt) => {
         const isSel = selected === dt.key;
-        const barPct = Math.min((dt.durationSec / BASELINE_SEC) * 100, 100);
+        const barPct = Math.max(
+          6,
+          Math.min(((dt.durationSec - MIN_SEC) / (BASELINE_SEC - MIN_SEC)) * 100, 100),
+        );
         return (
           <div key={dt.key} className="flex items-center gap-3">
             <div className="w-20 text-xs font-medium text-right" style={{ color: INK_PRIMARY }}>
@@ -230,11 +237,6 @@ function DurationBars({ selected }: { selected: DayType["key"] | null }) {
                   </span>
                 )}
               </motion.div>
-              {dt.key === "solar" && (
-                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] font-semibold" style={{ color: dt.color }}>
-                  ~30 days
-                </span>
-              )}
             </div>
             <div className="w-12 text-xs" style={{ color: INK_MUTED }}>
               {isSel ? "●" : ""}
@@ -242,16 +244,19 @@ function DurationBars({ selected }: { selected: DayType["key"] | null }) {
           </div>
         );
       })}
+      <p className="text-[10px] italic pt-1" style={{ color: INK_MUTED }}>
+        Zoomed view (23h–24h window): sidereal completes ~3m 56s before sāvana; the tithi varies ~19–26h; the saura day is essentially the sāvana ~24h.
+      </p>
     </div>
   );
 }
 
 function ComparisonTable() {
   const rows = [
-    { dim: "Reference", vals: ["Sunrise", "Star meridian", "12° elongation", "Saṅkrānti"] },
-    { dim: "Duration", vals: ["~24h", "~23h 56m", "~23.62h (var)", "~30 sāvana days"] },
-    { dim: "Primary use", vals: ["Civil time", "Planetary motion", "Pañcāṅga / festivals", "Solar calendars"] },
-    { dim: "Variability", vals: ["Seasonal ±min", "Constant", "Kepler-driven ±3h", "Fixed ~30-day"] },
+    { dim: "Reference", vals: ["Sunrise", "Star-rise", "12° elongation", "Saṅkrānti"] },
+    { dim: "Duration", vals: ["~24h", "~23h 56m", "~23.62h (var)", "~24h ± seasonal"] },
+    { dim: "Primary use", vals: ["Civil time", "Planetary motion", "Pañcāṅga / festivals", "Solar-month calendars"] },
+    { dim: "Variability", vals: ["Seasonal ±min", "Constant", "Kepler-driven ~19–26h", "Seasonal ±"] },
   ];
 
   return (
@@ -434,7 +439,7 @@ export function DayTypeComparator() {
         {/* Header: mode tabs + progress */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
           <div className="flex flex-wrap gap-2">
-            {(["explore", "compare"] as Mode[]).map((m) =>(
+            {(["explore", "compare", "quiz"] as Mode[]).map((m) =>(
               <button
                 key={m}
                 onClick={() => setMode(m)}
