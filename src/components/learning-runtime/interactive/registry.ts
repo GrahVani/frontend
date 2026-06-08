@@ -238,6 +238,12 @@ import { DoctrineSelector } from "./doctrine-selector";
 import { MultiStreamChartComparator } from "./multi-stream-chart-comparator";
 import { SaturnAspectDisambiguator } from "./saturn-aspect-disambiguator";
 import { PmpyDetector } from "./pmpy-detector";
+import { RajaYogaDetector } from "./raja-yoga-detector";
+import { DharmaKarmadhipatiDetector } from "./dharma-karmadhipati-detector";
+import { RajaYogaVariantsMap } from "./raja-yoga-variants-map";
+import { KendraTrikonaRationale } from "./kendra-trikona-rationale";
+import { RajaYogaWorkedExample } from "./raja-yoga-worked-example";
+import { DhanaYogaDetector } from "./dhana-yoga-detector";
 import { RuchakaValourSimulator } from "./ruchaka-valour-simulator";
 import { BhadraIntellectExplorer } from "./bhadra-intellect-explorer";
 import { HamsaMalavyaSynthesis } from "./hamsa-malavya-synthesis";
@@ -258,6 +264,11 @@ import { CrossStreamStrengthMap } from "./cross-stream-strength-map";
 import { StrengthQualityMatrix } from "./strength-quality-matrix";
 import { PakshaYuddhaCalculator } from "./paksha-yuddha-calculator";
 import { DikKalaSummer } from "./dik-kala-summer";
+import { LakshmiSaraswatiDetector } from "./lakshmi-saraswati-detector";
+import { AkhandaSamrajyaChecker } from "./akhanda-samrajya-checker";
+import { BuddhadityaGajakesariDetector } from "./buddhaditya-gajakesari-detector";
+import { SpecialYogaScan } from "./special-yoga-scan";
+import { NeechaBhangaChecker } from "./neecha-bhanga-checker";
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
 
@@ -748,6 +759,12 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "multi-stream-chart-comparator": MultiStreamChartComparator,
   "saturn-aspect-disambiguator": SaturnAspectDisambiguator,
   "pmpy-detector": PmpyDetector,
+  "raja-yoga-detector": RajaYogaDetector,
+  "dharma-karmadhipati-detector": DharmaKarmadhipatiDetector,
+  "raja-yoga-variants-map": RajaYogaVariantsMap,
+  "kendra-trikona-rationale": KendraTrikonaRationale,
+  "raja-yoga-worked-example": RajaYogaWorkedExample,
+  "dhana-yoga-detector": DhanaYogaDetector,
   "ruchaka-valour-simulator": RuchakaValourSimulator,
   "bhadra-intellect-explorer": BhadraIntellectExplorer,
   "hamsa-malavya-synthesis": HamsaMalavyaSynthesis,
@@ -803,6 +820,25 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // Dik bala slider + nine kāla sub-component sliders + SVG sum diagram +
   // virūpa→rūpa conversion + worked presets (Sun 10th, Moon night, war penalty).
   "dik-kala-summer": DikKalaSummer,
+  // Lesson 14.4.1's §7 interactive: Lakṣmī-Sarasvatī Detector — checks both
+  // deity-named special yogas. North Indian chart SVG + house/dignity selectors +
+  // condition checker with preset scenarios (Lakṣmī full, Sarasvatī full, broken).
+  "lakshmi-saraswati-detector": LakshmiSaraswatiDetector,
+  // Lesson 14.4.2's §7 interactive: Akhanda Sāmrājya Checker — tests the
+  // "unbroken sovereignty" yoga against selectable source definitions (standard
+  // vs Phaladīpikā). Sovereignty-stack SVG + mini-chart + source-variation discipline.
+  "akhanda-samrajya-checker": AkhandaSamrajyaChecker,
+  // Lesson 14.4.3's §7 interactive: Buddhāditya-Gaja-Kesari Detector — revisits
+  // both common yogas with depth. Combustion orb slider + kendra-from-Moon
+  // circular diagram + strength grading + trikoṇa misread warning.
+  "buddhaditya-gajakesari-detector": BuddhadityaGajakesariDetector,
+  // Lesson 14.4.4's §7 interactive: Special-Yoga Scan — Chapter 4 capstone.
+  // Systematic 5-yoga checklist on a fixed Cancer-lagna worked chart.
+  // Jupiter-dignity toggle demonstrates broken-condition cascade.
+  "special-yoga-scan": SpecialYogaScan,
+  // Lesson 14.5.1's §7 interactive: Neecha-Bhaṅga Checker — cancellation of debilitation.
+  // Planet selector + 5-condition checklist + rescue-chain SVG + honest debate.
+  "neecha-bhanga-checker": NeechaBhangaChecker,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {
