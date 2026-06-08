@@ -42,14 +42,14 @@ const GRAHAS: Graha[] = [
 
 const RELATIONSHIP: Record<string, Record<string, Relation>> = {
   sun: { moon: "friend", mars: "friend", mercury: "neutral", jupiter: "friend", venus: "enemy", saturn: "enemy", rahu: "enemy", ketu: "enemy" },
-  moon: { sun: "friend", mars: "neutral", mercury: "friend", jupiter: "neutral", venus: "neutral", saturn: "neutral", rahu: "enemy", ketu: "enemy" },
+  moon: { sun: "friend", mars: "neutral", mercury: "friend", jupiter: "neutral", venus: "neutral", saturn: "neutral", rahu: "neutral", ketu: "neutral" },
   mars: { sun: "friend", moon: "friend", mercury: "enemy", jupiter: "friend", venus: "neutral", saturn: "neutral", rahu: "enemy", ketu: "friend" },
   mercury: { sun: "friend", moon: "enemy", mars: "neutral", jupiter: "neutral", venus: "friend", saturn: "neutral", rahu: "friend", ketu: "neutral" },
   jupiter: { sun: "friend", moon: "friend", mars: "friend", mercury: "enemy", venus: "enemy", saturn: "neutral", rahu: "neutral", ketu: "neutral" },
   venus: { sun: "enemy", moon: "enemy", mars: "neutral", mercury: "friend", jupiter: "neutral", saturn: "friend", rahu: "friend", ketu: "friend" },
-  saturn: { sun: "enemy", moon: "enemy", mars: "enemy", mercury: "friend", jupiter: "neutral", venus: "friend", rahu: "friend", ketu: "neutral" },
+  saturn: { sun: "enemy", moon: "enemy", mars: "enemy", mercury: "friend", jupiter: "neutral", venus: "friend", rahu: "friend", ketu: "friend" },
   rahu: { sun: "enemy", moon: "enemy", mars: "enemy", mercury: "friend", jupiter: "neutral", venus: "friend", saturn: "friend", ketu: "varies" },
-  ketu: { sun: "enemy", moon: "enemy", mars: "friend", mercury: "neutral", jupiter: "neutral", venus: "friend", saturn: "neutral", rahu: "varies" },
+  ketu: { sun: "enemy", moon: "enemy", mars: "friend", mercury: "neutral", jupiter: "neutral", venus: "friend", saturn: "friend", rahu: "varies" },
 };
 
 const RELATION_META: Record<Relation, { label: string; color: string; bg: string }> = {
