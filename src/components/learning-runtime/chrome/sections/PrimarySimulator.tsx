@@ -329,6 +329,7 @@ const WIDE_LAYOUT_SLUGS = new Set([
   "ashlesha-the-entwining-serpent",
   "the-pushya-nakshatra-as-greatest-auspicious",
   "ashlesha-and-snake-shadow-honest-handling",
+  "tajika-drishti-in-annual-chart-context",
 ]);
 
 export function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorProps) {

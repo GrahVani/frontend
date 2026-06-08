@@ -1,0 +1,1055 @@
+"use client";
+
+import React, { useState, useEffect, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Sparkles, BookOpen, Check, X, ArrowRight, Star, Info, ChevronDown,
+  Layers, Compass, HelpCircle, RefreshCw
+} from "lucide-react";
+import {
+  PLANETS_DATA, LAGNAS_DATA, Planet, Lagna, getAspectedHouses
+} from "./data";
+import { useLessonSlug } from "../rashi-attribute-wheel";
+
+const GOLD = "#9C7A2F";
+const GOLD_DEEP = "#7A5E1E";
+const GOLD_LIGHT = "#F4C77B";
+const INDIGO = "#4F6FA8";
+const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
+const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
+const INK_MUTED = "var(--gl-ink-on-cream-muted)";
+
+type Mode = "universal7" | "special" | "nodal" | "guru9";
+
+export function AspectCaster() {
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
+
+  return (
+    <div className="gl-surface-twilight-glass" style={{ padding: "20px 22px 22px" }} data-interactive="aspect-caster">
+      <style dangerouslySetInnerHTML={{ __html: `
+        input[type="range"].gl-slider {
+          -webkit-appearance: none;
+          width: 100%;
+          height: 6px;
+          background: rgba(156, 122, 47, 0.15);
+          border-radius: 3px;
+          outline: none;
+          margin: 8px 0;
+        }
+        input[type="range"].gl-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #9C7A2F;
+          cursor: pointer;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+          transition: transform 0.1s ease, background 0.1s ease;
+        }
+        input[type="range"].gl-slider::-webkit-slider-thumb:hover {
+          transform: scale(1.25);
+          background: #7A5E1E;
+        }
+        input[type="range"].gl-slider::-moz-range-thumb {
+          width: 16px;
+          height: 16px;
+          border: none;
+          border-radius: 50%;
+          background: #9C7A2F;
+          cursor: pointer;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+          transition: transform 0.1s ease, background 0.1s ease;
+        }
+        input[type="range"].gl-slider::-moz-range-thumb:hover {
+          transform: scale(1.25);
+          background: #7A5E1E;
+        }
+
+        input[type="range"].gl-slider-indigo {
+          -webkit-appearance: none;
+          width: 100%;
+          height: 6px;
+          background: rgba(79, 111, 168, 0.15);
+          border-radius: 3px;
+          outline: none;
+          margin: 8px 0;
+        }
+        input[type="range"].gl-slider-indigo::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #4F6FA8;
+          cursor: pointer;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+          transition: transform 0.1s ease, background 0.1s ease;
+        }
+        input[type="range"].gl-slider-indigo::-webkit-slider-thumb:hover {
+          transform: scale(1.25);
+          background: #3B5A90;
+        }
+        input[type="range"].gl-slider-indigo::-moz-range-thumb {
+          width: 16px;
+          height: 16px;
+          border: none;
+          border-radius: 50%;
+          background: #4F6FA8;
+          cursor: pointer;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+          transition: transform 0.1s ease, background 0.1s ease;
+        }
+        input[type="range"].gl-slider-indigo::-moz-range-thumb:hover {
+          transform: scale(1.25);
+          background: #3B5A90;
+        }
+      `}} />
+      <SimulatorView reducedMotion={reducedMotion} />
+    </div>
+  );
+}
+
+
+/* ─── Simulator View ─── */
+function SimulatorView({ reducedMotion }: { reducedMotion: boolean }) {
+  const slug = useLessonSlug();
+
+  const initialMode = useMemo(() => {
+    if (slug === "the-special-aspects-of-mars-jupiter-saturn") return "special";
+    if (slug === "rahu-ketu-aspects-lineage-dependent-doctrine") return "nodal";
+    if (slug === "guru-aspects-and-the-9th-house") return "guru9";
+    return "universal7";
+  }, [slug]);
+
+  const [mode, setMode] = useState<Mode>(initialMode);
+
+  useEffect(() => {
+    setMode(initialMode);
+  }, [initialMode]);
+
+  const [lagnaId, setLagnaId] = useState<number>(1); // 1 = Aries default
+
+  // Universal 7th mode state
+  const [planet1Id, setPlanet1Id] = useState<string>("sun");
+  const [planet1House, setPlanet1House] = useState<number>(1);
+  const [planet1Nature, setPlanet1Nature] = useState<"benefic" | "malefic">("malefic");
+  const [addSecondPlanet, setAddSecondPlanet] = useState<boolean>(false);
+  const [planet2Id, setPlanet2Id] = useState<string>("venus");
+  const [planet2House, setPlanet2House] = useState<number>(7);
+  const [planet2Nature, setPlanet2Nature] = useState<"benefic" | "malefic">("benefic");
+
+  // Special Aspects mode state
+  const [specialPlanetId, setSpecialPlanetId] = useState<string>("mars");
+  const [specialHouse, setSpecialHouse] = useState<number>(1);
+
+  // Nodal mode state
+  const [nodeHouse, setNodeHouse] = useState<number>(4);
+  const [nodalDoctrine, setNodalDoctrine] = useState<"7th-only" | "5/7/9">("7th-only");
+
+  // Guru & 9th mode state
+  const [jupiterHouse, setJupiterHouse] = useState<number>(9);
+
+  // Sync defaults when mode changes
+  useEffect(() => {
+    if (mode === "guru9") {
+      setLagnaId(9); // Dhanus (Sagittarius) default for Guru mode
+    } else {
+      setLagnaId(1); // Aries default for other modes
+    }
+  }, [mode]);
+
+  // Compute active planet placements based on mode
+  const activePlacements = useMemo(() => {
+    const list: {
+      id: string;
+      name: string;
+      devanagari: string;
+      house: number;
+      nature: "benefic" | "malefic" | "special" | "neutral";
+      aspected: number[];
+      label: string;
+    }[] = [];
+
+    if (mode === "universal7") {
+      const p1 = PLANETS_DATA.find(p => p.id === planet1Id)!;
+      list.push({
+        id: p1.id,
+        name: p1.name,
+        devanagari: p1.devanagari,
+        house: planet1House,
+        nature: planet1Nature,
+        aspected: getAspectedHouses(planet1House, [7]),
+        label: "P1"
+      });
+
+      if (addSecondPlanet) {
+        const p2 = PLANETS_DATA.find(p => p.id === planet2Id)!;
+        list.push({
+          id: p2.id,
+          name: p2.name,
+          devanagari: p2.devanagari,
+          house: planet2House,
+          nature: planet2Nature,
+          aspected: getAspectedHouses(planet2House, [7]),
+          label: "P2"
+        });
+      }
+    } else if (mode === "special") {
+      const p = PLANETS_DATA.find(p => p.id === specialPlanetId)!;
+      const isSpecialPlanet = ["mars", "jupiter", "saturn"].includes(p.id);
+      list.push({
+        id: p.id,
+        name: p.name,
+        devanagari: p.devanagari,
+        house: specialHouse,
+        nature: isSpecialPlanet ? "special" : "neutral",
+        aspected: getAspectedHouses(specialHouse, p.aspectOffsets),
+        label: p.id.substring(0, 2).toUpperCase()
+      });
+    } else if (mode === "nodal") {
+      const offsets = nodalDoctrine === "7th-only" ? [7] : [5, 7, 9];
+      const rahuHouse = nodeHouse;
+      const ketuHouse = (rahuHouse + 5) % 12 + 1;
+
+      list.push({
+        id: "rahu",
+        name: "Rāhu",
+        devanagari: "राहु",
+        house: rahuHouse,
+        nature: "malefic",
+        aspected: getAspectedHouses(rahuHouse, offsets),
+        label: "Ra"
+      });
+
+      list.push({
+        id: "ketu",
+        name: "Ketu",
+        devanagari: "केतु",
+        house: ketuHouse,
+        nature: "malefic",
+        aspected: getAspectedHouses(ketuHouse, offsets),
+        label: "Ke"
+      });
+    } else if (mode === "guru9") {
+      list.push({
+        id: "jupiter",
+        name: "Jupiter (Guru)",
+        devanagari: "गुरु",
+        house: jupiterHouse,
+        nature: "benefic",
+        aspected: getAspectedHouses(jupiterHouse, [5, 7, 9]),
+        label: "Ju"
+      });
+    }
+
+    return list;
+  }, [
+    mode, planet1Id, planet1House, planet1Nature,
+    addSecondPlanet, planet2Id, planet2House, planet2Nature,
+    specialPlanetId, specialHouse, nodeHouse, nodalDoctrine, jupiterHouse
+  ]);
+
+  // Check if mutual aspect exists (only relevant in Mode 1 with 2 planets)
+  const isMutualAspect = useMemo(() => {
+    if (mode !== "universal7" || !addSecondPlanet) return false;
+    const p1 = activePlacements[0];
+    const p2 = activePlacements[1];
+    return p1.aspected.includes(p2.house) && p2.aspected.includes(p1.house);
+  }, [mode, addSecondPlanet, activePlacements]);
+
+  // Check Guru Alignment flags (Mode 4)
+  const jupiterAlignments = useMemo(() => {
+    if (mode !== "guru9") return { in9th: false, aspects9th: false, bhagyaYoga: false, alignedHouses: [] as number[] };
+    const jup = activePlacements[0];
+    const in9th = jup.house === 9;
+    const aspects9th = jup.aspected.includes(9);
+    const bhagyaYoga = lagnaId === 9 && in9th; // Dhanus Lagna + Jupiter in 9th (mula-trikona / own sign)
+
+    const aligned: number[] = [];
+    if (jup.house === 9 || jup.aspected.includes(9)) aligned.push(9);
+    if (jup.house === 5 || jup.aspected.includes(5)) aligned.push(5);
+    if (jup.house === 2 || jup.aspected.includes(2)) aligned.push(2);
+
+    return { in9th, aspects9th, bhagyaYoga, alignedHouses: aligned };
+  }, [mode, activePlacements, lagnaId]);
+
+  // SVG trigonometry helpers
+  const cx = 180;
+  const cy = 180;
+
+  const getHouseCoord = (houseNum: number, radius = 105) => {
+    // House 1 starts at top (-90 degrees) and counts counter-clockwise
+    const angle = -90 - (houseNum - 1) * 30;
+    const rad = angle * Math.PI / 180;
+    return {
+      x: cx + radius * Math.cos(rad),
+      y: cy + radius * Math.sin(rad),
+      angle
+    };
+  };
+
+  // Get sign name based on house index and Lagna selection
+  const getHouseSign = (houseNum: number) => {
+    const signIndex = (lagnaId - 1 + (houseNum - 1)) % 12;
+    return LAGNAS_DATA[signIndex];
+  };
+
+  const getLineStyle = (nature: string) => {
+    switch (nature) {
+      case "benefic": return { stroke: "#10b981", glow: "#10b98140" };
+      case "malefic": return { stroke: "#ef4444", glow: "#ef444440" };
+      case "special": return { stroke: "#f59e0b", glow: "#f59e0b40" };
+      default: return { stroke: "#4f6fa8", glow: "#4f6fa840" };
+    }
+  };
+
+  return (
+    <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+      {/* ─── Left Panel: Controls ─── */}
+      <div style={{ flex: "1 1 280px", display: "flex", flexDirection: "column", gap: "16px" }}>
+
+        {/* Mode Selector - 2x2 Interactive Pill Button Grid */}
+        <div>
+          <label style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.1em", color: GOLD_DEEP, fontWeight: 700, display: "block", marginBottom: "8px" }}>
+            Focus Mode
+          </label>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+            <ModeButton
+              active={mode === "universal7"}
+              onClick={() => setMode("universal7")}
+              title="1. Universal 7th"
+              subtitle="All Planets (L1)"
+            />
+            <ModeButton
+              active={mode === "special"}
+              onClick={() => setMode("special")}
+              title="2. Special Aspects"
+              subtitle="Mars/Jup/Sat (L2)"
+            />
+            <ModeButton
+              active={mode === "nodal"}
+              onClick={() => setMode("nodal")}
+              title="3. Nodal Aspects"
+              subtitle="Rāhu & Ketu (L3)"
+            />
+            <ModeButton
+              active={mode === "guru9"}
+              onClick={() => setMode("guru9")}
+              title="4. Guru & 9th"
+              subtitle="Dharma Bond (M5)"
+            />
+          </div>
+        </div>
+
+        {/* Lagna Selector */}
+        <div>
+          <label style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.1em", color: INDIGO, fontWeight: 700, display: "block", marginBottom: "6px" }}>
+            Ascendant (Lagna) Sign
+          </label>
+          <div style={{ position: "relative" }}>
+            <select
+              value={lagnaId}
+              onChange={(e) => setLagnaId(Number(e.target.value))}
+              style={{
+                width: "100%", padding: "10px 32px 10px 12px", borderRadius: "8px",
+                border: "1.5px solid rgba(79, 111, 168, 0.3)", background: "rgba(255, 251, 240, 0.9)",
+                fontFamily: "var(--font-sans)", fontSize: "14px", fontWeight: 600,
+                color: INK_PRIMARY, cursor: "pointer", appearance: "none"
+              }}
+            >
+              {LAGNAS_DATA.map(l => (
+                <option key={l.id} value={l.id}>{l.id}. {l.name} ({l.sanskrit})</option>
+              ))}
+            </select>
+            <ChevronDown size={16} style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: INDIGO }} />
+          </div>
+        </div>
+
+        {/* ─── Mode Specific Controls ─── */}
+        <div style={{ padding: "14px 16px", borderRadius: "10px", border: "1px solid rgba(156, 122, 47, 0.15)", background: "rgba(255, 251, 240, 0.4)", display: "flex", flexDirection: "column", gap: "14px" }}>
+
+          {mode === "universal7" && (
+            <>
+              {/* Planet 1 Controls */}
+              <div>
+                <label style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "6px" }}>
+                  Primary Planet (P1)
+                </label>
+                <div style={{ display: "flex", gap: "6px", marginBottom: "8px" }}>
+                  <select
+                    value={planet1Id}
+                    onChange={(e) => {
+                      const id = e.target.value;
+                      setPlanet1Id(id);
+                      setPlanet1Nature(PLANETS_DATA.find(p => p.id === id)!.defaultNature);
+                    }}
+                    style={{ flex: 1, padding: "6px", borderRadius: "6px", border: `1px solid ${GOLD_LIGHT}`, fontSize: "13px", fontWeight: 600 }}
+                  >
+                    {PLANETS_DATA.filter(p => p.id !== planet2Id).map(p => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
+                  </select>
+
+                  <select
+                    value={planet1Nature}
+                    onChange={(e) => setPlanet1Nature(e.target.value as "benefic" | "malefic")}
+                    style={{ padding: "6px", borderRadius: "6px", border: `1px solid ${GOLD_LIGHT}`, fontSize: "13px", fontWeight: 600 }}
+                  >
+                    <option value="benefic">Benefic</option>
+                    <option value="malefic">Malefic</option>
+                  </select>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <span style={{ fontSize: "12px", color: INK_SECONDARY }}>House:</span>
+                  <input
+                    type="range" min="1" max="12" value={planet1House}
+                    onChange={(e) => setPlanet1House(Number(e.target.value))}
+                    className="gl-slider"
+                    style={{ flex: 1 }}
+                  />
+                  <span style={{ fontSize: "13px", fontWeight: 700, color: GOLD_DEEP, width: "16px" }}>{planet1House}</span>
+                </div>
+              </div>
+
+              {/* Second Planet Toggle */}
+              <div style={{ borderTop: "1px dashed rgba(156, 122, 47, 0.2)", paddingTop: "10px" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px", fontWeight: 600, color: INK_PRIMARY }}>
+                  <input
+                    type="checkbox" checked={addSecondPlanet}
+                    onChange={(e) => setAddSecondPlanet(e.target.checked)}
+                    style={{ accentColor: GOLD }}
+                  />
+                  Compare 2 Planets
+                </label>
+              </div>
+
+              {/* Planet 2 Controls */}
+              {addSecondPlanet && (
+                <div style={{ borderTop: "1px dashed rgba(156, 122, 47, 0.2)", paddingTop: "10px" }}>
+                  <label style={{ fontSize: "11px", fontWeight: 700, color: INDIGO, display: "block", marginBottom: "6px" }}>
+                    Secondary Planet (P2)
+                  </label>
+                  <div style={{ display: "flex", gap: "6px", marginBottom: "8px" }}>
+                    <select
+                      value={planet2Id}
+                      onChange={(e) => {
+                        const id = e.target.value;
+                        setPlanet2Id(id);
+                        setPlanet2Nature(PLANETS_DATA.find(p => p.id === id)!.defaultNature);
+                      }}
+                      style={{ flex: 1, padding: "6px", borderRadius: "6px", border: "1px solid rgba(79, 111, 168, 0.3)", fontSize: "13px", fontWeight: 600 }}
+                    >
+                      {PLANETS_DATA.filter(p => p.id !== planet1Id).map(p => (
+                        <option key={p.id} value={p.id}>{p.name}</option>
+                      ))}
+                    </select>
+
+                    <select
+                      value={planet2Nature}
+                      onChange={(e) => setPlanet2Nature(e.target.value as "benefic" | "malefic")}
+                      style={{ padding: "6px", borderRadius: "6px", border: "1px solid rgba(79, 111, 168, 0.3)", fontSize: "13px", fontWeight: 600 }}
+                    >
+                      <option value="benefic">Benefic</option>
+                      <option value="malefic">Malefic</option>
+                    </select>
+                  </div>
+
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <span style={{ fontSize: "12px", color: INK_SECONDARY }}>House:</span>
+                    <input
+                      type="range" min="1" max="12" value={planet2House}
+                      onChange={(e) => setPlanet2House(Number(e.target.value))}
+                      className="gl-slider-indigo"
+                      style={{ flex: 1 }}
+                    />
+                    <span style={{ fontSize: "13px", fontWeight: 700, color: INDIGO, width: "16px" }}>{planet2House}</span>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
+          {mode === "special" && (
+            <>
+              {/* Outer Planet Selector */}
+              <div>
+                <label style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "6px" }}>
+                  Special-Aspect Planets
+                </label>
+                <div style={{ display: "flex", gap: "6px", marginBottom: "8px" }}>
+                  {["mars", "jupiter", "saturn"].map(id => {
+                    const active = specialPlanetId === id;
+                    return (
+                      <button
+                        key={id} type="button"
+                        onClick={() => setSpecialPlanetId(id)}
+                        style={{
+                          flex: 1, padding: "8px", borderRadius: "6px", fontSize: "12px", fontWeight: 700, cursor: "pointer",
+                          background: active ? `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})` : "rgba(156, 122, 47, 0.1)",
+                          color: active ? "#1A1408" : GOLD_DEEP, border: "none",
+                          transition: "all 0.2s ease"
+                        }}
+                      >
+                        {id.toUpperCase()}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <label style={{ fontSize: "11px", fontWeight: 700, color: INDIGO, display: "block", marginBottom: "6px" }}>
+                  Comparison (Universal 7th Only)
+                </label>
+                <div style={{ display: "flex", gap: "6px" }}>
+                  {["sun", "moon", "mercury", "venus"].map(id => {
+                    const active = specialPlanetId === id;
+                    return (
+                      <button
+                        key={id} type="button"
+                        onClick={() => setSpecialPlanetId(id)}
+                        style={{
+                          flex: 1, padding: "6px", borderRadius: "6px", fontSize: "11px", fontWeight: 700, cursor: "pointer",
+                          background: active ? "rgba(79, 111, 168, 0.25)" : "rgba(79, 111, 168, 0.05)",
+                          color: INDIGO, border: active ? `1.5px solid ${INDIGO}` : "1.5px solid transparent",
+                          transition: "all 0.2s ease"
+                        }}
+                      >
+                        {id.toUpperCase()}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Slider for Special planet */}
+              <div>
+                <label style={{ fontSize: "12px", color: INK_SECONDARY, display: "block", marginBottom: "6px" }}>
+                  Planet Position
+                </label>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <input
+                    type="range" min="1" max="12" value={specialHouse}
+                    onChange={(e) => setSpecialHouse(Number(e.target.value))}
+                    className="gl-slider"
+                    style={{ flex: 1 }}
+                  />
+                  <span style={{ fontSize: "13px", fontWeight: 700, color: GOLD_DEEP, width: "16px" }}>{specialHouse}</span>
+                </div>
+              </div>
+            </>
+          )}
+
+          {mode === "nodal" && (
+            <>
+              {/* Nodal Doctrine Selector */}
+              <div>
+                <label style={{ fontSize: "11px", fontWeight: 700, color: INDIGO, display: "block", marginBottom: "6px" }}>
+                  Aspect Doctrine
+                </label>
+                <div style={{ display: "flex", gap: "6px" }}>
+                  {[
+                    { val: "7th-only", label: "7th Only" },
+                    { val: "5/7/9", label: "5, 7, 9 (Trinal)" }
+                  ].map(doc => {
+                    const active = nodalDoctrine === doc.val;
+                    return (
+                      <button
+                        key={doc.val} type="button"
+                        onClick={() => setNodalDoctrine(doc.val as any)}
+                        style={{
+                          flex: 1, padding: "6px", borderRadius: "6px", fontSize: "12px", fontWeight: 700, cursor: "pointer",
+                          background: active ? "rgba(79, 111, 168, 0.2)" : "rgba(79, 111, 168, 0.05)",
+                          border: `1.5px solid ${active ? INDIGO : "transparent"}`,
+                          color: INDIGO
+                        }}
+                      >
+                        {doc.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Slider for node */}
+              <div>
+                <label style={{ fontSize: "12px", color: INK_SECONDARY, display: "block", marginBottom: "6px" }}>
+                  Rāhu Position (Ketu opposite)
+                </label>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <input
+                    type="range" min="1" max="12" value={nodeHouse}
+                    onChange={(e) => setNodeHouse(Number(e.target.value))}
+                    className="gl-slider"
+                    style={{ flex: 1 }}
+                  />
+                  <span style={{ fontSize: "13px", fontWeight: 700, color: GOLD_DEEP, width: "16px" }}>{nodeHouse}</span>
+                </div>
+              </div>
+            </>
+          )}
+
+          {mode === "guru9" && (
+            <>
+              {/* Jupiter Slider */}
+              <div>
+                <label style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "6px" }}>
+                  Jupiter (Guru) Position
+                </label>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <input
+                    type="range" min="1" max="12" value={jupiterHouse}
+                    onChange={(e) => setJupiterHouse(Number(e.target.value))}
+                    className="gl-slider"
+                    style={{ flex: 1 }}
+                  />
+                  <span style={{ fontSize: "13px", fontWeight: 700, color: GOLD_DEEP, width: "16px" }}>{jupiterHouse}</span>
+                </div>
+              </div>
+
+              {/* Bhāgya Yoga Preset Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  setLagnaId(9); // Sagittarius (Dhanus)
+                  setJupiterHouse(9); // Jupiter in 9th
+                }}
+                className="gl-clickable gl-focus-ring"
+                style={{
+                  width: "100%", padding: "8px", borderRadius: "6px",
+                  background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})`,
+                  color: "#1A1408", border: "none", fontWeight: 700, fontSize: "12.5px", cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: "6px"
+                }}
+              >
+                <Sparkles size={13} />
+                Set Dhanus Bhāgya-Yoga
+              </button>
+            </>
+          )}
+
+        </div>
+      </div>
+
+      {/* ─── Right Panel: Wheel + Detail Panel ─── */}
+      <div style={{ flex: "1.2 1 320px", display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" }}>
+
+        {/* Flag Alerts Panel */}
+        <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "8px" }}>
+          {isMutualAspect && (
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "8px 12px", background: "rgba(58, 140, 90, 0.10)", border: "1.5px solid #3A8C5A", borderRadius: "8px" }}>
+              <Sparkles size={16} style={{ color: "#3A8C5A" }} />
+              <span style={{ fontSize: "13px", fontWeight: 700, color: "#2A6B42" }}>
+                Mutual Aspect Active! (Planets gaze directly at each other)
+              </span>
+            </div>
+          )}
+
+          {jupiterAlignments.bhagyaYoga && (
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "8px 12px", background: "rgba(156, 122, 47, 0.12)", border: `1.5px solid ${GOLD}`, borderRadius: "8px" }}>
+              <Sparkles size={16} style={{ color: GOLD }} />
+              <span style={{ fontSize: "13px", fontWeight: 700, color: GOLD_DEEP }}>
+                Bhāgya-Yoga Active! (9th-Lord Guru in the 9th House)
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Circular SVG Wheel */}
+        <div style={{ width: "320px", height: "320px", position: "relative" }}>
+          <svg viewBox="0 0 360 360" width="100%" height="100%">
+            <defs>
+              <filter id="aspect-glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="5" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+              {/* SVG Marker Arrows */}
+              <marker id="arrow-benefic" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#10b981" />
+              </marker>
+              <marker id="arrow-malefic" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444" />
+              </marker>
+              <marker id="arrow-special" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b" />
+              </marker>
+              <marker id="arrow-neutral" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#4f6fa8" />
+              </marker>
+            </defs>
+
+            {/* Draw 12 House Wedges */}
+            {Array.from({ length: 12 }).map((_, index) => {
+              const houseNum = index + 1;
+              const angleSize = 30;
+              // Align starting point (House 1) at the top (-90 degrees) counting counter-clockwise
+              const startAngle = -90 - index * angleSize + 15;
+              const endAngle = startAngle - angleSize;
+
+              const midAngle = startAngle - 15;
+              const textPos = getHouseCoord(houseNum, 138);
+              const signPos = getHouseCoord(houseNum, 154);
+
+              // Check if this house is being aspected
+              const isAspected = activePlacements.some(p => p.aspected.includes(houseNum));
+              // Check if a planet sits here
+              const hasPlanet = activePlacements.some(p => p.house === houseNum);
+
+              // Determine color themes for wedges
+              let wedgeFill = "rgba(255, 251, 240, 0.05)";
+              let wedgeStroke = "rgba(156, 122, 47, 0.15)";
+              let strokeWidth = "1";
+
+              if (hasPlanet) {
+                wedgeFill = "rgba(156, 122, 47, 0.08)";
+                wedgeStroke = GOLD;
+                strokeWidth = "2";
+              } else if (isAspected) {
+                wedgeFill = "rgba(79, 111, 168, 0.05)";
+                wedgeStroke = "rgba(79, 111, 168, 0.3)";
+              }
+
+              // Special highlight for 9th house bond
+              if (mode === "guru9" && houseNum === 9) {
+                wedgeFill = jupiterAlignments.bhagyaYoga
+                  ? "rgba(156, 122, 47, 0.15)"
+                  : "rgba(156, 122, 47, 0.08)";
+                wedgeStroke = GOLD;
+                strokeWidth = "2";
+              }
+
+              // Build arc path
+              const describeWedgeArc = (cx: number, cy: number, r: number, start: number, end: number) => {
+                const s = { x: cx + r * Math.cos(start * Math.PI / 180), y: cy + r * Math.sin(start * Math.PI / 180) };
+                const e = { x: cx + r * Math.cos(end * Math.PI / 180), y: cy + r * Math.sin(end * Math.PI / 180) };
+                return `M ${s.x} ${s.y} A ${r} ${r} 0 0 0 ${e.x} ${e.y} L ${cx} ${cy} Z`;
+              };
+
+              const signRotation = (() => {
+                let rot = textPos.angle + 90;
+                const norm = ((rot % 360) + 360) % 360;
+                if (norm > 90 && norm < 270) {
+                  rot += 180;
+                }
+                return rot;
+              })();
+
+              return (
+                <g key={houseNum}>
+                  {/* Wedge Path */}
+                  <path
+                    d={describeWedgeArc(180, 180, 125, startAngle, endAngle)}
+                    fill={wedgeFill}
+                    stroke={wedgeStroke}
+                    strokeWidth={strokeWidth}
+                    style={{ transition: "all 0.25s ease" }}
+                  />
+
+                  {/* Outer Sign text */}
+                  <text
+                    x={signPos.x} y={signPos.y}
+                    textAnchor="middle" alignmentBaseline="middle"
+                    fill={hasPlanet ? GOLD_DEEP : INK_MUTED}
+                    fontSize="9.5" fontWeight={hasPlanet ? 800 : 600}
+                    fontFamily="var(--font-sans)"
+                    transform={`rotate(${signRotation}, ${signPos.x}, ${signPos.y})`}
+                  >
+                    {getHouseSign(houseNum).name.substring(0, 3)}
+                  </text>
+
+                  {/* House Number inside */}
+                  {houseNum === 1 ? (
+                    <>
+                      <text
+                        x={textPos.x} y={textPos.y - 4}
+                        textAnchor="middle" alignmentBaseline="middle"
+                        fill={hasPlanet ? GOLD_DEEP : GOLD}
+                        fontSize="11" fontWeight="800"
+                        fontFamily="var(--font-sans)"
+                      >
+                        1
+                      </text>
+                      <text
+                        x={textPos.x} y={textPos.y + 6}
+                        textAnchor="middle" alignmentBaseline="middle"
+                        fill={hasPlanet ? GOLD_DEEP : GOLD}
+                        fontSize="6.5" fontWeight="800"
+                        letterSpacing="0.05em"
+                        fontFamily="var(--font-sans)"
+                      >
+                        LAGNA
+                      </text>
+                    </>
+                  ) : (
+                    <text
+                      x={textPos.x} y={textPos.y}
+                      textAnchor="middle" alignmentBaseline="middle"
+                      fill={hasPlanet ? GOLD_DEEP : INK_SECONDARY}
+                      fontSize="11.5" fontWeight={hasPlanet ? 800 : 500}
+                      fontFamily="var(--font-sans)"
+                    >
+                      {houseNum}
+                    </text>
+                  )}
+                </g>
+              );
+            })}
+
+            {/* Inner Ring separator */}
+            <circle cx="180" cy="180" r="85" fill="none" stroke="rgba(156, 122, 47, 0.15)" strokeWidth="1" />
+
+            {/* Draw Aspect Lines (Vectors) */}
+            <AnimatePresence>
+              {activePlacements.map(p => {
+                const sourceCoord = getHouseCoord(p.house, 50);
+                const lineTheme = getLineStyle(p.nature);
+
+                return p.aspected.map((targetHouse, idx) => {
+                  const targetCoord = getHouseCoord(targetHouse, 85);
+                  const lineId = `${p.id}-${p.house}-${targetHouse}`;
+
+                  return (
+                    <g key={lineId}>
+                      {/* Glow Behind vector */}
+                      <line
+                        x1={sourceCoord.x} y1={sourceCoord.y}
+                        x2={targetCoord.x} y2={targetCoord.y}
+                        stroke={lineTheme.stroke}
+                        strokeWidth="5"
+                        strokeLinecap="round"
+                        opacity="0.25"
+                        filter="url(#aspect-glow)"
+                      />
+
+                      {/* Main Vector path */}
+                      <motion.line
+                        initial={reducedMotion ? { pathLength: 1 } : { pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 0.4, ease: "easeOut", delay: idx * 0.05 }}
+                        x1={sourceCoord.x} y1={sourceCoord.y}
+                        x2={targetCoord.x} y2={targetCoord.y}
+                        stroke={lineTheme.stroke}
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        markerEnd={`url(#arrow-${p.nature})`}
+                      />
+                    </g>
+                  );
+                });
+              })}
+            </AnimatePresence>
+
+            {/* Draw Planet glyph circles in houses */}
+            {activePlacements.map(p => {
+              const coord = getHouseCoord(p.house, 50);
+              const lineTheme = getLineStyle(p.nature);
+
+              return (
+                <g key={p.id}>
+                  {/* Planet badge outer glow */}
+                  <circle
+                    cx={coord.x} cy={coord.y} r="18"
+                    fill="rgba(255, 251, 240, 0.96)"
+                    stroke={lineTheme.stroke} strokeWidth="1.5"
+                    style={{ transition: "all 0.25s ease" }}
+                  />
+
+                  {/* Devangari/Label text */}
+                  <text
+                    x={coord.x} y={coord.y - 1}
+                    textAnchor="middle" alignmentBaseline="middle"
+                    fill={INK_PRIMARY}
+                    fontSize="11" fontWeight="700"
+                    fontFamily="var(--font-sans)"
+                  >
+                    {p.label}
+                  </text>
+                  <text
+                    x={coord.x} y={coord.y + 10}
+                    textAnchor="middle" fill={GOLD_DEEP}
+                    fontSize="8.5" fontWeight="600"
+                  >
+                    {p.devanagari}
+                  </text>
+                </g>
+              );
+            })}
+
+            {/* Center Hub */}
+            <circle cx="180" cy="180" r="28" fill="rgba(255, 251, 240, 0.98)" stroke={GOLD_LIGHT} strokeWidth="1.5" />
+            <text x="180" y="176" textAnchor="middle" fill={GOLD_DEEP} fontSize="9" fontWeight="700" letterSpacing="0.08em">GRAHA</text>
+            <text x="180" y="188" textAnchor="middle" fill={INK_MUTED} fontSize="8.5" fontWeight="600">DRISHTI</text>
+          </svg>
+        </div>
+
+        {/* ─── Detail Explanation Panel ─── */}
+        <div style={{
+          width: "100%", padding: "14px 18px", borderRadius: "10px", minHeight: "110px",
+          background: "rgba(255, 251, 240, 0.55)",
+          border: "1px solid rgba(156, 122, 47, 0.12)",
+          display: "flex", flexDirection: "column", justifyContent: "center"
+        }}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${mode}-${activePlacements.map(p=>`${p.id}-${p.house}`).join("-")}`}
+              initial={reducedMotion ? undefined : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <Info size={14} style={{ color: GOLD_DEEP }} />
+                <span style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.08em", color: GOLD_DEEP, fontWeight: 700 }}>
+                  Sight Mechanics
+                </span>
+              </div>
+
+              {mode === "universal7" && (
+                <div>
+                  <p style={{ fontSize: "13px", color: INK_PRIMARY, lineHeight: 1.5, margin: "0 0 6px 0" }}>
+                    <strong>Rule:</strong> Every planet casts a 100% full aspect to the 7th house (opposition) from itself.
+                  </p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "12.5px", color: INK_SECONDARY }}>
+                    {activePlacements.map(p => (
+                      <div key={p.id}>
+                        • {p.name} in House {p.house} ({getHouseSign(p.house).name}) aspects the <strong>7th-from ({p.aspected[0]} - {getHouseSign(p.aspected[0]).name})</strong>.
+                        The aspect's nature is <strong>{p.nature}</strong>.
+                      </div>
+                    ))}
+                    {isMutualAspect && (
+                      <p style={{ margin: "4px 0 0 0", color: "#2A6B42", fontWeight: 600 }}>
+                        ★ Mutual Opposition: Both planets look directly at each other, locking their energies!
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {mode === "special" && (
+                <div>
+                  <p style={{ fontSize: "13px", color: INK_PRIMARY, lineHeight: 1.5, margin: "0 0 6px 0" }}>
+                    <strong>Aspect Analysis:</strong> Special-aspect planets cast extra gazes, while comparison planets cast only the universal 7th aspect:
+                  </p>
+                  <div style={{ fontSize: "12.5px", color: INK_SECONDARY }}>
+                    {activePlacements.map(p => {
+                      const isSpecial = ["mars", "jupiter", "saturn"].includes(p.id);
+                      const rules = p.id === "mars"
+                        ? "4th, 7th, and 8th"
+                        : p.id === "jupiter"
+                          ? "5th, 7th, and 9th"
+                          : p.id === "saturn"
+                            ? "3rd, 7th, and 10th"
+                            : "7th only (Universal Aspect)";
+                      return (
+                        <div key={p.id}>
+                          • {p.name} in House {p.house} casts full aspect(s) to the {rules} from itself:
+                          <div style={{ display: "flex", gap: "10px", marginTop: "4px", flexWrap: "wrap" }}>
+                            {p.aspected.map((target, idx) => {
+                              const aspectType = p.id === "mars"
+                                ? ["4th", "7th", "8th"][idx]
+                                : p.id === "jupiter"
+                                  ? ["5th", "7th", "9th"][idx]
+                                  : p.id === "saturn"
+                                    ? ["3rd", "7th", "10th"][idx]
+                                    : "7th";
+                              return (
+                                <span key={idx} style={{ padding: "2px 8px", background: isSpecial ? "rgba(245, 158, 11, 0.12)" : "rgba(79, 111, 168, 0.12)", border: isSpecial ? "1px solid rgba(245, 158, 11, 0.3)" : "1px solid rgba(79, 111, 168, 0.3)", borderRadius: "4px", fontSize: "11px", fontWeight: 700, color: isSpecial ? GOLD_DEEP : INDIGO }}>
+                                  {aspectType}: House {target} ({getHouseSign(target).name})
+                                </span>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {mode === "nodal" && (
+                <div>
+                  <p style={{ fontSize: "13px", color: INK_PRIMARY, lineHeight: 1.5, margin: "0 0 6px 0" }}>
+                    <strong>Lineage Variation:</strong> Nodes are shadow points. Standard doctrine asserts they only aspect the 7th; trinal doctrine grants them 5th and 9th aspects like Jupiter.
+                  </p>
+                  <div style={{ fontSize: "12.5px", color: INK_SECONDARY }}>
+                    {activePlacements.map(p => (
+                      <div key={p.id}>
+                        • {p.name} in House {p.house} aspects:
+                        <div style={{ display: "flex", gap: "8px", marginTop: "4px", flexWrap: "wrap" }}>
+                          {p.aspected.map(target => (
+                            <span key={target} style={{ padding: "2px 8px", background: "rgba(79, 111, 168, 0.12)", border: "1px solid rgba(79, 111, 168, 0.3)", borderRadius: "4px", fontSize: "11px", fontWeight: 700, color: INDIGO }}>
+                              House {target} ({getHouseSign(target).name})
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {mode === "guru9" && (
+                <div>
+                  <p style={{ fontSize: "13px", color: INK_PRIMARY, lineHeight: 1.5, margin: "0 0 6px 0" }}>
+                    <strong>Planet-House Alignment:</strong> Jupiter (Guru) is the dharma significator, aligning with the 9th (dharma), 5th (wisdom/children), and 2nd (wealth) houses.
+                  </p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "12.5px", color: INK_SECONDARY }}>
+                    <div>
+                      • Jupiter in House {jupiterHouse} aspects houses: <strong>{activePlacements[0].aspected.join(", ")}</strong>.
+                    </div>
+                    {jupiterAlignments.alignedHouses.length > 0 ? (
+                      <p style={{ margin: "4px 0 0 0", color: GOLD_DEEP, fontWeight: 700 }}>
+                        ★ Aligned Domains: Jupiter resides in or blesses the aligned houses ({jupiterAlignments.alignedHouses.join(", ")})!
+                      </p>
+                    ) : (
+                      <p style={{ margin: "4px 0 0 0", color: INK_MUTED }}>
+                        Move Jupiter to aspect or sit in the 9th, 5th, or 2nd to activate alignments.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+
+function ModeButton({ active, onClick, title, subtitle }: { active: boolean; onClick: () => void; title: string; subtitle: string }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="gl-clickable gl-focus-ring"
+      style={{
+        padding: "8px 10px",
+        background: active ? "linear-gradient(180deg, rgba(255, 248, 230, 0.95) 0%, rgba(252, 240, 210, 0.9) 100%)" : "rgba(255, 251, 240, 0.45)",
+        border: active ? `1.5px solid ${GOLD}` : "1.5px solid rgba(156, 122, 47, 0.15)",
+        borderRadius: "8px",
+        cursor: "pointer",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "2px",
+        transition: "all 0.2s ease",
+        minHeight: "54px"
+      }}
+    >
+      <span style={{ fontFamily: "var(--font-sans), system-ui, sans-serif", fontSize: "12px", fontWeight: 700, color: active ? GOLD_DEEP : INK_PRIMARY }}>
+        {title}
+      </span>
+      <span style={{ fontFamily: "var(--font-sans), system-ui, sans-serif", fontSize: "9.5px", color: active ? GOLD : INK_MUTED }}>
+        {subtitle}
+      </span>
+    </button>
+  );
+}
