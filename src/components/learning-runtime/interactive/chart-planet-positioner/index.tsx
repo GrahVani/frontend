@@ -430,7 +430,7 @@ export function ChartPlanetPositioner() {
               <div className="pt-2 border-t text-xs" style={{ borderColor: "var(--gl-border-subtle)", color: "var(--gl-ink-muted)" }}>
                 Cross-references:{" "}
                 <span style={{ color: "var(--gl-ink-secondary)" }}>
-                  Full dignity tables → Module 05 · Dṛṣṭi → Module 08 · Bhāva → Module 06 · Daśā timing → Module 09
+                  Full dignity tables → Module 05 · Dṛṣṭi → Module 08 · Bhāva → Module 06 · Daśā timing → Module 10
                 </span>
               </div>
             </div>

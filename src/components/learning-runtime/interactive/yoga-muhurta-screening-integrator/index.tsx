@@ -35,7 +35,7 @@ const EVENT_RULES: Record<EventType, { label: string; limbs: LimbCheck[] }> = {
       { limb: "tithi", label: "Tithi", rule: "Avoid Riktā (4th, 9th, 14th). Prefer Nandā or Bhadrā.", detail: "1st, 2nd, 3rd, 5th, 7th, 10th, 11th, 12th tithis are favourable. Amāvāsyā and Caturdaśī are generally avoided.", required: true },
       { limb: "vara", label: "Vāra", rule: "Monday, Wednesday, Thursday, Friday preferred.", detail: "Avoid Tuesday (Mangala) and Saturday (Śanivāra) for marriage. Thursday (Guruvāra) is the most auspicious.", required: true },
       { limb: "nakshatra", label: "Nakṣatra", rule: "Rohiṇī, Mṛgaśīrṣa, Mūla, Maghā, Uttara-Phālgunī.", detail: "Avoid Nakṣatras belonging to oneself, partner, or immediate family. Mūla is considered excellent for fixed undertakings.", required: true },
-      { limb: "yoga", label: "Yoga", rule: "Avoid Vyatīpāta, Vaidhṛti, Parigha, Śūla, Gaṇḍa.", detail: "Śubha, Siddhi, Dhruva, Saubhāgya are excellent. Āyuṣmān and Śobhana are also very good.", required: true },
+      { limb: "yoga", label: "Yoga", rule: "Prefer Prīti, Saubhāgya, Vṛddhi, Brahma, Siddhi.", detail: "Avoid all 4 core inauspicious yogas — Vyatīpāta and Vaidhṛti absolutely (Mahādoṣas), plus Parigha (first half) and Vajra.", required: true },
       { limb: "karana", label: "Karaṇa", rule: "Prefer Bava, Bālava, Kaulava, Taitila, Gara, Vṛddhi.", detail: "Avoid Śakuni, Catuṣpada, Nāga karaṇas. Viṣṭi karaṇa is mixed and depends on other factors.", required: false },
     ],
   },
@@ -45,7 +45,7 @@ const EVENT_RULES: Record<EventType, { label: string; limbs: LimbCheck[] }> = {
       { limb: "tithi", label: "Tithi", rule: "1st, 2nd, 3rd, 5th, 7th, 10th, 11th, 13th.", detail: "Avoid 4th, 6th, 8th, 9th, 12th, 14th tithis. Pratipadā of both pakṣas is excellent.", required: true },
       { limb: "vara", label: "Vāra", rule: "Monday, Wednesday, Thursday, Friday.", detail: "Avoid Tuesday for travel (accident-prone). Sunday is neutral. Saturday depends on direction.", required: true },
       { limb: "nakshatra", label: "Nakṣatra", rule: "Aśvinī, Puṣya, Hasta, Mṛgaśīrṣa, Anurādhā.", detail: "Aśvinī is supreme for all journeys. Mūla is excellent for travel to the east. Avoid Jyeṣṭhā.", required: true },
-      { limb: "yoga", label: "Yoga", rule: "Siddha, Sādhya, Śiva, Sukarman.", detail: "Avoid Śūla, Gaṇḍa, Vyatīpāta. Dhṛti and Dhruva are excellent for long journeys.", required: true },
+      { limb: "yoga", label: "Yoga", rule: "Cara / movable-type yogas (movement).", detail: "Avoid the 4 core (Vyatīpāta, Vaidhṛti, Parigha, Vajra) and fixed-type yogas. Movement-themed yogas suit a journey.", required: true },
       { limb: "karana", label: "Karaṇa", rule: "Bava, Bālava, Kaulava, Taitila.", detail: "Vṛddhi is excellent. Avoid Śakuni for travel. First half of Bhadra is good.", required: false },
     ],
   },
@@ -55,7 +55,7 @@ const EVENT_RULES: Record<EventType, { label: string; limbs: LimbCheck[] }> = {
       { limb: "tithi", label: "Tithi", rule: "1st, 2nd, 3rd, 5th, 7th, 10th, 11th.", detail: "Daśamī (10th) is especially good for business. Avoid Amāvāsyā and Caturdaśī.", required: true },
       { limb: "vara", label: "Vāra", rule: "Wednesday (Budha) or Thursday (Guru).", detail: "Mercury rules commerce; Jupiter rules prosperity. Friday (Venus) is good for arts/beauty. Avoid Tuesday.", required: true },
       { limb: "nakshatra", label: "Nakṣatra", rule: "Aśvinī, Puṣya, Hasta, Svātī, Revatī.", detail: "Hasta is excellent for hand-crafts and trade. Revatī is good for accumulating wealth.", required: true },
-      { limb: "yoga", label: "Yoga", rule: "Dhana-promoting: Śubha, Vṛddhi, Siddhi, Śiva.", detail: "Indra yoga is excellent for leadership and dominance. Avoid all inauspicious yogas.", required: true },
+      { limb: "yoga", label: "Yoga", rule: "Siddhi (success), Vṛddhi (growth), Śubha.", detail: "Avoid the 4 core inauspicious yogas (Vyatīpāta, Vaidhṛti, Parigha, Vajra). Success/growth-themed yogas fit a business launch.", required: true },
       { limb: "karana", label: "Karaṇa", rule: "Bava, Bālava, Kaulava, Vṛddhi.", detail: "Vṛddhi (growth) is the most appropriate for business. Avoid Śakuni and Nāga.", required: false },
     ],
   },
@@ -65,17 +65,17 @@ const EVENT_RULES: Record<EventType, { label: string; limbs: LimbCheck[] }> = {
       { limb: "tithi", label: "Tithi", rule: "2nd, 3rd, 5th, 7th, 10th, 11th, 13th.", detail: "Dvitīyā and Tṛtīyā are excellent. Daśamī is also good. Avoid Caturthī and Amāvāsyā.", required: true },
       { limb: "vara", label: "Vāra", rule: "Monday, Thursday, Friday.", detail: "Monday (Moon) for homes; Thursday (Jupiter) for temples; Friday (Venus) for beauty. Avoid Tuesday and Saturday.", required: true },
       { limb: "nakshatra", label: "Nakṣatra", rule: "Puṣya, Mṛgaśīrṣa, Hasta, Uttarāṣāḍhā.", detail: "Uttarāṣāḍhā is specifically for laying foundations. Puṣya for all fixed structures.", required: true },
-      { limb: "yoga", label: "Yoga", rule: "Dhruva, Vṛddhi, Siddhi, Śiva.", detail: "Dhruva (fixed) is the best for construction. Avoid Atigaṇḍa, Gaṇḍa, and Śūla.", required: true },
+      { limb: "yoga", label: "Yoga", rule: "Dhruva (fixed), Śobhana.", detail: "Dhruva (fixed) suits a foundation. Avoid the 4 core (Vyatīpāta, Vaidhṛti, Parigha, Vajra) and movable-type yogas.", required: true },
       { limb: "karana", label: "Karaṇa", rule: "Kaulava, Taitila, Gara, Vṛddhi.", detail: "Gara (digging) is literally named for excavation. Excellent for foundation work.", required: false },
     ],
   },
   medical: {
     label: "Medical Procedures",
     limbs: [
-      { limb: "tithi", label: "Tithi", rule: "Monday, Wednesday, Friday.", detail: "Amāvāsyā is actually considered good for surgery (darkness hides the wound). Avoid Caturdaśī.", required: true },
+      { limb: "tithi", label: "Tithi", rule: "Prefer Nandā/Bhadrā/Jayā tithis; avoid Riktā (4th, 9th, 14th).", detail: "Avoid Amāvāsyā and Caturdaśī. (Tithi screening is from Chapter 1; this lesson's focus is the yoga screen.)", required: true },
       { limb: "vara", label: "Vāra", rule: "Monday, Wednesday, Friday.", detail: "Mercury rules medicine. Moon rules healing. Jupiter rules recovery. Avoid Saturday (Saturn = delay).", required: true },
       { limb: "nakshatra", label: "Nakṣatra", rule: "Aśvinī (healers), Hasta (hands), Mṛgaśīrṣa.", detail: "Aśvinī is the supreme healing nakṣatra. Hasta is good for hand-surgeries. Avoid Jyeṣṭhā.", required: true },
-      { limb: "yoga", label: "Yoga", rule: "Āyuṣmān, Siddhi, Śiva, Śubha.", detail: "Āyuṣmān directly promotes longevity and health. Avoid Śūla (pain) and Vyatīpāta (calamity).", required: true },
+      { limb: "yoga", label: "Yoga", rule: "Vajra (sharp action) — the right yoga for surgery.", detail: "Surgery is the contextual exception: Vajra's sharp/cutting nature suits it. Still avoid the Mahādoṣas Vyatīpāta and Vaidhṛti, which override even Vajra.", required: true },
       { limb: "karana", label: "Karaṇa", rule: "Bava, Bālava, Kaulava.", detail: "Mobile karaṇas are preferred. Avoid fixed karaṇas for surgery. Śakuni is very bad.", required: false },
     ],
   },
@@ -251,8 +251,8 @@ export function YogaMuhurtaScreeningIntegrator() {
             <p className="text-sm mt-2" style={{ color: "var(--gl-ink-secondary)" }}>{completed} of {total} limbs checked</p>
             {completed === total && (
               <div className="mt-3 p-3 rounded-lg" style={{ background: "#E8F5EE", border: "1.5px solid #A8D4B8" }}>
-                <p className="text-sm font-semibold" style={{ color: JADE }}>All limbs passed for {event.label}!</p>
-                <p className="text-xs" style={{ color: JADE, marginTop: 4 }}>This muhūrta appears favourable. Confirm with a qualified jyotiṣī before proceeding.</p>
+                <p className="text-sm font-semibold" style={{ color: JADE }}>All pañcāṅga limbs pass the screen for {event.label}.</p>
+                <p className="text-xs" style={{ color: JADE, marginTop: 4 }}>This is recognition-layer screening, not a finished election. A full client-facing election needs Module 23&apos;s complete workflow (10 screens + the 21 Mahādoṣas + lagna, planetary strength, and chart compatibility). Defer high-stakes delivery to a qualified jyotiṣī.</p>
               </div>
             )}
             {completed < total && completed > 0 && (
@@ -284,8 +284,8 @@ export function YogaMuhurtaScreeningIntegrator() {
           {/* Classical reference */}
           <div className="rounded-xl p-4" style={{ background: "#FDF6E3", border: "1px dashed var(--gl-gold-hairline)" }}>
             <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: GOLD }}>Classical Authority</p>
-            <p className="text-sm italic" style={{ color: "var(--gl-ink-secondary)", lineHeight: 1.6 }}>"Muhūrtaṁ pañcāṅgam eva pramāṇam" — The muhūrta is verified by the five limbs. Each element must be examined individually and in combination. No single element is sufficient on its own.</p>
-            <p className="text-xs mt-1" style={{ color: "var(--gl-ink-muted)" }}>— Bṛhat Parāśara Horā Śāstra, Chapter on Muhūrta</p>
+            <p className="text-sm italic" style={{ color: "var(--gl-ink-secondary)", lineHeight: 1.6 }}>The muhūrta is read across all the pañcāṅga limbs — each examined individually and in combination. No single limb is sufficient on its own; the yoga is one screen among several.</p>
+            <p className="text-xs mt-1" style={{ color: "var(--gl-ink-muted)" }}>— after Muhūrta Cintāmaṇi (Rāma Daivajña), the lesson's classical anchor</p>
           </div>
         </div>
       </div>

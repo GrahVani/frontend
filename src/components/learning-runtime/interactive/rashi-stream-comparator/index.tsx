@@ -1,8 +1,7 @@
 "use client";
 
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
-import { IAST } from "../../chrome/typography";
 
 const STREAMS = [
   {
@@ -97,8 +96,8 @@ const TOPICS = [
     label: "Daśā System",
     data: {
       parashari: { text: "Vimśottarī (primary), Aṣṭottarī, Yoginī, etc. — nakṣatra-based or rāśi-based period systems.", convergence: "base" },
-      jaimini: { text: "Jaimini-specific daśās: Śira-mantra, Māndūka, etc. — rāśi-based rather than nakṣatra-based.", convergence: "divergent" },
-      kp: { text: "KP daśā: Uḍḍa-based, nakṣatra-refined with sub-lord subdivision for precise timing.", convergence: "divergent" },
+      jaimini: { text: "Jaimini rāśi-daśās: Chara daśā (primary), plus Sthira, Niryāṇa, etc. — rāśi-based rather than nakṣatra-based.", convergence: "divergent" },
+      kp: { text: "KP uses Vimśottarī refined by the nakṣatra star-lord and sub-lord for precise timing.", convergence: "divergent" },
       tajika: { text: "Standard Vimśottarī for natal; Tājika-specific annual techniques (varṣaphala) for yearly predictions.", convergence: "same" },
       lalkitab: { text: "Lal Kitab uses its own timing system (years of planets) distinct from classical daśā.", convergence: "divergent" },
     },
@@ -380,7 +379,7 @@ export function RashiStreamComparator() {
       <div className="text-xs p-2 rounded-lg" style={{ background: "var(--gl-surface-twilight-glass)", border: "1px solid var(--gl-gold-hairline)", boxShadow: "0 4px 20px rgba(0,0,0,0.06)", color: "var(--gl-ink-muted)" }}>
         Cross-references:{" "}
         <span style={{ color: "var(--gl-ink-secondary)" }}>
-          Four-stream landscape → Module 01 Lesson 1.1.6 · Jaimini tradition → Module 17 · KP system → Module 18 · Lal Kitab → Module 19 · Tājika → Module 20
+          Stream overviews → KP → Module 16 · Jaimini → Module 17 · Lal Kitab → Module 18 · Tājika → Module 19 (Nāḍī → Module 20)
         </span>
       </div>
     </div>

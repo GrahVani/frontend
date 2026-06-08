@@ -42,7 +42,10 @@ import { ThreeSkandhaCurriculumMap } from "@/components/learning-runtime/interac
 import { TithiAngleVisualizer } from "@/components/learning-runtime/interactive/tithi-angle-visualizer";
 import { TithiContextMatcher } from "@/components/learning-runtime/interactive/tithi-context-matcher";
 import { ShuklaTithiStrip } from "@/components/learning-runtime/interactive/shukla-tithi-strip";
-import ZodiacTraditionComparator from "@/components/learning-runtime/interactive/zodiac-tradition-comparator";
+import { SevenSubBranchesExplorer } from "@/components/learning-runtime/interactive/seven-sub-branches-explorer";
+import { RegionalSchoolsExplorer } from "@/components/learning-runtime/interactive/regional-schools-explorer";
+import { LineageThreadsNetworkExplorer } from "@/components/learning-runtime/interactive/lineage-threads-network-explorer";
+import { ThreeLineageComparisonChartAnalyzer } from "@/components/learning-runtime/interactive/three-lineage-comparison-chart-analyzer";
 import { YugaProportionVisualiser } from "@/components/learning-runtime/interactive/yuga-proportion-visualiser";
 import { YugaCycleExplorer } from "@/components/learning-runtime/interactive/yuga-cycle-explorer";
 import { TraditionalVsAcademicDatingComparator } from "@/components/learning-runtime/interactive/traditional-vs-academic-dating-comparator";
@@ -728,7 +731,7 @@ export default async function LessonPage({
                   color: "var(--gl-gold-accent)",
                 }}
               >
-                Zodiac Tradition Comparator
+                The Seven Sub-Branches at a Glance
               </h3>
               <p
                 className="text-base italic mb-4"
@@ -739,9 +742,9 @@ export default async function LessonPage({
                   maxWidth: "680px",
                 }}
               >
-                The interactive below allows you to conceptually and visually understand the fundamental differences between the Sidereal (Nirayana) and Tropical (Sayana) zodiac systems. Use the Time Travel slider to observe Ayanamsa drift.
+                Explore each of the seven sub-branches (sapta-upāśākhā) in turn — Jātaka, Praśna, Muhūrta, Nimitta, Āyurveda-Jyotiṣa, Vāstu, and detailed Saṁhitā. Tap any sub-branch to read its scope, its primary classical texts, its skandha membership, and how much curriculum coverage it receives. Notice that Bṛhat Saṁhitā is the primary text for several saṁhitā sub-branches, while no single text dominates the horā sub-branches.
               </p>
-              <ZodiacTraditionComparator />
+              <SevenSubBranchesExplorer />
             </div>
           );
         } else if (fm.slug === "where-grahvani-sits-in-the-skandha-map") {
@@ -756,18 +759,99 @@ export default async function LessonPage({
             "A Punjabi Parāśari practitioner and a Tamil Nadu Parāśari practitioner share the same stream — but what specific regional-school differences would you expect in their teaching language, cultural framing, and cross-stream references?",
             "Try restating in your own words: why is the regional-school organisational level NECESSARY alongside streams + skandhas + sub-branches? What would be lost without it?",
           ];
+          scenes = (
+            <div data-l41-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                The Six Regional Schools
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                Explore the six regional schools of Jyotiṣa across the Indian subcontinent and the diaspora. Tap any school to read its stream-concentration pattern (which streams dominate where), its teaching language and cultural framing, and its key teachers and institutions — then toggle the overlays to see the global links and the four organisational levels (stream → skandha → sub-branch → regional school).
+              </p>
+              <RegionalSchoolsExplorer />
+            </div>
+          );
         } else if (fm.slug === "modern-lineage-threads") {
           reflectionPrompts = [
             "Of the eight lineage threads, which one's relationship to its regional school surprised you most — and what does it tell you about how lineages operate within broader regional contexts?",
             "A learner trained through BVB Delhi and another through SJC both study Jaiminī revival material. What specific lineage-level differences would you expect in their methodological emphases, teaching infrastructure, and practitioner-community norms?",
             "Try restating in your own words: why is the lineage-thread organisational level NECESSARY alongside streams + skandhas + sub-branches + regional schools? What would be lost without it?",
           ];
+          scenes = (
+            <div data-l42-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                The Eight Modern Lineage Threads
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                The network below maps the eight modern lineage threads as connected nodes — each tied to its parent regional school and the streams it emphasises. Tap any thread to read its founder, institution, methodological emphasis, and how it sits within its broader regional context; toggle the stream and region overlays to see the cross-cutting patterns.
+              </p>
+              <LineageThreadsNetworkExplorer />
+            </div>
+          );
         } else if (fm.slug === "lineage-matters-worked-example") {
           reflectionPrompts = [
             "The three approaches converge on broad-strokes thematic interpretation (marriage-challenge + career-strength + strong-lagna). Where do YOU sit on the reliability question — does convergence across lineages convince you of analytical reliability, or do you need additional evidence?",
             "Of the three approaches' unique contributions (KP event-timing precision; BVB deepest classical engagement; Western-Vedic-fusion cross-cultural translation + broader integration), which one would be most valuable to YOUR learning path — and what's your plan for accessing it?",
             "Try restating in your own words: what is the difference between 'synthesis' and 'collapse' — and why does the synthesis discipline prevent multi-lineage practice from diluting single-lineage operational accuracy?",
           ];
+          scenes = (
+            <div data-l43-scenes-mounted="true">
+              <h3
+                className="mb-3"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  fontSize: "26px",
+                  fontWeight: 500,
+                  color: "var(--gl-gold-accent)",
+                }}
+              >
+                One Chart, Three Lineage Readings
+              </h3>
+              <p
+                className="text-base italic mb-4"
+                style={{
+                  fontFamily: "var(--font-cormorant), serif",
+                  color: "var(--gl-ink-secondary)",
+                  lineHeight: 1.55,
+                  maxWidth: "680px",
+                }}
+              >
+                The same demonstration chart (Cancer lagna; Saturn as Ātma-kāraka; debilitated Jupiter in the 7th) read through three lineage approaches — Tamil-Nadu KP, BVB-Delhi Parāśari+Jaiminī, and Western-Vedic-fusion. Step through each lineage&apos;s method and interpretation, then read where the three converge (marriage-challenge + career-strength + strong-lagna) and where each contributes something the others don&apos;t.
+              </p>
+              <ThreeLineageComparisonChartAnalyzer />
+            </div>
+          );
         } else if (fm.slug === "the-four-yugas-and-the-mahayuga") {
           reflectionPrompts = [
             "The 4:3:2:1 proportional structure and the absolute durations (1.728M / 1.296M / 0.864M / 0.432M years) are two ways of describing the same thing. Which representation do you find more memorable, and why?",
@@ -940,10 +1024,12 @@ export default async function LessonPage({
                   maxWidth: "680px",
                 }}
               >
-                Compare the four day-types side by side — sāvana, sidereal,
-                lunar/tithi, and solar/saṅkrānti. Toggle each dimension
-                (reference-event, duration, operational norm) to see how
-                each day-type differs from the others.
+                Explore the four day-types — sāvana, sidereal, lunar/tithi,
+                and solar/saṅkrānti. Select any one to inspect its
+                reference-event, duration, and operational scope; switch to
+                Compare for the side-by-side table and duration bars; then
+                test yourself in Quiz mode on which day-type each computation
+                requires.
               </p>
               <DayTypeComparator />
             </div>
@@ -1188,10 +1274,12 @@ export default async function LessonPage({
                   maxWidth: "680px",
                 }}
               >
-                Side-by-side rendering of the major Indian calendar systems.
-                Input any Gregorian date to see equivalent dates across all
-                systems simultaneously. Toggle map mode to explore regional
-                conventions geographically.
+                Explore the major Indian calendar systems side by side and on
+                the regional map: compare each one's year-start event, month
+                structure (solar vs lunisolar), and relation to the Common Era.
+                Select any calendar to see its region, new-year festival, and
+                era offset. (Systematic date conversion is the next lesson's
+                tool.)
               </p>
               <RegionalCalendarExplorer />
             </div>
@@ -1224,10 +1312,11 @@ export default async function LessonPage({
                   maxWidth: "680px",
                 }}
               >
-                Module 02&apos;s most operationally-comprehensive calculative interactive.
-                Comprehensive cross-system date conversion with year-boundary
-                auto-detection, Julian-Gregorian transition handling, adhika-māsa
-                identification, and JDN cross-validation.
+                Module 02&apos;s capstone calculator: convert a date across CE,
+                Vikrama, Śaka, Kollam, and Bangla Sambat at once, with
+                year-start boundary auto-detection (the −1 adjustment before
+                each system&apos;s new year), a Julian Day Number readout, and a
+                worked-example library to load classical-text dates.
               </p>
               <CalendarConverter />
             </div>
@@ -1243,7 +1332,7 @@ export default async function LessonPage({
         const sec4Cleaned =
           fm.slug === "three-skandhas-overview" && sec4
             ? { ...sec4, body: sec4.body.replace(/```[\s\S]*?```/g, "") }
-            : fm.slug === "where-grahvani-sits-in-the-skandha-map" && sec4
+            : (fm.slug === "where-grahvani-sits-in-the-skandha-map" || fm.slug === "regional-schools-and-lineages") && sec4
               ? { ...sec4, body: sec4.body.replace(/^[|].*$/gm, "").replace(/\n{3,}/g, "\n\n") }
               : sec4;
 

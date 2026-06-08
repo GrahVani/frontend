@@ -19,8 +19,9 @@ const CALENDARS = [
     region: "North India",
     start: "Caitra Śukla Pratipad",
     startMonth: "March–April",
+    structure: "Lunisolar",
     offset: "CE + 57",
-    note: "Widely used in North India for festivals and religious dates.",
+    note: "Lunar (amānta/pūrṇimānta) saṁvat widely used in North India for festivals and religious dates.",
     color: INDIGO,
   },
   {
@@ -29,8 +30,9 @@ const CALENDARS = [
     region: "Official / Government",
     start: "Caitra Śukla Pratipad",
     startMonth: "March–April",
+    structure: "Lunisolar (modern govt: solar)",
     offset: "CE − 78",
-    note: "Official civil calendar of India since 1957. Modified by government to start 22 March.",
+    note: "Traditional lunar saṁvat of the classical-astronomical texts. The modern Indian-government civil calendar (since 1957) uses a solar Śaka starting 22 March.",
     color: GOLD,
   },
   {
@@ -38,9 +40,10 @@ const CALENDARS = [
     name: "Kollam Era",
     region: "Kerala",
     start: "Siṁha Saṅkrānti",
-    startMonth: "August–September",
-    offset: "CE − 825",
-    note: "Named after the city of Kollam (Quilon). Begins when Sun enters Leo, not Aries.",
+    startMonth: "August (~17th)",
+    structure: "Solar",
+    offset: "CE − 824 / − 825",
+    note: "Solar era named after the city of Kollam (Quilon). The year begins at Siṁha Saṅkrānti (Sun → Leo, ~17 Aug), so the CE offset is −824 after the boundary and −825 before it.",
     color: VERMILION,
   },
   {
@@ -49,8 +52,9 @@ const CALENDARS = [
     region: "Tamil Nadu",
     start: "Meṣa Saṅkrānti",
     startMonth: "April",
-    offset: "Solar",
-    note: "Solar calendar tied to Meṣa Saṅkrānti. Month names follow the nakṣatra of the full moon.",
+    structure: "Solar",
+    offset: "— (solar; 60-yr cycle)",
+    note: "Solar calendar whose months are the rāśi-named saura months, each beginning at the Sun's sign-ingress (saṅkrānti); the year starts at Meṣa Saṅkrānti (Puthandu, ~14 Apr). Years run on the 60-year Jovian cycle rather than a continuous count.",
     color: JADE,
   },
   {
@@ -59,8 +63,9 @@ const CALENDARS = [
     region: "Bengal",
     start: "Meṣa Saṅkrānti",
     startMonth: "April",
-    offset: "Solar-lunar hybrid",
-    note: "Hybrid solar-lunar system. Used for Bengali New Year (Pohela Boishakh).",
+    structure: "Solar",
+    offset: "CE − 593 / 594",
+    note: "Solar-month calendar (Bangla Sambat). The year begins at Meṣa Saṅkrānti — Pohela Boishakh (~14–15 Apr).",
     color: INDIGO,
   },
   {
@@ -69,8 +74,9 @@ const CALENDARS = [
     region: "Assam",
     start: "Meṣa Saṅkrānti",
     startMonth: "April",
-    offset: "Solar-lunar hybrid",
-    note: "Bihu festivals are anchored to this calendar. Bohag Bihu marks the new year.",
+    structure: "Solar",
+    offset: "— (solar; tied to CE)",
+    note: "Solar-month calendar. Bihu festivals are anchored to it; Bohag Bihu marks the new year at Meṣa Saṅkrānti.",
     color: JADE,
   },
   {
@@ -79,8 +85,9 @@ const CALENDARS = [
     region: "Odisha",
     start: "Meṣa Saṅkrānti",
     startMonth: "April",
-    offset: "Solar-lunar hybrid",
-    note: "Follows the same solar-lunar structure as Bengali and Assamese calendars.",
+    structure: "Solar",
+    offset: "— (solar; tied to CE)",
+    note: "Solar-month calendar like the Bengali and Assamese ones; the new year (Mahā Viṣuva Saṅkrānti / Pana Saṅkrānti) falls at Meṣa Saṅkrānti.",
     color: VERMILION,
   },
   {
@@ -89,6 +96,7 @@ const CALENDARS = [
     region: "All India (civil)",
     start: "1 January",
     startMonth: "January",
+    structure: "Solar",
     offset: "Base reference",
     note: "The universal civil calendar used for all official, legal, and commercial purposes.",
     color: INK_MUTED,
@@ -241,10 +249,14 @@ export function RegionalCalendarExplorer() {
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 mb-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
                 <div className="p-3 rounded-lg" style={{ backgroundColor: "var(--gl-surface-2, #F5EDD8)" }}>
                   <div className="text-xs mb-1" style={{ color: INK_MUTED }}>Year start</div>
                   <div className="text-sm font-medium">{active.start}</div>
+                </div>
+                <div className="p-3 rounded-lg" style={{ backgroundColor: "var(--gl-surface-2, #F5EDD8)" }}>
+                  <div className="text-xs mb-1" style={{ color: INK_MUTED }}>Month structure</div>
+                  <div className="text-sm font-medium">{active.structure}</div>
                 </div>
                 <div className="p-3 rounded-lg" style={{ backgroundColor: "var(--gl-surface-2, #F5EDD8)" }}>
                   <div className="text-xs mb-1" style={{ color: INK_MUTED }}>CE relation</div>
@@ -306,6 +318,7 @@ export function RegionalCalendarExplorer() {
                 <th className="text-left py-2 px-2 text-xs" style={{ color: INK_MUTED }}>Calendar</th>
                 <th className="text-left py-2 px-2 text-xs" style={{ color: INK_MUTED }}>Year starts on</th>
                 <th className="text-left py-2 px-2 text-xs" style={{ color: INK_MUTED }}>Month</th>
+                <th className="text-left py-2 px-2 text-xs" style={{ color: INK_MUTED }}>Structure</th>
                 <th className="text-left py-2 px-2 text-xs" style={{ color: INK_MUTED }}>CE relation</th>
               </tr>
             </thead>
@@ -325,6 +338,7 @@ export function RegionalCalendarExplorer() {
                   </td>
                   <td className="py-2 px-2" style={{ color: INK_SECONDARY }}>{cal.start}</td>
                   <td className="py-2 px-2" style={{ color: INK_SECONDARY }}>{cal.startMonth}</td>
+                  <td className="py-2 px-2" style={{ color: INK_SECONDARY }}>{cal.structure}</td>
                   <td className="py-2 px-2" style={{ color: INK_SECONDARY }}>{cal.offset}</td>
                 </tr>
               ))}

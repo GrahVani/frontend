@@ -89,7 +89,7 @@ export const DIMENSIONS: DimensionRow[] = [
       vedic: {
         headline: "Sidereal (fixed-star anchor)",
         detail:
-          "0° Mesha anchored to a specific point in the actual constellation Aries. Lahiri ayanāṁśa is the Indian-government standard, with K.N. Rao, B.V. Raman, and Krishnamurti variants in regular use.",
+          "0° Mesha anchored to a specific point in the actual constellation Aries. Lahiri ayanāṁśa is the Indian-government standard, with B.V. Raman and Krishnamurti (KP) ayanāṁśa variants also in use.",
       },
       western: {
         headline: "Tropical (seasonal anchor)",
@@ -141,7 +141,7 @@ export const DIMENSIONS: DimensionRow[] = [
       vedic: {
         headline: "Daśās (planetary periods)",
         detail:
-          "Daśā systems — Vimśottarī (120-year cycle, beginning from Moon's nakṣatra at birth per BPHS Daśākramaprakaraṇa 46.1), Yoginī, Aṣṭottarī, etc. — are the primary time-engine. Transits serve as a secondary trigger layer.",
+          "Daśā systems — Vimśottarī (120-year cycle, beginning from Moon's nakṣatra at birth per BPHS Daśākramaprakaraṇa, chs. 46–48), Yoginī, Aṣṭottarī, etc. — are the primary time-engine. Transits serve as a secondary trigger layer.",
       },
       western: {
         headline: "Progressions + transits + solar arcs",

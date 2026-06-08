@@ -73,11 +73,11 @@ const SCENARIOS = [
     category: "Mundane",
   },
   {
-    text: "A researcher writing an academic paper on the history of Indian astronomy, analysing how yuga durations vary across Purāṇic texts.",
-    verdict: "dependent" as const,
-    reasoning: "The research TOPIC is yuga-dependent (it's about yuga cycles). The researcher's task requires direct engagement with yuga-position frameworks.",
-    inputs: ["Yuga-cycle frameworks", "Purāṇic text references", "Cross-text comparison"],
-    category: "Research",
+    text: "A teacher preparing a lecture ON the yuga cycles casts a sample natal chart to illustrate ordinary chart-reading during the talk.",
+    verdict: "independent" as const,
+    reasoning: "A trap: the lecture's TOPIC is the yuga cycles, but the diagnostic question asks whether the COMPUTATION needs cosmic-time-locator input. Casting the natal chart uses ayanāṁśa + birth data only — topic-aboutness is not computational dependence (the §8 Mistake #3 confusion).",
+    inputs: ["Birth date/time/place", "Ayanāṁśa (precession)", "Ephemeris positions"],
+    category: "Natal",
   },
   {
     text: "A practitioner explaining to a culturally-curious client that we are in Kali Yuga as part of general astrological counselling.",

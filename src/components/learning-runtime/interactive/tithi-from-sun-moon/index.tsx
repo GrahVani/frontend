@@ -14,31 +14,32 @@ const INK_MUTED = "var(--gl-ink-muted)";
 type Mode = "compute" | "duration" | "sunrise";
 
 const TITHI_NAMES = [
-  "Pratipada",
-  "Dvitiya",
-  "Tritiya",
-  "Caturthi",
-  "Pancami",
-  "Sasthi",
-  "Saptami",
-  "Astami",
-  "Navami",
-  "Dasami",
-  "Ekadasi",
-  "Dvadasi",
-  "Trayodasi",
-  "Caturdasi",
-  "Purnima / Amavasya",
+  "Pratipad",
+  "Dvitīyā",
+  "Tṛtīyā",
+  "Caturthī",
+  "Pañcamī",
+  "Ṣaṣṭhī",
+  "Saptamī",
+  "Aṣṭamī",
+  "Navamī",
+  "Daśamī",
+  "Ekādaśī",
+  "Dvādaśī",
+  "Trayodaśī",
+  "Caturdaśī",
+  "Pūrṇimā / Amāvāsya",
 ];
 
 const SPECIAL_TITHIS = [
-  { n: 1, name: "Pratipada", note: "Paksha begins" },
-  { n: 4, name: "Caturthi", note: "Ganesa observances" },
-  { n: 8, name: "Astami", note: "Major vrata and festival tithi" },
-  { n: 9, name: "Navami", note: "Rama Navami pattern" },
-  { n: 11, name: "Ekadasi", note: "Fasting discipline" },
-  { n: 14, name: "Caturdasi", note: "Sivaratri pattern" },
-  { n: 15, name: "Purnima / Amavasya", note: "Full or new moon boundary" },
+  { n: 1, name: "Pratipad", note: "Pakṣa begins" },
+  { n: 4, name: "Caturthī", note: "Gaṇeśa observances (Gaṇeśa Caturthī, Śukla Bhādrapada)" },
+  { n: 5, name: "Pañcamī", note: "Vasanta Pañcamī / Sarasvatī (Śukla Māgha)" },
+  { n: 8, name: "Aṣṭamī", note: "Janmāṣṭamī (Kṛṣṇa Bhādrapada)" },
+  { n: 9, name: "Navamī", note: "Rāma Navamī (Śukla Caitra)" },
+  { n: 11, name: "Ekādaśī", note: "Fasting discipline (both pakṣas)" },
+  { n: 14, name: "Caturdaśī", note: "Mahā-Śivarātri (Kṛṣṇa Phālguna)" },
+  { n: 15, name: "Pūrṇimā / Amāvāsya", note: "Full moon (Śukla) or new moon (Kṛṣṇa) boundary" },
 ];
 
 const EDGE_SCENARIOS = [
@@ -46,10 +47,10 @@ const EDGE_SCENARIOS = [
     key: "normal",
     label: "Ordinary day",
     sunriseA: 132,
-    instant: 139,
+    instant: 145,
     sunriseB: 146,
     duration: 23.6,
-    note: "One transition happens in the civil day, so the sunrise tithi and later instant tithi may differ.",
+    note: "A tithi transition falls during the civil day: the sunrise tithi (Dvādaśī, by which the day is named in the pañcāṅga) differs from the tithi at a later instant such as a birth moment (Trayodaśī).",
   },
   {
     key: "ksaya",
@@ -79,11 +80,18 @@ function computeTithi(sunLongitude: number, moonLongitude: number) {
   const elongation = wrap360(moonLongitude - sunLongitude);
   const quotient = elongation / 12;
   const absoluteNumber = Math.floor(quotient) + 1;
-  const paksha = absoluteNumber <= 15 ? "Shukla" : "Krishna";
+  const paksha = absoluteNumber <= 15 ? "Śukla" : "Kṛṣṇa";
   const pakshaNumber = absoluteNumber <= 15 ? absoluteNumber : absoluteNumber - 15;
-  const name = TITHI_NAMES[pakshaNumber - 1];
+  // The 15th tithi resolves to a single name per pakṣa: Śukla-15 = Pūrṇimā
+  // (full moon, elongation 180°), Kṛṣṇa-15 = Amāvāsya (new moon, 0°/360°).
+  const name =
+    pakshaNumber === 15
+      ? paksha === "Śukla"
+        ? "Pūrṇimā"
+        : "Amāvāsya"
+      : TITHI_NAMES[pakshaNumber - 1];
   const elapsed = quotient - Math.floor(quotient);
-  const remainingDeg = 12 - (elongation % 12 || 12);
+  const remainingDeg = 12 - (elongation % 12); // 12° at a tithi's start → 0° at its end
 
   return {
     elongation,
@@ -119,7 +127,7 @@ function TithiWheel({ sunLongitude, moonLongitude }: { sunLongitude: number; moo
   const radius = 164;
   const innerRadius = 116;
   const tithi = computeTithi(sunLongitude, moonLongitude);
-  const activeColor = tithi.paksha === "Shukla" ? GOLD : BLUE;
+  const activeColor = tithi.paksha === "Śukla" ? GOLD : BLUE;
   const activeStart = sunLongitude + (tithi.absoluteNumber - 1) * 12;
   const sun = polar(center, center, radius, sunLongitude);
   const moon = polar(center, center, radius, moonLongitude);
@@ -303,7 +311,7 @@ export function TithiFromSunMoon() {
                 <div className="text-xs" style={{ color: INK_MUTED }}>
                   Tithi
                 </div>
-                <div className="text-3xl font-bold" style={{ color: tithi.paksha === "Shukla" ? GOLD : BLUE }}>
+                <div className="text-3xl font-bold" style={{ color: tithi.paksha === "Śukla" ? GOLD : BLUE }}>
                   {tithi.absoluteNumber}
                 </div>
                 <div className="text-sm font-semibold" style={{ color: INK_SECONDARY }}>
@@ -318,7 +326,7 @@ export function TithiFromSunMoon() {
                   {tithi.elongation.toFixed(1)} deg
                 </div>
                 <div className="text-sm" style={{ color: INK_SECONDARY }}>
-                  {(tithi.elapsed * 100).toFixed(0)}% elapsed
+                  {(tithi.elapsed * 100).toFixed(0)}% elapsed · {tithi.remainingDeg.toFixed(1)}° to next tithi
                 </div>
               </div>
             </div>

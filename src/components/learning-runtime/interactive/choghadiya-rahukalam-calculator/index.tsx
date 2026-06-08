@@ -5,38 +5,40 @@ import { IAST } from "../../chrome/typography";
 
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+// The seven choghaḍiyā (lesson §4.2), in canonical cycle order. The 8th
+// segment of each half repeats the cycle's start.
 const CHOGHADIYA_QUALITIES = [
-  { name: "Amṛta", type: "auspicious", color: "#2d7d46", bg: "#E8F5EE", meaning: "Nectar — excellent for all works" },
-  { name: "Kāla", type: "inauspicious", color: "#A23A1E", bg: "#FDE8E5", meaning: "Time of death — avoid" },
-  { name: "Labha", type: "auspicious", color: "#2d7d46", bg: "#E8F5EE", meaning: "Gain — good for commerce" },
-  { name: "Śubha", type: "auspicious", color: "#2d7d46", bg: "#E8F5EE", meaning: "Auspicious — general success" },
-  { name: "Roga", type: "inauspicious", color: "#A23A1E", bg: "#FDE8E5", meaning: "Disease — avoid medical procedures" },
-  { name: "Śūnya", type: "neutral", color: "#B8860B", bg: "#FDF6E3", meaning: "Service — mixed, routine works okay" },
-  { name: "Udvega", type: "inauspicious", color: "#A23A1E", bg: "#FDE8E5", meaning: "Anxiety — avoid new ventures" },
-  { name: "Cara", type: "auspicious", color: "#2d7d46", bg: "#E8F5EE", meaning: "Movement — excellent for travel" },
+  { name: "Udvega", type: "inauspicious", color: "#A23A1E", bg: "#FDE8E5", meaning: "Agitation — inauspicious; avoid new ventures" },
+  { name: "Cala", type: "mixed", color: "#B8860B", bg: "#FDF6E3", meaning: "Moving / variable — mixed; favoured where movement is the point (travel, commerce)" },
+  { name: "Lābha", type: "auspicious", color: "#2d7d46", bg: "#E8F5EE", meaning: "Gain — auspicious, good for commerce" },
+  { name: "Amṛta", type: "auspicious", color: "#2d7d46", bg: "#E8F5EE", meaning: "Nectar — most auspicious, excellent for all works" },
+  { name: "Kāla", type: "inauspicious", color: "#A23A1E", bg: "#FDE8E5", meaning: "Time / death — inauspicious" },
+  { name: "Śubha", type: "auspicious", color: "#2d7d46", bg: "#E8F5EE", meaning: "Good — auspicious, general success" },
+  { name: "Roga", type: "inauspicious", color: "#A23A1E", bg: "#FDE8E5", meaning: "Disease — inauspicious" },
 ] as const;
 
-const CHOGHADIYA_DAY_SEQUENCE = ["Udvega", "Cara", "Labha", "Amṛta", "Kāla", "Śubha", "Roga", "Śūnya"] as const;
-const CHOGHADIYA_NIGHT_SEQUENCE = ["Śubha", "Amṛta", "Cara", "Roga", "Kāla", "Labha", "Śūnya", "Udvega"] as const;
+const CHOGHADIYA_CYCLE = ["Udvega", "Cala", "Lābha", "Amṛta", "Kāla", "Śubha", "Roga"] as const;
 
-const RAHU_KALAM_TABLE: Record<string, number[]> = {
-  Sunday:    [2, 3],
-  Monday:    [1, 2],
-  Tuesday:   [6, 7],
-  Wednesday: [5, 6],
-  Thursday:  [4, 5],
-  Friday:    [3, 4],
-  Saturday:  [7, 1],
+// Per-vāra index into CHOGHADIYA_CYCLE for the first DAY choghaḍiyā (lesson §4.3).
+const DAY_START_INDEX: Record<string, number> = {
+  Sunday: 0,    // Udvega
+  Monday: 3,    // Amṛta
+  Tuesday: 6,   // Roga
+  Wednesday: 2, // Lābha
+  Thursday: 5,  // Śubha
+  Friday: 1,    // Cala
+  Saturday: 4,  // Kāla
 };
 
-const YAMAGANDA_TABLE: Record<string, number[]> = {
-  Sunday:    [6, 7],
-  Monday:    [5, 6],
-  Tuesday:   [4, 5],
-  Wednesday: [3, 4],
-  Thursday:  [2, 3],
-  Friday:    [1, 2],
-  Saturday:  [7, 1],
+// Rāhu-Kālam day-part (1–8 of the daytime) per weekday — lesson §4.4: 8,2,7,5,6,4,3 for Sun→Sat.
+const RAHU_KALAM_PART: Record<string, number> = {
+  Sunday: 8, Monday: 2, Tuesday: 7, Wednesday: 5, Thursday: 6, Friday: 4, Saturday: 3,
+};
+
+// Yamagaṇḍa day-part (1–8) per weekday — standard sequence 4,3,2,1,7,6,5 (Sun→Sat).
+// (A companion inauspicious window; not taught in this lesson — shown as an extra overlay.)
+const YAMAGANDA_PART: Record<string, number> = {
+  Sunday: 4, Monday: 3, Tuesday: 2, Wednesday: 1, Thursday: 7, Friday: 6, Saturday: 5,
 };
 
 function parseTime(t: string): number {
@@ -69,31 +71,35 @@ export function ChoghadiyaRahuKalamCalculator() {
   const nightSegmentLen = nightLength / 8;
 
   const daySegments = useMemo(() => {
-    return CHOGHADIYA_DAY_SEQUENCE.map((quality, i) => ({
-      quality,
+    const startIdx = DAY_START_INDEX[day];
+    return Array.from({ length: 8 }, (_, i) => ({
+      quality: CHOGHADIYA_CYCLE[(startIdx + i) % 7],
       start: sunriseDec + i * daySegmentLen,
       end: sunriseDec + (i + 1) * daySegmentLen,
       isDay: true,
       index: i + 1,
     }));
-  }, [sunriseDec, daySegmentLen]);
+  }, [day, sunriseDec, daySegmentLen]);
 
   const nightSegments = useMemo(() => {
-    return CHOGHADIYA_NIGHT_SEQUENCE.map((quality, i) => ({
-      quality,
+    // Night start sits +5 places ahead of the day start in the cycle (lesson §4.3
+    // example: Sunday day = Udvega → night = Śubha); the canonical order then proceeds.
+    const startIdx = (DAY_START_INDEX[day] + 5) % 7;
+    return Array.from({ length: 8 }, (_, i) => ({
+      quality: CHOGHADIYA_CYCLE[(startIdx + i) % 7],
       start: sunsetDec + i * nightSegmentLen,
       end: sunsetDec + (i + 1) * nightSegmentLen,
       isDay: false,
       index: i + 1,
     }));
-  }, [sunsetDec, nightSegmentLen]);
+  }, [day, sunsetDec, nightSegmentLen]);
 
-  const rahuHours = RAHU_KALAM_TABLE[day];
-  const yamaHours = YAMAGANDA_TABLE[day];
+  const rahuPart = RAHU_KALAM_PART[day];
+  const yamaPart = YAMAGANDA_PART[day];
 
-  const rahuStart = sunriseDec + (rahuHours[0] - 1) * daySegmentLen;
+  const rahuStart = sunriseDec + (rahuPart - 1) * daySegmentLen;
   const rahuEnd = rahuStart + daySegmentLen;
-  const yamaStart = sunriseDec + (yamaHours[0] - 1) * daySegmentLen;
+  const yamaStart = sunriseDec + (yamaPart - 1) * daySegmentLen;
   const yamaEnd = yamaStart + daySegmentLen;
 
   const isSegmentActive = (start: number, end: number, checkStart: number, checkEnd: number) => {
@@ -172,7 +178,7 @@ export function ChoghadiyaRahuKalamCalculator() {
           </div>
           <p className="text-[11px] mb-1" style={{ color: "var(--gl-ink-secondary)" }}>Inauspicious ~{Math.round(daySegmentLen * 60)} min</p>
           <p className="text-base font-bold" style={{ color: "var(--gl-ink-primary)" }}>{formatTime(rahuStart)} — {formatTime(rahuEnd)}</p>
-          <p className="text-[11px] mt-1" style={{ color: "var(--gl-ink-muted)" }}>Segment {rahuHours[0]}</p>
+          <p className="text-[11px] mt-1" style={{ color: "var(--gl-ink-muted)" }}>Segment {rahuPart}</p>
         </button>
         <div className="rounded-xl p-3" style={{ background: "#FDE8E5", border: "1px solid #E8AFA8" }}>
           <div className="flex items-center gap-2 mb-1.5">
@@ -181,7 +187,7 @@ export function ChoghadiyaRahuKalamCalculator() {
           </div>
           <p className="text-[11px] mb-1" style={{ color: "var(--gl-ink-secondary)" }}>Inauspicious ~{Math.round(daySegmentLen * 60)} min</p>
           <p className="text-base font-bold" style={{ color: "var(--gl-ink-primary)" }}>{formatTime(yamaStart)} — {formatTime(yamaEnd)}</p>
-          <p className="text-[11px] mt-1" style={{ color: "var(--gl-ink-muted)" }}>Segment {yamaHours[0]}</p>
+          <p className="text-[11px] mt-1" style={{ color: "var(--gl-ink-muted)" }}>Segment {yamaPart}</p>
         </div>
         <div className="rounded-xl p-3" style={{ background: "#E8F5EE", border: "1px solid #A8D4B8" }}>
           <div className="flex items-center gap-2 mb-1.5">
@@ -189,8 +195,8 @@ export function ChoghadiyaRahuKalamCalculator() {
             <h4 className="text-xs font-semibold" style={{ color: "#2d7d46" }}>Best Choghaḍiyā</h4>
           </div>
           <p className="text-[11px] mb-1" style={{ color: "var(--gl-ink-secondary)" }}>Most auspicious segments</p>
-          <p className="text-sm font-bold" style={{ color: "var(--gl-ink-primary)" }}>Amṛta, Śubha, Labha, Cara</p>
-          <p className="text-[11px] mt-1" style={{ color: "var(--gl-ink-muted)" }}>Avoid Kāla, Roga, Udvega</p>
+          <p className="text-sm font-bold" style={{ color: "var(--gl-ink-primary)" }}>Amṛta, Śubha, Lābha</p>
+          <p className="text-[11px] mt-1" style={{ color: "var(--gl-ink-muted)" }}>Avoid Kāla, Roga, Udvega · Cala is mixed (good for travel)</p>
         </div>
       </div>
 

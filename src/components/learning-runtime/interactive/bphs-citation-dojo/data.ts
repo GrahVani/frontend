@@ -3,9 +3,11 @@
  *
  * Two views:
  *   1. VERSE CROSS-REFERENCE — the canonical Vimśottarī starting-daśā rule
- *      (BPHS Daśākramaprakaraṇa 46.1 in Santhanam-numbering), shown with
- *      Sanskrit + English + Devanāgarī, and how it cross-references to the
- *      Sitaram Jha and Devacandra Jha recensions.
+ *      (BPHS Daśākramaprakaraṇa 46.1 in Santhanam-numbering). Per the lesson's
+ *      citation discipline, the Sanskrit is NOT reproduced verbatim (the
+ *      curriculum cites the locus + English gloss and instructs cross-checking
+ *      the Sanskrit in Santhanam); the plate shows how the locus cross-
+ *      references to the Sitaram Jha and Devacandra Jha recensions.
  *   2. CITATION DISCIPLINE DRILL — five scenarios specific to BPHS-citation
  *      discipline. Adapted from L2.2 §6 Recognition cases.
  */
@@ -14,6 +16,12 @@ export interface VerseCrossReference {
   santhanamCitation: string;
   santhanamPage: string;
   prakaranaContext: string;
+  /** True only when the lesson itself quotes the verse verbatim. For 46.1 the
+   * curriculum deliberately does NOT reproduce the Sanskrit — so this is false
+   * and the plate shows the cross-check discipline instead of a verse body. */
+  verbatimAvailable: boolean;
+  /** Shown when verbatimAvailable is false — the citation discipline the lesson teaches. */
+  crossCheckNote: string;
   sanskritDevanagari: string;
   iastTransliteration: string;
   englishTranslation: string;
@@ -31,12 +39,13 @@ export const VIMSHOTTARI_VERSE: VerseCrossReference = {
   santhanamPage: "Santhanam Vol II, pp. 1024-1031",
   prakaranaContext:
     "The opening verse of the Daśākramaprakaraṇa — establishing Vimśottarī as the primary daśā system and declaring that the starting mahā-daśā lord is determined by the graha governing the nakṣatra in which the Moon resides at the moment of birth.",
-  sanskritDevanagari:
-    "जन्मकाले शशी यस्मिन् नक्षत्रे तत्र यो ग्रहः ।\nतस्मात् प्रारभ्य गणिता विंशोत्तर्या दशा भवेत् ॥",
-  iastTransliteration:
-    "Janmakāle śaśī yasmin nakṣatre tatra yo grahaḥ |\nTasmāt prārabhya gaṇitā Vimśottaryā daśā bhavet ||",
+  verbatimAvailable: false,
+  crossCheckNote:
+    "The curriculum deliberately does NOT reproduce 46.1's Sanskrit verbatim. The discipline this verse teaches is the lesson itself: cite the locus (Daśākramaprakaraṇa 46.1), default to Santhanam's translation, and cross-check the corresponding Sanskrit in Santhanam (1996), Vol II, pp. 1024–1031, before ever quoting it. Reproducing a verse you have not verified against the edition in hand is the precise error this lesson trains you to avoid.",
+  sanskritDevanagari: "",
+  iastTransliteration: "",
   englishTranslation:
-    "Per Santhanam: \"The graha ruling the nakṣatra occupied by the Moon at the time of birth — beginning from this graha, the Vimśottarī mahā-daśā sequence is reckoned.\" (Santhanam 1996, Vol II, p. 1024)",
+    "Santhanam's translation renders 46.1 as the rule that the starting mahā-daśā lord is the graha ruling the nakṣatra occupied by the Moon at birth — the Vimśottarī sequence is reckoned from that graha. (Cross-check the Sanskrit yourself in Santhanam 1996, Vol II, pp. 1024–1031.)",
   doctrinalPoint:
     "This single verse is the foundation of the entire Vimśottarī mahā-daśā framework — the time-engine that underwrites virtually all Tier 1 and Tier 2 predictive practice. Every modern Jyotiṣa daśā computation traces back to this rule. The doctrine is stable across all three recensions; only the chapter:verse REFERENCE differs.",
   crossReferences: [
@@ -47,8 +56,8 @@ export const VIMSHOTTARI_VERSE: VerseCrossReference = {
     },
     {
       recension: "Sitaram Jha (Chaukhamba)",
-      citation: "Daśākramaprakaraṇa, Adhyāya 48.1 (in some manuscript families)",
-      notes: "Sanskrit + Hindi commentary. Adhyāya number shifts +2 in some manuscript families due to splitting of an earlier chapter.",
+      citation: "Daśākramaprakaraṇa, 46.1 — numbered slightly differently in some manuscript families",
+      notes: "Sanskrit + Hindi commentary. The chapter:verse reference differs slightly in some Sitaram Jha manuscript families; the curriculum does not fix the alternate number — verify against the edition in hand.",
     },
     {
       recension: "Devacandra Jha (Chaukhamba)",

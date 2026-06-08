@@ -125,7 +125,7 @@ export const JAIMINI_DOCTRINES: DoctrineDistinctive[] = [
     description:
       "Rāśis (signs) cast aspects on other rāśis based on movability-classification — cara rāśis aspect sthira rāśis (and vice-versa) at specific angular distances. Fundamentally different aspect logic from Parāśari graha-aspects.",
     operationalNote:
-      "Parāśari rāśi-dṛṣṭi is GRAHA-based (Mars aspects 4th, 7th, 8th from itself). Jaiminī rāśi-aspects are SIGN-based (rāśis aspect rāśis by movability class). Different aspect-system entirely. Multi-stream synthesis uses both as complementary lenses.",
+      "Parāśari graha-dṛṣṭi is GRAHA-based (Mars aspects the 4th, 7th, 8th from itself). Jaiminī rāśi-dṛṣṭi is SIGN-based (rāśis aspect rāśis by movability class). Different aspect-system entirely. Multi-stream synthesis uses both as complementary lenses.",
   },
   {
     slug: "cara-karakas",

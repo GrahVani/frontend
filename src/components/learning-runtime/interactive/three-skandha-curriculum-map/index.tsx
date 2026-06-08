@@ -198,7 +198,7 @@ function CanvasDistribution({ nodes, reducedMotion }: { nodes: SkandhaNode[]; re
       </div>
       <div className="p-4 rounded-xl border mt-4 text-sm" style={{ background: "rgba(162, 58, 30, 0.05)", borderColor: "rgba(162, 58, 30, 0.2)", color: INK_ON_CREAM_PRIMARY }}>
         <p className="font-semibold mb-1" style={{ color: "#A23A1E" }}>Observation</p>
-        <p>While conceptually equal, the operational modern curriculum is overwhelmingly weighted towards <strong>Horā</strong>. Gaṇita is mostly discharged by software, and Saṁhitā fragmented into specialisations like Vāstu.</p>
+        <p>The three skandhas are <strong>not equal silos</strong> — they hold distinct structural roles (Gaṇita = foundational substrate, Horā = centre-of-gravity, Saṁhitā = encyclopaedic breadth). The modern curriculum weights <strong>Horā</strong> heavily (~30 modules vs ~5 Gaṇita and ~3–4 Saṁhitā) because Horā is the centre-of-gravity for practitioner use-cases; Gaṇita is largely machine-discharged, and Saṁhitā has fragmented into specialisations like Vāstu. This reflects modern operational distribution, not a ranking of importance.</p>
       </div>
     </motion.div>
   );
@@ -209,22 +209,31 @@ function CanvasAlternatives({ reducedMotion }: { reducedMotion: boolean }) {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : 0.3 }} className="w-full h-full flex flex-col gap-6 justify-center items-center p-4 text-center">
       <h3 className="italic mb-2" style={{ fontFamily: "var(--font-cormorant), serif", color: INK_ON_CREAM_PRIMARY, fontSize: "1.5rem" }}>Alternative Organisations</h3>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-lg">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-2xl">
         <div className="p-5 rounded-xl border text-left" style={{ background: "rgba(162, 58, 30, 0.08)", borderColor: "rgba(162, 58, 30, 0.2)" }}>
           <h4 className="font-bold mb-2 flex items-center gap-2" style={{ color: "#A23A1E" }}>
-             The "Natal vs Predictive" Split
+             "Natal vs Predictive vs Remedial"
           </h4>
           <p className="text-sm" style={{ color: "rgba(162, 58, 30, 0.8)", lineHeight: 1.5 }}>
-            Often found in pop-astrology. Fails structurally because "natal" and "predictive" are both just subsets of Horā. It ignores Gaṇita and Saṁhitā entirely.
+            All three sit <em>within</em> Horā (remedial cross-cutting into Saṁhitā), so it flattens the three-skandha distinction into intra-Horā subdivisions and misses Gaṇita and Saṁhitā entirely. It also organises by use-case (what the practitioner does), not by knowledge-structure.
           </p>
         </div>
-        
+
         <div className="p-5 rounded-xl border text-left" style={{ background: "rgba(162, 58, 30, 0.08)", borderColor: "rgba(162, 58, 30, 0.2)" }}>
           <h4 className="font-bold mb-2 flex items-center gap-2" style={{ color: "#A23A1E" }}>
-            The "6-Fold Vedāṅga" View
+            "Beginner vs Intermediate vs Advanced"
           </h4>
           <p className="text-sm" style={{ color: "rgba(162, 58, 30, 0.8)", lineHeight: 1.5 }}>
-            Treating Jyotiṣa as just one of 6 Vedāṅgas (timekeeping for rituals) ignores that classical Jyotiṣa expanded into a massive 3-skandha superset encompassing horoscopy and omens.
+            That is progression-organisation, not topic-organisation — Bloom-sequencing and the Tier 1 → Tier 2 deepening already do it better. As primary scope it cross-cuts skandhas arbitrarily and fragments their coherence.
+          </p>
+        </div>
+
+        <div className="p-5 rounded-xl border text-left sm:col-span-2" style={{ background: "rgba(162, 58, 30, 0.08)", borderColor: "rgba(162, 58, 30, 0.2)" }}>
+          <h4 className="font-bold mb-2 flex items-center gap-2" style={{ color: "#A23A1E" }}>
+            "By Stream" (Parāśari / Jaiminī / KP / Lal Kitab)
+          </h4>
+          <p className="text-sm" style={{ color: "rgba(162, 58, 30, 0.8)", lineHeight: 1.5 }}>
+            Organising primarily by stream either replicates each topic four times (bloating the curriculum) or selects one stream per topic (violating multi-stream-honesty), and defers cross-stream synthesis to the very end — an unnatural sequence vs how learners actually engage topics.
           </p>
         </div>
       </div>

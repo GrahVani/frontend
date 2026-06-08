@@ -28,7 +28,7 @@ export const TIERS: TierData[] = [
     devanagari: "मन्वन्तर",
     color: "#4A6FA5",
     humanYears: 308_448_000,
-    divyaYears: 852_000,
+    divyaYears: 856_800,
     composition: "71 Mahā-Yugas + 1 saṁdhi (1 Kṛta-yuga)",
     description: "The rule of one Manu — 71 complete Mahā-Yuga cycles plus a transitional twilight.",
   },
@@ -64,7 +64,7 @@ export interface ManuData {
 export const MANUS: ManuData[] = [
   { n: 1, name: "Svāyambhuva", devanagari: "स्वायम्भुव", status: "past" },
   { n: 2, name: "Svārociṣa", devanagari: "स्वारोचिष", status: "past" },
-  { n: 3, name: "Auttami", devanagari: "औत्तमि", status: "past" },
+  { n: 3, name: "Uttama (Auttami)", devanagari: "उत्तम", status: "past" },
   { n: 4, name: "Tāmasa", devanagari: "तामस", status: "past" },
   { n: 5, name: "Raivata", devanagari: "रैवत", status: "past" },
   { n: 6, name: "Cākṣuṣa", devanagari: "चाक्षुष", status: "past" },

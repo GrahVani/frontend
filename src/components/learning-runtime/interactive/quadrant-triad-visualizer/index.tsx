@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useState, useMemo, useEffect } from "react";
 import { IAST } from "../../chrome/typography";
 import { RASHIS } from "../rashi-data";
@@ -10,7 +10,7 @@ type Quadrant = "kendra" | "panaphara" | "apoklima";
 const QUADRANT_META: Record<Quadrant, { label: string; devanagari: string; color: string; positions: number[]; desc: string; strength: string }> = {
   kendra: { label: "Kendra", devanagari: "केन्द्र", color: "#C9A24D", positions: [1, 4, 7, 10], desc: "Angular houses — maximum activity and manifestation", strength: "Maximum" },
   panaphara: { label: "Panaphara", devanagari: "पणफर", color: "#6B8E6B", positions: [2, 5, 8, 11], desc: "Succedent houses — resources and stabilisation", strength: "Moderate" },
-  apoklima: { label: "Apoklima", devanagari: "अपोक्लिम", color: "#7BA7C0", positions: [3, 6, 9, 12], desc: "Cadent houses — adaptation and transition", strength: "Weakest (except 9th/trikona)" },
+  apoklima: { label: "Apoklima", devanagari: "आपोक्लिम", color: "#7BA7C0", positions: [3, 6, 9, 12], desc: "Cadent houses — adaptation and transition", strength: "Weakest (except 9th/trikona)" },
 };
 
 export function QuadrantTriadVisualizer() {

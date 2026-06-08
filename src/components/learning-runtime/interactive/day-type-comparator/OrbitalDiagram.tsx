@@ -2,7 +2,23 @@
 
 import { useMemo } from "react";
 import type { DayType } from "./data";
-import { GOLD, INDIGO, VERMILION, JADE } from "./data";
+import { DAY_TYPES, GOLD, INDIGO, VERMILION, JADE } from "./data";
+
+// Short ring labels + glyphs, keyed by day-type. Durations/radii/colours are
+// driven from DAY_TYPES so the diagram stays in sync with the canonical data
+// (e.g. the saura day animates at the sāvana ~24h rate, not a ~30-day orbit).
+const RING_LABEL: Record<DayType["key"], string> = {
+  savana: "Sāvana",
+  sidereal: "Sidereal",
+  lunar: "Lunar",
+  solar: "Solar",
+};
+const RING_ICON: Record<DayType["key"], string> = {
+  savana: "☉",
+  sidereal: "✦",
+  lunar: "☽",
+  solar: "⟲",
+};
 
 interface OrbitalDiagramProps {
   selected: DayType["key"] | null;
@@ -30,12 +46,15 @@ export function OrbitalDiagram({
   const cy = 260;
 
   const rings = useMemo(
-    () => [
-      { key: "savana" as const, r: 90, color: GOLD, dur: "24s", label: "Sāvana", icon: "☉" },
-      { key: "sidereal" as const, r: 150, color: INDIGO, dur: "23.9s", label: "Sidereal", icon: "✦" },
-      { key: "lunar" as const, r: 210, color: VERMILION, dur: "23.6s", label: "Lunar", icon: "☽" },
-      { key: "solar" as const, r: 270, color: JADE, dur: "720s", label: "Solar", icon: "⟲" },
-    ],
+    () =>
+      DAY_TYPES.map((dt) => ({
+        key: dt.key,
+        r: dt.orbitalRadius,
+        color: COLORS[dt.key],
+        dur: `${dt.orbitalDurationSec}s`,
+        label: RING_LABEL[dt.key],
+        icon: RING_ICON[dt.key],
+      })),
     []
   );
 

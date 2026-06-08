@@ -185,7 +185,7 @@ export const ATTRIBUTION_SCENARIOS: AttributionScenario[] = [
         label: "Parāśari — graha-aspect doctrine",
         isCorrect: true,
         feedback:
-          "Correct. Mars aspecting the 4th, 7th, and 8th from itself is the Parāśari GRAHA-aspect doctrine. Jaiminī aspects are SIGN-based — \"Aries (movable) aspects fixed rāśis Taurus, Leo, Scorpio, Aquarius\" via the movability-class-distance-3 rule — not graha-based.",
+          "Correct. Mars aspecting the 4th, 7th, and 8th from itself is the Parāśari GRAHA-aspect doctrine. Jaiminī aspects are SIGN-based — a movable rāśi aspects the fixed rāśis other than the one adjacent to it: e.g. Aries (movable) aspects Leo, Scorpio, and Aquarius, but NOT the adjacent Taurus — not graha-based.",
       },
       {
         id: "b",

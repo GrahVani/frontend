@@ -87,7 +87,7 @@ export const VEDANGA_NODES: VedangaNode[] = [
     bodyPart: "Ear",
     clusters: ["meaning"],
     jyotishaInterlock:
-      "Technical-term unpacking. Jyotiṣa terminology (`yoga`, `kāla`, `daśā`, `dṛṣṭi`) often has Vedic etymology that a Nirukta lens clarifies. A learner who knows the etymological lineage of a Jyotiṣa term reads the classical literature with a sharper sense of meaning.",
+      "Technical-term unpacking. Jyotiṣa terminology (`Vimśottarī`, `ayanāṁśa`, `navāṁśa`, `ṣaḍbala`, `kāraka`) often has Vedic etymology that a Nirukta lens clarifies. A learner who knows the etymological lineage of a Jyotiṣa term reads the classical literature with a sharper sense of meaning.",
     modernPractice: "occasional",
     bearingDeg: 300,
   },
@@ -139,11 +139,11 @@ export const CLUSTERS: Cluster[] = [
   },
 ];
 
-/** Pāṇinīya Śikṣā 42 closing verse — used in the sāṅga panel. */
+/** Pāṇinīya Śikṣā 42 closing (sāṅga) couplet — verbatim from lesson §5. */
 export const SANGA_CITATION = {
-  devanagari: "षड्भिः अङ्गैः सहोपेतं — सर्वाङ्ग साङ्गम् इति स्मृतम् ।",
-  iast: "Ṣaḍbhiḥ aṅgaiḥ saho­petaṁ — sarvāṅga-sāṅgam iti smṛtam.",
+  devanagari: "शिक्षा घ्राणं तु वेदस्य मुखं व्याकरणं स्मृतम्। तस्मात् साङ्गमधीत्यैव ब्रह्मलोके महीयते॥",
+  iast: "śikṣā ghrāṇaṁ tu vedasya mukhaṁ vyākaraṇaṁ smṛtam | tasmāt sāṅgam-adhītyaiva brahma-loke mahīyate ||",
   english:
-    "Endowed with all six limbs — that is what classical tradition calls sāṅga (the integrated, with-all-limbs discipline).",
-  source: "Pāṇinīya Śikṣā 42 (closing verse)",
+    "Śikṣā is the nose of the Veda; Vyākaraṇa is remembered as its mouth. Therefore (tasmāt), having studied the Veda together with all its limbs (sāṅgam-adhītya), one is honoured in the world of Brahman.",
+  source: "Pāṇinīya Śikṣā 42",
 };

@@ -3,7 +3,7 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { IAST } from "../../chrome/typography";
-import { RASHIS, polarToCartesian, describeArc, midAngle, type RashiData } from "../rashi-data";
+import { RASHIS, polarToCartesian, describeArc, midAngle, GRAHA_SYMBOLS, type RashiData } from "../rashi-data";
 
 const PRESETS = [
   { label: "Meṣa 0°", deg: 0, desc: "0° — Aries start (spring equinox point)" },
@@ -56,14 +56,34 @@ function blendWithBase(color: string, base: string, alpha: number) {
 }
 
 /* ─── Step-by-step formula breakdown ─── */
-function StepByStepFormula({ longitude }: { longitude: number }) {
+function StepByStepFormula({
+  rawLongitude,
+  siderealLongitude,
+  mode,
+  ayanamsa,
+}: {
+  rawLongitude: number;
+  siderealLongitude: number;
+  mode: "sidereal" | "tropical";
+  ayanamsa: number;
+}) {
   const [expanded, setExpanded] = useState(false);
-  const step1 = longitude;
-  const step2 = step1 / 30;
+  const step2 = siderealLongitude / 30;
   const step3 = Math.floor(step2);
   const step4 = step3 + 1;
   const rashi = RASHIS[Math.min(step3, 11)];
-  const degInRashi = step1 % 30;
+  const degInRashi = siderealLongitude % 30;
+  const steps = [
+    ...(mode === "tropical"
+      ? [{ n: 0, color: "#5A8A9A", text: `Convert tropical → sidereal: ${rawLongitude.toFixed(2)}° − ${ayanamsa}° (ayanāṁśa) = ${siderealLongitude.toFixed(2)}°` }]
+      : []),
+    { n: 1, color: "var(--gl-gold-accent)", text: `Sidereal longitude: ${siderealLongitude.toFixed(2)}°` },
+    { n: 2, color: "var(--gl-gold-accent)", text: `Divide by 30°: ${siderealLongitude.toFixed(2)} / 30 = ${step2.toFixed(4)}` },
+    { n: 3, color: "var(--gl-gold-accent)", text: `Floor (integer part): floor(${step2.toFixed(4)}) = ${step3} (0-indexed)` },
+    { n: 4, color: "var(--gl-gold-accent)", text: `Add 1 for 1-based: ${step3} + 1 = Rāśi #${step4}` },
+    { n: 5, color: "#A23A1E", text: `Lookup: ${rashi.nameDevanagari} ${rashi.nameIAST}` },
+    { n: 6, color: "#4A90A4", text: `Degrees within rāśi: ${degInRashi.toFixed(2)}° of ${rashi.nameIAST}` },
+  ];
 
   return (
     <div
@@ -93,20 +113,13 @@ function StepByStepFormula({ longitude }: { longitude: number }) {
             className="overflow-hidden"
           >
             <div className="p-4 space-y-2.5 text-xs" style={{ background: "var(--gl-surface-manuscript)" }}>
-              {[
-                { n: 1, color: "var(--gl-gold-accent)", text: `Input longitude: ${step1.toFixed(2)}°` },
-                { n: 2, color: "var(--gl-gold-accent)", text: `Divide by 30°: ${step1.toFixed(2)} / 30 = ${step2.toFixed(4)}` },
-                { n: 3, color: "var(--gl-gold-accent)", text: `Floor (integer part): floor(${step2.toFixed(4)}) = ${step3} (0-indexed)` },
-                { n: 4, color: "var(--gl-gold-accent)", text: `Add 1 for 1-based: ${step3} + 1 = Rāśi #${step4}` },
-                { n: 5, color: "#A23A1E", text: `Lookup: ${rashi.nameDevanagari} ${rashi.nameIAST}` },
-                { n: 6, color: "#4A90A4", text: `Degrees within rāśi: ${degInRashi.toFixed(2)}° of ${rashi.nameIAST}` },
-              ].map((s) => (
+              {steps.map((s) => (
                 <div key={s.n} className="flex items-center gap-2.5">
                   <span
                     className="px-1.5 py-0.5 rounded-md text-[10px] font-bold shrink-0"
                     style={{ background: s.color, color: "#fff" }}
                   >
-                    {s.n}
+                    {s.n === 0 ? "Δ" : s.n}
                   </span>
                   <span style={{ color: "var(--gl-ink-primary)" }}>{s.text}</span>
                 </div>
@@ -134,39 +147,62 @@ export function RashiBoundaryWheel() {
   const [selected, setSelected] = useState<number | null>(1);
   const [longitude, setLongitude] = useState<number>(15);
   const [showBoundaries, setShowBoundaries] = useState(true);
+  const [showNakshatras, setShowNakshatras] = useState(false);
+  const [mode, setMode] = useState<"sidereal" | "tropical">("sidereal");
   const [hovered, setHovered] = useState<number | null>(null);
   const [focusedSegment, setFocusedSegment] = useState<number | null>(null);
 
-  const computedRashi = useMemo(() => {
-    const idx = Math.floor(longitude / 30);
-    return Math.min(idx, 11);
-  }, [longitude]);
+  // Lahiri ayanāṁśa ≈ 24° in 2026 (lesson §4.3 + Worked Ex2). The wheel is ALWAYS the
+  // sidereal zodiac; "tropical" mode interprets the typed longitude as tropical and
+  // subtracts the ayanāṁśa — so a near-boundary planet visibly jumps a sign (§7 try-it #3).
+  const AYANAMSA = 24;
+  const siderealLongitude = useMemo(
+    () => (mode === "tropical" ? (((longitude - AYANAMSA) % 360) + 360) % 360 : longitude),
+    [longitude, mode]
+  );
+
+  const computedRashi = useMemo(
+    () => Math.min(Math.floor(siderealLongitude / 30), 11),
+    [siderealLongitude]
+  );
 
   const activeRashi = RASHIS[computedRashi];
+
+  // Keep the highlighted segment in lock-step with the computed (sidereal) rāśi,
+  // so it stays correct when the sidereal/tropical mode is toggled.
+  useEffect(() => {
+    setSelected(computedRashi + 1);
+  }, [computedRashi]);
+
+  // Raw longitude (per current mode) that lands a planet at the centre of rāśi n.
+  const rawForRashi = useCallback(
+    (n: number) => {
+      const center = RASHIS[n - 1].startDegree + 15;
+      return mode === "tropical" ? (center + AYANAMSA) % 360 : center;
+    },
+    [mode]
+  );
 
   /* Keyboard navigation */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
         const prev = selected === null ? 1 : ((selected - 2 + 12) % 12) + 1;
-        setSelected(prev);
-        setLongitude(RASHIS[prev - 1].startDegree + 15);
+        setLongitude(rawForRashi(prev));
       } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
         const next = selected === null ? 1 : (selected % 12) + 1;
-        setSelected(next);
-        setLongitude(RASHIS[next - 1].startDegree + 15);
+        setLongitude(rawForRashi(next));
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [selected]);
+  }, [selected, rawForRashi]);
 
   const handleSegmentClick = useCallback(
     (rashi: RashiData) => {
-      setSelected(rashi.number);
-      setLongitude(rashi.startDegree + 15);
+      setLongitude(rawForRashi(rashi.number));
     },
-    []
+    [rawForRashi]
   );
 
   const handleSegmentHover = useCallback(
@@ -190,10 +226,7 @@ export function RashiBoundaryWheel() {
               key={p.label}
               whileHover={shouldReduceMotion ? undefined : { scale: 1.06 }}
               whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
-              onClick={() => {
-                setLongitude(p.deg);
-                setSelected(Math.floor(p.deg / 30) + 1);
-              }}
+              onClick={() => setLongitude(p.deg)}
               className="px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
               style={{
                 background: isActive ? "var(--gl-gold-accent)" : "var(--gl-surface-manuscript)",
@@ -230,7 +263,6 @@ export function RashiBoundaryWheel() {
             onChange={(e) => {
               const v = Math.min(360, Math.max(0, parseFloat(e.target.value) || 0));
               setLongitude(v);
-              setSelected(Math.floor(v / 30) + 1);
             }}
             className="px-3 py-1.5 rounded-lg text-sm w-24 outline-none"
             style={{
@@ -249,11 +281,7 @@ export function RashiBoundaryWheel() {
           max={360}
           step={0.1}
           value={longitude}
-          onChange={(e) => {
-            const v = parseFloat(e.target.value);
-            setLongitude(v);
-            setSelected(Math.floor(v / 30) + 1);
-          }}
+          onChange={(e) => setLongitude(parseFloat(e.target.value))}
           className="flex-1 min-w-[140px] accent-[var(--gl-gold-accent)]"
           style={{ accentColor: "var(--gl-gold-accent)" }}
         />
@@ -270,6 +298,45 @@ export function RashiBoundaryWheel() {
         >
           {showBoundaries ? "Hide" : "Show"} Boundaries
         </motion.button>
+        <motion.button
+          whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
+          whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
+          onClick={() => setShowNakshatras((s) => !s)}
+          className="px-4 py-1.5 rounded-lg text-xs font-semibold"
+          style={{
+            background: showNakshatras ? "#5A8A9A" : "var(--gl-surface-manuscript)",
+            color: showNakshatras ? "#fff" : "var(--gl-ink-primary)",
+            border: "1px solid #5A8A9A",
+          }}
+        >
+          {showNakshatras ? "Hide" : "Show"} Nakṣatras
+        </motion.button>
+        <div
+          className="flex rounded-lg overflow-hidden"
+          style={{ border: "1px solid var(--gl-gold-accent)" }}
+          role="group"
+          aria-label="Zodiac reference frame"
+        >
+          {(["sidereal", "tropical"] as const).map((m) => (
+            <motion.button
+              key={m}
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
+              onClick={() => setMode(m)}
+              className="px-3 py-1.5 text-xs font-semibold capitalize"
+              style={{
+                background: mode === m ? "var(--gl-gold-accent)" : "var(--gl-surface-manuscript)",
+                color: mode === m ? "#1a1a2e" : "var(--gl-ink-primary)",
+              }}
+              title={
+                m === "tropical"
+                  ? "Interpret the typed longitude as tropical — subtracts the ~24° ayanāṁśa before assigning a rāśi"
+                  : "Interpret the typed longitude as sidereal (nirayana) — the Jyotiṣa convention"
+              }
+            >
+              {m}
+            </motion.button>
+          ))}
+        </div>
       </div>
 
       {/* ── Formula banner ── */}
@@ -282,15 +349,23 @@ export function RashiBoundaryWheel() {
       >
         <div className="flex items-center justify-between flex-wrap gap-2">
           <span className="text-sm" style={{ color: "var(--gl-ink-secondary)" }}>
+            {mode === "tropical" && (
+              <code
+                className="px-2 py-1 rounded-md text-xs mr-2"
+                style={{ background: "#5A8A9A20", color: "#3F6B7A", border: "1px solid #5A8A9A55" }}
+              >
+                tropical {longitude.toFixed(2)}° − {AYANAMSA}° = sidereal {siderealLongitude.toFixed(2)}°
+              </code>
+            )}
             <code
               className="px-2 py-1 rounded-md text-xs mr-2"
               style={{ background: "var(--gl-surface-manuscript)", color: "var(--gl-ink-primary)" }}
             >
-              rāśi = floor({longitude.toFixed(2)} / 30) + 1
+              rāśi = floor({siderealLongitude.toFixed(2)} / 30) + 1
             </code>
             ={" "}
             <strong style={{ color: "var(--gl-gold-accent)", fontSize: 18 }}>
-              {Math.floor(longitude / 30) + 1}
+              {computedRashi + 1}
             </strong>
             <span className="mx-2" style={{ color: "var(--gl-ink-muted)" }}>·</span>
             <span style={{ fontFamily: "var(--font-devanagari)", color: activeRashi.color, fontSize: 16 }}>
@@ -300,11 +375,16 @@ export function RashiBoundaryWheel() {
               <IAST>{activeRashi.nameIAST}</IAST>
             </span>
             <span style={{ color: "var(--gl-ink-muted)", fontSize: 12 }}>
-              (remainder: {(longitude % 30).toFixed(2)}°)
+              (remainder: {(siderealLongitude % 30).toFixed(2)}°)
             </span>
           </span>
         </div>
-        <StepByStepFormula longitude={longitude} />
+        <StepByStepFormula
+          rawLongitude={longitude}
+          siderealLongitude={siderealLongitude}
+          mode={mode}
+          ayanamsa={AYANAMSA}
+        />
       </div>
 
       {/* ── Main layout: wheel + detail ── */}
@@ -455,6 +535,30 @@ export function RashiBoundaryWheel() {
                   );
                 })}
             </AnimatePresence>
+
+            {/* ── Nakṣatra overlay: 27 ticks, grouped 9-per-4-rāśi block (§4.4) ── */}
+            {showNakshatras &&
+              Array.from({ length: 27 }).map((_, i) => {
+                const angle = i * (360 / 27); // 13°20′ each
+                const block = Math.floor(i / 9); // 3 blocks of 9 = 3 × (4 rāśis)
+                const blockColors = ["#5A8A9A", "#8B5FC0", "#C9A24D"];
+                const c = blockColors[block];
+                const out = polarToCartesian(CX, CY, R_OUTER - 1, angle);
+                const inn = polarToCartesian(CX, CY, R_OUTER - 13, angle);
+                const isBlockStart = i % 9 === 0; // coincides with rāśi boundaries 0°/120°/240°
+                return (
+                  <line
+                    key={`nak-${i}`}
+                    x1={inn.x}
+                    y1={inn.y}
+                    x2={out.x}
+                    y2={out.y}
+                    stroke={c}
+                    strokeWidth={isBlockStart ? 2.5 : 1.2}
+                    opacity={isBlockStart ? 0.95 : 0.6}
+                  />
+                );
+              })}
 
             {/* ── Rashi segments ── */}
             {RASHIS.map((rashi) => {
@@ -614,7 +718,7 @@ export function RashiBoundaryWheel() {
 
             {/* ── Longitude marker with trail ── */}
             {(() => {
-              const markerAngle = longitude;
+              const markerAngle = siderealLongitude;
               const pos = polarToCartesian(CX, CY, R_OUTER - 8, markerAngle);
               const innerPos = polarToCartesian(CX, CY, R_INNER + 4, markerAngle);
               return (
@@ -645,7 +749,7 @@ export function RashiBoundaryWheel() {
                     fontSize={10}
                     fontWeight={700}
                   >
-                    {longitude.toFixed(1)}°
+                    {siderealLongitude.toFixed(1)}°
                   </text>
                 </g>
               );
@@ -661,8 +765,7 @@ export function RashiBoundaryWheel() {
               whileTap={shouldReduceMotion ? undefined : { scale: 0.92 }}
               onClick={() => {
                 const prev = selected === null ? 1 : ((selected - 2 + 12) % 12) + 1;
-                setSelected(prev);
-                setLongitude(RASHIS[prev - 1].startDegree + 15);
+                setLongitude(rawForRashi(prev));
               }}
               className="px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1"
               style={{
@@ -678,8 +781,7 @@ export function RashiBoundaryWheel() {
               whileTap={shouldReduceMotion ? undefined : { scale: 0.92 }}
               onClick={() => {
                 const next = selected === null ? 1 : (selected % 12) + 1;
-                setSelected(next);
-                setLongitude(RASHIS[next - 1].startDegree + 15);
+                setLongitude(rawForRashi(next));
               }}
               className="px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1"
               style={{
@@ -691,6 +793,14 @@ export function RashiBoundaryWheel() {
               Next →
             </motion.button>
           </div>
+
+          {/* Nakṣatra overlay caption */}
+          {showNakshatras && (
+            <p className="text-center mt-3 text-[11px]" style={{ color: "var(--gl-ink-secondary)" }}>
+              <span style={{ color: "#5A8A9A", fontWeight: 700 }}>27 nakṣatra ticks</span> · 2.25 per rāśi · each
+              colour-block = <strong>9 nakṣatras = 4 rāśis = 120°</strong> (the thick ticks at 0°/120°/240° fall on rāśi boundaries).
+            </p>
+          )}
 
           {/* Keyboard hint */}
           <p className="text-center mt-2 text-[10px]" style={{ color: "var(--gl-ink-muted)" }}>
@@ -748,7 +858,7 @@ export function RashiBoundaryWheel() {
                 {/* Attribute grid */}
                 <div className="grid grid-cols-2 gap-3">
                   {[
-                    { label: "Lord", value: activeRashi.lord, icon: "☉" },
+                    { label: "Lord", value: activeRashi.lord, icon: GRAHA_SYMBOLS[activeRashi.lord] ?? "☉" },
                     { label: "Element", value: activeRashi.element, icon: ELEMENT_META[activeRashi.element].icon },
                     { label: "Modality", value: activeRashi.modality, icon: "◈" },
                     { label: "Direction", value: activeRashi.direction, icon: "🧭" },

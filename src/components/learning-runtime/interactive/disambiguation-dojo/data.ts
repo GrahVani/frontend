@@ -247,7 +247,7 @@ export const DRILL_SCENARIOS: DrillScenario[] = [
     ],
     correctSlug: "vedic",
     rationale:
-      "Precise birth time + birth location + the request for *daśā analysis* and *Parāśarī interpretation* unambiguously locates this in classical Vedic Jyotiṣa. Daśā is the Vedic time-engine (Vimśottarī begins from Moon's nakṣatra at birth per BPHS Daśākramaprakaraṇa 46.1); Parāśarī is the largest of the five Vedic streams. This client knows what they're asking for — the practitioner can proceed directly into chart-reading discipline rather than disambiguation conversation.",
+      "Precise birth time + birth location + the request for *daśā analysis* and *Parāśarī interpretation* unambiguously locates this in classical Vedic Jyotiṣa. Daśā is the Vedic time-engine (Vimśottarī begins from Moon's nakṣatra at birth per BPHS Daśākramaprakaraṇa, chs. 46–48); Parāśarī is the largest of the five Vedic streams. This client knows what they're asking for — the practitioner can proceed directly into chart-reading discipline rather than disambiguation conversation.",
     disciplineMove:
       "When the client uses Vedic technical vocabulary (daśā, Parāśarī, nakṣatra, ayanāṁśa) and supplies precise per-individual data, the disambiguation work is already done — proceed to consultation. This is the ideal client-encounter shape.",
   },

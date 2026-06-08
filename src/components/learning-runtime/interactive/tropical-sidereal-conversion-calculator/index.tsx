@@ -43,9 +43,11 @@ function toDMS(decimalDeg: number): string {
   return `${d}°${m}′${s}″`;
 }
 
-/* ─── Ayanamsha by year (by-hand approximation) ─── */
+/* ─── Ayanamsha by year (Lahiri / Citrāpakṣa) ─── */
 function ayanamshaForYear(year: number): number {
-  return (year - 285) / 72;
+  // Curriculum's taught Lahiri simplified formula (2.2.2 §4.4): linear from the
+  // 285 CE zero-point at 50.2388″/year. → 2026 ≈ 24°17′46″ (precise ≈ 24°19′).
+  return (year - 285) * 50.2388 / 3600;
 }
 
 /* ─── Sun longitude approximation by date ─── */
@@ -65,7 +67,7 @@ export function TropicalSiderealConversionCalculator() {
 
   const ayanamsha = useMemo(() => {
     const y = parseInt(year, 10);
-    return Number.isNaN(y) ? 24.18 : ayanamshaForYear(y);
+    return Number.isNaN(y) ? ayanamshaForYear(2026) : ayanamshaForYear(y);
   }, [year]);
 
   /* Date tab computation */

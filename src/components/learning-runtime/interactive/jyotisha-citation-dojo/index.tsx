@@ -179,7 +179,7 @@ const PLATE_CONTEXT: Record<
   "jaimini-sutras": {
     plateNumeral: "Plate III",
     traditional: { label: "Pre-classical", context: "Maharṣi Jaiminī — contemporary of Parāśara within tradition" },
-    academic: { label: "~200 CE composition", context: "Classical era — commentaries medieval" },
+    academic: { label: "Classical-era composition", context: "Classical era — commentaries medieval" },
   },
 };
 

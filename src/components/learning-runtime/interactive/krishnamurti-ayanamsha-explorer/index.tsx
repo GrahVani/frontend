@@ -71,7 +71,7 @@ export function KrishnamurtiAyanamshaExplorer() {
   const [month, setMonth] = useState<string>("6");
   const [day, setDay] = useState<string>("15");
   const [result, setResult] = useState<{ lahiriDeg: number; krishnamurtiDeg: number } | null>(null);
-  const [boundaryDeg, setBoundaryDeg] = useState<number>(13.5);
+  const [boundaryDeg, setBoundaryDeg] = useState<number>(13.27);
 
   const handleCalc = () => {
     const y = parseInt(year, 10);
@@ -83,10 +83,12 @@ export function KrishnamurtiAyanamshaExplorer() {
     setResult({ lahiriDeg, krishnamurtiDeg });
   };
 
-  const lahiriSidereal = boundaryDeg - 24.3167; // ~24°19′ for 2026
-  const krishnamurtiSidereal = boundaryDeg - 24.2167; // ~24°13′ for 2026 (6′ less)
-  const lahiriNak = nakshatraAt(lahiriSidereal < 0 ? lahiriSidereal + 30 : lahiriSidereal);
-  const krishnamurtiNak = nakshatraAt(krishnamurtiSidereal < 0 ? krishnamurtiSidereal + 30 : krishnamurtiSidereal);
+  // The slider sets the Lahiri SIDEREAL position in Aries. Krishnamurti ayanāṁśa is
+  // ~6′ LESS than Lahiri, so the Krishnamurti sidereal position is ~6′ GREATER.
+  const lahiriSidereal = boundaryDeg;
+  const krishnamurtiSidereal = boundaryDeg + (6 / 60);
+  const lahiriNak = nakshatraAt(lahiriSidereal >= 30 ? lahiriSidereal - 30 : lahiriSidereal);
+  const krishnamurtiNak = nakshatraAt(krishnamurtiSidereal >= 30 ? krishnamurtiSidereal - 30 : krishnamurtiSidereal);
   const boundaryDiffers = lahiriNak.name !== krishnamurtiNak.name;
 
   return (
@@ -263,7 +265,7 @@ export function KrishnamurtiAyanamshaExplorer() {
               Nakṣatra Boundary Visualiser
             </h4>
             <p style={{ fontSize: "12px", color: INK_MUTED, margin: 0 }}>
-              Drag the slider to see where Lahiri vs Krishnamurti places a planet in Aries
+              Drag to set a planet's Lahiri sidereal position in Aries; Krishnamurti places the same planet ~6′ further along
             </p>
           </div>
 
@@ -271,7 +273,7 @@ export function KrishnamurtiAyanamshaExplorer() {
           <div style={{ maxWidth: "600px", margin: "0 auto 20px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
               <span style={{ fontSize: "11px", color: INK_MUTED }}>0° Aries</span>
-              <span style={{ fontSize: "13px", fontWeight: 700, color: INK_PRIMARY }}>Tropical: {boundaryDeg.toFixed(2)}° Aries</span>
+              <span style={{ fontSize: "13px", fontWeight: 700, color: INK_PRIMARY }}>Lahiri sidereal: {boundaryDeg.toFixed(2)}° Aries</span>
               <span style={{ fontSize: "11px", color: INK_MUTED }}>30° Aries</span>
             </div>
             <input

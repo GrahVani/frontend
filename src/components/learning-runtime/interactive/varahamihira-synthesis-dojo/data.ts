@@ -67,7 +67,7 @@ export const RELATIVE_DATING: RelativeDatingEntry[] = [
     authorDevanagari: "कल्याणवर्मा",
     primaryText: "Saravali",
     dateRange: "7th-10th century CE",
-    centralYear: 850,
+    centralYear: 750,
     relationLabel: "Post-Varāhamihira",
     relativeDatingNote:
       "Kalyāṇavarmā CITES Varāhamihira as a prior authority. This establishes Kalyāṇavarmā as POST-Varāhamihira (so post-587 CE). He is also CITED BY 9th-10th-century sources, bracketing his date to the 7th-10th c. window. Without Varāhamihira's anchor, this bracketing would be much looser.",
@@ -110,7 +110,7 @@ export const DRILL_SCENARIOS: DrillScenario[] = [
       },
       {
         id: "b",
-        label: "Through RELATIVE dating against Varāhamihira: Kalyāṇavarmā CITES Varāhamihira (so post-587 CE) and is CITED BY 9th-10th century authors (so pre-9th-10th c.). The bracketing gives a 7th-10th c. window, with ~750-850 CE often cited as the central estimate.",
+        label: "Through RELATIVE dating against Varāhamihira: Kalyāṇavarmā CITES Varāhamihira (so post-587 CE) and is CITED BY 9th-10th century authors (so pre-9th-10th c.). The bracketing gives a 7th-10th c. window, with ~750 CE often cited as the central estimate.",
       },
       {
         id: "c",

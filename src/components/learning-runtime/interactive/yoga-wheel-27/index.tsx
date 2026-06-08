@@ -23,7 +23,7 @@ interface YogaData {
 }
 
 const YOGA_DB: YogaData[] = [
-  { number: 1, name: "Viṣkambha", devanagari: "विष्कम्भ", nature: "mixed", ruler: "Indra", deity: "Vāyu", effects: "Obstacles overcome with effort; mixed results", lord: "Saturn" },
+  { number: 1, name: "Viṣkambha", devanagari: "विष्कम्भ", nature: "inauspicious", ruler: "Indra", deity: "Vāyu", effects: "Obstacles overcome with effort; generally inauspicious", lord: "Saturn" },
   { number: 2, name: "Prīti", devanagari: "प्रीति", nature: "auspicious", ruler: "Viśvedevā", deity: "Śiva", effects: "Love, affection, prosperity, joy", lord: "Mercury" },
   { number: 3, name: "Āyuṣmān", devanagari: "आयुष्मान्", nature: "auspicious", ruler: "Vāyu", deity: "Pavana", effects: "Longevity, health, vitality", lord: "Jupiter" },
   { number: 4, name: "Saubhāgya", devanagari: "सौभाग्य", nature: "auspicious", ruler: "Brahmā", deity: "Brahmā", effects: "Good fortune, marital bliss, success", lord: "Venus" },
@@ -37,16 +37,16 @@ const YOGA_DB: YogaData[] = [
   { number: 12, name: "Dhruva", devanagari: "ध्रुव", nature: "auspicious", ruler: "Pṛthivī", deity: "Pṛthivī", effects: "Stability, permanence, firm success", lord: "Ketu" },
   { number: 13, name: "Vyāghāta", devanagari: "व्याघात", nature: "inauspicious", ruler: "Vāyu", deity: "Vāyu", effects: "Violence, hindrance; avoid important undertakings", lord: "Rahu" },
   { number: 14, name: "Harṣaṇa", devanagari: "हर्षण", nature: "auspicious", ruler: "Brahmā", deity: "Brahmā", effects: "Delight, exhilaration, joy, success", lord: "Jupiter" },
-  { number: 15, name: "Vajra", devanagari: "वज्र", nature: "mixed", ruler: "Indra", deity: "Indra", effects: "Thunderbolt energy; forceful results, mixed", lord: "Saturn" },
+  { number: 15, name: "Vajra", devanagari: "वज्र", nature: "inauspicious", ruler: "Indra", deity: "Indra", effects: "Thunderbolt; inauspicious (CORE) — avoid auspicious onsets; suits sharp/transformative action", lord: "Saturn" },
   { number: 16, name: "Siddhi", devanagari: "सिद्धि", nature: "auspicious", ruler: "Mitra", deity: "Mitra", effects: "Accomplishment, perfection, magical attainment", lord: "Mars" },
   { number: 17, name: "Vyatīpāta", devanagari: "व्यतीपात", nature: "inauspicious", ruler: "Ravi", deity: "Rudra", effects: "Great calamity; most dangerous of all yogas", lord: "Rahu" },
-  { number: 18, name: "Variyas", devanagari: "वरियस्", nature: "auspicious", ruler: "Viśvedevā", deity: "Viśvedevā", effects: "Excellence, choice, noble deeds", lord: "Jupiter" },
+  { number: 18, name: "Varīyas", devanagari: "वरीयस्", nature: "auspicious", ruler: "Viśvedevā", deity: "Viśvedevā", effects: "Excellence, choice, noble deeds", lord: "Jupiter" },
   { number: 19, name: "Parigha", devanagari: "परिघ", nature: "inauspicious", ruler: "Indra", deity: "Varuṇa", effects: "Obstruction, iron-bar; imprisonment, confinement", lord: "Venus" },
   { number: 20, name: "Śiva", devanagari: "शिव", nature: "auspicious", ruler: "Pṛthivī", deity: "Śiva", effects: "Auspiciousness, divine grace, spiritual success", lord: "Sun" },
   { number: 21, name: "Siddha", devanagari: "सिद्ध", nature: "auspicious", ruler: "Pitṛ", deity: "Pitṛ", effects: "Attainment, perfection, completion of endeavours", lord: "Mercury" },
   { number: 22, name: "Sādhya", devanagari: "साध्य", nature: "auspicious", ruler: "Brahmā", deity: "Śiva", effects: "Feasible, achievable; good for all undertakings", lord: "Saturn" },
   { number: 23, name: "Śubha", devanagari: "शुभ", nature: "auspicious", ruler: "Lakṣmī", deity: "Viṣṇu", effects: "Auspiciousness, beauty, wealth, grace", lord: "Jupiter" },
-  { number: 24, name: "Śukla", devanagari: "शुक्ल", nature: "mixed", ruler: "Brahmā", deity: "Parameṣṭhī", effects: "Purity, clarity; mixed but generally favourable", lord: "Moon" },
+  { number: 24, name: "Śukla", devanagari: "शुक्ल", nature: "auspicious", ruler: "Brahmā", deity: "Parameṣṭhī", effects: "Purity, clarity; auspicious (sometimes mixed)", lord: "Moon" },
   { number: 25, name: "Brahma", devanagari: "ब्रह्म", nature: "auspicious", ruler: "Indra", deity: "Brahmā", effects: "Knowledge, sacred study, priestly success", lord: "Mars" },
   { number: 26, name: "Indra", devanagari: "इन्द्र", nature: "auspicious", ruler: "Śiva", deity: "Indra", effects: "Royal power, lordship, victory, rulership", lord: "Venus" },
   { number: 27, name: "Vaidhṛti", devanagari: "वैधृति", nature: "inauspicious", ruler: "Dharma", deity: "Dharma", effects: "Great obstruction; avoid all new ventures", lord: "Sun" },
@@ -184,7 +184,7 @@ export function YogaWheel27() {
 
       {/* Filter bar + stats — single row, non-wrapping */}
       <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
-        {(["all", "auspicious", "inauspicious", "mixed"] as FilterKey[]).map((f) => {
+        {(["all", "auspicious", "inauspicious"] as FilterKey[]).map((f) => {
           const meta = f === "all" ? null : NATURE_META[f];
           const active = filter === f;
           return (
@@ -206,7 +206,6 @@ export function YogaWheel27() {
           <div className="flex justify-center gap-4 mt-3 flex-wrap">
             <span className="flex items-center gap-1.5 text-xs" style={{ color: JADE }}><span className="inline-block rounded-full" style={{ width: 10, height: 10, background: JADE }} />Auspicious ({NATURE_META.auspicious.count})</span>
             <span className="flex items-center gap-1.5 text-xs" style={{ color: VERMILION }}><span className="inline-block rounded-full" style={{ width: 10, height: 10, background: VERMILION }} />Inauspicious ({NATURE_META.inauspicious.count})</span>
-            <span className="flex items-center gap-1.5 text-xs" style={{ color: AMBER }}><span className="inline-block rounded-full" style={{ width: 10, height: 10, background: AMBER }} />Mixed ({NATURE_META.mixed.count})</span>
           </div>
         </div>
 

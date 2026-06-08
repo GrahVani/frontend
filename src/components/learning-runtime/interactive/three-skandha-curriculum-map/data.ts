@@ -179,10 +179,8 @@ export const SKANDHA_NODES: SkandhaNode[] = [
     ],
     curriculumModules: [
       { code: "T1-22", name: "Vāstu Intro", tier: "Tier 1" },
-      { code: "T1-23", name: "Numerology Intro", tier: "Tier 1" },
       { code: "T2-19", name: "Mundane Astrology", tier: "Tier 2" },
       { code: "T2-21", name: "Saṁhitā Topics Mastery", tier: "Tier 2" },
-      { code: "T2-22", name: "Remedial Astrology Mastery", tier: "Tier 2" },
     ],
     structuralRole:
       "Most encyclopaedic — the broadest topical scope. Covers everything from mundane prediction to gemology to weather to architecture to perfumery. Modern operational distribution has fragmented many saṁhitā topics into separate modern specialisations (Vāstu, gemology, etc.).",

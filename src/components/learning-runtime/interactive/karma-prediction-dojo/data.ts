@@ -64,8 +64,10 @@ export interface TranslationScenario {
   /** The rationale for why the correct option is doctrinally right and
    * what mistakes the wrong options carry. */
   rationale: string;
-  /** Which karma type the correct framing primarily reads. */
-  primaryKarma: KarmaSlug;
+  /** Which karma type the correct framing primarily reads, or "beyond-scope"
+   * when the doctrinally-correct answer is a refusal (no karma type gives the
+   * chart honest access — e.g. lottery outcomes). */
+  primaryKarma: KarmaSlug | "beyond-scope";
 }
 
 export const TRANSLATION_SCENARIOS: TranslationScenario[] = [
@@ -202,7 +204,7 @@ export const TRANSLATION_SCENARIOS: TranslationScenario[] = [
     correctId: "a",
     rationale:
       "(a) is the doctrinally-correct response — refusing the prediction is sometimes the practitioner's job. Lottery outcomes are not a category classical Jyotiṣa claims to read — they sit far outside the prārabdha framework (which reads life-event windows, not single-event win/lose binaries). (b) gives a wishy-washy probabilistic framing as if the chart could honestly read this — it can't. (c) is borderline malpractice — encouraging speculation based on chart-reading. (d) is full pop-astrology determinism dressed in Sanskrit vocabulary.",
-    primaryKarma: "prarabdha",
+    primaryKarma: "beyond-scope",
   },
 ];
 

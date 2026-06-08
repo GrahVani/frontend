@@ -98,6 +98,13 @@ const HIGHLIGHTS: PairHighlight[] = [
   },
   {
     a: "sun",
+    b: "venus",
+    label: "Sun and Venus",
+    kind: "enmity",
+    reason: "The soul's authority and sensual indulgence pull against each other: the two mutual enmities are Sun-Saturn and Sun-Venus.",
+  },
+  {
+    a: "sun",
     b: "mercury",
     label: "Sun and Mercury",
     kind: "asymmetric",

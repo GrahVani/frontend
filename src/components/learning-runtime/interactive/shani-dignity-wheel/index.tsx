@@ -261,7 +261,7 @@ function KarakaPanel() {
 
 function FriendshipPanel() {
   return (
-    <Panel title="Friendship row" icon={<Users size={18} aria-hidden="true" />}>
+    <Panel title="Friendships" icon={<Users size={18} aria-hidden="true" />}>
       <InfoGrid
         items={[
           ["Friends", "Mercury and Venus. Venus-Saturn is mutual on shared worldly ground."],

@@ -198,10 +198,10 @@ export const TIMELINE_ENTRIES: TimelineEntry[] = [
     academicYear: 900,
     academicDateLabel: "8th-10th c. CE",
     stream: "parashari",
-    recension: "moderate",
+    recension: "low",
     oneLiner: "Comprehensive Parāśarī compilation, expanding Varāhamihira's framework",
     detail:
-      "Saravali ('Best of the Excellent') is a comprehensive Parāśarī treatise that compiles, expands, and refines material from earlier classical sources — especially Varāhamihira. It is foundational for many medieval-era Parāśarī teaching lineages. Academic dating places it in the 8th-10th century CE window with reasonable confidence. The recension problem is moderate (multiple manuscript families exist, but the variations are less severe than for BPHS).",
+      "Saravali ('Best of the Excellent') is a comprehensive Parāśarī treatise that compiles, expands, and refines material from earlier classical sources — especially Varāhamihira. It is foundational for many medieval-era Parāśarī teaching lineages. Academic dating places it in the 8th-10th century CE window with reasonable confidence. Its recension problem is low — though multiple manuscript families exist, the variations are far less severe than for BPHS, so Saravali sits among the more stable classical texts (per lesson §4.4).",
     curriculumCites: "T1-06 (Yogas), T1-07 (Aspects), T2 Parāśarī synthesis lessons",
   },
   {

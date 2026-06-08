@@ -124,6 +124,62 @@ import { ShukraFriendshipDignityGrid } from "./shukra-friendship-dignity-grid";
 import { AssociationClassifier } from "./association-classifier";
 import { CombustionCalculator } from "./combustion-calculator";
 import { FriendshipMatrix } from "./friendship-matrix";
+import { TamkalikaWheel } from "./tamkalika-wheel";
+import { PanchadhaCombiner } from "./panchadha-combiner";
+import { AvasthaPanel } from "./avastha-panel";
+import { StreamComparator } from "./stream-comparator";
+import { BhavaWheel } from "./bhava-wheel";
+import { HouseSystemComparator } from "./house-system-comparator";
+import { BhavaTemplateCard } from "./bhava-template-card";
+import { BhavaProfile } from "./bhava-profile";
+import { PreliminaryReadingFlow } from "./preliminary-reading-flow";
+import { KarakaTable } from "./karaka-table";
+import { NakshatraProfile } from "./nakshatra-profile";
+import { PadaNavamshaMapper } from "./pada-navamsha-mapper";
+import { SubLordCalculator } from "./sub-lord-calculator";
+import { TaraBalaWheel } from "./tara-bala-wheel";
+import { StreamComparisonTable } from "./stream-comparison-table";
+import { GrahaDrishtiWheel } from "./graha-drishti-wheel";
+import { DrishtiStrengthMeter } from "./drishti-strength-meter";
+import { RashiDrishtiGrid } from "./rashi-drishti-grid";
+import { AspectDoctrineComparator } from "./aspect-doctrine-comparator";
+import { TajikaOrbCalculator } from "./tajika-orb-calculator";
+import { TajikaApplyingSeparating } from "./tajika-applying-separating";
+import { TajikaYogaGlossary } from "./tajika-yoga-glossary";
+import { VarshaphalaOverview } from "./varshaphala-overview";
+import { SaturnAspectDisambiguator } from "./saturn-aspect-disambiguator";
+import { DoctrineSelector } from "./doctrine-selector";
+import { PmpyDetector } from "./pmpy-detector";
+import { LunarYogaDetector } from "./lunar-yoga-detector";
+import { KemadrumaChecker } from "./kemadruma-checker";
+import { GajaKesariDetector } from "./gaja-kesari-detector";
+import { BudhadityaChecker } from "./budhaditya-checker";
+import { VargaExplainer } from "./varga-explainer";
+import { VargaTemplateCard } from "./varga-template-card";
+import { HoraCalculator } from "./hora-calculator";
+import { DrekkanaCalculator } from "./drekkana-calculator";
+import { DrekkanaSystemComparator } from "./drekkana-system-comparator";
+import { ChaturthamshaCalculator } from "./chaturthamsha-calculator";
+import { SaptamshaCalculator } from "./saptamsha-calculator";
+import { RashiNavamshaPair } from "./rashi-navamsha-pair";
+import { DashamshaCalculator } from "./dashamsha-calculator";
+import { DvadashamshaCalculator } from "./dvadashamsha-calculator";
+import { ShodashamshaCalculator } from "./shodashamsha-calculator";
+import { MultiVargaComparator } from "./multi-varga-comparator";
+import { VimshamshaCalculator } from "./vimshamsha-calculator";
+import { ChaturvimshamshaCalculator } from "./chaturvimshamsha-calculator";
+import { SaptavimshamshaCalculator } from "./saptavimshamsha-calculator";
+import { SpiritualTrioComparator } from "./spiritual-trio-comparator";
+import { TrimshamshaCalculator } from "./trimshamsha-calculator";
+import { KhavedamshaAkshavedamshaCalculator } from "./khavedamsha-akshavedamsha-calculator";
+import { EthicalRoutingChecklist } from "./ethical-routing-checklist";
+import { ShashtyamshaCalculator } from "./shashtyamsha-calculator";
+import { D1D60Comparator } from "./d1-d60-comparator";
+import { SubstrateEthicsChecklist } from "./substrate-ethics-checklist";
+import { VimshopakaCalculator } from "./vimshopaka-calculator";
+import { MarriageVargaWorkflow } from "./marriage-varga-workflow";
+import { CareerVargaWorkflow } from "./career-varga-workflow";
+import { ChildrenVargaWorkflow } from "./children-varga-workflow";
 import { PakshabalaSlider } from "./pakshabala-slider";
 import { KarakaRouter } from "./karaka-router";
 import { FriendshipDignityGrid } from "./friendship-dignity-grid";
@@ -452,6 +508,220 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // Lesson 5.1.4's §7 interactive: Friendship Matrix — directed graha
   // relationship grid with mirror-cell comparison and Sun-Moon polarity axes.
   "friendship-matrix": FriendshipMatrix,
+  // Lesson 5.8.4's §7 interactive: Tāmkālika Wheel — places a reference planet at
+  // house 1, shades friend houses (2/3/4/10/11/12) and enemy houses (1/5/6/7/8/9),
+  // and reads the always-mutual temporary relationship of a dropped second planet.
+  "tamkalika-wheel": TamkalikaWheel,
+  // Lesson 5.8.5's §7 interactive: Pañcadhā Combiner — a 3×2 decision matrix
+  // combining the naisargika (fixed) and tāmkālika (temporary) layers into the
+  // five tiers (adhimitra/mitra/sama/śatru/adhiśatru), lighting the resulting cell.
+  "panchadha-combiner": PanchadhaCombiner,
+  // Lesson 5.8.6's §7 interactive: Avasthā Panel — sets a planet's motion,
+  // distance from the Sun, and degree-in-sign, and reports motion state, combustion
+  // (correct orbs: Moon12/Mars17/Merc14[12R]/Jup11/Ven10[8R]/Sat15), and age-state.
+  "avastha-panel": AvasthaPanel,
+  // Lesson 5.8.7's §7 interactive: Stream Comparator — lays the five streams
+  // (Parāśari/Jaimini/KP/Lal Kitab/Tājika) side by side, contrasts a sample
+  // placement (Mars in 1st) by Parāśari vs Lal Kitab, with name-the-stream + Tier-1 toggles.
+  "stream-comparator": StreamComparator,
+  // Lesson 6.1.1's §7 interactive: Bhāva Wheel — a 12-house wheel anchored to a
+  // selectable Lagna; shows each bhāva's domain + current sign, places a sample
+  // planet (its house shifts with the Lagna), and highlights a house from a life-area question.
+  "bhava-wheel": BhavaWheel,
+  // Lesson 6.1.2's §7 interactive: House-System Comparator — one planet in the
+  // rising sign shown by whole-sign / equal-house / Sripati (lagna-degree = midpoint),
+  // with Placidus deferred to Ch7; flags when the systems split near a boundary.
+  "house-system-comparator": HouseSystemComparator,
+  // Lesson 6.1.3's §7 interactive: Bhāva Template Card — the 10-attribute / 4-group
+  // scaffold each house lesson fills, with the 1st house pre-filled as the model, a
+  // house switcher (identity + computed classifications), and a per-graha-template
+  // toggle showing the 5 dropped (planet-only) attributes.
+  "bhava-template-card": BhavaTemplateCard,
+  // Lessons 6.2.1–6.5.3's §7 interactive: Bhāva Profile — a SHARED per-house card
+  // driven by the lesson slug (Nth-bhava-*); shows that house's ten attributes
+  // (computed classifications), a house-lord mover ("matters go where the lord goes"),
+  // and a benefic/malefic drop. One component serves all 12 per-house lessons.
+  "bhava-profile": BhavaProfile,
+  // Lesson 6.2.4's §7 interactive: Preliminary Reading Flow — the two-step opening
+  // pass: (1) set Lagna + Lagneśa house for the baseline, (2) drop a malefic into a
+  // house and read it by nature (upachaya 3/6/10/11 = grows; gentle houses = disrupts).
+  "preliminary-reading-flow": PreliminaryReadingFlow,
+  // Lesson 6.6.4's §7 interactive: Kāraka Table — the 12-house naisargika-kāraka
+  // table with graha-highlight (Jupiter 2/5/9/11, Saturn 6/8/10/12), a gender toggle
+  // for the 7th (Venus man's / Jupiter woman's), and a pick-a-house lord+kāraka read.
+  "karaka-table": KarakaTable,
+  // Module 7's per-nakṣatra profile lessons' §7 interactive: a SHARED slug-driven
+  // reference card reading nakshatra-data.ts (nakṣatra resolved from the lesson slug),
+  // showing the 12 attributes with the Vimśottarī lord highlighted; one component
+  // serves all ~24 per-nakṣatra profile lessons. Degree-span + rāśi are derived.
+  "nakshatra-profile": NakshatraProfile,
+  // Lesson 7.6.2's §7 interactive: the 108-cell pāda→navāṁśa mapper (27 nakṣatras × 4 pādas
+  // = 108 = 12 signs × 9 navāṁśas). Pick a nakṣatra+pāda → highlights its navāṁśa sign;
+  // vargottama (rāśi=navāṁśa) cells flagged. All derived (navāṁśa = SIGNS[k%12], k=(N-1)*4+(p-1)).
+  "pada-navamsha-mapper": PadaNavamshaMapper,
+  // Lesson 7.6.3 (KP 249) + Module 16's KP stream §7 interactive: enter a longitude →
+  // the KP lord-chain sign-lord → star-lord (nakṣatra) → sub-lord, with the nakṣatra's
+  // nine Vimśottarī-proportioned subs and the active sub flagged. All derived. Shared component.
+  "sub-lord-calculator": SubLordCalculator,
+  // Lesson 7.6.4's §7 interactive: Tāra Bala wheel — pick a Janma nakṣatra → the 9-tāra cycle
+  // across all 27 (favourable/unfavourable/mixed, the 3rd/5th/7th flagged), plus a STATIC
+  // Aṣṭakūṭa 8-kūṭa point reference (36 total). Tāra is derived; the kūṭa scoring grids
+  // (yoni/gaṇa/nāḍī/bhakūṭa) are intentionally NOT computed here (reference only).
+  "tara-bala-wheel": TaraBalaWheel,
+  // Lesson 7.6.5's §7 (Module-7 capstone): how each of the five streams (Parāśari/Jaimini/KP/
+  // Lal Kitab/Tājika) uses the nakṣatra — select a stream → its resolution/usage + forward module.
+  // Distinct from the M5-hardcoded `stream-comparator` (a graha comparison). Content from §4.1.
+  "stream-comparison-table": StreamComparisonTable,
+  // Module 8 Chapter 1's §7 interactive (graha-dṛṣṭi): place ANY of the 9 grahas in any house →
+  // its full 7th aspect highlighted on the 12-house wheel, plus the special aspects (Mars 4/8,
+  // Jupiter 5/9, Saturn 3/10) and the planet's benefic/malefic nature. Serves 8.1.1-8.1.4.
+  // (Distinct from the Guru-only `aspect-caster`, which is hardcoded to Lesson 5.4.3.)
+  "graha-drishti-wheel": GrahaDrishtiWheel,
+  // Lesson 8.1.4's §7 interactive: the graded virūpa aspect-strength meter. Place any graha →
+  // its dṛṣṭi strength on each house (7th=full/60, 4·8=¾/45, 5·9=½/30, 3·10=¼/15), with the
+  // Mars/Jupiter/Saturn special-aspect partial→full upgrade. All derived from the BPHS gradation (no engine).
+  "drishti-strength-meter": DrishtiStrengthMeter,
+  // Module 8 Chapter 2's §7 interactive (Jaimini rāśi-dṛṣṭi): pick a rāśi → the 3 signs it aspects
+  // by modality (movable→fixed-except-adjacent, fixed→movable-except-adjacent, dual→other-duals),
+  // the skipped adjacent sign greyed. Sign-to-sign (NOT planet-to-house). All derived. Serves 8.2.1-8.2.4.
+  "rashi-drishti-grid": RashiDrishtiGrid,
+  // Lesson 8.2.4's §7 (rāśi-dṛṣṭi vs graha-dṛṣṭi contrast): one planet+sign → the signs it aspects
+  // under EACH doctrine side by side (graha = 7th+specials in whole-sign terms; rāśi = sign modality),
+  // each sign tagged both/graha-only/rāśi-only/neither. All derived, no engine.
+  "aspect-doctrine-comparator": AspectDoctrineComparator,
+  // Module 8 Chapter 3's §7 (Tājika degree-orb): two grahas + separation → nearest aspect-angle,
+  // gap-from-exact, the combined orb (half-sum of the two dīptāṁśas: Sun15/Moon12/Mars8/Mer7/Jup9/Ven7/Sat9),
+  // and whether the aspect forms within orb. Derived, no engine. The annual-chart lens (deep Tājika = M19).
+  "tajika-orb-calculator": TajikaOrbCalculator,
+  // Lesson 8.3.2's §7: the faster graha applies toward exact (Itthaśāla = forming) then crosses
+  // and separates (Īsarāpha = fading); within-orb prerequisite; retrograde inverts which side
+  // is approaching. Faster = earlier in the daily-motion order (Moon…Saturn). Derived, no engine.
+  "tajika-applying-separating": TajikaApplyingSeparating,
+  // Lesson 8.3.3's §7: a flip-card glossary of the 16 Tājika yogas (ṣoḍaśa-yoga) using the lesson's
+  // OWN §4.2 glosses verbatim — foundational four (Itthaśāla/Iśrāf/Nakta/Yamayā) highlighted, the
+  // rest flagged → Module 19. No added/fabricated mechanics. Static reference, no engine.
+  "tajika-yoga-glossary": TajikaYogaGlossary,
+  // Lesson 8.3.4's §7 (Tājika in annual-chart context): the Muntha (the one purely-positional
+  // element — advances one sign/year from the natal Lagna, Muntha = (lagna+age) mod 12) on a
+  // 12-sign ring + the natal-vs-annual frame contrast. Year-lord/sahams/yoga-timing deferred to M19
+  // (not faked). Derived, no engine.
+  "varshaphala-overview": VarshaphalaOverview,
+  // Lesson 8.4.1's §7: disambiguate "Saturn aspects the 7th" across the THREE doctrines for one
+  // Saturn-house + target-house — graha-dṛṣṭi (3/7/10 yes/no), Jaimini rāśi-dṛṣṭi (modality yes/no),
+  // and Tājika (degree-orb dependent, annual-only — honest "depends", not faked). Derived, no engine.
+  "saturn-aspect-disambiguator": SaturnAspectDisambiguator,
+  // Lesson 8.4.2's §7: the which-doctrine-when decision guide — pick a use-case (natal / Jaimini /
+  // annual / cross-verify) → the preferred doctrine + rationale + deep-dive module. Fit-for-purpose,
+  // never ranked. Static, from §4.1's decision table. No engine.
+  "doctrine-selector": DoctrineSelector,
+  // Module 8 Chapter 5's §7 (shared 8.5.1-8.5.5): the Pañcamahāpuruṣa-yoga detector — place one of the
+  // five tārā-grahas (Mars/Mer/Jup/Ven/Sat) in a sign + house → own/exalted? in a kendra? → which yoga
+  // (Rucaka/Bhadra/Haṃsa/Mālavya/Śaśa) or none; afflicted toggle marks a marred yoga. Derived from the
+  // dignity tables + kendra rule (Sun/Moon never form one). No engine.
+  "pmpy-detector": PmpyDetector,
+  // Module 8 Chapter 6's §7 (lunar yogas): place planets in the 2nd/12th-from-Moon (Sun + nodes
+  // excluded/greyed) → Sunaphā (2nd) / Anaphā (12th) / Durudharā (both) / Kemadruma (neither, honest
+  // detect-don't-pronounce). Derived from occupancy of the Moon's flanks. No engine.
+  "lunar-yoga-detector": LunarYogaDetector,
+  // Lesson 8.6.2's §7: the Kemadruma-bhaṅga (cancellation) checker — tick any of the common
+  // cancellation conditions (planet in kendra from Lagna/Moon, Moon conjunct/aspected, strong Moon);
+  // even one cancels. Reinforces care-not-doom: usually cancelled, never a poverty-verdict. Static rules, no engine.
+  "kemadruma-checker": KemadrumaChecker,
+  // Lesson 8.6.3's §7: Gajakesarī detector — Jupiter's house counted FROM THE MOON ∈ {1,4,7,10}
+  // (kendra) → forms; with a Jupiter-dignity toggle for the honest "geometry-vs-condition" caveat.
+  // Distinct from the flank-based lunar-yoga-detector. Derived, no engine.
+  "gaja-kesari-detector": GajaKesariDetector,
+  // Lesson 8.6.4's §7: Budhāditya checker — Sun degree + Mercury offset → same-sign? (yoga forms)
+  // and Sun–Mercury gap vs the ~14° (retro ~7°) combustion orb → clean / combust / deeply-combust /
+  // dissolved-across-signs. Teaches that a same-sign Mercury is usually at least mildly combust. Derived, no engine.
+  "budhaditya-checker": BudhadityaChecker,
+  // Module 9 Chapter 1's §7: the varga-concept illustrator — pick a Dn (the 16 ṣoḍaśa-varga) + a degree
+  // → which part (of n) the planet lands in + the domain Dn magnifies. Equal 30/n° parts, EXCEPT D30
+  // (unequal 5/5/8/7/5). Per-varga sign-mapping rules are deferred to their own lessons. Derived, no engine.
+  "varga-explainer": VargaExplainer,
+  // Lesson 9.1.3's §7: the per-varga template card — the 8-attribute scaffold (name+meaning, subdivision,
+  // computation, jurisdiction, workflow, cross-refs, errors, example), with attrs 1/2/4 pre-filled per
+  // varga (D7/D9/D10/D12) + a read-alongside-D1 overlay. Mirrors bhava-template-card. Derived, no engine.
+  "varga-template-card": VargaTemplateCard,
+  // Lesson 9.2.2's §7: the D2 Horā calculator — sign (odd/even) + degree (</≥15°) → Sun's horā (Leo)
+  // or Moon's horā (Cancer). Odd sign: 1st half Sun/Leo, 2nd Moon/Cancer; even sign reversed. Derived, no engine.
+  "hora-calculator": HoraCalculator,
+  // Lesson 9.2.3's §7: the D3 Drekkāṇa calculator — sign + degree → decanate (1st/2nd/3rd) → same /
+  // 5th-from / 9th-from sign (the 1/5/9 trinal Parāśarī rule, same element) + deity + siblings domain. Derived, no engine.
+  "drekkana-calculator": DrekkanaCalculator,
+  // Lesson 9.2.4's §7: the three-drekkāṇa-system comparator — sign+degree → the D3 sign under Parāśarī
+  // (1/5/9) vs Jaimini (1/7/5, one tradition) side-by-side, with Somanātha (sequential) deferred-not-faked;
+  // flags where the systems diverge. Name-the-system discipline. Derived, no engine.
+  "drekkana-system-comparator": DrekkanaSystemComparator,
+  // Lesson 9.3.1's §7: the D4 Chaturthāṁśa calculator — sign+degree → quarter (7°30′) → the 4 kendras
+  // from the sign (same/4th/7th/10th, offsets [0,3,6,9]) + property/home domain. Derived, no engine.
+  "chaturthamsha-calculator": ChaturthamshaCalculator,
+  // Lesson 9.3.2's §7: the D7 Saptāṁśa calculator — sign(odd/even) + degree → part 1-7 (≈4°17′) →
+  // destination (odd: count from the sign; even: from its 7th) + children/Jupiter domain. Derived, no engine.
+  "saptamsha-calculator": SaptamshaCalculator,
+  // Lesson 9.3.5's §7: the D9-as-strength-test matrix — toggle a planet's D1 (promise) and D9 (delivery)
+  // dignity → the four outcomes (delivers / promised-not-delivered / recovery / consistently-weak). Pure §4.2
+  // doctrine, no chart data. Care-not-doom. Derived, no engine.
+  "rashi-navamsha-pair": RashiNavamshaPair,
+  // Lesson 9.4.1's §7: the D10 Daśāṁśa calculator — sign(odd/even) + degree → part 1-10 (3°) → destination
+  // (odd: count from the sign; even: from its 9th) + career/10th-house domain. Derived, no engine.
+  "dashamsha-calculator": DashamshaCalculator,
+  // Lesson 9.4.3's §7: the D12 Dvādaśāṁśa calculator — sign + degree → part 1-12 (2°30′) → destination
+  // counting from the sign itself for all signs (dest=(sign+part)%12) + parents/ancestry domain. Derived, no engine.
+  "dvadashamsha-calculator": DvadashamshaCalculator,
+  // Lesson 9.4.4's §7: the D16 Ṣoḍaśāṁśa calculator — sign + degree → part 1-16 (1°52′30″) → destination
+  // from a modality start (movable→Meṣa/fixed→Siṁha/dual→Dhanus) + vehicles/comforts domain. Derived, no engine.
+  "shodashamsha-calculator": ShodashamshaCalculator,
+  // Lesson 9.4.5's §7: the multi-varga synthesis — the §4.2 D10×D16 matrix (career × comforts → 4 quadrants)
+  // + a D12 (parents) blessed/afflicted modulator. Abstract strong/weak toggles, no chart data. Derived, no engine.
+  "multi-varga-comparator": MultiVargaComparator,
+  // Lesson 9.5.1's §7: the D20 Viṁśāṁśa calculator — sign + degree → part 1-20 (1°30′) → destination from a
+  // modality start (movable→Meṣa/fixed→Dhanus/dual→Siṁha — START [0,8,4], distinct from D16) + spiritual domain. Derived, no engine.
+  "vimshamsha-calculator": VimshamshaCalculator,
+  // Lesson 9.5.2's §7: the D24 Chaturviṁśāṁśa (Siddhāṁśa) calculator — sign + degree → part 1-24 (1°15′) →
+  // destination from odd→Siṁha(4)/even→Karka(3) + education domain. Standard floor (examples use interior degrees). Derived, no engine.
+  "chaturvimshamsha-calculator": ChaturvimshamshaCalculator,
+  // Lesson 9.5.3's §7: the D27 Saptaviṁśāṁśa (Bhāṁśa) calculator — sign + degree → part 1-27 (1°06′40″) →
+  // destination. DEFAULT rule = universal-Meṣa start (the lesson's stated rule); optional element-start toggle
+  // (fire→Meṣa/earth→Karka/air→Tulā/water→Makara). Strength/stamina domain. Derived, no engine.
+  "saptavimshamsha-calculator": SaptavimshamshaCalculator,
+  // Lesson 9.5.4's §7: the spiritual-trio synthesis — three abstract strong/weak toggles for D20 (practice),
+  // D27 (vehicle/stamina), D60 (karmic substrate) → the §4.1 synthesis read. Capacity-not-guarantee, no chart data. Derived, no engine.
+  "spiritual-trio-comparator": SpiritualTrioComparator,
+  // Lesson 9.6.2's §7: the D30 Triṁśāṁśa calculator — the ONE unequal varga. Degree → which of 5 unequal
+  // tārā-graha segments (odd 5/5/8/7/5 Mars→Venus / even 5/7/8/5/5 Venus→Mars) → ruling graha → its own-sign.
+  // No luminaries/nodes; tendency-map-not-verdict. Derived, no engine.
+  "trimshamsha-calculator": TrimshamshaCalculator,
+  // Lesson 9.6.3's §7: the lineage vargas — D40 Khavedāṁśa (40×0°45′, odd→Meṣa/even→Tulā, maternal) and
+  // D45 Akṣavedāṁśa (45×0°40′, movable→Meṣa/fixed→Siṁha/dual→Dhanus, paternal) via a mode toggle. Derived, no engine.
+  "khavedamsha-akshavedamsha-calculator": KhavedamshaAkshavedamshaCalculator,
+  // Lesson 9.6.4's §7: the ethical-routing checklist — the §4.1 four hard boundaries + scenario cards showing
+  // the unsafe framing vs the honest vigilance-framed + referral response (triple-care). Care-not-doom. Static, no engine.
+  "ethical-routing-checklist": EthicalRoutingChecklist,
+  // Lesson 9.7.1's §7: the D60 Ṣaṣṭyāṁśa calculator — within-sign degree → index 1-60 (= ⌊deg×2⌋+1, 0°30′ parts)
+  // + band + the precision-demand flip near a boundary. Name/quality/rāśi are recognition-level (NOT fabricated). Derived, no engine.
+  "shashtyamsha-calculator": ShashtyamshaCalculator,
+  // Lesson 9.7.2's §7: the D1↔D60 doctrine illustrator — D1=WHAT (events) vs D60=WHY (karmic substrate);
+  // abstract supportive/challenging + rectified/uncertain toggles → the substrate-not-destiny reading
+  // (modifiable by sādhanā; D60 unreliable on a vague time). No chart data. Derived, no engine.
+  "d1-d60-comparator": D1D60Comparator,
+  // Lesson 9.7.4's §7: the D60 substrate-ethics checklist — the §4.1 four forbidden malpractices + scenario
+  // cards showing the forbidden framing vs the honest empowerment-centred response (substrate-not-destiny,
+  // modifiable by sādhanā). The karma-domain sibling of ethical-routing-checklist. Static, no engine.
+  "substrate-ethics-checklist": SubstrateEthicsChecklist,
+  // Lesson 9.8.1's §7: the Vimśopaka calculator — pick a scheme (Ṣaḍvarga/Saptavarga/Daśavarga, each summing 20)
+  // + toggle which vargas the planet is well-placed in → weighted score /20 + band. Weights from L2's tables. Derived, no engine.
+  "vimshopaka-calculator": VimshopakaCalculator,
+  // Lesson 9.8.4's §7: the marriage four-varga workflow — D1 + D9 (primary) toggles → the §4.2 D1×D9 marriage
+  // matrix + D24 (compatibility) and D60 (BTR-gated karmic) layer toggles. Abstract, no chart, care-not-doom. Derived, no engine.
+  "marriage-varga-workflow": MarriageVargaWorkflow,
+  // Lesson 9.8.5's §7: the career three-varga workflow — D1 + D10 (primary) toggles → the §4.2 D1×D10 career
+  // matrix + a D24 (education dimension) toggle. Abstract strong/weak, no chart, not-doom. Derived, no engine.
+  "career-varga-workflow": CareerVargaWorkflow,
+  // Lesson 9.8.6's §7: the children three-varga workflow — D1 + D7 (primary) toggles → the §4.2 D1×D7 children
+  // matrix + a D9 (marriage context) toggle. Abstract strong/weak, no chart, care-not-doom (childlessness never
+  // a verdict; refer fertility to doctors; count/timing → Tier-2 T2-06). Derived, no engine.
+  "children-varga-workflow": ChildrenVargaWorkflow,
   // Lesson 5.1.5's §7 interactive: Pakshabala Slider — tithi scrubber with
   // inverse Sun/Moon virupa bars and a dignity-combination preview.
   "pakshabala-slider": PakshabalaSlider,

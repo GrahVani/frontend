@@ -239,9 +239,9 @@ export function TithiCalculatorDojo() {
             <div className="flex flex-wrap gap-2">
               {[
                 { label: "Śukla 1", s: 0, m: 0, md: 6, mm: 0 },
-                { label: "Śukla 5", s: 30, m: 0, md: 75, mm: 36 },
-                { label: "Śukla 15", s: 0, m: 0, md: 180, mm: 0 },
-                { label: "Kṛṣṇa 8", s: 30, m: 0, md: 225, mm: 0 },
+                { label: "Śukla 5", s: 30, m: 0, md: 84, mm: 0 },
+                { label: "Śukla 15 (Pūrṇimā)", s: 0, m: 0, md: 174, mm: 0 },
+                { label: "Kṛṣṇa 8", s: 30, m: 0, md: 300, mm: 0 },
                 { label: "Amāvāsyā", s: 0, m: 0, md: 354, mm: 0 },
               ].map((p) => (
                 <button

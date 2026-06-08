@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { usePathname } from "next/navigation";
 import { CircleDot, Eye, GitCompare, RotateCcw, SlidersHorizontal } from "lucide-react";
+import { useLessonSlug } from "../rashi-attribute-wheel";
 
 type DignityKind = "exalted" | "debilitated" | "mula" | "own" | "friend" | "neutral" | "enemy";
 type GrahaKey = "sun" | "moon" | "mars";
@@ -178,8 +178,8 @@ function degreeStrength(status: RashiStatus, degree: number) {
 }
 
 export function DignityWheel() {
-  const pathname = usePathname();
-  const lessonDefault: GrahaKey = pathname.includes("mangala") || pathname.includes("chapter-2") ? "mars" : pathname.includes("lesson-3") || pathname.includes("candra") ? "moon" : "sun";
+  const slug = useLessonSlug();
+  const lessonDefault: GrahaKey = slug.includes("mangala") ? "mars" : slug.includes("candra") ? "moon" : "sun";
   const defaultRashi = lessonDefault === "mars" ? 10 : lessonDefault === "moon" ? 2 : 1;
   const defaultDegree = lessonDefault === "mars" ? 28 : lessonDefault === "moon" ? 3 : 10;
   const [grahaKey, setGrahaKey] = useState<GrahaKey>(lessonDefault);
@@ -476,7 +476,7 @@ export function DignityWheel() {
             ) : null}
             {grahaKey === "moon" && selected.index === 2 ? (
               <p className="mt-3 text-xs font-semibold" style={{ color: "#7A5A12", lineHeight: 1.5 }}>
-                At 3 deg Vrishabha, Candra reaches exact exaltation and enters the 3-30 deg mula-trikona range. This is the Moon&apos;s strongest seat.
+                At 3 deg Vrishabha, Candra reaches exact exaltation; its mula-trikona is the 4-30 deg range just past that point. This is the Moon&apos;s strongest seat.
               </p>
             ) : null}
             {grahaKey === "mars" && selected.index === 10 ? (

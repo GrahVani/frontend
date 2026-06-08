@@ -13,12 +13,12 @@ interface Epoch {
 }
 
 const EPOCHS: Epoch[] = [
-  { year: -3000, label: "3000 BCE", poleStar: "Thuban (α Draconis)", ayanamsha: "≈ 0°", note: "Pyramid-era pole star" },
-  { year: -1000, label: "1000 BCE", poleStar: "Kochab (β UMi)", ayanamsha: "≈ 8°", note: "Vedic-period sky" },
-  { year: 0, label: "0 CE", poleStar: "Near Polaris", ayanamsha: "≈ 16°", note: "Start of common era" },
-  { year: 285, label: "285 CE", poleStar: "Polaris", ayanamsha: "≈ 0°", note: "Lahiri alignment epoch" },
-  { year: 575, label: "575 CE", poleStar: "Polaris", ayanamsha: "≈ 4°", note: "Varāhamihira's lifetime" },
-  { year: 1000, label: "1000 CE", poleStar: "Polaris", ayanamsha: "≈ 10°", note: "Medieval period" },
+  { year: -3000, label: "3000 BCE", poleStar: "Thuban (α Draconis)", ayanamsha: "≈ −46°", note: "Pyramid-era pole star" },
+  { year: -1000, label: "1000 BCE", poleStar: "Kochab (β UMi)", ayanamsha: "≈ −18°", note: "Vedic-period sky" },
+  { year: 0, label: "0 CE", poleStar: "Between Thuban and Polaris", ayanamsha: "≈ −4°", note: "Start of common era" },
+  { year: 285, label: "285 CE", poleStar: "Approaching Polaris", ayanamsha: "≈ 0°", note: "Lahiri alignment epoch" },
+  { year: 575, label: "575 CE", poleStar: "Approaching Polaris", ayanamsha: "≈ 4°", note: "Varāhamihira's lifetime" },
+  { year: 1000, label: "1000 CE", poleStar: "Approaching Polaris", ayanamsha: "≈ 10°", note: "Medieval period" },
   { year: 1900, label: "1900 CE", poleStar: "Polaris", ayanamsha: "22°26′", note: "Industrial era" },
   { year: 2026, label: "2026 CE", poleStar: "Polaris", ayanamsha: "24°11′", note: "Present day" },
   { year: 12000, label: "12000 CE", poleStar: "Vega (α Lyrae)", ayanamsha: "—", note: "Future pole star" },
