@@ -269,6 +269,28 @@ import { AkhandaSamrajyaChecker } from "./akhanda-samrajya-checker";
 import { BuddhadityaGajakesariDetector } from "./buddhaditya-gajakesari-detector";
 import { SpecialYogaScan } from "./special-yoga-scan";
 import { NeechaBhangaChecker } from "./neecha-bhanga-checker";
+import { GocharaIntro } from "./gochara-intro";
+import { NatalRelativeCounter } from "./natal-relative-counter";
+import { TransitComputer } from "./transit-computer";
+import { ThreeReferenceReader } from "./three-reference-reader";
+import { SadeSatiTracker } from "./sade-sati-tracker";
+import { SadeSatiPhases } from "./sade-sati-phases";
+import { SadeSatiFavourability } from "./sade-sati-favourability";
+import { SadeSatiCancellationChecker } from "./sade-sati-cancellation-checker";
+import { SadeSatiCommunicationGuide } from "./sade-sati-communication-guide";
+import { KantakaShaniReader } from "./kantaka-shani-reader";
+import { SaturnTransitMap } from "./saturn-transit-map";
+import { GuruTransitReader } from "./guru-transit-reader";
+import { GuruSaturnConjunctionReader } from "./guru-saturn-conjunction-reader";
+import { NodalTransitTracker } from "./nodal-transit-tracker";
+import { NodalAxisHouseReader } from "./nodal-axis-house-reader";
+import { EclipseSignificanceChecker } from "./eclipse-significance-checker";
+import { EclipseCalendar } from "./eclipse-calendar";
+import { VedhaIntro } from "./vedha-intro";
+import { VedhaTableLookup } from "./vedha-table-lookup";
+import { VedhaApplicator } from "./vedha-applicator";
+import { CrossStreamTransitIntro } from "./cross-stream-transit-intro";
+import { TransitWorkflowWorkbench } from "./transit-workflow-workbench";
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
 
@@ -839,6 +861,28 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // Lesson 14.5.1's §7 interactive: Neecha-Bhaṅga Checker — cancellation of debilitation.
   // Planet selector + 5-condition checklist + rescue-chain SVG + honest debate.
   "neecha-bhanga-checker": NeechaBhangaChecker,
+  "gochara-intro": GocharaIntro,
+  "natal-relative-counter": NatalRelativeCounter,
+  "transit-computer": TransitComputer,
+  "three-reference-reader": ThreeReferenceReader,
+  "sade-sati-tracker": SadeSatiTracker,
+  "sade-sati-phases": SadeSatiPhases,
+  "sade-sati-favourability": SadeSatiFavourability,
+  "sade-sati-cancellation-checker": SadeSatiCancellationChecker,
+  "sade-sati-communication-guide": SadeSatiCommunicationGuide,
+  "kantaka-shani-reader": KantakaShaniReader,
+  "saturn-transit-map": SaturnTransitMap,
+  "guru-transit-reader": GuruTransitReader,
+  "guru-saturn-conjunction-reader": GuruSaturnConjunctionReader,
+  "nodal-transit-tracker": NodalTransitTracker,
+  "nodal-axis-house-reader": NodalAxisHouseReader,
+  "eclipse-significance-checker": EclipseSignificanceChecker,
+  "eclipse-calendar": EclipseCalendar,
+  "vedha-intro": VedhaIntro,
+  "vedha-table-lookup": VedhaTableLookup,
+  "vedha-applicator": VedhaApplicator,
+  "cross-stream-transit-intro": CrossStreamTransitIntro,
+  "transit-workflow-workbench": TransitWorkflowWorkbench,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {
