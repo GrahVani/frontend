@@ -165,6 +165,16 @@ import { AssociationClassifier } from "./association-classifier";
 import { CombustionCalculator } from "./combustion-calculator";
 import { FriendshipMatrix } from "./friendship-matrix";
 import { PakshabalaSlider } from "./pakshabala-slider";
+import { ShadbalaIntro } from "./shadbala-intro";
+import { ShadbalaComponents } from "./shadbala-components";
+import { ShadbalaGrader } from "./shadbala-grader";
+import { UchchabalaCalculator } from "./uchchabala-calculator";
+import { SaptavargabalaCalculator } from "./saptavargabala-calculator";
+import { OjaYugmaCalculator } from "./oja-yugma-calculator";
+import { KendraDrekkanaCalculator } from "./kendra-drekkana-calculator";
+import { SthanaBalaSummer } from "./sthana-bala-summer";
+import { DikBalaCalculator } from "./dik-bala-calculator";
+import { KalaBalaOverview } from "./kala-bala-overview";
 import { KarakaRouter } from "./karaka-router";
 import { FriendshipDignityGrid } from "./friendship-dignity-grid";
 import { MulaRootMandala } from "./mula-root-mandala";
@@ -236,6 +246,18 @@ import { LunarYogaDetector } from "./lunar-yoga-detector";
 import { KemadrumaChecker } from "./kemadruma-checker";
 import { GajakesariSimulator } from "./gajakesari-simulator";
 import { BudhadityaChecker } from "./budhaditya-checker";
+import { CheshthaBalaCalculator } from "./cheshta-bala-calculator";
+import { NaisargikaTable } from "./naisargika-table";
+import { NaisargikaRationale } from "./naisargika-rationale";
+import { DrkBalaCalculator } from "./drk-bala-calculator";
+import { ShadbalaSummation } from "./shadbala-summation";
+import { ShadbalaScorecard } from "./shadbala-scorecard";
+import { BhavaBalaCalculator } from "./bhava-bala-calculator";
+import { ShadbalaBhavabalaSynthesis } from "./shadbala-bhavabala-synthesis";
+import { CrossStreamStrengthMap } from "./cross-stream-strength-map";
+import { StrengthQualityMatrix } from "./strength-quality-matrix";
+import { PakshaYuddhaCalculator } from "./paksha-yuddha-calculator";
+import { DikKalaSummer } from "./dik-kala-summer";
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
 
@@ -604,6 +626,16 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // Lesson 5.1.5's §7 interactive: Pakshabala Slider — tithi scrubber with
   // inverse Sun/Moon virupa bars and a dignity-combination preview.
   "pakshabala-slider": PakshabalaSlider,
+  "shadbala-intro": ShadbalaIntro,
+  "shadbala-components": ShadbalaComponents,
+  "shadbala-grader": ShadbalaGrader,
+  "uchchabala-calculator": UchchabalaCalculator,
+  "saptavargabala-calculator": SaptavargabalaCalculator,
+  "oja-yugma-calculator": OjaYugmaCalculator,
+  "kendra-drekkana-calculator": KendraDrekkanaCalculator,
+  "sthana-bala-summer": SthanaBalaSummer,
+  "dik-bala-calculator": DikBalaCalculator,
+  "kala-bala-overview": KalaBalaOverview,
   // Lesson 5.2.2's §7 interactive: Karaka Router — question-driven Mars
   // register selector with house-side confirmation and tie-breaker feedback.
   "karaka-router": KarakaRouter,
@@ -724,6 +756,53 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "kemadruma-checker": KemadrumaChecker,
   "gajakesari-simulator": GajakesariSimulator,
   "budhaditya-checker": BudhadityaChecker,
+  // Lesson 13.4.1's §7 interactive: Cheṣṭā Bala Calculator — motional strength
+  // explorer with eight cheṣṭā avasthās, epicycle diagram, Sun/Moon convention
+  // panels, and virūpa spectrum. Rich SVG diagrams illustrate retrograde mechanics.
+  "cheshta-bala-calculator": CheshthaBalaCalculator,
+  // Lesson 13.4.2's §7 interactive: Naisargika Bala Table — the seven fixed
+  // natural-strength values with descending bar chart, fraction ladder, wheel
+  // diagram, and baseline-stack visual. No engine needed (classical constants).
+  "naisargika-table": NaisargikaTable,
+  // Lesson 13.4.3's §7 interactive: Naisargika Rationale — hierarchy ladder,
+  // luminosity overlay, Venus-vs-Jupiter comparison, and baseline reminder.
+  // Explains why the fixed order is not arbitrary.
+  "naisargika-rationale": NaisargikaRationale,
+  // Lesson 13.5.1's §7 interactive: Dṛk Bala Calculator — aspect net diagram,
+  // signed number line, add/remove aspects, six-component overview. Teaches
+  // the signed-net concept and that dṛk bala can be negative.
+  "drk-bala-calculator": DrkBalaCalculator,
+  // Lesson 13.5.2's §7 interactive: Ṣaḍbala Summation — waterfall stack,
+  // threshold gauge, all-planets reference, and pass/fail comparison.
+  // Teaches summing, converting to rūpas, and comparing to minima.
+  "shadbala-summation": ShadbalaSummation,
+  // Lesson 13.5.3's §7 interactive: Ṣaḍbala Scorecard — per-planet ratio + band
+  // table, band spectrum, workflow diagram, and confidence-vs-virtue visual.
+  // Closes Module 13 by turning totals into interpretive judgement.
+  "shadbala-scorecard": ShadbalaScorecard,
+  // Lesson 13.6.1's §7 interactive: Bhāva Bala Calculator — house selector,
+  // three-component inputs, house diagram, and ṣaḍbala parallel comparison.
+  "bhava-bala-calculator": BhavaBalaCalculator,
+  // Lesson 13.6.2's §7 interactive: Ṣaḍbala–Bhāva Bala Synthesis — domain
+  // selector, strength toggles, four-cell matrix, and confidence dial.
+  // Teaches integrative reading of planet + house strength.
+  "shadbala-bhavabala-synthesis": ShadbalaBhavabalaSynthesis,
+  // Lesson 13.6.3's §7 interactive: Cross-Stream Strength Map — four stream
+  // conceptions, parallel tracks, convergence/divergence, and pañcavargīya
+  // breakdown. Maps how each sampradāya measures strength.
+  "cross-stream-strength-map": CrossStreamStrengthMap,
+  // Lesson 13.6.4's §7 interactive: Strength-Quality Matrix — Module 13 capstone.
+  // 2×2 judgement matrix fusing ṣaḍbala (quantity) with dignity/aspect/yoga (quality).
+  // Clickable SVG matrix + preset scenarios + amplifier diagram + discipline rules.
+  "strength-quality-matrix": StrengthQualityMatrix,
+  // Lesson 13.3.3's §7 interactive: Pakṣa-Yuddha Calculator — pakṣabala (lunar-phase
+  // strength split) + graha-yuddha (planetary war detection). Fortnight toggle,
+  // planet status grid, proximity checker with SVG diagrams, and worked scenarios.
+  "paksha-yuddha-calculator": PakshaYuddhaCalculator,
+  // Lesson 13.3.4's §7 interactive: Dik-Kāla Summer — Chapter 3 capstone.
+  // Dik bala slider + nine kāla sub-component sliders + SVG sum diagram +
+  // virūpa→rūpa conversion + worked presets (Sun 10th, Moon night, war penalty).
+  "dik-kala-summer": DikKalaSummer,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {
