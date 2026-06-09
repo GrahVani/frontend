@@ -318,7 +318,7 @@ export const clientApi = {
             },
             kp: {
                 charts: {
-                    divisional: ['D1'],
+                    divisional: ['D1', 'D2', 'D3', 'D4', 'D7', 'D9', 'D10', 'D12', 'D16', 'D20', 'D24', 'D27', 'D30', 'D40', 'D45', 'D60'],                  
                     special: ['planets_cusps', 'shodasha_varga'],
                     lagna: ['moon_chart', 'sun_chart', 'arudha_lagna', 'bhava_lagna', 'hora_lagna', 'sripathi_bhava', 'kp_bhava', 'equal_bhava', 'karkamsha_d1', 'karkamsha_d9', 'gl_chart', 'mandi', 'gulika']
                 },
@@ -329,8 +329,8 @@ export const clientApi = {
                     compatibility: [],
                     numerology: []
                 },
-                hasDivisional: false,
-                hasAshtakavarga: false,
+                hasDivisional: true,
+                hasAshtakavarga: true,
                 hasNumerology: false,
                 hasCompatibility: false,
                 hasHorary: true,
