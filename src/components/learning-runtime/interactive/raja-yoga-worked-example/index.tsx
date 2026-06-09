@@ -58,6 +58,16 @@ function wash(color: string, alphaHex = "14") {
   return color.startsWith("#") ? `${color}${alphaHex}` : "rgba(232, 199, 114, 0.12)";
 }
 
+function readableGrahaColor(slug: GrahaSlug) {
+  const readable: Partial<Record<GrahaSlug, string>> = {
+    candra: "#5F6F96",
+    shukra: "#4F7FAF",
+    surya: "#9C7A2F",
+    guru: "#B66F12",
+  };
+  return readable[slug] ?? grahas[slug].primary;
+}
+
 function familyColor(house: number) {
   if (house === 1) return YOGA;
   if ([4, 7, 10].includes(house)) return KENDRA;
@@ -238,7 +248,7 @@ export function RajaYogaWorkedExample() {
             {(["mangala", "guru", "shani"] as GrahaSlug[]).map((lord) => (
               <label key={lord} className="rounded-xl p-4 text-sm font-bold" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}>
                 <span className="flex items-center justify-between gap-3">
-                  <span style={{ color: grahas[lord].primary }}>{grahaName(lord)}</span>
+                  <span style={{ color: readableGrahaColor(lord) }}>{grahaName(lord)}</span>
                   <span>{strengths[lord]}</span>
                 </span>
                 <input type="range" min={30} max={95} step={1} value={strengths[lord]} onChange={(event) => setStrengths((current) => ({ ...current, [lord]: Number(event.target.value) }))} className="mt-3 w-full accent-[var(--gl-gold-accent)]" />
@@ -273,7 +283,7 @@ export function RajaYogaWorkedExample() {
                     <tr key={row.house} style={{ background: active ? wash(color, "12") : SURFACE, borderTop: `1px solid ${HAIRLINE}` }}>
                       <td className="px-4 py-3 font-bold" style={{ color }}>H{row.house}</td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{row.family}</td>
-                      <td className="px-4 py-3 font-bold" style={{ color: grahas[row.lord].primary }}>{grahaName(row.lord)}</td>
+                      <td className="px-4 py-3 font-bold" style={{ color: readableGrahaColor(row.lord) }}>{grahaName(row.lord)}</td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{row.sign}</td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{row.note}</td>
                     </tr>

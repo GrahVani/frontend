@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { CheckCircle2, CircleDot, Link2, Repeat2, RotateCcw, Sparkles, Table2 } from "lucide-react";
-import { grahas, ink, rashis, type RashiSlug } from "@/design-tokens/grahvani-learning/colors";
+import { grahas, ink, rashis, type GrahaSlug, type RashiSlug } from "@/design-tokens/grahvani-learning/colors";
 import { Devanagari, IAST } from "../../chrome/typography";
 import {
   RASHI_ORDER,
@@ -62,6 +62,16 @@ function wash(color: string, alphaHex = "14") {
   return color.startsWith("#") ? `${color}${alphaHex}` : "rgba(232, 199, 114, 0.12)";
 }
 
+function readableGrahaColor(slug: GrahaSlug) {
+  const readable: Partial<Record<GrahaSlug, string>> = {
+    candra: "#5F6F96",
+    shukra: "#4F7FAF",
+    surya: "#9C7A2F",
+    guru: "#B66F12",
+  };
+  return readable[slug] ?? grahas[slug].primary;
+}
+
 function relationIcon(mode: RelationshipMode) {
   if (mode === "exchange") return Repeat2;
   return Link2;
@@ -99,7 +109,7 @@ function RajaYogaChart({
             const point = HOUSE_CENTERS[house.house];
             const active = activeHouses.includes(house.house);
             const sign = rashis[house.sign];
-            const lord = grahas[house.lord];
+            const lordColor = readableGrahaColor(house.lord);
             return (
               <g
                 key={house.house}
@@ -118,7 +128,7 @@ function RajaYogaChart({
                 <text x={point.x} y={point.y + 6} textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                   {sign.number}
                 </text>
-                <text x={point.x} y={point.y + 23} textAnchor="middle" fill={lord.primary} fontSize="10" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+                <text x={point.x} y={point.y + 23} textAnchor="middle" fill={lordColor} fontSize="10.5" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                   {grahaShort(house.lord)}
                 </text>
               </g>
@@ -289,7 +299,7 @@ export function RajaYogaDetector() {
               {classicYogakarakas.length > 0 ? (
                 classicYogakarakas.map((item) => (
                   <p key={`${item.lord}-${item.kendraHouse}-${item.trikonaHouse}`} className="mt-3 text-sm" style={{ color: INK_SECONDARY }}>
-                    <strong style={{ color: grahas[item.lord].primary }}>{grahaLabel(item.lord)}</strong> owns kendra H{item.kendraHouse} and trikona H{item.trikonaHouse}: a raja yoga in one planet.
+                    <strong style={{ color: readableGrahaColor(item.lord) }}>{grahaLabel(item.lord)}</strong> owns kendra H{item.kendraHouse} and trikona H{item.trikonaHouse}: a raja yoga in one planet.
                   </p>
                 ))
               ) : (
@@ -322,8 +332,8 @@ export function RajaYogaDetector() {
               <tbody>
                 {pairs.slice(0, 12).map((pair, index) => {
                   const active = index === selectedIndex;
-                  const kendraLord = grahas[pair.kendra.lord];
-                  const trikonaLord = grahas[pair.trikona.lord];
+                  const kendraLordColor = readableGrahaColor(pair.kendra.lord);
+                  const trikonaLordColor = readableGrahaColor(pair.trikona.lord);
                   return (
                     <tr
                       key={`${pair.kendra.house}-${pair.trikona.house}-${index}`}
@@ -335,18 +345,18 @@ export function RajaYogaDetector() {
                         {active ? <CheckCircle2 size={17} color={YOGA} /> : <CircleDot size={17} color={INK_MUTED} />}
                       </td>
                       <td className="px-4 py-3">
-                        <p className="m-0 font-bold" style={{ color: kendraLord.primary }}>
+                        <p className="m-0 font-bold" style={{ color: kendraLordColor }}>
                           H{pair.kendra.house} {grahaLabel(pair.kendra.lord)}
                         </p>
-                        <p className="m-0 text-xs" style={{ color: INK_MUTED }}>
+                        <p className="m-0 text-xs font-medium" style={{ color: INK_SECONDARY }}>
                           {rashis[pair.kendra.sign].iast}
                         </p>
                       </td>
                       <td className="px-4 py-3">
-                        <p className="m-0 font-bold" style={{ color: trikonaLord.primary }}>
+                        <p className="m-0 font-bold" style={{ color: trikonaLordColor }}>
                           H{pair.trikona.house} {grahaLabel(pair.trikona.lord)}
                         </p>
-                        <p className="m-0 text-xs" style={{ color: INK_MUTED }}>
+                        <p className="m-0 text-xs font-medium" style={{ color: INK_SECONDARY }}>
                           {rashis[pair.trikona.sign].iast}
                         </p>
                       </td>

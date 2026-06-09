@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ArrowRightLeft, BriefcaseBusiness, CheckCircle2, CircleDot, Eye, Link2, RotateCcw, Sparkles, Table2 } from "lucide-react";
-import { grahas, ink, rashis, type RashiSlug } from "@/design-tokens/grahvani-learning/colors";
+import { grahas, ink, rashis, type GrahaSlug, type RashiSlug } from "@/design-tokens/grahvani-learning/colors";
 import { Devanagari, IAST } from "../../chrome/typography";
 import { RASHI_ORDER } from "../raja-yoga-detector/data";
 import {
@@ -27,6 +27,16 @@ const YOGA = ink.goldAccent;
 
 function wash(color: string, alphaHex = "14") {
   return color.startsWith("#") ? `${color}${alphaHex}` : "rgba(232, 199, 114, 0.12)";
+}
+
+function readableGrahaColor(slug: GrahaSlug) {
+  const readable: Partial<Record<GrahaSlug, string>> = {
+    candra: "#5F6F96",
+    shukra: "#4F7FAF",
+    surya: "#9C7A2F",
+    guru: "#B66F12",
+  };
+  return readable[slug] ?? grahas[slug].primary;
 }
 
 function modeIcon(mode: DharmaKarmaMode) {
@@ -87,8 +97,8 @@ function DharmaKarmaBridge({ lagna, mode }: { lagna: RashiSlug; mode: DharmaKarm
 
         {item.yogakarakaLord ? (
           <g>
-            <rect x="218" y="270" width="184" height="36" rx="18" fill={wash(grahas[item.yogakarakaLord].primary, "16")} stroke={grahas[item.yogakarakaLord].primary} />
-            <text x="310" y="293" textAnchor="middle" fill={grahas[item.yogakarakaLord].primary} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+            <rect x="218" y="270" width="184" height="36" rx="18" fill={wash(grahas[item.yogakarakaLord].primary, "16")} stroke={readableGrahaColor(item.yogakarakaLord)} />
+            <text x="310" y="293" textAnchor="middle" fill={readableGrahaColor(item.yogakarakaLord)} fontSize="12.5" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
               Yogakaraka note: {grahaName(item.yogakarakaLord)}
             </text>
           </g>
@@ -246,8 +256,8 @@ export function DharmaKarmadhipatiDetector() {
                     <tr key={row.lagna} onClick={() => setLagna(row.lagna)} className="cursor-pointer" style={{ background: active ? wash(YOGA, "12") : SURFACE, borderTop: `1px solid ${HAIRLINE}` }}>
                       <td className="px-4 py-3">{active ? <CheckCircle2 size={17} color={YOGA} /> : <CircleDot size={17} color={INK_MUTED} />}</td>
                       <td className="px-4 py-3 font-bold" style={{ color: INK_PRIMARY }}>{rashiName(row.lagna)}</td>
-                      <td className="px-4 py-3" style={{ color: grahas[row.ninthLord].primary }}>{grahaName(row.ninthLord)} <span style={{ color: INK_MUTED }}>({rashis[row.ninthSign].iast})</span></td>
-                      <td className="px-4 py-3" style={{ color: grahas[row.tenthLord].primary }}>{grahaName(row.tenthLord)} <span style={{ color: INK_MUTED }}>({rashis[row.tenthSign].iast})</span></td>
+                      <td className="px-4 py-3 font-medium" style={{ color: readableGrahaColor(row.ninthLord) }}>{grahaName(row.ninthLord)} <span style={{ color: INK_SECONDARY }}>({rashis[row.ninthSign].iast})</span></td>
+                      <td className="px-4 py-3 font-medium" style={{ color: readableGrahaColor(row.tenthLord) }}>{grahaName(row.tenthLord)} <span style={{ color: INK_SECONDARY }}>({rashis[row.tenthSign].iast})</span></td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{row.yogakarakaLord ? `${grahaName(row.yogakarakaLord)} is also yogakaraka.` : featured ? "Featured in this lesson." : "Check relationship mode."}</td>
                     </tr>
                   );
