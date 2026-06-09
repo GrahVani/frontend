@@ -47,7 +47,7 @@ export function SadeSatiTracker() {
 
   const circlePoints = useMemo(() => {
     const points = [];
-    const cx = 160, cy = 160, r = 110;
+    const cx = 170, cy = 170, r = 110;
     for (let i = 0; i < 12; i++) {
       const angleDeg = i * 30 - 90;
       const angleRad = (angleDeg * Math.PI) / 180;
@@ -61,6 +61,8 @@ export function SadeSatiTracker() {
     { cycle: 2, start: 29.5, end: 37, label: "2nd Cycle" },
     { cycle: 3, start: 59, end: 66.5, label: "3rd Cycle" },
   ], []);
+
+  const SHORT_SIGNS = ["ARI", "TAU", "GEM", "CAN", "LEO", "VIR", "LIB", "SCO", "SAG", "CAP", "AQU", "PIS"];
 
   return (
     <div className="gl-surface-twilight-glass" style={{ padding: "20px", borderRadius: "16px", background: "rgba(255, 253, 248, 0.75)", backdropFilter: "blur(12px)", border: "1px solid rgba(156, 122, 47, 0.15)", boxShadow: "0 8px 32px rgba(72, 48, 16, 0.05)", fontFamily: "'Inter', sans-serif", color: INK_PRIMARY, maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -129,70 +131,89 @@ export function SadeSatiTracker() {
       </div>
 
       {/* ─── MAIN SPLIT: WHEEL + VERDICT ─── */}
-      <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", alignItems: "center" }}>
         {/* Wheel */}
-        <div style={{ flex: "1 1 280px", display: "flex", flexDirection: "column", alignItems: "center", background: "#ffffff", padding: "16px", borderRadius: "12px", border: "1px solid rgba(156,122,47,0.1)", minWidth: 0 }}>
-          <div style={{ position: "relative", width: "280px", height: "280px" }}>
-            <svg width="280" height="280" viewBox="0 0 320 320">
-              <circle cx="160" cy="160" r="140" fill="none" stroke="rgba(156,122,47,0.15)" strokeWidth="2" />
-              <circle cx="160" cy="160" r="80" fill="none" stroke="rgba(156,122,47,0.1)" strokeWidth="1" />
+        <div style={{ flex: "1 1 340px", display: "flex", flexDirection: "column", alignItems: "center", background: "#ffffff", padding: "16px", borderRadius: "12px", border: "1px solid rgba(156,122,47,0.1)", minWidth: 0 }}>
+          <div style={{ position: "relative", width: "340px", height: "340px" }}>
+            <svg width="340" height="340" viewBox="0 0 340 340">
+              <circle cx="170" cy="170" r="162" fill="none" stroke="rgba(156,122,47,0.15)" strokeWidth="2" />
+              <circle cx="170" cy="170" r="148" fill="none" stroke="rgba(156,122,47,0.1)" strokeWidth="1" strokeDasharray="3 3" />
+              <circle cx="170" cy="170" r="95" fill="none" stroke="rgba(156,122,47,0.12)" strokeWidth="1.2" />
+              
               {RASHIS.map((r, i) => {
                 const angleDeg = i * 30 - 105;
                 const angleRad = (angleDeg * Math.PI) / 180;
-                const lx = 160 + 140 * Math.cos(angleRad);
-                const ly = 160 + 140 * Math.sin(angleRad);
-                return <line key={`line-${i}`} x1="160" y1="160" x2={lx} y2={ly} stroke="rgba(156,122,47,0.1)" strokeWidth="1.2" />;
+                const lx = 170 + 162 * Math.cos(angleRad);
+                const ly = 170 + 162 * Math.sin(angleRad);
+                return <line key={`line-${i}`} x1="170" y1="170" x2={lx} y2={ly} stroke="rgba(156,122,47,0.1)" strokeWidth="1.2" />;
               })}
+              
               {RASHIS.map((r, i) => {
                 const num = r.number;
                 let fill = "transparent"; let stroke = "none";
                 if (num === ssSigns.prev) { fill = `${SLATE_BLUE}12`; stroke = SLATE_BLUE; }
                 else if (num === ssSigns.curr) { fill = `${PURPLE}1A`; stroke = PURPLE; }
                 else if (num === ssSigns.next) { fill = `${AMBER}12`; stroke = AMBER; }
-                const startAngle = i * 30 - 90;
-                const endAngle = (i + 1) * 30 - 90;
-                const so = { x: 160 + 140 * Math.cos((startAngle * Math.PI) / 180), y: 160 + 140 * Math.sin((startAngle * Math.PI) / 180) };
-                const eo = { x: 160 + 140 * Math.cos((endAngle * Math.PI) / 180), y: 160 + 140 * Math.sin((endAngle * Math.PI) / 180) };
-                const si = { x: 160 + 80 * Math.cos((startAngle * Math.PI) / 180), y: 160 + 80 * Math.sin((startAngle * Math.PI) / 180) };
-                const ei = { x: 160 + 80 * Math.cos((endAngle * Math.PI) / 180), y: 160 + 80 * Math.sin((endAngle * Math.PI) / 180) };
-                const pathData = [`M ${si.x} ${si.y}`, `L ${so.x} ${so.y}`, `A 140 140 0 0 1 ${eo.x} ${eo.y}`, `L ${ei.x} ${ei.y}`, `A 80 80 0 0 0 ${si.x} ${si.y}`, "Z"].join(" ");
+                const startAngle = i * 30 - 105;
+                const endAngle = (i + 1) * 30 - 105;
+                const so = { x: 170 + 162 * Math.cos((startAngle * Math.PI) / 180), y: 170 + 162 * Math.sin((startAngle * Math.PI) / 180) };
+                const eo = { x: 170 + 162 * Math.cos((endAngle * Math.PI) / 180), y: 170 + 162 * Math.sin((endAngle * Math.PI) / 180) };
+                const si = { x: 170 + 95 * Math.cos((startAngle * Math.PI) / 180), y: 170 + 95 * Math.sin((startAngle * Math.PI) / 180) };
+                const ei = { x: 170 + 95 * Math.cos((endAngle * Math.PI) / 180), y: 170 + 95 * Math.sin((endAngle * Math.PI) / 180) };
+                const pathData = [`M ${si.x} ${si.y}`, `L ${so.x} ${so.y}`, `A 162 162 0 0 1 ${eo.x} ${eo.y}`, `L ${ei.x} ${ei.y}`, `A 95 95 0 0 0 ${si.x} ${si.y}`, "Z"].join(" ");
                 return <path key={`highlight-${num}`} d={pathData} fill={fill} stroke={stroke} strokeWidth={num === activeTransitSign ? "2.5" : "1"} />;
               })}
+              
               {circlePoints.map(p => {
                 const r = RASHIS[p.rashiNum - 1];
-                const angleDeg = p.angleDeg + 15;
+                const angleDeg = p.angleDeg;
                 const angleRad = (angleDeg * Math.PI) / 180;
-                const ptEng = { x: 160 + 125 * Math.cos(angleRad), y: 160 + 125 * Math.sin(angleRad) };
-                const ptDev = { x: 160 + 103 * Math.cos(angleRad), y: 160 + 103 * Math.sin(angleRad) };
-                const ptNum = { x: 160 + 62 * Math.cos(angleRad), y: 160 + 62 * Math.sin(angleRad) };
+                const ptEng = { x: 170 + 134 * Math.cos(angleRad), y: 170 + 134 * Math.sin(angleRad) };
+                const ptDev = { x: 170 + 114 * Math.cos(angleRad), y: 170 + 114 * Math.sin(angleRad) };
+                const ptNum = { x: 170 + 74 * Math.cos(angleRad), y: 170 + 74 * Math.sin(angleRad) };
                 const isCurrentMoon = p.rashiNum === moonSignNum;
                 return (
                   <g key={`label-${p.rashiNum}`}>
-                    <text x={ptEng.x} y={ptEng.y} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9px", fontWeight: 700, fill: INK_PRIMARY, letterSpacing: "0.2px" }}>{r.nameEnglish}</text>
-                    <text x={ptDev.x} y={ptDev.y + 1} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8px", fontWeight: 500, fill: INK_SECONDARY }}>{r.nameDevanagari}</text>
-                    <text x={ptNum.x} y={ptNum.y} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "10px", fontWeight: 800, fill: isCurrentMoon ? GOLD : INK_MUTED }}>{r.number}</text>
+                    <text x={ptEng.x} y={ptEng.y} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9.5px", fontWeight: 700, fill: INK_PRIMARY, letterSpacing: "0.2px" }}>{SHORT_SIGNS[p.rashiNum - 1]}</text>
+                    <text x={ptDev.x} y={ptDev.y + 1} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8.5px", fontWeight: 500, fill: INK_SECONDARY }}>{r.nameDevanagari}</text>
+                    <text x={ptNum.x} y={ptNum.y} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "10.5px", fontWeight: 800, fill: isCurrentMoon ? GOLD : INK_MUTED }}>{r.number}</text>
                   </g>
                 );
               })}
+              
+              {/* Natal Moon */}
               {(() => {
-                const angleDeg = (moonSignNum - 1) * 30 - 75;
+                const angleDeg = (moonSignNum - 1) * 30 - 90;
                 const angleRad = (angleDeg * Math.PI) / 180;
-                const mx = 160 + 48 * Math.cos(angleRad);
-                const my = 160 + 48 * Math.sin(angleRad);
-                return (<g><circle cx={mx} cy={my} r="12" fill={GOLD} stroke="#ffffff" strokeWidth="1.5" /><text x={mx} y={my + 1} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "11px", fill: "#ffffff" }}>☽</text></g>);
+                const mx = 170 + 52 * Math.cos(angleRad);
+                const my = 170 + 52 * Math.sin(angleRad);
+                return (
+                  <g>
+                    <circle cx={mx} cy={my} r="11" fill={GOLD} stroke="#ffffff" strokeWidth="1.5" />
+                    <text x={mx} y={my + 0.5} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "11px", fill: "#ffffff" }}>☽</text>
+                  </g>
+                );
               })()}
+              
+              {/* Transit Saturn */}
               {(() => {
                 const prevIndex = ssSigns.prev - 1;
-                const baseDeg = prevIndex * 30 - 90;
-                const currentDeg = baseDeg + (saturnTransitYear / 7.5) * 90 + 15;
+                const baseDeg = prevIndex * 30 - 105;
+                const currentDeg = baseDeg + (saturnTransitYear / 7.5) * 90;
                 const angleRad = (currentDeg * Math.PI) / 180;
-                const sx = 160 + 106 * Math.cos(angleRad);
-                const sy = 160 + 106 * Math.sin(angleRad);
-                return (<g><circle cx={sx} cy={sy} r="11" fill="#1e293b" stroke={activeTransitPhaseLabel.color} strokeWidth="2" style={{ transition: "all 0.15s ease-out" }} /><text x={sx} y={sy} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9px", fontWeight: 700, fill: "#ffffff" }}>♄</text></g>);
+                const sx = 170 + 148 * Math.cos(angleRad);
+                const sy = 170 + 148 * Math.sin(angleRad);
+                return (
+                  <g>
+                    <circle cx={sx} cy={sy} r="11" fill="#1e293b" stroke={activeTransitPhaseLabel.color} strokeWidth="2" style={{ transition: "all 0.15s ease-out" }} />
+                    <text x={sx} y={sy} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9px", fontWeight: 700, fill: "#ffffff" }}>♄</text>
+                  </g>
+                );
               })()}
-              <circle cx="160" cy="160" r="35" fill="rgba(156,122,47,0.06)" />
-              <text x="160" y="156" textAnchor="middle" style={{ fontSize: "7.5px", fontWeight: 700, fill: GOLD_DEEP, letterSpacing: "0.5px" }}>CHANDRA</text>
-              <text x="160" y="167" textAnchor="middle" style={{ fontSize: "7.5px", fontWeight: 700, fill: GOLD_DEEP, letterSpacing: "0.5px" }}>LAGNA</text>
+              
+              <circle cx="170" cy="170" r="38" fill="rgba(156,122,47,0.06)" />
+              <text x="170" y="166" textAnchor="middle" style={{ fontSize: "7.5px", fontWeight: 700, fill: GOLD_DEEP, letterSpacing: "0.5px" }}>CHANDRA</text>
+              <text x="170" y="177" textAnchor="middle" style={{ fontSize: "7.5px", fontWeight: 700, fill: GOLD_DEEP, letterSpacing: "0.5px" }}>LAGNA</text>
             </svg>
           </div>
         </div>
@@ -220,28 +241,63 @@ export function SadeSatiTracker() {
             </p>
           </div>
 
-          {/* Life Path Mini Timeline */}
+          {/* Interactive SVG Life Path Timeline */}
           <div style={{ background: "#ffffff", padding: "12px", borderRadius: "10px", border: "1px solid rgba(156,122,47,0.1)" }}>
             <h4 style={{ margin: "0 0 8px 0", fontSize: "11px", fontWeight: 700, color: GOLD_DEEP }}>Life-Path Windows (0–90 yr)</h4>
-            <div style={{ position: "relative", width: "100%", height: "28px" }}>
-              <div style={{ position: "absolute", top: "10px", left: 0, right: 0, height: "3px", background: "rgba(0,0,0,0.06)", borderRadius: "2px" }} />
-              {[0, 30, 60, 90].map(age => (
-                <div key={age} style={{ position: "absolute", left: `${(age / 90) * 100}%`, transform: "translateX(-50%)", top: 0, display: "flex", flexDirection: "column", alignItems: "center" }}>
-                  <div style={{ width: "1px", height: "6px", background: "rgba(0,0,0,0.15)" }} />
-                  <span style={{ fontSize: "8px", color: INK_MUTED, fontWeight: 600 }}>{age}</span>
-                </div>
-              ))}
-              {cycleWindows.map((win, idx) => {
-                const left = (win.start / 90) * 100;
-                const width = ((win.end - win.start) / 90) * 100;
-                const colors = [SLATE_BLUE, PURPLE, AMBER];
-                const isActive = activeCycle === win.cycle;
-                return (
-                  <div key={win.cycle} onClick={() => setActiveCycle(win.cycle)} style={{ position: "absolute", top: "7px", left: `${left}%`, width: `${width}%`, height: "10px", background: isActive ? `${colors[idx]}60` : `${colors[idx]}30`, border: isActive ? `1.5px solid ${colors[idx]}` : `1px solid ${colors[idx]}50`, borderRadius: "5px", cursor: "pointer", transition: "all 0.2s", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <span style={{ fontSize: "7px", fontWeight: 700, color: isActive ? "#ffffff" : colors[idx], whiteSpace: "nowrap" }}>{win.label}</span>
-                  </div>
-                );
-              })}
+            <div style={{ width: "100%", overflowX: "auto" }}>
+              <svg width="100%" height="52" viewBox="0 0 380 52" style={{ display: "block", overflow: "visible" }}>
+                {/* Baseline */}
+                <line x1="20" y1="24" x2="360" y2="24" stroke="rgba(0,0,0,0.08)" strokeWidth="3" strokeLinecap="round" />
+                
+                {/* Ticks & Age Labels */}
+                {[0, 30, 60, 90].map(age => {
+                  const x = 20 + (age / 90) * 340;
+                  return (
+                    <g key={age}>
+                      <line x1={x} y1={24} x2={x} y2={30} stroke="rgba(0,0,0,0.18)" strokeWidth="1" />
+                      <text x={x} y={42} textAnchor="middle" style={{ fontSize: "8.5px", fill: INK_MUTED, fontWeight: 600 }}>{age}</text>
+                    </g>
+                  );
+                })}
+
+                {/* Cycle Windows */}
+                {cycleWindows.map((win, idx) => {
+                  const x1 = 20 + (win.start / 90) * 340;
+                  const x2 = 20 + (win.end / 90) * 340;
+                  const w = x2 - x1;
+                  const colors = [SLATE_BLUE, PURPLE, AMBER];
+                  const isActive = activeCycle === win.cycle;
+                  const strokeColor = colors[idx];
+                  const fillColor = isActive ? colors[idx] : `${colors[idx]}25`;
+                  const textColor = isActive ? "#ffffff" : colors[idx];
+                  const centerLabelX = x1 + w / 2;
+
+                  return (
+                    <g key={win.cycle} style={{ cursor: "pointer" }} onClick={() => setActiveCycle(win.cycle)}>
+                      <rect
+                        x={x1}
+                        y={15}
+                        width={w}
+                        height={18}
+                        rx={9}
+                        fill={fillColor}
+                        stroke={strokeColor}
+                        strokeWidth={isActive ? 1.8 : 1}
+                        style={{ transition: "all 0.2s" }}
+                      />
+                      <text
+                        x={centerLabelX}
+                        y={24}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        style={{ fontSize: "8px", fontWeight: 800, fill: textColor, pointerEvents: "none" }}
+                      >
+                        {win.cycle === 1 ? "1st" : win.cycle === 2 ? "2nd" : "3rd"}
+                      </text>
+                    </g>
+                  );
+                })}
+              </svg>
             </div>
           </div>
         </div>

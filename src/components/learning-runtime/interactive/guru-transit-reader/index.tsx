@@ -32,6 +32,8 @@ const GURU_HOUSE_DATA: Record<number, GuruHouseDetail> = {
   12: { houseNum: 12, quality: "Mildly Supportive", color: SLATE_BLUE, theme: "Spiritual Release", details: "Charitable expenditure, peaceful sleep, isolated retreats.", icon: "🧘" }
 };
 
+const SHORT_SIGNS = ["ARI", "TAU", "GEM", "CAN", "LEO", "VIR", "LIB", "SCO", "SAG", "CAP", "AQU", "PIS"];
+
 export function GuruTransitReader() {
   const [moonSignNum, setMoonSignNum] = useState<number>(1);
   const [guruHouse, setGuruHouse] = useState<number>(5);
@@ -106,41 +108,107 @@ export function GuruTransitReader() {
       </div>
 
       {/* ─── MAIN SPLIT: WHEEL + VERDICT ─── */}
-      <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center" }}>
         {/* Wheel */}
-        <div style={{ flex: "0 0 280px", background: "#ffffff", padding: "14px", borderRadius: "12px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <div style={{ position: "relative", width: "260px", height: "260px" }}>
-            <svg width="260" height="260" viewBox="0 0 300 300">
-              <circle cx="150" cy="150" r="130" fill="none" stroke="rgba(156,122,47,0.15)" strokeWidth="1.5" />
-              <circle cx="150" cy="150" r="75" fill="none" stroke="rgba(156,122,47,0.08)" strokeWidth="1" />
+        <div style={{ flex: "0 0 340px", background: "#ffffff", padding: "14px", borderRadius: "12px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <div style={{ position: "relative", width: "340px", height: "340px" }}>
+            <svg width="340" height="340" viewBox="0 0 340 340">
+              <circle cx="170" cy="170" r="160" fill="none" stroke="rgba(156,122,47,0.15)" strokeWidth="1.5" />
+              <circle cx="170" cy="170" r="95" fill="none" stroke="rgba(156,122,47,0.08)" strokeWidth="1" />
               {sectors.map((s) => {
                 const hData = GURU_HOUSE_DATA[s.houseNum];
                 const angleRad = ((s.angleDeg + 15) * Math.PI) / 180;
                 const fill = hData.quality === "Very Favourable" ? "rgba(16,185,129,0.08)" : "rgba(0,0,0,0.02)";
                 const stroke = hData.quality === "Very Favourable" ? GREEN : "rgba(0,0,0,0.08)";
                 const isCurrentJupiter = s.houseNum === guruHouse;
-                const pathData = [`M ${150 + 75 * Math.cos((s.angleDeg * Math.PI) / 180)} ${150 + 75 * Math.sin((s.angleDeg * Math.PI) / 180)}`, `L ${150 + 130 * Math.cos((s.angleDeg * Math.PI) / 180)} ${150 + 130 * Math.sin((s.angleDeg * Math.PI) / 180)}`, `A 130 130 0 0 1 ${150 + 130 * Math.cos(((s.angleDeg + 30) * Math.PI) / 180)} ${150 + 130 * Math.sin(((s.angleDeg + 30) * Math.PI) / 180)}`, `L ${150 + 75 * Math.cos(((s.angleDeg + 30) * Math.PI) / 180)} ${150 + 75 * Math.sin(((s.angleDeg + 30) * Math.PI) / 180)}`, `A 75 75 0 0 0 ${150 + 75 * Math.cos((s.angleDeg * Math.PI) / 180)} ${150 + 75 * Math.sin((s.angleDeg * Math.PI) / 180)}`, "Z"].join(" ");
-                const signNum = ((moonSignNum + s.houseNum - 1 - 1) % 12) + 1;
+                
+                const pathData = [`M ${170 + 95 * Math.cos((s.angleDeg * Math.PI) / 180)} ${170 + 95 * Math.sin((s.angleDeg * Math.PI) / 180)}`, `L ${170 + 160 * Math.cos((s.angleDeg * Math.PI) / 180)} ${170 + 160 * Math.sin((s.angleDeg * Math.PI) / 180)}`, `A 160 160 0 0 1 ${170 + 160 * Math.cos(((s.angleDeg + 30) * Math.PI) / 180)} ${170 + 160 * Math.sin(((s.angleDeg + 30) * Math.PI) / 180)}`, `L ${170 + 95 * Math.cos(((s.angleDeg + 30) * Math.PI) / 180)} ${170 + 95 * Math.sin(((s.angleDeg + 30) * Math.PI) / 180)}`, `A 95 95 0 0 0 ${170 + 95 * Math.cos((s.angleDeg * Math.PI) / 180)} ${170 + 95 * Math.sin((s.angleDeg * Math.PI) / 180)}`, "Z"].join(" ");
+                const signNum = ((moonSignNum + s.houseNum - 2 + 12) % 12) + 1;
                 const r = RASHIS[signNum - 1];
-                const ptSign = { x: 150 + 116 * Math.cos(angleRad), y: 150 + 116 * Math.sin(angleRad) };
-                const ptHouse = { x: 150 + 60 * Math.cos(angleRad), y: 150 + 60 * Math.sin(angleRad) };
+                
+                const ptAbbrev = { x: 170 + 136 * Math.cos(angleRad), y: 170 + 136 * Math.sin(angleRad) };
+                const ptDev = { x: 170 + 114 * Math.cos(angleRad), y: 170 + 114 * Math.sin(angleRad) };
+                const ptIcon = { x: 170 + 98 * Math.cos(angleRad), y: 170 + 98 * Math.sin(angleRad) };
+                const ptHouse = { x: 170 + 52 * Math.cos(angleRad), y: 170 + 52 * Math.sin(angleRad) };
+                
                 return (
                   <g key={s.houseNum} style={{ cursor: "pointer" }} onClick={() => setGuruHouse(s.houseNum)}>
                     <path d={pathData} fill={fill} stroke={isCurrentJupiter ? GOLD : stroke} strokeWidth={isCurrentJupiter ? "2.5" : "0.8"} style={{ transition: "all 0.15s" }} />
-                    <text x={ptSign.x} y={ptSign.y - 3} textAnchor="middle" style={{ fontSize: "8.5px", fontWeight: 700, fill: INK_PRIMARY }}>{r.nameEnglish}</text>
-                    <text x={ptSign.x} y={ptSign.y + 6} textAnchor="middle" style={{ fontSize: "9px" }}>{hData.icon}</text>
+                    <line x1="170" y1="170" x2={170 + 160 * Math.cos((s.angleDeg * Math.PI) / 180)} y2={170 + 160 * Math.sin((s.angleDeg * Math.PI) / 180)} stroke="rgba(156,122,47,0.1)" />
+                    
+                    <text x={ptAbbrev.x} y={ptAbbrev.y} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9.5px", fontWeight: 700, fill: INK_PRIMARY }}>{SHORT_SIGNS[signNum - 1]}</text>
+                    <text x={ptDev.x} y={ptDev.y + 1} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8.5px", fill: INK_MUTED }}>{r.nameDevanagari}</text>
+                    <text x={ptIcon.x} y={ptIcon.y} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8.5px" }}>{hData.icon}</text>
+                    
                     <text x={ptHouse.x} y={ptHouse.y} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9.5px", fontWeight: 800, fill: isCurrentJupiter ? GOLD : INK_MUTED }}>H{s.houseNum}</text>
                   </g>
                 );
               })}
-              {activeHouseData.quality === "Very Favourable" && (() => { const coord = sectors[guruHouse - 1]; const angleRad = ((coord.angleDeg + 15) * Math.PI) / 180; const jx = 150 + 95 * Math.cos(angleRad); const jy = 150 + 95 * Math.sin(angleRad); return (<g style={{ pointerEvents: "none" }}><circle cx={jx} cy={jy} r="26" fill="none" stroke={GOLD} strokeWidth="1" strokeDasharray="3 3" style={{ opacity: 0.8 }} /><line x1={jx} y1={jy} x2="150" y2="150" stroke={GOLD} strokeWidth="2" strokeDasharray="2 2" style={{ opacity: 0.6 }} /></g>); })()}
-              {saturnAffliction && (() => { const coord = sectors[guruHouse - 1]; const angleRad = ((coord.angleDeg + 15) * Math.PI) / 180; const jx = 150 + 95 * Math.cos(angleRad); const jy = 150 + 95 * Math.sin(angleRad); const satAngleRad = ((((coord.angleDeg + 15) + 180) % 360) * Math.PI) / 180; const sx = 150 + 120 * Math.cos(satAngleRad); const sy = 150 + 120 * Math.sin(satAngleRad); return (<g style={{ pointerEvents: "none" }}><line x1={sx} y1={sy} x2={jx} y2={jy} stroke="#4a5568" strokeWidth="2.5" strokeDasharray="5 3" /><circle cx={sx} cy={sy} r="9" fill="#4a5568" /><text x={sx} y={sy} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "7.5px", fill: "#ffffff", fontWeight: 700 }}>♄</text></g>); })()}
-              {rahuAffliction && (() => { const coord = sectors[guruHouse - 1]; const angleRad = ((coord.angleDeg + 15) * Math.PI) / 180; const jx = 150 + 95 * Math.cos(angleRad); const jy = 150 + 95 * Math.sin(angleRad); const rahuAngleRad = ((((coord.angleDeg + 15) + 120) % 360) * Math.PI) / 180; const rx = 150 + 120 * Math.cos(rahuAngleRad); const ry = 150 + 120 * Math.sin(rahuAngleRad); return (<g style={{ pointerEvents: "none" }}><line x1={rx} y1={ry} x2={jx} y2={jy} stroke="#6b21a8" strokeWidth="2.5" strokeDasharray="5 3" /><circle cx={rx} cy={ry} r="9" fill="#6b21a8" /><text x={rx} y={ry} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "7.5px", fill: "#ffffff", fontWeight: 700 }}>☊</text></g>); })()}
-              {(() => { const coord = sectors[guruHouse - 1]; const angleRad = ((coord.angleDeg + 15) * Math.PI) / 180; const jx = 150 + 95 * Math.cos(angleRad); const jy = 150 + 95 * Math.sin(angleRad); return (<g style={{ pointerEvents: "none" }}><circle cx={jx} cy={jy} r="13" fill={GOLD} stroke="#ffffff" strokeWidth="1.5" /><text x={jx} y={jy + 0.5} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "10.5px", fill: "#ffffff", fontWeight: 700 }}>♃</text></g>); })()}
-              <circle cx="150" cy="150" r="32" fill="rgba(0,0,0,0.03)" />
-              <circle cx="150" cy="132" r="8" fill={GOLD} stroke="#ffffff" strokeWidth="1" />
-              <text x="150" y="132" textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8px", fill: "#ffffff" }}>☽</text>
-              <text x="150" y="152" textAnchor="middle" style={{ fontSize: "7.5px", fontWeight: 700, fill: INK_MUTED }}>CHANDRA</text>
+              
+              {activeHouseData.quality === "Very Favourable" && (() => { 
+                const coord = sectors[guruHouse - 1]; 
+                const angleRad = ((coord.angleDeg + 15) * Math.PI) / 180; 
+                const jx = 170 + 78 * Math.cos(angleRad); 
+                const jy = 170 + 78 * Math.sin(angleRad); 
+                return (
+                  <g style={{ pointerEvents: "none" }}>
+                    <circle cx={jx} cy={jy} r="22" fill="none" stroke={GOLD} strokeWidth="1" strokeDasharray="3 3" style={{ opacity: 0.8 }} />
+                    <line x1={jx} y1={jy} x2="170" y2="170" stroke={GOLD} strokeWidth="1.5" strokeDasharray="2 2" style={{ opacity: 0.6 }} />
+                  </g>
+                ); 
+              })()}
+              
+              {saturnAffliction && (() => { 
+                const coord = sectors[guruHouse - 1]; 
+                const angleRad = ((coord.angleDeg + 15) * Math.PI) / 180; 
+                const jx = 170 + 78 * Math.cos(angleRad); 
+                const jy = 170 + 78 * Math.sin(angleRad); 
+                const satAngleRad = ((((coord.angleDeg + 15) + 180) % 360) * Math.PI) / 180; 
+                const sx = 170 + 78 * Math.cos(satAngleRad); 
+                const sy = 170 + 78 * Math.sin(satAngleRad); 
+                return (
+                  <g style={{ pointerEvents: "none" }}>
+                    <line x1={sx} y1={sy} x2={jx} y2={jy} stroke="#4a5568" strokeWidth="2.5" strokeDasharray="5 3" />
+                    <circle cx={sx} cy={sy} r="9.5" fill="#4a5568" />
+                    <text x={sx} y={sy} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8px", fill: "#ffffff", fontWeight: 700 }}>♄</text>
+                  </g>
+                ); 
+              })()}
+              
+              {rahuAffliction && (() => { 
+                const coord = sectors[guruHouse - 1]; 
+                const angleRad = ((coord.angleDeg + 15) * Math.PI) / 180; 
+                const jx = 170 + 78 * Math.cos(angleRad); 
+                const jy = 170 + 78 * Math.sin(angleRad); 
+                const rahuAngleRad = ((((coord.angleDeg + 15) + 120) % 360) * Math.PI) / 180; 
+                const rx = 170 + 78 * Math.cos(rahuAngleRad); 
+                const ry = 170 + 78 * Math.sin(rahuAngleRad); 
+                return (
+                  <g style={{ pointerEvents: "none" }}>
+                    <line x1={rx} y1={ry} x2={jx} y2={jy} stroke="#6b21a8" strokeWidth="2.5" strokeDasharray="5 3" />
+                    <circle cx={rx} cy={ry} r="9.5" fill="#6b21a8" />
+                    <text x={rx} y={ry} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8px", fill: "#ffffff", fontWeight: 700 }}>☊</text>
+                  </g>
+                ); 
+              })()}
+              
+              {(() => { 
+                const coord = sectors[guruHouse - 1]; 
+                const angleRad = ((coord.angleDeg + 15) * Math.PI) / 180; 
+                const jx = 170 + 78 * Math.cos(angleRad); 
+                const jy = 170 + 78 * Math.sin(angleRad); 
+                return (
+                  <g style={{ pointerEvents: "none" }}>
+                    <circle cx={jx} cy={jy} r="12" fill={GOLD} stroke="#ffffff" strokeWidth="1.5" />
+                    <text x={jx} y={jy + 0.5} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9.5px", fill: "#ffffff", fontWeight: 700 }}>♃</text>
+                  </g>
+                ); 
+              })()}
+              
+              <circle cx="170" cy="170" r="30" fill="rgba(0,0,0,0.03)" />
+              <circle cx="170" cy="154" r="8.5" fill={GOLD} stroke="#ffffff" strokeWidth="1" />
+              <text x="170" y="154" textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8.5px", fill: "#ffffff" }}>☽</text>
+              <text x="170" y="174" textAnchor="middle" style={{ fontSize: "7.5px", fontWeight: 700, fill: INK_MUTED }}>CHANDRA</text>
             </svg>
           </div>
         </div>

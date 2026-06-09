@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { Shield, ShieldAlert, CheckCircle2, HelpCircle, Sparkles, Zap, ZapOff } from "lucide-react";
 import { RASHIS } from "../rashi-data";
+import { IAST } from "../../chrome/typography";
 
 const GOLD = "#9C7A2F";
 const GOLD_DEEP = "#7A5E1E";
@@ -24,9 +25,11 @@ export function VedhaIntro() {
     if (scenario === "saturn_12") {
       return {
         transitingPlanet: "Saturn",
+        transitingGlyph: "♄",
         transitHouse: 12,
         vedhaHouse: 3,
         blockerName: "Jupiter",
+        blockerGlyph: "♃",
         color: PURPLE,
         defaultEffect: "Pratham Sāḍhe-Sātī (12th from Moon). Classically triggers financial losses, high expenditure, mental worry, and sleep disturbances.",
         obstructedEffect: "Obstructed by planet in the 3rd House! The 12th-house difficulties are nullified — the native passes through this phase without typical troubles."
@@ -34,9 +37,11 @@ export function VedhaIntro() {
     } else {
       return {
         transitingPlanet: "Jupiter",
+        transitingGlyph: "♃",
         transitHouse: 11,
         vedhaHouse: 8,
         blockerName: "Mars",
+        blockerGlyph: "♂",
         color: SLATE_BLUE,
         defaultEffect: "Favorable 11th from Moon transit. Classically brings massive financial gains, network growth, honors, and desires fulfilled.",
         obstructedEffect: "Obstructed by planet in the 8th House! The favorable gain-bringing results are nullified — the transit passes without bringing expected gains."
@@ -44,52 +49,67 @@ export function VedhaIntro() {
     }
   }, [scenario]);
 
-  // SVG Positions
+  // SVG Center & Radius settings for clean layout
   const center = 150;
-  const radius = 95;
 
+  // Mid-point angles for houses (H1 is at -75 deg, i.e. between -90 and -60 deg)
   const transitAngle = useMemo(() => {
-    // 1-based house index to degree (H1 is top, clockwise H1 to H12)
-    return (details.transitHouse - 1) * 30 - 90;
+    return (details.transitHouse - 1) * 30 - 75;
   }, [details]);
 
   const vedhaAngle = useMemo(() => {
-    return (details.vedhaHouse - 1) * 30 - 90;
+    return (details.vedhaHouse - 1) * 30 - 75;
   }, [details]);
 
-  // Coordinates
+  // Planet outer coordinates (Radius 96)
   const transitCoord = useMemo(() => {
     const rad = (transitAngle * Math.PI) / 180;
     return {
-      x: center + radius * Math.cos(rad),
-      y: center + radius * Math.sin(rad)
+      x: center + 96 * Math.cos(rad),
+      y: center + 96 * Math.sin(rad)
     };
   }, [transitAngle]);
 
   const vedhaCoord = useMemo(() => {
     const rad = (vedhaAngle * Math.PI) / 180;
     return {
-      x: center + radius * Math.cos(rad),
-      y: center + radius * Math.sin(rad)
+      x: center + 96 * Math.cos(rad),
+      y: center + 96 * Math.sin(rad)
     };
   }, [vedhaAngle]);
 
-  // Shield coordinate (positioned closer along the ray path)
+  // Shield coordinate (positioned on the separator boundary at Radius 72)
   const shieldCoord = useMemo(() => {
     const rad = (transitAngle * Math.PI) / 180;
-    const shieldRadius = 55;
     return {
-      x: center + shieldRadius * Math.cos(rad),
-      y: center + shieldRadius * Math.sin(rad),
+      x: center + 72 * Math.cos(rad),
+      y: center + 72 * Math.sin(rad),
       angle: transitAngle + 90 // Tangent angle
     };
   }, [transitAngle]);
+
+  // Inner planet label coordinates (Radius 78, aligned inwards)
+  const transitLabelCoord = useMemo(() => {
+    const rad = (transitAngle * Math.PI) / 180;
+    return {
+      x: center + 78 * Math.cos(rad),
+      y: center + 78 * Math.sin(rad)
+    };
+  }, [transitAngle]);
+
+  const vedhaLabelCoord = useMemo(() => {
+    const rad = (vedhaAngle * Math.PI) / 180;
+    return {
+      x: center + 78 * Math.cos(rad),
+      y: center + 78 * Math.sin(rad)
+    };
+  }, [vedhaAngle]);
 
   return (
     <div
       className="gl-surface-twilight-glass"
       style={{
-        padding: "24px",
+        padding: "20px",
         borderRadius: "16px",
         background: "rgba(255, 253, 248, 0.75)",
         backdropFilter: "blur(12px)",
@@ -101,21 +121,21 @@ export function VedhaIntro() {
         margin: "0 auto",
         display: "flex",
         flexDirection: "column",
-        gap: "24px"
+        gap: "14px"
       }}
     >
       {/* Header */}
       <div>
-        <h3 style={{ margin: 0, fontSize: "20px", fontWeight: 800, color: GOLD_DEEP }}>
-          वेधसिद्धान्तपरिचयः — The Vedha Doctrine
+        <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 800, color: GOLD_DEEP }}>
+          <IAST>Vedhasiddhānta-paricayaḥ</IAST> — The Vedha Doctrine
         </h3>
-        <p style={{ margin: "4px 0 0 0", fontSize: "13px", color: INK_SECONDARY }}>
+        <p style={{ margin: "2px 0 0 0", fontSize: "12px", color: INK_SECONDARY }}>
           Watch how placing a planet in the designated vedha-point blocks the active ray of a transit, nullifying its outcomes.
         </p>
       </div>
 
       {/* Main Grid */}
-      <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
         
         {/* Left Column: Visual Ray Blockage Diagram */}
         <div style={{
@@ -134,82 +154,155 @@ export function VedhaIntro() {
           </h4>
 
           <div style={{ position: "relative", width: "300px", height: "300px" }}>
-            <svg width="300" height="300" viewBox="0 0 300 300">
+            <svg width="300" height="300" viewBox="0 0 300 300" style={{ overflow: "visible" }}>
               {/* Outer boundary */}
-              <circle cx="150" cy="150" r="120" fill="none" stroke="rgba(156,122,47,0.12)" strokeWidth="1.5" />
-              <circle cx="150" cy="150" r="70" fill="none" stroke="rgba(156,122,47,0.06)" strokeWidth="1" />
+              <circle cx="150" cy="150" r="122" fill="none" stroke="rgba(156,122,47,0.15)" strokeWidth="1.5" />
+              
+              {/* Concentric separator circle (separates inner house zone from outer planet zone) */}
+              <circle cx="150" cy="150" r="72" fill="none" stroke="rgba(156,122,47,0.08)" strokeWidth="1" strokeDasharray="3 3" />
 
               {/* 12 House Sectors */}
               {Array.from({ length: 12 }).map((_, i) => {
                 const angleDeg = i * 30 - 90;
                 const rad = (angleDeg * Math.PI) / 180;
-                const lineX2 = center + 120 * Math.cos(rad);
-                const lineY2 = center + 120 * Math.sin(rad);
+                const lineX2 = center + 122 * Math.cos(rad);
+                const lineY2 = center + 122 * Math.sin(rad);
 
                 const textRad = ((angleDeg + 15) * Math.PI) / 180;
-                const textX = center + 105 * Math.cos(textRad);
-                const textY = center + 105 * Math.sin(textRad);
+                const textX = center + 48 * Math.cos(textRad);
+                const textY = center + 48 * Math.sin(textRad);
 
                 return (
                   <g key={i}>
-                    {/* Partition Line */}
-                    <line x1="150" y1="150" x2={lineX2} y2={lineY2} stroke="rgba(156,122,47,0.08)" strokeWidth="1" />
-                    {/* House Label */}
-                    <text x={textX} y={textY} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "10px", fontWeight: 700, fill: INK_MUTED }}>
+                    {/* Partition Line starting from center (will be masked by Moon circle) */}
+                    <line x1="150" y1="150" x2={lineX2} y2={lineY2} stroke="rgba(156,122,47,0.1)" strokeWidth="1" />
+                    {/* House Label positioned cleanly in the middle zone */}
+                    <text x={textX} y={textY} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9px", fontWeight: 800, fill: INK_MUTED, opacity: 0.65 }}>
                       H{i + 1}
                     </text>
                   </g>
                 );
               })}
 
-              {/* Central Moon reference circle */}
-              <circle cx="150" cy="150" r="25" fill="rgba(156,122,47,0.08)" stroke={GOLD} strokeWidth="1" />
-              <text x="150" y="147" textAnchor="middle" style={{ fontSize: "8.5px", fontWeight: 800, fill: GOLD_DEEP }}>NATAL</text>
-              <text x="150" y="157" textAnchor="middle" style={{ fontSize: "8.5px", fontWeight: 800, fill: GOLD_DEEP }}>MOON</text>
+              {/* Active Transit Connection Ray */}
+              {vedhaPlaced ? (
+                <>
+                  {/* Outer Segment: Planet to Shield (Fully colored and glowing) */}
+                  <line
+                    x1={transitCoord.x}
+                    y1={transitCoord.y}
+                    x2={shieldCoord.x}
+                    y2={shieldCoord.y}
+                    stroke={details.color}
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    style={{ filter: `drop-shadow(0 0 5px ${details.color}50)`, transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)" }}
+                  />
+                  {/* Inner Segment: Shield to Moon (Blocked, faint dashed gray) */}
+                  <line
+                    x1={shieldCoord.x}
+                    y1={shieldCoord.y}
+                    x2={center}
+                    y2={center}
+                    stroke="#94a3b8"
+                    strokeWidth="1.5"
+                    strokeDasharray="3 3"
+                    opacity="0.3"
+                    style={{ transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)" }}
+                  />
+                </>
+              ) : (
+                /* Unobstructed: Solid glowing ray all the way from Planet to Moon */
+                <line
+                  x1={transitCoord.x}
+                  y1={transitCoord.y}
+                  x2={center}
+                  y2={center}
+                  stroke={details.color}
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  style={{ filter: `drop-shadow(0 0 7px ${details.color}60)`, transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)" }}
+                />
+              )}
 
-              {/* Active Connection Ray */}
-              <line
-                x1={center}
-                y1={center}
-                x2={transitCoord.x}
-                y2={transitCoord.y}
-                stroke={vedhaPlaced ? "#cbd5e1" : details.color}
-                strokeWidth={vedhaPlaced ? "2" : "3.5"}
-                strokeDasharray={vedhaPlaced ? "4 4" : "none"}
-                style={{ transition: "all 0.3s ease", opacity: vedhaPlaced ? 0.4 : 1 }}
-              />
-
-              {/* Transiting Planet Sphere */}
-              <g style={{ transform: `translate(${transitCoord.x - 14}px, ${transitCoord.y - 14}px)`, transition: "all 0.3s ease" }}>
-                <circle cx="14" cy="14" r="14" fill={details.color} stroke="#ffffff" strokeWidth="2" />
-                <text x="14" y="14" textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "10px", fill: "#ffffff", fontWeight: 800 }}>
-                  {details.transitingPlanet[0]}
-                </text>
-                {/* Small indicator label */}
-                <text x="14" y="-6" textAnchor="middle" style={{ fontSize: "8px", fontWeight: 800, fill: INK_PRIMARY }}>
-                  Transit H{details.transitHouse}
-                </text>
-              </g>
-
-              {/* Blocker planet if active */}
+              {/* Blocker Obstruction Beam (Vedha force ray from Blocker Planet to Shield) */}
               {vedhaPlaced && (
-                <g style={{ transform: `translate(${vedhaCoord.x - 14}px, ${vedhaCoord.y - 14}px)`, transition: "all 0.3s ease" }}>
-                  <circle cx="14" cy="14" r="14" fill={AMBER} stroke="#ffffff" strokeWidth="2" />
-                  <text x="14" y="14" textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "10px", fill: "#ffffff", fontWeight: 800 }}>
-                    {details.blockerName[0]}
-                  </text>
-                  <text x="14" y="-6" textAnchor="middle" style={{ fontSize: "8px", fontWeight: 800, fill: AMBER }}>
-                    Vedha H{details.vedhaHouse}
-                  </text>
+                <line
+                  x1={vedhaCoord.x}
+                  y1={vedhaCoord.y}
+                  x2={shieldCoord.x}
+                  y2={shieldCoord.y}
+                  stroke={AMBER}
+                  strokeWidth="2.5"
+                  strokeDasharray="4 3"
+                  strokeLinecap="round"
+                  style={{ filter: `drop-shadow(0 0 4px ${AMBER}60)`, transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)", opacity: 0.85 }}
+                />
+              )}
+
+              {/* Central Moon reference circle (Masks the inner partition lines) */}
+              <circle cx="150" cy="150" r="26" fill="#fffdfa" stroke={GOLD} strokeWidth="1.5" style={{ filter: "drop-shadow(0 3px 8px rgba(156,122,47,0.12))" }} />
+              <text x="150" y="145" textAnchor="middle" style={{ fontSize: "8px", fontWeight: 800, fill: GOLD_DEEP, letterSpacing: "0.05em" }}>NATAL</text>
+              <text x="150" y="156" textAnchor="middle" style={{ fontSize: "10px", fontWeight: 900, fill: GOLD_DEEP, letterSpacing: "0.05em" }}>MOON</text>
+
+              {/* Active Shield Arc on the transit ray path (at radius 72 separator) */}
+              {vedhaPlaced && (
+                <g transform={`translate(${shieldCoord.x} ${shieldCoord.y}) rotate(${shieldCoord.angle})`} style={{ transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)" }}>
+                  {/* Glow layer */}
+                  <path d="M -16 -4 Q 0 4 16 -4" fill="none" stroke={AMBER} strokeWidth="5" strokeLinecap="round" style={{ filter: `drop-shadow(0 0 4px ${AMBER})`, opacity: 0.6 }} />
+                  {/* Core white/amber layer */}
+                  <path d="M -16 -4 Q 0 4 16 -4" fill="none" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
                 </g>
               )}
 
-              {/* Visual Shield Blocker Overlay on the Ray path */}
+              {/* Transiting Planet Sphere */}
+              <g transform={`translate(${transitCoord.x}, ${transitCoord.y})`} style={{ transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)" }}>
+                {/* Glow ring */}
+                <circle cx="0" cy="0" r="18" fill="none" stroke={details.color} strokeWidth="1" opacity="0.3" strokeDasharray="2 2" />
+                {/* Solid orb */}
+                <circle cx="0" cy="0" r="14" fill={details.color} stroke="#ffffff" strokeWidth="2" style={{ filter: `drop-shadow(0 3px 8px ${details.color}50)` }} />
+                {/* Astrological Glyph */}
+                <text x="0" y="1" textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "14px", fill: "#ffffff", fontWeight: "normal", fontFamily: "Arial, sans-serif" }}>
+                  {details.transitingGlyph}
+                </text>
+              </g>
+
+              {/* Transiting Planet Label (Positioned inwards at radius 78) */}
+              <text
+                x={transitLabelCoord.x}
+                y={transitLabelCoord.y}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                style={{ fontSize: "9.5px", fontWeight: 900, fill: details.color, transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)" }}
+              >
+                {details.transitingPlanet}
+              </text>
+
+              {/* Blocker planet if active */}
               {vedhaPlaced && (
-                <g transform={`translate(${shieldCoord.x} ${shieldCoord.y}) rotate(${shieldCoord.angle})`}>
-                  <path d="M -15 -3 Q 0 5 15 -3" fill="none" stroke={AMBER} strokeWidth="4.5" strokeLinecap="round" />
-                  <path d="M -15 -3 Q 0 5 15 -3" fill="none" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
-                </g>
+                <>
+                  <g transform={`translate(${vedhaCoord.x}, ${vedhaCoord.y})`} style={{ transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)" }}>
+                    {/* Blocker glow ring */}
+                    <circle cx="0" cy="0" r="18" fill="none" stroke={AMBER} strokeWidth="1" opacity="0.3" strokeDasharray="2 2" />
+                    {/* Blocker solid orb */}
+                    <circle cx="0" cy="0" r="14" fill={AMBER} stroke="#ffffff" strokeWidth="2" style={{ filter: `drop-shadow(0 3px 8px ${AMBER}50)` }} />
+                    {/* Blocker Astrological Glyph */}
+                    <text x="0" y="1" textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "14px", fill: "#ffffff", fontWeight: "normal", fontFamily: "Arial, sans-serif" }}>
+                      {details.blockerGlyph}
+                    </text>
+                  </g>
+
+                  {/* Blocker Label (Positioned inwards at radius 78) */}
+                  <text
+                    x={vedhaLabelCoord.x}
+                    y={vedhaLabelCoord.y}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    style={{ fontSize: "9.5px", fontWeight: 900, fill: AMBER, transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)" }}
+                  >
+                    {details.blockerName}
+                  </text>
+                </>
               )}
             </svg>
           </div>
@@ -339,6 +432,10 @@ export function VedhaIntro() {
 
       </div>
 
+      {/* Source Footer */}
+      <div className="rounded-lg p-3 text-[10px]" style={{ background: "var(--gl-surface-manuscript, rgba(251,248,243,0.6))", border: "1px solid var(--gl-gold-hairline)", color: INK_MUTED }}>
+        <strong>Source:</strong> <IAST>Bṛhat Pārāśara Horā Śāstra</IAST> (gochara-phala); <IAST>Bṛhat Saṁhitā</IAST> — <IAST>Vedha</IAST> obstruction doctrine. A planet in the designated <IAST>vedha-sthāna</IAST> nullifies the transit <IAST>phala</IAST>.
+      </div>
     </div>
   );
 }

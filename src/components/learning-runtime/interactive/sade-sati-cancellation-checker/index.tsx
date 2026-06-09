@@ -71,7 +71,7 @@ export function SadeSatiCancellationChecker() {
 
   const rashiCoords = useMemo(() => {
     const coords: Record<number, { x: number; y: number; angle: number }> = {};
-    const cx = 150, cy = 150, r = 105;
+    const cx = 170, cy = 170, r = 110;
     for (let i = 0; i < 12; i++) {
       const num = i + 1;
       const angleDeg = i * 30 - 90;
@@ -80,6 +80,8 @@ export function SadeSatiCancellationChecker() {
     }
     return coords;
   }, []);
+
+  const SHORT_SIGNS = ["ARI", "TAU", "GEM", "CAN", "LEO", "VIR", "LIB", "SCO", "SAG", "CAP", "AQU", "PIS"];
 
   return (
     <div className="gl-surface-twilight-glass" style={{ padding: "20px", borderRadius: "16px", background: "rgba(255, 253, 248, 0.75)", backdropFilter: "blur(12px)", border: "1px solid rgba(156, 122, 47, 0.15)", boxShadow: "0 8px 32px rgba(72, 48, 16, 0.05)", fontFamily: "'Inter', sans-serif", color: INK_PRIMARY, maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "14px" }}>
@@ -142,35 +144,121 @@ export function SadeSatiCancellationChecker() {
       </div>
 
       {/* ─── SPLIT: WHEEL + RESULTS ─── */}
-      <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center" }}>
         {/* Wheel */}
-        <div style={{ flex: "0 0 280px", background: "#ffffff", padding: "14px", borderRadius: "12px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <div style={{ position: "relative", width: "260px", height: "260px" }}>
-            <svg width="260" height="260" viewBox="0 0 300 300">
-              <circle cx="150" cy="150" r="130" fill="none" stroke="rgba(156,122,47,0.15)" strokeWidth="1.5" />
-              <circle cx="150" cy="150" r="80" fill="none" stroke="rgba(156,122,47,0.08)" strokeWidth="1" />
+        <div style={{ flex: "0 0 340px", background: "#ffffff", padding: "14px", borderRadius: "12px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <div style={{ position: "relative", width: "340px", height: "340px" }}>
+            <svg width="340" height="340" viewBox="0 0 340 340">
+              <circle cx="170" cy="170" r="160" fill="none" stroke="rgba(156,122,47,0.15)" strokeWidth="1.5" />
+              <circle cx="170" cy="170" r="105" fill="none" stroke="rgba(156,122,47,0.08)" strokeWidth="1" />
               {RASHIS.map((r) => {
                 const coord = rashiCoords[r.number];
                 const angleRad = ((coord.angle + 15) * Math.PI) / 180;
-                const tx = 150 + 115 * Math.cos(angleRad);
-                const ty = 150 + 115 * Math.sin(angleRad);
+                const pEng = { x: 170 + 134 * Math.cos(angleRad), y: 170 + 134 * Math.sin(angleRad) };
+                const pDev = { x: 170 + 114 * Math.cos(angleRad), y: 170 + 114 * Math.sin(angleRad) };
+                const pNum = { x: 170 + 92 * Math.cos(angleRad), y: 170 + 92 * Math.sin(angleRad) };
+                
                 const isSadeSati = r.number === ssSigns.prev || r.number === ssSigns.curr || r.number === ssSigns.next;
                 return (
                   <g key={r.number}>
-                    <line x1="150" y1="150" x2={150 + 130 * Math.cos((coord.angle * Math.PI) / 180)} y2={150 + 130 * Math.sin((coord.angle * Math.PI) / 180)} stroke="rgba(156,122,47,0.1)" />
+                    <line x1="170" y1="170" x2={170 + 160 * Math.cos((coord.angle * Math.PI) / 180)} y2={170 + 160 * Math.sin((coord.angle * Math.PI) / 180)} stroke="rgba(156,122,47,0.1)" />
                     {isSadeSati && (
-                      <path d={[`M ${150 + 80 * Math.cos((coord.angle * Math.PI) / 180)} ${150 + 80 * Math.sin((coord.angle * Math.PI) / 180)}`, `L ${150 + 130 * Math.cos((coord.angle * Math.PI) / 180)} ${150 + 130 * Math.sin((coord.angle * Math.PI) / 180)}`, `A 130 130 0 0 1 ${150 + 130 * Math.cos(((coord.angle + 30) * Math.PI) / 180)} ${150 + 130 * Math.sin(((coord.angle + 30) * Math.PI) / 180)}`, `L ${150 + 80 * Math.cos(((coord.angle + 30) * Math.PI) / 180)} ${150 + 80 * Math.sin(((coord.angle + 30) * Math.PI) / 180)}`, `A 80 80 0 0 0 ${150 + 80 * Math.cos((coord.angle * Math.PI) / 180)} ${150 + 80 * Math.sin((coord.angle * Math.PI) / 180)}`, "Z"].join(" ")} fill={r.number === ssSigns.prev ? `${SLATE_BLUE}08` : r.number === ssSigns.curr ? `${PURPLE}0B` : `${AMBER}08`} />
+                      <path d={[`M ${170 + 105 * Math.cos((coord.angle * Math.PI) / 180)} ${170 + 105 * Math.sin((coord.angle * Math.PI) / 180)}`, `L ${170 + 160 * Math.cos((coord.angle * Math.PI) / 180)} ${170 + 160 * Math.sin((coord.angle * Math.PI) / 180)}`, `A 160 160 0 0 1 ${170 + 160 * Math.cos(((coord.angle + 30) * Math.PI) / 180)} ${170 + 160 * Math.sin(((coord.angle + 30) * Math.PI) / 180)}`, `L ${170 + 105 * Math.cos(((coord.angle + 30) * Math.PI) / 180)} ${170 + 105 * Math.sin(((coord.angle + 30) * Math.PI) / 180)}`, `A 105 105 0 0 0 ${170 + 105 * Math.cos((coord.angle * Math.PI) / 180)} ${170 + 105 * Math.sin((coord.angle * Math.PI) / 180)}`, "Z"].join(" ")} fill={r.number === ssSigns.prev ? `${SLATE_BLUE}08` : r.number === ssSigns.curr ? `${PURPLE}0B` : `${AMBER}08`} />
                     )}
-                    <text x={tx} y={ty - 3} textAnchor="middle" style={{ fontSize: "8px", fontWeight: 700, fill: INK_PRIMARY }}>{r.nameEnglish}</text>
-                    <text x={tx} y={ty + 6} textAnchor="middle" style={{ fontSize: "7px", fill: INK_MUTED }}>{r.nameDevanagari}</text>
+                    <text x={pEng.x} y={pEng.y} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9.5px", fontWeight: 700, fill: INK_PRIMARY }}>{SHORT_SIGNS[r.number - 1]}</text>
+                    <text x={pDev.x} y={pDev.y + 1} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8.5px", fill: INK_MUTED }}>{r.nameDevanagari}</text>
+                    <text x={pNum.x} y={pNum.y} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "10.5px", fontWeight: 800, fill: INK_SECONDARY }}>{r.number}</text>
                   </g>
                 );
               })}
-              {(() => { const coord = rashiCoords[moonSign]; const angleRad = ((coord.angle + 15) * Math.PI) / 180; const mx = 150 + 52 * Math.cos(angleRad); const my = 150 + 52 * Math.sin(angleRad); return (<g><circle cx={mx} cy={my} r="10" fill={GOLD} stroke="#ffffff" strokeWidth="1" /><text x={mx} y={my + 1} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9px", fill: "#ffffff" }}>☽</text></g>); })()}
-              {alignmentDetails.jupiterAspectActive && (() => { const cSat = rashiCoords[saturnSign]; const cJup = rashiCoords[jupiterSign]; const sRad = ((cSat.angle + 15) * Math.PI) / 180; const jRad = ((cJup.angle + 15) * Math.PI) / 180; const xS = 150 + 90 * Math.cos(sRad); const yS = 150 + 90 * Math.sin(sRad); const xJ = 150 + 90 * Math.cos(jRad); const yJ = 150 + 90 * Math.sin(jRad); return (<><defs><filter id="glow"><feGaussianBlur stdDeviation="2.5" result="coloredBlur" /><feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs><line x1={xJ} y1={yJ} x2={xS} y2={yS} stroke={GOLD} strokeWidth="3" strokeDasharray="4 3" filter="url(#glow)" opacity="0.9"><animate attributeName="stroke-dashoffset" from="0" to="14" dur="1s" repeatCount="indefinite" /><animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" /></line><circle cx={(xS + xJ) / 2} cy={(yS + yJ) / 2} r="12" fill={GOLD} stroke="#ffffff" strokeWidth="1.5" /><text x={(xS + xJ) / 2} y={(yS + yJ) / 2 + 1} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9.5px", fill: "#ffffff" }}>🛡️</text></>); })()}
-              {vedhaActive && (() => { const cSat = rashiCoords[saturnSign]; const sRad = ((cSat.angle + 15) * Math.PI) / 180; const vx = 150 + 72 * Math.cos(sRad); const vy = 150 + 72 * Math.sin(sRad); return (<g><circle cx={vx} cy={vy} r="9" fill={RED} stroke="#ffffff" strokeWidth="1" /><text x={vx} y={vy} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8.5px", fill: "#ffffff", fontWeight: 900 }}>❌</text></g>); })()}
-              {(() => { const coord = rashiCoords[saturnSign]; const angleRad = ((coord.angle + 15) * Math.PI) / 180; const sx = 150 + 95 * Math.cos(angleRad); const sy = 150 + 95 * Math.sin(angleRad); return (<g><circle cx={sx} cy={sy} r="13" fill="#1e293b" stroke="#ffffff" strokeWidth="1.5" /><text x={sx} y={sy} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "10px", fill: "#ffffff", fontWeight: 700 }}>♄</text></g>); })()}
-              {(() => { const coord = rashiCoords[jupiterSign]; const angleRad = ((coord.angle + 15) * Math.PI) / 180; const jx = 150 + 95 * Math.cos(angleRad); const jy = 150 + 95 * Math.sin(angleRad); return (<g><circle cx={jx} cy={jy} r="13" fill={GOLD_DEEP} stroke="#ffffff" strokeWidth="1.5" /><text x={jx} y={jy + 0.5} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "10px", fill: "#ffffff", fontWeight: 700 }}>♃</text></g>); })()}
+              
+              {/* Aspect Projection Line (Separated Orbits) */}
+              {alignmentDetails.jupiterAspectActive && (() => { 
+                const cSat = rashiCoords[saturnSign]; 
+                const cJup = rashiCoords[jupiterSign]; 
+                const sRad = ((cSat.angle + 15) * Math.PI) / 180; 
+                const jRad = ((cJup.angle + 15) * Math.PI) / 180; 
+                const xS = 170 + 78 * Math.cos(sRad); 
+                const yS = 170 + 78 * Math.sin(sRad); 
+                const xJ = 170 + 58 * Math.cos(jRad); 
+                const yJ = 170 + 58 * Math.sin(jRad); 
+                const midX = (xS + xJ) / 2;
+                const midY = (yS + yJ) / 2;
+                return (
+                  <>
+                    <defs>
+                      <filter id="glow-checker">
+                        <feGaussianBlur stdDeviation="2" result="blur" />
+                        <feMerge>
+                          <feMergeNode in="blur" />
+                          <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                      </filter>
+                    </defs>
+                    <line x1={xJ} y1={yJ} x2={xS} y2={yS} stroke={GOLD} strokeWidth="2.5" strokeDasharray="4 3" filter="url(#glow-checker)" opacity="0.9" />
+                    <circle cx={midX} cy={midY} r="10.5" fill={GOLD} stroke="#ffffff" strokeWidth="1.5" />
+                    <text x={midX} y={midY + 0.5} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9px", fill: "#ffffff" }}>🛡️</text>
+                  </>
+                ); 
+              })()}
+              
+              {/* Moon Node */}
+              {(() => { 
+                const coord = rashiCoords[moonSign]; 
+                const angleRad = ((coord.angle + 15) * Math.PI) / 180; 
+                const mx = 170 + 42 * Math.cos(angleRad); 
+                const my = 170 + 42 * Math.sin(angleRad); 
+                return (
+                  <g>
+                    <circle cx={mx} cy={my} r="10" fill={GOLD} stroke="#ffffff" strokeWidth="1.5" />
+                    <text x={mx} y={my + 0.5} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9px", fill: "#ffffff" }}>☽</text>
+                  </g>
+                ); 
+              })()}
+              
+              {/* Vedha Indicator */}
+              {vedhaActive && (() => { 
+                const cSat = rashiCoords[saturnSign]; 
+                const sRad = ((cSat.angle + 15) * Math.PI) / 180; 
+                const vx = 170 + 68 * Math.cos(sRad); 
+                const vy = 170 + 68 * Math.sin(sRad); 
+                return (
+                  <g>
+                    <circle cx={vx} cy={vy} r="8.5" fill={RED} stroke="#ffffff" strokeWidth="1" />
+                    <text x={vx} y={vy} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8px", fill: "#ffffff", fontWeight: 900 }}>❌</text>
+                  </g>
+                ); 
+              })()}
+              
+              {/* Transit Saturn Node */}
+              {(() => { 
+                const coord = rashiCoords[saturnSign]; 
+                const angleRad = ((coord.angle + 15) * Math.PI) / 180; 
+                const sx = 170 + 78 * Math.cos(angleRad); 
+                const sy = 170 + 78 * Math.sin(angleRad); 
+                return (
+                  <g>
+                    <circle cx={sx} cy={sy} r="12" fill="#1e293b" stroke="#ffffff" strokeWidth="1.5" />
+                    <text x={sx} y={sy} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9.5px", fill: "#ffffff", fontWeight: 700 }}>♄</text>
+                  </g>
+                ); 
+              })()}
+              
+              {/* Transit Jupiter Node */}
+              {(() => { 
+                const coord = rashiCoords[jupiterSign]; 
+                const angleRad = ((coord.angle + 15) * Math.PI) / 180; 
+                const jx = 170 + 58 * Math.cos(angleRad); 
+                const jy = 170 + 58 * Math.sin(angleRad); 
+                return (
+                  <g>
+                    <circle cx={jx} cy={jy} r="12" fill={GOLD_DEEP} stroke="#ffffff" strokeWidth="1.5" />
+                    <text x={jx} y={jy + 0.5} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9.5px", fill: "#ffffff", fontWeight: 700 }}>♃</text>
+                  </g>
+                ); 
+              })()}
+              
+              <circle cx="170" cy="170" r="30" fill="none" stroke="rgba(156,122,47,0.06)" />
             </svg>
           </div>
         </div>

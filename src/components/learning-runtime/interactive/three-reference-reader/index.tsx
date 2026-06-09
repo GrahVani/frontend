@@ -1,11 +1,15 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Info, Star, Zap, AlertCircle } from "lucide-react";
+import { Info } from "lucide-react";
 import { IAST } from "../../chrome/typography";
 
 const GOLD = "var(--gl-gold-accent, #9C7A2F)";
 const GOLD_DEEP = "var(--gl-gold-deep, #7A5E1E)";
+const GREEN = "#10b981";
+const RED = "#ef4444";
+const AMBER = "#f59e0b";
+const BLUE = "#3b82f6";
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary, #2d261e)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary, #4d4133)";
 const INK_MUTED = "var(--gl-ink-on-cream-muted, #7c6d5b)";
@@ -31,6 +35,133 @@ const DOMAINS = [
   { key: "health", label: "Health", icon: "🏥" },
 ];
 
+/* ── Vertical Gauge Component ── */
+function VerticalGauge({
+  label,
+  icon,
+  selectedHouse,
+  favourableHouses,
+  onHouseChange,
+  accentColor,
+}: {
+  label: string;
+  icon: string;
+  selectedHouse: number;
+  favourableHouses: number[];
+  onHouseChange: (h: number) => void;
+  accentColor: string;
+}) {
+  const isFav = favourableHouses.includes(selectedHouse);
+  const GAUGE_H = 240;
+  const TICK_H = GAUGE_H / 12;
+
+  return (
+    <div style={{ flex: "1 1 0", display: "flex", flexDirection: "column", alignItems: "center", gap: "6px", minWidth: "90px" }}>
+      {/* Label */}
+      <div style={{ textAlign: "center" }}>
+        <span style={{ fontSize: "14px" }}>{icon}</span>
+        <div style={{ fontSize: "9px", fontWeight: 700, color: accentColor, textTransform: "uppercase", letterSpacing: "0.5px" }}>{label}</div>
+      </div>
+
+      {/* Gauge body */}
+      <div style={{
+        position: "relative",
+        width: "56px",
+        height: `${GAUGE_H}px`,
+        background: "rgba(0,0,0,0.03)",
+        borderRadius: "8px",
+        border: "1px solid rgba(0,0,0,0.06)",
+        overflow: "hidden",
+      }}>
+        {/* House tick marks */}
+        {Array.from({ length: 12 }, (_, i) => {
+          const h = i + 1;
+          const isSelected = h === selectedHouse;
+          const isFavourable = favourableHouses.includes(h);
+          const y = i * TICK_H;
+          const bgColor = isSelected
+            ? (isFavourable ? `${GREEN}30` : `${RED}20`)
+            : (isFavourable ? `${GREEN}08` : "transparent");
+          const borderColor = isSelected
+            ? (isFavourable ? GREEN : RED)
+            : "rgba(0,0,0,0.04)";
+
+          return (
+            <div
+              key={h}
+              onClick={() => onHouseChange(h)}
+              style={{
+                position: "absolute",
+                top: `${y}px`,
+                left: 0,
+                right: 0,
+                height: `${TICK_H}px`,
+                background: bgColor,
+                borderBottom: `1px solid ${borderColor}`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+              title={`House ${h}${isFavourable ? " (Favourable)" : ""}`}
+            >
+              <span style={{
+                fontSize: isSelected ? "11px" : "8px",
+                fontWeight: isSelected ? 800 : 500,
+                color: isSelected
+                  ? (isFavourable ? GREEN : RED)
+                  : (isFavourable ? `${GREEN}90` : INK_MUTED),
+              }}>
+                H{h}
+              </span>
+              {/* Favourable dot */}
+              {isFavourable && !isSelected && (
+                <div style={{
+                  position: "absolute",
+                  right: "4px",
+                  width: "4px",
+                  height: "4px",
+                  borderRadius: "2px",
+                  background: `${GREEN}60`,
+                }} />
+              )}
+              {/* Selected indicator */}
+              {isSelected && (
+                <div style={{
+                  position: "absolute",
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: "3px",
+                  background: isFavourable ? GREEN : RED,
+                  borderRadius: "0 2px 2px 0",
+                }} />
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Status badge */}
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "4px",
+        padding: "3px 8px",
+        borderRadius: "4px",
+        background: isFav ? `${GREEN}12` : `${RED}10`,
+        border: `1px solid ${isFav ? `${GREEN}30` : `${RED}25`}`,
+      }}>
+        <span style={{ fontSize: "10px" }}>{isFav ? "✓" : "✗"}</span>
+        <span style={{ fontSize: "9px", fontWeight: 700, color: isFav ? GREEN : RED }}>
+          {isFav ? "Favourable" : "Contrary"}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export function ThreeReferenceReader() {
   const [selectedGraha, setSelectedGraha] = useState<string>("jupiter");
   const [domain, setDomain] = useState<string>("career");
@@ -46,23 +177,26 @@ export function ThreeReferenceReader() {
   const convergenceScore = (moonFav ? 1 : 0) + (lagnaFav ? 1 : 0) + (natalFav ? 1 : 0);
 
   const verdict = useMemo(() => {
-    if (convergenceScore === 3) return { text: "Strong convergence. All three references support this domain. High probability of manifestation.", color: "#10b981", icon: <Star size={14} /> };
-    if (convergenceScore === 2) return { text: "Moderate convergence. Two references align; one is neutral or contrary. Events may unfold with adjustments.", color: GOLD, icon: <Zap size={14} /> };
-    if (convergenceScore === 1) return { text: "Weak convergence. Only one reference supports. The event may be delayed, partial, or require significant remedial effort.", color: "#f59e0b", icon: <AlertCircle size={14} /> };
-    return { text: "No convergence. All three references are neutral or contrary. The domain is unlikely to manifest without major mitigating factors.", color: "#ef4444", icon: <AlertCircle size={14} /> };
+    if (convergenceScore === 3) return { status: "STRONG", text: "Strong convergence. All three references support this domain. High probability of manifestation.", color: GREEN };
+    if (convergenceScore === 2) return { status: "MODERATE", text: "Moderate convergence. Two references align; one is neutral or contrary. Events may unfold with adjustments.", color: "#9C7A2F" };
+    if (convergenceScore === 1) return { status: "WEAK", text: "Weak convergence. Only one reference supports. The event may be delayed, partial, or require significant remedial effort.", color: AMBER };
+    return { status: "NONE", text: "No convergence. All three references are neutral or contrary. The domain is unlikely to manifest without major mitigating factors.", color: RED };
   }, [convergenceScore]);
+
+  const strengthPercent = Math.round((convergenceScore / 3) * 100);
+  const barColor = convergenceScore === 3 ? GREEN : convergenceScore === 2 ? "#9C7A2F" : convergenceScore === 1 ? AMBER : RED;
 
   return (
     <div className="gl-surface-twilight-glass" style={{ padding: "20px", borderRadius: "16px", background: "rgba(255, 253, 248, 0.75)", backdropFilter: "blur(12px)", border: "1px solid rgba(156, 122, 47, 0.15)", boxShadow: "0 8px 32px rgba(72, 48, 16, 0.05)", fontFamily: "'Inter', sans-serif", color: INK_PRIMARY, maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "14px" }}>
-      
+
       <div>
         <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 800, color: GOLD_DEEP }}>
           <IAST>Trividha-Dṛṣṭi</IAST> — Three-Reference Reader
         </h3>
-        <p style={{ margin: "2px 0 0 0", fontSize: "12px", color: INK_SECONDARY }}>Moon + Lagna + Natal Planet convergence for timing events.</p>
+        <p style={{ margin: "2px 0 0 0", fontSize: "12px", color: INK_SECONDARY }}>Moon + Lagna + Natal Planet convergence for timing events. Click any house tick to update.</p>
       </div>
 
-      {/* ─── CONTROLS BAR (TOP) ─── */}
+      {/* ─── CONTROLS BAR ─── */}
       <div style={{ background: "#ffffff", padding: "12px", borderRadius: "10px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", gap: "10px" }}>
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
@@ -86,6 +220,7 @@ export function ThreeReferenceReader() {
             </div>
           </div>
         </div>
+        {/* House selectors (dropdown fallback for mobile) */}
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center", borderTop: "1px solid rgba(0,0,0,0.05)", paddingTop: "8px" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
             <span style={{ fontSize: "9px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase" }}>From Moon</span>
@@ -108,63 +243,115 @@ export function ThreeReferenceReader() {
         </div>
       </div>
 
-      {/* ─── MAIN SPLIT: CONVERGENCE DIAGRAM + VERDICT ─── */}
-      <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
-        {/* Diagram */}
-        <div style={{ flex: "0 0 260px", background: "#ffffff", padding: "14px", borderRadius: "12px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <h4 style={{ margin: "0 0 10px 0", fontSize: "11px", fontWeight: 700, color: INK_MUTED, textTransform: "uppercase" }}>Convergence Map</h4>
-          <svg width="220" height="160" viewBox="0 0 220 160">
-            {/* Moon node */}
-            <circle cx="50" cy="50" r="20" fill={moonFav ? "rgba(16,185,129,0.1)" : "rgba(0,0,0,0.03)"} stroke={moonFav ? "#10b981" : "rgba(0,0,0,0.1)"} strokeWidth="2" />
-            <text x="50" y="46" textAnchor="middle" style={{ fontSize: "8px", fontWeight: 700, fill: moonFav ? "#15803d" : INK_MUTED }}>MOON</text>
-            <text x="50" y="56" textAnchor="middle" style={{ fontSize: "8px", fill: moonFav ? "#15803d" : INK_MUTED }}>H{moonHouse}</text>
-            {/* Lagna node */}
-            <circle cx="170" cy="50" r="20" fill={lagnaFav ? "rgba(16,185,129,0.1)" : "rgba(0,0,0,0.03)"} stroke={lagnaFav ? "#10b981" : "rgba(0,0,0,0.1)"} strokeWidth="2" />
-            <text x="170" y="46" textAnchor="middle" style={{ fontSize: "8px", fontWeight: 700, fill: lagnaFav ? "#15803d" : INK_MUTED }}>LAGNA</text>
-            <text x="170" y="56" textAnchor="middle" style={{ fontSize: "8px", fill: lagnaFav ? "#15803d" : INK_MUTED }}>H{lagnaHouse}</text>
-            {/* Natal node */}
-            <circle cx="110" cy="130" r="20" fill={natalFav ? "rgba(16,185,129,0.1)" : "rgba(0,0,0,0.03)"} stroke={natalFav ? "#10b981" : "rgba(0,0,0,0.1)"} strokeWidth="2" />
-            <text x="110" y="126" textAnchor="middle" style={{ fontSize: "8px", fontWeight: 700, fill: natalFav ? "#15803d" : INK_MUTED }}>{graha.name.toUpperCase()}</text>
-            <text x="110" y="136" textAnchor="middle" style={{ fontSize: "8px", fill: natalFav ? "#15803d" : INK_MUTED }}>H{natalHouse}</text>
-            {/* Connection lines */}
-            <line x1="65" y1="55" x2="95" y2="115" stroke={moonFav && natalFav ? "#10b981" : "rgba(0,0,0,0.08)"} strokeWidth="2" strokeDasharray={moonFav && natalFav ? "0" : "3 3"} />
-            <line x1="155" y1="55" x2="125" y2="115" stroke={lagnaFav && natalFav ? "#10b981" : "rgba(0,0,0,0.08)"} strokeWidth="2" strokeDasharray={lagnaFav && natalFav ? "0" : "3 3"} />
-            <line x1="65" y1="45" x2="155" y2="45" stroke={moonFav && lagnaFav ? "#10b981" : "rgba(0,0,0,0.08)"} strokeWidth="2" strokeDasharray={moonFav && lagnaFav ? "0" : "3 3"} />
-            {/* Score badge */}
-            <circle cx="110" cy="80" r="14" fill={convergenceScore >= 2 ? "#10b981" : convergenceScore === 1 ? GOLD : "#ef4444"} stroke="#ffffff" strokeWidth="2" />
-            <text x="110" y="84" textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "11px", fontWeight: 800, fill: "#ffffff" }}>{convergenceScore}/3</text>
-          </svg>
+      {/* ─── MAIN: THREE GAUGES + VERDICT ─── */}
+      <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+        {/* Three Vertical Gauges */}
+        <div style={{ flex: "0 0 auto", background: "#ffffff", padding: "16px", borderRadius: "12px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", gap: "10px" }}>
+          <VerticalGauge
+            label="From Moon"
+            icon="☽"
+            selectedHouse={moonHouse}
+            favourableHouses={graha.houseFavourable}
+            onHouseChange={setMoonHouse}
+            accentColor={BLUE}
+          />
+          <VerticalGauge
+            label="From Lagna"
+            icon="⬆"
+            selectedHouse={lagnaHouse}
+            favourableHouses={graha.houseFavourable}
+            onHouseChange={setLagnaHouse}
+            accentColor="#9C7A2F"
+          />
+          <VerticalGauge
+            label={graha.name}
+            icon="🪐"
+            selectedHouse={natalHouse}
+            favourableHouses={graha.houseFavourable}
+            onHouseChange={setNatalHouse}
+            accentColor="#6366f1"
+          />
         </div>
 
-        {/* Verdict */}
+        {/* Verdict + Combined Strength */}
         <div style={{ flex: "1 1 280px", display: "flex", flexDirection: "column", gap: "10px", minWidth: 0 }}>
+          {/* Combined Strength Bar */}
+          <div style={{ background: "#ffffff", padding: "14px", borderRadius: "12px", border: "1px solid rgba(156,122,47,0.1)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+              <span style={{ fontSize: "10px", fontWeight: 700, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.5px" }}>Combined Convergence Strength</span>
+              <span style={{ fontSize: "16px", fontWeight: 800, color: barColor }}>{strengthPercent}%</span>
+            </div>
+            {/* Progress bar */}
+            <div style={{ width: "100%", height: "14px", background: "rgba(0,0,0,0.04)", borderRadius: "7px", overflow: "hidden", position: "relative" }}>
+              <div style={{
+                width: `${strengthPercent}%`,
+                height: "100%",
+                background: `linear-gradient(90deg, ${barColor}80, ${barColor})`,
+                borderRadius: "7px",
+                transition: "width 0.4s ease, background 0.3s ease",
+              }} />
+              {/* Tick markers at 33% and 66% */}
+              <div style={{ position: "absolute", left: "33.3%", top: 0, bottom: 0, width: "1px", background: "rgba(255,255,255,0.5)" }} />
+              <div style={{ position: "absolute", left: "66.6%", top: 0, bottom: 0, width: "1px", background: "rgba(255,255,255,0.5)" }} />
+            </div>
+            {/* Scale labels */}
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px" }}>
+              <span style={{ fontSize: "8px", color: RED, fontWeight: 600 }}>0/3</span>
+              <span style={{ fontSize: "8px", color: AMBER, fontWeight: 600 }}>1/3</span>
+              <span style={{ fontSize: "8px", color: "#9C7A2F", fontWeight: 600 }}>2/3</span>
+              <span style={{ fontSize: "8px", color: GREEN, fontWeight: 600 }}>3/3</span>
+            </div>
+          </div>
+
+          {/* Verdict panel */}
           <div style={{ background: "rgba(156,122,47,0.03)", border: `1.2px solid rgba(156,122,47,0.15)`, borderRadius: "12px", padding: "14px", flex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
               <span style={{ fontSize: "10px", fontWeight: 800, textTransform: "uppercase", padding: "3px 8px", borderRadius: "4px", background: verdict.color, color: "#ffffff" }}>
-                {convergenceScore}/3 Convergence
+                {verdict.status}
               </span>
               <h4 style={{ margin: 0, fontSize: "13px", fontWeight: 700, color: GOLD_DEEP }}>Timing Synthesis</h4>
             </div>
-            <p style={{ margin: 0, fontSize: "12px", lineHeight: "1.45", color: INK_SECONDARY }}>{verdict.text}</p>
-            <div style={{ marginTop: "10px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "6px" }}>
-              <div style={{ background: moonFav ? "#f0fdf4" : "#fef2f2", padding: "6px", borderRadius: "6px", textAlign: "center", border: `1px solid ${moonFav ? "#bbf7d0" : "#fecaca"}` }}>
+            <p style={{ margin: "0 0 10px 0", fontSize: "12px", lineHeight: "1.45", color: INK_SECONDARY }}>{verdict.text}</p>
+
+            {/* Reference cards */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "6px" }}>
+              <div style={{ background: moonFav ? "#f0fdf4" : "#fef2f2", padding: "8px 6px", borderRadius: "6px", textAlign: "center", border: `1px solid ${moonFav ? "#bbf7d0" : "#fecaca"}` }}>
+                <div style={{ fontSize: "12px", marginBottom: "2px" }}>☽</div>
                 <div style={{ fontSize: "9px", fontWeight: 700, color: moonFav ? "#166534" : "#991b1b" }}>Moon → H{moonHouse}</div>
-                <div style={{ fontSize: "8px", color: INK_MUTED }}>{moonFav ? "Favourable" : "Neutral/Contrary"}</div>
+                <div style={{ fontSize: "8px", color: INK_MUTED, marginTop: "1px" }}>{moonFav ? "Favourable" : "Contrary"}</div>
               </div>
-              <div style={{ background: lagnaFav ? "#f0fdf4" : "#fef2f2", padding: "6px", borderRadius: "6px", textAlign: "center", border: `1px solid ${lagnaFav ? "#bbf7d0" : "#fecaca"}` }}>
+              <div style={{ background: lagnaFav ? "#f0fdf4" : "#fef2f2", padding: "8px 6px", borderRadius: "6px", textAlign: "center", border: `1px solid ${lagnaFav ? "#bbf7d0" : "#fecaca"}` }}>
+                <div style={{ fontSize: "12px", marginBottom: "2px" }}>⬆</div>
                 <div style={{ fontSize: "9px", fontWeight: 700, color: lagnaFav ? "#166534" : "#991b1b" }}>Lagna → H{lagnaHouse}</div>
-                <div style={{ fontSize: "8px", color: INK_MUTED }}>{lagnaFav ? "Favourable" : "Neutral/Contrary"}</div>
+                <div style={{ fontSize: "8px", color: INK_MUTED, marginTop: "1px" }}>{lagnaFav ? "Favourable" : "Contrary"}</div>
               </div>
-              <div style={{ background: natalFav ? "#f0fdf4" : "#fef2f2", padding: "6px", borderRadius: "6px", textAlign: "center", border: `1px solid ${natalFav ? "#bbf7d0" : "#fecaca"}` }}>
+              <div style={{ background: natalFav ? "#f0fdf4" : "#fef2f2", padding: "8px 6px", borderRadius: "6px", textAlign: "center", border: `1px solid ${natalFav ? "#bbf7d0" : "#fecaca"}` }}>
+                <div style={{ fontSize: "12px", marginBottom: "2px" }}>🪐</div>
                 <div style={{ fontSize: "9px", fontWeight: 700, color: natalFav ? "#166534" : "#991b1b" }}>{graha.name} → H{natalHouse}</div>
-                <div style={{ fontSize: "8px", color: INK_MUTED }}>{natalFav ? "Favourable" : "Neutral/Contrary"}</div>
+                <div style={{ fontSize: "8px", color: INK_MUTED, marginTop: "1px" }}>{natalFav ? "Favourable" : "Contrary"}</div>
               </div>
             </div>
+
+            {/* Favourable houses legend */}
+            <div style={{ marginTop: "10px", padding: "8px", background: "rgba(0,0,0,0.02)", borderRadius: "6px" }}>
+              <div style={{ fontSize: "9px", fontWeight: 700, color: INK_MUTED, textTransform: "uppercase", marginBottom: "3px" }}>
+                <IAST>{graha.iast}</IAST> — Favourable Transit Houses
+              </div>
+              <div style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
+                {graha.houseFavourable.map(h => (
+                  <span key={h} style={{ fontSize: "9px", fontWeight: 700, padding: "2px 6px", borderRadius: "3px", background: `${GREEN}15`, color: GREEN, border: `1px solid ${GREEN}30` }}>
+                    H{h}
+                  </span>
+                ))}
+              </div>
+            </div>
+
             <p className="mt-2 text-[10px] italic" style={{ color: INK_MUTED }}>
               <Info size={10} className="inline mr-1" />
               Each lens adds a reference frame. All three converging = high confidence. Dignity of <IAST>{graha.iast}</IAST> modifies the strength of each reference.
             </p>
           </div>
+
           <div className="rounded-lg p-3 text-[10px]" style={{ background: SURFACE_MANUSCRIPT, border: "1px solid var(--gl-gold-hairline)", color: INK_MUTED }}>
             <strong>Source:</strong> <IAST>Bṛhat Pārāśara Horā Śāstra</IAST> — the three-reference rule (Moon + Lagna + Natal Planet) for <IAST>gochara</IAST> timing. <IAST>Phaladīpikā</IAST> — when all three references align, the event is certain.
           </div>
