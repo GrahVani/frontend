@@ -238,12 +238,22 @@ import { DoctrineSelector } from "./doctrine-selector";
 import { MultiStreamChartComparator } from "./multi-stream-chart-comparator";
 import { SaturnAspectDisambiguator } from "./saturn-aspect-disambiguator";
 import { PmpyDetector } from "./pmpy-detector";
+import { PmpyArchetypeExplorer } from "./pmpy-archetype-explorer";
+import { PmpyDilutionChecker } from "./pmpy-dilution-checker";
+import { PmpyGradeScenario } from "./pmpy-grade-scenario";
+import { YogaStrengthOverlay } from "./yoga-strength-overlay";
+import { CrossStreamYogaMap } from "./cross-stream-yoga-map";
+import { YogaFiringTimeline } from "./yoga-firing-timeline";
+import { YogaReadingWorkflow } from "./yoga-reading-workflow";
 import { RajaYogaDetector } from "./raja-yoga-detector";
 import { DharmaKarmadhipatiDetector } from "./dharma-karmadhipati-detector";
 import { RajaYogaVariantsMap } from "./raja-yoga-variants-map";
 import { KendraTrikonaRationale } from "./kendra-trikona-rationale";
 import { RajaYogaWorkedExample } from "./raja-yoga-worked-example";
 import { DhanaYogaDetector } from "./dhana-yoga-detector";
+import { DhanaYogaVariantsMap } from "./dhana-yoga-variants-map";
+import { RajaDhanaOverlapMap } from "./raja-dhana-overlap-map";
+import { DhanaYogaWorkedExample } from "./dhana-yoga-worked-example";
 import { RuchakaValourSimulator } from "./ruchaka-valour-simulator";
 import { BhadraIntellectExplorer } from "./bhadra-intellect-explorer";
 import { HamsaMalavyaSynthesis } from "./hamsa-malavya-synthesis";
@@ -269,6 +279,15 @@ import { AkhandaSamrajyaChecker } from "./akhanda-samrajya-checker";
 import { BuddhadityaGajakesariDetector } from "./buddhaditya-gajakesari-detector";
 import { SpecialYogaScan } from "./special-yoga-scan";
 import { NeechaBhangaChecker } from "./neecha-bhanga-checker";
+import { VipareetaDetector } from "./vipareeta-detector";
+import { VipareetaRationale } from "./vipareeta-rationale";
+import { VipareetaNeechaScan } from "./vipareeta-neecha-scan";
+import { ManglikDetector } from "./manglik-detector";
+import { ManglikCancellationChecker } from "./manglik-cancellation-checker";
+import { KalaSarpaDetector } from "./kala-sarpa-detector";
+import { PitrDoshaIndicator } from "./pitr-dosha-indicator";
+import { KemadrumaSadesatiRecap } from "./kemadruma-sadesati-recap";
+import { DefearmongeringProtocol } from "./defearmongering-protocol";
 import { GocharaIntro } from "./gochara-intro";
 import { NatalRelativeCounter } from "./natal-relative-counter";
 import { TransitComputer } from "./transit-computer";
@@ -817,12 +836,22 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "multi-stream-chart-comparator": MultiStreamChartComparator,
   "saturn-aspect-disambiguator": SaturnAspectDisambiguator,
   "pmpy-detector": PmpyDetector,
+  "pmpy-archetype-explorer": PmpyArchetypeExplorer,
+  "pmpy-dilution-checker": PmpyDilutionChecker,
+  "pmpy-grade-scenario": PmpyGradeScenario,
+  "yoga-strength-overlay": YogaStrengthOverlay,
+  "cross-stream-yoga-map": CrossStreamYogaMap,
+  "yoga-firing-timeline": YogaFiringTimeline,
+  "yoga-reading-workflow": YogaReadingWorkflow,
   "raja-yoga-detector": RajaYogaDetector,
   "dharma-karmadhipati-detector": DharmaKarmadhipatiDetector,
   "raja-yoga-variants-map": RajaYogaVariantsMap,
   "kendra-trikona-rationale": KendraTrikonaRationale,
   "raja-yoga-worked-example": RajaYogaWorkedExample,
   "dhana-yoga-detector": DhanaYogaDetector,
+  "dhana-yoga-variants-map": DhanaYogaVariantsMap,
+  "raja-dhana-overlap-map": RajaDhanaOverlapMap,
+  "dhana-yoga-worked-example": DhanaYogaWorkedExample,
   "ruchaka-valour-simulator": RuchakaValourSimulator,
   "bhadra-intellect-explorer": BhadraIntellectExplorer,
   "hamsa-malavya-synthesis": HamsaMalavyaSynthesis,
@@ -897,6 +926,33 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // Lesson 14.5.1's §7 interactive: Neecha-Bhaṅga Checker — cancellation of debilitation.
   // Planet selector + 5-condition checklist + rescue-chain SVG + honest debate.
   "neecha-bhanga-checker": NeechaBhangaChecker,
+  // Lesson 14.5.2's §7 interactive: Vipareeta Detector — three Vipareeta Rāja Yogas.
+  // Lagna selector + dusthana-lord placements + dusthana-triangle SVG + refinements.
+  "vipareeta-detector": VipareetaDetector,
+  // Lesson 14.5.3's §7 interactive: Vipareeta Rationale — spoiler-of-spoiler doctrine.
+  // Scenario explorer + strength/timing controls + spoiler-mechanism SVG + honest limits.
+  "vipareeta-rationale": VipareetaRationale,
+  // Lesson 14.5.4's §7 interactive: Vipareeta-Neecha Scan — Chapter 5 capstone.
+  // Fixed Aries chart + neecha-bhaṅga check + Harṣa check + combined honest reading.
+  "vipareeta-neecha-scan": VipareetaNeechaScan,
+  // Lesson 14.6.1's §7 interactive: Manglik Detector — Kuja-Doṣa from lagna/Moon/Venus.
+  // House-set variation (6-house vs 5-house) + severity grading + defearmongering.
+  "manglik-detector": ManglikDetector,
+  // Lesson 14.6.2's §7 interactive: Manglik Cancellation Checker — 15+ grouped conditions.
+  // Mars sign/house + toggle checklist + cancellation gauge + weighted result.
+  "manglik-cancellation-checker": ManglikCancellationChecker,
+  // Lesson 14.6.3's §7 interactive: Kāla Sarpa Detector — nodal-axis configuration check.
+  // Rāhu + 7 planet controls + circular diagram + doctrinal debate + honest handling.
+  "kala-sarpa-detector": KalaSarpaDetector,
+  // Lesson 14.6.4's §7 interactive: Pitṛ-Doṣa Indicator — chart signatures + remedial framework.
+  // Sun/Rahu/Saturn/9th-lord controls + signature gauge + remedy cards + honest limits.
+  "pitr-dosha-indicator": PitrDoshaIndicator,
+  // Lesson 14.6.5's §7 interactive: Kemadruma + Sade Sati Recap — two doṣas in one surface.
+  // Kemadruma (Moon + 2nd/12th + cancellations) + Sade Sati (Moon + Saturn transit + phases).
+  "kemadruma-sadesati-recap": KemadrumaSadesatiRecap,
+  // Lesson 14.6.6's §7 interactive: De-Fearmongering Protocol -- 8-step discipline walker.
+  // Doṣa selector + step cards + reframe exercise + ethics connection. Closes Chapter 6.
+  "defearmongering-protocol": DefearmongeringProtocol,
   "gochara-intro": GocharaIntro,
   "natal-relative-counter": NatalRelativeCounter,
   "transit-computer": TransitComputer,
