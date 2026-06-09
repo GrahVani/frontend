@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { HelpCircle, CheckCircle2, XCircle, AlertTriangle, ListOrdered, ShieldAlert } from "lucide-react";
+import { IAST } from "../../chrome/typography";
 
 const GOLD = "#9C7A2F";
 const GOLD_DEEP = "#7A5E1E";
@@ -104,7 +105,7 @@ export function VedhaTableLookup() {
     <div
       className="gl-surface-twilight-glass"
       style={{
-        padding: "24px",
+        padding: "20px",
         borderRadius: "16px",
         background: "rgba(255, 253, 248, 0.75)",
         backdropFilter: "blur(12px)",
@@ -116,21 +117,21 @@ export function VedhaTableLookup() {
         margin: "0 auto",
         display: "flex",
         flexDirection: "column",
-        gap: "24px"
+        gap: "14px"
       }}
     >
       {/* Header */}
       <div>
-        <h3 style={{ margin: 0, fontSize: "20px", fontWeight: 800, color: GOLD_DEEP }}>
-          शास्त्रीयवेधसारणी — BPHS Vedha Reference & Lookup
+        <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 800, color: GOLD_DEEP }}>
+          <IAST>Śāstrīya-Vedha-Sāraṇī</IAST> — BPHS Vedha Reference &amp; Lookup
         </h3>
-        <p style={{ margin: "4px 0 0 0", fontSize: "13px", color: INK_SECONDARY }}>
+        <p style={{ margin: "2px 0 0 0", fontSize: "12px", color: INK_SECONDARY }}>
           Select a transiting planet and position, place occupants in the 12-house grid, and resolve the 5-step lookup checklist.
         </p>
       </div>
 
       {/* Main Layout Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "24px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "14px" }}>
         
         {/* Left Column: Configurator & House Grid */}
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -378,6 +379,10 @@ export function VedhaTableLookup() {
 
       </div>
 
+      {/* Source Footer */}
+      <div className="rounded-lg p-3 text-[10px]" style={{ background: "var(--gl-surface-manuscript, rgba(251,248,243,0.6))", border: "1px solid var(--gl-gold-hairline)", color: INK_MUTED }}>
+        <strong>Source:</strong> <IAST>Bṛhat Pārāśara Horā Śāstra</IAST> (gochara-phala adhyāya) — classical <IAST>vedha</IAST> tables mapping favourable positions to obstruction points. Sun↔Saturn and Moon↔Mercury exceptions are canonical.
+      </div>
     </div>
   );
 }

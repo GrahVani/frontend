@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { ShieldCheck, HelpCircle, AlertCircle, Sparkles, Scale, Info } from "lucide-react";
+import { IAST } from "../../chrome/typography";
 
 const GOLD = "#9C7A2F";
 const GOLD_DEEP = "#7A5E1E";
@@ -129,7 +130,7 @@ export function VedhaApplicator() {
     <div
       className="gl-surface-twilight-glass"
       style={{
-        padding: "24px",
+        padding: "20px",
         borderRadius: "16px",
         background: "rgba(255, 253, 248, 0.75)",
         backdropFilter: "blur(12px)",
@@ -141,21 +142,21 @@ export function VedhaApplicator() {
         margin: "0 auto",
         display: "flex",
         flexDirection: "column",
-        gap: "24px"
+        gap: "14px"
       }}
     >
       {/* Header */}
       <div>
-        <h3 style={{ margin: 0, fontSize: "20px", fontWeight: 800, color: GOLD_DEEP }}>
-          गोचरवेधप्रयोगः — Vedha Application Workbench
+        <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 800, color: GOLD_DEEP }}>
+          <IAST>Gochara-Vedha-Prayogaḥ</IAST> — Vedha Application Workbench
         </h3>
-        <p style={{ margin: "4px 0 0 0", fontSize: "13px", color: INK_SECONDARY }}>
+        <p style={{ margin: "2px 0 0 0", fontSize: "12px", color: INK_SECONDARY }}>
           Run the systematic transit outcome routine, stacking vedha cancellations, natal mitigations, and Vimshottari triggers.
         </p>
       </div>
 
       {/* Grid Layout */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "14px" }}>
         
         {/* Left Column: Preset Scenarios & Configs */}
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -295,19 +296,19 @@ export function VedhaApplicator() {
             alignItems: "center",
             justifyContent: "center"
           }}>
-            <span style={{ fontSize: "11px", fontWeight: 700, color: INK_MUTED, textTransform: "uppercase", marginBottom: "8px", display: "flex", alignItems: "center", gap: "4px" }}>
+            <span style={{ fontSize: "11px", fontWeight: 700, color: INK_MUTED, textTransform: "uppercase", marginBottom: "4px", display: "flex", alignItems: "center", gap: "4px" }}>
               <Scale size={14} color={GOLD} /> Synthesized Transit Net Score
             </span>
 
             {/* Score Bar */}
-            <div style={{ width: "100%", height: "8px", background: "#f1f5f9", borderRadius: "4px", position: "relative", margin: "20px 0 10px 0" }}>
+            <div style={{ width: "100%", height: "8px", background: "#f1f5f9", borderRadius: "4px", position: "relative", margin: "24px 0 20px 0" }}>
               {/* Shaded baseline bar from center (0) */}
               {(() => {
                 const centerPct = 50;
                 const widthPct = (scores.netScore / 5) * 50;
                 const left = scores.netScore >= 0 ? centerPct : centerPct + widthPct;
                 const width = Math.abs(widthPct);
-                const color = scores.netScore > 0 ? GREEN : scores.netScore === 0 ? GOLD : RED;
+                const color = scores.netScore > 0 ? "#059669" : scores.netScore === 0 ? GOLD_DEEP : "#dc2626";
 
                 return (
                   <div style={{
@@ -325,31 +326,33 @@ export function VedhaApplicator() {
               {/* Center point marker */}
               <div style={{ position: "absolute", left: "50%", top: "-4px", width: "2px", height: "16px", background: INK_MUTED }} />
               
-              {/* Current Net Score Pin */}
+              {/* Current Net Score Pin - Polished for high readability */}
               <div style={{
                 position: "absolute",
                 left: `${50 + (scores.netScore / 5) * 50}%`,
-                top: "-8px",
+                top: "-15px",
                 transform: "translateX(-50%)",
-                width: "20px",
-                height: "20px",
+                width: "38px",
+                height: "38px",
                 borderRadius: "50%",
-                background: scores.netScore > 0 ? GREEN : scores.netScore === 0 ? GOLD : RED,
-                border: "2px solid #ffffff",
-                boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+                background: scores.netScore > 0 ? "#059669" : scores.netScore === 0 ? GOLD_DEEP : "#dc2626",
+                border: "2.5px solid #ffffff",
+                boxShadow: "0 4px 10px rgba(0,0,0,0.22)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 color: "#ffffff",
-                fontSize: "9px",
-                fontWeight: 800,
-                transition: "all 0.3s ease"
+                fontSize: "11.5px",
+                fontWeight: 900,
+                textShadow: "0 1px 2px rgba(0,0,0,0.3)",
+                transition: "all 0.3s ease",
+                zIndex: 10
               }}>
                 {scores.netScore > 0 ? `+${scores.netScore.toFixed(1)}` : scores.netScore.toFixed(1)}
               </div>
             </div>
 
-            <div style={{ display: "flex", justifyContent: "space-between", width: "100%", fontSize: "9px", color: INK_MUTED }}>
+            <div style={{ display: "flex", justifyContent: "space-between", width: "100%", fontSize: "9.5px", color: INK_MUTED, fontWeight: "500" }}>
               <span>High Friction (-5.0)</span>
               <span>Neutral (0.0)</span>
               <span>Smooth (+5.0)</span>
@@ -408,6 +411,10 @@ export function VedhaApplicator() {
 
       </div>
 
+      {/* Source Footer */}
+      <div className="rounded-lg p-3 text-[10px]" style={{ background: "var(--gl-surface-manuscript, rgba(251,248,243,0.6))", border: "1px solid var(--gl-gold-hairline)", color: INK_MUTED }}>
+        <strong>Source:</strong> <IAST>Bṛhat Pārāśara Horā Śāstra</IAST> — <IAST>vedha</IAST> cancellation; <IAST>Phaladīpikā</IAST> — natal dignity mitigates transit intensity. Workflow: transit → <IAST>vedha</IAST> check → natal strength → <IAST>daśā</IAST> confirmation.
+      </div>
     </div>
   );
 }

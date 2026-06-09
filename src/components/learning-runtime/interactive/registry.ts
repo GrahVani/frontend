@@ -308,6 +308,25 @@ import { SpiritualTrioComparator } from "./spiritual-trio-comparator";
 import { SubLordCalculator } from "./sub-lord-calculator";
 import { SubstrateEthicsChecklist } from "./substrate-ethics-checklist";
 import { VimshamshaCalculator } from "./vimshamsha-calculator";
+import { AshtakavargaIntro } from "./ashtakavarga-intro";
+import { AshtakavargaContributors } from "./ashtakavarga-contributors";
+import { ContributionTableDemo } from "./contribution-table-demo";
+import { LagnaContributorNote } from "./lagna-contributor-note";
+import { BhinnaBuilder } from "./bhinna-builder";
+import { BhinnaTotalChecker } from "./bhinna-total-checker";
+import { BhinnaInterpreter } from "./bhinna-interpreter";
+import { MarsBhinnaWalkthrough } from "./mars-bhinna-walkthrough";
+import { SavBuilder } from "./sav-builder";
+import { SavChecksum } from "./sav-checksum";
+import { SavInterpreter } from "./sav-interpreter";
+import { TrikonaReducer } from "./trikona-reducer";
+import { EkadhipatyaReducer } from "./ekadhipatya-reducer";
+import { ReductionOrderDemo } from "./reduction-order-demo";
+import { FullReductionWalkthrough } from "./full-reduction-walkthrough";
+import { YogaSavAuditor } from "./yoga-sav-auditor";
+import { TransitBavModulator } from "./transit-bav-modulator";
+import { AshtakavargaStreamMap } from "./ashtakavarga-stream-map";
+
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
 
@@ -918,6 +937,24 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "sub-lord-calculator": SubLordCalculator,
   "substrate-ethics-checklist": SubstrateEthicsChecklist,
   "vimshamsha-calculator": VimshamshaCalculator,
+  "ashtakavarga-intro": AshtakavargaIntro,
+  "ashtakavarga-contributors": AshtakavargaContributors,
+  "contribution-table-demo": ContributionTableDemo,
+  "lagna-contributor-note": LagnaContributorNote,
+  "bhinna-builder": BhinnaBuilder,
+  "bhinna-total-checker": BhinnaTotalChecker,
+  "bhinna-interpreter": BhinnaInterpreter,
+  "mars-bhinna-walkthrough": MarsBhinnaWalkthrough,
+  "sav-builder": SavBuilder,
+  "sav-checksum": SavChecksum,
+  "sav-interpreter": SavInterpreter,
+  "trikona-reducer": TrikonaReducer,
+  "ekadhipatya-reducer": EkadhipatyaReducer,
+  "reduction-order-demo": ReductionOrderDemo,
+  "full-reduction-walkthrough": FullReductionWalkthrough,
+  "yoga-sav-auditor": YogaSavAuditor,
+  "transit-bav-modulator": TransitBavModulator,
+  "ashtakavarga-stream-map": AshtakavargaStreamMap,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {

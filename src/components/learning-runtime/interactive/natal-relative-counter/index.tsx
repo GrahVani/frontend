@@ -7,6 +7,9 @@ import { RASHIS } from "../rashi-data";
 
 const GOLD = "var(--gl-gold-accent, #9C7A2F)";
 const GOLD_DEEP = "var(--gl-gold-deep, #7A5E1E)";
+const GREEN = "#10b981";
+const RED = "#ef4444";
+const BLUE = "#3b82f6";
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary, #2d261e)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary, #4d4133)";
 const INK_MUTED = "var(--gl-ink-on-cream-muted, #7c6d5b)";
@@ -24,6 +27,17 @@ const GRAHAS = [
   { key: "ketu", dev: "के", name: "Ketu", iast: "Ketu" },
 ];
 
+/* ── House nature classification ── */
+function getHouseNature(houseNum: number): { label: string; color: string; bg: string } {
+  if ([1, 4, 7, 10].includes(houseNum)) return { label: "Kendra", color: BLUE, bg: `${BLUE}12` };
+  if ([5, 9].includes(houseNum)) return { label: "Trikona", color: GREEN, bg: `${GREEN}12` };
+  if ([3, 6, 11].includes(houseNum)) return { label: "Upachaya", color: "#9C7A2F", bg: "rgba(156,122,47,0.08)" };
+  if ([8, 12].includes(houseNum)) return { label: "Dusthana", color: RED, bg: `${RED}10` };
+  if (houseNum === 2) return { label: "Maraka", color: "#d97706", bg: "rgba(217,119,6,0.08)" };
+  return { label: "House", color: INK_MUTED, bg: "rgba(0,0,0,0.03)" };
+}
+
+/* ── Classical transit names for Saturn ── */
 function getClassicalName(planet: string, houseFromMoon: number): string {
   if (planet === "saturn") {
     if (houseFromMoon === 1) return "Mukhya (conjunction)";
@@ -50,6 +64,7 @@ export function NatalRelativeCounter() {
   const [lagnaSign, setLagnaSign] = useState<number>(1);
   const [selectedPlanet, setSelectedPlanet] = useState<string>("saturn");
   const [planetSign, setPlanetSign] = useState<number>(4);
+  const [hoveredHouse, setHoveredHouse] = useState<number | null>(null);
 
   const moonRashi = useMemo(() => RASHIS.find(r => r.number === moonSign) || RASHIS[0], [moonSign]);
   const lagnaRashi = useMemo(() => RASHIS.find(r => r.number === lagnaSign) || RASHIS[0], [lagnaSign]);
@@ -68,14 +83,32 @@ export function NatalRelativeCounter() {
   }, [planetSign, lagnaSign]);
 
   const sadeSatiActive = useMemo(() => {
+    if (selectedPlanet !== "saturn") return false;
     const prev = moonSign === 1 ? 12 : moonSign - 1;
     const next = moonSign === 12 ? 1 : moonSign + 1;
     return planetSign === prev || planetSign === moonSign || planetSign === next;
-  }, [planetSign, moonSign]);
+  }, [planetSign, moonSign, selectedPlanet]);
+
+  const graha = GRAHAS.find(g => g.key === selectedPlanet) || GRAHAS[6];
+
+  /* ── Build house list relative to Moon ── */
+  const houses = useMemo(() => {
+    return Array.from({ length: 12 }, (_, i) => {
+      const hNum = i + 1;
+      const signNum = ((moonSign + i - 1 + 12) % 12) + 1;
+      const rashi = RASHIS[signNum - 1];
+      const isPlanetHere = hNum === houseFromMoon;
+      const isMoonHere = hNum === 1;
+      const nature = getHouseNature(hNum);
+      return { hNum, signNum, rashi, isPlanetHere, isMoonHere, nature };
+    });
+  }, [moonSign, houseFromMoon]);
+
+  const BAR_MAX_W = 280;
 
   return (
     <div className="gl-surface-twilight-glass" style={{ padding: "20px", borderRadius: "16px", background: "rgba(255, 253, 248, 0.75)", backdropFilter: "blur(12px)", border: "1px solid rgba(156, 122, 47, 0.15)", boxShadow: "0 8px 32px rgba(72, 48, 16, 0.05)", fontFamily: "'Inter', sans-serif", color: INK_PRIMARY, maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "14px" }}>
-      
+
       <div>
         <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 800, color: GOLD_DEEP }}>
           <IAST>Chandra-Lagna-Udaya</IAST> Gochara Counter
@@ -83,7 +116,7 @@ export function NatalRelativeCounter() {
         <p style={{ margin: "2px 0 0 0", fontSize: "12px", color: INK_SECONDARY }}>Compare a planet&apos;s position from both Moon and Lagna. Classical gochara counts from the Moon.</p>
       </div>
 
-      {/* ─── CONTROLS BAR (TOP) ─── */}
+      {/* ─── CONTROLS BAR ─── */}
       <div style={{ background: "#ffffff", padding: "12px", borderRadius: "10px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", gap: "10px" }}>
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
@@ -117,63 +150,104 @@ export function NatalRelativeCounter() {
         </div>
       </div>
 
-      {/* ─── MAIN SPLIT: CHART + READOUT ─── */}
-      <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
-        {/* Chart */}
-        <div style={{ flex: "0 0 260px", background: "#ffffff", padding: "14px", borderRadius: "12px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <h4 style={{ margin: "0 0 10px 0", fontSize: "11px", fontWeight: 700, color: INK_MUTED, textTransform: "uppercase" }}>Gochara from Moon</h4>
-          <div style={{ position: "relative", width: "220px", height: "220px" }}>
-            <svg width="220" height="220" viewBox="0 0 220 220">
-              <rect x="10" y="10" width="200" height="200" fill="none" stroke="rgba(156,122,47,0.15)" strokeWidth="1.5" />
-              <line x1="10" y1="110" x2="210" y2="110" stroke="rgba(156,122,47,0.1)" strokeWidth="1" />
-              <line x1="110" y1="10" x2="110" y2="210" stroke="rgba(156,122,47,0.1)" strokeWidth="1" />
-              <line x1="10" y1="10" x2="210" y2="210" stroke="rgba(156,122,47,0.08)" strokeWidth="1" />
-              <line x1="210" y1="10" x2="10" y2="210" stroke="rgba(156,122,47,0.08)" strokeWidth="1" />
-              {/* House numbers */}
-              {Array.from({ length: 12 }, (_, i) => {
-                const signNum = ((moonSign + i - 1 - 1) % 12) + 1;
-                const positions = [
-                  { x: 60, y: 60 }, { x: 110, y: 35 }, { x: 160, y: 60 },
-                  { x: 185, y: 110 }, { x: 160, y: 160 }, { x: 110, y: 185 },
-                  { x: 60, y: 160 }, { x: 35, y: 110 }, { x: 60, y: 60 },
-                  { x: 110, y: 35 }, { x: 160, y: 60 }, { x: 185, y: 110 }
-                ];
-                const pos = positions[i] || { x: 110, y: 110 };
-                const isSadeSati = sadeSatiActive && signNum === planetSign;
-                return (
-                  <g key={i}>
-                    <text x={pos.x} y={pos.y} textAnchor="middle" style={{ fontSize: "8px", fontWeight: 700, fill: isSadeSati ? "#ef4444" : INK_MUTED }}>H{i + 1}</text>
-                    <text x={pos.x} y={pos.y + 10} textAnchor="middle" style={{ fontSize: "7px", fill: isSadeSati ? "#ef4444" : INK_MUTED }}>{RASHIS[signNum - 1].nameDevanagari}</text>
-                  </g>
-                );
-              })}
-              {/* Moon marker */}
-              <circle cx="110" cy="110" r="14" fill={GOLD} stroke="#ffffff" strokeWidth="2" />
-              <text x="110" y="111" textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "10px", fill: "#ffffff", fontWeight: 700 }}>☽</text>
-              {/* Planet marker */}
-              {(() => {
-                const graha = GRAHAS.find(g => g.key === selectedPlanet);
-                const houseIdx = houseFromMoon - 1;
-                const positions = [
-                  { x: 60, y: 60 }, { x: 110, y: 35 }, { x: 160, y: 60 },
-                  { x: 185, y: 110 }, { x: 160, y: 160 }, { x: 110, y: 185 },
-                  { x: 60, y: 160 }, { x: 35, y: 110 }, { x: 60, y: 60 },
-                  { x: 110, y: 35 }, { x: 160, y: 60 }, { x: 185, y: 110 }
-                ];
-                const pos = positions[houseIdx] || { x: 110, y: 110 };
-                return (
-                  <g>
-                    <circle cx={pos.x} cy={pos.y - 18} r="10" fill="#1e293b" stroke="#ffffff" strokeWidth="1.5" />
-                    <text x={pos.x} y={pos.y - 17} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9px", fill: "#ffffff", fontWeight: 700 }}>{graha?.dev}</text>
-                  </g>
-                );
-              })()}
-            </svg>
+      {/* ─── MAIN SPLIT: BAR CHART + READOUT ─── */}
+      <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+        {/* Horizontal Bar Chart */}
+        <div style={{ flex: "1 1 340px", background: "#ffffff", padding: "14px", borderRadius: "12px", border: "1px solid rgba(156,122,47,0.1)" }}>
+          <h4 style={{ margin: "0 0 10px 0", fontSize: "11px", fontWeight: 700, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.5px" }}>Houses from Moon — {moonRashi.nameEnglish}</h4>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+            {houses.map(h => {
+              const isHovered = hoveredHouse === h.hNum;
+              const barWidth = h.isPlanetHere ? BAR_MAX_W : BAR_MAX_W * 0.65;
+              const borderColor = h.isPlanetHere ? h.nature.color : h.isMoonHere ? GOLD : isHovered ? "rgba(156,122,47,0.3)" : "rgba(0,0,0,0.06)";
+              const bgColor = h.isPlanetHere ? h.nature.bg : isHovered ? "rgba(0,0,0,0.02)" : "transparent";
+
+              return (
+                <div
+                  key={h.hNum}
+                  onMouseEnter={() => setHoveredHouse(h.hNum)}
+                  onMouseLeave={() => setHoveredHouse(null)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "4px 8px",
+                    borderRadius: "6px",
+                    background: bgColor,
+                    border: `1px solid ${borderColor}`,
+                    borderLeftWidth: h.isPlanetHere || h.isMoonHere ? "3px" : "1px",
+                    transition: "all 0.2s ease",
+                    cursor: "default",
+                    minHeight: "30px"
+                  }}
+                >
+                  {/* House Number */}
+                  <span style={{ fontSize: "10px", fontWeight: 800, color: h.isPlanetHere ? h.nature.color : INK_MUTED, minWidth: "24px" }}>
+                    H{h.hNum}
+                  </span>
+
+                  {/* Bar fill */}
+                  <div style={{ position: "relative", flex: 1, height: "20px", background: "rgba(0,0,0,0.03)", borderRadius: "4px", overflow: "hidden" }}>
+                    <div style={{
+                      width: `${(barWidth / BAR_MAX_W) * 100}%`,
+                      height: "100%",
+                      background: h.isPlanetHere
+                        ? `linear-gradient(90deg, ${h.nature.color}25, ${h.nature.color}50)`
+                        : h.isMoonHere
+                          ? `linear-gradient(90deg, rgba(156,122,47,0.1), rgba(156,122,47,0.25))`
+                          : "rgba(0,0,0,0.02)",
+                      borderRadius: "4px",
+                      transition: "width 0.3s ease"
+                    }} />
+
+                    {/* Markers inside bar */}
+                    <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", alignItems: "center", padding: "0 6px", justifyContent: "space-between" }}>
+                      <span style={{ fontSize: "9px", fontWeight: 600, color: h.isPlanetHere ? h.nature.color : INK_MUTED }}>
+                        {h.rashi.nameEnglish}
+                      </span>
+                      <span style={{ fontSize: "8px", color: INK_MUTED }}>
+                        {h.rashi.nameDevanagari}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Nature badge */}
+                  <span style={{ fontSize: "7px", fontWeight: 700, color: h.nature.color, background: h.nature.bg, padding: "1px 5px", borderRadius: "3px", minWidth: "48px", textAlign: "center" }}>
+                    {h.nature.label}
+                  </span>
+
+                  {/* Moon / Planet icons */}
+                  <div style={{ minWidth: "28px", textAlign: "center" }}>
+                    {h.isMoonHere && (
+                      <span style={{ fontSize: "14px", filter: "drop-shadow(0 0 2px rgba(156,122,47,0.3))" }} title="Natal Moon">☽</span>
+                    )}
+                    {h.isPlanetHere && (
+                      <span style={{
+                        display: "inline-flex", alignItems: "center", justifyContent: "center",
+                        width: "22px", height: "22px", borderRadius: "11px",
+                        background: "#1e293b", color: "#fff", fontSize: "10px", fontWeight: 700,
+                        border: `2px solid ${h.nature.color}`
+                      }} title={graha.name}>
+                        {graha.dev}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
+
+          {/* Hover tooltip */}
+          {hoveredHouse !== null && (
+            <div style={{ marginTop: "8px", padding: "6px 10px", borderRadius: "6px", background: "rgba(156,122,47,0.04)", border: "1px solid rgba(156,122,47,0.1)", fontSize: "10px", color: INK_SECONDARY }}>
+              <strong>H{hoveredHouse}:</strong> {getClassicalName(selectedPlanet, hoveredHouse)}
+            </div>
+          )}
         </div>
 
         {/* Readout */}
-        <div style={{ flex: "1 1 280px", display: "flex", flexDirection: "column", gap: "10px", minWidth: 0 }}>
+        <div style={{ flex: "1 1 260px", display: "flex", flexDirection: "column", gap: "10px", minWidth: 0 }}>
           <div style={{ background: "rgba(156,122,47,0.03)", border: `1.2px solid rgba(156,122,47,0.15)`, borderRadius: "12px", padding: "14px" }}>
             <div style={{ display: "flex", gap: "8px", marginBottom: "8px", flexWrap: "wrap" }}>
               <span style={{ fontSize: "10px", fontWeight: 700, padding: "3px 8px", borderRadius: "4px", background: "#dbeafe", color: "#1e40af" }}>
@@ -189,11 +263,11 @@ export function NatalRelativeCounter() {
               )}
             </div>
             <h4 style={{ margin: "0 0 4px 0", fontSize: "14px", fontWeight: 700, color: INK_PRIMARY }}>
-              {GRAHAS.find(g => g.key === selectedPlanet)?.name} in {planetRashi.nameEnglish} (<IAST>{planetRashi.nameIAST}</IAST>)
+              {graha.name} in {planetRashi.nameEnglish} (<IAST>{planetRashi.nameIAST}</IAST>)
             </h4>
             <p style={{ margin: 0, fontSize: "12px", lineHeight: "1.45", color: INK_SECONDARY }}>
-              Moon is in <strong>{moonRashi.nameEnglish}</strong>, Lagna is <strong>{lagnaRashi.nameEnglish}</strong>. 
-              {GRAHAS.find(g => g.key === selectedPlanet)?.name} transits the <strong>{houseFromMoon}th house from Moon</strong> and the <strong>{houseFromLagna}th house from Lagna</strong>.
+              Moon is in <strong>{moonRashi.nameEnglish}</strong>, Lagna is <strong>{lagnaRashi.nameEnglish}</strong>.
+              {graha.name} transits the <strong>{houseFromMoon}th house from Moon</strong> and the <strong>{houseFromLagna}th house from Lagna</strong>.
               Classical name: <em>{getClassicalName(selectedPlanet, houseFromMoon)}</em>.
             </p>
             <p className="mt-2 text-[10px] italic" style={{ color: INK_MUTED }}>
@@ -202,7 +276,6 @@ export function NatalRelativeCounter() {
             </p>
           </div>
 
-          {/* Sade-Sati hatch warning */}
           {sadeSatiActive && selectedPlanet === "saturn" && (
             <div style={{ background: "#fef2f2", border: "1px solid #fecaca", padding: "10px", borderRadius: "8px" }}>
               <div style={{ fontSize: "11px", fontWeight: 700, color: "#991b1b", marginBottom: "3px" }}>⚠️ Sāḍhe-Sātī Zone Active</div>

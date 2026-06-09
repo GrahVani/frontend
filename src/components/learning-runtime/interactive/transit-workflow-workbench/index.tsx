@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { CheckCircle2, AlertTriangle, ShieldCheck, List, ClipboardList, Info, Sparkles, HelpCircle, XCircle } from "lucide-react";
+import { IAST } from "../../chrome/typography";
 
 const GOLD = "#9C7A2F";
 const GOLD_DEEP = "#7A5E1E";
@@ -162,7 +163,7 @@ export function TransitWorkflowWorkbench() {
     <div
       className="gl-surface-twilight-glass"
       style={{
-        padding: "24px",
+        padding: "20px",
         borderRadius: "16px",
         background: "rgba(255, 253, 248, 0.75)",
         backdropFilter: "blur(12px)",
@@ -174,15 +175,15 @@ export function TransitWorkflowWorkbench() {
         margin: "0 auto",
         display: "flex",
         flexDirection: "column",
-        gap: "24px"
+        gap: "14px"
       }}
     >
       {/* Header */}
       <div>
-        <h3 style={{ margin: 0, fontSize: "20px", fontWeight: 800, color: GOLD_DEEP }}>
-          गोचरपठनतन्त्रसमन्वयः — Transit Workflow Workbench
+        <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 800, color: GOLD_DEEP }}>
+          <IAST>Gochara-Paṭhana-Tantra-Samanvayaḥ</IAST> — Transit Workflow Workbench
         </h3>
-        <p style={{ margin: "4px 0 0 0", fontSize: "13px", color: INK_SECONDARY }}>
+        <p style={{ margin: "2px 0 0 0", fontSize: "12px", color: INK_SECONDARY }}>
           Execute the Capstone 8-step transit workflow, applying references, checks, and dasha cross-validation.
         </p>
       </div>
@@ -202,7 +203,7 @@ export function TransitWorkflowWorkbench() {
       </div>
 
       {/* Main Grid Layout */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "14px" }}>
         
         {/* Left Column: Interactive 8-Step List */}
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -392,6 +393,10 @@ export function TransitWorkflowWorkbench() {
 
       </div>
 
+      {/* Source Footer */}
+      <div className="rounded-lg p-3 text-[10px]" style={{ background: "var(--gl-surface-manuscript, rgba(251,248,243,0.6))", border: "1px solid var(--gl-gold-hairline)", color: INK_MUTED }}>
+        <strong>Source:</strong> <IAST>Bṛhat Pārāśara Horā Śāstra</IAST> — three-reference <IAST>gochara</IAST>; <IAST>Phaladīpikā</IAST> — <IAST>vedha</IAST> rules; Module 10 — Vimśottari <IAST>daśā</IAST> timing. Capstone workflow: Moon → Lagna → Kāraka → <IAST>Vedha</IAST> → <IAST>Daśā</IAST> → Two-Yes.
+      </div>
     </div>
   );
 }
