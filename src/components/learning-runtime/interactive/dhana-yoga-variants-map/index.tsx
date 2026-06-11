@@ -12,6 +12,19 @@ import {
   type DhanaVariantCategory,
 } from "./data";
 
+/** Darken pale graha colors so they remain readable on cream/parchment backgrounds. */
+function readableColor(hex: string): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  if (luminance > 0.72) {
+    const scale = (c: number) => Math.round(c * 0.5).toString(16).padStart(2, "0");
+    return `#${scale(r)}${scale(g)}${scale(b)}`;
+  }
+  return hex;
+}
+
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.22))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
@@ -111,7 +124,7 @@ function ArchetypeStrip() {
     <svg viewBox="0 0 520 155" className="h-auto w-full" role="img" aria-label="2nd and 11th dhana yoga archetype">
       <rect x="16" y="18" width="488" height="118" rx="16" fill={SURFACE_2} stroke={HAIRLINE} />
       <rect x="50" y="52" width="120" height="52" rx="14" fill={wash(grahas.shukra.primary, "14")} stroke={grahas.shukra.primary} />
-      <text x="110" y="74" textAnchor="middle" fill={grahas.shukra.primary} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+      <text x="110" y="74" textAnchor="middle" fill={readableColor(grahas.shukra.primary)} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
         2nd lord
       </text>
       <text x="110" y="93" textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
@@ -123,7 +136,7 @@ function ArchetypeStrip() {
         MOST CELEBRATED LINK
       </text>
       <rect x="350" y="52" width="120" height="52" rx="14" fill={wash(grahas.surya.primary, "14")} stroke={grahas.surya.primary} />
-      <text x="410" y="74" textAnchor="middle" fill={grahas.surya.primary} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+      <text x="410" y="74" textAnchor="middle" fill={readableColor(grahas.surya.primary)} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
         11th lord
       </text>
       <text x="410" y="93" textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>

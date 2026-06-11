@@ -30,6 +30,18 @@ import { MedievalCodifierRelativeDatingExplorer } from "./medieval-codifier-rela
 import { MedievalSynthesisDojo } from "./medieval-synthesis-dojo";
 import { ParashariJaiminiParallelTraditionExplorer } from "./parashari-jaimini-parallel-tradition-explorer";
 import { JaiminiSecondTraditionDojo } from "./jaimini-second-tradition-dojo";
+import { JaiminiTraditionMap } from "./jaimini-tradition-map";
+import { SutraInterpretationLab } from "./sutra-interpretation-lab";
+import { JaiminiInterpreterComparator } from "./jaimini-interpreter-comparator";
+import { CaraKarakaRanker } from "./cara-karaka-ranker";
+import { CaraKarakaRoleAssigner } from "./cara-karaka-role-assigner";
+import { AtmakarakaKingLens } from "./atmakaraka-king-lens";
+import { KarakaCrossValidation } from "./karaka-cross-validation";
+import { CaraDashaMechanism } from "./cara-dasha-mechanism";
+import { CaraPeriodCalculator } from "./cara-period-calculator";
+import { CaraSequenceBuilder } from "./cara-sequence-builder";
+import { CaraDashaTimeline } from "./cara-dasha-timeline";
+import { DualDashaTimeline } from "./dual-dasha-timeline";
 import { FourStreamLandscapeExplorer } from "./four-stream-landscape-explorer";
 import { FourStreamSynthesisDojo } from "./four-stream-synthesis-dojo";
 import { ThreeSkandhaCurriculumMap } from "./three-skandha-curriculum-map";
@@ -288,6 +300,23 @@ import { KalaSarpaDetector } from "./kala-sarpa-detector";
 import { PitrDoshaIndicator } from "./pitr-dosha-indicator";
 import { KemadrumaSadesatiRecap } from "./kemadruma-sadesati-recap";
 import { DefearmongeringProtocol } from "./defearmongering-protocol";
+import { ArgalaExplorer } from "./argala-explorer";
+import { ArgalaConceptExplorer } from "./argala-concept-explorer";
+import { PositiveArgala2411 } from "./positive-argala-2-4-11";
+import { VirodhargalaCounterIntervention } from "./virodhargala-counter-intervention";
+import { ArudhaPadaFinder } from "./arudha-pada-finder";
+import { TwelveArudhaPadas } from "./twelve-arudha-padas";
+import { ArudhaPadaCalculator } from "./arudha-pada-calculator";
+import { ArudhaPadaExplorer } from "./arudha-pada-explorer";
+import { ArudhaCaveatLab } from "./arudha-caveat-lab";
+import { RashiDrishtiVisualizer } from "./rashi-drishti-visualizer";
+import { RashiDrishtiMapper } from "./rashi-drishti-mapper";
+import { AkDrishtiSynthesizer } from "./ak-drishti-synthesizer";
+import { KarakamshaLagnaLocator } from "./karakamsha-lagna-locator";
+import { KarakamshaReader } from "./karakamsha-reader";
+import { IshtaDevataFinder } from "./ishta-devata-finder";
+import { JaiminiWorkflowWalkthrough } from "./jaimini-workflow-walkthrough";
+import { JaiminiModuleClosureMap } from "./jaimini-module-closure-map";
 import { GocharaIntro } from "./gochara-intro";
 import { NatalRelativeCounter } from "./natal-relative-counter";
 import { TransitComputer } from "./transit-computer";
@@ -416,6 +445,18 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // (Doctrinal-Pair Atlas across 6 pairs + 5-scenario tradition-attribution
   // drill).
   "jaimini-second-tradition-dojo": JaiminiSecondTraditionDojo,
+  "jaimini-tradition-map": JaiminiTraditionMap,
+  "sutra-interpretation-lab": SutraInterpretationLab,
+  "jaimini-interpreter-comparator": JaiminiInterpreterComparator,
+  "cara-karaka-ranker": CaraKarakaRanker,
+  "cara-karaka-role-assigner": CaraKarakaRoleAssigner,
+  "atmakaraka-king-lens": AtmakarakaKingLens,
+  "karaka-cross-validation": KarakaCrossValidation,
+  "cara-dasha-mechanism": CaraDashaMechanism,
+  "cara-period-calculator": CaraPeriodCalculator,
+  "cara-sequence-builder": CaraSequenceBuilder,
+  "cara-dasha-timeline": CaraDashaTimeline,
+  "dual-dasha-timeline": DualDashaTimeline,
   // Lesson 2.6's §4 explorer: Four-Stream Landscape Explorer — hero diptych
   // (4 streams equal-weight) + modern-primary-vs-revival distinction +
   // KP founder plate + 5 KP contributions + Lal Kitab founder plate + 6 LK
@@ -953,6 +994,78 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // Lesson 14.6.6's §7 interactive: De-Fearmongering Protocol -- 8-step discipline walker.
   // Doṣa selector + step cards + reframe exercise + ethics connection. Closes Chapter 6.
   "defearmongering-protocol": DefearmongeringProtocol,
+  // Module 17 Chapter 3 argala explorer: reference-house selector + planet placement +
+  // circular diagram with argala/virodha highlights + pair-by-pair net computation +
+  // five-step workflow. Serves all four lessons in the argala chapter.
+  "argala-explorer": ArgalaExplorer,
+  // Lesson 17.3.1 interactive: Argala Concept Explorer -- bolt metaphor SVG,
+  // reference-house explorer, mechanism discriminator (argala vs graha-dṛṣṭi vs rāśi-dṛṣṭi),
+  // and what-argala-does/does-not-do checklist.
+  "argala-concept-explorer": ArgalaConceptExplorer,
+  // Lesson 17.3.2 interactive: Positive Argala 2/4/11 -- counting drill with circular diagram,
+  // self-check challenges, strength visualiser, and common-trap spotter.
+  "positive-argala-2-4-11": PositiveArgala2411,
+  // Lesson 17.3.3 interactive: Virodhārgala Counter-Intervention -- obstruction pair explorer,
+  // net-effect calculator with +/- count controls, and scenario presets.
+  "virodhargala-counter-intervention": VirodhargalaCounterIntervention,
+  // Lesson 17.4.1 interactive: Ārūḍha Pāda Finder -- double-count computation,
+  // 1st/7th exception detection, reality-vs-perception comparison, step-by-step walker.
+  "arudha-pada-finder": ArudhaPadaFinder,
+  // Lesson 17.4.2 interactive: The Twelve Ārūḍha Pādas -- complete image-pāda grid,
+  // AL/UL map, Lagna-AL gap interpretation, and common mistakes panel.
+  "twelve-arudha-padas": TwelveArudhaPadas,
+  // Lesson 17.4.3 interactive: Ārūḍha Pāda Calculator (Upapada mode) --
+  // computes UL from the 12th, shows double-count steps, 2nd-from-UL, planet
+  // placements, and triangulation reminders.
+  "arudha-pada-calculator": ArudhaPadaCalculator,
+  // Lesson 17.4.4 interactive: Ārūḍha Pāda Explorer -- computes all twelve
+  // padas, inspects occupants per pada, compares image vs reality, and builds
+  // focused readings (AL, AL+UL, AL+A2, AL+A10, AL+A11).
+  "arudha-pada-explorer": ArudhaPadaExplorer,
+  // Lesson 17.4.5 interactive: Ārūḍha Caveat Lab -- exception detector,
+  // dual-lordship convention switcher for Scorpio/Aquarius, and tradition
+  // disclosure statement generator.
+  "arudha-caveat-lab": ArudhaCaveatLab,
+  // Lesson 17.5.1 interactive: Rāśi-Dṛṣṭi Visualizer -- click any sign to
+  // see the three signs it aspects, with explore mode, drill mode, and
+  // rāśi-dṛṣṭi vs graha-dṛṣṭi comparison.
+  "rashi-drishti-visualizer": RashiDrishtiVisualizer,
+  // Lesson 17.5.2 interactive: Rāśi-Dṛṣṭi Mapper -- place planets on a chart,
+  // select a target, see which signs aspect it, and carry occupants + lords
+  // across to read influence and multi-sign convergence.
+  "rashi-drishti-mapper": RashiDrishtiMapper,
+  // Lesson 17.5.3 interactive: AK-Drishti Synthesizer -- integrates cara-kārakas
+  // with rāśi-dṛṣṭi. Select a kāraka, place it in a sign, populate the chart,
+  // and read the incoming sign-aspects with benefic/malefic classification
+  // and automated synthesis reading. Includes the four static-reading framework.
+  "ak-drishti-synthesizer": AkDrishtiSynthesizer,
+  // Lesson 17.7.1 interactive: Kārakāṁśa Lagna Locator -- identify the
+  // Ātmakāraka from within-sign degrees, select its navāṁśa (D9) sign, and
+  // see that sign projected onto the rāśi (D1) wheel as a special lagna with
+  // houses counted from the Kārakāṁśa. Includes source-vs-target diagram.
+  "karakamsha-lagna-locator": KarakamshaLagnaLocator,
+  // Lesson 17.7.2 interactive: Kārakāṁśa Reader -- the five-step soul-purpose
+  // read. Walks through AK identification, D9 sign selection, KL placement,
+  // occupant + rāśi-dṛṣṭi aspect reading, and key houses from KL with
+  // automated synthesis. Presets for Leo and Scorpio Kārakāṁśa examples.
+  "karakamsha-reader": KarakamshaReader,
+  // Lesson 17.7.3 interactive: Iṣṭa-Devatā Finder -- select the Kārakāṁśa,
+  // place planets, and see the 12th-from-KL auto-computed with planet-to-deity
+  // mapping, empty-house lord fallback, aspecting contributors, and ethical
+  // framing (offer, respect, hold lightly).
+  "ishta-devata-finder": IshtaDevataFinder,
+  // Lesson 17.7.4 interactive: Jaimini Workflow Walkthrough -- six ordered steps
+  // assembling every Jaimini tool into one end-to-end reading. Enforces workflow
+  // discipline: static tools first (Steps 1-5), timing engine last (Step 6).
+  // Includes question presets, running synthesis, timing-first failure demo,
+  // and cara-daśā / Vimśottarī cross-validation.
+  "jaimini-workflow-walkthrough": JaiminiWorkflowWalkthrough,
+  // Lesson 17.7.5 interactive: Jaimini Module Closure Map -- seven-chapter arc
+  // visualiser, pipeline tracer for four question types, Tier-1-vs-Tier-2
+  // comparison, and three discipline cards. Click any chapter to expand its
+  // consumes/produces detail; select a question to highlight which chapters
+  // the pipeline uses.
+  "jaimini-module-closure-map": JaiminiModuleClosureMap,
   "gochara-intro": GocharaIntro,
   "natal-relative-counter": NatalRelativeCounter,
   "transit-computer": TransitComputer,
