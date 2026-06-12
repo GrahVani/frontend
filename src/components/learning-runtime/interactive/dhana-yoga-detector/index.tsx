@@ -15,6 +15,19 @@ import {
   type DhanaRelationMode,
 } from "./data";
 
+/** Darken pale graha colors so they remain readable on cream/parchment backgrounds. */
+function readableColor(hex: string): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  if (luminance > 0.72) {
+    const scale = (c: number) => Math.round(c * 0.5).toString(16).padStart(2, "0");
+    return `#${scale(r)}${scale(g)}${scale(b)}`;
+  }
+  return hex;
+}
+
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.22))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
@@ -71,7 +84,7 @@ function WealthCircuit({
               <text x={point.x} y={point.y - 2} textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {lord.wealthHouse.label}
               </text>
-              <text x={point.x} y={point.y + 19} textAnchor="middle" fill={grahas[lord.lord].primary} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x={point.x} y={point.y + 19} textAnchor="middle" fill={readableColor(grahas[lord.lord].primary)} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {grahaName(lord.lord)}
               </text>
               <text x={point.x} y={point.y + 35} textAnchor="middle" fill={INK_MUTED} fontSize="9" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
