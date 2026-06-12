@@ -121,6 +121,33 @@ import { PlacidusKpConvention } from "./placidus-kp-convention";
 import { BhavaMadhyaSandhi } from "./bhava-madhya-sandhi";
 import { HouseSystemDecisionFramework } from "./house-system-decision-framework";
 import { LalKitabFixedAriesLagna } from "./lal-kitab-fixed-aries-lagna";
+import { LalKitabTraditionExplorer } from "./lal-kitab-tradition-explorer";
+import { LalKitabFarmanTimeline } from "./lal-kitab-farman-timeline";
+import { LalKitabClassicalComparator } from "./lal-kitab-classical-comparator";
+import { LalKitabStatusAndEthicsExplorer } from "./lal-kitab-status-and-ethics-explorer";
+import { LalKitabTevaDoctrineExplorer } from "./lal-kitab-teva-doctrine-explorer";
+import { TevaBuilder } from "./teva-builder";
+import { TevaHouseReader } from "./teva-house-reader";
+import { LalKitabLuminaryMapper } from "./lal-kitab-luminary-mapper";
+import { LalKitabMarsMercuryMapper } from "./lal-kitab-mars-mercury-mapper";
+import { LalKitabBeneficSorter } from "./lal-kitab-benefic-sorter";
+import { LalKitabShadowTriad } from "./lal-kitab-shadow-triad";
+import { LalKitabVarshphalaConcept } from "./lal-kitab-varshphala-concept";
+import { LalKitabVarshphalaComputation } from "./lal-kitab-varshphala-computation";
+import { LalKitabVarshphalaReading } from "./lal-kitab-varshphala-reading";
+import { LalKitabTajikaVarshaphalaComparator } from "./lal-kitab-tajika-varshaphala-comparator";
+import { LalKitabUpayaFamilySorter } from "./lal-kitab-upaya-family-sorter";
+import { LalKitabEpistemicDisclosureLab } from "./lal-kitab-epistemic-disclosure-lab";
+import { LalKitabRemedyDecisionFramework } from "./lal-kitab-remedy-decision-framework";
+import { CrossStreamRemedyPlanner } from "./cross-stream-remedy-planner";
+import { LalKitabRecognitionLab } from "./lal-kitab-recognition-lab";
+import { LalKitabStreamMasteryMap } from "./lal-kitab-stream-mastery-map";
+import { TevaLagnaCrossValidator } from "./teva-lagna-cross-validator";
+import { LalKitabGrahaClusters } from "./lal-kitab-graha-clusters";
+import { BlindPlanetExplorer } from "./blind-planet-explorer";
+import { SleepingPlanetExplorer } from "./sleeping-planet-explorer";
+import { BurningPlanetExplorer } from "./burning-planet-explorer";
+import { PlanetaryStateSynthesizer } from "./planetary-state-synthesizer";
 import { VargaExplainer } from "./varga-explainer";
 import { VargaReferenceTable } from "./varga-reference-table";
 import { VargaTemplateCard } from "./varga-template-card";
@@ -1066,6 +1093,53 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // consumes/produces detail; select a question to highlight which chapters
   // the pipeline uses.
   "jaimini-module-closure-map": JaiminiModuleClosureMap,
+  // --- Module 18: Lal Kitab ---
+  "lal-kitab-tradition-explorer": LalKitabTraditionExplorer,
+  "lal-kitab-farman-timeline": LalKitabFarmanTimeline,
+  "lal-kitab-classical-comparator": LalKitabClassicalComparator,
+  "lal-kitab-status-and-ethics-explorer": LalKitabStatusAndEthicsExplorer,
+  "lal-kitab-teva-doctrine-explorer": LalKitabTevaDoctrineExplorer,
+  "teva-builder": TevaBuilder,
+  "teva-house-reader": TevaHouseReader,
+  "lal-kitab-luminary-mapper": LalKitabLuminaryMapper,
+  "lal-kitab-mars-mercury-mapper": LalKitabMarsMercuryMapper,
+  "lal-kitab-benefic-sorter": LalKitabBeneficSorter,
+  "lal-kitab-shadow-triad": LalKitabShadowTriad,
+  "lal-kitab-varshphala-concept": LalKitabVarshphalaConcept,
+  "lal-kitab-varshphala-computation": LalKitabVarshphalaComputation,
+  "lal-kitab-varshphala-reading": LalKitabVarshphalaReading,
+  "lal-kitab-tajika-varshaphala-comparator": LalKitabTajikaVarshaphalaComparator,
+  "lal-kitab-upaya-family-sorter": LalKitabUpayaFamilySorter,
+  "lal-kitab-epistemic-disclosure-lab": LalKitabEpistemicDisclosureLab,
+  "lal-kitab-remedy-decision-framework": LalKitabRemedyDecisionFramework,
+  "cross-stream-remedy-planner": CrossStreamRemedyPlanner,
+  "lal-kitab-recognition-lab": LalKitabRecognitionLab,
+  "lal-kitab-stream-mastery-map": LalKitabStreamMasteryMap,
+  // Lesson 18.2.4 interactive: Teva vs Lagna Cross-Validator — side-by-side dual
+  // charts (Teva fixed Aries + Parāśarī lagna) with planet tracer and discipline
+  // check scenarios testing no-conflation. Reinforces frame separation.
+  "teva-lagna-cross-validator": TevaLagnaCrossValidator,
+  // Lesson 18.3.1 interactive: Blind Planet Explorer — concept tab with andhā
+  // metaphor and characteristics, blind-vs-combust comparison table + scenario
+  // classifier, and 6-scenario recognition drill with cause-based reasoning.
+  "blind-planet-explorer": BlindPlanetExplorer,
+  // Lesson 18.3.2 interactive: Sleeping Planet Explorer — concept tab with sutela
+  // metaphor and three characteristics, three awakening-mechanism cards, blind/
+  // sleeping/awake comparison table, and 6-scenario four-state recognition drill.
+  "sleeping-planet-explorer": SleepingPlanetExplorer,
+  // Lesson 18.3.3 interactive: Burning Planet Explorer — concept tab with jalit
+  // metaphor and three characteristics, two cause cards, four-state comparison
+  // table with remedy logic, and 6-scenario recognition drill.
+  "burning-planet-explorer": BurningPlanetExplorer,
+  // Lesson 18.3.4 interactive: Planetary State Synthesizer — Chapter 3 capstone.
+  // Awake-state concept with lamp metaphor, interactive four-state framework table
+  // with remedy-goal mapping, elimination checklist, and 6-scenario capstone drill
+  // with yes/no check previews.
+  "planetary-state-synthesizer": PlanetaryStateSynthesizer,
+  // Lesson 18.4.4 interactive: Lal Kitab Graha Clusters — Chapter 4 capstone.
+  // Accordion clusters for Saturn / Rāhu / Ketu, 6-item quiz, and all-nine-graha
+  // summary table with unifying concrete-object pattern.
+  "lal-kitab-graha-clusters": LalKitabGrahaClusters,
   "gochara-intro": GocharaIntro,
   "natal-relative-counter": NatalRelativeCounter,
   "transit-computer": TransitComputer,
