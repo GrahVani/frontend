@@ -73,15 +73,15 @@ function AnchorCard({ anchor, index }: { anchor: ParsedAnchor; index: number }) 
       }}
       aria-label={`Memory anchor ${index + 1}`}
     >
-      {/* Ordinal — small italic Cormorant in saffron, centered above body */}
+      {/* Ordinal — italic Cormorant in saffron, centered above body */}
       <p
         style={{
           fontFamily: "var(--font-cormorant), serif",
           fontStyle: "italic",
-          fontSize: "14px",
+          fontSize: "18px",
           color: SAFFRON,
           letterSpacing: "0.06em",
-          marginBottom: "10px",
+          marginBottom: "12px",
           lineHeight: 1,
         }}
       >

@@ -37,14 +37,17 @@ function parseMistakes(markdown: string): ParsedMistake[] {
   const entries: ParsedMistake[] = [];
 
   // Try blockquote format first (with or without ⚠️ emoji)
+  // Accept either "Common mistake #N: Title" or "Mistake N — Title"
   const bqBlocks = markdown
-    .split(/(?=(?:^|\n)>\s*(?:⚠️\s*)?\*\*Common mistake)/g)
+    .split(/(?=(?:^|\n)>\s*(?:⚠️\s*)?\*\*(?:Common mistake|Mistake)\b)/g)
     .filter((b) => b.trim().length > 0);
 
   for (const block of bqBlocks) {
-    // Match title: optional ⚠️, then **Common mistake #N: Title** or **Common mistake — Title**
-    const titleMatch = block.match(/(?:⚠️\s*)?\*\*Common mistake.*?[:\-—]\s*([^*\n]+)\*\*/i);
-    const whatMatch = block.match(/\*\*What happens:\*\*\s*([\s\S]+?)(?=\n>\s*\*\*Why|\n>\s*\*\*How|\n\n|$)/i);
+    // Match title: optional ⚠️, then **Common mistake #N: Title** / **Mistake N — Title**
+    const titleMatch = block.match(/(?:⚠️\s*)?\*\*(?:Common mistake|Mistake)\s*(?:#?\d+)?.*?[:\-—]\s*([^*\n]+)\*\*/i);
+    const standardWhatMatch = block.match(/\*\*What happens:\*\*\s*([\s\S]+?)(?=\n>\s*\*\*Why|\n>\s*\*\*How|\n\n|$)/i);
+    const inlineWhatMatch = block.match(/(?:⚠️\s*)?\*\*(?:Common mistake|Mistake)\s*(?:#?\d+)?.*?[:\-—]\s*[^*\n]+\*\*\s+([\s\S]+?)(?=\n\n|$)/i);
+    const whatMatch = standardWhatMatch ?? inlineWhatMatch;
     const whyMatch = block.match(/\*\*Why it happens:\*\*\s*([\s\S]+?)(?=\n>\s*\*\*How|\n\n|$)/i);
     const fixMatch = block.match(/\*\*How to avoid:\*\*\s*([\s\S]+?)(?=\n\n|$)/i);
 
@@ -64,7 +67,7 @@ function parseMistakes(markdown: string): ParsedMistake[] {
     const headingPattern = /###\s+Mistake\s+#(\d+)\s*[-—:]\s*\*([^*]+)\*/g;
     const headings = Array.from(markdown.matchAll(headingPattern));
     for (let i = 0; i < headings.length; i++) {
-      const [, num, title] = headings[i];
+      const [, , title] = headings[i];
       const startIdx = headings[i].index!;
       const endIdx = i + 1 < headings.length ? headings[i + 1].index! : markdown.length;
       const body = markdown.slice(startIdx + headings[i][0].length, endIdx).trim();
