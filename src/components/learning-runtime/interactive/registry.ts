@@ -381,6 +381,9 @@ import { SaptavimshamshaCalculator } from "./saptavimshamsha-calculator";
 import { ShodashamshaCalculator } from "./shodashamsha-calculator";
 import { SpiritualTrioComparator } from "./spiritual-trio-comparator";
 import { SubLordCalculator } from "./sub-lord-calculator";
+import { Kp249SubExplorer } from "./249-sub-explorer";
+import { SubSubRecursionExplorer } from "./sub-sub-recursion-explorer";
+import { SubLordFluencyTrainer } from "./sub-lord-fluency-trainer";
 import { SubstrateEthicsChecklist } from "./substrate-ethics-checklist";
 import { VimshamshaCalculator } from "./vimshamsha-calculator";
 import { AshtakavargaIntro } from "./ashtakavarga-intro";
@@ -401,6 +404,57 @@ import { FullReductionWalkthrough } from "./full-reduction-walkthrough";
 import { YogaSavAuditor } from "./yoga-sav-auditor";
 import { TransitBavModulator } from "./transit-bav-modulator";
 import { AshtakavargaStreamMap } from "./ashtakavarga-stream-map";
+import { KarmaFrameworkMap } from "./karma-framework-map";
+import { PrarabdhaIllustration } from "./prarabdha-illustration";
+import { MitigationVsCure } from "./mitigation-vs-cure";
+import { RemedyAuthorityMap } from "./remedy-authority-map";
+import { MantraTheoryExplainer } from "./mantra-theory-explainer";
+import { MantraTraditionsMap } from "./mantra-traditions-map";
+import { FoundationalMantraPlayer } from "./foundational-mantra-player";
+import { MantraSafetyChecklist } from "./mantra-safety-checklist";
+import { GrahaYantraGallery } from "./graha-yantra-gallery";
+import { TantraContextNote } from "./tantra-context-note";
+import { YantraAnatomy } from "./yantra-anatomy";
+import { NavaratnaTable } from "./navaratna-table";
+import { UparatnaTable } from "./uparatna-table";
+import { GemstoneSafetyChecklist } from "./gemstone-safety-checklist";
+import { ProtectiveDisciplineChecklist } from "./protective-discipline-checklist";
+import { GrahaDanaTable } from "./graha-dana-table";
+import { UpavasaGuide } from "./upavasa-guide";
+import { PujaVrataGuide } from "./puja-vrata-guide";
+import { CrossCulturalCareGuide } from "./cross-cultural-care-guide";
+import { RemedyMatchingExplorer } from "./remedy-matching-explorer";
+import { LalKitabUpayaIntro } from "./lal-kitab-upaya-intro";
+import { RestraintDoctrineCard } from "./restraint-doctrine-card";
+import { KPLineageTimeline } from "./kp-lineage-timeline";
+import { KPReaderSeriesExplorer } from "./kp-reader-series-explorer";
+import { KPPrecisionResolutionComparator } from "./kp-precision-resolution-comparator";
+import { KpCuspCalculator } from "./kp-cusp-calculator";
+import { KpVsParashariCuspComparator } from "./kp-vs-parashari-cusp-comparator";
+import { KpCuspVerifier } from "./kp-cusp-verifier";
+import { CuspalSubLordFinder } from "./cuspal-sub-lord-finder";
+import { CuspalSubLordVisualizer } from "./cuspal-sub-lord-visualizer";
+import { PlanetSubLordModulator } from "./planet-sub-lord-modulator";
+import { DispositionRulesWorkbench } from "./disposition-rules-workbench";
+import { RulingPlanetsRoleExplorer } from "./ruling-planets-role-explorer";
+import { RulingPlanetsCalculator } from "./ruling-planets-calculator";
+import { RulingPlanetsConfirmationWorkbench } from "./ruling-planets-confirmation-workbench";
+import { SignificatorHierarchyExplorer } from "./significator-hierarchy-explorer";
+import { FirstOrderSignificatorVisualizer } from "./first-order-significator-visualizer";
+import { SecondOrderSignificatorWorkbench } from "./second-order-significator-workbench";
+import { SignificatorChainBuilder } from "./significator-chain-builder";
+import { KpHoraryNumberSelector } from "./kp-horary-number-selector";
+import { KpHoraryChartCaster } from "./kp-horary-chart-caster";
+import { KpHoraryCuspalVerdict } from "./kp-horary-cuspal-verdict";
+import { KpHoraryMarriageWorkbench } from "./kp-horary-marriage-workbench";
+import { KpHoraryJobWorkbench } from "./kp-horary-job-workbench";
+import { KpHoraryStreamComparator } from "./kp-horary-stream-comparator";
+import { KpParashariSideBySide } from "./kp-parashari-side-by-side";
+import { KpParashariConvergences } from "./kp-parashari-convergences";
+import { KpParashariDivergences } from "./kp-parashari-divergences";
+import { KpCrossStreamRouter } from "./kp-cross-stream-router";
+import { KpModifiedVimshottariExplorer } from "./kp-modified-vimshottari-explorer";
+import { KpSynthesisCapstone } from "./kp-synthesis-capstone";
 
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
@@ -557,6 +611,7 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "lahiri-ayanamsha-explorer": LahiriAyanamshaExplorer,
   "lahiri-by-hand-step-by-step-calculator": LahiriByHandStepByStepCalculator,
   "krishnamurti-ayanamsha-explorer": KrishnamurtiAyanamshaExplorer,
+  "ayanamsha-comparator": KrishnamurtiAyanamshaExplorer,
   // Lesson 2.2.5's §7 interactive: Comparative Ayanāṁśa Explorer — side-by-side
   // comparison of all 7 conventions, convention detail profiles, alignment-epoch
   // timeline, practitioner-community mapping, and multi-ayanāṁśa honesty discipline.
@@ -1198,6 +1253,61 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "yoga-sav-auditor": YogaSavAuditor,
   "transit-bav-modulator": TransitBavModulator,
   "ashtakavarga-stream-map": AshtakavargaStreamMap,
+  "karma-framework-map": KarmaFrameworkMap,
+  "prarabdha-illustration": PrarabdhaIllustration,
+  "mitigation-vs-cure": MitigationVsCure,
+  "remedy-authority-map": RemedyAuthorityMap,
+  "mantra-theory-explainer": MantraTheoryExplainer,
+  "mantra-traditions-map": MantraTraditionsMap,
+  "foundational-mantra-player": FoundationalMantraPlayer,
+  "mantra-safety-checklist": MantraSafetyChecklist,
+  "graha-yantra-gallery": GrahaYantraGallery,
+  "tantra-context-note": TantraContextNote,
+  "yantra-anatomy": YantraAnatomy,
+  "navaratna-table": NavaratnaTable,
+  "uparatna-table": UparatnaTable,
+  "gemstone-safety-checklist": GemstoneSafetyChecklist,
+  "protective-discipline-checklist": ProtectiveDisciplineChecklist,
+  "graha-dana-table": GrahaDanaTable,
+  "upavasa-guide": UpavasaGuide,
+  "puja-vrata-guide": PujaVrataGuide,
+  "cross-cultural-care-guide": CrossCulturalCareGuide,
+  "remedy-matching-explorer": RemedyMatchingExplorer,
+  "lal-kitab-upaya-intro": LalKitabUpayaIntro,
+  "restraint-doctrine-card": RestraintDoctrineCard,
+  "kp-lineage-timeline": KPLineageTimeline,
+  "kp-reader-series-explorer": KPReaderSeriesExplorer,
+  "kp-precision-resolution-comparator": KPPrecisionResolutionComparator,
+  "kp-cusp-calculator": KpCuspCalculator,
+  "kp-vs-parashari-cusp-comparator": KpVsParashariCuspComparator,
+  "kp-cusp-verifier": KpCuspVerifier,
+  "placidus-house-visualizer": PlacidusKpConvention,
+  "249-sub-explorer": Kp249SubExplorer,
+  "sub-sub-recursion-explorer": SubSubRecursionExplorer,
+  "sub-lord-fluency-trainer": SubLordFluencyTrainer,
+  "cuspal-sub-lord-finder": CuspalSubLordFinder,
+  "cuspal-sub-lord-visualizer": CuspalSubLordVisualizer,
+  "planet-sub-lord-modulator": PlanetSubLordModulator,
+  "disposition-rules-workbench": DispositionRulesWorkbench,
+  "ruling-planets-role-explorer": RulingPlanetsRoleExplorer,
+  "ruling-planets-calculator": RulingPlanetsCalculator,
+  "ruling-planets-confirmation-workbench": RulingPlanetsConfirmationWorkbench,
+  "significator-hierarchy-explorer": SignificatorHierarchyExplorer,
+  "first-order-significator-visualizer": FirstOrderSignificatorVisualizer,
+  "second-order-significator-workbench": SecondOrderSignificatorWorkbench,
+  "significator-chain-builder": SignificatorChainBuilder,
+  "kp-horary-number-selector": KpHoraryNumberSelector,
+  "kp-horary-chart-caster": KpHoraryChartCaster,
+  "kp-horary-cuspal-verdict": KpHoraryCuspalVerdict,
+  "kp-horary-marriage-workbench": KpHoraryMarriageWorkbench,
+  "kp-horary-job-workbench": KpHoraryJobWorkbench,
+  "kp-horary-stream-comparator": KpHoraryStreamComparator,
+  "kp-parashari-side-by-side": KpParashariSideBySide,
+  "kp-parashari-convergences": KpParashariConvergences,
+  "kp-parashari-divergences": KpParashariDivergences,
+  "kp-cross-stream-router": KpCrossStreamRouter,
+  "kp-modified-vimshottari-explorer": KpModifiedVimshottariExplorer,
+  "kp-synthesis-capstone": KpSynthesisCapstone,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {
