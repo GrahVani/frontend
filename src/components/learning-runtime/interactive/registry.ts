@@ -88,6 +88,12 @@ import { AmantaPurnimantaConverter } from "./amanta-purnimanta-converter";
 import { TithiMuhurtaIntroductoryJudgment } from "./tithi-muhurta-introductory-judgment";
 import { VaraGrahaWheel } from "./vara-graha-wheel";
 import { ChaldeanPlanetaryHoraExplorer } from "./chaldean-planetary-hora-explorer";
+import { ChaldeanLetterTableExplorer } from "./chaldean-letter-table-explorer";
+import { PythagoreanLetterTableExplorer } from "./pythagorean-letter-table-explorer";
+import { VedicAnkaLetterTableExplorer } from "./vedic-anka-letter-table-explorer";
+import { NumerologySystemSelection } from "./numerology-system-selection";
+import { DigitMeaningExplorer } from "./digit-meaning-explorer";
+import { MasterNumberExplorer } from "./master-number-explorer";
 import { ChoghadiyaRahuKalamCalculator } from "./choghadiya-rahukalam-calculator";
 import { VaraEventPairingExplorer } from "./vara-event-pairing-explorer";
 import { MoonNakshatraCalculator } from "./moon-nakshatra-calculator";
@@ -148,6 +154,20 @@ import { BlindPlanetExplorer } from "./blind-planet-explorer";
 import { SleepingPlanetExplorer } from "./sleeping-planet-explorer";
 import { BurningPlanetExplorer } from "./burning-planet-explorer";
 import { PlanetaryStateSynthesizer } from "./planetary-state-synthesizer";
+import { MulankaCalculator } from "./mulanka-calculator";
+import { BhagyankaCalculator } from "./bhagyanka-calculator";
+import { MulankaBhagyankaNamankaCalculator } from "./mulanka-bhagyanka-namanka-calculator";
+import { PersonalYearCalculator } from "./personal-year-calculator";
+import { NameCorrectionRationaleEvaluator } from "./name-correction-rationale-evaluator";
+import { NameCorrectionCandidateCalculator } from "./name-correction-candidate-calculator";
+import { NameCorrectionCautionScreener } from "./name-correction-caution-screener";
+import { NumerologyHonestHandlingInspector } from "./numerology-honest-handling-inspector";
+import { NumerologyCompatibilityCalculator } from "./numerology-compatibility-calculator";
+import { BusinessNameNumerologyCalculator } from "./business-name-numerology-calculator";
+import { ObjectNumerologyCalculator } from "./object-numerology-calculator";
+import { ChartNumerologyIntegrationTool } from "./chart-numerology-integration-tool";
+import { NumerologyDecisionFlow } from "./numerology-decision-flow";
+import { DisciplineStatementBuilder } from "./discipline-statement-builder";
 import { VargaExplainer } from "./varga-explainer";
 import { VargaReferenceTable } from "./varga-reference-table";
 import { VargaTemplateCard } from "./varga-template-card";
@@ -697,6 +717,12 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // composition (Chaldean order strip + horā sequence generator) with
   // 24 mod 7 = 3 principle explanation.
   "chaldean-planetary-hora-explorer": ChaldeanPlanetaryHoraExplorer,
+  "chaldean-letter-table-explorer": ChaldeanLetterTableExplorer,
+  "pythagorean-letter-table-explorer": PythagoreanLetterTableExplorer,
+  "vedic-anka-letter-table-explorer": VedicAnkaLetterTableExplorer,
+  "numerology-system-selection": NumerologySystemSelection,
+  "digit-meaning-explorer": DigitMeaningExplorer,
+  "master-number-explorer": MasterNumberExplorer,
   // Lesson 3.2.3's §7 flagship: Choghadiyā &amp; Rāhu Kālam Calculator —
   // sunrise/sunset input, 16-segment quality tables, visual timeline,
   // and inauspicious-window highlight.
@@ -1191,6 +1217,77 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // with remedy-goal mapping, elimination checklist, and 6-scenario capstone drill
   // with yes/no check previews.
   "planetary-state-synthesizer": PlanetaryStateSynthesizer,
+  // Lesson 21.3.1 interactive: Mūlāṅka Calculator — birth-day-of-month (1-31)
+  // input with strict-preservation vs flexibility convention toggle, step-by-step
+  // computation, graha-aṅka register + caveat display, 31-day reference table,
+  // five-step discipline workflow, and four worked examples.
+  "mulanka-calculator": MulankaCalculator,
+  // Lesson 21.3.2 interactive: Bhāgyāṅka Calculator — full birth-date input
+  // (day/month/year) with strict-preservation vs flexibility convention toggle,
+  // step-by-step digit-sum computation, graha-aṅka register + caveat display,
+  // combined Mūlāṅka-to-Bhāgyāṅka lifetime-arc reading, worked examples, and
+  // five-step discipline workflow including destiny-determinism refusal layer.
+  "bhagyanka-calculator": BhagyankaCalculator,
+  // Lesson 21.3.3 interactive: Name-Number (Nāmāṅka) Calculator — three-system
+  // name computation (Chaldean / Pythagorean / Vedic-Chaldean hybrid) with
+  // strict-preservation vs flexibility convention toggle, letter-by-letter
+  // breakdown, graha-aṅka register + caveat display, Pythagorean four-number
+  // framework panel, letter-table reference, worked examples, and six-step
+  // discipline workflow including name-change refusal layer.
+  "mulanka-bhagyanka-namanka-calculator": MulankaBhagyankaNamankaCalculator,
+  // Lesson 21.3.4 interactive: Personal Year Number Calculator — birth-date +
+  // target-calendar-year computation with strict-preservation vs flexibility
+  // convention toggle, step-by-step digit-sum breakdown, graha-aṅka register +
+  // caveat display, 9-year cycle visualisation, worked examples, and six-step
+  // discipline workflow including year-as-determinant refusal layer.
+  "personal-year-calculator": PersonalYearCalculator,
+  // Lesson 21.4.1 interactive: Name-Correction Rationale Evaluator — scenario-
+  // based drill for categorising name-change rationales, identifying over-claim
+  // layers, applying the convergent-independent-grounds operational test, and
+  // reaching approve / partial / refuse verdicts. Includes six-category reference
+  // and five-step rationale-evaluation workflow.
+  "name-correction-rationale-evaluator": NameCorrectionRationaleEvaluator,
+  // Lesson 21.4.2 interactive: Name-Correction Candidate Calculator — six-step
+  // workflow tool that computes current + candidate Name-Numbers under the chosen
+  // system and convention, evaluates graha-compatibility (MITRA/SHATRU/SAMA) with
+  // Mūlāṅka / Bhāgyāṅka, tabulates candidates, and generates a discipline-compliant
+  // confirmatory-not-deterministic presentation template.
+  "name-correction-candidate-calculator": NameCorrectionCandidateCalculator,
+  // Lesson 21.4.3 interactive: Name-Correction Caution Screener — scenario-based
+  // drill that applies the four-test screen, identifies the six commercial-numerology
+  // failure modes, surfaces the three real-cost categories, and practises reaching
+  // proceed / preview / revise / refuse verdicts. Includes reference tabs for costs,
+  // failure-mode catalogue, and the Chapter 4 integrated refusal-discipline workflow.
+  "name-correction-caution-screener": NameCorrectionCautionScreener,
+  // Lesson 21.4.4 interactive: Numerology Honest-Handling Inspector — scenario-based
+  // drill that distinguishes the empirical-kernel from the over-claim layer, identifies
+  // the eight over-claim framings, applies the five operational forms of do-no-harm,
+  // and reaches proceed / revise / refuse / mixed verdicts. Includes reference tabs
+  // for the three-layer holding, the five do-no-harm forms, and the Chapter 1-4
+  // integration table.
+  "numerology-honest-handling-inspector": NumerologyHonestHandlingInspector,
+  // Lesson 21.5.1 interactive: Numerology Compatibility Calculator — two-person
+  // Mulanka / Bhagyanka / Name-number comparison using MITRA / SHATRU / SAMA
+  // graha-friendship vectors with relationship-outcome over-claim refusal.
+  "numerology-compatibility-calculator": NumerologyCompatibilityCalculator,
+  // Lesson 21.5.2 interactive: Business Name Numerology Calculator — business-name
+  // candidate computation with founder compatibility, industry-register preference,
+  // and pre-launch versus post-launch rebrand discipline.
+  "business-name-numerology-calculator": BusinessNameNumerologyCalculator,
+  // Lesson 21.5.3 interactive: Object Numerology Calculator — house / phone /
+  // vehicle digit reduction, personal compatibility, limited-choice recognition,
+  // and explicit 4/8 fear-induction refusal.
+  "object-numerology-calculator": ObjectNumerologyCalculator,
+  // Lesson 21.6.1 interactive: Chart Numerology Integration Tool — three-number
+  // to natal-graha cross-reference, four alignment configurations, and explicit
+  // chart-numerology causation over-claim refusal.
+  "chart-numerology-integration-tool": ChartNumerologyIntegrationTool,
+  // Lesson 21.6.2 interactive: Numerology Decision Flow — apply / refuse /
+  // defer gates, authorised consultation modes, and absent-grounds discipline.
+  "numerology-decision-flow": NumerologyDecisionFlow,
+  // Lesson 21.6.3 interactive: Discipline Statement Builder — six-chapter M21
+  // synthesis, do-no-harm floor, and five-field practitioner statement worksheet.
+  "discipline-statement-builder": DisciplineStatementBuilder,
   // Lesson 18.4.4 interactive: Lal Kitab Graha Clusters — Chapter 4 capstone.
   // Accordion clusters for Saturn / Rāhu / Ketu, 6-item quiz, and all-nine-graha
   // summary table with unifying concrete-object pattern.
