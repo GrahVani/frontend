@@ -57,8 +57,8 @@ function FlowSvg({ state, outcome }: { state: DecisionState; outcome: DecisionOu
   ];
   const activeColor = outcomeColor(outcome);
   return (
-    <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 300" className="h-auto w-full min-w-0" role="img" aria-label="Numerology decision flow">
+    <section className="w-full min-w-0 overflow-x-auto rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+      <svg viewBox="0 0 760 300" className="h-auto w-full min-w-[520px]" role="img" aria-label="Numerology decision flow">
         <rect x="20" y="20" width="720" height="260" rx="22" fill={SURFACE_2} stroke={HAIRLINE} />
         <text x="380" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           APPLY, REFUSE, DEFER, THEN MODE
@@ -75,8 +75,8 @@ function FlowSvg({ state, outcome }: { state: DecisionState; outcome: DecisionOu
             </g>
           );
         })}
-        <rect x="174" y="218" width="412" height="38" rx="19" fill={SURFACE} stroke={activeColor} />
-        <text x="380" y="243" textAnchor="middle" fill={activeColor} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="120" y="218" width="520" height="38" rx="19" fill={SURFACE} stroke={activeColor} />
+        <text x="380" y="243" textAnchor="middle" fill={activeColor} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Numerology is a contribution, never a cause: no fear, no guarantee.
         </text>
       </svg>

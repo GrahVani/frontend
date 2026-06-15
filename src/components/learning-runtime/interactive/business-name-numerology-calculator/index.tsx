@@ -79,8 +79,8 @@ function BrandFitSvg({
   const destinyColor = relationColor(candidate.founderDestinyRelation);
 
   return (
-    <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 380" className="h-auto w-full min-w-0" role="img" aria-label="Founder and business-name register fit">
+    <section className="w-full min-w-0 overflow-x-auto rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+      <svg viewBox="0 0 760 380" className="h-auto w-full min-w-[520px]" role="img" aria-label="Founder and business-name register fit">
         <rect x="20" y="20" width="720" height="340" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
         <text x="380" y="58" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           BUSINESS NAME IS ONE BRAND-CONTEXT INPUT
@@ -103,8 +103,8 @@ function BrandFitSvg({
         <text x="380" y="188" textAnchor="middle" fill={INK_PRIMARY} fontSize="34" fontWeight="800" style={{ fontFamily: "var(--font-cormorant), serif" }}>{candidate.digit} {candidate.graha}</text>
         <text x="380" y="216" textAnchor="middle" fill={fitColor(candidate.industryFit)} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>{candidate.industryFit.replace("-", " ")}</text>
 
-        <rect x="140" y="288" width="480" height="38" rx="19" fill={SURFACE} stroke={GOLD} />
-        <text x="380" y="313" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="90" y="288" width="580" height="38" rx="19" fill={SURFACE} stroke={GOLD} />
+        <text x="380" y="313" textAnchor="middle" fill={GOLD} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Brand strategy, market fit, legal availability, and execution remain primary.
         </text>
       </svg>

@@ -73,8 +73,8 @@ function CompatibilityBridge({
   const color = relationColor(relation);
 
   return (
-    <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 360" className="h-auto w-full min-w-0" role="img" aria-label="Two-person numerology compatibility bridge">
+    <section className="w-full min-w-0 overflow-x-auto rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+      <svg viewBox="0 0 760 360" className="h-auto w-full min-w-[520px]" role="img" aria-label="Two-person numerology compatibility bridge">
         <rect x="20" y="20" width="720" height="320" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
         <text x="380" y="58" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           CROSS-COMPARE ONE VECTOR AT A TIME
@@ -111,8 +111,8 @@ function CompatibilityBridge({
           {selectedPair.primary ? "primary vector" : "secondary vector"}
         </text>
 
-        <rect x="144" y="278" width="472" height="34" rx="17" fill={SURFACE} stroke={GOLD} />
-        <text x="380" y="301" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="100" y="278" width="560" height="34" rx="17" fill={SURFACE} stroke={GOLD} />
+        <text x="380" y="301" textAnchor="middle" fill={GOLD} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           A compatibility profile is chart-context information, not a relationship verdict.
         </text>
       </svg>

@@ -168,6 +168,27 @@ import { ObjectNumerologyCalculator } from "./object-numerology-calculator";
 import { ChartNumerologyIntegrationTool } from "./chart-numerology-integration-tool";
 import { NumerologyDecisionFlow } from "./numerology-decision-flow";
 import { DisciplineStatementBuilder } from "./discipline-statement-builder";
+import { VastuOriginsExplorer } from "./vastu-origins-explorer";
+import { VastuPurushaMandalaExplorer } from "./vastu-purusha-mandala-explorer";
+import { VastuFiveElementMapper } from "./vastu-five-element-mapper";
+import { VastuTextCorpusNavigator } from "./vastu-text-corpus-navigator";
+import { VastuCardinalDirectionLords } from "./vastu-cardinal-direction-lords";
+import { VastuIntercardinalDoubleQuality } from "./vastu-intercardinal-double-quality";
+import { VastuRoomDirectionSynthesizer } from "./vastu-room-direction-synthesizer";
+import { VastuEarthWaterAxis } from "./vastu-earth-water-axis";
+import { VastuFireAirAxis } from "./vastu-fire-air-axis";
+import { VastuBrahmasthanaCenter } from "./vastu-brahmasthana-center";
+import { VastuPlotSelectionEvaluator } from "./vastu-plot-selection-evaluator";
+import { VastuGroundSlopeEvaluator } from "./vastu-ground-slope-evaluator";
+import { VastuHouseShapeEvaluator } from "./vastu-house-shape-evaluator";
+import { VastuExtensionsCutsEvaluator } from "./vastu-extensions-cuts-evaluator";
+import { VastuRemedyFramework } from "./vastu-remedy-framework";
+import { VastuApartmentOfficePlanner } from "./vastu-apartment-office-planner";
+import { VastuMirrorRemedyPlanner } from "./vastu-mirror-remedy-planner";
+import { VastuHonestHandlingAudit } from "./vastu-honest-handling-audit";
+import { VastuDecisionFramework } from "./vastu-decision-framework";
+import { VastuChartIntegration } from "./vastu-chart-integration";
+import { VastuModuleClosure } from "./vastu-module-closure";
 import { VargaExplainer } from "./varga-explainer";
 import { VargaReferenceTable } from "./varga-reference-table";
 import { VargaTemplateCard } from "./varga-template-card";
@@ -1288,6 +1309,69 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // Lesson 21.6.3 interactive: Discipline Statement Builder — six-chapter M21
   // synthesis, do-no-harm floor, and five-field practitioner statement worksheet.
   "discipline-statement-builder": DisciplineStatementBuilder,
+  // Lesson 22.1.1 interactive: Vastu Origins Explorer — historical stream,
+  // five-domain spatial scope, classical corpus, and modern feasibility guards.
+  "vastu-origins-explorer": VastuOriginsExplorer,
+  // Lesson 22.1.2 interactive: Vastu Purusha Mandala Explorer — 9x9 / 8x8 /
+  // 7x7 grid variants, Brahma-sthana, deity-zone rings, and apartment guards.
+  "vastu-purusha-mandala-explorer": VastuPurushaMandalaExplorer,
+  // Lesson 22.1.3 interactive: Vastu Five Element Mapper — pancha-bhuta
+  // direction zones, activity matching, conflicts, and cross-discipline guardrails.
+  "vastu-five-element-mapper": VastuFiveElementMapper,
+  // Lesson 22.1.4 interactive: Vastu Text Corpus Navigator — source layers,
+  // five-text corpus, reading sequence, and regional attribution discipline.
+  "vastu-text-corpus-navigator": VastuTextCorpusNavigator,
+  // Lesson 22.2.1 interactive: Vastu Cardinal Direction Lords — Indra, Yama,
+  // Varuna, Kubera, deity-quality judgments, and activity matching.
+  "vastu-cardinal-direction-lords": VastuCardinalDirectionLords,
+  // Lesson 22.2.2 interactive: Vastu Intercardinal Double Quality — Ishana,
+  // Agni, Nirriti, Vayu, convergent deity-element matching, and fear guardrails.
+  "vastu-intercardinal-double-quality": VastuIntercardinalDoubleQuality,
+  // Lesson 22.2.3 interactive: Vastu Room Direction Synthesizer — room-by-room
+  // primary, secondary, mitigation, and prohibited placement workflow.
+  "vastu-room-direction-synthesizer": VastuRoomDirectionSynthesizer,
+  // Lesson 22.3.1 interactive: Vastu Earth Water Axis -- NE/SW polar axis,
+  // water and weight placement, elevation discipline, and mitigation cues.
+  "vastu-earth-water-axis": VastuEarthWaterAxis,
+  // Lesson 22.3.2 interactive: Vastu Fire Air Axis -- SE/NW compatible-flow
+  // axis, kitchen discipline, ventilation path, and proportional mitigation.
+  "vastu-fire-air-axis": VastuFireAirAxis,
+  // Lesson 22.3.3 interactive: Vastu Brahmasthana Center -- central 3x3
+  // Akasha discipline, centre-violation severity, and apartment mitigation.
+  "vastu-brahmasthana-center": VastuBrahmasthanaCenter,
+  // Lesson 22.4.1 interactive: Vastu Plot Selection Evaluator -- bhu-pariksha
+  // shape, extension/cut, road-facing, topography, and proportional verdict.
+  "vastu-plot-selection-evaluator": VastuPlotSelectionEvaluator,
+  // Lesson 22.4.2 interactive: Vastu Ground Slope Evaluator -- slope,
+  // drainage, construction phase, vertical massing, and grading feasibility.
+  "vastu-ground-slope-evaluator": VastuGroundSlopeEvaluator,
+  // Lesson 22.4.3 interactive: Vastu House Shape Evaluator -- building form,
+  // corner integrity, axis rotation, and modern-context mitigation.
+  "vastu-house-shape-evaluator": VastuHouseShapeEvaluator,
+  // Lesson 22.4.4 interactive: Vastu Extensions Cuts Evaluator -- extension
+  // versus cut asymmetry, directional severity, size, and context handling.
+  "vastu-extensions-cuts-evaluator": VastuExtensionsCutsEvaluator,
+  // Lesson 22.5.1 interactive: Vastu Remedy Framework -- severity-calibrated
+  // architectural, symbolic, yantra/pyramid, and ritual remediation tiers.
+  "vastu-remedy-framework": VastuRemedyFramework,
+  // Lesson 22.5.2 interactive: Vastu Apartment Office Planner -- unit-level
+  // mandala placement for apartments, offices, retail, and commercial spaces.
+  "vastu-apartment-office-planner": VastuApartmentOfficePlanner,
+  // Lesson 22.5.3 interactive: Vastu Mirror Remedy Planner -- wall direction,
+  // room context, sensitive reflection targets, and honest modern attribution.
+  "vastu-mirror-remedy-planner": VastuMirrorRemedyPlanner,
+  // Lesson 22.6.1 interactive: Vastu Honest Handling Audit -- four-test screen
+  // for empirical kernel, demolition prohibition, cost-benefit, and overclaim.
+  "vastu-honest-handling-audit": VastuHonestHandlingAudit,
+  // Lesson 22.6.2 interactive: Vastu Decision Framework -- when to flag,
+  // defer, refuse, and sequence the four-tier remediation cascade.
+  "vastu-decision-framework": VastuDecisionFramework,
+  // Lesson 22.6.3 interactive: Vastu Chart Integration -- 4H,
+  // residential karakas, property houses, and dik-pala-graha context.
+  "vastu-chart-integration": VastuChartIntegration,
+  // Lesson 22.6.4 interactive: Vastu Module Closure -- six-chapter
+  // synthesis, do-no-harm commitments, and practitioner statement builder.
+  "vastu-module-closure": VastuModuleClosure,
   // Lesson 18.4.4 interactive: Lal Kitab Graha Clusters — Chapter 4 capstone.
   // Accordion clusters for Saturn / Rāhu / Ketu, 6-item quiz, and all-nine-graha
   // summary table with unifying concrete-object pattern.
