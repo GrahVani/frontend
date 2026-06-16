@@ -40,6 +40,8 @@ export function Summary({ section, frontMatter: fm }: SummaryProps) {
   const coda = codaArr.join("\n\n");
   const primaryAnchor = fm.primarySources[0]?.ref;
   const primaryNote = fm.primarySources[0]?.note;
+  const hasAnchor = Boolean(anchorText);
+  const hasTakeaway = Boolean(takeawayText);
 
   return (
     <section
@@ -113,9 +115,9 @@ export function Summary({ section, frontMatter: fm }: SummaryProps) {
       )}
 
       {/* Stanzas II + III — Anchor + Takeaway (half-width each, side-by-side) */}
-      {(anchorText || takeawayText) && (
+      {(hasAnchor || hasTakeaway) && (
         <div
-          className="grid grid-cols-1 md:grid-cols-2 gap-5"
+          className={`grid grid-cols-1 gap-5 ${hasAnchor && hasTakeaway ? "md:grid-cols-2" : "max-w-2xl mx-auto"}`}
           style={{ marginBottom: "24px" }}
         >
           {anchorText && <AnchorCard text={anchorText} />}

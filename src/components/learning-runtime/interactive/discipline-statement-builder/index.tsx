@@ -28,24 +28,31 @@ function wash(color: string, alphaHex = "12") {
   return color.startsWith("#") ? `${color}${alphaHex}` : "rgba(232, 199, 114, 0.12)";
 }
 
+function splitChapterTitle(title: string): string[] {
+  if (!title.includes(" ")) return [title];
+  const words = title.split(" ");
+  const mid = Math.ceil(words.length / 2);
+  return [words.slice(0, mid).join(" "), words.slice(mid).join(" ")];
+}
+
 function ModuleArcSvg({ activeChapter }: { activeChapter: number }) {
   const points = CHAPTER_SYNTHESIS.map((chapter, index) => {
     const angle = -150 + index * 60;
     const radians = (angle * Math.PI) / 180;
     return {
       chapter,
-      x: 380 + Math.cos(radians) * 230,
-      y: 172 + Math.sin(radians) * 102,
+      x: 380 + Math.cos(radians) * 220,
+      y: 210 + Math.sin(radians) * 95,
     };
   });
   return (
-    <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 340" className="h-auto w-full min-w-0" role="img" aria-label="Module 21 six chapter synthesis arc">
-        <rect x="20" y="20" width="720" height="300" rx="22" fill={SURFACE_2} stroke={HAIRLINE} />
-        <text x="380" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+    <section className="w-full min-w-0 overflow-x-auto rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+      <svg viewBox="0 0 760 400" className="h-auto w-full min-w-[520px]" role="img" aria-label="Module 21 six chapter synthesis arc">
+        <rect x="20" y="20" width="720" height="360" rx="22" fill={SURFACE_2} stroke={HAIRLINE} />
+        <text x="380" y="48" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           SIX CHAPTERS BECOME ONE DISCIPLINE
         </text>
-        <path d="M150 222 C245 70, 515 70, 610 222" fill="none" stroke={HAIRLINE} strokeWidth="4" strokeDasharray="10 12" />
+        <path d="M160 248 C250 110, 510 110, 600 248" fill="none" stroke={HAIRLINE} strokeWidth="4" strokeDasharray="10 12" />
         <circle cx="380" cy="188" r="78" fill={SURFACE} stroke={GOLD} strokeWidth="4" />
         <text x="380" y="164" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>M21</text>
         <text x="380" y="198" textAnchor="middle" fill={INK_PRIMARY} fontSize="30" fontWeight="800" style={{ fontFamily: "var(--font-cormorant), serif" }}>discipline</text>
@@ -53,16 +60,21 @@ function ModuleArcSvg({ activeChapter }: { activeChapter: number }) {
         {points.map(({ chapter, x, y }) => {
           const active = chapter.chapter === activeChapter;
           const color = active ? GREEN : GOLD;
+          const titleLines = splitChapterTitle(chapter.title);
           return (
             <g key={chapter.chapter}>
               <circle cx={x} cy={y} r={active ? 42 : 36} fill={wash(color, active ? "16" : "0D")} stroke={color} strokeWidth={active ? 3 : 2} />
-              <text x={x} y={y - 6} textAnchor="middle" fill={color} fontSize="20" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>{chapter.chapter}</text>
-              <text x={x} y={y + 16} textAnchor="middle" fill={INK_PRIMARY} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>{chapter.title}</text>
+              <text x={x} y={y - 10} textAnchor="middle" fill={color} fontSize="20" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>{chapter.chapter}</text>
+              <text x={x} y={y + (titleLines.length === 1 ? 12 : 6)} textAnchor="middle" fill={INK_PRIMARY} fontSize="9" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+                {titleLines.map((line, index) => (
+                  <tspan key={line} x={x} dy={index === 0 ? 0 : 12}>{line}</tspan>
+                ))}
+              </text>
             </g>
           );
         })}
-        <rect x="150" y="280" width="460" height="30" rx="15" fill={SURFACE} stroke={VERMILION} />
-        <text x="380" y="300" textAnchor="middle" fill={VERMILION} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="120" y="350" width="520" height="28" rx="14" fill={SURFACE} stroke={VERMILION} />
+        <text x="380" y="369" textAnchor="middle" fill={VERMILION} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           No single factor, no fear, no guarantees, no numerology-only major action.
         </text>
       </svg>
@@ -131,11 +143,11 @@ export function DisciplineStatementBuilder() {
       <section className="mb-4 grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,360px)]">
         <div className="grid min-w-0 gap-4">
           <ModuleArcSvg activeChapter={activeChapter} />
-          <div className="grid min-w-0 gap-2 md:grid-cols-6">
+          <div className="grid min-w-0 gap-2 grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
             {CHAPTER_SYNTHESIS.map((item) => (
               <button key={item.chapter} type="button" onClick={() => setActiveChapter(item.chapter)} className="min-w-0 rounded-xl p-3 text-left" style={{ background: item.chapter === activeChapter ? wash(GREEN, "12") : SURFACE, border: `1px solid ${item.chapter === activeChapter ? GREEN : HAIRLINE}` }}>
                 <span className="block text-xs font-black uppercase" style={{ color: item.chapter === activeChapter ? GREEN : GOLD }}>Chapter {item.chapter}</span>
-                <span className="mt-1 block text-sm font-bold" style={{ color: INK_PRIMARY }}>{item.title}</span>
+                <span className="mt-1 block break-words text-sm font-bold" style={{ color: INK_PRIMARY }}>{item.title}</span>
               </button>
             ))}
           </div>

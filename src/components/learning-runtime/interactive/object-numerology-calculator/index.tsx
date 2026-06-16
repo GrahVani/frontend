@@ -71,8 +71,8 @@ function ObjectRegisterSvg({
   const destinyColor = relationColor(value.destinyRelation);
 
   return (
-    <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 360" className="h-auto w-full min-w-0" role="img" aria-label="Object number register and personal compatibility">
+    <section className="w-full min-w-0 overflow-x-auto rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+      <svg viewBox="0 0 760 360" className="h-auto w-full min-w-[520px]" role="img" aria-label="Object number register and personal compatibility">
         <rect x="20" y="20" width="720" height="320" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
         <text x="380" y="58" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           SUM DIGITS, READ REGISTER, REFUSE FEAR
@@ -95,8 +95,8 @@ function ObjectRegisterSvg({
         <text x="380" y="187" textAnchor="middle" fill={INK_PRIMARY} fontSize="34" fontWeight="800" style={{ fontFamily: "var(--font-cormorant), serif" }}>{value.reduced} {value.graha}</text>
         <text x="380" y="216" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>{value.digits} sum {value.total}</text>
 
-        <rect x="140" y="282" width="480" height="38" rx="19" fill={SURFACE} stroke={GOLD} />
-        <text x="380" y="307" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="100" y="282" width="560" height="38" rx="19" fill={SURFACE} stroke={GOLD} />
+        <text x="380" y="307" textAnchor="middle" fill={GOLD} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Object-number fit is a tie-breaker, not a reason to move, panic, or prescribe.
         </text>
       </svg>
