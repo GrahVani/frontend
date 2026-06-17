@@ -496,6 +496,67 @@ import { KpParashariDivergences } from "./kp-parashari-divergences";
 import { KpCrossStreamRouter } from "./kp-cross-stream-router";
 import { KpModifiedVimshottariExplorer } from "./kp-modified-vimshottari-explorer";
 import { KpSynthesisCapstone } from "./kp-synthesis-capstone";
+import { TajikaOriginsTimeline } from "./tajika-origins-timeline";
+import { TajikaNeelakanthiStructure } from "./tajika-neelakanthi-structure";
+import { TajikaTextsCatalogue } from "./tajika-texts-catalogue";
+import { TajikaComparativeMatrix } from "./tajika-comparative-matrix";
+import { TajikaIthasalaExplorer } from "./tajika-ithasala-explorer";
+import { TajikaThreeYogaComparator } from "./tajika-three-yoga-comparator";
+import { TajikaTwelveYogasSurveyor } from "./tajika-twelve-yogas-surveyor";
+import { TajikaYogasApplicationWizard } from "./tajika-yogas-application-wizard";
+import { TajikaSahamConceptExplorer } from "./tajika-saham-concept-explorer";
+import { TajikaAuspiciousSahamsComparator } from "./tajika-auspicious-sahams-comparator";
+import { TajikaLifeEventSahamsSurveyor } from "./tajika-life-event-sahams-surveyor";
+import { TajikaSahamsApplicationWizard } from "./tajika-sahams-application-wizard";
+import { TajikaMunthaConceptExplorer } from "./tajika-muntha-concept-explorer";
+import { TajikaVarsheshaSelector } from "./tajika-varshesha-selector";
+import { TajikaVarshaphalaCaster } from "./tajika-varshaphala-caster";
+import { TajikaVarshaphalaSynthesizer } from "./tajika-varshaphala-synthesizer";
+import { TajikaPrashnaConceptExplorer } from "./tajika-prashna-concept-explorer";
+import { TajikaPrashnaJudgmentMethodology } from "./tajika-prashna-judgment-methodology";
+import { TajikaVsKpHoraryComparator } from "./tajika-vs-kp-horary-comparator";
+import { TajikaCrossStreamSynthesis } from "./tajika-cross-stream-synthesis";
+import { TajikaHonestHandling } from "./tajika-honest-handling";
+import { M19Closure } from "./m19-closure";
+import { EvidentiaryLayers } from "./evidentiary-layers";
+import { ManuscriptMaterialMap } from "./manuscript-material-map";
+import { SchoolComparator } from "./school-comparator";
+import { StreamPositionMap } from "./stream-position-map";
+import { BhriguFlow } from "./bhrigu-flow";
+import { AgastyaFlow } from "./agastya-flow";
+import { SublineageMap } from "./sublineage-map";
+import { GranthaAccessibilityMap } from "./grantha-accessibility-map";
+import { MatchingProtocolFlow } from "./matching-protocol-flow";
+import { SessionFlow } from "./session-flow";
+import { KandaMap } from "./kanda-map";
+import { ShlokaDecoder } from "./shloka-decoder";
+import { ReaderDueDiligence } from "./reader-due-diligence";
+import { NadiVerificationSandbox } from "./nadi-verification-sandbox";
+import { NadiCommercialExplorer } from "./nadi-commercial-explorer";
+import { NadiDecisionFramework } from "./nadi-decision-framework";
+import { NadiHonestHandlingInstance } from "./nadi-honest-handling-instance";
+import { VedangaJyotishaYugaVisualizer } from "./vedanga-jyotisha-yuga-visualizer";
+import { ClassicalCanonStratigraphy } from "./classical-canon-stratigraphy";
+import { TajikaLoanwordTranslator } from "./tajika-loanword-translator";
+import { ModernStreamArchitects } from "./modern-stream-architects";
+import { DoNoHarmAhimsa } from "./do-no-harm-ahimsa";
+import { TruthWithCompassion } from "./truth-with-compassion";
+import { ConfidentialityAuditor } from "./confidentiality";
+import { CompetenceBoundaries } from "./competence-boundaries";
+import { EmpowermentNotDependency } from "./empowerment-not-dependency";
+import { ReasonableFees } from "./reasonable-fees";
+import { SessionProtocols } from "./session-protocols";
+import { FollowUpBoundaries } from "./follow-up-boundaries";
+import { PostTier1ReadingList } from "./post-tier-1-reading-list";
+import { CommunityParticipation } from "./community-participation";
+import { SelfChartTracking } from "./self-chart-tracking";
+import { Tier2Preview } from "./tier-2-preview";
+import { Module24SynthesisDojo } from "./24-module-synthesis";
+import { PractitionerPledgeSimulator } from "./practitioner-pledge";
+import { CurriculumCompletionLedger } from "./curriculum-completion";
+import { PathForwardRoadmap } from "./path-forward";
+
+
 
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
@@ -1489,6 +1550,65 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "kp-cross-stream-router": KpCrossStreamRouter,
   "kp-modified-vimshottari-explorer": KpModifiedVimshottariExplorer,
   "kp-synthesis-capstone": KpSynthesisCapstone,
+  "tajika-origins-timeline": TajikaOriginsTimeline,
+  "tajika-neelakanthi-structure": TajikaNeelakanthiStructure,
+  "tajika-texts-catalogue": TajikaTextsCatalogue,
+  "tajika-comparative-matrix": TajikaComparativeMatrix,
+  "tajika-ithasala-explorer": TajikaIthasalaExplorer,
+  "tajika-three-yoga-comparator": TajikaThreeYogaComparator,
+  "tajika-twelve-yogas-surveyor": TajikaTwelveYogasSurveyor,
+  "tajika-yogas-application-wizard": TajikaYogasApplicationWizard,
+  "tajika-saham-concept-explorer": TajikaSahamConceptExplorer,
+  "tajika-auspicious-sahams-comparator": TajikaAuspiciousSahamsComparator,
+  "tajika-life-event-sahams-surveyor": TajikaLifeEventSahamsSurveyor,
+  "tajika-sahams-application-wizard": TajikaSahamsApplicationWizard,
+  "tajika-muntha-concept-explorer": TajikaMunthaConceptExplorer,
+  "tajika-varshesha-selector": TajikaVarsheshaSelector,
+  "tajika-varshaphala-caster": TajikaVarshaphalaCaster,
+  "tajika-varshaphala-synthesizer": TajikaVarshaphalaSynthesizer,
+  "tajika-prashna-concept-explorer": TajikaPrashnaConceptExplorer,
+  "tajika-prashna-judgment-methodology": TajikaPrashnaJudgmentMethodology,
+  "tajika-vs-kp-horary-comparator": TajikaVsKpHoraryComparator,
+  "tajika-cross-stream-synthesis": TajikaCrossStreamSynthesis,
+  "tajika-honest-handling": TajikaHonestHandling,
+  "m19-closure": M19Closure,
+  "evidentiary-layers": EvidentiaryLayers,
+  "manuscript-material-map": ManuscriptMaterialMap,
+  "school-comparator": SchoolComparator,
+  "stream-position-map": StreamPositionMap,
+  "bhrigu-flow": BhriguFlow,
+  "agastya-flow": AgastyaFlow,
+  "sublineage-map": SublineageMap,
+  "grantha-accessibility-map": GranthaAccessibilityMap,
+  "matching-protocol-flow": MatchingProtocolFlow,
+  "session-flow": SessionFlow,
+  "kanda-map": KandaMap,
+  "shloka-decoder": ShlokaDecoder,
+  "reader-due-diligence": ReaderDueDiligence,
+  "nadi-verification-sandbox": NadiVerificationSandbox,
+  "nadi-commercial-explorer": NadiCommercialExplorer,
+  "nadi-decision-framework": NadiDecisionFramework,
+  "nadi-honest-handling-instance": NadiHonestHandlingInstance,
+  "vedanga-jyotisha-yuga-visualizer": VedangaJyotishaYugaVisualizer,
+  "classical-canon-stratigraphy": ClassicalCanonStratigraphy,
+  "tajika-loanword-translator": TajikaLoanwordTranslator,
+  "modern-stream-architects": ModernStreamArchitects,
+  "do-no-harm-ahimsa": DoNoHarmAhimsa,
+  "truth-with-compassion": TruthWithCompassion,
+  "confidentiality": ConfidentialityAuditor,
+  "competence-boundaries": CompetenceBoundaries,
+  "empowerment-not-dependency": EmpowermentNotDependency,
+  "reasonable-fees": ReasonableFees,
+  "session-protocols": SessionProtocols,
+  "follow-up-boundaries": FollowUpBoundaries,
+  "post-tier-1-reading-list": PostTier1ReadingList,
+  "community-participation": CommunityParticipation,
+  "self-chart-tracking": SelfChartTracking,
+  "tier-2-preview": Tier2Preview,
+  "24-module-synthesis": Module24SynthesisDojo,
+  "practitioner-pledge": PractitionerPledgeSimulator,
+  "curriculum-completion": CurriculumCompletionLedger,
+  "path-forward": PathForwardRoadmap,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {
