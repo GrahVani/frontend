@@ -38,14 +38,9 @@ import { VarahamihiraSkandhaCoverageExplorer } from "@/components/learning-runti
 import { MedievalCodifierRelativeDatingExplorer } from "@/components/learning-runtime/interactive/medieval-codifier-relative-dating-explorer";
 import { ParashariJaiminiParallelTraditionExplorer } from "@/components/learning-runtime/interactive/parashari-jaimini-parallel-tradition-explorer";
 import { FourStreamLandscapeExplorer } from "@/components/learning-runtime/interactive/four-stream-landscape-explorer";
-import { ThreeSkandhaCurriculumMap } from "@/components/learning-runtime/interactive/three-skandha-curriculum-map";
 import { TithiAngleVisualizer } from "@/components/learning-runtime/interactive/tithi-angle-visualizer";
 import { TithiContextMatcher } from "@/components/learning-runtime/interactive/tithi-context-matcher";
 import { ShuklaTithiStrip } from "@/components/learning-runtime/interactive/shukla-tithi-strip";
-import { SevenSubBranchesExplorer } from "@/components/learning-runtime/interactive/seven-sub-branches-explorer";
-import { RegionalSchoolsExplorer } from "@/components/learning-runtime/interactive/regional-schools-explorer";
-import { LineageThreadsNetworkExplorer } from "@/components/learning-runtime/interactive/lineage-threads-network-explorer";
-import { ThreeLineageComparisonChartAnalyzer } from "@/components/learning-runtime/interactive/three-lineage-comparison-chart-analyzer";
 import { YugaProportionVisualiser } from "@/components/learning-runtime/interactive/yuga-proportion-visualiser";
 import { YugaCycleExplorer } from "@/components/learning-runtime/interactive/yuga-cycle-explorer";
 import { TraditionalVsAcademicDatingComparator } from "@/components/learning-runtime/interactive/traditional-vs-academic-dating-comparator";
@@ -574,45 +569,6 @@ export default async function LessonPage({
               <KarmaTypologyExplorer />
             </div>
           );
-        } else if (fm.slug === "three-skandhas-overview") {
-          reflectionPrompts = [
-            "Of the three skandhas, which one's modern operational distribution surprised you most — and what does that imply about how you should value gaṇita study?",
-            "Where do YOU think the curriculum should have placed more saṁhitā coverage? What would be lost if saṁhitā were reduced further?",
-            "Try restating in your own words: why is gaṇita called 'foundational-substrate' rather than 'most important'?",
-          ];
-          scenes = (
-            <div data-l31-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                The Three Skandhas and the Curriculum Map
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                The classical three-fold organisation of Jyotiṣa — Gaṇita
-                (mathematical-astronomy), Horā (natal-and-predictive
-                astrology), and Saṁhitā (mundane astrology + adjacent
-                encyclopaedic disciplines). The painting on the left shows
-                the triangular relationship; the panel on the right lets you
-                explore each skandha&apos;s texts, modules, and stream-specific
-                emphasis.
-              </p>
-              <ThreeSkandhaCurriculumMap />
-            </div>
-          );
         } else if (fm.slug === "tithi-as-12-degrees-of-sun-moon-angle") {
           reflectionPrompts = [
             "At what elongation does the transition from śukla to kṛṣṇa pakṣa occur, and why is it astronomically significant?",
@@ -714,144 +670,12 @@ export default async function LessonPage({
               <ShuklaTithiStrip />
             </div>
           );
-        } else if (fm.slug === "seven-sub-branches") {
-          reflectionPrompts = [
-            "Which sub-branch surprised you most in how much curriculum coverage it receives — or doesn't receive? What does that imply about how you should allocate your study time?",
-            "Where do YOU think the honest framing of 'seven as convention' helps the learner — and where might it create unnecessary doubt?",
-            "Try restating in your own words: why is Bṛhat Saṁhitā primary for multiple saṁhitā sub-branches, while no single text dominates all horā sub-branches?",
-          ];
-          scenes = (
-            <div data-l32-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                The Seven Sub-Branches at a Glance
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                Explore each of the seven sub-branches (sapta-upāśākhā) in turn — Jātaka, Praśna, Muhūrta, Nimitta, Āyurveda-Jyotiṣa, Vāstu, and detailed Saṁhitā. Tap any sub-branch to read its scope, its primary classical texts, its skandha membership, and how much curriculum coverage it receives. Notice that Bṛhat Saṁhitā is the primary text for several saṁhitā sub-branches, while no single text dominates the horā sub-branches.
-              </p>
-              <SevenSubBranchesExplorer />
-            </div>
-          );
         } else if (fm.slug === "where-grahvani-sits-in-the-skandha-map") {
           reflectionPrompts = [
             "Which cell of the 4 × 3 × 7 coverage matrix surprised you most in how the curriculum distributed its depth — and what does that tell you about the curriculum's operational priorities?",
             "Of the seven categories of intentional non-coverage, which one do you think will be most relevant to YOUR learning path — and what's your plan for engaging the cross-references?",
             "Try restating in your own words: why is 'modern-teaching-synthesis' a MORE honest self-positioning than 'modern-primary' would be for this curriculum?",
           ];
-        } else if (fm.slug === "regional-schools-and-lineages") {
-          reflectionPrompts = [
-            "Of the six regional schools, which one's stream-concentration pattern surprised you most — and what does it tell you about how geography shapes doctrinal emphasis?",
-            "A Punjabi Parāśari practitioner and a Tamil Nadu Parāśari practitioner share the same stream — but what specific regional-school differences would you expect in their teaching language, cultural framing, and cross-stream references?",
-            "Try restating in your own words: why is the regional-school organisational level NECESSARY alongside streams + skandhas + sub-branches? What would be lost without it?",
-          ];
-          scenes = (
-            <div data-l41-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                The Six Regional Schools
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                Explore the six regional schools of Jyotiṣa across the Indian subcontinent and the diaspora. Tap any school to read its stream-concentration pattern (which streams dominate where), its teaching language and cultural framing, and its key teachers and institutions — then toggle the overlays to see the global links and the four organisational levels (stream → skandha → sub-branch → regional school).
-              </p>
-              <RegionalSchoolsExplorer />
-            </div>
-          );
-        } else if (fm.slug === "modern-lineage-threads") {
-          reflectionPrompts = [
-            "Of the eight lineage threads, which one's relationship to its regional school surprised you most — and what does it tell you about how lineages operate within broader regional contexts?",
-            "A learner trained through BVB Delhi and another through SJC both study Jaiminī revival material. What specific lineage-level differences would you expect in their methodological emphases, teaching infrastructure, and practitioner-community norms?",
-            "Try restating in your own words: why is the lineage-thread organisational level NECESSARY alongside streams + skandhas + sub-branches + regional schools? What would be lost without it?",
-          ];
-          scenes = (
-            <div data-l42-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                The Eight Modern Lineage Threads
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                The network below maps the eight modern lineage threads as connected nodes — each tied to its parent regional school and the streams it emphasises. Tap any thread to read its founder, institution, methodological emphasis, and how it sits within its broader regional context; toggle the stream and region overlays to see the cross-cutting patterns.
-              </p>
-              <LineageThreadsNetworkExplorer />
-            </div>
-          );
-        } else if (fm.slug === "lineage-matters-worked-example") {
-          reflectionPrompts = [
-            "The three approaches converge on broad-strokes thematic interpretation (marriage-challenge + career-strength + strong-lagna). Where do YOU sit on the reliability question — does convergence across lineages convince you of analytical reliability, or do you need additional evidence?",
-            "Of the three approaches' unique contributions (KP event-timing precision; BVB deepest classical engagement; Western-Vedic-fusion cross-cultural translation + broader integration), which one would be most valuable to YOUR learning path — and what's your plan for accessing it?",
-            "Try restating in your own words: what is the difference between 'synthesis' and 'collapse' — and why does the synthesis discipline prevent multi-lineage practice from diluting single-lineage operational accuracy?",
-          ];
-          scenes = (
-            <div data-l43-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                One Chart, Three Lineage Readings
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                The same demonstration chart (Cancer lagna; Saturn as Ātma-kāraka; debilitated Jupiter in the 7th) read through three lineage approaches — Tamil-Nadu KP, BVB-Delhi Parāśari+Jaiminī, and Western-Vedic-fusion. Step through each lineage&apos;s method and interpretation, then read where the three converge (marriage-challenge + career-strength + strong-lagna) and where each contributes something the others don&apos;t.
-              </p>
-              <ThreeLineageComparisonChartAnalyzer />
-            </div>
-          );
         } else if (fm.slug === "the-four-yugas-and-the-mahayuga") {
           reflectionPrompts = [
             "The 4:3:2:1 proportional structure and the absolute durations (1.728M / 1.296M / 0.864M / 0.432M years) are two ways of describing the same thing. Which representation do you find more memorable, and why?",
@@ -1323,18 +1147,13 @@ export default async function LessonPage({
           );
         }
 
-        // For three-skandhas-overview, the markdown §4 body contains an ASCII-art
-        // triangle that duplicates the interactive SVG scene. Strip it so only
-        // the interactive visual renders.
         // For where-grahvani-sits-in-the-skandha-map, the markdown §4 body contains
         // a large pipe-table coverage matrix that duplicates the interactive explorer.
         // Strip table rows (lines starting with |) so only the interactive renders.
         const sec4Cleaned =
-          fm.slug === "three-skandhas-overview" && sec4
-            ? { ...sec4, body: sec4.body.replace(/```[\s\S]*?```/g, "") }
-            : (fm.slug === "where-grahvani-sits-in-the-skandha-map" || fm.slug === "regional-schools-and-lineages") && sec4
-              ? { ...sec4, body: sec4.body.replace(/^[|].*$/gm, "").replace(/\n{3,}/g, "\n\n") }
-              : sec4;
+          (fm.slug === "where-grahvani-sits-in-the-skandha-map" || fm.slug === "regional-schools-and-lineages") && sec4
+            ? { ...sec4, body: sec4.body.replace(/^[|].*$/gm, "").replace(/\n{3,}/g, "\n\n") }
+            : sec4;
 
         return <ConceptTheatre section={sec4Cleaned} reflectionPrompts={reflectionPrompts} scenes={scenes} />;
       })()}

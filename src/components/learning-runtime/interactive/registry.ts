@@ -79,12 +79,22 @@ import { AyanamshaDecisionFrameworkFlowchart } from "./ayanamsha-decision-framew
 import { TithiAngleVisualizer } from "./tithi-angle-visualizer";
 import { TithiCalculatorDojo } from "./tithi-calculator-dojo";
 import { PancangaBuilder } from "./pancanga-builder";
+import { PanchangaFiveLimbFramework } from "./panchanga-five-limb-framework";
+import { MuhurtaTextCorpusNavigator } from "./muhurta-text-corpus-navigator";
+import { MuhurtaComparativePositionExplorer } from "./muhurta-comparative-position-explorer";
+import { TithiClassificationExplorer } from "./tithi-classification-explorer";
+import { VaraLordEffectsExplorer } from "./vara-lord-effects-explorer";
+import { NakshatrasCategorizedExplorer } from "./nakshatras-categorized-explorer";
 import { TithiDeityWheel } from "./tithi-deity-wheel";
 import { TithiContextMatcher } from "./tithi-context-matcher";
 import { ShuklaTithiStrip } from "./shukla-tithi-strip";
 import { KrishnaFestivalTimeline } from "./krishna-festival-timeline";
 import { NandaBhadraClassifier } from "./nanda-bhadra-classifier";
 import { AmantaPurnimantaConverter } from "./amanta-purnimanta-converter";
+import { M23Closure } from "./m23-closure";
+import { MuhurtaConceptScope } from "./muhurta-concept-scope";
+import { MuhurtaDecisionFramework } from "./muhurta-decision-framework";
+import { MuhurtaHonestHandling } from "./muhurta-honest-handling";
 import { TithiMuhurtaIntroductoryJudgment } from "./tithi-muhurta-introductory-judgment";
 import { VaraGrahaWheel } from "./vara-graha-wheel";
 import { ChaldeanPlanetaryHoraExplorer } from "./chaldean-planetary-hora-explorer";
@@ -555,8 +565,14 @@ import { Module24SynthesisDojo } from "./24-module-synthesis";
 import { PractitionerPledgeSimulator } from "./practitioner-pledge";
 import { CurriculumCompletionLedger } from "./curriculum-completion";
 import { PathForwardRoadmap } from "./path-forward";
-
-
+import { VivahaMuhurtaEvaluator } from "./vivaha-muhurta-evaluator";
+import { VyaparaArambhMuhurtaEvaluator } from "./vyapara-arambh-muhurta-evaluator";
+import { GrihaPraveshaMuhurtaEvaluator } from "./griha-pravesha-muhurta-evaluator";
+import { YatraMuhurtaEvaluator } from "./yatra-muhurta-evaluator";
+import { PanchakaCancellation } from "./panchaka-cancellation";
+import { RahuKalaYamagandaExplorer } from "./rahu-kala-yamaganda-explorer";
+import { LagnaSuddhiEvaluator } from "./lagna-suddhi-evaluator";
+import { FourPillarIntegrator } from "./four-pillar-integrator";
 
 
 export type InteractiveComponentType = ComponentType<Record<string, never>>;
@@ -564,8 +580,8 @@ export type InteractiveComponentType = ComponentType<Record<string, never>>;
 export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "vedanga-body-map": VedangaBodyMap,
   // The relationship diagram is the FULL version Lesson 2 declares it needs:
-  // cluster overlay + Jyotiṣa interlocks + sāṅga closing panel. Lesson 1 still
-  // uses the body-map (sage figure with six luminous body parts) — its lesson
+  // cluster overlay + Jyotiá¹£a interlocks + sÄá¹…ga closing panel. Lesson 1 still
+  // uses the body-map (sage figure with six luminous body parts) â€” its lesson
   // page route renders <VedangaBodyMap/> directly via the `scenes` prop and
   // ignores the registry mapping. Future lessons in this chapter family pick
   // up the relationship diagram via this registry entry.
@@ -573,58 +589,58 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "vedanga-vs-vedanta-comparator": VedangaVsVedantaComparator,
   "vedic-ecosystem-orbital": VedicEcosystemOrbital,
   "sloka-recitation-frame": SlokaRecitationFrame,
-  // Lesson 2's §7 flagship: Jyotiṣa-Sāṅga Synthesis Hub (hub-and-spoke
-  // interlock viz + sāṅga scenario explorer in a two-tab composition).
+  // Lesson 2's Â§7 flagship: Jyotiá¹£a-SÄá¹…ga Synthesis Hub (hub-and-spoke
+  // interlock viz + sÄá¹…ga scenario explorer in a two-tab composition).
   "jyotisha-sanga-hub": JyotishaSangaHub,
-  // Lesson 3's §4 explorer: Jyotiṣa vs Western tropical vs sun-sign pop
-  // comparator — six discriminating dimensions × three tradition-categories.
+  // Lesson 3's Â§4 explorer: Jyotiá¹£a vs Western tropical vs sun-sign pop
+  // comparator â€” six discriminating dimensions Ã— three tradition-categories.
   "jyotisha-vs-western-vs-pop-comparator": JyotishaVsWesternVsPopComparator,
-  // Lesson 3's §7 flagship: Disambiguation Dojo (Indo-Hellenistic lineage
-  // timeline + ayanāṁśa drift slider + 5-scenario disambiguation drill in
+  // Lesson 3's Â§7 flagship: Disambiguation Dojo (Indo-Hellenistic lineage
+  // timeline + ayanÄá¹Å›a drift slider + 5-scenario disambiguation drill in
   // a two-tab composition).
   "disambiguation-dojo": DisambiguationDojo,
-  // Lesson 4's §4 explorer: Karma Typology Explorer — 4-fold karma cycle
+  // Lesson 4's Â§4 explorer: Karma Typology Explorer â€” 4-fold karma cycle
   // SVG diagram with visibly-clickable karma-type nodes + side-panel
-  // active-detail (definition, etymology, properties, jyotiṣa-sees,
+  // active-detail (definition, etymology, properties, jyotiá¹£a-sees,
   // agent-control).
   "karma-typology-explorer": KarmaTypologyExplorer,
-  // Lesson 4's §7 flagship: Karma-Prediction Dojo (two-tab — Cycle in
+  // Lesson 4's Â§7 flagship: Karma-Prediction Dojo (two-tab â€” Cycle in
   // Motion with overlay toggles + Indication Translator skill drill with
   // 5 deterministic-to-indication translation scenarios).
   "karma-prediction-dojo": KarmaPredictionDojo,
-  // Lesson 2.1's §4 explorer: Historical Timeline — horizontal SVG with 12
-  // major Jyotiṣa authors/texts staggered on the academic-Indology
+  // Lesson 2.1's Â§4 explorer: Historical Timeline â€” horizontal SVG with 12
+  // major Jyotiá¹£a authors/texts staggered on the academic-Indology
   // chronological axis. Traditional-dating overlay shows divergences.
   "historical-timeline": HistoricalTimeline,
-  // Lesson 2.1's §7 flagship: Jyotiṣa Citation Dojo (two-tab — Dating
+  // Lesson 2.1's Â§7 flagship: Jyotiá¹£a Citation Dojo (two-tab â€” Dating
   // Divergence Atlas + Citation Discipline Drill with 5 scenarios).
   "jyotisha-citation-dojo": JyotishaCitationDojo,
-  // Lesson 2.2's §4 explorer: BPHS Recension Comparator — Parāśara duality
-  // diptych + 10 prakaraṇa-plates with Santhanam adhyāya ranges and
+  // Lesson 2.2's Â§4 explorer: BPHS Recension Comparator â€” ParÄÅ›ara duality
+  // diptych + 10 prakaraá¹‡a-plates with Santhanam adhyÄya ranges and
   // cross-recension notes.
   "bphs-recension-comparator": BphsRecensionComparator,
-  // Lesson 2.2's §7 flagship: BPHS Citation Dojo — Vimśottarī verse cross-
+  // Lesson 2.2's Â§7 flagship: BPHS Citation Dojo â€” VimÅ›ottarÄ« verse cross-
   // reference + 5-scenario BPHS citation discipline drill.
   "bphs-citation-dojo": BphsCitationDojo,
-  // Lesson 2.3's §4 explorer: Varāhamihira Skandha Coverage Explorer —
-  // date-anchor hero + 3 skandha plates (horā/saṁhitā/gaṇita) + dating
+  // Lesson 2.3's Â§4 explorer: VarÄhamihira Skandha Coverage Explorer â€”
+  // date-anchor hero + 3 skandha plates (horÄ/saá¹hitÄ/gaá¹‡ita) + dating
   // methodology + both-anchors framework comparison diptych.
   "varahamihira-skandha-coverage-explorer": VarahamihiraSkandhaCoverageExplorer,
-  // Lesson 2.3's §7 flagship: Varāhamihira Synthesis Dojo — author cross-
-  // dating (5 authors relative to Varāhamihira anchor) + 5-scenario drill.
+  // Lesson 2.3's Â§7 flagship: VarÄhamihira Synthesis Dojo â€” author cross-
+  // dating (5 authors relative to VarÄhamihira anchor) + 5-scenario drill.
   "varahamihira-synthesis-dojo": VarahamihiraSynthesisDojo,
-  // Lesson 2.4's §4 explorer: Medieval Codifier Relative-Dating Explorer —
-  // 3-layer Parāśari-tradition lineage + 4 codifier plates + compounding
+  // Lesson 2.4's Â§4 explorer: Medieval Codifier Relative-Dating Explorer â€”
+  // 3-layer ParÄÅ›ari-tradition lineage + 4 codifier plates + compounding
   // uncertainty visualization.
   "medieval-codifier-relative-dating-explorer": MedievalCodifierRelativeDatingExplorer,
-  // Lesson 2.4's §7 flagship: Medieval Synthesis Dojo — 5-scenario drill
+  // Lesson 2.4's Â§7 flagship: Medieval Synthesis Dojo â€” 5-scenario drill
   // on medieval-codifier dating + citation discipline.
   "medieval-synthesis-dojo": MedievalSynthesisDojo,
-  // Lesson 2.5's §4 explorer: Parāśari ⇄ Jaiminī Parallel-Tradition Explorer
-  // — diptych hero + 4-layer side-by-side comparison + sūtra-vs-verse genre
-  // + 5 distinctive Jaiminī doctrines + same-Jaiminī identity question.
+  // Lesson 2.5's Â§4 explorer: ParÄÅ›ari â‡„ JaiminÄ« Parallel-Tradition Explorer
+  // â€” diptych hero + 4-layer side-by-side comparison + sÅ«tra-vs-verse genre
+  // + 5 distinctive JaiminÄ« doctrines + same-JaiminÄ« identity question.
   "parashari-jaimini-parallel-tradition-explorer": ParashariJaiminiParallelTraditionExplorer,
-  // Lesson 2.5's §7 flagship: Jaiminī Second-Tradition Dojo — two-tab
+  // Lesson 2.5's Â§7 flagship: JaiminÄ« Second-Tradition Dojo â€” two-tab
   // (Doctrinal-Pair Atlas across 6 pairs + 5-scenario tradition-attribution
   // drill).
   "jaimini-second-tradition-dojo": JaiminiSecondTraditionDojo,
@@ -640,163 +656,201 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "cara-sequence-builder": CaraSequenceBuilder,
   "cara-dasha-timeline": CaraDashaTimeline,
   "dual-dasha-timeline": DualDashaTimeline,
-  // Lesson 2.6's §4 explorer: Four-Stream Landscape Explorer — hero diptych
+  // Lesson 2.6's Â§4 explorer: Four-Stream Landscape Explorer â€” hero diptych
   // (4 streams equal-weight) + modern-primary-vs-revival distinction +
   // KP founder plate + 5 KP contributions + Lal Kitab founder plate + 6 LK
   // contributions + 3 modern-primary status criteria.
   "four-stream-landscape-explorer": FourStreamLandscapeExplorer,
-  // Lesson 2.6's §7 flagship: Four-Stream Synthesis Dojo — two-tab
+  // Lesson 2.6's Â§7 flagship: Four-Stream Synthesis Dojo â€” two-tab
   // (Stream Landscape Matrix with classification-filter + cross-stream topic
   // deep-dive across 4 streams + 5-scenario Evaluative Reasoning Drill).
   // This is the Chapter-2 capstone Bloom-Evaluate practice surface.
   "four-stream-synthesis-dojo": FourStreamSynthesisDojo,
-  // Lesson 3.1's §4 explorer: Three Skandha Curriculum Map — L2 pattern
+  // Lesson 3.1's Â§4 explorer: Three Skandha Curriculum Map â€” L2 pattern
   // (triangle painting LEFT + clickable skandha rows RIGHT).
   "three-skandha-curriculum-map": ThreeSkandhaCurriculumMap,
-  // Lesson 3.1's §7 flagship: Three Skandha Synthesis Dojo — two-tab
-  // (Stream × Skandha Matrix + 5-scenario Evaluative Drill).
+  // Lesson 3.1's Â§7 flagship: Three Skandha Synthesis Dojo â€” two-tab
+  // (Stream Ã— Skandha Matrix + 5-scenario Evaluative Drill).
   "three-skandha-synthesis-dojo": ThreeSkandhaSynthesisDojo,
-  // Lesson 3.2's §4 explorer: Seven Sub-Branches Explorer — L2 pattern
+  // Lesson 3.2's Â§4 explorer: Seven Sub-Branches Explorer â€” L2 pattern
   // (manuscript diagram LEFT + clickable sub-branch rows RIGHT).
   "seven-sub-branches-explorer": SevenSubBranchesExplorer,
-  // Lesson 3.2's §7 flagship: Seven Sub-Branches Synthesis Dojo — two-tab
-  // (Stream × Sub-Branch Matrix + 5-scenario Evaluative Drill).
+  // Lesson 3.2's Â§7 flagship: Seven Sub-Branches Synthesis Dojo â€” two-tab
+  // (Stream Ã— Sub-Branch Matrix + 5-scenario Evaluative Drill).
   "seven-sub-branches-synthesis-dojo": SevenSubBranchesSynthesisDojo,
-  // Lesson 3.3's §4 explorer: Grahvani Coverage Matrix Explorer — L2 pattern
+  // Lesson 3.3's Â§4 explorer: Grahvani Coverage Matrix Explorer â€” L2 pattern
   // (navigational map LEFT + stream-filtered coverage cards RIGHT).
   "grahvani-coverage-matrix-explorer": GrahvaniCoverageMatrixExplorer,
-  // Lesson 3.3's §7 flagship: Grahvani Coverage Synthesis Dojo — two-tab
-  // (Full 4×7 Coverage Matrix + 5-scenario Evaluative Drill).
+  // Lesson 3.3's Â§7 flagship: Grahvani Coverage Synthesis Dojo â€” two-tab
+  // (Full 4Ã—7 Coverage Matrix + 5-scenario Evaluative Drill).
   "grahvani-coverage-synthesis-dojo": GrahvaniCoverageSynthesisDojo,
-  // Lesson 4.1's §4 explorer: Regional Schools Explorer — L2 pattern
+  // Lesson 4.1's Â§4 explorer: Regional Schools Explorer â€” L2 pattern
   // (map image LEFT + tabbed school explorer RIGHT with stream concentrations).
   "regional-schools-explorer": RegionalSchoolsExplorer,
-  // Lesson 4.1's §7 flagship: Regional Schools Synthesis Dojo — two-tab
-  // (6×4 Regional Schools Matrix + teacher lookup + 5-scenario Evaluative Drill).
+  // Lesson 4.1's Â§7 flagship: Regional Schools Synthesis Dojo â€” two-tab
+  // (6Ã—4 Regional Schools Matrix + teacher lookup + 5-scenario Evaluative Drill).
   "regional-schools-synthesis-dojo": RegionalSchoolsSynthesisDojo,
-  // Lesson 4.2's §4 explorer: Lineage Threads Network Explorer — L2 pattern
+  // Lesson 4.2's Â§4 explorer: Lineage Threads Network Explorer â€” L2 pattern
   // (network diagram LEFT + tabbed lineage explorer RIGHT with sub-lineages).
   "lineage-threads-network-explorer": LineageThreadsNetworkExplorer,
-  // Lesson 4.2's §7 flagship: Lineage Threads Synthesis Dojo — two-tab
+  // Lesson 4.2's Â§7 flagship: Lineage Threads Synthesis Dojo â€” two-tab
   // (Lineage Comparison Matrix + 5-scenario Evaluative Drill).
   "lineage-threads-synthesis-dojo": LineageThreadsSynthesisDojo,
-  // Lesson 4.3's §4 explorer: Three-Lineage Comparison Chart Analyzer — L2 pattern
+  // Lesson 4.3's Â§4 explorer: Three-Lineage Comparison Chart Analyzer â€” L2 pattern
   // (chart diagram LEFT + tabbed three-lineage analyzer RIGHT + convergence/divergence toggle).
   "three-lineage-comparison-chart-analyzer": ThreeLineageComparisonChartAnalyzer,
-  // Lesson 4.3's §7 flagship: Lineage Matters Synthesis Dojo — two-tab
+  // Lesson 4.3's Â§7 flagship: Lineage Matters Synthesis Dojo â€” two-tab
   // (Integrated Synthesis View + 5-scenario Evaluative Drill).
   "lineage-matters-synthesis-dojo": LineageMattersSynthesisDojo,
-  // Lesson 2.1.1's §7 interactive: Zodiac Reference Frame Explorer —
+  // Lesson 2.1.1's Â§7 interactive: Zodiac Reference Frame Explorer â€”
   // Earth-centered diagram showing sidereal vs tropical zodiacs with
   // clickable hotspots (sidereal zero, tropical zero, vernal equinox,
-  // summer solstice, ayanāṁśa gap, Spica, Earth's axis, ecliptic,
+  // summer solstice, ayanÄá¹Å›a gap, Spica, Earth's axis, ecliptic,
   // celestial equator).
   "zodiac-reference-frame-explorer": ZodiacReferenceFrameExplorer,
-  // Lesson 2.1.2's §7 interactive: Precession Visualizer — clickable SVG
+  // Lesson 2.1.2's Â§7 interactive: Precession Visualizer â€” clickable SVG
   // diagram with epoch slider, by-hand calculator, and classical-vs-modern
   // comparison tabs.
   "precession-visualizer": PrecessionVisualizer,
-  // Lesson 2.1.3's §7 interactive: Zodiac Tradition Reasoning Comparator —
+  // Lesson 2.1.3's Â§7 interactive: Zodiac Tradition Reasoning Comparator â€”
   // side-by-side comparison of Vedic-sidereal vs Western-tropical reasoning
   // across four dimensions (doctrinal, observational, historical, comparative).
   "zodiac-tradition-reasoning-comparator": ZodiacTraditionReasoningComparator,
   "zodiac-tradition-comparator": ZodiacTraditionComparator,
-  // Lesson 2.1.4's §7 interactive: Tropical-Sidereal Conversion Calculator —
-  // birth-date Sun-sign calculator + longitude converter showing graha-in-rāśi
-  // shifts, daśā consequences, and nakṣatra alignment effects.
+  // Lesson 2.1.4's Â§7 interactive: Tropical-Sidereal Conversion Calculator â€”
+  // birth-date Sun-sign calculator + longitude converter showing graha-in-rÄÅ›i
+  // shifts, daÅ›Ä consequences, and naká¹£atra alignment effects.
   "tropical-sidereal-conversion-calculator": TropicalSiderealConversionCalculator,
-  // Lesson 2.2.1's §7 interactive: Ayanāṁśa Definition Explorer —
+  // Lesson 2.2.1's Â§7 interactive: AyanÄá¹Å›a Definition Explorer â€”
   // 4-tab interactive: Definition (visual gap diagram + conversion calculator),
   // Etymology (Sanskrit compound breakdown), 7 Conventions (comparison table),
-  // Stream Matcher (stream → ayanāṁśa mapping).
+  // Stream Matcher (stream â†’ ayanÄá¹Å›a mapping).
   "ayanamsha-definition-explorer": AyanamshaDefinitionExplorer,
   "lahiri-ayanamsha-explorer": LahiriAyanamshaExplorer,
   "lahiri-by-hand-step-by-step-calculator": LahiriByHandStepByStepCalculator,
   "krishnamurti-ayanamsha-explorer": KrishnamurtiAyanamshaExplorer,
   "ayanamsha-comparator": KrishnamurtiAyanamshaExplorer,
-  // Lesson 2.2.5's §7 interactive: Comparative Ayanāṁśa Explorer — side-by-side
+  // Lesson 2.2.5's Â§7 interactive: Comparative AyanÄá¹Å›a Explorer â€” side-by-side
   // comparison of all 7 conventions, convention detail profiles, alignment-epoch
-  // timeline, practitioner-community mapping, and multi-ayanāṁśa honesty discipline.
+  // timeline, practitioner-community mapping, and multi-ayanÄá¹Å›a honesty discipline.
   "comparative-ayanamsha-explorer": ComparativeAyanamshaExplorer,
-  // Lesson 2.2.6's §7 interactive: Ayanāṁśa Decision Framework Flowchart —
-  // scenario → decision mapping, per-context rules table, multi-lineage synthesis,
+  // Lesson 2.2.6's Â§7 interactive: AyanÄá¹Å›a Decision Framework Flowchart â€”
+  // scenario â†’ decision mapping, per-context rules table, multi-lineage synthesis,
   // do-not-mix visualiser, software verification, and Chapter 2 capstone panel.
   "ayanamsha-decision-framework-flowchart": AyanamshaDecisionFrameworkFlowchart,
-  // Lesson 2.3.1's §9 interactive: Yuga Proportion Visualiser — three-mode
-  // proportional bar visualiser (proportion / absolute-duration / saṁdhyā)
+  // Lesson 2.3.1's Â§9 interactive: Yuga Proportion Visualiser â€” three-mode
+  // proportional bar visualiser (proportion / absolute-duration / saá¹dhyÄ)
   // with hover/click detail panels and embedded formative checkpoints.
   "yuga-proportion-visualiser": YugaProportionVisualiser,
-  // Lesson 2.3.2's §10 interactive: Yuga Cycle Explorer — three-zoom-level
-  // visual scrubber (Mahā-Yuga / Manvantara / Kalpa) with human/divya toggle,
+  // Lesson 2.3.2's Â§10 interactive: Yuga Cycle Explorer â€” three-zoom-level
+  // visual scrubber (MahÄ-Yuga / Manvantara / Kalpa) with human/divya toggle,
   // present-epoch marker, and modern cosmology benchmarks.
   "yuga-cycle-explorer": YugaCycleExplorer,
-  // Lesson 2.3.3's §9 interactive: Traditional vs Academic Dating Comparator —
+  // Lesson 2.3.3's Â§9 interactive: Traditional vs Academic Dating Comparator â€”
   // three-position side-by-side (Traditional Vedic / Yukteshwar / Academic-Indology)
   // with synthesis honesty dial.
   "traditional-vs-academic-dating-comparator": TraditionalVsAcademicDatingComparator,
-  // Lesson 2.3.4's §10 interactive: Yuga Dependence Classifier — scenario-based
+  // Lesson 2.3.4's Â§10 interactive: Yuga Dependence Classifier â€” scenario-based
   // yuga-dependent vs yuga-independent classification drill with three difficulty levels.
   "yuga-dependence-classifier": YugaDependenceClassifier,
-  // Lesson 2.4.1's §9 interactive: Day-Type Comparator — side-by-side comparison
-  // of four day-types (sāvana / sidereal / lunar / solar) with operational-scope quiz.
+  // Lesson 2.4.1's Â§9 interactive: Day-Type Comparator â€” side-by-side comparison
+  // of four day-types (sÄvana / sidereal / lunar / solar) with operational-scope quiz.
   "day-type-comparator": DayTypeComparator,
-  // Lesson 2.4.2's §10 interactive: Sunrise at Any Latitude — 7-step sunrise
+  // Lesson 2.4.2's Â§10 interactive: Sunrise at Any Latitude â€” 7-step sunrise
   // computation calculator with edge-case detection (polar day/night) and
   // worked-example library (Mumbai, Delhi, Singapore).
   "sunrise-at-any-latitude": SunriseAtAnyLatitude,
-  // Lesson 2.4.3's §8 interactive: Sidereal Day Explorer — top-down Earth view
+  // Lesson 2.4.3's Â§8 interactive: Sidereal Day Explorer â€” top-down Earth view
   // with time-scrubber, differential visualisation (~3m 56s), annual accumulation,
   // and operational-context picker.
   "sidereal-day-explorer": SiderealDayExplorer,
-  // Lesson 2.4.4's §10 interactive: Tithi from Sun-Moon — longitude scrubbers,
+  // Lesson 2.4.4's Â§10 interactive: Tithi from Sun-Moon â€” longitude scrubbers,
   // circular elongation arc visualisation, tithi computation, variable-duration
-  // mode, and edge-case detection (kṣaya/vṛddhi tithi).
+  // mode, and edge-case detection (ká¹£aya/vá¹›ddhi tithi).
   "tithi-from-sun-moon": TithiFromSunMoon,
-  // Lesson 2.4.5's §10 interactive: Saṅkrānti Tracker — Sun's annual journey
-  // through 12 rāśis with Uttarāyaṇa/Dakṣiṇāyana distinction, sidereal-vs-tropical
+  // Lesson 2.4.5's Â§10 interactive: Saá¹…krÄnti Tracker â€” Sun's annual journey
+  // through 12 rÄÅ›is with UttarÄyaá¹‡a/Daká¹£iá¹‡Äyana distinction, sidereal-vs-tropical
   // toggle, multi-century drift visualisation, and festival overlay.
   "sankranti-tracker": SankrantiTracker,
-  // Lesson 3.1.1's §4 explorer: Tithi Angle Visualizer — circular Sun-Moon
-  // orbit with 12° segment overlay + real-time tithi computation + pakṣa
-  // indicator + pañcāṅga reading panel.
+  // Lesson 3.1.1's Â§4 explorer: Tithi Angle Visualizer â€” circular Sun-Moon
+  // orbit with 12Â° segment overlay + real-time tithi computation + paká¹£a
+  // indicator + paÃ±cÄá¹…ga reading panel.
   "tithi-angle-visualizer": TithiAngleVisualizer,
-  // Lesson 3.1.1's §7 flagship: Tithi Calculator Dojo — step-by-step formula
+  // Lesson 3.1.1's Â§7 flagship: Tithi Calculator Dojo â€” step-by-step formula
   // breakdown with editable Sun/Moon longitudes + preset scenarios + elapsed
   // fraction visualisation.
   "tithi-calculator-dojo": TithiCalculatorDojo,
-  // Lesson 3.1.2's §7 flagship: Tithi-Deity Wheel — circular 30-tithi visual
+  // Lesson 3.1.2's Â§7 flagship: Tithi-Deity Wheel â€” circular 30-tithi visual
   // explorer with click-for-attributes, quality-filter highlight, and
   // festival-major badge system.
   "tithi-deity-wheel": TithiDeityWheel,
-  // Lesson 3.1.1's §4 sub-component: Tithi Context Matcher — scenario-based
-  // discrimination drill for pañcāṅga-tithi vs astronomical-instantaneous-tithi.
+  // Lesson 3.1.1's Â§4 sub-component: Tithi Context Matcher â€” scenario-based
+  // discrimination drill for paÃ±cÄá¹…ga-tithi vs astronomical-instantaneous-tithi.
   "tithi-context-matcher": TithiContextMatcher,
-  // Lesson 3.1.2's §4 explorer: Śukla Tithi Strip — horizontal scrollable
-  // enumeration of the 15 śukla pakṣa tithis with deity, quality, and
+  // Lesson 3.1.2's Â§4 explorer: Åšukla Tithi Strip â€” horizontal scrollable
+  // enumeration of the 15 Å›ukla paká¹£a tithis with deity, quality, and
   // festival cards.
   "shukla-tithi-strip": ShuklaTithiStrip,
-  // Lesson 3.1.3's §7 flagship: Kṛṣṇa Festival Timeline — vertical timeline
-  // of the 15 kṛṣṇa pakṣa tithis with festival-major highlights, Pitṛ Pakṣa
+  // Lesson 3.1.3's Â§7 flagship: Ká¹›á¹£á¹‡a Festival Timeline â€” vertical timeline
+  // of the 15 ká¹›á¹£á¹‡a paká¹£a tithis with festival-major highlights, Pitá¹› Paká¹£a
   // band, and click-to-reveal detail panel.
   "krishna-festival-timeline": KrishnaFestivalTimeline,
-  // M3-C1-L1's §7 flagship: Pañcāṅga Builder — computes all 5 limbs
-  // (tithi + vāra + nakṣatra + yoga + karaṇa) for any date with visual diagram.
+  // M3-C1-L1's Â§7 flagship: PaÃ±cÄá¹…ga Builder â€” computes all 5 limbs
+  // (tithi + vÄra + naká¹£atra + yoga + karaá¹‡a) for any date with visual diagram.
   "pancanga-builder": PancangaBuilder,
-  // Lesson 3.1.4's §7 flagship: Nandā-Bhadrā-Jayā-Riktā-Pūrṇā Classifier —
+  // Lesson 23.1.2 interactive: Panchanga Five-Limb Framework -- limb
+  // definitions, derivation hierarchy, and trade-off aggregation.
+  "panchanga-five-limb-framework": PanchangaFiveLimbFramework,
+  // Lesson 23.1.3 interactive: Muhurta Text Corpus Navigator -- classical
+  // source layers, attribution discipline, and reading sequence.
+  "muhurta-text-corpus-navigator": MuhurtaTextCorpusNavigator,
+  // Lesson 23.1.4 interactive: Muhurta Comparative Position Explorer --
+  // stream-variant inspector, shared-principles reference, sva-dharma framework.
+  "muhurta-comparative-position-explorer": MuhurtaComparativePositionExplorer,
+  // Lesson 23.2.1 interactive: Tithi Classification Explorer --
+  // five-fold matcher, 30-tithi wheel, scenario screener, integration workflow.
+  "tithi-classification-explorer": TithiClassificationExplorer,
+  // Lesson 23.2.2 interactive: Vara Lord Effects Explorer --
+  // weekday-event matcher, lord reference cards, scenario screener, integration workflow.
+  "vara-lord-effects-explorer": VaraLordEffectsExplorer,
+  // Lesson 23.2.3 interactive: Nakshatras Categorized Explorer --
+  // category-event matcher, category reference cards, 27-nakshatra map, scenario screener, integration workflow.
+  "nakshatras-categorized-explorer": NakshatrasCategorizedExplorer,
+  // Lesson 3.1.4's Â§7 flagship: NandÄ-BhadrÄ-JayÄ-RiktÄ-PÅ«rá¹‡Ä Classifier â€”
   // quality-event matcher with contextual-quality discipline override visualization.
   "nanda-bhadra-jaya-rikta-purna-classifier": NandaBhadraClassifier,
-  // Lesson 3.1.5's §7 flagship: Amānta-Pūrṇimānta Converter — pakṣa-month converter,
+  // Lesson 3.1.5's Â§7 flagship: AmÄnta-PÅ«rá¹‡imÄnta Converter â€” paká¹£a-month converter,
   // festival cross-reference cards, and regional identifier.
   "amanta-purnimanta-converter": AmantaPurnimantaConverter,
-  // Lesson 3.1.6's §7 flagship: Tithi-Muhūrta Introductory Judgment — scenario-based
-  // muhūrta quality trainer with multi-element synthesis preview.
+  // Lesson 23.1.1 interactive: Muhurta Concept Scope -- 48-minute
+  // time-unit grid and discipline-scope classifier.
+  "muhurta-concept-scope": MuhurtaConceptScope,
+  // Lesson 23.6.3 interactive: M23 Closure -- cumulative module synthesis
+  // with chapter wheel, hook timeline, self-assessment, and ongoing-development.
+  "m23-closure": M23Closure,
+  // Lesson 23.6.2 interactive: Muhurta Decision Framework -- stakes-calibrated
+  // engagement with decision-tree, stakes gauge, case files, and method matrix.
+  "muhurta-decision-framework": MuhurtaDecisionFramework,
+  // Lesson 23.6.1 interactive: Muhurta Honest Handling -- cumulative
+  // honest-handling synthesis across M23: rarity dial, case files,
+  // daivajna wheel, instance map, and common-mistake gallery.
+  "muhurta-honest-handling": MuhurtaHonestHandling,
+  // Lesson 23.5.1 interactive: Panchaka Cancellation -- 27-nakshatra wheel,
+  // pañca-niṣiddha-karma case files, distinction drill, and mitigation panel.
+  "panchaka-cancellation": PanchakaCancellation,
+  // Lesson 23.5.2 interactive: Rāhu-Kāla + Yamagaṇḍa + Gulika-Kāla explorer —
+  // 8-portion daylight wheel, 24h timeline, case-file verdict drill, 7-day
+  // mnemonic pattern table, and seasonal-duration variance explorer.
+  "rahu-kala-yamaganda-explorer": RahuKalaYamagandaExplorer,
+  // Lesson 3.1.6's Â§7 flagship: Tithi-MuhÅ«rta Introductory Judgment â€” scenario-based
+  // muhÅ«rta quality trainer with multi-element synthesis preview.
   "tithi-muhurta-introductory-judgment": TithiMuhurtaIntroductoryJudgment,
-  // Lesson 3.2.1's §4 explorer: Vāra-Graha Wheel — circular 7-segment visual
+  // Lesson 3.2.1's Â§4 explorer: VÄra-Graha Wheel â€” circular 7-segment visual
   // explorer with click-for-attributes, element-filter highlight, and
   // planetary-type filter system.
   "vara-graha-wheel": VaraGrahaWheel,
-  // Lesson 3.2.2's §7 flagship: Chaldean Planetary Horā Explorer — two-panel
-  // composition (Chaldean order strip + horā sequence generator) with
+  // Lesson 3.2.2's Â§7 flagship: Chaldean Planetary HorÄ Explorer â€” two-panel
+  // composition (Chaldean order strip + horÄ sequence generator) with
   // 24 mod 7 = 3 principle explanation.
   "chaldean-planetary-hora-explorer": ChaldeanPlanetaryHoraExplorer,
   "chaldean-letter-table-explorer": ChaldeanLetterTableExplorer,
@@ -805,67 +859,67 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "numerology-system-selection": NumerologySystemSelection,
   "digit-meaning-explorer": DigitMeaningExplorer,
   "master-number-explorer": MasterNumberExplorer,
-  // Lesson 3.2.3's §7 flagship: Choghadiyā &amp; Rāhu Kālam Calculator —
+  // Lesson 3.2.3's Â§7 flagship: ChoghadiyÄ &amp; RÄhu KÄlam Calculator â€”
   // sunrise/sunset input, 16-segment quality tables, visual timeline,
   // and inauspicious-window highlight.
   "choghadiya-rahukalam-calculator": ChoghadiyaRahuKalamCalculator,
-  // Lesson 3.2.4's §7 flagship: Vāra-Event Pairing Explorer — event-category
-  // cards, recommended-vāra panels, vāra reference grid, and planetary
+  // Lesson 3.2.4's Â§7 flagship: VÄra-Event Pairing Explorer â€” event-category
+  // cards, recommended-vÄra panels, vÄra reference grid, and planetary
   // friendship/enmity visualization.
   "vara-event-pairing-explorer": VaraEventPairingExplorer,
-  // Lesson 3.3.1's §7 flagship: Moon-Nakṣatra Calculator — step-by-step formula
+  // Lesson 3.3.1's Â§7 flagship: Moon-Naká¹£atra Calculator â€” step-by-step formula
   // breakdown with editable Moon longitude + optional Sun context + preset
   // scenarios + 27-segment circular visualisation.
   "moon-nakshatra-calculator": MoonNakshatraCalculator,
-  // Lesson 3.3.2's §4 explorer: Nakṣatra Strip — horizontal scrollable
-  // enumeration of all 27 nakṣatras with ruler-colour coding, filter pills,
-  // search, and click-to-reveal detail panel (pāda, yoni, gana, tara).
+  // Lesson 3.3.2's Â§4 explorer: Naká¹£atra Strip â€” horizontal scrollable
+  // enumeration of all 27 naká¹£atras with ruler-colour coding, filter pills,
+  // search, and click-to-reveal detail panel (pÄda, yoni, gana, tara).
   "nakshatra-strip": NakshatraStrip,
-  // Lesson 3.3.3's §7 flagship: Nakṣatra Deity & Ruler Wheel — circular 27-segment
+  // Lesson 3.3.3's Â§7 flagship: Naká¹£atra Deity & Ruler Wheel â€” circular 27-segment
   // SVG explorer with inner-name / outer-planet rings, filter pills, centre
-  // mandala, and pakṣa-suitability overlay toggle.
+  // mandala, and paká¹£a-suitability overlay toggle.
   "nakshatra-deity-ruler-wheel": NakshatraDeityRulerWheel,
-  // Lesson 3.3.4's §7 flagship: Daily Nakṣatra Pañcāṅga Reader — simulated
-  // today's pañcāṅga with time-slider, transition tracking, activity-suitability
+  // Lesson 3.3.4's Â§7 flagship: Daily Naká¹£atra PaÃ±cÄá¹…ga Reader â€” simulated
+  // today's paÃ±cÄá¹…ga with time-slider, transition tracking, activity-suitability
   // grid, and classical reasoning panel.
   "daily-nakshatra-pancanga-reader": DailyNakshatraPancangaReader,
-  // Lesson 3.4.1's §7 flagship: Yoga vs Chart-Yoga Comparison — two-column
+  // Lesson 3.4.1's Â§7 flagship: Yoga vs Chart-Yoga Comparison â€” two-column
   // comparison table + 8-statement discrimination drill + visual icons.
   "yoga-vs-chart-yoga-comparison": YogaVsChartYogaComparison,
-  // Lesson 3.4.2's §7 flagship: Time-Yoga Calculator — Sun+Moon longitude sum
+  // Lesson 3.4.2's Â§7 flagship: Time-Yoga Calculator â€” Sun+Moon longitude sum
   // with step-by-step formula breakdown, 27-segment circular visualisation,
   // and preset scenarios.
   "time-yoga-calculator": TimeYogaCalculator,
-  // Lesson 3.4.3's §7 flagship: Yoga Wheel 27 — circular 27-segment explorer
+  // Lesson 3.4.3's Â§7 flagship: Yoga Wheel 27 â€” circular 27-segment explorer
   // with nature colour-coding, filter pills, table view toggle, and search.
   "yoga-wheel-27": YogaWheel27,
-  // Lesson 3.4.4's §7 flagship: Inauspicious Yoga Avoidance Calculator —
+  // Lesson 3.4.4's Â§7 flagship: Inauspicious Yoga Avoidance Calculator â€”
   // focus on 6 inauspicious yogas with severity ranking, mitigation guide,
   // and month-view timeline.
   "inauspicious-yoga-avoidance-calculator": InauspiciousYogaAvoidanceCalculator,
-  // Lesson 3.4.5's §7 flagship: Yoga Muhūrta Screening Integrator — multi-element
-  // muhūrta screening tool with 5-element dashboard and yoga-specific filter.
+  // Lesson 3.4.5's Â§7 flagship: Yoga MuhÅ«rta Screening Integrator â€” multi-element
+  // muhÅ«rta screening tool with 5-element dashboard and yoga-specific filter.
   "yoga-muhurta-screening-integrator": YogaMuhurtaScreeningIntegrator,
-  // Lesson 3.5.1's §7 flagship: Karaṇa Calculator — half-tithi computation
+  // Lesson 3.5.1's Â§7 flagship: Karaá¹‡a Calculator â€” half-tithi computation
   // with step-by-step breakdown, tithi-bar visual, and preset scenarios.
   "karana-calculator": KaranaCalculator,
-  // Lesson 3.5.2's §7 flagship: Karaṇa Cycle Diagram — circular 11-karaṇa
+  // Lesson 3.5.2's Â§7 flagship: Karaá¹‡a Cycle Diagram â€” circular 11-karaá¹‡a
   // explorer with Cara/Sthira colour-coding, filter pills, and table view.
   "karana-cycle-diagram": KaranaCycleDiagram,
-  // Lesson 3.5.3's §7 flagship: Bhadra Avoidance Integrator — Bhadra (Viṣṭi)
+  // Lesson 3.5.3's Â§7 flagship: Bhadra Avoidance Integrator â€” Bhadra (Viá¹£á¹­i)
   // calculator with day-of-week selector, activity-avoidance cards, classical
   // source panel, and comparison with other inauspicious periods.
   "bhadra-avoidance-integrator": BhadraAvoidanceIntegrator,
-  // Lesson 2.5.1's §7 interactive: Samvat Converter — Vikrama ↔ Śaka ↔ CE
+  // Lesson 2.5.1's Â§7 interactive: Samvat Converter â€” Vikrama â†” Åšaka â†” CE
   // interactive year-conversion calculator with boundary detection + convention toggles.
   "samvat-converter-vikrama-shaka": SamvatConverterVikramaShaka,
-  // Lesson 2.5.2's §7 interactive: Regional Calendar Explorer — side-by-side
+  // Lesson 2.5.2's Â§7 interactive: Regional Calendar Explorer â€” side-by-side
   // rendering of Tamil + Kerala + Bengali + Assamese + Odia regional calendars.
   "regional-calendar-explorer": RegionalCalendarExplorer,
-  // Lesson 2.5.3's §7 interactive: Calendar Converter — comprehensive cross-system
-  // date-conversion across Vikrama / Śaka / Kollam / Gregorian + JDN cross-validation.
+  // Lesson 2.5.3's Â§7 interactive: Calendar Converter â€” comprehensive cross-system
+  // date-conversion across Vikrama / Åšaka / Kollam / Gregorian + JDN cross-validation.
   "calendar-converter": CalendarConverter,
-  // ─── Module 04: Rāśi System interactives ───
+  // â”€â”€â”€ Module 04: RÄÅ›i System interactives â”€â”€â”€
   "rashi-boundary-wheel": RashiBoundaryWheel,
   "boundary-crossing-demonstrator": BoundaryCrossingDemonstrator,
   "rashi-attribute-wheel": RashiAttributeWheel,
@@ -907,7 +961,7 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "rashi-profile-explorer": RashiProfileExplorer,
   "quadrant-triad-visualizer": QuadrantTriadVisualizer,
   "trikona-pair-explorer": TrikonaPairExplorer,
-  // Lesson 5.1.2's §7 interactive: Dignity Wheel — clickable 12-rashi
+  // Lesson 5.1.2's Â§7 interactive: Dignity Wheel â€” clickable 12-rashi
   // dignity map with degree cues, friendship overlay, and Sun-Moon comparison.
   "dignity-wheel": DignityWheel,
   "budha-dignity-wheel": BudhaDignityWheel,
@@ -939,10 +993,10 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "shukra-friendship-dignity-grid": ShukraFriendshipDignityGrid,
   "association-classifier": AssociationClassifier,
   "combustion-calculator": CombustionCalculator,
-  // Lesson 5.1.4's §7 interactive: Friendship Matrix — directed graha
+  // Lesson 5.1.4's Â§7 interactive: Friendship Matrix â€” directed graha
   // relationship grid with mirror-cell comparison and Sun-Moon polarity axes.
   "friendship-matrix": FriendshipMatrix,
-  // Lesson 5.1.5's §7 interactive: Pakshabala Slider — tithi scrubber with
+  // Lesson 5.1.5's Â§7 interactive: Pakshabala Slider â€” tithi scrubber with
   // inverse Sun/Moon virupa bars and a dignity-combination preview.
   "pakshabala-slider": PakshabalaSlider,
   "shadbala-intro": ShadbalaIntro,
@@ -955,10 +1009,10 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "sthana-bala-summer": SthanaBalaSummer,
   "dik-bala-calculator": DikBalaCalculator,
   "kala-bala-overview": KalaBalaOverview,
-  // Lesson 5.2.2's §7 interactive: Karaka Router — question-driven Mars
+  // Lesson 5.2.2's Â§7 interactive: Karaka Router â€” question-driven Mars
   // register selector with house-side confirmation and tie-breaker feedback.
   "karaka-router": KarakaRouter,
-  // Lesson 5.2.3's §7 interactive: Friendship Dignity Grid — Mars across
+  // Lesson 5.2.3's Â§7 interactive: Friendship Dignity Grid â€” Mars across
   // the 12 signs with sign-lord relation, degree control, and dignity override.
   "friendship-dignity-grid": FriendshipDignityGrid,
   "mula-root-mandala": MulaRootMandala,
@@ -980,21 +1034,25 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "swati-breeze-navigator": SwatiBreezeNavigator,
   "vishakha-forked-path-explorer": VishakhaForkedPathExplorer,
   "pada-calculator": PadaCalculator,
+  "vivaha-muhurta-evaluator": VivahaMuhurtaEvaluator,
+  "vyapara-arambh-muhurta-evaluator": VyaparaArambhMuhurtaEvaluator,
+  "griha-pravesha-muhurta-evaluator": GrihaPraveshaMuhurtaEvaluator,
+  "yatra-muhurta-evaluator": YatraMuhurtaEvaluator,
   "pada-navamsha-mapper": PadaNavamshaMapper,
   "kp-sub-calculator": KpSubCalculator,
   "tara-bala-wheel": TaraBalAWheel,
-  // Module 10 Chapter 1 — Vimśottarī Daśā Cycle
-  // Lesson 10.1.1's §7 interactive: Daśā Timeline — 120-year proportional wheel
+  // Module 10 Chapter 1 â€” VimÅ›ottarÄ« DaÅ›Ä Cycle
+  // Lesson 10.1.1's Â§7 interactive: DaÅ›Ä Timeline â€” 120-year proportional wheel
   // with 9 clickable lord segments, starting-lord rotation, lifespan overlay,
   // and linear timeline bar.
   "dasha-timeline": DashaTimeline,
   "dasha-start-finder": DashaStartFinder,
-  // Lesson 10.1.3's §7 interactive: Daśā Selector — Universal Default vs Conditional Simulator
+  // Lesson 10.1.3's Â§7 interactive: DaÅ›Ä Selector â€” Universal Default vs Conditional Simulator
   "dasha-selector": DashaSelector,
-  // Lesson 10.2.1's §7 interactive: Daśā Balance Calculator — four-step
-  // pedagogical calculator with Moon longitude input, nakṣatra identification,
+  // Lesson 10.2.1's Â§7 interactive: DaÅ›Ä Balance Calculator â€” four-step
+  // pedagogical calculator with Moon longitude input, naká¹£atra identification,
   // fraction-traversed computation, and balance result with boundary warnings
-  // and subsequent mahādaśā preview.
+  // and subsequent mahÄdaÅ›Ä preview.
   "dasha-balance-calculator": DashaBalanceCalculator,
   "dasha-cascade-explorer": DashaCascadeExplorer,
   "vimshottari-ratio-calculator": VimshottariRatioCalculator,
@@ -1008,51 +1066,51 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "conditional-criteria-checker": ConditionalCriteriaChecker,
   "dasha-decision-framework": DashaDecisionFramework,
   "kp-vimshottari-intro": KpVimshottariIntro,
-  // Lesson 10.2.2's §7 interactive: Daśā Balance Mistake Explorer —
+  // Lesson 10.2.2's Â§7 interactive: DaÅ›Ä Balance Mistake Explorer â€”
   // toggle switches for all 6 common mistakes with side-by-side correct/corrupted
-  // comparison and ±1-day tolerance indicator.
+  // comparison and Â±1-day tolerance indicator.
   "dasha-balance-mistake-explorer": DashaBalanceMistakeExplorer,
-  // Lesson 10.2.3's §7 interactive: Daśā Balance Cross-Check — hand-computed
-  // balance input vs engine output with ±1-day confirmation band and
+  // Lesson 10.2.3's Â§7 interactive: DaÅ›Ä Balance Cross-Check â€” hand-computed
+  // balance input vs engine output with Â±1-day confirmation band and
   // severity-based diagnosis hints (match/minor/major/critical).
   "dasha-balance-cross-check": DashaBalanceCrossCheck,
-  // Lesson 10.2.4's §7 interactive: Daśā Table Builder — constructs the full
-  // birth-to-120 mahādaśā table from a balance, with expandable bhukti
-  // subdivisions using the proportion formula (MD × lord) ÷ 120.
+  // Lesson 10.2.4's Â§7 interactive: DaÅ›Ä Table Builder â€” constructs the full
+  // birth-to-120 mahÄdaÅ›Ä table from a balance, with expandable bhukti
+  // subdivisions using the proportion formula (MD Ã— lord) Ã· 120.
   "dasha-table-builder": DashaTableBuilder,
-  // Lesson 10.4.1's §7 interactive: Bhukti-Yoga Matrix — MD-lord ↔ AD-lord
+  // Lesson 10.4.1's Â§7 interactive: Bhukti-Yoga Matrix â€” MD-lord â†” AD-lord
   // naisargika friendship sets the baseline quality of a sub-period.
   // Includes dignity modulator demonstrating "modulator, not override."
   "bhukti-yoga-matrix": BhuktiYogaMatrix,
-  // Lesson 10.4.2's §7 interactive: Kāraka Overlay Reader — MD-lord's life-phase
+  // Lesson 10.4.2's Â§7 interactive: KÄraka Overlay Reader â€” MD-lord's life-phase
   // quality overlaid with AD-lord's domain-flavour significations.
-  // Detects multi-kāraka clusters and provides same-AD-different-MD comparison.
+  // Detects multi-kÄraka clusters and provides same-AD-different-MD comparison.
   "karaka-overlay-reader": KarakaOverlayReader,
-  // Lesson 10.4.3's §7 interactive: Two-Yes Checker — counts independent
+  // Lesson 10.4.3's Â§7 interactive: Two-Yes Checker â€” counts independent
   // indicator families for a predictive question and flags reliable only
-  // when ≥2 genuinely different lines of evidence agree.
+  // when â‰¥2 genuinely different lines of evidence agree.
   "two-yes-checker": TwoYesChecker,
-  // Lesson 10.4.4's §7 interactive: Event Reading Workbench — runs the six-step
-  // workflow end-to-end with functional lordship, bhukti-yoga, kāraka overlay,
+  // Lesson 10.4.4's Â§7 interactive: Event Reading Workbench â€” runs the six-step
+  // workflow end-to-end with functional lordship, bhukti-yoga, kÄraka overlay,
   // and the two-yes gate for any domain + ascendant + MD-AD pair.
   "event-reading-workbench": EventReadingWorkbench,
-  // Lesson 10.6.1's §7 interactive: Cara Daśā Intro — side-by-side contrast of
-  // Vimśottarī (planet-based, fixed) vs Cara (sign-based, variable) with
+  // Lesson 10.6.1's Â§7 interactive: Cara DaÅ›Ä Intro â€” side-by-side contrast of
+  // VimÅ›ottarÄ« (planet-based, fixed) vs Cara (sign-based, variable) with
   // modality legend and cross-validation panel.
   "cara-dasha-intro": CaraDashaIntro,
-  // Lesson 10.6.2's §7 interactive: Sthira Daśā Intro — awareness-level
-  // reference table contrasting Cara and Sthira (both rāśi-based Jaimini,
+  // Lesson 10.6.2's Â§7 interactive: Sthira DaÅ›Ä Intro â€” awareness-level
+  // reference table contrasting Cara and Sthira (both rÄÅ›i-based Jaimini,
   // different rules) with deferral note to Jaimini module (T1-17).
   "sthira-dasha-intro": SthiraDashaIntro,
-  // Lesson 10.6.3's §7 interactive: Kālacakra Overview — awareness-level
-  // pāda-derived sign daśā explorer with savya/apasavya direction rules,
-  // 108-point nakṣatra-pāda grid, and complexity breakdown.
+  // Lesson 10.6.3's Â§7 interactive: KÄlacakra Overview â€” awareness-level
+  // pÄda-derived sign daÅ›Ä explorer with savya/apasavya direction rules,
+  // 108-point naká¹£atra-pÄda grid, and complexity breakdown.
   "kalachakra-overview": KalachakraOverview,
-  // Lesson 10.6.4's §7 interactive: Parāśarī-Jaimini Chooser — decision-tool
-  // recommending daśā(s) for any situation with Vimśottarī always anchored.
+  // Lesson 10.6.4's Â§7 interactive: ParÄÅ›arÄ«-Jaimini Chooser â€” decision-tool
+  // recommending daÅ›Ä(s) for any situation with VimÅ›ottarÄ« always anchored.
   // Includes cross-validation scenarios (convergence / divergence).
   "parashari-jaimini-chooser": ParashariJaiminiChooser,
-  // Lesson 10.7.5's §7 interactive: Daśā Landscape Map — survey of ~14 systems
+  // Lesson 10.7.5's Â§7 interactive: DaÅ›Ä Landscape Map â€” survey of ~14 systems
   // grouped by class, five-point discipline overlay, and honest-framing practice.
   // Closes Module 10.
   "dasha-landscape-map": DashaLandscapeMap,
@@ -1091,155 +1149,155 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "kemadruma-checker": KemadrumaChecker,
   "gajakesari-simulator": GajakesariSimulator,
   "budhaditya-checker": BudhadityaChecker,
-  // Lesson 13.4.1's §7 interactive: Cheṣṭā Bala Calculator — motional strength
-  // explorer with eight cheṣṭā avasthās, epicycle diagram, Sun/Moon convention
-  // panels, and virūpa spectrum. Rich SVG diagrams illustrate retrograde mechanics.
+  // Lesson 13.4.1's Â§7 interactive: Cheá¹£á¹­Ä Bala Calculator â€” motional strength
+  // explorer with eight cheá¹£á¹­Ä avasthÄs, epicycle diagram, Sun/Moon convention
+  // panels, and virÅ«pa spectrum. Rich SVG diagrams illustrate retrograde mechanics.
   "cheshta-bala-calculator": CheshthaBalaCalculator,
-  // Lesson 13.4.2's §7 interactive: Naisargika Bala Table — the seven fixed
+  // Lesson 13.4.2's Â§7 interactive: Naisargika Bala Table â€” the seven fixed
   // natural-strength values with descending bar chart, fraction ladder, wheel
   // diagram, and baseline-stack visual. No engine needed (classical constants).
   "naisargika-table": NaisargikaTable,
-  // Lesson 13.4.3's §7 interactive: Naisargika Rationale — hierarchy ladder,
+  // Lesson 13.4.3's Â§7 interactive: Naisargika Rationale â€” hierarchy ladder,
   // luminosity overlay, Venus-vs-Jupiter comparison, and baseline reminder.
   // Explains why the fixed order is not arbitrary.
   "naisargika-rationale": NaisargikaRationale,
-  // Lesson 13.5.1's §7 interactive: Dṛk Bala Calculator — aspect net diagram,
+  // Lesson 13.5.1's Â§7 interactive: Dá¹›k Bala Calculator â€” aspect net diagram,
   // signed number line, add/remove aspects, six-component overview. Teaches
-  // the signed-net concept and that dṛk bala can be negative.
+  // the signed-net concept and that dá¹›k bala can be negative.
   "drk-bala-calculator": DrkBalaCalculator,
-  // Lesson 13.5.2's §7 interactive: Ṣaḍbala Summation — waterfall stack,
+  // Lesson 13.5.2's Â§7 interactive: á¹¢aá¸bala Summation â€” waterfall stack,
   // threshold gauge, all-planets reference, and pass/fail comparison.
-  // Teaches summing, converting to rūpas, and comparing to minima.
+  // Teaches summing, converting to rÅ«pas, and comparing to minima.
   "shadbala-summation": ShadbalaSummation,
-  // Lesson 13.5.3's §7 interactive: Ṣaḍbala Scorecard — per-planet ratio + band
+  // Lesson 13.5.3's Â§7 interactive: á¹¢aá¸bala Scorecard â€” per-planet ratio + band
   // table, band spectrum, workflow diagram, and confidence-vs-virtue visual.
   // Closes Module 13 by turning totals into interpretive judgement.
   "shadbala-scorecard": ShadbalaScorecard,
-  // Lesson 13.6.1's §7 interactive: Bhāva Bala Calculator — house selector,
-  // three-component inputs, house diagram, and ṣaḍbala parallel comparison.
+  // Lesson 13.6.1's Â§7 interactive: BhÄva Bala Calculator â€” house selector,
+  // three-component inputs, house diagram, and á¹£aá¸bala parallel comparison.
   "bhava-bala-calculator": BhavaBalaCalculator,
-  // Lesson 13.6.2's §7 interactive: Ṣaḍbala–Bhāva Bala Synthesis — domain
+  // Lesson 13.6.2's Â§7 interactive: á¹¢aá¸balaâ€“BhÄva Bala Synthesis â€” domain
   // selector, strength toggles, four-cell matrix, and confidence dial.
   // Teaches integrative reading of planet + house strength.
   "shadbala-bhavabala-synthesis": ShadbalaBhavabalaSynthesis,
-  // Lesson 13.6.3's §7 interactive: Cross-Stream Strength Map — four stream
-  // conceptions, parallel tracks, convergence/divergence, and pañcavargīya
-  // breakdown. Maps how each sampradāya measures strength.
+  // Lesson 13.6.3's Â§7 interactive: Cross-Stream Strength Map â€” four stream
+  // conceptions, parallel tracks, convergence/divergence, and paÃ±cavargÄ«ya
+  // breakdown. Maps how each sampradÄya measures strength.
   "cross-stream-strength-map": CrossStreamStrengthMap,
-  // Lesson 13.6.4's §7 interactive: Strength-Quality Matrix — Module 13 capstone.
-  // 2×2 judgement matrix fusing ṣaḍbala (quantity) with dignity/aspect/yoga (quality).
+  // Lesson 13.6.4's Â§7 interactive: Strength-Quality Matrix â€” Module 13 capstone.
+  // 2Ã—2 judgement matrix fusing á¹£aá¸bala (quantity) with dignity/aspect/yoga (quality).
   // Clickable SVG matrix + preset scenarios + amplifier diagram + discipline rules.
   "strength-quality-matrix": StrengthQualityMatrix,
-  // Lesson 13.3.3's §7 interactive: Pakṣa-Yuddha Calculator — pakṣabala (lunar-phase
+  // Lesson 13.3.3's Â§7 interactive: Paká¹£a-Yuddha Calculator â€” paká¹£abala (lunar-phase
   // strength split) + graha-yuddha (planetary war detection). Fortnight toggle,
   // planet status grid, proximity checker with SVG diagrams, and worked scenarios.
   "paksha-yuddha-calculator": PakshaYuddhaCalculator,
-  // Lesson 13.3.4's §7 interactive: Dik-Kāla Summer — Chapter 3 capstone.
-  // Dik bala slider + nine kāla sub-component sliders + SVG sum diagram +
-  // virūpa→rūpa conversion + worked presets (Sun 10th, Moon night, war penalty).
+  // Lesson 13.3.4's Â§7 interactive: Dik-KÄla Summer â€” Chapter 3 capstone.
+  // Dik bala slider + nine kÄla sub-component sliders + SVG sum diagram +
+  // virÅ«paâ†’rÅ«pa conversion + worked presets (Sun 10th, Moon night, war penalty).
   "dik-kala-summer": DikKalaSummer,
-  // Lesson 14.4.1's §7 interactive: Lakṣmī-Sarasvatī Detector — checks both
+  // Lesson 14.4.1's Â§7 interactive: Laká¹£mÄ«-SarasvatÄ« Detector â€” checks both
   // deity-named special yogas. North Indian chart SVG + house/dignity selectors +
-  // condition checker with preset scenarios (Lakṣmī full, Sarasvatī full, broken).
+  // condition checker with preset scenarios (Laká¹£mÄ« full, SarasvatÄ« full, broken).
   "lakshmi-saraswati-detector": LakshmiSaraswatiDetector,
-  // Lesson 14.4.2's §7 interactive: Akhanda Sāmrājya Checker — tests the
+  // Lesson 14.4.2's Â§7 interactive: Akhanda SÄmrÄjya Checker â€” tests the
   // "unbroken sovereignty" yoga against selectable source definitions (standard
-  // vs Phaladīpikā). Sovereignty-stack SVG + mini-chart + source-variation discipline.
+  // vs PhaladÄ«pikÄ). Sovereignty-stack SVG + mini-chart + source-variation discipline.
   "akhanda-samrajya-checker": AkhandaSamrajyaChecker,
-  // Lesson 14.4.3's §7 interactive: Buddhāditya-Gaja-Kesari Detector — revisits
+  // Lesson 14.4.3's Â§7 interactive: BuddhÄditya-Gaja-Kesari Detector â€” revisits
   // both common yogas with depth. Combustion orb slider + kendra-from-Moon
-  // circular diagram + strength grading + trikoṇa misread warning.
+  // circular diagram + strength grading + trikoá¹‡a misread warning.
   "buddhaditya-gajakesari-detector": BuddhadityaGajakesariDetector,
-  // Lesson 14.4.4's §7 interactive: Special-Yoga Scan — Chapter 4 capstone.
+  // Lesson 14.4.4's Â§7 interactive: Special-Yoga Scan â€” Chapter 4 capstone.
   // Systematic 5-yoga checklist on a fixed Cancer-lagna worked chart.
   // Jupiter-dignity toggle demonstrates broken-condition cascade.
   "special-yoga-scan": SpecialYogaScan,
-  // Lesson 14.5.1's §7 interactive: Neecha-Bhaṅga Checker — cancellation of debilitation.
+  // Lesson 14.5.1's Â§7 interactive: Neecha-Bhaá¹…ga Checker â€” cancellation of debilitation.
   // Planet selector + 5-condition checklist + rescue-chain SVG + honest debate.
   "neecha-bhanga-checker": NeechaBhangaChecker,
-  // Lesson 14.5.2's §7 interactive: Vipareeta Detector — three Vipareeta Rāja Yogas.
+  // Lesson 14.5.2's Â§7 interactive: Vipareeta Detector â€” three Vipareeta RÄja Yogas.
   // Lagna selector + dusthana-lord placements + dusthana-triangle SVG + refinements.
   "vipareeta-detector": VipareetaDetector,
-  // Lesson 14.5.3's §7 interactive: Vipareeta Rationale — spoiler-of-spoiler doctrine.
+  // Lesson 14.5.3's Â§7 interactive: Vipareeta Rationale â€” spoiler-of-spoiler doctrine.
   // Scenario explorer + strength/timing controls + spoiler-mechanism SVG + honest limits.
   "vipareeta-rationale": VipareetaRationale,
-  // Lesson 14.5.4's §7 interactive: Vipareeta-Neecha Scan — Chapter 5 capstone.
-  // Fixed Aries chart + neecha-bhaṅga check + Harṣa check + combined honest reading.
+  // Lesson 14.5.4's Â§7 interactive: Vipareeta-Neecha Scan â€” Chapter 5 capstone.
+  // Fixed Aries chart + neecha-bhaá¹…ga check + Hará¹£a check + combined honest reading.
   "vipareeta-neecha-scan": VipareetaNeechaScan,
-  // Lesson 14.6.1's §7 interactive: Manglik Detector — Kuja-Doṣa from lagna/Moon/Venus.
+  // Lesson 14.6.1's Â§7 interactive: Manglik Detector â€” Kuja-Doá¹£a from lagna/Moon/Venus.
   // House-set variation (6-house vs 5-house) + severity grading + defearmongering.
   "manglik-detector": ManglikDetector,
-  // Lesson 14.6.2's §7 interactive: Manglik Cancellation Checker — 15+ grouped conditions.
+  // Lesson 14.6.2's Â§7 interactive: Manglik Cancellation Checker â€” 15+ grouped conditions.
   // Mars sign/house + toggle checklist + cancellation gauge + weighted result.
   "manglik-cancellation-checker": ManglikCancellationChecker,
-  // Lesson 14.6.3's §7 interactive: Kāla Sarpa Detector — nodal-axis configuration check.
-  // Rāhu + 7 planet controls + circular diagram + doctrinal debate + honest handling.
+  // Lesson 14.6.3's Â§7 interactive: KÄla Sarpa Detector â€” nodal-axis configuration check.
+  // RÄhu + 7 planet controls + circular diagram + doctrinal debate + honest handling.
   "kala-sarpa-detector": KalaSarpaDetector,
-  // Lesson 14.6.4's §7 interactive: Pitṛ-Doṣa Indicator — chart signatures + remedial framework.
+  // Lesson 14.6.4's Â§7 interactive: Pitá¹›-Doá¹£a Indicator â€” chart signatures + remedial framework.
   // Sun/Rahu/Saturn/9th-lord controls + signature gauge + remedy cards + honest limits.
   "pitr-dosha-indicator": PitrDoshaIndicator,
-  // Lesson 14.6.5's §7 interactive: Kemadruma + Sade Sati Recap — two doṣas in one surface.
+  // Lesson 14.6.5's Â§7 interactive: Kemadruma + Sade Sati Recap â€” two doá¹£as in one surface.
   // Kemadruma (Moon + 2nd/12th + cancellations) + Sade Sati (Moon + Saturn transit + phases).
   "kemadruma-sadesati-recap": KemadrumaSadesatiRecap,
-  // Lesson 14.6.6's §7 interactive: De-Fearmongering Protocol -- 8-step discipline walker.
-  // Doṣa selector + step cards + reframe exercise + ethics connection. Closes Chapter 6.
+  // Lesson 14.6.6's Â§7 interactive: De-Fearmongering Protocol -- 8-step discipline walker.
+  // Doá¹£a selector + step cards + reframe exercise + ethics connection. Closes Chapter 6.
   "defearmongering-protocol": DefearmongeringProtocol,
   // Module 17 Chapter 3 argala explorer: reference-house selector + planet placement +
   // circular diagram with argala/virodha highlights + pair-by-pair net computation +
   // five-step workflow. Serves all four lessons in the argala chapter.
   "argala-explorer": ArgalaExplorer,
   // Lesson 17.3.1 interactive: Argala Concept Explorer -- bolt metaphor SVG,
-  // reference-house explorer, mechanism discriminator (argala vs graha-dṛṣṭi vs rāśi-dṛṣṭi),
+  // reference-house explorer, mechanism discriminator (argala vs graha-dá¹›á¹£á¹­i vs rÄÅ›i-dá¹›á¹£á¹­i),
   // and what-argala-does/does-not-do checklist.
   "argala-concept-explorer": ArgalaConceptExplorer,
   // Lesson 17.3.2 interactive: Positive Argala 2/4/11 -- counting drill with circular diagram,
   // self-check challenges, strength visualiser, and common-trap spotter.
   "positive-argala-2-4-11": PositiveArgala2411,
-  // Lesson 17.3.3 interactive: Virodhārgala Counter-Intervention -- obstruction pair explorer,
+  // Lesson 17.3.3 interactive: VirodhÄrgala Counter-Intervention -- obstruction pair explorer,
   // net-effect calculator with +/- count controls, and scenario presets.
   "virodhargala-counter-intervention": VirodhargalaCounterIntervention,
-  // Lesson 17.4.1 interactive: Ārūḍha Pāda Finder -- double-count computation,
+  // Lesson 17.4.1 interactive: Ä€rÅ«á¸ha PÄda Finder -- double-count computation,
   // 1st/7th exception detection, reality-vs-perception comparison, step-by-step walker.
   "arudha-pada-finder": ArudhaPadaFinder,
-  // Lesson 17.4.2 interactive: The Twelve Ārūḍha Pādas -- complete image-pāda grid,
+  // Lesson 17.4.2 interactive: The Twelve Ä€rÅ«á¸ha PÄdas -- complete image-pÄda grid,
   // AL/UL map, Lagna-AL gap interpretation, and common mistakes panel.
   "twelve-arudha-padas": TwelveArudhaPadas,
-  // Lesson 17.4.3 interactive: Ārūḍha Pāda Calculator (Upapada mode) --
+  // Lesson 17.4.3 interactive: Ä€rÅ«á¸ha PÄda Calculator (Upapada mode) --
   // computes UL from the 12th, shows double-count steps, 2nd-from-UL, planet
   // placements, and triangulation reminders.
   "arudha-pada-calculator": ArudhaPadaCalculator,
-  // Lesson 17.4.4 interactive: Ārūḍha Pāda Explorer -- computes all twelve
+  // Lesson 17.4.4 interactive: Ä€rÅ«á¸ha PÄda Explorer -- computes all twelve
   // padas, inspects occupants per pada, compares image vs reality, and builds
   // focused readings (AL, AL+UL, AL+A2, AL+A10, AL+A11).
   "arudha-pada-explorer": ArudhaPadaExplorer,
-  // Lesson 17.4.5 interactive: Ārūḍha Caveat Lab -- exception detector,
+  // Lesson 17.4.5 interactive: Ä€rÅ«á¸ha Caveat Lab -- exception detector,
   // dual-lordship convention switcher for Scorpio/Aquarius, and tradition
   // disclosure statement generator.
   "arudha-caveat-lab": ArudhaCaveatLab,
-  // Lesson 17.5.1 interactive: Rāśi-Dṛṣṭi Visualizer -- click any sign to
+  // Lesson 17.5.1 interactive: RÄÅ›i-Dá¹›á¹£á¹­i Visualizer -- click any sign to
   // see the three signs it aspects, with explore mode, drill mode, and
-  // rāśi-dṛṣṭi vs graha-dṛṣṭi comparison.
+  // rÄÅ›i-dá¹›á¹£á¹­i vs graha-dá¹›á¹£á¹­i comparison.
   "rashi-drishti-visualizer": RashiDrishtiVisualizer,
-  // Lesson 17.5.2 interactive: Rāśi-Dṛṣṭi Mapper -- place planets on a chart,
+  // Lesson 17.5.2 interactive: RÄÅ›i-Dá¹›á¹£á¹­i Mapper -- place planets on a chart,
   // select a target, see which signs aspect it, and carry occupants + lords
   // across to read influence and multi-sign convergence.
   "rashi-drishti-mapper": RashiDrishtiMapper,
-  // Lesson 17.5.3 interactive: AK-Drishti Synthesizer -- integrates cara-kārakas
-  // with rāśi-dṛṣṭi. Select a kāraka, place it in a sign, populate the chart,
+  // Lesson 17.5.3 interactive: AK-Drishti Synthesizer -- integrates cara-kÄrakas
+  // with rÄÅ›i-dá¹›á¹£á¹­i. Select a kÄraka, place it in a sign, populate the chart,
   // and read the incoming sign-aspects with benefic/malefic classification
   // and automated synthesis reading. Includes the four static-reading framework.
   "ak-drishti-synthesizer": AkDrishtiSynthesizer,
-  // Lesson 17.7.1 interactive: Kārakāṁśa Lagna Locator -- identify the
-  // Ātmakāraka from within-sign degrees, select its navāṁśa (D9) sign, and
-  // see that sign projected onto the rāśi (D1) wheel as a special lagna with
-  // houses counted from the Kārakāṁśa. Includes source-vs-target diagram.
+  // Lesson 17.7.1 interactive: KÄrakÄá¹Å›a Lagna Locator -- identify the
+  // Ä€tmakÄraka from within-sign degrees, select its navÄá¹Å›a (D9) sign, and
+  // see that sign projected onto the rÄÅ›i (D1) wheel as a special lagna with
+  // houses counted from the KÄrakÄá¹Å›a. Includes source-vs-target diagram.
   "karakamsha-lagna-locator": KarakamshaLagnaLocator,
-  // Lesson 17.7.2 interactive: Kārakāṁśa Reader -- the five-step soul-purpose
+  // Lesson 17.7.2 interactive: KÄrakÄá¹Å›a Reader -- the five-step soul-purpose
   // read. Walks through AK identification, D9 sign selection, KL placement,
-  // occupant + rāśi-dṛṣṭi aspect reading, and key houses from KL with
-  // automated synthesis. Presets for Leo and Scorpio Kārakāṁśa examples.
+  // occupant + rÄÅ›i-dá¹›á¹£á¹­i aspect reading, and key houses from KL with
+  // automated synthesis. Presets for Leo and Scorpio KÄrakÄá¹Å›a examples.
   "karakamsha-reader": KarakamshaReader,
-  // Lesson 17.7.3 interactive: Iṣṭa-Devatā Finder -- select the Kārakāṁśa,
+  // Lesson 17.7.3 interactive: Iá¹£á¹­a-DevatÄ Finder -- select the KÄrakÄá¹Å›a,
   // place planets, and see the 12th-from-KL auto-computed with planet-to-deity
   // mapping, empty-house lord fallback, aspecting contributors, and ethical
   // framing (offer, respect, hold lightly).
@@ -1248,7 +1306,7 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // assembling every Jaimini tool into one end-to-end reading. Enforces workflow
   // discipline: static tools first (Steps 1-5), timing engine last (Step 6).
   // Includes question presets, running synthesis, timing-first failure demo,
-  // and cara-daśā / Vimśottarī cross-validation.
+  // and cara-daÅ›Ä / VimÅ›ottarÄ« cross-validation.
   "jaimini-workflow-walkthrough": JaiminiWorkflowWalkthrough,
   // Lesson 17.7.5 interactive: Jaimini Module Closure Map -- seven-chapter arc
   // visualiser, pipeline tracer for four question types, Tier-1-vs-Tier-2
@@ -1278,117 +1336,117 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "cross-stream-remedy-planner": CrossStreamRemedyPlanner,
   "lal-kitab-recognition-lab": LalKitabRecognitionLab,
   "lal-kitab-stream-mastery-map": LalKitabStreamMasteryMap,
-  // Lesson 18.2.4 interactive: Teva vs Lagna Cross-Validator — side-by-side dual
-  // charts (Teva fixed Aries + Parāśarī lagna) with planet tracer and discipline
+  // Lesson 18.2.4 interactive: Teva vs Lagna Cross-Validator â€” side-by-side dual
+  // charts (Teva fixed Aries + ParÄÅ›arÄ« lagna) with planet tracer and discipline
   // check scenarios testing no-conflation. Reinforces frame separation.
   "teva-lagna-cross-validator": TevaLagnaCrossValidator,
-  // Lesson 18.3.1 interactive: Blind Planet Explorer — concept tab with andhā
+  // Lesson 18.3.1 interactive: Blind Planet Explorer â€” concept tab with andhÄ
   // metaphor and characteristics, blind-vs-combust comparison table + scenario
   // classifier, and 6-scenario recognition drill with cause-based reasoning.
   "blind-planet-explorer": BlindPlanetExplorer,
-  // Lesson 18.3.2 interactive: Sleeping Planet Explorer — concept tab with sutela
+  // Lesson 18.3.2 interactive: Sleeping Planet Explorer â€” concept tab with sutela
   // metaphor and three characteristics, three awakening-mechanism cards, blind/
   // sleeping/awake comparison table, and 6-scenario four-state recognition drill.
   "sleeping-planet-explorer": SleepingPlanetExplorer,
-  // Lesson 18.3.3 interactive: Burning Planet Explorer — concept tab with jalit
+  // Lesson 18.3.3 interactive: Burning Planet Explorer â€” concept tab with jalit
   // metaphor and three characteristics, two cause cards, four-state comparison
   // table with remedy logic, and 6-scenario recognition drill.
   "burning-planet-explorer": BurningPlanetExplorer,
-  // Lesson 18.3.4 interactive: Planetary State Synthesizer — Chapter 3 capstone.
+  // Lesson 18.3.4 interactive: Planetary State Synthesizer â€” Chapter 3 capstone.
   // Awake-state concept with lamp metaphor, interactive four-state framework table
   // with remedy-goal mapping, elimination checklist, and 6-scenario capstone drill
   // with yes/no check previews.
   "planetary-state-synthesizer": PlanetaryStateSynthesizer,
-  // Lesson 21.3.1 interactive: Mūlāṅka Calculator — birth-day-of-month (1-31)
+  // Lesson 21.3.1 interactive: MÅ«lÄá¹…ka Calculator â€” birth-day-of-month (1-31)
   // input with strict-preservation vs flexibility convention toggle, step-by-step
-  // computation, graha-aṅka register + caveat display, 31-day reference table,
+  // computation, graha-aá¹…ka register + caveat display, 31-day reference table,
   // five-step discipline workflow, and four worked examples.
   "mulanka-calculator": MulankaCalculator,
-  // Lesson 21.3.2 interactive: Bhāgyāṅka Calculator — full birth-date input
+  // Lesson 21.3.2 interactive: BhÄgyÄá¹…ka Calculator â€” full birth-date input
   // (day/month/year) with strict-preservation vs flexibility convention toggle,
-  // step-by-step digit-sum computation, graha-aṅka register + caveat display,
-  // combined Mūlāṅka-to-Bhāgyāṅka lifetime-arc reading, worked examples, and
+  // step-by-step digit-sum computation, graha-aá¹…ka register + caveat display,
+  // combined MÅ«lÄá¹…ka-to-BhÄgyÄá¹…ka lifetime-arc reading, worked examples, and
   // five-step discipline workflow including destiny-determinism refusal layer.
   "bhagyanka-calculator": BhagyankaCalculator,
-  // Lesson 21.3.3 interactive: Name-Number (Nāmāṅka) Calculator — three-system
+  // Lesson 21.3.3 interactive: Name-Number (NÄmÄá¹…ka) Calculator â€” three-system
   // name computation (Chaldean / Pythagorean / Vedic-Chaldean hybrid) with
   // strict-preservation vs flexibility convention toggle, letter-by-letter
-  // breakdown, graha-aṅka register + caveat display, Pythagorean four-number
+  // breakdown, graha-aá¹…ka register + caveat display, Pythagorean four-number
   // framework panel, letter-table reference, worked examples, and six-step
   // discipline workflow including name-change refusal layer.
   "mulanka-bhagyanka-namanka-calculator": MulankaBhagyankaNamankaCalculator,
-  // Lesson 21.3.4 interactive: Personal Year Number Calculator — birth-date +
+  // Lesson 21.3.4 interactive: Personal Year Number Calculator â€” birth-date +
   // target-calendar-year computation with strict-preservation vs flexibility
-  // convention toggle, step-by-step digit-sum breakdown, graha-aṅka register +
+  // convention toggle, step-by-step digit-sum breakdown, graha-aá¹…ka register +
   // caveat display, 9-year cycle visualisation, worked examples, and six-step
   // discipline workflow including year-as-determinant refusal layer.
   "personal-year-calculator": PersonalYearCalculator,
-  // Lesson 21.4.1 interactive: Name-Correction Rationale Evaluator — scenario-
+  // Lesson 21.4.1 interactive: Name-Correction Rationale Evaluator â€” scenario-
   // based drill for categorising name-change rationales, identifying over-claim
   // layers, applying the convergent-independent-grounds operational test, and
   // reaching approve / partial / refuse verdicts. Includes six-category reference
   // and five-step rationale-evaluation workflow.
   "name-correction-rationale-evaluator": NameCorrectionRationaleEvaluator,
-  // Lesson 21.4.2 interactive: Name-Correction Candidate Calculator — six-step
+  // Lesson 21.4.2 interactive: Name-Correction Candidate Calculator â€” six-step
   // workflow tool that computes current + candidate Name-Numbers under the chosen
   // system and convention, evaluates graha-compatibility (MITRA/SHATRU/SAMA) with
-  // Mūlāṅka / Bhāgyāṅka, tabulates candidates, and generates a discipline-compliant
+  // MÅ«lÄá¹…ka / BhÄgyÄá¹…ka, tabulates candidates, and generates a discipline-compliant
   // confirmatory-not-deterministic presentation template.
   "name-correction-candidate-calculator": NameCorrectionCandidateCalculator,
-  // Lesson 21.4.3 interactive: Name-Correction Caution Screener — scenario-based
+  // Lesson 21.4.3 interactive: Name-Correction Caution Screener â€” scenario-based
   // drill that applies the four-test screen, identifies the six commercial-numerology
   // failure modes, surfaces the three real-cost categories, and practises reaching
   // proceed / preview / revise / refuse verdicts. Includes reference tabs for costs,
   // failure-mode catalogue, and the Chapter 4 integrated refusal-discipline workflow.
   "name-correction-caution-screener": NameCorrectionCautionScreener,
-  // Lesson 21.4.4 interactive: Numerology Honest-Handling Inspector — scenario-based
+  // Lesson 21.4.4 interactive: Numerology Honest-Handling Inspector â€” scenario-based
   // drill that distinguishes the empirical-kernel from the over-claim layer, identifies
   // the eight over-claim framings, applies the five operational forms of do-no-harm,
   // and reaches proceed / revise / refuse / mixed verdicts. Includes reference tabs
   // for the three-layer holding, the five do-no-harm forms, and the Chapter 1-4
   // integration table.
   "numerology-honest-handling-inspector": NumerologyHonestHandlingInspector,
-  // Lesson 21.5.1 interactive: Numerology Compatibility Calculator — two-person
+  // Lesson 21.5.1 interactive: Numerology Compatibility Calculator â€” two-person
   // Mulanka / Bhagyanka / Name-number comparison using MITRA / SHATRU / SAMA
   // graha-friendship vectors with relationship-outcome over-claim refusal.
   "numerology-compatibility-calculator": NumerologyCompatibilityCalculator,
-  // Lesson 21.5.2 interactive: Business Name Numerology Calculator — business-name
+  // Lesson 21.5.2 interactive: Business Name Numerology Calculator â€” business-name
   // candidate computation with founder compatibility, industry-register preference,
   // and pre-launch versus post-launch rebrand discipline.
   "business-name-numerology-calculator": BusinessNameNumerologyCalculator,
-  // Lesson 21.5.3 interactive: Object Numerology Calculator — house / phone /
+  // Lesson 21.5.3 interactive: Object Numerology Calculator â€” house / phone /
   // vehicle digit reduction, personal compatibility, limited-choice recognition,
   // and explicit 4/8 fear-induction refusal.
   "object-numerology-calculator": ObjectNumerologyCalculator,
-  // Lesson 21.6.1 interactive: Chart Numerology Integration Tool — three-number
+  // Lesson 21.6.1 interactive: Chart Numerology Integration Tool â€” three-number
   // to natal-graha cross-reference, four alignment configurations, and explicit
   // chart-numerology causation over-claim refusal.
   "chart-numerology-integration-tool": ChartNumerologyIntegrationTool,
-  // Lesson 21.6.2 interactive: Numerology Decision Flow — apply / refuse /
+  // Lesson 21.6.2 interactive: Numerology Decision Flow â€” apply / refuse /
   // defer gates, authorised consultation modes, and absent-grounds discipline.
   "numerology-decision-flow": NumerologyDecisionFlow,
-  // Lesson 21.6.3 interactive: Discipline Statement Builder — six-chapter M21
+  // Lesson 21.6.3 interactive: Discipline Statement Builder â€” six-chapter M21
   // synthesis, do-no-harm floor, and five-field practitioner statement worksheet.
   "discipline-statement-builder": DisciplineStatementBuilder,
-  // Lesson 22.1.1 interactive: Vastu Origins Explorer — historical stream,
+  // Lesson 22.1.1 interactive: Vastu Origins Explorer â€” historical stream,
   // five-domain spatial scope, classical corpus, and modern feasibility guards.
   "vastu-origins-explorer": VastuOriginsExplorer,
-  // Lesson 22.1.2 interactive: Vastu Purusha Mandala Explorer — 9x9 / 8x8 /
+  // Lesson 22.1.2 interactive: Vastu Purusha Mandala Explorer â€” 9x9 / 8x8 /
   // 7x7 grid variants, Brahma-sthana, deity-zone rings, and apartment guards.
   "vastu-purusha-mandala-explorer": VastuPurushaMandalaExplorer,
-  // Lesson 22.1.3 interactive: Vastu Five Element Mapper — pancha-bhuta
+  // Lesson 22.1.3 interactive: Vastu Five Element Mapper â€” pancha-bhuta
   // direction zones, activity matching, conflicts, and cross-discipline guardrails.
   "vastu-five-element-mapper": VastuFiveElementMapper,
-  // Lesson 22.1.4 interactive: Vastu Text Corpus Navigator — source layers,
+  // Lesson 22.1.4 interactive: Vastu Text Corpus Navigator â€” source layers,
   // five-text corpus, reading sequence, and regional attribution discipline.
   "vastu-text-corpus-navigator": VastuTextCorpusNavigator,
-  // Lesson 22.2.1 interactive: Vastu Cardinal Direction Lords — Indra, Yama,
+  // Lesson 22.2.1 interactive: Vastu Cardinal Direction Lords â€” Indra, Yama,
   // Varuna, Kubera, deity-quality judgments, and activity matching.
   "vastu-cardinal-direction-lords": VastuCardinalDirectionLords,
-  // Lesson 22.2.2 interactive: Vastu Intercardinal Double Quality — Ishana,
+  // Lesson 22.2.2 interactive: Vastu Intercardinal Double Quality â€” Ishana,
   // Agni, Nirriti, Vayu, convergent deity-element matching, and fear guardrails.
   "vastu-intercardinal-double-quality": VastuIntercardinalDoubleQuality,
-  // Lesson 22.2.3 interactive: Vastu Room Direction Synthesizer — room-by-room
+  // Lesson 22.2.3 interactive: Vastu Room Direction Synthesizer â€” room-by-room
   // primary, secondary, mitigation, and prohibited placement workflow.
   "vastu-room-direction-synthesizer": VastuRoomDirectionSynthesizer,
   // Lesson 22.3.1 interactive: Vastu Earth Water Axis -- NE/SW polar axis,
@@ -1433,8 +1491,8 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // Lesson 22.6.4 interactive: Vastu Module Closure -- six-chapter
   // synthesis, do-no-harm commitments, and practitioner statement builder.
   "vastu-module-closure": VastuModuleClosure,
-  // Lesson 18.4.4 interactive: Lal Kitab Graha Clusters — Chapter 4 capstone.
-  // Accordion clusters for Saturn / Rāhu / Ketu, 6-item quiz, and all-nine-graha
+  // Lesson 18.4.4 interactive: Lal Kitab Graha Clusters â€” Chapter 4 capstone.
+  // Accordion clusters for Saturn / RÄhu / Ketu, 6-item quiz, and all-nine-graha
   // summary table with unifying concrete-object pattern.
   "lal-kitab-graha-clusters": LalKitabGrahaClusters,
   "gochara-intro": GocharaIntro,
@@ -1609,9 +1667,13 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "practitioner-pledge": PractitionerPledgeSimulator,
   "curriculum-completion": CurriculumCompletionLedger,
   "path-forward": PathForwardRoadmap,
+  "lagna-suddhi-evaluator": LagnaSuddhiEvaluator,
+  "four-pillar-integrator": FourPillarIntegrator,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {
   if (!slug) return null;
   return INTERACTIVE_REGISTRY[slug] ?? null;
 }
+
+
