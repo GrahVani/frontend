@@ -117,7 +117,16 @@ export function usePanchang(date?: string, location?: Partial<PanchangRequest>) 
                 ...location,
             });
             if (!response.success || !response.data) {
-                throw new Error('Panchang data unavailable');
+                return {
+                    date: targetDate,
+                    tithi: { name: '-' },
+                    nakshatra: { name: '-' },
+                    yoga: { name: '-' },
+                    karana: { name: '-' },
+                    vara: { name: '-' },
+                    sunrise: '-',
+                    sunset: '-',
+                };
             }
             return extractPanchangFields(response.data, targetDate);
         },
@@ -376,7 +385,11 @@ export function useMuhurta(date?: string) {
                 birthTime: '06:00:00',
             });
             if (!response.success || !response.data) {
-                throw new Error('Muhurta data unavailable');
+                return {
+                    durMuhurats: [],
+                    sunrise: '-',
+                    sunset: '-',
+                };
             }
             return extractMuhurta(response.data);
         },
