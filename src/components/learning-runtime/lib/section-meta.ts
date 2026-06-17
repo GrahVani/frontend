@@ -219,6 +219,24 @@ const LESSON_SECTION_OVERRIDES: Record<
     "7": { embodiedTitle: "Survey the four-stream matrix, then drill the chapter-capstone Bloom-Evaluate" },
     "8": { embodiedTitle: "Mere-innovations, competing-schools, Sanskrit-criterion, cross-stream-critique-without-fluency" },
   },
+  "three-skandhas-overview": {
+    "7": { embodiedTitle: "The Three Skandhas and the Curriculum Map" },
+  },
+  "seven-sub-branches": {
+    "7": { embodiedTitle: "The Seven Sub-Branches at a Glance" },
+  },
+  "where-grahvani-sits-in-the-skandha-map": {
+    "7": { embodiedTitle: "Where Grahvani Sits in the Skandha-Map" },
+  },
+  "regional-schools-and-lineages": {
+    "7": { embodiedTitle: "The Six Regional Schools" },
+  },
+  "modern-lineage-threads": {
+    "7": { embodiedTitle: "The Eight Modern Lineage Threads" },
+  },
+  "lineage-matters-worked-example": {
+    "7": { embodiedTitle: "One Chart, Three Lineage Readings" },
+  },
   "the-per-nakshatra-template": {
     "7": { embodiedTitle: "Build the twelve-slot nakṣatra template" },
   },
@@ -272,6 +290,9 @@ const LESSON_SECTION_OVERRIDES: Record<
     "6": { embodiedTitle: "Bṛhat Saṁhitā 8 + Mahābhārata Vana Parva 188 + Manusmṛti 1.69-71" },
     "7": { embodiedTitle: "Yuga Proportion Visualiser — 4:3:2:1 interactive explorer" },
     "8": { embodiedTitle: "Four traps in the yuga-cycle framework" },
+  },
+  "vyapara-arambh-muhurta": {
+    "7": { embodiedTitle: "Business-Launch Muhūrta Evaluator" },
   },
 };
 

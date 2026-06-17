@@ -65,8 +65,6 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   // §4 keeps the four-stream-landscape-explorer.
   "modern-founders-krishnamurti-and-joshi": "four-stream-synthesis-dojo",
   "shani-the-judge-and-server": "shani-dignity-wheel",
-  // L3.1's §7 = Three Skandha Synthesis Dojo (Stream × Skandha Matrix +
-  "three-skandhas-overview": "three-skandha-synthesis-dojo",
   // M3-C1-L1's §7 = Tithi Calculator Dojo (step-by-step formula breakdown +
   // editable longitudes + preset scenarios). §4 keeps the tithi-angle-visualizer.
   "tithi-as-12-degrees-of-sun-moon-angle": "tithi-calculator-dojo",
@@ -108,6 +106,27 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   // M3-C3-L4's §7 = Daily Nakṣatra Pañcāṅga Reader — simulated today's
   // pañcāṅga with time-slider and activity-suitability grid.
   "the-daily-nakshatra-and-its-use": "daily-nakshatra-pancanga-reader",
+  // M23-C2-L4's §7 = Precision Pāda Dial & Calculator — 13°20′→4×3°20′
+  // subdivision, Navāṁśa bridge, and case-file drill.
+  "nakshatra-pada-precision": "pada-calculator",
+  // M23-C4-L1's §7 = Vivāha-Muhūrta Evaluator — wedding-specific pañcāṅga
+  // weighting, Jupiter-Venus discipline, cancellation-doṣa screener, multi-actor
+  // synergy, and saptapadī lagna-window selection.
+  "vivaha-muhurta": "vivaha-muhurta-evaluator",
+  // M23-C6-L1's §7 = Muhūrta Honest Handling — cumulative honest-handling
+  // synthesis across M23 with rarity dial, case files, daivajña wheel, and
+  // instance map.
+  "muhurta-honest-handling": "muhurta-honest-handling",
+  // M23-C6-L2's §7 = Muhūrta Decision Framework — stakes-calibrated engagement
+  // decision-tree, stakes gauge, case files, and method matrix.
+  "muhurta-decision-framework": "muhurta-decision-framework",
+  // M23-C6-L3's §7 = M23 Closure — cumulative module synthesis with chapter
+  // wheel, hook timeline, self-assessment, and ongoing-development practices.
+  "m23-closure": "m23-closure",
+  // M23-C4-L2's §7 = Vyāpāra-Ārambha-Muhūrta Evaluator — business-launch-specific
+  // pañcāṅga weighting, Mercury-Jupiter discipline, cancellation-doṣa screener,
+  // house-bala foundation, business-type refinement, and nirlobha ethics.
+  "vyapara-arambh-muhurta": "vyapara-arambh-muhurta-evaluator",
   // M3-C4-L1's §7 = Yoga vs Chart-Yoga Comparison — two-column comparison
   // table + 8-statement discrimination drill.
   "time-yoga-vs-chart-yoga-clearing-up-confusion": "yoga-vs-chart-yoga-comparison",
@@ -132,20 +151,6 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   // M3-C5-L3's §7 = Bhadra Avoidance Integrator — Bhadra (Viṣṭi) calculator
   // with day-of-week selector and activity-avoidance cards.
   "bhadra-vishti-karana-and-its-avoidance": "bhadra-avoidance-integrator",
-  // L3.2's §7 = Seven Sub-Branches Synthesis Dojo (Stream × Sub-Branch Matrix +
-  "seven-sub-branches": "seven-sub-branches-synthesis-dojo",
-  // L3.3's §7 = Grahvani Coverage Synthesis Dojo (Full 4×7 Coverage Matrix +
-  // Intentional Non-Coverage + Evaluative Drill).
-  "where-grahvani-sits-in-the-skandha-map": "grahvani-coverage-synthesis-dojo",
-  // L4.1's §7 = Regional Schools Synthesis Dojo (6×4 Regional Schools Matrix +
-  // teacher lookup + 5-scenario Evaluative Drill). §4 keeps the regional-schools-explorer.
-  "regional-schools-and-lineages": "regional-schools-synthesis-dojo",
-  // L4.2's §7 = Lineage Threads Synthesis Dojo (Lineage Comparison Matrix +
-  // 5-scenario Evaluative Drill). §4 keeps the lineage-threads-network-explorer.
-  "modern-lineage-threads": "lineage-threads-synthesis-dojo",
-  // L4.3's §7 = Lineage Matters Synthesis Dojo (Integrated Synthesis View +
-  // 5-scenario Evaluative Drill). §4 keeps the three-lineage-comparison-chart-analyzer.
-  "lineage-matters-worked-example": "lineage-matters-synthesis-dojo",
   // ─── Module 04: Rāśi System ───
   // Chapter 1 — Rāśi Mechanics
   "rashi-as-30-degree-segment": "rashi-boundary-wheel",
@@ -323,6 +328,11 @@ const WIDE_LAYOUT_SLUGS = new Set([
   "the-15-shukla-tithis",
   "the-15-krishna-tithis",
   "nakshatra-deity-and-ruling-planet-at-pancanga-level",
+  "panchaka-cancellation",
+  "rahu-kala-yamaganda",
+  "muhurta-honest-handling",
+  "muhurta-decision-framework",
+  "m23-closure",
   "the-12-slot-nakshatra-template-lab",
   "nakshatra-template-lab",
   "ashwini-the-horse-headed-physicians",

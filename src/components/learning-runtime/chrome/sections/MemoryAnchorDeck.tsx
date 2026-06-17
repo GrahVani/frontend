@@ -8,7 +8,6 @@
 
 "use client";
 
-import { useState, type ReactNode, type Key } from "react";
 import { Lightbulb } from "lucide-react";
 import { SectionHeader } from "../SectionHeader";
 import { presentationFor } from "../../lib/section-meta";
@@ -22,13 +21,23 @@ interface ParsedAnchor {
 function parseAnchors(markdown: string): ParsedAnchor[] {
   const entries: ParsedAnchor[] = [];
 
-  // Pattern 1: > 💡 **Remember:** text OR > **Remember:** text (blockquote-style, with or without emoji)
-  const bqMatches = Array.from(
-    markdown.matchAll(/>\s*(?:💡\s*)?\*\*[^*]+:\*\*\s*([^\n]+(?:\n>\s*[^*\n][^\n]*)*)/g),
-  );
+  // Pattern 1: blockquote-style memory anchors.
+  // Matches:
+  //   > 💡 **Remember:** text
+  //   > 💡 **Remember**: text
+  //   > **Remember:** text
+  //   > **Remember**: text
+  // The label must be "Remember" (case-insensitive) so that unrelated
+  // blockquotes such as **Source:** are not pulled into the anchor deck.
+  // Continuation lines must start with ">" and must NOT be the start of
+  // another Remember anchor.
+  const bqRegex =
+    />\s*(?:💡\s*)?(?:\*\*Remember\*\*[:：]|\*\*Remember[:：]\*\*)\s*([^\n]+(?:\n>(?!\s*(?:💡\s*)?(?:\*\*Remember\*\*[:：]|\*\*Remember[:：]\*\*))\s*[^\n]*)*)/gi;
+  const bqMatches = Array.from(markdown.matchAll(bqRegex));
   if (bqMatches.length > 0) {
     for (const m of bqMatches) {
-      entries.push({ text: m[1].replace(/^>\s?/gm, "").trim() });
+      const text = m[1].replace(/^>\s?/gm, "").trim();
+      if (text) entries.push({ text });
     }
     return entries;
   }
