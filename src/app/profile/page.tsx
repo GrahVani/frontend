@@ -2,19 +2,31 @@
 
 import React, { useState } from 'react';
 import { useAuth } from "@/context/AuthContext";
-import { User, Shield, Camera, Edit3, Save, X } from 'lucide-react';
+import { User, Shield, Camera, Edit3, Save, X, Lock, Eye, EyeOff } from 'lucide-react';
 import Button from "@/components/ui/Button";
 import ParchmentInput from "@/components/ui/ParchmentInput";
 import { SkeletonCard } from "@/components/ui/Skeleton";
 import { useToast } from "@/context/ToastContext";
+import { useAuthMutations } from "@/hooks/mutations/useAuthMutations";
 
 export default function ProfilePage() {
     const { user, refreshProfile } = useAuth();
     const toast = useToast();
+    const { updateProfileMutation, changePasswordMutation } = useAuthMutations();
+
     const [editing, setEditing] = useState(false);
     const [editName, setEditName] = useState("");
     const [editBio, setEditBio] = useState("");
     const [isSaving, setIsSaving] = useState(false);
+
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [showCurrent, setShowCurrent] = useState(false);
+    const [showNew, setShowNew] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [isChangingPassword, setIsChangingPassword] = useState(false);
 
     if (!user) {
         return (
@@ -26,14 +38,22 @@ export default function ProfilePage() {
 
     const handleEdit = () => {
         setEditName(user.name || "");
-        setEditBio("Dedicated to exploring the celestial alignments that guide human destiny through the ancient wisdom of Vedic Astrology.");
+        setEditBio(user.bio || "");
         setEditing(true);
     };
 
     const handleSave = async () => {
+        if (!editName.trim()) {
+            toast.error("Display name cannot be empty.");
+            return;
+        }
         setIsSaving(true);
         try {
-            // TODO: Call profile update API
+            await updateProfileMutation.mutateAsync({
+                name: editName.trim(),
+                bio: editBio.trim() || null,
+            });
+            await refreshProfile();
             toast.success("Profile updated successfully.");
             setEditing(false);
         } catch {
@@ -45,6 +65,41 @@ export default function ProfilePage() {
 
     const handleCancel = () => {
         setEditing(false);
+    };
+
+    const handleChangePassword = async () => {
+        if (newPassword !== confirmPassword) {
+            toast.error("New password and confirm password do not match.");
+            return;
+        }
+        if (newPassword.length < 8) {
+            toast.error("New password must be at least 8 characters.");
+            return;
+        }
+        setIsChangingPassword(true);
+        try {
+            await changePasswordMutation.mutateAsync({
+                currentPassword,
+                newPassword,
+                confirmPassword,
+            });
+            toast.success("Password changed successfully.");
+            setShowPasswordModal(false);
+            setCurrentPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
+        } catch {
+            toast.error("Failed to change password. Please check your current password.");
+        } finally {
+            setIsChangingPassword(false);
+        }
+    };
+
+    const closePasswordModal = () => {
+        setShowPasswordModal(false);
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
     };
 
     return (
@@ -135,7 +190,7 @@ export default function ProfilePage() {
                                         placeholder="Your professional philosophy"
                                     />
                                 ) : (
-                                    <ProfileItem label="Professional Bio" value="Dedicated to exploring the celestial alignments that guide human destiny through the ancient wisdom of Vedic Astrology." fullWidth />
+                                    <ProfileItem label="Professional Bio" value={user.bio || "Not provided"} fullWidth />
                                 )}
                             </div>
                         </div>
@@ -160,15 +215,60 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="prem-card rounded-2xl p-6 space-y-4">
-                        <Button variant="golden" className="w-full" onClick={() => {}}>
+                        <Button variant="golden" className="w-full" onClick={handleEdit}>
                             Edit Profile
                         </Button>
-                        <Button variant="secondary" className="w-full">
+                        <Button variant="secondary" className="w-full" onClick={() => setShowPasswordModal(true)}>
                             Change Password
                         </Button>
                     </div>
                 </div>
             </div>
+
+            {/* Change Password Modal */}
+            {showPasswordModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="prem-card w-full max-w-md rounded-2xl p-6 space-y-6">
+                        <div className="flex items-center gap-3">
+                            <Lock className="w-5 h-5 text-gold-dark" />
+                            <h2 className="text-[18px] font-serif font-bold text-ink">Change Password</h2>
+                        </div>
+
+                        <div className="space-y-4">
+                            <PasswordInput
+                                label="Current Password"
+                                value={currentPassword}
+                                onChange={setCurrentPassword}
+                                show={showCurrent}
+                                toggle={() => setShowCurrent((s) => !s)}
+                            />
+                            <PasswordInput
+                                label="New Password"
+                                value={newPassword}
+                                onChange={setNewPassword}
+                                show={showNew}
+                                toggle={() => setShowNew((s) => !s)}
+                            />
+                            <PasswordInput
+                                label="Confirm New Password"
+                                value={confirmPassword}
+                                onChange={setConfirmPassword}
+                                show={showConfirm}
+                                toggle={() => setShowConfirm((s) => !s)}
+                            />
+                        </div>
+
+                        <div className="flex items-center gap-3 pt-2">
+                            <Button onClick={handleChangePassword} loading={isChangingPassword} className="flex-1">
+                                Update Password
+                            </Button>
+                            <Button onClick={closePasswordModal} variant="ghost">
+                                Cancel
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
@@ -184,6 +284,39 @@ function ProfileItem({ label, value, icon, fullWidth = false }: { label: string,
                style={{ borderBottom: '1px solid rgba(220,201,166,0.25)' }}>
                 {value || 'Not provided'}
             </p>
+        </div>
+    );
+}
+
+function PasswordInput({
+    label,
+    value,
+    onChange,
+    show,
+    toggle,
+}: {
+    label: string;
+    value: string;
+    onChange: (v: string) => void;
+    show: boolean;
+    toggle: () => void;
+}) {
+    return (
+        <div className="relative">
+            <ParchmentInput
+                label={label}
+                type={show ? 'text' : 'password'}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+            />
+            <button
+                type="button"
+                onClick={toggle}
+                className="absolute right-3 top-[34px] text-gold-dark hover:text-gold-primary"
+                aria-label={show ? 'Hide password' : 'Show password'}
+            >
+                {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
         </div>
     );
 }

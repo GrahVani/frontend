@@ -23,6 +23,15 @@ export const authApi = {
 
 export const userApi = {
     getMe: () => apiFetch<Record<string, unknown>>(`${USER_URL}/users/me`),
+    updateMe: (data: { name?: string; bio?: string | null }) => apiFetch<Record<string, unknown>>(`${USER_URL}/users/me`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+    }),
+    changePassword: (data: { currentPassword: string; newPassword: string; confirmPassword: string }) =>
+        apiFetch<{ success: boolean }>(`${AUTH_URL}/auth/change-password`, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        }),
     updatePreferences: (prefs: UserPreferences) => apiFetch<Record<string, unknown>>(`${USER_URL}/users/me/preferences`, {
         method: 'PUT',
         body: JSON.stringify(prefs),
