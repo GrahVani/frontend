@@ -48,6 +48,8 @@ export function RevealSection({ children, delayMs = 0 }: RevealSectionProps) {
       return;
     }
     setRevealed(false);
+    const elementHeight = node.offsetHeight || node.getBoundingClientRect().height;
+    const threshold = elementHeight > window.innerHeight * 0.8 ? 0.01 : 0.12;
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -58,7 +60,7 @@ export function RevealSection({ children, delayMs = 0 }: RevealSectionProps) {
           }
         }
       },
-      { threshold: 0.12 },
+      { threshold },
     );
     observer.observe(node);
     return () => observer.disconnect();
