@@ -11,6 +11,7 @@ interface UserProfile {
     role: string;
     tenantId: string;
     avatarUrl?: string;
+    bio?: string | null;
     createdAt?: string;
 }
 

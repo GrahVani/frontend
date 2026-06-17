@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { authApi } from "@/lib/api";
+import { authApi, userApi } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useAuthTokenStore } from "@/store/useAuthTokenStore";
 import { queryKeys } from "@/lib/query-keys";
@@ -33,5 +33,17 @@ export function useAuthMutations() {
         },
     });
 
-    return { loginMutation, logoutMutation };
+    const updateProfileMutation = useMutation({
+        mutationFn: (data: { name?: string; bio?: string | null }) => userApi.updateMe(data),
+        onSuccess: (updatedUser) => {
+            queryClient.setQueryData(queryKeys.userProfile, updatedUser);
+        },
+    });
+
+    const changePasswordMutation = useMutation({
+        mutationFn: (data: { currentPassword: string; newPassword: string; confirmPassword: string }) =>
+            userApi.changePassword(data),
+    });
+
+    return { loginMutation, logoutMutation, updateProfileMutation, changePasswordMutation };
 }
