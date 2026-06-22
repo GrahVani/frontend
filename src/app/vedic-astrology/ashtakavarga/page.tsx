@@ -6,16 +6,20 @@ import {
     RefreshCw,
     Info,
     LayoutGrid,
-    Map as MapIcon,
     Loader2,
     Zap,
     Compass,
     Grid3X3,
+    Home,
+    BarChart3,
+    Trophy,
+    Sparkles,
     Settings,
     Settings2,
     Plus,
     Minus,
-    X
+    X,
+    AlertTriangle
 } from 'lucide-react';
 import { useQueryClient } from "@tanstack/react-query";
 import AshtakavargaMatrix from '@/components/astrology/AshtakavargaMatrix';
@@ -71,6 +75,41 @@ const AnalyzeCard = ({ icon, title, desc, color }: { icon: React.ReactNode; titl
         <p className={cn(TYPOGRAPHY.subValue, "!text-[10px] leading-relaxed text-amber-900")}>{desc}</p>
     </div>
 );
+
+const MetricCard = ({
+    icon,
+    label,
+    value,
+    sub,
+    tone,
+}: {
+    icon: React.ReactNode;
+    label: string;
+    value: string;
+    sub?: string;
+    tone: 'violet' | 'amber' | 'green' | 'red' | 'gold';
+}) => {
+    const toneClasses = {
+        violet: 'from-violet-500 to-fuchsia-500 text-white shadow-violet-200',
+        amber: 'from-amber-400 to-orange-500 text-white shadow-amber-200',
+        green: 'from-emerald-500 to-green-600 text-white shadow-emerald-200',
+        red: 'from-red-400 to-rose-500 text-white shadow-red-200',
+        gold: 'from-yellow-300 to-amber-500 text-white shadow-amber-200',
+    };
+
+    return (
+        <div className="flex items-center gap-3 px-4 py-2 bg-white/65 border border-amber-100/70 rounded-xl min-w-[150px]">
+            <div className={cn("w-10 h-10 rounded-full bg-gradient-to-br flex items-center justify-center shadow-lg", toneClasses[tone])}>
+                {icon}
+            </div>
+            <div className="min-w-0">
+                <p className="text-[10px] font-bold text-amber-900/70 leading-none mb-1">{label}</p>
+                <p className="font-serif text-[18px] font-bold text-[#4A2417] leading-none">{value}</p>
+                {sub && <p className="text-[10px] font-bold text-amber-700 mt-1 leading-none">{sub}</p>}
+            </div>
+        </div>
+    );
+};
 
 import { parseChartData } from '@/lib/chart-helpers';
 
@@ -230,13 +269,41 @@ export default function AshtakavargaPage() {
         }
     }
 
+    const savTotal = Object.values(houseValues).reduce((sum, value) => sum + value, 0);
+    const averageStrength = savTotal > 0 ? savTotal / 12 : 0;
+    const strongHouses = Object.entries(houseValues)
+        .filter(([, value]) => value >= 30)
+        .map(([house]) => Number(house));
+    const weakHouses = Object.entries(houseValues)
+        .filter(([, value]) => value <= 22)
+        .map(([house]) => Number(house));
+    const balancedHouses = Object.entries(houseValues)
+        .filter(([, value]) => value > 22 && value < 30)
+        .map(([house]) => Number(house));
+    const highestHouse = Object.entries(houseValues).reduce(
+        (best, [house, value]) => value > best.value ? { house: Number(house), value } : best,
+        { house: 0, value: 0 }
+    );
+    const overallStrength = Math.min(100, Math.round((averageStrength / 39) * 1000) / 10);
+    const overallLabel = overallStrength >= 70 ? 'Very Good' : overallStrength >= 55 ? 'Good' : overallStrength >= 40 ? 'Average' : 'Needs Support';
+    const bhinnaAverageBindu = savTotal > 0 ? savTotal / 12 : 0;
+    const bhinnaStrongSigns = Object.entries(houseValues)
+        .filter(([, value]) => value >= 5)
+        .map(([house]) => Number(house));
+    const bhinnaWeakSigns = Object.entries(houseValues)
+        .filter(([, value]) => value <= 2)
+        .map(([house]) => Number(house));
+    const bhinnaStrengthLabel = bhinnaAverageBindu >= 5 ? 'Very Good' : bhinnaAverageBindu >= 4 ? 'Good' : bhinnaAverageBindu >= 3 ? 'Average' : 'Needs Support';
+
     return (
         <div className="space-y-3 animate-in fade-in duration-500 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 -mx-4 -mt-4 px-4 py-4">
             <div className={cn("sticky z-50 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 py-3 -mx-4 px-4 border-b border-amber-100 flex flex-col md:flex-row md:items-center justify-between gap-3", hasClientBar ? "top-[144px]" : "top-[104px]")}>
-                <div>
-                    <h1 className={cn(TYPOGRAPHY.sectionTitle, "text-[24px] font-bold")}>
+                <div className="flex items-center gap-3">
+                    <Sparkles className="w-6 h-6 text-amber-500 fill-amber-200" />
+                    <h1 className="font-serif text-[28px] font-bold text-[#4A2417] leading-none">
                         Ashtakavarga systems
                     </h1>
+                    <Sparkles className="w-5 h-5 text-amber-500 fill-amber-200" />
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -289,11 +356,17 @@ export default function AshtakavargaPage() {
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
                             <div className="lg:col-span-12 space-y-3">
                                 <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
-                                    <div className="py-2 px-3 border-b border-amber-200/60 flex flex-col md:flex-row md:items-center justify-between gap-3">
-                                        <div>
-                                            <h2 className={TYPOGRAPHY.sectionTitle}>
-                                                {activeTab === 'sarva' ? 'Sarvashtakavarga (SAV)' : `Bhinnashtakavarga: ${selectedPlanet}`}
-                                            </h2>
+                                    <div className="py-2 px-3 border-b border-amber-200/60 flex flex-col md:flex-row md:flex-wrap md:items-center justify-between gap-3">
+                                        <div className="order-1">
+                                            <div className="flex items-center gap-2">
+                                                {activeTab === 'bhinna' && (
+                                                    <Sparkles className="w-5 h-5 text-amber-500 fill-amber-200" />
+                                                )}
+                                                <h2 className="font-serif text-[20px] font-bold text-[#4A2417] leading-none">
+                                                    {activeTab === 'sarva' ? 'Sarvashtakavarga (SAV)' : `Bhinnashtakavarga: ${selectedPlanet}`}
+                                                </h2>
+                                                <Info className="w-4 h-4 text-orange-500" />
+                                            </div>
                                             <p className="text-[12px] text-amber-600 font-sans mt-0.5">
                                                 {activeTab === 'sarva'
                                                     ? 'The collective strength of all planets across the 12 signs/houses.'
@@ -301,8 +374,88 @@ export default function AshtakavargaPage() {
                                             </p>
                                         </div>
 
+                                        {activeTab === 'sarva' && savTotal > 0 && (
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2">
+                                                <MetricCard
+                                                    icon={<Grid3X3 className="w-5 h-5" />}
+                                                    label="Total Bindus"
+                                                    value={String(savTotal)}
+                                                    sub="/ 864"
+                                                    tone="violet"
+                                                />
+                                                <MetricCard
+                                                    icon={<BarChart3 className="w-5 h-5" />}
+                                                    label="Average Strength"
+                                                    value={averageStrength.toFixed(1)}
+                                                    sub="/ 39"
+                                                    tone="amber"
+                                                />
+                                                <MetricCard
+                                                    icon={<Shield className="w-5 h-5" />}
+                                                    label="Strong Houses"
+                                                    value={`${strongHouses.length} Houses`}
+                                                    sub={strongHouses.length ? strongHouses.join(', ') : 'None'}
+                                                    tone="green"
+                                                />
+                                                <MetricCard
+                                                    icon={<AlertTriangle className="w-5 h-5" />}
+                                                    label="Weak Houses"
+                                                    value={`${weakHouses.length} Houses`}
+                                                    sub={weakHouses.length ? weakHouses.join(', ') : 'None'}
+                                                    tone="red"
+                                                />
+                                                <MetricCard
+                                                    icon={<Sparkles className="w-5 h-5 fill-white/30" />}
+                                                    label="Overall Strength"
+                                                    value={`${overallStrength.toFixed(1)}%`}
+                                                    sub={overallLabel}
+                                                    tone="gold"
+                                                />
+                                            </div>
+                                        )}
+
+                                        {activeTab === 'bhinna' && savTotal > 0 && (
+                                            <div className="order-3 w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2">
+                                                <MetricCard
+                                                    icon={<Sparkles className="w-5 h-5 fill-white/30" />}
+                                                    label="Total Bindu (SAV)"
+                                                    value={String(savTotal)}
+                                                    sub="/ 504"
+                                                    tone="violet"
+                                                />
+                                                <MetricCard
+                                                    icon={<BarChart3 className="w-5 h-5" />}
+                                                    label="Average Bindu"
+                                                    value={bhinnaAverageBindu.toFixed(2)}
+                                                    sub="/ 7"
+                                                    tone="amber"
+                                                />
+                                                <MetricCard
+                                                    icon={<Shield className="w-5 h-5" />}
+                                                    label="Strong Signs"
+                                                    value={String(bhinnaStrongSigns.length)}
+                                                    sub="(>= 5 Bindus)"
+                                                    tone="green"
+                                                />
+                                                <MetricCard
+                                                    icon={<AlertTriangle className="w-5 h-5" />}
+                                                    label="Weak Signs"
+                                                    value={String(bhinnaWeakSigns.length)}
+                                                    sub="(<= 2 Bindus)"
+                                                    tone="red"
+                                                />
+                                                <MetricCard
+                                                    icon={<Trophy className="w-5 h-5" />}
+                                                    label={`${selectedPlanet} Strength`}
+                                                    value={bhinnaStrengthLabel}
+                                                    sub="★★★★★"
+                                                    tone="gold"
+                                                />
+                                            </div>
+                                        )}
+
                                         {activeTab === 'bhinna' && (
-                                            <div className="flex gap-1.5 p-1 rounded-xl bg-white border border-amber-200/60 shadow-sm overflow-x-auto">
+                                            <div className="order-2 flex gap-1.5 p-1 rounded-xl bg-white border border-amber-200/60 shadow-sm overflow-x-auto">
                                                 {PLANETS.map(p => (
                                                     <button
                                                         key={p}
@@ -323,8 +476,8 @@ export default function AshtakavargaPage() {
 
                                     <div className="p-3 grid grid-cols-1 lg:grid-cols-[5fr_12fr] gap-5 items-stretch">
                                         <div className="space-y-1.5 flex flex-col h-full">
-                                            <h3 className={cn(TYPOGRAPHY.label, "text-amber-900 flex items-center gap-2")}>
-                                                <MapIcon className="w-3.5 h-3.5" /> House distribution
+                                            <h3 className="text-[12px] font-bold uppercase tracking-wide text-orange-700 flex items-center gap-2">
+                                                <Home className="w-3.5 h-3.5" /> House distribution
                                             </h3>
                                             <div className="flex justify-start w-full flex-1 items-center">
                                                 <AshtakavargaChart
@@ -337,7 +490,7 @@ export default function AshtakavargaPage() {
                                         </div>
 
                                         <div className="space-y-1.5 w-full">
-                                            <h3 className={cn(TYPOGRAPHY.label, "text-amber-900 flex items-center gap-2")}>
+                                            <h3 className="text-[12px] font-bold uppercase tracking-wide text-orange-700 flex items-center gap-2">
                                                 <Grid3X3 className="w-3.5 h-3.5" /> Bindu matrix
                                             </h3>
                                             <AshtakavargaMatrix
@@ -350,6 +503,46 @@ export default function AshtakavargaPage() {
                                             />
                                         </div>
                                     </div>
+                                    {activeTab === 'sarva' && savTotal > 0 && (
+                                        <div className="grid grid-cols-1 md:grid-cols-4 gap-2 px-4 py-3 border-t border-amber-200/60 bg-amber-50/40">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white flex items-center justify-center shadow-md">
+                                                    <Sparkles className="w-4 h-4 fill-white/30" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-amber-700">Highest Strength</p>
+                                                    <p className="text-[13px] font-bold text-purple-700">House {highestHouse.house} <span className="text-amber-900/70">({highestHouse.value} Bindus)</span></p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500 to-green-600 text-white flex items-center justify-center shadow-md">
+                                                    <Shield className="w-4 h-4" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-amber-700">Strong Houses</p>
+                                                    <p className="text-[13px] font-bold text-green-700">{strongHouses.length ? strongHouses.join(', ') : 'None'}</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center shadow-md">
+                                                    <Compass className="w-4 h-4" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-amber-700">Balanced Houses</p>
+                                                    <p className="text-[13px] font-bold text-orange-700">{balancedHouses.length ? balancedHouses.join(', ') : 'None'}</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-yellow-300 to-amber-500 text-white flex items-center justify-center shadow-md">
+                                                    <Trophy className="w-4 h-4" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-amber-700">Overall Assessment</p>
+                                                    <p className="text-[13px] font-bold text-green-700">{overallLabel}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

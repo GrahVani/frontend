@@ -5,7 +5,24 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Settings, Clock, ChevronDown, Menu, Bell, Heart, Hash, Calendar } from "lucide-react";
+import {
+    Settings,
+    Clock,
+    ChevronDown,
+    Menu,
+    Bell,
+    Heart,
+    Hash,
+    Calendar,
+    LayoutGrid,
+    BriefcaseBusiness,
+    Atom,
+    TrendingUp,
+    CalendarDays,
+    Clock3,
+    GraduationCap,
+    Ellipsis,
+} from "lucide-react";
 import { useAstrologerStore } from "@/store/useAstrologerStore";
 import { useAuth } from "@/context/AuthContext";
 import { LogOut, User } from "lucide-react";
@@ -194,17 +211,18 @@ export default function GlobalHeader() {
                     {/* Glass separator between brand and nav */}
                     <div className="header-divider hidden md:block" />
 
-                    <nav className="hidden md:flex items-center gap-0.5" role="navigation" aria-label="Main navigation">
-                        <NavLink href="/dashboard" label="Dashboard" active={isActive("/dashboard")} />
-                        <NavLink href={isClientSet ? "/vedic-astrology/customize" : "/vedic-astrology?redirect=/vedic-astrology/customize"} label="Workbench" active={isActive("/vedic-astrology/customize")} onClick={handleProtectedClick} isLocked={!isClientSet} />
-                        <NavLink href={isClientSet ? "/vedic-astrology/overview" : "/vedic-astrology"} label="Vedic Astrology" active={isActive("/vedic-astrology/vedic-tab")} onClick={handleVedicClick} isLocked={!isClientSet} />
-                        <NavLink href={isClientSet ? "/vedic-astrology/kp" : "/vedic-astrology/kp"} label="KP" active={isActive("/vedic-astrology/kp-tab")} onClick={handleKPClick} isLocked={!isClientSet} />
-                        <NavLink href="/vedic-astrology/panchanga" label="Panchang" active={isActive("/vedic-astrology/panchanga")} onClick={handleProtectedClick} isLocked={!isClientSet} />
-                        <NavLink href="/muhurta" label="Muhurta" active={isActive("/muhurta")} onClick={handleProtectedClick} isLocked={!isClientSet} />
-                        <NavLink href="/learn" label="Learn" active={isActive("/learn")} />
+                    <nav className="hidden md:flex items-center gap-0.5 h-full" role="navigation" aria-label="Main navigation">
+                        <NavLink href="/dashboard" label="Dashboard" icon={LayoutGrid} active={isActive("/dashboard")} />
+                        <NavLink href={isClientSet ? "/vedic-astrology/customize" : "/vedic-astrology?redirect=/vedic-astrology/customize"} label="Workbench" icon={BriefcaseBusiness} active={isActive("/vedic-astrology/customize")} onClick={handleProtectedClick} isLocked={!isClientSet} />
+                        <NavLink href={isClientSet ? "/vedic-astrology/overview" : "/vedic-astrology"} label="Vedic Astrology" icon={Atom} active={isActive("/vedic-astrology/vedic-tab")} onClick={handleVedicClick} isLocked={!isClientSet} />
+                        <NavLink href={isClientSet ? "/vedic-astrology/kp" : "/vedic-astrology/kp"} label="KP" icon={TrendingUp} active={isActive("/vedic-astrology/kp-tab")} onClick={handleKPClick} isLocked={!isClientSet} />
+                        <NavLink href="/vedic-astrology/panchanga" label="Panchang" icon={CalendarDays} active={isActive("/vedic-astrology/panchanga")} onClick={handleProtectedClick} isLocked={!isClientSet} />
+                        <NavLink href="/muhurta" label="Muhurta" icon={Clock3} active={isActive("/muhurta")} onClick={handleProtectedClick} isLocked={!isClientSet} />
+                        <NavLink href="/learn" label="Learn" icon={GraduationCap} active={isActive("/learn")} />
                         <NavLink 
                             href="#" 
                             label="More" 
+                            icon={Ellipsis}
                             active={isActive("/matchmaking") || isActive("/numerology") || isActive("/calendar")}
                             subItems={[
                                 { name: "Matchmaking", path: "/matchmaking", icon: Heart },

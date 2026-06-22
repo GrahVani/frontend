@@ -38,12 +38,14 @@ import {
     Sunrise,
     Sunset,
     AlertTriangle,
-    LayoutTemplate,
     Plus,
     Minus,
     Settings,
     ChevronDown,
-    ChevronUp
+    ChevronUp,
+    User,
+    Gem,
+    Table2
 } from 'lucide-react';
 import Link from 'next/link';
 import { useVedicClient } from '@/context/VedicClientContext';
@@ -118,6 +120,20 @@ function TypeIcon(props: React.SVGProps<SVGSVGElement>) {
             <polyline points="4 7 4 4 20 4 20 7" />
             <line x1="9" x2="15" y1="20" y2="20" />
             <line x1="12" x2="12" y1="4" y2="20" />
+        </svg>
+    );
+}
+
+function NorthIndianChartIcon(props: React.SVGProps<SVGSVGElement>) {
+    return (
+        <svg {...props} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" stroke="currentColor" strokeWidth="1.4" />
+            <path
+                d="M3 3L21 21M21 3L3 21M12 3L21 12L12 21L3 12L12 3Z"
+                stroke="currentColor"
+                strokeWidth="1.1"
+                strokeLinejoin="round"
+            />
         </svg>
     );
 }
@@ -257,7 +273,7 @@ export default function VedicOverviewPage() {
                             <X className="w-6 h-6" />
                         </button>
                         <div className="mb-8">
-                            <h2 className="text-[18px] font-serif font-bold text-ink">{analysisModal.label}</h2>
+                            <h2 className={OVERVIEW_HEADER_TITLE_CLASS}>{analysisModal.label}</h2>
                         </div>
                         {analysisModal.type === 'yoga' ? (
                             <YogaAnalysisView clientId={clientDetails?.id || ""} yogaType={analysisModal.subType} ayanamsa={settings.ayanamsa} />
@@ -297,6 +313,8 @@ const HEADER_STYLE = {
     background: 'linear-gradient(180deg, rgba(255,251,235,0.80) 0%, rgba(255,251,235,0.40) 100%)',
     borderBottom: '1px solid rgba(217,119,6,0.15)',
 };
+
+const OVERVIEW_HEADER_TITLE_CLASS = "font-serif text-[20px] leading-none font-bold tracking-normal text-[#4A2417]";
 
 // ============================================================================
 // Chart Picker Modal
@@ -352,7 +370,7 @@ function ChartPickerModal({
                     }}>
                     <X className="w-5 h-5" />
                 </button>
-                <h2 className="text-[18px] font-serif font-bold text-ink mb-1">Select a Chart</h2>
+                <h2 className={cn(OVERVIEW_HEADER_TITLE_CLASS, "mb-1")}>Select a Chart</h2>
                 <p className={cn(TYPOGRAPHY.profileDetail, "mb-5")}>Choose a divisional or lagna chart to display</p>
 
                 {Object.entries(grouped).map(([category, charts]) => (
@@ -447,20 +465,23 @@ function RenderedChartSlot({
     return (
         <div className="learn-card overflow-hidden relative">
             <div className="px-3 py-1.5 flex justify-between items-center" style={HEADER_STYLE}>
-                <h2 className={TYPOGRAPHY.sectionTitle}>{displayName}</h2>
+                <div className="flex items-center gap-1.5 min-w-0">
+                    <NorthIndianChartIcon className="w-4 h-4 text-[#D98A1F] shrink-0" />
+                    <h2 className={cn(OVERVIEW_HEADER_TITLE_CLASS, "truncate")}>{displayName}</h2>
+                </div>
                 <div className="flex items-center gap-1">
                     <button
                         onClick={() => setShowSettings(!showSettings)}
-                        className={cn("p-1 transition-colors", showSettings ? "text-primary" : "text-primary/70 hover:text-primary")}
+                        className={cn("p-1 transition-colors", showSettings ? "text-amber-900" : "text-amber-900 hover:text-amber-950")}
                         aria-label="Chart Settings"
                     >
                         <Settings className="w-3 h-3" />
                     </button>
-                    <button onClick={onZoom} className="p-1 text-primary/70 hover:text-primary transition-colors" aria-label={`Zoom ${displayName}`}>
+                    <button onClick={onZoom} className="p-1 text-amber-900 hover:text-amber-950 transition-colors" aria-label={`Zoom ${displayName}`}>
                         <Maximize2 className="w-3 h-3" />
                     </button>
                     {!(activeSystem === 'kp' && chartId === 'D1') && (
-                        <button onClick={onDismiss} className="p-1 text-primary/50 hover:text-rose-500 transition-colors" aria-label={`Remove ${displayName}`}>
+                        <button onClick={onDismiss} className="p-1 text-amber-900 hover:text-rose-500 transition-colors" aria-label={`Remove ${displayName}`}>
                             <X className="w-3 h-3" />
                         </button>
                     )}
@@ -799,8 +820,9 @@ function KundaliContent({
                     {/* Planetary Details Window (dynamic from Slot 0) — hidden for KP */}
                     {activeSystem !== 'kp' && (
                         <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
-                            <div className="px-3 py-1.5 bg-amber-50 border-b border-amber-200/50">
-                                <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-amber-900")}>
+                            <div className="px-3 py-1.5 flex items-center gap-1.5" style={HEADER_STYLE}>
+                                <Table2 className="w-4 h-4 text-[#D98A1F] shrink-0" strokeWidth={1.7} />
+                                <h2 className={OVERVIEW_HEADER_TITLE_CLASS}>
                                     Rashi <KnowledgeTooltip term="planetary_positions" unstyled>planetary positions</KnowledgeTooltip>
                                 </h2>
                             </div>
@@ -831,12 +853,16 @@ function KundaliContent({
                     {/* Client Identity Bar */}
                     {clientDetails && (
                         <div className="bg-white rounded-2xl border border-amber-200/60 shadow-sm overflow-hidden">
-                            <div className="px-3 py-1.5 bg-amber-50 border-b border-amber-200/50">
-                                <h2 className={cn(TYPOGRAPHY.sectionTitle, "text-amber-900")}>Client profile</h2>
+                            <div className="px-3 py-1.5 flex items-center gap-1.5" style={HEADER_STYLE}>
+                                <User className="w-3.5 h-3.5 text-amber-700" />
+                                <h2 className={OVERVIEW_HEADER_TITLE_CLASS}>Client profile</h2>
+                            </div>
+                            <div className="relative h-px bg-gradient-to-r from-transparent via-amber-200/60 to-transparent">
+                                <Sparkle className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 text-amber-300 fill-amber-100" />
                             </div>
                             <div className="px-3 py-2.5 flex flex-wrap items-center gap-x-4 gap-y-2">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white shrink-0 ring-2 ring-amber-200/60 ring-offset-2 ring-offset-white"
+                                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white shrink-0 ring-2 ring-amber-200/60 ring-offset-2 ring-offset-white"
                                         style={{
                                             background: 'linear-gradient(135deg, #D97706 0%, #92400E 100%)',
                                             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.20), 0 2px 8px rgba(146,64,14,0.20)',
@@ -844,20 +870,25 @@ function KundaliContent({
                                         <span className="text-[18px] font-semibold">{clientDetails.name.charAt(0)}</span>
                                     </div>
                                     <div className="min-w-0">
-                                        <div className={cn(TYPOGRAPHY.profileName, "text-amber-900 text-[16px] font-semibold")}>{clientDetails.name}</div>
+                                        <div className={cn(TYPOGRAPHY.profileName, "flex items-center gap-1.5 text-amber-900 text-[16px] font-semibold")}>
+                                            {clientDetails.name}
+                                            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-violet-100 text-violet-500">
+                                                <Gem className="w-3 h-3" />
+                                            </span>
+                                        </div>
                                         <div className={cn(TYPOGRAPHY.profileDetail, "flex flex-wrap items-center gap-x-2 mt-1 text-[12px]")}>
-                                            <span className="flex items-center gap-1 text-amber-700/80">
-                                                <Calendar className="w-3 h-3" />
+                                            <span className="flex items-center gap-1 text-amber-900">
+                                                <Calendar className="w-3 h-3 text-amber-700/80" />
                                                 {formatDate(clientDetails.dateOfBirth)}
                                             </span>
-                                            <span className="text-amber-300">•</span>
-                                            <span className="flex items-center gap-1 text-amber-700/80">
-                                                <Clock className="w-3 h-3" />
+                                            <Sparkle className="w-2.5 h-2.5 text-amber-300" />
+                                            <span className="flex items-center gap-1 text-amber-900">
+                                                <Clock className="w-3 h-3 text-amber-700/80" />
                                                 {formatTime(clientDetails.timeOfBirth)}
                                             </span>
-                                            <span className="text-amber-300">•</span>
-                                            <span className="flex items-center gap-1 text-amber-700/80 truncate max-w-[180px]" title={clientDetails.placeOfBirth.city}>
-                                                <MapPin className="w-3 h-3" />
+                                            <Sparkle className="w-2.5 h-2.5 text-amber-300" />
+                                            <span className="flex items-center gap-1 text-amber-900 truncate max-w-[180px]" title={clientDetails.placeOfBirth.city}>
+                                                <MapPin className="w-3 h-3 text-amber-700/80" />
                                                 {clientDetails.placeOfBirth.city}
                                             </span>
                                         </div>
@@ -899,9 +930,9 @@ function KundaliContent({
                                         };
 
                                         const chips = [
-                                            { key: 'lagna', label: <KnowledgeTooltip term="lagna" unstyled>Lagna</KnowledgeTooltip> as React.ReactNode, value: lagnaSign, planetColor: planetColors['lagna'] },
-                                            { key: 'moon', label: 'Moon', value: moonSign, planetColor: planetColors['moon'] },
-                                            { key: 'sun', label: 'Sun', value: sunSign, planetColor: planetColors['sun'] },
+                                            { key: 'lagna', label: 'Lagna' as React.ReactNode, value: lagnaSign, planetColor: planetColors['lagna'] },
+                                            { key: 'moon', label: 'Moon' as React.ReactNode, value: moonSign, planetColor: planetColors['moon'] },
+                                            { key: 'sun', label: 'Sun' as React.ReactNode, value: sunSign, planetColor: planetColors['sun'] },
                                         ];
 
                                         return chips.map((chip) => {
@@ -915,7 +946,7 @@ function KundaliContent({
                                                             {chip.value}
                                                         </span>
                                                     </div>
-                                                    <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center text-[18px] shadow-sm shrink-0", style.bg, style.text)}>
+                                                    <div className={cn("w-8 h-8 rounded-full flex items-center justify-center text-[18px] shadow-sm shrink-0 bg-violet-50", style.text)}>
                                                         {signSymbols[chip.value] || ''}
                                                     </div>
                                                 </div>
@@ -931,9 +962,19 @@ function KundaliContent({
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
                         {/* Birth Panchanga Card */}
                         <div className="col-span-12 md:col-span-6 lg:col-span-5 prem-card overflow-hidden flex flex-col">
-                            <div className="px-3 py-1.5 flex items-center gap-1.5" style={HEADER_STYLE}>
-                                <Sparkle className="w-3 h-3 text-gold-dark" />
-                                <h2 className={TYPOGRAPHY.sectionTitle}>Birth <KnowledgeTooltip term="panchanga" unstyled>panchanga</KnowledgeTooltip></h2>
+                            <div className="px-3 py-1.5 flex items-center justify-between" style={HEADER_STYLE}>
+                                <div className="flex items-center gap-1.5">
+                                    <Sparkle className="w-4 h-4 text-[#D98A1F]" strokeWidth={1.6} />
+                                    <h2 className={OVERVIEW_HEADER_TITLE_CLASS}>
+                                        Birth <KnowledgeTooltip
+                                            term="panchanga"
+                                            unstyled
+                                            className="[&>span:last-child]:w-[16px] [&>span:last-child]:h-[16px] [&>span:last-child]:border-orange-400 [&>span:last-child]:text-orange-500 [&>span:last-child]:shadow-none"
+                                        >
+                                            panchanga
+                                        </KnowledgeTooltip>
+                                    </h2>
+                                </div>
                             </div>
                             <div className="p-2.5 flex-1 flex flex-col justify-between gap-2 bg-surface-warm">
                                 <BirthPanchanga data={birthPanchangaData} />
@@ -942,8 +983,18 @@ function KundaliContent({
 
                         {/* Vimshottari Dasha */}
                         <div className="col-span-12 md:col-span-6 lg:col-span-7 prem-card overflow-hidden flex flex-col">
-                            <div className="px-3 py-1.5" style={HEADER_STYLE}>
-                                <h2 className={TYPOGRAPHY.sectionTitle}><KnowledgeTooltip term="dasha_vimshottari" unstyled>Vimshottari</KnowledgeTooltip> dasha</h2>
+                            <div className="px-3 py-1.5 flex items-center gap-1.5" style={HEADER_STYLE}>
+                                <Sparkle className="w-4 h-4 text-[#D98A1F]" strokeWidth={1.6} />
+                                <h2 className={OVERVIEW_HEADER_TITLE_CLASS}>
+                                    Vimshottari Dasha
+                                </h2>
+                                <KnowledgeTooltip
+                                    term="dasha_vimshottari"
+                                    unstyled
+                                    className="[&>span:last-child]:w-[16px] [&>span:last-child]:h-[16px] [&>span:last-child]:border-orange-400 [&>span:last-child]:text-orange-500 [&>span:last-child]:shadow-none"
+                                >
+                                    <span className="sr-only">About Vimshottari Dasha</span>
+                                </KnowledgeTooltip>
                             </div>
                             <div className="p-0 bg-surface-warm">
                                 <VimshottariTreeGrid

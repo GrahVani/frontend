@@ -4,7 +4,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import {
     Loader2, ChevronRight, ChevronLeft,
     Calendar, ChevronDown, Clock,
-    User, MapPin, TrendingUp
+    User, MapPin,
+    Sparkle, Flower2
 } from 'lucide-react';
 import Link from 'next/link';
 import { useVedicClient } from '@/context/VedicClientContext';
@@ -15,7 +16,7 @@ import { cn } from '@/lib/utils';
 import { ChartWithPopup } from '@/components/astrology/NorthIndianChart';
 import { parseChartData } from '@/lib/chart-helpers';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
-import { COLORS } from '@/design-tokens/colors';
+import { COLORS, PLANET_SVG_FILLS } from '@/design-tokens/colors';
 import { useDasha, useOtherDasha } from '@/hooks/queries/useCalculations';
 import { useQueryClient } from "@tanstack/react-query";
 import dynamic from 'next/dynamic';
@@ -396,8 +397,27 @@ export default function VedicDashasPage() {
         <div className="space-y-4 animate-in fade-in duration-500 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 -mx-4 -mt-4 px-4 py-6">
             {/* Page Heading */}
             <div className="mb-4">
-                <h1 className="text-[28px] font-bold text-amber-900">Dasha System</h1>
-                <p className="text-[16px] text-amber-600 mt-1">Explore planetary time periods and their influences</p>
+                <h1 className="text-[28px] font-bold text-amber-900 flex items-center gap-2">
+                    <svg className="w-7 h-7 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M12 2v4" />
+                        <path d="M12 18v4" />
+                        <path d="M2 12h4" />
+                        <path d="M18 12h4" />
+                        <path d="M4.93 4.93l2.83 2.83" />
+                        <path d="M16.24 16.24l2.83 2.83" />
+                        <path d="M4.93 19.07l2.83-2.83" />
+                        <path d="M16.24 7.76l2.83-2.83" />
+                    </svg>
+                    Dasha System
+                    <Sparkle className="w-5 h-5 text-amber-500" />
+                </h1>
+                <p className="text-[16px] text-amber-600 mt-1 flex items-center gap-2">
+                    Explore planetary time periods & their influences
+                    <span className="h-px w-8 bg-amber-400" />
+                    <Flower2 className="w-4 h-4 text-amber-500" />
+                </p>
             </div>
 
             {/* ================================================================= */}
@@ -408,8 +428,17 @@ export default function VedicDashasPage() {
                     <div className="flex flex-col md:flex-row items-center justify-between gap-2">
                         {/* Status & Title */}
                         <div className="flex items-center gap-3 shrink-0 min-w-[120px]">
-                            <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
-                                <TrendingUp className="w-5 h-5 text-amber-700" />
+                            <div
+                                className="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
+                                style={{
+                                    background: `radial-gradient(circle at 30% 30%, ${PLANET_SVG_FILLS[activeLords[0].planet] || '#10B981'}22, ${PLANET_SVG_FILLS[activeLords[0].planet] || '#10B981'}66)`,
+                                    border: `2px solid ${PLANET_SVG_FILLS[activeLords[0].planet] || '#10B981'}`,
+                                    boxShadow: `0 0 0 3px ${PLANET_SVG_FILLS[activeLords[0].planet] || '#10B981'}22, inset 0 1px 2px rgba(255,255,255,0.5)`,
+                                }}
+                            >
+                                <span className="text-[22px] font-serif" style={{ color: PLANET_SVG_FILLS[activeLords[0].planet] || '#10B981' }}>
+                                    {getPlanetSymbol(activeLords[0].planet)}
+                                </span>
                             </div>
                             <div>
                                 <h2 className="text-[18px] font-bold text-amber-900 !mb-0">Current Dasha</h2>
@@ -423,24 +452,30 @@ export default function VedicDashasPage() {
                         <div className="flex flex-1 flex-wrap items-center justify-around gap-4 px-4 border-x border-amber-200/60">
                             {/* Dasha Levels */}
                             <div className="flex items-center gap-6">
-                                {activeLords.slice(0, 3).map((node, i) => (
-                                    <div key={i} className="flex flex-col">
-                                        <span className="text-[11px] tracking-wider text-amber-500 font-bold mb-0.5">
-                                            {i === 0 ? 'Mahadasha' : i === 1 ? 'Antardasha' : 'Pratyantar'}
-                                        </span>
-                                        <span className={cn(
-                                            "font-bold text-[18px]",
-                                            i === 0 ? "text-amber-600" : i === 1 ? "text-orange-700" : "text-pink-700"
-                                        )}>
-                                            {isChara ? String(node.raw?.sign_name || node.planet) : node.planet}
-                                        </span>
-                                    </div>
-                                ))}
+                                {activeLords.slice(0, 3).map((node, i) => {
+                                    const planetName = isChara ? String(node.raw?.sign_name || node.planet) : node.planet;
+                                    return (
+                                        <div key={i} className="flex flex-col">
+                                            <span className="text-[11px] tracking-wider text-amber-500 font-bold mb-0.5">
+                                                {i === 0 ? 'Mahadasha' : i === 1 ? 'Antardasha' : 'Pratyantar'}
+                                            </span>
+                                            <span
+                                                className="font-bold text-[18px]"
+                                                style={{ color: PLANET_SVG_FILLS[planetName] || '#B45309' }}
+                                            >
+                                                {planetName}
+                                            </span>
+                                        </div>
+                                    );
+                                })}
                             </div>
 
                             {/* Date Range */}
                             <div className="flex flex-col text-center">
-                                <span className="text-[12px] tracking-wide text-amber-500 font-bold mb-1">Duration</span>
+                                <span className="text-[12px] tracking-wide text-amber-500 font-bold mb-1 inline-flex items-center justify-center gap-1">
+                                    <Calendar className="w-3 h-3" />
+                                    Duration
+                                </span>
                                 <div className="text-[14px] text-amber-800 font-mono bg-amber-50 px-2 py-1 rounded border border-amber-200/50">
                                     {`${formatDateShort(activeLords[0].startDate)} — ${formatDateShort(activeLords[0].endDate)}`}
                                 </div>
@@ -448,19 +483,43 @@ export default function VedicDashasPage() {
                         </div>
 
                         {/* Progress Section */}
-                        <div className="shrink-0 min-w-[200px] w-full md:w-auto">
-                            <div className="flex justify-between text-[13px] mb-1 font-medium tracking-tight">
-                                <span className="text-amber-600">Maha progress</span>
-                                <span className="text-amber-700 font-bold">{activeAnalysis?.progress}%</span>
-                            </div>
-                            <div className="h-1.5 bg-amber-100 rounded-full overflow-hidden">
-                                <div
-                                    className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full"
-                                    style={{ width: `${activeAnalysis?.progress || 0}%` }}
-                                />
-                            </div>
-                            <div className="text-[12px] text-right mt-1 text-amber-500 font-mono">
-                                {getDaysRemaining(activeLords[0].endDate).toLocaleString()} days left
+                        <div className="shrink-0 min-w-[220px] w-full md:w-auto">
+                            <div className="flex items-center gap-3">
+                                {/* Circular progress */}
+                                <div className="relative w-14 h-14 shrink-0">
+                                    <svg className="w-full h-full -rotate-90" viewBox="0 0 40 40">
+                                        <circle cx="20" cy="20" r="17" fill="none" stroke="#FEF3C7" strokeWidth="4" />
+                                        <circle
+                                            cx="20"
+                                            cy="20"
+                                            r="17"
+                                            fill="none"
+                                            stroke="#F97316"
+                                            strokeWidth="4"
+                                            strokeLinecap="round"
+                                            strokeDasharray={106.8}
+                                            strokeDashoffset={106.8 * (1 - (activeAnalysis?.progress || 0) / 100)}
+                                        />
+                                    </svg>
+                                    <span className="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-amber-700">
+                                        {activeAnalysis?.progress}%
+                                    </span>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex justify-between text-[13px] mb-1 font-medium tracking-tight">
+                                        <span className="text-amber-600">Maha Progress</span>
+                                    </div>
+                                    <div className="relative h-1.5 bg-amber-100 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full"
+                                            style={{ width: `${activeAnalysis?.progress || 0}%` }}
+                                        />
+                                        <Sparkle className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 text-amber-400" />
+                                    </div>
+                                    <div className="text-[12px] text-right mt-1 text-amber-500 font-mono">
+                                        {getDaysRemaining(activeLords[0].endDate).toLocaleString()} days left
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -486,18 +545,9 @@ export default function VedicDashasPage() {
                                 >
                                     D1 Chart
                                 </button>
-                                <button
-                                    onClick={() => setLeftPanelTab('dashas')}
-                                    className={cn(
-                                        "px-2 py-1 text-[13px] font-bold rounded-lg transition-all",
-                                        leftPanelTab === 'dashas' ? "bg-amber-100 text-amber-900 border border-amber-200" : "text-amber-500 hover:text-amber-700"
-                                    )}
-                                >
-                                    Dashas
-                                </button>
                             </div>
                             <div className="px-2 py-0.5 bg-amber-100 rounded border border-amber-200">
-                                <span className="text-amber-800 font-semibold !mb-0 text-[11px]">{isTrueChitra && leftPanelTab === 'chart' ? 'Lahiri' : (leftPanelTab === 'dashas' ? 'Lahiri' : ayanamsa)}</span>
+                                <span className="text-amber-800 font-semibold !mb-0 text-[11px]">{isTrueChitra ? 'Lahiri' : ayanamsa}</span>
                             </div>
                         </div>
                         <div className="flex-1 flex flex-col overflow-hidden bg-amber-50/30">

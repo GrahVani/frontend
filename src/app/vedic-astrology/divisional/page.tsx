@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Grid3X3, RefreshCw, Loader2, Plus, X, Maximize2, Minimize2, Settings2, House, ChevronDown, LayoutGrid, Columns2, Columns3, Rows3, Palette, BookOpen, Eye, EyeOff } from 'lucide-react';
+import { Grid3X3, RefreshCw, Loader2, Plus, X, Maximize2, Minimize2, Settings2, House, ChevronDown, LayoutGrid, Columns2, Columns3, Rows3, Palette, BookOpen, Eye, EyeOff, Sparkle, Flower2 } from 'lucide-react';
 import { useVedicClient } from '@/context/VedicClientContext';
 import { useAstrologerStore } from '@/store/useAstrologerStore';
 import dynamic from 'next/dynamic';
@@ -233,10 +233,15 @@ export default function VedicDivisionalPage() {
             {/* Header */}
             <header className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-[28px] font-bold text-amber-900">
+                    <h1 className="text-[28px] font-bold text-amber-900 flex items-center gap-2">
+                        <Sparkle className="w-6 h-6 text-amber-600" />
                         Shodashvarga Matrix
                     </h1>
-                    <p className="text-[16px] text-amber-600 mt-1">16 divisional charts analysis</p>
+                    <p className="text-[16px] text-amber-600 mt-1 flex items-center gap-2">
+                        16 divisional charts analysis
+                        <span className="h-px w-8 bg-amber-400" />
+                        <Flower2 className="w-4 h-4 text-amber-500" />
+                    </p>
                     <div className="flex items-center gap-2">
                         {isGeneratingCharts && (
                             <span className="flex items-center gap-1.5 px-2 py-0.5 bg-green-100/80 text-green-700 text-[10px] font-bold rounded-full border border-green-200 animate-pulse">

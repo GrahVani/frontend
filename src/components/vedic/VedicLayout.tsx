@@ -125,14 +125,14 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
     return (
         <div className={cn("sticky left-0 right-0 z-40 h-12 flex items-center px-4 md:px-6 gap-4", hasClientBar ? "top-24" : "top-14")}
             style={{
-                background: '#78350f',
+                background: '#fffaf0',
                 backdropFilter: 'blur(16px)',
-                borderBottom: '1px solid rgba(251, 191, 36, 0.1)',
+                borderBottom: '1px solid rgba(146, 64, 14, 0.18)',
             }}
             role="navigation"
             aria-label="Vedic astrology sections">
             {/* Top Border Indicator - keep very subtle */}
-            <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/5" />
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-amber-900/10" />
 
             {/* Navigation Items */}
             <nav className="flex-1 flex items-center gap-0.5 overflow-x-auto no-scrollbar h-full" aria-label="Vedic astrology sub-navigation">
@@ -174,8 +174,8 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                                     "relative h-full flex items-center px-4 transition-all duration-300",
                                     "text-[14px] font-semibold tracking-wide",
                                     isActive
-                                        ? "text-white text-shadow-glow"
-                                        : "text-white hover:text-white"
+                                        ? "text-amber-800 text-shadow-glow"
+                                        : "text-stone-900 hover:text-amber-800"
                                 )}
                             >
                                 <span>{item.name}</span>
@@ -207,8 +207,8 @@ function VedicSubHeader({ clientDetails, setClientDetails, pathname, router, aya
                             TYPOGRAPHY.tableHeader,
                             "flex items-center gap-1 px-3 py-2 transition-all duration-300 !font-medium",
                             isMoreOpen
-                                ? "text-active-glow"
-                                : "text-white hover:text-active-glow"
+                                ? "text-amber-800"
+                                : "text-stone-900 hover:text-amber-800"
                         )}
                     >
                         <span>More</span>

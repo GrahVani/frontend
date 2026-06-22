@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-    X, Loader2, AlertCircle, Sparkles, Layers, Shield, Gem, Star, Table2, Map as MapIcon
+    X, Loader2, AlertCircle, Sparkles, Layers, Shield, Gem, Star, Table2, Map as MapIcon, Info
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { clientApi } from '@/lib/api';
@@ -181,6 +181,7 @@ function WidgetCard({
     };
 
     const isCompatible = isChartCompatible(widget.id, activeSystem || 'Lahiri');
+    const isVimshottariWidget = widget.id === 'vimshottari';
 
     const scaleConfig = WIDGET_SCALE_CONFIG[size] || WIDGET_SCALE_CONFIG.medium;
 
@@ -200,19 +201,32 @@ function WidgetCard({
                 }}
             >
                 <div className="flex items-center gap-1.5 min-w-0">
-                    <span className={cn(
-                        "px-1.5 py-0.5 rounded font-medium tracking-wider shrink-0 shadow-sm",
-                        scaleConfig.headerText,
-                        getCategoryColor()
-                    )} style={{ fontSize: `max(7px, ${7 * scaleConfig.zoom}px)` }}>
-                        {getCategoryLabel()}
-                    </span>
-                    <h4 className={cn(
-                        "font-medium text-[#3E2A1F] tracking-tight truncate",
-                        scaleConfig.titleMaxW
-                    )} style={{ fontSize: `max(9px, ${10 * scaleConfig.zoom}px)` }}>
-                        {widget.name}
-                    </h4>
+                    {isVimshottariWidget ? (
+                        <h4
+                            className="flex items-center gap-1.5 min-w-0 font-serif font-bold text-[#4A2417] tracking-normal truncate"
+                            style={{ fontSize: `max(18px, ${20 * scaleConfig.zoom}px)` }}
+                        >
+                            <Sparkles className="w-4 h-4 shrink-0 text-[#D98A1F]" strokeWidth={1.6} />
+                            <span className="truncate">Vimshottari Dasha</span>
+                            <Info className="w-4 h-4 shrink-0 text-[#B97520]" strokeWidth={1.8} />
+                        </h4>
+                    ) : (
+                        <>
+                            <span className={cn(
+                                "px-1.5 py-0.5 rounded font-medium tracking-wider shrink-0 shadow-sm",
+                                scaleConfig.headerText,
+                                getCategoryColor()
+                            )} style={{ fontSize: `max(7px, ${7 * scaleConfig.zoom}px)` }}>
+                                {getCategoryLabel()}
+                            </span>
+                            <h4 className={cn(
+                                "font-medium text-[#3E2A1F] tracking-tight truncate",
+                                scaleConfig.titleMaxW
+                            )} style={{ fontSize: `max(9px, ${10 * scaleConfig.zoom}px)` }}>
+                                {widget.name}
+                            </h4>
+                        </>
+                    )}
                     {onAyanamsaChange && (
                         <div className="ml-1 shrink-0">
                             <AyanamsaSelect
