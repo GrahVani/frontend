@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ChevronDown, Lock } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface NavSubItem {
@@ -15,12 +15,13 @@ interface NavLinkProps {
     href: string;
     label: string;
     active: boolean;
+    icon?: React.ElementType;
     subItems?: NavSubItem[];
     onClick?: (e: React.MouseEvent) => void;
     isLocked?: boolean;
 }
 
-export default function NavLink({ href, label, active, subItems, onClick, isLocked }: NavLinkProps) {
+export default function NavLink({ href, label, active, icon: Icon, subItems, onClick, isLocked }: NavLinkProps) {
     const [open, setOpen] = React.useState(false);
     const ref = React.useRef<HTMLDivElement>(null);
 
@@ -45,7 +46,7 @@ export default function NavLink({ href, label, active, subItems, onClick, isLock
     const hasDropdown = subItems && subItems.length > 0;
 
     const baseClass = cn(
-        "px-2 lg:px-3 py-1.5 rounded-lg font-semibold text-[14px] tracking-wide transition-all duration-300 relative inline-flex items-center gap-1",
+        "h-14 min-w-[72px] px-2 lg:px-3 py-1 rounded-none font-semibold text-[12px] tracking-wide transition-all duration-300 relative inline-flex flex-col items-center justify-center gap-1",
         active
             ? "nav-glass-pill text-white text-shadow-glow"
             : "text-white hover:text-white hover:bg-white/[0.06]"
@@ -61,7 +62,8 @@ export default function NavLink({ href, label, active, subItems, onClick, isLock
                 onClick={onClick}
                 title={isLocked ? "Please select a client from Dashboard to unlock" : undefined}
             >
-                {label}
+                {Icon && <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.8} />}
+                <span className="leading-none whitespace-nowrap">{label}</span>
                 {active && (
                     <div className="absolute bottom-[2px] left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-active-glow shadow-[0_0_8px_2px_rgba(255,210,125,0.4)]" />
                 )}
@@ -77,10 +79,11 @@ export default function NavLink({ href, label, active, subItems, onClick, isLock
                 aria-expanded={open}
                 aria-haspopup="true"
                 aria-label={`${label} menu`}
-                className={cn(baseClass, "cursor-pointer pr-2.5 gap-1.5")}
+                className={cn(baseClass, "cursor-pointer")}
                 title={isLocked ? "Please select a client from Dashboard to unlock" : undefined}
             >
-                <div className="flex items-center gap-1">
+                {Icon && <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.8} />}
+                <div className="flex items-center gap-1 leading-none">
                     <Link
                         href={href}
                         aria-current={active ? "page" : undefined}
@@ -88,16 +91,16 @@ export default function NavLink({ href, label, active, subItems, onClick, isLock
                             e.stopPropagation();
                             if (onClick) onClick(e);
                         }}
-                        className="hover:underline underline-offset-2 decoration-white/30"
+                        className="hover:underline underline-offset-2 decoration-white/30 leading-none"
                     >
                         {label}
                     </Link>
+                    <ChevronDown className={cn(
+                        "w-3 h-3 transition-transform duration-200 shrink-0",
+                        "text-white",
+                        open && "rotate-180"
+                    )} />
                 </div>
-                <ChevronDown className={cn(
-                    "w-3.5 h-3.5 transition-transform duration-200 shrink-0",
-                    "text-white",
-                    open && "rotate-180"
-                )} />
                 {active && (
                     <div className="absolute bottom-[2px] left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-active-glow shadow-[0_0_8px_2px_rgba(255,210,125,0.4)]" />
                 )}

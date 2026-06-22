@@ -191,11 +191,11 @@ function ClientTab({
                 style={{
                     background: isActive
                         ? 'linear-gradient(135deg, rgba(255,210,125,0.35) 0%, rgba(201,162,77,0.25) 100%)'
-                        : 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 100%)',
+                        : 'linear-gradient(135deg, rgba(217,119,6,0.10) 0%, rgba(146,64,14,0.05) 100%)',
                     border: isActive
                         ? '1px solid rgba(255,210,125,0.45)'
-                        : '1px solid rgba(255,255,255,0.15)',
-                    color: isActive ? '#FFD27D' : 'rgba(255,255,255,0.7)',
+                        : '1px solid rgba(146,64,14,0.14)',
+                    color: isActive ? '#92400e' : 'rgba(120,53,15,0.72)',
                 }}
             >
                 {initial}
@@ -205,7 +205,7 @@ function ClientTab({
             <span
                 className={cn(
                     "text-[13px] font-semibold truncate max-w-[100px]",
-                    isActive ? "text-white text-shadow-glow" : "text-white"
+                    isActive ? "text-amber-900" : "text-stone-700"
                 )}
             >
                 {client.name}
@@ -254,15 +254,15 @@ export default function ClientSwitcherBar() {
                     className={cn(
                         "w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-200",
                         isAddOpen
-                            ? "bg-white/12 border border-gold-primary/30"
-                            : "border border-white/10 hover:bg-white/8 hover:border-white/20"
+                            ? "bg-amber-100/80 border border-amber-700/25"
+                            : "border border-amber-900/10 hover:bg-amber-100/55 hover:border-amber-900/20"
                     )}
                     aria-label="Add client"
                     title="Add client"
                 >
                     <Plus className={cn(
                         "w-3.5 h-3.5 transition-transform duration-200",
-                        isAddOpen ? "text-active-glow rotate-45" : "text-white/60"
+                        isAddOpen ? "text-amber-800 rotate-45" : "text-amber-900/60"
                     )} />
                 </button>
 
@@ -270,7 +270,7 @@ export default function ClientSwitcherBar() {
             </div>
 
             {/* Divider */}
-            <div className="w-[1px] h-5 bg-white/10 shrink-0 mx-1" />
+            <div className="w-[1px] h-5 bg-amber-900/12 shrink-0 mx-1" />
 
             {/* Client tabs — scrollable */}
             <div className="flex-1 flex items-center gap-1 overflow-x-auto no-scrollbar">
@@ -294,11 +294,11 @@ export default function ClientSwitcherBar() {
             {openClients.length > 1 && (
                 <div className="shrink-0 flex items-center gap-1 px-2 py-1 rounded-md"
                     style={{
-                        background: 'rgba(255,255,255,0.06)',
-                        border: '1px solid rgba(255,255,255,0.08)',
+                        background: 'rgba(146,64,14,0.06)',
+                        border: '1px solid rgba(146,64,14,0.10)',
                     }}>
-                    <span className="text-[10px] font-bold text-white/50">{openClients.length}</span>
-                    <span className="text-[9px] text-white/35 font-medium">open</span>
+                    <span className="text-[10px] font-bold text-amber-900/60">{openClients.length}</span>
+                    <span className="text-[9px] text-amber-900/45 font-medium">open</span>
                 </div>
             )}
         </div>

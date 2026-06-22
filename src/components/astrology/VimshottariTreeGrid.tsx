@@ -2,10 +2,11 @@
 
 import React, { useMemo, useState } from 'react';
 import { cn } from "@/lib/utils";
-import { ChevronRight, Loader2 } from 'lucide-react';
+import { CalendarDays, ChevronRight, Clock3, Home, Loader2 } from 'lucide-react';
 import { DashaNode, calculateDuration, generateVimshottariSubperiods, parseApiDate } from '@/lib/dasha-utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
 import { KnowledgeTooltip } from '@/components/knowledge';
+import { getPlanetSymbol } from '@/lib/planet-symbols';
 
 interface VimshottariTreeGridProps {
     data: DashaNode[];
@@ -17,6 +18,18 @@ interface VimshottariTreeGridProps {
 const PLANET_ABBREVIATIONS: Record<string, string> = {
     'Sun': 'Su', 'Moon': 'Mo', 'Mars': 'Ma', 'Mercury': 'Me', 'Jupiter': 'Ju',
     'Venus': 'Ve', 'Saturn': 'Sa', 'Rahu': 'Ra', 'Ketu': 'Ke',
+};
+
+const PLANET_GLYPH_COLORS: Record<string, string> = {
+    Sun: '#F59E0B',
+    Moon: '#3867FF',
+    Mars: '#FF4967',
+    Mercury: '#0F8F65',
+    Jupiter: '#7C5CFF',
+    Venus: '#F05A96',
+    Saturn: '#F59E0B',
+    Rahu: '#D97706',
+    Ketu: '#D97706',
 };
 
 const LEVEL_LABELS = ["MAHA", "ANTAR", "PRATYANTAR", "SOOKSHMA", "PRANA"];
@@ -90,11 +103,12 @@ export default function VimshottariTreeGrid({ data, isLoading, className, maxDep
                 <button
                     onClick={handleReset}
                     className={cn(
-                        "px-1.5 py-0.5 rounded hover:bg-amber-100 transition-colors leading-compact font-serif",
+                        "px-1.5 py-0.5 rounded hover:bg-amber-100 transition-colors leading-compact font-serif inline-flex items-center gap-1",
                         navPath.length === 0 ? "font-bold text-amber-900" : "text-amber-700",
                         TYPOGRAPHY.breadcrumb
                     )}
                 >
+                    <Home className="w-3 h-3 text-amber-600" />
                     Home
                 </button>
                 {navPath.length > 0 && <ChevronRight className="w-2.5 h-2.5 text-amber-600 flex-shrink-0" />}
@@ -121,12 +135,24 @@ export default function VimshottariTreeGrid({ data, isLoading, className, maxDep
                         <tr className={cn("border-b border-amber-200/60", TYPOGRAPHY.tableHeader)}>
                             <th className="px-0.5 py-0.5 text-left w-[33%]">
                                 {LEVEL_TOOLTIP_TERMS[currentLevelName] ? (
-                                    <KnowledgeTooltip term={LEVEL_TOOLTIP_TERMS[currentLevelName]} unstyled>{currentLevelName}</KnowledgeTooltip>
+                                    <KnowledgeTooltip
+                                        term={LEVEL_TOOLTIP_TERMS[currentLevelName]}
+                                        unstyled
+                                        className="[&>span:last-child]:w-[16px] [&>span:last-child]:h-[16px] [&>span:last-child]:border-orange-400 [&>span:last-child]:text-orange-500 [&>span:last-child]:shadow-none"
+                                    >
+                                        {currentLevelName}
+                                    </KnowledgeTooltip>
                                 ) : currentLevelName}
                             </th>
-                            <th className="px-0.5 py-0.5 text-left w-[27%] text-emerald-700/70">Start</th>
-                            <th className="px-0.5 py-0.5 text-left w-[27%] text-amber-800/70">End</th>
-                            <th className="px-0.5 py-0.5 text-left w-[13%]">Dur</th>
+                            <th className="px-0.5 py-0.5 text-left w-[27%] text-emerald-700/80">
+                                <span className="inline-flex items-center gap-1"><CalendarDays className="w-3 h-3" />Start</span>
+                            </th>
+                            <th className="px-0.5 py-0.5 text-left w-[27%] text-amber-800/80">
+                                <span className="inline-flex items-center gap-1"><CalendarDays className="w-3 h-3" />End</span>
+                            </th>
+                            <th className="px-0.5 py-0.5 text-left w-[13%]">
+                                <span className="inline-flex items-center gap-1"><Clock3 className="w-3 h-3" />Dur</span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-amber-200/40">
@@ -161,16 +187,6 @@ function DashaDrillRow({ node, depth, pathPrefix, onDrill, maxDepth = 4 }: { nod
     // This allows generating sub-periods on the fly for non-active branches
     const isDrillable = hasData || depth < maxDepth;
 
-    // Calculate progress for active rows
-    const progress = useMemo(() => {
-        if (!isActive || !node.startDate || !node.endDate) return 0;
-        const start = new Date(node.startDate).getTime();
-        const end = new Date(node.endDate).getTime();
-        const now = new Date().getTime();
-        if (end <= start) return 0;
-        return Math.max(0, Math.min(100, ((now - start) / (end - start)) * 100));
-    }, [isActive, node.startDate, node.endDate]);
-
     const durationDisplay = useMemo(() => {
         return calculateDuration(node.startDate, node.endDate);
     }, [node.startDate, node.endDate]);
@@ -180,7 +196,7 @@ function DashaDrillRow({ node, depth, pathPrefix, onDrill, maxDepth = 4 }: { nod
             onClick={isDrillable ? onDrill : undefined}
             className={cn(
                 "transition-colors group border-b border-amber-200/40",
-                isActive ? "bg-amber-50 font-bold" : "hover:bg-amber-50/50",
+                isActive ? "bg-emerald-50/60 font-bold shadow-[inset_2px_0_0_#059669]" : "hover:bg-amber-50/50",
                 isDrillable ? "cursor-pointer" : "cursor-default",
                 depth > 0 ? "text-[10px]" : "text-[11px]"
             )}
@@ -198,7 +214,13 @@ function DashaDrillRow({ node, depth, pathPrefix, onDrill, maxDepth = 4 }: { nod
                             {depth > 0 && (
                                 <span className={cn(TYPOGRAPHY.planetName, "font-serif text-black shrink-0 tracking-tighter")}>{pathPrefix}</span>
                             )}
-                            <span className={cn(TYPOGRAPHY.planetName, "font-serif tracking-tighter flex items-center gap-1 text-black")}>
+                            <span className={cn(TYPOGRAPHY.planetName, "font-serif tracking-tighter flex items-center gap-1.5 text-black")}>
+                                <span
+                                    className="text-[18px] leading-none min-w-4 text-center"
+                                    style={{ color: PLANET_GLYPH_COLORS[node.planet] || '#92400E' }}
+                                >
+                                    {getPlanetSymbol(node.planet)}
+                                </span>
                                 <span>{PLANET_ABBREVIATIONS[node.planet] || node.planet}</span>
                             </span>
                         </div>
@@ -210,14 +232,21 @@ function DashaDrillRow({ node, depth, pathPrefix, onDrill, maxDepth = 4 }: { nod
                     </div>
                 </div>
             </td>
-            <td className={cn("px-0.5 py-0.5 overflow-hidden text-emerald-700/80", TYPOGRAPHY.dateAndDuration)}>
+            <td className={cn("px-0.5 py-0.5 overflow-hidden", isActive ? "text-emerald-800" : "text-emerald-700/80", TYPOGRAPHY.dateAndDuration)}>
                 {formatDate(node.startDate)}
             </td>
-            <td className={cn("px-0.5 py-0.5 overflow-hidden text-amber-800/80", TYPOGRAPHY.dateAndDuration)}>
+            <td className={cn("px-0.5 py-0.5 overflow-hidden", isActive ? "text-emerald-800" : "text-amber-800/80", TYPOGRAPHY.dateAndDuration)}>
                 {formatDate(node.endDate)}
             </td>
-            <td className={cn("px-0.5 py-0.5 overflow-hidden text-amber-700/80", TYPOGRAPHY.dateAndDuration)}>
-                {durationDisplay}
+            <td className={cn("px-0.5 py-0.5 overflow-hidden", TYPOGRAPHY.dateAndDuration)}>
+                <span className={cn(
+                    "inline-flex min-w-[38px] justify-center rounded-md border px-1.5 py-0.5 leading-none",
+                    isActive
+                        ? "border-emerald-200 bg-emerald-100 text-emerald-800"
+                        : "border-amber-200/60 bg-amber-50/50 text-amber-900/80"
+                )}>
+                    {durationDisplay}
+                </span>
             </td>
         </tr>
     );
