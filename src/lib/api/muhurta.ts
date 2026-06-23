@@ -19,10 +19,10 @@ import type {
   TimeQualityResponse,
 } from "@/types/muhurta.types";
 
-// Direct engine URL until backend proxy (api-astro.grahvani.in) is deployed with muhurat routes
-// Once deployed, switch to: `${process.env.NEXT_PUBLIC_ASTRO_ENGINE_URL}/api/muhurat`
-const MUHURAT_ENGINE_URL = process.env.NEXT_PUBLIC_MUHURAT_ENGINE_URL || "https://astroengine.astrocorp.in";
-const BASE = `${MUHURAT_ENGINE_URL}/muhurat`;
+const MUHURAT_ENGINE_URL = process.env.NEXT_PUBLIC_MUHURAT_ENGINE_URL 
+  || (process.env.NEXT_PUBLIC_ASTRO_ENGINE_URL ? `${process.env.NEXT_PUBLIC_ASTRO_ENGINE_URL}/api` : null)
+  || "https://astroengine.astrocorp.in";
+const BASE = MUHURAT_ENGINE_URL.endsWith("/muhurat") ? MUHURAT_ENGINE_URL : `${MUHURAT_ENGINE_URL}/muhurat`;
 
 interface ApiResult<T> {
   success: boolean;
