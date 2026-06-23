@@ -6,7 +6,7 @@
 //   - astro_engine/engine/routes/LahairiAyanmasa.py   (/panchanga)
 //   - astro_engine/engine/routes/MuhuratEngine.py     (/muhurat/*)
 
-const ASTRO_ENGINE_URL = process.env.NEXT_PUBLIC_ASTRO_ENGINE_URL || 'https://api-astro.grahvani.in';
+const ASTRO_ENGINE_URL = (process.env.NEXT_PUBLIC_ASTRO_ENGINE_URL || 'https://api-astro.grahvani.in') + '/api';
 
 export interface PanchangRequest {
     birthDate: string;    // YYYY-MM-DD (the date to calculate panchang for)
@@ -71,10 +71,11 @@ function offsetToTimezone(offset: number): string {
 }
 
 interface AstroEnginePanchangBody {
-    date: string;
-    time: string;
+    birthDate: string;
+    birthTime: string;
     latitude: number;
     longitude: number;
+    timezoneOffset: number;
     timezone: string;
 }
 
@@ -89,10 +90,11 @@ interface AstroEngineMuhuratBody {
 
 function toAstroEnginePanchangBody(req: PanchangRequest): AstroEnginePanchangBody {
     return {
-        date: req.birthDate,
-        time: req.birthTime,
+        birthDate: req.birthDate,
+        birthTime: req.birthTime,
         latitude: req.latitude,
         longitude: req.longitude,
+        timezoneOffset: req.timezoneOffset,
         timezone: offsetToTimezone(req.timezoneOffset),
     };
 }

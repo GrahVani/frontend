@@ -1,5 +1,5 @@
 const FESTIVAL_API_URL = process.env.NEXT_PUBLIC_ASTRO_ENGINE_URL
-  ? `${process.env.NEXT_PUBLIC_ASTRO_ENGINE_URL}/festival`
+  ? `${process.env.NEXT_PUBLIC_ASTRO_ENGINE_URL}/api/festival`
   : 'http://localhost:3014/api/festival';
 
 export interface FestivalQueryParams {
