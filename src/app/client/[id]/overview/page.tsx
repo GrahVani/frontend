@@ -1,216 +1,936 @@
 "use client";
 
-import React from 'react';
-import NorthIndianChart from "@/components/astrology/NorthIndianChart";
+import React, { useMemo, useState } from "react";
+import Link from "next/link";
 import {
-    Calendar,
-    Clock,
-    MapPin,
-    FileText,
-    TrendingUp,
-    Sparkles,
-    Zap,
-    History,
-    Edit3,
-    ArrowRight
-} from 'lucide-react';
-import Link from 'next/link';
+  Calendar,
+  Clock,
+  MapPin,
+  ChevronDown,
+  ChevronRight,
+  Sparkles,
+  TrendingUp,
+  FileText,
+  LayoutDashboard,
+  Loader2,
+  Moon,
+  Orbit,
+} from "lucide-react";
+
+import { useVedicClient } from "@/context/VedicClientContext";
+import { useAstrologerStore } from "@/store/useAstrologerStore";
+import {
+  useDasha,
+  useShadbala,
+  useAshtakavarga,
+} from "@/hooks/queries/useCalculations";
+import { findActiveDashaPath, type DashaNode } from "@/lib/dasha-utils";
+import { parseChartData, signIdToName } from "@/lib/chart-helpers";
+import { getPlanetSymbol } from "@/lib/planet-symbols";
+import { cn } from "@/lib/utils";
+
+import NorthIndianChart from "@/components/astrology/NorthIndianChart";
 import GoldenButton from "@/components/GoldenButton";
-import { useVedicClient } from '@/context/VedicClientContext';
-import { useAstrologerStore } from '@/store/useAstrologerStore';
+
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardSubtitle,
+  CardBody,
+  CardFooter,
+} from "@/design-system/components/cards";
+import { DataTable, type DataTableColumn } from "@/design-system/components/table";
+import {
+  pageHeaderClasses,
+  pageSummaryClasses,
+  heroInsightClasses,
+  insightStripClasses,
+  metricGridClasses,
+  metricCardClasses,
+} from "@/design-system/templates/shared-template";
+import { dashboardTemplateClasses } from "@/design-system/templates/dashboard-template";
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+interface PlanetaryInfo {
+  planet: string;
+  sign: string;
+  degree: string;
+  nakshatra: string;
+  nakshatraPart: number;
+  house: number;
+  isRetro?: boolean;
+}
+
+interface ShadbalaRow {
+  planet: string;
+  rupas: number;
+  virupas: number;
+  rank: number;
+  status: string;
+}
+
+interface AshtakavargaRow {
+  sign: string;
+  score: number;
+}
+
+interface DisplayClient {
+  id?: string;
+  name: string;
+  dateOfBirth: string;
+  timeOfBirth: string;
+  placeOfBirth: { city: string };
+  rashi?: string;
+  nakshatra?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Mock fallback client
+// ---------------------------------------------------------------------------
+
+const MOCK_CLIENT: DisplayClient = {
+  id: "",
+  name: "Ananya Sharma",
+  dateOfBirth: "1992-08-15",
+  timeOfBirth: "14:30",
+  placeOfBirth: { city: "New Delhi, India" },
+  rashi: "Leo",
+  nakshatra: "Magha",
+};
+
+// ---------------------------------------------------------------------------
+// Utilities
+// ---------------------------------------------------------------------------
+
+function formatDateShort(dateStr: string): string {
+  if (!dateStr) return "—";
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr;
+  return d.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function daysBetween(start: string, end: string): number {
+  const s = new Date(start).getTime();
+  const e = new Date(end).getTime();
+  if (isNaN(s) || isNaN(e)) return 0;
+  return Math.max(0, Math.ceil((e - s) / (1000 * 60 * 60 * 24)));
+}
+
+function getElement(sign: string): string {
+  const fire = ["Aries", "Leo", "Sagittarius"];
+  const earth = ["Taurus", "Virgo", "Capricorn"];
+  const air = ["Gemini", "Libra", "Aquarius"];
+  const water = ["Cancer", "Scorpio", "Pisces"];
+  if (fire.includes(sign)) return "fire";
+  if (earth.includes(sign)) return "earth";
+  if (air.includes(sign)) return "air";
+  if (water.includes(sign)) return "water";
+  return "balanced";
+}
+
+function getNakshatraTone(nakshatra?: string): string {
+  const fire = ["Ashwini", "Magha", "Moola"];
+  const earth = ["Bharani", "Purva Phalguni", "Purva Ashadha"];
+  const air = ["Krittika", "Uttara Phalguni", "Uttara Ashadha"];
+  const water = ["Rohini", "Hasta", "Shravana"];
+  if (!nakshatra) return "balanced";
+  if (fire.includes(nakshatra)) return "fiery, activation";
+  if (earth.includes(nakshatra)) return "grounded, material";
+  if (air.includes(nakshatra)) return "intellectual, mobile";
+  if (water.includes(nakshatra)) return "emotional, receptive";
+  return "balanced";
+}
+
+function getDashaTheme(planet: string): string {
+  const themes: Record<string, string> = {
+    Saturn: "maturity, discipline, and karmic restructuring",
+    Jupiter: "growth, wisdom, and expansion of fortune",
+    Mars: "courage, conflict, and accelerated action",
+    Mercury: "communication, commerce, and analytical refinement",
+    Venus: "relationships, pleasure, and creative flowering",
+    Sun: "authority, vitality, and self-definition",
+    Moon: "emotional maturation, public connection, and nurturing",
+    Rahu: "obsession, foreign influence, and unconventional ascent",
+    Ketu: "detachment, spiritual insight, and karmic release",
+  };
+  return themes[planet] ?? "a period of significant inner development";
+}
+
+function computeStrongestPlanet(
+  shadbalaData: Record<string, unknown> | undefined
+): { planet: string; score: number } | null {
+  if (!shadbalaData) return null;
+
+  const rupas = shadbalaData.shadbala_rupas as Record<string, number> | undefined;
+  if (!rupas) return null;
+
+  const sorted = Object.entries(rupas).sort((a, b) => b[1] - a[1]);
+  if (sorted.length === 0) return null;
+
+  const [planet, score] = sorted[0];
+  return { planet, score: Number(score) || 0 };
+}
+
+function computeShadbalaRows(
+  shadbalaData: Record<string, unknown> | undefined
+): ShadbalaRow[] {
+  if (!shadbalaData) return [];
+
+  const rupas = (shadbalaData.shadbala_rupas || {}) as Record<string, number>;
+  const virupas = (shadbalaData.shadbala_virupas || {}) as Record<string, number>;
+  const ranks = (shadbalaData.relative_rank || {}) as Record<string, number>;
+  const summary = (shadbalaData.strength_summary || {}) as Record<string, string>;
+
+  return Object.keys(rupas).map((planet) => ({
+    planet,
+    rupas: Number(rupas[planet]) || 0,
+    virupas: Number(virupas[planet]) || 0,
+    rank: Number(ranks[planet]) || 0,
+    status: summary[planet] ?? "—",
+  }));
+}
+
+function computeAshtakavargaTotal(
+  ashtakavargaData: unknown
+): number | null {
+  if (!ashtakavargaData) return null;
+
+  const root = (ashtakavargaData as Record<string, unknown>).data ?? ashtakavargaData;
+  const summary =
+    (root as Record<string, unknown>).sarvashtakavarga_summary ??
+    (root as Record<string, unknown>).sarvashtakavarga ??
+    (root as Record<string, unknown>).ashtakvarga;
+
+  if (typeof summary === "number") return summary;
+  if (typeof summary === "object" && summary !== null) {
+    const values = Object.values(summary).filter(
+      (v): v is number => typeof v === "number"
+    );
+    return values.reduce((a, b) => a + b, 0);
+  }
+  return null;
+}
+
+function computeAshtakavargaRows(
+  ashtakavargaData: unknown
+): AshtakavargaRow[] {
+  if (!ashtakavargaData) return [];
+
+  const root = (ashtakavargaData as Record<string, unknown>).data ?? ashtakavargaData;
+  const summary =
+    (root as Record<string, unknown>).sarvashtakavarga_summary ??
+    (root as Record<string, unknown>).sarvashtakavarga ??
+    (root as Record<string, unknown>).ashtakvarga;
+
+  if (typeof summary === "object" && summary !== null && !Array.isArray(summary)) {
+    return Object.entries(summary)
+      .filter(([, v]) => typeof v === "number")
+      .map(([sign, score]) => ({ sign, score: Number(score) }));
+  }
+
+  return [];
+}
+
+function countChartsByPrefix(
+  processedCharts: Record<string, { chartType?: string }>,
+  prefix: string
+): number {
+  return Object.values(processedCharts).filter((c) =>
+    c.chartType?.startsWith(prefix)
+  ).length;
+}
+
+// ---------------------------------------------------------------------------
+// Main page
+// ---------------------------------------------------------------------------
 
 export default function ClientOverviewPage() {
-    const { clientDetails, isClientSet } = useVedicClient();
-    const { ayanamsa, chartStyle, recentClientIds } = useAstrologerStore();
-    const settings = { ayanamsa, chartStyle, recentClientIds };
+  const { clientDetails, processedCharts, isLoadingCharts } = useVedicClient();
+  const { ayanamsa } = useAstrologerStore();
 
-    // Fallback Mock Data if no client is set in context
-    const displayClient = clientDetails || {
-        name: 'Ananya Sharma',
-        dateOfBirth: '1992-08-15',
-        timeOfBirth: '14:30',
-        placeOfBirth: { city: 'New Delhi, India' },
-        rashi: 'Leo'
+  const displayClient: DisplayClient = clientDetails ?? MOCK_CLIENT;
+  const clientId = displayClient.id ?? "";
+  const activeAyanamsa = ayanamsa.toLowerCase();
+
+  // -------------------------------------------------------------------------
+  // Queries
+  // -------------------------------------------------------------------------
+
+  const { data: dashaResponse, isLoading: isDashaLoading } = useDasha(
+    clientId,
+    "tree",
+    activeAyanamsa,
+    { drillDownPath: [] }
+  );
+
+  const { data: shadbalaResponse, isLoading: isShadbalaLoading } =
+    useShadbala(clientId);
+
+  const { data: ashtakavargaResponse, isLoading: isAshtakavargaLoading } =
+    useAshtakavarga(clientId, activeAyanamsa, "sarva");
+
+  // -------------------------------------------------------------------------
+  // Derived chart data
+  // -------------------------------------------------------------------------
+
+  const chartData = useMemo(() => {
+    const d1Key = `D1_${activeAyanamsa}`;
+    const d1 = processedCharts[d1Key]?.chartData;
+    if (!d1) return null;
+    return parseChartData(d1);
+  }, [processedCharts, activeAyanamsa]);
+
+  const planetaryInfo: PlanetaryInfo[] = useMemo(() => {
+    if (!chartData) return [];
+    return chartData.planets.map((p) => ({
+      planet: p.name,
+      sign: signIdToName[p.signId] ?? "??",
+      degree: p.degree ?? "00°00′",
+      nakshatra: p.nakshatra ?? "??",
+      nakshatraPart: p.pada ?? 1,
+      house: p.house ?? 1,
+      isRetro: p.isRetro,
+    }));
+  }, [chartData]);
+
+  const ascendant = chartData ? signIdToName[chartData.ascendant] : "—";
+  const moonInfo = planetaryInfo.find((p) => p.planet === "Moon");
+
+  // -------------------------------------------------------------------------
+  // Derived dasha data
+  // -------------------------------------------------------------------------
+
+  const activeDasha = useMemo(() => {
+    if (!dashaResponse?.data) {
+      return {
+        nodes: [] as DashaNode[],
+        maha: "—",
+        antar: "—",
+        pratya: null as string | null,
+        start: "—",
+        end: "—",
+        remaining: 0,
+        elapsed: 0,
+        total: 0,
+        progress: 0,
+      };
+    }
+
+    const path = findActiveDashaPath(dashaResponse.data as never);
+    const nodes = path.nodes;
+    const mahaNode = nodes[0];
+    const antarNode = nodes[1];
+
+    const maha = mahaNode?.planet ?? "Unknown";
+    const antar = antarNode?.planet ?? "Unknown";
+    const pratya = nodes[2]?.planet ?? null;
+
+    const start = mahaNode?.startDate ?? "";
+    const end = mahaNode?.endDate ?? "";
+    const total = daysBetween(start, end);
+    const elapsed = daysBetween(start, new Date().toISOString());
+    const remaining = Math.max(0, total - elapsed);
+    const progress = total > 0 ? Math.min(100, Math.round((elapsed / total) * 100)) : 0;
+
+    return {
+      nodes,
+      maha,
+      antar,
+      pratya,
+      start: formatDateShort(start),
+      end: formatDateShort(end),
+      remaining,
+      elapsed,
+      total,
+      progress,
     };
+  }, [dashaResponse]);
 
-    return (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+  const upcomingTransitions = useMemo(() => {
+    if (!dashaResponse?.data) return [];
 
-            {/* Top Workspace Header (Brief Summary) */}
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 bg-softwhite/5 border border-gold-primary/15 p-6 rounded-3xl backdrop-blur-md">
-                <div className="flex items-center gap-5">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gold-dark to-ink flex items-center justify-center text-white shadow-[0_8px_30px_rgba(0,0,0,0.3)] border border-white/10">
-                        <span className="text-[30px] font-serif font-bold">{displayClient.name.charAt(0)}</span>
-                    </div>
-                    <div>
-                        <div className="flex items-center gap-3">
-                            <h1 className="text-[30px] font-serif text-white font-bold tracking-tight">{displayClient.name}</h1>
-                            <span className="bg-active-glow/10 text-active-glow text-[10px] px-2 py-0.5 rounded-full border border-active-glow/30 font-bold uppercase tracking-widest">Active</span>
-                        </div>
-                        <p className="text-gold-dark text-[12px] font-serif italic mt-1">Astrological profile for {displayClient.name}</p>
-                    </div>
-                </div>
+    const data = dashaResponse.data as Record<string, unknown>;
+    const mahadashas =
+      (data.mahadashas as Record<string, unknown>[]) ??
+      (data.periods as Record<string, unknown>[]) ??
+      [];
 
-                <div className="flex gap-3">
-                    <button className="p-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white/60 hover:text-active-glow transition-all">
-                        <Edit3 className="w-5 h-5" />
-                    </button>
-                    <Link href={`/vedic-astrology`} className="px-6 py-3 bg-active-glow text-ink rounded-xl font-black uppercase tracking-widest text-[10px] shadow-lg hover:scale-105 transition-transform flex items-center gap-2">
-                        <Zap className="w-4 h-4" />
-                        Full Analysis
-                    </Link>
-                </div>
-            </div>
+    const now = new Date().getTime();
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                {/* LEFT: Client Meta Info */}
-                <div className="lg:col-span-4 space-y-8">
+    return mahadashas
+      .filter((period) => {
+        const end = new Date(String(period.end_date ?? period.endDate ?? "")).getTime();
+        return !isNaN(end) && end > now;
+      })
+      .slice(0, 3)
+      .map((period) => ({
+        planet: String(period.planet ?? period.lord ?? "—"),
+        start: formatDateShort(String(period.start_date ?? period.startDate ?? "")),
+        end: formatDateShort(String(period.end_date ?? period.endDate ?? "")),
+      }));
+  }, [dashaResponse]);
 
-                    {/* AVATAR DATA CARD */}
-                    <div className="bg-ink-deep/60 border border-gold-primary/20 rounded-3xl p-6 relative overflow-hidden group shadow-2xl">
-                        <div className="absolute -right-4 -top-4 w-24 h-24 bg-gold-primary/10 rounded-full blur-2xl group-hover:bg-active-glow/20 transition-all" />
+  // -------------------------------------------------------------------------
+  // Derived metric data
+  // -------------------------------------------------------------------------
 
-                        <h2 className="text-[10px] font-bold tracking-widest uppercase text-active-glow mb-6 border-b border-gold-primary/15 pb-2">
-                            Birth Coordinates
-                        </h2>
+  const shadbalaData = shadbalaResponse as Record<string, unknown> | undefined;
+  const strongestPlanet = useMemo(
+    () => computeStrongestPlanet(shadbalaData),
+    [shadbalaData]
+  );
 
-                        <div className="space-y-6">
-                            <BirthDatum icon={Calendar} label="Incarnation Date" value={displayClient.dateOfBirth} />
-                            <BirthDatum icon={Clock} label="Precise Time" value={`${displayClient.timeOfBirth} (Local Time)`} />
-                            <BirthDatum icon={MapPin} label="Geography" value={displayClient.placeOfBirth.city} subValue="28.6139° N, 77.2090° E" />
-                        </div>
-                    </div>
+  const shadbalaRows = useMemo(
+    () => computeShadbalaRows(shadbalaData),
+    [shadbalaData]
+  );
 
-                    {/* COSMIC SIGNATURES */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <SignatureCard label="Ascendant" value="Cancer" />
-                        <SignatureCard label="Moon Rashi" value={displayClient.rashi || "Leo"} highlight />
-                        <SignatureCard label="Nakshatra" value="Magha" />
-                        <SignatureCard label="Sun Sign" value="Leo" />
-                    </div>
-                </div>
+  const ashtakavargaTotal = useMemo(
+    () => computeAshtakavargaTotal(ashtakavargaResponse),
+    [ashtakavargaResponse]
+  );
 
-                {/* RIGHT: Analytical Insights */}
-                <div className="lg:col-span-8 space-y-8">
+  const ashtakavargaRows = useMemo(
+    () => computeAshtakavargaRows(ashtakavargaResponse),
+    [ashtakavargaResponse]
+  );
 
-                    {/* MAIN LIFE TIMELINE (Vimshottari Overview) */}
-                    <div className="bg-gradient-to-br from-ink-deep to-brown-dark border border-gold-primary/20 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-                            <TrendingUp className="w-32 h-32 text-active-glow" />
-                        </div>
+  const yogaCount = useMemo(
+    () => countChartsByPrefix(processedCharts, "yoga_"),
+    [processedCharts]
+  );
 
-                        <div className="flex items-center justify-between mb-8">
-                            <div>
-                                <h2 className="text-[24px] font-serif text-white font-bold tracking-tight">Vimshottari Lifecycle</h2>
-                                <p className="text-[10px] text-gold-dark uppercase tracking-widest font-bold mt-1">Current Major Influence</p>
-                            </div>
-                            <div className="bg-sky-700/20 border border-sky-700/50 px-4 py-2 rounded-2xl">
-                                <span className="text-sky-400 font-bold text-[14px] font-serif">Saturn Mahadasha</span>
-                            </div>
-                        </div>
+  const doshaCount = useMemo(
+    () => countChartsByPrefix(processedCharts, "dosha_"),
+    [processedCharts]
+  );
 
-                        {/* Interactive Timeline Visualization */}
-                        <div className="space-y-6">
-                            <div className="relative h-4 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                                <div className="absolute top-0 left-0 h-full w-[60%] bg-gradient-to-r from-gold-dark to-mahogany shadow-[0_0_15px_rgba(208,140,96,0.3)]" />
-                                <div className="absolute top-0 left-[60%] h-full w-[40%] bg-white/5" />
-                                <div className="absolute top-0 bottom-0 left-[45%] w-1 bg-white cursor-pointer group shadow-[0_0_10px_white]">
-                                    <div className="absolute -top-1 -left-1.5 w-4 h-4 rounded-full bg-white border border-gold-primary scale-0 group-hover:scale-100 transition-transform" />
-                                </div>
-                            </div>
+  // -------------------------------------------------------------------------
+  // Template data
+  // -------------------------------------------------------------------------
 
-                            <div className="flex justify-between items-start text-center">
-                                <TimelineMark label="Past" value="Jupiter" year="2016" />
-                                <TimelineMark label="Present" value="Saturn" year="2026" active />
-                                <TimelineMark label="Future" value="Mercury" year="2032" />
-                            </div>
-                        </div>
-                    </div>
+  const heroTitle =
+    activeDasha.maha === "—"
+      ? "Current Life Period"
+      : `${activeDasha.maha} Mahadasha · ${activeDasha.antar} Antardasha`;
 
-                    {/* ACTION GRID */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <ActionCard
-                            title="Analytical Charts"
-                            desc="Dive into D1, D9 and Divisional mappings."
-                            href="/vedic-astrology"
-                            icon={Sparkles}
-                        />
-                        <ActionCard
-                            title="Dasha Predictor"
-                            desc="Timeline analysis for career and luck."
-                            href={`/client/${displayClient.name}/dashas`}
-                            icon={TrendingUp}
-                        />
-                        <ActionCard
-                            title="Report Lab"
-                            desc="Generate professional synthesis PDFs."
-                            href={`/client/${displayClient.name}/reports`}
-                            icon={FileText}
-                        />
-                    </div>
+  const heroSubtitle =
+    activeDasha.maha === "—"
+      ? "Dasha data is loading."
+      : `The ${activeDasha.maha} Mahadasha, currently focused through ${activeDasha.antar}, is a chapter of ${getDashaTheme(
+          activeDasha.maha
+        ).toLowerCase()}.`;
 
-                    {/* ASTROLOGER'S PRIVATE NOTES */}
-                    <div className="bg-softwhite/5 border border-gold-primary/15 rounded-3xl p-8 backdrop-blur-md relative">
-                        <div className="flex items-center gap-3 mb-4">
-                            <History className="w-5 h-5 text-active-glow" />
-                            <h3 className="text-[14px] font-bold text-active-glow uppercase tracking-widest font-serif">Consultant Summary</h3>
-                        </div>
-                        <p className="font-serif italic text-white/50 leading-relaxed text-[18px] font-light">
-                            "Subject shows high spiritual aptitude due to Ketu in the 5th house. The current Saturn major period is forcing a restructuring of professional identity. Recommend focusing on grounding practices until Magha nakshatra stabilizes in late 2026..."
-                        </p>
-                        <button className="absolute top-8 right-8 text-gold-dark hover:text-active-glow transition-colors">
-                            <ArrowRight className="w-5 h-5" />
-                        </button>
-                    </div>
+  const heroMetadata =
+    activeDasha.maha === "—"
+      ? "—"
+      : `${activeDasha.start} – ${activeDasha.end} · ${activeDasha.remaining.toLocaleString()} days remaining`;
 
-                </div>
-            </div>
+  const insights = [
+    {
+      label: "Ascendant",
+      value: ascendant,
+      metadata: "Lagna",
+    },
+    {
+      label: "Moon Rashi",
+      value: moonInfo?.sign ?? "—",
+      metadata: `${displayClient.nakshatra ?? moonInfo?.nakshatra ?? "—"} · Pada ${
+        moonInfo?.nakshatraPart ?? "—"
+      }`,
+    },
+    {
+      label: "Current Mahadasha",
+      value: activeDasha.maha,
+      metadata: activeDasha.start,
+    },
+    {
+      label: "Current Antardasha",
+      value: activeDasha.antar,
+      metadata:
+        activeDasha.remaining > 0
+          ? `${activeDasha.remaining.toLocaleString()} days left`
+          : "—",
+    },
+    {
+      label: "Strongest Planet",
+      value: strongestPlanet?.planet ?? "—",
+      metadata: strongestPlanet ? `${strongestPlanet.score.toFixed(1)} rupas` : "—",
+    },
+    {
+      label: "Key Transit",
+      value: "Saturn in 8th",
+      metadata: "Aquarius · restructuring",
+    },
+  ];
+
+  const metrics = [
+    {
+      label: "Shadbala",
+      value: strongestPlanet ? strongestPlanet.score.toFixed(1) : "—",
+      metadata: "Strongest planet rupas",
+    },
+    {
+      label: "Ashtakavarga",
+      value: ashtakavargaTotal?.toString() ?? "—",
+      metadata: "Sarva total",
+    },
+    {
+      label: "Yogas",
+      value: yogaCount,
+      metadata: "Active combinations",
+    },
+    {
+      label: "Doshas",
+      value: doshaCount,
+      metadata: "Active corrections",
+    },
+  ];
+
+  const interpretation = useMemo(() => {
+    if (!chartData || activeDasha.maha === "—") {
+      return "Client overview is being prepared.";
+    }
+
+    const moonRashi = moonInfo?.sign ?? "—";
+    const nakshatra = displayClient.nakshatra ?? moonInfo?.nakshatra ?? "—";
+
+    return [
+      `With ${ascendant} rising, the client presents a ${getElement(
+        ascendant
+      )}-tempered outer personality.`,
+      `The Moon in ${moonRashi} (${nakshatra}) colours the emotional baseline with ${getNakshatraTone(
+        nakshatra
+      )} energy.`,
+      `Currently in ${activeDasha.maha} Mahadasha · ${activeDasha.antar} Antardasha, the dominant life theme is ${getDashaTheme(
+        activeDasha.maha
+      ).toLowerCase()}.`,
+      getDashaTheme(activeDasha.antar),
+    ].join(" ");
+  }, [chartData, ascendant, moonInfo, activeDasha, displayClient.nakshatra]);
+
+  // -------------------------------------------------------------------------
+  // Table columns
+  // -------------------------------------------------------------------------
+
+  const planetaryColumns: DataTableColumn<PlanetaryInfo>[] = [
+    {
+      key: "planet",
+      header: "Planet",
+      render: (row) => (
+        <span className="inline-flex items-center gap-2">
+          <span className="font-serif text-[18px]">{getPlanetSymbol(row.planet)}</span>
+          <span>{row.planet}</span>
+          {row.isRetro && <span className="text-meta-md text-muted">℞</span>}
+        </span>
+      ),
+    },
+    { key: "sign", header: "Sign" },
+    { key: "degree", header: "Degree", type: "numeric" },
+    { key: "nakshatra", header: "Nakshatra" },
+    { key: "nakshatraPart", header: "Pada", align: "center", type: "numeric" },
+    { key: "house", header: "House", align: "center", type: "numeric" },
+  ];
+
+  const shadbalaColumns: DataTableColumn<ShadbalaRow>[] = [
+    { key: "planet", header: "Planet" },
+    { key: "rupas", header: "Rupas", align: "right", type: "numeric" },
+    { key: "virupas", header: "Virupas", align: "right", type: "numeric" },
+    { key: "rank", header: "Rank", align: "center", type: "numeric" },
+    { key: "status", header: "Status" },
+  ];
+
+  const ashtakavargaColumns: DataTableColumn<AshtakavargaRow>[] = [
+    { key: "sign", header: "Sign" },
+    { key: "score", header: "Score", align: "center", type: "numeric" },
+  ];
+
+  // -------------------------------------------------------------------------
+  // Loading state
+  // -------------------------------------------------------------------------
+
+  const isLoading =
+    isLoadingCharts || isDashaLoading || isShadbalaLoading || isAshtakavargaLoading;
+
+  // -------------------------------------------------------------------------
+  // Render
+  // -------------------------------------------------------------------------
+
+  return (
+    <div
+      className={cn(
+        dashboardTemplateClasses.root,
+        "animate-in fade-in slide-in-from-bottom-4 duration-700"
+      )}
+    >
+      {/* 1. PAGE HEADER */}
+      <header className={pageHeaderClasses.container}>
+        <div className={pageHeaderClasses.titleBlock}>
+          <h1 className={pageHeaderClasses.title}>Overview</h1>
+          <p className={pageHeaderClasses.subtitle}>
+            Astrological intelligence for {displayClient.name}
+          </p>
         </div>
-    );
-}
+        <div className={pageHeaderClasses.actions}>
+          <GoldenButton topText="Generate" bottomText="Full Report" />
+        </div>
+      </header>
 
-function BirthDatum({ icon: Icon, label, value, subValue }: { icon: React.ElementType, label: string, value: string, subValue?: string }) {
-    return (
-        <div className="flex gap-4 group">
-            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gold-dark group-hover:text-active-glow group-hover:border-active-glow/30 transition-all shadow-lg">
-                <Icon className="w-5 h-5" />
+      {/* 2. PAGE SUMMARY */}
+      <section
+        className={pageSummaryClasses.container}
+        aria-label="Client birth summary"
+      >
+        <div className={pageSummaryClasses.item}>
+          <Calendar className="w-4 h-4 text-muted" />
+          <span className={pageSummaryClasses.label}>Born</span>
+          <span className={pageSummaryClasses.value}>
+            {formatDateShort(displayClient.dateOfBirth)}
+          </span>
+        </div>
+        <div className={pageSummaryClasses.item}>
+          <Clock className="w-4 h-4 text-muted" />
+          <span className={pageSummaryClasses.label}>Time</span>
+          <span className={pageSummaryClasses.value}>
+            {displayClient.timeOfBirth}
+          </span>
+        </div>
+        <div className={pageSummaryClasses.item}>
+          <MapPin className="w-4 h-4 text-muted" />
+          <span className={pageSummaryClasses.label}>Place</span>
+          <span className={pageSummaryClasses.value}>
+            {displayClient.placeOfBirth?.city ?? "—"}
+          </span>
+        </div>
+        <div className={pageSummaryClasses.item}>
+          <Sparkles className="w-4 h-4 text-muted" />
+          <span className={pageSummaryClasses.label}>Ayanamsa</span>
+          <span className={pageSummaryClasses.value}>{ayanamsa}</span>
+        </div>
+      </section>
+
+      {/* 3. HERO INSIGHT */}
+      {isLoading ? (
+        <Card variant="hero" className={heroInsightClasses.container}>
+          <div className="flex items-center gap-3 text-muted">
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span className="text-body-md">Consulting the stars...</span>
+          </div>
+        </Card>
+      ) : (
+        <Card variant="hero" className={heroInsightClasses.container}>
+          <span className={heroInsightClasses.label}>Current Life Period</span>
+          <h2 className={heroInsightClasses.value}>{heroTitle}</h2>
+          <p className={heroInsightClasses.supportingText}>{heroSubtitle}</p>
+          <p className={heroInsightClasses.metadata}>{heroMetadata}</p>
+
+          {/* Progress bar */}
+          {activeDasha.total > 0 && (
+            <div className="mt-4">
+              <div className="h-1.5 w-full bg-bg-subtle rounded-full overflow-hidden border border-border-secondary">
+                <div
+                  className="h-full bg-text-primary rounded-full"
+                  style={{ width: `${activeDasha.progress}%` }}
+                  aria-hidden="true"
+                />
+              </div>
+              <p className="text-meta-md text-muted mt-1.5">
+                {activeDasha.progress}% elapsed
+              </p>
             </div>
+          )}
+
+          <div className={heroInsightClasses.actionArea}>
+            <Link
+              href={`/client/${clientId}/dashas`}
+              className="inline-flex items-center gap-1.5 text-body-md font-medium text-primary hover:underline"
+            >
+              Open Dasha Timeline
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </Card>
+      )}
+
+      {/* 4. INSIGHT STRIP */}
+      <section className={insightStripClasses.container} aria-label="Key insights">
+        {insights.map((insight) => (
+          <Card
+            key={insight.label}
+            variant="insight"
+            className={insightStripClasses.item}
+          >
+            <span className={insightStripClasses.label}>{insight.label}</span>
+            <span className={insightStripClasses.value}>{insight.value}</span>
+            {insight.metadata && (
+              <span className={insightStripClasses.metadata}>
+                {insight.metadata}
+              </span>
+            )}
+          </Card>
+        ))}
+      </section>
+
+      {/* 5. METRIC GRID */}
+      <section
+        className={metricGridClasses[4]}
+        aria-label="Quantified metrics"
+      >
+        {metrics.map((metric) => (
+          <Card
+            key={metric.label}
+            variant="widget"
+            className={metricCardClasses.container}
+          >
+            <span className={metricCardClasses.label}>{metric.label}</span>
+            <span className={metricCardClasses.value}>{metric.value}</span>
+            {metric.metadata && (
+              <span className={metricCardClasses.metadata}>{metric.metadata}</span>
+            )}
+          </Card>
+        ))}
+      </section>
+
+      {/* 6. CONTENT AREA */}
+      <section
+        className={dashboardTemplateClasses.contentArea}
+        aria-label="Chart and interpretation"
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-card-gap">
+          {/* Chart */}
+          <Card variant="data" className="lg:col-span-5">
+            <CardHeader>
+              <div>
+                <CardTitle>D1 Natal Chart</CardTitle>
+                <CardSubtitle>{ayanamsa} ayanamsa</CardSubtitle>
+              </div>
+            </CardHeader>
+            <CardBody className="items-center justify-center">
+              {chartData ? (
+                <div className="w-full max-w-[320px]">
+                  <NorthIndianChart
+                    ascendantSign={chartData.ascendant}
+                    planets={chartData.planets}
+                    showDegrees
+                  />
+                </div>
+              ) : (
+                <p className="text-body-md text-muted">Chart data unavailable</p>
+              )}
+            </CardBody>
+          </Card>
+
+          {/* Interpretation */}
+          <Card variant="insight" className="lg:col-span-7">
+            <CardHeader>
+              <div>
+                <CardTitle>Reading</CardTitle>
+                <CardSubtitle>Consultant summary</CardSubtitle>
+              </div>
+            </CardHeader>
+            <CardBody>
+              <p className="text-body-md text-secondary leading-relaxed">
+                {interpretation}
+              </p>
+            </CardBody>
+          </Card>
+        </div>
+
+        {/* Timeline */}
+        <Card variant="data">
+          <CardHeader>
             <div>
-                <p className="text-[10px] font-bold tracking-widest uppercase text-white/60">{label}</p>
-                <p className="font-serif text-[18px] font-bold text-white/90">{value}</p>
-                {subValue && <p className="text-[10px] text-gold-dark font-serif italic">{subValue}</p>}
+              <CardTitle>Upcoming Dasha Transitions</CardTitle>
+              <CardSubtitle>Next major life periods</CardSubtitle>
             </div>
-        </div>
-    );
-}
+          </CardHeader>
+          <CardBody>
+            {upcomingTransitions.length > 0 ? (
+              <div className="space-y-3">
+                {upcomingTransitions.map((t, i) => (
+                  <div
+                    key={`${t.planet}-${i}`}
+                    className="flex items-center justify-between py-2 border-b border-border-secondary last:border-b-0"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="font-serif text-[20px]">
+                        {getPlanetSymbol(t.planet)}
+                      </span>
+                      <div>
+                        <p className="text-body-md text-primary font-medium">
+                          {t.planet} Mahadasha
+                        </p>
+                        <p className="text-meta-md text-muted">
+                          {t.start} – {t.end}
+                        </p>
+                      </div>
+                    </div>
+                    <TrendingUp className="w-4 h-4 text-muted" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-body-md text-muted">
+                No upcoming transitions available.
+              </p>
+            )}
+          </CardBody>
+        </Card>
+      </section>
 
-function SignatureCard({ label, value, highlight = false }: { label: string, value: string, highlight?: boolean }) {
-    return (
-        <div className={`p-4 rounded-2xl border transition-all ${highlight ? 'bg-active-glow/10 border-active-glow/40 shadow-[0_0_20px_rgba(255,210,125,0.1)]' : 'bg-white/5 border-white/10'}`}>
-            <p className="text-[9px] uppercase tracking-widest text-white/60 mb-1 font-bold">{label}</p>
-            <p className={`font-serif text-[18px] font-extrabold ${highlight ? 'text-active-glow' : 'text-white/80'}`}>{value}</p>
-        </div>
-    );
-}
-
-function TimelineMark({ label, value, year, active = false }: { label: string, value: string, year: string, active?: boolean }) {
-    return (
-        <div className={`space-y-1 ${active ? 'opacity-100 scale-110' : 'opacity-40'}`}>
-            <p className="text-[8px] font-black tracking-tighter uppercase text-gold-dark">{label}</p>
-            <p className="text-[12px] font-serif font-bold text-white">{value}</p>
-            <p className="text-[9px] text-white/60 font-bold">{year}</p>
-        </div>
-    );
-}
-
-function ActionCard({ title, desc, href, icon: Icon }: { title: string, desc: string, href: string, icon: React.ElementType }) {
-    return (
-        <Link href={href} className="flex flex-col p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-active-glow/40 hover:bg-active-glow/5 transition-all group shadow-xl">
-            <div className="w-12 h-12 rounded-2xl bg-gold-primary/10 border border-gold-primary/15 flex items-center justify-center text-gold-dark mb-4 group-hover:scale-110 transition-transform">
-                <Icon className="w-6 h-6" />
+      {/* 7. DATA AREA */}
+      <section className={dashboardTemplateClasses.dataArea} aria-label="Supporting data">
+        {/* Planetary Positions — visible by default */}
+        <Card variant="data">
+          <CardHeader>
+            <div>
+              <CardTitle>Planetary Positions</CardTitle>
+              <CardSubtitle>Natal planet coordinates</CardSubtitle>
             </div>
-            <h4 className="text-[18px] font-serif font-bold text-white mb-2">{title}</h4>
-            <p className="text-[11px] text-white/60 leading-relaxed font-light">{desc}</p>
-        </Link>
-    );
+          </CardHeader>
+          <CardBody>
+            <DataTable
+              columns={planetaryColumns}
+              data={planetaryInfo}
+              variant="compact"
+              ariaLabel="Planetary positions"
+              loading={isLoadingCharts}
+              loadingRows={5}
+            />
+          </CardBody>
+        </Card>
+
+        {/* Shadbala — collapsed */}
+        <CollapsibleDataCard title="Shadbala Detail" defaultOpen={false}>
+          <DataTable
+            columns={shadbalaColumns}
+            data={shadbalaRows}
+            variant="compact"
+            ariaLabel="Shadbala strength detail"
+            loading={isShadbalaLoading}
+            loadingRows={5}
+          />
+        </CollapsibleDataCard>
+
+        {/* Ashtakavarga — collapsed */}
+        <CollapsibleDataCard title="Ashtakavarga Summary" defaultOpen={false}>
+          <DataTable
+            columns={ashtakavargaColumns}
+            data={ashtakavargaRows}
+            variant="compact"
+            ariaLabel="Ashtakavarga summary"
+            loading={isAshtakavargaLoading}
+            loadingRows={5}
+          />
+        </CollapsibleDataCard>
+      </section>
+
+      {/* 8. ACTION AREA */}
+      <section className={dashboardTemplateClasses.actionArea} aria-label="Actions">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-card-gap">
+          <ActionCard
+            href={`/client/${clientId}/reports`}
+            icon={FileText}
+            title="Generate Report"
+            desc="Create a full PDF analysis"
+          />
+          <ActionCard
+            href={`/client/${clientId}/charts`}
+            icon={LayoutDashboard}
+            title="View Charts"
+            desc="D1, D9, and divisionals"
+          />
+          <ActionCard
+            href={`/client/${clientId}/dashas`}
+            icon={Moon}
+            title="View Dashas"
+            desc="Timeline analysis"
+          />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Local helper components
+// ---------------------------------------------------------------------------
+
+function CollapsibleDataCard({
+  title,
+  children,
+  defaultOpen = false,
+}: {
+  title: string;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  const panelId = `${title.toLowerCase().replace(/\s+/g, "-")}-panel`;
+
+  return (
+    <Card variant="data">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="w-full text-left"
+        aria-expanded={open}
+        aria-controls={panelId}
+      >
+        <CardHeader
+          action={
+            <ChevronDown
+              className={cn(
+                "w-4 h-4 text-muted transition-transform",
+                open && "rotate-180"
+              )}
+            />
+          }
+        >
+          <div>
+            <CardTitle>{title}</CardTitle>
+          </div>
+        </CardHeader>
+      </button>
+      {open && (
+        <CardBody id={panelId}>
+          {children}
+        </CardBody>
+      )}
+    </Card>
+  );
+}
+
+function ActionCard({
+  href,
+  icon: Icon,
+  title,
+  desc,
+}: {
+  href: string;
+  icon: React.ElementType;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <Link href={href} className="block">
+      <Card variant="interactive" className="h-full">
+        <CardBody className="flex-row items-center gap-card-gap">
+          <Icon className="w-6 h-6 text-muted shrink-0" />
+          <div>
+            <h3 className="text-title-md font-ui text-primary">{title}</h3>
+            <p className="text-body-sm text-secondary">{desc}</p>
+          </div>
+        </CardBody>
+      </Card>
+    </Link>
+  );
 }

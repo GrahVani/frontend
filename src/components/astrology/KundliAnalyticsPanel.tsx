@@ -243,6 +243,8 @@ const HEADER_STYLE = {
     borderBottom: '1px solid rgba(220,201,166,0.25)',
 };
 
+const HEADER_TITLE_CLASS = "font-serif text-[20px] leading-none font-bold tracking-normal text-[#4A2417] truncate";
+
 export default function KundliAnalyticsPanel() {
     const { processedCharts, isLoadingCharts } = useVedicClient();
 
@@ -325,7 +327,7 @@ export default function KundliAnalyticsPanel() {
                 <div className="px-3 py-1.5 flex items-center justify-between gap-1.5" style={HEADER_STYLE}>
                     <div className="flex items-center gap-1.5 min-w-0">
                         <BarChart3 className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "truncate")}>Shadbala strength</h2>
+                        <h2 className={HEADER_TITLE_CLASS}>Shadbala strength</h2>
                     </div>
                 </div>
                 <div className="flex-1 bg-surface-warm overflow-hidden">
@@ -351,7 +353,7 @@ export default function KundliAnalyticsPanel() {
                 <div className="px-3 py-1.5 flex items-center justify-between gap-1.5" style={HEADER_STYLE}>
                     <div className="flex items-center gap-1.5 min-w-0">
                         <Grid3X3 className="w-3.5 h-3.5 text-purple-600 shrink-0" />
-                        <h2 className={cn(TYPOGRAPHY.sectionTitle, "truncate")}>Sarvashtakavarga</h2>
+                        <h2 className={HEADER_TITLE_CLASS}>Sarvashtakavarga</h2>
                     </div>
                 </div>
                 <div className="flex-1 p-3 bg-surface-warm min-h-[180px] flex flex-col xl:flex-row items-stretch gap-6 overflow-hidden">
@@ -361,8 +363,8 @@ export default function KundliAnalyticsPanel() {
                         </div>
                     ) : (hasSarva && ascSign) ? (
                         <>
-                            {/* Left Side: Chart (Centered vertically to match table height) */}
-                            <div className="shrink-0 w-full max-w-[380px] mx-auto xl:mx-0 flex flex-col justify-center py-2">
+                            {/* Left Side: Chart (Square on desktop, capped to keep table readable) */}
+                            <div className="shrink-0 w-full max-w-[360px] xl:w-auto xl:max-w-none xl:h-full xl:max-h-[400px] xl:aspect-square mx-auto xl:mx-0 flex flex-col justify-center py-2 xl:py-0">
                                 <AshtakavargaChart
                                     type="sarva"
                                     ascendantSign={ascSign}
@@ -372,15 +374,12 @@ export default function KundliAnalyticsPanel() {
 
                             {/* Right Side: Matrix Table */}
                             <div className="flex-1 w-full overflow-hidden flex flex-col justify-start">
-                                <div className="text-[12px] text-black font-semibold mb-1.5 px-1 flex items-center gap-2">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                                    Bindu Matrix
-                                </div>
                                 <div className="overflow-x-auto custom-scrollbar rounded-xl border border-primary/10 bg-white/30 flex-1">
                                     <AshtakavargaMatrix
                                         type="sarva"
                                         data={sarvaFullData}
                                         className="!text-[11px]"
+                                        compact
                                     />
                                 </div>
                             </div>
@@ -396,4 +395,3 @@ export default function KundliAnalyticsPanel() {
         </div>
     );
 }
-

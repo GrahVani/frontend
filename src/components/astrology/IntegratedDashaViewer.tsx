@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Loader2, ChevronRight, Milestone } from 'lucide-react';
+import { CalendarDays, ChevronRight, Clock3, Home, Info, Loader2, Milestone } from 'lucide-react';
 import { clientApi } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { TYPOGRAPHY } from '@/design-tokens/typography';
@@ -24,6 +24,18 @@ interface IntegratedDashaViewerProps {
 const PLANET_ABBREVIATIONS: Record<string, string> = {
     'Sun': 'Su', 'Moon': 'Mo', 'Mars': 'Ma', 'Mercury': 'Me', 'Jupiter': 'Ju',
     'Venus': 'Ve', 'Saturn': 'Sa', 'Rahu': 'Ra', 'Ketu': 'Ke',
+};
+
+const PLANET_GLYPH_COLORS: Record<string, string> = {
+    Sun: '#F59E0B',
+    Moon: '#3867FF',
+    Mars: '#FF4967',
+    Mercury: '#0F8F65',
+    Jupiter: '#7C5CFF',
+    Venus: '#F05A96',
+    Saturn: '#F59E0B',
+    Rahu: '#D97706',
+    Ketu: '#D97706',
 };
 
 const formatDate = (dateStr?: string) => {
@@ -278,7 +290,10 @@ export default function IntegratedDashaViewer({
             {/* Navigation Header */}
             {selectedPath.length > 0 && (
                 <div className="bg-surface-warm/30 border-b border-gold-primary/10 px-3 py-1 flex items-center gap-1 overflow-x-auto no-scrollbar shrink-0">
-                    <button onClick={() => handleBreadcrumbClick(-1)} className={cn("px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors text-[11px] font-medium uppercase tracking-wider !text-primary")}>Home</button>
+                    <button onClick={() => handleBreadcrumbClick(-1)} className={cn("px-1.5 py-0.5 rounded hover:bg-gold-primary/10 transition-colors text-[11px] font-medium uppercase tracking-wider !text-primary inline-flex items-center gap-1")}>
+                        <Home className="w-3 h-3 text-gold-dark" />
+                        Home
+                    </button>
                     {selectedPath.map((node, i) => (
                         <React.Fragment key={i}>
                             <ChevronRight className="w-2.5 h-2.5 text-primary/30 shrink-0" />
@@ -341,12 +356,22 @@ export default function IntegratedDashaViewer({
                 <div className="flex-1 flex flex-col h-full">
                     {/* Header Strip - Fixed height */}
                     <div className="sticky top-0 z-20 bg-surface-warm/95 backdrop-blur-sm shadow-sm flex items-center shrink-0 border-b border-gold-primary/10 h-[36px]">
-                        <div className="px-2 text-left w-[44%] !text-[11px] font-semibold tracking-wider text-primary">
-                            {DASHA_LEVELS[currentLevel]?.name || 'Period'}
+                        <div className="px-2 text-left w-[44%] !text-[11px] font-semibold tracking-wider text-primary inline-flex items-center gap-1.5">
+                            <span>{DASHA_LEVELS[currentLevel]?.name || 'Period'}</span>
+                            <Info className="w-3 h-3 text-gold-dark" />
                         </div>
-                        <div className="px-1 text-center w-[20%] !text-[11px] font-semibold tracking-wider text-primary">Start</div>
-                        <div className="px-1 text-center w-[20%] !text-[11px] font-semibold tracking-wider text-primary">End</div>
-                        <div className="px-1 text-center w-[16%] !text-[11px] font-semibold tracking-wider text-primary">Dur.</div>
+                        <div className="px-1 text-center w-[20%] !text-[11px] font-semibold tracking-wider text-emerald-700 inline-flex items-center justify-center gap-1.5">
+                            <CalendarDays className="w-3 h-3" />
+                            Start
+                        </div>
+                        <div className="px-1 text-center w-[20%] !text-[11px] font-semibold tracking-wider text-orange-700 inline-flex items-center justify-center gap-1.5">
+                            <CalendarDays className="w-3 h-3" />
+                            End
+                        </div>
+                        <div className="px-1 text-center w-[16%] !text-[11px] font-semibold tracking-wider text-primary inline-flex items-center justify-center gap-1.5">
+                            <Clock3 className="w-3 h-3" />
+                            Dur.
+                        </div>
                     </div>
 
                     {/* Filling Rows - Stretches to fill available height */}
@@ -366,31 +391,34 @@ export default function IntegratedDashaViewer({
                                         key={idx}
                                         className={cn(
                                             "flex-1 flex items-center transition-all duration-200 group border-b border-gold-primary/5 last:border-none",
-                                            period.isCurrent ? "bg-gold-primary/10" : "hover:bg-gold-primary/5 bg-white/40 shadow-sm",
+                                            period.isCurrent ? "bg-emerald-50/55 shadow-[inset_2px_0_0_#059669]" : "hover:bg-gold-primary/5 bg-white/40 shadow-sm",
                                             isClickable ? "cursor-pointer" : "cursor-default"
                                         )}
                                         onClick={() => isClickable && !isSubLevelFetching && handleDrillDown(period)}
                                     >
-                                        <div className="px-1.5 flex items-center gap-1 w-[44%] h-full border-l-2 border-transparent group-hover:border-gold-primary transition-all overflow-hidden">
+                                        <div className={cn(
+                                            "px-1.5 flex items-center gap-1 w-[44%] h-full border-l-2 border-transparent group-hover:border-gold-primary transition-all overflow-hidden",
+                                            period.isCurrent && "group-hover:border-emerald-600"
+                                        )}>
                                             {isClickable ? (
                                                 <ChevronRight className="w-2.5 h-2.5 text-primary/40 group-hover:text-gold-dark transition-colors flex-shrink-0" />
                                             ) : (
                                                 <div className="w-2 flex-shrink-0" />
                                             )}
-                                            <div className="flex items-baseline gap-1 truncate overflow-hidden">
+                                            <div className="flex items-baseline gap-1.5 truncate overflow-hidden">
                                                 <div className="flex items-center">
                                                     {selectedPath.length > 0 && (
                                                         <span className="!text-primary font-normal shrink-0 tracking-tighter !text-[11px] font-mono">{pathPrefix}</span>
                                                     )}
-                                                    <span className="inline-flex items-center gap-1 shrink-0">
+                                                    <span className="inline-flex items-center gap-1.5 shrink-0">
                                                         <span
-                                                            className="text-[13px] font-serif leading-none"
-                                                            style={{ color: PLANET_SVG_FILLS[nameStr] || '#92400E' }}
+                                                            className="text-[16px] font-serif leading-none min-w-4 text-center"
+                                                            style={{ color: PLANET_GLYPH_COLORS[nameStr] || PLANET_SVG_FILLS[nameStr] || '#92400E' }}
                                                         >
                                                             {getPlanetSymbol(nameStr)}
                                                         </span>
-                                                        <span className="text-[11px] font-bold text-primary">
-                                                            {displayName}
+                                                        <span className={cn("text-[11px] font-bold text-primary", period.isCurrent && "text-emerald-800")}>
+                                                            {isChara ? displayName : pName}
                                                         </span>
                                                     </span>
                                                 </div>
@@ -401,14 +429,21 @@ export default function IntegratedDashaViewer({
                                                 </span>
                                             )}
                                         </div>
-                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "w-[20%] px-0.5 text-center !text-[10px] font-semibold !text-primary tracking-tighter")}>
+                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "w-[20%] px-0.5 text-center !text-[10px] font-semibold tracking-tighter", period.isCurrent ? "!text-emerald-800" : "!text-primary")}>
                                             {startFmt.date}
                                         </div>
-                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "w-[20%] px-0.5 text-center !text-[10px] font-semibold !text-primary tracking-tighter")}>
+                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "w-[20%] px-0.5 text-center !text-[10px] font-semibold tracking-tighter", period.isCurrent ? "!text-emerald-800" : "!text-primary")}>
                                             {endFmt.date}
                                         </div>
-                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "w-[16%] px-0.5 text-center !text-[10px] font-semibold !text-primary tracking-tighter")}>
-                                            {durationStr}
+                                        <div className={cn(TYPOGRAPHY.dateAndDuration, "w-[16%] px-0.5 text-center !text-[10px] font-semibold !text-primary tracking-tighter flex justify-center")}>
+                                            <span className={cn(
+                                                "inline-flex min-w-[38px] justify-center rounded-md border px-1.5 py-0.5 leading-none",
+                                                period.isCurrent
+                                                    ? "border-emerald-200 bg-emerald-100 text-emerald-800"
+                                                    : "border-gold-primary/15 bg-surface-warm/70 text-primary"
+                                            )}>
+                                                {durationStr}
+                                            </span>
                                         </div>
                                     </div>
                                 );
