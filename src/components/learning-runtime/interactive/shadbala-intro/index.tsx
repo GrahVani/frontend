@@ -75,92 +75,94 @@ function AuditVectorDiagram({
   bindus: number;
   showAudit: boolean;
 }) {
+  const centerX = 320;
+  const centerY = 135;
   const spokes = sample.components.map((component, index) => {
     const angle = (index / sample.components.length) * Math.PI * 2 - Math.PI / 2;
     const outer = 84;
     const inner = 38 + (component.score / 100) * 42;
     return {
       component,
-      x1: 270 + Math.cos(angle) * 34,
-      y1: 150 + Math.sin(angle) * 34,
-      x2: 270 + Math.cos(angle) * outer,
-      y2: 150 + Math.sin(angle) * outer,
-      px: 270 + Math.cos(angle) * inner,
-      py: 150 + Math.sin(angle) * inner,
+      x1: centerX + Math.cos(angle) * 34,
+      y1: centerY + Math.sin(angle) * 34,
+      x2: centerX + Math.cos(angle) * outer,
+      y2: centerY + Math.sin(angle) * outer,
+      px: centerX + Math.cos(angle) * inner,
+      py: centerY + Math.sin(angle) * inner,
     };
   });
 
   return (
-    <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 720 320" className="h-auto w-full" role="img" aria-label="Shadbala impression to audit vector diagram">
+    <section className="overflow-hidden rounded-xl p-5" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+      <svg viewBox="0 0 640 340" className="h-auto w-full" role="img" aria-label="Shadbala impression to audit vector diagram">
         <defs>
           <marker id="shadbala-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
             <path d="M0,0 L0,6 L9,3 z" fill={sample.color} />
           </marker>
         </defs>
 
-        <rect x="18" y="24" width="684" height="272" rx="18" fill={SURFACE} stroke="var(--gl-gold-hairline)" />
+        <rect x="16" y="24" width="608" height="292" rx="18" fill={SURFACE} stroke="var(--gl-gold-hairline)" />
 
         <g>
-          <rect x="44" y="92" width="142" height="116" rx="16" fill={SURFACE} stroke="var(--gl-gold-hairline)" />
-          <text x="115" y="124" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight="900" letterSpacing="1.1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <rect x="42" y="76" width="156" height="118" rx="16" fill={SURFACE} stroke="var(--gl-gold-hairline)" />
+          <text x="120" y="109" textAnchor="middle" fill={INK_MUTED} fontSize="13" fontWeight="900" letterSpacing="1.1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             IMPRESSION
           </text>
-          <text x="115" y="154" textAnchor="middle" fill={sample.color} fontSize="27" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+          <text x="120" y="140" textAnchor="middle" fill={sample.color} fontSize="31" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
             {sample.name}
           </text>
-          <text x="115" y="180" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <text x="120" y="168" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             looks strong?
           </text>
         </g>
 
-        <path d="M 194 150 C 215 150, 225 150, 239 150" fill="none" stroke={sample.color} strokeWidth="3" markerEnd="url(#shadbala-arrow)" />
+        <path d="M 210 135 C 226 135, 238 135, 252 135" fill="none" stroke={sample.color} strokeWidth="3" markerEnd="url(#shadbala-arrow)" />
 
         <g>
-          <circle cx="270" cy="150" r="96" fill={showAudit ? wash(sample.color, "16") : SURFACE} stroke={showAudit ? sample.color : "var(--gl-gold-hairline)"} strokeWidth={showAudit ? 2 : 1.5} />
-          <circle cx="270" cy="150" r="35" fill={SURFACE} stroke="var(--gl-gold-hairline)" />
+          <circle cx={centerX} cy={centerY} r="96" fill={showAudit ? wash(sample.color, "16") : SURFACE} stroke={showAudit ? sample.color : "var(--gl-gold-hairline)"} strokeWidth={showAudit ? 2 : 1.5} />
+          <circle cx={centerX} cy={centerY} r="35" fill={SURFACE} stroke="var(--gl-gold-hairline)" />
           {spokes.map(({ component, x1, y1, x2, y2, px, py }) => (
             <g key={component.key}>
               <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={showAudit ? sample.color : "var(--gl-gold-hairline)"} strokeWidth="2" opacity={showAudit ? 0.8 : 0.45} />
               <circle cx={px} cy={py} r="5" fill={showAudit ? sample.color : INK_MUTED} />
-              <text x={x2} y={y2 + 4} textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x={x2} y={y2 + 4} textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {component.name.slice(0, 3)}
               </text>
             </g>
           ))}
-          <text x="270" y="144" textAnchor="middle" fill={sample.color} fontSize="22" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+          <text x={centerX} y={centerY - 6} textAnchor="middle" fill={sample.color} fontSize="26" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
             {average}
           </text>
-          <text x="270" y="163" textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <text x={centerX} y={centerY + 10} textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             audit
           </text>
         </g>
 
-        <path d="M 370 150 C 395 150, 405 150, 426 150" fill="none" stroke={sample.color} strokeWidth="3" markerEnd="url(#shadbala-arrow)" />
+        <path d="M 420 155 C 426 155, 426 155, 430 155" fill="none" stroke={sample.color} strokeWidth="3" markerEnd="url(#shadbala-arrow)" />
 
         <g>
-          <rect x="438" y="92" width="146" height="116" rx="16" fill={wash(sample.color, "12")} stroke={sample.color} strokeWidth="1.5" />
-          <text x="511" y="124" textAnchor="middle" fill={sample.color} fontSize="11" fontWeight="900" letterSpacing="1.1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <rect x="434" y="76" width="154" height="118" rx="16" fill={wash(sample.color, "12")} stroke={sample.color} strokeWidth="1.5" />
+          <text x="511" y="109" textAnchor="middle" fill={sample.color} fontSize="13" fontWeight="900" letterSpacing="1.1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             PLANET WEIGHT
           </text>
-          <text x="511" y="156" textAnchor="middle" fill={sample.color} fontSize="30" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+          <text x="511" y="141" textAnchor="middle" fill={sample.color} fontSize="34" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
             {strengthBand(average)}
           </text>
-          <text x="511" y="181" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <text x="511" y="168" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             delivery capacity
           </text>
         </g>
 
         <g>
-          <line x1="82" y1="258" x2="582" y2="258" stroke="var(--gl-gold-hairline)" strokeWidth="5" strokeLinecap="round" />
-          <circle cx={82 + Math.min(500, Math.max(0, (bindus / 40) * 500))} cy="258" r="9" fill={ink.goldAccent} stroke={SURFACE} strokeWidth="3" />
-          <text x="82" y="240" fill={INK_MUTED} fontSize="11" fontWeight="900" letterSpacing="1.1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <line x1="72" y1="262" x2="540" y2="262" stroke="var(--gl-gold-hairline)" strokeWidth="5" strokeLinecap="round" />
+          <circle cx={72 + Math.min(468, Math.max(0, (bindus / 40) * 468))} cy="262" r="9" fill={ink.goldAccent} stroke={SURFACE} strokeWidth="3" />
+          <text x="72" y="240" fill={INK_MUTED} fontSize="13" fontWeight="900" letterSpacing="1.1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             ASHTAKAVARGA HOUSE BINDUS
           </text>
-          <text x="600" y="263" fill={ink.goldAccent} fontSize="22" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+          <text x="558" y="267" fill={ink.goldAccent} fontSize="26" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
             {bindus}
           </text>
-          <text x="82" y="282" fill={INK_SECONDARY} fontSize="12" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <text x="72" y="292" fill={INK_SECONDARY} fontSize="14" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             separate track: where support lies, not how strong the planet itself is
           </text>
         </g>

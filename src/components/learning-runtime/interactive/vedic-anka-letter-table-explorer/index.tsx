@@ -46,10 +46,10 @@ function GrahaAnkaSvg({ activeValue }: { activeValue: number }) {
               <text x={x - 66} y={y - 7} fill={color} fontSize="34" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
                 {item.value}
               </text>
-              <text x={x - 2} y={y - 16} textAnchor="middle" fill={INK_PRIMARY} fontSize="22" fontWeight="900" style={{ fontFamily: "var(--font-devanagari), var(--font-sans), sans-serif" }}>
+              <text x={x - 2} y={y - 16} textAnchor="middle" fill={INK_PRIMARY} fontSize="24" fontWeight="700" style={{ fontFamily: "var(--font-devanagari), var(--font-sans), sans-serif" }}>
                 {item.devanagari}
               </text>
-              <text x={x - 2} y={y + 14} textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x={x - 2} y={y + 14} textAnchor="middle" fill={INK_SECONDARY} fontSize="15" fontWeight="600" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {item.grahaSlug}
               </text>
             </g>
@@ -57,7 +57,7 @@ function GrahaAnkaSvg({ activeValue }: { activeValue: number }) {
         })}
 
         <rect x="180" y="432" width="400" height="52" rx="26" fill={SURFACE} stroke={GOLD} />
-        <text x="380" y="458" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="380" y="458" textAnchor="middle" fill={GOLD} fontSize="15" fontWeight="600" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           <tspan x="380" dy="0">This graha map is the Vedic layer</tspan>
           <tspan x="380" dy="18">modern Indian Chaldean practice inherits.</tspan>
         </text>

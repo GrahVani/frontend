@@ -100,8 +100,8 @@ function RajaYogaChart({
 
   return (
     <section className="mx-auto w-full max-w-[560px] rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 430 430" className="mx-auto h-auto w-full max-w-[430px]" role="img" aria-label="Kendra and trikona lords in a North Indian chart diagram">
-        <rect x="16" y="18" width="398" height="392" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+      <svg viewBox="0 0 430 455" className="mx-auto h-auto w-full max-w-[430px]" role="img" aria-label="Kendra and trikona lords in a North Indian chart diagram">
+        <rect x="16" y="18" width="398" height="417" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
         <g transform="translate(36 32)">
           <rect x="18" y="18" width="324" height="336" rx="10" fill={SURFACE} stroke={HAIRLINE} />
           {kendraPoint && trikonaPoint ? <line x1={kendraPoint.x} y1={kendraPoint.y} x2={trikonaPoint.x} y2={trikonaPoint.y} stroke={YOGA} strokeWidth="3" strokeDasharray="8 7" opacity="0.75" /> : null}
@@ -135,7 +135,7 @@ function RajaYogaChart({
             );
           })}
         </g>
-        <text x="215" y="386" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="215" y="414" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Select a pair below to see the kendra-trikona bridge.
         </text>
       </svg>
@@ -319,12 +319,18 @@ export function RajaYogaDetector() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[760px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["", "Kendra side", "Trikona side", "Relationship", "Reading cue"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "", width: "w-12" },
+                    { label: "Kendra side", width: "w-[140px]" },
+                    { label: "Trikona side", width: "w-[140px]" },
+                    { label: "Relationship", width: "w-[120px]" },
+                    { label: "Reading cue", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -363,7 +369,7 @@ export function RajaYogaDetector() {
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>
                         {RELATIONSHIP_MODES[mode].label}
                       </td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>
                         {pair.samePlanet ? "Single lord binds both sides; inspect yogakaraka quality." : "If these lords relate by the selected mode, the foundational pattern is active."}
                       </td>
                     </tr>

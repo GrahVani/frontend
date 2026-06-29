@@ -235,12 +235,20 @@ export function CaraKarakaRanker() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[760px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["Rank", "Role", "Planet", "Raw degree", "Effective degree", "Cara domain", "Natural meaning"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "Rank", width: "w-[60px]" },
+                    { label: "Role", width: "w-[120px]" },
+                    { label: "Planet", width: "w-[100px]" },
+                    { label: "Raw degree", width: "w-[100px]" },
+                    { label: "Effective degree", width: "w-[110px]" },
+                    { label: "Cara domain", width: "w-[120px]" },
+                    { label: "Natural meaning", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -251,12 +259,12 @@ export function CaraKarakaRanker() {
                   return (
                     <tr key={planet.slug} onClick={() => setSelectedSlug(planet.slug)} className="cursor-pointer align-top" style={{ background: planet.slug === selected.slug ? wash(color, "0D") : SURFACE, borderTop: `1px solid ${HAIRLINE}` }}>
                       <td className="px-4 py-3 font-bold" style={{ color }}>{role.rank}</td>
-                      <td className="px-4 py-3 font-bold" style={{ color }}>{role.short} / {role.iast}</td>
+                      <td className="px-4 py-3 break-words font-bold" style={{ color }}>{role.short} / {role.iast}</td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{planet.label}</td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{formatDegree(planet.degree)}</td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{formatDegree(effectiveDegree)}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{role.domain}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{planet.naisargika}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{role.domain}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{planet.naisargika}</td>
                     </tr>
                   );
                 })}

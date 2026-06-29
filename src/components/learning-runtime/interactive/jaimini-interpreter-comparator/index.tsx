@@ -45,8 +45,8 @@ function InterpreterSvg({
 
   return (
     <section className="mx-auto w-full max-w-[600px] min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 540 300" className="mx-auto h-auto w-full max-w-[540px]" role="img" aria-label="Modern Jaimini interpreter comparison map">
-        <rect x="18" y="18" width="504" height="250" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+      <svg viewBox="0 0 540 330" className="mx-auto h-auto w-full max-w-[540px]" role="img" aria-label="Modern Jaimini interpreter comparison map">
+        <rect x="18" y="18" width="504" height="285" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
         <text x="270" y="48" textAnchor="middle" fill={GOLD} fontSize="12" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           THREE MODERN READINGS OF ONE TERSE SOURCE
         </text>
@@ -88,7 +88,7 @@ function InterpreterSvg({
           );
         })}
 
-        <text x="270" y="272" textAnchor="middle" fill={INK_MUTED} fontSize="9" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="270" y="286" textAnchor="middle" fill={INK_MUTED} fontSize="9" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           plurality is disciplined: label the framework before comparing results
         </text>
       </svg>
@@ -240,12 +240,18 @@ export function JaiminiInterpreterComparator() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[820px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["Divergence", "Raman", "Rath", "Rao", "Why disclose"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "Divergence", width: "w-[140px]" },
+                    { label: "Raman", width: "w-[160px]" },
+                    { label: "Rath", width: "w-[160px]" },
+                    { label: "Rao", width: "w-[160px]" },
+                    { label: "Why disclose", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -256,10 +262,10 @@ export function JaiminiInterpreterComparator() {
                   return (
                     <tr key={point.slug} onClick={() => setSelectedDivergenceSlug(point.slug)} className="cursor-pointer align-top" style={{ background: active ? wash(selectedInterpreter.color, "0D") : SURFACE, borderTop: `1px solid ${HAIRLINE}` }}>
                       <td className="px-4 py-3 font-bold" style={{ color: selectedInterpreter.color }}>{point.label}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{point.raman}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{point.rath}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{point.rao}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{point.whyItMatters}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{point.raman}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{point.rath}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{point.rao}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{point.whyItMatters}</td>
                     </tr>
                   );
                 })}

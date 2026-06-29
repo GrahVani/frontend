@@ -36,9 +36,9 @@ function RashiClockSvg({
 
   return (
     <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 900 330" className="h-auto w-full min-w-0" role="img" aria-label="Cara Dasha sign clock with sign periods and sign sub-periods">
-        <rect x="24" y="24" width="852" height="270" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
-        <text x="450" y="56" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+      <svg viewBox="0 0 900 350" className="h-auto w-full min-w-0" role="img" aria-label="Cara Dasha sign clock with sign periods and sign sub-periods">
+        <rect x="24" y="24" width="852" height="300" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+        <text x="450" y="46" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           CARA DAŚĀ IS A SIGN CLOCK
         </text>
         <ellipse cx={centerX} cy={centerY} rx={radiusX} ry={radiusY} fill="none" stroke={HAIRLINE} strokeWidth="8" />
@@ -66,7 +66,7 @@ function RashiClockSvg({
               }}
               style={{ cursor: "pointer" }}
             >
-              <circle cx={x} cy={y} r={selected ? 28 : 22} fill={selected ? wash(rashi.color, "18") : SURFACE} stroke={selected ? rashi.color : HAIRLINE} strokeWidth={selected ? 3 : 1.3} />
+              <circle cx={x} cy={y} r={selected ? 24 : 22} fill={selected ? wash(rashi.color, "18") : SURFACE} stroke={selected ? rashi.color : HAIRLINE} strokeWidth={selected ? 3 : 1.3} />
               <text x={x} y={y - 2} textAnchor="middle" fill={selected ? rashi.color : INK_PRIMARY} fontSize="10" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {rashi.iast}
               </text>
@@ -77,8 +77,8 @@ function RashiClockSvg({
           );
         })}
 
-        <line x1="286" y1="260" x2="614" y2="260" stroke={HAIRLINE} strokeWidth="4" strokeLinecap="round" />
-        <text x="450" y="282" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <line x1="286" y1="280" x2="614" y2="280" stroke={HAIRLINE} strokeWidth="4" strokeLinecap="round" />
+        <text x="450" y="300" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           inside every main sign-period: twelve antar-rāśi sub-periods, still signs
         </text>
       </svg>

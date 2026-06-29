@@ -70,9 +70,9 @@ function MarsSignStrip({ selectedSign, onSignChange }: { selectedSign: number; o
 
       {/* North Indian diamond chart for sign selection */}
       <div style={{ width: "100%", maxWidth: 460, margin: "0 auto" }}>
-        <svg viewBox="0 0 400 400" className="h-auto w-full min-w-0" role="img" aria-label="Mars sign-key finder North Indian chart">
+        <svg viewBox="0 0 400 420" className="h-auto w-full min-w-0" role="img" aria-label="Mars sign-key finder North Indian chart">
           {/* Chart lines */}
-          <g stroke="rgba(184, 132, 33, 0.35)" strokeWidth="1.2" fill="none">
+          <g stroke="rgba(130, 90, 30, 0.65)" strokeWidth="1.8" fill="none">
             <rect x="10" y="10" width="380" height="380" />
             <line x1="10" y1="10" x2="390" y2="390" />
             <line x1="390" y1="10" x2="10" y2="390" />
@@ -117,9 +117,9 @@ function MarsSignStrip({ selectedSign, onSignChange }: { selectedSign: number; o
                 <g transform={`translate(${center.x}, ${center.y})`}>
                   {/* Sign number */}
                   <text
-                    y={-16}
+                    y={-18}
                     fill={active ? color : own ? NEK : INK_SECONDARY}
-                    fontSize={10}
+                    fontSize={13}
                     fontWeight="900"
                     textAnchor="middle"
                     dominantBaseline="central"
@@ -132,7 +132,7 @@ function MarsSignStrip({ selectedSign, onSignChange }: { selectedSign: number; o
                   <text
                     y={0}
                     fill={active ? color : own ? NEK : INK_PRIMARY}
-                    fontSize={12}
+                    fontSize={15}
                     fontWeight="950"
                     textAnchor="middle"
                     dominantBaseline="central"
@@ -143,9 +143,9 @@ function MarsSignStrip({ selectedSign, onSignChange }: { selectedSign: number; o
 
                   {/* Own/other sign label */}
                   <text
-                    y={13}
+                    y={16}
                     fill={active ? color : INK_MUTED}
-                    fontSize={7.5}
+                    fontSize={10}
                     fontWeight="700"
                     textAnchor="middle"
                     dominantBaseline="central"
@@ -159,7 +159,7 @@ function MarsSignStrip({ selectedSign, onSignChange }: { selectedSign: number; o
           })}
 
           {/* Chart footer */}
-          <text x="200" y="400" textAnchor="middle" fill={INK_MUTED} fontSize="8" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <text x="200" y="412" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             Click a sign to check Maṅgal nek / bad classification
           </text>
         </svg>

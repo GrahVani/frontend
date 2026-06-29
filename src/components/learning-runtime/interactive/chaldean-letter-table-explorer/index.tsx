@@ -47,14 +47,14 @@ function LetterTableSvg({ activeValue, nameLetters }: { activeValue: number; nam
               <text x={x - 66} y={y - 8} fill={color} fontSize="32" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
                 {group.value}
               </text>
-              <text x={x - 4} y={y - 18} fill={INK_PRIMARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x={x - 4} y={y - 18} fill={INK_PRIMARY} fontSize="14" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {grahaLabel(group.value)}
               </text>
-              <text x={x - 4} y={y + 6} fill={INK_SECONDARY} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x={x - 4} y={y + 6} fill={INK_SECONDARY} fontSize="15" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {group.letters.length ? group.letters.join(" ") : "no letters"}
               </text>
               {group.value === 9 ? (
-                <text x={x - 4} y={y + 29} textAnchor="middle" fill={VERMILION} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+                <text x={x - 4} y={y + 29} textAnchor="middle" fill={VERMILION} fontSize="12" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                   RESERVED
                 </text>
               ) : null}
@@ -62,9 +62,8 @@ function LetterTableSvg({ activeValue, nameLetters }: { activeValue: number; nam
           );
         })}
 
-        <path d="M92 456 C180 416 270 416 358 456 C446 496 534 496 626 456" fill="none" stroke={GOLD} strokeWidth="2" strokeDasharray="8 8" />
         <rect x="150" y="436" width="460" height="40" rx="20" fill={SURFACE} stroke={GOLD} />
-        <text x="380" y="461" textAnchor="middle" fill={GOLD} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="380" y="461" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="600" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           A result may reduce to 9; no input letter is assigned 9.
         </text>
       </svg>

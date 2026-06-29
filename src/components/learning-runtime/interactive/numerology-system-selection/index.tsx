@@ -33,24 +33,24 @@ function getRecommendation(scores: ReturnType<typeof scoreSystems>) {
 function DecisionFlowSvg({ activeSystem }: { activeSystem: SystemId }) {
   const active = getSystem(activeSystem);
   const nodes = [
-    { id: "context", label: "Client context", sub: "literacy + purpose", x: 110, y: 108, color: GOLD },
-    { id: "format", label: "Name format", sub: "Roman / Devanagari", x: 330, y: 108, color: BLUE },
-    { id: "system", label: active.label, sub: "one selected frame", x: 550, y: 108, color: active.color },
-    { id: "discipline", label: "Use consistently", sub: "no mid-reading mix", x: 330, y: 300, color: GREEN },
+    { id: "context", label: "Client context", sub: "literacy + purpose", x: 110, y: 118, color: GOLD },
+    { id: "format", label: "Name format", sub: "Roman / Devanagari", x: 330, y: 118, color: BLUE },
+    { id: "system", label: active.label, sub: "one selected frame", x: 550, y: 118, color: active.color },
+    { id: "discipline", label: "Use consistently", sub: "no mid-reading mix", x: 330, y: 310, color: GREEN },
   ];
 
   return (
     <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
       <svg viewBox="0 0 700 410" className="h-auto w-full min-w-0" role="img" aria-label="Numerology system selection flow">
         <rect x="18" y="18" width="664" height="374" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
-        <text x="350" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="350" y="44" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           SELECT ONE SYSTEM, THEN KEEP THE READING INSIDE IT
         </text>
 
-        <path d="M198 108 H242" stroke={GOLD} strokeWidth="3" strokeLinecap="round" />
-        <path d="M418 108 H462" stroke={GOLD} strokeWidth="3" strokeLinecap="round" />
-        <path d="M550 176 C550 244 458 300 418 300" fill="none" stroke={GOLD} strokeWidth="3" strokeLinecap="round" />
-        <path d="M242 300 C196 300 110 244 110 176" fill="none" stroke={GOLD} strokeWidth="3" strokeLinecap="round" strokeDasharray="8 8" />
+        <path d="M198 118 H242" stroke={GOLD} strokeWidth="3" strokeLinecap="round" />
+        <path d="M418 118 H462" stroke={GOLD} strokeWidth="3" strokeLinecap="round" />
+        <path d="M550 186 C550 250 458 310 418 310" fill="none" stroke={GOLD} strokeWidth="3" strokeLinecap="round" />
+        <path d="M242 310 C196 310 110 250 110 186" fill="none" stroke={GOLD} strokeWidth="3" strokeLinecap="round" strokeDasharray="8 8" />
 
         {nodes.map((node) => (
           <g key={node.id}>
@@ -71,8 +71,8 @@ function DecisionFlowSvg({ activeSystem }: { activeSystem: SystemId }) {
           </g>
         ))}
 
-        <rect x="150" y="338" width="400" height="46" rx="23" fill={SURFACE} stroke={GOLD} />
-        <text x="350" y="358" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="150" y="348" width="400" height="46" rx="23" fill={SURFACE} stroke={GOLD} />
+        <text x="350" y="368" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           <tspan x="350" dy="0">The Vedic-Chaldean hybrid is allowed</tspan>
           <tspan x="350" dy="18">only when named as one frame.</tspan>
         </text>

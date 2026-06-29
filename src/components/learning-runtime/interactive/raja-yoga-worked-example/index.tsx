@@ -78,8 +78,8 @@ function familyColor(house: number) {
 function CancerChart({ activeHouses }: { activeHouses: number[] }) {
   return (
     <section className="mx-auto w-full max-w-[560px] rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 430 430" className="mx-auto h-auto w-full max-w-[430px]" role="img" aria-label="Cancer lagna worked raja yoga chart">
-        <rect x="16" y="18" width="398" height="392" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+      <svg viewBox="0 0 430 455" className="mx-auto h-auto w-full max-w-[430px]" role="img" aria-label="Cancer lagna worked raja yoga chart">
+        <rect x="16" y="18" width="398" height="417" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
         <g transform="translate(36 32)">
           <rect x="18" y="18" width="324" height="336" rx="10" fill={SURFACE} stroke={HAIRLINE} />
           <line x1={HOUSE_CENTERS[10].x} y1={HOUSE_CENTERS[10].y} x2={HOUSE_CENTERS[5].x} y2={HOUSE_CENTERS[5].y} stroke={grahas.shani.primary} strokeWidth="2.5" strokeDasharray="7 7" opacity="0.6" />
@@ -112,7 +112,7 @@ function CancerChart({ activeHouses }: { activeHouses: number[] }) {
             );
           })}
         </g>
-        <text x="215" y="386" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="215" y="414" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Saturn in H10 aspects the Mars-Jupiter conjunction in H5.
         </text>
       </svg>
@@ -265,12 +265,18 @@ export function RajaYogaWorkedExample() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[760px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["House", "Family", "Lord", "Sign owned", "Worked-example note"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "House", width: "w-12" },
+                    { label: "Family", width: "w-[100px]" },
+                    { label: "Lord", width: "w-[120px]" },
+                    { label: "Sign owned", width: "w-[140px]" },
+                    { label: "Worked-example note", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -285,7 +291,7 @@ export function RajaYogaWorkedExample() {
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{row.family}</td>
                       <td className="px-4 py-3 font-bold" style={{ color: readableGrahaColor(row.lord) }}>{grahaName(row.lord)}</td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{row.sign}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{row.note}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{row.note}</td>
                     </tr>
                   );
                 })}

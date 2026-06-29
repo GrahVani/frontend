@@ -13,8 +13,6 @@ import { useState, useMemo } from "react";
 import { IAST } from "../../chrome/typography";
 import {
   SIGNS,
-  CLASS_LABELS,
-  SIGN_CLASSES,
   GRAHAS,
   PRESETS,
   DEFAULT_DEGREES,
@@ -48,42 +46,10 @@ const VERMILION = "#A23A1E";
 const BLUE = "#3B82F6";
 const PURPLE = "#8B5CF6";
 const AMBER = "#D97706";
+const GRID_LINE = "rgba(138, 126, 94, 0.85)";
 
 function signForHouse(lagna: number, house: number): number {
   return ((lagna - 1 + house - 1) % 12);
-}
-
-/* --- Circular wheel --- */
-
-const CX = 190;
-const CY = 190;
-const R_OUTER = 170;
-const R_INNER = 90;
-const R_LABEL = 128;
-const R_HOUSE_NUM = 102;
-const R_KARAKAMSHA = 150;
-
-function angleForHouse(house: number): number {
-  return (house - 1) * 30 - 90;
-}
-
-function polar(cx: number, cy: number, r: number, deg: number) {
-  const rad = (deg * Math.PI) / 180;
-  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
-}
-
-function sectorPath(cx: number, cy: number, r1: number, r2: number, deg1: number, deg2: number) {
-  const a1 = (deg1 * Math.PI) / 180;
-  const a2 = (deg2 * Math.PI) / 180;
-  const x1 = cx + r2 * Math.cos(a1);
-  const y1 = cy + r2 * Math.sin(a1);
-  const x2 = cx + r2 * Math.cos(a2);
-  const y2 = cy + r2 * Math.sin(a2);
-  const x3 = cx + r1 * Math.cos(a2);
-  const y3 = cy + r1 * Math.sin(a2);
-  const x4 = cx + r1 * Math.cos(a1);
-  const y4 = cy + r1 * Math.sin(a1);
-  return `M ${x1} ${y1} A ${r2} ${r2} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${r1} ${r1} 0 0 0 ${x4} ${y4} Z`;
 }
 
 function CircularWheel({
@@ -95,31 +61,44 @@ function CircularWheel({
   karakamshaSign: number;
   onSelectSign: (signIdx: number) => void;
 }) {
+  const HOUSE_POLYGONS: Record<number, string> = {
+    1: "200,10 105,105 200,200 295,105",
+    2: "10,10 200,10 105,105",
+    3: "10,10 105,105 10,200",
+    4: "10,200 105,105 200,200 105,295",
+    5: "10,200 105,295 10,390",
+    6: "10,390 105,295 200,390",
+    7: "200,390 105,295 200,200 295,295",
+    8: "200,390 295,295 390,390",
+    9: "390,200 295,295 390,390",
+    10: "390,200 295,105 200,200 295,295",
+    11: "390,10 295,105 390,200",
+    12: "200,10 390,10 295,105",
+  };
+
+  const HOUSE_CENTERS: Record<number, { x: number; y: number }> = {
+    1: { x: 200, y: 105 },
+    2: { x: 105, y: 45 },
+    3: { x: 45, y: 105 },
+    4: { x: 105, y: 200 },
+    5: { x: 45, y: 295 },
+    6: { x: 105, y: 355 },
+    7: { x: 200, y: 295 },
+    8: { x: 295, y: 355 },
+    9: { x: 355, y: 295 },
+    10: { x: 295, y: 200 },
+    11: { x: 355, y: 105 },
+    12: { x: 295, y: 45 },
+  };
+
   return (
-    <svg viewBox="0 0 380 380" className="w-full h-auto" style={{ maxHeight: 400 }}>
-      {/* Outer ring */}
-      <circle cx={CX} cy={CY} r={R_OUTER} fill="none" stroke={HAIRLINE} strokeWidth={1.5} />
-      <circle cx={CX} cy={CY} r={R_INNER} fill="none" stroke={HAIRLINE} strokeWidth={1} />
-
-      {/* Sector dividers */}
-      {Array.from({ length: 12 }, (_, i) => {
-        const deg = angleForHouse(i + 1) - 15;
-        const pOuter = polar(CX, CY, R_OUTER, deg);
-        const pInner = polar(CX, CY, R_INNER, deg);
-        return <line key={`div-${i}`} x1={pInner.x} y1={pInner.y} x2={pOuter.x} y2={pOuter.y} stroke={HAIRLINE} strokeWidth={0.8} />;
-      })}
-
+    <svg viewBox="0 0 400 400" className="w-full h-auto" style={{ maxHeight: 400 }}>
       {/* Sector backgrounds */}
       {Array.from({ length: 12 }, (_, i) => {
         const hnum = i + 1;
         const sIdx = signForHouse(lagna, hnum);
-        const deg1 = angleForHouse(hnum) - 15;
-        const deg2 = angleForHouse(hnum) + 15;
-
         const isKarakamsha = sIdx === karakamshaSign;
         const isLagna = hnum === 1;
-
-        if (!isKarakamsha && !isLagna) return null;
 
         let fill = "transparent";
         let opacity = 0;
@@ -127,97 +106,72 @@ function CircularWheel({
         else if (isLagna) { fill = BLUE; opacity = 0.08; }
 
         return (
-          <path
+          <polygon
             key={`sector-${hnum}`}
-            d={sectorPath(CX, CY, R_INNER, R_OUTER, deg1, deg2)}
+            points={HOUSE_POLYGONS[hnum]}
             fill={fill}
-            fillOpacity={opacity}
+            fillOpacity={opacity > 0 ? opacity : undefined}
+            stroke="none"
           />
         );
       })}
 
-      {/* Labels: sign abbreviations + D1 house numbers */}
+      {/* Grid Lines */}
+      <g stroke={GRID_LINE} strokeWidth="1.5" fill="none">
+        <rect x="10" y="10" width="380" height="380" />
+        <line x1="10" y1="10" x2="390" y2="390" />
+        <line x1="390" y1="10" x2="10" y2="390" />
+        <line x1="200" y1="10" x2="10" y2="200" />
+        <line x1="10" y1="200" x2="200" y2="390" />
+        <line x1="200" y1="390" x2="390" y2="200" />
+        <line x1="390" y1="200" x2="200" y2="10" />
+      </g>
+
+      {/* Labels */}
       {Array.from({ length: 12 }, (_, i) => {
         const hnum = i + 1;
         const sIdx = signForHouse(lagna, hnum);
-        const deg = angleForHouse(hnum);
-        const pos = polar(CX, CY, R_LABEL, deg);
+        const center = HOUSE_CENTERS[hnum];
         const isKarakamsha = sIdx === karakamshaSign;
+        const kmHouse = houseFromKarakamsha(karakamshaSign, sIdx);
         return (
-          <g key={`label-${hnum}`}>
-            <text x={pos.x} y={pos.y - 7} textAnchor="middle" dominantBaseline="middle" fontSize={13} fontWeight={700} fill={isKarakamsha ? GOLD_ACCENT : INK_MUTED}>
+          <g key={`label-${hnum}`} transform={`translate(${center.x}, ${center.y})`}>
+            <text y={-8} textAnchor="middle" dominantBaseline="middle" fontSize={14} fontWeight={700} fill={isKarakamsha ? GOLD_ACCENT : INK_MUTED}>
               H{hnum}
             </text>
-            <text x={pos.x} y={pos.y + 7} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={600} fill={isKarakamsha ? INK_PRIMARY : INK_SECONDARY}>
+            <text y={6} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={600} fill={isKarakamsha ? INK_PRIMARY : INK_SECONDARY}>
               {SIGNS[sIdx].slice(0, 3)}
             </text>
-          </g>
-        );
-      })}
-
-      {/* Kārakāṁśa house numbers (inner ring) */}
-      {Array.from({ length: 12 }, (_, i) => {
-        const hnum = i + 1;
-        const sIdx = signForHouse(lagna, hnum);
-        const kmHouse = houseFromKarakamsha(karakamshaSign, sIdx);
-        const deg = angleForHouse(hnum);
-        const pos = polar(CX, CY, R_HOUSE_NUM, deg);
-        const isKarakamsha = sIdx === karakamshaSign;
-        return (
-          <text
-            key={`km-${hnum}`}
-            x={pos.x}
-            y={pos.y}
-            textAnchor="middle"
-            fontSize={isKarakamsha ? 12 : 9}
-            fontWeight={isKarakamsha ? 800 : 600}
-            fill={isKarakamsha ? GOLD_ACCENT : INK_MUTED}
-          >
-            {kmHouse}
-          </text>
-        );
-      })}
-
-      {/* Kārakāṁśa label on outer rim */}
-      {(() => {
-        const kmHouseD1 = ((karakamshaSign - lagna + 1 + 12) % 12) || 12;
-        const deg = angleForHouse(kmHouseD1);
-        const pos = polar(CX, CY, R_KARAKAMSHA, deg);
-        return (
-          <g>
-            <rect x={pos.x - 34} y={pos.y - 18} width={68} height={22} rx={4} fill={SURFACE} stroke={GOLD_ACCENT} strokeWidth={1} />
-            <text x={pos.x} y={pos.y - 3} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={700} fill={GOLD_ACCENT}>
-              Kārakāṁśa
+            <text y={18} textAnchor="middle" dominantBaseline="middle" fontSize={isKarakamsha ? 11 : 9} fontWeight={isKarakamsha ? 800 : 600} fill={isKarakamsha ? GOLD_ACCENT : INK_MUTED}>
+              {kmHouse}
             </text>
           </g>
         );
-      })()}
+      })}
+
+      {/* Center badge: KL */}
+      <circle cx={200} cy={200} r={22} fill={SURFACE} stroke={GOLD_ACCENT} strokeWidth={1.5} />
+      <text x={200} y={196} textAnchor="middle" dominantBaseline="middle" fontSize={12} fontWeight={700} fill={GOLD_ACCENT}>
+        KL
+      </text>
+      <text x={200} y={210} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={600} fill={INK_SECONDARY}>
+        {SIGNS[karakamshaSign].slice(0, 3)}
+      </text>
 
       {/* Clickable sectors */}
       {Array.from({ length: 12 }, (_, i) => {
         const hnum = i + 1;
         const sIdx = signForHouse(lagna, hnum);
-        const deg1 = angleForHouse(hnum) - 15;
-        const deg2 = angleForHouse(hnum) + 15;
         return (
-          <path
+          <polygon
             key={`hit-${hnum}`}
-            d={sectorPath(CX, CY, R_INNER, R_OUTER, deg1, deg2)}
+            points={HOUSE_POLYGONS[hnum]}
             fill="transparent"
             cursor="pointer"
             onClick={() => onSelectSign(sIdx)}
           />
         );
       })}
-
-      {/* Center badge: KL */}
-      <circle cx={CX} cy={CY} r={22} fill={SURFACE} stroke={GOLD_ACCENT} strokeWidth={1.5} />
-      <text x={CX} y={CY - 4} textAnchor="middle" dominantBaseline="middle" fontSize={12} fontWeight={700} fill={GOLD_ACCENT}>
-        KL
-      </text>
-      <text x={CX} y={CY + 10} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={600} fill={INK_SECONDARY}>
-        {SIGNS[karakamshaSign].slice(0, 3)}
-      </text>
     </svg>
   );
 }
@@ -280,7 +234,7 @@ export function KarakamshaLagnaLocator() {
         <div>
           <div className="flex items-center gap-2 mb-3">
             <Target size={14} style={{ color: GOLD_ACCENT }} />
-            <span className="text-xs font-bold" style={{ color: INK_PRIMARY }}>Within-sign degrees (0° - 29°59')</span>
+            <span className="text-xs font-bold" style={{ color: INK_PRIMARY }}>Within-sign degrees (0° - 29°59&apos;)</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {GRAHAS.map((g) => (
@@ -320,7 +274,7 @@ export function KarakamshaLagnaLocator() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <MapPin size={14} style={{ color: BLUE }} />
-              <span className="text-xs font-bold" style={{ color: INK_PRIMARY }}>Step 2: AK's navāṁśa (D9) sign</span>
+              <span className="text-xs font-bold" style={{ color: INK_PRIMARY }}>Step 2: AK&apos;s navāṁśa (D9) sign</span>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {Array.from({ length: 12 }, (_, i) => (
@@ -474,7 +428,7 @@ export function KarakamshaLagnaLocator() {
           kārakāṁśe lagnavat phalāni cintayet ||
         </div>
         <div className="text-xs" style={{ color: INK_MUTED }}>
-          "From the Kārakāṁśa, let the results be considered as from a lagna." The word <em>lagnavat</em> (lagna-like) is the key:
+          &quot;From the Kārakāṁśa, let the results be considered as from a lagna.&quot; The word <em>lagnavat</em> (lagna-like) is the key:
           the Kārakāṁśa is treated as a lagna, so houses are counted from it.
         </div>
       </div>

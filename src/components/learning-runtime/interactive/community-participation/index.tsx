@@ -307,22 +307,21 @@ export function CommunityParticipation() {
             </span>
 
             <div className="flex justify-center rounded-xl p-2 my-3 border bg-white" style={{ borderColor: HAIRLINE }}>
-              <svg width="160" height="80" viewBox="0 0 160 80">
-                <path d="M 20 75 A 60 60 0 0 1 140 75" fill="none" stroke="rgba(168,130,30,0.15)" strokeWidth="6" strokeLinecap="round" />
-                <path d="M 20 75 A 60 60 0 0 1 60 35" fill="none" stroke={GREEN} strokeWidth="6" />
-                <path d="M 60 35 A 60 60 0 0 1 100 35" fill="none" stroke={GOLD} strokeWidth="6" />
-                <path d="M 100 35 A 60 60 0 0 1 140 75" fill="none" stroke={VERMILION} strokeWidth="6" />
+              <svg width="240" height="120" viewBox="0 0 240 120">
+                <path d="M 30 95 A 90 90 0 0 1 78 40" fill="none" stroke={GREEN} strokeWidth="8" />
+                <path d="M 78 40 A 90 90 0 0 1 162 40" fill="none" stroke={GOLD} strokeWidth="8" />
+                <path d="M 162 40 A 90 90 0 0 1 210 95" fill="none" stroke={VERMILION} strokeWidth="8" />
 
                 {(() => {
                   const angle = -180 + (driftRisk / 100) * 180;
                   return (
-                    <g transform="translate(80, 75)">
-                      <line x1="0" y1="0" x2="-45" y2="0" stroke={INK_PRIMARY} strokeWidth="2.5" transform={`rotate(${angle})`} strokeLinecap="round" />
-                      <circle cx="0" cy="0" r="7" fill={INK_PRIMARY} />
+                    <g transform="translate(120, 95)">
+                      <line x1="0" y1="0" x2="-65" y2="0" stroke={INK_PRIMARY} strokeWidth="3" transform={`rotate(${angle})`} strokeLinecap="round" />
+                      <circle cx="0" cy="0" r="8" fill={INK_PRIMARY} />
                     </g>
                   );
                 })()}
-                <text x="80" y="70" fill={INK_MUTED} fontSize="6" fontWeight="bold" textAnchor="middle">Idiosyncratic Drift</text>
+                <text x="120" y="112" fill={INK_SECONDARY} fontSize="9" fontWeight="bold" textAnchor="middle">Idiosyncratic Drift</text>
               </svg>
             </div>
 

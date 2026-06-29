@@ -275,14 +275,14 @@ export function SelfChartTracking() {
                 Timestamped Verification Timeline
               </span>
               <div className="flex justify-center rounded-xl p-2 my-3 border bg-white" style={{ borderColor: HAIRLINE }}>
-                <svg width="180" height="70" viewBox="0 0 180 70">
-                  <line x1="20" y1="35" x2="160" y2="35" stroke="rgba(168,130,30,0.2)" strokeWidth="1.5" />
-                  <circle cx="35" cy="35" r="6" fill={GOLD} />
-                  <rect x="75" y="27" width="30" height="16" rx="2" fill="rgba(168,130,30,0.1)" stroke={GOLD} strokeWidth="1" />
-                  <circle cx="145" cy="35" r="6" fill={biasWarning ? VERMILION : GREEN} />
-                  <text x="35" y="52" fill={INK_MUTED} fontSize="5" fontWeight="bold" textAnchor="middle">Pre-Event Lock</text>
-                  <text x="90" y="52" fill={INK_MUTED} fontSize="5" fontWeight="bold" textAnchor="middle">Window</text>
-                  <text x="145" y="52" fill={INK_MUTED} fontSize="5" fontWeight="bold" textAnchor="middle">Post-Event Log</text>
+                <svg width="320" height="120" viewBox="0 0 320 120">
+                  <line x1="45" y1="60" x2="275" y2="60" stroke="rgba(168,130,30,0.2)" strokeWidth="1.5" />
+                  <circle cx="70" cy="60" r="8" fill={GOLD} />
+                  <rect x="145" y="50" width="30" height="20" rx="2" fill="rgba(168,130,30,0.1)" stroke={GOLD} strokeWidth="1" />
+                  <circle cx="250" cy="60" r="8" fill={biasWarning ? VERMILION : GREEN} />
+                  <text x="70" y="92" fill={INK_SECONDARY} fontSize="9" fontWeight="bold" textAnchor="middle">Pre-Event Lock</text>
+                  <text x="160" y="92" fill={INK_SECONDARY} fontSize="9" fontWeight="bold" textAnchor="middle">Window</text>
+                  <text x="250" y="92" fill={INK_SECONDARY} fontSize="9" fontWeight="bold" textAnchor="middle">Post-Event Log</text>
                 </svg>
               </div>
 

@@ -1,7 +1,8 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
-import { BookOpen, GitBranch, Globe2, Layers3, MapPin, RotateCcw, Users } from "lucide-react";
+import { BookOpen, CheckCircle2, GitBranch, Globe2, Layers3, MapPin, RotateCcw, Users } from "lucide-react";
 
 const GOLD = "var(--gl-gold-on-cream, #A8821E)";
 const GOLD_HEX = "#A8821E";
@@ -105,6 +106,8 @@ const SCHOOLS = [
   },
 ];
 
+type School = (typeof SCHOOLS)[number];
+
 const STREAM_PATTERNS = [
   ["Parashari", "All six regional schools", GREEN],
   ["KP", "South Indian, especially Tamil Nadu", RUST],
@@ -128,6 +131,86 @@ const LEVELS = [
   ["Regional schools", "Geographic, cultural-linguistic, and practitioner-community context"],
 ];
 
+const STREAM_DETAILS: Record<string, string[]> = {
+  Parashari: ["south", "north", "bengal", "gujarat", "maharashtra", "western"],
+  KP: ["south"],
+  "Lal Kitab": ["north"],
+  "Prasna Marga": ["south"],
+  "Jaimini revival": ["north", "western"],
+};
+
+const DIAGRAM_NODES: Record<string, { x: number; y: number }> = {
+  western: { x: 48, y: 72 },
+  north: { x: 292, y: 52 },
+  bengal: { x: 536, y: 92 },
+  gujarat: { x: 78, y: 276 },
+  maharashtra: { x: 294, y: 314 },
+  south: { x: 536, y: 266 },
+};
+
+function ViewButton({
+  active,
+  icon,
+  label,
+  onClick,
+}: {
+  active: boolean;
+  icon: ReactNode;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition"
+      style={{
+        backgroundColor: active ? GOLD : "rgba(255, 249, 240, 0.72)",
+        color: active ? "#FFF9F0" : INK_SECONDARY,
+        border: active ? `1px solid ${GOLD}` : `1px solid ${HAIRLINE}`,
+        boxShadow: active ? "0 8px 20px rgba(122, 94, 30, 0.18)" : "none",
+      }}
+    >
+      {icon}
+      <span>{label}</span>
+    </button>
+  );
+}
+
+function SchoolPicker({
+  activeId,
+  onSelect,
+}: {
+  activeId: string;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+      {SCHOOLS.map((school) => {
+        const active = school.id === activeId;
+        return (
+          <button
+            key={school.id}
+            type="button"
+            onClick={() => onSelect(school.id)}
+            className="flex min-h-12 items-center gap-2 rounded px-3 py-2 text-left text-xs font-bold transition"
+            style={{
+              backgroundColor: active ? "rgba(255, 249, 240, 0.95)" : "rgba(255, 249, 240, 0.58)",
+              border: active ? `1px solid ${school.color}` : `1px solid ${HAIRLINE}`,
+              color: active ? school.color : INK_SECONDARY,
+              boxShadow: active ? "0 8px 18px rgba(122, 94, 30, 0.12)" : "none",
+            }}
+            aria-pressed={active}
+          >
+            <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: school.color }} />
+            <span className="leading-tight">{school.short}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 function RegionalMap({
   activeId,
   showStreams,
@@ -139,40 +222,75 @@ function RegionalMap({
   showGlobal: boolean;
   onSelect: (id: string) => void;
 }) {
+  const center = { x: 380, y: 206 };
+  const activeNode = DIAGRAM_NODES[activeId] ?? DIAGRAM_NODES.south;
+  const westernNode = DIAGRAM_NODES.western;
+
   return (
-    <svg viewBox="0 0 760 430" role="img" aria-label="Schematic map of six Jyotisha regional schools" className="h-auto w-full">
+    <svg viewBox="0 0 760 430" role="img" aria-label="Network diagram of six Jyotisha regional schools" className="h-auto w-full">
       <defs>
         <filter id="regional-pin-shadow" x="-40%" y="-40%" width="180%" height="180%">
           <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#7A5E1E" floodOpacity="0.18" />
         </filter>
+        <filter id="regional-card-shadow" x="-15%" y="-25%" width="130%" height="150%">
+          <feDropShadow dx="0" dy="8" stdDeviation="8" floodColor="#7A5E1E" floodOpacity="0.12" />
+        </filter>
       </defs>
       <rect x="0" y="0" width="760" height="430" rx="8" fill={CARD} stroke={HAIRLINE} />
       <rect x="18" y="18" width="724" height="394" rx="7" fill={SOFT} opacity="0.42" />
-      <path d="M384 86 C448 104 509 147 545 202 C584 260 566 326 506 354 C443 384 355 360 313 301 C270 238 287 149 384 86 Z" fill="rgba(156, 122, 47, 0.10)" stroke={HAIRLINE} strokeWidth="2" />
-      <path d="M367 83 C343 133 355 185 338 238 C324 283 338 336 379 365" fill="none" stroke="rgba(92, 74, 42, 0.28)" strokeDasharray="7 8" />
-      <text x="392" y="218" textAnchor="middle" fill={INK_MUTED} fontSize="13" fontWeight="700">
-        Indian regional field
-      </text>
 
       {showGlobal &&
         SCHOOLS.filter((school) => school.id !== "western").map((school) => {
-          const west = SCHOOLS.find((item) => item.id === "western")!;
+          const node = DIAGRAM_NODES[school.id];
           return (
             <line
               key={school.id}
-              x1={`${west.x}%`}
-              y1={`${west.y}%`}
-              x2={`${school.x}%`}
-              y2={`${school.y}%`}
+              x1={westernNode.x + 72}
+              y1={westernNode.y + 29}
+              x2={node.x + 72}
+              y2={node.y + 29}
               stroke="rgba(79, 111, 168, 0.45)"
-              strokeWidth="2"
+              strokeWidth="2.5"
               strokeDasharray="5 7"
             />
           );
         })}
 
       {SCHOOLS.map((school) => {
+        const node = DIAGRAM_NODES[school.id];
+        return (
+          <line
+            key={`field-${school.id}`}
+            x1={center.x}
+            y1={center.y}
+            x2={node.x + 72}
+            y2={node.y + 29}
+            stroke={school.id === activeId ? school.color : "rgba(156, 122, 47, 0.22)"}
+            strokeWidth={school.id === activeId ? 3 : 1.5}
+          />
+        );
+      })}
+
+      <g filter="url(#regional-card-shadow)">
+        <circle cx={center.x} cy={center.y} r="76" fill="rgba(255, 249, 240, 0.92)" stroke={HAIRLINE} strokeWidth="1.5" />
+        <circle cx={center.x} cy={center.y} r="49" fill="rgba(156, 122, 47, 0.09)" stroke="rgba(156, 122, 47, 0.22)" />
+        <text x={center.x} y={center.y - 10} textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="800">
+          Regional
+        </text>
+        <text x={center.x} y={center.y + 10} textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="800">
+          practice field
+        </text>
+        <text x={center.x} y={center.y + 31} textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight="700">
+          schools + lineages
+        </text>
+      </g>
+
+      <line x1={center.x} y1={center.y} x2={activeNode.x + 72} y2={activeNode.y + 29} stroke={GOLD_HEX} strokeWidth="5" strokeLinecap="round" opacity="0.38" />
+
+      {SCHOOLS.map((school) => {
         const active = school.id === activeId;
+        const node = DIAGRAM_NODES[school.id];
+        const linkedStreams = STREAM_PATTERNS.filter(([stream]) => STREAM_DETAILS[stream]?.includes(school.id)).map(([stream]) => stream);
         return (
           <g
             key={school.id}
@@ -188,27 +306,155 @@ function RegionalMap({
             }}
             className="cursor-pointer"
           >
-            <circle cx={`${school.x}%`} cy={`${school.y}%`} r={active ? 25 : 19} fill={active ? school.color : CARD} stroke={school.color} strokeWidth="3" filter={active ? "url(#regional-pin-shadow)" : undefined} />
-            <text x={`${school.x}%`} y={`${school.y + 9}%`} textAnchor="middle" fill={active ? "#fff" : school.color} fontSize="11" fontWeight="800">
+            <rect
+              x={node.x}
+              y={node.y}
+              width="144"
+              height="58"
+              rx="8"
+              fill={active ? "rgba(255, 249, 240, 0.98)" : "rgba(255, 249, 240, 0.82)"}
+              stroke={school.color}
+              strokeWidth={active ? 2.5 : 1.5}
+              filter={active ? "url(#regional-pin-shadow)" : undefined}
+            />
+            <circle cx={node.x + 20} cy={node.y + 22} r={active ? 8 : 6} fill={school.color} />
+            <text x={node.x + 36} y={node.y + 25} fill={school.color} fontSize="14" fontWeight="900">
               {school.short}
             </text>
+            <text x={node.x + 18} y={node.y + 45} fill={INK_SECONDARY} fontSize="10.5" fontWeight="700">
+              {school.reach}
+            </text>
+            {showStreams && (
+              <text x={node.x + 126} y={node.y + 45} textAnchor="end" fill={school.color} fontSize="10.5" fontWeight="900">
+                {linkedStreams.length}
+              </text>
+            )}
           </g>
         );
       })}
 
       {showStreams &&
-        STREAM_PATTERNS.slice(1).map(([stream, place, color], index) => (
+        STREAM_PATTERNS.map(([stream, place, color], index) => (
           <g key={stream}>
-            <rect x={24} y={292 + index * 28} width="260" height="22" rx="5" fill="rgba(156, 122, 47, 0.09)" stroke="rgba(156, 122, 47, 0.18)" />
-            <text x={36} y={307 + index * 28} fill={color} fontSize="12" fontWeight="800">
+            <rect x={70 + index * 124} y={372} width="112" height="26" rx="13" fill="rgba(255, 249, 240, 0.82)" stroke={color} />
+            <text x={126 + index * 124} y={389} textAnchor="middle" fill={color} fontSize="10.5" fontWeight="900">
               {stream}
             </text>
-            <text x={125} y={307 + index * 28} fill={INK_SECONDARY} fontSize="11">
-              {place}
-            </text>
+            <title>{place}</title>
           </g>
         ))}
     </svg>
+  );
+}
+
+function LevelStack() {
+  return (
+    <div className="gl-surface-twilight-glass p-4" style={{ borderRadius: "8px" }}>
+      <div className="mb-4 flex items-center gap-2 text-sm font-semibold">
+        <Layers3 size={16} style={{ color: GREEN }} />
+        Four complementary organisational levels
+      </div>
+      <div className="grid gap-3">
+        {LEVELS.map(([label, text], index) => {
+          const active = index === 3;
+          return (
+            <div
+              key={label}
+              className="grid gap-2 rounded p-3 sm:grid-cols-[150px_minmax(0,1fr)]"
+              style={{
+                backgroundColor: active ? "rgba(58, 140, 90, 0.10)" : SOFT,
+                border: active ? `1px solid rgba(58, 140, 90, 0.25)` : `1px solid ${HAIRLINE}`,
+                borderLeft: active ? `4px solid ${GREEN}` : `4px solid ${HAIRLINE}`,
+              }}
+            >
+              <div className="flex items-center gap-2 text-sm font-bold" style={{ color: active ? GREEN : INK_PRIMARY }}>
+                <span
+                  className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs"
+                  style={{ backgroundColor: active ? "rgba(58, 140, 90, 0.16)" : "rgba(156, 122, 47, 0.12)" }}
+                >
+                  {index + 1}
+                </span>
+                {label}
+              </div>
+              <p className="text-sm leading-relaxed" style={{ color: INK_SECONDARY }}>
+                {text}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function SchoolSummary({ school }: { school: School }) {
+  return (
+    <div className="gl-surface-twilight-glass p-4" style={{ borderLeft: `3px solid ${school.color}`, borderRadius: "8px" }}>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3 className="text-xl font-bold sm:text-2xl" style={{ color: school.color }}>
+            {school.name}
+          </h3>
+          <p className="text-sm" style={{ color: INK_SECONDARY }}>
+            {school.center}
+          </p>
+        </div>
+        <span className="rounded-full px-3 py-1 text-xs font-bold" style={{ backgroundColor: "rgba(156, 122, 47, 0.12)", color: school.color, border: `1px solid ${HAIRLINE}` }}>
+          {school.reach}
+        </span>
+      </div>
+
+      <div className="mt-4 rounded p-3" style={{ backgroundColor: SOFT, border: `1px solid ${HAIRLINE}` }}>
+        <div className="text-xs font-bold uppercase" style={{ color: INK_MUTED }}>
+          Languages
+        </div>
+        <div className="mt-1 text-sm" style={{ color: INK_SECONDARY }}>
+          {school.languages}
+        </div>
+      </div>
+
+      <div className="mt-3 grid gap-2">
+        {school.emphases.map((item) => (
+          <div key={item} className="rounded p-3 text-sm font-semibold" style={{ backgroundColor: "rgba(156, 122, 47, 0.08)", border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}>
+            {item}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DetailCards({ school }: { school: School }) {
+  return (
+    <div className="mt-4 grid gap-4 lg:grid-cols-2">
+      <div className="gl-surface-twilight-glass p-4" style={{ borderRadius: "8px" }}>
+        <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+          <Users size={16} style={{ color: GOLD }} />
+          Practitioner-community features
+        </div>
+        <div className="space-y-2">
+          {school.features.map((feature) => (
+            <div key={feature} className="rounded p-3 text-sm" style={{ backgroundColor: SOFT, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}>
+              {feature}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="gl-surface-twilight-glass p-4" style={{ borderRadius: "8px" }}>
+        <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+          <BookOpen size={16} style={{ color: BLUE }} />
+          Named teachers and lineage cues
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {school.teachers.map((teacher) => (
+            <span key={teacher} className="rounded-full px-3 py-1.5 text-xs font-semibold" style={{ backgroundColor: "rgba(156, 122, 47, 0.10)", border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}>
+              {teacher}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -228,118 +474,67 @@ export function RegionalSchoolsExplorer() {
           ["global", "Global links", <Globe2 key="icon" size={15} />],
           ["levels", "Four levels", <Layers3 key="icon" size={15} />],
         ].map(([key, label, icon]) => (
-          <button
+          <ViewButton
             key={key as string}
-            type="button"
+            active={view === key}
+            icon={icon}
+            label={label as string}
             onClick={() => setView(key as View)}
-            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold"
-            style={{
-              backgroundColor: view === key ? GOLD : "transparent",
-              color: view === key ? "#FFF9F0" : INK_SECONDARY,
-              border: view === key ? `1px solid ${GOLD}` : `1px solid transparent`,
-            }}
-          >
-            {icon}
-            {label}
-          </button>
+          />
         ))}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(330px,0.95fr)]">
-        <section className="gl-surface-twilight-glass p-3" style={{ borderRadius: "8px" }}>
-          <RegionalMap activeId={activeId} showStreams={showStreams} showGlobal={showGlobal} onSelect={setActiveId} />
-        </section>
-
-        <section className="space-y-4">
-          {view !== "levels" ? (
-            <>
-              <div className="gl-surface-twilight-glass p-4" style={{ borderLeft: `3px solid ${activeSchool.color}`, borderRadius: "8px" }}>
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="text-2xl font-bold" style={{ color: activeSchool.color }}>
-                      {activeSchool.name}
-                    </h3>
-                    <p className="text-sm" style={{ color: INK_SECONDARY }}>{activeSchool.center}</p>
-                  </div>
-                  <span className="rounded-full px-3 py-1 text-xs font-bold" style={{ backgroundColor: "rgba(156, 122, 47, 0.12)", color: activeSchool.color, border: `1px solid ${HAIRLINE}` }}>
-                    {activeSchool.reach}
-                  </span>
-                </div>
-
-                <div className="mt-4 rounded p-3" style={{ backgroundColor: SOFT, border: `1px solid ${HAIRLINE}` }}>
-                  <div className="text-xs font-bold uppercase tracking-[0.08em]" style={{ color: INK_MUTED }}>Languages</div>
-                  <div className="mt-1 text-sm" style={{ color: INK_SECONDARY }}>{activeSchool.languages}</div>
-                </div>
-
-                <div className="mt-3 grid gap-2">
-                  {activeSchool.emphases.map((item) => (
-                    <div key={item} className="rounded p-3 text-sm font-semibold" style={{ backgroundColor: "rgba(156, 122, 47, 0.08)", border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}>
-                      {item}
-                    </div>
-                  ))}
-                </div>
+      {view === "levels" ? (
+        <LevelStack />
+      ) : (
+        <>
+          <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(330px,0.95fr)]">
+            <section className="gl-surface-twilight-glass p-3" style={{ borderRadius: "8px" }}>
+              <RegionalMap activeId={activeId} showStreams={showStreams} showGlobal={showGlobal} onSelect={setActiveId} />
+              <div className="mt-3">
+                <SchoolPicker activeId={activeId} onSelect={setActiveId} />
               </div>
+            </section>
 
-              <div className="gl-surface-twilight-glass p-4" style={{ borderRadius: "8px" }}>
-                <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
-                  <Users size={16} style={{ color: GOLD }} />
-                  Practitioner-community features
-                </div>
-                <div className="space-y-2">
-                  {activeSchool.features.map((feature) => (
-                    <div key={feature} className="rounded p-3 text-sm" style={{ backgroundColor: SOFT, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}>
-                      {feature}
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <section className="space-y-4">
+              <SchoolSummary school={activeSchool} />
+            </section>
+          </div>
 
-              <div className="gl-surface-twilight-glass p-4" style={{ borderRadius: "8px" }}>
-                <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
-                  <BookOpen size={16} style={{ color: BLUE }} />
-                  Named teachers and lineage cues
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {activeSchool.teachers.map((teacher) => (
-                    <span key={teacher} className="rounded-full px-3 py-1.5 text-xs font-semibold" style={{ backgroundColor: "rgba(156, 122, 47, 0.10)", border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}>
-                      {teacher}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="gl-surface-twilight-glass p-4" style={{ borderRadius: "8px" }}>
-              <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
-                <Layers3 size={16} style={{ color: GREEN }} />
-                Four complementary organisational levels
-              </div>
-              <div className="space-y-3">
-                {LEVELS.map(([label, text], index) => (
-                  <div key={label} className="rounded p-3" style={{ backgroundColor: index === 3 ? "rgba(58, 140, 90, 0.10)" : SOFT, border: index === 3 ? `1px solid rgba(58, 140, 90, 0.25)` : `1px solid ${HAIRLINE}`, borderLeft: index === 3 ? `3px solid ${GREEN}` : `3px solid ${HAIRLINE}` }}>
-                    <div className="text-sm font-bold" style={{ color: index === 3 ? GREEN : INK_PRIMARY }}>{label}</div>
-                    <p className="mt-1 text-sm" style={{ color: INK_SECONDARY }}>{text}</p>
-                  </div>
-                ))}
-              </div>
+          <DetailCards school={activeSchool} />
+
+          <section className="gl-surface-twilight-glass mt-4 p-4" style={{ borderRadius: "8px" }}>
+            <div className="mb-3 flex items-center gap-2 text-xs font-bold uppercase" style={{ color: INK_MUTED }}>
+              <GitBranch size={15} style={{ color: GOLD }} />
+              Cross-stream regional emphasis
             </div>
-          )}
-        </section>
-      </div>
-
-      <section className="gl-surface-twilight-glass mt-4 p-4" style={{ borderRadius: "8px" }}>
-        <div className="mb-3 text-xs font-bold uppercase tracking-[0.08em]" style={{ color: INK_MUTED }}>
-          Cross-stream regional emphasis
-        </div>
-        <div className="grid gap-2 md:grid-cols-5">
-          {STREAM_PATTERNS.map(([stream, school, color]) => (
-            <div key={stream} className="rounded p-3" style={{ backgroundColor: CARD, border: `1px solid ${HAIRLINE}`, borderLeft: `3px solid ${color}` }}>
-              <div className="text-sm font-bold" style={{ color }}>{stream}</div>
-              <div className="mt-1 text-xs" style={{ color: INK_SECONDARY }}>{school}</div>
+            <div className="grid gap-2 md:grid-cols-5">
+              {STREAM_PATTERNS.map(([stream, school, color]) => {
+                const selected = STREAM_DETAILS[stream]?.includes(activeId) ?? false;
+                return (
+                  <div
+                    key={stream}
+                    className="rounded p-3"
+                    style={{
+                      backgroundColor: selected ? "rgba(58, 140, 90, 0.09)" : CARD,
+                      border: selected ? `1px solid rgba(58, 140, 90, 0.28)` : `1px solid ${HAIRLINE}`,
+                      borderLeft: `3px solid ${selected ? GREEN : color}`,
+                    }}
+                  >
+                    <div className="flex items-center gap-1.5 text-sm font-bold" style={{ color: selected ? GREEN : color }}>
+                      {selected && <CheckCircle2 size={14} />}
+                      {stream}
+                    </div>
+                    <div className="mt-1 text-xs leading-relaxed" style={{ color: INK_SECONDARY }}>
+                      {school}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          ))}
-        </div>
-      </section>
+          </section>
+        </>
+      )}
 
       {view === "global" && (
         <section className="gl-surface-twilight-glass mt-4 p-4" style={{ borderRadius: "8px" }}>

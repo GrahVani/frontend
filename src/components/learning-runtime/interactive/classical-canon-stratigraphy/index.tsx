@@ -341,7 +341,10 @@ export function ClassicalCanonStratigraphy() {
                       </div>
                       
                       {/* Sanskrit code snippet on leaf */}
-                      <div className="mt-1.5 font-devanagari text-stone-700/80 text-[11px] select-none text-center tracking-wider italic">
+                      <div
+                        className="mt-1.5 font-devanagari text-[11px] select-none text-center tracking-wider italic"
+                        style={{ color: INK_SECONDARY }}
+                      >
                         {s.sanskritExample}
                       </div>
                     </div>

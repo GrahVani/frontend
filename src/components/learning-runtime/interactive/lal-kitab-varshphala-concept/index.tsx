@@ -28,57 +28,57 @@ function AnnualFrameDiagram({ active, age }: { active: FrameKey; age: number }) 
 
   return (
     <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 310" className="h-auto w-full min-w-0" role="img" aria-label="Natal Teva Lal Kitab annual varshphala and Tajika annual frame comparison">
-        <rect x="20" y="20" width="720" height="270" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
-        <text x="380" y="50" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+      <svg viewBox="0 0 760 350" className="h-auto w-full min-w-0" style={{ minHeight: 280 }} role="img" aria-label="Natal Teva Lal Kitab annual varshphala and Tajika annual frame comparison">
+        <rect x="20" y="30" width="720" height="290" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+        <text x="380" y="62" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           ONE LIFE BASELINE, ONE YEAR OVERLAY, ONE SEPARATE ANNUAL SYSTEM
         </text>
 
-        <rect x="72" y="86" width="190" height="150" rx="18" fill={active === "natal" ? wash(natal.color, "16") : SURFACE} stroke={active === "natal" ? natal.color : HAIRLINE} strokeWidth={active === "natal" ? 2.4 : 1.2} />
-        <text x="167" y="116" textAnchor="middle" fill={natal.color} fontSize="15" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="72" y="96" width="190" height="160" rx="18" fill={active === "natal" ? wash(natal.color, "16") : SURFACE} stroke={active === "natal" ? natal.color : HAIRLINE} strokeWidth={active === "natal" ? 2.4 : 1.2} />
+        <text x="167" y="126" textAnchor="middle" fill={natal.color} fontSize="18" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           NATAL TEVA
         </text>
-        <rect x="118" y="135" width="98" height="70" rx="10" fill={SURFACE_2} stroke={natal.color} />
-        <path d="M118 135 L216 205 M216 135 L118 205 M167 135 L167 205 M118 170 H216" stroke={HAIRLINE} strokeWidth="1.2" />
-        <text x="167" y="258" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="118" y="150" width="98" height="80" rx="10" fill={SURFACE_2} stroke={natal.color} />
+        <path d="M118 150 L216 230 M216 150 L118 230 M167 150 L167 230 M118 190 H216" stroke={HAIRLINE} strokeWidth="1.4" />
+        <text x="167" y="282" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           cast once; lifetime baseline
         </text>
 
-        <rect x="285" y="76" width="190" height="170" rx="18" fill={active === "lalKitabAnnual" ? wash(annual.color, "16") : SURFACE} stroke={active === "lalKitabAnnual" ? annual.color : HAIRLINE} strokeWidth={active === "lalKitabAnnual" ? 2.4 : 1.2} />
-        <text x="380" y="106" textAnchor="middle" fill={annual.color} fontSize="15" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="285" y="86" width="190" height="180" rx="18" fill={active === "lalKitabAnnual" ? wash(annual.color, "16") : SURFACE} stroke={active === "lalKitabAnnual" ? annual.color : HAIRLINE} strokeWidth={active === "lalKitabAnnual" ? 2.4 : 1.2} />
+        <text x="380" y="116" textAnchor="middle" fill={annual.color} fontSize="18" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           LAL KITAB YEAR
         </text>
-        <circle cx="380" cy="166" r="50" fill={SURFACE_2} stroke={annual.color} strokeWidth="2" />
-        <circle cx="380" cy="166" r="34" fill={SURFACE} stroke={HAIRLINE} />
-        <path d={`M380 166 L${380 + Math.cos(orbit) * 50} ${166 + Math.sin(orbit) * 50}`} stroke={annual.color} strokeWidth="3" strokeLinecap="round" />
-        <text x="380" y="160" textAnchor="middle" fill={INK_PRIMARY} fontSize="19" fontWeight="700" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+        <circle cx="380" cy="176" r="55" fill={SURFACE_2} stroke={annual.color} strokeWidth="2" />
+        <circle cx="380" cy="176" r="38" fill={SURFACE} stroke={HAIRLINE} />
+        <path d={`M380 176 L${380 + Math.cos(orbit) * 55} ${176 + Math.sin(orbit) * 55}`} stroke={annual.color} strokeWidth="3.5" strokeLinecap="round" />
+        <text x="380" y="170" textAnchor="middle" fill={INK_PRIMARY} fontSize="21" fontWeight="700" style={{ fontFamily: "var(--font-cormorant), serif" }}>
           Age {age}
         </text>
-        <text x="380" y="180" textAnchor="middle" fill={GOLD} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="380" y="192" textAnchor="middle" fill={GOLD} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           birth-year cycle
         </text>
-        <text x="380" y="258" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="380" y="282" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           recast yearly; themes plus upaya
         </text>
 
-        <rect x="498" y="86" width="190" height="150" rx="18" fill={active === "tajikaAnnual" ? wash(tajika.color, "16") : SURFACE} stroke={active === "tajikaAnnual" ? tajika.color : HAIRLINE} strokeWidth={active === "tajikaAnnual" ? 2.4 : 1.2} />
-        <text x="593" y="116" textAnchor="middle" fill={tajika.color} fontSize="15" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="498" y="96" width="190" height="160" rx="18" fill={active === "tajikaAnnual" ? wash(tajika.color, "16") : SURFACE} stroke={active === "tajikaAnnual" ? tajika.color : HAIRLINE} strokeWidth={active === "tajikaAnnual" ? 2.4 : 1.2} />
+        <text x="593" y="126" textAnchor="middle" fill={tajika.color} fontSize="18" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           TAJIKA YEAR
         </text>
-        <text x="593" y="151" textAnchor="middle" fill={INK_PRIMARY} fontSize="16" fontWeight="800" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+        <text x="593" y="158" textAnchor="middle" fill={INK_PRIMARY} fontSize="17" fontWeight="800" style={{ fontFamily: "var(--font-cormorant), serif" }}>
           muntha
         </text>
-        <text x="593" y="176" textAnchor="middle" fill={INK_PRIMARY} fontSize="16" fontWeight="800" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+        <text x="593" y="186" textAnchor="middle" fill={INK_PRIMARY} fontSize="17" fontWeight="800" style={{ fontFamily: "var(--font-cormorant), serif" }}>
           sahams
         </text>
-        <text x="593" y="201" textAnchor="middle" fill={INK_PRIMARY} fontSize="16" fontWeight="800" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+        <text x="593" y="214" textAnchor="middle" fill={INK_PRIMARY} fontSize="17" fontWeight="800" style={{ fontFamily: "var(--font-cormorant), serif" }}>
           year-lord
         </text>
-        <text x="593" y="258" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="593" y="282" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           separate stream; Module 19
         </text>
 
-        <text x="380" y="284" textAnchor="middle" fill={activeProfile.color} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="380" y="318" textAnchor="middle" fill={activeProfile.color} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Selected frame: {activeProfile.label}
         </text>
       </svg>

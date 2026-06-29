@@ -68,9 +68,9 @@ function AnnualTevaSvg({ activeStep }: { activeStep: WorkflowStepKey }) {
   return (
     <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
       <div style={{ width: "100%", maxWidth: 460, margin: "0 auto" }}>
-        <svg viewBox="0 0 400 400" className="h-auto w-full min-w-0" role="img" aria-label="Lal Kitab annual fixed Aries Teva computation diagram">
+        <svg viewBox="0 0 400 420" className="h-auto w-full min-w-0" role="img" aria-label="Lal Kitab annual fixed Aries Teva computation diagram">
           {/* Chart lines */}
-          <g stroke="rgba(184, 132, 33, 0.35)" strokeWidth="1.2" fill="none">
+          <g stroke="rgba(130, 90, 30, 0.65)" strokeWidth="1.8" fill="none">
             <rect x="10" y="10" width="380" height="380" />
             <line x1="10" y1="10" x2="390" y2="390" />
             <line x1="390" y1="10" x2="10" y2="390" />
@@ -104,9 +104,9 @@ function AnnualTevaSvg({ activeStep }: { activeStep: WorkflowStepKey }) {
                     <>
                       {/* House number small */}
                       <text
-                        y={-18}
+                        y={-20}
                         fill={isH1 ? GOLD : INK_SECONDARY}
-                        fontSize={9}
+                        fontSize={12}
                         fontWeight="800"
                         textAnchor="middle"
                         dominantBaseline="central"
@@ -140,7 +140,7 @@ function AnnualTevaSvg({ activeStep }: { activeStep: WorkflowStepKey }) {
                             />
                             <text
                               fill={active ? planet.color : INK_SECONDARY}
-                              fontSize={9}
+                              fontSize={10}
                               fontWeight="900"
                               textAnchor="middle"
                               dominantBaseline="central"
@@ -155,9 +155,9 @@ function AnnualTevaSvg({ activeStep }: { activeStep: WorkflowStepKey }) {
                       {/* State label below planets */}
                       {showPlanets && housePlanets.length === 1 && (
                         <text
-                          y={16}
+                          y={18}
                           fill={INK_MUTED}
-                          fontSize={7}
+                          fontSize={9}
                           fontWeight="700"
                           textAnchor="middle"
                           dominantBaseline="central"
@@ -171,9 +171,9 @@ function AnnualTevaSvg({ activeStep }: { activeStep: WorkflowStepKey }) {
                     /* Empty house — centered label */
                     <>
                       <text
-                        y={-10}
+                        y={-12}
                         fill={isH1 ? GOLD : INK_SECONDARY}
-                        fontSize={10}
+                        fontSize={13}
                         fontWeight="800"
                         textAnchor="middle"
                         dominantBaseline="central"
@@ -182,9 +182,9 @@ function AnnualTevaSvg({ activeStep }: { activeStep: WorkflowStepKey }) {
                         H{h}
                       </text>
                       <text
-                        y={4}
+                        y={6}
                         fill={isH1 ? GOLD : INK_PRIMARY}
-                        fontSize={12}
+                        fontSize={15}
                         fontWeight="950"
                         textAnchor="middle"
                         dominantBaseline="central"
@@ -200,16 +200,16 @@ function AnnualTevaSvg({ activeStep }: { activeStep: WorkflowStepKey }) {
           })}
 
           {/* Central step output label */}
-          <rect x="155" y="180" width="90" height="40" rx="10" fill={wash(step.color, "12")} stroke={step.color} strokeWidth="1.2" />
-          <text x="200" y="196" textAnchor="middle" fill={step.color} fontSize="8" fontWeight="900" letterSpacing="0.5" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <rect x="150" y="176" width="100" height="48" rx="10" fill={wash(step.color, "12")} stroke={step.color} strokeWidth="1.4" />
+          <text x="200" y="194" textAnchor="middle" fill={step.color} fontSize="10" fontWeight="900" letterSpacing="0.5" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             STEP OUTPUT
           </text>
-          <text x="200" y="210" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight="700" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+          <text x="200" y="212" textAnchor="middle" fill={INK_PRIMARY} fontSize="12" fontWeight="700" style={{ fontFamily: "var(--font-cormorant), serif" }}>
             {step.shortLabel}
           </text>
 
           {/* Footer */}
-          <text x="200" y="400" textAnchor="middle" fill={INK_MUTED} fontSize="7.5" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <text x="200" y="412" textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             Aries remains H1; only return-moment planet positions refresh each year.
           </text>
         </svg>

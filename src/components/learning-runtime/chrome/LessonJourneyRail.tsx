@@ -146,11 +146,11 @@ export function LessonJourneyRail({
         />
         <p
           style={{
-            fontSize: "11px",
+            fontSize: "12px",
             textTransform: "uppercase",
-            letterSpacing: "0.14em",
+            letterSpacing: "0.12em",
             color: "var(--gl-gold-accent)",
-            fontWeight: 600,
+            fontWeight: 700,
             marginBottom: "6px",
           }}
         >
@@ -163,10 +163,11 @@ export function LessonJourneyRail({
             style={{
               fontFamily: "var(--font-cormorant), serif",
               fontStyle: "italic",
-              fontSize: "13px",
-              color: "var(--gl-ink-muted)",
+              fontSize: "14px",
+              color: "var(--gl-ink-secondary)",
               marginBottom: "8px",
-              lineHeight: 1.3,
+              lineHeight: 1.35,
+              fontWeight: 500,
             }}
           >
             {humanizeSlug(frontMatter.chapterSlug)}
@@ -175,8 +176,8 @@ export function LessonJourneyRail({
         <p
           style={{
             fontFamily: "var(--font-cormorant), serif",
-            fontSize: "17px",
-            fontWeight: 500,
+            fontSize: "18px",
+            fontWeight: 600,
             color: "var(--gl-ink-primary)",
             lineHeight: 1.3,
           }}
@@ -191,10 +192,11 @@ export function LessonJourneyRail({
             style={{
               fontFamily: "var(--font-cormorant), serif",
               fontStyle: "italic",
-              fontSize: "13.5px",
-              color: "var(--gl-ink-secondary)",
+              fontSize: "14px",
+              color: "var(--gl-ink-primary)",
               marginTop: "3px",
-              lineHeight: 1.4,
+              lineHeight: 1.45,
+              fontWeight: 500,
             }}
           >
             {frontMatter.title.split(":").slice(1).join(":").trim()}
@@ -205,10 +207,11 @@ export function LessonJourneyRail({
             lang="sa"
             style={{
               fontFamily: "var(--font-devanagari), serif",
-              fontSize: "14px",
+              fontSize: "15px",
               color: "var(--gl-gold-accent)",
               marginTop: "6px",
-              lineHeight: 1.4,
+              lineHeight: 1.45,
+              fontWeight: 500,
             }}
           >
             {frontMatter.titleDevanagari.split(":")[0]}
@@ -250,13 +253,14 @@ export function LessonJourneyRail({
           style={{
             marginTop: "8px",
             fontSize: "14px",
-            color: "var(--gl-ink-muted)",
+            color: "var(--gl-ink-secondary)",
             display: "flex",
             alignItems: "center",
             gap: "4px",
+            fontWeight: 500,
           }}
         >
-          <Clock size={10} />
+          <Clock size={12} />
           {Math.round(completedMinutes)} of {Math.round(totalMinutes)} min · {Math.round(progressPct)}%
         </p>
       </div>
@@ -331,8 +335,8 @@ export function LessonJourneyRail({
                 </span>
                 <span
                   style={{
-                    fontSize: "14px",
-                    fontWeight: isActive ? 600 : 500,
+                    fontSize: "15px",
+                    fontWeight: isActive ? 700 : 600,
                     color: isActive
                       ? presentation.accentHex
                       : isViewed
@@ -346,19 +350,20 @@ export function LessonJourneyRail({
                 </span>
                 <span
                   style={{
-                    fontSize: "12px",
+                    fontSize: "13px",
                     color: "var(--gl-ink-secondary)",
                     fontFamily: "var(--font-cormorant), serif",
                     fontStyle: "italic",
                     display: "flex",
                     alignItems: "center",
                     gap: "4px",
+                    fontWeight: 500,
                   }}
                 >
-                  <Clock size={10} aria-hidden="true" />
+                  <Clock size={11} aria-hidden="true" />
                   {minutes} min
                   {isViewed && !isActive && (
-                    <span style={{ color: presentation.accentHex, marginLeft: "4px" }}>· read</span>
+                    <span style={{ color: presentation.accentHex, marginLeft: "4px", fontWeight: 600 }}>· read</span>
                   )}
                 </span>
               </a>
@@ -381,18 +386,18 @@ export function LessonJourneyRail({
         >
           <p
             style={{
-              fontSize: "11px",
+              fontSize: "12px",
               textTransform: "uppercase",
-              letterSpacing: "0.14em",
+              letterSpacing: "0.12em",
               color: "#A23A1E",
-              fontWeight: 600,
+              fontWeight: 700,
               marginBottom: "8px",
               display: "flex",
               alignItems: "center",
               gap: "5px",
             }}
           >
-            <BookOpen size={11} />
+            <BookOpen size={12} />
             Classical anchors
           </p>
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
@@ -402,12 +407,13 @@ export function LessonJourneyRail({
                 style={{
                   fontFamily: "var(--font-cormorant), serif",
                   fontStyle: "italic",
-                  fontSize: "14px",
+                  fontSize: "15px",
                   color: "var(--gl-ink-primary)",
-                  lineHeight: 1.4,
+                  lineHeight: 1.45,
                   marginBottom: "6px",
                   paddingLeft: "10px",
                   position: "relative",
+                  fontWeight: 500,
                 }}
               >
                 <span

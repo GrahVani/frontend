@@ -221,18 +221,18 @@ export function DoNoHarmAhimsa() {
 
             {/* Visual SVG Kundali Sim */}
             <div className="flex justify-center rounded-xl p-3 my-2 relative overflow-hidden border bg-white" style={{ borderColor: HAIRLINE }}>
-              <svg width="180" height="180" viewBox="0 0 200 200" className="block">
-                <rect x="0" y="0" width="200" height="200" fill="none" stroke="rgba(168, 130, 30, 0.3)" strokeWidth="1.5" rx="4" />
+              <svg width="260" height="260" viewBox="0 0 200 200" className="block">
+                <rect x="0" y="0" width="200" height="200" fill="none" stroke={INK_SECONDARY} strokeWidth="1.5" rx="4" />
                 
                 {/* Diagonals */}
-                <line x1="0" y1="0" x2="200" y2="200" stroke="rgba(168, 130, 30, 0.2)" strokeWidth="1" />
-                <line x1="200" y1="0" x2="0" y2="200" stroke="rgba(168, 130, 30, 0.2)" strokeWidth="1" />
+                <line x1="0" y1="0" x2="200" y2="200" stroke={INK_SECONDARY} strokeWidth="1" />
+                <line x1="200" y1="0" x2="0" y2="200" stroke={INK_SECONDARY} strokeWidth="1" />
                 
                 {/* Inner diamond */}
-                <line x1="100" y1="0" x2="0" y2="100" stroke="rgba(168, 130, 30, 0.2)" strokeWidth="1" />
-                <line x1="0" y1="100" x2="100" y2="200" stroke="rgba(168, 130, 30, 0.2)" strokeWidth="1" />
-                <line x1="100" y1="200" x2="200" y2="100" stroke="rgba(168, 130, 30, 0.2)" strokeWidth="1" />
-                <line x1="200" y1="100" x2="100" y2="0" stroke="rgba(168, 130, 30, 0.2)" strokeWidth="1" />
+                <line x1="100" y1="0" x2="0" y2="100" stroke={INK_SECONDARY} strokeWidth="1" />
+                <line x1="0" y1="100" x2="100" y2="200" stroke={INK_SECONDARY} strokeWidth="1" />
+                <line x1="100" y1="200" x2="200" y2="100" stroke={INK_SECONDARY} strokeWidth="1" />
+                <line x1="200" y1="100" x2="100" y2="0" stroke={INK_SECONDARY} strokeWidth="1" />
 
                 {(Object.keys(HOUSE_PATHS) as Array<unknown> as number[]).map((h) => {
                   const pathStr = HOUSE_PATHS[h as keyof typeof HOUSE_PATHS];
@@ -257,11 +257,11 @@ export function DoNoHarmAhimsa() {
 
                   return (
                     <g key={h}>
-                      <path d={pathStr} fill="none" stroke="rgba(168, 130, 30, 0.08)" strokeWidth="1" />
+                      <path d={pathStr} fill="none" stroke={INK_SECONDARY} strokeWidth="1" />
                       <text x={centroid.x} y={centroid.y - 7} fill={INK_MUTED} fontSize="9" fontWeight="bold" textAnchor="middle" dominantBaseline="central">
                         {currentRashi}
                       </text>
-                      <text x={pos.x} y={pos.y} fill="rgba(168, 130, 30, 0.4)" fontSize="6" textAnchor="middle" dominantBaseline="central">
+                      <text x={pos.x} y={pos.y} fill={INK_SECONDARY} fontSize="8" textAnchor="middle" dominantBaseline="central">
                         {`H${h}`}
                       </text>
                       {planetsText && (

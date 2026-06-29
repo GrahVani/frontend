@@ -1,11 +1,11 @@
 "use client";
 
 /**
- * Lakṣmī-Sarasvatī Detector — Lesson 14.4.1 Interactive
+ * Lakshmi-Sarasvati Detector - Lesson 14.4.1 Interactive
  *
- * §7 interactive for detecting two deity-named special yogas:
- * 1. Lakṣmī Yoga — dignified 9th lord in kendra/trikoṇa + strong lagna lord
- * 2. Sarasvatī Yoga — Me/Ju/Ve well-placed in kendra/trikoṇa/2nd, undebilitated
+ * Section 7 interactive for detecting two deity-named special yogas:
+ * 1. Lakshmi Yoga - dignified 9th lord in kendra/trikona + strong lagna lord
+ * 2. Sarasvati Yoga - Me/Ju/Ve well-placed in kendra/trikona/2nd, undebilitated
  *
  * North Indian chart SVG + condition checker + preset scenarios.
  */
@@ -38,8 +38,6 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-/* ─── Design tokens ──────────────────────────────────────────────────────── */
-
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.18))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #1A1408)";
@@ -49,8 +47,6 @@ const GOLD_ACCENT = "var(--gl-gold-accent, #9C7A2F)";
 const GREEN = "#2F7D55";
 const VERMILION = "#A23A1E";
 const AMBER = "#C8841E";
-
-/* ─── SVG Chart: North Indian diamond ────────────────────────────────────── */
 
 const HOUSE_CENTERS: Record<number, { x: number; y: number }> = {
   1: { x: 200, y: 105 }, 2: { x: 105, y: 45 }, 3: { x: 45, y: 105 },
@@ -95,9 +91,9 @@ function ChartSVG({
   };
 
   return (
-    <svg viewBox="0 0 400 400" className="w-full h-auto" style={{ maxHeight: 400 }}>
+    <svg viewBox="0 0 400 445" className="w-full h-auto" style={{ maxHeight: 445 }}>
       {/* Background */}
-      <rect x={8} y={8} width={384} height={384} rx={10} fill={SURFACE} stroke={HAIRLINE} strokeWidth={1.5} />
+      <rect x={8} y={8} width={384} height={424} rx={10} fill={SURFACE} stroke={HAIRLINE} strokeWidth={1.5} />
 
       {/* Diagonals */}
       <g stroke={HAIRLINE} strokeWidth={1.2} fill="none">
@@ -184,11 +180,11 @@ function ChartSVG({
       </text>
 
       {/* Legend */}
-      <g transform="translate(16, 360)">
+      <g transform="translate(38, 410)">
         <rect x={0} y={0} width={12} height={12} rx={2} fill={GOLD_ACCENT} fillOpacity={0.12} stroke={GOLD_ACCENT} strokeWidth={1} />
         <text x={18} y={10} fontSize={10} fill={INK_SECONDARY}>Lagna</text>
         <rect x={65} y={0} width={12} height={12} rx={2} fill={GREEN} fillOpacity={0.1} stroke={GREEN} strokeWidth={1} />
-        <text x={83} y={10} fontSize={10} fill={INK_SECONDARY}>Kendra/Trikoṇa</text>
+        <text x={83} y={10} fontSize={10} fill={INK_SECONDARY}>Kendra/Trikona</text>
         <rect x={180} y={0} width={12} height={12} rx={2} fill={GREEN} fillOpacity={0.06} stroke={GREEN} strokeWidth={1} strokeDasharray="3 2" />
         <text x={198} y={10} fontSize={10} fill={INK_SECONDARY}>2nd house</text>
       </g>
@@ -436,7 +432,7 @@ export function LakshmiSaraswatiDetector() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
             <ConditionRow met={lakshmi.conditions.ninthLordDignified} label={`9th lord (${ninthLordName}) dignified`} />
-            <ConditionRow met={lakshmi.conditions.ninthLordInKendraTrikona} label="9th lord in kendra/trikoṇa" />
+            <ConditionRow met={lakshmi.conditions.ninthLordInKendraTrikona} label="9th lord in kendra/trikona" />
             <ConditionRow met={lakshmi.conditions.lagnaLordStrong} label={`Lagna lord (${lagnaLordName}) strong`} />
             <ConditionRow met={lakshmi.conditions.venusReinforces} label="Venus reinforces" />
           </div>
@@ -586,12 +582,12 @@ export function LakshmiSaraswatiDetector() {
             </span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-            <ConditionRow met={saraswati.conditions.mercuryWellPlaced} label="Mercury well-placed (kendra/trikoṇa/2nd)" />
+            <ConditionRow met={saraswati.conditions.mercuryWellPlaced} label="Mercury well-placed (kendra/trikona/2nd)" />
             <ConditionRow met={saraswati.conditions.mercuryUndebilitated} label="Mercury undebilitated" />
-            <ConditionRow met={saraswati.conditions.jupiterWellPlaced} label="Jupiter well-placed (kendra/trikoṇa/2nd)" />
+            <ConditionRow met={saraswati.conditions.jupiterWellPlaced} label="Jupiter well-placed (kendra/trikona/2nd)" />
             <ConditionRow met={saraswati.conditions.jupiterUndebilitated} label="Jupiter undebilitated" />
             <ConditionRow met={saraswati.conditions.jupiterStrong} label="Jupiter especially strong" />
-            <ConditionRow met={saraswati.conditions.venusWellPlaced} label="Venus well-placed (kendra/trikoṇa/2nd)" />
+            <ConditionRow met={saraswati.conditions.venusWellPlaced} label="Venus well-placed (kendra/trikona/2nd)" />
             <ConditionRow met={saraswati.conditions.venusUndebilitated} label="Venus undebilitated" />
           </div>
           {saraswati.notes.length > 0 && (

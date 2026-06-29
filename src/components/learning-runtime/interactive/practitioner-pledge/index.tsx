@@ -241,41 +241,41 @@ export function PractitionerPledgeSimulator() {
 
           {/* Eight-Spoke Seal SVG */}
           <div className="flex justify-center mb-5">
-            <svg width="200" height="200" viewBox="0 0 200 200">
+            <svg width="320" height="320" viewBox="0 0 320 320" className="w-full max-w-[360px] h-auto">
               {/* Central ring */}
-              <circle cx="100" cy="100" r="70" fill="none" stroke={`${GOLD}30`} strokeWidth="1.5" />
-              <circle cx="100" cy="100" r="30" fill={`${GOLD}08`} stroke={`${GOLD}22`} strokeWidth="1" />
-              <text x="100" y="97" textAnchor="middle" fill={GOLD} fontSize="7" fontWeight="700">PLEDGE</text>
-              <text x="100" y="107" textAnchor="middle" fill={INK_MUTED} fontSize="6">8 Points</text>
+              <circle cx="160" cy="160" r="110" fill="none" stroke={INK_SECONDARY} strokeWidth="2.5" opacity="0.5" />
+              <circle cx="160" cy="160" r="52" fill={`${GOLD}12`} stroke={GOLD} strokeWidth="2" />
+              <text x="160" y="156" textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight="700">PLEDGE</text>
+              <text x="160" y="173" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="600">8 Points</text>
 
               {/* Eight spokes + commitment nodes */}
               {EIGHT_COMMITMENTS.map((c, i) => {
                 const angle = (i * 45 - 90) * (Math.PI / 180);
-                const innerR = 30;
-                const outerR = 70;
-                const nodeR = 82;
-                const x1 = 100 + Math.cos(angle) * innerR;
-                const y1 = 100 + Math.sin(angle) * innerR;
-                const x2 = 100 + Math.cos(angle) * outerR;
-                const y2 = 100 + Math.sin(angle) * outerR;
-                const nx = 100 + Math.cos(angle) * nodeR;
-                const ny = 100 + Math.sin(angle) * nodeR;
+                const innerR = 52;
+                const outerR = 110;
+                const nodeR = 130;
+                const x1 = 160 + Math.cos(angle) * innerR;
+                const y1 = 160 + Math.sin(angle) * innerR;
+                const x2 = 160 + Math.cos(angle) * outerR;
+                const y2 = 160 + Math.sin(angle) * outerR;
+                const nx = 160 + Math.cos(angle) * nodeR;
+                const ny = 160 + Math.sin(angle) * nodeR;
                 const isExpanded = expandedCommitment === c.num;
 
                 return (
                   <g key={c.num} className="cursor-pointer" onClick={() => setExpandedCommitment(isExpanded ? null : c.num)}>
                     {/* Spoke line */}
-                    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={isExpanded ? GOLD : `${GOLD}25`} strokeWidth={isExpanded ? 1.5 : 1} />
+                    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={isExpanded ? GOLD : INK_SECONDARY} strokeWidth={isExpanded ? 3 : 2} opacity={isExpanded ? 1 : 0.6} />
                     {/* Node circle */}
-                    <circle cx={nx} cy={ny} r={isExpanded ? 14 : 11} fill={isExpanded ? `${GOLD}20` : "rgba(255,249,240,0.9)"} stroke={isExpanded ? GOLD : `${GOLD}33`} strokeWidth={isExpanded ? 2 : 1} />
+                    <circle cx={nx} cy={ny} r={isExpanded ? 20 : 16} fill={isExpanded ? `${GOLD}20` : "rgba(255,249,240,0.95)"} stroke={isExpanded ? GOLD : INK_SECONDARY} strokeWidth={isExpanded ? 3 : 2} />
                     {/* Node number */}
-                    <text x={nx} y={ny + 3} textAnchor="middle" fill={isExpanded ? GOLD : INK_MUTED} fontSize="8" fontWeight="700">
+                    <text x={nx} y={ny + 4} textAnchor="middle" fill={isExpanded ? GOLD : INK_PRIMARY} fontSize="13" fontWeight="700">
                       {c.num}
                     </text>
                     {/* Active pulse */}
                     {isExpanded && (
-                      <circle cx={nx} cy={ny} r="14" fill="none" stroke={GOLD} strokeWidth="1" opacity="0.4">
-                        <animate attributeName="r" values="14;18;14" dur="2s" repeatCount="indefinite" />
+                      <circle cx={nx} cy={ny} r="20" fill="none" stroke={GOLD} strokeWidth="2" opacity="0.4">
+                        <animate attributeName="r" values="20;26;20" dur="2s" repeatCount="indefinite" />
                         <animate attributeName="opacity" values="0.4;0.1;0.4" dur="2s" repeatCount="indefinite" />
                       </circle>
                     )}

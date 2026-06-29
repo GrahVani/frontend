@@ -44,31 +44,31 @@ export function ThreeLineageComparisonChartAnalyzer() {
 
   return (
     <div className="w-full" data-interactive="three-lineage-comparison-chart-analyzer" style={{ color: INK_PRIMARY }}>
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
+      <div className="grid gap-4 xl:grid-cols-[minmax(360px,0.78fr)_minmax(0,1.22fr)]">
         <section
-          className="overflow-hidden rounded-lg"
+          className="self-start overflow-hidden rounded-lg"
           style={{
             border: `1px solid ${HAIRLINE}`,
             background: "linear-gradient(180deg, rgba(255,251,239,0.94), rgba(245,232,203,0.72))",
             boxShadow: "0 18px 40px rgba(72, 48, 16, 0.10)",
           }}
         >
-          <div className="grid gap-4 p-4 md:grid-cols-[minmax(0,1fr)_220px]">
+          <div className="grid gap-3 p-3 lg:grid-cols-[minmax(220px,0.78fr)_minmax(220px,0.72fr)] xl:grid-cols-1">
             <ChartSvg activePoint={activePoint} onSelect={setActivePoint} approach={approach} />
-            <div className="flex flex-col justify-between gap-3">
+            <div className="flex flex-col gap-3">
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: INK_MUTED }}>
                   Demonstration chart
                 </p>
-                <h3 className="mt-1 text-[24px] font-semibold leading-tight" style={{ color: approach.color }}>
+                <h3 className="mt-1 text-[22px] font-semibold leading-tight" style={{ color: approach.color }}>
                   {point.label}
                 </h3>
                 <p className="mt-1 text-sm" style={{ color: INK_SECONDARY }}>
                   {point.sub}
                 </p>
               </div>
-              <div className="rounded-md p-3" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-                <p className="text-xs leading-relaxed" style={{ color: INK_SECONDARY }}>
+              <div className="rounded-md p-2.5" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+                <p className="text-[12px] leading-relaxed" style={{ color: INK_SECONDARY }}>
                   The same chart is read three ways. Tap a graha or lineage to watch the practitioner&apos;s centre of
                   gravity shift without pretending the other methods disappear.
                 </p>
@@ -97,7 +97,7 @@ export function ThreeLineageComparisonChartAnalyzer() {
         </section>
 
         <section
-          className="rounded-lg p-5"
+          className="rounded-lg p-4"
           style={{ borderLeft: `3px solid ${approach.color}`, background: "rgba(255,250,238,0.54)" }}
         >
           <div className="flex flex-wrap gap-2">
@@ -145,7 +145,7 @@ function ChartSvg({
   approach: LineageApproach;
 }) {
   return (
-    <svg viewBox="0 0 330 330" role="img" aria-label="Clickable South Indian demonstration chart" className="h-full min-h-[320px] w-full">
+    <svg viewBox="0 0 330 330" role="img" aria-label="Clickable South Indian demonstration chart" className="h-auto min-h-[240px] w-full">
       <rect x="8" y="8" width="314" height="314" rx="8" fill="#fff8e8" stroke="#d7b769" strokeWidth="1.5" />
       <path d="M8 8 L165 165 L322 8 M8 322 L165 165 L322 322 M8 8 L8 322 M322 8 L322 322 M8 8 L322 8 M8 322 L322 322" stroke="#d8bd79" strokeWidth="1.2" fill="none" />
       <circle cx="165" cy="165" r="70" fill={`${approach.color}12`} stroke={approach.color} strokeDasharray="4 5" />
@@ -191,12 +191,12 @@ function ChartSvg({
 
 function ApproachPanel({ approach }: { approach: LineageApproach }) {
   return (
-    <div className="mt-5 space-y-4">
+    <div className="mt-4 space-y-3">
       <div>
         <p className="text-[11px] font-bold uppercase tracking-[0.14em]" style={{ color: INK_MUTED }}>
           Active lineage
         </p>
-        <h3 className="mt-1 text-[28px] font-semibold leading-tight" style={{ color: approach.color }}>
+        <h3 className="mt-1 text-[26px] font-semibold leading-tight" style={{ color: approach.color }}>
           {approach.name}
         </h3>
         <p className="mt-2 text-sm leading-relaxed" style={{ color: INK_SECONDARY }}>
@@ -204,9 +204,12 @@ function ApproachPanel({ approach }: { approach: LineageApproach }) {
         </p>
       </div>
 
-      <InfoBlock icon={Layers3} title="Chart conventions" color={approach.color} items={approach.chartConventions} />
-      <InfoBlock icon={Crosshair} title="Primary lens" color={approach.color} items={[approach.primaryLens]} />
-      <div className="grid gap-3 md:grid-cols-3">
+      <div className="grid gap-3 lg:grid-cols-2">
+        <InfoBlock icon={Layers3} title="Chart conventions" color={approach.color} items={approach.chartConventions} />
+        <InfoBlock icon={Crosshair} title="Primary lens" color={approach.color} items={[approach.primaryLens]} />
+      </div>
+
+      <div className="grid gap-3 lg:grid-cols-3">
         {approach.predictiveJudgments.map((item) => (
           <div key={item.area} className="rounded-md p-3" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <p className="text-[11px] font-bold uppercase tracking-[0.1em]" style={{ color: approach.color }}>
@@ -263,11 +266,11 @@ function MatrixPanel({
   dimensionKey?: "theme" | "dimension";
 }) {
   return (
-    <div className="mt-5">
-      <h3 className="text-[26px] font-semibold leading-tight" style={{ color: GOLD }}>
+    <div className="mt-4">
+      <h3 className="text-[24px] font-semibold leading-tight" style={{ color: GOLD }}>
         {title}
       </h3>
-      <div className="mt-4 space-y-3">
+      <div className="mt-3 grid gap-3 xl:grid-cols-2">
         {rows.map((row) => (
           <div key={row[dimensionKey]} className="rounded-md p-3" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <p className="mb-3 text-sm font-bold" style={{ color: INK_PRIMARY }}>
@@ -298,15 +301,15 @@ function MatrixPanel({
 
 function SynthesisPanel({ approach }: { approach: LineageApproach }) {
   return (
-    <div className="mt-5 space-y-4">
-      <h3 className="text-[26px] font-semibold leading-tight" style={{ color: approach.color }}>
+    <div className="mt-4 space-y-3">
+      <h3 className="text-[24px] font-semibold leading-tight" style={{ color: approach.color }}>
         Synthesis without collapse
       </h3>
       <p className="text-sm leading-relaxed" style={{ color: INK_SECONDARY }}>
         The capstone discipline is not to flatten KP, BVB, and Western-Vedic-fusion into one generic reading. It is to
         keep each lineage&apos;s method visible, compare what repeats, and name what only one lineage can contribute.
       </p>
-      <div className="grid gap-3">
+      <div className="grid gap-3 xl:grid-cols-3">
         {UNIQUE_CONTRIBUTIONS.map((item) => (
           <div key={item.lineage} className="rounded-md p-3" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="mb-1 flex items-center gap-2">

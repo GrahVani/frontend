@@ -34,18 +34,18 @@ function polar(cx: number, cy: number, radius: number, angle: number) {
 
 function DirectionWheel({ planet, angle }: { planet: DikBalaPlanet; angle: number }) {
   const cx = 230;
-  const cy = 220;
+  const cy = 260;
   const score = dikBalaVirupas(planet, angle);
-  const current = polar(cx, cy, 150, angle);
-  const home = planet.homeAngle === null ? null : polar(cx, cy, 150, planet.homeAngle);
+  const current = polar(cx, cy, 140, angle);
+  const home = planet.homeAngle === null ? null : polar(cx, cy, 140, planet.homeAngle);
   const oppositeAngle = planet.homeAngle === null ? null : normalizeAngle(planet.homeAngle + 180);
-  const opposite = oppositeAngle === null ? null : polar(cx, cy, 150, oppositeAngle);
+  const opposite = oppositeAngle === null ? null : polar(cx, cy, 140, oppositeAngle);
   const distance = planet.homeAngle === null ? 0 : angularDistance(angle, planet.homeAngle);
 
   return (
     <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 720 450" className="h-auto w-full" role="img" aria-label="Dik bala directional strength wheel">
-        <rect x="20" y="24" width="680" height="386" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+      <svg viewBox="0 0 720 540" className="h-auto w-full" role="img" aria-label="Dik bala directional strength wheel">
+        <rect x="20" y="24" width="680" height="476" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
         <text x="48" y="58" fill={ink.goldAccent} fontSize="13" fontWeight="900" letterSpacing="1.1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           DIRECTIONAL KENDRA, OPPOSITE ZERO
         </text>
@@ -54,30 +54,37 @@ function DirectionWheel({ planet, angle }: { planet: DikBalaPlanet; angle: numbe
         <circle cx={cx} cy={cy} r="92" fill="rgba(232, 199, 114, 0.10)" stroke={HAIRLINE} />
 
         {DIRECTION_HOUSES.map((direction) => {
-          const point = polar(cx, cy, 174, direction.angle);
-          const line = polar(cx, cy, 145, direction.angle);
+          const point = polar(cx, cy, 150, direction.angle);
+          const line = polar(cx, cy, 130, direction.angle);
           const active = planet.homeHouse === direction.house;
+          const hasCurrentMarker = !planet.excluded && angularDistance(angle, direction.angle) < 8;
+          const hasZeroMarker = oppositeAngle !== null && angularDistance(oppositeAngle, direction.angle) < 8;
+          const showDirectionLabel = !active && !hasCurrentMarker && !hasZeroMarker;
           return (
             <g key={direction.house}>
               <line x1={cx} y1={cy} x2={line.x} y2={line.y} stroke={active ? planet.color : HAIRLINE} strokeWidth={active ? 2.5 : 1.5} />
-              <circle cx={point.x} cy={point.y} r={active ? 24 : 19} fill={active ? wash(planet.color, "20") : SURFACE} stroke={active ? planet.color : HAIRLINE} />
-              <text x={point.x} y={point.y - 2} textAnchor="middle" fill={active ? planet.color : INK_SECONDARY} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-                {direction.direction}
-              </text>
-              <text x={point.x} y={point.y + 14} textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-                H{direction.house}
-              </text>
+              {showDirectionLabel ? (
+                <>
+                  <circle cx={point.x} cy={point.y} r="18" fill={SURFACE} stroke={HAIRLINE} />
+                  <text x={point.x} y={point.y - 2} textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+                    {direction.direction}
+                  </text>
+                  <text x={point.x} y={point.y + 13} textAnchor="middle" fill={INK_MUTED} fontSize="9" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+                    H{direction.house}
+                  </text>
+                </>
+              ) : null}
             </g>
           );
         })}
 
         {home ? (
-          <circle cx={home.x} cy={home.y} r="31" fill="none" stroke={planet.color} strokeWidth="3" />
+          <circle cx={home.x} cy={home.y} r="30" fill="none" stroke={planet.color} strokeWidth="3" />
         ) : null}
         {opposite ? (
           <g>
-            <circle cx={opposite.x} cy={opposite.y} r="26" fill={SURFACE_2} stroke={INK_MUTED} strokeWidth="2" strokeDasharray="4 4" />
-            <text x={opposite.x} y={opposite.y + 4} textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+            <circle cx={opposite.x} cy={opposite.y} r="20" fill={SURFACE_2} stroke={INK_MUTED} strokeWidth="2" strokeDasharray="4 4" />
+            <text x={opposite.x} y={opposite.y + 4} textAnchor="middle" fill={INK_MUTED} fontSize="8" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
               ZERO
             </text>
           </g>
@@ -86,8 +93,8 @@ function DirectionWheel({ planet, angle }: { planet: DikBalaPlanet; angle: numbe
         {!planet.excluded ? (
           <>
             <line x1={cx} y1={cy} x2={current.x} y2={current.y} stroke={planet.color} strokeWidth="2" opacity="0.6" />
-            <circle cx={current.x} cy={current.y} r="22" fill={wash(planet.color, "28")} stroke={planet.color} strokeWidth="3" />
-            <text x={current.x} y={current.y + 5} textAnchor="middle" fill={planet.color} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+            <circle cx={current.x} cy={current.y} r="20" fill={wash(planet.color, "28")} stroke={planet.color} strokeWidth="3" />
+            <text x={current.x} y={current.y + 5} textAnchor="middle" fill={planet.color} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
               {planet.planet.slice(0, 2)}
             </text>
           </>
@@ -105,19 +112,19 @@ function DirectionWheel({ planet, angle }: { planet: DikBalaPlanet; angle: numbe
         </text>
 
         <g>
-          <rect x="490" y="112" width="164" height="130" rx="16" fill={planet.excluded ? SURFACE : wash(planet.color, "12")} stroke={planet.excluded ? HAIRLINE : planet.color} />
-          <text x="572" y="144" textAnchor="middle" fill={planet.excluded ? INK_MUTED : planet.color} fontSize="15" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <rect x="490" y="152" width="164" height="130" rx="16" fill={planet.excluded ? SURFACE : wash(planet.color, "12")} stroke={planet.excluded ? HAIRLINE : planet.color} />
+          <text x="572" y="184" textAnchor="middle" fill={planet.excluded ? INK_MUTED : planet.color} fontSize="15" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             {planet.direction}
           </text>
-          <text x="572" y="172" textAnchor="middle" fill={INK_PRIMARY} fontSize="28" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+          <text x="572" y="212" textAnchor="middle" fill={INK_PRIMARY} fontSize="28" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
             {planet.homeHouse ? `House ${planet.homeHouse}` : "None"}
           </text>
-          <text x="572" y="204" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <text x="572" y="244" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             {planet.excluded ? "no dik bala" : "full strength home"}
           </text>
         </g>
 
-        <text x="360" y="382" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="360" y="470" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Full at the directional kendra, zero opposite, linear between.
         </text>
       </svg>

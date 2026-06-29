@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties } from "react";
 import {
   BookOpen,
   CheckCircle2,
@@ -272,7 +272,7 @@ export function LalKitabFarmanTimeline() {
       <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
         <p style={eyebrowStyle}>Language and translation history</p>
         <p style={{ margin: "0.35rem 0 0.75rem", color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.88rem" }}>
-          The Farmāns were written in Urdu. Toggle to see how the corpus reached today's readers.
+          The Farmāns were written in Urdu. Toggle to see how the corpus reached today&apos;s readers.
         </p>
         <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.75rem" }}>
           {LANGUAGE_LAYERS.map((layer, i) => (
@@ -325,13 +325,16 @@ function TimelineStrip({
   const span = maxYear - minYear;
   const leftPct = (year: number) => ((year - minYear) / span) * 100;
   const AXIS_TOP = 75;
-
-  // Even-numbered farmans flip to the opposite side so tightly-clustered
-  // labels (1939-1942, only 1 year apart) do not overlap.
-  const isFlipped = (n: number) => n % 2 === 0;
+  const nodeLabelLane: Record<number, { subjectTop: number }> = {
+    1: { subjectTop: 118 },
+    2: { subjectTop: 18 },
+    3: { subjectTop: 140 },
+    4: { subjectTop: 18 },
+    5: { subjectTop: 118 },
+  };
 
   return (
-    <div style={{ position: "relative", height: 150, marginTop: "0.5rem" }}>
+    <div style={{ position: "relative", height: 190, marginTop: "0.5rem" }}>
       {/* Axis */}
       <div style={{ position: "absolute", top: AXIS_TOP, left: 0, right: 0, height: 2, background: HAIRLINE, borderRadius: 1 }} />
 
@@ -363,7 +366,7 @@ function TimelineStrip({
           position: "absolute",
           left: `${leftPct(1942)}%`,
           right: `${100 - leftPct(1952)}%`,
-          top: 10,
+          top: 2,
           textAlign: "center",
         }}
       >
@@ -388,7 +391,7 @@ function TimelineStrip({
       {/* Farman nodes */}
       {FARMANS.map((f) => {
         const isSelected = f.number === selected;
-        const flipped = isFlipped(f.number);
+        const lane = nodeLabelLane[f.number];
         return (
           <button
             key={f.number}
@@ -397,99 +400,49 @@ function TimelineStrip({
             style={{
               position: "absolute",
               left: `${leftPct(f.year)}%`,
-              top: flipped ? 32 : 50,
+              top: 0,
               transform: "translateX(-50%)",
               background: "transparent",
               border: "none",
               cursor: "pointer",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 5,
-              width: 100,
+              width: 124,
+              height: 170,
               zIndex: isSelected ? 5 : 1,
             }}
             aria-pressed={isSelected}
           >
-            {!flipped ? (
-              <>
-                <span
-                  style={{
-                    fontSize: 11,
-                    fontWeight: 900,
-                    color: isSelected ? LAL_KITAB_COLOR : INK_SECONDARY,
-                    whiteSpace: "nowrap",
-                    fontFamily: "var(--font-sans), system-ui, sans-serif",
-                  }}
-                >
-                  {f.year}
-                </span>
-                <div
-                  style={{
-                    width: isSelected ? 20 : 14,
-                    height: isSelected ? 20 : 14,
-                    borderRadius: "50%",
-                    background: isSelected ? LAL_KITAB_COLOR : `${LAL_KITAB_COLOR}55`,
-                    border: `2px solid ${isSelected ? LAL_KITAB_DEEP : SURFACE}`,
-                    boxShadow: isSelected ? `0 0 0 3px ${LAL_KITAB_COLOR}33` : "none",
-                    transition: "all 180ms ease",
-                    flexShrink: 0,
-                  }}
-                />
-                <span
-                  style={{
-                    fontSize: 10,
-                    color: isSelected ? LAL_KITAB_DEEP : INK_MUTED,
-                    fontWeight: isSelected ? 900 : 700,
-                    textAlign: "center",
-                    lineHeight: 1.25,
-                    whiteSpace: "nowrap",
-                    fontFamily: "var(--font-sans), system-ui, sans-serif",
-                  }}
-                >
-                  F{f.number}: {f.subjectShort}
-                </span>
-              </>
-            ) : (
-              <>
-                <span
-                  style={{
-                    fontSize: 10,
-                    color: isSelected ? LAL_KITAB_DEEP : INK_MUTED,
-                    fontWeight: isSelected ? 900 : 700,
-                    textAlign: "center",
-                    lineHeight: 1.25,
-                    whiteSpace: "nowrap",
-                    fontFamily: "var(--font-sans), system-ui, sans-serif",
-                  }}
-                >
-                  F{f.number}: {f.subjectShort}
-                </span>
-                <div
-                  style={{
-                    width: isSelected ? 20 : 14,
-                    height: isSelected ? 20 : 14,
-                    borderRadius: "50%",
-                    background: isSelected ? LAL_KITAB_COLOR : `${LAL_KITAB_COLOR}55`,
-                    border: `2px solid ${isSelected ? LAL_KITAB_DEEP : SURFACE}`,
-                    boxShadow: isSelected ? `0 0 0 3px ${LAL_KITAB_COLOR}33` : "none",
-                    transition: "all 180ms ease",
-                    flexShrink: 0,
-                  }}
-                />
-                <span
-                  style={{
-                    fontSize: 11,
-                    fontWeight: 900,
-                    color: isSelected ? LAL_KITAB_COLOR : INK_SECONDARY,
-                    whiteSpace: "nowrap",
-                    fontFamily: "var(--font-sans), system-ui, sans-serif",
-                  }}
-                >
-                  {f.year}
-                </span>
-              </>
-            )}
+            <span
+              style={{
+                position: "absolute",
+                left: 0,
+                right: 0,
+                top: lane.subjectTop,
+                fontSize: 10,
+                color: isSelected ? LAL_KITAB_DEEP : INK_MUTED,
+                fontWeight: isSelected ? 900 : 700,
+                textAlign: "center",
+                lineHeight: 1.3,
+                whiteSpace: "normal",
+                fontFamily: "var(--font-sans), system-ui, sans-serif",
+              }}
+            >
+              F{f.number} ({f.year}): {f.subjectShort}
+            </span>
+            <div
+              style={{
+                position: "absolute",
+                left: "50%",
+                top: AXIS_TOP - (isSelected ? 10 : 7),
+                transform: "translateX(-50%)",
+                width: isSelected ? 20 : 14,
+                height: isSelected ? 20 : 14,
+                borderRadius: "50%",
+                background: isSelected ? LAL_KITAB_COLOR : `${LAL_KITAB_COLOR}55`,
+                border: `2px solid ${isSelected ? LAL_KITAB_DEEP : SURFACE}`,
+                boxShadow: isSelected ? `0 0 0 3px ${LAL_KITAB_COLOR}33` : "none",
+                transition: "all 180ms ease",
+              }}
+            />
           </button>
         );
       })}

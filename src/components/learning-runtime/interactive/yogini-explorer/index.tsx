@@ -17,9 +17,12 @@ import {
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.18))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
-const INK_PRIMARY = "var(--gl-ink-primary)";
-const INK_SECONDARY = "var(--gl-ink-secondary)";
-const INK_MUTED = "var(--gl-ink-muted)";
+const INK_PRIMARY = "#3F2D1D";
+const INK_SECONDARY = "#5C4630";
+const INK_MUTED = "#745D40";
+const READABLE_GOLD = "#936817";
+const TABLE_LINE = "rgba(139, 118, 82, 0.28)";
+const SELECTED_ROW = "rgba(255, 248, 229, 0.98)";
 
 const CX = 210;
 const CY = 210;
@@ -96,8 +99,8 @@ function YoginiWheel({
               x={label.x}
               y={label.y - 1}
               textAnchor="middle"
-              fill={period.color}
-              fontSize="12"
+              fill={INK_PRIMARY}
+              fontSize="13"
               fontWeight={900}
               style={{ fontFamily: "var(--font-sans), sans-serif", pointerEvents: "none" }}
             >
@@ -107,8 +110,8 @@ function YoginiWheel({
               x={yearLabel.x}
               y={yearLabel.y + 3}
               textAnchor="middle"
-              fill={selected ? period.color : INK_MUTED}
-              fontSize="10"
+              fill={selected ? READABLE_GOLD : INK_MUTED}
+              fontSize="11"
               fontWeight={800}
               style={{ fontFamily: "var(--font-sans), sans-serif", pointerEvents: "none" }}
             >
@@ -124,7 +127,7 @@ function YoginiWheel({
         x={CX}
         y={CY - 12}
         textAnchor="middle"
-        fill={ink.goldAccent}
+        fill={READABLE_GOLD}
         fontSize="34"
         fontWeight={900}
         style={{ fontFamily: "var(--font-cormorant), serif" }}
@@ -172,13 +175,13 @@ export function YoginiExplorer() {
     >
       <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+          <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
             Quick supplementary dasha
           </p>
           <h2 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
             <IAST>Yogini</IAST> 36-year cycle
           </h2>
-          <p className="mt-1 max-w-3xl text-sm" style={{ color: INK_SECONDARY }}>
+          <p className="mt-1 max-w-3xl text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
             Explore the eight Yoginis, their 1-to-8-year allotments, planetary links, symbolic qualities, and active period for a date.
           </p>
         </div>
@@ -190,7 +193,7 @@ export function YoginiExplorer() {
             setTargetDate("2038-08-15");
             setSelectedIndex(1);
           }}
-          className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold"
+          className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold"
           style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}
         >
           <RotateCcw size={16} />
@@ -204,10 +207,10 @@ export function YoginiExplorer() {
             <YoginiWheel selectedIndex={selected.index} startIndex={startIndex} cycleYear={cycleYear} onSelect={setSelectedIndex} />
           </section>
 
-          <section className="rounded-xl p-4" style={{ background: selected.tint, border: `1.5px solid ${selected.color}55` }}>
+          <section className="rounded-xl p-4" style={{ background: SELECTED_ROW, border: `1.5px solid ${selected.color}55` }}>
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="m-0 text-xs font-bold uppercase" style={{ color: selected.color, letterSpacing: "0.08em" }}>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                   Selected Yogini
                 </p>
                 <h3 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
@@ -221,7 +224,7 @@ export function YoginiExplorer() {
                 {selected.devanagari}
               </Devanagari>
             </div>
-            <p className="mt-3 text-sm" style={{ color: INK_SECONDARY }}>
+            <p className="mt-3 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
               {selected.readingCue}
             </p>
           </section>
@@ -231,14 +234,14 @@ export function YoginiExplorer() {
           <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="mb-4 flex items-center gap-2">
               <CalendarDays size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Active Yogini for a date
               </p>
             </div>
 
             <div className="grid gap-3 md:grid-cols-3">
               <label className="block">
-                <span className="mb-1 block text-xs font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
+                <span className="mb-1 block text-sm font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
                   Starting Yogini
                 </span>
                 <select
@@ -248,7 +251,7 @@ export function YoginiExplorer() {
                     setStartIndex(next);
                     setSelectedIndex(activeYoginiForYears(elapsedYears, next).period.index);
                   }}
-                  className="w-full rounded-lg px-3 py-2 text-sm"
+                  className="w-full rounded-lg px-4 py-3 text-base"
                   style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, color: INK_PRIMARY }}
                 >
                   {YOGINI_PERIODS.map((period) => (
@@ -260,42 +263,42 @@ export function YoginiExplorer() {
               </label>
 
               <label className="block">
-                <span className="mb-1 block text-xs font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
+                <span className="mb-1 block text-sm font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
                   Cycle start
                 </span>
                 <input
                   type="date"
                   value={startDate}
                   onChange={(event) => setStartDate(event.target.value)}
-                  className="w-full rounded-lg px-3 py-2 text-sm"
+                  className="w-full rounded-lg px-4 py-3 text-base"
                   style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, color: INK_PRIMARY }}
                 />
               </label>
 
               <label className="block">
-                <span className="mb-1 block text-xs font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
+                <span className="mb-1 block text-sm font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
                   Target date
                 </span>
                 <input
                   type="date"
                   value={targetDate}
                   onChange={(event) => setTargetDate(event.target.value)}
-                  className="w-full rounded-lg px-3 py-2 text-sm"
+                  className="w-full rounded-lg px-4 py-3 text-base"
                   style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, color: INK_PRIMARY }}
                 />
               </label>
             </div>
 
-            <div className="mt-4 rounded-xl p-4" style={{ background: active.period.tint, border: `1.5px solid ${active.period.color}55` }}>
+            <div className="mt-4 rounded-xl p-4" style={{ background: SELECTED_ROW, border: `1.5px solid ${active.period.color}55` }}>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="m-0 text-xs font-bold uppercase" style={{ color: active.period.color, letterSpacing: "0.08em" }}>
+                  <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                     Active now
                   </p>
                   <h3 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
                     {active.period.name} / {active.period.planet}
                   </h3>
-                  <p className="mt-1 text-sm" style={{ color: INK_SECONDARY }}>
+                  <p className="mt-1 text-base" style={{ color: INK_SECONDARY }}>
                     Cycle year {cycleYear.toFixed(2)} of 36 · window {active.start}-{active.end} years
                   </p>
                 </div>
@@ -327,14 +330,14 @@ export function YoginiExplorer() {
               <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
                 <div className="flex items-center gap-2">
                   <Hash size={17} color={ink.goldAccent} />
-                  <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+                  <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                     Triangular sum
                   </p>
                 </div>
                 <p className="mt-3 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
                   {yoginiYearsMnemonic()} = {triangularTotal()}
                 </p>
-                <p className="mt-2 text-sm" style={{ color: INK_SECONDARY }}>
+                <p className="mt-2 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
                   The easy 1-8 sequence is why Yogini works as a fast timing cross-check.
                 </p>
               </section>
@@ -342,11 +345,11 @@ export function YoginiExplorer() {
               <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
                 <div className="flex items-center gap-2">
                   <Sparkles size={17} color={ink.goldAccent} />
-                  <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+                  <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                     Reading rule
                   </p>
                 </div>
-                <p className="mt-3 text-sm" style={{ color: INK_SECONDARY }}>
+                <p className="mt-3 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
                   Read the Yogini through planet plus quality, then compare with Vimshottari. It is a subtle-energy supplement, not the primary dasha.
                 </p>
               </section>
@@ -358,11 +361,11 @@ export function YoginiExplorer() {
           <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
               <Table2 size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Eight Yoginis
               </p>
             </div>
-            <p className="m-0 text-xs font-semibold" style={{ color: INK_MUTED }}>
+            <p className="m-0 text-sm font-semibold" style={{ color: INK_MUTED }}>
               {"1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 = 36"}
             </p>
           </div>
@@ -372,8 +375,8 @@ export function YoginiExplorer() {
               style={{
                 gridTemplateColumns: "52px 170px 128px 92px 160px minmax(300px,1fr)",
                 background: SURFACE_2,
-                color: INK_MUTED,
-                fontSize: "0.72rem",
+                color: INK_SECONDARY,
+                fontSize: "0.82rem",
                 fontWeight: 900,
                 letterSpacing: "0.06em",
                 textTransform: "uppercase",
@@ -393,26 +396,26 @@ export function YoginiExplorer() {
                 className="grid min-w-[900px] text-left"
                 style={{
                   gridTemplateColumns: "52px 170px 128px 92px 160px minmax(300px,1fr)",
-                  background: selected.index === period.index ? period.tint : SURFACE,
-                  borderTop: `1px solid ${HAIRLINE}`,
+                  background: selected.index === period.index ? SELECTED_ROW : SURFACE,
+                  borderTop: `1px solid ${TABLE_LINE}`,
                   color: INK_PRIMARY,
                 }}
               >
-                <div className="px-3 py-3 text-sm font-bold" style={{ color: period.color }}>
+                <div className="px-3 py-3 text-base font-bold" style={{ color: READABLE_GOLD }}>
                   {period.index}
                 </div>
                 <div className="px-3 py-3">
-                  <p className="m-0 text-sm font-bold" style={{ color: period.color }}>
+                  <p className="m-0 text-base font-bold" style={{ color: INK_PRIMARY }}>
                     {period.name}
                   </p>
-                  <p className="m-0 text-xs" style={{ color: INK_MUTED }}>
+                  <p className="m-0 text-sm" style={{ color: INK_SECONDARY }}>
                     {period.devanagari}
                   </p>
                 </div>
-                <div className="px-3 py-3 text-sm font-semibold">{period.planet}</div>
-                <div className="px-3 py-3 text-sm font-bold">{period.years}</div>
-                <div className="px-3 py-3 text-sm font-semibold">{period.quality}</div>
-                <div className="px-3 py-3 text-sm" style={{ color: INK_SECONDARY }}>
+                <div className="px-3 py-3 text-base font-semibold">{period.planet}</div>
+                <div className="px-3 py-3 text-base font-bold">{period.years}</div>
+                <div className="px-3 py-3 text-base font-semibold">{period.quality}</div>
+                <div className="px-3 py-3 text-base" style={{ color: INK_SECONDARY }}>
                   {period.readingCue}
                 </div>
               </button>

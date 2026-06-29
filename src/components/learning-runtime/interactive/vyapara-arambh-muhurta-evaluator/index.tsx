@@ -424,29 +424,76 @@ function MercuryJupiterDial({ candidate }: { candidate: Candidate }) {
   );
 }
 
+function ordinalSuffix(n: number) {
+  if (n === 1 || n === 21 || n === 31) return "st";
+  if (n === 2 || n === 22) return "nd";
+  if (n === 3 || n === 23) return "rd";
+  return "th";
+}
+
 function HouseFoundationChart({ houses }: { houses: Candidate["houses"] }) {
+  const boxW = 110;
+  const boxH = 72;
+  const positions = [
+    { x: 20, y: 28 },
+    { x: 190, y: 28 },
+    { x: 20, y: 128 },
+    { x: 190, y: 128 },
+  ];
+
   return (
-    <svg width="100%" height={180} viewBox="0 0 320 180" role="img" aria-label="House bala foundation chart">
-      <rect x={20} y={20} width={280} height={140} rx={12} fill={SURFACE_2} stroke={HAIRLINE} strokeWidth={1} />
-      <line x1={160} y1={20} x2={160} y2={160} stroke={HAIRLINE} strokeWidth={1} />
-      <line x1={20} y1={90} x2={300} y2={90} stroke={HAIRLINE} strokeWidth={1} />
+    <svg width="100%" height={220} viewBox="0 0 320 220" role="img" aria-label="House bala foundation chart">
+      <rect x={15} y={20} width={290} height={180} rx={12} fill={SURFACE_2} stroke={HAIRLINE} strokeWidth={1} />
       {houses.map((h, i) => {
-        const x = i % 2 === 0 ? 25 : 165;
-        const y = i < 2 ? 25 : 95;
+        const { x, y } = positions[i];
         return (
           <g key={h.house}>
-            <rect x={x} y={y} width={130} height={60} rx={8} fill={qualityBg(h.quality)} stroke={qualityColor(h.quality)} strokeWidth={1.5} />
-            <text x={x + 65} y={y + 22} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "0.75rem", fontWeight: 800, fill: INK_PRIMARY }}>
-              {h.house}th · {h.label}
-            </text>
-            <text x={x + 65} y={y + 44} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "0.65rem", fontWeight: 700, fill: qualityColor(h.quality), textTransform: "uppercase" }}>
-              {h.quality}
-            </text>
+            <rect x={x} y={y} width={boxW} height={boxH} rx={10} fill={qualityBg(h.quality)} stroke={qualityColor(h.quality)} strokeWidth={1.5} />
+            <foreignObject x={x} y={y} width={boxW} height={boxH}>
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "0.35rem",
+                  boxSizing: "border-box",
+                  textAlign: "center",
+                  lineHeight: 1.25,
+                  overflow: "hidden",
+                }}
+              >
+                <div style={{ fontSize: "0.72rem", fontWeight: 800, color: INK_PRIMARY }}>
+                  {h.house}
+                  {ordinalSuffix(h.house)} · {h.label}
+                </div>
+                <div
+                  style={{
+                    marginTop: "0.25rem",
+                    fontSize: "0.65rem",
+                    fontWeight: 700,
+                    color: qualityColor(h.quality),
+                    textTransform: "uppercase",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  {h.quality}
+                </div>
+              </div>
+            </foreignObject>
           </g>
         );
       })}
-      <rect x={120} y={70} width={80} height={40} rx={8} fill={SURFACE} stroke={GOLD} strokeWidth={1.5} />
-      <text x={160} y={92} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "0.65rem", fontWeight: 800, fill: GOLD_DEEP, textTransform: "uppercase" }}>
+      <rect x={135} y={108} width={50} height={20} rx={10} fill={SURFACE} stroke={GOLD} strokeWidth={1.5} />
+      <text
+        x={160}
+        y={118}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        style={{ fontSize: "0.6rem", fontWeight: 800, fill: GOLD_DEEP, textTransform: "uppercase", letterSpacing: "0.04em" }}
+      >
         Business
       </text>
     </svg>
@@ -1119,9 +1166,10 @@ export function VyaparaArambhMuhurtaEvaluator() {
                   display: "grid",
                   gridTemplateColumns: "minmax(260px, 320px) 1fr",
                   gap: "1rem",
+                  alignItems: "start",
                 }}
               >
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.7rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                   <SectionCard title="Candidate case files" icon={<Briefcase size={16} />}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
                       {CANDIDATES.map((candidate) => (
@@ -1137,6 +1185,16 @@ export function VyaparaArambhMuhurtaEvaluator() {
                       ))}
                     </div>
                   </SectionCard>
+
+                  <SectionCard title="Mercury-Jupiter importance dial" icon={<Crown size={16} />}>
+                    <MercuryJupiterDial candidate={selectedCandidate} />
+                  </SectionCard>
+
+                  <SectionCard title="Business house-bala foundation" icon={<Building2 size={16} />}>
+                    <HouseFoundationChart houses={selectedCandidate.houses} />
+                  </SectionCard>
+
+                  <VerdictCard candidate={selectedCandidate} />
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -1159,14 +1217,6 @@ export function VyaparaArambhMuhurtaEvaluator() {
                     <ProgressBar candidate={selectedCandidate} />
                   </SectionCard>
 
-                  <SectionCard title="Mercury-Jupiter importance dial" icon={<Crown size={16} />}>
-                    <MercuryJupiterDial candidate={selectedCandidate} />
-                  </SectionCard>
-
-                  <SectionCard title="Business house-bala foundation" icon={<Building2 size={16} />}>
-                    <HouseFoundationChart houses={selectedCandidate.houses} />
-                  </SectionCard>
-
                   <SectionCard title="Multi-founder synergy" icon={<Users size={16} />}>
                     <FounderCards founders={selectedCandidate.founders} />
                   </SectionCard>
@@ -1174,8 +1224,6 @@ export function VyaparaArambhMuhurtaEvaluator() {
                   <SectionCard title="Cancellation-doṣa screen" icon={<ShieldCheck size={16} />}>
                     <DoshaList doshas={selectedCandidate.doshas} />
                   </SectionCard>
-
-                  <VerdictCard candidate={selectedCandidate} />
                 </div>
               </div>
             </>

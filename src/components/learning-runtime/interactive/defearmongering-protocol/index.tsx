@@ -57,17 +57,41 @@ function statusLabel(status: DoshaProfile["classicalStatus"]) {
 
 /* --- 8-step ladder SVG --- */
 
+function StepLabel({ x, y, children, done }: { x: number; y: number; children: string; done: boolean }) {
+  const words = children.split(" ");
+  const lineHeight = 11;
+  const totalHeight = words.length * lineHeight;
+  const startY = y - totalHeight / 2 + lineHeight / 2;
+  return (
+    <text
+      x={x}
+      y={startY}
+      textAnchor="middle"
+      fontSize={10}
+      fontWeight={600}
+      fill={done ? INK_SECONDARY : INK_MUTED}
+      style={{ fontFamily: "var(--font-sans), ui-sans-serif, system-ui, sans-serif" }}
+    >
+      {words.map((word, idx) => (
+        <tspan key={idx} x={x} dy={idx === 0 ? 0 : lineHeight}>
+          {word}
+        </tspan>
+      ))}
+    </text>
+  );
+}
+
 function StepLadder({ completed }: { completed: boolean[] }) {
-  const w = 520;
-  const h = 140;
+  const w = 760;
+  const h = 170;
   const steps = 8;
-  const stepW = 52;
-  const gap = 8;
+  const stepW = 80;
+  const gap = 10;
   const startX = (w - (steps * stepW + (steps - 1) * gap)) / 2 + stepW / 2;
-  const cy = 50;
+  const cy = 56;
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" style={{ maxHeight: 100 }}>
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" style={{ maxHeight: 130 }}>
       {/* Connecting line */}
       <line
         x1={startX}
@@ -88,7 +112,7 @@ function StepLadder({ completed }: { completed: boolean[] }) {
             <circle
               cx={x}
               cy={cy}
-              r={18}
+              r={20}
               fill={done ? `${GREEN}15` : SURFACE}
               stroke={color}
               strokeWidth={done ? 2.5 : 1.5}
@@ -98,22 +122,15 @@ function StepLadder({ completed }: { completed: boolean[] }) {
               y={cy + 1}
               textAnchor="middle"
               dominantBaseline="middle"
-              fontSize={11}
+              fontSize={12}
               fontWeight={800}
               fill={done ? GREEN : INK_MUTED}
             >
               {step.num}
             </text>
-            <text
-              x={x}
-              y={cy + 32}
-              textAnchor="middle"
-              fontSize={7}
-              fontWeight={600}
-              fill={done ? INK_SECONDARY : INK_MUTED}
-            >
+            <StepLabel x={x} y={cy + 48} done={done}>
               {step.short}
-            </text>
+            </StepLabel>
           </g>
         );
       })}

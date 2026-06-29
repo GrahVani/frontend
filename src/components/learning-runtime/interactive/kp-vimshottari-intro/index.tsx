@@ -19,6 +19,7 @@ const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
 const INK_PRIMARY = "var(--gl-ink-primary)";
 const INK_SECONDARY = "var(--gl-ink-secondary)";
 const INK_MUTED = "var(--gl-ink-muted)";
+const READABLE_GOLD = "#936817";
 
 function VimshottariSkeleton() {
   const rows = vimshottariCycleRows();
@@ -48,7 +49,7 @@ function VimshottariSkeleton() {
                 borderRight: `1px solid ${HAIRLINE}`,
               }}
             >
-              <span className="text-sm font-bold" style={{ color: lord.color }}>
+              <span className="text-sm font-bold" style={{ color: INK_PRIMARY }}>
                 {lord.abbr}
               </span>
               <span className="text-[11px] font-semibold" style={{ color: INK_SECONDARY }}>
@@ -144,7 +145,7 @@ function KpSubOverlay({
       </div>
 
       <div className="mt-4 rounded-xl p-4" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}` }}>
-        <p className="m-0 text-xs font-bold uppercase" style={{ color: active.color, letterSpacing: "0.08em" }}>
+        <p className="m-0 text-xs font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
           Selected sub-lord
         </p>
         <h4 className="mt-1 text-xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
@@ -241,7 +242,7 @@ export function KpVimshottariIntro() {
         <div className="min-w-0 space-y-4">
           {KP_INTRO_FEATURES.map((feature) => (
             <section key={feature.title} className="rounded-xl p-4" style={{ background: feature.tint, border: `1.5px solid ${feature.color}44` }}>
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: feature.color, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-xs font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 {feature.title}
               </p>
               <h3 className="mt-1 text-xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>

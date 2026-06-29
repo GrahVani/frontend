@@ -474,52 +474,76 @@ function HomeSignificatorDials({ candidate }: { candidate: Candidate }) {
   );
 }
 
+function ordinalSuffix(n: number) {
+  if (n === 1 || n === 21 || n === 31) return "st";
+  if (n === 2 || n === 22) return "nd";
+  if (n === 3 || n === 23) return "rd";
+  return "th";
+}
+
 function HouseFoundationChart({ houses }: { houses: Candidate["houses"] }) {
+  const boxW = 110;
+  const boxH = 72;
+  const positions = [
+    { x: 20, y: 28 },
+    { x: 190, y: 28 },
+    { x: 20, y: 128 },
+    { x: 190, y: 128 },
+  ];
+
   return (
-    <svg width="100%" height={200} viewBox="0 0 320 200" role="img" aria-label="House bala foundation chart">
-      <rect x={20} y={20} width={280} height={160} rx={12} fill={SURFACE_2} stroke={HAIRLINE} strokeWidth={1} />
-      <line x1={160} y1={20} x2={160} y2={180} stroke={HAIRLINE} strokeWidth={1} />
-      <line x1={20} y1={100} x2={300} y2={100} stroke={HAIRLINE} strokeWidth={1} />
+    <svg width="100%" height={220} viewBox="0 0 320 220" role="img" aria-label="House bala foundation chart">
+      <rect x={15} y={20} width={290} height={180} rx={12} fill={SURFACE_2} stroke={HAIRLINE} strokeWidth={1} />
       {houses.map((h, i) => {
-        const x = i % 2 === 0 ? 25 : 165;
-        const y = i < 2 ? 25 : 105;
+        const { x, y } = positions[i];
         const isCentral = h.house === 4;
         return (
           <g key={h.house}>
             <rect
               x={x}
               y={y}
-              width={130}
-              height={70}
-              rx={8}
+              width={boxW}
+              height={boxH}
+              rx={10}
               fill={qualityBg(h.quality)}
               stroke={isCentral ? GOLD : qualityColor(h.quality)}
               strokeWidth={isCentral ? 2.5 : 1.5}
               strokeDasharray={isCentral ? "4 2" : undefined}
             />
-            <text
-              x={x + 65}
-              y={y + 24}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              style={{ fontSize: "0.75rem", fontWeight: 800, fill: INK_PRIMARY }}
-            >
-              {h.house}th · {h.label}
-            </text>
-            <text
-              x={x + 65}
-              y={y + 48}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              style={{
-                fontSize: "0.65rem",
-                fontWeight: 700,
-                fill: isCentral ? GOLD_DEEP : qualityColor(h.quality),
-                textTransform: "uppercase",
-              }}
-            >
-              {isCentral ? "★ MOST-CENTRAL" : h.quality}
-            </text>
+            <foreignObject x={x} y={y} width={boxW} height={boxH}>
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "0.35rem",
+                  boxSizing: "border-box",
+                  textAlign: "center",
+                  lineHeight: 1.25,
+                  overflow: "hidden",
+                }}
+              >
+                <div style={{ fontSize: "0.72rem", fontWeight: 800, color: INK_PRIMARY }}>
+                  {h.house}
+                  {ordinalSuffix(h.house)} · {h.label}
+                </div>
+                <div
+                  style={{
+                    marginTop: "0.25rem",
+                    fontSize: "0.65rem",
+                    fontWeight: 700,
+                    color: isCentral ? GOLD_DEEP : qualityColor(h.quality),
+                    textTransform: "uppercase",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  {isCentral ? "★ MOST-CENTRAL" : h.quality}
+                </div>
+              </div>
+            </foreignObject>
           </g>
         );
       })}
@@ -1352,9 +1376,10 @@ export function GrihaPraveshaMuhurtaEvaluator() {
                   display: "grid",
                   gridTemplateColumns: "minmax(260px, 320px) 1fr",
                   gap: "1rem",
+                  alignItems: "start",
                 }}
               >
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.7rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                   <SectionCard title="Candidate windows" icon={<Home size={16} />}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
                       {CANDIDATES.map((candidate) => (
@@ -1367,6 +1392,16 @@ export function GrihaPraveshaMuhurtaEvaluator() {
                       ))}
                     </div>
                   </SectionCard>
+
+                  <SectionCard title="Venus-Moon-Jupiter importance" icon={<Crown size={16} />}>
+                    <HomeSignificatorDials candidate={selectedCandidate} />
+                  </SectionCard>
+
+                  <SectionCard title="Gṛha-praveśa house-bala (4th most-central)" icon={<Home size={16} />}>
+                    <HouseFoundationChart houses={selectedCandidate.houses} />
+                  </SectionCard>
+
+                  <VerdictCard candidate={selectedCandidate} />
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -1389,19 +1424,11 @@ export function GrihaPraveshaMuhurtaEvaluator() {
                           <PanchangaDetail factor={activePanchanga} />
                         ) : (
                           <p style={{ margin: 0, color: INK_MUTED, fontSize: "0.85rem", lineHeight: 1.5 }}>
-                            Hover or click a wheel segment to see the candidate's pañcāṅga factor detail.
+                            Hover or click a wheel segment to see the candidate&apos;s pañcāṅga factor detail.
                           </p>
                         )}
                       </div>
                     </div>
-                  </SectionCard>
-
-                  <SectionCard title="Venus-Moon-Jupiter importance" icon={<Crown size={16} />}>
-                    <HomeSignificatorDials candidate={selectedCandidate} />
-                  </SectionCard>
-
-                  <SectionCard title="Gṛha-praveśa house-bala (4th most-central)" icon={<Home size={16} />}>
-                    <HouseFoundationChart houses={selectedCandidate.houses} />
                   </SectionCard>
 
                   <SectionCard title="Seasonal-calendar doṣa discipline" icon={<Sun size={16} />}>
@@ -1416,7 +1443,6 @@ export function GrihaPraveshaMuhurtaEvaluator() {
                     <DoshaList doshas={selectedCandidate.doshas} />
                   </SectionCard>
 
-                  <VerdictCard candidate={selectedCandidate} />
                   <ProgressBar candidate={selectedCandidate} />
                 </div>
               </div>

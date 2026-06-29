@@ -25,45 +25,45 @@ function BeneficBridge({ active }: { active: BeneficKey }) {
 
   return (
     <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 260" className="h-auto w-full min-w-0" role="img" aria-label="Jupiter and Venus Lal Kitab concrete portfolio bridge">
-        <rect x="20" y="20" width="720" height="220" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
-        <text x="380" y="50" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+      <svg viewBox="0 0 760 320" className="h-auto w-full min-w-0" style={{ minHeight: 300 }} role="img" aria-label="Jupiter and Venus Lal Kitab concrete portfolio bridge">
+        <rect x="20" y="30" width="720" height="270" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+        <text x="380" y="62" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           TWO BENEFICS, NOT INTERCHANGEABLE
         </text>
-        <path d="M188 130 H340" stroke={jupiter.readableColor} strokeWidth="3" strokeLinecap="round" opacity="0.75" />
-        <path d="M420 130 H572" stroke={venus.readableColor} strokeWidth="3" strokeLinecap="round" opacity="0.75" />
-        <path d="M350 130 C368 105 392 105 410 130 C392 155 368 155 350 130 Z" fill={SURFACE} stroke={GOLD} strokeWidth="2" />
-        <text x="380" y="126" textAnchor="middle" fill={GOLD} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <path d="M178 160 H330" stroke={jupiter.readableColor} strokeWidth="3.5" strokeLinecap="round" opacity="0.75" />
+        <path d="M430 160 H582" stroke={venus.readableColor} strokeWidth="3.5" strokeLinecap="round" opacity="0.75" />
+        <path d="M330 160 C355 125 405 125 430 160 C405 195 355 195 330 160 Z" fill={SURFACE} stroke={GOLD} strokeWidth="2.5" />
+        <text x="380" y="153" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           EXPAND
         </text>
-        <text x="380" y="141" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="380" y="176" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           no swap
         </text>
 
         {[
-          { profile: jupiter, x: 154, y: 130, top: "Dharma", bottom: "Gold + paternal uncle" },
-          { profile: venus, x: 606, y: 130, top: "Wife", bottom: "Sweets + vehicles" },
+          { profile: jupiter, x: 154, y: 160, top: "Dharma", bottom: "Gold + paternal uncle" },
+          { profile: venus, x: 606, y: 160, top: "Wife", bottom: "Sweets + vehicles" },
         ].map(({ profile, x, y, top, bottom }) => {
           const selected = profile.key === active;
           return (
             <g key={profile.key}>
-              <rect x={x - 100} y={y - 58} width="200" height="116" rx="18" fill={selected ? wash(profile.color, "16") : SURFACE} stroke={selected ? profile.readableColor : HAIRLINE} strokeWidth={selected ? 2.4 : 1.2} />
-              <text x={x} y={y - 28} textAnchor="middle" fill={profile.readableColor} fontSize="16" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <rect x={x - 110} y={y - 75} width="220" height="150" rx="18" fill={selected ? wash(profile.color, "16") : SURFACE} stroke={selected ? profile.readableColor : HAIRLINE} strokeWidth={selected ? 2.6 : 1.4} />
+              <text x={x} y={y - 38} textAnchor="middle" fill={profile.readableColor} fontSize="20" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {profile.label}
               </text>
-              <text x={x} y={y - 6} textAnchor="middle" fill={INK_PRIMARY} fontSize="16" fontWeight="700" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+              <text x={x} y={y - 10} textAnchor="middle" fill={INK_PRIMARY} fontSize="18" fontWeight="700" style={{ fontFamily: "var(--font-cormorant), serif" }}>
                 {top}
               </text>
-              <text x={x} y={y + 18} textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x={x} y={y + 20} textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {bottom}
               </text>
-              <text x={x} y={y + 42} textAnchor="middle" fill={profile.readableColor} fontSize="24" fontWeight="800" style={{ fontFamily: "var(--font-devanagari), serif" }}>
+              <text x={x} y={y + 52} textAnchor="middle" fill={profile.readableColor} fontSize="30" fontWeight="800" style={{ fontFamily: "var(--font-devanagari), serif" }}>
                 {profile.devanagari}
               </text>
             </g>
           );
         })}
-        <text x="380" y="222" textAnchor="middle" fill={activeProfile.readableColor} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="380" y="280" textAnchor="middle" fill={activeProfile.readableColor} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Selected: {activeProfile.label}&apos;s Lal Kitab portfolio
         </text>
       </svg>

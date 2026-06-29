@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Coins, Scale, ShieldAlert, Sparkles, TrendingUp, Compass, Heart, AlertTriangle } from "lucide-react";
+import { Scale, ShieldAlert, TrendingUp, Heart, AlertTriangle } from "lucide-react";
 import { goldOnGlassHairline } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.22))";
@@ -372,21 +372,21 @@ export function ReasonableFees() {
             </div>
 
             {/* Guṇa Dial SVG */}
-            <div className="flex justify-center rounded-xl p-3 mb-4 border bg-white" style={{ borderColor: HAIRLINE }}>
-              <svg width="200" height="110" viewBox="0 0 200 110">
+            <div className="flex justify-center rounded-xl p-4 mb-4 border bg-white" style={{ borderColor: HAIRLINE }}>
+              <svg viewBox="0 0 260 150" className="w-full max-w-[440px] h-auto block">
                 {/* Arc tracks */}
-                <path d="M 30,90 A 70,70 0 0,1 170,90" fill="none" stroke="rgba(168,130,30,0.1)" strokeWidth="8" strokeLinecap="round" />
+                <path d="M 38,118 A 92,92 0 0,1 222,118" fill="none" stroke="rgba(168,130,30,0.1)" strokeWidth="11" strokeLinecap="round" />
                 {/* Sattvika zone (Left) */}
-                <path d="M 30,90 A 70,70 0 0,1 80,35" fill="none" stroke={GREEN} strokeWidth="8" strokeLinecap="round" />
+                <path d="M 38,118 A 92,92 0 0,1 104,46" fill="none" stroke={GREEN} strokeWidth="11" strokeLinecap="round" />
                 {/* Rajasika zone (Middle) */}
-                <path d="M 80,35 A 70,70 0 0,1 120,35" fill="none" stroke={GOLD} strokeWidth="8" />
+                <path d="M 104,46 A 92,92 0 0,1 156,46" fill="none" stroke={GOLD} strokeWidth="11" />
                 {/* Tamasika zone (Right) */}
-                <path d="M 120,35 A 70,70 0 0,1 170,90" fill="none" stroke={VERMILION} strokeWidth="8" strokeLinecap="round" />
+                <path d="M 156,46 A 92,92 0 0,1 222,118" fill="none" stroke={VERMILION} strokeWidth="11" strokeLinecap="round" />
 
                 {/* Dial labels */}
-                <text x="40" y="102" fill={GREEN} fontSize="7" fontWeight="bold" textAnchor="middle">Sāttvika</text>
-                <text x="100" y="22" fill={GOLD} fontSize="7" fontWeight="bold" textAnchor="middle">Rājasika</text>
-                <text x="160" y="102" fill={VERMILION} fontSize="7" fontWeight="bold" textAnchor="middle">Tāmasika</text>
+                <text x="54" y="138" fill={GREEN} fontSize="10" fontWeight="bold" textAnchor="middle">Sāttvika</text>
+                <text x="130" y="30" fill={GOLD} fontSize="10" fontWeight="bold" textAnchor="middle">Rājasika</text>
+                <text x="206" y="138" fill={VERMILION} fontSize="10" fontWeight="bold" textAnchor="middle">Tāmasika</text>
 
                 {/* Animated pointer based on guna */}
                 {(() => {
@@ -395,14 +395,14 @@ export function ReasonableFees() {
                   if (option.guna === "Tamasika") rotation = 50;
                   const color = option.guna === "Sattvika" ? GREEN : option.guna === "Tamasika" ? VERMILION : GOLD;
                   return (
-                    <g transform="translate(100, 90)">
-                      <circle cx="0" cy="0" r="6" fill={INK_PRIMARY} />
-                      <line x1="0" y1="0" x2="0" y2="-65" stroke={color} strokeWidth="3" transform={`rotate(${rotation})`} strokeLinecap="round" />
+                    <g transform="translate(130, 118)">
+                      <circle cx="0" cy="0" r="8" fill={INK_PRIMARY} />
+                      <line x1="0" y1="0" x2="0" y2="-86" stroke={color} strokeWidth="4" transform={`rotate(${rotation})`} strokeLinecap="round" />
                     </g>
                   );
                 })()}
 
-                <text x="100" y="82" fill={INK_PRIMARY} fontSize="8" fontWeight="bold" textAnchor="middle">
+                <text x="130" y="102" fill={INK_PRIMARY} fontSize="10.5" fontWeight="bold" textAnchor="middle">
                   {option.guna === "Sattvika" ? "Sāttvika Dakṣiṇā" : option.guna === "Tamasika" ? "Tāmasika Extraction" : "Rājasika Transaction"}
                 </text>
               </svg>
@@ -506,7 +506,7 @@ export function ReasonableFees() {
           कर्मण्येवाधिकारस्ते मा फलेषु कदाचन। मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥ २.४७॥
         </p>
         <p className="m-0 mt-0.5 text-[10px] italic" style={{ color: INK_SECONDARY }}>
-          karmaṇy evādhikāras te mā phaleṣu kadāchana | mā karma-phala-hetur bhūr mā te saṅgo 'stv akarmaṇi || 2.47 ||
+          karmaṇy evādhikāras te mā phaleṣu kadāchana | mā karma-phala-hetur bhūr mā te saṅgo &apos;stv akarmaṇi || 2.47 ||
         </p>
         <p className="m-0 mt-1 text-[10px] max-w-xl mx-auto leading-relaxed" style={{ color: INK_SECONDARY }}>
           &ldquo;You have the right to action alone, never to its fruits. Let not the fruits-of-action be your motivation; let not your attachment be to inaction either.&rdquo;

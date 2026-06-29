@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.18))";
+const GRID_LINE = "rgba(138, 126, 94, 0.85)";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #1A1408)";
 const INK_SECONDARY = "var(--gl-ink-secondary, #5A4E2E)";
@@ -46,37 +47,6 @@ function signForHouse(lagna: number, house: number): number {
   return ((lagna - 1 + house - 1) % 12);
 }
 
-/* --- Circular wheel --- */
-
-const CX = 190;
-const CY = 190;
-const R_OUTER = 170;
-const R_INNER = 100;
-const R_LABEL = 135;
-
-function angleForHouse(house: number): number {
-  // House 1 at top (-90 deg), then clockwise
-  return (house - 1) * 30 - 90;
-}
-
-function polar(cx: number, cy: number, r: number, deg: number) {
-  const rad = (deg * Math.PI) / 180;
-  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
-}
-
-function sectorPath(cx: number, cy: number, r1: number, r2: number, deg1: number, deg2: number) {
-  const a1 = (deg1 * Math.PI) / 180;
-  const a2 = (deg2 * Math.PI) / 180;
-  const x1 = cx + r2 * Math.cos(a1);
-  const y1 = cy + r2 * Math.sin(a1);
-  const x2 = cx + r2 * Math.cos(a2);
-  const y2 = cy + r2 * Math.sin(a2);
-  const x3 = cx + r1 * Math.cos(a2);
-  const y3 = cy + r1 * Math.sin(a2);
-  const x4 = cx + r1 * Math.cos(a1);
-  const y4 = cy + r1 * Math.sin(a1);
-  return `M ${x1} ${y1} A ${r2} ${r2} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${r1} ${r1} 0 0 0 ${x4} ${y4} Z`;
-}
 
 function CircularWheel({
   lagna,
@@ -91,32 +61,46 @@ function CircularWheel({
   excluded: number | null;
   onSelect: (signIdx: number) => void;
 }) {
+  const HOUSE_POLYGONS: Record<number, string> = {
+    1: "200,10 105,105 200,200 295,105",
+    2: "10,10 200,10 105,105",
+    3: "10,10 105,105 10,200",
+    4: "10,200 105,105 200,200 105,295",
+    5: "10,200 105,295 10,390",
+    6: "10,390 105,295 200,390",
+    7: "200,390 105,295 200,200 295,295",
+    8: "200,390 295,295 390,390",
+    9: "390,200 295,295 390,390",
+    10: "390,200 295,105 200,200 295,295",
+    11: "390,10 295,105 390,200",
+    12: "200,10 390,10 295,105",
+  };
+
+  const HOUSE_CENTERS: Record<number, { x: number; y: number }> = {
+    1: { x: 200, y: 105 },
+    2: { x: 105, y: 45 },
+    3: { x: 45, y: 105 },
+    4: { x: 105, y: 200 },
+    5: { x: 45, y: 295 },
+    6: { x: 105, y: 355 },
+    7: { x: 200, y: 295 },
+    8: { x: 295, y: 355 },
+    9: { x: 355, y: 295 },
+    10: { x: 295, y: 200 },
+    11: { x: 355, y: 105 },
+    12: { x: 295, y: 45 },
+  };
+
   return (
-    <svg viewBox="0 0 380 380" className="w-full h-auto" style={{ maxHeight: 400 }}>
-      {/* Outer ring */}
-      <circle cx={CX} cy={CY} r={R_OUTER} fill="none" stroke={HAIRLINE} strokeWidth={1.5} />
-      <circle cx={CX} cy={CY} r={R_INNER} fill="none" stroke={HAIRLINE} strokeWidth={1} />
-
-      {/* Sector dividers */}
-      {Array.from({ length: 12 }, (_, i) => {
-        const deg = angleForHouse(i + 1) - 15;
-        const pOuter = polar(CX, CY, R_OUTER, deg);
-        const pInner = polar(CX, CY, R_INNER, deg);
-        return <line key={`div-${i}`} x1={pInner.x} y1={pInner.y} x2={pOuter.x} y2={pOuter.y} stroke={HAIRLINE} strokeWidth={0.8} />;
-      })}
-
+    <svg viewBox="0 0 400 400" className="w-full h-auto" style={{ maxHeight: 400 }}>
       {/* Sector backgrounds */}
       {Array.from({ length: 12 }, (_, i) => {
         const hnum = i + 1;
         const sIdx = signForHouse(lagna, hnum);
-        const deg1 = angleForHouse(hnum) - 15;
-        const deg2 = angleForHouse(hnum) + 15;
 
         const isSelected = selected === sIdx;
         const isHighlighted = highlighted.includes(sIdx);
         const isExcluded = excluded === sIdx;
-
-        if (!isSelected && !isHighlighted && !isExcluded) return null;
 
         let fill = "transparent";
         let opacity = 0;
@@ -125,28 +109,39 @@ function CircularWheel({
         else if (isExcluded) { fill = VERMILION; opacity = 0.08; }
 
         return (
-          <path
+          <polygon
             key={`sector-${hnum}`}
-            d={sectorPath(CX, CY, R_INNER, R_OUTER, deg1, deg2)}
+            points={HOUSE_POLYGONS[hnum]}
             fill={fill}
-            fillOpacity={opacity}
+            fillOpacity={opacity > 0 ? opacity : undefined}
+            stroke="none"
           />
         );
       })}
+
+      {/* Grid Lines */}
+      <g stroke={GRID_LINE} strokeWidth="1.5" fill="none">
+        <rect x="10" y="10" width="380" height="380" />
+        <line x1="10" y1="10" x2="390" y2="390" />
+        <line x1="390" y1="10" x2="10" y2="390" />
+        <line x1="200" y1="10" x2="10" y2="200" />
+        <line x1="10" y1="200" x2="200" y2="390" />
+        <line x1="200" y1="390" x2="390" y2="200" />
+        <line x1="390" y1="200" x2="200" y2="10" />
+      </g>
 
       {/* Labels */}
       {Array.from({ length: 12 }, (_, i) => {
         const hnum = i + 1;
         const sIdx = signForHouse(lagna, hnum);
-        const deg = angleForHouse(hnum);
-        const pos = polar(CX, CY, R_LABEL, deg);
+        const center = HOUSE_CENTERS[hnum];
         const isKey = selected === sIdx || highlighted.includes(sIdx) || excluded === sIdx;
         return (
-          <g key={`label-${hnum}`}>
-            <text x={pos.x} y={pos.y - 7} textAnchor="middle" dominantBaseline="middle" fontSize={13} fontWeight={700} fill={isKey ? INK_SECONDARY : INK_MUTED}>
+          <g key={`label-${hnum}`} transform={`translate(${center.x}, ${center.y})`}>
+            <text y={-6} textAnchor="middle" dominantBaseline="middle" fontSize={14} fontWeight={isKey ? 800 : 700} fill={isKey ? INK_SECONDARY : INK_MUTED}>
               H{hnum}
             </text>
-            <text x={pos.x} y={pos.y + 7} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={600} fill={isKey ? INK_PRIMARY : INK_SECONDARY}>
+            <text y={8} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={isKey ? 700 : 600} fill={isKey ? INK_PRIMARY : INK_SECONDARY}>
               {SIGNS[sIdx].slice(0, 3)}
             </text>
           </g>
@@ -157,21 +152,16 @@ function CircularWheel({
       {Array.from({ length: 12 }, (_, i) => {
         const hnum = i + 1;
         const sIdx = signForHouse(lagna, hnum);
-        const deg1 = angleForHouse(hnum) - 15;
-        const deg2 = angleForHouse(hnum) + 15;
         return (
-          <path
+          <polygon
             key={`hit-${hnum}`}
-            d={sectorPath(CX, CY, R_INNER, R_OUTER, deg1, deg2)}
+            points={HOUSE_POLYGONS[hnum]}
             fill="transparent"
             cursor="pointer"
             onClick={() => onSelect(sIdx)}
           />
         );
       })}
-
-      {/* Center dot */}
-      <circle cx={CX} cy={CY} r={3} fill={HAIRLINE} />
     </svg>
   );
 }

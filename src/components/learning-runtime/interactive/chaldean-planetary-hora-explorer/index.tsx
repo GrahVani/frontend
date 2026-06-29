@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { IAST } from "../../chrome/typography";
 
 interface GrahaInfo {
@@ -25,6 +25,13 @@ const CHALDEAN_ORDER: GrahaInfo[] = [
 
 const DAY_LORDS = ["Sūrya", "Candra", "Maṅgala", "Budha", "Guru", "Śukra", "Śani"];
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const INK = "#3F2D1D";
+const INK_SOFT = "#5C4630";
+const INK_MUTED_STRONG = "#745D40";
+const GOLD_DEEP = "#8F6818";
+const BORDER = "rgba(143, 104, 24, 0.38)";
+const PANEL = "rgba(255, 250, 240, 0.96)";
+const PANEL_STRONG = "#FFF7E8";
 const DAY_DEVANAGARI = ["भानु", "सोम", "मङ्गल", "बुध", "गुरु", "शुक्र", "शनि"];
 
 export function ChaldeanPlanetaryHoraExplorer() {
@@ -51,7 +58,7 @@ export function ChaldeanPlanetaryHoraExplorer() {
     setAnimKey((k) => k + 1);
   };
 
-  const horas = useMemo(() => generateHoras(selectedDay), [selectedDay]);
+  const horas = generateHoras(selectedDay);
   const nextDayLordIndex = (selectedDay + 1) % 7;
   const nextDayFirstHoraGraha = horas[23].graha.name;
 
@@ -59,18 +66,19 @@ export function ChaldeanPlanetaryHoraExplorer() {
     <div
       className="w-full"
       style={{
-        background: "var(--gl-surface-card, var(--gl-card-surface))",
-        border: "1px solid var(--gl-border-subtle, var(--gl-gold-hairline))",
+        background: "linear-gradient(180deg, #FFF8EA 0%, #F8EBCF 100%)",
+        border: `1px solid ${BORDER}`,
         borderRadius: "16px",
         padding: "20px",
+        boxShadow: "0 18px 40px rgba(72, 48, 16, 0.10)",
       }}
       data-interactive="chaldean-planetary-hora-explorer"
     >
       <div className="mb-4">
-        <h2 className="text-lg font-semibold" style={{ color: "var(--gl-ink-primary)" }}>
+        <h2 className="text-lg font-bold" style={{ color: INK }}>
           <IAST>Chaldean Planetary Hora Explorer</IAST>
         </h2>
-        <p className="text-sm mt-1" style={{ color: "var(--gl-ink-muted)" }}>
+        <p className="text-sm mt-1 font-medium" style={{ color: INK_SOFT }}>
           Why the weekdays follow this order — the 24 Hora sequence explained
         </p>
       </div>
@@ -83,10 +91,10 @@ export function ChaldeanPlanetaryHoraExplorer() {
       <div className="flex flex-col xl:flex-row gap-5">
         {/* Left: Chaldean Order — compact */}
         <div className="w-full xl:w-64 shrink-0">
-          <h3 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--gl-gold-accent)" }}>
+          <h3 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: GOLD_DEEP }}>
             Chaldean Order
           </h3>
-          <p className="text-xs mb-3" style={{ color: "var(--gl-ink-muted)" }}>
+          <p className="text-xs mb-3 font-medium" style={{ color: INK_SOFT }}>
             Slowest to fastest orbital speed.
           </p>
           <div className="space-y-1.5">
@@ -96,33 +104,34 @@ export function ChaldeanPlanetaryHoraExplorer() {
                 onClick={() => setSelectedGraha(idx)}
                 className="w-full flex items-center gap-2 p-2 rounded-lg text-left transition-all hover:scale-[1.01]"
                 style={{
-                  background: selectedGraha === idx ? `${g.color}14` : "var(--gl-card-surface-solid, #FFF9F0)",
-                  border: selectedGraha === idx ? `1.5px solid ${g.color}` : "1px solid var(--gl-gold-hairline)",
+                  background: selectedGraha === idx ? `${g.color}1F` : PANEL,
+                  border: selectedGraha === idx ? `2px solid ${g.color}` : `1px solid ${BORDER}`,
+                  boxShadow: selectedGraha === idx ? "0 8px 18px rgba(72, 48, 16, 0.12)" : "none",
                 }}
               >
                 <span className="text-base font-bold w-6 text-center" style={{ color: g.color }}>{g.symbol}</span>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold" style={{ color: "var(--gl-ink-primary)" }}>
+                  <div className="text-sm font-bold" style={{ color: INK }}>
                     <IAST>{g.name}</IAST>
                   </div>
-                  <div className="text-[11px]" style={{ color: "var(--gl-ink-muted)" }}>
+                  <div className="text-[11px] font-semibold" style={{ color: INK_MUTED_STRONG }}>
                     {g.speed} · {g.period}
                   </div>
                 </div>
-                <span className="text-[11px] font-bold" style={{ color: "var(--gl-ink-muted)" }}>{idx + 1}</span>
+                <span className="text-[11px] font-bold" style={{ color: INK }}>{idx + 1}</span>
               </button>
             ))}
           </div>
           {selectedGraha !== null && (
-            <div className="mt-2 p-2.5 rounded-lg text-xs" style={{ background: "var(--gl-card-surface-solid)", border: "1px solid var(--gl-gold-hairline)" }}>
-              <p style={{ color: "var(--gl-ink-secondary)" }}>{CHALDEAN_ORDER[selectedGraha].description}</p>
+            <div className="mt-2 p-2.5 rounded-lg text-xs" style={{ background: PANEL_STRONG, border: `1px solid ${BORDER}` }}>
+              <p className="font-medium leading-relaxed" style={{ color: INK_SOFT }}>{CHALDEAN_ORDER[selectedGraha].description}</p>
             </div>
           )}
         </div>
 
         {/* Right: Hora Sequence */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--gl-gold-accent)" }}>
+          <h3 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: GOLD_DEEP }}>
             Hora Sequence Generator
           </h3>
 
@@ -134,8 +143,9 @@ export function ChaldeanPlanetaryHoraExplorer() {
                 className="px-2.5 py-1 text-xs font-medium rounded-full transition-all"
                 style={{
                   background: selectedDay === idx ? "var(--gl-gold-accent)" : "transparent",
-                  color: selectedDay === idx ? "#fff" : "var(--gl-ink-secondary)",
-                  border: "1px solid var(--gl-gold-hairline)",
+                  color: selectedDay === idx ? "#fff" : INK,
+                  border: selectedDay === idx ? "1px solid var(--gl-gold-accent)" : `1px solid ${BORDER}`,
+                  boxShadow: selectedDay === idx ? "0 6px 14px rgba(143, 104, 24, 0.18)" : "none",
                 }}
               >
                 {day}
@@ -143,8 +153,8 @@ export function ChaldeanPlanetaryHoraExplorer() {
             ))}
           </div>
 
-          <p className="text-xs mb-3" style={{ color: "var(--gl-ink-muted)" }}>
-            1st hora of <strong style={{ color: "var(--gl-ink-primary)" }}>{DAY_NAMES[selectedDay]}</strong>{" "}
+          <p className="text-sm mb-3 font-medium" style={{ color: INK_SOFT }}>
+            1st hora of <strong style={{ color: INK }}>{DAY_NAMES[selectedDay]}</strong>{" "}
             ({DAY_DEVANAGARI[selectedDay]}) = <IAST>{DAY_LORDS[selectedDay]}</IAST>
           </p>
 
@@ -156,14 +166,15 @@ export function ChaldeanPlanetaryHoraExplorer() {
                 className="relative flex flex-col items-center justify-center p-1.5 rounded-lg transition-all cursor-default"
                 style={{
                   background: hoverHora === i ? `${h.graha.color}28` : `${h.graha.color}10`,
-                  border: hoverHora === i ? `1.5px solid ${h.graha.color}` : "1px solid var(--gl-gold-hairline)",
+                  border: hoverHora === i ? `2px solid ${h.graha.color}` : `1px solid ${BORDER}`,
                   animation: `horaFadeIn 0.25s ease ${i * 0.015}s both`,
+                  minHeight: 56,
                 }}
                 onMouseEnter={() => setHoverHora(i)}
                 onMouseLeave={() => setHoverHora(null)}
               >
-                <span className="text-xs font-bold" style={{ color: h.graha.color }}>{h.graha.symbol}</span>
-                <span className="text-[10px] mt-0.5" style={{ color: "var(--gl-ink-muted)" }}>{h.number}</span>
+                <span className="text-sm font-bold" style={{ color: h.graha.color }}>{h.graha.symbol}</span>
+                <span className="text-[11px] mt-0.5 font-bold" style={{ color: INK_MUTED_STRONG }}>{h.number}</span>
                 {i === 0 && (
                   <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[7px] font-bold text-white" style={{ background: "var(--gl-gold-accent)" }}>1</span>
                 )}
@@ -172,16 +183,16 @@ export function ChaldeanPlanetaryHoraExplorer() {
           </div>
 
           {hoverHora !== null && (
-            <div className="mb-3 p-2.5 rounded-lg text-xs" style={{ background: "var(--gl-card-surface-solid)", border: "1px solid var(--gl-gold-hairline)" }}>
-              <span className="font-semibold" style={{ color: "var(--gl-ink-primary)" }}>Hora {horas[hoverHora].number}</span>
+            <div className="mb-3 p-2.5 rounded-lg text-xs" style={{ background: PANEL_STRONG, border: `1px solid ${BORDER}` }}>
+              <span className="font-bold" style={{ color: INK }}>Hora {horas[hoverHora].number}</span>
               <span style={{ color: "var(--gl-ink-secondary)" }}> — ruled by <IAST>{horas[hoverHora].graha.name}</IAST> ({horas[hoverHora].graha.devanagari})</span>
             </div>
           )}
 
           {/* Mathematical Proof Panel */}
-          <div className="rounded-xl p-3" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
-            <h4 className="text-xs font-semibold mb-2" style={{ color: "var(--gl-ink-primary)" }}>Why does the weekday shift by 3?</h4>
-            <div className="space-y-2 text-xs" style={{ color: "var(--gl-ink-secondary)" }}>
+          <div className="rounded-xl p-3" style={{ background: PANEL_STRONG, border: `1px solid ${BORDER}` }}>
+            <h4 className="text-sm font-bold mb-2" style={{ color: INK }}>Why does the weekday shift by 3?</h4>
+            <div className="space-y-2 text-sm font-medium" style={{ color: INK_SOFT }}>
               <p>24 horas ÷ 7 planets = 3 remainder <strong>3</strong></p>
 
               <div className="flex flex-col items-center gap-1.5 py-1">
@@ -242,8 +253,8 @@ export function ChaldeanPlanetaryHoraExplorer() {
 function HoraCycleRing({ selectedDay, animKey }: { selectedDay: number; animKey: number }) {
   const CX = 200;
   const CY = 200;
-  const R_OUTER = 170;
-  const R_INNER = 130;
+  const R_OUTER = 180;
+  const R_INNER = 118;
   const R_LABEL = (R_OUTER + R_INNER) / 2;
 
   const chaldeanNames = CHALDEAN_ORDER.map((g) => g.name);
@@ -271,13 +282,13 @@ function HoraCycleRing({ selectedDay, animKey }: { selectedDay: number; animKey:
   }
 
   return (
-    <svg viewBox="0 0 400 400" className="w-full h-auto" style={{ maxWidth: 280 }}>
+    <svg viewBox="0 0 400 400" className="w-full h-auto" style={{ maxWidth: 420 }}>
       <defs>
         <filter id="hShadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow dx="0" dy={1} stdDeviation={2} floodColor="#6B4423" floodOpacity="0.1" />
         </filter>
       </defs>
-      <circle cx={CX} cy={CY} r={R_OUTER + 6} fill="none" stroke="var(--gl-gold-hairline)" strokeWidth={1} opacity={0.3} />
+      <circle cx={CX} cy={CY} r={R_OUTER + 6} fill="none" stroke={BORDER} strokeWidth={1.5} opacity={0.85} />
 
       {horaPositions.map((h, idx) => {
         const midAngle = idx * (360 / 24) + (360 / 48) - 90;
@@ -287,17 +298,17 @@ function HoraCycleRing({ selectedDay, animKey }: { selectedDay: number; animKey:
 
         return (
           <g key={`${animKey}-${idx}`} style={{ animation: `horaFadeIn 0.25s ease ${idx * 0.01}s both` }}>
-            <path d={getSegmentPath(idx, 24)} fill={`${h.graha.color}12`} stroke={isFirst ? h.graha.color : `${h.graha.color}30`} strokeWidth={isFirst ? 1.5 : 0.5} filter="url(#hShadow)" />
-            <text x={lx} y={ly - 2} textAnchor="middle" fill={h.graha.color} fontSize={10} fontWeight={700} style={{ pointerEvents: "none", fontFamily: "serif" }}>{h.graha.symbol}</text>
-            <text x={lx} y={ly + 8} textAnchor="middle" fill="var(--gl-ink-muted)" fontSize={7} style={{ pointerEvents: "none", fontFamily: "var(--font-sans), sans-serif" }}>{h.number}</text>
+            <path d={getSegmentPath(idx, 24)} fill={`${h.graha.color}18`} stroke={isFirst ? h.graha.color : `${h.graha.color}66`} strokeWidth={isFirst ? 2.8 : 1.1} filter="url(#hShadow)" />
+            <text x={lx} y={ly - 4} textAnchor="middle" fill={h.graha.color} fontSize={16} fontWeight={900} style={{ pointerEvents: "none", fontFamily: "serif" }}>{h.graha.symbol}</text>
+            <text x={lx} y={ly + 12} textAnchor="middle" fill={INK} fontSize={10} fontWeight={800} style={{ pointerEvents: "none", fontFamily: "var(--font-sans), sans-serif" }}>{h.number}</text>
           </g>
         );
       })}
 
-      <circle cx={CX} cy={CY} r={R_INNER - 10} fill="var(--gl-card-surface-solid, #FFF9F0)" stroke="var(--gl-gold-accent)" strokeWidth={1.5} filter="url(#hShadow)" />
-      <text x={CX} y={CY - 8} textAnchor="middle" fill="var(--gl-ink-primary)" fontSize={10} fontWeight={700} style={{ fontFamily: "var(--font-sans), sans-serif" }}>{DAY_NAMES[selectedDay]}</text>
-      <text x={CX} y={CY + 5} textAnchor="middle" fill="var(--gl-ink-secondary)" fontSize={9} fontWeight={600}>{DAY_DEVANAGARI[selectedDay]}</text>
-      <text x={CX} y={CY + 16} textAnchor="middle" fill="var(--gl-ink-muted)" fontSize={8}>24 Horas</text>
+      <circle cx={CX} cy={CY} r={R_INNER - 12} fill={PANEL_STRONG} stroke={GOLD_DEEP} strokeWidth={2.2} filter="url(#hShadow)" />
+      <text x={CX} y={CY - 13} textAnchor="middle" fill={INK} fontSize={15} fontWeight={900} style={{ fontFamily: "var(--font-sans), sans-serif" }}>{DAY_NAMES[selectedDay]}</text>
+      <text x={CX} y={CY + 5} textAnchor="middle" fill={INK_SOFT} fontSize={13} fontWeight={800}>{DAY_DEVANAGARI[selectedDay]}</text>
+      <text x={CX} y={CY + 22} textAnchor="middle" fill={INK_MUTED_STRONG} fontSize={12} fontWeight={800}>24 Horas</text>
     </svg>
   );
 }

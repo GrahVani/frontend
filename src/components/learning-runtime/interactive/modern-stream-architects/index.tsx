@@ -3,16 +3,13 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Compass,
   ArrowRight,
   User,
-  Layers,
   ShieldCheck,
-  Calendar,
   BookOpen,
   GitBranch,
 } from "lucide-react";
-import { ink, goldOnGlassHairline } from "@/design-tokens/grahvani-learning/colors";
+import { goldOnGlassHairline } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.22))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
@@ -20,7 +17,6 @@ const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
 const INK_PRIMARY = "var(--gl-ink-primary, #3E2A1F)";
 const INK_SECONDARY = "var(--gl-ink-secondary, #5C3D26)";
 const GOLD = "#A8821E";
-const VERMILION = "#A23A1E";
 const GREEN = "#2E7D32";
 
 interface Architect {
@@ -188,8 +184,8 @@ export function ModernStreamArchitects() {
             </div>
 
             {/* Lineage Tree SVG (Light Parchment theme, matching the rest of the application) */}
-            <div className="my-4 flex justify-center rounded-xl p-4 border" style={{ background: SURFACE_2, borderColor: HAIRLINE }}>
-              <svg viewBox="0 0 280 200" className="w-full max-w-[260px] h-auto block">
+            <div className="my-4 flex justify-center rounded-xl p-5 border" style={{ background: SURFACE_2, borderColor: HAIRLINE }}>
+              <svg viewBox="0 0 280 205" className="w-full max-w-[520px] h-auto block">
                 {/* Branches / Connectors */}
                 <line x1="140" y1="180" x2="140" y2="135" stroke={getLineColor("vedic", "classical")} strokeWidth={isNodeActive("classical") ? 2.5 : 1} />
                 
@@ -208,43 +204,43 @@ export function ModernStreamArchitects() {
                 <line x1="210" y1="90" x2="230" y2="40" stroke={getLineColor("tajika", "sastri")} strokeWidth={isNodeActive("sastri") ? 2 : 1} />
 
                 {/* Root Node (Vedic Roots) */}
-                <circle cx="140" cy="180" r="10" fill="#1C2E20" stroke={GOLD} strokeWidth="1" />
-                <text x="140" y="183" textAnchor="middle" fill="#ECEFF1" fontSize="7" fontWeight="bold">Vedic</text>
-                <text x="140" y="196" textAnchor="middle" fill={INK_SECONDARY} fontSize="6" fontWeight="bold">Lagadha (~1200 BCE)</text>
+                <circle cx="140" cy="180" r="12" fill="#1C2E20" stroke={GOLD} strokeWidth="1.4" />
+                <text x="140" y="183.5" textAnchor="middle" fill="#ECEFF1" fontSize="8.5" fontWeight="bold">Vedic</text>
+                <text x="140" y="199" textAnchor="middle" fill={INK_SECONDARY} fontSize="9" fontWeight="bold">Lagadha (~1200 BCE)</text>
 
                 {/* Classical Node */}
-                <circle cx="140" cy="135" r="9" fill={isNodeActive("classical") ? GOLD : SURFACE} stroke={isNodeActive("classical") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.5" />
-                <text x="140" y="137.5" textAnchor="middle" fill={isNodeActive("classical") ? "#FFF" : INK_SECONDARY} fontSize="6" fontWeight="bold">Class</text>
-                <text x="186" y="137" textAnchor="middle" fill={INK_SECONDARY} fontSize="6" fontWeight="500">Varāhamihira (6th c.)</text>
+                <circle cx="140" cy="135" r="11" fill={isNodeActive("classical") ? GOLD : SURFACE} stroke={isNodeActive("classical") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.7" />
+                <text x="140" y="138" textAnchor="middle" fill={isNodeActive("classical") ? "#FFF" : INK_SECONDARY} fontSize="7.5" fontWeight="bold">Class</text>
+                <text x="195" y="138" textAnchor="middle" fill={INK_SECONDARY} fontSize="8.5" fontWeight="600">Varāhamihira (6th c.)</text>
 
                 {/* Stream Nodes */}
-                <circle cx="70" cy="90" r="8" fill={isNodeActive("parashari") ? GOLD : SURFACE} stroke={isNodeActive("parashari") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.5" />
-                <text x="70" y="92.5" textAnchor="middle" fill={isNodeActive("parashari") ? "#FFF" : INK_SECONDARY} fontSize="6" fontWeight="bold">Para</text>
+                <circle cx="70" cy="90" r="10" fill={isNodeActive("parashari") ? GOLD : SURFACE} stroke={isNodeActive("parashari") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.7" />
+                <text x="70" y="93" textAnchor="middle" fill={isNodeActive("parashari") ? "#FFF" : INK_SECONDARY} fontSize="7.5" fontWeight="bold">Para</text>
 
-                <circle cx="110" cy="90" r="8" fill={isNodeActive("jaimini") ? GOLD : SURFACE} stroke={isNodeActive("jaimini") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.5" />
-                <text x="110" y="92.5" textAnchor="middle" fill={isNodeActive("jaimini") ? "#FFF" : INK_SECONDARY} fontSize="6" fontWeight="bold">Jaim</text>
+                <circle cx="110" cy="90" r="10" fill={isNodeActive("jaimini") ? GOLD : SURFACE} stroke={isNodeActive("jaimini") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.7" />
+                <text x="110" y="93" textAnchor="middle" fill={isNodeActive("jaimini") ? "#FFF" : INK_SECONDARY} fontSize="7.5" fontWeight="bold">Jaim</text>
 
-                <circle cx="210" cy="90" r="8" fill={isNodeActive("tajika") ? GOLD : SURFACE} stroke={isNodeActive("tajika") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.5" />
-                <text x="210" y="92.5" textAnchor="middle" fill={isNodeActive("tajika") ? "#FFF" : INK_SECONDARY} fontSize="6" fontWeight="bold">Taji</text>
+                <circle cx="210" cy="90" r="10" fill={isNodeActive("tajika") ? GOLD : SURFACE} stroke={isNodeActive("tajika") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.7" />
+                <text x="210" y="93" textAnchor="middle" fill={isNodeActive("tajika") ? "#FFF" : INK_SECONDARY} fontSize="7.5" fontWeight="bold">Taji</text>
 
                 {/* Modern Figure Nodes */}
-                <circle cx="30" cy="40" r="7" fill={isNodeActive("raman") ? GOLD : SURFACE} stroke={isNodeActive("raman") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.5" />
-                <text x="30" y="42.5" textAnchor="middle" fill={isNodeActive("raman") ? "#FFF" : INK_SECONDARY} fontSize="6" fontWeight="bold">BVR</text>
+                <circle cx="30" cy="40" r="9.5" fill={isNodeActive("raman") ? GOLD : SURFACE} stroke={isNodeActive("raman") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.7" />
+                <text x="30" y="43" textAnchor="middle" fill={isNodeActive("raman") ? "#FFF" : INK_SECONDARY} fontSize="7.2" fontWeight="bold">BVR</text>
                 
-                <circle cx="70" cy="40" r="7" fill={isNodeActive("krishnamurti") ? GOLD : SURFACE} stroke={isNodeActive("krishnamurti") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.5" />
-                <text x="70" y="42.5" textAnchor="middle" fill={isNodeActive("krishnamurti") ? "#FFF" : INK_SECONDARY} fontSize="6" fontWeight="bold">KSK</text>
+                <circle cx="70" cy="40" r="9.5" fill={isNodeActive("krishnamurti") ? GOLD : SURFACE} stroke={isNodeActive("krishnamurti") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.7" />
+                <text x="70" y="43" textAnchor="middle" fill={isNodeActive("krishnamurti") ? "#FFF" : INK_SECONDARY} fontSize="7.2" fontWeight="bold">KSK</text>
 
-                <circle cx="110" cy="40" r="7" fill={isNodeActive("joshi") ? GOLD : SURFACE} stroke={isNodeActive("joshi") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.5" />
-                <text x="110" y="42.5" textAnchor="middle" fill={isNodeActive("joshi") ? "#FFF" : INK_SECONDARY} fontSize="6" fontWeight="bold">Roop</text>
+                <circle cx="110" cy="40" r="9.5" fill={isNodeActive("joshi") ? GOLD : SURFACE} stroke={isNodeActive("joshi") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.7" />
+                <text x="110" y="43" textAnchor="middle" fill={isNodeActive("joshi") ? "#FFF" : INK_SECONDARY} fontSize="7.2" fontWeight="bold">Roop</text>
 
-                <circle cx="150" cy="40" r="7" fill={isNodeActive("rao") ? GOLD : SURFACE} stroke={isNodeActive("rao") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.5" />
-                <text x="150" y="42.5" textAnchor="middle" fill={isNodeActive("rao") ? "#FFF" : INK_SECONDARY} fontSize="6" fontWeight="bold">KNR</text>
+                <circle cx="150" cy="40" r="9.5" fill={isNodeActive("rao") ? GOLD : SURFACE} stroke={isNodeActive("rao") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.7" />
+                <text x="150" y="43" textAnchor="middle" fill={isNodeActive("rao") ? "#FFF" : INK_SECONDARY} fontSize="7.2" fontWeight="bold">KNR</text>
 
-                <circle cx="190" cy="40" r="7" fill={isNodeActive("rath") ? GOLD : SURFACE} stroke={isNodeActive("rath") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.5" />
-                <text x="190" y="42.5" textAnchor="middle" fill={isNodeActive("rath") ? "#FFF" : INK_SECONDARY} fontSize="6" fontWeight="bold">Rath</text>
+                <circle cx="190" cy="40" r="9.5" fill={isNodeActive("rath") ? GOLD : SURFACE} stroke={isNodeActive("rath") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.7" />
+                <text x="190" y="43" textAnchor="middle" fill={isNodeActive("rath") ? "#FFF" : INK_SECONDARY} fontSize="7.2" fontWeight="bold">Rath</text>
 
-                <circle cx="230" cy="40" r="7" fill={isNodeActive("sastri") ? GOLD : SURFACE} stroke={isNodeActive("sastri") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.5" />
-                <text x="230" y="42.5" textAnchor="middle" fill={isNodeActive("sastri") ? "#FFF" : INK_SECONDARY} fontSize="6" fontWeight="bold">Sast</text>
+                <circle cx="230" cy="40" r="9.5" fill={isNodeActive("sastri") ? GOLD : SURFACE} stroke={isNodeActive("sastri") ? GOLD : "rgba(168, 130, 30, 0.4)"} strokeWidth="1.7" />
+                <text x="230" y="43" textAnchor="middle" fill={isNodeActive("sastri") ? "#FFF" : INK_SECONDARY} fontSize="7.2" fontWeight="bold">Sast</text>
               </svg>
             </div>
 
@@ -271,7 +267,7 @@ export function ModernStreamArchitects() {
             </div>
             
             <p className="m-0 text-xs leading-normal mb-4" style={{ color: INK_SECONDARY }}>
-              To qualify as a citable "Modern Primary" (like KP Reader or Lal Kitab), a 20th-century text must meet four strict criteria:
+              To qualify as a citable &quot;Modern Primary&quot; (like KP Reader or Lal Kitab), a 20th-century text must meet four strict criteria:
             </p>
 
             {/* Audit Checklist */}

@@ -93,11 +93,11 @@ export function TamkalikaWheel() {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1rem", alignItems: "start" }}>
         <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }} aria-label="Temporary friendship wheel from the reference planet">
-          <svg viewBox="0 0 360 360" role="img" aria-label={`${ref.name} at house 1; friend houses 2,3,4,10,11,12 shaded green, enemy houses 1,5,6,7,8,9 shaded red`} style={{ width: "100%", height: "auto", display: "block" }}>
-            <circle cx="180" cy="180" r="148" fill="rgba(255,251,241,0.7)" stroke={HAIRLINE} />
+          <svg viewBox="0 0 360 360" role="img" aria-label={`${ref.name} at house 1; friend houses 2,3,4,10,11,12 shaded green, enemy houses 1,5,6,7,8,9 shaded red`} style={{ width: "100%", height: "auto", display: "block", overflow: "visible" }}>
+            <circle cx="180" cy="180" r="136" fill="rgba(255,251,241,0.7)" stroke={HAIRLINE} />
             {[...Array(12)].map((_, index) => {
               const house = index + 1;
-              const p = point(house, 124);
+              const p = point(house, 110);
               const isRef = house === 1;
               const isPlaced = house === placedHouse;
               const friend = isFriendHouse(house);
@@ -122,16 +122,20 @@ export function TamkalikaWheel() {
                   }}
                   style={{ cursor: isRef ? "default" : "pointer" }}
                 >
-                  <circle cx={p.x} cy={p.y} r={isRef || isPlaced ? 24 : 19} fill={isRef ? ref.color : isPlaced ? second.color : tint} stroke={ringColor} strokeWidth={isRef || isPlaced ? 3 : 1.5} />
+                  <circle cx={p.x} cy={p.y} r={isRef || isPlaced ? 22 : 17.5} fill={isRef ? ref.color : isPlaced ? second.color : tint} stroke={ringColor} strokeWidth={isRef || isPlaced ? 3 : 1.5} />
                   <text x={p.x} y={p.y + 4} textAnchor="middle" fill={isRef || isPlaced ? "#fff" : INK_SECONDARY} fontSize="11" fontWeight="900" pointerEvents="none">
                     {isRef ? ref.glyph : isPlaced ? second.glyph : house}
                   </text>
                 </g>
               );
             })}
-            <circle cx="180" cy="180" r="52" fill="rgba(156,122,47,0.12)" stroke={GOLD} strokeWidth="2" />
-            <text x="180" y="174" textAnchor="middle" fill={GOLD} fontSize="15" fontWeight="900">From {ref.glyph}</text>
+            <circle cx="180" cy="180" r="58" fill="rgba(156,122,47,0.12)" stroke={GOLD} strokeWidth="2" />
+            <text x="180" y="166" textAnchor="middle" fill={GOLD} fontSize="15" fontWeight="900">From {ref.glyph}</text>
             <text x="180" y="197" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight="800">2·3·4·10·11·12 = friend</text>
+            <circle cx="180" cy="180" r="58" fill="rgba(255,251,241,0.96)" stroke={GOLD} strokeWidth="2" />
+            <text x="180" y="166" textAnchor="middle" fill={GOLD} fontSize="15" fontWeight="900">From {ref.glyph}</text>
+            <text x="180" y="187" textAnchor="middle" fill={INK_MUTED} fontSize="10.5" fontWeight="800">Friend houses</text>
+            <text x="180" y="202" textAnchor="middle" fill={INK_SECONDARY} fontSize="10.5" fontWeight="850">2, 3, 4, 10, 11, 12</text>
           </svg>
         </section>
 

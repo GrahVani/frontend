@@ -432,17 +432,19 @@ function TithiDetailCard({ tithiDef }: { tithiDef: typeof TITHIS[number] }) {
 /* ── Category Legend ───────────────────────────────────── */
 function CategoryLegend() {
   return (
-    <div className="grid gap-1.5 sm:grid-cols-5">
+    <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
       {CATEGORIES.map((c) => (
         <div
           key={c.key}
-          className="flex items-center gap-2 rounded-lg p-2"
+          className="flex min-w-0 items-start gap-2 rounded-lg p-2.5"
           style={{ background: wash(c.color, "10"), border: `1px solid ${wash(c.color, "18")}` }}
         >
-          <div className="h-3 w-3 shrink-0 rounded-full" style={{ background: c.color }} />
+          <div className="mt-1 h-3 w-3 shrink-0 rounded-full" style={{ background: c.color }} />
           <div className="min-w-0">
-            <span className="text-xs font-bold" style={{ color: c.color }}>{c.name}</span>
-            <span className="ml-1 text-[10px]" style={{ color: INK_SECONDARY }}>({c.positions.join(",")})</span>
+            <p className="m-0 text-sm font-bold leading-tight" style={{ color: c.color }}>{c.name}</p>
+            <p className="m-0 mt-1 text-[11px] leading-tight" style={{ color: INK_SECONDARY }}>
+              {c.positions.join(", ")}
+            </p>
           </div>
         </div>
       ))}
@@ -930,7 +932,7 @@ function ScreenerTab() {
           </h3>
           <div className="mt-3 rounded-lg p-3" style={{ background: wash(GOLD, "06"), border: `1px solid ${wash(GOLD, "15")}` }}>
             <p className="m-0 text-sm leading-relaxed" style={{ color: INK_PRIMARY }}>
-              "{scenario.situation}"
+              &ldquo;{scenario.situation}&rdquo;
             </p>
           </div>
         </article>
@@ -1097,7 +1099,7 @@ function ScreenerTab() {
             <div>
               <p className="m-0 text-sm font-bold" style={{ color: GREEN }}>All {SCENARIOS.length} cases diagnosed!</p>
               <p className="m-0 mt-1 text-xs" style={{ color: INK_SECONDARY }}>
-                You've practised the five-fold framework, Riktā-exception discipline, vrata-modulation, and single-limb-dominance avoidance.
+                You&apos;ve practised the five-fold framework, Riktā-exception discipline, vrata-modulation, and single-limb-dominance avoidance.
               </p>
             </div>
           </div>
@@ -1283,7 +1285,7 @@ function IntegrationTab() {
             </IAST>
           </div>
           <p className="mb-0 mt-2 text-sm leading-relaxed" style={{ color: INK_PRIMARY }}>
-            "The tithis are remembered as Nandā, Bhadrā, Jayā, Riktā, and Pūrṇā; each respectively occupying six positions across the two pakṣas (three per pakṣa)."
+            &ldquo;The tithis are remembered as Nandā, Bhadrā, Jayā, Riktā, and Pūrṇā; each respectively occupying six positions across the two pakṣas (three per pakṣa).&rdquo;
           </p>
           <p className="mb-0 mt-2 text-xs italic" style={{ color: INK_MUTED }}>
             Per Muhūrta-Cintāmaṇi of Rāma Daivajña, Chapter 2 (standard-edition paraphrase).

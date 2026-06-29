@@ -1,8 +1,7 @@
 /**
  * Lal Kitab Teva Doctrine Explorer — data engine for Lesson 18.2.1.
  *
- * Static content for the fixed-Aries frame, planet placement rules,
- * and house-to-sign quiz items.
+ * Static content for the fixed-Aries frame and planet placement rules.
  */
 
 export const SIGNS = [
@@ -77,48 +76,4 @@ export const DEMO_PLACEMENTS: DemoPlacement[] = [
   },
 ];
 
-export interface QuizItem {
-  id: number;
-  question: string;
-  answer: string;
-  explanation: string;
-}
 
-export const QUIZ_ITEMS: QuizItem[] = [
-  {
-    id: 1,
-    question: "In the Teva, which sign is always in the 1st house?",
-    answer: "Aries",
-    explanation: "The fixed-Aries doctrine: Meṣa (Aries) is permanently pinned to house 1, regardless of the native's actual lagna.",
-  },
-  {
-    id: 2,
-    question: "A planet sits in the genuine 7th house from the lagna. Which Teva house does it go into, and which sign do we read it with?",
-    answer: "Teva house 7, read as Libra",
-    explanation: "The lagna determines the planet's house-position, but the Teva's 7th house is always Libra (sign 7). House number equals sign number.",
-  },
-  {
-    id: 3,
-    question: "Which sign occupies the Teva's 10th house?",
-    answer: "Capricorn",
-    explanation: "House 10 = sign 10 = Makara (Capricorn). The fixed mapping never changes.",
-  },
-  {
-    id: 4,
-    question: "A native has Leo rising. In the Parāśarī rāśi chart, which sign is in the 1st house? In the Teva?",
-    answer: "Parāśarī: Leo. Teva: Aries.",
-    explanation: "Parāśarī rotates the frame so the lagna (Leo) becomes house 1. Teva fixes Aries in house 1 for everyone.",
-  },
-  {
-    id: 5,
-    question: "In the Teva, does the lagna play any role at all?",
-    answer: "Yes — it determines where planets fall within the fixed houses",
-    explanation: "The lagna still shifts planet-positions. A planet in the genuine 4th house from lagna goes into Teva house 4. The lagna just never sets the 1st-house sign.",
-  },
-  {
-    id: 6,
-    question: "A planet is in Teva house 5. Which sign's signification do we read it with?",
-    answer: "Leo",
-    explanation: "Read house N as sign N. House 5 is always Siṁha (Leo) in the Teva.",
-  },
-];

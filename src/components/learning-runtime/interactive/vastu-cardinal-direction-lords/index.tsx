@@ -68,9 +68,17 @@ function CardinalCompass({
           const x = (lord.x / 100) * 420 + 50;
           const y = (lord.y / 100) * 320 + 50;
           const color = match === "avoid" ? VERMILION : lord.color;
+          const isNorth = y < 210;
+          const isSouth = y > 210;
+          const isEast = x > 260;
+          const isWest = x < 260;
+          const x1 = isEast ? 316 : isWest ? 204 : 260;
+          const y1 = isNorth ? 154 : isSouth ? 266 : 210;
+          const x2 = isEast ? x - 66 : isWest ? x + 66 : x;
+          const y2 = isNorth ? y + 46 : isSouth ? y - 46 : y;
           return (
             <g key={lord.key}>
-              <line x1="260" y1="210" x2={x} y2={y} stroke={selected ? lord.color : HAIRLINE} strokeWidth={selected ? 4 : 2} strokeDasharray={selected ? "0" : "8 8"} />
+              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={selected ? lord.color : HAIRLINE} strokeWidth={selected ? 4 : 2} strokeDasharray={selected ? "0" : "8 8"} />
               <foreignObject x={x - 66} y={y - 46} width="132" height="92">
                 <button
                   type="button"

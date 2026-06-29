@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import type React from "react";
 import { AlertTriangle, ArrowRight, BadgeCheck, Building2, Flag, GitBranch, RotateCcw, ShieldCheck } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
@@ -66,14 +66,12 @@ function DecisionFlow({ steps }: { steps: DecisionStep[] }) {
           flag -&gt; defer -&gt; refuse -&gt; cascade
         </p>
       </div>
-      <div className="grid min-w-0 gap-3 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid min-w-0 gap-3 md:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_32px_minmax(0,1fr)_32px_minmax(0,1fr)_32px_minmax(0,1fr)]">
         {steps.map((step, index) => {
           const color = stepColor(step.status);
           return (
-            <article key={step.key} className="relative min-w-0 rounded-xl p-4" style={{ background: wash(color, "0F"), border: `1px solid ${color}` }}>
-              {index < steps.length - 1 ? (
-                <ArrowRight className="absolute -right-3 top-1/2 hidden -translate-y-1/2 xl:block" size={20} color={GOLD} />
-              ) : null}
+            <Fragment key={step.key}>
+            <article className="min-w-0 rounded-xl p-4" style={{ background: wash(color, "0F"), border: `1px solid ${color}` }}>
               <div className="flex min-w-0 items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-2 text-xs font-black uppercase" style={{ color }}>
                   {stepIcon(step)}
@@ -90,6 +88,12 @@ function DecisionFlow({ steps }: { steps: DecisionStep[] }) {
                 {step.result}
               </p>
             </article>
+            {index < steps.length - 1 ? (
+              <div className="hidden min-w-0 items-center justify-center xl:flex" aria-hidden="true">
+                <ArrowRight size={22} color={GOLD} strokeWidth={2.2} />
+              </div>
+            ) : null}
+            </Fragment>
           );
         })}
       </div>

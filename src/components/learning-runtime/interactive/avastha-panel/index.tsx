@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import type { ReactNode } from "react";
-import { Flame, Gauge, Hourglass, RotateCcw, Sparkles } from "lucide-react";
+import { Flame, Gauge, Hourglass, Layers, RotateCcw, Sparkles, AlertTriangle } from "lucide-react";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
@@ -13,16 +13,17 @@ const GOLD = "#9C7A2F";
 const GREEN = "#2F7D55";
 const RED = "#A44135";
 const SUN = "#D99622";
+const DEEP_BLUE = "#303A4D";
 
 type PlanetKey = "moon" | "mars" | "mercury" | "jupiter" | "venus" | "saturn";
-type Dignity = "exalted" | "neutral" | "debilitated";
+type Dignity = "exalted" | "friendly" | "neutral" | "inimical" | "debilitated";
 
 interface Planet {
   key: PlanetKey;
   name: string;
-  orb: number; // combustion orb from the Sun (direct motion)
-  retroOrb?: number; // combustion orb when retrograde (Mercury/Venus only)
-  canRetro: boolean; // Moon never goes retrograde
+  orb: number;
+  retroOrb?: number;
+  canRetro: boolean;
 }
 
 // Standard combustion orbs from the Sun (degrees): Moon 12, Mars 17,
@@ -37,12 +38,20 @@ const PLANETS: Planet[] = [
 ];
 
 const AGE_STATES = [
-  { name: "Bāla", gloss: "infant", strength: "weak" },
-  { name: "Kumāra", gloss: "child", strength: "developing" },
-  { name: "Yuvā", gloss: "adult", strength: "peak" },
-  { name: "Vṛddha", gloss: "old", strength: "declining" },
-  { name: "Mṛta", gloss: "dead", strength: "minimal" },
+  { name: "Bāla", gloss: "infant", strength: "weak", color: "#6B7280" },
+  { name: "Kumāra", gloss: "child", strength: "developing", color: "#8B6914" },
+  { name: "Yuvā", gloss: "adult", strength: "peak", color: GREEN },
+  { name: "Vṛddha", gloss: "old", strength: "declining", color: "#8B6914" },
+  { name: "Mṛta", gloss: "dead", strength: "minimal", color: RED },
 ];
+
+const DIGNITY_INFO: Record<Dignity, { label: string; note: string; color: string }> = {
+  exalted: { label: "Exalted", note: "Full structural strength. The planet is at its highest expression.", color: GREEN },
+  friendly: { label: "Friendly", note: "Well-supported. The planet is comfortable and performs well.", color: "#2F7D55" },
+  neutral: { label: "Neutral", note: "Average. The planet is functional without special advantage or disadvantage.", color: GOLD },
+  inimical: { label: "Inimical", note: "Uncomfortable. The planet's delivery is stressed.", color: "#A44135" },
+  debilitated: { label: "Debilitated", note: "Lowest structural dignity. The planet struggles to deliver.", color: RED },
+};
 
 function combustOrb(p: Planet, retro: boolean) {
   return retro && p.retroOrb != null ? p.retroOrb : p.orb;
@@ -69,17 +78,46 @@ export function AvasthaPanel() {
   const age = AGE_STATES[ageIndex(degreeInSign, evenSign)];
   const immature = age.gloss === "infant" || age.gloss === "child";
   const strongButImmature = dignity === "exalted" && immature;
+  const vakraAsta = isRetro && isCombust;
+  const digInfo = DIGNITY_INFO[dignity];
+
+  const synthesisVerdict = useMemo(() => {
+    const parts: string[] = [];
+    // Dignity
+    if (dignity === "exalted") parts.push("structurally powerful");
+    else if (dignity === "friendly") parts.push("well-supported");
+    else if (dignity === "neutral") parts.push("functionally average");
+    else if (dignity === "inimical") parts.push("under stress");
+    else parts.push("structurally weak");
+    // Motion
+    if (isRetro) parts.push("amplified by retrogression");
+    // Light
+    if (isCombust && !vakraAsta) parts.push("obscured by combustion");
+    else if (vakraAsta) parts.push("partly shielded from combustion by retrogression (vakra-asta)");
+    // Age
+    if (age.gloss === "adult") parts.push("at peak delivery (yuvā)");
+    else if (age.gloss === "infant") parts.push("but immature in delivery (bāla)");
+    else if (age.gloss === "child") parts.push("still developing in delivery (kumāra)");
+    else if (age.gloss === "old") parts.push("with declining delivery (vṛddha)");
+    else parts.push("with minimal delivery capacity (mṛta)");
+
+    return `${planet.name} is ${parts.join(", ")}. The states modulate the baseline — they rarely overturn it.`;
+  }, [planet, dignity, isRetro, isCombust, vakraAsta, age]);
+
+  // Burn-orb percentage for the visual track
+  const orbPercent = Math.min(100, (orb / 30) * 100);
 
   return (
     <div data-interactive="avastha-panel" style={{ display: "grid", gap: "1rem", color: INK_PRIMARY }}>
+      {/* Header */}
       <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "end", flexWrap: "wrap" }}>
           <div>
             <p style={{ margin: 0, color: INK_MUTED, fontSize: "0.78rem", fontWeight: 900, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-              Avasthā panel
+              Avasthā synthesizer
             </p>
             <h2 style={{ margin: "0.2rem 0 0", color: GOLD, fontSize: "1.35rem" }}>
-              Motion, light, and age states
+              Layer the states: motion, light, and age
             </h2>
           </div>
           <button
@@ -100,9 +138,10 @@ export function AvasthaPanel() {
         </div>
       </section>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1rem", alignItems: "start" }}>
-        {/* Inputs */}
-        <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.9rem" }} aria-label="Planet state inputs">
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(280px, 0.82fr) minmax(0, 1.18fr)", gap: "1rem", alignItems: "start" }}>
+        {/* ═══ LEFT: THE MODULATOR ═══ */}
+        <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "1.1rem" }} aria-label="Planet state inputs">
+          {/* Planet selector */}
           <div>
             <div style={{ color: INK_MUTED, fontSize: "0.78rem", fontWeight: 900, letterSpacing: "0.06em", textTransform: "uppercase" }}>Planet</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem", marginTop: "0.6rem" }}>
@@ -123,16 +162,25 @@ export function AvasthaPanel() {
             </div>
           </div>
 
-          <label style={{ display: "block" }}>
-            <span style={{ color: INK_SECONDARY, fontWeight: 800, fontSize: "0.86rem" }}>Distance from the Sun: {distFromSun}°</span>
-            <input type="range" min={0} max={30} step={1} value={distFromSun} onChange={(e) => setDistFromSun(Number(e.target.value))} aria-label="Distance from the Sun in degrees" style={{ width: "100%", accentColor: SUN }} />
-          </label>
+          {/* Dignity selector */}
+          <div>
+            <div style={{ color: INK_MUTED, fontSize: "0.78rem", fontWeight: 900, letterSpacing: "0.06em", textTransform: "uppercase" }}>Baseline dignity</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(85px,1fr))", gap: "0.4rem", marginTop: "0.6rem" }}>
+              {(Object.keys(DIGNITY_INFO) as Dignity[]).map((d) => (
+                <button
+                  key={d}
+                  type="button"
+                  aria-pressed={dignity === d}
+                  onClick={() => setDignity(d)}
+                  style={{ border: `1px solid ${dignity === d ? DIGNITY_INFO[d].color : HAIRLINE}`, borderRadius: 8, background: dignity === d ? DIGNITY_INFO[d].color : "transparent", color: dignity === d ? "#fff" : INK_SECONDARY, padding: "0.45rem 0.35rem", fontWeight: 850, fontSize: "0.78rem", textTransform: "capitalize", cursor: "pointer" }}
+                >
+                  {d}
+                </button>
+              ))}
+            </div>
+          </div>
 
-          <label style={{ display: "block" }}>
-            <span style={{ color: INK_SECONDARY, fontWeight: 800, fontSize: "0.86rem" }}>Degree within its sign: {degreeInSign}°</span>
-            <input type="range" min={0} max={29} step={1} value={degreeInSign} onChange={(e) => setDegreeInSign(Number(e.target.value))} aria-label="Degree within the sign" style={{ width: "100%", accentColor: GOLD }} />
-          </label>
-
+          {/* Retrograde toggle */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
             <button
               type="button"
@@ -150,71 +198,169 @@ export function AvasthaPanel() {
               onClick={() => setEvenSign((v) => !v)}
               style={{ border: `1px solid ${evenSign ? GOLD : HAIRLINE}`, borderRadius: 8, background: evenSign ? GOLD : "transparent", color: evenSign ? "#fff" : INK_SECONDARY, padding: "0.5rem 0.7rem", fontWeight: 850, cursor: "pointer" }}
             >
-              Even-sign age-reversal
+              Even-sign reversal
             </button>
           </div>
 
+          {/* Distance from Sun slider with burn-orb visual */}
           <div>
-            <div style={{ color: INK_MUTED, fontSize: "0.78rem", fontWeight: 900, letterSpacing: "0.06em", textTransform: "uppercase" }}>Dignity</div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0,1fr))", gap: "0.5rem", marginTop: "0.6rem" }}>
-              {(["exalted", "neutral", "debilitated"] as Dignity[]).map((d) => (
-                <button
-                  key={d}
-                  type="button"
-                  aria-pressed={dignity === d}
-                  onClick={() => setDignity(d)}
-                  style={{ border: `1px solid ${dignity === d ? (d === "exalted" ? GREEN : d === "debilitated" ? RED : GOLD) : HAIRLINE}`, borderRadius: 8, background: dignity === d ? (d === "exalted" ? GREEN : d === "debilitated" ? RED : GOLD) : "transparent", color: dignity === d ? "#fff" : INK_SECONDARY, padding: "0.5rem 0.4rem", fontWeight: 850, fontSize: "0.8rem", textTransform: "capitalize", cursor: "pointer" }}
-                >
-                  {d}
-                </button>
-              ))}
+            <span style={{ color: INK_SECONDARY, fontWeight: 800, fontSize: "0.86rem" }}>
+              Distance from the Sun: {distFromSun}°
+              <span style={{ marginLeft: "0.5rem", fontSize: "0.75rem", color: isCombust ? RED : GREEN }}>
+                {isCombust ? `🔥 Combust (orb: ${orb}°)` : `Safe (orb: ${orb}°)`}
+              </span>
+            </span>
+            <div style={{ position: "relative", marginTop: "0.4rem" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, width: `${orbPercent}%`, height: "100%", background: `${RED}18`, borderRadius: 4, pointerEvents: "none" }} />
+              <input type="range" min={0} max={30} step={1} value={distFromSun} onChange={(e) => setDistFromSun(Number(e.target.value))} aria-label="Distance from the Sun in degrees" style={{ width: "100%", accentColor: isCombust ? RED : SUN, position: "relative" }} />
             </div>
+          </div>
+
+          {/* Degree in sign slider with age-state visual track */}
+          <div>
+            <span style={{ color: INK_SECONDARY, fontWeight: 800, fontSize: "0.86rem" }}>
+              Degree within sign: {degreeInSign}°
+              <span style={{ marginLeft: "0.5rem", fontSize: "0.75rem", color: age.color, fontWeight: 900 }}>
+                {age.name} ({age.gloss})
+              </span>
+            </span>
+            {/* 5-segment age track */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "2px", marginTop: "0.4rem", borderRadius: 4, overflow: "hidden" }}>
+              {(evenSign ? [...AGE_STATES].reverse() : AGE_STATES).map((s, i) => {
+                const segStart = i * 6;
+                const segEnd = segStart + 6;
+                const isActive = degreeInSign >= segStart && degreeInSign < segEnd;
+                return (
+                  <div
+                    key={s.name}
+                    style={{
+                      background: isActive ? s.color : `${s.color}22`,
+                      color: isActive ? "#fff" : s.color,
+                      padding: "0.25rem 0.3rem",
+                      fontSize: "0.65rem",
+                      fontWeight: 900,
+                      textAlign: "center",
+                      transition: "all 0.2s ease",
+                    }}
+                  >
+                    {s.name}
+                  </div>
+                );
+              })}
+            </div>
+            <input type="range" min={0} max={29} step={1} value={degreeInSign} onChange={(e) => setDegreeInSign(Number(e.target.value))} aria-label="Degree within the sign" style={{ width: "100%", accentColor: age.color, marginTop: "0.3rem" }} />
           </div>
         </section>
 
-        {/* Readout */}
-        <section style={{ display: "grid", gap: "0.85rem" }} aria-label="State readout">
-          <Card icon={<Gauge size={18} aria-hidden="true" />} title="Motion" color={isRetro ? GREEN : INK_MUTED}>
+        {/* ═══ RIGHT: THE LAYERED READING ═══ */}
+        <section style={{ display: "grid", gap: "0.75rem" }} aria-label="Layered state readout">
+          {/* Layer 1: Baseline */}
+          <LayerCard
+            step="1"
+            title="Baseline"
+            subtitle={digInfo.label}
+            icon={<Sparkles size={18} aria-hidden="true" />}
+            color={digInfo.color}
+          >
+            {digInfo.note}
+          </LayerCard>
+
+          {/* Layer 2: Motion */}
+          <LayerCard
+            step="2"
+            title="Motion"
+            subtitle={isRetro ? "Retrograde (Vakra)" : "Direct"}
+            icon={<Gauge size={18} aria-hidden="true" />}
+            color={isRetro ? GREEN : INK_MUTED}
+          >
             {isRetro
-              ? `${planet.name} is retrograde (vakra): it gains ceṣṭā-bala — more emphatic, not weaker.`
-              : `${planet.name} is in direct motion. (Only the five tārā-grahas go retrograde; the Sun and Moon never do.)`}
-          </Card>
+              ? `${planet.name} is retrograde: it gains ceṣṭā-bala (motional strength) — more emphatic, not weaker.`
+              : `${planet.name} is in direct motion. ${!planet.canRetro ? `(${planet.name} never goes retrograde.)` : "(Only the five tārā-grahas go retrograde.)"}`}
+          </LayerCard>
 
-          <Card icon={<Flame size={18} aria-hidden="true" />} title="Light (combustion)" color={isCombust ? RED : GREEN}>
+          {/* Layer 3: Light / Combustion */}
+          <LayerCard
+            step="3"
+            title="Light"
+            subtitle={isCombust ? "Combust (Asta)" : "Clear"}
+            icon={<Flame size={18} aria-hidden="true" />}
+            color={isCombust ? RED : GREEN}
+          >
             {isCombust
-              ? `Combust (asta): within the ${orb}° burn-orb${isRetro && planet.retroOrb != null ? " (the retrograde orb)" : ""}. Significations are obscured.${isRetro ? " Retrograde + combust (vakra-asta) can partly cancel the weakness." : ""}`
+              ? `Combust: within the ${orb}° burn-orb${isRetro && planet.retroOrb != null ? " (retrograde orb)" : ""}. Significations are obscured.${vakraAsta ? " However, retrogression partly cancels the weakness (vakra-asta)." : ""}`
               : `Not combust: ${distFromSun}° from the Sun is outside the ${orb}° burn-orb.`}
-          </Card>
+          </LayerCard>
 
-          <Card icon={<Hourglass size={18} aria-hidden="true" />} title={`Age: ${age.name} (${age.gloss})`} color={age.gloss === "adult" ? GREEN : INK_MUTED}>
-            Strength {age.strength}{evenSign ? ", with the even-sign reversal applied" : ""}. {age.gloss === "adult" ? "Yuvā is the peak." : "Peak strength is yuvā (12°–18°)."}
-          </Card>
+          {/* Layer 4: Age */}
+          <LayerCard
+            step="4"
+            title="Age"
+            subtitle={`${age.name} (${age.gloss})`}
+            icon={<Hourglass size={18} aria-hidden="true" />}
+            color={age.color}
+          >
+            Strength: {age.strength}{evenSign ? " (even-sign reversal applied)" : ""}. {age.gloss === "adult" ? "Yuvā is the peak — this planet delivers at full capacity." : "Peak strength is yuvā (12°–18°)."}
+          </LayerCard>
 
-          {strongButImmature ? (
-            <section style={{ border: `1px solid ${GOLD}`, borderRadius: 8, background: `${GOLD}1F`, padding: "1rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: GOLD, fontWeight: 900 }}>
-                <Sparkles size={18} aria-hidden="true" />
-                Strong but immature
+          {/* ═══ SPECIAL FLAGS ═══ */}
+          {strongButImmature && (
+            <div style={{ border: `1px solid ${GOLD}`, borderRadius: 8, background: `${GOLD}15`, padding: "1rem", display: "flex", gap: "0.6rem", alignItems: "start" }}>
+              <AlertTriangle size={20} style={{ color: GOLD, flexShrink: 0, marginTop: 2 }} />
+              <div>
+                <div style={{ color: GOLD, fontWeight: 900, fontSize: "0.9rem" }}>⚠ Strong but immature</div>
+                <p style={{ margin: "0.4rem 0 0", color: INK_SECONDARY, lineHeight: 1.55, fontSize: "0.9rem" }}>
+                  Exalted by dignity yet <strong>{age.gloss}</strong> by age — the promise is high but not yet ripe. The states modulate the baseline; they rarely overturn it.
+                </p>
               </div>
-              <p style={{ margin: "0.5rem 0 0", color: INK_SECONDARY, lineHeight: 1.6 }}>
-                Exalted by dignity yet {age.gloss} by age: the promise is high but not yet ripe — the states modulate the baseline, they rarely overturn it.
-              </p>
-            </section>
-          ) : null}
+            </div>
+          )}
+
+          {vakraAsta && (
+            <div style={{ border: `1px solid ${SUN}`, borderRadius: 8, background: `${SUN}15`, padding: "1rem", display: "flex", gap: "0.6rem", alignItems: "start" }}>
+              <Flame size={20} style={{ color: SUN, flexShrink: 0, marginTop: 2 }} />
+              <div>
+                <div style={{ color: SUN, fontWeight: 900, fontSize: "0.9rem" }}>🔁 Vakra-Asta (retrograde + combust)</div>
+                <p style={{ margin: "0.4rem 0 0", color: INK_SECONDARY, lineHeight: 1.55, fontSize: "0.9rem" }}>
+                  Retrogression partly offsets combustion. {planet.name} is combust within {orb}° but its retrograde motion lends it enough strength to resist some of the Sun's obscuration. Net effect: less damaged than "combust" alone.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* ═══ SYNTHESIS VERDICT ═══ */}
+          <div style={{
+            border: `1px solid ${HAIRLINE}`,
+            borderLeft: `4px solid ${DEEP_BLUE}`,
+            borderRadius: 8,
+            background: "rgba(255, 251, 241, 0.78)",
+            padding: "1rem",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
+              <Layers size={18} style={{ color: DEEP_BLUE }} />
+              <span style={{ color: DEEP_BLUE, fontWeight: 900, fontSize: "0.9rem", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                Synthesis verdict
+              </span>
+            </div>
+            <p style={{ margin: 0, color: INK_PRIMARY, lineHeight: 1.65, fontSize: "0.95rem" }}>
+              {synthesisVerdict}
+            </p>
+          </div>
         </section>
       </div>
     </div>
   );
 }
 
-function Card({ icon, title, color, children }: { icon: ReactNode; title: string; color: string; children: ReactNode }) {
+function LayerCard({ step, title, subtitle, icon, color, children }: { step: string; title: string; subtitle: string; icon: ReactNode; color: string; children: ReactNode }) {
   return (
-    <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color, fontWeight: 900 }}>
+    <div style={{ border: `1px solid ${color}33`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <span style={{ display: "grid", placeItems: "center", width: 26, height: 26, borderRadius: 999, background: `${color}18`, color, fontWeight: 900, fontSize: "0.75rem" }}>{step}</span>
         {icon}
-        {title}
+        <span style={{ color, fontWeight: 900, fontSize: "0.9rem" }}>{title}</span>
+        <span style={{ color: INK_MUTED, fontSize: "0.8rem", marginLeft: "auto" }}>{subtitle}</span>
       </div>
-      <p style={{ margin: "0.5rem 0 0", color: INK_SECONDARY, lineHeight: 1.6 }}>{children}</p>
-    </section>
+      <p style={{ margin: "0.5rem 0 0", color: INK_SECONDARY, lineHeight: 1.6, fontSize: "0.9rem" }}>{children}</p>
+    </div>
   );
 }

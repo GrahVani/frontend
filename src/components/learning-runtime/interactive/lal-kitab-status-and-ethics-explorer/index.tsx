@@ -3,20 +3,15 @@
 import { useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import {
-  BookOpen,
-  CheckCircle2,
   ChevronDown,
   ChevronUp,
   Globe,
   GraduationCap,
-  MessageCircle,
   Pencil,
   RotateCcw,
   ShieldAlert,
-  XCircle,
 } from "lucide-react";
 import {
-  SCENARIO_ITEMS,
   REWRITE_ITEMS,
   LINEAGE_CARDS,
   EPISTEMIC_POSITIONS,
@@ -28,29 +23,27 @@ const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
 const INK_MUTED = "var(--gl-ink-on-cream-muted)";
 const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
-const GOLD = "#B88421";
 const BLUE = "#356CAB";
 const GREEN = "#2F7D55";
 const VERMILION = "#A23A1E";
 const LAL_KITAB_COLOR = "#A87830";
 const LAL_KITAB_DEEP = "#7A5212";
 
-type TabKey = "scenarios" | "rewrite" | "lineages" | "epistemic";
+type TabKey = "rewrite" | "lineages" | "epistemic";
 
 const TABS: { key: TabKey; label: string; icon: ReactNode }[] = [
-  { key: "scenarios", label: "Scenarios", icon: <MessageCircle size={16} /> },
   { key: "rewrite", label: "Rewrite lab", icon: <Pencil size={16} /> },
   { key: "lineages", label: "Lineages & reach", icon: <Globe size={16} /> },
   { key: "epistemic", label: "Epistemic map", icon: <GraduationCap size={16} /> },
 ];
 
 export function LalKitabStatusAndEthicsExplorer() {
-  const [activeTab, setActiveTab] = useState<TabKey>("scenarios");
+  const [activeTab, setActiveTab] = useState<TabKey>("rewrite");
   const [resetKey, setResetKey] = useState(0);
 
   const handleReset = () => {
     setResetKey((k) => k + 1);
-    setActiveTab("scenarios");
+    setActiveTab("rewrite");
   };
 
   return (
@@ -64,7 +57,7 @@ export function LalKitabStatusAndEthicsExplorer() {
               Lal Kitab — Status, Ethics & Honest Practice
             </h2>
             <p style={{ margin: "0.45rem 0 0", color: INK_SECONDARY, lineHeight: 1.55, maxWidth: 780 }}>
-              Practise honest client responses, rewrite over-claims, explore lineages, and map the epistemic landscape.
+              Rewrite over-claims, explore lineages, and map the epistemic landscape.
             </p>
           </div>
           <button type="button" onClick={handleReset} style={buttonStyle(false, BLUE)}>
@@ -104,151 +97,11 @@ export function LalKitabStatusAndEthicsExplorer() {
 
       {/* Tab content */}
       <div key={resetKey}>
-        {activeTab === "scenarios" && <ScenariosTab />}
         {activeTab === "rewrite" && <RewriteTab />}
         {activeTab === "lineages" && <LineagesTab />}
         {activeTab === "epistemic" && <EpistemicTab />}
       </div>
     </div>
-  );
-}
-
-/* ───────────────────────── Scenarios Tab ───────────────────────── */
-
-function ScenariosTab() {
-  const [answers, setAnswers] = useState<Record<number, string | null>>({});
-  const [revealed, setRevealed] = useState<Record<number, boolean>>({});
-
-  const choose = (id: number, label: string) => {
-    setAnswers((prev) => ({ ...prev, [id]: label }));
-    setRevealed((prev) => ({ ...prev, [id]: true }));
-  };
-
-  const correctCount = SCENARIO_ITEMS.filter(
-    (s) => {
-      const chosenLabel = answers[s.id];
-      const chosenOpt = s.options.find((o) => o.label === chosenLabel);
-      return chosenOpt?.isCorrect ?? false;
-    }
-  ).length;
-  const allDone = SCENARIO_ITEMS.every(
-    (s) => answers[s.id] !== undefined && answers[s.id] !== null
-  );
-
-  return (
-    <section style={{ display: "grid", gap: "0.85rem" }}>
-      <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
-          <div>
-            <p style={eyebrowStyle}>Client scenario responder</p>
-            <p style={{ margin: "0.25rem 0 0", color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.88rem" }}>
-              Choose the honest response for each client interaction.
-            </p>
-          </div>
-          {allDone && (
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: correctCount === SCENARIO_ITEMS.length ? GREEN : GOLD, fontWeight: 950, fontSize: "0.9rem" }}>
-              {correctCount === SCENARIO_ITEMS.length ? <CheckCircle2 size={18} /> : <MessageCircle size={18} />}
-              {correctCount} / {SCENARIO_ITEMS.length} correct
-            </div>
-          )}
-        </div>
-      </div>
-
-      {SCENARIO_ITEMS.map((item) => {
-        const chosen = answers[item.id];
-        const show = revealed[item.id];
-        const chosenOpt = item.options.find((o) => o.label === chosen);
-        const isCorrect = chosenOpt?.isCorrect ?? false;
-
-        return (
-          <article key={item.id} style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.6rem" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: INK_MUTED, fontWeight: 900, fontSize: "0.78rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-              <MessageCircle size={14} />
-              Scenario {item.id}
-            </div>
-            <p style={{ margin: 0, color: INK_SECONDARY, fontSize: "0.88rem", lineHeight: 1.5 }}>{item.context}</p>
-            <p style={{ margin: 0, color: INK_PRIMARY, fontSize: "0.95rem", fontStyle: "italic", lineHeight: 1.55 }}>
-              &ldquo;{item.clientSays.replace(/"/g, "")}&rdquo;
-            </p>
-
-            <div style={{ display: "grid", gap: "0.45rem" }}>
-              {item.options.map((opt) => {
-                const active = chosen === opt.label;
-                return (
-                  <button
-                    key={opt.label}
-                    type="button"
-                    onClick={() => choose(item.id, opt.label)}
-                    disabled={show}
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: "0.5rem",
-                      textAlign: "left",
-                      border: `1px solid ${active ? (opt.isCorrect ? GREEN : VERMILION) : HAIRLINE}`,
-                      borderRadius: 8,
-                      background: active ? (opt.isCorrect ? `${GREEN}0D` : `${VERMILION}0D`) : "transparent",
-                      color: INK_PRIMARY,
-                      padding: "0.6rem 0.75rem",
-                      fontWeight: active ? 850 : 700,
-                      cursor: "pointer",
-                      lineHeight: 1.5,
-                      opacity: show && !active ? 0.55 : 1,
-                    }}
-                  >
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: 24,
-                        height: 24,
-                        borderRadius: "50%",
-                        background: active ? (opt.isCorrect ? GREEN : VERMILION) : HAIRLINE,
-                        color: active ? "#fff" : INK_SECONDARY,
-                        fontWeight: 950,
-                        fontSize: "0.8rem",
-                        flexShrink: 0,
-                        marginTop: 1,
-                      }}
-                    >
-                      {opt.label}
-                    </span>
-                    <span style={{ fontSize: "0.88rem" }}>{opt.text}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {show && (
-              <div
-                style={{
-                  border: `1px solid ${isCorrect ? GREEN : VERMILION}44`,
-                  borderRadius: 8,
-                  background: `${isCorrect ? GREEN : VERMILION}0D`,
-                  padding: "0.65rem",
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "flex-start",
-                }}
-              >
-                {isCorrect ? (
-                  <CheckCircle2 size={18} color={GREEN} style={{ flexShrink: 0, marginTop: 2 }} />
-                ) : (
-                  <XCircle size={18} color={VERMILION} style={{ flexShrink: 0, marginTop: 2 }} />
-                )}
-                <div>
-                  <div style={{ fontWeight: 950, color: isCorrect ? GREEN : VERMILION, fontSize: "0.88rem" }}>
-                    {isCorrect ? "Correct" : "This response fails the discipline"}
-                  </div>
-                  <p style={{ margin: "0.2rem 0 0", color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.85rem" }}>{item.discipline}</p>
-                </div>
-              </div>
-            )}
-          </article>
-        );
-      })}
-    </section>
   );
 }
 

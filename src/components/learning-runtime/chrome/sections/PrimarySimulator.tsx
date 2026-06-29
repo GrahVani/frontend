@@ -67,7 +67,7 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   "shani-the-judge-and-server": "shani-dignity-wheel",
   // M3-C1-L1's §7 = Tithi Calculator Dojo (step-by-step formula breakdown +
   // editable longitudes + preset scenarios). §4 keeps the tithi-angle-visualizer.
-  "tithi-as-12-degrees-of-sun-moon-angle": "tithi-calculator-dojo",
+  "tithi-as-12-degrees-of-sun-moon-angle": "tithi-as-12-degrees-explorer",
   // M3-C1-L2's §7 = Tithi-Deity Wheel (circular 30-tithi visual explorer with
   // click-for-attributes + quality-filter + festival-major badges).
   "the-15-shukla-tithis": "tithi-deity-wheel",

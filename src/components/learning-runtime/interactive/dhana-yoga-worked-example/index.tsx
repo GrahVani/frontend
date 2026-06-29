@@ -270,12 +270,18 @@ export function DhanaYogaWorkedExample() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[720px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["Yoga", "Participating lords", "Shadbala", "SAV houses", "Reading"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "Yoga", width: "w-[140px]" },
+                    { label: "Participating lords", width: "w-[150px]" },
+                    { label: "Shadbala", width: "w-[120px]" },
+                    { label: "SAV houses", width: "w-[140px]" },
+                    { label: "Reading", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -291,7 +297,7 @@ export function DhanaYogaWorkedExample() {
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{yoga.lords.map(grahaLabel).join(" + ")}</td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{yogaShadbala}</td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{yogaSav}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{yoga.classification}: {yoga.reading}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{yoga.classification}: {yoga.reading}</td>
                     </tr>
                   );
                 })}

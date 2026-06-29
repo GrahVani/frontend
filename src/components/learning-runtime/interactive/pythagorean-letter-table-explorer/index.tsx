@@ -50,19 +50,18 @@ function SequentialTableSvg({ activeValue, activeLetters }: { activeValue: numbe
               <text x={x - 66} y={y - 7} fill={color} fontSize="34" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
                 {value}
               </text>
-              <text x={x - 4} y={y - 16} fill={INK_PRIMARY} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x={x - 4} y={y - 16} fill={INK_PRIMARY} fontSize="15" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {letters.join(" ")}
               </text>
-              <text x={x - 4} y={y + 12} fill={INK_SECONDARY} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x={x - 4} y={y + 12} fill={INK_SECONDARY} fontSize="13" fontWeight="600" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 pos mod 9
               </text>
             </g>
           );
         })}
 
-        <path d="M112 454 H648" stroke={GOLD} strokeWidth="2" strokeDasharray="8 8" />
         <rect x="160" y="434" width="440" height="42" rx="21" fill={SURFACE} stroke={GOLD} />
-        <text x="380" y="461" textAnchor="middle" fill={GOLD} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="380" y="461" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="600" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Formula: ((alphabet position - 1) mod 9) + 1
         </text>
       </svg>

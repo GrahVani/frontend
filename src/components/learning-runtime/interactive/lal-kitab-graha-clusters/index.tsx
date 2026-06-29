@@ -3,19 +3,15 @@
 import { useState } from "react";
 import type { CSSProperties } from "react";
 import {
-  BookOpen,
-  CheckCircle2,
   GraduationCap,
   Layers,
   Lightbulb,
   RotateCcw,
   ShieldAlert,
   Sparkles,
-  XCircle,
 } from "lucide-react";
 import {
   CLUSTERS,
-  QUIZ_ITEMS,
   ALL_NINE_GRAHAS,
 } from "./data";
 
@@ -27,15 +23,13 @@ const SURFACE = "var(--gl-card-surface-solid)";
 const GOLD = "#B88421";
 const BLUE = "#356CAB";
 const GREEN = "#2F7D55";
-const VERMILION = "#A23A1E";
 const LAL_KITAB_COLOR = "#A87830";
 const LAL_KITAB_DEEP = "#7A5212";
 
-type TabKey = "clusters" | "quiz" | "capstone";
+type TabKey = "clusters" | "capstone";
 
 const TABS: { key: TabKey; label: string; icon: React.ReactNode }[] = [
   { key: "clusters", label: "Clusters", icon: <Layers size={16} /> },
-  { key: "quiz", label: "Quiz", icon: <BookOpen size={16} /> },
   { key: "capstone", label: "Capstone", icon: <GraduationCap size={16} /> },
 ];
 
@@ -99,7 +93,6 @@ export function LalKitabGrahaClusters() {
 
       <div key={resetKey}>
         {activeTab === "clusters" && <ClustersTab />}
-        {activeTab === "quiz" && <QuizTab />}
         {activeTab === "capstone" && <CapstoneTab />}
       </div>
     </div>
@@ -207,93 +200,6 @@ function ClustersTab() {
           </p>
         </div>
       </div>
-    </section>
-  );
-}
-
-/* ───────────────────────── Quiz Tab ───────────────────────── */
-
-function QuizTab() {
-  const [answers, setAnswers] = useState<Record<number, number | null>>({});
-  const [revealed, setRevealed] = useState<Record<number, boolean>>({});
-
-  const choose = (id: number, idx: number) => {
-    setAnswers((prev) => ({ ...prev, [id]: idx }));
-    setRevealed((prev) => ({ ...prev, [id]: true }));
-  };
-
-  const correctCount = QUIZ_ITEMS.filter((q) => answers[q.id] === q.correctIdx).length;
-  const allDone = QUIZ_ITEMS.every((q) => answers[q.id] !== undefined && answers[q.id] !== null);
-
-  return (
-    <section style={{ display: "grid", gap: "0.85rem" }}>
-      <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
-          <div>
-            <p style={eyebrowStyle}>Cluster quiz</p>
-            <p style={{ margin: "0.25rem 0 0", color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.88rem" }}>Test your recall of the Saturn / Rāhu / Ketu clusters.</p>
-          </div>
-          {allDone && (
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: correctCount === QUIZ_ITEMS.length ? GREEN : GOLD, fontWeight: 950, fontSize: "0.9rem" }}>
-              {correctCount === QUIZ_ITEMS.length ? <CheckCircle2 size={18} /> : <BookOpen size={18} />}
-              {correctCount} / {QUIZ_ITEMS.length} correct
-            </div>
-          )}
-        </div>
-      </div>
-
-      {QUIZ_ITEMS.map((item) => {
-        const chosen = answers[item.id];
-        const show = revealed[item.id];
-        const isCorrect = chosen === item.correctIdx;
-
-        return (
-          <article key={item.id} style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.55rem" }}>
-            <p style={{ margin: 0, color: INK_PRIMARY, fontSize: "0.93rem", lineHeight: 1.5 }}>{item.question}</p>
-            <div style={{ display: "grid", gap: "0.35rem" }}>
-              {item.options.map((opt, i) => {
-                const active = chosen === i;
-                return (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => choose(item.id, i)}
-                    disabled={show}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                      textAlign: "left",
-                      border: `1px solid ${active ? (i === item.correctIdx ? GREEN : VERMILION) : HAIRLINE}`,
-                      borderRadius: 8,
-                      background: active ? (i === item.correctIdx ? `${GREEN}0D` : `${VERMILION}0D`) : "transparent",
-                      color: INK_PRIMARY,
-                      padding: "0.55rem 0.7rem",
-                      fontWeight: active ? 850 : 700,
-                      cursor: "pointer",
-                      opacity: show && !active ? 0.5 : 1,
-                    }}
-                  >
-                    <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 22, height: 22, borderRadius: "50%", background: active ? (i === item.correctIdx ? GREEN : VERMILION) : HAIRLINE, color: active ? "#fff" : INK_SECONDARY, fontWeight: 950, fontSize: "0.75rem", flexShrink: 0 }}>
-                      {String.fromCharCode(65 + i)}
-                    </span>
-                    <span style={{ fontSize: "0.87rem" }}>{opt}</span>
-                  </button>
-                );
-              })}
-            </div>
-            {show && (
-              <div style={{ border: `1px solid ${isCorrect ? GREEN : VERMILION}44`, borderRadius: 8, background: `${isCorrect ? GREEN : VERMILION}0D`, padding: "0.6rem", display: "flex", gap: "0.5rem", alignItems: "flex-start" }}>
-                {isCorrect ? <CheckCircle2 size={18} color={GREEN} style={{ flexShrink: 0, marginTop: 2 }} /> : <XCircle size={18} color={VERMILION} style={{ flexShrink: 0, marginTop: 2 }} />}
-                <div>
-                  <div style={{ fontWeight: 950, color: isCorrect ? GREEN : VERMILION, fontSize: "0.88rem" }}>{isCorrect ? "Correct" : `Answer: ${item.options[item.correctIdx]}`}</div>
-                  <p style={{ margin: "0.2rem 0 0", color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.85rem" }}>{item.explanation}</p>
-                </div>
-              </div>
-            )}
-          </article>
-        );
-      })}
     </section>
   );
 }

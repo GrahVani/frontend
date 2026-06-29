@@ -73,11 +73,11 @@ function RemedyLadder({ tiers, severity }: { tiers: TierReading[]; severity: Sev
       </div>
       <svg viewBox="0 0 520 430" className="block h-auto w-full" role="img" aria-label="Four tier Vastu remediation ladder">
         <rect x="34" y="28" width="452" height="374" rx="24" fill={SURFACE_2} stroke={HAIRLINE} />
-        <text x="260" y="58" textAnchor="middle" fontSize="15" fontWeight="900" fill={GOLD}>
+        <text x="260" y="58" textAnchor="middle" fontSize="15" fontWeight="600" fill={GOLD}>
           DIAGNOSIS BEFORE PRODUCT
         </text>
         <rect x="128" y="330" width="264" height="42" rx="18" fill={wash(color, "14")} stroke={color} />
-        <text x="260" y="356" textAnchor="middle" fontSize="16" fontWeight="900" fill={color}>
+        <text x="260" y="356" textAnchor="middle" fontSize="16" fontWeight="700" fill={color}>
           {severity.toUpperCase()} DOSHA
         </text>
 
@@ -90,17 +90,17 @@ function RemedyLadder({ tiers, severity }: { tiers: TierReading[]; severity: Sev
           return (
             <g key={tier.key}>
               <rect x={x} y={y} width={width} height="44" rx="12" fill={active ? wash(tierColor, "14") : "rgba(255,249,240,0.74)"} stroke={active ? tierColor : HAIRLINE} strokeWidth={active ? 2 : 1} />
-              <text x={x + 18} y={y + 18} fontSize="12" fontWeight="900" fill={active ? tierColor : INK_SECONDARY}>
+              <text x={x + 18} y={y + 18} fontSize="12" fontWeight="700" fill={active ? tierColor : INK_SECONDARY}>
                 {priorityLabel(tier.priority).toUpperCase()}
               </text>
-              <text x={x + width / 2} y={y + 30} textAnchor="middle" fontSize="14" fontWeight="900" fill={INK_PRIMARY}>
+              <text x={x + width / 2} y={y + 30} textAnchor="middle" fontSize="14" fontWeight="700" fill={INK_PRIMARY}>
                 {tier.label.replace("Tier ", "T")}
               </text>
             </g>
           );
         })}
         <path d="M260 314 V276" stroke={color} strokeWidth="3" strokeLinecap="round" strokeDasharray="6 6" />
-        <text x="260" y="394" textAnchor="middle" fontSize="12" fontWeight="800" fill={INK_SECONDARY}>
+        <text x="260" y="394" textAnchor="middle" fontSize="12" fontWeight="600" fill={INK_SECONDARY}>
           Severe cases layer tiers; mild cases should not be over-prescribed.
         </text>
       </svg>

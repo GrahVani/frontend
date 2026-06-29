@@ -14,7 +14,6 @@ import { computeArgala, GRAHAS, PRESETS, WORKFLOW_STEPS } from "./data";
 import type { GrahaKey } from "./data";
 import {
   RotateCcw,
-  CheckCircle2,
   AlertTriangle,
   Info,
   ArrowRight,
@@ -48,32 +47,10 @@ const GOLD_ACCENT = "var(--gl-gold-accent, #9C7A2F)";
 const GREEN = "#2F7D55";
 const VERMILION = "#A23A1E";
 const AMBER = "#C8841E";
+const GRID_LINE = "rgba(90, 78, 46, 0.95)";
 
-/* --- SVG helpers --- */
 
-function houseXY(cx: number, cy: number, r: number, house: number) {
-  const angleDeg = (house - 1) * 30 - 90;
-  const angleRad = (angleDeg * Math.PI) / 180;
-  return { x: cx + r * Math.cos(angleRad), y: cy + r * Math.sin(angleRad) };
-}
 
-function sectorPath(cx: number, cy: number, rIn: number, rOut: number, house: number, widthDeg = 28) {
-  const mid = (house - 1) * 30 - 90;
-  const start = ((mid - widthDeg / 2) * Math.PI) / 180;
-  const end = ((mid + widthDeg / 2) * Math.PI) / 180;
-  const x1 = cx + rIn * Math.cos(start);
-  const y1 = cy + rIn * Math.sin(start);
-  const x2 = cx + rOut * Math.cos(start);
-  const y2 = cy + rOut * Math.sin(start);
-  const x3 = cx + rOut * Math.cos(end);
-  const y3 = cy + rOut * Math.sin(end);
-  const x4 = cx + rIn * Math.cos(end);
-  const y4 = cy + rIn * Math.sin(end);
-  const large = 0;
-  return `M ${x1} ${y1} L ${x2} ${y2} A ${rOut} ${rOut} 0 ${large} 1 ${x3} ${y3} L ${x4} ${y4} A ${rIn} ${rIn} 0 ${large} 0 ${x1} ${y1} Z`;
-}
-
-/** Circular diagram: 12 houses, reference, argala/virodha highlights, planets. */
 function ArgalaDiagram({
   referenceHouse,
   placements,
@@ -83,19 +60,52 @@ function ArgalaDiagram({
   placements: Partial<Record<GrahaKey, number>>;
   result: ReturnType<typeof computeArgala>;
 }) {
-  const w = 340;
-  const h = 360;
-  const cx = w / 2;
-  const cy = h / 2 - 8;
-  const r = 115;
-
   const positiveHouses = new Set([result.pairs[0].positiveHouse, result.pairs[1].positiveHouse, result.pairs[2].positiveHouse]);
   const virodhaHouses = new Set([result.pairs[0].virodhaHouse, result.pairs[1].virodhaHouse, result.pairs[2].virodhaHouse]);
   const secHouse = result.secondaryPositive.house;
 
+  const HOUSE_POLYGONS: Record<number, string> = {
+    1: "200,10 105,105 200,200 295,105",
+    2: "10,10 200,10 105,105",
+    3: "10,10 105,105 10,200",
+    4: "10,200 105,105 200,200 105,295",
+    5: "10,200 105,295 10,390",
+    6: "10,390 105,295 200,390",
+    7: "200,390 105,295 200,200 295,295",
+    8: "200,390 295,295 390,390",
+    9: "390,200 295,295 390,390",
+    10: "390,200 295,105 200,200 295,295",
+    11: "390,10 295,105 390,200",
+    12: "200,10 390,10 295,105",
+  };
+
+  const HOUSE_CENTERS: Record<number, { x: number; y: number }> = {
+    1: { x: 200, y: 105 },
+    2: { x: 105, y: 45 },
+    3: { x: 45, y: 105 },
+    4: { x: 105, y: 200 },
+    5: { x: 45, y: 295 },
+    6: { x: 105, y: 355 },
+    7: { x: 200, y: 295 },
+    8: { x: 295, y: 355 },
+    9: { x: 355, y: 295 },
+    10: { x: 295, y: 200 },
+    11: { x: 355, y: 105 },
+    12: { x: 295, y: 45 },
+  };
+
+  const grahasByHouse = GRAHAS.reduce((acc, g) => {
+    const h = placements[g.key];
+    if (h) {
+      acc[h] = acc[h] || [];
+      acc[h].push(g);
+    }
+    return acc;
+  }, {} as Record<number, (typeof GRAHAS)[number][]>);
+
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" style={{ maxHeight: 340 }}>
-      {/* Sector highlights */}
+    <svg viewBox="0 0 400 448" className="w-full h-auto" style={{ maxHeight: 430, minHeight: 360 }}>
+      {/* Houses */}
       {Array.from({ length: 12 }, (_, i) => {
         const hnum = i + 1;
         const isRef = hnum === referenceHouse;
@@ -105,76 +115,72 @@ function ArgalaDiagram({
 
         let fill = "transparent";
         let opacity = 0;
-        if (isRef) { fill = `${GOLD_ACCENT}`; opacity = 0.12; }
-        else if (isPos) { fill = `${GREEN}`; opacity = 0.1; }
-        else if (isViro) { fill = `${VERMILION}`; opacity = 0.1; }
-        else if (isSec) { fill = `${GREEN}`; opacity = 0.06; }
+        if (isRef) { fill = GOLD_ACCENT; opacity = 0.22; }
+        else if (isPos) { fill = GREEN; opacity = 0.2; }
+        else if (isViro) { fill = VERMILION; opacity = 0.18; }
+        else if (isSec) { fill = GREEN; opacity = 0.1; }
 
         return (
-          <path
-            key={hnum}
-            d={sectorPath(cx, cy, 40, r + 6, hnum, 26)}
-            fill={fill}
-            fillOpacity={opacity}
-            stroke="none"
-          />
+          <g key={hnum}>
+            <polygon
+              points={HOUSE_POLYGONS[hnum]}
+              fill={fill}
+              fillOpacity={opacity > 0 ? opacity : undefined}
+              stroke="none"
+            />
+          </g>
         );
       })}
 
-      {/* Rings */}
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke={HAIRLINE} strokeWidth={1.5} />
-      <circle cx={cx} cy={cy} r={r - 38} fill="none" stroke={HAIRLINE} strokeWidth={0.8} strokeDasharray="3 3" />
+      {/* Grid Lines */}
+      <g stroke={GRID_LINE} strokeWidth="2.2" fill="none">
+        <rect x="10" y="10" width="380" height="380" />
+        <line x1="10" y1="10" x2="390" y2="390" />
+        <line x1="390" y1="10" x2="10" y2="390" />
+        <line x1="200" y1="10" x2="10" y2="200" />
+        <line x1="10" y1="200" x2="200" y2="390" />
+        <line x1="200" y1="390" x2="390" y2="200" />
+        <line x1="390" y1="200" x2="200" y2="10" />
+      </g>
 
-      {/* Tick marks */}
+      {/* Labels & Planets */}
       {Array.from({ length: 12 }, (_, i) => {
-        const a = houseXY(cx, cy, r, i + 1);
-        const b = houseXY(cx, cy, r - 8, i + 1);
-        return <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={HAIRLINE} strokeWidth={1} />;
-      })}
-
-      {/* House numbers */}
-      {Array.from({ length: 12 }, (_, i) => {
-        const pos = houseXY(cx, cy, r + 16, i + 1);
         const hnum = i + 1;
+        const center = HOUSE_CENTERS[hnum];
         const isRef = hnum === referenceHouse;
+        const hGrahas = grahasByHouse[hnum] || [];
+        
         return (
-          <text key={i} x={pos.x} y={pos.y + 1} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={isRef ? 800 : 600} fill={isRef ? GOLD_ACCENT : INK_MUTED}>
-            {hnum}
-          </text>
-        );
-      })}
-
-      {/* Reference label in centre */}
-      <text x={cx} y={cy - 2} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={700} fill={GOLD_ACCENT}>
-        REF
-      </text>
-      <text x={cx} y={cy + 10} textAnchor="middle" dominantBaseline="middle" fontSize={10} fontWeight={600} fill={INK_MUTED}>
-        H{referenceHouse}
-      </text>
-
-      {/* Planets */}
-      {GRAHAS.map((g) => {
-        const h = placements[g.key];
-        if (!h) return null;
-        const pos = houseXY(cx, cy, r - 22, h);
-        return (
-          <g key={g.key}>
-            <circle cx={pos.x} cy={pos.y} r={11} fill={`${g.color}22`} stroke={g.color} strokeWidth={1.5} />
-            <text x={pos.x} y={pos.y + 1} textAnchor="middle" dominantBaseline="middle" fontSize={10} fontWeight={700} fill={readableColor(g.color)}>{g.label}</text>
+          <g key={`lbl-${hnum}`} transform={`translate(${center.x}, ${center.y})`}>
+            {isRef && (
+              <text y="-20" textAnchor="middle" dominantBaseline="middle" fontSize={15} fontWeight={800} fill={GOLD_ACCENT}>REF</text>
+            )}
+            <text y={isRef ? -4 : -8} textAnchor="middle" dominantBaseline="middle" fontSize={isRef ? 14 : 18} fontWeight={isRef ? 800 : 700} fill={isRef ? GOLD_ACCENT : INK_SECONDARY}>
+              {isRef ? `H${hnum}` : hnum}
+            </text>
+            {/* Display Planets */}
+            {hGrahas.map((g, idx) => {
+              const yOffset = 8 + (idx * 14);
+              return (
+                <text key={g.key} y={yOffset} textAnchor="middle" dominantBaseline="middle" fontSize={12} fontWeight={800} fill={readableColor(g.color)}>
+                  {g.label}
+                </text>
+              );
+            })}
           </g>
         );
       })}
 
       {/* Legend */}
-      <g transform={`translate(14, ${h - 52})`}>
-        <rect x={0} y={0} width={10} height={10} rx={2} fill={GOLD_ACCENT} fillOpacity={0.15} stroke={GOLD_ACCENT} strokeWidth={1} />
-        <text x={15} y={9} fontSize={11} fill={INK_SECONDARY}>Reference</text>
-        <rect x={65} y={0} width={10} height={10} rx={2} fill={GREEN} fillOpacity={0.15} stroke={GREEN} strokeWidth={1} />
-        <text x={80} y={9} fontSize={11} fill={INK_SECONDARY}>Positive</text>
-        <rect x={130} y={0} width={10} height={10} rx={2} fill={VERMILION} fillOpacity={0.15} stroke={VERMILION} strokeWidth={1} />
-        <text x={145} y={9} fontSize={11} fill={INK_SECONDARY}>Virodha</text>
-        <rect x={195} y={0} width={10} height={10} rx={2} fill={GREEN} fillOpacity={0.08} stroke={GREEN} strokeWidth={1} strokeDasharray="2 1" />
-        <text x={210} y={9} fontSize={11} fill={INK_SECONDARY}>Secondary</text>
+      <g transform="translate(16, 418)">
+        <rect x={0} y={0} width={12} height={12} rx={2} fill={GOLD_ACCENT} fillOpacity={0.32} stroke={GOLD_ACCENT} strokeWidth={1.5} />
+        <text x={18} y={11} fontSize={13} fontWeight={700} fill={INK_PRIMARY}>Reference</text>
+        <rect x={96} y={0} width={12} height={12} rx={2} fill={GREEN} fillOpacity={0.32} stroke={GREEN} strokeWidth={1.5} />
+        <text x={114} y={11} fontSize={13} fontWeight={700} fill={INK_PRIMARY}>Positive</text>
+        <rect x={176} y={0} width={12} height={12} rx={2} fill={VERMILION} fillOpacity={0.3} stroke={VERMILION} strokeWidth={1.5} />
+        <text x={194} y={11} fontSize={13} fontWeight={700} fill={INK_PRIMARY}>Virodha</text>
+        <rect x={256} y={0} width={12} height={12} rx={2} fill={GREEN} fillOpacity={0.16} stroke={GREEN} strokeWidth={1.5} strokeDasharray="3 2" />
+        <text x={274} y={11} fontSize={13} fontWeight={700} fill={INK_PRIMARY}>Secondary</text>
       </g>
     </svg>
   );
@@ -217,7 +223,7 @@ export function ArgalaExplorer() {
             <IAST>Argala</IAST> Explorer
           </h3>
           <p className="text-sm" style={{ color: INK_MUTED }}>
-            Jaimini's bolt-and-intervention doctrine: positive argala (2/4/11) vs virodhārgala (12/10/3).
+            Jaimini&apos;s bolt-and-intervention doctrine: positive argala (2/4/11) vs virodhārgala (12/10/3).
           </p>
         </div>
       </div>
@@ -247,9 +253,9 @@ export function ArgalaExplorer() {
       </div>
 
       {/* Reference + Diagram row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
         {/* Left: Reference selector + Planet placement */}
-        <div className="rounded-lg p-4 space-y-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+        <div className="xl:col-span-3 rounded-lg p-4 space-y-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
           {/* Reference */}
           <div>
             <div className="flex items-center gap-2 mb-2">
@@ -316,8 +322,8 @@ export function ArgalaExplorer() {
         </div>
 
         {/* Right: Diagram + Overall result */}
-        <div className="space-y-3">
-          <div className="rounded-lg p-3" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+        <div className="xl:col-span-2 space-y-3">
+          <div className="rounded-lg p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <ArgalaDiagram referenceHouse={referenceHouse} placements={placements} result={result} />
           </div>
 
@@ -434,7 +440,7 @@ export function ArgalaExplorer() {
         <p className="text-xs" style={{ color: INK_SECONDARY }}>
           Argala is <strong>relative, never absolute</strong>. No house is inherently an argala house -- it becomes one only relative to the reference you choose.
           The same physical house can be positive argala for one reference and virodhārgala for another. Always count from the reference, never assume from the lagna.
-          A planet's nature (benefic/malefic) colours the <em>quality</em> of the argala, but argala itself is generated by <em>position</em>.
+          A planet&apos;s nature (benefic/malefic) colours the <em>quality</em> of the argala, but argala itself is generated by <em>position</em>.
         </p>
       </div>
 

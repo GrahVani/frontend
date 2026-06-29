@@ -498,7 +498,7 @@ function DayNightWheel({
 
   return (
     <div className="relative flex justify-center">
-      <svg viewBox="0 0 440 440" className="w-full max-w-[420px] h-auto">
+      <svg viewBox="0 0 480 480" className="w-full max-w-[460px] h-auto">
         <defs>
           <filter id="segGlow" x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#6B4423" floodOpacity="0.1" />
@@ -540,8 +540,8 @@ function DayNightWheel({
                 y={p.y}
                 textAnchor="middle"
                 fill={meta.color}
-                fontSize={10}
-                fontWeight={700}
+                fontSize={13}
+                fontWeight={800}
                 style={{ pointerEvents: "none" }}
               >
                 {seg.quality}
@@ -588,8 +588,8 @@ function DayNightWheel({
                 y={p.y}
                 textAnchor="middle"
                 fill={meta.color}
-                fontSize={10}
-                fontWeight={700}
+                fontSize={13}
+                fontWeight={800}
                 style={{ pointerEvents: "none" }}
               >
                 {seg.quality}
@@ -611,12 +611,12 @@ function DayNightWheel({
           strokeWidth={1.5}
         />
         <text
-          x={polar(CX, CY, R_OUTER + 22, -90).x}
-          y={polar(CX, CY, R_OUTER + 22, -90).y + 3}
+          x={CX - 72}
+          y={CY + 38}
           textAnchor="middle"
           fill={GOLD_ACCENT}
-          fontSize={11}
-          fontWeight={700}
+          fontSize={15}
+          fontWeight={800}
         >
           Sunrise
         </text>
@@ -630,29 +630,29 @@ function DayNightWheel({
           strokeWidth={1.5}
         />
         <text
-          x={polar(CX, CY, R_OUTER + 22, 90).x}
-          y={polar(CX, CY, R_OUTER + 22, 90).y + 3}
+          x={CX + 72}
+          y={CY + 38}
           textAnchor="middle"
           fill="#5A5A7A"
-          fontSize={11}
-          fontWeight={700}
+          fontSize={15}
+          fontWeight={800}
         >
           Sunset
         </text>
 
         {/* Day / Night labels */}
-        <text x={CX + R_OUTER - 34} y={CY} textAnchor="middle" fill={GOLD_ACCENT} fontSize={12} fontWeight={800}>
+        <text x={CX + R_OUTER - 34} y={CY} textAnchor="middle" fill={GOLD_ACCENT} fontSize={15} fontWeight={900}>
           DAY
         </text>
-        <text x={CX - R_OUTER + 34} y={CY} textAnchor="middle" fill="#5A5A7A" fontSize={12} fontWeight={800}>
+        <text x={CX - R_OUTER + 34} y={CY} textAnchor="middle" fill="#5A5A7A" fontSize={15} fontWeight={900}>
           NIGHT
         </text>
 
         {/* Center info */}
-        <text x={CX} y={CY - 10} textAnchor="middle" fill={INK_PRIMARY} fontSize={14} fontWeight={700}>
+        <text x={CX} y={CY - 48} textAnchor="middle" fill={INK_PRIMARY} fontSize={17} fontWeight={800}>
           16 Segments
         </text>
-        <text x={CX} y={CY + 8} textAnchor="middle" fill={INK_MUTED} fontSize={10}>
+        <text x={CX} y={CY - 26} textAnchor="middle" fill={INK_MUTED} fontSize={13} fontWeight={700}>
           ~90 min each*
         </text>
       </svg>
@@ -687,11 +687,11 @@ function TimelineBar({
   setHoverSeg: (s: { type: "day" | "night"; idx: number } | null) => void;
   pulseRahu: boolean;
 }) {
-  const W = 720;
-  const H = 110;
-  const PAD = 18;
-  const BAR_Y = 38;
-  const BAR_H = 36;
+  const W = 980;
+  const H = 165;
+  const PAD = 28;
+  const BAR_Y = 52;
+  const BAR_H = 52;
   const TOTAL_W = W - PAD * 2;
 
   const timeToX = (t: number) => PAD + ((t % 24) / 24) * TOTAL_W;
@@ -755,14 +755,14 @@ function TimelineBar({
                   opacity={0.7}
                 />
               )}
-              {width > 34 && (
+              {width > 30 && (
                 <text
                   x={(sx + ex) / 2}
-                  y={BAR_Y + BAR_H / 2 + 3}
+                  y={BAR_Y + BAR_H / 2 + 6}
                   textAnchor="middle"
                   fill={isHovered ? "#fff" : meta.color}
-                  fontSize={10}
-                  fontWeight={700}
+                  fontSize={15}
+                  fontWeight={900}
                   style={{ pointerEvents: "none" }}
                 >
                   {seg.quality}
@@ -787,11 +787,11 @@ function TimelineBar({
         />
         <text
           x={timeToX((rahuStart + rahuEnd) / 2)}
-          y={BAR_Y - 10}
+          y={BAR_Y - 14}
           textAnchor="middle"
           fill="#A23A1E"
-          fontSize={11}
-          fontWeight={800}
+          fontSize={16}
+          fontWeight={900}
         >
           RĀHU-KĀLAM
         </text>
@@ -811,11 +811,11 @@ function TimelineBar({
         />
         <text
           x={timeToX((yamaStart + yamaEnd) / 2)}
-          y={BAR_Y + BAR_H + 16}
+          y={BAR_Y + BAR_H + 22}
           textAnchor="middle"
           fill="#A23A1E"
-          fontSize={10}
-          fontWeight={700}
+          fontSize={15}
+          fontWeight={900}
         >
           YAMAGAṆḌA
         </text>
@@ -831,11 +831,11 @@ function TimelineBar({
         />
         <text
           x={timeToX(sunriseDec)}
-          y={BAR_Y + BAR_H + 20}
+          y={BAR_Y + BAR_H + 44}
           textAnchor="middle"
           fill={GOLD_ACCENT}
-          fontSize={9}
-          fontWeight={700}
+          fontSize={15}
+          fontWeight={900}
         >
           Sunrise
         </text>
@@ -850,11 +850,11 @@ function TimelineBar({
         />
         <text
           x={timeToX(sunsetDec)}
-          y={BAR_Y + BAR_H + 20}
+          y={BAR_Y + BAR_H + 44}
           textAnchor="middle"
           fill="#5A5A7A"
-          fontSize={9}
-          fontWeight={700}
+          fontSize={15}
+          fontWeight={900}
         >
           Sunset
         </text>
@@ -1526,19 +1526,7 @@ export function ChoghadiyaRahuKalamCalculator() {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-center min-w-0">
-          <div className="min-w-0">
-            <DayNightWheel
-              daySegments={daySegments}
-              nightSegments={nightSegments}
-              rahuStart={rahuStart}
-              rahuEnd={rahuEnd}
-              yamaStart={yamaStart}
-              yamaEnd={yamaEnd}
-              hoverSeg={hoverSeg}
-              setHoverSeg={setHoverSeg}
-            />
-          </div>
-          <div className="space-y-4 min-w-0">
+          <div className="min-w-0 xl:col-span-2">
             <TimelineBar
               daySegments={daySegments}
               nightSegments={nightSegments}
@@ -1552,6 +1540,20 @@ export function ChoghadiyaRahuKalamCalculator() {
               setHoverSeg={setHoverSeg}
               pulseRahu={pulseRahu}
             />
+          </div>
+          <div className="min-w-0">
+            <DayNightWheel
+              daySegments={daySegments}
+              nightSegments={nightSegments}
+              rahuStart={rahuStart}
+              rahuEnd={rahuEnd}
+              yamaStart={yamaStart}
+              yamaEnd={yamaEnd}
+              hoverSeg={hoverSeg}
+              setHoverSeg={setHoverSeg}
+            />
+          </div>
+          <div className="space-y-4 min-w-0">
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-1 gap-4">
               <SegmentTable
                 segments={daySegments}

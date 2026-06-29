@@ -242,33 +242,33 @@ export function PathForwardRoadmap() {
               Interactive Pathway (Click a phase to explore)
             </span>
             <div className="flex justify-center rounded-xl p-4 border bg-white overflow-x-auto" style={{ borderColor: HAIRLINE }}>
-              <svg width="480" height="150" viewBox="0 0 480 150" className="min-w-[480px]">
+              <svg width="720" height="205" viewBox="0 0 720 205" className="w-full max-w-[780px] min-w-[720px] h-auto">
                 {/* Background base path line */}
-                <line x1="40" y1="65" x2="440" y2="65" stroke={HAIRLINE} strokeWidth="3" strokeLinecap="round" />
+                <line x1="60" y1="85" x2="660" y2="85" stroke={INK_SECONDARY} strokeWidth="4" strokeLinecap="round" opacity="0.25" />
                 
                 {/* Progressive active path line */}
                 <motion.line
-                  x1="40" y1="65"
-                  x2={40 + activePhaseIdx * 100} y2="65"
+                  x1="60" y1="85"
+                  x2={60 + activePhaseIdx * 150} y2="85"
                   stroke={GOLD}
-                  strokeWidth="3"
+                  strokeWidth="4"
                   strokeLinecap="round"
-                  animate={{ x2: 40 + activePhaseIdx * 100 }}
+                  animate={{ x2: 60 + activePhaseIdx * 150 }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                 />
 
                 {PHASES.map((phase, i) => {
-                  const x = 40 + i * 100;
+                  const x = 60 + i * 150;
                   const isActive = activePhase === phase.id;
                   return (
                     <g key={phase.id} className="cursor-pointer" onClick={() => setActivePhase(phase.id)}>
                       {/* Pulsing glow ring for active node */}
                       {isActive && (
                         <motion.circle
-                          cx={x} cy={65} r={18}
+                          cx={x} cy={85} r={22}
                           fill="transparent"
                           stroke={phase.color}
-                          strokeWidth="1.5"
+                          strokeWidth="2"
                           animate={{ scale: [1, 1.35, 1], opacity: [0.8, 0.2, 0.8] }}
                           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
                         />
@@ -276,18 +276,18 @@ export function PathForwardRoadmap() {
                       
                       {/* Outer node circle */}
                       <circle
-                        cx={x} cy={65} r={isActive ? 12 : 9}
+                        cx={x} cy={85} r={isActive ? 16 : 13}
                         fill={isActive ? phase.color : SURFACE_2}
                         stroke={phase.color}
-                        strokeWidth={isActive ? 2 : 1.5}
+                        strokeWidth={isActive ? 2.5 : 2}
                         className="transition-all duration-200"
                       />
                       
                       {/* Number indicator */}
                       <text
-                        x={x} y={isActive ? 68 : 67.5}
+                        x={x} y={isActive ? 89 : 88.5}
                         fill={isActive ? "#FFF" : INK_PRIMARY}
-                        fontSize={isActive ? "9" : "8"}
+                        fontSize={isActive ? "13" : "12"}
                         fontWeight="bold"
                         textAnchor="middle"
                       >
@@ -296,19 +296,20 @@ export function PathForwardRoadmap() {
 
                       {/* Phase labels */}
                       <text
-                        x={x} y={92}
+                        x={x} y={120}
                         fill={isActive ? phase.color : INK_PRIMARY}
-                        fontSize="9"
-                        fontWeight={isActive ? "bold" : "normal"}
+                        fontSize="13"
+                        fontWeight={isActive ? "bold" : "600"}
                         textAnchor="middle"
                       >
                         {phase.title.split(" ")[0]}
                       </text>
                       {phase.title.split(" ").length > 1 && (
                         <text
-                          x={x} y={101}
+                          x={x} y={137}
                           fill={isActive ? phase.color : INK_SECONDARY}
-                          fontSize="8"
+                          fontSize="12"
+                          fontWeight="500"
                           textAnchor="middle"
                         >
                           {phase.title.split(" ").slice(1).join(" ")}
@@ -317,10 +318,10 @@ export function PathForwardRoadmap() {
 
                       {/* Horizon text */}
                       <text
-                        x={x} y={118}
-                        fill={isActive ? GOLD : INK_MUTED}
-                        fontSize="7.5"
-                        fontStyle="italic"
+                        x={x} y={158}
+                        fill={isActive ? GOLD : INK_SECONDARY}
+                        fontSize="10"
+                        fontWeight="500"
                         textAnchor="middle"
                       >
                         {phase.horizon}
@@ -329,7 +330,7 @@ export function PathForwardRoadmap() {
                   );
                 })}
 
-                <text x="240" y="20" fill={INK_MUTED} fontSize="7.5" textAnchor="middle" fontStyle="italic">
+                <text x="360" y="28" fill={INK_SECONDARY} fontSize="12" textAnchor="middle" fontWeight="500">
                   The phases overlap and the timeline flexes with the life you actually have
                 </text>
               </svg>

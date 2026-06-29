@@ -238,12 +238,18 @@ export function DharmaKarmadhipatiDetector() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[760px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["", "Lagna", "9th lord", "10th lord", "Note"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "", width: "w-12" },
+                    { label: "Lagna", width: "w-[140px]" },
+                    { label: "9th lord", width: "w-[160px]" },
+                    { label: "10th lord", width: "w-[160px]" },
+                    { label: "Note", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -258,7 +264,7 @@ export function DharmaKarmadhipatiDetector() {
                       <td className="px-4 py-3 font-bold" style={{ color: INK_PRIMARY }}>{rashiName(row.lagna)}</td>
                       <td className="px-4 py-3 font-medium" style={{ color: readableGrahaColor(row.ninthLord) }}>{grahaName(row.ninthLord)} <span style={{ color: INK_SECONDARY }}>({rashis[row.ninthSign].iast})</span></td>
                       <td className="px-4 py-3 font-medium" style={{ color: readableGrahaColor(row.tenthLord) }}>{grahaName(row.tenthLord)} <span style={{ color: INK_SECONDARY }}>({rashis[row.tenthSign].iast})</span></td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{row.yogakarakaLord ? `${grahaName(row.yogakarakaLord)} is also yogakaraka.` : featured ? "Featured in this lesson." : "Check relationship mode."}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{row.yogakarakaLord ? `${grahaName(row.yogakarakaLord)} is also yogakaraka.` : featured ? "Featured in this lesson." : "Check relationship mode."}</td>
                     </tr>
                   );
                 })}

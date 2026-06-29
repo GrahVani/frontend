@@ -227,12 +227,17 @@ export function SutraInterpretationLab() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[760px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["Aspect", "Jaimini sutra", "BPHS shloka", "Reading discipline"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "Aspect", width: "w-[110px]" },
+                    { label: "Jaimini sutra", width: "w-[200px]" },
+                    { label: "BPHS shloka", width: "w-[200px]" },
+                    { label: "Reading discipline", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -246,9 +251,9 @@ export function SutraInterpretationLab() {
                 ].map((row) => (
                   <tr key={row[0]} style={{ background: row[0] === "Interpretive spread" ? wash(selectedLayer.color, "0D") : SURFACE, borderTop: `1px solid ${HAIRLINE}` }}>
                     <td className="px-4 py-3 font-bold" style={{ color: selectedLayer.color }}>{row[0]}</td>
-                    <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{row[1]}</td>
-                    <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{row[2]}</td>
-                    <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{row[3]}</td>
+                    <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{row[1]}</td>
+                    <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{row[2]}</td>
+                    <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{row[3]}</td>
                   </tr>
                 ))}
               </tbody>

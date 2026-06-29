@@ -39,57 +39,57 @@ function ParityBoard({
   placement: OjaYugmaPlacement;
 }) {
   const layers: Array<{ key: ChartLayerKey; label: string; signIndex: number; y: number }> = [
-    { key: "rashi", label: "Rashi / D1", signIndex: placement.rashi, y: 112 },
-    { key: "navamsa", label: "Navamsa / D9", signIndex: placement.navamsa, y: 232 },
+    { key: "rashi", label: "Rashi / D1", signIndex: placement.rashi, y: 164 },
+    { key: "navamsa", label: "Navamsa / D9", signIndex: placement.navamsa, y: 318 },
   ];
   const total = totalOjaYugma(planet, placement);
 
   return (
     <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 700 390" className="h-auto w-full" role="img" aria-label="Oja-yugma odd even sign scoring board">
-        <rect x="20" y="24" width="660" height="330" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+      <svg viewBox="0 0 700 560" className="h-auto w-full" role="img" aria-label="Oja-yugma odd even sign scoring board">
+        <rect x="20" y="24" width="660" height="500" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
         <text x="46" y="58" fill={ink.goldAccent} fontSize="13" fontWeight="900" letterSpacing="1.1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           TWO CHECKS: RASHI + NAVAMSA
         </text>
 
-        <rect x="170" y="76" width="190" height="210" rx="18" fill={planet.preferredParity === "odd" ? wash(planet.color, "16") : SURFACE} stroke={planet.preferredParity === "odd" ? planet.color : HAIRLINE} />
-        <rect x="388" y="76" width="190" height="210" rx="18" fill={planet.preferredParity === "even" ? wash(planet.color, "16") : SURFACE} stroke={planet.preferredParity === "even" ? planet.color : HAIRLINE} />
-        <text x="265" y="104" textAnchor="middle" fill={planet.preferredParity === "odd" ? planet.color : INK_SECONDARY} fontSize="16" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="176" y="88" width="180" height="300" rx="18" fill={planet.preferredParity === "odd" ? wash(planet.color, "16") : SURFACE} stroke={planet.preferredParity === "odd" ? planet.color : HAIRLINE} />
+        <rect x="384" y="88" width="180" height="300" rx="18" fill={planet.preferredParity === "even" ? wash(planet.color, "16") : SURFACE} stroke={planet.preferredParity === "even" ? planet.color : HAIRLINE} />
+        <text x="266" y="116" textAnchor="middle" fill={planet.preferredParity === "odd" ? planet.color : INK_SECONDARY} fontSize="16" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Oja / Odd
         </text>
-        <text x="483" y="104" textAnchor="middle" fill={planet.preferredParity === "even" ? planet.color : INK_SECONDARY} fontSize="16" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="474" y="116" textAnchor="middle" fill={planet.preferredParity === "even" ? planet.color : INK_SECONDARY} fontSize="16" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Yugma / Even
         </text>
 
         {layers.map((layer) => {
           const sign = getSign(layer.signIndex);
           const matched = scoresPlacement(planet, layer.signIndex);
-          const x = sign.parity === "odd" ? 265 : 483;
+          const x = sign.parity === "odd" ? 266 : 474;
           return (
             <g key={layer.key}>
-              <text x="76" y={layer.y + 5} fill={INK_PRIMARY} fontSize="16" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x="72" y={layer.y + 5} fill={INK_PRIMARY} fontSize="15" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {layer.label}
               </text>
               <circle cx={x} cy={layer.y} r="29" fill={matched ? wash(planet.color, "28") : SURFACE_2} stroke={matched ? planet.color : HAIRLINE} strokeWidth={matched ? 2.5 : 1.5} />
               <text x={x} y={layer.y + 5} textAnchor="middle" fill={matched ? planet.color : INK_SECONDARY} fontSize="15" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {sign.short}
               </text>
-              <text x="610" y={layer.y + 5} textAnchor="end" fill={matched ? planet.color : INK_MUTED} fontSize="17" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x="620" y={layer.y + 5} textAnchor="end" fill={matched ? planet.color : INK_MUTED} fontSize="17" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {matched ? "+15" : "0"}
               </text>
             </g>
           );
         })}
 
-        <circle cx="108" cy="286" r="50" fill={SURFACE} stroke="var(--gl-gold-accent)" strokeWidth="2" />
-        <text x="108" y="282" textAnchor="middle" fill={ink.goldAccent} fontSize="35" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+        <circle cx="610" cy="444" r="42" fill={SURFACE} stroke="var(--gl-gold-accent)" strokeWidth="2" />
+        <text x="610" y="440" textAnchor="middle" fill={ink.goldAccent} fontSize="30" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
           {total}
         </text>
-        <text x="108" y="305" textAnchor="middle" fill={INK_PRIMARY} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="610" y="461" textAnchor="middle" fill={INK_PRIMARY} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           virupas
         </text>
 
-        <text x="350" y="332" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="302" y="474" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Moon and Venus score in even signs. All other planets score in odd signs.
         </text>
       </svg>

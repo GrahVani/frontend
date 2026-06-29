@@ -3,6 +3,12 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 
+const READABLE_INK = "#3F2D1D";
+const READABLE_SECONDARY = "#5C4630";
+const READABLE_MUTED = "#745D40";
+const CARD_SURFACE = "rgba(255, 250, 240, 0.96)";
+const TABLE_LINE = "rgba(139, 118, 82, 0.28)";
+
 const STREAMS = [
   {
     key: "parashari",
@@ -178,28 +184,28 @@ export function RashiStreamComparator() {
     <div className="w-full space-y-4" style={{ fontFamily: "var(--font-sans)" }}>
       {/* Completion Status Panel */}
       <div 
-        className="p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs transition-all"
+        className="p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm transition-all"
         style={{ 
-          background: isCompleted ? "rgba(107, 142, 107, 0.08)" : "var(--gl-surface-twilight-glass)", 
+          background: isCompleted ? "rgba(107, 142, 107, 0.10)" : CARD_SURFACE, 
           border: `1px solid ${isCompleted ? "#6B8E6B" : "var(--gl-gold-hairline)"}` 
         }}
       >
         <div>
-          <div className="font-semibold text-sm flex items-center gap-1.5 animate-pulse" style={{ color: isCompleted ? "#6B8E6B" : "var(--gl-gold-accent)" }}>
+          <div className="font-semibold text-base flex items-center gap-1.5 animate-pulse" style={{ color: isCompleted ? "#3F7A52" : "#936817" }}>
             {isCompleted ? "✓ Interactive Lesson Completed!" : "🎯 Interactive Lesson Objectives"}
           </div>
-          <div className="mt-1" style={{ color: "var(--gl-ink-secondary)" }}>
+          <div className="mt-1 leading-relaxed" style={{ color: READABLE_SECONDARY }}>
             Explore at least 15 stream-topic combinations (currently {exploredCells.length}/30) and score 4/5 or higher on the quiz.
           </div>
         </div>
         <div className="flex gap-4 font-medium sm:text-right flex-shrink-0">
           <div>
-            <span style={{ color: "var(--gl-ink-muted)" }}>Explored:</span>{" "}
-            <span style={{ color: exploredCells.length >= 15 ? "#6B8E6B" : "var(--gl-gold-accent)" }}>{exploredCells.length} / 30</span>
+            <span style={{ color: READABLE_MUTED }}>Explored:</span>{" "}
+            <span style={{ color: exploredCells.length >= 15 ? "#3F7A52" : "#936817" }}>{exploredCells.length} / 30</span>
           </div>
           <div>
-            <span style={{ color: "var(--gl-ink-muted)" }}>Quiz Score:</span>{" "}
-            <span style={{ color: quizScore.correct >= 4 ? "#6B8E6B" : "var(--gl-ink-muted)" }}>{quizScore.correct} / {Math.max(5, quizScore.total)}</span>
+            <span style={{ color: READABLE_MUTED }}>Quiz Score:</span>{" "}
+            <span style={{ color: quizScore.correct >= 4 ? "#3F7A52" : READABLE_MUTED }}>{quizScore.correct} / {Math.max(5, quizScore.total)}</span>
           </div>
         </div>
       </div>
@@ -212,17 +218,18 @@ export function RashiStreamComparator() {
             whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
             key={s.key}
             onClick={() => selectCell(s.key, selectedTopic)}
-            className="px-3 py-2 rounded-lg text-xs text-left transition-all"
+            className="px-4 py-3 rounded-xl text-left transition-all"
             style={{
-              background: selectedStream === s.key ? `${s.color}25` : "var(--gl-surface-manuscript)",
-              border: `1px solid ${selectedStream === s.key ? s.color : "var(--gl-border-subtle)"}`,
-              color: selectedStream === s.key ? s.color : "var(--gl-ink-primary)",
-              minWidth: 100,
+              background: selectedStream === s.key ? `${s.color}22` : CARD_SURFACE,
+              border: `1px solid ${selectedStream === s.key ? s.color : TABLE_LINE}`,
+              color: selectedStream === s.key ? s.color : READABLE_INK,
+              minWidth: 136,
+              boxShadow: selectedStream === s.key ? `0 8px 22px ${s.color}18` : "0 6px 18px rgba(63, 45, 29, 0.05)",
             }}
           >
-            <div className="font-semibold" style={{ fontFamily: "var(--font-devanagari)", fontSize: 13 }}>{s.devanagari}</div>
-            <div className="font-medium">{s.name}</div>
-            <div className="text-xs opacity-70" style={{ color: "var(--gl-ink-muted)" }}>{s.founded}</div>
+            <div className="font-semibold" style={{ fontFamily: "var(--font-devanagari)", fontSize: 15 }}>{s.devanagari}</div>
+            <div className="font-semibold text-base">{s.name}</div>
+            <div className="text-sm leading-snug mt-1" style={{ color: READABLE_MUTED }}>{s.founded}</div>
           </motion.button>
         ))}
       </div>
@@ -235,10 +242,10 @@ export function RashiStreamComparator() {
             whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
             key={t.key}
             onClick={() => selectCell(selectedStream, t.key)}
-            className="px-3 py-1.5 rounded-lg text-xs transition-all"
+            className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
             style={{
-              background: selectedTopic === t.key ? "var(--gl-gold-accent)" : "var(--gl-surface-manuscript)",
-              color: selectedTopic === t.key ? "#1a1a2e" : "var(--gl-ink-secondary)",
+              background: selectedTopic === t.key ? "#A97818" : CARD_SURFACE,
+              color: selectedTopic === t.key ? "#FFF9EA" : READABLE_SECONDARY,
               border: "1px solid var(--gl-gold-accent)",
             }}
           >
@@ -248,36 +255,36 @@ export function RashiStreamComparator() {
       </div>
 
       {/* Detail panel */}
-      <div className="p-4 rounded-xl space-y-3 animate-fade-in" style={{ background: "var(--gl-surface-twilight-glass)", border: `1px solid ${conv.color}40` }}>
+      <div className="p-5 rounded-xl space-y-4 animate-fade-in" style={{ background: CARD_SURFACE, border: `1px solid ${conv.color}55`, boxShadow: "0 10px 28px rgba(63, 45, 29, 0.07)" }}>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full" style={{ background: conv.color }} />
-          <span className="font-semibold text-sm" style={{ color: conv.color, fontFamily: "var(--font-cormorant)" }}>
+          <span className="font-semibold text-base" style={{ color: conv.color, fontFamily: "var(--font-cormorant)" }}>
             {stream.name} · {topic.label}
           </span>
-          <span className="ml-auto px-2 py-0.5 rounded text-xs font-medium" style={{ background: conv.bg, color: conv.color, border: `1px solid ${conv.color}40` }}>
+          <span className="ml-auto px-3 py-1 rounded-lg text-sm font-semibold" style={{ background: conv.bg, color: conv.color, border: `1px solid ${conv.color}55` }}>
             {conv.label}
           </span>
         </div>
-        <p className="text-sm" style={{ color: "var(--gl-ink-secondary)", lineHeight: 1.6 }}>
+        <p className="text-base" style={{ color: READABLE_SECONDARY, lineHeight: 1.65 }}>
           {cell.text}
         </p>
       </div>
 
       {/* Full matrix summary */}
       <div className="overflow-x-auto">
-        <table role="grid" aria-label="Streams and Topics Comparison Matrix" className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
+        <table role="grid" aria-label="Streams and Topics Comparison Matrix" className="w-full text-sm" style={{ borderCollapse: "collapse" }}>
           <thead>
             <tr role="row">
-              <th role="columnheader" className="text-left p-2" style={{ color: "var(--gl-ink-muted)", borderBottom: "1px solid var(--gl-border-subtle)" }}>Stream \ Topic</th>
+              <th role="columnheader" className="text-left p-3 font-semibold" style={{ color: READABLE_INK, borderBottom: `1px solid ${TABLE_LINE}` }}>Stream \ Topic</th>
               {TOPICS.map((t) => (
-                <th role="columnheader" key={t.key} className="text-center p-2" style={{ color: "var(--gl-gold-accent)", borderBottom: "1px solid var(--gl-border-subtle)", minWidth: 80 }}>{t.label}</th>
+                <th role="columnheader" key={t.key} className="text-center p-3 font-semibold" style={{ color: "#936817", borderBottom: `1px solid ${TABLE_LINE}`, minWidth: 112 }}>{t.label}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {STREAMS.map((s) => (
               <tr role="row" key={s.key}>
-                <th role="rowheader" className="p-2 font-medium text-left" style={{ color: s.color, borderBottom: "1px solid var(--gl-border-subtle)" }}>
+                <th role="rowheader" className="p-3 font-semibold text-left" style={{ color: s.color, borderBottom: `1px solid ${TABLE_LINE}` }}>
                   <span style={{ fontFamily: "var(--font-devanagari)" }}>{s.devanagari}</span> {s.name}
                 </th>
                 {TOPICS.map((t) => {
@@ -285,17 +292,17 @@ export function RashiStreamComparator() {
                   const cm = CONVERGENCE_META[c];
                   const isCellSelected = selectedStream === s.key && selectedTopic === t.key;
                   return (
-                    <td role="gridcell" key={t.key} className="p-2 text-center" style={{ borderBottom: "1px solid var(--gl-border-subtle)" }}>
+                    <td role="gridcell" key={t.key} className="p-3 text-center" style={{ borderBottom: `1px solid ${TABLE_LINE}` }}>
                       <motion.button
                         whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
                         whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
                         onClick={() => selectCell(s.key, t.key)}
-                        className="w-6 h-6 rounded-full inline-flex items-center justify-center text-xs font-bold transition-all"
+                        className="w-9 h-9 rounded-full inline-flex items-center justify-center text-base font-bold transition-all"
                         style={{ 
                           background: cm.bg, 
                           color: cm.color, 
-                          border: isCellSelected ? `2px solid ${s.color}` : `1px solid ${cm.color}40`,
-                          boxShadow: isCellSelected ? `0 0 8px ${s.color}` : "none",
+                          border: isCellSelected ? `2px solid ${s.color}` : `1px solid ${cm.color}60`,
+                          boxShadow: isCellSelected ? `0 0 0 3px ${s.color}22` : "0 4px 12px rgba(63, 45, 29, 0.07)",
                         }}
                         aria-label={`${s.name} ${t.label} convergence: ${cm.label}`}
                         aria-selected={isCellSelected}
@@ -311,7 +318,7 @@ export function RashiStreamComparator() {
         </table>
       </div>
 
-      <div className="flex gap-3 text-xs flex-wrap" style={{ color: "var(--gl-ink-muted)" }}>
+      <div className="flex gap-4 text-sm flex-wrap font-medium" style={{ color: READABLE_MUTED }}>
         <span><span style={{ color: "#C9A24D" }}>★</span> Reference</span>
         <span><span style={{ color: "#6B8E6B" }}>✓</span> Convergent</span>
         <span><span style={{ color: "#7BA7C0" }}>~</span> Divergent</span>
@@ -323,19 +330,19 @@ export function RashiStreamComparator() {
         whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
         whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
         onClick={() => setShowQuiz((s) => !s)}
-        className="px-4 py-2 rounded-lg text-sm transition-all"
-        style={{ background: showQuiz ? "var(--gl-gold-accent)" : "var(--gl-surface-manuscript)", color: showQuiz ? "#1a1a2e" : "var(--gl-ink-primary)", border: "1px solid var(--gl-gold-accent)" }}
+        className="px-5 py-3 rounded-lg text-base font-medium transition-all"
+        style={{ background: showQuiz ? "#A97818" : CARD_SURFACE, color: showQuiz ? "#FFF9EA" : READABLE_INK, border: "1px solid var(--gl-gold-accent)" }}
       >
         {showQuiz ? "Hide Spot-the-Divergence Quiz" : "🎯 Spot-the-Divergence Quiz"}
       </motion.button>
 
       {showQuiz && (
-        <div className="p-4 rounded-xl space-y-3" style={{ background: "var(--gl-surface-twilight-glass)", border: "1px solid var(--gl-gold-hairline)", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
-          <div className="flex justify-between text-sm" style={{ color: "var(--gl-ink-secondary)" }}>
+        <div className="p-5 rounded-xl space-y-4" style={{ background: CARD_SURFACE, border: "1px solid var(--gl-gold-hairline)", boxShadow: "0 8px 24px rgba(63,45,29,0.07)" }}>
+          <div className="flex justify-between text-sm font-medium" style={{ color: READABLE_SECONDARY }}>
             <span>Question {quizIndex + 1} / {QUIZ_QUESTIONS.length}</span>
             <span>Score: <strong style={{ color: "var(--gl-gold-accent)" }}>{quizScore.correct}/{quizScore.total}</strong></span>
           </div>
-          <div className="text-base font-medium" style={{ color: "var(--gl-ink-primary)", fontFamily: "var(--font-cormorant)" }}>
+          <div className="text-xl font-semibold" style={{ color: READABLE_INK, fontFamily: "var(--font-cormorant)" }}>
             {QUIZ_QUESTIONS[quizIndex].q}
           </div>
           <div className="grid grid-cols-2 gap-2">
@@ -349,11 +356,11 @@ export function RashiStreamComparator() {
                   key={opt}
                   onClick={() => handleQuizGuess(opt)}
                   disabled={isAnswered}
-                  className="p-3 rounded-lg text-sm text-left transition-all"
+                  className="p-3 rounded-lg text-base text-left transition-all"
                   style={{
                     background: isAnswered && isCorrect ? "#6B8E6B20" : isAnswered && quizAnswer === opt ? "#A23A1E20" : "var(--gl-surface-manuscript)",
                     border: `1px solid ${isAnswered && isCorrect ? "#6B8E6B" : isAnswered && quizAnswer === opt ? "#A23A1E" : "var(--gl-border-subtle)"}`,
-                    color: isAnswered && isCorrect ? "#6B8E6B" : isAnswered && quizAnswer === opt ? "#A23A1E" : "var(--gl-ink-primary)",
+                    color: isAnswered && isCorrect ? "#3F7A52" : isAnswered && quizAnswer === opt ? "#A23A1E" : READABLE_INK,
                   }}
                 >
                   {opt}
@@ -376,9 +383,9 @@ export function RashiStreamComparator() {
       )}
 
       {/* Cross-references */}
-      <div className="text-xs p-2 rounded-lg" style={{ background: "var(--gl-surface-twilight-glass)", border: "1px solid var(--gl-gold-hairline)", boxShadow: "0 4px 20px rgba(0,0,0,0.06)", color: "var(--gl-ink-muted)" }}>
+      <div className="text-sm p-3 rounded-lg leading-relaxed" style={{ background: CARD_SURFACE, border: "1px solid var(--gl-gold-hairline)", boxShadow: "0 4px 20px rgba(0,0,0,0.06)", color: READABLE_MUTED }}>
         Cross-references:{" "}
-        <span style={{ color: "var(--gl-ink-secondary)" }}>
+        <span style={{ color: READABLE_SECONDARY }}>
           Stream overviews → KP → Module 16 · Jaimini → Module 17 · Lal Kitab → Module 18 · Tājika → Module 19 (Nāḍī → Module 20)
         </span>
       </div>

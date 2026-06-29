@@ -2,17 +2,14 @@
 
 import { useMemo, useState, useCallback } from "react";
 import type React from "react";
-import type { CSSProperties } from "react";
 import {
   BadgeCheck,
-  CalendarClock,
   Clock3,
   HelpCircle,
   RotateCcw,
   ShieldCheck,
   Sun,
   Moon,
-  Star,
   Inbox,
   Mail,
   MailOpen,
@@ -74,6 +71,7 @@ function qualityLabel(quality: string) {
 
 /* ── SVG Circular Dial ──────────────────────────────────── */
 const DIAL_SIZE = 380;
+const DIAL_VIEWBOX_HEIGHT = 420;
 const CENTER = DIAL_SIZE / 2;
 const OUTER_R = 165;
 const INNER_R = 80;
@@ -126,7 +124,7 @@ function MuhurtaClockDial({
   return (
     <div className="flex flex-col items-center gap-4">
       <svg
-        viewBox={`0 0 ${DIAL_SIZE} ${DIAL_SIZE}`}
+        viewBox={`0 0 ${DIAL_SIZE} ${DIAL_VIEWBOX_HEIGHT}`}
         width="100%"
         style={{ maxWidth: DIAL_SIZE, overflow: "visible" }}
         role="img"
@@ -240,7 +238,7 @@ function MuhurtaClockDial({
         </text>
         <text
           x={CENTER}
-          y={CENTER + OUTER_R + 20}
+          y={CENTER + OUTER_R + 42}
           textAnchor="middle"
           dominantBaseline="central"
           fill="#5566AA"
@@ -292,13 +290,13 @@ function MuhurtaClockDial({
         )}
 
         {/* Center info text */}
-        <text x={CENTER} y={CENTER + 10} textAnchor="middle" fill={isDay ? "#4A3000" : "#C5D0F0"} fontSize={12} fontWeight={800}>
+        <text x={CENTER} y={CENTER + 20} textAnchor="middle" fill={isDay ? "#4A3000" : "#C5D0F0"} fontSize={12} fontWeight={800}>
           {unit?.nameDevanagari}
         </text>
-        <text x={CENTER} y={CENTER + 26} textAnchor="middle" fill={isDay ? "#7A6030" : "#8899CC"} fontSize={9.5} fontWeight={600}>
+        <text x={CENTER} y={CENTER + 36} textAnchor="middle" fill={isDay ? "#7A6030" : "#8899CC"} fontSize={9.5} fontWeight={600}>
           {unit?.name}
         </text>
-        <text x={CENTER} y={CENTER + 40} textAnchor="middle" fill={isDay ? "#9A8050" : "#6677AA"} fontSize={8.5} fontWeight={500}>
+        <text x={CENTER} y={CENTER + 50} textAnchor="middle" fill={isDay ? "#9A8050" : "#6677AA"} fontSize={8.5} fontWeight={500}>
           {unit?.range}
         </text>
       </svg>
@@ -435,7 +433,7 @@ function ClientEnvelopeCard({
           {request.label}
         </p>
         <p className="m-0 mt-1 text-xs leading-relaxed" style={{ color: INK_SECONDARY }}>
-          "{request.note}"
+          &ldquo;{request.note}&rdquo;
         </p>
         {isProcessed && (
           <div className="mt-2 flex items-center gap-1.5">
@@ -871,7 +869,7 @@ export function MuhurtaConceptScope() {
                 <div>
                   <p className="m-0 text-sm font-bold" style={{ color: GREEN }}>All requests classified!</p>
                   <p className="m-0 mt-1 text-xs" style={{ color: INK_SECONDARY }}>
-                    You've reviewed all {totalRequests} client requests. Muhūrta is electional astrology for agentive, future-shiftable actions.
+                    You&apos;ve reviewed all {totalRequests} client requests. Muhūrta is electional astrology for agentive, future-shiftable actions.
                   </p>
                 </div>
               </div>

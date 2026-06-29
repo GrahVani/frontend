@@ -80,7 +80,7 @@ export function OrbitalDiagram({
       </defs>
 
       {/* Background field */}
-      <circle cx={cx} cy={cy} r="285" fill="none" stroke="#C28220" strokeWidth="0.5" opacity="0.08" />
+      <circle cx={cx} cy={cy} r="285" fill="none" stroke="#9C6A1B" strokeWidth="0.8" opacity="0.18" />
 
       {/* Rings */}
       {rings.map((ring) => {
@@ -96,9 +96,9 @@ export function OrbitalDiagram({
               r={ring.r}
               fill="none"
               stroke={ring.color}
-              strokeWidth={isSel ? 2 : 1}
+              strokeWidth={isSel ? 2.4 : 1.6}
               strokeDasharray={isSel ? "none" : "4 4"}
-              opacity={isSel ? 0.5 : 0.25}
+              opacity={isSel ? 0.78 : 0.48}
             />
 
             {/* Animated orbital marker */}
@@ -118,7 +118,7 @@ export function OrbitalDiagram({
                 <circle
                   r={isSel ? 14 : 10}
                   fill={ring.color}
-                  opacity={isSel ? 0.9 : 0.7}
+                  opacity={isSel ? 0.96 : 0.88}
                   filter={isSel ? "url(#glow)" : undefined}
                   style={{ cursor: "pointer" }}
                   onClick={() => onSelect(ring.key)}
@@ -188,8 +188,8 @@ export function OrbitalDiagram({
           r="28"
           fill="none"
           stroke="#4A6FA5"
-          strokeWidth="1"
-          opacity="0.4"
+          strokeWidth="1.4"
+          opacity="0.65"
         />
         {/* Axis tilt */}
         <line
@@ -198,8 +198,8 @@ export function OrbitalDiagram({
           x2={cx}
           y2={cy + 28}
           stroke="#4A6FA5"
-          strokeWidth="0.75"
-          opacity="0.3"
+          strokeWidth="1"
+          opacity="0.55"
           transform={`rotate(23.5 ${cx} ${cy})`}
         />
         {/* Earth label */}
@@ -234,8 +234,8 @@ export function OrbitalDiagram({
                   x2={lx}
                   y2={ly}
                   stroke={ring.color}
-                  strokeWidth="1"
-                  opacity="0.5"
+                  strokeWidth="1.5"
+                  opacity="0.75"
                 />
                 <circle cx={lx} cy={ly} r="4" fill={ring.color} opacity="0.8" />
               </g>

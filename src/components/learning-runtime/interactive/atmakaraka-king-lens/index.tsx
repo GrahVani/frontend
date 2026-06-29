@@ -252,16 +252,36 @@ export function AtmakarakaKingLens() {
           </div>
         </section>
 
-        <section className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
-          <article className="min-w-0 rounded-xl p-4" style={{ background: wash(selectedColor, "10"), border: `1px solid ${selectedColor}` }}>
-            <p className="m-0 text-xs font-bold uppercase" style={{ color: readableColor(selectedColor), letterSpacing: "0.08em" }}>
-              Selected planet
-            </p>
-            <h3 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
-              <IAST>{selected.iast}</IAST> · rank {selectedRank}
-            </h3>
+        <section className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)]">
+          <article className="flex min-w-0 flex-col rounded-xl p-4" style={{ background: wash(selectedColor, "10"), border: `1px solid ${selectedColor}` }}>
+            <div className="flex min-w-0 items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="m-0 text-xs font-bold uppercase" style={{ color: readableColor(selectedColor), letterSpacing: "0.08em" }}>
+                  Selected planet
+                </p>
+                <h3 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
+                  <IAST>{grahas[selected.slug].iast}</IAST> · rank {selectedRank}
+                </h3>
+              </div>
+              <Devanagari size="md" className="shrink-0 opacity-80" style={{ color: readableColor(selectedColor) }}>
+                {grahas[selected.slug].devanagari}
+              </Devanagari>
+            </div>
             <p className="mt-2 text-sm font-bold" style={{ color: INK_PRIMARY }}>{selected.condition}</p>
             <p className="m-0 text-sm" style={{ color: INK_SECONDARY }}>{selected.soulCue}</p>
+            <div className="mt-4 grid min-w-0 flex-1 gap-3 sm:grid-cols-2">
+              {[
+                { label: "Sign", value: selected.sign },
+                { label: "House", value: `House ${selected.house}` },
+                { label: "Dignity", value: selected.dignity },
+                { label: "Degree", value: formatAkDegree(selected.degree) },
+              ].map((item) => (
+                <div key={item.label} className="rounded-lg p-3" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+                  <p className="m-0 text-xs font-bold uppercase" style={{ color: GOLD }}>{item.label}</p>
+                  <p className="mt-1 text-sm font-bold" style={{ color: INK_PRIMARY }}>{item.value}</p>
+                </div>
+              ))}
+            </div>
           </article>
 
           <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>

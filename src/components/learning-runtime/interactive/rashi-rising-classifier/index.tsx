@@ -1,9 +1,14 @@
 "use client";
 
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { IAST } from "../../chrome/typography";
 import { RASHIS } from "../rashi-data";
+
+const READABLE_INK = "#3F2D1D";
+const READABLE_SECONDARY = "#5C4630";
+const READABLE_MUTED = "#745D40";
+const CARD_SURFACE = "rgba(255, 250, 240, 0.96)";
 
 type RisingType = "śīrṣodaya" | "pṛṣṭhodaya" | "ubhayodaya";
 
@@ -132,7 +137,7 @@ export function RashiRisingClassifier() {
     setAppIdx(Math.floor(Math.random() * APP_QUESTIONS.length));
   }, []);
 
-  const handleGuess = (guess: RisingType) => {
+  const handleGuess = useCallback((guess: RisingType) => {
     if (revealed) return;
     setSelected(guess);
     setRevealed(true);
@@ -148,9 +153,9 @@ export function RashiRisingClassifier() {
     } else {
       setStreak(0);
     }
-  };
+  }, [correctAnswer, currentRashi, revealed]);
 
-  const handleAppGuess = (idx: number) => {
+  const handleAppGuess = useCallback((idx: number) => {
     if (revealed) return;
     setSelectedAppIdx(idx);
     setRevealed(true);
@@ -166,11 +171,11 @@ export function RashiRisingClassifier() {
     } else {
       setStreak(0);
     }
-  };
+  }, [appCorrectAnswer, currentAppQuestion, currentRashi, revealed]);
 
-  const nextQuestion = () => {
+  const nextQuestion = useCallback(() => {
     resetQuestion();
-  };
+  }, [resetQuestion]);
 
   // Keyboard navigation: 1, 2, 3 selection, Enter/Space = next
   useEffect(() => {
@@ -199,7 +204,7 @@ export function RashiRisingClassifier() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [mode, revealed, currentRashi, isAppQuiz, appIdx]);
+  }, [mode, revealed, isAppQuiz, currentAppQuestion.options.length, handleAppGuess, handleGuess, nextQuestion]);
 
   // Progress ring
   const progressPct = stats.total > 0 ? (stats.correct / stats.total) * 100 : 0;
@@ -254,15 +259,15 @@ export function RashiRisingClassifier() {
       {mode === "learn" && (
         <div className="space-y-4">
           {/* 6/5/1 Count Summary */}
-          <div className="flex gap-3 justify-center">
+          <div className="flex gap-4 justify-center">
             {(Object.entries(RISING_META) as [RisingType, typeof RISING_META[RisingType]][]).map(([type, rm]) => (
-              <div key={type} className="text-center px-4 py-2 rounded-lg" style={{ background: `${rm.color}10`, border: `1px solid ${rm.color}30` }}>
-                <div className="text-2xl font-bold" style={{ color: rm.color, fontFamily: "var(--font-cormorant)" }}>{rm.count}</div>
-                <div className="text-xs" style={{ color: rm.color }}>{rm.label}</div>
+              <div key={type} className="text-center px-5 py-3 rounded-xl" style={{ background: CARD_SURFACE, border: `1px solid ${rm.color}55`, boxShadow: "0 8px 24px rgba(63, 45, 29, 0.06)" }}>
+                <div className="text-3xl font-semibold leading-none" style={{ color: rm.color, fontFamily: "var(--font-cormorant)" }}>{rm.count}</div>
+                <div className="text-sm font-semibold mt-1" style={{ color: rm.color }}>{rm.label}</div>
               </div>
             ))}
-            <div className="text-center px-4 py-2 rounded-lg flex items-center" style={{ background: "var(--gl-surface-manuscript)", border: "1px solid var(--gl-gold-hairline)" }}>
-              <div className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>6 + 5 + 1 = <strong style={{ color: "var(--gl-gold-accent)" }}>12</strong></div>
+            <div className="text-center px-5 py-3 rounded-xl flex items-center" style={{ background: CARD_SURFACE, border: "1px solid rgba(169, 120, 24, 0.42)" }}>
+              <div className="text-sm font-semibold" style={{ color: READABLE_SECONDARY }}>6 + 5 + 1 = <strong style={{ color: "#8E6115" }}>12</strong></div>
             </div>
           </div>
 
@@ -271,14 +276,14 @@ export function RashiRisingClassifier() {
             {(Object.entries(risingCounts) as [RisingType, number[]][]).map(([type, rashiNums]) => {
               const rm = RISING_META[type];
               return (
-                <div key={type} className="p-4 rounded-xl space-y-2" style={{ background: `${rm.color}10`, border: `1px solid ${rm.color}30` }}>
+                <div key={type} className="p-5 rounded-xl space-y-3" style={{ background: CARD_SURFACE, border: `1px solid ${rm.color}55`, boxShadow: "0 10px 28px rgba(63, 45, 29, 0.07)" }}>
                   <div className="flex items-center gap-2">
-                    <div className="text-lg font-semibold" style={{ color: rm.color, fontFamily: "var(--font-cormorant)" }}>{rm.label}</div>
-                    <span className="text-xs px-1.5 py-0.5 rounded-full font-bold" style={{ background: `${rm.color}20`, color: rm.color }}>{rm.count}</span>
+                    <div className="text-xl font-semibold" style={{ color: rm.color, fontFamily: "var(--font-cormorant)" }}>{rm.label}</div>
+                    <span className="text-sm px-2 py-0.5 rounded-full font-bold" style={{ background: `${rm.color}22`, color: rm.color }}>{rm.count}</span>
                   </div>
-                  <div className="text-xs" style={{ color: "var(--gl-ink-secondary)" }}>{rm.meaning}</div>
-                  <div className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>{rm.mnemonic}</div>
-                  <div className="text-xs pt-1" style={{ color: "var(--gl-ink-secondary)" }}>Signs: <strong>{rm.signs}</strong></div>
+                  <div className="text-base font-medium" style={{ color: READABLE_SECONDARY }}>{rm.meaning}</div>
+                  <div className="text-sm leading-relaxed" style={{ color: READABLE_MUTED }}>{rm.mnemonic}</div>
+                  <div className="text-sm leading-relaxed pt-1" style={{ color: READABLE_SECONDARY }}>Signs: <strong style={{ color: READABLE_INK }}>{rm.signs}</strong></div>
                   <div className="flex gap-1.5 flex-wrap pt-2">
                     {rashiNums.map((n) => {
                       const r = RASHIS[n - 1];
@@ -289,12 +294,12 @@ export function RashiRisingClassifier() {
                           whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
                           key={n}
                           onClick={() => { setCurrentRashi(n); setMode("quiz"); setQuizType("rashi"); resetQuestion(n); }}
-                          className="px-2 py-1 rounded text-xs transition-all focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
+                          className="px-3 py-1.5 rounded-lg text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
                           style={{
                             background: isVrschika ? `${rm.color}30` : `${r.color}20`,
                             color: isVrschika ? rm.color : r.color,
                             border: isVrschika ? `2px solid ${rm.color}` : `1px solid ${r.color}40`,
-                            fontWeight: isVrschika ? 700 : 400,
+                            fontWeight: isVrschika ? 700 : 600,
                           }}
                           title={isVrschika ? "⚠ Vṛścika is śīrṣodaya — the common slip is to count it as back-rising!" : `${r.nameIAST} — ${rm.label}`}
                         >
@@ -304,11 +309,11 @@ export function RashiRisingClassifier() {
                     })}
                   </div>
                   {/* Muhūrta / Praśna usage */}
-                  <div className="pt-2 space-y-1" style={{ borderTop: `1px dashed ${rm.color}25` }}>
-                    <div className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>
+                  <div className="pt-3 space-y-2" style={{ borderTop: `1px dashed ${rm.color}45` }}>
+                    <div className="text-sm leading-snug" style={{ color: READABLE_SECONDARY }}>
                       <strong style={{ color: rm.color }}>Muhūrta:</strong> {rm.muhurta}
                     </div>
-                    <div className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>
+                    <div className="text-sm leading-snug" style={{ color: READABLE_SECONDARY }}>
                       <strong style={{ color: rm.color }}>Praśna:</strong> {rm.prashna}
                     </div>
                   </div>
@@ -318,9 +323,9 @@ export function RashiRisingClassifier() {
           </div>
 
           {/* Vṛścika callout */}
-          <div className="p-3 rounded-lg text-sm" style={{ background: "#C9A24D10", border: "1px solid #C9A24D30" }}>
-            <strong style={{ color: "#C9A24D" }}>⚠ Common mistake:</strong>{" "}
-            <span style={{ color: "var(--gl-ink-secondary)" }}>
+          <div className="p-4 rounded-xl text-base leading-relaxed" style={{ background: "rgba(201, 162, 77, 0.13)", border: "1px solid rgba(201, 162, 77, 0.45)", color: READABLE_SECONDARY }}>
+            <strong style={{ color: "#936817" }}>⚠ Common mistake:</strong>{" "}
+            <span style={{ color: READABLE_SECONDARY }}>
               Vṛścika (Scorpio) is <strong>śīrṣodaya</strong> (head-rising), not back-rising. Its intensity &quot;feels&quot; backward, but the classical count places it among the six head-rising signs. The split is <strong>6 head / 5 back / 1 both</strong>.
             </span>
           </div>

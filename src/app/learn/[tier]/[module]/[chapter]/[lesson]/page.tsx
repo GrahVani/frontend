@@ -38,21 +38,7 @@ import { VarahamihiraSkandhaCoverageExplorer } from "@/components/learning-runti
 import { MedievalCodifierRelativeDatingExplorer } from "@/components/learning-runtime/interactive/medieval-codifier-relative-dating-explorer";
 import { ParashariJaiminiParallelTraditionExplorer } from "@/components/learning-runtime/interactive/parashari-jaimini-parallel-tradition-explorer";
 import { FourStreamLandscapeExplorer } from "@/components/learning-runtime/interactive/four-stream-landscape-explorer";
-import { TithiAngleVisualizer } from "@/components/learning-runtime/interactive/tithi-angle-visualizer";
-import { TithiContextMatcher } from "@/components/learning-runtime/interactive/tithi-context-matcher";
 import { ShuklaTithiStrip } from "@/components/learning-runtime/interactive/shukla-tithi-strip";
-import { YugaProportionVisualiser } from "@/components/learning-runtime/interactive/yuga-proportion-visualiser";
-import { YugaCycleExplorer } from "@/components/learning-runtime/interactive/yuga-cycle-explorer";
-import { TraditionalVsAcademicDatingComparator } from "@/components/learning-runtime/interactive/traditional-vs-academic-dating-comparator";
-import { YugaDependenceClassifier } from "@/components/learning-runtime/interactive/yuga-dependence-classifier";
-import { DayTypeComparator } from "@/components/learning-runtime/interactive/day-type-comparator";
-import { SunriseAtAnyLatitude } from "@/components/learning-runtime/interactive/sunrise-at-any-latitude";
-import { SiderealDayExplorer } from "@/components/learning-runtime/interactive/sidereal-day-explorer";
-import { TithiFromSunMoon } from "@/components/learning-runtime/interactive/tithi-from-sun-moon";
-import { SankrantiTracker } from "@/components/learning-runtime/interactive/sankranti-tracker";
-import { SamvatConverterVikramaShaka } from "@/components/learning-runtime/interactive/samvat-converter-vikrama-shaka";
-import { RegionalCalendarExplorer } from "@/components/learning-runtime/interactive/regional-calendar-explorer";
-import { CalendarConverter } from "@/components/learning-runtime/interactive/calendar-converter";
 import { SectionDivider } from "@/components/learning-runtime/chrome/SectionDivider";
 import { RevealSection } from "@/components/learning-runtime/chrome/RevealSection";
 import { LessonTimeTracker } from "@/components/learning-runtime/LessonTimeTracker";
@@ -575,64 +561,6 @@ export default async function LessonPage({
             "If a birth occurs at 16:00 on a day whose pañcāṅga-tithi is Śukla Caturthī but whose tithi-end-time was 14:42, what tithi do you record in the natal chart — and why?",
             "Try restating in your own words: why must true (spaṣṭa) longitudes be used instead of mean longitudes for tithi computation?",
           ];
-          scenes = (
-            <div data-l311-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                The 12° Sun-Moon Engine
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                The tithi is the first limb of the pañcāṅga — computed from the
-                angular separation of the Moon from the Sun, 12° per tithi.
-                Drag the slider to see how the tithi changes as the Moon
-                advances, and read the pañcāṅga interpretation at each moment.
-              </p>
-              <TithiAngleVisualizer />
-              <div className="mt-10">
-                <h3
-                  className="mb-3"
-                  style={{
-                    fontFamily: "var(--font-cormorant), serif",
-                    fontSize: "26px",
-                    fontWeight: 500,
-                    color: "var(--gl-gold-accent)",
-                  }}
-                >
-                  Pañcāṅga-tithi vs Astronomical-instantaneous
-                </h3>
-                <p
-                  className="text-base italic mb-4"
-                  style={{
-                    fontFamily: "var(--font-cormorant), serif",
-                    color: "var(--gl-ink-secondary)",
-                    lineHeight: 1.55,
-                    maxWidth: "680px",
-                  }}
-                >
-                  The same 12° formula produces two operationally distinct tithis
-                  depending on when you apply it. Read each scenario and choose
-                  which tithi type a practitioner would use — wrong choices teach
-                  via correction.
-                </p>
-                <TithiContextMatcher />
-              </div>
-            </div>
-          );
         } else if (fm.slug === "the-15-shukla-tithis") {
           reflectionPrompts = [
             "Which śukla tithi's deity association surprised you most — and what does it tell you about how tithi-deity correspondences encode cultural significance?",
@@ -682,322 +610,54 @@ export default async function LessonPage({
             "The dharma-erosion doctrine is a cosmological-philosophical framework, not a sociological claim. What is the practical difference this framing makes for how you read classical texts?",
             "Try restating in your own words: why does the yuga-cycle need saṁdhyā + saṁdhyāṁśa twilight regions? What doctrinal awkwardness would arise without them?",
           ];
-          scenes = (
-            <div data-l231-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                The Four Yugas and the Mahā-Yuga
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                The complete four-yuga unit — Satya, Tretā, Dvāpara, Kali —
-                proportionally structured in the invariant 4:3:2:1 ratio.
-                Toggle between proportion, absolute duration, and saṁdhyā
-                twilight modes. Click any yuga bar to reveal its detail
-                panel: Devanāgarī name, duration in divya-varṣa and human
-                years, dharma-leg count, and symbolic gloss. Answer the
-                formative checkpoints to test recall.
-              </p>
-              <YugaProportionVisualiser />
-            </div>
-          );
         } else if (fm.slug === "manvantara-and-kalpa-the-cosmic-scale") {
           reflectionPrompts = [
             "The Manvantara (~308M years) and Kalpa (~4.32B years) are scales far beyond human intuition. What mental anchor do you use to make these numbers meaningful?",
             "Why does the Kalpa structure need 14 Manvantaras plus 15 saṁdhyā periods rather than a simple multiple? What doctrinal function does the saṁdhyā serve at this scale?",
             "Try restating in your own words: what is the difference between a Manvantara and a Kalpa, and why does the distinction matter for cosmological literacy?",
           ];
-          scenes = (
-            <div data-l232-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                Manvantara and Kalpa: The Cosmic Scale
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                Explore the nested cosmic-time hierarchy from Mahā-Yuga up to
-                Brahmā-life. Toggle each tier to reveal its duration, constituent
-                units, and classical anchors.
-              </p>
-              <YugaCycleExplorer />
-            </div>
-          );
         } else if (fm.slug === "where-are-we-now") {
           reflectionPrompts = [
             "The traditional, Yukteshwar, and academic-Indology positions on present-epoch dating all operate at different epistemological registers. Which register do you find most challenging to hold simultaneously with the others?",
             "The saṅkalpa formula requires the traditional placement. How would you honestly respond to a client who asks why you use the traditional framework rather than Yukteshwar's?",
             "Try restating in your own words: what is the difference between 'this position is operationally normative in context X' and 'this position is universally true'?",
           ];
-          scenes = (
-            <div data-l233-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                Traditional vs Academic Dating Comparator
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                Three position-clusters side by side — Traditional Vedic,
-                Yukteshwar, and Academic-Indology — with the multi-tradition-
-                honesty synthesis dial at the bottom.
-              </p>
-              <TraditionalVsAcademicDatingComparator />
-            </div>
-          );
         } else if (fm.slug === "does-yuga-position-affect-your-chart") {
           reflectionPrompts = [
             "The diagnostic question — 'does this computation require cosmic-time-locator input?' — cleanly separates yuga-dependent from yuga-independent calculations. Which category surprised you more in how large it is?",
             "Why is 'cultural-cosmological context' operationally distinct from 'computational input'? When might a practitioner confuse the two in client communication?",
             "Try restating the honest-weighting framework in your own words: what is the third path between maximalist over-application and minimalist under-application?",
           ];
-          scenes = (
-            <div data-l234-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                Yuga-Dependence Classifier
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                Classify each practitioner computation as yuga-dependent or
-                yuga-independent using the single diagnostic question. Surface
-                correct verdicts, reasoning, and cross-references.
-              </p>
-              <YugaDependenceClassifier />
-            </div>
-          );
         } else if (fm.slug === "the-four-day-types") {
           reflectionPrompts = [
             "The four day-types are defined by four different reference-events (sunrise, star-transit, Sun-Moon angle, sign-ingress). Which reference-event do you find most counterintuitive, and why?",
             "A client says 'I was born on March 15, 1985 at 2 AM' — which day-type is implicit in their statement, and which day-type would a pañcāṅga use to determine their vāra?",
             "Try restating in your own words: why does the sidereal day (~23h 56m) being shorter than the sāvana day (~24h) mean that using sāvana-day mechanics for sidereal-position computation accumulates ~1° error per year?",
           ];
-          scenes = (
-            <div data-l241-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                The Four Day-Types Comparator
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                Explore the four day-types — sāvana, sidereal, lunar/tithi,
-                and solar/saṅkrānti. Select any one to inspect its
-                reference-event, duration, and operational scope; switch to
-                Compare for the side-by-side table and duration bars; then
-                test yourself in Quiz mode on which day-type each computation
-                requires.
-              </p>
-              <DayTypeComparator />
-            </div>
-          );
         } else if (fm.slug === "savana-day-and-civil-time") {
           reflectionPrompts = [
             "The sunrise-hour-angle formula cos H = −tan(φ) × tan(δ) is a spherical-trigonometry result. What is the physical meaning of each variable, and why does the minus sign appear?",
             "At the equator, sunrise is nearly constant year-round. At high latitudes, the formula breaks down. What does this tell you about the formula's domain of applicability?",
             "Try restating in your own words: why is sunrise (not sunset, noon, or midnight) the traditional Vedic civil-day reference?",
           ];
-          scenes = (
-            <div data-l242-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                Sunrise at Any Latitude
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                Enter any date, latitude, and longitude to compute local
-                sunrise time. The calculator walks through declination,
-                hour-angle, and longitude-correction step by step.
-              </p>
-              <SunriseAtAnyLatitude />
-            </div>
-          );
         } else if (fm.slug === "sidereal-day-and-its-uses") {
           reflectionPrompts = [
             "The ~3m 56s differential between sāvana and sidereal day seems tiny. Why does it accumulate to ~1° per year — and why is that operationally consequential for nakṣatra-timing?",
             "Local Sidereal Time (LST) converts civil time to star-time. When would you need LST in actual chart-computation work?",
             "Try restating in your own words: what is the difference between 'the Earth rotates 360° in 24 hours' (sāvana intuition) and 'the Earth rotates 360° in 23h 56m 4s' (sidereal fact)?",
           ];
-          scenes = (
-            <div data-l243-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                Sidereal Day Explorer
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                Visualise the sāvana-vs-sidereal differential. Watch the
-                Earth rotate relative to the Sun vs relative to fixed stars.
-                Compute LST from any civil time and location.
-              </p>
-              <SiderealDayExplorer />
-            </div>
-          );
         } else if (fm.slug === "the-tithi-as-lunar-day") {
           reflectionPrompts = [
             "The tithi formula divides Sun-Moon elongation by 12°. Why 12° specifically — what makes that the natural unit for lunar-day division?",
             "A tithi can last 23 hours or 25 hours depending on the Moon's orbital speed. What does this variability mean for pañcāṅga practitioners who need to publish a calendar months in advance?",
             "Try restating in your own words: what is the difference between 'the tithi prevailing at sunrise' (pañcāṅga convention) and 'the astronomical tithi at the birth moment' (natal computation)?",
           ];
-          scenes = (
-            <div data-l244-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                Tithi from Sun-Moon Angle
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                Drag the Sun and Moon to any angular separation and watch the
-                tithi update in real time. The simulator visualises the 12°
-                elongation engine, pakṣa transitions, and edge cases.
-              </p>
-              <TithiFromSunMoon />
-            </div>
-          );
         } else if (fm.slug === "solar-day-and-sankranti") {
           reflectionPrompts = [
             "The Uttarāyaṇa-Dakṣiṇāyana axis divides the year into 'auspicious' and 'contemplative' halves. Is this a cosmological-philosophical framework or a sociological claim about human behaviour — and what is the practical difference?",
             "Makara Saṅkrānti is ~14 January in sidereal terms but ~21 December in tropical terms. A Western-astrology client asks why Makara Saṅkrānti is not on the winter solstice. What is your honest answer?",
             "Try restating in your own words: why does the saṅkrānti-date drift forward at ~1 day per 72 years, and what does this mean for interpreting classical texts that mention saṅkrānti dates?",
           ];
-          scenes = (
-            <div data-l245-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                Saṅkrānti Tracker
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                Navigate the Sun&apos;s annual journey through the 12 rāśis.
-                Scrub through the year to watch saṅkrānti events, toggle
-                sidereal vs tropical dates, and visualise multi-century drift.
-              </p>
-              <SankrantiTracker />
-            </div>
-          );
         } else if (fm.slug === "jyotisha-vs-western-astrology-vs-pop-astrology") {
           reflectionPrompts = [
             "Of the six dimensions, which one was the biggest surprise — where did you realise you'd been carrying an incorrect mental model about one of the traditions?",
@@ -1041,110 +701,18 @@ export default async function LessonPage({
             "A north-India client mentions their birth year as 'Vikrama 2050' and a south-India client as 'Śaka 1915'. Without computing, which client is older — and what does this tell you about intuitive date sense across saṁvats?",
             "Try restating in your own words: why does the modern Indian government use a modified Śaka year-start (22 March) when the classical tradition uses Caitra Śukla Pratipad? What is lost and what is gained by each convention?",
           ];
-          scenes = (
-            <div data-l251-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                Samvat Converter — Vikrama ↔ Śaka ↔ CE
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                Interactive year-conversion calculator with boundary detection,
-                Caitra-ādi vs Kārtika-ādi toggle, modern-government vs traditional
-                Śaka toggle, and worked-example library for cross-validation.
-              </p>
-              <SamvatConverterVikramaShaka />
-            </div>
-          );
         } else if (fm.slug === "kollam-era-and-regional-calendars") {
           reflectionPrompts = [
             "Of the eight calendar systems in the explorer, which one's year-start date surprised you most — and what does that tell you about your own calendar intuition?",
             "A Kerala client and a Tamil client both celebrate their New Year in April. But only one actually does. Which one — and why does the other celebrate in August?",
             "Try restating in your own words: why is Kollam's Siṁha Saṅkrānti year-start not a 'mistake' or 'delay' but a coherent regional convention with its own historical logic?",
           ];
-          scenes = (
-            <div data-l252-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                Regional Calendar Explorer
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                Explore the major Indian calendar systems side by side and on
-                the regional map: compare each one's year-start event, month
-                structure (solar vs lunisolar), and relation to the Common Era.
-                Select any calendar to see its region, new-year festival, and
-                era offset. (Systematic date conversion is the next lesson's
-                tool.)
-              </p>
-              <RegionalCalendarExplorer />
-            </div>
-          );
         } else if (fm.slug === "converting-dates-systematically") {
           reflectionPrompts = [
             "Module 02 closes with this lesson. Of the five chapters' frameworks, which one do you feel MOST confident applying — and which one needs review before Module 03?",
             "A client gives you a birth date as 'Kollam 1195, Kanni 12' and asks for their Gregorian birth date. Walk through the complete conversion step by step — where is the highest risk of error?",
             "Try restating in your own words: what is the difference between 'I know the conversion formula' and 'I can reliably convert dates under pressure'? What practice bridge is still missing?",
           ];
-          scenes = (
-            <div data-l253-scenes-mounted="true">
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "26px",
-                  fontWeight: 500,
-                  color: "var(--gl-gold-accent)",
-                }}
-              >
-                Calendar Converter
-              </h3>
-              <p
-                className="text-base italic mb-4"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  color: "var(--gl-ink-secondary)",
-                  lineHeight: 1.55,
-                  maxWidth: "680px",
-                }}
-              >
-                Module 02&apos;s capstone calculator: convert a date across CE,
-                Vikrama, Śaka, Kollam, and Bangla Sambat at once, with
-                year-start boundary auto-detection (the −1 adjustment before
-                each system&apos;s new year), a Julian Day Number readout, and a
-                worked-example library to load classical-text dates.
-              </p>
-              <CalendarConverter />
-            </div>
-          );
         }
 
         // For where-grahvani-sits-in-the-skandha-map, the markdown §4 body contains

@@ -157,48 +157,48 @@ function MatrixSVG({ activeKey, onSelect }: { activeKey?: string; onSelect: (k: 
 
 function AmplifierDiagram() {
   const w = 420;
-  const h = 120;
+  const h = 165;
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" style={{ maxHeight: 140 }}>
-      <text x={w / 2} y={16} textAnchor="middle" fontSize={11} fill={INK_SECONDARY} fontWeight={600}>
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" style={{ maxHeight: 185 }}>
+      <text x={w / 2} y={20} textAnchor="middle" fontSize={12} fill={INK_SECONDARY} fontWeight={700}>
         Strength amplifies whatever the quality is
       </text>
 
       {/* Low-strength bar (small effect) */}
-      <text x={60} y={38} textAnchor="middle" fontSize={9} fill={INK_MUTED}>Low ṣaḍbala</text>
+      <text x={60} y={66} textAnchor="middle" fontSize={9} fill={INK_MUTED}>Low shadbala</text>
       {/* Benefic direction */}
-      <rect x={30} y={48} width={60} height={10} rx={4} fill="#2F7D5530" />
-      <line x1={60} y1={58} x2={60} y2={72} stroke="#2F7D55" strokeWidth={1.5} strokeDasharray="3 2" opacity={0.5} />
-      <polygon points="56,68 60,76 64,68" fill="#2F7D55" opacity={0.6} />
-      <text x={60} y={88} textAnchor="middle" fontSize={8} fill="#2F7D55">Small benefit</text>
+      <rect x={30} y={76} width={60} height={10} rx={4} fill="#2F7D5530" />
+      <line x1={60} y1={86} x2={60} y2={100} stroke="#2F7D55" strokeWidth={1.5} strokeDasharray="3 2" opacity={0.5} />
+      <polygon points="56,96 60,104 64,96" fill="#2F7D55" opacity={0.6} />
+      <text x={60} y={118} textAnchor="middle" fontSize={8} fill="#2F7D55">Small benefit</text>
       {/* Malefic direction */}
-      <line x1={60} y1={48} x2={60} y2={34} stroke="#A23A1E" strokeWidth={1.5} strokeDasharray="3 2" opacity={0.5} />
-      <polygon points="56,38 60,30 64,38" fill="#A23A1E" opacity={0.6} />
-      <text x={60} y={26} textAnchor="middle" fontSize={8} fill="#A23A1E">Small harm</text>
+      <line x1={60} y1={76} x2={60} y2={62} stroke="#A23A1E" strokeWidth={1.5} strokeDasharray="3 2" opacity={0.5} />
+      <polygon points="56,66 60,58 64,66" fill="#A23A1E" opacity={0.6} />
+      <text x={60} y={50} textAnchor="middle" fontSize={8} fill="#A23A1E">Small harm</text>
 
       {/* High-strength bar (large effect) */}
-      <text x={180} y={38} textAnchor="middle" fontSize={9} fill={INK_MUTED}>High ṣaḍbala</text>
-      <rect x={140} y={44} width={80} height={18} rx={5} fill="#2F7D5530" />
-      <line x1={180} y1={62} x2={180} y2={88} stroke="#2F7D55" strokeWidth={2.5} opacity={0.7} />
-      <polygon points="174,82 180,96 186,82" fill="#2F7D55" opacity={0.8} />
-      <text x={180} y={108} textAnchor="middle" fontSize={9} fontWeight={600} fill="#2F7D55">Large benefit</text>
+      <text x={180} y={66} textAnchor="middle" fontSize={9} fill={INK_MUTED}>High shadbala</text>
+      <rect x={140} y={72} width={80} height={18} rx={5} fill="#2F7D5530" />
+      <line x1={180} y1={90} x2={180} y2={116} stroke="#2F7D55" strokeWidth={2.5} opacity={0.7} />
+      <polygon points="174,110 180,124 186,110" fill="#2F7D55" opacity={0.8} />
+      <text x={180} y={140} textAnchor="middle" fontSize={9} fontWeight={600} fill="#2F7D55">Large benefit</text>
       {/* Malefic direction */}
-      <line x1={180} y1={44} x2={180} y2={18} stroke="#A23A1E" strokeWidth={2.5} opacity={0.7} />
-      <polygon points="174,24 180,10 186,24" fill="#A23A1E" opacity={0.8} />
-      <text x={180} y={16} textAnchor="middle" fontSize={9} fontWeight={600} fill="#A23A1E">Large harm</text>
+      <line x1={180} y1={72} x2={180} y2={46} stroke="#A23A1E" strokeWidth={2.5} opacity={0.7} />
+      <polygon points="174,52 180,38 186,52" fill="#A23A1E" opacity={0.8} />
+      <text x={180} y={34} textAnchor="middle" fontSize={9} fontWeight={600} fill="#A23A1E">Large harm</text>
 
       {/* Divider */}
-      <line x1={260} y1={24} x2={260} y2={96} stroke={HAIRLINE} strokeWidth={1} />
+      <line x1={260} y1={54} x2={260} y2={126} stroke={HAIRLINE} strokeWidth={1} />
 
-      /* Summary equation */
-      <text x={340} y={42} textAnchor="middle" fontSize={9} fill={INK_SECONDARY} fontWeight={600}>
+      {/* Summary equation */}
+      <text x={340} y={72} textAnchor="middle" fontSize={9} fill={INK_SECONDARY} fontWeight={600}>
         Strength × Quality
       </text>
-      <text x={340} y={56} textAnchor="middle" fontSize={8} fill={INK_MUTED}>
+      <text x={340} y={88} textAnchor="middle" fontSize={8} fill={INK_MUTED}>
         = Reading
       </text>
-      <text x={340} y={76} textAnchor="middle" fontSize={8} fill={INK_SECONDARY}>
+      <text x={340} y={112} textAnchor="middle" fontSize={8} fill={INK_SECONDARY}>
         Never one alone
       </text>
     </svg>

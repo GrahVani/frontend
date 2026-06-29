@@ -1,12 +1,17 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { IAST, Devanagari } from "../../chrome/typography";
 
 const GOLD = "#C28220";
 const JADE = "#2d7d46";
 const VERMILION = "#A23A1E";
 const AMBER = "#B8860B";
+const INK = "#3F2D1D";
+const INK_MUTED_STRONG = "#745D40";
+const GOLD_DEEP = "#8F6818";
+const BORDER = "rgba(143, 104, 24, 0.42)";
+const PANEL = "#FFF7E8";
 
 interface YogaData {
   number: number;
@@ -76,8 +81,6 @@ function SummationSVG({ sunLon, moonLon, sum }: { sunLon: number; moonLon: numbe
 
   const sunPct = (sunLon / 360) * barW;
   const moonPct = (moonLon / 360) * barW;
-  const sumPct = (sum / 360) * barW;
-
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" style={{ maxWidth: 360 }}>
       <defs>
@@ -107,15 +110,15 @@ function SummationSVG({ sunLon, moonLon, sum }: { sunLon: number; moonLon: numbe
 function YogaWheel({ yogaNumber }: { yogaNumber: number }) {
   const CX = 180;
   const CY = 180;
-  const R_OUTER = 160;
-  const R_INNER = 48;
+  const R_OUTER = 166;
+  const R_INNER = 54;
 
   return (
-    <svg viewBox="0 0 360 360" className="w-full h-auto" style={{ maxWidth: 280, display: "block", margin: "0 auto" }}>
+    <svg viewBox="0 0 360 360" className="w-full h-auto" style={{ maxWidth: 380, display: "block", margin: "0 auto" }}>
       <defs>
-        <filter id="ywShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy={1} stdDeviation={2} floodColor="#6B4423" floodOpacity="0.1" /></filter>
+        <filter id="ywShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy={1} stdDeviation={2} floodColor="#6B4423" floodOpacity="0.16" /></filter>
       </defs>
-      <circle cx={CX} cy={CY} r={R_OUTER + 8} fill="none" stroke="var(--gl-gold-hairline)" strokeWidth={1} opacity={0.3} />
+      <circle cx={CX} cy={CY} r={R_OUTER + 8} fill="none" stroke={BORDER} strokeWidth={1.5} opacity={0.9} />
 
       {YOGA_DB.map((yoga) => {
         const startAngle = (yoga.number - 1) * (360 / 27);
@@ -138,22 +141,22 @@ function YogaWheel({ yogaNumber }: { yogaNumber: number }) {
         const ly = CY + labelR * Math.sin((midAngle - 90) * (Math.PI / 180));
 
         return (
-          <g key={yoga.number} style={{ opacity: isActive ? 1 : 0.35, transition: "opacity 0.3s ease" }}>
+          <g key={yoga.number} style={{ opacity: isActive ? 1 : 0.9, transition: "opacity 0.3s ease" }}>
             <path d={`M ${xi1} ${yi1} L ${x1} ${y1} A ${R_OUTER} ${R_OUTER} 0 0 1 ${x2} ${y2} L ${xi2} ${yi2} A ${R_INNER} ${R_INNER} 0 0 0 ${xi1} ${yi1} Z`}
-              fill={isActive ? col.bg : "var(--gl-card-surface-solid, #FFF9F0)"}
-              stroke={isActive ? col.border : "var(--gl-gold-hairline)"}
-              strokeWidth={isActive ? 2 : 0.5}
+              fill={isActive ? col.bg : "rgba(255, 250, 240, 0.96)"}
+              stroke={isActive ? col.border : BORDER}
+              strokeWidth={isActive ? 2.2 : 0.9}
             />
-            <text x={lx} y={ly + 3} textAnchor="middle" fill={isActive ? col.text : "var(--gl-ink-muted)"} fontSize={9} fontWeight={isActive ? 800 : 500} style={{ fontFamily: "var(--font-sans), sans-serif", pointerEvents: "none" }}>
+            <text x={lx} y={ly + 4} textAnchor="middle" fill={isActive ? col.text : INK_MUTED_STRONG} fontSize={12} fontWeight={isActive ? 900 : 800} style={{ fontFamily: "var(--font-sans), sans-serif", pointerEvents: "none" }}>
               {yoga.number}
             </text>
           </g>
         );
       })}
 
-      <circle cx={CX} cy={CY} r={R_INNER - 3} fill="var(--gl-card-surface-solid, #FFF9F0)" stroke={GOLD} strokeWidth={1} strokeOpacity={0.35} filter="url(#ywShadow)" />
-      <text x={CX} y={CY - 4} textAnchor="middle" fill={GOLD} fontSize={11} fontWeight={700}>{yogaNumber}</text>
-      <text x={CX} y={CY + 10} textAnchor="middle" fill="var(--gl-ink-muted)" fontSize={8} fontWeight={600}>of 27</text>
+      <circle cx={CX} cy={CY} r={R_INNER - 3} fill={PANEL} stroke={GOLD_DEEP} strokeWidth={2} strokeOpacity={0.85} filter="url(#ywShadow)" />
+      <text x={CX} y={CY - 5} textAnchor="middle" fill={GOLD_DEEP} fontSize={16} fontWeight={900}>{yogaNumber}</text>
+      <text x={CX} y={CY + 13} textAnchor="middle" fill={INK} fontSize={10} fontWeight={800}>of 27</text>
     </svg>
   );
 }
@@ -221,7 +224,7 @@ export function TimeYogaCalculator() {
               <div className="flex-1"><label className="text-xs block mb-1" style={{ color: "var(--gl-ink-muted)" }}>Degrees</label><input type="number" min={0} max={359} value={sunDeg} onChange={(e) => setSunDeg(Number(e.target.value))} className="w-full px-2.5 py-1.5 rounded-lg text-sm outline-none" style={{ border: "1px solid var(--gl-gold-hairline)", background: "var(--gl-card-surface-solid)", color: "var(--gl-ink-primary)" }} /></div>
               <div className="flex-1"><label className="text-xs block mb-1" style={{ color: "var(--gl-ink-muted)" }}>Minutes</label><input type="number" min={0} max={59} value={sunMin} onChange={(e) => setSunMin(Number(e.target.value))} className="w-full px-2.5 py-1.5 rounded-lg text-sm outline-none" style={{ border: "1px solid var(--gl-gold-hairline)", background: "var(--gl-card-surface-solid)", color: "var(--gl-ink-primary)" }} /></div>
             </div>
-            <p className="text-xs mt-1" style={{ color: "var(--gl-ink-muted)" }}>= {sunDms.d}° {pad2(sunDms.m)}' {pad2(sunDms.s)}"</p>
+            <p className="text-xs mt-1" style={{ color: "var(--gl-ink-muted)" }}>= {sunDms.d}° {pad2(sunDms.m)}&apos; {pad2(sunDms.s)}&quot;</p>
           </div>
           <div>
             <label className="flex items-center gap-2 text-sm mb-2 font-semibold" style={{ color: "var(--gl-ink-primary)" }}><span style={{ fontSize: 16 }}>☽</span> λ Moon (true)</label>
@@ -229,7 +232,7 @@ export function TimeYogaCalculator() {
               <div className="flex-1"><label className="text-xs block mb-1" style={{ color: "var(--gl-ink-muted)" }}>Degrees</label><input type="number" min={0} max={359} value={moonDeg} onChange={(e) => setMoonDeg(Number(e.target.value))} className="w-full px-2.5 py-1.5 rounded-lg text-sm outline-none" style={{ border: "1px solid var(--gl-gold-hairline)", background: "var(--gl-card-surface-solid)", color: "var(--gl-ink-primary)" }} /></div>
               <div className="flex-1"><label className="text-xs block mb-1" style={{ color: "var(--gl-ink-muted)" }}>Minutes</label><input type="number" min={0} max={59} value={moonMin} onChange={(e) => setMoonMin(Number(e.target.value))} className="w-full px-2.5 py-1.5 rounded-lg text-sm outline-none" style={{ border: "1px solid var(--gl-gold-hairline)", background: "var(--gl-card-surface-solid)", color: "var(--gl-ink-primary)" }} /></div>
             </div>
-            <p className="text-xs mt-1" style={{ color: "var(--gl-ink-muted)" }}>= {moonDms.d}° {pad2(moonDms.m)}' {pad2(moonDms.s)}"</p>
+            <p className="text-xs mt-1" style={{ color: "var(--gl-ink-muted)" }}>= {moonDms.d}° {pad2(moonDms.m)}&apos; {pad2(moonDms.s)}&quot;</p>
           </div>
         </div>
 
@@ -249,7 +252,7 @@ export function TimeYogaCalculator() {
           <div className="relative h-2 rounded-full overflow-hidden mb-2" style={{ background: "var(--gl-card-surface-solid)" }}>
             <div className="absolute top-0 left-0 h-full rounded-full" style={{ width: `${elapsedFraction * 100}%`, background: nc.text }} />
           </div>
-          <p className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>{Math.round(elapsedFraction * 100)}% elapsed · Sum = {sumDms.d}° {pad2(sumDms.m)}' {pad2(sumDms.s)}"</p>
+          <p className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>{Math.round(elapsedFraction * 100)}% elapsed · Sum = {sumDms.d}° {pad2(sumDms.m)}&apos; {pad2(sumDms.s)}&quot;</p>
         </div>
       </div>
 

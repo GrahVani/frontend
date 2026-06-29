@@ -44,31 +44,9 @@ const AMBER = "#C8841E";
 const BLUE = "#3B82F6";
 const PURPLE = "#8B5CF6";
 const TEAL = "#0D9488";
+const GRID_LINE = "rgba(90, 78, 46, 0.95)";
 
-/* --- SVG helpers --- */
 
-function houseXY(cx: number, cy: number, r: number, house: number) {
-  const angleDeg = (house - 1) * 30 - 90;
-  const angleRad = (angleDeg * Math.PI) / 180;
-  return { x: cx + r * Math.cos(angleRad), y: cy + r * Math.sin(angleRad) };
-}
-
-function sectorPath(cx: number, cy: number, rIn: number, rOut: number, house: number, widthDeg = 28) {
-  const mid = (house - 1) * 30 - 90;
-  const start = ((mid - widthDeg / 2) * Math.PI) / 180;
-  const end = ((mid + widthDeg / 2) * Math.PI) / 180;
-  const x1 = cx + rIn * Math.cos(start);
-  const y1 = cy + rIn * Math.sin(start);
-  const x2 = cx + rOut * Math.cos(start);
-  const y2 = cy + rOut * Math.sin(start);
-  const x3 = cx + rOut * Math.cos(end);
-  const y3 = cy + rOut * Math.sin(end);
-  const x4 = cx + rIn * Math.cos(end);
-  const y4 = cy + rIn * Math.sin(end);
-  return `M ${x1} ${y1} L ${x2} ${y2} A ${rOut} ${rOut} 0 0 1 ${x3} ${y3} L ${x4} ${y4} A ${rIn} ${rIn} 0 0 0 ${x1} ${y1} Z`;
-}
-
-/* --- Diagram --- */
 
 function UpapadaDiagram({
   lagna,
@@ -83,62 +61,103 @@ function UpapadaDiagram({
   ul: number;
   secondFromUl: number;
 }) {
-  const w = 380;
-  const h = 380;
-  const cx = w / 2;
-  const cy = h / 2;
-  const r = 120;
+  const HOUSE_POLYGONS: Record<number, string> = {
+    1: "200,10 105,105 200,200 295,105",
+    2: "10,10 200,10 105,105",
+    3: "10,10 105,105 10,200",
+    4: "10,200 105,105 200,200 105,295",
+    5: "10,200 105,295 10,390",
+    6: "10,390 105,295 200,390",
+    7: "200,390 105,295 200,200 295,295",
+    8: "200,390 295,295 390,390",
+    9: "390,200 295,295 390,390",
+    10: "390,200 295,105 200,200 295,295",
+    11: "390,10 295,105 390,200",
+    12: "200,10 390,10 295,105",
+  };
+
+  const HOUSE_CENTERS: Record<number, { x: number; y: number }> = {
+    1: { x: 200, y: 105 },
+    2: { x: 105, y: 45 },
+    3: { x: 45, y: 105 },
+    4: { x: 105, y: 200 },
+    5: { x: 45, y: 295 },
+    6: { x: 105, y: 355 },
+    7: { x: 200, y: 295 },
+    8: { x: 295, y: 355 },
+    9: { x: 355, y: 295 },
+    10: { x: 295, y: 200 },
+    11: { x: 355, y: 105 },
+    12: { x: 295, y: 45 },
+  };
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" style={{ maxHeight: 340 }}>
+    <svg viewBox="0 0 400 456" className="w-full h-auto" style={{ maxHeight: 440, minHeight: 370 }}>
+      {/* Houses */}
       {Array.from({ length: 12 }, (_, i) => {
         const hnum = i + 1;
         let fill = "transparent";
         let opacity = 0;
-        if (hnum === lagna) { fill = GOLD_ACCENT; opacity = 0.12; }
-        else if (hnum === sourceHouse) { fill = BLUE; opacity = 0.12; }
-        else if (hnum === lordPos) { fill = TEAL; opacity = 0.12; }
-        else if (hnum === ul) { fill = GREEN; opacity = 0.15; }
-        else if (hnum === secondFromUl) { fill = PURPLE; opacity = 0.12; }
-        return <path key={hnum} d={sectorPath(cx, cy, 48, r + 5, hnum, 26)} fill={fill} fillOpacity={opacity} stroke="none" />;
-      })}
+        if (hnum === lagna) { fill = GOLD_ACCENT; opacity = 0.2; }
+        else if (hnum === sourceHouse) { fill = BLUE; opacity = 0.2; }
+        else if (hnum === lordPos) { fill = TEAL; opacity = 0.2; }
+        else if (hnum === ul) { fill = GREEN; opacity = 0.22; }
+        else if (hnum === secondFromUl) { fill = PURPLE; opacity = 0.2; }
 
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke={HAIRLINE} strokeWidth={1.5} />
-      <circle cx={cx} cy={cy} r={r - 40} fill="none" stroke={HAIRLINE} strokeWidth={0.8} strokeDasharray="3 3" />
-
-      {Array.from({ length: 12 }, (_, i) => {
-        const pos = houseXY(cx, cy, r + 24, i + 1);
-        const hnum = i + 1;
-        const isKey = hnum === lagna || hnum === sourceHouse || hnum === lordPos || hnum === ul || hnum === secondFromUl;
         return (
-          <text key={i} x={pos.x} y={pos.y + 1} textAnchor="middle" dominantBaseline="middle" fontSize={13} fontWeight={isKey ? 700 : 600} fill={isKey ? INK_SECONDARY : INK_MUTED}>
-            {hnum}
-          </text>
+          <g key={hnum}>
+            <polygon
+              points={HOUSE_POLYGONS[hnum]}
+              fill={fill}
+              fillOpacity={opacity > 0 ? opacity : undefined}
+              stroke="none"
+            />
+          </g>
         );
       })}
 
+      {/* Grid Lines */}
+      <g stroke={GRID_LINE} strokeWidth="2.2" fill="none">
+        <rect x="10" y="10" width="380" height="380" />
+        <line x1="10" y1="10" x2="390" y2="390" />
+        <line x1="390" y1="10" x2="10" y2="390" />
+        <line x1="200" y1="10" x2="10" y2="200" />
+        <line x1="10" y1="200" x2="200" y2="390" />
+        <line x1="200" y1="390" x2="390" y2="200" />
+        <line x1="390" y1="200" x2="200" y2="10" />
+      </g>
+
+      {/* Labels */}
       {Array.from({ length: 12 }, (_, i) => {
-        const pos = houseXY(cx, cy, r - 22, i + 1);
         const hnum = i + 1;
+        const center = HOUSE_CENTERS[hnum];
         const isKey = hnum === lagna || hnum === sourceHouse || hnum === lordPos || hnum === ul || hnum === secondFromUl;
+
         return (
-          <text key={`sig-${i}`} x={pos.x} y={pos.y + 1} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={isKey ? 700 : 400} fill={isKey ? INK_SECONDARY : INK_MUTED}>
-            {SIGNS[i].slice(0, 3)}
-          </text>
+          <g key={`lbl-${hnum}`} transform={`translate(${center.x}, ${center.y})`}>
+            <text y={-6} textAnchor="middle" dominantBaseline="middle" fontSize={18} fontWeight={isKey ? 800 : 700} fill={isKey ? INK_PRIMARY : INK_SECONDARY}>
+              {hnum}
+            </text>
+            <text y={12} textAnchor="middle" dominantBaseline="middle" fontSize={13} fontWeight={isKey ? 800 : 600} fill={isKey ? INK_PRIMARY : INK_SECONDARY}>
+              {SIGNS[i].slice(0, 3)}
+            </text>
+          </g>
         );
       })}
 
-      <g transform={`translate(20, ${h - 44})`}>
-        <rect x={0} y={0} width={12} height={12} rx={2} fill={GOLD_ACCENT} fillOpacity={0.15} stroke={GOLD_ACCENT} strokeWidth={1} />
-        <text x={18} y={11} fontSize={11} fill={INK_SECONDARY}>Lagna</text>
-        <rect x={72} y={0} width={12} height={12} rx={2} fill={BLUE} fillOpacity={0.15} stroke={BLUE} strokeWidth={1} />
-        <text x={90} y={11} fontSize={11} fill={INK_SECONDARY}>12th</text>
-        <rect x={138} y={0} width={12} height={12} rx={2} fill={TEAL} fillOpacity={0.15} stroke={TEAL} strokeWidth={1} />
-        <text x={156} y={11} fontSize={11} fill={INK_SECONDARY}>Lord</text>
-        <rect x={0} y={22} width={12} height={12} rx={2} fill={GREEN} fillOpacity={0.15} stroke={GREEN} strokeWidth={1} />
-        <text x={18} y={33} fontSize={11} fill={INK_SECONDARY}>UL</text>
-        <rect x={72} y={22} width={12} height={12} rx={2} fill={PURPLE} fillOpacity={0.15} stroke={PURPLE} strokeWidth={1} />
-        <text x={90} y={33} fontSize={11} fill={INK_SECONDARY}>2nd-from-UL</text>
+      {/* Legend */}
+      <g transform="translate(16, 414)">
+        <rect x={0} y={0} width={12} height={12} rx={2} fill={GOLD_ACCENT} fillOpacity={0.3} stroke={GOLD_ACCENT} strokeWidth={1.5} />
+        <text x={18} y={11} fontSize={13} fontWeight={700} fill={INK_PRIMARY}>Lagna</text>
+        <rect x={82} y={0} width={12} height={12} rx={2} fill={BLUE} fillOpacity={0.3} stroke={BLUE} strokeWidth={1.5} />
+        <text x={100} y={11} fontSize={13} fontWeight={700} fill={INK_PRIMARY}>12th</text>
+        <rect x={146} y={0} width={12} height={12} rx={2} fill={TEAL} fillOpacity={0.3} stroke={TEAL} strokeWidth={1.5} />
+        <text x={164} y={11} fontSize={13} fontWeight={700} fill={INK_PRIMARY}>Lord</text>
+        
+        <rect x={0} y={24} width={12} height={12} rx={2} fill={GREEN} fillOpacity={0.3} stroke={GREEN} strokeWidth={1.5} />
+        <text x={18} y={35} fontSize={13} fontWeight={700} fill={INK_PRIMARY}>UL</text>
+        <rect x={82} y={24} width={12} height={12} rx={2} fill={PURPLE} fillOpacity={0.3} stroke={PURPLE} strokeWidth={1.5} />
+        <text x={100} y={35} fontSize={13} fontWeight={700} fill={INK_PRIMARY}>2nd-from-UL</text>
       </g>
     </svg>
   );
@@ -331,11 +350,11 @@ export function ArudhaPadaCalculator() {
       </div>
 
       {/* Diagram + reading */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-1 rounded-lg p-3" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+      <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
+        <div className="xl:col-span-2 rounded-lg p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
           <UpapadaDiagram lagna={lagna} sourceHouse={result.sourceHouse} lordPos={lordPos} ul={result.finalPada} secondFromUl={result.secondFromUl} />
         </div>
-        <div className="lg:col-span-2 rounded-lg p-4 space-y-3" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderLeft: `4px solid ${GREEN}` }}>
+        <div className="xl:col-span-3 rounded-lg p-4 space-y-3" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderLeft: `4px solid ${GREEN}` }}>
           <div className="flex items-center gap-2">
             <Heart size={16} style={{ color: GREEN }} />
             <span className="text-sm font-bold" style={{ color: GREEN }}>Marriage-image reading</span>

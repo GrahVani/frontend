@@ -42,8 +42,8 @@ function VastuScopeSvg({ activeDomain }: { activeDomain: DomainKey }) {
     { key: "site", x: 156, y: 120 },
     { key: "layout", x: 380, y: 100 },
     { key: "orientation", x: 604, y: 120 },
-    { key: "room", x: 248, y: 322 },
-    { key: "sequence", x: 512, y: 322 },
+    { key: "room", x: 248, y: 370 },
+    { key: "sequence", x: 512, y: 370 },
   ] as const;
   const labelLines = active.label.includes("-") || active.label.includes(" ")
     ? active.label.split(/[-\s]+/)
@@ -56,20 +56,20 @@ function VastuScopeSvg({ activeDomain }: { activeDomain: DomainKey }) {
 
   return (
     <section className="w-full min-w-0 overflow-x-auto rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 430" className="h-auto w-full min-w-[520px]" role="img" aria-label="Vastu Shastra five-domain scope diagram">
-        <rect x="20" y="20" width="720" height="390" rx="22" fill={SURFACE_2} stroke={HAIRLINE} />
+      <svg viewBox="0 0 760 480" className="h-auto w-full min-w-[520px]" role="img" aria-label="Vastu Shastra five-domain scope diagram">
+        <rect x="20" y="20" width="720" height="440" rx="22" fill={SURFACE_2} stroke={HAIRLINE} />
         <text x="380" y="48" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           VASTU ANSWERS THE SPATIAL WHERE
         </text>
-        <path d="M156 120 L380 100 L604 120 L512 322 L248 322 Z" fill="none" stroke={HAIRLINE} strokeWidth="3" strokeDasharray="10 12" />
-        <circle cx="380" cy="225" r="70" fill={SURFACE} stroke={domainColor(activeDomain)} strokeWidth="4" />
-        <text x="380" y="200" textAnchor="middle" fill={domainColor(activeDomain)} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>{active.sanskrit}</text>
-        <text x="380" y={225 + (labelLines.length === 1 ? 6 : -10)} textAnchor="middle" fill={INK_PRIMARY} fontSize="17" fontWeight="800" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+        <path d="M156 120 L380 100 L604 120 L512 370 L248 370 Z" fill="none" stroke={HAIRLINE} strokeWidth="3" strokeDasharray="10 12" />
+        <circle cx="380" cy="240" r="90" fill={SURFACE} stroke={domainColor(activeDomain)} strokeWidth="4" />
+        <text x="380" y="205" textAnchor="middle" fill={domainColor(activeDomain)} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>{active.sanskrit}</text>
+        <text x="380" y={240 + (labelLines.length === 1 ? 6 : -12)} textAnchor="middle" fill={INK_PRIMARY} fontSize="16" fontWeight="800" style={{ fontFamily: "var(--font-cormorant), serif" }}>
           {labelLines.map((line, index) => (
             <tspan key={line} x={380} dy={index === 0 ? 0 : 20}>{line}</tspan>
           ))}
         </text>
-        <text x="380" y={270 + (questionLines.length === 1 ? 6 : -6)} textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="380" y={288 + (questionLines.length === 1 ? 6 : -6)} textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           {questionLines.map((line, index) => (
             <tspan key={line} x={380} dy={index === 0 ? 0 : 16}>{line}</tspan>
           ))}
@@ -86,8 +86,8 @@ function VastuScopeSvg({ activeDomain }: { activeDomain: DomainKey }) {
             </g>
           );
         })}
-        <rect x="130" y="370" width="500" height="28" rx="14" fill={SURFACE} stroke={GOLD} />
-        <text x="380" y="389" textAnchor="middle" fill={GOLD} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="130" y="420" width="500" height="28" rx="14" fill={SURFACE} stroke={GOLD} />
+        <text x="380" y="439" textAnchor="middle" fill={GOLD} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Muhurta asks when; Vastu asks where and how space is ordered.
         </text>
       </svg>

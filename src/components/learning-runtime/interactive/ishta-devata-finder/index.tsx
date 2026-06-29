@@ -24,12 +24,10 @@ import type { GrahaKey } from "./data";
 import {
   Heart,
   MapPin,
-  ArrowRight,
   RotateCcw,
   AlertTriangle,
   Sparkles,
   Info,
-  CheckCircle2,
   Compass,
   Eye,
 } from "lucide-react";
@@ -47,64 +45,98 @@ const VERMILION = "#A23A1E";
 const BLUE = "#3B82F6";
 const PURPLE = "#8B5CF6";
 const AMBER = "#D97706";
+const GRID_LINE = "rgba(90, 78, 46, 0.95)";
 
-/* --- Mini wheel: KL + 12th --- */
-
-const CX = 160;
-const CY = 160;
-const R = 130;
-
-function angleForSign(signIdx: number): number {
-  return signIdx * 30 - 90;
-}
-
-function polar(cx: number, cy: number, r: number, deg: number) {
-  const rad = (deg * Math.PI) / 180;
-  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
-}
+/* --- North Indian chart: KL + 12th --- */
 
 function MiniWheel({ klSign, twelfthSign }: { klSign: number; twelfthSign: number }) {
+  const HOUSE_POLYGONS: Record<number, string> = {
+    1: "200,10 105,105 200,200 295,105",
+    2: "10,10 200,10 105,105",
+    3: "10,10 105,105 10,200",
+    4: "10,200 105,105 200,200 105,295",
+    5: "10,200 105,295 10,390",
+    6: "10,390 105,295 200,390",
+    7: "200,390 105,295 200,200 295,295",
+    8: "200,390 295,295 390,390",
+    9: "390,200 295,295 390,390",
+    10: "390,200 295,105 200,200 295,295",
+    11: "390,10 295,105 390,200",
+    12: "200,10 390,10 295,105",
+  };
+
+  const HOUSE_CENTERS: Record<number, { x: number; y: number }> = {
+    1: { x: 200, y: 105 },
+    2: { x: 105, y: 45 },
+    3: { x: 45, y: 105 },
+    4: { x: 105, y: 200 },
+    5: { x: 45, y: 295 },
+    6: { x: 105, y: 355 },
+    7: { x: 200, y: 295 },
+    8: { x: 295, y: 355 },
+    9: { x: 355, y: 295 },
+    10: { x: 295, y: 200 },
+    11: { x: 355, y: 105 },
+    12: { x: 295, y: 45 },
+  };
+
+  // Map signs to houses (sign index -> house position)
+  // House 1 = Aries (sign 0), etc. in the fixed North Indian chart
   return (
-    <svg viewBox="0 0 320 320" className="w-full h-auto" style={{ maxHeight: 320 }}>
-      <circle cx={CX} cy={CY} r={R} fill="none" stroke={HAIRLINE} strokeWidth={1.5} />
+    <svg viewBox="0 0 400 400" className="w-full h-auto" style={{ maxHeight: 430, minHeight: 360 }}>
+      {/* Sector backgrounds */}
       {Array.from({ length: 12 }, (_, i) => {
-        const deg = angleForSign(i);
-        const p = polar(CX, CY, R, deg);
-        return <line key={`d-${i}`} x1={CX} y1={CY} x2={p.x} y2={p.y} stroke={HAIRLINE} strokeWidth={0.6} />;
+        const isKL = i === klSign;
+        const is12 = i === twelfthSign;
+
+        let fill = "transparent";
+        let opacity = 0;
+        if (isKL) { fill = GOLD_ACCENT; opacity = 0.24; }
+        else if (is12) { fill = GREEN; opacity = 0.22; }
+
+        // Map sign index to house position (Aries=H1, Taurus=H2, etc.)
+        const hnum = i + 1;
+        return (
+          <polygon
+            key={`sector-${hnum}`}
+            points={HOUSE_POLYGONS[hnum]}
+            fill={fill}
+            fillOpacity={opacity > 0 ? opacity : undefined}
+            stroke="none"
+          />
+        );
       })}
-      {/* KL dot */}
-      {(() => {
-        const p = polar(CX, CY, R - 12, angleForSign(klSign));
-        return (
-          <g>
-            <circle cx={p.x} cy={p.y} r={10} fill={SURFACE} stroke={GOLD_ACCENT} strokeWidth={1.5} />
-            <text x={p.x} y={p.y + 3} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={700} fill={GOLD_ACCENT}>KL</text>
-          </g>
-        );
-      })()}
-      {/* 12th dot */}
-      {(() => {
-        const p = polar(CX, CY, R - 12, angleForSign(twelfthSign));
-        return (
-          <g>
-            <circle cx={p.x} cy={p.y} r={10} fill={SURFACE} stroke={GREEN} strokeWidth={1.5} />
-            <text x={p.x} y={p.y + 3} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={700} fill={GREEN}>12</text>
-          </g>
-        );
-      })()}
+
+      {/* Grid Lines */}
+      <g stroke={GRID_LINE} strokeWidth="2.2" fill="none">
+        <rect x="10" y="10" width="380" height="380" />
+        <line x1="10" y1="10" x2="390" y2="390" />
+        <line x1="390" y1="10" x2="10" y2="390" />
+        <line x1="200" y1="10" x2="10" y2="200" />
+        <line x1="10" y1="200" x2="200" y2="390" />
+        <line x1="200" y1="390" x2="390" y2="200" />
+        <line x1="390" y1="200" x2="200" y2="10" />
+      </g>
+
       {/* Sign labels */}
       {Array.from({ length: 12 }, (_, i) => {
-        const p = polar(CX, CY, R + 14, angleForSign(i));
+        const hnum = i + 1;
+        const center = HOUSE_CENTERS[hnum];
         const isKL = i === klSign;
         const is12 = i === twelfthSign;
         return (
-          <text key={`l-${i}`} x={p.x} y={p.y + 4} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={isKL || is12 ? 700 : 400} fill={isKL ? GOLD_ACCENT : is12 ? GREEN : INK_MUTED}>
-            {SIGNS[i].slice(0, 3)}
-          </text>
+          <g key={`lbl-${hnum}`} transform={`translate(${center.x}, ${center.y})`}>
+            <text y={isKL || is12 ? -6 : 0} textAnchor="middle" dominantBaseline="middle" fontSize={15} fontWeight={isKL || is12 ? 800 : 700} fill={isKL || is12 ? INK_PRIMARY : INK_SECONDARY}>
+              {SIGNS[i].slice(0, 3)}
+            </text>
+            {isKL && <text y={12} textAnchor="middle" dominantBaseline="middle" fontSize={12} fontWeight={800} fill={GOLD_ACCENT}>KL</text>}
+            {is12 && <text y={12} textAnchor="middle" dominantBaseline="middle" fontSize={12} fontWeight={800} fill={GREEN}>12</text>}
+          </g>
         );
       })}
-      {/* Center label */}
-      <circle cx={CX} cy={CY} r={3} fill={HAIRLINE} />
+
+      {/* Center dot */}
+      <circle cx={200} cy={200} r={3} fill={GRID_LINE} />
     </svg>
   );
 }
@@ -194,7 +226,7 @@ export function IshtaDevataFinder() {
           kārakāṁśād dvādaśeṣṭadevatā |
         </div>
         <div className="text-xs mt-1" style={{ color: INK_MUTED }}>
-          "From the Kārakāṁśa, the twelfth [house] shows the iṣṭa-devatā."
+          &quot;From the Kārakāṁśa, the twelfth [house] shows the iṣṭa-devatā.&quot;
         </div>
       </div>
 
@@ -215,19 +247,19 @@ export function IshtaDevataFinder() {
       </div>
 
       {/* Main content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
         {/* Mini wheel + result */}
-        <div className="lg:col-span-1 space-y-3">
+        <div className="xl:col-span-2 space-y-3">
           <div className="rounded-lg p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <MiniWheel klSign={klSign} twelfthSign={twelfthSign} />
             <div className="flex flex-wrap gap-3 justify-center mt-2">
               <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full" style={{ border: `1.5px solid ${GOLD_ACCENT}` }} />
-                <span className="text-[10px]" style={{ color: INK_SECONDARY }}>KL</span>
+                <div className="w-3 h-3 rounded-full" style={{ background: "rgba(156,122,47,0.3)", border: `1.5px solid ${GOLD_ACCENT}` }} />
+                <span className="text-xs font-semibold" style={{ color: INK_PRIMARY }}>KL</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full" style={{ border: `1.5px solid ${GREEN}` }} />
-                <span className="text-[10px]" style={{ color: INK_SECONDARY }}>12th</span>
+                <div className="w-3 h-3 rounded-full" style={{ background: "rgba(47,125,85,0.3)", border: `1.5px solid ${GREEN}` }} />
+                <span className="text-xs font-semibold" style={{ color: INK_PRIMARY }}>12th</span>
               </div>
             </div>
           </div>
@@ -274,7 +306,7 @@ export function IshtaDevataFinder() {
         </div>
 
         {/* Result + placement */}
-        <div className="lg:col-span-2 space-y-3">
+        <div className="xl:col-span-3 space-y-3">
           {/* Primary result card */}
           <div className="rounded-lg p-5 space-y-3" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderLeft: `4px solid ${PURPLE}` }}>
             <div className="flex items-center gap-2">

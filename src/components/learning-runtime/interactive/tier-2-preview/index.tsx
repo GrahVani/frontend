@@ -357,30 +357,30 @@ export function Tier2Preview() {
               </span>
             </div>
             <div className="flex justify-center rounded-xl p-3 border bg-white" style={{ borderColor: HAIRLINE }}>
-              <svg width="220" height="90" viewBox="0 0 220 90">
-                <line x1="20" y1="45" x2="60" y2="45" stroke="rgba(168,130,30,0.3)" strokeWidth="1.5" />
-                <line x1="60" y1="45" x2="100" y2="45" stroke="rgba(168,130,30,0.3)" strokeWidth="1.5" />
-                <path d="M 100 45 C 120 45, 120 25, 140 25" fill="none" stroke="rgba(168,130,30,0.2)" strokeWidth="1.5" />
-                <path d="M 100 45 C 120 45, 120 65, 140 65" fill="none" stroke="rgba(168,130,30,0.2)" strokeWidth="1.5" />
-                
+              <svg width="340" height="130" viewBox="0 0 340 130">
+                <line x1="45" y1="70" x2="105" y2="70" stroke={INK_SECONDARY} strokeWidth="1.5" />
+                <line x1="105" y1="70" x2="165" y2="70" stroke={INK_SECONDARY} strokeWidth="1.5" />
+                <path d="M 165 70 C 190 70, 190 42, 225 42" fill="none" stroke={INK_SECONDARY} strokeWidth="1.5" />
+                <path d="M 165 70 C 190 70, 190 98, 225 98" fill="none" stroke={INK_SECONDARY} strokeWidth="1.5" />
+
                 {[
-                  { t: 1, x: 20, y: 45, lbl: "T1" },
-                  { t: 2, x: 60, y: 45, lbl: "T2" },
-                  { t: 3, x: 100, y: 45, lbl: "T3" },
-                  { t: 4, x: 140, y: 25, lbl: "T4" },
-                  { t: 5, x: 140, y: 65, lbl: "T5" },
+                  { t: 1, x: 45, y: 70, lbl: "T1" },
+                  { t: 2, x: 105, y: 70, lbl: "T2" },
+                  { t: 3, x: 165, y: 70, lbl: "T3" },
+                  { t: 4, x: 225, y: 42, lbl: "T4" },
+                  { t: 5, x: 225, y: 98, lbl: "T5" },
                 ].map((n) => (
                   <g key={n.t} className="cursor-pointer" onClick={() => setActiveTier(n.t)}>
-                    <circle cx={n.x} cy={n.y} r="11" fill={activeTier === n.t ? GOLD : SURFACE_2} stroke={GOLD} strokeWidth="1.5" />
-                    <text x={n.x} y={n.y + 3} fill={activeTier === n.t ? "#FFF" : INK_PRIMARY} fontSize="7" fontWeight="bold" textAnchor="middle">{n.lbl}</text>
+                    <circle cx={n.x} cy={n.y} r="13" fill={activeTier === n.t ? GOLD : SURFACE_2} stroke={GOLD} strokeWidth="1.5" />
+                    <text x={n.x} y={n.y + 4} fill={activeTier === n.t ? "#FFF" : INK_PRIMARY} fontSize="9" fontWeight="bold" textAnchor="middle">{n.lbl}</text>
                   </g>
                 ))}
-                
-                <text x="20" y="80" fill={INK_MUTED} fontSize="5" textAnchor="middle">Survey</text>
-                <text x="60" y="80" fill={INK_MUTED} fontSize="5" textAnchor="middle">Mastery</text>
-                <text x="100" y="80" fill={INK_MUTED} fontSize="5" textAnchor="middle">Specialist</text>
-                <text x="160" y="20" fill={INK_MUTED} fontSize="5" textAnchor="middle">Research (Optional)</text>
-                <text x="160" y="80" fill={INK_MUTED} fontSize="5" textAnchor="middle">Teaching (Optional)</text>
+
+                <text x="45" y="110" fill={INK_SECONDARY} fontSize="8" fontWeight="bold" textAnchor="middle">Survey</text>
+                <text x="105" y="110" fill={INK_SECONDARY} fontSize="8" fontWeight="bold" textAnchor="middle">Mastery</text>
+                <text x="165" y="110" fill={INK_SECONDARY} fontSize="8" fontWeight="bold" textAnchor="middle">Specialist</text>
+                <text x="245" y="24" fill={INK_SECONDARY} fontSize="8" fontWeight="bold" textAnchor="start">Research (Optional)</text>
+                <text x="245" y="116" fill={INK_SECONDARY} fontSize="8" fontWeight="bold" textAnchor="start">Teaching (Optional)</text>
               </svg>
             </div>
             

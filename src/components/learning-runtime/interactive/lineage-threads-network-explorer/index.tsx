@@ -134,6 +134,17 @@ const PATTERNS = [
   ["Practitioner mobility", "Modern learners often combine foundational, intermediate, and specialised training across lineages."],
 ];
 
+const LINEAGE_NODES: Record<string, { x: number; y: number; group: "institutional" | "western" | "specialist" | "classical" }> = {
+  sjc: { x: 50, y: 66, group: "western" },
+  aivs: { x: 50, y: 162, group: "western" },
+  defouw: { x: 50, y: 258, group: "western" },
+  sutton: { x: 50, y: 340, group: "western" },
+  bvb: { x: 548, y: 66, group: "institutional" },
+  pundit: { x: 548, y: 162, group: "classical" },
+  lal: { x: 548, y: 258, group: "specialist" },
+  kp: { x: 548, y: 340, group: "specialist" },
+};
+
 function NetworkSvg({
   activeId,
   showStreams,
@@ -145,7 +156,14 @@ function NetworkSvg({
   showRegions: boolean;
   onSelect: (id: string) => void;
 }) {
-  const active = LINEAGES.find((lineage) => lineage.id === activeId) ?? LINEAGES[0];
+  const center = { x: 380, y: 214 };
+  const activeNode = LINEAGE_NODES[activeId] ?? LINEAGE_NODES.bvb;
+  const streamTags = [
+    ["Parashari", "#3A8C5A"],
+    ["Jaimini", "#6A568E"],
+    ["KP", "#3A6F8C"],
+    ["Lal Kitab", "#7A3E4A"],
+  ];
 
   return (
     <svg viewBox="0 0 760 430" role="img" aria-label="Network of eight modern Jyotisha lineage threads" className="h-auto w-full">
@@ -153,35 +171,71 @@ function NetworkSvg({
         <filter id="lineage-shadow" x="-40%" y="-40%" width="180%" height="180%">
           <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#7A5E1E" floodOpacity="0.18" />
         </filter>
+        <filter id="lineage-card-shadow" x="-15%" y="-25%" width="130%" height="150%">
+          <feDropShadow dx="0" dy="8" stdDeviation="8" floodColor="#7A5E1E" floodOpacity="0.12" />
+        </filter>
       </defs>
       <rect x="0" y="0" width="760" height="430" rx="8" fill={CARD} stroke={HAIRLINE} />
       <rect x="18" y="18" width="724" height="394" rx="7" fill={SOFT} opacity="0.45" />
 
-      {LINEAGES.filter((lineage) => lineage.id !== activeId).map((lineage) => (
-        <line
-          key={lineage.id}
-          x1={`${active.x}%`}
-          y1={`${active.y}%`}
-          x2={`${lineage.x}%`}
-          y2={`${lineage.y}%`}
-          stroke={showRegions ? "rgba(156, 122, 47, 0.30)" : "rgba(92, 74, 42, 0.18)"}
-          strokeWidth={showRegions ? 2 : 1}
-          strokeDasharray={showRegions ? "6 7" : undefined}
-        />
-      ))}
+      <rect x="34" y="34" width="190" height="362" rx="10" fill="rgba(79, 111, 168, 0.06)" stroke="rgba(79, 111, 168, 0.16)" />
+      <text x="129" y="58" textAnchor="middle" fill={INK_MUTED} fontSize="13" fontWeight="900">
+        Western/global teaching
+      </text>
+      <rect x="536" y="34" width="190" height="362" rx="10" fill="rgba(156, 122, 47, 0.07)" stroke="rgba(156, 122, 47, 0.18)" />
+      <text x="631" y="58" textAnchor="middle" fill={INK_MUTED} fontSize="13" fontWeight="900">
+        Indian/regional roots
+      </text>
+
+      {LINEAGES.map((lineage) => {
+        const node = LINEAGE_NODES[lineage.id];
+        const isActive = lineage.id === activeId;
+        return (
+          <line
+            key={`hub-${lineage.id}`}
+            x1={center.x}
+            y1={center.y}
+            x2={node.x + 81}
+            y2={node.y + 29}
+            stroke={isActive ? lineage.color : "rgba(92, 74, 42, 0.16)"}
+            strokeWidth={isActive ? 3 : 1.4}
+            strokeDasharray={showRegions && !isActive ? "6 7" : undefined}
+          />
+        );
+      })}
 
       {showStreams && (
         <g>
-          <rect x="470" y="42" width="250" height="112" rx="8" fill="rgba(156, 122, 47, 0.09)" stroke={HAIRLINE} />
-          <text x="490" y="68" fill={GOLD} fontSize="13" fontWeight="800">Stream emphasis overlay</text>
-          <text x="490" y="94" fill={INK_SECONDARY} fontSize="12">KP: KP lineages</text>
-          <text x="490" y="116" fill={INK_SECONDARY} fontSize="12">Lal Kitab: Punjabi/North lines</text>
-          <text x="490" y="138" fill={INK_SECONDARY} fontSize="12">Jaimini revival: BVB + SJC</text>
+          {streamTags.map(([label, color], index) => (
+            <g key={label}>
+              <rect x={214 + index * 84} y={360} width="74" height="29" rx="14.5" fill="rgba(255, 249, 240, 0.86)" stroke={color} />
+              <text x={251 + index * 84} y={379} textAnchor="middle" fill={color} fontSize="12" fontWeight="900">
+                {label}
+              </text>
+            </g>
+          ))}
         </g>
       )}
 
+      <g filter="url(#lineage-card-shadow)">
+        <circle cx={center.x} cy={center.y} r="86" fill="rgba(255, 249, 240, 0.94)" stroke={HAIRLINE} strokeWidth="1.5" />
+        <circle cx={center.x} cy={center.y} r="56" fill="rgba(156, 122, 47, 0.09)" stroke="rgba(156, 122, 47, 0.22)" />
+        <text x={center.x} y={center.y - 16} textAnchor="middle" fill={INK_PRIMARY} fontSize="18" fontWeight="900">
+          Lineage
+        </text>
+        <text x={center.x} y={center.y + 7} textAnchor="middle" fill={INK_PRIMARY} fontSize="18" fontWeight="900">
+          thread landscape
+        </text>
+        <text x={center.x} y={center.y + 35} textAnchor="middle" fill={INK_MUTED} fontSize="13" fontWeight="800">
+          teacher networks, not streams
+        </text>
+      </g>
+
+      <line x1={center.x} y1={center.y} x2={activeNode.x + 81} y2={activeNode.y + 29} stroke={GOLD} strokeWidth="5" strokeLinecap="round" opacity="0.34" />
+
       {LINEAGES.map((lineage) => {
         const isActive = lineage.id === activeId;
+        const node = LINEAGE_NODES[lineage.id];
         return (
           <g
             key={lineage.id}
@@ -197,14 +251,62 @@ function NetworkSvg({
             }}
             className="cursor-pointer"
           >
-            <circle cx={`${lineage.x}%`} cy={`${lineage.y}%`} r={isActive ? 28 : 21} fill={isActive ? lineage.color : CARD} stroke={lineage.color} strokeWidth="3" filter={isActive ? "url(#lineage-shadow)" : undefined} />
-            <text x={`${lineage.x}%`} y={`${lineage.y + 9}%`} textAnchor="middle" fill={isActive ? "#FFF9F0" : lineage.color} fontSize="11" fontWeight="800">
+            <rect
+              x={node.x}
+              y={node.y}
+              width="162"
+              height="58"
+              rx="8"
+              fill={isActive ? "rgba(255, 249, 240, 0.98)" : "rgba(255, 249, 240, 0.82)"}
+              stroke={lineage.color}
+              strokeWidth={isActive ? 2.5 : 1.5}
+              filter={isActive ? "url(#lineage-shadow)" : undefined}
+            />
+            <circle cx={node.x + 22} cy={node.y + 22} r={isActive ? 9 : 7} fill={lineage.color} />
+            <text x={node.x + 40} y={node.y + 27} fill={lineage.color} fontSize="18" fontWeight="900">
               {lineage.short}
+            </text>
+            <text x={node.x + 20} y={node.y + 48} fill={INK_SECONDARY} fontSize="12" fontWeight="800">
+              {lineage.reach}
             </text>
           </g>
         );
       })}
     </svg>
+  );
+}
+
+function LineagePicker({
+  activeId,
+  onSelect,
+}: {
+  activeId: string;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      {LINEAGES.map((lineage) => {
+        const active = lineage.id === activeId;
+        return (
+          <button
+            key={lineage.id}
+            type="button"
+            onClick={() => onSelect(lineage.id)}
+            className="flex min-h-12 items-center gap-2 rounded px-3 py-2 text-left text-xs font-bold transition"
+            style={{
+              backgroundColor: active ? "rgba(255, 249, 240, 0.95)" : "rgba(255, 249, 240, 0.58)",
+              border: active ? `1px solid ${lineage.color}` : `1px solid ${HAIRLINE}`,
+              color: active ? lineage.color : INK_SECONDARY,
+              boxShadow: active ? "0 8px 18px rgba(122, 94, 30, 0.12)" : "none",
+            }}
+            aria-pressed={active}
+          >
+            <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: lineage.color }} />
+            <span className="leading-tight">{lineage.short}</span>
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -242,6 +344,9 @@ export function LineageThreadsNetworkExplorer() {
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(330px,0.95fr)]">
         <section className="gl-surface-twilight-glass p-3" style={{ borderRadius: "8px" }}>
           <NetworkSvg activeId={activeId} showStreams={view === "streams"} showRegions={view === "regions"} onSelect={setActiveId} />
+          <div className="mt-3">
+            <LineagePicker activeId={activeId} onSelect={setActiveId} />
+          </div>
         </section>
 
         <section className="space-y-4">

@@ -344,48 +344,48 @@ export function TruthWithCompassion() {
             </div>
 
             {/* Visual SVG Speech Compass Flow Chart */}
-            <div className="flex justify-center rounded-xl p-3 mb-4 border bg-white" style={{ borderColor: HAIRLINE }}>
-              <svg width="200" height="150" viewBox="0 0 200 150">
+            <div className="flex justify-center rounded-xl p-4 mb-4 border bg-white" style={{ borderColor: HAIRLINE }}>
+              <svg viewBox="0 0 240 170" className="w-full max-w-[420px] h-auto block">
                 {/* Connecting Lines */}
                 <path
-                  d="M 15 75 L 50 40 L 150 40 L 50 110 L 150 110 L 185 75"
+                  d="M 20 85 L 60 45 L 180 45 L 60 125 L 180 125 L 220 85"
                   fill="none"
                   stroke={activeOptionKey === "balanced" ? GREEN : "rgba(168,130,30,0.15)"}
-                  strokeWidth="2.5"
+                  strokeWidth="3"
                 />
 
                 {/* Gate 1: Satyam */}
-                <g transform="translate(50, 40)">
-                  <circle cx="0" cy="0" r="15" fill={option.manuSatyam ? "rgba(46,125,50,0.15)" : "rgba(162,58,30,0.15)"} stroke={option.manuSatyam ? GREEN : VERMILION} strokeWidth="1.5" />
-                  <text x="0" y="3" textAnchor="middle" fontSize="6.5" fontWeight="bold" fill={option.manuSatyam ? GREEN : VERMILION}>Satya</text>
-                  <text x="0" y="-18" textAnchor="middle" fontSize="8" fontWeight="bold" fill={INK_PRIMARY}>Gate 1</text>
+                <g transform="translate(60, 45)">
+                  <circle cx="0" cy="0" r="19" fill={option.manuSatyam ? "rgba(46,125,50,0.15)" : "rgba(162,58,30,0.15)"} stroke={option.manuSatyam ? GREEN : VERMILION} strokeWidth="2" />
+                  <text x="0" y="4" textAnchor="middle" fontSize="9.5" fontWeight="bold" fill={option.manuSatyam ? GREEN : VERMILION}>Satya</text>
+                  <text x="0" y="-25" textAnchor="middle" fontSize="10.5" fontWeight="bold" fill={INK_PRIMARY}>Gate 1</text>
                 </g>
 
                 {/* Gate 2: Priyam */}
-                <g transform="translate(150, 40)">
-                  <circle cx="0" cy="0" r="15" fill={option.manuPriyam ? "rgba(46,125,50,0.15)" : "rgba(162,58,30,0.15)"} stroke={option.manuPriyam ? GREEN : VERMILION} strokeWidth="1.5" />
-                  <text x="0" y="3" textAnchor="middle" fontSize="6.5" fontWeight="bold" fill={option.manuPriyam ? GREEN : VERMILION}>Priya</text>
-                  <text x="0" y="-18" textAnchor="middle" fontSize="8" fontWeight="bold" fill={INK_PRIMARY}>Gate 2</text>
+                <g transform="translate(180, 45)">
+                  <circle cx="0" cy="0" r="19" fill={option.manuPriyam ? "rgba(46,125,50,0.15)" : "rgba(162,58,30,0.15)"} stroke={option.manuPriyam ? GREEN : VERMILION} strokeWidth="2" />
+                  <text x="0" y="4" textAnchor="middle" fontSize="9.5" fontWeight="bold" fill={option.manuPriyam ? GREEN : VERMILION}>Priya</text>
+                  <text x="0" y="-25" textAnchor="middle" fontSize="10.5" fontWeight="bold" fill={INK_PRIMARY}>Gate 2</text>
                 </g>
 
                 {/* Gate 3: Na Apriyam */}
-                <g transform="translate(50, 110)">
-                  <circle cx="0" cy="0" r="15" fill={option.manuNaApriyam ? "rgba(46,125,50,0.15)" : "rgba(162,58,30,0.15)"} stroke={option.manuNaApriyam ? GREEN : VERMILION} strokeWidth="1.5" />
-                  <text x="0" y="3" textAnchor="middle" fontSize="6.5" fontWeight="bold" fill={option.manuNaApriyam ? GREEN : VERMILION}>Apriya</text>
-                  <text x="0" y="-18" textAnchor="middle" fontSize="8" fontWeight="bold" fill={INK_PRIMARY}>Gate 3</text>
+                <g transform="translate(60, 125)">
+                  <circle cx="0" cy="0" r="19" fill={option.manuNaApriyam ? "rgba(46,125,50,0.15)" : "rgba(162,58,30,0.15)"} stroke={option.manuNaApriyam ? GREEN : VERMILION} strokeWidth="2" />
+                  <text x="0" y="4" textAnchor="middle" fontSize="9.5" fontWeight="bold" fill={option.manuNaApriyam ? GREEN : VERMILION}>Apriya</text>
+                  <text x="0" y="-25" textAnchor="middle" fontSize="10.5" fontWeight="bold" fill={INK_PRIMARY}>Gate 3</text>
                 </g>
 
                 {/* Gate 4: Priyam Nanritam */}
-                <g transform="translate(150, 110)">
-                  <circle cx="0" cy="0" r="15" fill={option.manuNaAnritam ? "rgba(46,125,50,0.15)" : "rgba(162,58,30,0.15)"} stroke={option.manuNaAnritam ? GREEN : VERMILION} strokeWidth="1.5" />
-                  <text x="0" y="3" textAnchor="middle" fontSize="6.5" fontWeight="bold" fill={option.manuNaAnritam ? GREEN : VERMILION}>Anṛta</text>
-                  <text x="0" y="-18" textAnchor="middle" fontSize="8" fontWeight="bold" fill={INK_PRIMARY}>Gate 4</text>
+                <g transform="translate(180, 125)">
+                  <circle cx="0" cy="0" r="19" fill={option.manuNaAnritam ? "rgba(46,125,50,0.15)" : "rgba(162,58,30,0.15)"} stroke={option.manuNaAnritam ? GREEN : VERMILION} strokeWidth="2" />
+                  <text x="0" y="4" textAnchor="middle" fontSize="9.5" fontWeight="bold" fill={option.manuNaAnritam ? GREEN : VERMILION}>Anṛta</text>
+                  <text x="0" y="-25" textAnchor="middle" fontSize="10.5" fontWeight="bold" fill={INK_PRIMARY}>Gate 4</text>
                 </g>
 
                 {/* Output Terminal */}
-                <g transform="translate(185, 75)">
-                  <circle cx="0" cy="0" r="10" fill={activeOptionKey === "balanced" ? GREEN : "rgba(162,58,30,0.15)"} stroke={activeOptionKey === "balanced" ? GREEN : VERMILION} strokeWidth="1" />
-                  <text x="0" y="2" textAnchor="middle" fontSize="5.5" fontWeight="bold" fill={activeOptionKey === "balanced" ? "#FFF" : VERMILION}>Out</text>
+                <g transform="translate(220, 85)">
+                  <circle cx="0" cy="0" r="13" fill={activeOptionKey === "balanced" ? GREEN : "rgba(162,58,30,0.15)"} stroke={activeOptionKey === "balanced" ? GREEN : VERMILION} strokeWidth="1.5" />
+                  <text x="0" y="3" textAnchor="middle" fontSize="8" fontWeight="bold" fill={activeOptionKey === "balanced" ? "#FFF" : VERMILION}>Out</text>
                 </g>
               </svg>
             </div>

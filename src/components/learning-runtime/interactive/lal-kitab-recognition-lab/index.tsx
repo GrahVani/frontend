@@ -34,40 +34,47 @@ function labelLines(label: string): string[] {
   if (label === "Kale dagh idiom") return ["Kale dagh", "idiom"];
   if (label === "Punjab / Delhi context") return ["Punjab / Delhi", "context"];
   if (label === "Rina debt language") return ["Rina debt", "language"];
-  if (label === "Classical remedy cue") return ["Classical remedy", "cue"];
+  if (label === "Classical remedy cue") return ["Classical", "remedy", "cue"];
   return [label];
 }
 
 function RecognitionSvg({ activeSignals, verdict, activeSignal }: { activeSignals: SignalKey[]; verdict: ReportVerdict; activeSignal: SignalKey }) {
   const activeSet = new Set(activeSignals);
   const resultColor = verdictColor(verdict);
+  const verdictLines =
+    verdict === "lalKitab" ? ["Lal Kitab", "derived"] :
+    verdict === "mixed" ? ["Mixed", "influenced"] :
+    verdict === "insufficient" ? ["Insufficient", "convergence"] :
+    [verdictLabel(verdict)];
   const points = [
-    { key: "teva" as const, x: 120, y: 136 },
-    { key: "totka" as const, x: 244, y: 102 },
-    { key: "idiom" as const, x: 368, y: 136 },
-    { key: "lineage" as const, x: 492, y: 102 },
-    { key: "region" as const, x: 616, y: 136 },
-    { key: "debt" as const, x: 244, y: 222 },
-    { key: "classical" as const, x: 492, y: 222 },
+    { key: "teva" as const, x: 112, y: 200 },
+    { key: "totka" as const, x: 230, y: 112 },
+    { key: "idiom" as const, x: 370, y: 98 },
+    { key: "lineage" as const, x: 510, y: 112 },
+    { key: "region" as const, x: 648, y: 200 },
+    { key: "debt" as const, x: 230, y: 300 },
+    { key: "classical" as const, x: 510, y: 300 },
   ];
 
   return (
     <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 330" className="h-auto w-full min-w-0" role="img" aria-label="Lal Kitab recognition convergence map">
-        <rect x="20" y="20" width="720" height="280" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
-        <text x="380" y="50" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+      <svg viewBox="0 0 760 430" className="h-auto w-full min-w-0" role="img" aria-label="Lal Kitab recognition convergence map">
+        <rect x="20" y="20" width="720" height="380" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+        <text x="380" y="50" textAnchor="middle" fill={GOLD} fontSize="20" fontWeight="700" letterSpacing="0.5" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           CONVERGING SIGNALS IDENTIFY THE STREAM
         </text>
-        <path d="M120 136 C260 52 500 52 616 136" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
-        <path d="M120 136 C238 274 504 274 616 136" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
-        <path d="M244 102 L492 222 M492 102 L244 222" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
+        <path d="M112 200 C250 64 514 64 648 200" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
+        <path d="M112 200 C250 352 514 352 648 200" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
+        <path d="M230 112 L510 300 M510 112 L230 300" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
 
-        <circle cx="380" cy="172" r="52" fill={wash(resultColor, "12")} stroke={resultColor} strokeWidth="2.4" />
-        <text x="380" y="164" textAnchor="middle" fill={resultColor} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <circle cx="380" cy="210" r="62" fill={wash(resultColor, "12")} stroke={resultColor} strokeWidth="2.4" />
+        <text x="380" y="190" textAnchor="middle" fill={resultColor} fontSize="15" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           VERDICT
         </text>
-        <text x="380" y="185" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-          {verdictLabel(verdict)}
+        <text x="380" y="216" textAnchor="middle" fill={INK_PRIMARY} fontSize="16" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          {verdictLines.map((line, index) => (
+            <tspan key={line} x="380" dy={index === 0 ? 0 : 18}>{line}</tspan>
+          ))}
         </text>
 
         {points.map((point) => {
@@ -76,23 +83,23 @@ function RecognitionSvg({ activeSignals, verdict, activeSignal }: { activeSignal
           const selected = activeSignal === point.key;
           return (
             <g key={point.key}>
-              <circle cx={point.x} cy={point.y} r={selected ? 44 : 36} fill={active ? wash(signal.color, "18") : SURFACE} stroke={active || selected ? signal.color : HAIRLINE} strokeWidth={selected ? 2.4 : 1.2} />
-              <text x={point.x} y={point.y - (labelLines(signal.label).length === 1 ? 4 : 10)} textAnchor="middle" fill={active || selected ? signal.color : INK_SECONDARY} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <circle cx={point.x} cy={point.y} r={selected ? 54 : 48} fill={active ? wash(signal.color, "18") : SURFACE} stroke={active || selected ? signal.color : HAIRLINE} strokeWidth={selected ? 2.4 : 1.2} />
+              <text x={point.x} y={point.y - (labelLines(signal.label).length === 1 ? 10 : labelLines(signal.label).length === 2 ? 19 : 26)} textAnchor="middle" fill={active || selected ? signal.color : INK_SECONDARY} fontSize="12" fontWeight="600" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {labelLines(signal.label).map((line, i) => (
-                  <tspan key={line} x={point.x} dy={i === 0 ? 0 : 13}>
+                  <tspan key={line} x={point.x} dy={i === 0 ? 0 : 14}>
                     {line}
                   </tspan>
                 ))}
               </text>
-              <text x={point.x} y={point.y + 14} textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x={point.x} y={point.y + 28} textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {signal.strength}
               </text>
             </g>
           );
         })}
 
-        <rect x="214" y="282" width="332" height="28" rx="14" fill={SURFACE} stroke={GOLD} />
-        <text x="380" y="301" textAnchor="middle" fill={GOLD} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="174" y="370" width="412" height="28" rx="14" fill={SURFACE} stroke={GOLD} />
+        <text x="380" y="389" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           One cue raises a hypothesis; several cues confirm it.
         </text>
       </svg>

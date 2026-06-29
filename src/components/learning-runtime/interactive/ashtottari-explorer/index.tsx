@@ -17,9 +17,12 @@ import {
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.18))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
-const INK_PRIMARY = "var(--gl-ink-primary)";
-const INK_SECONDARY = "var(--gl-ink-secondary)";
-const INK_MUTED = "var(--gl-ink-muted)";
+const INK_PRIMARY = "#3F2D1D";
+const INK_SECONDARY = "#5C4630";
+const INK_MUTED = "#745D40";
+const READABLE_GOLD = "#936817";
+const TABLE_LINE = "rgba(139, 118, 82, 0.28)";
+const SELECTED_ROW = "rgba(255, 248, 229, 0.98)";
 
 const CX = 210;
 const CY = 210;
@@ -97,8 +100,8 @@ function AshtottariWheel({
               x={label.x}
               y={label.y + 4}
               textAnchor="middle"
-              fill={lord.color}
-              fontSize="13"
+              fill={INK_PRIMARY}
+              fontSize="14"
               fontWeight={800}
               style={{ fontFamily: "var(--font-sans), sans-serif", pointerEvents: "none" }}
             >
@@ -108,8 +111,8 @@ function AshtottariWheel({
               x={yearLabel.x}
               y={yearLabel.y + 3}
               textAnchor="middle"
-              fill={selected ? lord.color : INK_MUTED}
-              fontSize="10"
+              fill={selected ? READABLE_GOLD : INK_MUTED}
+              fontSize="11"
               fontWeight={700}
               style={{ fontFamily: "var(--font-sans), sans-serif", pointerEvents: "none" }}
             >
@@ -124,7 +127,7 @@ function AshtottariWheel({
         x={CX}
         y={CY - 12}
         textAnchor="middle"
-        fill={ink.goldAccent}
+        fill={READABLE_GOLD}
         fontSize="34"
         fontWeight={800}
         style={{ fontFamily: "var(--font-cormorant), serif" }}
@@ -165,20 +168,20 @@ export function AshtottariExplorer() {
     >
       <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+          <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
             Conditional dasha reference
           </p>
           <h2 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
             <IAST>Ashtottari</IAST> 108-year cycle
           </h2>
-          <p className="mt-1 max-w-3xl text-sm" style={{ color: INK_SECONDARY }}>
+          <p className="mt-1 max-w-3xl text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
             Explore the eight-period sequence, compare each allotment with Vimshottari, and see why 108 is structurally meaningful.
           </p>
         </div>
         <button
           type="button"
           onClick={() => setSelectedIndex(8)}
-          className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold"
+          className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold"
           style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}
         >
           <RotateCcw size={16} />
@@ -192,10 +195,10 @@ export function AshtottariExplorer() {
             <AshtottariWheel selectedIndex={selectedIndex} onSelect={setSelectedIndex} />
           </section>
 
-          <section className="rounded-xl p-4" style={{ background: selected.colorTint, border: `1.5px solid ${selected.color}45` }}>
+          <section className="rounded-xl p-4" style={{ background: SELECTED_ROW, border: `1.5px solid ${selected.color}45` }}>
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="m-0 text-xs font-bold uppercase" style={{ color: selected.color, letterSpacing: "0.08em" }}>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                   Selected period
                 </p>
                 <h3 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
@@ -206,7 +209,7 @@ export function AshtottariExplorer() {
                 {selected.devanagari}
               </Devanagari>
             </div>
-            <p className="mt-3 text-sm" style={{ color: INK_SECONDARY }}>
+            <p className="mt-3 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
               {selected.contrast}
             </p>
           </section>
@@ -217,11 +220,11 @@ export function AshtottariExplorer() {
             <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-2">
                 <Table2 size={17} color={ink.goldAccent} />
-                <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                   Eight allotments
                 </p>
               </div>
-              <p className="m-0 text-xs font-semibold" style={{ color: INK_MUTED, overflowWrap: "anywhere" }}>
+              <p className="m-0 text-sm font-semibold" style={{ color: INK_MUTED, overflowWrap: "anywhere" }}>
                 {ashtottariSequenceMnemonic()}
               </p>
             </div>
@@ -232,8 +235,8 @@ export function AshtottariExplorer() {
                 style={{
                   gridTemplateColumns: "48px 132px 110px 130px minmax(220px,1fr)",
                   background: SURFACE_2,
-                  color: INK_MUTED,
-                  fontSize: "0.72rem",
+                  color: INK_SECONDARY,
+                  fontSize: "0.82rem",
                   fontWeight: 900,
                   letterSpacing: "0.06em",
                   textTransform: "uppercase",
@@ -257,28 +260,28 @@ export function AshtottariExplorer() {
                     className="grid min-w-[680px] text-left"
                     style={{
                       gridTemplateColumns: "48px 132px 110px 130px minmax(220px,1fr)",
-                      background: selectedRow ? lord.colorTint : SURFACE,
-                      borderTop: `1px solid ${HAIRLINE}`,
+                      background: selectedRow ? SELECTED_ROW : SURFACE,
+                      borderTop: `1px solid ${TABLE_LINE}`,
                     }}
                   >
-                    <div className="px-3 py-3 text-sm font-bold" style={{ color: lord.color }}>
+                    <div className="px-3 py-3 text-base font-bold" style={{ color: READABLE_GOLD }}>
                       {lord.index}
                     </div>
                     <div className="px-3 py-3">
-                      <span className="block text-sm font-bold" style={{ color: lord.color }}>
+                      <span className="block text-base font-bold" style={{ color: INK_PRIMARY }}>
                         {lord.nameIAST}
                       </span>
-                      <span className="block text-xs" style={{ color: INK_MUTED }}>
+                      <span className="block text-sm" style={{ color: INK_SECONDARY }}>
                         {lord.abbr}
                       </span>
                     </div>
-                    <div className="px-3 py-3 text-sm font-bold" style={{ color: INK_PRIMARY }}>
+                    <div className="px-3 py-3 text-base font-bold" style={{ color: INK_PRIMARY }}>
                       {lord.years} years
                     </div>
-                    <div className="px-3 py-3 text-sm" style={{ color: INK_SECONDARY }}>
+                    <div className="px-3 py-3 text-base" style={{ color: INK_SECONDARY }}>
                       {lord.vimshottariYears} years {diff === 0 ? "(same)" : diff && diff > 0 ? `(+${diff})` : `(${diff})`}
                     </div>
-                    <div className="px-3 py-3 text-sm" style={{ color: INK_SECONDARY }}>
+                    <div className="px-3 py-3 text-base" style={{ color: INK_SECONDARY }}>
                       {lord.contrast}
                     </div>
                   </button>
@@ -291,11 +294,11 @@ export function AshtottariExplorer() {
             <section className="rounded-xl p-4" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}` }}>
               <div className="mb-2 flex items-center gap-2">
                 <CheckCircle2 size={17} color={ink.goldAccent} />
-                <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                   Sum
                 </p>
               </div>
-              <p className="m-0 text-2xl font-bold" style={{ color: total === ASHTOTTARI_TOTAL_YEARS ? ink.goldAccent : ink.vermilionAccent }}>
+              <p className="m-0 text-2xl font-bold" style={{ color: total === ASHTOTTARI_TOTAL_YEARS ? READABLE_GOLD : ink.vermilionAccent }}>
                 {ashtottariYearsMnemonic()} = {total}
               </p>
               <p className="mt-2 text-sm" style={{ color: INK_SECONDARY }}>
@@ -306,7 +309,7 @@ export function AshtottariExplorer() {
             <section className="rounded-xl p-4" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}` }}>
               <div className="mb-2 flex items-center gap-2">
                 <Ban size={17} color={ink.vermilionAccent} />
-                <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.vermilionAccent, letterSpacing: "0.08em" }}>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: ink.vermilionAccent, letterSpacing: "0.08em" }}>
                   Ketu test
                 </p>
               </div>
@@ -321,7 +324,7 @@ export function AshtottariExplorer() {
             <section className="rounded-xl p-4" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}` }}>
               <div className="mb-2 flex items-center gap-2">
                 <Hash size={17} color={ink.goldAccent} />
-                <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                   108
                 </p>
               </div>
@@ -337,11 +340,11 @@ export function AshtottariExplorer() {
           <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="mb-2 flex items-center gap-2">
               <CircleDot size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Structural takeaway
               </p>
             </div>
-            <p className="m-0 text-sm" style={{ color: INK_SECONDARY }}>
+            <p className="m-0 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
               Ashtottari is not Vimshottari scaled down to 108. It has a different sequence, different allotments,
               and a different planet set. Use it only when its conditions apply.
             </p>

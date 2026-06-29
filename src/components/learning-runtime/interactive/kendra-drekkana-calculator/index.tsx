@@ -49,13 +49,13 @@ function KendraDrekkanaDiagram({
 
   return (
     <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 720 430" className="h-auto w-full" role="img" aria-label="Kendra bala house wheel and drekkana strip">
-        <rect x="20" y="24" width="680" height="370" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+      <svg viewBox="0 0 860 540" className="h-auto w-full" role="img" aria-label="Kendra bala house wheel and drekkana strip">
+        <rect x="20" y="24" width="820" height="492" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
         <text x="46" y="58" fill={ink.goldAccent} fontSize="13" fontWeight="900" letterSpacing="1.1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           HOUSE CLASS + TEN-DEGREE THIRD
         </text>
 
-        <g>
+        <g transform="translate(0, 61)">
           <circle cx="190" cy="205" r="122" fill={SURFACE} stroke={HAIRLINE} />
           <circle cx="190" cy="205" r="68" fill="rgba(232, 199, 114, 0.10)" stroke={HAIRLINE} />
           {Array.from({ length: 12 }, (_, index) => index + 1).map((item) => {
@@ -67,7 +67,7 @@ function KendraDrekkanaDiagram({
               <g key={item}>
                 <line x1="190" y1="205" x2={lineEnd.x} y2={lineEnd.y} stroke={HAIRLINE} />
                 <circle cx={label.x} cy={label.y} r={selected ? 17 : 13} fill={selected ? wash(planet.color, "26") : inClass ? "rgba(232, 199, 114, 0.14)" : SURFACE} stroke={selected ? planet.color : HAIRLINE} strokeWidth={selected ? 2 : 1} />
-                <text x={label.x} y={label.y + 4} textAnchor="middle" fill={selected ? planet.color : INK_SECONDARY} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+                <text x={label.x} y={label.y + 5} textAnchor="middle" fill={selected ? planet.color : INK_SECONDARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                   {item}
                 </text>
               </g>
@@ -76,10 +76,9 @@ function KendraDrekkanaDiagram({
           <text x="190" y="196" textAnchor="middle" fill={planet.color} fontSize="34" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
             {houseClass.virupas}
           </text>
-          <text x="190" y="220" textAnchor="middle" fill={INK_PRIMARY} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <text x="190" y="222" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             kendra-bala
           </text>
-        </g>
 
         <g>
           <text x="408" y="116" fill={INK_PRIMARY} fontSize="16" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
@@ -95,10 +94,10 @@ function KendraDrekkanaDiagram({
                 <text x={x + 66} y="170" textAnchor="middle" fill={favoured ? planet.color : INK_SECONDARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                   {item.label}
                 </text>
-                <text x={x + 66} y="193" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+                <text x={x + 66} y="195" textAnchor="middle" fill={INK_MUTED} fontSize="13" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                   {item.range}
                 </text>
-                <text x={x + 66} y="213" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+                <text x={x + 66} y="217" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                   {item.favours}
                 </text>
               </g>
@@ -117,16 +116,17 @@ function KendraDrekkanaDiagram({
         <text x="580" y="74" textAnchor="middle" fill={ink.goldAccent} fontSize="34" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
           {total}
         </text>
-        <text x="580" y="96" textAnchor="middle" fill={INK_PRIMARY} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="580" y="98" textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           total
         </text>
 
-        <text x="360" y="354" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="360" y="356" textAnchor="middle" fill={INK_SECONDARY} fontSize="15" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Kendra-bala scores house class. Drekkana-bala scores only the matching gender third.
         </text>
-        <text x="360" y="376" textAnchor="middle" fill={dScore ? planet.color : INK_MUTED} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="360" y="382" textAnchor="middle" fill={dScore ? planet.color : INK_MUTED} fontSize="15" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           {planet.gender} planet in {band.label}: drekkana score {dScore}
         </text>
+        </g>
       </svg>
     </section>
   );

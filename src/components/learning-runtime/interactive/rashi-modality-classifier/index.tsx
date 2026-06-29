@@ -5,6 +5,11 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { IAST } from "../../chrome/typography";
 import { RASHIS } from "../rashi-data";
 
+const READABLE_INK = "#3F2D1D";
+const READABLE_SECONDARY = "#5C4630";
+const READABLE_MUTED = "#745D40";
+const CARD_SURFACE = "rgba(255, 250, 240, 0.96)";
+
 const MODALITIES = [
   { key: "Chara", label: "Chara (Cardinal)", devanagari: "चर", icon: "↗", color: "#C9A24D", description: "Initiating, active, moving" },
   { key: "Sthira", label: "Sthira (Fixed)", devanagari: "स्थिर", icon: "■", color: "#5A8A9A", description: "Persisting, stable, maintaining" },
@@ -146,7 +151,6 @@ export function RashiModalityClassifier() {
   useEffect(() => {
     if (phase !== "playing" || !!feedback || !timerEnabled) return;
 
-    setTimeLeft(10);
     const startTime = Date.now();
 
     const interval = setInterval(() => {
@@ -246,10 +250,10 @@ export function RashiModalityClassifier() {
             transition={{ duration: 0.25 }}
             className="w-full space-y-4"
           >
-            <h3 className="text-lg font-semibold" style={{ fontFamily: "var(--font-cormorant)", color: "var(--gl-gold-accent)" }}>
+            <h3 className="text-xl font-semibold" style={{ fontFamily: "var(--font-cormorant)", color: "#8F6818" }}>
               Rāśi Modality Classifier
             </h3>
-            <p className="text-sm" style={{ color: "var(--gl-ink-secondary)" }}>
+            <p className="text-base leading-relaxed" style={{ color: READABLE_SECONDARY }}>
               Explore the three modalities: Chara (Cardinal), Sthira (Fixed), and Dvi-svabhāva (Mutable).
               Click any rāśi card below to launch a play round starting with that sign.
             </p>
@@ -258,12 +262,12 @@ export function RashiModalityClassifier() {
               {(Object.entries(modalityCounts) as [string, number[]][]).map(([type, rashiNums]) => {
                 const m = MODALITIES.find((item) => item.key === type)!;
                 return (
-                  <div key={type} className="p-4 rounded-xl space-y-3 flex flex-col" style={{ background: `${m.color}08`, border: `1px solid ${m.color}25` }}>
-                    <div className="flex items-center gap-2 pb-2 border-b" style={{ borderColor: `${m.color}20` }}>
-                      <span className="text-xl">{m.icon}</span>
+                  <div key={type} className="p-4 rounded-xl space-y-3 flex flex-col" style={{ background: `${m.color}10`, border: `1px solid ${m.color}55` }}>
+                    <div className="flex items-center gap-2 pb-2 border-b" style={{ borderColor: `${m.color}40` }}>
+                      <span className="text-2xl" style={{ color: READABLE_INK }}>{m.icon}</span>
                       <div>
-                        <div className="text-base font-bold" style={{ color: m.color, fontFamily: "var(--font-cormorant)" }}>{m.label}</div>
-                        <div className="text-[10px]" style={{ color: "var(--gl-ink-muted)" }}>{m.description}</div>
+                        <div className="text-lg font-bold" style={{ color: m.color, fontFamily: "var(--font-cormorant)" }}>{m.label}</div>
+                        <div className="text-sm font-medium" style={{ color: READABLE_MUTED }}>{m.description}</div>
                       </div>
                     </div>
 
@@ -276,26 +280,26 @@ export function RashiModalityClassifier() {
                             whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
                             key={n}
                             onClick={() => startTargetedGame(n)}
-                            className="p-3 rounded-xl text-left transition-all border flex flex-col gap-1 w-full focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
+                            className="p-4 rounded-xl text-left transition-all border flex flex-col gap-2 w-full focus-visible:ring-2 focus-visible:ring-[var(--gl-gold-accent)] outline-none"
                             style={{
-                              background: "var(--gl-surface-manuscript)",
-                              border: `1px solid ${r.color}35`,
-                              color: "var(--gl-ink-primary)",
+                              background: CARD_SURFACE,
+                              border: `1px solid ${r.color}60`,
+                              color: READABLE_INK,
                             }}
                           >
                             <div className="flex items-center justify-between w-full">
                               <div className="flex items-center gap-2">
-                                <span className="w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs" style={{ background: `${r.color}20`, color: r.color, fontFamily: "var(--font-devanagari)" }}>
+                                <span className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm" style={{ background: `${r.color}24`, color: r.color, fontFamily: "var(--font-devanagari)" }}>
                                   {r.nameDevanagari}
                                 </span>
-                                <span className="font-semibold text-xs"><IAST>{r.nameIAST}</IAST></span>
-                                <span className="text-[10px]" style={{ color: "var(--gl-ink-muted)" }}>({r.nameEnglish})</span>
+                                <span className="font-semibold text-base"><IAST>{r.nameIAST}</IAST></span>
+                                <span className="text-sm" style={{ color: READABLE_MUTED }}>({r.nameEnglish})</span>
                               </div>
-                              <span className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider" style={{ background: `${r.color}15`, color: r.color }}>
+                              <span className="text-[11px] px-2 py-1 rounded font-bold uppercase tracking-wider" style={{ background: `${r.color}18`, color: r.color }}>
                                 {r.element}
                               </span>
                             </div>
-                            <div className="text-[10px] italic leading-snug pl-8" style={{ color: "var(--gl-ink-secondary)" }}>
+                            <div className="text-sm leading-snug pl-10" style={{ color: READABLE_SECONDARY }}>
                               {r.mnemonic}
                             </div>
                           </motion.button>
@@ -309,7 +313,7 @@ export function RashiModalityClassifier() {
 
             {/* Difficulty selector quick start */}
             <div className="p-4 rounded-xl space-y-3" style={{ background: "var(--gl-surface-twilight-glass)", border: "1px solid var(--gl-gold-hairline)" }}>
-              <div className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--gl-ink-muted)" }}>
+              <div className="text-sm font-semibold uppercase tracking-wider" style={{ color: READABLE_MUTED }}>
                 Or start a full graded game:
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -328,8 +332,8 @@ export function RashiModalityClassifier() {
                     whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
                     style={{ background: "var(--gl-surface-manuscript)", border: `1px solid ${d.color}40` }}
                   >
-                    <div className="font-semibold text-xs" style={{ color: d.color }}>{d.label}</div>
-                    <div className="text-[10px] mt-0.5" style={{ color: "var(--gl-ink-secondary)" }}>{d.desc}</div>
+                    <div className="font-semibold text-sm" style={{ color: d.color }}>{d.label}</div>
+                    <div className="text-xs mt-0.5" style={{ color: READABLE_SECONDARY }}>{d.desc}</div>
                   </motion.button>
                 ))}
               </div>

@@ -138,12 +138,15 @@ export function TevaLagnaCrossValidator() {
       </div>
 
       {/* Side-by-side grids */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1rem", alignItems: "start" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1rem", alignItems: "stretch" }}>
         {/* Teva */}
-        <section style={{ border: `1px solid ${LAL_KITAB_COLOR}44`, borderRadius: 8, background: `${LAL_KITAB_COLOR}0D`, padding: "1rem" }}>
+        <section style={{ border: `1px solid ${LAL_KITAB_COLOR}44`, borderRadius: 8, background: `${LAL_KITAB_COLOR}0D`, padding: "1rem", display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: LAL_KITAB_DEEP, fontWeight: 950, fontSize: "1rem", marginBottom: "0.6rem" }}>
             <Grid3x3 size={16} />
             Lal Kitab Teva
+          </div>
+          <div style={{ marginBottom: "0.5rem", padding: "0.4rem 0.6rem", borderRadius: 6, background: `${LAL_KITAB_COLOR}15`, border: `1px solid ${LAL_KITAB_COLOR}33`, fontSize: "0.8rem", color: LAL_KITAB_DEEP, fontWeight: 850 }}>
+            Fixed frame: Aries = house 1
           </div>
           <NorthIndianSvgChart
             boxPlanets={tevaBoxes}
@@ -153,7 +156,7 @@ export function TevaLagnaCrossValidator() {
         </section>
 
         {/* Parashari */}
-        <section style={{ border: `1px solid ${BLUE}44`, borderRadius: 8, background: `${BLUE}0A`, padding: "1rem" }}>
+        <section style={{ border: `1px solid ${BLUE}44`, borderRadius: 8, background: `${BLUE}0A`, padding: "1rem", display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: BLUE, fontWeight: 950, fontSize: "1rem", marginBottom: "0.6rem" }}>
             <BookOpen size={16} />
             Parāśarī rāśi chart (D1)

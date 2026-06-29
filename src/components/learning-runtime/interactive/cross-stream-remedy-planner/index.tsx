@@ -39,12 +39,18 @@ function ArchitectureSvg({ activeStep, scenarioKey }: { activeStep: PlanStepKey;
     { key: "layer" as const, x: 476, y: 148 },
     { key: "sequence" as const, x: 660, y: 148 },
   ];
+  const stepLabelLines: Record<PlanStepKey, string[]> = {
+    diagnose: ["Diagnose"],
+    validate: ["Cross", "validate"],
+    layer: ["Layer", "remedies"],
+    sequence: ["Sequence"],
+  };
 
   return (
     <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 780 310" className="h-auto w-full min-w-0" role="img" aria-label="Cross stream remedy integration architecture">
-        <rect x="20" y="20" width="740" height="260" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
-        <text x="390" y="50" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+      <svg viewBox="0 0 780 350" className="h-auto w-full min-w-0" role="img" aria-label="Cross stream remedy integration architecture">
+        <rect x="20" y="20" width="740" height="300" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+        <text x="390" y="52" textAnchor="middle" fill={GOLD} fontSize="20" fontWeight="700" letterSpacing="0.5" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           DIAGNOSE SINGLE-STREAM, REMEDY CROSS-STREAM
         </text>
         <path d="M108 148 H660" stroke={HAIRLINE} strokeWidth="3" strokeDasharray="10 9" />
@@ -52,28 +58,30 @@ function ArchitectureSvg({ activeStep, scenarioKey }: { activeStep: PlanStepKey;
         {points.map((point, index) => {
           const step = getStep(point.key);
           const selected = point.key === activeStep;
+          const labelLines = stepLabelLines[point.key];
           return (
             <g key={point.key}>
-              <circle cx={point.x} cy={point.y} r={selected ? 44 : 36} fill={selected ? wash(step.color, "18") : SURFACE} stroke={selected ? step.color : HAIRLINE} strokeWidth={selected ? 2.4 : 1.2} />
-              <text x={point.x} y={point.y - 12} textAnchor="middle" fill={selected ? readableColor(step.color) : INK_SECONDARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-                {index + 1}. {step.label}
+              <circle cx={point.x} cy={point.y} r={selected ? 58 : 52} fill={selected ? wash(step.color, "18") : SURFACE} stroke={selected ? step.color : HAIRLINE} strokeWidth={selected ? 2.4 : 1.2} />
+              <text x={point.x} y={point.y - 26} textAnchor="middle" fill={selected ? readableColor(step.color) : INK_SECONDARY} fontSize="14" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+                <tspan x={point.x} dy="0">{index + 1}. {labelLines[0]}</tspan>
+                {labelLines[1] ? <tspan x={point.x} dy="16">{labelLines[1]}</tspan> : null}
               </text>
-              <text x={point.x} y={point.y + 8} textAnchor="middle" fill={INK_PRIMARY} fontSize="11" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x={point.x} y={point.y + 25} textAnchor="middle" fill={INK_PRIMARY} fontSize="12" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {step.source}
               </text>
             </g>
           );
         })}
 
-        <rect x="194" y="210" width="392" height="46" rx="16" fill={wash(active.color, "10")} stroke={active.color} />
-        <text x="390" y="228" textAnchor="middle" fill={readableColor(active.color)} fontSize="12" fontWeight="900" letterSpacing="0.6" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="174" y="230" width="432" height="54" rx="16" fill={wash(active.color, "10")} stroke={active.color} />
+        <text x="390" y="249" textAnchor="middle" fill={readableColor(active.color)} fontSize="16" fontWeight="700" letterSpacing="0.3" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           ACTIVE RULE
         </text>
-        <text x="390" y="247" textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="390" y="272" textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           {active.rule}
         </text>
 
-        <text x="390" y="88" textAnchor="middle" fill={readableColor(CHECKS[scenario.check].color)} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="390" y="90" textAnchor="middle" fill={readableColor(CHECKS[scenario.check].color)} fontSize="17" fontWeight="600" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Scenario check: {CHECKS[scenario.check].label}
         </text>
       </svg>

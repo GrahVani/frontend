@@ -203,12 +203,18 @@ export function KendraTrikonaRationale() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[700px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["Family", "Houses", "Deity name", "Function", "Raja-yoga role"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "Family", width: "w-[120px]" },
+                    { label: "Houses", width: "w-[100px]" },
+                    { label: "Deity name", width: "w-[130px]" },
+                    { label: "Function", width: "w-[140px]" },
+                    { label: "Raja-yoga role", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -219,8 +225,8 @@ export function KendraTrikonaRationale() {
                     <td className="px-4 py-3 font-bold" style={{ color: family.color }}>{family.label}</td>
                     <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{family.houses}</td>
                     <td className="px-4 py-3" style={{ color: INK_SECONDARY }}><IAST>{family.iast}</IAST></td>
-                    <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{family.meaning}</td>
-                    <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{family.slug === "kendra" ? "Gives power to act." : "Gives grace and dharmic legitimacy."}</td>
+                    <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{family.meaning}</td>
+                    <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{family.slug === "kendra" ? "Gives power to act." : "Gives grace and dharmic legitimacy."}</td>
                   </tr>
                 ))}
               </tbody>

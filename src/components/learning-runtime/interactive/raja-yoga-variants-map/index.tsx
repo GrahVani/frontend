@@ -261,12 +261,18 @@ export function RajaYogaVariantsMap() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[800px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["", "Name", "Category", "Condition", "Caution"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "", width: "w-12" },
+                    { label: "Name", width: "w-[140px]" },
+                    { label: "Category", width: "w-[130px]" },
+                    { label: "Condition", width: "w-[220px]" },
+                    { label: "Caution", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -280,8 +286,8 @@ export function RajaYogaVariantsMap() {
                       <td className="px-4 py-3">{active ? <CheckCircle2 size={17} color={color} /> : <CircleDot size={17} color={INK_MUTED} />}</td>
                       <td className="px-4 py-3 font-bold" style={{ color }}><IAST>{variant.iast}</IAST></td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{VARIANT_CATEGORIES[variant.category].label}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{variant.condition}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{variant.caution}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{variant.condition}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{variant.caution}</td>
                     </tr>
                   );
                 })}

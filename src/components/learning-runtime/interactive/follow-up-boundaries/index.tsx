@@ -280,20 +280,20 @@ export function FollowUpBoundaries() {
 
             {/* Dial SVG */}
             <div className="flex justify-center rounded-xl p-3 mb-4 border bg-white" style={{ borderColor: HAIRLINE }}>
-              <svg width="200" height="110" viewBox="0 0 200 110">
+              <svg width="260" height="150" viewBox="0 0 260 150">
                 {/* Arc tracks */}
-                <path d="M 30,90 A 70,70 0 0,1 170,90" fill="none" stroke="rgba(168,130,30,0.1)" strokeWidth="8" strokeLinecap="round" />
+                <path d="M 60,90 A 70,70 0 0,1 200,90" fill="none" stroke="rgba(168,130,30,0.1)" strokeWidth="8" strokeLinecap="round" />
                 {/* Under-involvement zone (Left) */}
-                <path d="M 30,90 A 70,70 0 0,1 80,35" fill="none" stroke={VERMILION} strokeWidth="8" strokeLinecap="round" />
+                <path d="M 60,90 A 70,70 0 0,1 110,35" fill="none" stroke={VERMILION} strokeWidth="8" strokeLinecap="round" />
                 {/* Samatva zone (Middle) */}
-                <path d="M 80,35 A 70,70 0 0,1 120,35" fill="none" stroke={GREEN} strokeWidth="8" />
+                <path d="M 110,35 A 70,70 0 0,1 150,35" fill="none" stroke={GREEN} strokeWidth="8" />
                 {/* Over-involvement zone (Right) */}
-                <path d="M 120,35 A 70,70 0 0,1 170,90" fill="none" stroke={GOLD} strokeWidth="8" strokeLinecap="round" />
+                <path d="M 150,35 A 70,70 0 0,1 200,90" fill="none" stroke={GOLD} strokeWidth="8" strokeLinecap="round" />
 
                 {/* Dial labels */}
-                <text x="35" y="102" fill={VERMILION} fontSize="6" fontWeight="bold" textAnchor="middle">Abandonment</text>
-                <text x="100" y="22" fill={GREEN} fontSize="7" fontWeight="bold" textAnchor="middle">Samatvam</text>
-                <text x="165" y="102" fill={GOLD} fontSize="6" fontWeight="bold" textAnchor="middle">Life-Coach Drift</text>
+                <text x="60" y="108" fill={VERMILION} fontSize="8" fontWeight="bold" textAnchor="middle">Abandonment</text>
+                <text x="130" y="18" fill={GREEN} fontSize="9" fontWeight="bold" textAnchor="middle">Samatvam</text>
+                <text x="200" y="108" fill={GOLD} fontSize="8" fontWeight="bold" textAnchor="middle">Life-Coach Drift</text>
 
                 {/* Animated pointer based on choice */}
                 {(() => {
@@ -302,14 +302,14 @@ export function FollowUpBoundaries() {
                   if (choice.strategy === "over") rotation = 50;
                   const color = choice.strategy === "samatva" ? GREEN : choice.strategy === "under" ? VERMILION : GOLD;
                   return (
-                    <g transform="translate(100, 90)">
+                    <g transform="translate(130, 90)">
                       <circle cx="0" cy="0" r="6" fill={INK_PRIMARY} />
                       <line x1="0" y1="0" x2="0" y2="-65" stroke={color} strokeWidth="3" transform={`rotate(${rotation})`} strokeLinecap="round" />
                     </g>
                   );
                 })()}
 
-                <text x="100" y="82" fill={choice.strategy === "samatva" ? GREEN : choice.strategy === "under" ? VERMILION : GOLD} fontSize="8" fontWeight="bold" textAnchor="middle">
+                <text x="130" y="132" fill={choice.strategy === "samatva" ? GREEN : choice.strategy === "under" ? VERMILION : GOLD} fontSize="9" fontWeight="bold" textAnchor="middle">
                   {choice.impact}
                 </text>
               </svg>

@@ -57,8 +57,8 @@ function grahaColor(slug: GrahaSlug): string {
 
 function BandSpectrum({ entries }: { entries: { slug: GrahaSlug; ratio: number }[] }) {
   const chartW = 520;
-  const chartH = 90;
-  const barY = 50;
+  const chartH = 130;
+  const barY = 82;
   const barH = 22;
   const leftPad = 30;
   const barW = chartW - leftPad - 30;
@@ -68,8 +68,21 @@ function BandSpectrum({ entries }: { entries: { slug: GrahaSlug; ratio: number }
     return leftPad + (Math.min(r, maxRatio) / maxRatio) * barW;
   }
 
+  const markerLayout = entries.map((entry) => {
+    const baseX = xForRatio(entry.ratio);
+    const siblings = entries.filter((other) => Math.abs(xForRatio(other.ratio) - baseX) < 8);
+    const siblingIndex = siblings.findIndex((other) => other.slug === entry.slug);
+    const middle = (siblings.length - 1) / 2;
+    return {
+      ...entry,
+      x: baseX + (siblingIndex - middle) * 18,
+      anchorX: baseX + (siblingIndex - middle) * 8,
+      yOffset: siblings.length > 1 ? -18 - siblingIndex * 26 : -28,
+    };
+  });
+
   return (
-    <svg viewBox={`0 0 ${chartW} ${chartH}`} className="w-full h-auto" style={{ maxHeight: 110 }}>
+    <svg viewBox={`0 0 ${chartW} ${chartH}`} className="w-full h-auto" style={{ maxHeight: 150 }}>
       {/* Adhama zone */}
       <rect x={leftPad} y={barY} width={(0.5 / maxRatio) * barW} height={barH} rx={4} fill={VERMILION} opacity={0.18} />
       <text x={leftPad + (0.25 / maxRatio) * barW} y={barY + barH + 14} textAnchor="middle" fontSize={9} fill={VERMILION} fontWeight={600}>
@@ -101,14 +114,14 @@ function BandSpectrum({ entries }: { entries: { slug: GrahaSlug; ratio: number }
       </text>
 
       {/* Planet markers */}
-      {entries.map((e, i) => {
-        const x = xForRatio(e.ratio);
+      {markerLayout.map((e) => {
+        const x = e.x;
         const col = grahaColor(e.slug);
         const band = bandFromRatio(e.ratio);
-        const yOffset = (i % 2 === 0) ? -18 : -32;
+        const yOffset = e.yOffset;
         return (
           <g key={e.slug}>
-            <line x1={x} y1={barY + yOffset + 10} x2={x} y2={barY} stroke={col} strokeWidth={1.5} />
+            <line x1={x} y1={barY + yOffset + 10} x2={e.anchorX} y2={barY - 1} stroke={col} strokeWidth={1.8} strokeDasharray="3 2" opacity="0.9" />
             <circle cx={x} cy={barY + yOffset} r={10} fill={`${col}18`} stroke={col} strokeWidth={1.5} />
             <text x={x} y={barY + yOffset + 3} textAnchor="middle" fontSize={8} fill={col} fontWeight={700}>
               <IAST size="sm">{REQUIRED_MAP[e.slug].nameIAST}</IAST>

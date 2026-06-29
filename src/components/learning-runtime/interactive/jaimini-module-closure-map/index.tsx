@@ -21,13 +21,11 @@ import {
   Shield,
   Eye,
   MapPin,
-  Home,
   Clock,
   Sparkles,
   ArrowRight,
   CheckCircle2,
   AlertTriangle,
-  ChevronDown,
   ChevronUp,
   GraduationCap,
 } from "lucide-react";

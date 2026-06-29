@@ -30,6 +30,9 @@ const CY = 210;
 const R_OUTER = 190;
 const R_INNER = 95;
 const R_HUB = 55;
+const WHEEL_TEXT = "#3F2D1D";
+const WHEEL_MUTED = "#5C4630";
+const WHEEL_GOLD = "#8F6818";
 
 /* Smooth step helper for colour interpolation */
 function hexToRgb(hex: string) {
@@ -390,13 +393,13 @@ export function RashiBoundaryWheel() {
       {/* ── Main layout: wheel + detail ── */}
       <div className="flex flex-col lg:flex-row gap-8 items-start">
         {/* ── Wheel ── */}
-        <div className="flex-shrink-0 mx-auto lg:mx-0" style={{ maxWidth: 440 }}>
+        <div className="flex-shrink-0 mx-auto lg:mx-0" style={{ maxWidth: 560 }}>
           <svg
             viewBox="0 0 420 420"
             className="w-full"
             role="img"
             aria-label="Interactive 12-segment Sidereal Zodiac Wheel representing rashi boundaries"
-            style={{ maxWidth: 420, filter: "drop-shadow(0 12px 32px rgba(0,0,0,0.12))" }}
+            style={{ maxWidth: 560, filter: "drop-shadow(0 12px 32px rgba(0,0,0,0.12))" }}
           >
             <defs>
               {/* 3D bevel filter */}
@@ -483,9 +486,9 @@ export function RashiBoundaryWheel() {
               cy={CY}
               r={R_OUTER}
               fill={BASE_BG}
-              stroke="var(--gl-gold-accent)"
-              strokeOpacity={0.25}
-              strokeWidth={1.5}
+              stroke={WHEEL_GOLD}
+              strokeOpacity={0.75}
+              strokeWidth={2}
               filter="url(#wheelShadow)"
             />
 
@@ -495,9 +498,9 @@ export function RashiBoundaryWheel() {
               cy={CY}
               r={R_INNER}
               fill="none"
-              stroke="var(--gl-gold-accent)"
-              strokeOpacity={0.15}
-              strokeWidth={1}
+              stroke={WHEEL_GOLD}
+              strokeOpacity={0.45}
+              strokeWidth={1.25}
               strokeDasharray="4 4"
             />
 
@@ -515,18 +518,18 @@ export function RashiBoundaryWheel() {
                         y1={inner.y}
                         x2={outer.x}
                         y2={outer.y}
-                        stroke="var(--gl-gold-accent)"
-                        strokeWidth={1.5}
-                        opacity={0.7}
+                        stroke={WHEEL_GOLD}
+                        strokeWidth={2}
+                        opacity={0.95}
                       />
                       <text
                         x={outer.x}
                         y={outer.y}
                         textAnchor="middle"
                         dominantBaseline="middle"
-                        fill="var(--gl-gold-accent)"
-                        fontSize={9}
-                        fontWeight={600}
+                        fill={WHEEL_GOLD}
+                        fontSize={12}
+                        fontWeight={900}
                         style={{ fontFamily: "var(--font-sans)" }}
                       >
                         {i * 30}°
@@ -575,10 +578,10 @@ export function RashiBoundaryWheel() {
               const lordPos = polarToCartesian(CX, CY, (R_INNER + R_HUB) / 2 + 8, m);
 
               /* Colour intensity based on state */
-              const fillAlpha = isSelected ? 0.35 : isHovered ? 0.28 : isActiveComputed ? 0.22 : 0.14;
+              const fillAlpha = isSelected ? 0.42 : isHovered ? 0.32 : isActiveComputed ? 0.26 : 0.16;
               const fillColor = blendWithBase(rashi.color, BASE_BG, fillAlpha);
-              const strokeColor = isSelected ? rashi.color : isHovered ? rashi.color : `${rashi.color}60`;
-              const strokeWidth = isSelected ? 3 : isHovered ? 2 : 1;
+              const strokeColor = isSelected ? rashi.color : isHovered ? rashi.color : `${rashi.color}85`;
+              const strokeWidth = isSelected ? 3.5 : isHovered ? 2.5 : 1.25;
 
               return (
                 <g 
@@ -632,9 +635,9 @@ export function RashiBoundaryWheel() {
                     y={labelPos.y - 6}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fill={isSelected ? rashi.color : "var(--gl-ink-primary)"}
-                    fontSize={13}
-                    fontWeight={isSelected ? 700 : 500}
+                    fill={WHEEL_TEXT}
+                    fontSize={18}
+                    fontWeight={900}
                     fontFamily="var(--font-devanagari)"
                     style={{ pointerEvents: "none" }}
                   >
@@ -647,9 +650,9 @@ export function RashiBoundaryWheel() {
                     y={labelPos.y + 10}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fill={isSelected ? rashi.color : "var(--gl-ink-secondary)"}
-                    fontSize={9}
-                    fontWeight={500}
+                    fill={WHEEL_TEXT}
+                    fontSize={12}
+                    fontWeight={800}
                     fontFamily="var(--font-cormorant)"
                     style={{ pointerEvents: "none" }}
                   >
@@ -662,8 +665,9 @@ export function RashiBoundaryWheel() {
                     y={labelPos.y + 22}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fill="var(--gl-ink-muted)"
-                    fontSize={8}
+                    fill={WHEEL_MUTED}
+                    fontSize={10.5}
+                    fontWeight={800}
                     style={{ pointerEvents: "none" }}
                   >
                     {rashi.startDegree}°–{rashi.endDegree}°
@@ -675,9 +679,9 @@ export function RashiBoundaryWheel() {
                     y={lordPos.y}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fill={isSelected ? rashi.color : `${rashi.color}90`}
-                    fontSize={11}
-                    fontWeight={600}
+                    fill={WHEEL_TEXT}
+                    fontSize={14}
+                    fontWeight={900}
                     style={{ pointerEvents: "none", fontFamily: "var(--font-sans)" }}
                   >
                     {rashi.lord.slice(0, 3)}
@@ -687,8 +691,8 @@ export function RashiBoundaryWheel() {
             })}
 
             {/* ── Center hub ── */}
-            <circle cx={CX} cy={CY} r={R_HUB} fill="url(#hubGrad)" stroke="var(--gl-gold-accent)" strokeOpacity={0.3} strokeWidth={1.5} filter="url(#bevel)" />
-            <circle cx={CX} cy={CY} r={R_HUB - 6} fill="none" stroke="var(--gl-gold-accent)" strokeOpacity={0.15} strokeWidth={1} />
+            <circle cx={CX} cy={CY} r={R_HUB} fill="url(#hubGrad)" stroke={WHEEL_GOLD} strokeOpacity={0.85} strokeWidth={2} filter="url(#bevel)" />
+            <circle cx={CX} cy={CY} r={R_HUB - 6} fill="none" stroke={WHEEL_GOLD} strokeOpacity={0.35} strokeWidth={1.25} />
 
             {/* Hub text */}
             <text
@@ -696,8 +700,8 @@ export function RashiBoundaryWheel() {
               y={CY - 6}
               textAnchor="middle"
               dominantBaseline="middle"
-              fill="var(--gl-gold-accent)"
-              fontSize={13}
+              fill={WHEEL_GOLD}
+              fontSize={15}
               fontFamily="var(--font-cormorant)"
               fontWeight={700}
               letterSpacing={1}
@@ -709,8 +713,9 @@ export function RashiBoundaryWheel() {
               y={CY + 10}
               textAnchor="middle"
               dominantBaseline="middle"
-              fill="var(--gl-ink-muted)"
-              fontSize={10}
+              fill={WHEEL_TEXT}
+              fontSize={12}
+              fontWeight={800}
               fontFamily="var(--font-sans)"
             >
               0° – 360°
@@ -730,13 +735,13 @@ export function RashiBoundaryWheel() {
                     x2={pos.x}
                     y2={pos.y}
                     stroke="#A23A1E"
-                    strokeWidth={2}
+                    strokeWidth={3}
                     strokeLinecap="round"
                     opacity={0.6}
                   />
                   {/* Pulsing marker */}
-                  <circle cx={pos.x} cy={pos.y} r={5} fill="#A23A1E" stroke="#fff" strokeWidth={2}>
-                    <animate attributeName="r" values="5;7;5" dur="1.5s" repeatCount="indefinite" />
+                  <circle cx={pos.x} cy={pos.y} r={6} fill="#A23A1E" stroke="#fff" strokeWidth={2.5}>
+                    <animate attributeName="r" values="6;8;6" dur="1.5s" repeatCount="indefinite" />
                     <animate attributeName="opacity" values="1;0.7;1" dur="1.5s" repeatCount="indefinite" />
                   </circle>
                   {/* Degree label near marker */}
@@ -746,8 +751,8 @@ export function RashiBoundaryWheel() {
                     textAnchor={pos.x > CX ? "start" : "end"}
                     dominantBaseline="middle"
                     fill="#A23A1E"
-                    fontSize={10}
-                    fontWeight={700}
+                    fontSize={13}
+                    fontWeight={900}
                   >
                     {siderealLongitude.toFixed(1)}°
                   </text>

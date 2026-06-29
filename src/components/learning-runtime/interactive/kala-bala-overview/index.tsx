@@ -74,8 +74,8 @@ function TemporalMandala({
 
   return (
     <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 640 430" className="mx-auto h-auto w-full" style={{ maxHeight: 460 }} role="img" aria-label="Nine Kala Bala sub-components grouped around total temporal strength">
-        <rect x="18" y="18" width="604" height="394" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+      <svg viewBox="0 0 640 500" className="mx-auto h-auto w-full" role="img" aria-label="Nine Kala Bala sub-components grouped around total temporal strength">
+        <rect x="18" y="18" width="604" height="464" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
         <text x="42" y="52" fill={ink.goldAccent} fontSize="12" fontWeight="900" letterSpacing="1.1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           NINE TIME SOURCES, ONE SUM
         </text>
@@ -143,7 +143,7 @@ function TemporalMandala({
           );
         })}
 
-        <text x="320" y="386" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="320" y="460" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           The diagram is structural: exact sub-formulas are computed by the Astro Engine.
         </text>
       </svg>

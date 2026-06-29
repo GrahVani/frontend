@@ -93,9 +93,9 @@ function TabBar({ active, onChange }: { active: TabKey; onChange: (t: TabKey) =>
 function M23WheelTab() {
   const [selected, setSelected] = useState<ChapterKey>("ch1");
   const active = findChapter(selected);
-  const cx = 220;
-  const cy = 220;
-  const radius = 150;
+  const cx = 280;
+  const cy = 280;
+  const radius = 200;
 
   return (
     <section className="grid min-w-0 gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,360px)]">
@@ -109,7 +109,7 @@ function M23WheelTab() {
         </p>
 
         <div className="flex justify-center">
-          <svg viewBox="0 0 440 440" className="w-full max-w-[440px]" role="img" aria-label="M23 six chapter cumulative wheel">
+          <svg viewBox="0 0 560 560" className="w-full max-w-[560px]" role="img" aria-label="M23 six chapter cumulative wheel">
             <circle cx={cx} cy={cy} r={radius + 10} fill="none" stroke={HAIRLINE} />
             {CHAPTERS.map((chapter, i) => {
               const startAngle = i * 60;
@@ -119,36 +119,37 @@ function M23WheelTab() {
               const outer = isActive ? radius + 8 : radius;
               const p1 = polarToCartesian(cx, cy, outer, startAngle);
               const p2 = polarToCartesian(cx, cy, outer, endAngle);
-              const inner = polarToCartesian(cx, cy, 70, endAngle);
-              const inner2 = polarToCartesian(cx, cy, 70, startAngle);
+              const innerR = 110;
+              const inner = polarToCartesian(cx, cy, innerR, endAngle);
+              const inner2 = polarToCartesian(cx, cy, innerR, startAngle);
               const largeArc = endAngle - startAngle > 180 ? 1 : 0;
-              const numberPos = polarToCartesian(cx, cy, 88, midAngle);
-              const labelPos = polarToCartesian(cx, cy, 130, midAngle);
+              const numberPos = polarToCartesian(cx, cy, 120, midAngle);
+              const labelPos = polarToCartesian(cx, cy, 172, midAngle);
 
               return (
                 <g key={chapter.key} style={{ cursor: "pointer" }} onClick={() => setSelected(chapter.key)}>
                   <path
-                    d={`M ${p1.x} ${p1.y} A ${outer} ${outer} 0 ${largeArc} 1 ${p2.x} ${p2.y} L ${inner.x} ${inner.y} A 70 70 0 ${largeArc} 0 ${inner2.x} ${inner2.y} Z`}
+                    d={`M ${p1.x} ${p1.y} A ${outer} ${outer} 0 ${largeArc} 1 ${p2.x} ${p2.y} L ${inner.x} ${inner.y} A ${innerR} ${innerR} 0 ${largeArc} 0 ${inner2.x} ${inner2.y} Z`}
                     fill={wash(chapter.color, isActive ? "28" : "16")}
                     stroke={isActive ? chapter.color : HAIRLINE}
                     strokeWidth={isActive ? 3 : 1.5}
                     style={{ transition: "all 0.2s ease" }}
                   />
-                  <text x={numberPos.x} y={numberPos.y} textAnchor="middle" dominantBaseline="central" fill={chapter.color} fontSize={16} fontWeight={800} style={{ pointerEvents: "none" }}>
+                  <text x={numberPos.x} y={numberPos.y} textAnchor="middle" dominantBaseline="central" fill={chapter.color} fontSize={18} fontWeight={800} style={{ pointerEvents: "none" }}>
                     {chapter.number}
                   </text>
-                  <foreignObject x={labelPos.x - 34} y={labelPos.y - 22} width="68" height="44" style={{ pointerEvents: "none" }}>
-                    <div className="flex h-full items-center justify-center text-center text-[8px] font-bold uppercase leading-tight" style={{ color: INK_PRIMARY }}>
+                  <foreignObject x={labelPos.x - 50} y={labelPos.y - 28} width="100" height="56" style={{ pointerEvents: "none" }}>
+                    <div className="flex h-full items-center justify-center text-center text-[11px] font-bold uppercase leading-tight" style={{ color: INK_PRIMARY }}>
                       {chapter.title}
                     </div>
                   </foreignObject>
                 </g>
               );
             })}
-            <circle cx={cx} cy={cy} r="62" fill="#FFFFFF" stroke={GOLD} strokeWidth={2} />
-            <text x={cx} y={cy - 8} textAnchor="middle" fill={GOLD} fontSize={14} fontWeight={800}>M23</text>
-            <text x={cx} y={cy + 10} textAnchor="middle" fill={INK_SECONDARY} fontSize={8} fontWeight={600}>22 lessons</text>
-            <text x={cx} y={cy + 24} textAnchor="middle" fill={INK_SECONDARY} fontSize={7} fontWeight={500}>Temporal discipline</text>
+            <circle cx={cx} cy={cy} r="86" fill="#FFFFFF" stroke={GOLD} strokeWidth={2} />
+            <text x={cx} y={cy - 10} textAnchor="middle" fill={GOLD} fontSize={18} fontWeight={800}>M23</text>
+            <text x={cx} y={cy + 16} textAnchor="middle" fill={INK_SECONDARY} fontSize={11} fontWeight={600}>22 lessons</text>
+            <text x={cx} y={cy + 34} textAnchor="middle" fill={INK_SECONDARY} fontSize={10} fontWeight={500}>Temporal discipline</text>
           </svg>
         </div>
       </div>

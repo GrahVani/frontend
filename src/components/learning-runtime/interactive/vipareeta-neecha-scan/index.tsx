@@ -85,8 +85,8 @@ function ChartSVG({ highlightAspectTest }: { highlightAspectTest: boolean }) {
   });
 
   return (
-    <svg viewBox="0 0 400 400" className="w-full h-auto" style={{ maxHeight: 400 }}>
-      <rect x={8} y={8} width={384} height={384} rx={10} fill={SURFACE} stroke={HAIRLINE} strokeWidth={1.5} />
+    <svg viewBox="0 0 400 445" className="w-full h-auto" style={{ maxHeight: 445 }}>
+      <rect x={8} y={8} width={384} height={424} rx={10} fill={SURFACE} stroke={HAIRLINE} strokeWidth={1.5} />
 
       <g stroke={HAIRLINE} strokeWidth={1.2} fill="none">
         <rect x={10} y={10} width={380} height={380} />
@@ -174,7 +174,7 @@ function ChartSVG({ highlightAspectTest }: { highlightAspectTest: boolean }) {
             opacity={0.6}
           />
           <text x={(HOUSE_CENTERS[4].x + HOUSE_CENTERS[10].x) / 2} y={(HOUSE_CENTERS[4].y + HOUSE_CENTERS[10].y) / 2 - 6} textAnchor="middle" fontSize={9} fontWeight={700} fill={GREEN}>
-            Sun's 7th aspect → H10
+            Sun&apos;s 7th aspect → H10
           </text>
           {/* Ghost line from H4 to H1 (the false claim) */}
           <line
@@ -199,7 +199,7 @@ function ChartSVG({ highlightAspectTest }: { highlightAspectTest: boolean }) {
       <text x={200} y={208} textAnchor="middle" fontSize={10} fontFamily="var(--font-cormorant), serif" fontStyle="italic" fill={INK_SECONDARY}>Meṣa Lagna</text>
 
       {/* Legend */}
-      <g transform="translate(16, 360)">
+      <g transform="translate(38, 410)">
         <rect x={0} y={0} width={12} height={12} rx={2} fill={GOLD_ACCENT} fillOpacity={0.12} stroke={GOLD_ACCENT} strokeWidth={1} />
         <text x={18} y={10} fontSize={10} fill={INK_SECONDARY}>Lagna</text>
         <rect x={65} y={0} width={12} height={12} rx={2} fill={GREEN} fillOpacity={0.1} stroke={GREEN} strokeWidth={1} />

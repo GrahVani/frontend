@@ -57,13 +57,17 @@ function MasterFlowSvg({ activeValue, convention }: { activeValue: MasterNumberI
           Reduce
         </text>
 
-        <path d="M520 184 H596" stroke={GOLD} strokeWidth="4" strokeLinecap="round" />
-        <rect x="608" y="125" width="100" height="120" rx="18" fill={wash(color, "12")} stroke={color} strokeWidth="2.5" />
+        <path d="M520 184 H576" stroke={GOLD} strokeWidth="4" strokeLinecap="round" />
+        <rect x="588" y="125" width="140" height="120" rx="18" fill={wash(color, "12")} stroke={color} strokeWidth="2.5" />
         <text x="658" y="176" textAnchor="middle" fill={color} fontSize="44" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
           {resultLabel}
         </text>
-        <text x="658" y="210" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-          {resultSub}
+        <text x="658" y={resultSub.includes(" ") ? 204 : 210} textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          {resultSub.split(" ").map((word, i) => (
+            <tspan key={word} x="658" dy={i === 0 ? 0 : 18}>
+              {word}
+            </tspan>
+          ))}
         </text>
 
         <rect x="155" y="324" width="450" height="48" rx="24" fill={SURFACE} stroke={GOLD} />

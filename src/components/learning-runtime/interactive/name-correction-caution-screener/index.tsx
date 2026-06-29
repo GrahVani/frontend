@@ -86,7 +86,7 @@ export function NameCorrectionCautionScreener() {
               background: activeTab === tab.key ? TEAL : "transparent",
               color: activeTab === tab.key ? "#fff" : INK_SECONDARY,
               padding: "0.52rem 0.85rem",
-              fontWeight: 850,
+              fontWeight: 400,
               cursor: "pointer",
               fontSize: "0.85rem",
             }}
@@ -179,21 +179,21 @@ function ScreenerTab() {
       <article style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.75rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
           <Scale size={18} color={TEAL} />
-          <span style={{ fontWeight: 950, color: TEAL, fontSize: "1rem" }}>Scenario {scenario.id}: {scenario.client}</span>
+          <span style={{ fontWeight: 400, color: TEAL, fontSize: "1rem" }}>Scenario {scenario.id}: {scenario.client}</span>
         </div>
         <blockquote style={{ margin: 0, padding: "0.75rem", borderLeft: `4px solid ${GOLD}`, background: `${GOLD}0A`, borderRadius: 8, fontStyle: "italic", color: INK_PRIMARY, lineHeight: 1.55 }}>
           &ldquo;{scenario.quote}&rdquo;
         </blockquote>
         <p style={{ margin: 0, color: INK_SECONDARY, fontSize: "0.87rem", lineHeight: 1.55 }}>
-          <strong style={{ color: INK_PRIMARY }}>Context:</strong> {scenario.context}
+          <span style={{ color: INK_PRIMARY }}>Context:</span> {scenario.context}
         </p>
 
         <div style={{ display: "grid", gap: "0.5rem" }}>
-          <div style={{ fontSize: "0.85rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 1 — Apply the four-test screen</div>
+          <div style={{ fontSize: "0.85rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 1 — Apply the four-test screen</div>
           <div style={{ display: "grid", gap: "0.5rem" }}>
             {FOUR_TESTS.map((t) => (
               <div key={t.key} style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, padding: "0.65rem", background: SURFACE }}>
-                <div style={{ fontWeight: 900, color: INK_PRIMARY, fontSize: "0.9rem", marginBottom: "0.35rem" }}>{t.label}</div>
+                <div style={{ fontWeight: 400, color: INK_PRIMARY, fontSize: "0.9rem", marginBottom: "0.35rem" }}>{t.label}</div>
                 <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
                   <button
                     type="button"
@@ -216,7 +216,7 @@ function ScreenerTab() {
         </div>
 
         <div style={{ display: "grid", gap: "0.5rem" }}>
-          <div style={{ fontSize: "0.85rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 2 — Identify commercial failure modes (if any)</div>
+          <div style={{ fontSize: "0.85rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 2 — Identify commercial failure modes (if any)</div>
           <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             {FAILURE_MODES.map((fm) => (
               <button
@@ -236,7 +236,7 @@ function ScreenerTab() {
         </div>
 
         <div style={{ display: "grid", gap: "0.5rem" }}>
-          <div style={{ fontSize: "0.85rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 3 — Choose discipline-compliant verdict</div>
+          <div style={{ fontSize: "0.85rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 3 — Choose discipline-compliant verdict</div>
           <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             {VERDICTS.map((v) => (
               <button
@@ -269,7 +269,7 @@ function ScreenerTab() {
             <div style={{ border: `1px solid ${verdictColor(scenario.verdict)}44`, borderRadius: 8, background: `${verdictColor(scenario.verdict)}0A`, padding: "1rem", display: "grid", gap: "0.35rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 {scenario.verdict === "refuse" ? <ShieldAlert size={18} color={verdictColor(scenario.verdict)} /> : <CheckCircle2 size={18} color={verdictColor(scenario.verdict)} />}
-                <span style={{ fontWeight: 950, color: verdictColor(scenario.verdict), fontSize: "1rem" }}>{verdictLabel(scenario.verdict)}</span>
+                <span style={{ fontWeight: 400, color: verdictColor(scenario.verdict), fontSize: "1rem" }}>{verdictLabel(scenario.verdict)}</span>
               </div>
               <p style={{ margin: 0, color: INK_PRIMARY, lineHeight: 1.55, fontSize: "0.9rem" }}>{scenario.explanation}</p>
             </div>
@@ -277,7 +277,7 @@ function ScreenerTab() {
             <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "0.85rem", display: "grid", gap: "0.5rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <AlertTriangle size={18} color={GOLD} />
-                <span style={{ fontWeight: 950, color: GOLD, fontSize: "0.95rem" }}>Model practitioner response</span>
+                <span style={{ fontWeight: 400, color: GOLD, fontSize: "0.95rem" }}>Model practitioner response</span>
               </div>
               <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.55, fontSize: "0.87rem", fontStyle: "italic" }}>
                 &ldquo;{scenario.practitionerResponse}&rdquo;
@@ -285,13 +285,13 @@ function ScreenerTab() {
             </div>
 
             <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "0.75rem", display: "grid", gap: "0.35rem" }}>
-              <div style={{ fontSize: "0.78rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Your selections vs. model answer</div>
+              <div style={{ fontSize: "0.78rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Your selections vs. model answer</div>
               <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", fontSize: "0.85rem" }}>
-                <span style={{ color: testsCorrect ? GREEN : VERMILION, fontWeight: 850 }}>Four tests: {testsCorrect ? "match" : "mismatch"}</span>
+                <span style={{ color: testsCorrect ? GREEN : VERMILION, fontWeight: 400 }}>Four tests: {testsCorrect ? "match" : "mismatch"}</span>
                 <span style={{ color: INK_MUTED }}>·</span>
-                <span style={{ color: failuresCorrect ? GREEN : VERMILION, fontWeight: 850 }}>Failure modes: {failuresCorrect ? "match" : "mismatch"}</span>
+                <span style={{ color: failuresCorrect ? GREEN : VERMILION, fontWeight: 400 }}>Failure modes: {failuresCorrect ? "match" : "mismatch"}</span>
                 <span style={{ color: INK_MUTED }}>·</span>
-                <span style={{ color: verdictCorrect ? GREEN : VERMILION, fontWeight: 850 }}>Verdict: {verdictCorrect ? "match" : "mismatch"}</span>
+                <span style={{ color: verdictCorrect ? GREEN : VERMILION, fontWeight: 400 }}>Verdict: {verdictCorrect ? "match" : "mismatch"}</span>
               </div>
             </div>
           </div>
@@ -309,7 +309,7 @@ function CostsTab() {
       <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
           <AlertTriangle size={18} color={TEAL} />
-          <span style={{ fontWeight: 950, color: TEAL, fontSize: "1rem" }}>Three real-cost categories of legal name-change</span>
+          <span style={{ fontWeight: 400, color: TEAL, fontSize: "1rem" }}>Three real-cost categories of legal name-change</span>
         </div>
         <p style={{ margin: "0.3rem 0 0", color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.88rem" }}>
           Documentation, social-friction, and identity-continuity costs COMPOUND. Single-numerology-framing alone
@@ -330,7 +330,7 @@ function CostsTab() {
             gap: "0.35rem",
           }}
         >
-          <div style={{ fontWeight: 950, color: INK_PRIMARY, fontSize: "1rem" }}>
+          <div style={{ fontWeight: 400, color: INK_PRIMARY, fontSize: "1rem" }}>
             {cost.number}. {cost.label}
           </div>
           <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.87rem" }}>{cost.description}</p>
@@ -362,7 +362,7 @@ function CatalogueTab() {
       <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
           <BookOpen size={18} color={TEAL} />
-          <span style={{ fontWeight: 950, color: TEAL, fontSize: "1rem" }}>Commercial-numerology over-claim refusal catalogue</span>
+          <span style={{ fontWeight: 400, color: TEAL, fontSize: "1rem" }}>Commercial-numerology over-claim refusal catalogue</span>
         </div>
         <p style={{ margin: "0.3rem 0 0", color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.88rem" }}>
           Refuse all six failure modes regardless of legitimate-looking surface presentation. Often two or more
@@ -384,10 +384,10 @@ function CatalogueTab() {
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
-            <div style={{ fontWeight: 950, color: INK_PRIMARY, fontSize: "1rem" }}>
+            <div style={{ fontWeight: 400, color: INK_PRIMARY, fontSize: "1rem" }}>
               {fm.number}. {fm.label}
             </div>
-            <div style={{ fontSize: "0.72rem", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.06em", color: VERMILION }}>
+            <div style={{ fontSize: "0.72rem", fontWeight: 400, textTransform: "uppercase", letterSpacing: "0.06em", color: VERMILION }}>
               Refuse
             </div>
           </div>
@@ -398,7 +398,7 @@ function CatalogueTab() {
       <div style={{ border: `1px solid ${TEAL}44`, borderRadius: 8, background: `${TEAL}0A`, padding: "0.85rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.35rem" }}>
           <Scale size={18} color={TEAL} />
-          <span style={{ fontWeight: 950, color: TEAL, fontSize: "0.95rem" }}>Practitioner ethical position</span>
+          <span style={{ fontWeight: 400, color: TEAL, fontSize: "0.95rem" }}>Practitioner ethical position</span>
         </div>
         <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.85rem" }}>
           Provide information + apply discipline + respect client decision. Refuse pressure in BOTH directions:
@@ -417,16 +417,16 @@ function WorkflowTab() {
     <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.75rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
         <ListChecks size={18} color={TEAL} />
-        <span style={{ fontWeight: 950, color: TEAL, fontSize: "1rem" }}>Chapter 4 integrated refusal-discipline flow</span>
+        <span style={{ fontWeight: 400, color: TEAL, fontSize: "1rem" }}>Chapter 4 integrated refusal-discipline flow</span>
       </div>
       <div style={{ display: "grid", gap: "0.5rem" }}>
         {WORKFLOW_STEPS.map((step, i) => (
           <div key={i} style={{ display: "flex", gap: "0.6rem", alignItems: "flex-start", border: `1px solid ${HAIRLINE}`, borderRadius: 8, padding: "0.75rem", background: SURFACE }}>
-            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 26, height: 26, borderRadius: "50%", background: TEAL, color: "#fff", fontWeight: 950, fontSize: "0.8rem", flexShrink: 0 }}>
+            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 26, height: 26, borderRadius: "50%", background: TEAL, color: "#fff", fontWeight: 400, fontSize: "0.8rem", flexShrink: 0 }}>
               {i + 1}
             </span>
             <div>
-              <div style={{ fontWeight: 950, color: INK_PRIMARY, fontSize: "0.95rem", marginBottom: "0.15rem" }}>{step.title}</div>
+              <div style={{ fontWeight: 400, color: INK_PRIMARY, fontSize: "0.95rem", marginBottom: "0.15rem" }}>{step.title}</div>
               <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.85rem" }}>{step.text}</p>
             </div>
           </div>
@@ -461,7 +461,7 @@ function buttonStyle(active: boolean, color: string): CSSProperties {
     background: active ? color : "transparent",
     color: active ? "#fff" : INK_SECONDARY,
     padding: "0.52rem 0.68rem",
-    fontWeight: 850,
+    fontWeight: 400,
     cursor: "pointer",
   };
 }
@@ -472,5 +472,5 @@ const eyebrowStyle: CSSProperties = {
   letterSpacing: "0.08em",
   color: INK_MUTED,
   fontSize: "0.78rem",
-  fontWeight: 900,
+  fontWeight: 400,
 };

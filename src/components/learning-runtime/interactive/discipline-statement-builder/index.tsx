@@ -41,31 +41,34 @@ function ModuleArcSvg({ activeChapter }: { activeChapter: number }) {
     const radians = (angle * Math.PI) / 180;
     return {
       chapter,
-      x: 380 + Math.cos(radians) * 220,
-      y: 210 + Math.sin(radians) * 95,
+      x: 380 + Math.cos(radians) * 260,
+      y: 240 + Math.sin(radians) * 160,
     };
   });
   return (
     <section className="w-full min-w-0 overflow-x-auto rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 400" className="h-auto w-full min-w-[520px]" role="img" aria-label="Module 21 six chapter synthesis arc">
-        <rect x="20" y="20" width="720" height="360" rx="22" fill={SURFACE_2} stroke={HAIRLINE} />
+      <svg viewBox="0 0 760 460" className="h-auto w-full min-w-[520px]" role="img" aria-label="Module 21 six chapter synthesis arc">
+        <rect x="20" y="20" width="720" height="420" rx="22" fill={SURFACE_2} stroke={HAIRLINE} />
         <text x="380" y="48" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           SIX CHAPTERS BECOME ONE DISCIPLINE
         </text>
-        <path d="M160 248 C250 110, 510 110, 600 248" fill="none" stroke={HAIRLINE} strokeWidth="4" strokeDasharray="10 12" />
-        <circle cx="380" cy="188" r="78" fill={SURFACE} stroke={GOLD} strokeWidth="4" />
-        <text x="380" y="164" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>M21</text>
-        <text x="380" y="198" textAnchor="middle" fill={INK_PRIMARY} fontSize="30" fontWeight="800" style={{ fontFamily: "var(--font-cormorant), serif" }}>discipline</text>
-        <text x="380" y="224" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>write it, test it, practise it</text>
+        <path d="M155 320 C250 80, 510 80, 605 320" fill="none" stroke={HAIRLINE} strokeWidth="4" strokeDasharray="10 12" />
+        <circle cx="380" cy="230" r="95" fill={SURFACE} stroke={GOLD} strokeWidth="4" />
+        <text x="380" y="190" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>M21</text>
+        <text x="380" y="222" textAnchor="middle" fill={INK_PRIMARY} fontSize="30" fontWeight="800" style={{ fontFamily: "var(--font-cormorant), serif" }}>discipline</text>
+        <text x="380" y="250" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <tspan x="380" dy="0">write it, test it,</tspan>
+          <tspan x="380" dy="16">practise it</tspan>
+        </text>
         {points.map(({ chapter, x, y }) => {
           const active = chapter.chapter === activeChapter;
           const color = active ? GREEN : GOLD;
           const titleLines = splitChapterTitle(chapter.title);
           return (
             <g key={chapter.chapter}>
-              <circle cx={x} cy={y} r={active ? 42 : 36} fill={wash(color, active ? "16" : "0D")} stroke={color} strokeWidth={active ? 3 : 2} />
-              <text x={x} y={y - 10} textAnchor="middle" fill={color} fontSize="20" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>{chapter.chapter}</text>
-              <text x={x} y={y + (titleLines.length === 1 ? 12 : 6)} textAnchor="middle" fill={INK_PRIMARY} fontSize="9" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <circle cx={x} cy={y} r={active ? 44 : 38} fill={wash(color, active ? "16" : "0D")} stroke={color} strokeWidth={active ? 3 : 2} />
+              <text x={x} y={y - 12} textAnchor="middle" fill={color} fontSize="20" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>{chapter.chapter}</text>
+              <text x={x} y={y + (titleLines.length === 1 ? 14 : 8)} textAnchor="middle" fill={INK_PRIMARY} fontSize="9" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {titleLines.map((line, index) => (
                   <tspan key={line} x={x} dy={index === 0 ? 0 : 12}>{line}</tspan>
                 ))}
@@ -73,8 +76,8 @@ function ModuleArcSvg({ activeChapter }: { activeChapter: number }) {
             </g>
           );
         })}
-        <rect x="120" y="350" width="520" height="28" rx="14" fill={SURFACE} stroke={VERMILION} />
-        <text x="380" y="369" textAnchor="middle" fill={VERMILION} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="120" y="410" width="520" height="28" rx="14" fill={SURFACE} stroke={VERMILION} />
+        <text x="380" y="429" textAnchor="middle" fill={VERMILION} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           No single factor, no fear, no guarantees, no numerology-only major action.
         </text>
       </svg>

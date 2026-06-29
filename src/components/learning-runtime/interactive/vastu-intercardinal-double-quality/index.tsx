@@ -39,6 +39,22 @@ function matchLabel(match: string) {
   return "Context";
 }
 
+function lineToBoxEdge(cx: number, cy: number, px: number, py: number, circleR: number, halfW: number, halfH: number) {
+  const dx = px - cx;
+  const dy = py - cy;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  const ux = dx / len;
+  const uy = dy / len;
+  const x1 = cx + ux * circleR;
+  const y1 = cy + uy * circleR;
+  const tx = 1 - halfW / Math.abs(dx);
+  const ty = 1 - halfH / Math.abs(dy);
+  const t = Math.max(0, tx, ty);
+  const x2 = cx + dx * t;
+  const y2 = cy + dy * t;
+  return { x1, y1, x2, y2 };
+}
+
 function DirectionCompass({
   activeZone,
   activeActivity,
@@ -69,9 +85,10 @@ function DirectionCompass({
           const color = match === "avoid" ? VERMILION : zone.color;
           const x = (zone.x / 100) * 480 + 40;
           const y = (zone.y / 100) * 340 + 40;
+          const { x1, y1, x2, y2 } = lineToBoxEdge(280, 210, x, y, 58, 76, 48);
           return (
             <g key={zone.key}>
-              <line x1="280" y1="210" x2={x} y2={y} stroke={selected ? zone.color : HAIRLINE} strokeWidth={selected ? 4 : 2} strokeDasharray={selected ? "0" : "8 8"} />
+              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={selected ? zone.color : HAIRLINE} strokeWidth={selected ? 4 : 2} strokeDasharray={selected ? "0" : "8 8"} />
               <foreignObject x={x - 76} y={y - 48} width="152" height="96">
                 <button
                   type="button"
