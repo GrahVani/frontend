@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { ShieldAlert, CheckCircle2, Clock, Scale, Info } from "lucide-react";
+import { useState, useMemo } from "react";
+import { CheckCircle2, Clock, Scale, Info } from "lucide-react";
 import { IAST } from "../../chrome/typography";
 
 const GOLD = "var(--gl-gold-accent, #9C7A2F)";
 const GOLD_DEEP = "var(--gl-gold-deep, #7A5E1E)";
 const PURPLE = "#8b5cf6";
-const GREEN = "#10b981";
+const GREEN = "#2F7D55";
 const AMBER = "#f59e0b";
-const RED = "#ef4444";
+const RED = "#A8412B";
 const SLATE_BLUE = "#3b82f6";
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary, #2d261e)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary, #4d4133)";
@@ -17,8 +17,14 @@ const INK_MUTED = "var(--gl-ink-on-cream-muted, #7c6d5b)";
 const SURFACE_MANUSCRIPT = "var(--gl-surface-manuscript, rgba(251,248,243,0.6))";
 
 interface HouseAxisDetail {
-  id: string; label: string; rahuHouse: number; ketuHouse: number;
-  title: string; rahuFocus: string; ketuFocus: string; synthesis: string;
+  id: string;
+  label: string;
+  rahuHouse: number;
+  ketuHouse: number;
+  title: string;
+  rahuFocus: string;
+  ketuFocus: string;
+  synthesis: string;
 }
 
 const AXIS_DETAILS: HouseAxisDetail[] = [
@@ -35,11 +41,11 @@ const AXIS_DETAILS: HouseAxisDetail[] = [
     ketuFocus: "Dissolving rigid dogmatic beliefs, detaching from religious institutions, distance from gurus and fathers — bhāgya through letting go.",
     synthesis: "Learning to balance self-made efforts and logical skills with mature, structured surrender to dharma and spiritual laws." },
   { id: "4-10", label: "4–10", rahuHouse: 4, ketuHouse: 10, title: "Home vs. Professional Status Polarity",
-    rahuFocus: "Urge for domestic peace, property acquisitions, home baseline comfort. emotional nesting focus — sukha-sthāna grasping.",
+    rahuFocus: "Urge for domestic peace, property acquisitions, home baseline comfort. Emotional nesting focus — sukha-sthāna grasping.",
     ketuFocus: "Releasing ambition, detaching from public reputation pressures, dissolving corporate status obsession — karma-sthāna release.",
     synthesis: "Stabilizing home boundaries and emotional foundations by consciously letting go of external status anxieties." },
   { id: "5-11", label: "5–11", rahuHouse: 5, ketuHouse: 11, title: "Creative Intellect vs. Social Gains Polarity",
-    rahuFocus: "Obsessive focus on personal projects, children, spiritual chants (mantra), speculative intellect. putra-bhāva grasping.",
+    rahuFocus: "Obsessive focus on personal projects, children, spiritual chants (mantra), speculative intellect. Putra-bhāva grasping.",
     ketuFocus: "Detaching from massive social clubs, dissolving dependencies on networking gains, pruning superficial friendships — lābha released.",
     synthesis: "Realignment toward deep individual creativity, study, and child development, leaving behind social recognition loops." },
   { id: "6-12", label: "6–12", rahuHouse: 6, ketuHouse: 12, title: "Daily Service vs. Spiritual Liberation Polarity",
@@ -60,10 +66,22 @@ const PLANET_RULED_HOUSES: Record<string, { houses: number[]; description: strin
   Ketu: { houses: [], description: "transit node (directly activates axis)" }
 };
 
+const HIT_GUIDE = [
+  { point: "Natal Moon", symbol: "☽", color: SLATE_BLUE, effect: "Turbulent mental/emotional period; nodes on the mind." },
+  { point: "Natal Sun", symbol: "☉", color: AMBER, effect: "Ego-restructuring; authority and identity reconsidered." },
+  { point: "Natal Lagna", symbol: "Lg", color: GOLD_DEEP, effect: "Identity transformation; body and lifestyle shift." },
+  { point: "Daśā-lord", symbol: "D", color: RED, effect: "Major event-trigger for the running promise." },
+];
+
+const WORKED_EXAMPLES = [
+  { label: "4–10 axis", text: "Home↔career tension — e.g. relocation for work. Read both poles together." },
+  { label: "Hit on the Moon", text: "Nodal axis on natal Moon → turbulent mental period; handle gently." },
+  { label: "Daśā-lord trigger", text: "Axis crossing running daśā-lord → strong timing signature for that lord's matters." },
+];
+
 export function NodalAxisHouseReader() {
   const [activeAxisId, setActiveAxisId] = useState<string>("4-10");
-  
-  // Placement states for sensitive hits: "none" | "rahu" | "ketu"
+
   const [moonPlacement, setMoonPlacement] = useState<"none" | "rahu" | "ketu">("none");
   const [sunPlacement, setSunPlacement] = useState<"none" | "rahu" | "ketu">("none");
   const [lagnaPlacement, setLagnaPlacement] = useState<"none" | "rahu" | "ketu">("none");
@@ -79,14 +97,12 @@ export function NodalAxisHouseReader() {
     return ruled.includes(activeAxis.rahuHouse) || ruled.includes(activeAxis.ketuHouse);
   }, [runningDashaLord, activeAxis]);
 
-  // Sensitive hits helpers
   const isMoonHit = moonPlacement !== "none";
   const isSunHit = sunPlacement !== "none";
   const isLagnaHit = lagnaPlacement !== "none";
   const isDashaHit = dashaPlacement !== "none";
   const anyHit = isMoonHit || isSunHit || isLagnaHit || isDashaHit;
 
-  // Occupants list for SVG drawing
   const leftOccupants = useMemo(() => {
     const list = [];
     if (moonPlacement === "rahu") list.push({ glyph: "☽", name: "Moon", color: SLATE_BLUE });
@@ -105,22 +121,17 @@ export function NodalAxisHouseReader() {
     return list;
   }, [moonPlacement, sunPlacement, lagnaPlacement, dashaPlacement, runningDashaLord]);
 
-  // Calculate weights & scale angle
   const scaleAngle = useMemo(() => {
-    // Rahu base weight = 2 (grasping desire is heavy)
-    // Ketu base weight = 0.5 (detachment is light)
     const rahuWeight = 2 + leftOccupants.length * 1.5;
     const ketuWeight = 0.5 + rightOccupants.length * 1.5;
     const diff = rahuWeight - ketuWeight;
-    // Angle limits between -25 and 25 degrees
     return Math.max(-25, Math.min(25, -5 - diff * 7));
   }, [leftOccupants, rightOccupants]);
 
-  // SVG Coordinate helpers based on angle
   const scaleCoords = useMemo(() => {
     const cx = 120;
     const cy = 45;
-    const d = 70; // half-length of beam
+    const d = 70;
     const rad = (scaleAngle * Math.PI) / 180;
     return {
       leftX: cx - d * Math.cos(rad),
@@ -131,376 +142,295 @@ export function NodalAxisHouseReader() {
   }, [scaleAngle]);
 
   return (
-    <div className="gl-surface-twilight-glass" style={{ padding: "20px", borderRadius: "16px", background: "rgba(255, 253, 248, 0.75)", backdropFilter: "blur(12px)", border: "1px solid rgba(156, 122, 47, 0.15)", boxShadow: "0 8px 32px rgba(72, 48, 16, 0.05)", fontFamily: "'Inter', sans-serif", color: INK_PRIMARY, maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "14px" }}>
-      
+    <div data-interactive="nodal-axis-house-reader" style={{ padding: "16px", borderRadius: "14px", background: "rgba(255, 253, 248, 0.75)", backdropFilter: "blur(12px)", border: "1px solid rgba(156, 122, 47, 0.15)", boxShadow: "0 8px 32px rgba(72, 48, 16, 0.05)", fontFamily: "'Inter', sans-serif", color: INK_PRIMARY, maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "10px" }}>
+
+      {/* Header */}
       <div>
-        <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 800, color: GOLD_DEEP }}>
-          Janmabhāveṣu Rāhu-Ketu-Akṣaḥ — Axis on Natal Houses
+        <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 800, color: GOLD_DEEP }}>
+          <IAST>Rāhu-Ketu</IAST> Axis on Natal Houses — Dragon Scale Model
         </h3>
-        <p style={{ margin: "2px 0 0 0", fontSize: "12px", color: INK_SECONDARY }}>The six house-pair axes. Rāhu grasps in one house; Ketu releases in the opposite. Always read both.</p>
+        <p style={{ margin: "2px 0 0 0", fontSize: "11px", color: INK_SECONDARY }}>
+          The nodal axis activates two opposite houses for ~18 months. Rāhu grasps in one; Ketu releases in the other. Always read both.
+        </p>
       </div>
 
-      {/* ─── CONTROLS BAR (TOP) ─── */}
-      <div style={{ background: "#ffffff", padding: "12px", borderRadius: "10px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", gap: "10px" }}>
-        <div>
-          <label style={{ fontSize: "11.5px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "6px" }}>
-            1. Select Transit Nodal Axis
-          </label>
-          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-            {AXIS_DETAILS.map(axis => (
-              <button key={axis.id} onClick={() => setActiveAxisId(axis.id)} style={{
-                padding: "5px 8px", borderRadius: "5px", border: activeAxisId === axis.id ? `1.5px solid ${GOLD_DEEP}` : "1px solid rgba(0,0,0,0.08)",
-                background: activeAxisId === axis.id ? "rgba(156,122,47,0.08)" : "#ffffff", fontWeight: activeAxisId === axis.id ? 700 : 500,
-                fontSize: "10px", cursor: "pointer", color: activeAxisId === axis.id ? GOLD_DEEP : INK_SECONDARY, textAlign: "center",
-                transition: "all 0.15s ease"
-              }}>
-                <div>{axis.label}</div>
-                <div style={{ fontSize: "8px", opacity: 0.8 }}>H{axis.rahuHouse}-H{axis.ketuHouse}</div>
-              </button>
-            ))}
-          </div>
+      {/* Axis selector */}
+      <div style={{ background: "#ffffff", padding: "10px", borderRadius: "8px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", gap: "8px" }}>
+        <span style={{ fontSize: "10px", fontWeight: 800, color: GOLD_DEEP, textTransform: "uppercase" }}>1. Select transit nodal axis</span>
+        <div style={{ display: "flex", gap: "5px", flexWrap: "wrap" }}>
+          {AXIS_DETAILS.map(axis => (
+            <button key={axis.id} onClick={() => setActiveAxisId(axis.id)} style={{
+              padding: "5px 8px", borderRadius: "5px", border: activeAxisId === axis.id ? `1.5px solid ${GOLD_DEEP}` : "1px solid rgba(156,122,47,0.15)",
+              background: activeAxisId === axis.id ? "rgba(156,122,47,0.08)" : "#ffffff", fontWeight: activeAxisId === axis.id ? 800 : 600,
+              fontSize: "10px", cursor: "pointer", color: activeAxisId === axis.id ? GOLD_DEEP : INK_SECONDARY, textAlign: "center"
+            }}>
+              <div>{axis.label}</div>
+              <div style={{ fontSize: "8px", opacity: 0.8 }}>H{axis.rahuHouse}-H{axis.ketuHouse}</div>
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* ─── MAIN: BALANCE SCALE + SYNTHESIS ─── */}
-      <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
-        
-        {/* Left Column: Interactive Balance Scale */}
-        <div style={{ flex: "0 0 280px", background: "#ffffff", padding: "16px", borderRadius: "12px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-          <h4 style={{ margin: "0 0 14px 0", fontSize: "11.5px", fontWeight: 700, color: INK_MUTED, textTransform: "uppercase", display: "flex", alignItems: "center", gap: "4px" }}>
-            <Scale size={14} color={GOLD} /> Dragon Scale Model (DSM)
-          </h4>
-          
-          <div style={{ position: "relative", width: "240px", height: "150px" }}>
-            <svg width="240" height="150" viewBox="0 0 240 150" style={{ overflow: "visible" }}>
-              {/* Stand Base */}
-              <line x1="120" y1="130" x2="120" y2="45" stroke={INK_SECONDARY} strokeWidth="3.5" />
-              <line x1="85" y1="130" x2="155" y2="130" stroke={INK_SECONDARY} strokeWidth="4.5" strokeLinecap="round" />
-              
-              {/* Fulcrum indicator point */}
-              <circle cx="120" cy="45" r="4.5" fill={INK_SECONDARY} />
-              
-              {/* Rotated Beam */}
-              <line x1={scaleCoords.leftX} y1={scaleCoords.leftY} x2={scaleCoords.rightX} y2={scaleCoords.rightY} stroke={GOLD_DEEP} strokeWidth="3" strokeLinecap="round" style={{ transition: "all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)" }} />
-              
-              {/* Left Pan (Rahu side) - strings hang straight down */}
-              {(() => {
-                const { leftX, leftY } = scaleCoords;
-                return (
-                  <g style={{ transition: "all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)" }}>
-                    {/* Strings */}
-                    <line x1={leftX} y1={leftY} x2={leftX - 16} y2={leftY + 28} stroke={PURPLE} strokeWidth="1" opacity="0.6" />
-                    <line x1={leftX} y1={leftY} x2={leftX + 16} y2={leftY + 28} stroke={PURPLE} strokeWidth="1" opacity="0.6" />
-                    {/* Pan Basket */}
-                    <path d={`M ${leftX - 20} ${leftY + 28} Q ${leftX} ${leftY + 38} ${leftX + 20} ${leftY + 28} Z`} fill="rgba(139,92,246,0.08)" stroke={PURPLE} strokeWidth="1.5" />
-                    
-                    {/* Suspended core Rahu weight */}
-                    <circle cx={leftX} cy={leftY + 36} r="7" fill={PURPLE} stroke="#ffffff" strokeWidth="1" />
-                    <text x={leftX} y={leftY + 36.5} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8px", fill: "#ffffff", fontWeight: 900 }}>☊</text>
-                    
-                    <text x={leftX} y={leftY + 49} textAnchor="middle" style={{ fontSize: "8.5px", fill: PURPLE, fontWeight: 800 }}>Rāhu (H{activeAxis.rahuHouse})</text>
+      {/* Main two-column layout */}
+      <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "stretch" }}>
 
-                    {/* Left occupants in pan */}
-                    {leftOccupants.map((occ, idx) => {
-                      const total = leftOccupants.length;
-                      const spacing = 11;
-                      const startX = leftX - ((total - 1) * spacing) / 2;
-                      const occX = startX + idx * spacing;
-                      const occY = leftY + 18;
-                      return (
-                        <g key={occ.name}>
-                          <circle cx={occX} cy={occY} r="5.5" fill={occ.color} stroke="#ffffff" strokeWidth="0.75" />
-                          <text x={occX} y={occY} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "7px", fill: "#ffffff", fontWeight: 900, fontFamily: "Arial, sans-serif" }}>
-                            {occ.glyph}
-                          </text>
-                        </g>
-                      );
-                    })}
-                  </g>
-                );
-              })()}
+        {/* Left — scale + educational panels */}
+        <div style={{ flex: "1 1 280px", minWidth: "260px", display: "flex", flexDirection: "column", gap: "8px" }}>
+          {/* Scale card */}
+          <div style={{ background: "#ffffff", padding: "12px", borderRadius: "10px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <h4 style={{ margin: "0 0 10px 0", fontSize: "10px", fontWeight: 800, color: INK_MUTED, textTransform: "uppercase", display: "flex", alignItems: "center", gap: "4px" }}>
+              <Scale size={13} color={GOLD} /> Dragon Scale Model (DSM)
+            </h4>
+            <div style={{ position: "relative", width: "240px", height: "150px" }}>
+              <svg width="240" height="150" viewBox="0 0 240 150" style={{ overflow: "visible" }}>
+                <line x1="120" y1="130" x2="120" y2="45" stroke={INK_SECONDARY} strokeWidth="3.5" />
+                <line x1="85" y1="130" x2="155" y2="130" stroke={INK_SECONDARY} strokeWidth="4.5" strokeLinecap="round" />
+                <circle cx="120" cy="45" r="4.5" fill={INK_SECONDARY} />
+                <line x1={scaleCoords.leftX} y1={scaleCoords.leftY} x2={scaleCoords.rightX} y2={scaleCoords.rightY} stroke={GOLD_DEEP} strokeWidth="3" strokeLinecap="round" style={{ transition: "all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)" }} />
+                <ScalePan side="left" x={scaleCoords.leftX} y={scaleCoords.leftY} node="rahu" house={activeAxis.rahuHouse} occupants={leftOccupants} />
+                <ScalePan side="right" x={scaleCoords.rightX} y={scaleCoords.rightY} node="ketu" house={activeAxis.ketuHouse} occupants={rightOccupants} />
+              </svg>
+            </div>
+          </div>
 
-              {/* Right Pan (Ketu side) - strings hang straight down */}
-              {(() => {
-                const { rightX, rightY } = scaleCoords;
-                return (
-                  <g style={{ transition: "all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)" }}>
-                    {/* Strings */}
-                    <line x1={rightX} y1={rightY} x2={rightX - 16} y2={rightY + 28} stroke={AMBER} strokeWidth="1" opacity="0.6" />
-                    <line x1={rightX} y1={rightY} x2={rightX + 16} y2={rightY + 28} stroke={AMBER} strokeWidth="1" opacity="0.6" />
-                    {/* Pan Basket */}
-                    <path d={`M ${rightX - 20} ${rightY + 28} Q ${rightX} ${rightY + 38} ${rightX + 20} ${rightY + 28} Z`} fill="rgba(245,158,11,0.08)" stroke={AMBER} strokeWidth="1.5" />
-                    
-                    {/* Suspended core Ketu weight */}
-                    <circle cx={rightX} cy={rightY + 36} r="7" fill={AMBER} stroke="#ffffff" strokeWidth="1" />
-                    <text x={rightX} y={rightY + 36.5} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8px", fill: "#ffffff", fontWeight: 900 }}>☋</text>
-                    
-                    <text x={rightX} y={rightY + 49} textAnchor="middle" style={{ fontSize: "8.5px", fill: AMBER, fontWeight: 800 }}>Ketu (H{activeAxis.ketuHouse})</text>
+          {/* Reading the scale */}
+          <div style={{ background: "#ffffff", padding: "10px", borderRadius: "8px", border: "1px solid rgba(156,122,47,0.1)" }}>
+            <div style={{ fontSize: "9px", fontWeight: 800, color: GOLD_DEEP, textTransform: "uppercase", marginBottom: "6px" }}>Reading the scale</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+              <div style={{ display: "flex", gap: "6px", fontSize: "10px" }}>
+                <span style={{ fontWeight: 900, color: PURPLE, minWidth: "60px" }}>☊ Rāhu</span>
+                <span style={{ color: INK_SECONDARY }}>Heavy side — grasping, obsession, amplification in H{activeAxis.rahuHouse}.</span>
+              </div>
+              <div style={{ display: "flex", gap: "6px", fontSize: "10px" }}>
+                <span style={{ fontWeight: 900, color: AMBER, minWidth: "60px" }}>☋ Ketu</span>
+                <span style={{ color: INK_SECONDARY }}>Light side — release, detachment, depletion in H{activeAxis.ketuHouse}.</span>
+              </div>
+              <div style={{ display: "flex", gap: "6px", fontSize: "10px" }}>
+                <span style={{ fontWeight: 900, color: INK_PRIMARY, minWidth: "60px" }}>Hits</span>
+                <span style={{ color: INK_SECONDARY }}>Adding Moon/Sun/Lagna/daśā-lord tips the scale and intensifies the axis.</span>
+              </div>
+            </div>
+          </div>
 
-                    {/* Right occupants in pan */}
-                    {rightOccupants.map((occ, idx) => {
-                      const total = rightOccupants.length;
-                      const spacing = 11;
-                      const startX = rightX - ((total - 1) * spacing) / 2;
-                      const occX = startX + idx * spacing;
-                      const occY = rightY + 18;
-                      return (
-                        <g key={occ.name}>
-                          <circle cx={occX} cy={occY} r="5.5" fill={occ.color} stroke="#ffffff" strokeWidth="0.75" />
-                          <text x={occX} y={occY} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "7px", fill: "#ffffff", fontWeight: 900, fontFamily: "Arial, sans-serif" }}>
-                            {occ.glyph}
-                          </text>
-                        </g>
-                      );
-                    })}
-                  </g>
-                );
-              })()}
-            </svg>
+          {/* Sensitive-point guide */}
+          <div style={{ background: "#ffffff", padding: "10px", borderRadius: "8px", border: "1px solid rgba(156,122,47,0.1)" }}>
+            <div style={{ fontSize: "9px", fontWeight: 800, color: GOLD_DEEP, textTransform: "uppercase", marginBottom: "6px" }}>Sensitive-point hits</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              {HIT_GUIDE.map(h => (
+                <div key={h.point} style={{ display: "flex", gap: "6px", alignItems: "flex-start", fontSize: "10px" }}>
+                  <span style={{ fontSize: "11px", color: h.color, flexShrink: 0 }}>{h.symbol}</span>
+                  <span style={{ fontWeight: 800, color: INK_PRIMARY, minWidth: "75px" }}>{h.point}</span>
+                  <span style={{ color: INK_SECONDARY }}>{h.effect}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* All six axes */}
+          <div style={{ background: "#ffffff", padding: "10px", borderRadius: "8px", border: "1px solid rgba(156,122,47,0.1)" }}>
+            <div style={{ fontSize: "9px", fontWeight: 800, color: GOLD_DEEP, textTransform: "uppercase", marginBottom: "6px" }}>Six house-pair axes</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+              {AXIS_DETAILS.map(axis => (
+                <button
+                  key={axis.id}
+                  type="button"
+                  onClick={() => setActiveAxisId(axis.id)}
+                  style={{
+                    textAlign: "left",
+                    padding: "4px 6px",
+                    borderRadius: "4px",
+                    border: "none",
+                    background: activeAxisId === axis.id ? `${GOLD}12` : "rgba(156,122,47,0.04)",
+                    cursor: "pointer",
+                    fontSize: "9.5px",
+                    color: activeAxisId === axis.id ? GOLD_DEEP : INK_SECONDARY,
+                    fontWeight: activeAxisId === axis.id ? 800 : 600,
+                  }}
+                >
+                  <strong>H{axis.rahuHouse}–H{axis.ketuHouse}</strong> — {axis.title.replace(" Polarity", "")}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Right Column: Placement Selector & Synthesis */}
-        <div style={{ flex: "1.2 1 300px", display: "flex", flexDirection: "column", gap: "10px", minWidth: 0 }}>
-          
-          {/* Conjunction Placement Panel */}
-          <div style={{ background: "#ffffff", padding: "14px", borderRadius: "10px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", gap: "8px" }}>
-            <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase", display: "block" }}>
-              2. Place Sensitive Conjunctions (DSM)
-            </span>
-            
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              {/* Moon Placement Row */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "11px", fontWeight: 600, display: "flex", alignItems: "center", gap: "4px" }}>
-                  <span style={{ color: SLATE_BLUE, fontWeight: 800 }}>☽</span> Natal Moon:
-                </span>
-                <div style={{ display: "flex", gap: "2px" }}>
-                  {[
-                    { value: "none", label: "None" },
-                    { value: "rahu", label: `H${activeAxis.rahuHouse} (Rāhu)` },
-                    { value: "ketu", label: `H${activeAxis.ketuHouse} (Ketu)` }
-                  ].map(opt => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setMoonPlacement(opt.value as any)}
-                      style={{
-                        padding: "4px 6px",
-                        fontSize: "9.5px",
-                        fontWeight: 700,
-                        borderRadius: "4px",
-                        border: moonPlacement === opt.value ? `1.5px solid ${GOLD}` : "1px solid rgba(0,0,0,0.08)",
-                        background: moonPlacement === opt.value ? "rgba(156,122,47,0.08)" : "#ffffff",
-                        color: moonPlacement === opt.value ? GOLD_DEEP : INK_SECONDARY,
-                        cursor: "pointer"
-                      }}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Sun Placement Row */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "11px", fontWeight: 600, display: "flex", alignItems: "center", gap: "4px" }}>
-                  <span style={{ color: AMBER, fontWeight: 800 }}>☉</span> Natal Sun:
-                </span>
-                <div style={{ display: "flex", gap: "2px" }}>
-                  {[
-                    { value: "none", label: "None" },
-                    { value: "rahu", label: `H${activeAxis.rahuHouse} (Rāhu)` },
-                    { value: "ketu", label: `H${activeAxis.ketuHouse} (Ketu)` }
-                  ].map(opt => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setSunPlacement(opt.value as any)}
-                      style={{
-                        padding: "4px 6px",
-                        fontSize: "9.5px",
-                        fontWeight: 700,
-                        borderRadius: "4px",
-                        border: sunPlacement === opt.value ? `1.5px solid ${GOLD}` : "1px solid rgba(0,0,0,0.08)",
-                        background: sunPlacement === opt.value ? "rgba(156,122,47,0.08)" : "#ffffff",
-                        color: sunPlacement === opt.value ? GOLD_DEEP : INK_SECONDARY,
-                        cursor: "pointer"
-                      }}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Lagna Placement Row */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "11px", fontWeight: 600, display: "flex", alignItems: "center", gap: "4px" }}>
-                  <span style={{ color: GOLD_DEEP, fontWeight: 800 }}>L</span> Natal Lagna:
-                </span>
-                <div style={{ display: "flex", gap: "2px" }}>
-                  {[
-                    { value: "none", label: "None" },
-                    { value: "rahu", label: `H${activeAxis.rahuHouse} (Rāhu)` },
-                    { value: "ketu", label: `H${activeAxis.ketuHouse} (Ketu)` }
-                  ].map(opt => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setLagnaPlacement(opt.value as any)}
-                      style={{
-                        padding: "4px 6px",
-                        fontSize: "9.5px",
-                        fontWeight: 700,
-                        borderRadius: "4px",
-                        border: lagnaPlacement === opt.value ? `1.5px solid ${GOLD}` : "1px solid rgba(0,0,0,0.08)",
-                        background: lagnaPlacement === opt.value ? "rgba(156,122,47,0.08)" : "#ffffff",
-                        color: lagnaPlacement === opt.value ? GOLD_DEEP : INK_SECONDARY,
-                        cursor: "pointer"
-                      }}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Dasha Placement Row */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "11px", fontWeight: 600, display: "flex", flexDirection: "column" }}>
-                  <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                    <span style={{ color: RED, fontWeight: 800 }}>D</span> Daśā-lord ({runningDashaLord}):
-                  </span>
-                  <span style={{ fontSize: "8.5px", color: INK_MUTED, marginLeft: "10px" }}>
-                    {PLANET_RULED_HOUSES[runningDashaLord]?.description}
-                  </span>
-                </span>
-                <div style={{ display: "flex", gap: "2px" }}>
-                  {[
-                    { value: "none", label: "None" },
-                    { value: "rahu", label: `H${activeAxis.rahuHouse} (Rāhu)` },
-                    { value: "ketu", label: `H${activeAxis.ketuHouse} (Ketu)` }
-                  ].map(opt => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setDashaPlacement(opt.value as any)}
-                      style={{
-                        padding: "4px 6px",
-                        fontSize: "9.5px",
-                        fontWeight: 700,
-                        borderRadius: "4px",
-                        border: dashaPlacement === opt.value ? `1.5px solid ${GOLD}` : "1px solid rgba(0,0,0,0.08)",
-                        background: dashaPlacement === opt.value ? "rgba(156,122,47,0.08)" : "#ffffff",
-                        color: dashaPlacement === opt.value ? GOLD_DEEP : INK_SECONDARY,
-                        cursor: "pointer"
-                      }}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Dasha Lord Dropdown */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px dashed rgba(0,0,0,0.06)", paddingTop: "6px" }}>
-                <span style={{ fontSize: "10.5px", color: INK_SECONDARY }}>Select Running Daśā-lord:</span>
-                <select value={runningDashaLord} onChange={(e) => setRunningDashaLord(e.target.value)} style={{ padding: "4px 6px", fontSize: "10.5px", borderRadius: "4px", border: "1px solid rgba(0,0,0,0.12)", background: "#ffffff", fontWeight: 600 }}>
-                  {Object.keys(PLANET_RULED_HOUSES).map(p => <option key={p} value={p}>{p}</option>)}
-                </select>
-              </div>
-
+        {/* Right — placement controls + synthesis */}
+        <div style={{ flex: "1 1 300px", minWidth: "280px", display: "flex", flexDirection: "column", gap: "8px" }}>
+          {/* Placement controls */}
+          <div style={{ background: "#ffffff", padding: "12px", borderRadius: "10px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", gap: "8px" }}>
+            <span style={{ fontSize: "10px", fontWeight: 800, color: GOLD_DEEP, textTransform: "uppercase" }}>2. Place sensitive conjunctions</span>
+            <PlacementRow label="Natal Moon" symbol="☽" color={SLATE_BLUE} value={moonPlacement} onChange={setMoonPlacement} axis={activeAxis} />
+            <PlacementRow label="Natal Sun" symbol="☉" color={AMBER} value={sunPlacement} onChange={setSunPlacement} axis={activeAxis} />
+            <PlacementRow label="Natal Lagna" symbol="Lg" color={GOLD_DEEP} value={lagnaPlacement} onChange={setLagnaPlacement} axis={activeAxis} />
+            <PlacementRow label={`Daśā-lord (${runningDashaLord})`} symbol="D" color={RED} value={dashaPlacement} onChange={setDashaPlacement} axis={activeAxis} note={PLANET_RULED_HOUSES[runningDashaLord]?.description} />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px dashed rgba(156,122,47,0.15)", paddingTop: "6px" }}>
+              <span style={{ fontSize: "10px", color: INK_SECONDARY }}>Running Daśā-lord</span>
+              <select value={runningDashaLord} onChange={e => setRunningDashaLord(e.target.value)} style={{ padding: "4px 6px", fontSize: "10.5px", borderRadius: "4px", border: "1px solid rgba(156,122,47,0.25)", background: "#ffffff", fontWeight: 700, color: INK_PRIMARY }}>
+                {Object.keys(PLANET_RULED_HOUSES).map(p => <option key={p} value={p}>{p}</option>)}
+              </select>
             </div>
           </div>
 
-          {/* Detailed Synthesis text output */}
-          <div style={{ background: "rgba(156,122,47,0.03)", border: `1.2px solid rgba(156,122,47,0.15)`, borderRadius: "12px", padding: "14px" }}>
-            <h4 style={{ margin: "0 0 6px 0", fontSize: "13px", fontWeight: 800, color: GOLD_DEEP }}>{activeAxis.title}</h4>
-            <p style={{ margin: 0, fontSize: "12px", lineHeight: "1.45", color: INK_SECONDARY }}>{activeAxis.synthesis}</p>
-            
-            <div style={{ marginTop: "10px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", borderTop: "1px solid rgba(0,0,0,0.05)", paddingTop: "10px" }}>
+          {/* Synthesis */}
+          <div style={{ background: "rgba(156,122,47,0.03)", border: "1.2px solid rgba(156,122,47,0.15)", borderRadius: "10px", padding: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
+            <h4 style={{ margin: 0, fontSize: "13px", fontWeight: 800, color: GOLD_DEEP }}>{activeAxis.title}</h4>
+            <p style={{ margin: 0, fontSize: "11px", lineHeight: "1.45", color: INK_SECONDARY }}>{activeAxis.synthesis}</p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", borderTop: "1px solid rgba(156,122,47,0.1)", paddingTop: "10px" }}>
               <div>
-                <strong style={{ fontSize: "10px", color: PURPLE }}>☊ RĀHU (H{activeAxis.rahuHouse}):</strong>
-                <p style={{ margin: "3px 0 0 0", fontSize: "11px", lineHeight: "1.4", color: INK_SECONDARY }}>{activeAxis.rahuFocus}</p>
+                <strong style={{ fontSize: "9px", color: PURPLE, textTransform: "uppercase" }}>☊ Rāhu (H{activeAxis.rahuHouse})</strong>
+                <p style={{ margin: "3px 0 0 0", fontSize: "10px", lineHeight: "1.4", color: INK_SECONDARY }}>{activeAxis.rahuFocus}</p>
               </div>
               <div>
-                <strong style={{ fontSize: "10px", color: AMBER }}>☋ KETU (H{activeAxis.ketuHouse}):</strong>
-                <p style={{ margin: "3px 0 0 0", fontSize: "11px", lineHeight: "1.4", color: INK_SECONDARY }}>{activeAxis.ketuFocus}</p>
+                <strong style={{ fontSize: "9px", color: AMBER, textTransform: "uppercase" }}>☋ Ketu (H{activeAxis.ketuHouse})</strong>
+                <p style={{ margin: "3px 0 0 0", fontSize: "10px", lineHeight: "1.4", color: INK_SECONDARY }}>{activeAxis.ketuFocus}</p>
               </div>
             </div>
 
-            {/* Dynamic Sensitive Hit Warnings */}
             {anyHit && (
-              <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "10px", borderTop: "1px solid rgba(0,0,0,0.05)", paddingTop: "10px" }}>
-                <strong style={{ fontSize: "11px", color: INK_PRIMARY }}>Active Conjunction Impacts:</strong>
-                
-                {isMoonHit && (
-                  <div style={{ background: "rgba(59,130,246,0.05)", borderLeft: `3px solid ${SLATE_BLUE}`, padding: "6px 8px", borderRadius: "4px", fontSize: "11px", color: "#1e40af", lineHeight: "1.35" }}>
-                    <strong>Moon conjunct {moonPlacement === "rahu" ? "Rāhu" : "Ketu"}:</strong>{" "}
-                    {moonPlacement === "rahu" 
-                      ? "Intense, obsessive emotional desire in H" + activeAxis.rahuHouse + ". Spells of psychological shadow or driven ambitions."
-                      : "Deep emotional detachment and apathy in H" + activeAxis.ketuHouse + ". Quiet introspection, letting go of attachment, or mood isolation."}
-                  </div>
-                )}
-
-                {isSunHit && (
-                  <div style={{ background: "rgba(245,158,11,0.05)", borderLeft: `3px solid ${AMBER}`, padding: "6px 8px", borderRadius: "4px", fontSize: "11px", color: "#9a3412", lineHeight: "1.35" }}>
-                    <strong>Sun conjunct {sunPlacement === "rahu" ? "Rāhu" : "Ketu"}:</strong>{" "}
-                    {sunPlacement === "rahu"
-                      ? "High ego amplification in H" + activeAxis.rahuHouse + ". Driven focus on leadership, public projection, or authority tensions."
-                      : "Ego dissolution and restructuring in H" + activeAxis.ketuHouse + ". Letting go of external validation, father/authority release."}
-                  </div>
-                )}
-
-                {isLagnaHit && (
-                  <div style={{ background: "rgba(156,122,47,0.05)", borderLeft: `3px solid ${GOLD_DEEP}`, padding: "6px 8px", borderRadius: "4px", fontSize: "11px", color: "#7a5e1e", lineHeight: "1.35" }}>
-                    <strong>Lagna conjunct {lagnaPlacement === "rahu" ? "Rāhu" : "Ketu"}:</strong>{" "}
-                    {lagnaPlacement === "rahu"
-                      ? "Physical and identity transformation in H" + activeAxis.rahuHouse + ". Intense projection of self, lifestyle changes, high-drive phase."
-                      : "Physical detachment and inward identity shift in H" + activeAxis.ketuHouse + ". Focus on spiritual baseline, body sensitivity, letting go of vanity."}
-                  </div>
-                )}
-
-                {isDashaHit && (
-                  <div style={{ background: "rgba(239,68,68,0.05)", borderLeft: `3px solid ${RED}`, padding: "6px 8px", borderRadius: "4px", fontSize: "11px", color: "#991b1b", lineHeight: "1.35" }}>
-                    <strong>Daśā-lord conjunct {dashaPlacement === "rahu" ? "Rāhu" : "Ketu"}:</strong>{" "}
-                    {dashaPlacement === "rahu"
-                      ? "Concrete event timing activated! Nodal shadow triggers the mahādaśā/bhukti lord promise in H" + activeAxis.rahuHouse + "."
-                      : "Concrete release event activated! The running timeline promise triggers letting go or completion in H" + activeAxis.ketuHouse + "."}
-                  </div>
-                )}
-
+              <div style={{ display: "flex", flexDirection: "column", gap: "5px", marginTop: "4px", borderTop: "1px solid rgba(156,122,47,0.1)", paddingTop: "10px" }}>
+                <strong style={{ fontSize: "10px", color: INK_PRIMARY }}>Active conjunction impacts</strong>
+                {isMoonHit && <HitBox type="Moon" node={moonPlacement} house={moonPlacement === "rahu" ? activeAxis.rahuHouse : activeAxis.ketuHouse} text={moonPlacement === "rahu" ? "Intense, obsessive emotional desire." : "Emotional detachment and letting go."} color={SLATE_BLUE} />}
+                {isSunHit && <HitBox type="Sun" node={sunPlacement} house={sunPlacement === "rahu" ? activeAxis.rahuHouse : activeAxis.ketuHouse} text={sunPlacement === "rahu" ? "Ego amplification and driven focus." : "Ego dissolution and restructuring."} color={AMBER} />}
+                {isLagnaHit && <HitBox type="Lagna" node={lagnaPlacement} house={lagnaPlacement === "rahu" ? activeAxis.rahuHouse : activeAxis.ketuHouse} text={lagnaPlacement === "rahu" ? "Physical and identity transformation." : "Inward identity shift and surrender."} color={GOLD_DEEP} />}
+                {isDashaHit && <HitBox type={`Daśā-lord (${runningDashaLord})`} node={dashaPlacement} house={dashaPlacement === "rahu" ? activeAxis.rahuHouse : activeAxis.ketuHouse} text={dashaPlacement === "rahu" ? "Concrete event timing activated." : "Concrete release event activated."} color={RED} />}
               </div>
             )}
 
-            {/* Two-Yes Verdict */}
-            <div style={{ marginTop: "10px" }}>
+            <div style={{ marginTop: "4px" }}>
               {dashaMatching ? (
-                <div style={{ background: "rgba(16,185,129,0.06)", border: "1px solid #bbf7d0", padding: "8px", borderRadius: "6px", display: "flex", gap: "6px", color: "#14532d", fontSize: "11px" }}>
+                <div style={{ background: `${GREEN}08`, border: `1px solid ${GREEN}50`, padding: "8px", borderRadius: "6px", display: "flex", gap: "6px", color: GREEN, fontSize: "10px" }}>
                   <CheckCircle2 size={14} color={GREEN} />
-                  <strong>Two-Yes Timing Active:</strong> Transit axis + running Vimśottari Daśā support the same theme. High event probability.
+                  <span><strong>Two-Yes Timing Active:</strong> Transit axis + running Vimśottari Daśā support the same theme. High event probability.</span>
                 </div>
               ) : (
-                <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)", padding: "8px", borderRadius: "6px", display: "flex", gap: "6px", color: INK_SECONDARY, fontSize: "11px" }}>
+                <div style={{ background: "rgba(156,122,47,0.04)", border: "1px solid rgba(156,122,47,0.12)", padding: "8px", borderRadius: "6px", display: "flex", gap: "6px", color: INK_SECONDARY, fontSize: "10px" }}>
                   <Clock size={14} color={INK_MUTED} />
-                  <strong>Background Shift:</strong> Psychological-level transit. Concrete changes delayed — Daśā lord does not trigger this house-pair.
+                  <span><strong>Background Shift:</strong> Psychological-level transit. Concrete changes delayed — Daśā lord does not trigger this house-pair.</span>
                 </div>
               )}
             </div>
 
-            <p style={{ margin: "10px 0 0 0", fontSize: "10px", fontStyle: "italic", color: INK_MUTED, display: "flex", alignItems: "center", gap: "4px" }}>
-              <Info size={12} color={INK_MUTED} />
+            <div style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "9px", color: INK_MUTED, fontStyle: "italic" }}>
+              <Info size={11} color={INK_MUTED} />
               Always read both houses of the axis. Confirm with daśā before predicting events. Themes are tendencies, not verdicts.
-            </p>
-
+            </div>
           </div>
 
-          {/* Footer source references */}
-          <div className="rounded-lg p-3 text-[10px]" style={{ background: SURFACE_MANUSCRIPT, border: "1px solid var(--gl-gold-hairline)", color: INK_MUTED }}>
-            <strong>Source:</strong> Classical gochara (nodal transits). Bṛhat Pārāśara Horā Śāstra — the nodes activate opposite bhāvas simultaneously. Special force on natal Moon (mind), Sun (ego), Lagna (body), and daśā-lord (timing trigger).
+          {/* Worked examples */}
+          <div style={{ background: "#ffffff", padding: "10px", borderRadius: "8px", border: "1px solid rgba(156,122,47,0.1)" }}>
+            <div style={{ fontSize: "9px", fontWeight: 800, color: GOLD_DEEP, textTransform: "uppercase", marginBottom: "5px" }}>Worked examples</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              {WORKED_EXAMPLES.map(ex => (
+                <div key={ex.label} style={{ display: "flex", gap: "6px", fontSize: "10px", padding: "4px 6px", borderRadius: "4px", background: "rgba(156,122,47,0.04)" }}>
+                  <span style={{ fontWeight: 900, color: GOLD_DEEP, minWidth: "100px" }}>{ex.label}</span>
+                  <span style={{ color: INK_SECONDARY }}>{ex.text}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
+          {/* Source footer */}
+          <div style={{ background: SURFACE_MANUSCRIPT, border: "1px solid rgba(156,122,47,0.12)", borderRadius: "8px", padding: "8px", fontSize: "9px", color: INK_MUTED, lineHeight: "1.4" }}>
+            <strong>Source:</strong> Classical gochara (nodal transits). <IAST>Bṛhat Pārāśara Horā Śāstra</IAST> — the nodes activate opposite bhāvas simultaneously. Special force on natal Moon (mind), Sun (ego), Lagna (body), and daśā-lord (timing trigger).
+          </div>
         </div>
-
       </div>
+    </div>
+  );
+}
 
+function ScalePan({ side, x, y, node, house, occupants }: {
+  side: "left" | "right";
+  x: number;
+  y: number;
+  node: "rahu" | "ketu";
+  house: number;
+  occupants: { glyph: string; name: string; color: string }[];
+}) {
+  const color = node === "rahu" ? PURPLE : AMBER;
+  return (
+    <g style={{ transition: "all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)" }}>
+      <line x1={x} y1={y} x2={x - 16} y2={y + 28} stroke={color} strokeWidth="1" opacity="0.6" />
+      <line x1={x} y1={y} x2={x + 16} y2={y + 28} stroke={color} strokeWidth="1" opacity="0.6" />
+      <path d={`M ${x - 20} ${y + 28} Q ${x} ${y + 38} ${x + 20} ${y + 28} Z`} fill={`${color}14`} stroke={color} strokeWidth="1.5" />
+      <circle cx={x} cy={y + 36} r="7" fill={color} stroke="#ffffff" strokeWidth="1" />
+      <text x={x} y={y + 36.5} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8px", fill: "#ffffff", fontWeight: 900 }}>{node === "rahu" ? "☊" : "☋"}</text>
+      <text x={x} y={y + 49} textAnchor="middle" style={{ fontSize: "8.5px", fill: color, fontWeight: 800 }}>{node === "rahu" ? "Rāhu" : "Ketu"} (H{house})</text>
+      {occupants.map((occ, idx) => {
+        const total = occupants.length;
+        const spacing = 11;
+        const startX = x - ((total - 1) * spacing) / 2;
+        const occX = startX + idx * spacing;
+        const occY = y + 18;
+        return (
+          <g key={occ.name}>
+            <circle cx={occX} cy={occY} r="5.5" fill={occ.color} stroke="#ffffff" strokeWidth="0.75" />
+            <text x={occX} y={occY} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "7px", fill: "#ffffff", fontWeight: 900, fontFamily: "Arial, sans-serif" }}>{occ.glyph}</text>
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+function PlacementRow({ label, symbol, color, value, onChange, axis, note }: {
+  label: string;
+  symbol: string;
+  color: string;
+  value: "none" | "rahu" | "ketu";
+  onChange: (v: "none" | "rahu" | "ketu") => void;
+  axis: HouseAxisDetail;
+  note?: string;
+}) {
+  const options = [
+    { value: "none", label: "None" },
+    { value: "rahu", label: `H${axis.rahuHouse} (Rāhu)` },
+    { value: "ketu", label: `H${axis.ketuHouse} (Ketu)` },
+  ];
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <span style={{ fontSize: "11px", fontWeight: 600, display: "flex", flexDirection: "column" }}>
+        <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          <span style={{ color, fontWeight: 900 }}>{symbol}</span> {label}:
+        </span>
+        {note && <span style={{ fontSize: "8.5px", color: INK_MUTED, marginLeft: "12px" }}>{note}</span>}
+      </span>
+      <div style={{ display: "flex", gap: "2px" }}>
+        {options.map(opt => (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => onChange(opt.value as "none" | "rahu" | "ketu")}
+            style={{
+              padding: "4px 6px",
+              fontSize: "9.5px",
+              fontWeight: 700,
+              borderRadius: "4px",
+              border: value === opt.value ? `1.5px solid ${GOLD}` : "1px solid rgba(156,122,47,0.15)",
+              background: value === opt.value ? "rgba(156,122,47,0.08)" : "#ffffff",
+              color: value === opt.value ? GOLD_DEEP : INK_SECONDARY,
+              cursor: "pointer"
+            }}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HitBox({ type, node, house, text, color }: {
+  type: string;
+  node: "rahu" | "ketu";
+  house: number;
+  text: string;
+  color: string;
+}) {
+  return (
+    <div style={{ background: `${color}08`, borderLeft: `3px solid ${color}`, padding: "5px 7px", borderRadius: "4px", fontSize: "10px", color: INK_SECONDARY, lineHeight: "1.35" }}>
+      <strong style={{ color }}>{type} conjunct {node === "rahu" ? "Rāhu" : "Ketu"} (H{house})</strong> — {text}
     </div>
   );
 }

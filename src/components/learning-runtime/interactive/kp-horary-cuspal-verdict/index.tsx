@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
+import { Check, Info, Sparkles, Zap, RotateCcw, HelpCircle, Layers, CheckCircle2, ShieldCheck, Filter, AlertTriangle } from "lucide-react";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
@@ -8,8 +10,9 @@ const INK_MUTED = "var(--gl-ink-on-cream-muted)";
 const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const GOLD = "#9C7A2F";
-const CRIMSON = "#A23A1E";
+const EMERALD = "#2F7D55";
 const AMBER = "#D9822B";
+const CRIMSON = "#A23A1E";
 
 interface MatterConfig {
   name: string;
@@ -56,7 +59,7 @@ export function KpHoraryCuspalVerdict() {
 
     if (hasSupport && !hasNegation && inRPs) {
       verdict = "YES";
-      color = GOLD;
+      color = EMERALD;
       desc = `${selectedSubLord} signifies supporting houses (${supports.join(", ")}) cleanly and aligns with the Ruling Planets. The query resolves affirmatively.`;
     } else if (hasSupport && hasNegation) {
       verdict = "CONDITIONAL";
@@ -75,68 +78,12 @@ export function KpHoraryCuspalVerdict() {
     return { verdict, color, desc, supports, negates };
   }, [activeMatter, selectedSubLord, signifiedHouses, inRPs]);
 
-  // SVG Flowchart drawing paths dynamically
-  const svgFlowchart = useMemo(() => {
-    const hasSupport = verdictResult.supports.length > 0;
-    const hasNegation = verdictResult.negates.length > 0;
-
-    const path1Color = hasSupport ? GOLD : HAIRLINE;
-    const path2Color = hasSupport && !hasNegation ? GOLD : HAIRLINE;
-    const path3Color = hasSupport && hasNegation ? GOLD : HAIRLINE;
-    const path4Color = hasSupport && !hasNegation && inRPs ? GOLD : HAIRLINE;
-    const path5Color = hasSupport && !hasNegation && !inRPs ? GOLD : HAIRLINE;
-
-    return (
-      <svg width="100%" height="265" viewBox="0 0 400 265" style={{ display: "block" }}>
-        {/* Node 1: Start */}
-        <rect x="150" y="10" width="100" height="30" rx="6" fill={SURFACE} stroke={GOLD} strokeWidth="1.5" />
-        <text x="200" y="29" textAnchor="middle" fontSize="10" fill={INK_PRIMARY} fontWeight="bold">1. Cuspal Sub-Lord</text>
-
-        {/* Path 1: Start to support check */}
-        <line x1="200" y1="40" x2="200" y2="65" stroke={GOLD} strokeWidth="1.5" />
-        
-        {/* Node 2: Support check */}
-        <polygon points="200,65 255,90 200,115 145,90" fill={SURFACE} stroke={path1Color} strokeWidth="1.5" />
-        <text x="200" y="93" textAnchor="middle" fontSize="8.5" fill={INK_PRIMARY} fontWeight="bold">Signifies Support?</text>
-
-        {/* Left Branch: No support -> NO */}
-        <line x1="145" y1="90" x2="80" y2="90" stroke={!hasSupport ? GOLD : HAIRLINE} strokeWidth="1.5" />
-        <line x1="80" y1="90" x2="80" y2="160" stroke={!hasSupport ? GOLD : HAIRLINE} strokeWidth="1.5" />
-        <rect x="30" y="160" width="100" height="30" rx="6" fill={SURFACE} stroke={!hasSupport ? CRIMSON : HAIRLINE} strokeWidth="2" />
-        <text x="80" y="179" textAnchor="middle" fontSize="11" fill={!hasSupport ? CRIMSON : INK_MUTED} fontWeight="bold">NO VERDICT</text>
-
-        {/* Right branch: Yes support -> Negation Check */}
-        <line x1="255" y1="90" x2="320" y2="90" stroke={path1Color} strokeWidth="1.5" />
-        <line x1="320" y1="90" x2="320" y2="105" stroke={path1Color} strokeWidth="1.5" />
-
-        {/* Node 3: Negation check */}
-        <polygon points="320,105 365,125 320,145 275,125" fill={SURFACE} stroke={path1Color} strokeWidth="1.5" />
-        <text x="320" y="128" textAnchor="middle" fontSize="8" fill={INK_PRIMARY} fontWeight="bold">Negation?</text>
-
-        {/* Branch 3a: Negation Yes -> Conditional */}
-        <line x1="275" y1="125" x2="230" y2="125" stroke={path3Color} strokeWidth="1.5" />
-        <line x1="230" y1="125" x2="230" y2="160" stroke={path3Color} strokeWidth="1.5" />
-        <rect x="180" y="160" width="100" height="30" rx="6" fill={SURFACE} stroke={path3Color === GOLD ? AMBER : HAIRLINE} strokeWidth="2" />
-        <text x="230" y="179" textAnchor="middle" fontSize="10" fill={path3Color === GOLD ? AMBER : INK_MUTED} fontWeight="bold">CONDITIONAL</text>
-
-        {/* Branch 3b: Negation No -> RP check */}
-        <line x1="320" y1="145" x2="320" y2="165" stroke={path2Color} strokeWidth="1.5" />
-        
-        {/* Node 4: RP alignment */}
-        <polygon points="320,165 365,185 320,205 275,185" fill={SURFACE} stroke={path2Color} strokeWidth="1.5" />
-        <text x="320" y="188" textAnchor="middle" fontSize="8" fill={INK_PRIMARY} fontWeight="bold">RP Match?</text>
-
-        {/* Branch 4a: RP Match -> YES */}
-        <line x1="320" y1="205" x2="320" y2="225" stroke={path4Color} strokeWidth="1.5" />
-        <rect x="270" y="225" width="100" height="30" rx="6" fill={SURFACE} stroke={path4Color === GOLD ? GOLD : HAIRLINE} strokeWidth="2" />
-        <text x="320" y="244" textAnchor="middle" fontSize="11" fill={path4Color === GOLD ? GOLD : INK_MUTED} fontWeight="bold">YES VERDICT</text>
-        
-        {/* Branch 4b: RP No -> Conditional */}
-        <line x1="275" y1="185" x2="230" y2="185" stroke={path5Color} strokeWidth="1.5" />
-        <line x1="230" y1="185" x2="230" y2="190" stroke={path5Color} strokeWidth="1.5" />
-      </svg>
-    );
-  }, [verdictResult, inRPs]);
+  // Gauge needle rotation angle: YES (60deg), CONDITIONAL (0deg), NO (-60deg)
+  const needleAngle = useMemo(() => {
+    if (verdictResult.verdict === "YES") return 60;
+    if (verdictResult.verdict === "CONDITIONAL") return 0;
+    return -60;
+  }, [verdictResult.verdict]);
 
   return (
     <div className="gl-surface-twilight-glass" style={{ padding: "24px", color: INK_PRIMARY }} data-interactive="kp-horary-cuspal-verdict">
@@ -144,23 +91,30 @@ export function KpHoraryCuspalVerdict() {
       {/* Header */}
       <section style={{ borderBottom: `1px solid ${HAIRLINE}`, paddingBottom: "1rem", marginBottom: "1.5rem" }}>
         <span style={{ color: GOLD, fontSize: "10px", textTransform: "uppercase", fontWeight: 900, letterSpacing: "0.1em" }}>Module 16 · Chapter 7 · Lesson 3</span>
-        <h1 style={{ margin: "0.2rem 0 0", color: GOLD, fontSize: "1.5rem", fontWeight: 700 }}>The Cuspal Sub-Lord Yes/No Verdict Engine</h1>
+        <h1 style={{ margin: "0.2rem 0 0", color: GOLD, fontSize: "1.5rem", fontWeight: 700 }}>The Horary Verdict Gauge Console</h1>
       </section>
 
       {/* Main Grid Layout */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px", alignItems: "start" }}>
+      <div style={{ display: "grid", gap: "24px", alignItems: "start" }} className="grid grid-cols-1 md:grid-cols-2">
         
         {/* Left Panel: Configurations */}
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           
           {/* Query Config */}
           <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 12, padding: "16px", background: SURFACE }}>
-            <h2 style={{ fontSize: "1rem", color: GOLD, margin: "0 0 12px" }}>1. Setup Query Matter</h2>
+            <h2 style={{ fontSize: "1rem", color: GOLD, margin: "0 0 12px", display: "flex", alignItems: "center", gap: "6px", fontWeight: 800 }}>
+              <Layers size={16} /> 1. Setup Query Matter
+            </h2>
             <div style={{ marginBottom: "12px" }}>
               <label style={{ fontSize: "0.8rem", color: INK_SECONDARY, display: "block", marginBottom: "4px" }}>Select Matter Category</label>
               <select
                 value={activeMatterKey}
-                onChange={(e) => setActiveMatterKey(e.target.value)}
+                onChange={(e) => {
+                  const m = MATTERS[e.target.value];
+                  setActiveMatterKey(e.target.value);
+                  // Auto toggle active houses based on new matter default
+                  setSignifiedHouses([m.supporting[0]]);
+                }}
                 style={{ width: "100%", padding: "8px 10px", border: `1px solid ${HAIRLINE}`, borderRadius: 6, background: SURFACE, color: INK_PRIMARY, fontWeight: 700 }}
               >
                 {Object.keys(MATTERS).map((key) => (
@@ -171,11 +125,11 @@ export function KpHoraryCuspalVerdict() {
 
             {/* Matter House Sets */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", fontSize: "0.85rem", marginTop: "12px" }}>
-              <div style={{ border: `1px solid ${GOLD}44`, borderRadius: 6, padding: "8px", background: `${GOLD}06` }}>
+              <div style={{ border: `1.2px solid ${GOLD}40`, borderRadius: 6, padding: "8px", background: `${GOLD}06` }}>
                 <strong style={{ color: GOLD, fontSize: "0.76rem", textTransform: "uppercase", display: "block", marginBottom: "4px" }}>Supporting Houses:</strong>
                 <span style={{ fontWeight: 700 }}>{activeMatter.supporting.map(h => `House ${h}`).join(", ")}</span>
               </div>
-              <div style={{ border: `1px solid ${CRIMSON}44`, borderRadius: 6, padding: "8px", background: `${CRIMSON}06` }}>
+              <div style={{ border: `1.2px solid ${CRIMSON}40`, borderRadius: 6, padding: "8px", background: `${CRIMSON}06` }}>
                 <strong style={{ color: CRIMSON, fontSize: "0.76rem", textTransform: "uppercase", display: "block", marginBottom: "4px" }}>Negating Houses:</strong>
                 <span style={{ fontWeight: 700 }}>{activeMatter.negating.map(h => `House ${h}`).join(", ")}</span>
               </div>
@@ -184,7 +138,9 @@ export function KpHoraryCuspalVerdict() {
 
           {/* Sub Lord Signification Checkbox Array */}
           <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 12, padding: "16px", background: SURFACE }}>
-            <h2 style={{ fontSize: "1rem", color: GOLD, margin: "0 0 12px" }}>2. Cuspal Sub-Lord Significations ({selectedSubLord})</h2>
+            <h2 style={{ fontSize: "1rem", color: GOLD, margin: "0 0 12px", display: "flex", alignItems: "center", gap: "6px", fontWeight: 800 }}>
+              <Filter size={16} /> 2. Cuspal Sub-Lord Significations
+            </h2>
             
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "12px" }}>
               <div>
@@ -200,7 +156,7 @@ export function KpHoraryCuspalVerdict() {
                 </select>
               </div>
               <div>
-                <label style={{ fontSize: "0.8rem", color: INK_SECONDARY, display: "block", marginBottom: "4px" }}>Ruling Planet Alignment</label>
+                <label style={{ fontSize: "0.8rem", color: INK_SECONDARY, display: "block", marginBottom: "4px" }}>RP Alignment</label>
                 <label style={{ display: "flex", alignItems: "center", gap: "8px", height: "32px", cursor: "pointer", fontSize: "0.88rem" }}>
                   <input
                     type="checkbox"
@@ -222,7 +178,7 @@ export function KpHoraryCuspalVerdict() {
                 
                 let borderCol = HAIRLINE;
                 if (isSelected) {
-                  borderCol = isSupporting ? GOLD : (isNegating ? CRIMSON : INK_PRIMARY);
+                  borderCol = isSupporting ? EMERALD : (isNegating ? CRIMSON : GOLD);
                 }
                 
                 return (
@@ -234,13 +190,14 @@ export function KpHoraryCuspalVerdict() {
                       borderRadius: 6,
                       border: `1.5px solid ${borderCol}`,
                       background: isSelected 
-                        ? (isSupporting ? `${GOLD}22` : (isNegating ? `${CRIMSON}22` : `${INK_MUTED}22`))
+                        ? (isSupporting ? `${EMERALD}15` : (isNegating ? `${CRIMSON}15` : `${GOLD}15`))
                         : "transparent",
                       color: isSelected ? INK_PRIMARY : INK_MUTED,
                       fontWeight: isSelected ? 800 : 500,
                       cursor: "pointer",
                       fontSize: "0.78rem"
                     }}
+                    className="gl-clickable"
                   >
                     H{h}
                   </button>
@@ -251,28 +208,60 @@ export function KpHoraryCuspalVerdict() {
 
         </div>
 
-        {/* Right Panel: Decision SVG and Verdict Display */}
-        <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 12, padding: "16px", background: SURFACE, display: "flex", flexDirection: "column", gap: "16px" }}>
-          <h2 style={{ fontSize: "1rem", color: GOLD, margin: "0" }}>3. Astrological Verdict</h2>
+        {/* Right Panel: The Horary Verdict Gauge (SVG) */}
+        <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 12, padding: "16px", background: SURFACE, display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" }}>
+          <h2 style={{ fontSize: "1rem", color: GOLD, margin: "0", alignSelf: "flex-start", fontWeight: 800 }}>3. Horary Verdict Gauge</h2>
 
-          {/* SVG Flow diagram */}
-          <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, padding: "8px", background: "rgba(0,0,0,0.01)" }}>
-            {svgFlowchart}
+          {/* Premium SVG Gauge */}
+          <div style={{ position: "relative", width: "100%", maxWidth: "260px", aspectRatio: "1.3/1" }}>
+            <svg width="100%" height="100%" viewBox="-120 -100 240 180" style={{ overflow: "visible" }}>
+              {/* Gauge arcs */}
+              {/* NO zone (Red) */}
+              <path d="M -90 -10 A 90 90 0 0 1 -45 -78" fill="none" stroke={CRIMSON} strokeWidth="12" strokeLinecap="round" />
+              {/* CONDITIONAL zone (Amber) */}
+              <path d="M -42 -80 A 90 90 0 0 1 42 -80" fill="none" stroke={AMBER} strokeWidth="12" />
+              {/* YES zone (Green) */}
+              <path d="M 45 -78 A 90 90 0 0 1 90 -10" fill="none" stroke={EMERALD} strokeWidth="12" strokeLinecap="round" />
+
+              {/* Labels on arcs */}
+              <text x="-65" y="-35" textAnchor="middle" fill={CRIMSON} fontSize="8.5" fontWeight="800">NO</text>
+              <text x="0" y="-95" textAnchor="middle" fill={AMBER} fontSize="8.5" fontWeight="800">CONDITIONAL</text>
+              <text x="65" y="-35" textAnchor="middle" fill={EMERALD} fontSize="8.5" fontWeight="800">YES</text>
+
+              {/* Central Needle cap */}
+              <circle cx="0" cy="0" r="14" fill="#333" stroke="#FFF" strokeWidth="2.5" />
+
+              {/* The Sweeping Needle */}
+              <motion.g
+                animate={{ rotate: needleAngle }}
+                transition={{ type: "spring", stiffness: 60, damping: 10 }}
+                style={{ originX: 0, originY: 0 }}
+              >
+                {/* Draw needle pointing straight UP (which is rotated by needleAngle) */}
+                <line x1="0" y1="0" x2="0" y2="-75" stroke="#333" strokeWidth="3" strokeLinecap="round" />
+                <polygon points="-4,0 4,0 0,-75" fill="#333" />
+                <circle cx="0" cy="-60" r="3.5" fill={verdictResult.color} />
+              </motion.g>
+            </svg>
           </div>
 
-          {/* Verdict Output Card */}
+          {/* Verdict Card */}
           <div style={{
+            width: "100%",
             border: `2px solid ${verdictResult.color}`,
             borderRadius: 8,
-            padding: "16px",
-            background: `${verdictResult.color}11`,
-            textAlign: "center"
+            padding: "12px 16px",
+            background: `${verdictResult.color}06`,
+            textAlign: "center",
+            marginTop: "6px"
           }}>
-            <span style={{ fontSize: "0.78rem", textTransform: "uppercase", color: INK_SECONDARY, fontWeight: 900 }}>Final Verdict</span>
-            <div style={{ fontSize: "1.8rem", fontWeight: 900, color: verdictResult.color, margin: "4px 0" }}>
-              {verdictResult.verdict}
+            <span style={{ fontSize: "10px", textTransform: "uppercase", color: INK_MUTED, fontWeight: 900, letterSpacing: "0.05em" }}>Cuspal Sub-Lord Verdict</span>
+            <div style={{ fontSize: "1.6rem", fontWeight: 900, color: verdictResult.color, margin: "4px 0" }}>
+              {verdictResult.verdict === "YES" && "YES (AUSPICIOUS)"}
+              {verdictResult.verdict === "CONDITIONAL" && "CONDITIONAL / DELAY"}
+              {verdictResult.verdict === "NO" && "NO / OBSTRUCTED"}
             </div>
-            <p style={{ margin: 0, fontSize: "0.85rem", lineHeight: 1.4, color: INK_PRIMARY }}>
+            <p style={{ margin: 0, fontSize: "12.5px", lineHeight: 1.45, color: INK_SECONDARY }}>
               {verdictResult.desc}
             </p>
           </div>
@@ -281,10 +270,13 @@ export function KpHoraryCuspalVerdict() {
 
       </div>
 
-      {/* Summary table (replaces raw logs) */}
+      {/* Summary table */}
       <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 12, padding: "16px", background: SURFACE, marginTop: "24px" }}>
-        <h3 style={{ fontSize: "0.95rem", color: GOLD, margin: "0 0 10px" }}>Verdict Parameters Checklist</h3>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.8rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
+          <ShieldCheck size={16} style={{ color: GOLD }} />
+          <h3 style={{ fontSize: "12px", color: GOLD, margin: "0", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>Verdict Parameters Checklist</h3>
+        </div>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px" }}>
           <thead>
             <tr style={{ borderBottom: `1.5px solid ${HAIRLINE}`, color: GOLD }}>
               <th style={{ textAlign: "left", padding: "6px" }}>Variable</th>
@@ -300,17 +292,23 @@ export function KpHoraryCuspalVerdict() {
             </tr>
             <tr style={{ borderBottom: `1px dashed ${HAIRLINE}` }}>
               <td style={{ padding: "6px", fontWeight: 700 }}>Supporting Significations</td>
-              <td style={{ padding: "6px" }}>{verdictResult.supports.length > 0 ? `Yes (${verdictResult.supports.map(h => `H${h}`).join(", ")})` : "None"}</td>
+              <td style={{ padding: "6px", color: EMERALD, fontWeight: 700 }}>
+                {verdictResult.supports.length > 0 ? `Yes (${verdictResult.supports.map(h => `H${h}`).join(", ")})` : "None"}
+              </td>
               <td style={{ padding: "6px" }}>Required to establish the positive promise (YES).</td>
             </tr>
             <tr style={{ borderBottom: `1px dashed ${HAIRLINE}` }}>
               <td style={{ padding: "6px", fontWeight: 700 }}>Negating Significations</td>
-              <td style={{ padding: "6px" }}>{verdictResult.negates.length > 0 ? `Yes (${verdictResult.negates.map(h => `H${h}`).join(", ")})` : "None"}</td>
+              <td style={{ padding: "6px", color: CRIMSON, fontWeight: 700 }}>
+                {verdictResult.negates.length > 0 ? `Yes (${verdictResult.negates.map(h => `H${h}`).join(", ")})` : "None"}
+              </td>
               <td style={{ padding: "6px" }}>If present, overrides or delays the positive outcome.</td>
             </tr>
             <tr>
               <td style={{ padding: "6px", fontWeight: 700 }}>Ruling Planet Match</td>
-              <td style={{ padding: "6px" }}>{inRPs ? "Aligned" : "Absent"}</td>
+              <td style={{ padding: "6px", color: inRPs ? EMERALD : AMBER, fontWeight: 700 }}>
+                {inRPs ? "Aligned" : "Absent"}
+              </td>
               <td style={{ padding: "6px" }}>Cross-check corroborating the timed event promise.</td>
             </tr>
           </tbody>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { AlertCircle, ShieldCheck, CheckCircle2, XCircle, Award, RefreshCw, AlertOctagon } from "lucide-react";
+import { ShieldCheck, CheckCircle2, XCircle, Award, RefreshCw, AlertOctagon } from "lucide-react";
 
 const GOLD = "var(--gl-gold-accent, #9C7A2F)";
 const GOLD_DEEP = "var(--gl-gold-deep, #7A5E1E)";
@@ -24,27 +24,10 @@ interface RemedyMapping {
   secularName: string;
   secularDetails: string;
   sharedMechanism: string;
+  angle: number; // needle target angle (North=0, East=90, South=180, West=270)
 }
 
 const REMEDY_MAPS: RemedyMapping[] = [
-  {
-    id: "dana",
-    name: "Dāna (Charity)",
-    sanskrit: "दानम्",
-    devotionalDetails: "Giving graha-associated foods (wheat, sesame) or metals (copper, iron) to traditional recipients on weekdays.",
-    secularName: "Ordinary Charity",
-    secularDetails: "Volunteering time or donating financial support and supplies to local shelters, food banks, or elderly homes.",
-    sharedMechanism: "Generosity balances possessive karma (sañcita) and nurtures compassion via present conduct (kriyamāṇa)."
-  },
-  {
-    id: "upavasa",
-    name: "Upavāsa (Fasting)",
-    sanskrit: "उपवासः",
-    devotionalDetails: "Abstaining from food or taking a modified fast on the weekday of the graha (e.g. Saturday for Śani) as a devotion.",
-    secularName: "Dietary Discipline / Restraint",
-    secularDetails: "Mindfully abstaining from specific foods (sugar, heavy meals) on a fixed weekday to build physical and mental control.",
-    sharedMechanism: "Voluntary self-restraint purifies the body, strengthens willpower, and counteracts impulsive desires."
-  },
   {
     id: "mantra",
     name: "Mantra / Pūjā (Ritual)",
@@ -52,7 +35,18 @@ const REMEDY_MAPS: RemedyMapping[] = [
     devotionalDetails: "Reciting Sanskrit sound frequencies 108 times daily or offering flowers/incense to a planetary deity image.",
     secularName: "Reflective Meditative Practice",
     secularDetails: "Engaging in focused deep breathing, silent contemplation, or reading philosophically grounding texts daily.",
-    sharedMechanism: "Quiet focus settles the nervous system, clears emotional waves, and expands mental presence."
+    sharedMechanism: "Quiet focus settles the nervous system, clears emotional waves, and expands mental presence.",
+    angle: 0
+  },
+  {
+    id: "dana",
+    name: "Dāna (Charity)",
+    sanskrit: "दानम्",
+    devotionalDetails: "Giving graha-associated foods (wheat, sesame) or metals (copper, iron) to traditional recipients on weekdays.",
+    secularName: "Ordinary Charity",
+    secularDetails: "Volunteering time or donating financial support and supplies to local shelters, food banks, or elderly homes.",
+    sharedMechanism: "Generosity balances possessive karma (sañcita) and nurtures compassion via present conduct (kriyamāṇa).",
+    angle: 9
   },
   {
     id: "vrata",
@@ -61,7 +55,18 @@ const REMEDY_MAPS: RemedyMapping[] = [
     devotionalDetails: "A highly structured, religious commitment combining fasting, pūjā, and dāna on a deity's holy day.",
     secularName: "Kept Commitment to Practice",
     secularDetails: "Pledging to perform a constructive, healthy habit (e.g. daily walk, reading, early sleep) for a fixed period (e.g. 40 days).",
-    sharedMechanism: "Keeping a self-assigned commitment exercises personal integrity, strengthening the mind's baseline power."
+    sharedMechanism: "Keeping a self-assigned commitment exercises personal integrity, strengthening the mind's baseline power.",
+    angle: 18
+  },
+  {
+    id: "upavasa",
+    name: "Upavāsa (Fasting)",
+    sanskrit: "उपवासः",
+    devotionalDetails: "Abstaining from food or taking a modified fast on the weekday of the graha (e.g. Saturday for Śani) as a devotion.",
+    secularName: "Dietary Discipline / Restraint",
+    secularDetails: "Mindfully abstaining from specific foods (sugar, heavy meals) on a fixed weekday to build physical and mental control.",
+    sharedMechanism: "Voluntary self-restraint purifies the body, strengthens willpower, and counteracts impulsive desires.",
+    angle: 27
   }
 ];
 
@@ -134,8 +139,8 @@ const SCENARIOS: DojoScenario[] = [
 ];
 
 export function CrossCulturalCareGuide() {
-  const [activeTab, setActiveTab] = useState<"siblings" | "dojo">("siblings");
-  const [selectedRemedyId, setSelectedRemedyId] = useState<string>("dana");
+  const [activeTab, setActiveTab] = useState<"siblings" | "dojo" | "compass">("compass");
+  const [selectedRemedyId, setSelectedRemedyId] = useState<string>("mantra");
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
   const [showFeedback, setShowFeedback] = useState<Record<number, boolean>>({});
 
@@ -174,6 +179,86 @@ export function CrossCulturalCareGuide() {
   };
 
   const allAnswered = Object.keys(selectedAnswers).length === SCENARIOS.length;
+
+  // Render the SVG Compass
+  const renderCompassSVG = () => {
+    const angleMap: Record<string, number> = {
+      mantra: 0,
+      dana: 90,
+      vrata: 180,
+      upavasa: 270
+    };
+    const currentAngle = angleMap[selectedRemedyId] ?? 0;
+
+    return (
+      <svg
+        viewBox="0 0 200 200"
+        style={{
+          width: "180px",
+          height: "180px",
+          background: "none"
+        }}
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="compassRing" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#f5efe6" />
+            <stop offset="100%" stopColor="#ab9b82" />
+          </linearGradient>
+          <linearGradient id="needleGold" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#ffe082" />
+            <stop offset="100%" stopColor="#b388ff" opacity="0" />
+          </linearGradient>
+        </defs>
+
+        {/* Outer Ring */}
+        <circle cx="100" cy="100" r="90" fill="url(#compassRing)" stroke={GOLD} strokeWidth="1.5" />
+        <circle cx="100" cy="100" r="82" fill="#fffdf9" stroke="rgba(156,122,47,0.15)" strokeWidth="1" />
+
+        {/* 4 Interactive Quadrants clickable */}
+        <g style={{ cursor: "pointer" }}>
+          {/* North - Mantra */}
+          <circle cx="100" cy="30" r="18" fill={selectedRemedyId === "mantra" ? GOLD_DEEP : "transparent"} stroke={GOLD} strokeWidth="1" onClick={() => handleSelectRemedy("mantra")} />
+          <text x="100" y="22" fontSize="9" fontWeight="bold" textAnchor="middle" fill={selectedRemedyId === "mantra" ? "#fff" : INK_SECONDARY} onClick={() => handleSelectRemedy("mantra")}>N</text>
+          <text x="100" y="32" fontSize="6.5" fontWeight="800" textAnchor="middle" fill={selectedRemedyId === "mantra" ? "#ffe082" : GOLD_DEEP} onClick={() => handleSelectRemedy("mantra")}>Mantra</text>
+
+          {/* East - Dana */}
+          <circle cx="170" cy="100" r="18" fill={selectedRemedyId === "dana" ? GOLD_DEEP : "transparent"} stroke={GOLD} strokeWidth="1" onClick={() => handleSelectRemedy("dana")} />
+          <text x="170" y="92" fontSize="9" fontWeight="bold" textAnchor="middle" fill={selectedRemedyId === "dana" ? "#fff" : INK_SECONDARY} onClick={() => handleSelectRemedy("dana")}>E</text>
+          <text x="170" y="102" fontSize="6.5" fontWeight="800" textAnchor="middle" fill={selectedRemedyId === "dana" ? "#ffe082" : GOLD_DEEP} onClick={() => handleSelectRemedy("dana")}>Dāna</text>
+
+          {/* South - Vrata */}
+          <circle cx="100" cy="170" r="18" fill={selectedRemedyId === "vrata" ? GOLD_DEEP : "transparent"} stroke={GOLD} strokeWidth="1" onClick={() => handleSelectRemedy("vrata")} />
+          <text x="100" y="162" fontSize="9" fontWeight="bold" textAnchor="middle" fill={selectedRemedyId === "vrata" ? "#fff" : INK_SECONDARY} onClick={() => handleSelectRemedy("vrata")}>S</text>
+          <text x="100" y="172" fontSize="6.5" fontWeight="800" textAnchor="middle" fill={selectedRemedyId === "vrata" ? "#ffe082" : GOLD_DEEP} onClick={() => handleSelectRemedy("vrata")}>Vrata</text>
+
+          {/* West - Upavasa */}
+          <circle cx="30" cy="100" r="18" fill={selectedRemedyId === "upavasa" ? GOLD_DEEP : "transparent"} stroke={GOLD} strokeWidth="1" onClick={() => handleSelectRemedy("upavasa")} />
+          <text x="30" y="92" fontSize="9" fontWeight="bold" textAnchor="middle" fill={selectedRemedyId === "upavasa" ? "#fff" : INK_SECONDARY} onClick={() => handleSelectRemedy("upavasa")}>W</text>
+          <text x="30" y="102" fontSize="6.5" fontWeight="800" textAnchor="middle" fill={selectedRemedyId === "upavasa" ? "#ffe082" : GOLD_DEEP} onClick={() => handleSelectRemedy("upavasa")}>Upavāsa</text>
+        </g>
+
+        {/* Center pivot point */}
+        <circle cx="100" cy="100" r="8" fill={GOLD_DEEP} stroke="#ffe082" strokeWidth="1.5" />
+
+        {/* Compass Needle */}
+        <g
+          transform={`rotate(${currentAngle}, 100, 100)`}
+          style={{
+            transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+            transformOrigin: "100px 100px"
+          }}
+        >
+          {/* North needle tip (red/gold) */}
+          <path d="M 100 45 L 94 100 L 106 100 Z" fill="#e0583c" filter="drop-shadow(0 0 2px rgba(224,88,60,0.5))" />
+          {/* South needle tip (black) */}
+          <path d="M 100 155 L 94 100 L 106 100 Z" fill={INK_PRIMARY} />
+          {/* Center pin cap */}
+          <circle cx="100" cy="100" r="3" fill="#ffe082" />
+        </g>
+      </svg>
+    );
+  };
 
   return (
     <div style={{
@@ -240,6 +325,10 @@ export function CrossCulturalCareGuide() {
           border-color: ${GOLD};
           background: rgba(251,248,243,0.7);
         }
+        button:focus-visible {
+          outline: 2px solid ${GOLD_DEEP};
+          outline-offset: 2px;
+        }
       `}</style>
 
       {/* HEADER */}
@@ -248,7 +337,7 @@ export function CrossCulturalCareGuide() {
         paddingBottom: "10px"
       }}>
         <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 800, color: GOLD_DEEP }}>
-          Cross-Cultural Care & secular Sibling Dojo
+          Cross-Cultural Care & Secular Sibling Dojo
         </h3>
         <p style={{ margin: "2px 0 0 0", fontSize: "11px", color: INK_SECONDARY }}>
           Learn to present faith-based remedies ethically by matching them to secular equivalents and training optional framing.
@@ -265,11 +354,11 @@ export function CrossCulturalCareGuide() {
         gap: "4px"
       }}>
         <button
-          onClick={() => setActiveTab("siblings")}
-          className={`tab-btn ${activeTab === "siblings" ? "active" : ""}`}
+          onClick={() => setActiveTab("compass")}
+          className={`tab-btn ${activeTab === "compass" ? "active" : ""}`}
           style={{ padding: "6px 14px", borderRadius: "6px", fontSize: "11.5px", color: INK_SECONDARY }}
         >
-          Secular Sibling Map
+          Universal Welcoming Compass
         </button>
         <button
           onClick={() => setActiveTab("dojo")}
@@ -280,21 +369,53 @@ export function CrossCulturalCareGuide() {
         </button>
       </div>
 
-      {/* TAB 1: SIBLINGS */}
-      {activeTab === "siblings" && (
+      {/* TAB 1: COMPASS (REPLACE STATIC SIBLINGS VIEW) */}
+      {activeTab === "compass" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           
-          {/* REMEDY SELECTOR PILLS */}
-          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-            {REMEDY_MAPS.map(r => (
-              <button
-                key={r.id}
-                onClick={() => handleSelectRemedy(r.id)}
-                className={`rem-btn ${r.id === selectedRemedyId ? "active" : ""}`}
-              >
-                {r.name}
-              </button>
-            ))}
+          <div style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            gap: "24px"
+          }}>
+            {/* COMPASS COMPONENT */}
+            <div style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "8px"
+            }}>
+              {renderCompassSVG()}
+              <span style={{ fontSize: "9.5px", color: INK_MUTED, fontStyle: "italic" }}>
+                * Click cardinal points or buttons to rotate compass.
+              </span>
+            </div>
+
+            {/* BUTTON SELECTOR GRIDS */}
+            <div style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+              flex: "1",
+              minWidth: "220px"
+            }} role="radiogroup" aria-label="Remedy Sibling Mapping Selection">
+              {REMEDY_MAPS.map(r => (
+                <button
+                  key={r.id}
+                  onClick={() => handleSelectRemedy(r.id)}
+                  aria-pressed={r.id === selectedRemedyId}
+                  className={`rem-btn ${r.id === selectedRemedyId ? "active" : ""}`}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold" }}>
+                    <span>{r.name}</span>
+                    <span style={{ color: GOLD }}>{r.sanskrit}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* CONTRASTING CARD DIPTYCH */}
@@ -354,7 +475,7 @@ export function CrossCulturalCareGuide() {
             border: `1.5px solid ${GOLD}`,
             borderRadius: "12px",
             padding: "12px"
-          }}>
+          }} role="status">
             <strong style={{ fontSize: "11px", color: GOLD_DEEP, display: "block" }}>
               Universal Karmic Mechanism (Kriyamāṇa)
             </strong>
@@ -406,7 +527,7 @@ export function CrossCulturalCareGuide() {
                     </h4>
                   </div>
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }} role="radiogroup" aria-label={`Scenario ${s.id} Options`}>
                     {s.options.map((opt) => {
                       const isChosen = chosenKey === opt.key;
                       
@@ -432,6 +553,7 @@ export function CrossCulturalCareGuide() {
                           disabled={isSubmitted}
                           onClick={() => handleSelectAnswer(s.id, opt.key)}
                           className="dojo-choice-btn"
+                          aria-pressed={isChosen}
                           style={{
                             background: bg,
                             color: color,
@@ -457,12 +579,7 @@ export function CrossCulturalCareGuide() {
                       display: "flex",
                       alignItems: "flex-start",
                       gap: "6px"
-                    }}>
-                      {chosenOption.isCorrect ? (
-                        <CheckCircle2 size={14} style={{ color: "#4e7037", marginTop: "2px", flexShrink: 0 }} />
-                      ) : (
-                        <XCircle size={14} style={{ color: "#ad4b37", marginTop: "2px", flexShrink: 0 }} />
-                      )}
+                    }} role="alert">
                       <div>
                         <strong>{chosenOption.isCorrect ? "Respectful Framing!" : "Coercive Framing."}</strong>
                         <p style={{ margin: "2px 0 0 0" }}>{chosenOption.feedback}</p>
@@ -486,8 +603,7 @@ export function CrossCulturalCareGuide() {
               background: "rgba(251, 248, 243, 0.8)",
               border: `1.5px solid ${GOLD}`,
               textAlign: "center"
-            }}>
-              <Award size={28} style={{ color: GOLD_DEEP }} />
+            }} role="status">
               <div>
                 <span style={{ fontSize: "13px", fontWeight: 850, color: GOLD_DEEP }}>
                   Dojo Score: {getScore()} / {SCENARIOS.length}

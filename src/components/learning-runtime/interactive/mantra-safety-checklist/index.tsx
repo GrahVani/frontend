@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ShieldAlert, CheckCircle, AlertTriangle, RefreshCw, ChevronRight, UserCheck, ShieldCheck, HeartPulse } from "lucide-react";
+import { ShieldAlert, CheckCircle, AlertTriangle, RefreshCw, ChevronRight, ShieldCheck, HeartPulse } from "lucide-react";
 
 const GOLD = "var(--gl-gold-accent, #9C7A2F)";
 const GOLD_DEEP = "var(--gl-gold-deep, #7A5E1E)";
@@ -24,7 +24,7 @@ interface Step {
 const STEPS: Step[] = [
   {
     id: 1,
-    title: "Pronunciation Source",
+    title: "Pronunciation",
     question: "How did you learn (or intend to learn) the mantra's correct pronunciation?",
     options: [
       {
@@ -46,7 +46,7 @@ const STEPS: Step[] = [
   },
   {
     id: 2,
-    title: "Initiation Status",
+    title: "Initiation",
     question: "What is the mantra's tradition category, and have you received initiation (dīkṣā)?",
     options: [
       {
@@ -90,7 +90,7 @@ const STEPS: Step[] = [
   },
   {
     id: 4,
-    title: "Health & Intensity",
+    title: "Health & Force",
     question: "Is the practitioner planning intensive sādhana (breath-linked, long sessions) or dealing with medical issues?",
     options: [
       {
@@ -121,9 +121,7 @@ export function MantraSafetyChecklist() {
     if (typeof navigator !== "undefined" && navigator.vibrate) {
       try {
         navigator.vibrate(pattern);
-      } catch (err) {
-        console.warn("Haptic vibration blocked or unsupported:", err);
-      }
+      } catch (err) {}
     }
   };
 
@@ -137,7 +135,6 @@ export function MantraSafetyChecklist() {
       triggerVibration(50);
       setCurrentStepIdx(prev => prev + 1);
     } else {
-      // Complete: calculate warnings to decide vibration pattern
       const warnings = Object.keys(selectedChoices).reduce((acc, stepId) => {
         const sId = Number(stepId);
         const optId = selectedChoices[sId];
@@ -181,21 +178,17 @@ export function MantraSafetyChecklist() {
 
   const isCurrentStepAnswered = selectedOptionIdx !== undefined;
 
+  // Determine path coloring for the flowchart
+  const getFlowSegmentColor = (stepIdx: number) => {
+    const choice = selectedChoices[stepIdx];
+    if (choice === undefined) return "rgba(0,0,0,0.1)"; // uncompleted
+    const option = STEPS[stepIdx].options[choice];
+    return option.isSafe ? "#4e7037" : "#ad4b37"; // green for safe, red for contraindication
+  };
+
   return (
-    <div style={{
-      padding: "16px",
-      borderRadius: "16px",
-      background: "rgba(255, 253, 248, 0.75)",
-      backdropFilter: "blur(12px)",
-      border: "1px solid rgba(156, 122, 47, 0.15)",
-      fontFamily: "'Inter', sans-serif",
-      color: INK_PRIMARY,
-      maxWidth: "960px",
-      margin: "0 auto",
-      display: "flex",
-      flexDirection: "column",
-      gap: "14px"
-    }}>
+    <div style={{ padding: "16px", borderRadius: "16px", background: "rgba(255, 253, 248, 0.75)", backdropFilter: "blur(12px)", border: "1px solid rgba(156, 122, 47, 0.15)", fontFamily: "'Inter', sans-serif", color: INK_PRIMARY, maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "14px" }}>
+      
       <style>{`
         .checklist-option-btn {
           border: 1.5px solid rgba(156, 122, 47, 0.15);
@@ -206,21 +199,10 @@ export function MantraSafetyChecklist() {
           border-color: ${GOLD};
           background: rgba(251,248,243,0.7);
         }
-        .step-circle {
-          transition: all 0.25s ease;
-        }
       `}</style>
 
       {/* HEADER */}
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        flexWrap: "wrap",
-        gap: "8px",
-        borderBottom: "1px solid rgba(156,122,47,0.1)",
-        paddingBottom: "10px"
-      }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px", borderBottom: "1px solid rgba(156,122,47,0.1)", paddingBottom: "10px" }}>
         <div>
           <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 800, color: GOLD_DEEP }}>
             Mantra Practice Safety Auditor
@@ -231,65 +213,43 @@ export function MantraSafetyChecklist() {
         </div>
       </div>
 
+      {/* INTERACTIVE FLOWCHART DECISION TREE SVG */}
+      <div style={{ background: "rgba(255,255,255,0.55)", border: "1px solid rgba(156, 122, 47, 0.12)", borderRadius: "12px", padding: "10px", display: "flex", flexDirection: "column", gap: "6px" }}>
+        <span style={{ fontSize: "10px", fontWeight: 800, textTransform: "uppercase", color: INK_MUTED, paddingLeft: "4px" }}>
+          Interactive Safety Flowchart Path
+        </span>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <svg width="280" height="60" viewBox="0 0 280 60" style={{ display: "block" }}>
+            {/* Flowchart lines */}
+            <line x1="40" y1="30" x2="105" y2="30" stroke={getFlowSegmentColor(0)} strokeWidth="3" style={{ transition: "stroke 0.4s ease" }} />
+            <line x1="105" y1="30" x2="175" y2="30" stroke={getFlowSegmentColor(1)} strokeWidth="3" style={{ transition: "stroke 0.4s ease" }} />
+            <line x1="175" y1="30" x2="240" y2="30" stroke={getFlowSegmentColor(2)} strokeWidth="3" style={{ transition: "stroke 0.4s ease" }} />
+
+            {/* Step 1 Node */}
+            <circle cx="40" cy="30" r="10" fill={selectedChoices[0] !== undefined ? getFlowSegmentColor(0) : "#ffffff"} stroke={currentStepIdx === 0 ? GOLD : "rgba(156,122,47,0.3)"} strokeWidth="2" style={{ transition: "all 0.3s ease" }} />
+            <text x="40" y="33" textAnchor="middle" style={{ fontSize: "9px", fontWeight: 900, fill: selectedChoices[0] !== undefined ? "#ffffff" : INK_SECONDARY }}>1</text>
+            
+            {/* Step 2 Node */}
+            <circle cx="105" cy="30" r="10" fill={selectedChoices[1] !== undefined ? getFlowSegmentColor(1) : "#ffffff"} stroke={currentStepIdx === 1 ? GOLD : "rgba(156,122,47,0.3)"} strokeWidth="2" style={{ transition: "all 0.3s ease" }} />
+            <text x="105" y="33" textAnchor="middle" style={{ fontSize: "9px", fontWeight: 900, fill: selectedChoices[1] !== undefined ? "#ffffff" : INK_SECONDARY }}>2</text>
+
+            {/* Step 3 Node */}
+            <circle cx="175" cy="30" r="10" fill={selectedChoices[2] !== undefined ? getFlowSegmentColor(2) : "#ffffff"} stroke={currentStepIdx === 2 ? GOLD : "rgba(156,122,47,0.3)"} strokeWidth="2" style={{ transition: "all 0.3s ease" }} />
+            <text x="175" y="33" textAnchor="middle" style={{ fontSize: "9px", fontWeight: 900, fill: selectedChoices[2] !== undefined ? "#ffffff" : INK_SECONDARY }}>3</text>
+
+            {/* Step 4 Node */}
+            <circle cx="240" cy="30" r="10" fill={selectedChoices[3] !== undefined ? getFlowSegmentColor(3) : "#ffffff"} stroke={currentStepIdx === 3 ? GOLD : "rgba(156,122,47,0.3)"} strokeWidth="2" style={{ transition: "all 0.3s ease" }} />
+            <text x="240" y="33" textAnchor="middle" style={{ fontSize: "9px", fontWeight: 900, fill: selectedChoices[3] !== undefined ? "#ffffff" : INK_SECONDARY }}>4</text>
+          </svg>
+        </div>
+      </div>
+
       {!showReport ? (
         /* WIZARD INTERFACE */
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           
-          {/* STEP INDICATORS */}
-          <div style={{ display: "flex", gap: "10px", justifyContent: "center", alignItems: "center" }}>
-            {STEPS.map((step, idx) => {
-              const isActive = currentStepIdx === idx;
-              const isFilled = selectedChoices[idx] !== undefined;
-              
-              let bg = "rgba(0, 0, 0, 0.06)";
-              let border = "1px solid transparent";
-              let color = INK_MUTED;
-
-              if (isActive) {
-                bg = "#ffffff";
-                border = `1.5px solid ${GOLD}`;
-                color = GOLD_DEEP;
-              } else if (isFilled) {
-                bg = GOLD;
-                color = "#ffffff";
-              }
-
-              return (
-                <div key={step.id} style={{ display: "flex", alignItems: "center" }}>
-                  <div
-                    className="step-circle"
-                    style={{
-                      width: "24px",
-                      height: "24px",
-                      borderRadius: "50%",
-                      background: bg,
-                      border: border,
-                      color: color,
-                      fontSize: "11px",
-                      fontWeight: 800,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center"
-                    }}
-                  >
-                    {step.id}
-                  </div>
-                  {idx < STEPS.length - 1 && (
-                    <div style={{ width: "24px", height: "1px", background: "rgba(156,122,47,0.15)", marginLeft: "10px" }} />
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
           {/* QUESTION BOX */}
-          <div style={{
-            background: SURFACE_MANUSCRIPT,
-            border: "1.5px solid rgba(156, 122, 47, 0.15)",
-            borderRadius: "12px",
-            padding: "16px",
-            textAlign: "center"
-          }}>
+          <div style={{ background: SURFACE_MANUSCRIPT, border: "1.5px solid rgba(156, 122, 47, 0.15)", borderRadius: "12px", padding: "16px", textAlign: "center" }}>
             <span style={{ fontSize: "9.5px", textTransform: "uppercase", fontWeight: 800, color: GOLD_DEEP }}>
               Audit Check {activeStep.id}: {activeStep.title}
             </span>
@@ -302,7 +262,6 @@ export function MantraSafetyChecklist() {
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {activeStep.options.map((option, optIdx) => {
               const isChosen = selectedOptionIdx === optIdx;
-              
               let borderStyle = isChosen ? `1.5px solid ${GOLD}` : "1px solid rgba(156, 122, 47, 0.15)";
               let bg = isChosen ? "rgba(251, 248, 243, 0.95)" : "rgba(255, 255, 255, 0.55)";
               let shadow = isChosen ? "0 2px 6px rgba(156, 122, 47, 0.08)" : "none";
@@ -503,15 +462,7 @@ export function MantraSafetyChecklist() {
       )}
 
       {/* FOOTER */}
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        borderTop: "1px solid rgba(156,122,47,0.08)",
-        paddingTop: "8px",
-        fontSize: "10px",
-        color: INK_MUTED
-      }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid rgba(156,122,47,0.08)", paddingTop: "8px", fontSize: "10px", color: INK_MUTED }}>
         <span>Grahvani Learning Runtime (Chapter 2)</span>
         <span>Safety Checklist Wizard</span>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Info, HelpCircle, CheckCircle, XCircle, RefreshCw, BookOpen, UserCheck, ShieldAlert, Award, Grid, Compass } from "lucide-react";
+import { HelpCircle, CheckCircle, XCircle, RefreshCw, BookOpen, UserCheck, Award, Grid, Compass, Info } from "lucide-react";
 
 const GOLD = "var(--gl-gold-accent, #9C7A2F)";
 const GOLD_DEEP = "var(--gl-gold-deep, #7A5E1E)";
@@ -20,7 +20,9 @@ const TRADITIONS = [
     rules: "Demands strict pronunciation and svara (pitch-accent). Historically associated with specific eligibility or initiation conventions.",
     badge: "Strict & Pitch-Gated",
     badgeBg: "rgba(156, 122, 47, 0.08)",
-    badgeColor: GOLD_DEEP
+    badgeColor: GOLD_DEEP,
+    circleColor: "rgba(156, 122, 47, 0.15)",
+    circleStroke: GOLD
   },
   {
     id: "smarta",
@@ -31,7 +33,9 @@ const TRADITIONS = [
     rules: "Broadly accessible devotional practice. No strict eligibility rules or pitch-accents required. Accessible to all seekers.",
     badge: "Broadly Accessible",
     badgeBg: "rgba(78, 112, 55, 0.08)",
-    badgeColor: "#4e7037"
+    badgeColor: "#4e7037",
+    circleColor: "rgba(78, 112, 55, 0.15)",
+    circleStroke: "#4e7037"
   },
   {
     id: "tantrika",
@@ -42,7 +46,9 @@ const TRADITIONS = [
     rules: "Typically requires dīkṣā (initiation) from a qualified guru within a lineage. Casual practice without a guru is contraindicated.",
     badge: "Initiation Gated",
     badgeBg: "rgba(173, 75, 55, 0.08)",
-    badgeColor: "#ad4b37"
+    badgeColor: "#ad4b37",
+    circleColor: "rgba(173, 75, 55, 0.15)",
+    circleStroke: "#ad4b37"
   }
 ];
 
@@ -129,21 +135,19 @@ export function MantraTraditionsMap() {
   const [activeQuizIndex, setActiveQuizIndex] = useState<number>(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
   const [showExplanation, setShowExplanation] = useState<boolean>(false);
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const [selectedTraditionId, setSelectedTraditionId] = useState<string>("vaidika");
   const [selectedMatrixRow, setSelectedMatrixRow] = useState<number | null>(0);
 
   const triggerVibration = (pattern: number | number[]) => {
     if (typeof navigator !== "undefined" && navigator.vibrate) {
       try {
         navigator.vibrate(pattern);
-      } catch (err) {
-        console.warn("Haptic vibration blocked or unsupported:", err);
-      }
+      } catch (err) {}
     }
   };
 
   const handleSelectAnswer = (traditionId: string) => {
-    if (selectedAnswers[activeQuizIndex] !== undefined) return; // already answered
+    if (selectedAnswers[activeQuizIndex] !== undefined) return;
     const isCorrect = traditionId === QUIZ_ITEMS[activeQuizIndex].correctTraditionId;
     if (isCorrect) {
       triggerVibration(60);
@@ -160,8 +164,7 @@ export function MantraTraditionsMap() {
       triggerVibration(50);
       setActiveQuizIndex(prev => prev + 1);
     } else {
-      triggerVibration([80, 40, 80]); // quiz complete flourish
-      // Trigger complete by updating count
+      triggerVibration([80, 40, 80]);
       setActiveQuizIndex(prev => prev + 1);
     }
   };
@@ -182,33 +185,12 @@ export function MantraTraditionsMap() {
   const answeredCount = Object.keys(selectedAnswers).length;
   const isComplete = answeredCount === QUIZ_ITEMS.length;
 
+  const activeTradition = TRADITIONS.find(t => t.id === selectedTraditionId) || TRADITIONS[0];
+
   return (
-    <div style={{
-      padding: "16px",
-      borderRadius: "16px",
-      background: "rgba(255, 253, 248, 0.75)",
-      backdropFilter: "blur(12px)",
-      border: "1px solid rgba(156, 122, 47, 0.15)",
-      fontFamily: "'Inter', sans-serif",
-      color: INK_PRIMARY,
-      maxWidth: "960px",
-      margin: "0 auto",
-      display: "flex",
-      flexDirection: "column",
-      gap: "12px"
-    }}>
-      {/* Styles for dynamic card hovers */}
+    <div style={{ padding: "16px", borderRadius: "16px", background: "rgba(255, 253, 248, 0.75)", backdropFilter: "blur(12px)", border: "1px solid rgba(156, 122, 47, 0.15)", fontFamily: "'Inter', sans-serif", color: INK_PRIMARY, maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "12px" }}>
+      
       <style>{`
-        .tradition-card {
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-          border: 1px solid rgba(156, 122, 47, 0.1);
-        }
-        .tradition-card-hovered {
-          transform: translateY(-3px);
-          border-color: ${GOLD};
-          box-shadow: 0 4px 12px rgba(156, 122, 47, 0.1);
-          background: rgba(251, 248, 243, 0.9) !important;
-        }
         .quiz-choice-btn {
           transition: all 0.2s ease-in-out;
           border: 1.5px solid rgba(156, 122, 47, 0.15);
@@ -228,15 +210,7 @@ export function MantraTraditionsMap() {
       `}</style>
 
       {/* HEADER */}
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        flexWrap: "wrap",
-        gap: "8px",
-        borderBottom: "1px solid rgba(156,122,47,0.1)",
-        paddingBottom: "10px"
-      }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px", borderBottom: "1px solid rgba(156,122,47,0.1)", paddingBottom: "10px" }}>
         <div>
           <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 800, color: GOLD_DEEP }}>
             Mantra Traditions Map & Dojo
@@ -248,13 +222,7 @@ export function MantraTraditionsMap() {
       </div>
 
       {/* SUB-TABS (Atlas vs Dojo) */}
-      <div style={{
-        display: "flex",
-        gap: "4px",
-        background: "rgba(156, 122, 47, 0.05)",
-        padding: "4px",
-        borderRadius: "10px"
-      }}>
+      <div style={{ display: "flex", gap: "4px", background: "rgba(156, 122, 47, 0.05)", padding: "4px", borderRadius: "10px" }}>
         <button
           onClick={() => {
             triggerVibration(40);
@@ -313,84 +281,122 @@ export function MantraTraditionsMap() {
       {viewMode === "atlas" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           
-          {/* Side-by-side tradition cards */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: "12px"
-          }}>
-            {TRADITIONS.map(trad => {
-              const isHovered = hoveredCard === trad.id;
-              return (
-                <div
-                  key={trad.id}
-                  className={`tradition-card ${isHovered ? "tradition-card-hovered" : ""}`}
-                  onMouseEnter={() => setHoveredCard(trad.id)}
-                  onMouseLeave={() => setHoveredCard(null)}
-                  style={{
-                    background: "rgba(255, 255, 255, 0.45)",
-                    padding: "14px",
-                    borderRadius: "12px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    gap: "8px"
-                  }}
-                >
+          {/* INTERACTIVE VENN DIAGRAM AND CARD SIDE-BY-SIDE */}
+          <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", alignItems: "stretch" }}>
+            
+            {/* Left side: Interactive SVG Venn Diagram */}
+            <div style={{ flex: "1 1 280px", background: "rgba(255, 255, 255, 0.45)", border: "1px solid rgba(156, 122, 47, 0.1)", borderRadius: "12px", padding: "12px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ fontSize: "9.5px", fontWeight: 800, textTransform: "uppercase", color: INK_MUTED, marginBottom: "8px" }}>
+                Interactive Traditions Alignment
+              </span>
+              
+              <svg width="260" height="210" viewBox="0 0 260 210" style={{ display: "block" }}>
+                {/* Vaidika Circle (Left-Top) */}
+                <circle 
+                  cx="95" 
+                  cy="80" 
+                  r="55" 
+                  fill={selectedTraditionId === "vaidika" ? "rgba(156, 122, 47, 0.2)" : "rgba(156, 122, 47, 0.08)"} 
+                  stroke={GOLD} 
+                  strokeWidth={selectedTraditionId === "vaidika" ? "3" : "1.5"} 
+                  style={{ cursor: "pointer", transition: "all 0.3s ease" }}
+                  onClick={() => { triggerVibration(30); setSelectedTraditionId("vaidika"); }}
+                />
+
+                {/* Smarta Circle (Right-Top) */}
+                <circle 
+                  cx="165" 
+                  cy="80" 
+                  r="55" 
+                  fill={selectedTraditionId === "smarta" ? "rgba(78, 112, 55, 0.2)" : "rgba(78, 112, 55, 0.08)"} 
+                  stroke="#4e7037" 
+                  strokeWidth={selectedTraditionId === "smarta" ? "3" : "1.5"} 
+                  style={{ cursor: "pointer", transition: "all 0.3s ease" }}
+                  onClick={() => { triggerVibration(30); setSelectedTraditionId("smarta"); }}
+                />
+
+                {/* Tantrika Circle (Bottom-Center) */}
+                <circle 
+                  cx="130" 
+                  cy="135" 
+                  r="55" 
+                  fill={selectedTraditionId === "tantrika" ? "rgba(173, 75, 55, 0.2)" : "rgba(173, 75, 55, 0.08)"} 
+                  stroke="#ad4b37" 
+                  strokeWidth={selectedTraditionId === "tantrika" ? "3" : "1.5"} 
+                  style={{ cursor: "pointer", transition: "all 0.3s ease" }}
+                  onClick={() => { triggerVibration(30); setSelectedTraditionId("tantrika"); }}
+                />
+
+                {/* Text Labels inside Venn rings */}
+                <text x="75" y="80" textAnchor="middle" style={{ fontSize: "11px", fontWeight: 800, fill: GOLD_DEEP, pointerEvents: "none" }}>Vaidika</text>
+                <text x="185" y="80" textAnchor="middle" style={{ fontSize: "11px", fontWeight: 800, fill: "#344e24", pointerEvents: "none" }}>Smārta</text>
+                <text x="130" y="150" textAnchor="middle" style={{ fontSize: "11px", fontWeight: 800, fill: "#762e21", pointerEvents: "none" }}>Tāntrika</text>
+                
+                {/* Central overlap label */}
+                <text x="130" y="98" textAnchor="middle" style={{ fontSize: "8.5px", fontWeight: 900, fill: INK_MUTED, pointerEvents: "none" }}>Mantra</text>
+              </svg>
+
+              <span style={{ fontSize: "9px", color: INK_MUTED, marginTop: "6px", textAlign: "center" }}>
+                Click a ring to inspect its classical rules, parameters, and guidelines on the right.
+              </span>
+            </div>
+
+            {/* Right side: Detailed Active Card */}
+            <div style={{ flex: "1.2 1 340px", background: SURFACE_MANUSCRIPT, border: `1.5px solid ${activeTradition.circleStroke}`, borderRadius: "12px", padding: "16px", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "10px" }}>
+              
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px dashed rgba(156,122,47,0.2)", paddingBottom: "6px" }}>
                   <div>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "4px" }}>
-                      <div>
-                        <h4 style={{ margin: 0, fontSize: "14px", fontWeight: 850, color: GOLD_DEEP }}>
-                          {trad.name}
-                        </h4>
-                        <span style={{ fontSize: "9.5px", color: INK_MUTED, fontStyle: "italic" }}>
-                          ({trad.translation})
-                        </span>
-                      </div>
-                      <span style={{
-                        fontSize: "8.5px",
-                        fontWeight: 800,
-                        padding: "2px 6px",
-                        borderRadius: "4px",
-                        background: trad.badgeBg,
-                        color: trad.badgeColor
-                      }}>
-                        {trad.badge}
-                      </span>
-                    </div>
-
-                    <div style={{ display: "flex", flexDirection: "column", gap: "6px", fontSize: "11px", marginTop: "4px" }}>
-                      <div>
-                        <strong style={{ color: INK_SECONDARY, display: "flex", alignItems: "center", gap: "4px" }}>
-                          <BookOpen size={11} style={{ color: GOLD }} /> Source:
-                        </strong>
-                        <div style={{ color: INK_PRIMARY, marginTop: "1px" }}>{trad.source}</div>
-                      </div>
-                      <div>
-                        <strong style={{ color: INK_SECONDARY, display: "flex", alignItems: "center", gap: "4px" }}>
-                          <UserCheck size={11} style={{ color: GOLD }} /> Example:
-                        </strong>
-                        <div style={{ color: INK_PRIMARY, marginTop: "1px", fontWeight: 700 }}>{trad.example}</div>
-                      </div>
-                    </div>
+                    <h4 style={{ margin: 0, fontSize: "15px", fontWeight: 900, color: activeTradition.badgeColor }}>
+                      {activeTradition.name} Tradition
+                    </h4>
+                    <span style={{ fontSize: "10px", color: INK_MUTED, fontStyle: "italic" }}>
+                      ({activeTradition.translation})
+                    </span>
                   </div>
-
-                  <div style={{
-                    background: "rgba(255, 255, 255, 0.6)",
-                    border: "1px dashed rgba(156,122,47,0.12)",
-                    padding: "8px",
-                    borderRadius: "8px",
-                    fontSize: "11px",
-                    color: INK_SECONDARY,
-                    lineHeight: "1.35",
-                    marginTop: "6px"
+                  <span style={{
+                    fontSize: "8.5px",
+                    fontWeight: 800,
+                    padding: "3px 8px",
+                    borderRadius: "4px",
+                    background: activeTradition.badgeBg,
+                    color: activeTradition.badgeColor
                   }}>
-                    <strong style={{ color: GOLD_DEEP, fontSize: "10.5px" }}>Rules & Discipline:</strong>
-                    <p style={{ margin: "2px 0 0 0", color: INK_PRIMARY }}>{trad.rules}</p>
+                    {activeTradition.badge}
+                  </span>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: "11.5px", marginTop: "10px" }}>
+                  <div>
+                    <strong style={{ color: INK_SECONDARY, display: "flex", alignItems: "center", gap: "4px" }}>
+                      <BookOpen size={12} style={{ color: activeTradition.circleStroke }} /> Source Corpora:
+                    </strong>
+                    <div style={{ color: INK_PRIMARY, marginTop: "1px" }}>{activeTradition.source}</div>
+                  </div>
+                  <div>
+                    <strong style={{ color: INK_SECONDARY, display: "flex", alignItems: "center", gap: "4px" }}>
+                      <UserCheck size={12} style={{ color: activeTradition.circleStroke }} /> Foundational Repertoire:
+                    </strong>
+                    <div style={{ color: INK_PRIMARY, marginTop: "1px", fontWeight: 700 }}>{activeTradition.example}</div>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+
+              <div style={{
+                background: "#ffffff",
+                border: `1px dashed ${activeTradition.circleStroke}`,
+                padding: "10px",
+                borderRadius: "8px",
+                fontSize: "11px",
+                color: INK_SECONDARY,
+                lineHeight: "1.4"
+              }}>
+                <strong style={{ color: activeTradition.badgeColor, fontSize: "10.5px" }}>Rules & Discipline:</strong>
+                <p style={{ margin: "2px 0 0 0", color: INK_PRIMARY }}>{activeTradition.rules}</p>
+              </div>
+
+            </div>
+
           </div>
 
           {/* Interactive Comparison Matrix */}

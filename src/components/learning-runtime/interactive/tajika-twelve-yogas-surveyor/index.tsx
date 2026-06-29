@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { BookOpen, Check, X, HelpCircle, RefreshCw, Layers } from "lucide-react";
+import { IAST } from "../../chrome/typography";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary, #2d261e)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary, #4d4133)";
@@ -10,6 +12,7 @@ const GOLD = "#9C7A2F";
 const GOLD_DEEP = "#7A5E1E";
 const GREEN = "#2F7D55";
 const RED = "#A23A1E";
+const LIGHT_BG = "#FCFAF2";
 
 interface YogaInfo {
   id: string;
@@ -191,152 +194,161 @@ export function TajikaTwelveYogasSurveyor() {
     switch (type) {
       case "aspect_reception":
         return (
-          <svg viewBox="0 0 400 180" width="100%" height="100%">
+          <svg viewBox="0 0 400 180" width="100%" height="100%" aria-label="Applying aspect with mutual reception">
             <defs>
               <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                 <path d="M 0 0 L 10 5 L 0 10 z" fill={GOLD} />
               </marker>
             </defs>
-            <circle cx="80" cy="90" r="30" fill="#ffffff" stroke={GOLD} strokeWidth="2" />
-            <text x="80" y="85" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="14">☽</text>
-            <text x="80" y="105" fill={INK_SECONDARY} textAnchor="middle" fontSize="10">Moon (Fast)</text>
+            {/* Moon Junction */}
+            <circle cx="80" cy="90" r="32" fill="#ffffff" stroke={GOLD} strokeWidth="2.5" />
+            <circle cx="80" cy="90" r="28" fill="none" stroke="rgba(156,122,47,0.1)" strokeWidth="1.5" />
+            <text x="80" y="86" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="16">☽</text>
+            <text x="80" y="108" fill={INK_SECONDARY} textAnchor="middle" fontSize="11" fontWeight="700">Moon (Fast)</text>
             
-            <circle cx="320" cy="90" r="30" fill="#ffffff" stroke={GOLD} strokeWidth="2" />
-            <text x="320" y="85" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="14">♃</text>
-            <text x="320" y="105" fill={INK_SECONDARY} textAnchor="middle" fontSize="10">Jup (Slow)</text>
+            {/* Jup Junction */}
+            <circle cx="320" cy="90" r="32" fill="#ffffff" stroke={GOLD} strokeWidth="2.5" />
+            <circle cx="320" cy="90" r="28" fill="none" stroke="rgba(156,122,47,0.1)" strokeWidth="1.5" />
+            <text x="320" y="86" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="16">♃</text>
+            <text x="320" y="108" fill={INK_SECONDARY} textAnchor="middle" fontSize="11" fontWeight="700">Jup (Slow)</text>
 
-            <path d="M 110 90 L 290 90" stroke={GOLD} strokeWidth="3" strokeDasharray="5,5" markerEnd="url(#arrow)" />
-            <text x="200" y="75" fill={GOLD} textAnchor="middle" fontWeight="bold" fontSize="11">Applying Aspect</text>
+            <path d="M 116 90 L 284 90" stroke={GOLD} strokeWidth="3" strokeDasharray="5,5" markerEnd="url(#arrow)" />
+            <text x="200" y="76" fill={GOLD_DEEP} textAnchor="middle" fontWeight="800" fontSize="12">Applying Aspect</text>
 
-            <path d="M 290 110 C 230 150, 170 150, 110 110" stroke={GREEN} strokeWidth="2" fill="none" markerEnd="url(#arrow)" />
-            <text x="200" y="145" fill={GREEN} textAnchor="middle" fontWeight="bold" fontSize="10">Mutual Reception</text>
+            <path d="M 292 112 C 230 156, 170 156, 108 112" stroke={GREEN} strokeWidth="2.5" fill="none" markerEnd="url(#arrow)" />
+            <text x="200" y="152" fill={GREEN} textAnchor="middle" fontWeight="800" fontSize="11.5">Mutual Reception (Support)</text>
           </svg>
         );
       case "aspect_no_reception":
         return (
-          <svg viewBox="0 0 400 180" width="100%" height="100%">
-            <circle cx="80" cy="90" r="30" fill="#ffffff" stroke={GOLD} strokeWidth="2" />
-            <text x="80" y="85" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="14">☽</text>
-            <text x="80" y="105" fill={INK_SECONDARY} textAnchor="middle" fontSize="10">Moon (Fast)</text>
+          <svg viewBox="0 0 400 180" width="100%" height="100%" aria-label="Applying aspect without reception">
+            <circle cx="80" cy="90" r="32" fill="#ffffff" stroke={GOLD} strokeWidth="2.5" />
+            <text x="80" y="86" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="16">☽</text>
+            <text x="80" y="108" fill={INK_SECONDARY} textAnchor="middle" fontSize="11" fontWeight="700">Moon (Fast)</text>
 
-            <circle cx="320" cy="90" r="30" fill="#ffffff" stroke={GOLD} strokeWidth="2" />
-            <text x="320" y="85" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="14">♄</text>
-            <text x="320" y="105" fill={INK_SECONDARY} textAnchor="middle" fontSize="10">Sat (Slow)</text>
+            <circle cx="320" cy="90" r="32" fill="#ffffff" stroke={GOLD} strokeWidth="2.5" />
+            <text x="320" y="86" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="16">♄</text>
+            <text x="320" y="108" fill={INK_SECONDARY} textAnchor="middle" fontSize="11" fontWeight="700">Sat (Slow)</text>
 
-            <line x1="110" y1="90" x2="290" y2="90" stroke={GOLD} strokeWidth="2" strokeDasharray="3,3" />
-            <text x="200" y="75" fill={GOLD} textAnchor="middle" fontWeight="bold" fontSize="11">Aspect Only</text>
+            <line x1="116" y1="90" x2="284" y2="90" stroke={GOLD} strokeWidth="2" strokeDasharray="4,4" />
+            <text x="200" y="76" fill={GOLD_DEEP} textAnchor="middle" fontWeight="800" fontSize="12">Aspect Only</text>
             
-            <path d="M 120 120 L 280 120" stroke={RED} strokeWidth="1.5" />
-            <line x1="200" y1="112" x2="200" y2="128" stroke={RED} strokeWidth="2" />
-            <text x="200" y="138" fill={RED} textAnchor="middle" fontSize="10">No Mutual Reception (Friction)</text>
+            <path d="M 120 125 L 280 125" stroke={RED} strokeWidth="2" />
+            <line x1="200" y1="117" x2="200" y2="133" stroke={RED} strokeWidth="2.5" />
+            <text x="200" y="145" fill={RED} textAnchor="middle" fontWeight="800" fontSize="11">No Reception (Friction)</text>
           </svg>
         );
       case "dusthana":
         return (
-          <svg viewBox="0 0 400 180" width="100%" height="100%">
-            <circle cx="80" cy="90" r="30" fill="#ffffff" stroke={GOLD} strokeWidth="2" />
-            <text x="80" y="85" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="14">♀</text>
-            <text x="80" y="105" fill={INK_SECONDARY} textAnchor="middle" fontSize="10">Venus</text>
+          <svg viewBox="0 0 400 180" width="100%" height="100%" aria-label="Aspect reception cancelled due to Dusthana placement">
+            <circle cx="80" cy="90" r="32" fill="#ffffff" stroke={GOLD} strokeWidth="2.5" />
+            <text x="80" y="86" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="16">♀</text>
+            <text x="80" y="108" fill={INK_SECONDARY} textAnchor="middle" fontSize="11" fontWeight="700">Venus</text>
 
-            <rect x="270" y="45" width="100" height="90" rx="8" fill="rgba(162, 58, 30, 0.05)" stroke={RED} strokeWidth="1.5" />
-            <circle cx="320" cy="90" r="18" fill="#ffffff" stroke={RED} strokeWidth="1.5" />
-            <text x="320" y="94" fill={RED} textAnchor="middle" fontWeight="bold" fontSize="11">☿</text>
-            <text x="320" y="122" fill={RED} textAnchor="middle" fontSize="8" fontWeight="bold">Dusthana / Debility</text>
+            <rect x="260" y="35" width="120" height="110" rx="8" fill="rgba(162, 58, 30, 0.05)" stroke={RED} strokeWidth="2" />
+            <circle cx="320" cy="90" r="22" fill="#ffffff" stroke={RED} strokeWidth="2" />
+            <text x="320" y="94" fill={RED} textAnchor="middle" fontWeight="bold" fontSize="14">☿</text>
+            <text x="320" y="130" fill={RED} textAnchor="middle" fontSize="9.5" fontWeight="800">6th, 8th or 12th House</text>
 
-            <line x1="110" y1="90" x2="270" y2="90" stroke={GOLD} strokeWidth="2" strokeDasharray="4,4" />
-            <path d="M 180 80 L 200 100" stroke={RED} strokeWidth="2" />
-            <path d="M 200 80 L 180 100" stroke={RED} strokeWidth="2" />
-            <text x="190" y="70" fill={RED} textAnchor="middle" fontWeight="bold" fontSize="10">Reception Cancelled</text>
+            <line x1="116" y1="90" x2="256" y2="90" stroke={GOLD} strokeWidth="2" strokeDasharray="4,4" />
+            
+            {/* Cancel cross */}
+            <path d="M 175 80 L 195 100 M 195 80 L 175 100" stroke={RED} strokeWidth="3" />
+            <text x="185" y="70" fill={RED} textAnchor="middle" fontWeight="850" fontSize="11.5">CANCELLED</text>
           </svg>
         );
       case "blocked":
         return (
-          <svg viewBox="0 0 400 180" width="100%" height="100%">
-            <circle cx="60" cy="110" r="24" fill="#ffffff" stroke={GOLD} strokeWidth="2" />
-            <text x="60" y="114" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="12">☽</text>
-            <text x="60" y="148" fill={INK_SECONDARY} textAnchor="middle" fontSize="9">Planet A (Fast)</text>
+          <svg viewBox="0 0 400 180" width="100%" height="100%" aria-label="Interrupted aspect (Raddha)">
+            <circle cx="60" cy="110" r="28" fill="#ffffff" stroke={GOLD} strokeWidth="2.5" />
+            <text x="60" y="114" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="14">☽</text>
+            <text x="60" y="152" fill={INK_SECONDARY} textAnchor="middle" fontSize="10.5" fontWeight="700">Planet A (Fast)</text>
 
-            <circle cx="340" cy="110" r="24" fill="#ffffff" stroke={GOLD} strokeWidth="2" />
-            <text x="340" y="114" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="12">♃</text>
-            <text x="340" y="148" fill={INK_SECONDARY} textAnchor="middle" fontSize="9">Planet B (Slow)</text>
+            <circle cx="340" cy="110" r="28" fill="#ffffff" stroke={GOLD} strokeWidth="2.5" />
+            <text x="340" y="114" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="14">♃</text>
+            <text x="340" y="152" fill={INK_SECONDARY} textAnchor="middle" fontSize="10.5" fontWeight="700">Planet B (Slow)</text>
 
-            <circle cx="200" cy="60" r="24" fill="#ffffff" stroke={RED} strokeWidth="2" />
-            <text x="200" y="64" fill={RED} textAnchor="middle" fontWeight="bold" fontSize="12">☿</text>
-            <text x="200" y="98" fill={RED} textAnchor="middle" fontSize="9">Planet C (Intervener)</text>
+            {/* Intervening planet */}
+            <circle cx="200" cy="50" r="28" fill="#ffffff" stroke={RED} strokeWidth="2.5" />
+            <text x="200" y="54" fill={RED} textAnchor="middle" fontWeight="bold" fontSize="14">☿</text>
+            <text x="200" y="92" fill={RED} textAnchor="middle" fontSize="10.5" fontWeight="800">Planet C (Intervener)</text>
 
-            <line x1="84" y1="110" x2="316" y2="110" stroke={INK_MUTED} strokeWidth="1.5" strokeDasharray="3,3" />
+            {/* Target aspect line */}
+            <line x1="90" y1="110" x2="310" y2="110" stroke={INK_MUTED} strokeWidth="1.5" strokeDasharray="3,3" />
 
-            <line x1="80" y1="95" x2="180" y2="65" stroke={RED} strokeWidth="2" />
-            <line x1="220" y1="65" x2="320" y2="95" stroke={RED} strokeWidth="2" />
-            <text x="200" y="125" fill={RED} textAnchor="middle" fontWeight="bold" fontSize="11">Interception (Blocked)</text>
+            {/* Interception paths */}
+            <line x1="84" y1="95" x2="176" y2="65" stroke={RED} strokeWidth="2.5" />
+            <line x1="224" y1="65" x2="316" y2="95" stroke={RED} strokeWidth="2.5" />
+            <text x="200" y="128" fill={RED} textAnchor="middle" fontWeight="850" fontSize="12">Interception (Blocked)</text>
           </svg>
         );
       case "exchange":
         return (
-          <svg viewBox="0 0 400 180" width="100%" height="100%">
+          <svg viewBox="0 0 400 180" width="100%" height="100%" aria-label="Sign exchange (Tambeera)">
             <defs>
               <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                 <path d="M 0 0 L 10 5 L 0 10 z" fill={GOLD} />
               </marker>
             </defs>
-            <circle cx="100" cy="90" r="30" fill="#ffffff" stroke={GOLD} strokeWidth="2" />
-            <text x="100" y="85" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="14">☉</text>
-            <text x="100" y="105" fill={INK_SECONDARY} textAnchor="middle" fontSize="9">Sun in Jup Sign</text>
+            <circle cx="100" cy="90" r="32" fill="#ffffff" stroke={GOLD} strokeWidth="2.5" />
+            <text x="100" y="85" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="16">☉</text>
+            <text x="100" y="108" fill={INK_SECONDARY} textAnchor="middle" fontSize="10.5" fontWeight="700">Sun in Jup Sign</text>
 
-            <circle cx="300" cy="90" r="30" fill="#ffffff" stroke={GOLD} strokeWidth="2" />
-            <text x="300" y="85" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="14">♃</text>
-            <text x="300" y="105" fill={INK_SECONDARY} textAnchor="middle" fontSize="9">Jup in Sun Sign</text>
+            <circle cx="300" cy="90" r="32" fill="#ffffff" stroke={GOLD} strokeWidth="2.5" />
+            <text x="300" y="85" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="16">♃</text>
+            <text x="300" y="108" fill={INK_SECONDARY} textAnchor="middle" fontSize="10.5" fontWeight="700">Jup in Sun Sign</text>
 
-            <path d="M 130 70 Q 200 40 270 70" fill="none" stroke={GOLD} strokeWidth="2" markerEnd="url(#arrow)" />
-            <path d="M 270 110 Q 200 140 130 110" fill="none" stroke={GOLD} strokeWidth="2" markerEnd="url(#arrow)" />
-            <text x="200" y="30" fill={GOLD} textAnchor="middle" fontWeight="bold" fontSize="10">Exchanges signs</text>
+            <path d="M 130 70 Q 200 36 270 70" fill="none" stroke={GOLD} strokeWidth="2.5" markerEnd="url(#arrow)" />
+            <path d="M 270 110 Q 200 144 130 110" fill="none" stroke={GOLD} strokeWidth="2.5" markerEnd="url(#arrow)" />
+            <text x="200" y="24" fill={GOLD_DEEP} textAnchor="middle" fontWeight="800" fontSize="11">Sign Exchange</text>
           </svg>
         );
       case "isolated":
         return (
-          <svg viewBox="0 0 400 180" width="100%" height="100%">
-            <circle cx="200" cy="90" r="35" fill="#ffffff" stroke={RED} strokeWidth="2" strokeDasharray="5,5" />
-            <text x="200" y="85" fill={RED} textAnchor="middle" fontWeight="bold" fontSize="16">♄</text>
-            <text x="200" y="105" fill={RED} textAnchor="middle" fontSize="10">Saturn Isolated</text>
+          <svg viewBox="0 0 400 180" width="100%" height="100%" aria-label="Isolated planet (Dureph)">
+            <circle cx="200" cy="90" r="40" fill="#ffffff" stroke={RED} strokeWidth="2.5" strokeDasharray="5,5" />
+            <text x="200" y="85" fill={RED} textAnchor="middle" fontWeight="bold" fontSize="18">♄</text>
+            <text x="200" y="108" fill={RED} textAnchor="middle" fontSize="11" fontWeight="800">Isolated Saturn</text>
 
-            <circle cx="60" cy="40" r="15" fill="#ffffff" stroke={INK_MUTED} strokeWidth="1" />
-            <circle cx="340" cy="40" r="15" fill="#ffffff" stroke={INK_MUTED} strokeWidth="1" />
-            <circle cx="60" cy="140" r="15" fill="#ffffff" stroke={INK_MUTED} strokeWidth="1" />
-            <circle cx="340" cy="140" r="15" fill="#ffffff" stroke={INK_MUTED} strokeWidth="1" />
+            {/* Other planets disconnected */}
+            <circle cx="60" cy="40" r="16" fill="#ffffff" stroke={INK_MUTED} strokeWidth="1" />
+            <circle cx="340" cy="40" r="16" fill="#ffffff" stroke={INK_MUTED} strokeWidth="1" />
+            <circle cx="60" cy="140" r="16" fill="#ffffff" stroke={INK_MUTED} strokeWidth="1" />
+            <circle cx="340" cy="140" r="16" fill="#ffffff" stroke={INK_MUTED} strokeWidth="1" />
 
-            <text x="200" y="150" fill={RED} textAnchor="middle" fontSize="11">No aspecting lines form with any graha</text>
+            <text x="200" y="152" fill={RED} textAnchor="middle" fontSize="11.5" fontWeight="800">No aspecting lines form with any graha</text>
           </svg>
         );
       case "friendly_conjunction":
         return (
-          <svg viewBox="0 0 400 180" width="100%" height="100%">
-            <rect x="100" y="30" width="200" height="120" rx="12" fill="rgba(47, 125, 85, 0.05)" stroke={GREEN} strokeWidth="2" />
-            <text x="200" y="55" fill={GREEN} textAnchor="middle" fontWeight="bold" fontSize="12">Friends in Same Sign</text>
+          <svg viewBox="0 0 400 180" width="100%" height="100%" aria-label="Conjunction of friendly planets">
+            <rect x="90" y="25" width="220" height="130" rx="12" fill="rgba(47, 125, 85, 0.05)" stroke={GREEN} strokeWidth="2" />
+            <text x="200" y="50" fill={GREEN} textAnchor="middle" fontWeight="800" fontSize="12">Friends in Same Sign</text>
             
-            <circle cx="160" cy="100" r="24" fill="#ffffff" stroke={GOLD} strokeWidth="2" />
-            <text x="160" y="105" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="14">☉</text>
+            <circle cx="150" cy="100" r="28" fill="#ffffff" stroke={GOLD} strokeWidth="2.5" />
+            <text x="150" y="104" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="16">☉</text>
             
-            <circle cx="240" cy="100" r="24" fill="#ffffff" stroke={GOLD} strokeWidth="2" />
-            <text x="240" y="105" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="14">♃</text>
+            <circle cx="250" cy="100" r="28" fill="#ffffff" stroke={GOLD} strokeWidth="2.5" />
+            <text x="250" y="104" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="16">♃</text>
 
-            <path d="M 184 100 L 216 100" stroke={GREEN} strokeWidth="3" />
-            <text x="200" y="135" fill={GREEN} textAnchor="middle" fontSize="10">Sajjana: Constructive Union</text>
+            <path d="M 180 100 L 220 100" stroke={GREEN} strokeWidth="3" />
+            <text x="200" y="142" fill={GREEN} textAnchor="middle" fontWeight="800" fontSize="11.5">Sajjana: Constructive Union</text>
           </svg>
         );
       case "enemy_conjunction":
         return (
-          <svg viewBox="0 0 400 180" width="100%" height="100%">
-            <rect x="100" y="30" width="200" height="120" rx="12" fill="rgba(168, 65, 43, 0.05)" stroke={RED} strokeWidth="2" />
-            <text x="200" y="55" fill={RED} textAnchor="middle" fontWeight="bold" fontSize="12">Enemies in Same Sign</text>
+          <svg viewBox="0 0 400 180" width="100%" height="100%" aria-label="Conjunction of enemy planets">
+            <rect x="90" y="25" width="220" height="130" rx="12" fill="rgba(168, 65, 43, 0.05)" stroke={RED} strokeWidth="2" />
+            <text x="200" y="50" fill={RED} textAnchor="middle" fontWeight="800" fontSize="12">Enemies in Same Sign</text>
             
-            <circle cx="160" cy="100" r="24" fill="#ffffff" stroke={GOLD} strokeWidth="2" />
-            <text x="160" y="105" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="14">♂</text>
+            <circle cx="150" cy="100" r="28" fill="#ffffff" stroke={GOLD} strokeWidth="2.5" />
+            <text x="150" y="104" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="16">♂</text>
             
-            <circle cx="240" cy="100" r="24" fill="#ffffff" stroke={GOLD} strokeWidth="2" />
-            <text x="240" y="105" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="14">♄</text>
+            <circle cx="250" cy="100" r="28" fill="#ffffff" stroke={GOLD} strokeWidth="2.5" />
+            <text x="250" y="104" fill={INK_PRIMARY} textAnchor="middle" fontWeight="bold" fontSize="16">♄</text>
 
-            <path d="M 184 100 L 200 90 L 216 100" stroke={RED} strokeWidth="2" fill="none" />
-            <text x="200" y="135" fill={RED} textAnchor="middle" fontSize="10">Manaau: Friction & Conflict</text>
+            <path d="M 180 100 Q 200 90 220 100" stroke={RED} strokeWidth="2.5" fill="none" />
+            <text x="200" y="142" fill={RED} textAnchor="middle" fontWeight="800" fontSize="11.5">Manaau: Friction & Competition</text>
           </svg>
         );
       default:
@@ -348,14 +360,14 @@ export function TajikaTwelveYogasSurveyor() {
     <div
       className="gl-surface-twilight-glass"
       style={{
-        padding: "20px",
-        borderRadius: "12px",
-        background: "rgba(255, 253, 246, 0.7)",
-        border: "1px solid rgba(156, 122, 47, 0.15)",
-        boxShadow: "0 8px 32px rgba(156, 122, 47, 0.05)",
+        padding: "24px",
+        borderRadius: "14px",
+        background: "rgba(255, 253, 246, 0.85)",
+        border: "1px solid rgba(156, 122, 47, 0.2)",
+        boxShadow: "0 10px 40px rgba(156, 122, 47, 0.08)",
         fontFamily: "'Inter', sans-serif",
         color: INK_PRIMARY,
-        maxWidth: "860px",
+        maxWidth: "920px",
         margin: "0 auto",
         display: "flex",
         flexDirection: "column",
@@ -364,15 +376,20 @@ export function TajikaTwelveYogasSurveyor() {
       data-interactive="tajika-twelve-yogas-surveyor"
     >
       {/* Header */}
-      <div style={{ borderBottom: "1px solid rgba(156,122,47,0.12)", paddingBottom: "12px", marginBottom: "4px" }}>
-        <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: GOLD_DEEP, display: "flex", alignItems: "center", gap: "6px" }}>
+      <div style={{ borderBottom: "1px solid rgba(156,122,47,0.15)", paddingBottom: "12px" }}>
+        <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, letterSpacing: "0.12em", textTransform: "uppercase" }}>
+          Module 19 — Chapter 2 — Lesson 3
+        </span>
+        <h3 style={{ margin: "4px 0 0", fontSize: "22px", fontWeight: 800, color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
           Twelve Refinement Yogas Surveyor
         </h3>
-        <span style={{ fontSize: "11.5px", color: INK_SECONDARY }}>Explore and deconstruct the 12 refinement yogas that modify base aspect timing in Tājika</span>
+        <p style={{ margin: "4px 0 0", fontSize: "13.5px", color: INK_SECONDARY, lineHeight: "1.4" }}>
+          Explore and deconstruct the twelve refinement yogas that modify base aspect timing predictions in Tājika.
+        </p>
       </div>
 
       {/* Category Selection Tabs */}
-      <div style={{ display: "flex", gap: "4px", overflowX: "auto", paddingBottom: "4px" }}>
+      <div style={{ display: "flex", gap: "6px", overflowX: "auto", paddingBottom: "6px" }}>
         {CATEGORIES.map((cat, i) => (
           <button
             key={cat.name}
@@ -382,16 +399,16 @@ export function TajikaTwelveYogasSurveyor() {
               selectYoga(cat.yogas[0]);
             }}
             style={{
-              border: `1.5px solid ${activeCategory === i ? GOLD : HAIRLINE}`,
+              border: `1.5px solid ${activeCategory === i ? GOLD : "rgba(156, 122, 47, 0.2)"}`,
               background: activeCategory === i ? GOLD : "transparent",
               color: activeCategory === i ? "#ffffff" : INK_SECONDARY,
               borderRadius: "20px",
-              padding: "4px 12px",
+              padding: "6px 14px",
               fontWeight: 700,
-              fontSize: "11px",
+              fontSize: "12px",
               whiteSpace: "nowrap",
               cursor: "pointer",
-              transition: "all 0.2s"
+              transition: "all 150ms ease"
             }}
           >
             {cat.name}
@@ -400,7 +417,7 @@ export function TajikaTwelveYogasSurveyor() {
       </div>
 
       {/* Yoga selection cards list */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
         {CATEGORIES[activeCategory].yogas.map((yoga) => {
           const isSelected = selectedYoga.id === yoga.id;
           return (
@@ -410,17 +427,17 @@ export function TajikaTwelveYogasSurveyor() {
               onClick={() => selectYoga(yoga)}
               style={{
                 textAlign: "left",
-                border: `1.5px solid ${isSelected ? GOLD : HAIRLINE}`,
+                border: `1.5px solid ${isSelected ? GOLD : "rgba(156, 122, 47, 0.15)"}`,
                 background: isSelected ? "rgba(156, 122, 47, 0.08)" : "#ffffff",
                 color: INK_PRIMARY,
                 borderRadius: "8px",
-                padding: "12px",
+                padding: "16px",
                 cursor: "pointer",
-                transition: "all 0.2s"
+                transition: "all 150ms ease"
               }}
             >
-              <strong style={{ color: GOLD, fontSize: "11.5px", display: "block", marginBottom: "2px" }}>{yoga.name}</strong>
-              <span style={{ fontSize: "10px", color: INK_SECONDARY, lineHeight: 1.4 }}>{yoga.definition}</span>
+              <strong style={{ color: GOLD_DEEP, fontSize: "13.5px", display: "block", marginBottom: "4px" }}>{yoga.name}</strong>
+              <span style={{ fontSize: "12px", color: INK_SECONDARY, lineHeight: 1.45 }}>{yoga.definition}</span>
             </button>
           );
         })}
@@ -428,39 +445,61 @@ export function TajikaTwelveYogasSurveyor() {
 
       {/* Workbench Diagram */}
       {selectedYoga && (
-        <div style={{ background: "#ffffff", border: "1px solid rgba(156, 122, 47, 0.08)", padding: "14px", borderRadius: "8px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px", alignItems: "center" }}>
-          <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: "6px", background: "rgba(0,0,0,0.01)", display: "flex", justifyContent: "center", alignItems: "center", minHeight: "160px" }}>
+        <div 
+          style={{ 
+            background: "#ffffff", 
+            border: "1px solid rgba(156, 122, 47, 0.15)", 
+            padding: "20px", 
+            borderRadius: "8px", 
+            display: "grid", 
+            gridTemplateColumns: "1.1fr 1fr", 
+            gap: "20px", 
+            alignItems: "center" 
+          }}
+        >
+          <div 
+            style={{ 
+              border: `1px solid ${HAIRLINE}`, 
+              borderRadius: "6px", 
+              background: LIGHT_BG, 
+              display: "flex", 
+              justifyContent: "center", 
+              alignItems: "center", 
+              minHeight: "185px",
+              padding: "12px"
+            }}
+          >
             {renderSvgDiagram(selectedYoga.svgType)}
           </div>
           <div>
-            <span style={{ color: GOLD, fontSize: "10px", textTransform: "uppercase", fontWeight: 900 }}>Yoga details</span>
-            <h4 style={{ margin: "2px 0 6px 0", color: INK_PRIMARY, fontSize: "13px" }}>{selectedYoga.name}</h4>
+            <span style={{ color: RED, fontSize: "10.5px", textTransform: "uppercase", fontWeight: 900 }}>Yoga Analysis Parameters</span>
+            <h4 style={{ margin: "4px 0 10px 0", color: INK_PRIMARY, fontSize: "18px", fontFamily: "var(--font-cormorant), serif", fontWeight: 800 }}>{selectedYoga.name}</h4>
             
-            <div style={{ marginBottom: "8px" }}>
-              <span style={{ display: "block", fontSize: "10px", color: INK_MUTED, fontWeight: 700 }}>Technical Definition:</span>
-              <p style={{ margin: 0, fontSize: "11px", color: INK_SECONDARY, lineHeight: 1.4 }}>{selectedYoga.definition}</p>
+            <div style={{ marginBottom: "12px" }}>
+              <span style={{ display: "block", fontSize: "10.5px", color: INK_MUTED, fontWeight: 700, textTransform: "uppercase" }}>Technical Definition:</span>
+              <p style={{ margin: "2px 0 0", fontSize: "13px", color: INK_SECONDARY, lineHeight: 1.45 }}>{selectedYoga.definition}</p>
             </div>
 
             <div>
-              <span style={{ display: "block", fontSize: "10px", color: INK_MUTED, fontWeight: 700 }}>Astrological Application:</span>
-              <p style={{ margin: 0, fontSize: "11.5px", color: INK_PRIMARY, fontWeight: 600, lineHeight: 1.4 }}>{selectedYoga.astrologicalMeaning}</p>
+              <span style={{ display: "block", fontSize: "10.5px", color: INK_MUTED, fontWeight: 700, textTransform: "uppercase" }}>Astrological Application:</span>
+              <p style={{ margin: "2px 0 0", fontSize: "13.5px", color: INK_PRIMARY, fontWeight: 700, lineHeight: 1.45 }}>{selectedYoga.astrologicalMeaning}</p>
             </div>
           </div>
         </div>
       )}
 
       {/* Mini-game check card */}
-      <div style={{ background: "#ffffff", border: "1px solid rgba(156, 122, 47, 0.08)", padding: "14px", borderRadius: "8px", display: "flex", flexDirection: "column", gap: "10px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: `1px solid ${HAIRLINE}`, paddingBottom: "4px" }}>
-          <span style={{ fontSize: "11.5px", fontWeight: 700, color: GOLD_DEEP }}>Definition Matcher Game</span>
-          <span style={{ fontSize: "11px", color: INK_SECONDARY }}>Score: <strong>{matcherScore}</strong></span>
+      <div style={{ background: "#ffffff", border: "1px solid rgba(156, 122, 47, 0.15)", padding: "20px", borderRadius: "8px", display: "flex", flexDirection: "column", gap: "12px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: `1px solid ${HAIRLINE}`, paddingBottom: "6px" }}>
+          <span style={{ fontSize: "13px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase" }}>Definition Matcher Game</span>
+          <span style={{ fontSize: "12px", color: INK_SECONDARY }}>Score: <strong>{matcherScore}</strong></span>
         </div>
 
-        <p style={{ margin: 0, fontSize: "11.5px", fontStyle: "italic", lineHeight: 1.45, color: INK_SECONDARY }}>
+        <p style={{ margin: 0, fontSize: "13.5px", fontStyle: "italic", lineHeight: 1.5, color: INK_SECONDARY }}>
           Match this definition: &ldquo;{matcherQuestion.definition}&rdquo;
         </p>
 
-        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           {matcherOptions.map((opt) => {
             const isSelected = matcherAnswered === opt;
             const isCorrect = opt === matcherQuestion.yogaName;
@@ -470,21 +509,21 @@ export function TajikaTwelveYogasSurveyor() {
               background: "#ffffff",
               color: INK_PRIMARY,
               borderRadius: "6px",
-              padding: "4px 12px",
-              fontSize: "11px",
+              padding: "6px 14px",
+              fontSize: "12.5px",
               fontWeight: 700,
               cursor: "pointer",
-              transition: "all 0.2s"
+              transition: "all 150ms ease"
             };
 
             if (matcherAnswered) {
               if (isCorrect) {
                 btnStyle.border = `1.5px solid ${GREEN}`;
-                btnStyle.background = `${GREEN}15`;
+                btnStyle.background = "rgba(47, 125, 85, 0.05)";
                 btnStyle.color = GREEN;
               } else if (isSelected) {
                 btnStyle.border = `1.5px solid ${RED}`;
-                btnStyle.background = `${RED}15`;
+                btnStyle.background = "rgba(162, 58, 30, 0.05)";
                 btnStyle.color = RED;
               } else {
                 btnStyle.opacity = 0.5;
@@ -506,7 +545,7 @@ export function TajikaTwelveYogasSurveyor() {
         </div>
 
         {matcherAnswered && (
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12.5px", marginTop: "4px" }}>
             <span style={{ color: matcherAnswered === matcherQuestion.yogaName ? GREEN : RED, fontWeight: 700 }}>
               {matcherAnswered === matcherQuestion.yogaName ? "✓ Correct!" : `✗ Incorrect. Answer was ${matcherQuestion.yogaName}.`}
             </span>
@@ -518,13 +557,14 @@ export function TajikaTwelveYogasSurveyor() {
                 background: GOLD,
                 color: "#ffffff",
                 borderRadius: "4px",
-                padding: "4px 10px",
-                fontSize: "10.5px",
+                padding: "6px 12px",
+                fontSize: "12px",
                 fontWeight: 700,
-                cursor: "pointer"
+                cursor: "pointer",
+                textTransform: "uppercase"
               }}
             >
-              Next
+              Next Question
             </button>
           </div>
         )}

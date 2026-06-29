@@ -142,6 +142,35 @@ export function NadiDecisionFramework() {
         fontFamily: "var(--font-sans), system-ui, sans-serif",
       }}
     >
+      {/* Scoped CSS Style Injection */}
+      <style>{`
+        @keyframes flowDash {
+          to {
+            stroke-dashoffset: -20;
+          }
+        }
+        .active-flow-path {
+          stroke-dasharray: 6, 4;
+          animation: flowDash 1.2s linear infinite;
+        }
+        .flowchart-gate {
+          transform-origin: center;
+          transform-box: fill-box;
+          transition: all 0.22s ease-in-out;
+          cursor: pointer;
+        }
+        .flowchart-gate:hover {
+          transform: scale(1.05);
+        }
+        .flowchart-gate circle {
+          transition: stroke-width 0.22s ease, stroke 0.22s ease;
+        }
+        .flowchart-gate:hover circle {
+          stroke-width: 2px !important;
+          stroke: #A8821E !important;
+        }
+      `}</style>
+
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between border-b pb-4" style={{ borderColor: HAIRLINE }}>
         <div>
@@ -286,7 +315,7 @@ export function NadiDecisionFramework() {
 
                 {/* --- CONNECTING LINES --- */}
                 {/* 1. Start to Gate 1 (Always Active) */}
-                <line x1="20" y1="110" x2="120" y2="110" stroke={GOLD} strokeWidth="2" strokeDasharray="4 4" />
+                <line x1="20" y1="110" x2="120" y2="110" stroke={GOLD} strokeWidth="2.5" className="active-flow-path" />
 
                 {/* 2. Gate 1 (Recommend) to Out of Scope leaf */}
                 <path
@@ -294,8 +323,7 @@ export function NadiDecisionFramework() {
                   fill="none"
                   stroke={!recommendPass ? VERMILION : `${INK_MUTED}40`}
                   strokeWidth={!recommendPass ? 3.5 : 1.2}
-                  strokeDasharray={!recommendPass ? "5 3" : "none"}
-                  className={!recommendPass ? "animate-[dash_1s_linear_infinite]" : ""}
+                  className={!recommendPass ? "active-flow-path" : ""}
                   style={{ transition: "all 300ms ease" }}
                 />
 
@@ -307,7 +335,7 @@ export function NadiDecisionFramework() {
                   y2="110"
                   stroke={recommendPass ? GREEN : `${INK_MUTED}40`}
                   strokeWidth={recommendPass ? 3 : 1.2}
-                  strokeDasharray={recommendPass ? "5 3" : "none"}
+                  className={recommendPass ? "active-flow-path" : ""}
                   style={{ transition: "all 300ms ease" }}
                 />
 
@@ -317,7 +345,7 @@ export function NadiDecisionFramework() {
                   fill="none"
                   stroke={recommendPass && !refusePass ? VERMILION : `${INK_MUTED}40`}
                   strokeWidth={recommendPass && !refusePass ? 3.5 : 1.2}
-                  strokeDasharray={recommendPass && !refusePass ? "5 3" : "none"}
+                  className={recommendPass && !refusePass ? "active-flow-path" : ""}
                   style={{ transition: "all 300ms ease" }}
                 />
 
@@ -329,7 +357,7 @@ export function NadiDecisionFramework() {
                   y2="110"
                   stroke={recommendPass && refusePass ? GREEN : `${INK_MUTED}40`}
                   strokeWidth={recommendPass && refusePass ? 3 : 1.2}
-                  strokeDasharray={recommendPass && refusePass ? "5 3" : "none"}
+                  className={recommendPass && refusePass ? "active-flow-path" : ""}
                   style={{ transition: "all 300ms ease" }}
                 />
 
@@ -339,7 +367,7 @@ export function NadiDecisionFramework() {
                   fill="none"
                   stroke={recommendPass && refusePass && !deferPass ? GOLD : `${INK_MUTED}40`}
                   strokeWidth={recommendPass && refusePass && !deferPass ? 3.5 : 1.2}
-                  strokeDasharray={recommendPass && refusePass && !deferPass ? "5 3" : "none"}
+                  className={recommendPass && refusePass && !deferPass ? "active-flow-path" : ""}
                   style={{ transition: "all 300ms ease" }}
                 />
 
@@ -351,7 +379,7 @@ export function NadiDecisionFramework() {
                   y2="110"
                   stroke={recommendPass && refusePass && deferPass ? GREEN : `${INK_MUTED}40`}
                   strokeWidth={recommendPass && refusePass && deferPass ? 3 : 1.2}
-                  strokeDasharray={recommendPass && refusePass && deferPass ? "5 3" : "none"}
+                  className={recommendPass && refusePass && deferPass ? "active-flow-path" : ""}
                   style={{ transition: "all 300ms ease" }}
                 />
 
@@ -361,7 +389,7 @@ export function NadiDecisionFramework() {
                   fill="none"
                   stroke={verdict === "MODE_1_CONTEXTUAL" ? GREEN : `${INK_MUTED}40`}
                   strokeWidth={verdict === "MODE_1_CONTEXTUAL" ? 3.5 : 1.2}
-                  strokeDasharray={verdict === "MODE_1_CONTEXTUAL" ? "5 3" : "none"}
+                  className={verdict === "MODE_1_CONTEXTUAL" ? "active-flow-path" : ""}
                   style={{ transition: "all 300ms ease" }}
                 />
 
@@ -371,13 +399,13 @@ export function NadiDecisionFramework() {
                   fill="none"
                   stroke={verdict === "MODE_2_STANDALONE" ? GREEN : `${INK_MUTED}40`}
                   strokeWidth={verdict === "MODE_2_STANDALONE" ? 3.5 : 1.2}
-                  strokeDasharray={verdict === "MODE_2_STANDALONE" ? "5 3" : "none"}
+                  className={verdict === "MODE_2_STANDALONE" ? "active-flow-path" : ""}
                   style={{ transition: "all 300ms ease" }}
                 />
 
                 {/* --- GATE NODES (CLICKABLE) --- */}
                 {/* Gate 1: Recommend */}
-                <g className="cursor-pointer" onClick={() => setFocusedGate(1)}>
+                <g className="flowchart-gate cursor-pointer" onClick={() => setFocusedGate(1)}>
                   <circle cx="160" cy="110" r="32" fill={focusedGate === 1 ? "url(#goldGlow)" : SURFACE} stroke={focusedGate === 1 ? GOLD : HAIRLINE} strokeWidth={focusedGate === 1 ? 2.5 : 1.2} filter="url(#shadow)" />
                   <text x="160" y="106" textAnchor="middle" fontSize="10" fontWeight="bold" fill={INK_PRIMARY}>1. Recommend?</text>
                   <text x="160" y="121" textAnchor="middle" fontSize="8" fill={recommendPass ? GREEN : VERMILION} fontWeight="bold">
@@ -391,7 +419,7 @@ export function NadiDecisionFramework() {
                 </g>
 
                 {/* Gate 2: Refuse */}
-                <g className="cursor-pointer" onClick={() => setFocusedGate(2)} opacity={recommendPass ? 1 : 0.5}>
+                <g className="flowchart-gate cursor-pointer" onClick={() => setFocusedGate(2)} opacity={recommendPass ? 1 : 0.5}>
                   <circle cx="330" cy="110" r="32" fill={focusedGate === 2 ? "url(#vermilionGlow)" : SURFACE} stroke={focusedGate === 2 ? VERMILION : HAIRLINE} strokeWidth={focusedGate === 2 ? 2.5 : 1.2} filter="url(#shadow)" />
                   <text x="330" y="106" textAnchor="middle" fontSize="10" fontWeight="bold" fill={INK_PRIMARY}>2. Refuse?</text>
                   <text x="330" y="121" textAnchor="middle" fontSize="8" fill={!recommendPass ? INK_MUTED : refusePass ? GREEN : VERMILION} fontWeight="bold">
@@ -408,7 +436,7 @@ export function NadiDecisionFramework() {
                 </g>
 
                 {/* Gate 3: Defer */}
-                <g className="cursor-pointer" onClick={() => setFocusedGate(3)} opacity={recommendPass && refusePass ? 1 : 0.5}>
+                <g className="flowchart-gate cursor-pointer" onClick={() => setFocusedGate(3)} opacity={recommendPass && refusePass ? 1 : 0.5}>
                   <circle cx="500" cy="110" r="32" fill={focusedGate === 3 ? "url(#goldGlow)" : SURFACE} stroke={focusedGate === 3 ? GOLD : HAIRLINE} strokeWidth={focusedGate === 3 ? 2.5 : 1.2} filter="url(#shadow)" />
                   <text x="500" y="106" textAnchor="middle" fontSize="10" fontWeight="bold" fill={INK_PRIMARY}>3. Defer?</text>
                   <text x="500" y="121" textAnchor="middle" fontSize="8" fill={!recommendPass || !refusePass ? INK_MUTED : deferPass ? GREEN : GOLD} fontWeight="bold">

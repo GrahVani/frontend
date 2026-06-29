@@ -188,9 +188,49 @@ export function NadiCommercialExplorer() {
         </div>
       </div>
 
+      {/* Scoped CSS Style Injection */}
+      <style>{`
+        .responsive-grid {
+          display: grid;
+          grid-template-columns: 1.25fr 1fr;
+          gap: 24px;
+        }
+        @media (max-width: 820px) {
+          .responsive-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+        .steer-branch-top:hover {
+          stroke: #A23A1E !important;
+          stroke-width: 4px !important;
+          opacity: 1 !important;
+        }
+        .steer-branch-bottom:hover {
+          stroke: #2F7D55 !important;
+          stroke-width: 4px !important;
+          opacity: 1 !important;
+        }
+        .shield-option {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 13px;
+          cursor: pointer;
+          padding: 10px 12px;
+          border-radius: 6px;
+          border: 1px solid rgba(156,122,47,0.12);
+          background: #fff;
+          transition: all 0.2s ease;
+        }
+        .shield-option:hover {
+          background: rgba(156,122,47,0.03);
+          border-color: rgba(156,122,47,0.3);
+        }
+      `}</style>
+
       {activeTab === "simulator" ? (
         /* Simulator Tab */
-        <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "24px" }}>
+        <div className="responsive-grid">
           
           {/* Left Panel: Roadmap & Interaction */}
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -207,15 +247,16 @@ export function NadiCommercialExplorer() {
                   key={stepObj.s} 
                   style={{ 
                     flex: 1, 
-                    padding: "6px", 
-                    borderRadius: "4px", 
-                    background: simStep === stepObj.s ? GOLD : "rgba(156,122,47,0.08)",
+                    padding: "8px 6px", 
+                    borderRadius: "6px", 
+                    background: simStep === stepObj.s ? GOLD : "rgba(156,122,47,0.06)",
                     border: simStep === stepObj.s ? "none" : "1px solid rgba(156,122,47,0.15)",
                     color: simStep === stepObj.s ? "#fff" : INK_SECONDARY,
                     fontSize: "11px",
                     fontWeight: 700,
                     textAlign: "center",
-                    transition: "all 0.3s"
+                    transition: "all 0.3s",
+                    boxShadow: simStep === stepObj.s ? "0 2px 8px rgba(156,122,47,0.2)" : "none"
                   }}
                 >
                   {stepObj.s}. {stepObj.name}
@@ -223,8 +264,104 @@ export function NadiCommercialExplorer() {
               ))}
             </div>
 
+            {/* Interactive SVG Steering Map */}
+            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "10px", padding: "16px", boxShadow: "0 4px 16px rgba(156,122,47,0.04)" }}>
+              <span style={{ fontSize: "11.5px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "12px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                Pilgrimage Steering Route Map
+              </span>
+              
+              {(() => {
+                const isSteered = scamAlert?.includes("steering");
+                const hasDecidedRickshaw = simStep >= 2;
+                const isHonestRoute = hasDecidedRickshaw && !isSteered;
+                return (
+                  <svg viewBox="0 0 340 140" style={{ overflow: "visible", width: "100%", display: "block" }} aria-label="Steering network flowchart map from railway station to reading centers">
+                    {/* Station to Rickshaw Path */}
+                    <line x1="35" y1="70" x2="100" y2="70" stroke={simStep >= 1 ? GOLD : "#E5E5E5"} strokeWidth="3" />
+                    
+                    {/* Rickshaw to Cousin's (Steered) Path */}
+                    <path 
+                      className={simStep === 1 ? "steer-branch-top" : ""}
+                      d="M 100 70 Q 140 30 180 30" 
+                      fill="none" 
+                      stroke={isSteered ? RED : (simStep === 1 ? "rgba(162,58,30,0.25)" : "#E5E5E5")} 
+                      strokeWidth="3" 
+                      style={{ cursor: simStep === 1 ? "pointer" : "default", transition: "stroke 0.2s" }}
+                      onClick={() => simStep === 1 && triggerAction("driver-yes")}
+                    />
+
+                    {/* Rickshaw to Booked (Honest) Path */}
+                    <path 
+                      className={simStep === 1 ? "steer-branch-bottom" : ""}
+                      d="M 100 70 Q 140 110 180 110" 
+                      fill="none" 
+                      stroke={isHonestRoute ? GREEN : (simStep === 1 ? "rgba(47,125,85,0.25)" : "#E5E5E5")} 
+                      strokeWidth="3" 
+                      style={{ cursor: simStep === 1 ? "pointer" : "default", transition: "stroke 0.2s" }}
+                      onClick={() => simStep === 1 && triggerAction("driver-no")}
+                    />
+
+                    {/* Cousin's to Reading Room Path */}
+                    <path 
+                      d="M 180 30 Q 215 30 250 70" 
+                      fill="none" 
+                      stroke={isSteered && simStep >= 3 ? RED : "#E5E5E5"} 
+                      strokeWidth="3" 
+                    />
+
+                    {/* Booked to Reading Room Path */}
+                    <path 
+                      d="M 180 110 Q 215 110 250 70" 
+                      fill="none" 
+                      stroke={isHonestRoute && simStep >= 3 ? GREEN : "#E5E5E5"} 
+                      strokeWidth="3" 
+                    />
+
+                    {/* Reading Room to Exit Path */}
+                    <line x1="250" y1="70" x2="305" y2="70" stroke={simStep >= 4 ? GOLD : "#E5E5E5"} strokeWidth="3" />
+
+                    {/* Node 1: Station */}
+                    <circle cx="35" cy="70" r="8" fill={simStep === 1 ? GOLD : GOLD_DEEP} stroke="#FFF" strokeWidth="2" />
+                    <text x="35" y="54" textAnchor="middle" fontSize="8px" fontWeight="bold" fill={INK_PRIMARY}>Station</text>
+
+                    {/* Node 2: Rickshaw */}
+                    <circle cx="100" cy="70" r="8" fill={simStep === 1 ? "#E5E5E5" : (simStep === 2 ? GOLD : GOLD_DEEP)} stroke="#FFF" strokeWidth="2" />
+                    <text x="100" y="54" textAnchor="middle" fontSize="8px" fontWeight="bold" fill={INK_PRIMARY}>Auto</text>
+
+                    {/* Node 3A: Cousin's (Steered) */}
+                    <g 
+                      style={{ cursor: simStep === 1 ? "pointer" : "default" }}
+                      onClick={() => simStep === 1 && triggerAction("driver-yes")}
+                    >
+                      <circle cx="180" cy="30" r="11" fill={isSteered ? RED : "#FFF"} stroke={isSteered ? RED : "#C2C2C2"} strokeWidth="2" />
+                      <text x="180" y="16" textAnchor="middle" fontSize="8px" fontWeight="bold" fill={isSteered ? RED : INK_SECONDARY}>Cousin's Library</text>
+                      {simStep === 1 && <text x="180" y="33" textAnchor="middle" fontSize="7px" fill={RED} fontWeight="bold">(Pay Cut)</text>}
+                    </g>
+
+                    {/* Node 3B: Booked Center */}
+                    <g 
+                      style={{ cursor: simStep === 1 ? "pointer" : "default" }}
+                      onClick={() => simStep === 1 && triggerAction("driver-no")}
+                    >
+                      <circle cx="180" cy="110" r="11" fill={isHonestRoute ? GREEN : "#FFF"} stroke={isHonestRoute ? GREEN : "#C2C2C2"} strokeWidth="2" />
+                      <text x="180" y="128" textAnchor="middle" fontSize="8px" fontWeight="bold" fill={isHonestRoute ? GREEN : INK_SECONDARY}>Booked Center</text>
+                      {simStep === 1 && <text x="180" y="113" textAnchor="middle" fontSize="7px" fill={GREEN} fontWeight="bold">(Direct)</text>}
+                    </g>
+
+                    {/* Node 4: Reading Room */}
+                    <circle cx="250" cy="70" r="8" fill={simStep < 3 ? "#E5E5E5" : (simStep === 3 ? GOLD : GOLD_DEEP)} stroke="#FFF" strokeWidth="2" />
+                    <text x="250" y="54" textAnchor="middle" fontSize="8px" fontWeight="bold" fill={INK_PRIMARY}>Reading Room</text>
+
+                    {/* Node 5: Exit */}
+                    <circle cx="305" cy="70" r="8" fill={simStep < 4 ? "#E5E5E5" : GOLD} stroke="#FFF" strokeWidth="2" />
+                    <text x="305" y="54" textAnchor="middle" fontSize="8px" fontWeight="bold" fill={INK_PRIMARY}>Exit</text>
+                  </svg>
+                );
+              })()}
+            </div>
+
             {/* Stage Box Content */}
-            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "8px", padding: "16px", minHeight: "180px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "10px", padding: "20px", minHeight: "180px", display: "flex", flexDirection: "column", justifyContent: "space-between", boxShadow: "0 4px 16px rgba(156,122,47,0.04)" }}>
               
               {simStep === 1 && (
                 <div>
@@ -236,13 +373,17 @@ export function NadiCommercialExplorer() {
                   <div style={{ display: "flex", gap: "10px" }}>
                     <button 
                       onClick={() => triggerAction("driver-yes")}
-                      style={{ flex: 1, padding: "10px", borderRadius: "6px", background: RED, color: "#fff", border: "none", fontWeight: 600, fontSize: "12px", cursor: "pointer" }}
+                      style={{ flex: 1, padding: "12px", borderRadius: "6px", background: RED, color: "#fff", border: "none", fontWeight: 600, fontSize: "12px", cursor: "pointer", transition: "all 0.2s" }}
+                      onMouseOver={(e) => e.currentTarget.style.filter = "brightness(0.9)"}
+                      onMouseOut={(e) => e.currentTarget.style.filter = "none"}
                     >
                       Follow Driver (Steer Route)
                     </button>
                     <button 
                       onClick={() => triggerAction("driver-no")}
-                      style={{ flex: 1, padding: "10px", borderRadius: "6px", background: GREEN, color: "#fff", border: "none", fontWeight: 600, fontSize: "12px", cursor: "pointer" }}
+                      style={{ flex: 1, padding: "12px", borderRadius: "6px", background: GREEN, color: "#fff", border: "none", fontWeight: 600, fontSize: "12px", cursor: "pointer", transition: "all 0.2s" }}
+                      onMouseOver={(e) => e.currentTarget.style.filter = "brightness(0.9)"}
+                      onMouseOut={(e) => e.currentTarget.style.filter = "none"}
                     >
                       Stick to Booked Center
                     </button>
@@ -256,25 +397,27 @@ export function NadiCommercialExplorer() {
                   <p style={{ margin: "0 0 16px 0", fontSize: "12.5px", lineHeight: "1.4", color: INK_SECONDARY }}>
                     Before sitting in the reading room, establish your **Checklist Shields** to neutralize upsell pressure. Enable checks:
                   </p>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "16px" }}>
-                    <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", cursor: "pointer" }}>
-                      <input type="checkbox" checked={lineageShield} onChange={(e) => setLineageShield(e.target.checked)} style={{ accentColor: GOLD }} />
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "16px" }}>
+                    <label className="shield-option">
+                      <input type="checkbox" checked={lineageShield} onChange={(e) => setLineageShield(e.target.checked)} style={{ accentColor: GOLD, width: "15px", height: "15px", cursor: "pointer" }} />
                       <span><strong>Lineage reference check</strong> (Verifies hereditary successor)</span>
                     </label>
-                    <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", cursor: "pointer" }}>
-                      <input type="checkbox" checked={priceShield} onChange={(e) => setPriceShield(e.target.checked)} style={{ accentColor: GOLD }} />
+                    <label className="shield-option">
+                      <input type="checkbox" checked={priceShield} onChange={(e) => setPriceShield(e.target.checked)} style={{ accentColor: GOLD, width: "15px", height: "15px", cursor: "pointer" }} />
                       <span><strong>Written Price Lock</strong> (Secures per-kāṇḍa fees upfront)</span>
                     </label>
-                    <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", cursor: "pointer" }}>
-                      <input type="checkbox" checked={recordingShield} onChange={(e) => setRecordingShield(e.target.checked)} style={{ accentColor: GOLD }} />
+                    <label className="shield-option">
+                      <input type="checkbox" checked={recordingShield} onChange={(e) => setRecordingShield(e.target.checked)} style={{ accentColor: GOLD, width: "15px", height: "15px", cursor: "pointer" }} />
                       <span><strong>Recording permission confirmed</strong> (Secures session record)</span>
                     </label>
                   </div>
                   <button 
                     onClick={() => setSimStep(3)}
-                    style={{ padding: "10px", borderRadius: "6px", background: GOLD, color: "#fff", border: "none", width: "100%", fontWeight: 600, fontSize: "12px", cursor: "pointer" }}
+                    style={{ padding: "12px", borderRadius: "6px", background: GOLD, color: "#fff", border: "none", width: "100%", fontWeight: 600, fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", transition: "all 0.2s" }}
+                    onMouseOver={(e) => e.currentTarget.style.background = GOLD_DEEP}
+                    onMouseOut={(e) => e.currentTarget.style.background = GOLD}
                   >
-                    Enter Reading Room <ArrowRight size={14} style={{ display: "inline", marginLeft: "4px" }} />
+                    Enter Reading Room <ArrowRight size={14} />
                   </button>
                 </div>
               )}
@@ -288,7 +431,7 @@ export function NadiCommercialExplorer() {
                   </p>
                   
                   {priceShield && recordingShield ? (
-                    <div style={{ background: "rgba(47,125,85,0.06)", border: `1px solid ${GREEN}`, padding: "8px 12px", borderRadius: "6px", fontSize: "12px", color: GREEN, marginBottom: "16px" }}>
+                    <div style={{ background: "rgba(47,125,85,0.06)", border: `1px solid ${GREEN}`, padding: "10px 14px", borderRadius: "6px", fontSize: "12px", color: GREEN, marginBottom: "16px", lineHeight: "1.4" }}>
                       <strong>✓ Pre-Check shields active!</strong> Your written price lock and recording record allow you to calmly refuse the sudden crisis upsell.
                     </div>
                   ) : null}
@@ -297,13 +440,13 @@ export function NadiCommercialExplorer() {
                     <button 
                       onClick={() => triggerAction("room-pay")}
                       disabled={priceShield && recordingShield}
-                      style={{ flex: 1, padding: "10px", borderRadius: "6px", background: RED, color: "#fff", border: "none", fontWeight: 600, fontSize: "12px", cursor: priceShield && recordingShield ? "not-allowed" : "pointer", opacity: priceShield && recordingShield ? 0.4 : 1 }}
+                      style={{ flex: 1, padding: "12px", borderRadius: "6px", background: RED, color: "#fff", border: "none", fontWeight: 600, fontSize: "12px", cursor: priceShield && recordingShield ? "not-allowed" : "pointer", opacity: priceShield && recordingShield ? 0.4 : 1, transition: "all 0.2s" }}
                     >
                       Pay ₹15,000 for Puja
                     </button>
                     <button 
                       onClick={() => triggerAction("room-refuse")}
-                      style={{ flex: 1, padding: "10px", borderRadius: "6px", background: GREEN, color: "#fff", border: "none", fontWeight: 600, fontSize: "12px", cursor: "pointer" }}
+                      style={{ flex: 1, padding: "12px", borderRadius: "6px", background: GREEN, color: "#fff", border: "none", fontWeight: 600, fontSize: "12px", cursor: "pointer", transition: "all 0.2s" }}
                     >
                       Refuse & Exit
                     </button>
@@ -314,12 +457,14 @@ export function NadiCommercialExplorer() {
               {simStep === 4 && (
                 <div>
                   <h4 style={{ margin: "0 0 8px 0", color: GOLD_DEEP, fontSize: "14px", fontWeight: 700 }}>Stage 4: Exit & Review</h4>
-                  <p style={{ margin: "0 0 16px 0", fontSize: "12.5px", lineHeight: "1.4", color: INK_SECONDARY }}>
+                  <p style={{ margin: "0 0 16px 0", fontSize: "12.5px", lineHeight: "1.45", color: INK_SECONDARY }}>
                     The pilgrimage simulation is complete. Settle down and review your safety score.
                   </p>
                   <button 
                     onClick={handleResetSim}
-                    style={{ padding: "10px", borderRadius: "6px", background: GOLD, color: "#fff", border: "none", width: "100%", fontWeight: 600, fontSize: "12px", cursor: "pointer" }}
+                    style={{ padding: "12px", borderRadius: "6px", background: GOLD, color: "#fff", border: "none", width: "100%", fontWeight: 600, fontSize: "12px", cursor: "pointer", transition: "all 0.2s" }}
+                    onMouseOver={(e) => e.currentTarget.style.background = GOLD_DEEP}
+                    onMouseOut={(e) => e.currentTarget.style.background = GOLD}
                   >
                     Run Simulation Again
                   </button>
@@ -334,14 +479,14 @@ export function NadiCommercialExplorer() {
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             
             {/* Status Gauges */}
-            <div style={{ background: "#fff", border: `1.5px solid ${GOLD}`, borderRadius: "10px", padding: "16px", display: "flex", flexDirection: "column", gap: "14px" }}>
-              <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase" }}>
+            <div style={{ background: "#fff", border: `1.5px solid ${GOLD}`, borderRadius: "10px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px", boxShadow: "0 4px 16px rgba(156,122,47,0.06)" }}>
+              <span style={{ fontSize: "11.5px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Seeker Safety Gauges
               </span>
 
               {/* Seeker Budget */}
               <div>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "4px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "6px" }}>
                   <span style={{ fontWeight: 600, color: INK_SECONDARY }}>Seeker Budget:</span>
                   <span style={{ fontWeight: 700, color: GOLD_DEEP }}>₹{budget.toLocaleString()}</span>
                 </div>
@@ -352,7 +497,7 @@ export function NadiCommercialExplorer() {
 
               {/* Seeker Fear Level */}
               <div>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "4px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "6px" }}>
                   <span style={{ fontWeight: 600, color: INK_SECONDARY }}>Fear/Crisis Level:</span>
                   <span style={{ fontWeight: 700, color: fearLevel > 50 ? RED : GREEN }}>{fearLevel}%</span>
                 </div>
@@ -363,28 +508,28 @@ export function NadiCommercialExplorer() {
 
               {/* Dynamic Alerts */}
               {scamAlert && (
-                <div style={{ padding: "10px", borderRadius: "6px", background: "rgba(156,122,47,0.06)", border: `1px solid ${GOLD}`, fontSize: "11.5px", color: INK_SECONDARY, lineHeight: "1.3" }}>
+                <div style={{ padding: "12px", borderRadius: "8px", background: scamAlert.includes("Warning") ? "rgba(162,58,30,0.06)" : "rgba(47,125,85,0.06)", border: `1px solid ${scamAlert.includes("Warning") ? RED : GREEN}`, fontSize: "11.5px", color: INK_SECONDARY, lineHeight: "1.4" }}>
                   {scamAlert}
                 </div>
               )}
             </div>
 
             {/* Checklist Shields Visualization */}
-            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "8px", padding: "16px", display: "flex", flexDirection: "column", gap: "8px" }}>
-              <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase" }}>
+            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "10px", padding: "20px", display: "flex", flexDirection: "column", gap: "10px", boxShadow: "0 4px 16px rgba(156,122,47,0.04)" }}>
+              <span style={{ fontSize: "11.5px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Checklist Shields Status
               </span>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                <div style={{ display: "flex", gap: "6px", alignItems: "center", color: lineageShield ? GREEN : INK_MUTED }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ display: "flex", gap: "8px", alignItems: "center", color: lineageShield ? GREEN : INK_MUTED, fontSize: "12.5px" }}>
                   <span>{lineageShield ? "✓" : "○"}</span>
                   <span>1. Lineage Referral Check</span>
                 </div>
-                <div style={{ display: "flex", gap: "6px", alignItems: "center", color: priceShield ? GREEN : INK_MUTED }}>
+                <div style={{ display: "flex", gap: "8px", alignItems: "center", color: priceShield ? GREEN : INK_MUTED, fontSize: "12.5px" }}>
                   <span>{priceShield ? "✓" : "○"}</span>
                   <span>2. Written Price Lock</span>
                 </div>
-                <div style={{ display: "flex", gap: "6px", alignItems: "center", color: recordingShield ? GREEN : INK_MUTED }}>
+                <div style={{ display: "flex", gap: "8px", alignItems: "center", color: recordingShield ? GREEN : INK_MUTED, fontSize: "12.5px" }}>
                   <span>{recordingShield ? "✓" : "○"}</span>
                   <span>3. Recording Permit</span>
                 </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Info, HelpCircle, Layers, CheckCircle2, ShieldAlert, Award } from "lucide-react";
+import { IAST } from "../../chrome/typography";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary, #2d261e)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary, #4d4133)";
@@ -11,6 +12,7 @@ const GOLD_DEEP = "#7A5E1E";
 const GREEN = "#2F7D55";
 const RED = "#A23A1E";
 const AMBER = "#D97706";
+const LIGHT_BG = "#FCFAF2";
 
 interface SahamProfile {
   name: string;
@@ -35,10 +37,10 @@ const SAHAM_PROFILES: Record<"Punya" | "Vidya" | "Yashas", SahamProfile> = {
     houseMeanings: {
       1: "Auspiciousness manifesting directly in personal efforts, physical wellbeing, and self-expression.",
       2: "Opportunities for financial stability, nourishing speech, and family harmony.",
-      3: "Auspicous year-context for self-motivation, writing, short travels, and sibling collaborations.",
+      3: "Auspicious year-context for self-motivation, writing, short travels, and sibling collaborations.",
       4: "Favorable conditions for home comforts, property acquisition, and inner emotional contentment.",
       5: "Intellectual creativity, educational milestones, and happiness regarding children.",
-      6: "Auspicous conditions for overcoming obstacles, service-oriented work, and daily discipline.",
+      6: "Auspicious conditions for overcoming obstacles, service-oriented work, and daily discipline.",
       7: "Favorable year-context for marriage partner harmony, joint ventures, and social contracts.",
       8: "Auspiciousness through research, inheritance, or inner psychological transformation.",
       9: "Higher wisdom, spiritual pilgrimages, favor from mentors, and alignment with dharma.",
@@ -140,35 +142,35 @@ export function TajikaAuspiciousSahamsComparator() {
     <div
       className="gl-surface-twilight-glass"
       style={{
-        padding: "20px",
-        borderRadius: "12px",
-        background: "rgba(255, 253, 246, 0.7)",
-        border: "1px solid rgba(156, 122, 47, 0.15)",
-        boxShadow: "0 8px 32px rgba(156, 122, 47, 0.05)",
+        padding: "24px",
+        borderRadius: "14px",
+        background: "rgba(255, 253, 246, 0.85)",
+        border: "1px solid rgba(156, 122, 47, 0.2)",
+        boxShadow: "0 10px 40px rgba(156, 122, 47, 0.08)",
         fontFamily: "'Inter', sans-serif",
         color: INK_PRIMARY,
         maxWidth: "920px",
         margin: "0 auto",
         display: "flex",
         flexDirection: "column",
-        gap: "16px"
+        gap: "20px"
       }}
       data-interactive="tajika-auspicious-sahams-comparator"
     >
       {/* Header Banner */}
-      <div style={{ borderBottom: "1px solid rgba(156, 122, 47, 0.12)", paddingBottom: "12px", marginBottom: "4px" }}>
-        <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+      <div style={{ borderBottom: "1px solid rgba(156, 122, 47, 0.15)", paddingBottom: "14px" }}>
+        <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, letterSpacing: "0.12em", textTransform: "uppercase" }}>
           Module 19 — Chapter 3 — Lesson 2
         </span>
-        <h3 style={{ fontSize: "20px", fontWeight: 700, color: INK_PRIMARY, margin: "4px 0 0" }}>
+        <h3 style={{ fontSize: "22px", fontWeight: 800, color: INK_PRIMARY, margin: "6px 0 0", fontFamily: "var(--font-cormorant), serif" }}>
           Auspicious Sahams Comparator & House Scrubber
         </h3>
-        <p style={{ fontSize: "12.5px", color: INK_SECONDARY, margin: "2px 0 0" }}>
-          Compare the three core auspiciousness sahams and practice the non-deterministic over-promise refutation.
+        <p style={{ fontSize: "13.5px", color: INK_SECONDARY, margin: "4px 0 0", lineHeight: "1.4" }}>
+          Compare the three core auspiciousness sahams and practice the non-deterministic over-promise refutation across the twelve natal houses.
         </p>
       </div>
 
-      {/* Tab Selectors */}
+      {/* Tab Selectors (Expanded touch target heights to 44px) */}
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
         {(Object.keys(SAHAM_PROFILES) as Array<"Punya" | "Vidya" | "Yashas">).map((key) => {
           const isActive = key === activeTab;
@@ -178,19 +180,19 @@ export function TajikaAuspiciousSahamsComparator() {
               onClick={() => setActiveTab(key)}
               style={{
                 flex: 1,
-                minWidth: "150px",
-                padding: "10px",
-                borderRadius: "6px",
+                minWidth: "160px",
+                height: "46px", // Exceeds 44px minimum touch target requirement
+                borderRadius: "8px",
                 background: isActive ? GOLD_DEEP : "#ffffff",
                 color: isActive ? "#ffffff" : INK_SECONDARY,
-                border: `1px solid ${isActive ? GOLD_DEEP : "rgba(156, 122, 47, 0.15)"}`,
+                border: `1.5px solid ${isActive ? GOLD_DEEP : "rgba(156, 122, 47, 0.15)"}`,
                 fontWeight: 700,
                 cursor: "pointer",
-                fontSize: "13px",
+                fontSize: "13.5px",
                 transition: "all 150ms ease"
               }}
             >
-              {SAHAM_PROFILES[key].name} ({SAHAM_PROFILES[key].sanskrit})
+              {SAHAM_PROFILES[key].name}
             </button>
           );
         })}
@@ -200,43 +202,43 @@ export function TajikaAuspiciousSahamsComparator() {
       <div
         style={{
           background: "#ffffff",
-          border: "1px solid rgba(156, 122, 47, 0.12)",
+          border: "1px solid rgba(156, 122, 47, 0.15)",
           borderRadius: "8px",
-          padding: "16px",
+          padding: "20px",
           display: "grid",
           gridTemplateColumns: "1.2fr 1fr",
-          gap: "16px",
+          gap: "20px",
           alignItems: "center"
         }}
       >
         <div>
-          <span style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", color: GOLD }}>
+          <span style={{ fontSize: "10.5px", fontWeight: 700, textTransform: "uppercase", color: GOLD_DEEP }}>
             Astrological Focus:
           </span>
-          <h4 style={{ fontSize: "16px", fontWeight: 700, color: INK_PRIMARY, margin: "4px 0 2px" }}>
+          <h4 style={{ fontSize: "18px", fontWeight: 800, color: INK_PRIMARY, margin: "4px 0 6px", fontFamily: "var(--font-cormorant), serif" }}>
             {profile.name}
           </h4>
-          <p style={{ fontSize: "12.5px", color: INK_SECONDARY, lineHeight: "1.45", margin: 0 }}>
+          <p style={{ fontSize: "13.5px", color: INK_SECONDARY, lineHeight: "1.5", margin: 0 }}>
             {profile.domain}
           </p>
-          <div style={{ marginTop: "8px", fontSize: "11px", color: INK_MUTED }}>
-            <strong>Cross-Cultural counterpart:</strong> {profile.crossCultural}
+          <div style={{ marginTop: "10px", fontSize: "11.5px", color: INK_MUTED }}>
+            <strong>Cross-Cultural:</strong> {profile.crossCultural}
           </div>
         </div>
 
-        <div style={{ borderLeft: "1px solid rgba(156, 122, 47, 0.1)", paddingLeft: "16px", display: "flex", flexDirection: "column", gap: "6px" }}>
-          <span style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", color: GOLD }}>
-            Mathematical Formulation:
+        <div style={{ borderLeft: "1px solid rgba(156, 122, 47, 0.15)", paddingLeft: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
+          <span style={{ fontSize: "10.5px", fontWeight: 700, textTransform: "uppercase", color: GOLD_DEEP }}>
+            Mathematical Formulations:
           </span>
           <div>
-            <div style={{ fontSize: "11px", color: INK_MUTED }}>Day-Birth Formula:</div>
-            <div style={{ fontFamily: "monospace", fontSize: "12px", color: GREEN, fontWeight: 700 }}>
+            <div style={{ fontSize: "11px", color: INK_MUTED }}>Day-Birth:</div>
+            <div style={{ fontFamily: "monospace", fontSize: "13px", color: GREEN, fontWeight: 700, marginTop: "2px" }}>
               {profile.dayFormula}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: "11px", color: INK_MUTED }}>Night-Birth Formula (Reversal):</div>
-            <div style={{ fontFamily: "monospace", fontSize: "12px", color: RED, fontWeight: 700 }}>
+            <div style={{ fontSize: "11px", color: INK_MUTED }}>Night-Birth:</div>
+            <div style={{ fontFamily: "monospace", fontSize: "13px", color: RED, fontWeight: 700, marginTop: "2px" }}>
               {profile.nightFormula}
             </div>
           </div>
@@ -247,28 +249,28 @@ export function TajikaAuspiciousSahamsComparator() {
       <div
         style={{
           background: "#ffffff",
-          border: "1px solid rgba(156, 122, 47, 0.12)",
+          border: "1px solid rgba(156, 122, 47, 0.15)",
           borderRadius: "8px",
-          padding: "16px",
+          padding: "20px",
           display: "flex",
           flexDirection: "column",
-          gap: "12px"
+          gap: "14px"
         }}
       >
-        <div style={{ display: "flex", justifyItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" }}>
-          <span style={{ fontWeight: 700, color: GOLD_DEEP, fontSize: "14px", display: "flex", alignItems: "center", gap: "6px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" }}>
+          <span style={{ fontWeight: 800, color: GOLD_DEEP, fontSize: "14.5px", display: "flex", alignItems: "center", gap: "8px", fontFamily: "var(--font-cormorant), serif" }}>
             <Award size={18} color={GOLD} />
             Place {profile.name} in North Indian Diamond Chart:
           </span>
-          <strong style={{ fontSize: "14px", color: GOLD_DEEP }}>
-            House {selectedHouse}
+          <strong style={{ fontSize: "15px", color: GOLD_DEEP }}>
+            House {selectedHouse} Delineation
           </strong>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: "20px", alignItems: "center" }}>
           {/* SVG traditional North Indian Chart */}
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", background: "rgba(156, 122, 47, 0.01)", border: "1px solid rgba(156, 122, 47, 0.06)", borderRadius: "8px", padding: "10px" }}>
-            <svg width="220" height="220" viewBox="0 0 200 200">
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", background: LIGHT_BG, border: "1px solid rgba(156, 122, 47, 0.15)", borderRadius: "8px", padding: "12px" }}>
+            <svg width="220" height="220" viewBox="0 0 200 200" aria-label="North Indian diamond chart highlighting selected house">
               {/* Outer boundary */}
               <rect x="0" y="0" width="200" height="200" fill="none" stroke="rgba(156, 122, 47, 0.3)" strokeWidth="1.5" />
 
@@ -281,9 +283,9 @@ export function TajikaAuspiciousSahamsComparator() {
                   <g key={h}>
                     <path
                       d={pathStr}
-                      fill={isActive ? "rgba(156, 122, 47, 0.12)" : "none"}
-                      stroke={isActive ? GOLD : "rgba(156, 122, 47, 0.2)"}
-                      strokeWidth={isActive ? "2" : "1"}
+                      fill={isActive ? "rgba(156, 122, 47, 0.15)" : "none"}
+                      stroke={isActive ? GOLD_DEEP : "rgba(156, 122, 47, 0.2)"}
+                      strokeWidth={isActive ? "2.5" : "1"}
                       style={{ transition: "all 300ms ease" }}
                     />
                     {/* Render Saham short code in active house, otherwise render house number */}
@@ -291,9 +293,9 @@ export function TajikaAuspiciousSahamsComparator() {
                       <text
                         x={pos.x}
                         y={pos.y}
-                        fill={GOLD_DEEP}
-                        fontSize="9"
-                        fontWeight="bold"
+                        fill={RED}
+                        fontSize="9.5"
+                        fontWeight="800"
                         textAnchor="middle"
                         dominantBaseline="central"
                       >
@@ -318,8 +320,8 @@ export function TajikaAuspiciousSahamsComparator() {
           </div>
 
           {/* House selector buttons & Interpretation */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <div style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: "8px" }}>
               {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => {
                 const isSelected = h === selectedHouse;
                 return (
@@ -327,15 +329,14 @@ export function TajikaAuspiciousSahamsComparator() {
                     key={h}
                     onClick={() => setSelectedHouse(h)}
                     style={{
-                      flex: "1 0 45px",
-                      padding: "6px 0",
-                      borderRadius: "4px",
+                      height: "44px", // Height meets 44px touch target guidelines
+                      borderRadius: "6px",
                       background: isSelected ? GOLD : "rgba(156, 122, 47, 0.05)",
                       color: isSelected ? "#ffffff" : INK_SECONDARY,
-                      border: `1px solid ${isSelected ? GOLD : "rgba(156, 122, 47, 0.12)"}`,
+                      border: `1.5px solid ${isSelected ? GOLD : "rgba(156, 122, 47, 0.15)"}`,
                       cursor: "pointer",
                       fontWeight: 700,
-                      fontSize: "11px",
+                      fontSize: "12.5px",
                       transition: "all 150ms ease"
                     }}
                   >
@@ -345,11 +346,11 @@ export function TajikaAuspiciousSahamsComparator() {
               })}
             </div>
 
-            <div style={{ background: "rgba(255, 253, 246, 0.6)", border: "1px solid rgba(156, 122, 47, 0.12)", borderRadius: "6px", padding: "12px" }}>
+            <div style={{ background: "rgba(255, 253, 246, 0.6)", border: "1px solid rgba(156, 122, 47, 0.15)", borderRadius: "8px", padding: "16px" }}>
               <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "4px", textTransform: "uppercase" }}>
                 Interpretation (Relative to Natal Lagna):
               </span>
-              <p style={{ fontSize: "12.5px", lineHeight: "1.45", color: INK_SECONDARY, margin: 0 }}>
+              <p style={{ fontSize: "13.5px", lineHeight: "1.5", color: INK_SECONDARY, margin: 0 }}>
                 {profile.houseMeanings[selectedHouse]}
               </p>
             </div>
@@ -361,20 +362,20 @@ export function TajikaAuspiciousSahamsComparator() {
       <div
         style={{
           background: "#ffffff",
-          border: "1px solid rgba(156, 122, 47, 0.12)",
+          border: "1px solid rgba(156, 122, 47, 0.15)",
           borderRadius: "8px",
-          padding: "16px",
+          padding: "20px",
           display: "flex",
           flexDirection: "column",
-          gap: "12px"
+          gap: "14px"
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <Layers size={18} color={GOLD} />
             <div>
-              <span style={{ fontWeight: 700, color: GOLD_DEEP, fontSize: "14px" }}>Over-Promise Refutation Drill</span>
-              <p style={{ fontSize: "11px", color: INK_MUTED, margin: 0 }}>
+              <span style={{ fontWeight: 700, color: GOLD_DEEP, fontSize: "14.5px" }}>Over-Promise Refutation Drill</span>
+              <p style={{ fontSize: "11.5px", color: INK_MUTED, margin: 0 }}>
                 Compare faulty deterministic predictions with correct Vedic discipline.
               </p>
             </div>
@@ -385,11 +386,11 @@ export function TajikaAuspiciousSahamsComparator() {
               backgroundColor: showCompliance ? GREEN : RED,
               color: "#ffffff",
               border: "none",
-              borderRadius: "4px",
-              padding: "6px 12px",
+              borderRadius: "6px",
+              padding: "8px 16px",
               cursor: "pointer",
               fontWeight: 700,
-              fontSize: "11px",
+              fontSize: "11.5px",
               textTransform: "uppercase",
               transition: "all 150ms ease"
             }}
@@ -402,9 +403,9 @@ export function TajikaAuspiciousSahamsComparator() {
           {/* Faulty display */}
           <div
             style={{
-              border: `1.5px solid ${!showCompliance ? RED : "rgba(156, 122, 47, 0.12)"}`,
-              borderRadius: "6px",
-              padding: "12px",
+              border: `1.5px solid ${!showCompliance ? RED : "rgba(156, 122, 47, 0.15)"}`,
+              borderRadius: "8px",
+              padding: "14px",
               background: !showCompliance ? "rgba(162, 58, 30, 0.03)" : "transparent",
               transition: "all 200ms ease",
               opacity: showCompliance ? 0.6 : 1
@@ -416,10 +417,10 @@ export function TajikaAuspiciousSahamsComparator() {
                 Faulty Over-Promise Reading
               </span>
             </div>
-            <p style={{ fontSize: "12.5px", lineHeight: "1.45", color: INK_SECONDARY, margin: "6px 0 0" }}>
+            <p style={{ fontSize: "13px", lineHeight: "1.5", color: INK_SECONDARY, margin: "6px 0 0" }}>
               "{profile.overPromiseSample}"
             </p>
-            <div style={{ fontSize: "10.5px", color: INK_MUTED, marginTop: "8px", borderTop: "1px solid rgba(156, 122, 47, 0.08)", paddingTop: "4px" }}>
+            <div style={{ fontSize: "11px", color: INK_MUTED, marginTop: "10px", borderTop: "1px solid rgba(156, 122, 47, 0.08)", paddingTop: "6px" }}>
               *Violates discipline by treating sensitive points as absolute guarantees.
             </div>
           </div>
@@ -427,9 +428,9 @@ export function TajikaAuspiciousSahamsComparator() {
           {/* Compliant display */}
           <div
             style={{
-              border: `1.5px solid ${showCompliance ? GREEN : "rgba(156, 122, 47, 0.12)"}`,
-              borderRadius: "6px",
-              padding: "12px",
+              border: `1.5px solid ${showCompliance ? GREEN : "rgba(156, 122, 47, 0.15)"}`,
+              borderRadius: "8px",
+              padding: "14px",
               background: showCompliance ? "rgba(47, 125, 85, 0.03)" : "transparent",
               transition: "all 200ms ease",
               opacity: !showCompliance ? 0.6 : 1
@@ -441,10 +442,10 @@ export function TajikaAuspiciousSahamsComparator() {
                 Discipline-Compliant Reading
               </span>
             </div>
-            <p style={{ fontSize: "12.5px", lineHeight: "1.45", color: INK_SECONDARY, margin: "6px 0 0" }}>
+            <p style={{ fontSize: "13px", lineHeight: "1.5", color: INK_SECONDARY, margin: "6px 0 0" }}>
               "{profile.compliantSample}"
             </p>
-            <div style={{ fontSize: "10.5px", color: INK_MUTED, marginTop: "8px", borderTop: "1px solid rgba(156, 122, 47, 0.08)", paddingTop: "4px" }}>
+            <div style={{ fontSize: "11px", color: INK_MUTED, marginTop: "10px", borderTop: "1px solid rgba(156, 122, 47, 0.08)", paddingTop: "6px" }}>
               *Preserves legitimacy of year-context while protecting client proactive agency.
             </div>
           </div>

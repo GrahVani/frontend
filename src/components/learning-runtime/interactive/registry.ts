@@ -178,6 +178,7 @@ import { ObjectNumerologyCalculator } from "./object-numerology-calculator";
 import { ChartNumerologyIntegrationTool } from "./chart-numerology-integration-tool";
 import { NumerologyDecisionFlow } from "./numerology-decision-flow";
 import { DisciplineStatementBuilder } from "./discipline-statement-builder";
+import { NadiDisciplineStatementBuilder } from "./nadi-discipline-statement-builder";
 import { VastuOriginsExplorer } from "./vastu-origins-explorer";
 import { VastuPurushaMandalaExplorer } from "./vastu-purusha-mandala-explorer";
 import { VastuFiveElementMapper } from "./vastu-five-element-mapper";
@@ -1428,6 +1429,7 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // Lesson 21.6.3 interactive: Discipline Statement Builder â€” six-chapter M21
   // synthesis, do-no-harm floor, and five-field practitioner statement worksheet.
   "discipline-statement-builder": DisciplineStatementBuilder,
+  "nadi-discipline-statement-builder": NadiDisciplineStatementBuilder,
   // Lesson 22.1.1 interactive: Vastu Origins Explorer â€” historical stream,
   // five-domain spatial scope, classical corpus, and modern feasibility guards.
   "vastu-origins-explorer": VastuOriginsExplorer,

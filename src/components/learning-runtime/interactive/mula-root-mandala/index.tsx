@@ -114,9 +114,20 @@ function DiagramView({ reducedMotion }: { reducedMotion: boolean }) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[1fr_340px] gap-6 items-stretch">
-      <div style={{ display: "flex", flex: 1, justifyContent: "center", alignItems: "center", minHeight: "480px" }}>
-        <div style={{ position: "relative", width: "100%", maxWidth: "500px", margin: "0 auto", aspectRatio: "1/1" }}>
+      <div style={{ display: "flex", flex: 1, flexDirection: "column", justifyContent: "space-between", minHeight: "480px" }}>
+        <div style={{ position: "relative", width: "100%", maxWidth: "440px", margin: "0 auto", aspectRatio: "1/1" }}>
           <svg width="100%" height="100%" viewBox="-200 -200 400 400" style={{ overflow: "visible" }}>
+            <defs>
+              <linearGradient id="activeHubGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor={GOLD} />
+                <stop offset="100%" stopColor={GOLD_DEEP} />
+              </linearGradient>
+              <linearGradient id="inactiveHubGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#FFF9F0" />
+                <stop offset="100%" stopColor="#FAEFD8" />
+              </linearGradient>
+            </defs>
+
             <circle cx="0" cy="0" r={RADIUS} fill="none" stroke={GOLD_LIGHT} strokeWidth="1" strokeDasharray="4 4" />
             <circle cx="0" cy="0" r={RADIUS * 0.5} fill="none" stroke={GOLD_LIGHT} strokeWidth="1" strokeDasharray="2 6" />
             
@@ -154,9 +165,11 @@ function DiagramView({ reducedMotion }: { reducedMotion: boolean }) {
                     >
                       {node.devanagari}
                     </text>
+                    
+                    {/* Shift text slightly away from the center to prevent overlap */}
                     <text
-                      textAnchor="middle" dy="50"
-                      fontSize="13" fontWeight={600}
+                      textAnchor="middle" dy={node.angleDeg && node.angleDeg > 0 ? "46" : "-42"}
+                      fontSize="12" fontWeight={700}
                       fill={GOLD_DEEP}
                       pointerEvents="none"
                       style={{ textShadow: "0 2px 4px rgba(255,255,255,0.8)" }}
@@ -169,37 +182,188 @@ function DiagramView({ reducedMotion }: { reducedMotion: boolean }) {
             })}
 
             {NODES.filter(n => n.isCenter).map((node) => {
-               const isMultiCenter = NODES.filter(n => n.isCenter).length > 1;
-               const rad = ((node.angleDeg || 0) * Math.PI) / 180;
-               const dist = isMultiCenter ? RADIUS * 0.4 : 0;
-               const x = Math.cos(rad) * dist;
-               const y = Math.sin(rad) * dist;
                const isActive = activeNode === node.id;
 
                return (
                 <g 
                   key={node.id}
-                  transform={`translate(${x}, ${y})`}
+                  transform="translate(0, 0)"
                   onClick={() => setActiveNode(node.id)}
                   style={{ cursor: "pointer" }}
                 >
+                  {/* Concentric outer rings */}
+                  <circle cx="0" cy="0" r="54" fill="none" stroke={isActive ? GOLD : "rgba(156, 122, 47, 0.2)"} strokeWidth="1" strokeDasharray="3 3" />
+                  <circle cx="0" cy="0" r="48" fill="none" stroke={isActive ? GOLD_LIGHT : "rgba(156, 122, 47, 0.4)"} strokeWidth="1.5" />
+                  
+                  {/* Core hub */}
                   <motion.circle 
-                    cx="0" cy="0" r="45" 
-                    fill={isActive ? GOLD : "#FAEFD8"} 
+                    cx="0" cy="0" r="42" 
+                    fill={isActive ? "url(#activeHubGrad)" : "url(#inactiveHubGrad)"} 
                     stroke={GOLD_DEEP} 
-                    strokeWidth="3" 
+                    strokeWidth="2.5" 
                     whileHover={reducedMotion ? {} : { scale: 1.05 }}
                   />
-                  <text textAnchor="middle" dy="-2" fontSize="16" fontWeight="bold" fill={isActive ? "#FFF" : GOLD_DEEP} pointerEvents="none">
+
+                  {/* Inner details / spokes */}
+                  <circle cx="0" cy="0" r="32" fill="none" stroke={isActive ? "rgba(255, 255, 255, 0.3)" : "rgba(156, 122, 47, 0.2)"} strokeWidth="1" />
+                  {Array.from({ length: 8 }).map((_, i) => {
+                    const spokeRad = (i * 45 * Math.PI) / 180;
+                    const sx1 = Math.cos(spokeRad) * 8;
+                    const sy1 = Math.sin(spokeRad) * 8;
+                    const sx2 = Math.cos(spokeRad) * 32;
+                    const sy2 = Math.sin(spokeRad) * 32;
+                    return (
+                      <line 
+                        key={i} 
+                        x1={sx1} y1={sy1} x2={sx2} y2={sy2} 
+                        stroke={isActive ? "rgba(255, 255, 255, 0.35)" : "rgba(156, 122, 47, 0.25)"} 
+                        strokeWidth="1" 
+                      />
+                    );
+                  })}
+                  
+                  <text textAnchor="middle" dy="-2" fontSize="15" fontWeight="bold" fill={isActive ? "#FFF" : GOLD_DEEP} pointerEvents="none">
                     {node.devanagari}
                   </text>
-                  <text textAnchor="middle" dy="16" fontSize="12" fill={isActive ? "rgba(255,255,255,0.9)" : INK_SECONDARY} pointerEvents="none">
+                  <text textAnchor="middle" dy="16" fontSize="11" fill={isActive ? "rgba(255,255,255,0.9)" : INK_SECONDARY} pointerEvents="none">
                     {node.iast}
                   </text>
                 </g>
                )
             })}
           </svg>
+        </div>
+
+        {/* Interactive Legend Box explaining components */}
+        <div 
+          style={{ 
+            marginTop: "16px", 
+            padding: "14px 16px", 
+            background: "rgba(255, 251, 240, 0.6)", 
+            border: "1px solid rgba(156, 122, 47, 0.2)", 
+            borderRadius: "12px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px"
+          }}
+        >
+          <h4 style={{ margin: 0, fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+            Maṇḍala Legend & Interactive Navigation
+          </h4>
+          <p style={{ margin: 0, fontSize: "13px", color: INK_SECONDARY, lineHeight: 1.4 }}>
+            Click on any circle in the mandala diagram or select a role below to analyze its energetic relation to the Mūla (Root) core:
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "8px" }} className="grid grid-cols-1 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={() => setActiveNode("mula")}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "6px 10px",
+                borderRadius: "6px",
+                background: activeNode === "mula" ? "rgba(156, 122, 47, 0.12)" : "transparent",
+                border: activeNode === "mula" ? `1px solid ${GOLD}` : "1px solid transparent",
+                cursor: "pointer",
+                textAlign: "left"
+              }}
+              className="gl-clickable"
+            >
+              <span style={{ width: "12px", height: "12px", borderRadius: "50%", background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})`, border: `1px solid ${GOLD_DEEP}`, display: "inline-block" }} />
+              <span style={{ fontSize: "13px", fontWeight: activeNode === "mula" ? 700 : 500, color: INK_PRIMARY }}>
+                <strong>Center:</strong> Mūla Nakshatra Core
+              </span>
+            </button>
+            
+            <button
+              type="button"
+              onClick={() => setActiveNode("sagittarius")}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "6px 10px",
+                borderRadius: "6px",
+                background: activeNode === "sagittarius" ? "rgba(156, 122, 47, 0.12)" : "transparent",
+                border: activeNode === "sagittarius" ? `1px solid ${GOLD}` : "1px solid transparent",
+                cursor: "pointer",
+                textAlign: "left"
+              }}
+              className="gl-clickable"
+            >
+              <span style={{ width: "12px", height: "12px", borderRadius: "50%", background: "#FFF9F0", border: `2px solid ${GOLD}`, display: "inline-block" }} />
+              <span style={{ fontSize: "13px", fontWeight: activeNode === "sagittarius" ? 700 : 500, color: INK_PRIMARY }}>
+                <strong>Top-Left:</strong> Dhanus (Rashi/Sign)
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveNode("nirriti")}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "6px 10px",
+                borderRadius: "6px",
+                background: activeNode === "nirriti" ? "rgba(156, 122, 47, 0.12)" : "transparent",
+                border: activeNode === "nirriti" ? `1px solid ${GOLD}` : "1px solid transparent",
+                cursor: "pointer",
+                textAlign: "left"
+              }}
+              className="gl-clickable"
+            >
+              <span style={{ width: "12px", height: "12px", borderRadius: "50%", background: "#FFF9F0", border: `2px solid ${GOLD}`, display: "inline-block" }} />
+              <span style={{ fontSize: "13px", fontWeight: activeNode === "nirriti" ? 700 : 500, color: INK_PRIMARY }}>
+                <strong>Top-Right:</strong> Nirṛti (Presiding Deity)
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveNode("roots")}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "6px 10px",
+                borderRadius: "6px",
+                background: activeNode === "roots" ? "rgba(156, 122, 47, 0.12)" : "transparent",
+                border: activeNode === "roots" ? `1px solid ${GOLD}` : "1px solid transparent",
+                cursor: "pointer",
+                textAlign: "left"
+              }}
+              className="gl-clickable"
+            >
+              <span style={{ width: "12px", height: "12px", borderRadius: "50%", background: "#FFF9F0", border: `2px solid ${GOLD}`, display: "inline-block" }} />
+              <span style={{ fontSize: "13px", fontWeight: activeNode === "roots" ? 700 : 500, color: INK_PRIMARY }}>
+                <strong>Bottom-Left:</strong> Tied Roots (Symbol)
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveNode("ketu")}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "6px 10px",
+                borderRadius: "6px",
+                background: activeNode === "ketu" ? "rgba(156, 122, 47, 0.12)" : "transparent",
+                border: activeNode === "ketu" ? `1px solid ${GOLD}` : "1px solid transparent",
+                cursor: "pointer",
+                textAlign: "left"
+              }}
+              className="gl-clickable"
+            >
+              <span style={{ width: "12px", height: "12px", borderRadius: "50%", background: "#FFF9F0", border: `2px solid ${GOLD}`, display: "inline-block" }} />
+              <span style={{ fontSize: "13px", fontWeight: activeNode === "ketu" ? 700 : 500, color: INK_PRIMARY }}>
+                <strong>Bottom-Right:</strong> Ketu (Planetary Lord)
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 

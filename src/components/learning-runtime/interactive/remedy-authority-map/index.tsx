@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Info, RotateCcw, Sparkles, BookOpen, Compass, CheckCircle2 } from "lucide-react";
+import { RotateCcw, Sparkles, BookOpen, CheckCircle2 } from "lucide-react";
 
 const GOLD = "var(--gl-gold-accent, #9C7A2F)";
 const GOLD_DEEP = "var(--gl-gold-deep, #7A5E1E)";
@@ -35,17 +35,6 @@ const AUTHORITIES_DATA: AuthoritySource[] = [
     description: "The core foundational text of Parāśarī astrology. Its remedial chapters outline specific mantras and donations designed to soften hard transits and dashas, emphasizing reduction of friction rather than fate-erasure."
   },
   {
-    id: "mantramahodadhi",
-    name: "Mantra-Mahodadhi",
-    devanagari: "मन्त्रमहोदधिः",
-    type: "Classical Text",
-    era: "16th Century CE",
-    focus: "Sound vibration and mantra repertoire",
-    claim: "Mantra operates as causal sound vibration, creating subtle shifts in the practitioner's consciousness and energy field.",
-    consensusVerification: "Focuses on internal purification and subtle alignment rather than external fate cancellation.",
-    description: "A major classical manual on mantra practice. It explains that sacred sounds alter subtle vibrations within the individual. Remedies here work by building resonance and shifting capacity, not by erasing external events."
-  },
-  {
     id: "brhatsamhita",
     name: "Bṛhat Saṁhitā (Ratna Chapters)",
     devanagari: "बृहत्संहिता (रत्नपरीक्षा)",
@@ -55,6 +44,17 @@ const AUTHORITIES_DATA: AuthoritySource[] = [
     claim: "Gemstones possess specific natural resonances that match planetary rays, acting to balance localized energy fields.",
     consensusVerification: "Treats gemstones as tuning forks for energy rather than magical deflectors of physical destiny.",
     description: "Varāhamihira's encyclopedic compilation. In its gemstone sections, stones are described as physical resonators for planetary light, helping the native balance weak areas through vibrational alignment."
+  },
+  {
+    id: "mantramahodadhi",
+    name: "Mantra-Mahodadhi",
+    devanagari: "मन्त्रमहोदधिः",
+    type: "Classical Text",
+    era: "16th Century CE",
+    focus: "Sound vibration and mantra repertoire",
+    claim: "Mantra operates as causal sound vibration, creating subtle shifts in the practitioner's consciousness and energy field.",
+    consensusVerification: "Focuses on internal purification and subtle alignment rather than external fate cancellation.",
+    description: "A major classical manual on mantra practice. It explains that sacred sounds alter subtle vibrations within the individual. Remedies here work by building resonance and shifting capacity, not by erasing external events."
   },
   {
     id: "raman",
@@ -91,6 +91,9 @@ const AUTHORITIES_DATA: AuthoritySource[] = [
   }
 ];
 
+// Re-ordered chronologically for timeline display
+const TIMELINE_ORDER = ["bphs", "brhatsamhita", "mantramahodadhi", "raman", "frawley", "charak"];
+
 export function RemedyAuthorityMap() {
   const [selectedId, setSelectedId] = useState<string>("bphs");
   const [filterType, setFilterType] = useState<"All" | "Classical Text" | "Modern Authority">("All");
@@ -106,6 +109,9 @@ export function RemedyAuthorityMap() {
     setSelectedId("bphs");
     setFilterType("All");
   };
+
+  const getSourceIndex = (id: string) => TIMELINE_ORDER.indexOf(id);
+  const selectedIndex = getSourceIndex(selectedId);
 
   return (
     <div style={{ padding: "16px", borderRadius: "16px", background: "rgba(255, 253, 248, 0.75)", backdropFilter: "blur(12px)", border: "1px solid rgba(156, 122, 47, 0.15)", fontFamily: "'Inter', sans-serif", color: INK_PRIMARY, maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -148,11 +154,133 @@ export function RemedyAuthorityMap() {
         </div>
       </div>
 
+      {/* CHRONOLOGICAL CONSENSUS TIMELINE (SVG) */}
+      <div style={{ background: "rgba(255, 255, 255, 0.55)", border: "1px solid rgba(156, 122, 47, 0.12)", borderRadius: "12px", padding: "12px 6px", display: "flex", flexDirection: "column", gap: "6px" }}>
+        <span style={{ fontSize: "10px", fontWeight: 800, textTransform: "uppercase", color: INK_MUTED, paddingLeft: "8px" }}>
+          Unbroken Consensus Lineage (Chronological Timeline)
+        </span>
+        <div style={{ overflowX: "auto", display: "flex", justifyContent: "center" }}>
+          <svg width="640" height="70" viewBox="0 0 640 70" style={{ display: "block", minWidth: "600px" }}>
+            {/* Background Line */}
+            <line x1="40" y1="35" x2="600" y2="35" stroke="rgba(156,122,47,0.15)" strokeWidth="3" />
+            
+            {/* Glowing Unbroken Consensus Path up to active selection */}
+            {selectedIndex > 0 && (
+              <line 
+                x1="40" 
+                y1="35" 
+                x2={40 + selectedIndex * 112} 
+                y2="35" 
+                stroke={GOLD} 
+                strokeWidth="3.5" 
+                style={{ transition: "all 0.5s ease" }}
+              />
+            )}
+
+            {/* Timeline Nodes */}
+            {TIMELINE_ORDER.map((id, idx) => {
+              const src = AUTHORITIES_DATA.find(a => a.id === id);
+              if (!src) return null;
+              
+              const isSelected = selectedId === id;
+              const isFilteredOut = filterType !== "All" && src.type !== filterType;
+              
+              const cx = 40 + idx * 112;
+              const cy = 35;
+              
+              // Colors based on state
+              let nodeColor = "#ffffff";
+              let nodeBorder = "rgba(156, 122, 47, 0.3)";
+              let labelColor = INK_SECONDARY;
+              
+              if (isSelected) {
+                nodeColor = GOLD_DEEP;
+                nodeBorder = GOLD;
+                labelColor = GOLD_DEEP;
+              } else if (idx <= selectedIndex) {
+                nodeColor = "rgba(156, 122, 47, 0.15)";
+                nodeBorder = GOLD;
+              }
+              
+              if (isFilteredOut) {
+                nodeColor = "rgba(0,0,0,0.03)";
+                nodeBorder = "rgba(0,0,0,0.05)";
+                labelColor = INK_MUTED;
+              }
+
+              return (
+                <g 
+                  key={id} 
+                  style={{ cursor: isFilteredOut ? "not-allowed" : "pointer" }}
+                  onClick={() => !isFilteredOut && setSelectedId(id)}
+                >
+                  {/* Outer circle halo for hover/selection */}
+                  {isSelected && (
+                    <circle 
+                      cx={cx} 
+                      cy={cy} 
+                      r="10" 
+                      fill="none" 
+                      stroke={GOLD} 
+                      strokeWidth="1.5" 
+                      style={{ animation: "slideIn 0.3s ease" }}
+                    />
+                  )}
+                  {/* Node point */}
+                  <circle 
+                    cx={cx} 
+                    cy={cy} 
+                    r="6" 
+                    fill={nodeColor} 
+                    stroke={nodeBorder} 
+                    strokeWidth="2.5" 
+                    style={{ transition: "all 0.3s ease" }}
+                  />
+                  {/* Short Title Label */}
+                  <text 
+                    x={cx} 
+                    y="22" 
+                    textAnchor="middle" 
+                    style={{ 
+                      fontSize: "9px", 
+                      fontWeight: isSelected ? 900 : 700, 
+                      fill: labelColor,
+                      fontFamily: "'Inter', sans-serif"
+                    }}
+                  >
+                    {src.name.split(" (")[0].split(" ")[0]}
+                  </text>
+                  {/* Era Label below node */}
+                  <text 
+                    x={cx} 
+                    y="52" 
+                    textAnchor="middle" 
+                    style={{ 
+                      fontSize: "8px", 
+                      fontWeight: 500, 
+                      fill: isFilteredOut ? INK_MUTED : INK_SECONDARY,
+                      fontFamily: "'Inter', sans-serif"
+                    }}
+                  >
+                    {src.era.includes("CE") 
+                      ? src.era.split(" ")[0] + " CE" 
+                      : src.era.includes("Ancient") 
+                        ? "Ancient" 
+                        : "Modern"
+                    }
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+      </div>
+
       {/* SPLIT VIEW */}
       <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
         
-        {/* Left Column: Interactive Library Grid */}
-        <div style={{ flex: "1 1 340px", display: "flex", flexDirection: "column", gap: "8px", minWidth: 0 }}>
+        {/* Left Column: List fallback for quick selectors */}
+        <div style={{ flex: "1 1 300px", display: "flex", flexDirection: "column", gap: "8px", minWidth: 0 }}>
           <span style={{ fontSize: "10px", fontWeight: 800, textTransform: "uppercase", color: INK_MUTED, letterSpacing: "0.5px" }}>
             The Astrological Authority Library
           </span>
@@ -163,20 +291,6 @@ export function RemedyAuthorityMap() {
                 <div
                   key={a.id}
                   onClick={() => setSelectedId(a.id)}
-                  onMouseEnter={(e) => {
-                    if (!isSelected) {
-                      e.currentTarget.style.borderColor = GOLD;
-                      e.currentTarget.style.background = "rgba(255,255,255,0.75)";
-                      e.currentTarget.style.boxShadow = "0 2px 8px rgba(156,122,47,0.1)";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isSelected) {
-                      e.currentTarget.style.borderColor = "rgba(0,0,0,0.05)";
-                      e.currentTarget.style.background = "rgba(255,255,255,0.4)";
-                      e.currentTarget.style.boxShadow = "none";
-                    }
-                  }}
                   style={{
                     background: isSelected ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.4)",
                     border: isSelected ? `2px solid ${GOLD}` : "1px solid rgba(0,0,0,0.05)",
@@ -208,7 +322,7 @@ export function RemedyAuthorityMap() {
         </div>
 
         {/* Right Column: Detailed Document Card */}
-        <div style={{ flex: "1 1 380px", background: SURFACE_MANUSCRIPT, border: `1.5px solid ${GOLD}`, borderRadius: "12px", padding: "16px", display: "flex", flexDirection: "column", gap: "10px", minWidth: 0 }}>
+        <div style={{ flex: "1 1 400px", background: SURFACE_MANUSCRIPT, border: `1.5px solid ${GOLD}`, borderRadius: "12px", padding: "16px", display: "flex", flexDirection: "column", gap: "10px", minWidth: 0 }}>
           
           {/* Sanskrit Header */}
           <div style={{ borderBottom: "1px dashed rgba(156,122,47,0.2)", paddingBottom: "8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>

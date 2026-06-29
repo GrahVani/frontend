@@ -245,23 +245,51 @@ export function KPReaderSeriesExplorer() {
       {activeTab === "explorer" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "14px", animation: "slideIn 0.3s ease" }}>
           <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-            {/* Left Column: Stack of books */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "6px", flex: "1", minWidth: "250px" }}>
-              <span style={{ fontSize: "10px", fontWeight: 800, textTransform: "uppercase", color: INK_MUTED, letterSpacing: "0.5px" }}>
-                1. Click a Volume to Open its Pages
-              </span>
-              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                {READERS.map((book, idx) => (
-                  <div
-                    key={book.vol}
-                    onClick={() => setSelectedVolIdx(idx)}
-                    className={`book-spine ${selectedVolIdx === idx ? "selected" : ""}`}
-                    style={{ background: book.color }}
-                  >
-                    <span>Vol {book.vol}: {book.title.split(":")[1] || book.title}</span>
-                    <BookOpen size={13} />
-                  </div>
-                ))}
+            {/* Left Column: Interactive Bookcase */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", flex: "1.2", minWidth: "290px" }}>
+              <div style={{ background: "rgba(253, 246, 227, 0.3)", border: `1.5px solid ${STEEL_BORDER}`, borderRadius: "12px", padding: "12px" }}>
+                <span style={{ fontSize: "10px", fontWeight: 800, textTransform: "uppercase", color: INK_MUTED, letterSpacing: "0.5px", display: "block", marginBottom: "8px" }}>
+                  1. Select a Volume from the Classical Bookcase
+                </span>
+                <div style={{ position: "relative", width: "100%", height: "165px", overflow: "hidden" }}>
+                  <svg viewBox="0 0 600 165" style={{ width: "100%", height: "100%" }} role="img" aria-label="KP Bookcase">
+                    {/* Wooden shelf structure */}
+                    <rect x="10" y="140" width="580" height="15" rx="4" fill="#8d5b4c" stroke="#5c3a2f" strokeWidth="2" />
+                    <rect x="20" y="5" width="10" height="135" fill="#7a4e41" />
+                    <rect x="570" y="5" width="10" height="135" fill="#7a4e41" />
+                    
+                    {/* Books on shelf */}
+                    {READERS.map((book, idx) => {
+                      const isActive = selectedVolIdx === idx;
+                      const x = 50 + idx * 84;
+                      const y = isActive ? 12 : 28;
+                      const h = 112;
+                      const w = 72;
+                      return (
+                        <g key={book.vol} onClick={() => setSelectedVolIdx(idx)} style={{ cursor: "pointer" }}>
+                          {/* Book shadow */}
+                          <rect x={x + 3} y={y + 3} width={w} height={h} rx="2" fill="rgba(0,0,0,0.12)" style={{ transition: "all 0.25s ease" }} />
+                          {/* Book cover */}
+                          <rect x={x} y={y} width={w} height={h} rx="2" fill={book.color} stroke={isActive ? "#dca134" : "rgba(255,255,255,0.15)"} strokeWidth={isActive ? 2.5 : 1} style={{ transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)" }} />
+                          {/* Gold foil lines on cover */}
+                          <line x1={x + 6} y1={y} x2={x + 6} y2={y + h} stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
+                          <line x1={x + w - 6} y1={y} x2={x + w - 6} y2={y + h} stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
+                          
+                          {/* Label holder */}
+                          <rect x={x + w/2 - 16} y={y + 10} width="32" height="18" rx="2" fill="rgba(255,255,255,0.2)" />
+                          <text x={x + w/2} y={y + 22} textAnchor="middle" fill="#ffffff" fontSize="9px" fontWeight="900">Vol {book.vol}</text>
+                          
+                          {/* Title (Vertically aligned) */}
+                          <g transform={`translate(${x + w/2 + 3}, ${y + 70}) rotate(-90)`}>
+                            <text x="0" y="0" textAnchor="middle" fill="#ffffff" fontSize="8.5px" fontWeight="700" letterSpacing="0.1px">
+                              {book.title.split(": ")[1] ? book.title.split(": ")[1].substring(0, 13) : book.title.substring(0, 13)}
+                            </text>
+                          </g>
+                        </g>
+                      );
+                    })}
+                  </svg>
+                </div>
               </div>
               
               {/* Actions row */}

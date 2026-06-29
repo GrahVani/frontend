@@ -95,9 +95,32 @@ const QUIZ_QUESTIONS = [
   }
 ];
 
+function describeWedge(cx: number, cy: number, rInner: number, rOuter: number, startDeg: number, endDeg: number): string {
+  // Convert to radians and flip Y for SVG space
+  const startRad = (startDeg * Math.PI) / 180;
+  const endRad = (endDeg * Math.PI) / 180;
+  
+  // Note: subtraction for Y to go counter-clockwise starting from 3 o'clock (0 deg)
+  const x1_in = cx + rInner * Math.cos(startRad);
+  const y1_in = cy - rInner * Math.sin(startRad);
+  const x2_in = cx + rInner * Math.cos(endRad);
+  const y2_in = cy - rInner * Math.sin(endRad);
+  const x1_out = cx + rOuter * Math.cos(startRad);
+  const y1_out = cy - rOuter * Math.sin(startRad);
+  const x2_out = cx + rOuter * Math.cos(endRad);
+  const y2_out = cy - rOuter * Math.sin(endRad);
+  
+  const sweepIn = 1; // clockwise returning back
+  const sweepOut = 0; // counter-clockwise moving forward
+  const largeArcFlag = Math.abs(endDeg - startDeg) > 180 ? 1 : 0;
+  
+  return `M ${x1_in} ${y1_in} L ${x1_out} ${y1_out} A ${rOuter} ${rOuter} 0 ${largeArcFlag} ${sweepOut} ${x2_out} ${y2_out} L ${x2_in} ${y2_in} A ${rInner} ${rInner} 0 ${largeArcFlag} ${sweepIn} ${x1_in} ${y1_in} Z`;
+}
+
 export function KpCuspVerifier() {
   const [tab, setTab] = useState<"verifier" | "worked" | "quiz">("verifier");
   const [tolerance, setTolerance] = useState(0.5); // in degrees
+  const [hoveredCusp, setHoveredCusp] = useState<number | null>(null);
   
   // 12 cusps state arrays
   const [byHandCusps, setByHandCusps] = useState<number[]>([...VERIFIER_PRESETS[0].byHand]);
@@ -173,10 +196,6 @@ export function KpCuspVerifier() {
   // Quiz states
   const [quizAns, setQuizAns] = useState<Record<number, number>>({});
   const [quizShow, setQuizShow] = useState<Record<number, boolean>>({});
-
-  const meanError = useMemo(() => {
-    return differences.reduce((sum, d) => sum + d, 0) / 12;
-  }, [differences]);
 
   return (
     <div data-interactive="kp-cusp-verifier" style={{ color: INK_PRIMARY, fontFamily: "var(--font-sans), system-ui, sans-serif" }}>
@@ -255,7 +274,7 @@ export function KpCuspVerifier() {
               <span style={{ fontSize: "11px", fontWeight: 700, color: INK_MUTED, textTransform: "uppercase" }}>Diagnostic Scenario Presets</span>
               <p style={{ margin: 0, fontSize: "13px", color: INK_SECONDARY }}>Select a preset case study to simulate common calculation slips.</p>
             </div>
-            <div style={{ display: "flex", gap: "6px" }}>
+            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
               {VERIFIER_PRESETS.map((p, idx) => {
                 const isSelected = activePresetDesc === p.description;
                 return (
@@ -273,128 +292,303 @@ export function KpCuspVerifier() {
           </section>
 
           {/* Tolerance & Status Display */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: "1.25rem", alignItems: "stretch" }}>
-            <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 12, background: SURFACE, padding: "1.25rem", display: "flex", flexDirection: "column", justifyContent: "center", boxShadow: "0 2px 10px rgba(0,0,0,0.01)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.4rem" }}>
-                <span style={{ fontSize: "12px", fontWeight: 700, color: INK_SECONDARY }}>Acceptable Tolerance:</span>
-                <span style={{ fontSize: "14px", fontWeight: 800, color: GOLD, fontFamily: "monospace" }}>±{tolerance}° ({Math.round(tolerance * 60)}′)</span>
-              </div>
-              <input
-                type="range"
-                min="0.1"
-                max="1.0"
-                step="0.05"
-                value={tolerance}
-                onChange={(e) => setTolerance(parseFloat(e.target.value))}
-                style={{ width: "100%", accentColor: GOLD, cursor: "pointer" }}
-              />
-              <span style={{ fontSize: "11px", color: INK_MUTED, marginTop: "0.4rem", display: "block" }}>
-                Default: ±0.5°. Slide down to ±0.1° to observe how standard precession variants trigger errors.
-              </span>
-            </section>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.25rem", alignItems: "stretch" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1rem" }}>
+              <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 12, background: SURFACE, padding: "1.25rem", display: "flex", flexDirection: "column", justifyContent: "center", boxShadow: "0 2px 10px rgba(0,0,0,0.01)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.4rem" }}>
+                  <span style={{ fontSize: "12px", fontWeight: 700, color: INK_SECONDARY }}>Acceptable Tolerance:</span>
+                  <span style={{ fontSize: "14px", fontWeight: 800, color: GOLD, fontFamily: "monospace" }}>±{tolerance}° ({Math.round(tolerance * 60)}′)</span>
+                </div>
+                <input
+                  type="range"
+                  aria-label="Verification Tolerance"
+                  min="0.1"
+                  max="1.0"
+                  step="0.05"
+                  value={tolerance}
+                  onChange={(e) => setTolerance(parseFloat(e.target.value))}
+                  style={{ width: "100%", accentColor: GOLD, cursor: "pointer" }}
+                />
+                <span style={{ fontSize: "11px", color: INK_MUTED, marginTop: "0.4rem", display: "block" }}>
+                  Slide to modify tolerance (Standard: ±0.5°).
+                </span>
+              </section>
 
-            <section
-              style={{
-                border: `1.5px solid ${diagnosticResult.color}44`,
-                borderRadius: 12,
-                background: `${diagnosticResult.color}05`,
-                padding: "1.25rem",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                boxShadow: "0 2px 10px rgba(0,0,0,0.01)"
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: diagnosticResult.color, fontWeight: 900, fontSize: "13.5px", marginBottom: "0.4rem" }}>
-                <Play size={16} />
-                System Verdict Panel
-              </div>
-              <p style={{ margin: 0, fontSize: "12.5px", color: INK_SECONDARY, lineHeight: 1.55 }}>
-                {diagnosticResult.text}
-              </p>
-            </section>
+              <section
+                style={{
+                  border: `1.5px solid ${diagnosticResult.color}44`,
+                  borderRadius: 12,
+                  background: `${diagnosticResult.color}05`,
+                  padding: "1.25rem",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  boxShadow: "0 2px 10px rgba(0,0,0,0.01)"
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: diagnosticResult.color, fontWeight: 900, fontSize: "13.5px", marginBottom: "0.4rem" }}>
+                  <Play size={16} />
+                  System Verdict Panel
+                </div>
+                <p style={{ margin: 0, fontSize: "12.5px", color: INK_SECONDARY, lineHeight: 1.55 }}>
+                  {diagnosticResult.text}
+                </p>
+              </section>
+            </div>
           </div>
 
-          {/* Verification Grid */}
-          <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 12, background: SURFACE, padding: "1rem", boxShadow: "0 2px 10px rgba(0,0,0,0.01)" }}>
-            <h4 style={{ margin: "0 0 0.6rem", color: GOLD, fontSize: "0.95rem", fontFamily: "var(--font-cormorant), serif", fontWeight: 700 }}>Cusp Comparison Workspace</h4>
-            <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "10.5px" }}>
-                <thead>
-                  <tr style={{ borderBottom: `2px solid ${HAIRLINE}`, color: GOLD, textAlign: "left" }}>
-                    <th style={{ padding: "0.35rem 0.3rem", fontSize: "9.5px", textTransform: "uppercase", letterSpacing: "0.04em" }}>#</th>
-                    <th style={{ padding: "0.35rem 0.3rem", fontSize: "9.5px", textTransform: "uppercase", letterSpacing: "0.04em" }}>By-Hand (°)</th>
-                    <th style={{ padding: "0.35rem 0.3rem", fontSize: "9.5px", textTransform: "uppercase", letterSpacing: "0.04em" }}>Engine (°)</th>
-                    <th style={{ padding: "0.35rem 0.3rem", fontSize: "9.5px", textTransform: "uppercase", letterSpacing: "0.04em" }}>Δ Diff</th>
-                    <th style={{ padding: "0.35rem 0.3rem", fontSize: "9.5px", textTransform: "uppercase", letterSpacing: "0.04em", textAlign: "right" }}>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => {
-                    const idx = h - 1;
-                    const manualVal = byHandCusps[idx];
-                    const engineVal = engineCusps[idx];
-                    const diff = differences[idx];
-                    const passes = diff <= tolerance;
-
-                    return (
-                      <tr
-                        key={h}
-                        style={{
-                          borderBottom: `1px solid ${HAIRLINE}55`,
-                          background: passes ? "transparent" : "rgba(162, 58, 30, 0.03)"
-                        }}
+          {/* Redesigned interactive experiences: Dual-Ring Alignment Diagnostic Wheel */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.25rem" }}>
+            
+            {/* Left Column: Interactive Wheel */}
+            <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 12, background: SURFACE, padding: "1.25rem", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ fontSize: "11px", fontWeight: 700, color: INK_MUTED, textTransform: "uppercase", marginBottom: "0.75rem" }}>
+                Alignment Diagnostics Map
+              </span>
+              <svg width="280" height="280" viewBox="0 0 300 300" style={{ overflow: "visible" }}>
+                <defs>
+                  <radialGradient id="ringGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#B88421" stopOpacity="0.05" />
+                    <stop offset="100%" stopColor="#B88421" stopOpacity="0" />
+                  </radialGradient>
+                </defs>
+                <circle cx="150" cy="150" r="140" fill="url(#ringGlow)" stroke={HAIRLINE} strokeWidth="1" />
+                <circle cx="150" cy="150" r="110" fill="none" stroke={HAIRLINE} strokeWidth="1" strokeDasharray="3 3" />
+                <circle cx="150" cy="150" r="70" fill="none" stroke={HAIRLINE} strokeWidth="1.5" />
+                
+                {/* 12 Rashi Sectors (30 deg each) */}
+                {RASHIS.map((r, i) => {
+                  const startAngle = i * 30;
+                  const endAngle = (i + 1) * 30;
+                  const midAngle = startAngle + 15;
+                  const labelRad = (midAngle * Math.PI) / 180;
+                  const lx = 150 + 125 * Math.cos(labelRad);
+                  const ly = 150 - 125 * Math.sin(labelRad);
+                  
+                  return (
+                    <g key={r}>
+                      {/* Boundary line */}
+                      <line
+                        x1="150"
+                        y1="150"
+                        x2={150 + 140 * Math.cos((startAngle * Math.PI) / 180)}
+                        y2={150 - 140 * Math.sin((startAngle * Math.PI) / 180)}
+                        stroke={`${HAIRLINE}40`}
+                        strokeWidth="1"
+                      />
+                      {/* Label abbreviation */}
+                      <text
+                        x={lx}
+                        y={ly}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fontSize="9"
+                        fill={INK_SECONDARY}
+                        fontWeight="700"
+                        transform={`rotate(${-midAngle + 90}, ${lx}, ${ly})`}
                       >
-                        <td style={{ padding: "0.3rem 0.3rem", fontWeight: 800, fontSize: "10px", color: passes ? INK_PRIMARY : VERMILION }}>{h}</td>
-                        <td style={{ padding: "0.25rem 0.3rem" }}>
-                          <div style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
-                            <input
-                              type="number"
-                              step="0.01"
-                              value={manualVal}
-                              onChange={(e) => updateByHandCusp(idx, parseFloat(e.target.value) || 0)}
-                              style={tableInputStyle}
-                            />
-                            <span style={{ fontSize: "9px", color: INK_MUTED, fontFamily: "monospace", whiteSpace: "nowrap" }}>
-                              {getRashiName(manualVal)}
-                            </span>
-                          </div>
-                        </td>
-                        <td style={{ padding: "0.25rem 0.3rem" }}>
-                          <div style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
-                            <input
-                              type="number"
-                              step="0.01"
-                              value={engineVal}
-                              onChange={(e) => updateEngineCusp(idx, parseFloat(e.target.value) || 0)}
-                              style={tableInputStyle}
-                            />
-                            <span style={{ fontSize: "9px", color: INK_MUTED, fontFamily: "monospace", whiteSpace: "nowrap" }}>
-                              {getRashiName(engineVal)}
-                            </span>
-                          </div>
-                        </td>
-                        <td style={{ padding: "0.3rem 0.3rem", fontFamily: "monospace", fontWeight: 700, fontSize: "10px" }}>
-                          {toDMS(diff)}
-                        </td>
-                        <td style={{ padding: "0.3rem 0.3rem", textAlign: "right" }}>
-                          {passes ? (
-                            <span style={{ fontSize: "9px", background: `${GREEN}10`, color: GREEN, padding: "2px 5px", borderRadius: "3px", fontWeight: 800 }}>
-                              ✓ OK
-                            </span>
-                          ) : (
-                            <span style={{ fontSize: "9px", background: `${VERMILION}15`, color: VERMILION, padding: "2px 5px", borderRadius: "3px", fontWeight: 800, border: `1px solid ${VERMILION}33` }}>
-                              ⚠ FAIL
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                        {r.substring(0, 3)}
+                      </text>
+                    </g>
+                  );
+                })}
+
+                {/* Draw 12 Cusps, Halos and Engine lines */}
+                {Array.from({ length: 12 }, (_, idx) => {
+                  const cuspNum = idx + 1;
+                  const bhDeg = byHandCusps[idx];
+                  const engDeg = engineCusps[idx];
+                  const diff = differences[idx];
+                  const passes = diff <= tolerance;
+                  const isHovered = hoveredCusp === idx;
+                  
+                  // Angles for plotting
+                  const bhRad = (bhDeg * Math.PI) / 180;
+                  const engRad = (engDeg * Math.PI) / 180;
+                  
+                  // Tolerance Wedge
+                  const haloPath = describeWedge(150, 150, 70, 140, bhDeg - tolerance, bhDeg + tolerance);
+                  
+                  // Coordinates
+                  const xHandStart = 150 + 70 * Math.cos(bhRad);
+                  const yHandStart = 150 - 70 * Math.sin(bhRad);
+                  const xHandEnd = 150 + 105 * Math.cos(bhRad);
+                  const yHandEnd = 150 - 105 * Math.sin(bhRad);
+                  
+                  const xEngStart = 150 + 115 * Math.cos(engRad);
+                  const yEngStart = 150 - 115 * Math.sin(engRad);
+                  const xEngEnd = 150 + 140 * Math.cos(engRad);
+                  const yEngEnd = 150 - 140 * Math.sin(engRad);
+                  
+                  return (
+                    <g
+                      key={idx}
+                      onMouseEnter={() => setHoveredCusp(idx)}
+                      onMouseLeave={() => setHoveredCusp(null)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {/* Safe Tolerance Halo */}
+                      <path
+                        d={haloPath}
+                        fill={passes ? GREEN : VERMILION}
+                        fillOpacity={isHovered ? 0.22 : 0.1}
+                        stroke={passes ? `${GREEN}33` : `${VERMILION}33`}
+                        strokeWidth="0.5"
+                      />
+                      
+                      {/* Cusp By-Hand Line (Inner Ring) */}
+                      <line
+                        x1={xHandStart}
+                        y1={yHandStart}
+                        x2={xHandEnd}
+                        y2={yHandEnd}
+                        stroke={passes ? GREEN : GOLD}
+                        strokeWidth={isHovered ? 3.5 : 2}
+                        strokeLinecap="round"
+                      />
+                      
+                      {/* Cusp Engine Line (Outer Ring) */}
+                      <line
+                        x1={xEngStart}
+                        y1={yEngStart}
+                        x2={xEngEnd}
+                        y2={yEngEnd}
+                        stroke={passes ? GREEN : VERMILION}
+                        strokeWidth={isHovered ? 3.5 : 2}
+                        strokeLinecap="round"
+                      />
+
+                      {/* Line connecting the discrepancy gap if fails */}
+                      {!passes && (
+                        <path
+                          d={`M ${xHandEnd} ${yHandEnd} A 110 110 0 0 ${bhDeg < engDeg ? 0 : 1} ${xEngStart} ${yEngStart}`}
+                          fill="none"
+                          stroke={VERMILION}
+                          strokeWidth="1"
+                          strokeDasharray="2 2"
+                        />
+                      )}
+                      
+                      {/* Cusp Label Indicator on inner boundary */}
+                      <text
+                        x={150 + 60 * Math.cos(bhRad)}
+                        y={150 - 60 * Math.sin(bhRad)}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fontSize="8.5"
+                        fontWeight="800"
+                        fill={passes ? INK_PRIMARY : VERMILION}
+                      >
+                        C{cuspNum}
+                      </text>
+                    </g>
+                  );
+                })}
+              </svg>
+              <div style={{ marginTop: "0.5rem", display: "flex", gap: "1rem", flexWrap: "wrap", fontSize: "10px", fontWeight: "700" }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", color: GREEN }}>
+                  <span style={{ width: 8, height: 8, background: GREEN, borderRadius: "20%" }} />
+                  Pass Tolerance
+                </span>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", color: VERMILION }}>
+                  <span style={{ width: 8, height: 8, background: VERMILION, borderRadius: "20%" }} />
+                  Fail (Accidental Slips)
+                </span>
+              </div>
             </div>
-          </section>
+
+            {/* Right Column: Comparative Workspace Table */}
+            <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 12, background: SURFACE, padding: "1rem", boxShadow: "0 2px 10px rgba(0,0,0,0.01)" }}>
+              <h4 style={{ margin: "0 0 0.6rem", color: GOLD, fontSize: "0.95rem", fontFamily: "var(--font-cormorant), serif", fontWeight: 700 }}>Cusp Comparison Workspace</h4>
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "10.5px" }}>
+                  <thead>
+                    <tr style={{ borderBottom: `2px solid ${HAIRLINE}`, color: GOLD, textAlign: "left" }}>
+                      <th style={{ padding: "0.35rem 0.3rem", fontSize: "9.5px", textTransform: "uppercase", letterSpacing: "0.04em" }}>Cusp</th>
+                      <th style={{ padding: "0.35rem 0.3rem", fontSize: "9.5px", textTransform: "uppercase", letterSpacing: "0.04em" }}>By-Hand (°)</th>
+                      <th style={{ padding: "0.35rem 0.3rem", fontSize: "9.5px", textTransform: "uppercase", letterSpacing: "0.04em" }}>Engine (°)</th>
+                      <th style={{ padding: "0.35rem 0.3rem", fontSize: "9.5px", textTransform: "uppercase", letterSpacing: "0.04em" }}>Δ Diff</th>
+                      <th style={{ padding: "0.35rem 0.3rem", fontSize: "9.5px", textTransform: "uppercase", letterSpacing: "0.04em", textAlign: "right" }}>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => {
+                      const idx = h - 1;
+                      const manualVal = byHandCusps[idx];
+                      const engineVal = engineCusps[idx];
+                      const diff = differences[idx];
+                      const passes = diff <= tolerance;
+                      const isHovered = hoveredCusp === idx;
+
+                      return (
+                        <tr
+                          key={h}
+                          onMouseEnter={() => setHoveredCusp(idx)}
+                          onMouseLeave={() => setHoveredCusp(null)}
+                          style={{
+                            borderBottom: `1px solid ${HAIRLINE}55`,
+                            background: isHovered
+                              ? `${GOLD}0B`
+                              : passes
+                              ? "transparent"
+                              : "rgba(162, 58, 30, 0.03)",
+                            transition: "background-color 100ms ease"
+                          }}
+                        >
+                          <td style={{ padding: "0.3rem 0.3rem", fontWeight: 800, fontSize: "10px", color: passes ? INK_PRIMARY : VERMILION }}>Cusp {h}</td>
+                          <td style={{ padding: "0.25rem 0.3rem" }}>
+                            <div style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                              <input
+                                type="number"
+                                step="0.01"
+                                aria-label={`Cusp ${h} By Hand Degree`}
+                                value={Number(manualVal.toFixed(2))}
+                                onChange={(e) => updateByHandCusp(idx, parseFloat(e.target.value) || 0)}
+                                style={tableInputStyle}
+                              />
+                              <span style={{ fontSize: "9px", color: INK_MUTED, fontFamily: "monospace", whiteSpace: "nowrap" }}>
+                                {getRashiName(manualVal)}
+                              </span>
+                            </div>
+                          </td>
+                          <td style={{ padding: "0.25rem 0.3rem" }}>
+                            <div style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                              <input
+                                type="number"
+                                step="0.01"
+                                aria-label={`Cusp ${h} Engine Degree`}
+                                value={Number(engineVal.toFixed(2))}
+                                onChange={(e) => updateEngineCusp(idx, parseFloat(e.target.value) || 0)}
+                                style={tableInputStyle}
+                              />
+                              <span style={{ fontSize: "9px", color: INK_MUTED, fontFamily: "monospace", whiteSpace: "nowrap" }}>
+                                {getRashiName(engineVal)}
+                              </span>
+                            </div>
+                          </td>
+                          <td style={{ padding: "0.3rem 0.3rem", fontFamily: "monospace", fontWeight: 700, fontSize: "10px" }}>
+                            {toDMS(diff)}
+                          </td>
+                          <td style={{ padding: "0.3rem 0.3rem", textAlign: "right" }}>
+                            {passes ? (
+                              <span style={{ fontSize: "9px", background: `${GREEN}10`, color: GREEN, padding: "2px 5px", borderRadius: "3px", fontWeight: 800 }}>
+                                ✓ OK
+                              </span>
+                            ) : (
+                              <span style={{ fontSize: "9px", background: `${VERMILION}15`, color: VERMILION, padding: "2px 5px", borderRadius: "3px", fontWeight: 800, border: `1px solid ${VERMILION}33` }}>
+                                ⚠ FAIL
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
         </div>
       )}
 
@@ -545,3 +739,5 @@ function buttonStyle(active: boolean, color: string): CSSProperties {
     outline: "none"
   };
 }
+
+

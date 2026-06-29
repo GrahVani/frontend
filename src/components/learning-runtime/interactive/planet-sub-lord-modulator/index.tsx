@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 import { NAKSHATRAS } from "../nakshatra-data";
-import { RASHIS } from "../rashi-data";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
@@ -10,7 +9,9 @@ const INK_MUTED = "var(--gl-ink-on-cream-muted)";
 const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const GOLD = "#9C7A2F";
-const INDIGO = "#4F6FA8";
+const GREEN = "#2F7D55";
+const RED = "#A23A1E";
+const BLUE = "#356CAB";
 
 const SIGNS = ["Meṣa", "Vṛṣabha", "Mithuna", "Karka", "Siṁha", "Kanyā", "Tulā", "Vṛścika", "Dhanus", "Makara", "Kumbha", "Mīna"];
 const PLANET_NAMES = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"];
@@ -22,20 +23,30 @@ const VIM: [string, number][] = [
 
 const NAK_DEG = 13 + 20 / 60; // 13.3333°
 
-// Base meanings database
 const BASE_MEANINGS: Record<string, string> = {
-  Sun: "Soul, father, authority, government, leadership, status, vitality.",
-  Moon: "Mind, mother, emotions, the public, nurturing, memory, changeability.",
-  Mars: "Energy, courage, conflict, property, action, assertiveness, drive.",
-  Mercury: "Intellect, communication, commerce, speech, logic, writing, agility.",
-  Jupiter: "Wisdom, teacher, children, expansion, spirituality, fortune, growth.",
-  Venus: "Love, spouse, wealth, the arts, beauty, pleasure, diplomacy.",
-  Saturn: "Discipline, delay, longevity, obstacle, structure, grief, endurance.",
-  Rahu: "Obsession, foreign elements, amplification, material desires, illusion.",
-  Ketu: "Detachment, spirituality, dissolution, liberation, introversion, separation."
+  Sun: "Soul, authority, government, leadership, status, vitality, external ego.",
+  Moon: "Mind, emotions, public connection, public image, memory, shifting moods.",
+  Mars: "Action, energy, courage, conflict, dynamic drive, physical construction.",
+  Mercury: "Intellect, logic, commerce, writing, speech, agility, mathematical parsing.",
+  Jupiter: "Wisdom, wealth, counseling, child indicators, spiritual expansion.",
+  Venus: "Relational harmony, spouse, beauty, refined arts, diplomatic transactions.",
+  Saturn: "Discipline, delays, structures, boundaries, karmic patience, structural endurance.",
+  Rahu: "Amplification, material obsessions, foreign systems, illusions, expansion.",
+  Ketu: "Separation, spiritual detachment, internal search, dissolution, liberation."
 };
 
-// Custom dynamic modulations helper
+const PLANET_COLORS: Record<string, string> = {
+  Sun: "#D97706",
+  Moon: "#85929E",
+  Mars: "#EF4444",
+  Mercury: "#10B981",
+  Jupiter: "#EAB308",
+  Venus: "#EC4899",
+  Saturn: "#6366F1",
+  Rahu: "#4B5563",
+  Ketu: "#78350F"
+};
+
 function getModulationText(planet: string, subLord: string): string {
   const pairs: Record<string, string> = {
     "Mars-Mercury": "Energy & drive are channeled through Mercury's themes: intellect, communication, or commerce. Instead of raw physical confrontation, energy is applied to analytical or commercial pursuits (e.g. intellectual sparring or business drive).",
@@ -50,7 +61,7 @@ function getModulationText(planet: string, subLord: string): string {
   };
 
   const key = `${planet}-${subLord}`;
-  return pairs[key] ?? `${planet}'s base indicators are modulated through ${subLord}'s energetic channel, filtering its traditional delivery through ${subLord}'s natural domains in this chart.`;
+  return pairs[key] ?? `${planet}'s raw planetary energy is refracted through the prism of ${subLord}'s sub-lord, coloring how its final predictive results manifest.`;
 }
 
 function fmtDMS(d: number): string {
@@ -89,14 +100,13 @@ function getSubLordData(lon: number) {
 export function PlanetSubLordModulator() {
   const [selectedPlanet, setSelectedPlanet] = useState<string>("Mars");
   
-  // Custom local longitudes for testing
   const [planetLongitudes, setPlanetLongitudes] = useState<Record<string, number>>({
     Sun: 45.0,
     Moon: 140.0,
-    Mars: 314.3667, // Śatabhiṣaj 14°22' Aquarius (Mercury sub)
+    Mars: 314.3667, 
     Mercury: 110.0,
     Jupiter: 265.0,
-    Venus: 98.50, // Cancer 8°30' (Sun sub)
+    Venus: 98.50, 
     Saturn: 185.0,
     Rahu: 12.0,
     Ketu: 192.0
@@ -114,25 +124,47 @@ export function PlanetSubLordModulator() {
     });
   };
 
+  const handleSliderChange = (val: number) => {
+    setPlanetLongitudes((prev) => {
+      const copy = { ...prev };
+      copy[selectedPlanet] = val;
+      return copy;
+    });
+  };
+
   const modulationText = useMemo(() => {
     return getModulationText(selectedPlanet, subData.activeSub.lord);
   }, [selectedPlanet, subData.activeSub.lord]);
 
+  // Derived colors for modulation lens pipeline
+  const planetColor = PLANET_COLORS[selectedPlanet] || GOLD;
+  const starLordColor = PLANET_COLORS[subData.nak.ruler] || GOLD;
+  const subLordColor = PLANET_COLORS[subData.activeSub.lord] || GOLD;
+
   return (
-    <div className="gl-surface-twilight-glass" style={{ padding: "20px 22px 22px" }} data-interactive="planet-sub-lord-modulator">
-      {/* Header */}
-      <section style={{ borderBottom: `1px solid ${HAIRLINE}`, paddingBottom: "0.8rem", marginBottom: "1rem" }}>
-        <span style={{ color: GOLD, fontSize: "9px", textTransform: "uppercase", fontWeight: 900, letterSpacing: "0.08em" }}>Module 16 · Chapter 4 · Lesson 2</span>
-        <h1 style={{ margin: "0.1rem 0 0", color: GOLD, fontSize: "1.3rem", fontWeight: 700 }}>Planet Sub-Lord Modulation Layer</h1>
+    <div style={{ color: INK_PRIMARY, fontFamily: "var(--font-sans), system-ui, sans-serif" }} data-interactive="planet-sub-lord-modulator">
+      
+      {/* Header Banner */}
+      <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 12, background: SURFACE, padding: "1.25rem", marginBottom: "1rem", boxShadow: "0 4px 20px -2px rgba(47, 125, 85, 0.05)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <span style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", color: GREEN, fontWeight: 900, background: `${GREEN}15`, padding: "2px 8px", borderRadius: "4px" }}>Energy Refraction Pipeline</span>
+          <span style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", color: GOLD, fontWeight: 900, background: `${GOLD}15`, padding: "2px 8px", borderRadius: "4px" }}>Chapter 4, Lesson 2</span>
+        </div>
+        <h2 style={{ margin: "0.4rem 0 0.2rem", color: GOLD, fontSize: "1.45rem", fontFamily: "var(--font-cormorant), serif", fontWeight: 700 }}>
+          Planet Sub-Lord Modulation Layer
+        </h2>
+        <p style={{ margin: 0, color: INK_SECONDARY, fontSize: "13px", lineHeight: 1.55 }}>
+          KP Sub-lord theory states that while a planet's Star Lord shows the source of its energy, its Sub Lord acts as a refraction filter defining the final outcome of that energy.
+        </p>
       </section>
 
-      {/* Main Grid */}
-      <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "1rem" }}>
+      {/* Main Grid Layout */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.25rem" }}>
         
         {/* Left Side: Planet Selector and Scrubber */}
-        <div style={{ flex: "1 1 18rem", display: "flex", flexDirection: "column", gap: "0.8rem" }}>
-          <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: 12, padding: "1rem" }}>
-            <h3 style={{ margin: "0 0 0.6rem", color: INK_SECONDARY, fontSize: "11px", fontWeight: 800, textTransform: "uppercase" }}>Select Graha</h3>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: 12, padding: "1.25rem", boxShadow: "0 2px 10px rgba(0,0,0,0.01)" }}>
+            <h3 style={{ margin: "0 0 0.75rem", color: GOLD, fontSize: "11px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>Select Graha</h3>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.4rem", marginBottom: "1rem" }}>
               {PLANET_NAMES.map((p) => {
                 const isActive = selectedPlanet === p;
@@ -142,77 +174,158 @@ export function PlanetSubLordModulator() {
                     key={p}
                     onClick={() => setSelectedPlanet(p)}
                     style={{
-                      border: `1px solid ${isActive ? GOLD : HAIRLINE}`,
-                      borderRadius: 6,
-                      background: isActive ? `${GOLD}15` : "transparent",
-                      color: isActive ? GOLD : INK_PRIMARY,
-                      padding: "0.4rem 0.2rem",
+                      border: `1.5px solid ${isActive ? PLANET_COLORS[p] : HAIRLINE}`,
+                      borderRadius: 8,
+                      background: isActive ? `${PLANET_COLORS[p]}15` : "transparent",
+                      color: isActive ? PLANET_COLORS[p] : INK_PRIMARY,
+                      padding: "0.45rem 0.25rem",
                       fontSize: "11px",
-                      fontWeight: isActive ? 800 : 500,
+                      fontWeight: isActive ? 800 : 600,
                       cursor: "pointer",
                       display: "flex",
                       flexDirection: "column",
-                      alignItems: "center"
+                      alignItems: "center",
+                      transition: "all 150ms ease"
                     }}
                   >
                     <strong>{p}</strong>
-                    <span style={{ fontSize: "7.5px", color: INK_MUTED, marginTop: "0.15rem" }}>sub: {pSub}</span>
+                    <span style={{ fontSize: "8px", color: INK_MUTED, marginTop: "0.15rem" }}>Sub: {pSub.substring(0, 3)}</span>
                   </button>
                 );
               })}
             </div>
 
-            {/* Longitude fine tune */}
-            <div style={{ borderTop: `1px dashed ${HAIRLINE}`, paddingTop: "0.8rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-                <span style={{ fontSize: "10px", color: INK_MUTED, textTransform: "uppercase", fontWeight: 700 }}>Fine-Tune Degree:</span>
-                <strong style={{ fontSize: "11.5px", color: GOLD }}>{fmtDMS(activeLongitude)}</strong>
+            {/* Longitude fine tune / range slider */}
+            <div style={{ borderTop: `1px dashed ${HAIRLINE}`, paddingTop: "1rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.4rem" }}>
+                <span style={{ fontSize: "10px", color: INK_MUTED, textTransform: "uppercase", fontWeight: 800 }}>Graha Longitude:</span>
+                <strong style={{ fontSize: "12px", color: GOLD, fontFamily: "monospace" }}>{fmtDMS(activeLongitude)}</strong>
               </div>
+              <input
+                type="range"
+                min="0"
+                max="359.99"
+                step="0.05"
+                value={activeLongitude}
+                onChange={(e) => handleSliderChange(parseFloat(e.target.value))}
+                style={{ width: "100%", accentColor: planetColor, cursor: "pointer", marginBottom: "0.75rem" }}
+                aria-label="Planet Longitude Scrubber"
+              />
               <div style={{ display: "flex", gap: "0.3rem", justifyContent: "center" }}>
-                <button onClick={() => handleNudge(-1)} style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 4, background: SURFACE, color: INK_PRIMARY, padding: "0.2rem 0.4rem", cursor: "pointer", fontSize: "10px" }}>-1°</button>
-                <button onClick={() => handleNudge(-1/15)} style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 4, background: SURFACE, color: INK_PRIMARY, padding: "0.2rem 0.4rem", cursor: "pointer", fontSize: "10px" }}>-4′</button>
-                <button onClick={() => handleNudge(1/15)} style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 4, background: SURFACE, color: INK_PRIMARY, padding: "0.2rem 0.4rem", cursor: "pointer", fontSize: "10px" }}>+4′</button>
-                <button onClick={() => handleNudge(1)} style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 4, background: SURFACE, color: INK_PRIMARY, padding: "0.2rem 0.4rem", cursor: "pointer", fontSize: "10px" }}>+1°</button>
+                <button onClick={() => handleNudge(-1)} style={nudgeButtonStyle}>-1°</button>
+                <button onClick={() => handleNudge(-1/15)} style={nudgeButtonStyle}>-4′</button>
+                <button onClick={() => handleNudge(1/15)} style={nudgeButtonStyle}>+4′</button>
+                <button onClick={() => handleNudge(1)} style={nudgeButtonStyle}>+1°</button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right Side: Modulation Details */}
-        <div style={{ flex: "1.2 1 22rem", display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+        {/* Right Side: Planet Modulation Lens Pipeline SVG & Refraction Details */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           
-          {/* Base vs Modulation Cards */}
+          {/* Draggable Redesigned experience: The Planet Modulation Lens Pipeline */}
+          <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 12, background: SURFACE, padding: "1.25rem" }}>
+            <span style={{ fontSize: "11px", fontWeight: 700, color: INK_MUTED, textTransform: "uppercase", display: "block", marginBottom: "0.5rem" }}>
+              Energy Refraction Pipeline Diagram
+            </span>
+            <svg width="100%" height="150" viewBox="0 0 420 150" style={{ background: "rgba(0,0,0,0.01)", border: `1px stroke ${HAIRLINE}`, borderRadius: 8, overflow: "visible" }}>
+              <defs>
+                <filter id="laserGlow">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <linearGradient id="refractedBeam" x1="0%" y1="50%" x2="100%" y2="50%">
+                  <stop offset="0%" stopColor={starLordColor} />
+                  <stop offset="100%" stopColor={subLordColor} />
+                </linearGradient>
+              </defs>
+
+              {/* Layout pipeline connection lines */}
+              <line x1="50" y1="75" x2="370" y2="75" stroke={`${HAIRLINE}50`} strokeWidth="1" strokeDasharray="3 3" />
+              
+              {/* LASER BEAMS */}
+              {/* Beam 1: Planet to Star Lord (focused lens) */}
+              <line x1="50" y1="75" x2="180" y2="75" stroke={planetColor} strokeWidth="3" filter="url(#laserGlow)" />
+              {/* Beam 2: Star Lord to Sub Lord (Prism) */}
+              <line x1="180" y1="75" x2="295" y2="75" stroke={starLordColor} strokeWidth="3.5" filter="url(#laserGlow)" />
+              {/* Beam 3: Sub Lord refracted/modulated outputs */}
+              <line x1="295" y1="75" x2="370" y2="40" stroke={subLordColor} strokeWidth="2.5" filter="url(#laserGlow)" strokeDasharray="5 1" />
+              <line x1="295" y1="75" x2="370" y2="75" stroke={subLordColor} strokeWidth="3.5" filter="url(#laserGlow)" />
+              <line x1="295" y1="75" x2="370" y2="110" stroke={subLordColor} strokeWidth="2.5" filter="url(#laserGlow)" strokeDasharray="5 1" />
+
+              {/* NODE 1: Planet Base Energy */}
+              <g transform="translate(50, 75)">
+                <circle cx="0" cy="0" r="22" fill={SURFACE} stroke={planetColor} strokeWidth="3" />
+                <circle cx="0" cy="0" r="16" fill={`${planetColor}15`} />
+                <text x="0" y="0" textAnchor="middle" dominantBaseline="middle" fontSize="9" fontWeight="900" fill={INK_PRIMARY}>
+                  {selectedPlanet}
+                </text>
+              </g>
+
+              {/* NODE 2: Star Lord Focus Lens */}
+              <g transform="translate(180, 75)">
+                <ellipse rx="10" ry="26" fill={`${starLordColor}12`} stroke={starLordColor} strokeWidth="2.5" />
+                <line x1="0" y1="-28" x2="0" y2="28" stroke={starLordColor} strokeWidth="1" />
+                <text x="0" y="-34" textAnchor="middle" fontSize="8" fontWeight="800" fill={starLordColor} style={{ textTransform: "uppercase" }}>
+                  Star Lord Lens ({subData.nak.ruler})
+                </text>
+              </g>
+
+              {/* NODE 3: Sub Lord Verdict Prism */}
+              <g transform="translate(295, 75)">
+                {/* Draw triangle prism */}
+                <polygon points="-16,24 -16,-24 18,0" fill={`${subLordColor}10`} stroke={subLordColor} strokeWidth="2.5" />
+                <text x="0" y="-34" textAnchor="middle" fontSize="8" fontWeight="800" fill={subLordColor} style={{ textTransform: "uppercase" }}>
+                  Sub Lord Prism ({subData.activeSub.lord})
+                </text>
+              </g>
+
+              {/* Output Target Screen */}
+              <g transform="translate(370, 75)">
+                <line x1="0" y1="-45" x2="0" y2="45" stroke={INK_SECONDARY} strokeWidth="3" strokeLinecap="round" />
+                <text x="10" y="0" textAnchor="start" dominantBaseline="middle" fontSize="8" fontWeight="800" fill={INK_MUTED} style={{ textTransform: "uppercase" }}>
+                  Modulated Results
+                </text>
+              </g>
+            </svg>
+          </div>
+
+          {/* Modulation Text Card */}
           <div style={{ display: "grid", gap: "0.8rem" }}>
             
-            {/* Base Layer */}
             <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: 12, padding: "1rem" }}>
-              <span style={{ color: INK_MUTED, fontSize: "9px", textTransform: "uppercase", fontWeight: 700, display: "block" }}>Base Layer (Traditional Meaning)</span>
-              <h2 style={{ margin: "0.2rem 0", color: INK_PRIMARY, fontSize: "1.2rem", fontWeight: 700 }}>
-                {selectedPlanet} Significations
-              </h2>
-              <p style={{ margin: 0, fontSize: "11.5px", color: INK_SECONDARY, lineHeight: 1.45 }}>
+              <span style={{ color: INK_MUTED, fontSize: "9px", textTransform: "uppercase", fontWeight: 800, display: "block" }}>
+                1. Base Planet Significations
+              </span>
+              <p style={{ margin: "0.2rem 0 0", fontSize: "12.5px", color: INK_SECONDARY, lineHeight: 1.5 }}>
                 {BASE_MEANINGS[selectedPlanet]}
               </p>
             </div>
 
-            {/* Modulation Layer */}
-            <div style={{ background: `${GOLD}06`, border: `1px solid ${GOLD}`, borderRadius: 12, padding: "1rem" }}>
-              <span style={{ color: GOLD, fontSize: "9px", textTransform: "uppercase", fontWeight: 900, display: "block" }}>Modulation Layer (KP Sub-Lord Filter)</span>
-              <h2 style={{ margin: "0.2rem 0", color: GOLD, fontSize: "1.2rem", fontWeight: 700 }}>
-                Modulated by: {subData.activeSub.lord}
-              </h2>
-              <p style={{ margin: 0, fontSize: "11.5px", color: INK_SECONDARY, lineHeight: 1.5 }}>
+            <div style={{ background: `${GOLD}05`, border: `1.5px solid ${subLordColor}44`, borderRadius: 12, padding: "1.25rem", boxShadow: "0 2px 8px rgba(0,0,0,0.01)" }}>
+              <span style={{ color: subLordColor, fontSize: "9px", textTransform: "uppercase", fontWeight: 900, display: "block" }}>
+                2. modulated KP result
+              </span>
+              <h4 style={{ margin: "0.2rem 0 0.4rem", color: GOLD, fontSize: "1.2rem", fontFamily: "var(--font-cormorant), serif", fontWeight: 700 }}>
+                {selectedPlanet} Energy refracted through {subData.activeSub.lord}
+              </h4>
+              <p style={{ margin: 0, fontSize: "12.5px", color: INK_PRIMARY, lineHeight: 1.55 }}>
                 {modulationText}
               </p>
             </div>
+
           </div>
 
-          {/* Sub-walk visualizer */}
+          {/* Sub divisions range overlay */}
           <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: 12, padding: "1rem" }}>
             <span style={{ color: INK_MUTED, fontSize: "9px", textTransform: "uppercase", fontWeight: 700, display: "block", marginBottom: "0.4rem" }}>
-              Sub-Division positions inside {subData.nak.name} nakṣatra:
+              Sub-Division span coordinates inside {subData.nak.name} nakṣatra:
             </span>
-            <div style={{ position: "relative", height: "1.6rem", background: "rgba(0,0,0,0.02)", border: `1px solid ${HAIRLINE}`, borderRadius: 6, display: "flex", overflow: "hidden" }}>
+            <div style={{ position: "relative", height: "1.8rem", background: "rgba(0,0,0,0.02)", border: `1px solid ${HAIRLINE}`, borderRadius: 6, display: "flex", overflow: "hidden" }}>
               {subData.subs.map((s, idx) => {
                 const isActive = s.lord === subData.activeSub.lord;
                 const widthPercent = ((s.to - s.from) / NAK_DEG) * 100;
@@ -223,16 +336,16 @@ export function PlanetSubLordModulator() {
                       width: `${widthPercent}%`,
                       height: "100%",
                       borderRight: `1px solid ${HAIRLINE}`,
-                      background: isActive ? `${GOLD}20` : "transparent",
+                      background: isActive ? `${subLordColor}20` : "transparent",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
-                      fontSize: "8.5px",
+                      fontSize: "9px",
                       fontWeight: isActive ? 900 : 500,
-                      color: isActive ? GOLD : INK_MUTED
+                      color: isActive ? subLordColor : INK_MUTED
                     }}
                   >
-                    {s.lord.substring(0, 2)}
+                    {s.lord.substring(0, 3)}
                   </div>
                 );
               })}
@@ -242,21 +355,20 @@ export function PlanetSubLordModulator() {
                   left: `${(subData.elapsed / NAK_DEG) * 100}%`,
                   top: 0,
                   bottom: 0,
-                  width: "2.5px",
-                  background: GOLD,
-                  boxShadow: "0 0 3px rgba(156,122,47,0.8)"
+                  width: "3px",
+                  background: subLordColor,
+                  boxShadow: `0 0 6px ${subLordColor}`
                 }}
               />
             </div>
-            
-            {/* Step-by-step Math table instead of raw JSON console */}
+
             <div style={{ borderTop: `1px dashed ${HAIRLINE}`, marginTop: "0.8rem", paddingTop: "0.6rem" }}>
               <span style={{ color: GOLD, fontSize: "9px", textTransform: "uppercase", fontWeight: 900, display: "block", marginBottom: "0.3rem" }}>Mathematical Calculation Log</span>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "10.5px", color: INK_SECONDARY }}>
                 <tbody>
                   <tr style={{ borderBottom: `1px solid ${HAIRLINE}30` }}>
                     <td style={{ padding: "0.25rem 0" }}>Graha absolute longitude</td>
-                    <td style={{ padding: "0.25rem 0", textAlign: "right", fontWeight: 700 }}>{activeLongitude.toFixed(4)}°</td>
+                    <td style={{ padding: "0.25rem 0", textAlign: "right", fontWeight: 700, fontFamily: "monospace" }}>{activeLongitude.toFixed(4)}°</td>
                   </tr>
                   <tr style={{ borderBottom: `1px solid ${HAIRLINE}30` }}>
                     <td style={{ padding: "0.25rem 0" }}>Nakṣatra division start</td>
@@ -264,19 +376,31 @@ export function PlanetSubLordModulator() {
                   </tr>
                   <tr style={{ borderBottom: `1px solid ${HAIRLINE}30` }}>
                     <td style={{ padding: "0.25rem 0" }}>Offset / Span ratio</td>
-                    <td style={{ padding: "0.25rem 0", textAlign: "right", fontWeight: 700 }}>{fmtDMS(subData.elapsed)} ({Math.round(subData.elapsed * 60)}′ / 800′)</td>
+                    <td style={{ padding: "0.25rem 0", textAlign: "right", fontWeight: 700, fontFamily: "monospace" }}>{fmtDMS(subData.elapsed)} ({Math.round(subData.elapsed * 60)}′ / 800′)</td>
                   </tr>
                   <tr>
                     <td style={{ padding: "0.25rem 0" }}>Active Modulation Sub-Lord</td>
-                    <td style={{ padding: "0.25rem 0", textAlign: "right", fontWeight: 700, color: GOLD }}>{subData.activeSub.lord}</td>
+                    <td style={{ padding: "0.25rem 0", textAlign: "right", fontWeight: 700, color: subLordColor }}>{subData.activeSub.lord}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
+
         </div>
 
       </div>
     </div>
   );
 }
+
+const nudgeButtonStyle: React.CSSProperties = {
+  border: `1px solid ${HAIRLINE}`,
+  borderRadius: 4,
+  background: SURFACE,
+  color: INK_PRIMARY,
+  padding: "0.3rem 0.5rem",
+  cursor: "pointer",
+  fontSize: "11px",
+  fontWeight: 700
+};

@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import {
   Award, RefreshCw, AlertOctagon, ShieldCheck, CheckCircle2,
-  Lock, Unlock, ArrowRight, BookOpen, Compass, ChevronDown, ChevronUp, Check
+  Lock, Unlock, ArrowRight, BookOpen, Compass, ChevronDown, ChevronUp
 } from "lucide-react";
 
 // Design Tokens
@@ -150,11 +150,18 @@ export function RestraintDoctrineCard() {
 
   const handleToggleCheck = (id: string) => {
     setCheckedItems(prev => ({ ...prev, [id]: !prev[id] }));
+    if (typeof window !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(8);
+    }
   };
 
   const handleSelectDojoOption = (optKey: string) => {
     setDojoAnswers(prev => ({ ...prev, [currentScenarioIdx]: optKey }));
     setShowDojoFeedback(prev => ({ ...prev, [currentScenarioIdx]: true }));
+    const correct = DOJO_SCENARIOS[currentScenarioIdx].options.find(o => o.key === optKey)?.correct;
+    if (typeof window !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(correct ? 15 : 35);
+    }
   };
 
   // Statement Builder functions
@@ -206,6 +213,143 @@ export function RestraintDoctrineCard() {
     setStatementValid(null);
     setCurrentScenarioIdx(0);
     setActiveTab("curriculum");
+  };
+
+  // Determine seal states based on checkboxes
+  // Seal 1: Theory (can1, can2, can3)
+  const isSeal1Melted = !!(checkedItems.can1 && checkedItems.can2 && checkedItems.can3);
+  // Seal 2: Prescription Limits (cannot1, cannot2)
+  const isSeal2Melted = !!(checkedItems.cannot1 && checkedItems.cannot2);
+  // Seal 3: Ethical Gating (cannot3)
+  const isSeal3Melted = !!checkedItems.cannot3;
+
+  // Render SVG Parchment Scroll with seals
+  const renderParchmentScrollSVG = () => {
+    const allMelted = isSeal1Melted && isSeal2Melted && isSeal3Melted;
+
+    return (
+      <svg
+        viewBox="0 0 380 130"
+        style={{
+          width: "100%",
+          maxHeight: "140px",
+          background: "var(--gl-cream-light, #fdfcf7)",
+          border: "1px solid rgba(156,122,47,0.15)",
+          borderRadius: "12px",
+          boxShadow: "inset 0 0 16px rgba(0,0,0,0.03)"
+        }}
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="parchmentGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#faf6ec" />
+            <stop offset="50%" stopColor="#f5efe0" />
+            <stop offset="100%" stopColor="#eadecb" />
+          </linearGradient>
+        </defs>
+
+        {/* Scroll Background rolled up or unrolling */}
+        <rect
+          x="15"
+          y="15"
+          width="350"
+          height={allMelted ? 100 : 65}
+          rx="6"
+          fill="url(#parchmentGrad)"
+          stroke="#d3c3ab"
+          strokeWidth="1.5"
+          style={{ transition: "height 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
+        />
+
+        {/* Scroll details lines */}
+        <path d="M 25 25 L 355 25" stroke="#d3c3ab" strokeWidth="0.5" strokeDasharray="3,3" />
+        <path d="M 25 105 L 355 105" stroke="#d3c3ab" strokeWidth="0.5" strokeDasharray="3,3" opacity={allMelted ? 1 : 0} style={{ transition: "opacity 0.6s" }} />
+
+        {/* Scroll Text */}
+        <g transform="translate(190, 45)" textAnchor="middle">
+          {!allMelted ? (
+            <>
+              <text y="-8" fontSize="10.5" fontWeight="bold" fill={INK_PRIMARY} style={{ fontFamily: "'Inter', sans-serif" }}>
+                CONSECRATED COVENANT OF RESTRAINT
+              </text>
+              <text y="5" fontSize="8.5" fill={INK_MUTED} style={{ fontFamily: "'Inter', sans-serif" }}>
+                * Melt the three seals below by completing the boundaries checklist *
+              </text>
+            </>
+          ) : (
+            <g style={{ animation: "slideIn 0.5s ease" }}>
+              <text y="-10" fontSize="12" fontWeight="bold" fill={GREEN} style={{ fontFamily: "'Inter', sans-serif" }}>
+                ✧ COVENANT UNLOCKED ✧
+              </text>
+              <text y="5" fontSize="9.5" fontWeight="700" fill={GOLD_DEEP} style={{ fontFamily: "'Inter', sans-serif" }}>
+                Mastery Scroll of Remedial Foundation
+              </text>
+              <text y="18" fontSize="8" fill={INK_SECONDARY} style={{ fontFamily: "'Inter', sans-serif" }}>
+                "Knowing limits is the ultimate lock of safety."
+              </text>
+            </g>
+          )}
+        </g>
+
+        {/* THREE WAX SEALS */}
+        {/* Seal 1: Theory */}
+        <g transform="translate(85, 95)" style={{ opacity: allMelted ? 0.3 : 1, transition: "opacity 0.6s" }}>
+          {/* Ribbon */}
+          <path d="M 0 -25 L -5 10 L 5 10 Z" fill="#b71c1c" opacity={isSeal1Melted ? 0.15 : 0.8} style={{ transition: "opacity 0.5s" }} />
+          {/* Wax Stamp */}
+          <circle
+            cx="0"
+            cy="0"
+            r={isSeal1Melted ? 8 : 14}
+            fill={isSeal1Melted ? "rgba(78, 112, 55, 0.4)" : "#ad4b37"}
+            stroke={isSeal1Melted ? GREEN : "#762e21"}
+            strokeWidth="1.5"
+            style={{ transition: "all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)" }}
+          />
+          <text y="3" fontSize="8" fontWeight="bold" fill="#fff" textAnchor="middle" opacity={isSeal1Melted ? 0 : 1} style={{ transition: "opacity 0.3s" }}>T</text>
+          {isSeal1Melted && <path d="M -3 0 L -1 2 L 3 -2" fill="none" stroke={GREEN} strokeWidth="1.5" strokeLinecap="round" />}
+          <text y="20" fontSize="7.5" fontWeight="bold" fill={isSeal1Melted ? GREEN : INK_SECONDARY} textAnchor="middle">Theory</text>
+        </g>
+
+        {/* Seal 2: Prescription Limits */}
+        <g transform="translate(190, 95)" style={{ opacity: allMelted ? 0.3 : 1, transition: "opacity 0.6s" }}>
+          {/* Ribbon */}
+          <path d="M 0 -25 L -5 10 L 5 10 Z" fill="#b71c1c" opacity={isSeal2Melted ? 0.15 : 0.8} style={{ transition: "opacity 0.5s" }} />
+          {/* Wax Stamp */}
+          <circle
+            cx="0"
+            cy="0"
+            r={isSeal2Melted ? 8 : 14}
+            fill={isSeal2Melted ? "rgba(78, 112, 55, 0.4)" : "#ad4b37"}
+            stroke={isSeal2Melted ? GREEN : "#762e21"}
+            strokeWidth="1.5"
+            style={{ transition: "all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)" }}
+          />
+          <text y="3" fontSize="8" fontWeight="bold" fill="#fff" textAnchor="middle" opacity={isSeal2Melted ? 0 : 1} style={{ transition: "opacity 0.3s" }}>L</text>
+          {isSeal2Melted && <path d="M -3 0 L -1 2 L 3 -2" fill="none" stroke={GREEN} strokeWidth="1.5" strokeLinecap="round" />}
+          <text y="20" fontSize="7.5" fontWeight="bold" fill={isSeal2Melted ? GREEN : INK_SECONDARY} textAnchor="middle">Limits</text>
+        </g>
+
+        {/* Seal 3: Ethical Gating */}
+        <g transform="translate(295, 95)" style={{ opacity: allMelted ? 0.3 : 1, transition: "opacity 0.6s" }}>
+          {/* Ribbon */}
+          <path d="M 0 -25 L -5 10 L 5 10 Z" fill="#b71c1c" opacity={isSeal3Melted ? 0.15 : 0.8} style={{ transition: "opacity 0.5s" }} />
+          {/* Wax Stamp */}
+          <circle
+            cx="0"
+            cy="0"
+            r={isSeal3Melted ? 8 : 14}
+            fill={isSeal3Melted ? "rgba(78, 112, 55, 0.4)" : "#ad4b37"}
+            stroke={isSeal3Melted ? GREEN : "#762e21"}
+            strokeWidth="1.5"
+            style={{ transition: "all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)" }}
+          />
+          <text y="3" fontSize="8" fontWeight="bold" fill="#fff" textAnchor="middle" opacity={isSeal3Melted ? 0 : 1} style={{ transition: "opacity 0.3s" }}>E</text>
+          {isSeal3Melted && <path d="M -3 0 L -1 2 L 3 -2" fill="none" stroke={GREEN} strokeWidth="1.5" strokeLinecap="round" />}
+          <text y="20" fontSize="7.5" fontWeight="bold" fill={isSeal3Melted ? GREEN : INK_SECONDARY} textAnchor="middle">Ethics</text>
+        </g>
+      </svg>
+    );
   };
 
   return (
@@ -280,6 +424,11 @@ export function RestraintDoctrineCard() {
         }
         .chapter-node.completed { background: rgba(78, 112, 55, 0.06); border-color: ${GREEN}; color: ${GREEN}; }
         .chapter-node.active { background: ${GOLD_LIGHT}; border-color: ${GOLD_DEEP}; color: ${GOLD_DEEP}; box-shadow: 0 0 8px rgba(156, 122, 47, 0.2); }
+        
+        button:focus-visible, .comp-checkbox-row:focus-visible, .virtue-card:focus-visible {
+          outline: 2px solid ${GOLD_DEEP};
+          outline-offset: 2px;
+        }
       `}</style>
 
       {/* ── HEADER ── */}
@@ -299,18 +448,18 @@ export function RestraintDoctrineCard() {
       </div>
 
       {/* ── NAV SWITCHER ── */}
-      <div style={{ display: "flex", gap: "4px", background: "rgba(156, 122, 47, 0.03)", borderRadius: "10px", padding: "3px" }}>
-        <button onClick={() => setActiveTab("curriculum")} className={`rd-nav-btn ${activeTab === "curriculum" ? "active" : ""}`}>
+      <div style={{ display: "flex", gap: "4px", background: "rgba(156, 122, 47, 0.03)", borderRadius: "10px", padding: "3px" }} role="tablist" aria-label="Restraint Card Subsections">
+        <button role="tab" aria-selected={activeTab === "curriculum"} onClick={() => setActiveTab("curriculum")} className={`rd-nav-btn ${activeTab === "curriculum" ? "active" : ""}`}>
           <span style={{ display: "flex", alignItems: "center", gap: "5px" }}><Compass size={13} /> Curriculum Map & Virtues</span>
         </button>
-        <button onClick={() => setActiveTab("checklist")} className={`rd-nav-btn ${activeTab === "checklist" ? "active" : ""}`}>
+        <button role="tab" aria-selected={activeTab === "checklist"} onClick={() => setActiveTab("checklist")} className={`rd-nav-btn ${activeTab === "checklist" ? "active" : ""}`}>
           <span style={{ display: "flex", alignItems: "center", gap: "5px" }}><CheckCircle2 size={13} /> Boundary Checklist</span>
         </button>
-        <button onClick={() => setActiveTab("dojo")} className={`rd-nav-btn ${activeTab === "dojo" ? "active" : ""}`}>
-          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}><Award size={13} /> Restraint Dojo Scenarios</span>
+        <button role="tab" aria-selected={activeTab === "dojo"} onClick={() => setActiveTab("dojo")} className={`rd-nav-btn ${activeTab === "dojo" ? "active" : ""}`}>
+          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}><Award size={13} /> Restraint Dojo</span>
         </button>
-        <button onClick={() => setActiveTab("statement")} className={`rd-nav-btn ${activeTab === "statement" ? "active" : ""}`}>
-          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}><BookOpen size={13} /> Restraint Statement Builder</span>
+        <button role="tab" aria-selected={activeTab === "statement"} onClick={() => setActiveTab("statement")} className={`rd-nav-btn ${activeTab === "statement" ? "active" : ""}`}>
+          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}><BookOpen size={13} /> Statement Builder</span>
         </button>
       </div>
 
@@ -318,7 +467,7 @@ export function RestraintDoctrineCard() {
       {/* TAB 1: CURRICULUM MAP & VIRTUES                          */}
       {/* ════════════════════════════════════════════════════════ */}
       {activeTab === "curriculum" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px", animation: "slideIn 0.3s ease" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px", animation: "slideIn 0.3s ease" }} role="tabpanel">
           
           {/* Module 15 curriculum map */}
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
@@ -352,6 +501,8 @@ export function RestraintDoctrineCard() {
                     className="virtue-card"
                     onClick={() => setExpandedVirtue(isOpen ? null : idx)}
                     style={{ gridColumn: isOpen ? "span 2" : "auto" }}
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); setExpandedVirtue(isOpen ? null : idx); } }}
                   >
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <strong style={{ fontSize: "11.5px", color: GOLD_DEEP }}>{v.title}</strong>
@@ -381,12 +532,15 @@ export function RestraintDoctrineCard() {
       {/* TAB 2: BOUNDARY CHECKLIST                                */}
       {/* ════════════════════════════════════════════════════════ */}
       {activeTab === "checklist" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "14px", animation: "slideIn 0.3s ease" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "14px", animation: "slideIn 0.3s ease" }} role="tabpanel">
           <span style={{ fontSize: "11px", fontWeight: 800, textTransform: "uppercase", color: INK_MUTED, letterSpacing: "0.5px" }}>
-            1. Verify Competency Boundaries (Check all to complete)
+            1. Verify Competency Boundaries
           </span>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          {/* PARCHMENT SCROLL VISUAL ALTAR PREVIEW */}
+          {renderParchmentScrollSVG()}
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }} role="group" aria-label="Competency Checklist">
             {COMPETENCY_ITEMS.map((item) => {
               const isChecked = !!checkedItems[item.id];
               return (
@@ -394,8 +548,12 @@ export function RestraintDoctrineCard() {
                   key={item.id}
                   onClick={() => handleToggleCheck(item.id)}
                   className={`comp-checkbox-row ${isChecked ? "checked" : ""}`}
+                  role="checkbox"
+                  aria-checked={isChecked}
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); handleToggleCheck(item.id); } }}
                 >
-                  <input type="checkbox" checked={isChecked} readOnly style={{ pointerEvents: "none" }} />
+                  <input type="checkbox" checked={isChecked} readOnly style={{ pointerEvents: "none" }} tabIndex={-1} />
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", flex: 1 }}>
                     {item.type === "can" ? (
                       <span style={{
@@ -427,11 +585,11 @@ export function RestraintDoctrineCard() {
       {/* TAB 3: RESTRAINT DOJO SCENARIOS                          */}
       {/* ════════════════════════════════════════════════════════ */}
       {activeTab === "dojo" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "14px", animation: "slideIn 0.3s ease" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "14px", animation: "slideIn 0.3s ease" }} role="tabpanel">
           
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ display: "flex", justifySelf: "stretch", justifyContent: "space-between", alignItems: "center" }}>
             <span style={{ fontSize: "11px", fontWeight: 800, textTransform: "uppercase", color: INK_MUTED, letterSpacing: "0.5px" }}>
-              2. Restraint Dojo counseling challenge
+              2. Restraint Dojo Counseling Challenge
             </span>
             <span style={{ fontSize: "10px", color: INK_MUTED, fontWeight: 700 }}>
               Scenario {currentScenarioIdx + 1} of {DOJO_SCENARIOS.length}
@@ -451,7 +609,7 @@ export function RestraintDoctrineCard() {
               {DOJO_SCENARIOS[currentScenarioIdx].prompt}
             </p>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "4px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "4px" }} role="radiogroup" aria-label={`Dojo Scenario ${currentScenarioIdx + 1}`}>
               {DOJO_SCENARIOS[currentScenarioIdx].options.map(opt => {
                 const isSelected = dojoAnswers[currentScenarioIdx] === opt.key;
                 const isRevealed = showDojoFeedback[currentScenarioIdx];
@@ -461,6 +619,7 @@ export function RestraintDoctrineCard() {
                     disabled={isRevealed}
                     onClick={() => handleSelectDojoOption(opt.key)}
                     className="dojo-choice-btn"
+                    aria-pressed={isSelected}
                     style={{
                       borderColor: isSelected ? (opt.correct ? GREEN : RED) : undefined,
                       background: isSelected ? (opt.correct ? GREEN_LIGHT : RED_LIGHT) : undefined,
@@ -483,7 +642,7 @@ export function RestraintDoctrineCard() {
                 color: DOJO_SCENARIOS[currentScenarioIdx].options.find(o => o.key === dojoAnswers[currentScenarioIdx])?.correct
                   ? "#344e24" : "#762e21",
                 animation: "slideIn 0.2s ease"
-              }}>
+              }} role="alert">
                 <strong>
                   {DOJO_SCENARIOS[currentScenarioIdx].options.find(o => o.key === dojoAnswers[currentScenarioIdx])?.correct
                     ? "Correct! Virtuous Restraint." : "Ethical Overstep / Mismatched Action."}
@@ -528,11 +687,11 @@ export function RestraintDoctrineCard() {
       {/* TAB 4: RESTRAINT STATEMENT BUILDER                       */}
       {/* ════════════════════════════════════════════════════════ */}
       {activeTab === "statement" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "14px", animation: "slideIn 0.3s ease" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "14px", animation: "slideIn 0.3s ease" }} role="tabpanel">
           
           <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
             <span style={{ fontSize: "11px", fontWeight: 800, textTransform: "uppercase", color: INK_MUTED, letterSpacing: "0.5px" }}>
-              3. Practise the Honest Restraint Statement (§7)
+              3. Practise the Honest Restraint Statement
             </span>
             <p style={{ margin: 0, fontSize: "11px", color: INK_SECONDARY, lineHeight: "1.45" }}>
               Arrange the phrases below in the correct logical sequence to construct the canonical statement of ethical restraint.
@@ -540,7 +699,7 @@ export function RestraintDoctrineCard() {
           </div>
 
           {/* Draggable/clickable phrase list */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px", margin: "6px 0" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", margin: "6px 0" }} role="group" aria-label="Statement Phrases">
             {STATEMENT_PHRASES.map((p) => {
               const isSelected = selectedPhrases.includes(p.text);
               return (
@@ -548,6 +707,7 @@ export function RestraintDoctrineCard() {
                   key={p.id}
                   onClick={() => handlePhraseClick(p.text)}
                   className={`phrase-pill ${isSelected ? "selected" : ""}`}
+                  aria-pressed={isSelected}
                 >
                   {p.text}
                 </button>
@@ -604,7 +764,7 @@ export function RestraintDoctrineCard() {
               borderLeft: `3px solid ${statementValid ? GREEN : RED}`,
               padding: "10px", borderRadius: "0 6px 6px 0", fontSize: "11px",
               color: statementValid ? "#344e24" : "#762e21", animation: "slideIn 0.2s ease"
-            }}>
+            }} role="alert">
               {statementValid ? (
                 <span><strong>Verification Passed!</strong> Excellent. This statement summarizes theoretical competence combined with ethical limits.</span>
               ) : (
@@ -620,7 +780,7 @@ export function RestraintDoctrineCard() {
       {/* MASTERY SCROLL / COMPLETED STATE                          */}
       {/* ════════════════════════════════════════════════════════ */}
       {isCompleted ? (
-        <div className="parchment-scroll">
+        <div className="parchment-scroll" role="region" aria-label="Mastery Certificate">
           <div className="scroll-border">
             <Award size={36} style={{ color: GOLD_DEEP, margin: "0 auto 8px auto" }} />
             <h4 style={{ margin: 0, fontSize: "17px", fontWeight: 800, color: GOLD_DEEP }}>
@@ -674,9 +834,9 @@ export function RestraintDoctrineCard() {
         <div style={{
           background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)",
           borderRadius: "12px", padding: "12px", display: "flex", alignItems: "center", justifyContent: "space-between"
-        }}>
+        }} role="status">
           <span style={{ fontSize: "10.5px", color: INK_MUTED, display: "flex", alignItems: "center", gap: "4px" }}>
-            <Lock size={12} /> Mastery Scroll locked. Complete all sections to unlock:
+            <Lock size={12} /> Mastery Scroll Locked. Complete all sections to unlock:
           </span>
           <div style={{ display: "flex", gap: "8px", fontSize: "9.5px", fontWeight: 700 }}>
             <span style={{ color: allCheckboxesChecked ? GREEN : RED }}>Checklist {allCheckboxesChecked ? "✓" : "✗"}</span>

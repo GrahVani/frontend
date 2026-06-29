@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, AlertTriangle, ShieldAlert, BookOpen, Volume2, Info, ChevronRight, Sliders, Music } from "lucide-react";
+import { Play, Pause, ShieldAlert, ChevronRight, Sliders } from "lucide-react";
 
 const GOLD = "var(--gl-gold-accent, #9C7A2F)";
 const GOLD_DEEP = "var(--gl-gold-deep, #7A5E1E)";
@@ -18,6 +18,7 @@ const REPERTOIRE = [
     tradition: "Vaidika (Ṛg Veda)",
     theme: "Sun / Illumination / Wisdom",
     planet: "Sun (Sūrya)",
+    planetColor: "#f59e0b",
     devanagari: "तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि धियो यो नः प्रचोदयात् ॥",
     iast: "tat savitur vareṇyaṁ bhargo devasya dhīmahi dhiyo yo naḥ pracodayāt ||",
     literalTranslation: "We meditate upon the glorious splendor of the divine Sun; may that divine light inspire and illuminate our intellect.",
@@ -30,6 +31,7 @@ const REPERTOIRE = [
     tradition: "Vaidika (Ṛg / Yajur)",
     theme: "Health / Longevity / Śiva",
     planet: "Saturn / Rahu / Ketu",
+    planetColor: "#6366f1",
     devanagari: "त्र्यम्बकं यजामहे सुगन्धिं पुष्टिवर्धनम् । उर्वारुकमिव बन्धनान्मृत्योर्मुक्षीय माऽमृतात् ॥",
     iast: "tryambakaṁ yajāmahe sugandhiṁ puṣṭi-vardhanam | urvārukam iva bandhanān mṛtyor mukṣīya mā 'mṛtāt ||",
     literalTranslation: "We worship the three-eyed one (Lord Śiva), who is fragrant and who nourishes all. Just as a cucumber is liberated from its stalk, may He liberate us from death for the sake of immortality.",
@@ -42,6 +44,7 @@ const REPERTOIRE = [
     tradition: "Devotional / Smārta",
     theme: "Strength / Courage",
     planet: "Mars (Maṅgala)",
+    planetColor: "#ef4444",
     devanagari: "मनोजवं मारुततुल्यवेगं जितेन्द्रियं बुद्धिमतां वरिष्ठम् । वातात्मजं वानरयूथमुख्यं श्रीरामदूतं शरणं प्रपद्ये ॥",
     iast: "manojavaṁ māruta-tulya-vegaṁ jitendriyaṁ buddhimatāṁ variṣṭham | vātātmajaṁ vānara-yūtha-mukhyaṁ śrī-rāma-dūtaṁ śaraṇaṁ prapadye ||",
     literalTranslation: "I take refuge in the messenger of Śrī Rāma, who is swift as the mind, quick as the wind, master of the senses, foremost among the wise, and chief among the vanaras.",
@@ -54,6 +57,7 @@ const REPERTOIRE = [
     tradition: "Vaidika (Ṛg Veda Pariśiṣṭa)",
     theme: "Wealth / Prosperity",
     planet: "Venus (Śukra) / Moon",
+    planetColor: "#22d3ee",
     devanagari: "हिरण्यवर्णां हरिणीं सुवर्णरजतस्रजाम् । चन्द्रां हिरण्मयीं लक्ष्मीं जातवेदो म आवह ॥",
     iast: "hiraṇya-varṇāṁ hariṇīṁ suvarṇa-rajata-srajām | candrāṁ hiraṇmayīṁ lakṣmīṁ jāta-vedo ma āvaha ||",
     literalTranslation: "O Jatavedas (Agni), invoke for me that Lakṣmī who is golden-hued, radiant like gold and silver, shining like the Moon, and full of prosperity.",
@@ -66,6 +70,7 @@ const REPERTOIRE = [
     tradition: "Devotional / Smārta",
     theme: "Learning / Speech / Wisdom",
     planet: "Mercury (Budha) / Jupiter",
+    planetColor: "#10b981",
     devanagari: "सरस्वती नमस्तुभ्यं वरदे कामरूपिणी । विद्यारम्भं करिष्यामी सिद्धिर्भवतु मे सदा ॥",
     iast: "sarasvatī namas-tubhyaṁ vara-de kāma-rūpiṇī | vidyārambhaṁ kariṣyāmi siddhir bhavatu me sadā ||",
     literalTranslation: "Salutations to Sarasvatī, the giver of boons, who fulfills desires. I am beginning my studies; may there always be success for me.",
@@ -73,9 +78,6 @@ const REPERTOIRE = [
   }
 ];
 
-// ────────────────────────────────────────────────────────────────
-// TUNING PROFILES — declared once, outside the component
-// ────────────────────────────────────────────────────────────────
 interface TuningProfile {
   freqs: number[];
   waveformType: OscillatorType;
@@ -84,49 +86,20 @@ interface TuningProfile {
 }
 
 const TUNING_PROFILES: Record<string, TuningProfile> = {
-  gayatri: {
-    freqs: [220.00, 146.83, 185.00, 293.66],
-    waveformType: "sine",
-    baseLfoFreq: 0.25,
-    lfoDepth: 0.02,
-  },
-  mahamrityunjaya: {
-    freqs: [110.00, 146.83, 73.42, 147.83],
-    waveformType: "triangle",
-    baseLfoFreq: 0.15,
-    lfoDepth: 0.02,
-  },
-  hanuman: {
-    freqs: [196.00, 130.81, 261.63, 131.81],
-    waveformType: "triangle",
-    baseLfoFreq: 0.8,
-    lfoDepth: 0.04,
-  },
-  shri_sukta: {
-    freqs: [220.00, 174.61, 261.63, 349.23],
-    waveformType: "sine",
-    baseLfoFreq: 0.3,
-    lfoDepth: 0.02,
-  },
-  sarasvati: {
-    freqs: [293.66, 196.00, 246.94, 392.00],
-    waveformType: "triangle",
-    baseLfoFreq: 0.25,
-    lfoDepth: 0.02,
-  },
+  gayatri: { freqs: [220.00, 146.83, 185.00, 293.66], waveformType: "sine", baseLfoFreq: 0.25, lfoDepth: 0.02 },
+  mahamrityunjaya: { freqs: [110.00, 146.83, 73.42, 147.83], waveformType: "triangle", baseLfoFreq: 0.15, lfoDepth: 0.02 },
+  hanuman: { freqs: [196.00, 130.81, 261.63, 131.81], waveformType: "triangle", baseLfoFreq: 0.8, lfoDepth: 0.04 },
+  shri_sukta: { freqs: [220.00, 174.61, 261.63, 349.23], waveformType: "sine", baseLfoFreq: 0.3, lfoDepth: 0.02 },
+  sarasvati: { freqs: [293.66, 196.00, 246.94, 392.00], waveformType: "triangle", baseLfoFreq: 0.25, lfoDepth: 0.02 }
 };
 
 const DEFAULT_PROFILE: TuningProfile = {
   freqs: [220.00, 146.83, 147.83, 73.42],
   waveformType: "triangle",
   baseLfoFreq: 0.25,
-  lfoDepth: 0.02,
+  lfoDepth: 0.02
 };
 
-// ────────────────────────────────────────────────────────────────
-// AUDIO ENGINE — imperative, lives entirely in refs, never
-// touched by React effects except unmount cleanup.
-// ────────────────────────────────────────────────────────────────
 interface AudioEngine {
   ctx: AudioContext | null;
   oscs: OscillatorNode[];
@@ -138,15 +111,7 @@ interface AudioEngine {
 }
 
 function createEngine(): AudioEngine {
-  return {
-    ctx: null,
-    oscs: [],
-    gains: [],
-    lfo: null,
-    lfoGain: null,
-    master: null,
-    fadeTimer: null,
-  };
+  return { ctx: null, oscs: [], gains: [], lfo: null, lfoGain: null, master: null, fadeTimer: null };
 }
 
 export function FoundationalMantraPlayer() {
@@ -154,21 +119,15 @@ export function FoundationalMantraPlayer() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(1);
+  const [wavePhase, setWavePhase] = useState<number>(0);
 
   const activeMantra = REPERTOIRE[selectedIndex];
-
-  // ── Ref-based audio engine (immune to React re-renders) ──
   const engineRef = useRef<AudioEngine>(createEngine());
-  // Mirror isPlaying into a ref so interval callbacks always
-  // see the freshest value without depending on React state.
   const isPlayingRef = useRef(false);
   const speedRef = useRef(speed);
 
-  // Keep refs in sync with state
   useEffect(() => { isPlayingRef.current = isPlaying; }, [isPlaying]);
   useEffect(() => { speedRef.current = speed; }, [speed]);
-
-  // ── AudioContext helpers ──
 
   const ensureAudioContext = useCallback((): AudioContext | null => {
     if (typeof window === "undefined") return null;
@@ -178,7 +137,6 @@ export function FoundationalMantraPlayer() {
         const Ctor = window.AudioContext || (window as any).webkitAudioContext;
         if (Ctor) eng.ctx = new Ctor();
       } catch (err) {
-        console.error("[MantraPlayer] Failed to create AudioContext:", err);
         return null;
       }
     }
@@ -193,8 +151,6 @@ export function FoundationalMantraPlayer() {
       try { navigator.vibrate(pattern); } catch (_) {}
     }
   }, []);
-
-  // ── Core audio start / stop ──
 
   const killAudioNodes = useCallback(() => {
     const eng = engineRef.current;
@@ -211,7 +167,6 @@ export function FoundationalMantraPlayer() {
   const stopAudio = useCallback((immediate = false) => {
     const eng = engineRef.current;
     if (!eng.master || immediate) { killAudioNodes(); return; }
-    // Graceful 250 ms fade-out then cleanup
     try {
       const ctx = eng.ctx;
       if (ctx) {
@@ -226,23 +181,20 @@ export function FoundationalMantraPlayer() {
 
   const startAudio = useCallback((mantraId: string, currentSpeed: number) => {
     const ctx = ensureAudioContext();
-    if (!ctx) { console.warn("[MantraPlayer] No AudioContext"); return; }
+    if (!ctx) return;
 
-    // Always kill existing nodes first (immediate)
     killAudioNodes();
 
     const profile = TUNING_PROFILES[mantraId] || DEFAULT_PROFILE;
     const eng = engineRef.current;
     const now = ctx.currentTime;
 
-    // ── Master gain — audible volume (0.18 peak) ──
     const master = ctx.createGain();
     master.gain.setValueAtTime(0, now);
     master.gain.linearRampToValueAtTime(0.18, now + 0.3);
     master.connect(ctx.destination);
     eng.master = master;
 
-    // ── Per-voice oscillators ──
     profile.freqs.forEach((freq, idx) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -250,7 +202,6 @@ export function FoundationalMantraPlayer() {
       osc.type = idx === 3 ? "sine" : profile.waveformType;
       osc.frequency.setValueAtTime(freq, now);
 
-      // Sarasvatī: flowing pitch slide on voice 2
       if (mantraId === "sarasvati" && idx === 2) {
         osc.frequency.linearRampToValueAtTime(freq + 10, now + 1.5);
         osc.frequency.linearRampToValueAtTime(freq, now + 3.0);
@@ -267,7 +218,6 @@ export function FoundationalMantraPlayer() {
       eng.gains.push(gain);
     });
 
-    // ── LFO (breathing swell) ──
     const lfo = ctx.createOscillator();
     lfo.frequency.setValueAtTime(profile.baseLfoFreq * currentSpeed, now);
 
@@ -280,11 +230,8 @@ export function FoundationalMantraPlayer() {
 
     eng.lfo = lfo;
     eng.lfoGain = lfoGain;
-
-    console.log("[MantraPlayer] ▶ Audio started for", mantraId, "@ speed", currentSpeed);
   }, [ensureAudioContext, killAudioNodes]);
 
-  // ── Adjust LFO when speed changes while playing ──
   const adjustLfo = useCallback((mantraId: string, newSpeed: number) => {
     const eng = engineRef.current;
     if (!eng.lfo || !eng.ctx) return;
@@ -298,23 +245,33 @@ export function FoundationalMantraPlayer() {
     } catch (_) {}
   }, []);
 
-  // ── Unmount cleanup only ──
   useEffect(() => {
     return () => { killAudioNodes(); };
   }, [killAudioNodes]);
 
-  // ── Speed change while playing → adjust LFO ──
   useEffect(() => {
     if (isPlaying) adjustLfo(activeMantra.id, speed);
   }, [speed, isPlaying, activeMantra.id, adjustLfo]);
 
-  // ── Progress simulation ──
+  // Phase animation loop for waveform
+  useEffect(() => {
+    let animFrame: number;
+    const animateWave = () => {
+      setWavePhase(prev => (prev + 0.1) % (Math.PI * 2));
+      animFrame = requestAnimationFrame(animateWave);
+    };
+    if (isPlaying) {
+      animFrame = requestAnimationFrame(animateWave);
+    }
+    return () => cancelAnimationFrame(animFrame);
+  }, [isPlaying]);
+
+  // Progress simulation
   useEffect(() => {
     if (!isPlaying) return;
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
-          // Completed — stop audio & reset
           isPlayingRef.current = false;
           setIsPlaying(false);
           stopAudio();
@@ -325,8 +282,6 @@ export function FoundationalMantraPlayer() {
     }, 100);
     return () => clearInterval(interval);
   }, [isPlaying, stopAudio]);
-
-  // ── User actions ──
 
   const togglePlay = () => {
     ensureAudioContext();
@@ -345,7 +300,6 @@ export function FoundationalMantraPlayer() {
   const selectMantra = (idx: number) => {
     ensureAudioContext();
     triggerVibration(50);
-    // Stop anything playing (immediate) before switching
     if (isPlayingRef.current) {
       killAudioNodes();
     }
@@ -355,39 +309,29 @@ export function FoundationalMantraPlayer() {
     setSelectedIndex(idx);
   };
 
+  // Generate dynamic wave path for visualizer
+  const renderWavePath = () => {
+    const w = 320;
+    const h = 60;
+    const wavePoints = [];
+    const amp = isPlaying ? 16 : 3;
+    const freqCount = 3.5;
+    
+    for (let x = 0; x <= w; x += 4) {
+      const angle = (x / w) * Math.PI * 2 * freqCount + wavePhase;
+      const y = h / 2 + Math.sin(angle) * amp;
+      wavePoints.push(`${x},${y}`);
+    }
+    return `M ${wavePoints.join(" L ")}`;
+  };
+
+  // Floating planet X coordinate along the path
+  const planetX = 20 + (progress / 100) * 280;
+
   return (
-    <div style={{
-      padding: "16px",
-      borderRadius: "16px",
-      background: "rgba(255, 253, 248, 0.75)",
-      backdropFilter: "blur(12px)",
-      border: "1px solid rgba(156, 122, 47, 0.15)",
-      fontFamily: "'Inter', sans-serif",
-      color: INK_PRIMARY,
-      maxWidth: "960px",
-      margin: "0 auto",
-      display: "flex",
-      flexDirection: "column",
-      gap: "12px"
-    }}>
+    <div style={{ padding: "16px", borderRadius: "16px", background: "rgba(255, 253, 248, 0.75)", backdropFilter: "blur(12px)", border: "1px solid rgba(156, 122, 47, 0.15)", fontFamily: "'Inter', sans-serif", color: INK_PRIMARY, maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "12px" }}>
       
-      {/* Styles for animation waves and active list rows */}
       <style>{`
-        @keyframes bounce-wave {
-          0%, 100% { transform: scaleY(0.3); }
-          50% { transform: scaleY(1.1); }
-        }
-        .bounce-bar {
-          width: 3px;
-          height: 100%;
-          background: ${GOLD};
-          border-radius: 1px;
-          transform-origin: bottom;
-          transform: scaleY(0.3);
-        }
-        .bounce-bar-active {
-          animation: bounce-wave var(--bounce-duration, 1.2s) ease-in-out infinite;
-        }
         .mantra-row {
           border: 1px solid rgba(156,122,47,0.08);
           background: rgba(255, 255, 255, 0.45);
@@ -396,21 +340,12 @@ export function FoundationalMantraPlayer() {
         .mantra-row:hover {
           border-color: ${GOLD};
           background: rgba(251,248,243,0.8);
-          box-shadow: 0 2px 8px rgba(156,122,47,0.06);
           transform: translateX(2px);
         }
       `}</style>
 
       {/* WARNING HEADER */}
-      <div style={{
-        display: "flex",
-        alignItems: "flex-start",
-        gap: "10px",
-        background: "rgba(173, 75, 55, 0.06)",
-        border: "1px solid rgba(173, 75, 55, 0.2)",
-        borderRadius: "10px",
-        padding: "10px 14px"
-      }}>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", background: "rgba(173, 75, 55, 0.06)", border: "1px solid rgba(173, 75, 55, 0.2)", borderRadius: "10px", padding: "10px 14px" }}>
         <ShieldAlert size={18} style={{ color: "#ad4b37", flexShrink: 0, marginTop: "2px" }} />
         <div>
           <strong style={{ fontSize: "11.5px", color: "#762e21" }}>Pedagogical Limitation Warning:</strong>
@@ -421,13 +356,7 @@ export function FoundationalMantraPlayer() {
       </div>
 
       {/* DASHBOARD GRID */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1.3fr",
-        gap: "16px",
-        flexWrap: "wrap",
-        marginTop: "4px"
-      }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: "16px", flexWrap: "wrap", marginTop: "4px" }}>
         
         {/* LEFT COLUMN: LIST */}
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -445,11 +374,11 @@ export function FoundationalMantraPlayer() {
                   padding: "10px 12px",
                   borderRadius: "8px",
                   cursor: "pointer",
-                  borderLeft: isSelected ? `4.5px solid ${GOLD}` : "1px solid rgba(156,122,47,0.08)",
+                  borderLeft: isSelected ? `4.5px solid ${mantra.planetColor}` : "1px solid rgba(156,122,47,0.08)",
                   background: isSelected ? "rgba(251, 248, 243, 0.85)" : "rgba(255, 255, 255, 0.45)"
                 }}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ display: "flex", justifyItems: "center", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
                     <h5 style={{ margin: 0, fontSize: "12.5px", fontWeight: 800, color: isSelected ? GOLD_DEEP : INK_PRIMARY }}>
                       {mantra.name}
@@ -458,7 +387,7 @@ export function FoundationalMantraPlayer() {
                       Theme: {mantra.theme.split(" / ")[0]}
                     </p>
                   </div>
-                  <ChevronRight size={14} style={{ color: isSelected ? GOLD : INK_MUTED, opacity: isSelected ? 1 : 0.4 }} />
+                  <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: mantra.planetColor }} />
                 </div>
               </div>
             );
@@ -516,57 +445,49 @@ export function FoundationalMantraPlayer() {
             </div>
           </div>
 
-          {/* HONESTY NOTE (FOR HANUMAN) */}
+          {/* HONESTY NOTE */}
           {activeMantra.honestyNote && (
-            <div style={{
-              background: "rgba(156,122,47,0.05)",
-              border: "1px dashed rgba(156,122,47,0.2)",
-              borderRadius: "8px",
-              padding: "8px 10px",
-              fontSize: "10px",
-              lineHeight: "1.35",
-              color: INK_SECONDARY
-            }}>
+            <div style={{ background: "rgba(156,122,47,0.05)", border: "1px dashed rgba(156,122,47,0.2)", borderRadius: "8px", padding: "8px 10px", fontSize: "10px", lineHeight: "1.35", color: INK_SECONDARY }}>
               <strong style={{ color: GOLD_DEEP }}>Honest Translation Context:</strong> {activeMantra.honestyNote}
             </div>
           )}
 
-          {/* AUDIO CONTROLS PANEL */}
-          <div style={{
-            background: "rgba(255, 255, 255, 0.6)",
-            border: "1px solid rgba(156,122,47,0.1)",
-            borderRadius: "10px",
-            padding: "12px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px"
-          }}>
+          {/* DYNAMIC SPECTRUM VISUALIZER */}
+          <div style={{ background: "rgba(255, 255, 255, 0.65)", border: "1px solid rgba(156,122,47,0.1)", borderRadius: "10px", padding: "10px", display: "flex", flexDirection: "column", gap: "6px" }}>
             
-            {/* Timeline & Waveform visualizer */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px" }}>
-              {/* Progress track */}
-              <div style={{ flex: 1, height: "4px", background: "rgba(156,122,47,0.12)", borderRadius: "2px", position: "relative" }}>
-                <div style={{ width: `${progress}%`, height: "100%", background: GOLD, borderRadius: "2px", transition: "width 0.1s linear" }} />
-              </div>
+            {/* Visualizer SVG */}
+            <div style={{ position: "relative", height: "60px", background: "rgba(0,0,0,0.02)", borderRadius: "8px" }}>
+              <svg width="100%" height="60" viewBox="0 0 320 60" style={{ display: "block" }}>
+                {/* Horizontal reference grid */}
+                <line x1="0" y1="30" x2="320" y2="30" stroke="rgba(156,122,47,0.12)" strokeDasharray="3,3" />
+                
+                {/* Sine Wave */}
+                <path d={renderWavePath()} fill="none" stroke={activeMantra.planetColor} strokeWidth="2" style={{ transition: "stroke 0.3s ease" }} />
 
-              {/* Waveform indicator */}
-              <div style={{ display: "flex", alignItems: "flex-end", gap: "2px", width: "40px", height: "20px" }}>
-                {[...Array(6)].map((_, i) => (
-                  <div
-                    key={i}
-                    className={`bounce-bar ${isPlaying ? "bounce-bar-active" : ""}`}
-                    style={{
-                      "--bounce-duration": `${1 + (i * 0.15)}s`,
-                      height: "100%"
-                    } as any}
-                  />
-                ))}
-              </div>
+                {/* Floating planetary node sliding along timeline */}
+                <g style={{ transform: `translateX(${planetX - 160}px)`, transition: "transform 0.1s linear", transformOrigin: "160px 30px" }}>
+                  <circle cx="160" cy="30" r="8" fill={activeMantra.planetColor} style={{ filter: "drop-shadow(0 0 4px " + activeMantra.planetColor + ")" }} />
+                  <circle cx="160" cy="30" r="3" fill="#ffffff" />
+                </g>
+              </svg>
+
+              {/* Pulsing breathing circle (pranayama pacing helper) */}
+              <div style={{
+                position: "absolute",
+                right: "10px",
+                top: "10px",
+                width: "16px",
+                height: "16px",
+                borderRadius: "50%",
+                border: `2px solid ${activeMantra.planetColor}`,
+                transform: `scale(${isPlaying ? 1 + 0.25 * Math.sin(wavePhase * 1.5) : 1})`,
+                transition: "transform 0.1s ease",
+                opacity: isPlaying ? 0.8 : 0.3
+              }} />
             </div>
 
-            {/* Buttons & Sliders */}
+            {/* Controls */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
-              {/* Play Pause Button */}
               <button
                 onClick={togglePlay}
                 style={{
@@ -589,9 +510,7 @@ export function FoundationalMantraPlayer() {
                 {isPlaying ? "Pause Simulation" : "Listen (Simulate)"}
               </button>
 
-              {/* Speed Controller */}
               <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <Sliders size={12} style={{ color: GOLD_DEEP }} />
                 <span style={{ fontSize: "10px", color: INK_SECONDARY, fontWeight: 700 }}>Tempo:</span>
                 <select
                   value={speed}
@@ -624,15 +543,7 @@ export function FoundationalMantraPlayer() {
       </div>
 
       {/* FOOTER */}
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        borderTop: "1px solid rgba(156,122,47,0.08)",
-        paddingTop: "8px",
-        fontSize: "10px",
-        color: INK_MUTED
-      }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid rgba(156,122,47,0.08)", paddingTop: "8px", fontSize: "10px", color: INK_MUTED }}>
         <span>Grahvani Learning Runtime (Chapter 2)</span>
         <span>Foundational Five Player</span>
       </div>

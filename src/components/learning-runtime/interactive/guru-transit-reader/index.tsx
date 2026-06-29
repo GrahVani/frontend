@@ -1,38 +1,64 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { Sparkles, Moon, AlertTriangle, ShieldCheck, Info } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Sparkles, ShieldCheck, AlertTriangle } from "lucide-react";
 import { IAST } from "../../chrome/typography";
-import { RASHIS } from "../rashi-data";
+import { RASHIS, polarToCartesian, describeArc } from "../rashi-data";
 
 const GOLD = "var(--gl-gold-accent, #9C7A2F)";
 const GOLD_DEEP = "var(--gl-gold-deep, #7A5E1E)";
-const SLATE_BLUE = "#3b82f6";
-const GREEN = "#10b981";
-const RED = "#ef4444";
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary, #2d261e)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary, #4d4133)";
 const INK_MUTED = "var(--gl-ink-on-cream-muted, #7c6d5b)";
 const SURFACE_MANUSCRIPT = "var(--gl-surface-manuscript, rgba(251,248,243,0.6))";
+const GREEN = "#2F7D55";
+const BLUE = "#3b82f6";
+const RED = "#A8412B";
+const PURPLE = "#7c3aed";
+const SATURN_DARK = "#475569";
 
-interface GuruHouseDetail { houseNum: number; quality: "Very Favourable" | "Favourable" | "Mildly Supportive"; color: string; theme: string; details: string; icon: string; }
+interface GuruHouseDetail {
+  houseNum: number;
+  quality: "Very Favourable" | "Favourable" | "Mildly Supportive";
+  color: string;
+  theme: string;
+  details: string;
+  icon: string;
+}
 
 const GURU_HOUSE_DATA: Record<number, GuruHouseDetail> = {
-  1: { houseNum: 1, quality: "Mildly Supportive", color: SLATE_BLUE, theme: "Self-growth & Health", details: "Mental optimism, self-confidence, protective health blessings.", icon: "🌱" },
+  1: { houseNum: 1, quality: "Mildly Supportive", color: BLUE, theme: "Self-growth & Health", details: "Mental optimism, self-confidence, protective health blessings.", icon: "🌱" },
   2: { houseNum: 2, quality: "Favourable", color: GREEN, theme: "Wealth & Family", details: "Wealth enhancement, family stability, truthful speech.", icon: "💰" },
-  3: { houseNum: 3, quality: "Mildly Supportive", color: SLATE_BLUE, theme: "Travels & Siblings", details: "Short journeys, communications, courage, sibling support.", icon: "✈️" },
-  4: { houseNum: 4, quality: "Mildly Supportive", color: SLATE_BLUE, theme: "Home & Mother", details: "Domestic happiness, mother's health, comfortable living.", icon: "🏡" },
+  3: { houseNum: 3, quality: "Mildly Supportive", color: BLUE, theme: "Travels & Siblings", details: "Short journeys, communications, courage, sibling support.", icon: "✈️" },
+  4: { houseNum: 4, quality: "Mildly Supportive", color: BLUE, theme: "Home & Mother", details: "Domestic happiness, mother's health, comfortable living.", icon: "🏡" },
   5: { houseNum: 5, quality: "Very Favourable", color: GREEN, theme: "Children & Creativity", details: "Prime fortune. Creative study, intelligence, children's birth, wisdom.", icon: "✨" },
-  6: { houseNum: 6, quality: "Mildly Supportive", color: SLATE_BLUE, theme: "Service & Healing", details: "Resolves disputes, protects against health setbacks.", icon: "🩺" },
+  6: { houseNum: 6, quality: "Mildly Supportive", color: BLUE, theme: "Service & Healing", details: "Resolves disputes, protects against health setbacks.", icon: "🩺" },
   7: { houseNum: 7, quality: "Very Favourable", color: GREEN, theme: "Marriage & Partners", details: "Highly supportive for marriage negotiations and business alliances.", icon: "💖" },
-  8: { houseNum: 8, quality: "Mildly Supportive", color: SLATE_BLUE, theme: "Research & Legacy", details: "Protects during crises. Deep research, occult, inheritances.", icon: "🔍" },
+  8: { houseNum: 8, quality: "Mildly Supportive", color: BLUE, theme: "Research & Legacy", details: "Protects during crises. Deep research, occult, inheritances.", icon: "🔍" },
   9: { houseNum: 9, quality: "Very Favourable", color: GREEN, theme: "Dharma & Fortune", details: "Deep fortune, spiritual teachers, father's blessings, long journeys.", icon: "🕉️" },
-  10: { houseNum: 10, quality: "Mildly Supportive", color: SLATE_BLUE, theme: "Career & Status", details: "Career guidance, ethics in work, public recognition.", icon: "💼" },
+  10: { houseNum: 10, quality: "Mildly Supportive", color: BLUE, theme: "Career & Status", details: "Career guidance, ethics in work, public recognition.", icon: "💼" },
   11: { houseNum: 11, quality: "Very Favourable", color: GREEN, theme: "Gains & Networks", details: "Abundant financial expansion, elder associates, wish fulfillment.", icon: "📈" },
-  12: { houseNum: 12, quality: "Mildly Supportive", color: SLATE_BLUE, theme: "Spiritual Release", details: "Charitable expenditure, peaceful sleep, isolated retreats.", icon: "🧘" }
+  12: { houseNum: 12, quality: "Mildly Supportive", color: BLUE, theme: "Spiritual Release", details: "Charitable expenditure, peaceful sleep, isolated retreats.", icon: "🧘" }
 };
 
 const SHORT_SIGNS = ["ARI", "TAU", "GEM", "CAN", "LEO", "VIR", "LIB", "SCO", "SAG", "CAP", "AQU", "PIS"];
+
+const HOUSE_QUALITY_GROUPS = [
+  { label: "Very favourable", houses: [5, 7, 9, 11], color: GREEN, note: "Peak windows — act with daśā support" },
+  { label: "Favourable", houses: [2], color: GREEN, note: "Classically favourable — wealth & family" },
+  { label: "Mildly supportive", houses: [1, 3, 4, 6, 8, 10, 12], color: BLUE, note: "Less intense, still protective" },
+];
+
+const AFFLICTION_GUIDE = [
+  { graha: "Saturn", symbol: "♄", effect: "-30%", desc: "Delays and disciplines the expansion; blessing arrives slowly." },
+  { graha: "Rāhu", symbol: "☊", effect: "-35%", desc: "Guru-Chāṇḍāla effect — distorts wisdom into ideological rigidity." },
+];
+
+const WORKED_EXAMPLES = [
+  { label: "Guru 5th from Moon", text: "Favourable window for children, creativity, or study." },
+  { label: "Guru 7th from Moon", text: "Supportive for marriage and partnership timing." },
+  { label: "Afflicted Guru", text: "Saturn aspecting Jupiter dampens the blessing." },
+];
 
 export function GuruTransitReader() {
   const [moonSignNum, setMoonSignNum] = useState<number>(1);
@@ -47,202 +73,267 @@ export function GuruTransitReader() {
 
   const blessingIndexDetails = useMemo(() => {
     let score = activeHouseData.quality === "Very Favourable" ? 100 : activeHouseData.quality === "Favourable" ? 85 : 65;
-    const dampeners: string[] = [];
-    if (saturnAffliction) { score -= 30; dampeners.push("Saturn aspecting Jupiter: dampens expansion through delays."); }
-    if (rahuAffliction) { score -= 35; dampeners.push("Rāhu aspecting Jupiter: Guru-Chāṇḍāla influence, ethical confusion."); }
+    const dampeners: { label: string; text: string }[] = [];
+    if (saturnAffliction) { score -= 30; dampeners.push({ label: "Saturn aspect", text: "Dampens expansion through delays and discipline." }); }
+    if (rahuAffliction) { score -= 35; dampeners.push({ label: "Rāhu aspect — Guru-Chāṇḍāla", text: "Distorts wisdom into ideological rigidity." }); }
     score = Math.max(10, score);
-    let label = "", color = "";
+    let label = "";
+    let color = "";
     if (score >= 75) { label = "Radiant Blessing"; color = GREEN; }
-    else if (score >= 45) { label = "Dampened Grace"; color = SLATE_BLUE; }
+    else if (score >= 45) { label = "Dampened Grace"; color = BLUE; }
     else { label = "Afflicted Jupiter"; color = RED; }
     return { score, label, color, dampeners };
   }, [activeHouseData, saturnAffliction, rahuAffliction]);
 
-  const sectors = useMemo(() => {
-    const coords = [];
-    for (let i = 0; i < 12; i++) {
-      const houseNum = i + 1;
-      const angleDeg = i * 30 - 90;
-      coords.push({ houseNum, angleDeg });
-    }
-    return coords;
-  }, []);
-
   return (
-    <div className="gl-surface-twilight-glass" style={{ padding: "20px", borderRadius: "16px", background: "rgba(255, 253, 248, 0.75)", backdropFilter: "blur(12px)", border: "1px solid rgba(156, 122, 47, 0.15)", boxShadow: "0 8px 32px rgba(72, 48, 16, 0.05)", fontFamily: "'Inter', sans-serif", color: INK_PRIMARY, maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "14px" }}>
-      
+    <div data-interactive="guru-transit-reader" style={{ padding: "16px", borderRadius: "14px", background: "rgba(255, 253, 248, 0.75)", backdropFilter: "blur(12px)", border: "1px solid rgba(156, 122, 47, 0.15)", boxShadow: "0 8px 32px rgba(72, 48, 16, 0.05)", fontFamily: "'Inter', sans-serif", color: INK_PRIMARY, maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "10px" }}>
+
+      {/* Header */}
       <div>
-        <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 800, color: GOLD_DEEP }}>
+        <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 800, color: GOLD_DEEP }}>
           <IAST>Gurugochara-Yantra</IAST> — Jupiter Transit Reader
         </h3>
-        <p style={{ margin: "2px 0 0 0", fontSize: "12px", color: INK_SECONDARY }}>Jupiter is a natural benefic — even in difficult houses, its presence is protective. Watch for Saturn/Rāhu afflictions.</p>
+        <p style={{ margin: "2px 0 0 0", fontSize: "11px", color: INK_SECONDARY }}>
+          Jupiter is the great benefic — generally protective, especially in the 5th/7th/9th/11th from the Moon. Saturn or Rāhu aspect can dampen the grace.
+        </p>
       </div>
 
-      {/* ─── CONTROLS BAR (TOP) ─── */}
-      <div style={{ background: "#ffffff", padding: "12px", borderRadius: "10px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", gap: "10px" }}>
-        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", fontWeight: 700, color: GOLD_DEEP, whiteSpace: "nowrap" }}>
-            <Moon size={14} /> Moon Sign
+      {/* Controls */}
+      <div style={{ background: "#ffffff", padding: "10px", borderRadius: "8px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexWrap: "wrap", gap: "12px", alignItems: "center" }}>
+        <SignSelect label="Moon sign" value={moonSignNum} onChange={setMoonSignNum} />
+        <div style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+          <span style={{ fontSize: "10px", fontWeight: 800, color: GOLD_DEEP, textTransform: "uppercase" }}>Jupiter house</span>
+          <select value={guruHouse} onChange={e => setGuruHouse(Number(e.target.value))} style={{ border: "1px solid rgba(156,122,47,0.25)", borderRadius: "5px", background: "#ffffff", color: INK_PRIMARY, padding: "4px 5px", fontSize: "11px", fontWeight: 700, minWidth: "110px" }}>
+            {Array.from({ length: 12 }, (_, i) => i + 1).map(h => (
+              <option key={h} value={h}>H{h} — {GURU_HOUSE_DATA[h].theme}</option>
+            ))}
+          </select>
+        </div>
+        <Toggle checked={saturnAffliction} onChange={setSaturnAffliction} label="Saturn aspecting Jupiter (-30%)" />
+        <Toggle checked={rahuAffliction} onChange={setRahuAffliction} label={<><IAST>Guru-Chāṇḍāla</IAST> (Rāhu, -35%)</>} />
+      </div>
+
+      {/* Main two-column layout */}
+      <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "stretch" }}>
+
+        {/* Left — wheel + reference */}
+        <div style={{ flex: "1 1 280px", minWidth: "260px", display: "flex", flexDirection: "column", gap: "8px" }}>
+          <div style={{ background: "#ffffff", padding: "12px", borderRadius: "10px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <h4 style={{ margin: 0, fontSize: "10px", fontWeight: 800, color: GOLD_DEEP, textTransform: "uppercase", alignSelf: "flex-start" }}>Jupiter from the Moon</h4>
+            <GuruWheel moonSign={moonSignNum} guruHouse={guruHouse} saturnAffliction={saturnAffliction} rahuAffliction={rahuAffliction} onSelectHouse={setGuruHouse} />
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", fontSize: "9px", color: INK_MUTED, marginTop: "6px" }}>
+              <LegendDot color={GREEN} label="Very favourable" />
+              <LegendDot color={BLUE} label="Mildly supportive" />
+              <LegendDot color={GOLD} label="Jupiter" />
+              <LegendDot color={SATURN_DARK} label="Saturn affliction" />
+              <LegendDot color={PURPLE} label="Rāhu affliction" />
+            </div>
           </div>
-          {RASHIS.map(r => (
-            <button key={r.number} onClick={() => setMoonSignNum(r.number)} style={{
-              padding: "4px 7px", borderRadius: "5px", border: moonSignNum === r.number ? `1.5px solid ${GOLD}` : "1px solid rgba(0,0,0,0.08)",
-              background: moonSignNum === r.number ? "rgba(156,122,47,0.08)" : "#ffffff", fontSize: "10px", fontWeight: moonSignNum === r.number ? 700 : 500,
-              cursor: "pointer", textAlign: "center", color: moonSignNum === r.number ? GOLD_DEEP : INK_SECONDARY
-            }}>
-              <div style={{ fontWeight: 700 }}>{r.nameEnglish}</div>
-              <div style={{ fontSize: "8px", opacity: 0.85 }}><IAST>{r.nameIAST}</IAST></div>
-            </button>
-          ))}
-        </div>
-        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center", borderTop: "1px solid rgba(0,0,0,0.05)", paddingTop: "8px" }}>
-          <label style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "11px", cursor: "pointer" }}>
-            <input type="checkbox" checked={saturnAffliction} onChange={(e) => setSaturnAffliction(e.target.checked)} style={{ accentColor: GOLD }} />
-            Saturn aspecting Jupiter (-30%)
-          </label>
-          <label style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "11px", cursor: "pointer" }}>
-            <input type="checkbox" checked={rahuAffliction} onChange={(e) => setRahuAffliction(e.target.checked)} style={{ accentColor: GOLD }} />
-            Rāhu aspecting Jupiter — <IAST>Guru-Chāṇḍāla</IAST> (-35%)
-          </label>
-        </div>
-      </div>
 
-      {/* ─── MAIN SPLIT: WHEEL + VERDICT ─── */}
-      <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center" }}>
-        {/* Wheel */}
-        <div style={{ flex: "0 0 340px", background: "#ffffff", padding: "14px", borderRadius: "12px", border: "1px solid rgba(156,122,47,0.1)", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <div style={{ position: "relative", width: "340px", height: "340px" }}>
-            <svg width="340" height="340" viewBox="0 0 340 340">
-              <circle cx="170" cy="170" r="160" fill="none" stroke="rgba(156,122,47,0.15)" strokeWidth="1.5" />
-              <circle cx="170" cy="170" r="95" fill="none" stroke="rgba(156,122,47,0.08)" strokeWidth="1" />
-              {sectors.map((s) => {
-                const hData = GURU_HOUSE_DATA[s.houseNum];
-                const angleRad = ((s.angleDeg + 15) * Math.PI) / 180;
-                const fill = hData.quality === "Very Favourable" ? "rgba(16,185,129,0.08)" : "rgba(0,0,0,0.02)";
-                const stroke = hData.quality === "Very Favourable" ? GREEN : "rgba(0,0,0,0.08)";
-                const isCurrentJupiter = s.houseNum === guruHouse;
-                
-                const pathData = [`M ${170 + 95 * Math.cos((s.angleDeg * Math.PI) / 180)} ${170 + 95 * Math.sin((s.angleDeg * Math.PI) / 180)}`, `L ${170 + 160 * Math.cos((s.angleDeg * Math.PI) / 180)} ${170 + 160 * Math.sin((s.angleDeg * Math.PI) / 180)}`, `A 160 160 0 0 1 ${170 + 160 * Math.cos(((s.angleDeg + 30) * Math.PI) / 180)} ${170 + 160 * Math.sin(((s.angleDeg + 30) * Math.PI) / 180)}`, `L ${170 + 95 * Math.cos(((s.angleDeg + 30) * Math.PI) / 180)} ${170 + 95 * Math.sin(((s.angleDeg + 30) * Math.PI) / 180)}`, `A 95 95 0 0 0 ${170 + 95 * Math.cos((s.angleDeg * Math.PI) / 180)} ${170 + 95 * Math.sin((s.angleDeg * Math.PI) / 180)}`, "Z"].join(" ");
-                const signNum = ((moonSignNum + s.houseNum - 2 + 12) % 12) + 1;
-                const r = RASHIS[signNum - 1];
-                
-                const ptAbbrev = { x: 170 + 136 * Math.cos(angleRad), y: 170 + 136 * Math.sin(angleRad) };
-                const ptDev = { x: 170 + 114 * Math.cos(angleRad), y: 170 + 114 * Math.sin(angleRad) };
-                const ptIcon = { x: 170 + 98 * Math.cos(angleRad), y: 170 + 98 * Math.sin(angleRad) };
-                const ptHouse = { x: 170 + 52 * Math.cos(angleRad), y: 170 + 52 * Math.sin(angleRad) };
-                
-                return (
-                  <g key={s.houseNum} style={{ cursor: "pointer" }} onClick={() => setGuruHouse(s.houseNum)}>
-                    <path d={pathData} fill={fill} stroke={isCurrentJupiter ? GOLD : stroke} strokeWidth={isCurrentJupiter ? "2.5" : "0.8"} style={{ transition: "all 0.15s" }} />
-                    <line x1="170" y1="170" x2={170 + 160 * Math.cos((s.angleDeg * Math.PI) / 180)} y2={170 + 160 * Math.sin((s.angleDeg * Math.PI) / 180)} stroke="rgba(156,122,47,0.1)" />
-                    
-                    <text x={ptAbbrev.x} y={ptAbbrev.y} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9.5px", fontWeight: 700, fill: INK_PRIMARY }}>{SHORT_SIGNS[signNum - 1]}</text>
-                    <text x={ptDev.x} y={ptDev.y + 1} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8.5px", fill: INK_MUTED }}>{r.nameDevanagari}</text>
-                    <text x={ptIcon.x} y={ptIcon.y} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8.5px" }}>{hData.icon}</text>
-                    
-                    <text x={ptHouse.x} y={ptHouse.y} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9.5px", fontWeight: 800, fill: isCurrentJupiter ? GOLD : INK_MUTED }}>H{s.houseNum}</text>
-                  </g>
-                );
-              })}
-              
-              {activeHouseData.quality === "Very Favourable" && (() => { 
-                const coord = sectors[guruHouse - 1]; 
-                const angleRad = ((coord.angleDeg + 15) * Math.PI) / 180; 
-                const jx = 170 + 78 * Math.cos(angleRad); 
-                const jy = 170 + 78 * Math.sin(angleRad); 
-                return (
-                  <g style={{ pointerEvents: "none" }}>
-                    <circle cx={jx} cy={jy} r="22" fill="none" stroke={GOLD} strokeWidth="1" strokeDasharray="3 3" style={{ opacity: 0.8 }} />
-                    <line x1={jx} y1={jy} x2="170" y2="170" stroke={GOLD} strokeWidth="1.5" strokeDasharray="2 2" style={{ opacity: 0.6 }} />
-                  </g>
-                ); 
-              })()}
-              
-              {saturnAffliction && (() => { 
-                const coord = sectors[guruHouse - 1]; 
-                const angleRad = ((coord.angleDeg + 15) * Math.PI) / 180; 
-                const jx = 170 + 78 * Math.cos(angleRad); 
-                const jy = 170 + 78 * Math.sin(angleRad); 
-                const satAngleRad = ((((coord.angleDeg + 15) + 180) % 360) * Math.PI) / 180; 
-                const sx = 170 + 78 * Math.cos(satAngleRad); 
-                const sy = 170 + 78 * Math.sin(satAngleRad); 
-                return (
-                  <g style={{ pointerEvents: "none" }}>
-                    <line x1={sx} y1={sy} x2={jx} y2={jy} stroke="#4a5568" strokeWidth="2.5" strokeDasharray="5 3" />
-                    <circle cx={sx} cy={sy} r="9.5" fill="#4a5568" />
-                    <text x={sx} y={sy} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8px", fill: "#ffffff", fontWeight: 700 }}>♄</text>
-                  </g>
-                ); 
-              })()}
-              
-              {rahuAffliction && (() => { 
-                const coord = sectors[guruHouse - 1]; 
-                const angleRad = ((coord.angleDeg + 15) * Math.PI) / 180; 
-                const jx = 170 + 78 * Math.cos(angleRad); 
-                const jy = 170 + 78 * Math.sin(angleRad); 
-                const rahuAngleRad = ((((coord.angleDeg + 15) + 120) % 360) * Math.PI) / 180; 
-                const rx = 170 + 78 * Math.cos(rahuAngleRad); 
-                const ry = 170 + 78 * Math.sin(rahuAngleRad); 
-                return (
-                  <g style={{ pointerEvents: "none" }}>
-                    <line x1={rx} y1={ry} x2={jx} y2={jy} stroke="#6b21a8" strokeWidth="2.5" strokeDasharray="5 3" />
-                    <circle cx={rx} cy={ry} r="9.5" fill="#6b21a8" />
-                    <text x={rx} y={ry} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8px", fill: "#ffffff", fontWeight: 700 }}>☊</text>
-                  </g>
-                ); 
-              })()}
-              
-              {(() => { 
-                const coord = sectors[guruHouse - 1]; 
-                const angleRad = ((coord.angleDeg + 15) * Math.PI) / 180; 
-                const jx = 170 + 78 * Math.cos(angleRad); 
-                const jy = 170 + 78 * Math.sin(angleRad); 
-                return (
-                  <g style={{ pointerEvents: "none" }}>
-                    <circle cx={jx} cy={jy} r="12" fill={GOLD} stroke="#ffffff" strokeWidth="1.5" />
-                    <text x={jx} y={jy + 0.5} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9.5px", fill: "#ffffff", fontWeight: 700 }}>♃</text>
-                  </g>
-                ); 
-              })()}
-              
-              <circle cx="170" cy="170" r="30" fill="rgba(0,0,0,0.03)" />
-              <circle cx="170" cy="154" r="8.5" fill={GOLD} stroke="#ffffff" strokeWidth="1" />
-              <text x="170" y="154" textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8.5px", fill: "#ffffff" }}>☽</text>
-              <text x="170" y="174" textAnchor="middle" style={{ fontSize: "7.5px", fontWeight: 700, fill: INK_MUTED }}>CHANDRA</text>
-            </svg>
+          {/* House quality groups */}
+          <div style={{ background: "#ffffff", padding: "10px", borderRadius: "8px", border: "1px solid rgba(156,122,47,0.1)" }}>
+            <div style={{ fontSize: "9px", fontWeight: 800, color: GOLD_DEEP, textTransform: "uppercase", marginBottom: "6px" }}>House-quality map from Moon</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+              {HOUSE_QUALITY_GROUPS.map(g => (
+                <div key={g.label} style={{ display: "flex", gap: "6px", alignItems: "center", fontSize: "10px" }}>
+                  <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: g.color, flexShrink: 0 }} />
+                  <span style={{ fontWeight: 800, color: g.color, minWidth: "95px" }}>{g.label}</span>
+                  <span style={{ color: INK_SECONDARY }}>H{g.houses.join(", ")}</span>
+                  <span style={{ color: INK_MUTED, fontSize: "9px" }}>— {g.note}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Verdict */}
-        <div style={{ flex: "1 1 280px", display: "flex", flexDirection: "column", gap: "10px", minWidth: 0 }}>
-          <div style={{ background: "rgba(156,122,47,0.03)", border: `1.2px solid rgba(156,122,47,0.15)`, borderRadius: "12px", padding: "14px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-              <h4 style={{ margin: 0, fontSize: "13.5px", fontWeight: 700, color: blessingIndexDetails.color }}>{blessingIndexDetails.label}</h4>
-              <span style={{ fontSize: "14px", fontWeight: 800, color: blessingIndexDetails.color }}>{blessingIndexDetails.score}%</span>
+        {/* Right — verdict + education */}
+        <div style={{ flex: "1 1 280px", minWidth: "260px", display: "flex", flexDirection: "column", gap: "8px" }}>
+          {/* Blessing index */}
+          <div style={{ background: `${blessingIndexDetails.color}08`, border: `1.2px solid ${blessingIndexDetails.color}`, borderRadius: "10px", padding: "12px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+              <h4 style={{ margin: 0, fontSize: "13px", fontWeight: 800, color: blessingIndexDetails.color, display: "flex", alignItems: "center", gap: "5px" }}>
+                {blessingIndexDetails.score >= 75 ? <ShieldCheck size={14} /> : <AlertTriangle size={14} />}
+                {blessingIndexDetails.label}
+              </h4>
+              <span style={{ fontSize: "16px", fontWeight: 900, color: blessingIndexDetails.color }}>{blessingIndexDetails.score}%</span>
             </div>
-            <div style={{ display: "flex", gap: "6px", alignItems: "center", marginBottom: "8px" }}>
-              <span style={{ fontSize: "12.5px", fontWeight: 700, color: GOLD_DEEP }}>{activeHouseData.icon} House {guruHouse} from Moon: {activeHouseData.theme}</span>
+            <div style={{ fontSize: "10px", fontWeight: 800, color: GOLD_DEEP, textTransform: "uppercase", marginBottom: "6px" }}>
+              {activeHouseData.icon} House {guruHouse} from Moon — {activeHouseData.theme}
             </div>
-            <p style={{ margin: 0, fontSize: "12.5px", lineHeight: "1.45", color: INK_SECONDARY }}>
-              Moon in <strong>{moonRashi.nameEnglish} (<IAST>{moonRashi.nameIAST}</IAST>)</strong>, Jupiter in <strong>{jupiterRashi.nameEnglish} (<IAST>{jupiterRashi.nameIAST}</IAST>)</strong> — H{guruHouse} from Moon. {activeHouseData.details}
+            <p style={{ margin: 0, fontSize: "11px", lineHeight: "1.45", color: INK_SECONDARY }}>
+              Moon in <strong>{moonRashi.nameEnglish} (<IAST>{moonRashi.nameIAST}</IAST>)</strong>, Jupiter in <strong>{jupiterRashi.nameEnglish} (<IAST>{jupiterRashi.nameIAST}</IAST>)</strong>. {activeHouseData.details}
             </p>
             {blessingIndexDetails.dampeners.length > 0 && (
               <div style={{ marginTop: "8px", display: "flex", flexDirection: "column", gap: "3px" }}>
                 {blessingIndexDetails.dampeners.map((d, idx) => (
-                  <div key={idx} style={{ fontSize: "10.5px", color: RED, display: "flex", gap: "4px" }}><span>⚠️</span><span>{d}</span></div>
+                  <div key={idx} style={{ fontSize: "10px", color: RED, background: `${RED}08`, padding: "4px 6px", borderRadius: "4px", border: `1px solid ${RED}40`, display: "flex", gap: "4px" }}>
+                    <span>⚠️</span><span><strong>{d.label}</strong> — {d.text}</span>
+                  </div>
                 ))}
               </div>
             )}
-            <p className="mt-2 text-[10px] italic" style={{ color: INK_MUTED }}>
-              <Info size={10} className="inline mr-1" />
-              Jupiter is a natural benefic (<IAST>śubha graha</IAST>). Even in 6th/8th/12th, it protects. <IAST>Guru-Chāṇḍāla Yoga</IAST> (Jupiter + Rāhu) is the most serious affliction — it distorts wisdom into ideological rigidity.
+          </div>
+
+          {/* Affliction guide */}
+          <div style={{ background: "#ffffff", padding: "10px", borderRadius: "8px", border: "1px solid rgba(156,122,47,0.1)" }}>
+            <div style={{ fontSize: "9px", fontWeight: 800, color: GOLD_DEEP, textTransform: "uppercase", marginBottom: "5px" }}>When Guru turns challenging</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+              {AFFLICTION_GUIDE.map(a => (
+                <div key={a.graha} style={{ display: "flex", gap: "6px", alignItems: "flex-start", fontSize: "10px", padding: "4px 6px", borderRadius: "4px", background: "rgba(156,122,47,0.04)" }}>
+                  <span style={{ fontSize: "12px" }}>{a.symbol}</span>
+                  <span style={{ fontWeight: 800, color: INK_PRIMARY, minWidth: "60px" }}>{a.graha} {a.effect}</span>
+                  <span style={{ color: INK_SECONDARY }}>{a.desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Worked examples */}
+          <div style={{ background: "#ffffff", padding: "10px", borderRadius: "8px", border: "1px solid rgba(156,122,47,0.1)" }}>
+            <div style={{ fontSize: "9px", fontWeight: 800, color: GOLD_DEEP, textTransform: "uppercase", marginBottom: "5px" }}>Worked examples</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              {WORKED_EXAMPLES.map(ex => (
+                <div key={ex.label} style={{ display: "flex", gap: "6px", fontSize: "10px", padding: "4px 6px", borderRadius: "4px", background: "rgba(156,122,47,0.04)" }}>
+                  <span style={{ fontWeight: 900, color: GOLD_DEEP, minWidth: "120px" }}>{ex.label}</span>
+                  <span style={{ color: INK_SECONDARY }}>{ex.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Jupiter cycle reminder */}
+          <div style={{ background: `${GOLD}08`, border: `1px solid ${GOLD}`, borderRadius: "8px", padding: "10px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <span style={{ fontSize: "16px" }}>✨</span>
+            <p style={{ margin: 0, fontSize: "10px", lineHeight: "1.45", color: INK_SECONDARY }}>
+              <strong style={{ color: GOLD_DEEP }}>Jupiter cycle:</strong> ~1 year per sign, ~12 years through the zodiac. The 5th/7th/9th/11th from the Moon are windows to act — confirmed against daśā.
             </p>
           </div>
-          <div className="rounded-lg p-3 text-[10px]" style={{ background: SURFACE_MANUSCRIPT, border: "1px solid var(--gl-gold-hairline)", color: INK_MUTED }}>
-            <strong>Source:</strong> <IAST>Bṛhat Pārāśara Horā Śāstra</IAST> — Jupiter's 1st/5th/7th/9th aspects are protective <IAST>dṛṣṭi</IAST>. <IAST>Phaladīpikā</IAST> — Jupiter transits 5th/7th/9th/11th from Moon are peak fortune. <IAST>Jātaka Pārijāta</IAST> — <IAST>Guru-Chāṇḍāla Yoga</IAST> distorts wisdom.
+
+          {/* Source footer */}
+          <div style={{ background: SURFACE_MANUSCRIPT, border: "1px solid rgba(156,122,47,0.12)", borderRadius: "8px", padding: "8px", fontSize: "9px", color: INK_MUTED, lineHeight: "1.4" }}>
+            <strong>Source:</strong> Classical gochara — Jupiter transits from the Moon. <IAST>Bṛhat Pārāśara Horā Śāstra</IAST> — Jupiter&apos;s 1st/5th/7th/9th aspects are protective <IAST>dṛṣṭi</IAST>. <IAST>Guru-Chāṇḍāla Yoga</IAST> (Jupiter + Rāhu) distorts wisdom.
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+function SignSelect({ label, value, onChange }: { label: string; value: number; onChange: (n: number) => void }) {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+      <span style={{ fontSize: "10px", fontWeight: 800, color: GOLD_DEEP, textTransform: "uppercase" }}>{label}</span>
+      <select value={value} onChange={e => onChange(Number(e.target.value))} style={{ border: "1px solid rgba(156,122,47,0.25)", borderRadius: "5px", background: "#ffffff", color: INK_PRIMARY, padding: "4px 5px", fontSize: "11px", fontWeight: 700, minWidth: "130px" }}>
+        {RASHIS.map(r => <option key={r.number} value={r.number}>{r.nameEnglish} (<IAST>{r.nameIAST}</IAST>)</option>)}
+      </select>
+    </span>
+  );
+}
+
+function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: React.ReactNode }) {
+  return (
+    <label style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "11px", color: checked ? GOLD_DEEP : INK_SECONDARY, cursor: "pointer", fontWeight: checked ? 800 : 600 }}>
+      <input type="checkbox" checked={checked} onChange={e => onChange(e.target.checked)} style={{ accentColor: GOLD }} />
+      {label}
+    </label>
+  );
+}
+
+function LegendDot({ color, label }: { color: string; label: string }) {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+      <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: color }} />
+      {label}
+    </span>
+  );
+}
+
+function GuruWheel({ moonSign, guruHouse, saturnAffliction, rahuAffliction, onSelectHouse }: {
+  moonSign: number;
+  guruHouse: number;
+  saturnAffliction: boolean;
+  rahuAffliction: boolean;
+  onSelectHouse: (h: number) => void;
+}) {
+  const size = 260;
+  const cx = size / 2;
+  const cy = size / 2;
+  const R = 118;
+  const rInner = 55;
+
+  const coords = useMemo(() => {
+    const c: Record<number, { start: number; end: number; mid: number; signNum: number }> = {};
+    for (let h = 1; h <= 12; h++) {
+      const start = (h - 1) * 30;
+      const end = start + 30;
+      const signNum = ((moonSign + h - 2 + 12) % 12) + 1;
+      c[h] = { start, end, mid: start + 15, signNum };
+    }
+    return c;
+  }, [moonSign]);
+
+  const jupiterPt = polarToCartesian(cx, cy, 68, coords[guruHouse].mid);
+
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ display: "block", maxWidth: "100%" }}>
+      {/* Outer ring */}
+      <circle cx={cx} cy={cy} r={R} fill="none" stroke="rgba(156,122,47,0.18)" strokeWidth={1.5} />
+      <circle cx={cx} cy={cy} r={rInner} fill="none" stroke="rgba(156,122,47,0.1)" strokeWidth={1} />
+
+      {/* Sectors */}
+      {Array.from({ length: 12 }, (_, i) => i + 1).map(h => {
+        const { start, end, signNum, mid } = coords[h];
+        const hData = GURU_HOUSE_DATA[h];
+        const isCurrent = h === guruHouse;
+        const sign = RASHIS[signNum - 1];
+        const pEng = polarToCartesian(cx, cy, 100, mid);
+        const pDev = polarToCartesian(cx, cy, 86, mid);
+        const pIcon = polarToCartesian(cx, cy, 72, mid);
+        const pHouse = polarToCartesian(cx, cy, 62, mid);
+        const qualityFill = hData.quality === "Very Favourable" ? GREEN : hData.quality === "Favourable" ? GREEN : BLUE;
+
+        return (
+          <g key={h} style={{ cursor: "pointer" }} onClick={() => onSelectHouse(h)}>
+            <path
+              d={describeArc(cx, cy, R - 1, start, end)}
+              fill={qualityFill}
+              fillOpacity={isCurrent ? 0.14 : 0.06}
+              stroke={isCurrent ? GOLD : "rgba(156,122,47,0.08)"}
+              strokeWidth={isCurrent ? 2 : 1}
+            />
+            <line x1={cx} y1={cy} x2={cx + R * Math.cos((start * Math.PI) / 180)} y2={cy + R * Math.sin((start * Math.PI) / 180)} stroke="rgba(156,122,47,0.1)" strokeWidth={1} />
+            <text x={pEng.x} y={pEng.y} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8px", fontWeight: 800, fill: INK_PRIMARY }}>{SHORT_SIGNS[signNum - 1]}</text>
+            <text x={pDev.x} y={pDev.y + 1} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "7px", fill: INK_MUTED }}>{sign.nameDevanagari}</text>
+            <text x={pIcon.x} y={pIcon.y} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "9px" }}>{hData.icon}</text>
+            <text x={pHouse.x} y={pHouse.y} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8px", fontWeight: 900, fill: isCurrent ? GOLD_DEEP : INK_MUTED }}>H{h}</text>
+          </g>
+        );
+      })}
+
+      {/* Affliction rays */}
+      {saturnAffliction && (
+        <>
+          <line x1={cx + 68 * Math.cos(((coords[guruHouse].mid + 180) * Math.PI) / 180)} y1={cy + 68 * Math.sin(((coords[guruHouse].mid + 180) * Math.PI) / 180)} x2={jupiterPt.x} y2={jupiterPt.y} stroke={SATURN_DARK} strokeWidth={2} strokeDasharray="4 3" />
+          <circle cx={cx + 68 * Math.cos(((coords[guruHouse].mid + 180) * Math.PI) / 180)} cy={cy + 68 * Math.sin(((coords[guruHouse].mid + 180) * Math.PI) / 180)} r={9} fill={SATURN_DARK} stroke="#ffffff" strokeWidth={1} />
+          <text x={cx + 68 * Math.cos(((coords[guruHouse].mid + 180) * Math.PI) / 180)} y={cy + 68 * Math.sin(((coords[guruHouse].mid + 180) * Math.PI) / 180) + 0.5} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8px", fill: "#ffffff", fontWeight: 700 }}>♄</text>
+        </>
+      )}
+      {rahuAffliction && (
+        <>
+          <line x1={cx + 68 * Math.cos(((coords[guruHouse].mid + 120) * Math.PI) / 180)} y1={cy + 68 * Math.sin(((coords[guruHouse].mid + 120) * Math.PI) / 180)} x2={jupiterPt.x} y2={jupiterPt.y} stroke={PURPLE} strokeWidth={2} strokeDasharray="4 3" />
+          <circle cx={cx + 68 * Math.cos(((coords[guruHouse].mid + 120) * Math.PI) / 180)} cy={cy + 68 * Math.sin(((coords[guruHouse].mid + 120) * Math.PI) / 180)} r={9} fill={PURPLE} stroke="#ffffff" strokeWidth={1} />
+          <text x={cx + 68 * Math.cos(((coords[guruHouse].mid + 120) * Math.PI) / 180)} y={cy + 68 * Math.sin(((coords[guruHouse].mid + 120) * Math.PI) / 180) + 0.5} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "8px", fill: "#ffffff", fontWeight: 700 }}>☊</text>
+        </>
+      )}
+
+      {/* Jupiter marker */}
+      <circle cx={jupiterPt.x} cy={jupiterPt.y} r={11} fill={GOLD} stroke="#ffffff" strokeWidth={1.5} />
+      <text x={jupiterPt.x} y={jupiterPt.y + 0.5} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "10px", fill: "#ffffff", fontWeight: 700 }}>♃</text>
+
+      {/* Center hub / Moon */}
+      <circle cx={cx} cy={cy} r={16} fill="#ffffff" stroke={GOLD} strokeWidth={1.5} />
+      <text x={cx} y={cy - 2} textAnchor="middle" style={{ fontSize: "8px", fill: GOLD }}>☽</text>
+      <text x={cx} y={cy + 8} textAnchor="middle" style={{ fontSize: "7px", fontWeight: 800, fill: INK_MUTED }}>CHANDRA</text>
+    </svg>
   );
 }

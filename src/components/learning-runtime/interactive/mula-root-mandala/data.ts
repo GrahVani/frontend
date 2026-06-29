@@ -52,7 +52,7 @@ export const NODES: NodeData[] = [
       "Uprooting falsehoods",
       "Radical transformation"
     ],
-    "angleDeg": -90
+    "angleDeg": -45
   },
   {
     "id": "ketu",
@@ -67,7 +67,7 @@ export const NODES: NodeData[] = [
       "Sudden severing",
       "Quest for liberation"
     ],
-    "angleDeg": 0
+    "angleDeg": 45
   },
   {
     "id": "roots",
@@ -82,7 +82,7 @@ export const NODES: NodeData[] = [
       "Karmic bindings",
       "Foundational strength"
     ],
-    "angleDeg": 90
+    "angleDeg": 135
   },
   {
     "id": "sagittarius",
@@ -97,7 +97,7 @@ export const NODES: NodeData[] = [
       "Truth-seeking",
       "Higher meaning"
     ],
-    "angleDeg": 180
+    "angleDeg": -135
   }
 ];
 

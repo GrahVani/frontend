@@ -261,16 +261,26 @@ export function YantraAnatomy() {
             >
               {/* Meditative Progression Path Trace */}
               {isTracing && (
-                <path
-                  d="M 100 15 L 100 48 M 100 48 A 52 52 0 0 1 152 100 L 100 100"
-                  className="trace-line"
-                  stroke={GOLD}
-                  strokeWidth="2.5"
-                  strokeDasharray="6,6"
-                  fill="none"
-                  pointerEvents="none"
-                  opacity="0.8"
-                />
+                <>
+                  <path
+                    d="M 100 15 L 100 48 A 52 52 0 0 1 152 100 L 100 100"
+                    className="trace-line"
+                    stroke={GOLD}
+                    strokeWidth="2.5"
+                    strokeDasharray="6,6"
+                    fill="none"
+                    pointerEvents="none"
+                    opacity="0.8"
+                  />
+                  {/* Glowing indicator circle node moving along the continuous path */}
+                  <circle r="5" fill="#ffffff" stroke={GOLD_DEEP} strokeWidth="1.5" style={{ filter: `drop-shadow(0 0 3px ${GOLD})` }}>
+                    <animateMotion
+                      dur="5s"
+                      repeatCount="indefinite"
+                      path="M 100 15 L 100 48 A 52 52 0 0 1 152 100 L 100 100"
+                    />
+                  </circle>
+                </>
               )}
 
               {/* 1. BHŪPURA (OUTER SQUARE WITH CARDINAL GATES) */}
@@ -283,13 +293,13 @@ export function YantraAnatomy() {
                 {/* Outer Double Square with T-Gates */}
                 <path
                   d="M 30 30 L 85 30 L 85 15 L 115 15 L 115 30 L 170 30 L 170 85 L 185 85 L 185 115 L 170 115 L 170 170 L 115 170 L 115 185 L 85 185 L 85 170 L 30 170 L 30 115 L 15 115 L 15 85 L 30 85 Z"
-                  fill="none"
+                  fill="rgba(255, 255, 255, 0.001)"
                   stroke={isHighlighted("bhupura") ? GOLD_DEEP : "rgba(156,122,47,0.3)"}
                   strokeWidth={isHighlighted("bhupura") ? "3" : "1.5"}
                 />
                 <path
                   d="M 35 35 L 85 35 L 85 22 L 115 22 L 115 35 L 165 35 L 165 85 L 178 85 L 178 115 L 165 115 L 165 165 L 115 165 L 115 178 L 85 178 L 85 165 L 35 165 L 35 115 L 22 115 L 22 85 L 35 85 Z"
-                  fill="none"
+                  fill="rgba(255, 255, 255, 0.001)"
                   stroke={isHighlighted("bhupura") ? GOLD_DEEP : "rgba(156,122,47,0.2)"}
                   strokeWidth={isHighlighted("bhupura") ? "2" : "1"}
                 />
@@ -307,7 +317,7 @@ export function YantraAnatomy() {
                   cx="100"
                   cy="100"
                   r="52"
-                  fill="none"
+                  fill="rgba(255, 255, 255, 0.001)"
                   stroke={isHighlighted("inner") ? GOLD : "rgba(156,122,47,0.25)"}
                   strokeWidth={isHighlighted("inner") ? "2.5" : "1"}
                 />
@@ -318,7 +328,7 @@ export function YantraAnatomy() {
                     key={angle}
                     d="M 100 48 Q 107 38 114 48 Q 107 58 100 48"
                     transform={`rotate(${angle} 100 100)`}
-                    fill={isHighlighted("inner") ? "rgba(156, 122, 47, 0.08)" : "none"}
+                    fill={isHighlighted("inner") ? "rgba(156, 122, 47, 0.08)" : "rgba(255, 255, 255, 0.001)"}
                     stroke={isHighlighted("inner") ? GOLD : "rgba(156,122,47,0.25)"}
                     strokeWidth={isHighlighted("inner") ? "2" : "1"}
                   />
@@ -328,14 +338,14 @@ export function YantraAnatomy() {
                 {/* Downward (Śakti) */}
                 <polygon
                   points="100,136 71,76 129,76"
-                  fill="none"
+                  fill="rgba(255, 255, 255, 0.001)"
                   stroke={isHighlighted("inner") ? GOLD_DEEP : "rgba(156,122,47,0.25)"}
                   strokeWidth={isHighlighted("inner") ? "2.5" : "1"}
                 />
                 {/* Upward (Śiva) */}
                 <polygon
                   points="100,64 71,124 129,124"
-                  fill="none"
+                  fill="rgba(255, 255, 255, 0.001)"
                   stroke={isHighlighted("inner") ? GOLD_DEEP : "rgba(156,122,47,0.25)"}
                   strokeWidth={isHighlighted("inner") ? "2.5" : "1"}
                 />
@@ -348,6 +358,15 @@ export function YantraAnatomy() {
                 onMouseLeave={() => setHoveredLayerId(null)}
                 onClick={() => setSelectedLayerId("bindu")}
               >
+                {/* Expanded invisible touch/hover helper target */}
+                <circle
+                  cx="100"
+                  cy="100"
+                  r="15"
+                  fill="rgba(255, 255, 255, 0.001)"
+                  stroke="transparent"
+                  pointerEvents="all"
+                />
                 <circle
                   cx="100"
                   cy="100"

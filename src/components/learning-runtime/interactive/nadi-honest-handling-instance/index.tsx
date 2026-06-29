@@ -181,6 +181,24 @@ export function NadiHonestHandlingInstance() {
         fontFamily: "var(--font-sans), system-ui, sans-serif",
       }}
     >
+      {/* Scoped CSS Style Injection */}
+      <style>{`
+        .mandala-node circle {
+          transition: all 0.22s ease-in-out;
+        }
+        .mandala-node:hover circle {
+          r: 28px !important;
+          stroke: #C8412E !important;
+          stroke-width: 2.5px !important;
+        }
+        .mandala-node text {
+          transition: fill 0.22s ease-in-out;
+        }
+        .mandala-node:hover text {
+          fill: #C8412E !important;
+        }
+      `}</style>
+
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between border-b pb-4" style={{ borderColor: HAIRLINE }}>
         <div>
@@ -245,7 +263,7 @@ export function NadiHonestHandlingInstance() {
           >
             {/* SVG Interactive Wheel */}
             <div className="flex flex-col items-center justify-center">
-              <svg viewBox="-180 -180 360 360" className="w-full max-w-[340px] h-auto block">
+              <svg viewBox="-180 -180 360 360" className="w-full max-w-[340px] h-auto block" aria-label="5-spoke interactive disclosures wisdom mandala wheel">
                 <defs>
                   <radialGradient id="hubFill" cx="35%" cy="30%" r="80%">
                     <stop offset="0%" stopColor="#FFF9E5" />
@@ -258,9 +276,9 @@ export function NadiHonestHandlingInstance() {
 
                 {/* Central Hub */}
                 <circle cx={0} cy={0} r="40" fill="url(#hubFill)" stroke={GOLD} strokeWidth="2" filter="url(#nodeShadow)" />
-                <text x={0} y={-4} textAnchor="middle" fontSize="9" fontWeight="bold" fill={ink.primaryOnDark}>HONEST</text>
-                <text x={0} y={8} textAnchor="middle" fontSize="9" fontWeight="bold" fill={ink.primaryOnDark}>ADVISING</text>
-                <text x={0} y={18} textAnchor="middle" fontSize="6.5" fill={ink.mutedOnDark} fontStyle="italic">M20 Chapter 5</text>
+                <text x={0} y={-4} textAnchor="middle" fontSize="9" fontWeight="bold" fill="#3D2E0B">HONEST</text>
+                <text x={0} y={8} textAnchor="middle" fontSize="9" fontWeight="bold" fill="#3D2E0B">ADVISING</text>
+                <text x={0} y={18} textAnchor="middle" fontSize="6.5" fill="#705929" fontStyle="italic">M20 Chapter 5</text>
 
                 {/* Spoke Lines & Satellite Nodes */}
                 {DISCLOSURES.map((disc, idx) => {
@@ -284,7 +302,7 @@ export function NadiHonestHandlingInstance() {
                       />
 
                       {/* Clickable Satellite Node */}
-                      <g className="cursor-pointer" onClick={() => handleDiscClick(idx)}>
+                      <g className="mandala-node cursor-pointer" onClick={() => handleDiscClick(idx)}>
                         <circle
                           cx={x}
                           cy={y}

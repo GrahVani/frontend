@@ -291,6 +291,34 @@ export function DispositionRulesWorkbench() {
             </div>
           </div>
 
+          {/* Interactive SVG Flow Logic Gates */}
+          <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: 12, padding: "0.8rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+            <span style={{ color: GOLD, fontSize: "9px", textTransform: "uppercase", fontWeight: 900, display: "block" }}>Stellar Logic Gate Visualizer</span>
+            <svg viewBox="0 0 440 120" style={{ width: "100%", height: "auto", display: "block" }} aria-hidden="true">
+              {/* Path 1: Planet to Star Gate */}
+              <line x1="80" y1="60" x2="200" y2="60" stroke={isSignificator ? GREEN : RED} strokeWidth="3" strokeDasharray={isSignificator ? "none" : "4 4"} />
+              {/* Path 2: Star Gate to Sub Gate */}
+              <line x1="240" y1="60" x2="360" y2="60" stroke={verdictDetails.verdict === "YES" ? GREEN : verdictDetails.verdict === "NO" ? RED : ORANGE} strokeWidth="3" />
+
+              {/* Node 1: Planet (Source) */}
+              <circle cx="60" cy="60" r="20" fill={SURFACE} stroke={isSignificator ? GREEN : RED} strokeWidth="2.5" />
+              <text x="60" y="64" textAnchor="middle" fontSize="10" fontWeight="900" fill={INK_PRIMARY}>PLANET</text>
+
+              {/* Node 2: Star Lord (Yes/No direction) */}
+              <circle cx="220" cy="60" r="20" fill={SURFACE} stroke={isSignificator ? GREEN : RED} strokeWidth="2.5" />
+              <text x="220" y="64" textAnchor="middle" fontSize="10" fontWeight="900" fill={INK_PRIMARY}>STAR</text>
+
+              {/* Node 3: Sub Lord (Confirmation lock) */}
+              <circle cx="380" cy="60" r="20" fill={SURFACE} stroke={verdictDetails.verdict === "YES" ? GREEN : verdictDetails.verdict === "NO" ? RED : ORANGE} strokeWidth="2.5" />
+              <text x="380" y="64" textAnchor="middle" fontSize="10" fontWeight="900" fill={INK_PRIMARY}>SUB</text>
+
+              {/* Labels below circles */}
+              <text x="60" y="98" textAnchor="middle" fontSize="9" fontWeight="700" fill={INK_MUTED}>Source</text>
+              <text x="220" y="98" textAnchor="middle" fontSize="9" fontWeight="700" fill={INK_MUTED}>{isSignificator ? "Signifies" : "Closed"}</text>
+              <text x="380" y="98" textAnchor="middle" fontSize="9" fontWeight="700" fill={INK_MUTED}>{verdictDetails.verdict}</text>
+            </svg>
+          </div>
+
           {/* Verdict Card */}
           <div
             style={{

@@ -118,9 +118,50 @@ function formatArcToZodiac(totalArcMin: number): string {
   }
 }
 
+function describeArc(x: number, y: number, rInner: number, rOuter: number, startAngleDeg: number, endAngleDeg: number) {
+  const startRad1 = ((startAngleDeg - 90) * Math.PI) / 180;
+  const endRad1 = ((endAngleDeg - 90) * Math.PI) / 180;
+  
+  const x1_in = x + rInner * Math.cos(startRad1);
+  const y1_in = y + rInner * Math.sin(startRad1);
+  const x2_in = x + rInner * Math.cos(endRad1);
+  const y2_in = y + rInner * Math.sin(endRad1);
+
+  const x1_out = x + rOuter * Math.cos(startRad1);
+  const y1_out = y + rOuter * Math.sin(startRad1);
+  const x2_out = x + rOuter * Math.cos(endRad1);
+  const y2_out = y + rOuter * Math.sin(endRad1);
+  
+  const largeArc = endAngleDeg - startAngleDeg <= 180 ? 0 : 1;
+  
+  return [
+    "M", x1_out, y1_out,
+    "A", rOuter, rOuter, 0, largeArc, 1, x2_out, y2_out,
+    "L", x2_in, y2_in,
+    "A", rInner, rInner, 0, largeArc, 0, x1_in, y1_in,
+    "Z"
+  ].join(" ");
+}
+
 export function KPPrecisionResolutionComparator() {
   const [totalMin, setTotalMin] = useState<number>(330); // Default to 5°30' in Aries (330 arc-minutes)
   const [activeTab, setActiveTab] = useState<"slider" | "evaluation">("slider");
+  
+  const handleSvgClick = (e: React.MouseEvent<SVGSVGElement> | React.MouseEvent<SVGPathElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    let angleRad = Math.atan2(y, x);
+    let angleNormalized = angleRad + Math.PI / 2;
+    if (angleNormalized < 0) {
+      angleNormalized += 2 * Math.PI;
+    }
+    const ratio = angleNormalized / (2 * Math.PI);
+    const newMin = Math.round(ratio * 1800);
+    if (newMin >= 0 && newMin <= 1800) {
+      setTotalMin(newMin);
+    }
+  };
   
   // Evaluation checklist
   const [evalTab, setEvalTab] = useState<"strengths" | "limitations">("strengths");
@@ -282,127 +323,247 @@ export function KPPrecisionResolutionComparator() {
       {/* TAB 1: RESOLUTION SLIDER                                */}
       {/* ════════════════════════════════════════════════════════ */}
       {activeTab === "slider" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px", animation: "slideIn 0.3s ease" }}>
+        <>
+          <div style={{ display: "grid", gap: "20px" }} className="grid grid-cols-1 md:grid-cols-[1.1fr_1fr] items-start">
           
-          {/* Cusp Degree Slider */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-              <span style={{ fontSize: "11px", fontWeight: 800, textTransform: "uppercase", color: INK_MUTED, letterSpacing: "0.5px" }}>
-                1. Select Exact Cusp Degree (Aries/Meṣa)
-              </span>
-              <span style={{ fontSize: "15px", fontWeight: 850, color: STEEL_BLUE }}>
-                {deg}° {min}′
-              </span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="1800" // 30 degrees * 60 minutes
-              step="1"
-              value={totalMin}
-              onChange={(e) => setTotalMin(parseInt(e.target.value))}
-              style={{ cursor: "pointer", accentColor: STEEL_BLUE, width: "100%" }}
-            />
-            {/* Fine adjustment buttons */}
-            <div style={{ display: "flex", gap: "8px", marginTop: "4px" }}>
-              <button 
-                onClick={() => setTotalMin(prev => Math.max(0, prev - 10))}
-                style={{
-                  background: "white", border: `1px solid ${STEEL_BORDER}`, borderRadius: "4px",
-                  fontSize: "10.5px", padding: "4px 8px", cursor: "pointer", color: INK_SECONDARY
-                }}
-              >
-                -10′
-              </button>
-              <button 
-                onClick={() => setTotalMin(prev => Math.max(0, prev - 1))}
-                style={{
-                  background: "white", border: `1px solid ${STEEL_BORDER}`, borderRadius: "4px",
-                  fontSize: "10.5px", padding: "4px 8px", cursor: "pointer", color: INK_SECONDARY
-                }}
-              >
-                -1′
-              </button>
-              <button 
-                onClick={() => setTotalMin(prev => Math.min(1800, prev + 1))}
-                style={{
-                  background: "white", border: `1px solid ${STEEL_BORDER}`, borderRadius: "4px",
-                  fontSize: "10.5px", padding: "4px 8px", cursor: "pointer", color: INK_SECONDARY
-                }}
-              >
-                +1′
-              </button>
-              <button 
-                onClick={() => setTotalMin(prev => Math.min(1800, prev + 10))}
-                style={{
-                  background: "white", border: `1px solid ${STEEL_BORDER}`, borderRadius: "4px",
-                  fontSize: "10.5px", padding: "4px 8px", cursor: "pointer", color: INK_SECONDARY
-                }}
-              >
-                +10′
-              </button>
-            </div>
-          </div>
-
-          {/* Active Lords Display Panel */}
+          {/* LEFT COLUMN: Circular SVG Triple-Tier Dial */}
           <div style={{
-            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "10px"
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "12px",
+            background: "#ffffff",
+            padding: "18px",
+            borderRadius: "12px",
+            border: `1px solid ${STEEL_BORDER}`,
+            boxShadow: "0 4px 20px -6px rgba(54, 92, 122, 0.08)"
           }}>
-            {/* Parashari Sign Lord */}
-            <div style={{ background: "#ffffff", border: "1px solid rgba(54,92,122,0.12)", padding: "12px", borderRadius: "10px" }}>
-              <span style={{ fontSize: "9px", fontWeight: 800, color: INK_MUTED, textTransform: "uppercase" }}>Sign (Parāśarī) Resolution</span>
-              <div style={{ fontSize: "14px", fontWeight: 800, color: STEEL_DEEP, marginTop: "4px" }}>Aries (Meṣa)</div>
-              <div style={{ fontSize: "11px", color: STEEL_BLUE, fontWeight: 700 }}>Lord: Mars (Maṅgala)</div>
-            </div>
+            <span style={{ fontSize: "11px", fontWeight: 800, textTransform: "uppercase", color: STEEL_DEEP, letterSpacing: "0.5px" }}>
+              Triple-Tier Resolving Dial (Interactive)
+            </span>
+            <div style={{ position: "relative", width: "100%", maxWidth: "320px", aspectRatio: "1/1", margin: "0 auto" }}>
+              <svg 
+                width="100%" 
+                height="100%" 
+                viewBox="-180 -180 360 360" 
+                style={{ overflow: "visible", cursor: "pointer", userSelect: "none" }}
+                onClick={handleSvgClick}
+                onMouseMove={(e) => {
+                  if (e.buttons === 1) { // Left-click dragged
+                    handleSvgClick(e);
+                  }
+                }}
+              >
+                {/* Dial Center Info */}
+                <circle cx="0" cy="0" r="45" fill="#fcfbf7" stroke={STEEL_BLUE} strokeWidth="1.5" />
+                <text textAnchor="middle" dy="-8" fontSize="9" fontWeight="700" fill={INK_MUTED}>CUSP DEGREE</text>
+                <text textAnchor="middle" dy="10" fontSize="14" fontWeight="850" fill={STEEL_DEEP}>{deg}°{min}′</text>
+                <text textAnchor="middle" dy="24" fontSize="9" fontWeight="800" fill={STEEL_BLUE}>{currentSub.lord} Sub</text>
 
-            {/* Nakshatra Lord */}
-            <div style={{ background: "#ffffff", border: "1px solid rgba(54,92,122,0.12)", padding: "12px", borderRadius: "10px" }}>
-              <span style={{ fontSize: "9px", fontWeight: 800, color: INK_MUTED, textTransform: "uppercase" }}>Nakṣatra Resolution</span>
-              <div style={{ fontSize: "14px", fontWeight: 800, color: STEEL_DEEP, marginTop: "4px" }}>{currentNak.name}</div>
-              <div style={{ fontSize: "11px", color: STEEL_BLUE, fontWeight: 700 }}>Lord: {currentNak.lord}</div>
-            </div>
+                {/* Outer Ring: Whole-Sign Aries (Mars-ruled) */}
+                <path 
+                  d={describeArc(0, 0, 142, 162, 0, 360)} 
+                  fill="rgba(54, 92, 122, 0.04)" 
+                  stroke={STEEL_BLUE} 
+                  strokeWidth="1.2" 
+                />
+                <text textAnchor="middle" transform="rotate(0) translate(0, -149)" fontSize="8.5" fontWeight="800" fill={STEEL_DEEP} letterSpacing="1px">ARIES (Mars)</text>
 
-            {/* KP Sub-Lord */}
-            <div style={{ background: "#ffffff", border: `1.5px solid ${STEEL_BLUE}`, padding: "12px", borderRadius: "10px", boxShadow: "0 4px 10px rgba(54, 92, 122, 0.05)" }}>
-              <span style={{ fontSize: "9px", fontWeight: 800, color: STEEL_BLUE, textTransform: "uppercase" }}>KP Sub-Lord (249-sub)</span>
-              <div style={{ fontSize: "14px", fontWeight: 850, color: STEEL_DEEP, marginTop: "4px" }}>
-                {currentSub.lord} Sub
-              </div>
-              <div style={{ fontSize: "11.5px", color: STEEL_BLUE, fontWeight: 800 }}>Lord of Sub: {currentSub.lord}</div>
+                {/* Middle Ring: Nakshatras */}
+                {/* Ashvini (0° to 13°20') = 0 to 160 degrees */}
+                <path 
+                  d={describeArc(0, 0, 115, 138, 0.5, 159.5)} 
+                  fill={currentNak.name === "Aśvinī" ? "rgba(54, 92, 122, 0.15)" : "#FFF"} 
+                  stroke={currentNak.name === "Aśvinī" ? STEEL_BLUE : "rgba(0,0,0,0.12)"} 
+                  strokeWidth="1.5" 
+                />
+                {/* Bharani (13°20' to 26°40') = 160 to 320 degrees */}
+                <path 
+                  d={describeArc(0, 0, 115, 138, 160.5, 319.5)} 
+                  fill={currentNak.name === "Bharaṇī" ? "rgba(54, 92, 122, 0.15)" : "#FFF"} 
+                  stroke={currentNak.name === "Bharaṇī" ? STEEL_BLUE : "rgba(0,0,0,0.12)"} 
+                  strokeWidth="1.5" 
+                />
+                {/* Krittika (26°40' to 30°) = 320 to 360 degrees */}
+                <path 
+                  d={describeArc(0, 0, 115, 138, 320.5, 359.5)} 
+                  fill={currentNak.name.includes("Kṛttikā") ? "rgba(54, 92, 122, 0.15)" : "#FFF"} 
+                  stroke={currentNak.name.includes("Kṛttikā") ? STEEL_BLUE : "rgba(0,0,0,0.12)"} 
+                  strokeWidth="1.5" 
+                />
+                
+                {/* Labels for Nakshatras */}
+                <text textAnchor="middle" transform="rotate(80) translate(0, -123) rotate(-80)" fontSize="9" fontWeight="700" fill={INK_SECONDARY}>Aśvinī (Ketu)</text>
+                <text textAnchor="middle" transform="rotate(240) translate(0, -123) rotate(-240)" fontSize="9" fontWeight="700" fill={INK_SECONDARY}>Bharaṇī (Venus)</text>
+                <text textAnchor="middle" transform="rotate(340) translate(0, -123) rotate(-340)" fontSize="9" fontWeight="700" fill={INK_SECONDARY}>Kṛttikā (Sun)</text>
+
+                {/* Inner Ring: Sub-lords (Render all subdivisions dynamically from active Nakshatra) */}
+                {fullSubdivisions.map((sub, i) => {
+                  const startAngle = (sub.startMin / 1800) * 360;
+                  const endAngle = (sub.endMin / 1800) * 360;
+                  const isActive = totalMin >= sub.startMin && totalMin <= sub.endMin;
+                  
+                  const subFill = isActive ? STEEL_BLUE : "rgba(54, 92, 122, 0.05)";
+                  const subStroke = isActive ? STEEL_DEEP : "rgba(0, 0, 0, 0.08)";
+                  
+                  return (
+                    <g key={i}>
+                      <path 
+                        d={describeArc(0, 0, 85, 110, startAngle + 0.3, endAngle - 0.3)} 
+                        fill={subFill} 
+                        stroke={subStroke} 
+                        strokeWidth={isActive ? 2 : 0.8} 
+                      />
+                    </g>
+                  );
+                })}
+
+                {/* Pointer Line */}
+                {(() => {
+                  const pointerAngleDeg = (totalMin / 1800) * 360;
+                  const pointerRad = ((pointerAngleDeg - 90) * Math.PI) / 180;
+                  const targetX = Math.cos(pointerRad) * 165;
+                  const targetY = Math.sin(pointerRad) * 165;
+                  
+                  return (
+                    <g>
+                      <line 
+                        x1="0" 
+                        y1="0" 
+                        x2={targetX} 
+                        y2={targetY} 
+                        stroke={boundaryDetails.isClose ? RED : "#dca134"} 
+                        strokeWidth={boundaryDetails.isClose ? 3 : 2} 
+                        strokeDasharray={boundaryDetails.isClose ? "none" : "3 1"} 
+                      />
+                      <circle cx={targetX} cy={targetY} r="5" fill={boundaryDetails.isClose ? RED : "#dca134"} stroke="#FFF" strokeWidth="1.5" />
+                    </g>
+                  );
+                })()}
+              </svg>
             </div>
+            <span style={{ fontSize: "11px", color: INK_MUTED, fontStyle: "italic", textAlign: "center" }}>
+              Click or drag on dial rings to rotate needle
+            </span>
           </div>
 
-          {/* Proportional Nakshatra Map visualizer */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "10px", fontWeight: 800, color: INK_MUTED, textTransform: "uppercase" }}>
-              <span>Nakṣatra subdivision view ({currentNak.name})</span>
-              <span>Total Arc: 13°20′</span>
-            </div>
+          {/* RIGHT COLUMN: Scrubber Controls & Active Info */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             
-            <div className="zodiac-bar-container">
-              {currentNak.subs.map((sub, i) => {
-                const isActive = totalMin >= sub.startMin && totalMin <= sub.endMin;
-                const percentage = (sub.durationMin / 800) * 100;
-                return (
-                  <div
-                    key={i}
-                    className={`sub-block ${isActive ? "active" : ""}`}
-                    style={{
-                      width: `${percentage}%`,
-                      background: sub.color,
-                      opacity: isActive ? 1 : 0.45
-                    }}
-                    title={`Sub-lord: ${sub.lord}`}
-                  />
-                );
-              })}
+            {/* Cusp Degree Slider */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                <span style={{ fontSize: "11px", fontWeight: 800, textTransform: "uppercase", color: INK_MUTED, letterSpacing: "0.5px" }}>
+                  1. Fine Coordinate Scrubber
+                </span>
+                <span style={{ fontSize: "15px", fontWeight: 850, color: STEEL_BLUE }}>
+                  {deg}° {min}′
+                </span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="1800"
+                step="1"
+                value={totalMin}
+                onChange={(e) => setTotalMin(parseInt(e.target.value))}
+                style={{ cursor: "pointer", accentColor: STEEL_BLUE, width: "100%" }}
+              />
+              <div style={{ display: "flex", gap: "8px", marginTop: "4px" }}>
+                <button 
+                  onClick={() => setTotalMin(prev => Math.max(0, prev - 10))}
+                  style={{
+                    background: "white", border: `1px solid ${STEEL_BORDER}`, borderRadius: "4px",
+                    fontSize: "10.5px", padding: "4px 8px", cursor: "pointer", color: INK_SECONDARY
+                  }}
+                >
+                  -10′
+                </button>
+                <button 
+                  onClick={() => setTotalMin(prev => Math.max(0, prev - 1))}
+                  style={{
+                    background: "white", border: `1px solid ${STEEL_BORDER}`, borderRadius: "4px",
+                    fontSize: "10.5px", padding: "4px 8px", cursor: "pointer", color: INK_SECONDARY
+                  }}
+                >
+                  -1′
+                </button>
+                <button 
+                  onClick={() => setTotalMin(prev => Math.min(1800, prev + 1))}
+                  style={{
+                    background: "white", border: `1px solid ${STEEL_BORDER}`, borderRadius: "4px",
+                    fontSize: "10.5px", padding: "4px 8px", cursor: "pointer", color: INK_SECONDARY
+                  }}
+                >
+                  +1′
+                </button>
+                <button 
+                  onClick={() => setTotalMin(prev => Math.min(1800, prev + 10))}
+                  style={{
+                    background: "white", border: `1px solid ${STEEL_BORDER}`, borderRadius: "4px",
+                    fontSize: "10.5px", padding: "4px 8px", cursor: "pointer", color: INK_SECONDARY
+                  }}
+                >
+                  +10′
+                </button>
+              </div>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "9px", color: INK_MUTED }}>
-              <span>Start: {currentNak.name === "Aśvinī" ? "0°00′" : currentNak.name === "Bharaṇī" ? "13°20′" : "26°40′"}</span>
-              <span>Active Sub-lord segment: <strong>{currentSub.lord}</strong> ({Math.round(currentSub.duration / 60)}° {Math.round(currentSub.duration % 60)}′ span)</span>
-              <span>End: {currentNak.name === "Aśvinī" ? "13°20′" : currentNak.name === "Bharaṇī" ? "26°40′" : "30°00′"}</span>
+
+            {/* Active Lords Display Panel */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: "10px" }}>
+              <div style={{ background: "#ffffff", border: "1px solid rgba(54,92,122,0.12)", padding: "10px 12px", borderRadius: "8px" }}>
+                <span style={{ fontSize: "9px", fontWeight: 800, color: INK_MUTED, textTransform: "uppercase" }}>Sign (Parāśarī)</span>
+                <div style={{ fontSize: "13px", fontWeight: 800, color: STEEL_DEEP, marginTop: "2px" }}>Aries (Meṣa)</div>
+                <div style={{ fontSize: "11px", color: STEEL_BLUE, fontWeight: 700 }}>Mars-ruled</div>
+              </div>
+
+              <div style={{ background: "#ffffff", border: "1px solid rgba(54,92,122,0.12)", padding: "10px 12px", borderRadius: "8px" }}>
+                <span style={{ fontSize: "9px", fontWeight: 800, color: INK_MUTED, textTransform: "uppercase" }}>Nakṣatra</span>
+                <div style={{ fontSize: "13px", fontWeight: 800, color: STEEL_DEEP, marginTop: "2px" }}>{currentNak.name}</div>
+                <div style={{ fontSize: "11px", color: STEEL_BLUE, fontWeight: 700 }}>{currentNak.lord}-ruled</div>
+              </div>
+
+              <div style={{ background: "#ffffff", border: `1.5px solid ${STEEL_BLUE}`, padding: "10px 12px", borderRadius: "8px" }}>
+                <span style={{ fontSize: "9px", fontWeight: 850, color: STEEL_BLUE, textTransform: "uppercase" }}>KP Sub-Lord</span>
+                <div style={{ fontSize: "13px", fontWeight: 850, color: STEEL_DEEP, marginTop: "2px" }}>{currentSub.lord} Sub</div>
+                <div style={{ fontSize: "11px", color: STEEL_BLUE, fontWeight: 800 }}>Confirming Lord</div>
+              </div>
             </div>
+
+            {/* Proportional Nakshatra Map visualizer */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "10px", fontWeight: 800, color: INK_MUTED, textTransform: "uppercase" }}>
+                <span>Nakṣatra subdivision view ({currentNak.name})</span>
+                <span>Total Arc: 13°20′</span>
+              </div>
+              
+              <div className="zodiac-bar-container">
+                {currentNak.subs.map((sub, i) => {
+                  const isActive = totalMin >= sub.startMin && totalMin <= sub.endMin;
+                  const percentage = (sub.durationMin / 800) * 100;
+                  return (
+                    <div
+                      key={i}
+                      className={`sub-block ${isActive ? "active" : ""}`}
+                      style={{
+                        width: `${percentage}%`,
+                        background: sub.color,
+                        opacity: isActive ? 1 : 0.45
+                      }}
+                      title={`Sub-lord: ${sub.lord}`}
+                    />
+                  );
+                })}
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "9px", color: INK_MUTED }}>
+                <span>Start: {currentNak.name === "Aśvinī" ? "0°00′" : currentNak.name === "Bharaṇī" ? "13°20′" : "26°40′"}</span>
+                <span>Active Sub: <strong>{currentSub.lord}</strong> ({formatArcToDegMin(currentSub.duration)})</span>
+                <span>End: {currentNak.name === "Aśvinī" ? "13°20′" : currentNak.name === "Bharaṇī" ? "26°40′" : "30°00′"}</span>
+              </div>
+            </div>
+
           </div>
+        </div>
 
           {/* Toggle Math Details Button */}
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -545,7 +706,7 @@ export function KPPrecisionResolutionComparator() {
             </div>
           )}
 
-        </div>
+        </>
       )}
 
       {/* ════════════════════════════════════════════════════════ */}

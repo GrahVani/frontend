@@ -239,50 +239,92 @@ export function KandaMap() {
                 1. South Indian Grid Representation
               </span>
 
-              {/* High-fidelity visual parchment grid wrapper */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(4, 1fr)",
-                  gridTemplateRows: "repeat(4, 1fr)",
-                  gap: "6px",
-                  background: "url(#parchmentBg)",
-                  backgroundColor: "#FAF6EB",
-                  border: `2px solid ${GOLD}`,
-                  borderRadius: "10px",
-                  padding: "10px",
-                  aspectRatio: "1/1",
-                  boxShadow: "inset 0 0 12px rgba(156, 122, 47, 0.15)"
-                }}
-              >
-                {/* Row 1 */}
-                {renderGridBox(12)}
-                {renderGridBox(1)}
-                {renderGridBox(2)}
-                {renderGridBox(3)}
+              {/* High-fidelity native SVG South Indian Chart Map */}
+              <svg viewBox="0 0 320 320" className="w-full h-auto block" style={{ maxHeight: "320px", border: `1.5px solid ${GOLD}`, borderRadius: "8px", background: "#fff" }}>
+                {/* Inner center square */}
+                <rect x="80" y="80" width="160" height="160" fill="#FAF6EB" stroke={GOLD} strokeWidth="1.5" strokeDasharray="3 3" />
+                <text x="160" y="150" textAnchor="middle" fontSize="13" fontWeight="900" fill={GOLD_DEEP}>AGASTYA NĀḌĪ</text>
+                <text x="160" y="172" textAnchor="middle" fontSize="10" fontWeight="bold" fill={INK_SECONDARY}>12 Chapter Parallel</text>
 
-                {/* Row 2 */}
-                {renderGridBox(11)}
-                <div style={{ gridColumn: "span 2", gridRow: "span 2", background: "#fff", borderRadius: "8px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", border: "1px dashed rgba(156,122,47,0.25)", padding: "10px" }}>
-                  <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, textAlign: "center", letterSpacing: "0.05em" }}>
-                    AGASTYA NĀḌĪ
-                  </span>
-                  <span style={{ fontSize: "9px", color: INK_MUTED, textAlign: "center", marginTop: "2px" }}>
-                    12 Chapter Parallel
-                  </span>
-                </div>
-                {renderGridBox(4)}
+                {/* Draw lines dividing columns/rows */}
+                <line x1="80" y1="0" x2="80" y2="320" stroke={GOLD} strokeWidth="1.5" />
+                <line x1="240" y1="0" x2="240" y2="320" stroke={GOLD} strokeWidth="1.5" />
+                <line x1="0" y1="80" x2="320" y2="80" stroke={GOLD} strokeWidth="1.5" />
+                <line x1="0" y1="240" x2="320" y2="240" stroke={GOLD} strokeWidth="1.5" />
 
-                {/* Row 3 */}
-                {renderGridBox(10)}
-                {renderGridBox(5)}
+                {/* Render Kanda cells */}
+                {[
+                  { num: 12, x: 0, y: 0 },
+                  { num: 1, x: 80, y: 0 },
+                  { num: 2, x: 160, y: 0 },
+                  { num: 3, x: 240, y: 0 },
+                  { num: 4, x: 240, y: 80 },
+                  { num: 5, x: 240, y: 160 },
+                  { num: 6, x: 240, y: 240 },
+                  { num: 7, x: 160, y: 240 },
+                  { num: 8, x: 80, y: 240 },
+                  { num: 9, x: 0, y: 240 },
+                  { num: 10, x: 0, y: 160 },
+                  { num: 11, x: 0, y: 80 }
+                ].map((pos) => {
+                  const kanda = KANDAS.find((k) => k.num === pos.num) || KANDAS[0];
+                  const isSelected = activeKanda.num === pos.num;
+                  const isHighlighted = activeQuestionPreset?.chapters?.includes(pos.num);
 
-                {/* Row 4 */}
-                {renderGridBox(9)}
-                {renderGridBox(8)}
-                {renderGridBox(7)}
-                {renderGridBox(6)}
-              </div>
+                  let cellColor = "transparent";
+                  if (isSelected) {
+                    cellColor = GOLD;
+                  } else if (isHighlighted) {
+                    cellColor = "rgba(47, 125, 82, 0.12)";
+                  }
+
+                  let textColor = GOLD_DEEP;
+                  if (isSelected) {
+                    textColor = "#fff";
+                  } else if (isHighlighted) {
+                    textColor = GREEN;
+                  }
+
+                  return (
+                    <g
+                      key={pos.num}
+                      className="cursor-pointer"
+                      onClick={() => setActiveKanda(kanda)}
+                    >
+                      <rect
+                        x={pos.x + 2}
+                        y={pos.y + 2}
+                        width="76"
+                        height="76"
+                        fill={cellColor}
+                        stroke={isHighlighted && !isSelected ? GREEN : "transparent"}
+                        strokeWidth="1.5"
+                        style={{ transition: "all 0.2s" }}
+                      />
+                      <text
+                        x={pos.x + 40}
+                        y={pos.y + 32}
+                        textAnchor="middle"
+                        fontSize="11"
+                        fontWeight="bold"
+                        fill={textColor}
+                      >
+                        K{pos.num}
+                      </text>
+                      <text
+                        x={pos.x + 40}
+                        y={pos.y + 48}
+                        textAnchor="middle"
+                        fontSize="8"
+                        fill={isSelected ? "#FAF6EB" : INK_SECONDARY}
+                        fontWeight={isSelected || isHighlighted ? "bold" : "normal"}
+                      >
+                        {kanda.name.split(" ")[0]}
+                      </text>
+                    </g>
+                  );
+                })}
+              </svg>
             </div>
 
             <div style={{ background: "#FAF6EB", border: "1px solid rgba(156, 122, 47, 0.15)", borderRadius: "12px", padding: "16px" }}>
@@ -526,39 +568,4 @@ export function KandaMap() {
     </div>
   );
 
-  function renderGridBox(num: number) {
-    const kanda = KANDAS.find((k) => k.num === num) || KANDAS[0];
-    const isSelected = activeKanda.num === num;
-    
-    // Check if preset highlights this chapter
-    const isHighlighted = activeQuestionPreset?.chapters?.includes(num);
-
-    return (
-      <button
-        onClick={() => setActiveKanda(kanda)}
-        style={{
-          border: `1.5px solid ${isSelected ? GOLD : isHighlighted ? GREEN : "rgba(156,122,47,0.25)"}`,
-          background: isSelected ? GOLD : isHighlighted ? "rgba(47,125,85,0.12)" : "#fff",
-          color: isSelected ? "#fff" : INK_PRIMARY,
-          borderRadius: "6px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-          padding: "4px",
-          transition: "all 0.25s ease",
-          boxShadow: isSelected ? "0 2px 6px rgba(156,122,47,0.3)" : "none",
-          transform: isSelected ? "scale(1.03)" : "none"
-        }}
-      >
-        <span style={{ fontSize: "8.5px", fontWeight: "bold", color: isSelected ? "#FAF6EB" : isHighlighted ? GREEN : GOLD_DEEP }}>
-          K{num}
-        </span>
-        <span style={{ fontSize: "9.5px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: "100%", textAlign: "center", fontWeight: isSelected || isHighlighted ? "bold" : "normal" }}>
-          {kanda.name.split(" ")[0]}
-        </span>
-      </button>
-    );
-  }
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { Check, Info, Sparkles, Zap, RotateCcw, HelpCircle, Layers, CheckCircle2, ShieldCheck, Filter, Clock } from "lucide-react";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
@@ -8,9 +9,10 @@ const INK_MUTED = "var(--gl-ink-on-cream-muted)";
 const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const GOLD = "#9C7A2F";
-const EMERALD = "#10B981";
-const ORANGE = "#E67E22";
-const CRIMSON = "#C8412E";
+const GOLD_LIGHT = "#F4C77B";
+const EMERALD = "#2F7D55";
+const ORANGE = "#C28220";
+const CRIMSON = "#A23A1E";
 
 const PLANETS = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"];
 const CUSPS = Array.from({ length: 12 }, (_, i) => i + 1);
@@ -148,31 +150,54 @@ export function RulingPlanetsConfirmationWorkbench() {
     };
   }, [activeRps, dasaLord, bhuktiLord, antaraLord]);
 
-  // SVG Radial arc computation (gauge)
-  const strokeDashoffset = useMemo(() => {
-    const r = 40;
-    const circ = 2 * Math.PI * r;
-    const angleRange = 270; // 3/4 circle
-    const activeLength = (confirmationResult.percent / 100) * angleRange;
-    const strokeLength = (activeLength / 360) * circ;
-    return circ - strokeLength;
-  }, [confirmationResult.percent]);
-
   return (
     <div className="gl-surface-twilight-glass" style={{ padding: "28px 24px", color: INK_PRIMARY, minHeight: "600px" }} data-interactive="ruling-planets-confirmation-workbench">
       
       {/* Header */}
       <section style={{ borderBottom: `1px solid ${HAIRLINE}`, paddingBottom: "1.2rem", marginBottom: "1.8rem" }}>
-        <span style={{ color: GOLD, fontSize: "10px", textTransform: "uppercase", fontWeight: 900, letterSpacing: "0.1em" }}>Module 16 · Chapter 5 · Lesson 3</span>
-        <h1 style={{ margin: "0.3rem 0 0", color: GOLD, fontSize: "1.6rem", fontWeight: 700, letterSpacing: "-0.02em" }}>Ruling Planets Confirmation Workbench</h1>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+          <div>
+            <span style={{ color: GOLD, fontSize: "10px", textTransform: "uppercase", fontWeight: 900, letterSpacing: "0.1em" }}>Module 16 · Chapter 5 · Lesson 3</span>
+            <h1 style={{ margin: "0.3rem 0 0", color: GOLD, fontSize: "1.6rem", fontWeight: 700, letterSpacing: "-0.02em" }}>Ruling Planets Active Filter Cockpit</h1>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveRps(["Mercury", "Rahu", "Mars", "Jupiter"]);
+              setTargetCusp(7);
+              setCuspSubLord("Mercury");
+              setSubStarLord("Mars");
+              setQueryType("marriage");
+              setDasaLord("Jupiter");
+              setBhuktiLord("Mercury");
+              setAntaraLord("Saturn");
+              setCustomHouses("2,7,11");
+            }}
+            style={{
+              background: "transparent",
+              border: `1.2px solid ${HAIRLINE}`,
+              borderRadius: "6px",
+              padding: "4px 10px",
+              fontSize: "12px",
+              fontWeight: 700,
+              color: GOLD,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "4px"
+            }}
+          >
+            <RotateCcw size={13} /> Reset
+          </button>
+        </div>
         <p style={{ margin: "0.4rem 0 0", fontSize: "13.5px", color: INK_SECONDARY, lineHeight: "1.5" }}>
-          Verify cuspal sub-lord indicators against current active RPs, and identify convergence windows for Vimśottarī DBA periods.
+          Verify Cuspal Sub-lord configuration against momental RPs, and filter DBA periods to identify timing convergence.
         </p>
       </section>
 
       {/* Presets */}
       <section style={{ marginBottom: "1.8rem", display: "flex", gap: "0.8rem", flexWrap: "wrap", alignItems: "center" }}>
-        <span style={{ fontSize: "11px", fontWeight: 800, color: INK_SECONDARY, textTransform: "uppercase", letterSpacing: "0.05em" }}>Load Case Preset:</span>
+        <span style={{ fontSize: "11.5px", fontWeight: 800, color: INK_SECONDARY, textTransform: "uppercase", letterSpacing: "0.05em" }}>Load Case Preset:</span>
         {PRESETS.map((p, idx) => (
           <button
             key={idx}
@@ -196,14 +221,17 @@ export function RulingPlanetsConfirmationWorkbench() {
         ))}
       </section>
 
-      {/* Grid containing Cockpits */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2rem", marginBottom: "2.4rem" }}>
+      {/* THREE COLUMN COCKPIT CONTROLS */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.5rem", marginBottom: "2rem" }}>
         
         {/* Panel 1: RPs checklist */}
         <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "16px 20px" }}>
-          <h3 style={{ margin: "0 0 12px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em" }}>Ruling Planets Roster</h3>
-          <p style={{ fontSize: "10.5px", color: INK_MUTED, margin: "0 0 12px 0" }}>
-            Select the active Ruling Planets computed for this moment of inquiry.
+          <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
+            <Filter size={15} style={{ color: GOLD }} />
+            <h3 style={{ margin: "0", fontSize: "12.5px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>Momental RPs Console</h3>
+          </div>
+          <p style={{ fontSize: "11px", color: INK_MUTED, margin: "0 0 12px 0", lineHeight: 1.4 }}>
+            Click to set the 5 momental RPs computed for the query execution time.
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
             {PLANETS.map((p) => {
@@ -216,34 +244,29 @@ export function RulingPlanetsConfirmationWorkbench() {
                     padding: "8px 2px",
                     borderRadius: "6px",
                     border: `1px solid ${isActive ? GOLD : HAIRLINE}`,
-                    background: isActive ? `${GOLD}10` : "transparent",
+                    background: isActive ? `${GOLD}15` : "transparent",
                     color: isActive ? GOLD : INK_PRIMARY,
-                    fontSize: "11.5px",
+                    fontSize: "12px",
                     fontWeight: isActive ? 800 : 500,
                     cursor: "pointer",
                     textAlign: "center",
                     transition: "all 0.2s"
                   }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) e.currentTarget.style.background = `${GOLD}05`;
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) e.currentTarget.style.background = "transparent";
-                  }}
+                  className="gl-clickable"
                 >
                   {p}
                 </button>
               );
             })}
           </div>
-          <div style={{ fontSize: "11px", color: GOLD, marginTop: "12px", fontWeight: 700 }}>
-            Active: {activeRps.join(", ") || "(None)"}
-          </div>
         </div>
 
         {/* Panel 2: Cusp Sub-lord settings */}
         <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "16px 20px" }}>
-          <h3 style={{ margin: "0 0 12px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em" }}>Cuspal Verdict & Query</h3>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
+            <Layers size={15} style={{ color: GOLD }} />
+            <h3 style={{ margin: "0", fontSize: "12.5px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>Cuspal Configuration</h3>
+          </div>
           
           <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "11.5px" }}>
             <div style={{ display: "flex", gap: "8px" }}>
@@ -276,7 +299,7 @@ export function RulingPlanetsConfirmationWorkbench() {
 
             {queryType === "custom" && (
               <label style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={{ fontWeight: 700, color: INK_SECONDARY }}>Custom Target Houses (comma-separated)</span>
+                <span style={{ fontWeight: 700, color: INK_SECONDARY }}>Custom Target Houses</span>
                 <input
                   type="text"
                   value={customHouses}
@@ -316,11 +339,14 @@ export function RulingPlanetsConfirmationWorkbench() {
           </div>
         </div>
 
-        {/* Panel 3: Vimshottari DBA Period Lords */}
+        {/* Panel 3: Vimshottari DBA Period Rulers */}
         <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "16px 20px" }}>
-          <h3 style={{ margin: "0 0 12px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em" }}>Vimśottarī DBA Lords</h3>
-          <p style={{ fontSize: "10.5px", color: INK_MUTED, margin: "0 0 12px 0" }}>
-            Identify the nested period rulers currently active in the Vimśottarī timeline.
+          <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
+            <Clock size={15} style={{ color: GOLD }} />
+            <h3 style={{ margin: "0", fontSize: "12.5px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>Vimśottarī DBA Period</h3>
+          </div>
+          <p style={{ fontSize: "11px", color: INK_MUTED, margin: "0 0 12px 0", lineHeight: 1.4 }}>
+            Input the active DBA period rulers to analyze their agreement with current RPs.
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "11.5px" }}>
             <label style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -366,69 +392,138 @@ export function RulingPlanetsConfirmationWorkbench() {
 
       </div>
 
-      {/* Outputs: Confirmation Panel & Convergence Analyzer */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2rem", marginBottom: "2.4rem" }}>
-        
-        {/* Output Panel 1: Cusp Confirmation & SVG Gauge */}
-        <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "20px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-          
-          <div>
-            <h3 style={{ margin: "0 0 14px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-              Cuspal Verdict Confirmation
-            </h3>
-            
-            {/* Radial SVG Gauge and Status block */}
-            <div style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "16px" }}>
-              <svg width="88" height="88" viewBox="0 0 100 100" style={{ transform: "rotate(-135deg)" }}>
-                {/* Background arc */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  stroke={HAIRLINE}
-                  strokeWidth="8"
-                  strokeDasharray="251.2"
-                  strokeDashoffset="62.8" // 3/4 circle
-                  strokeLinecap="round"
-                />
-                {/* Active indicator arc */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  stroke={confirmationResult.level === "high" ? EMERALD : confirmationResult.level === "moderate" ? ORANGE : CRIMSON}
-                  strokeWidth="8"
-                  strokeDasharray="251.2"
-                  strokeDashoffset={strokeDashoffset}
-                  strokeLinecap="round"
-                  style={{ transition: "stroke-dashoffset 0.35s ease-out" }}
-                />
-              </svg>
+      {/* VISUAL FILTER AND GATEWAY FLOW (SVG GATEWAY) */}
+      <section style={{
+        background: "white",
+        border: `1px solid ${HAIRLINE}`,
+        borderRadius: "12px",
+        padding: "16px 20px",
+        marginBottom: "2rem",
+        boxShadow: "0 4px 12px rgba(156,122,47,0.03)"
+      }}>
+        <h3 style={{ margin: "0 0 12px 0", fontSize: "12.5px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          Active Convergence Filter Gateway
+        </h3>
+        <p style={{ margin: "0 0 16px 0", fontSize: "12px", color: INK_SECONDARY, lineHeight: 1.45 }}>
+          The diagram below visualizes the dynamic filtering process. RPs filter both Cuspal rulers and DBA time periods, highlighting convergence matches.
+        </p>
+
+        <div style={{ width: "100%", overflowX: "auto" }}>
+          <svg viewBox="0 0 680 180" style={{ minWidth: "600px", width: "100%", height: "100%", overflow: "visible" }}>
+            {/* Left side: Active RPs list */}
+            <g transform="translate(10, 0)">
+              <rect x="0" y="10" width="160" height="160" rx="8" fill="rgba(156, 122, 47, 0.03)" stroke={HAIRLINE} strokeWidth="1.5" />
+              <text x="80" y="32" textAnchor="middle" fontSize="10.5" fontWeight="800" fill={GOLD}>MOMENTAL RPs</text>
+              {activeRps.slice(0, 5).map((rp, idx) => (
+                <g key={rp} transform={`translate(15, ${50 + idx * 24})`}>
+                  <circle cx="10" cy="0" r="7" fill={GOLD} />
+                  <text x="24" y="4" fontSize="11" fontWeight="700" fill={INK_PRIMARY}>{rp}</text>
+                </g>
+              ))}
+              {activeRps.length === 0 && (
+                <text x="80" y="90" textAnchor="middle" fontSize="11" fontStyle="italic" fill={INK_MUTED}>No RPs Active</text>
+              )}
+            </g>
+
+            {/* Middle: Filter Gate */}
+            <g transform="translate(240, 20)">
+              <circle cx="50" cy="70" r="45" fill="#fcfbf7" stroke={GOLD} strokeWidth="2" strokeDasharray="3 3" />
+              <path d="M 32 50 L 68 50 L 58 85 L 42 85 Z" fill="none" stroke={GOLD} strokeWidth="2.5" />
+              <line x1="50" y1="85" x2="50" y2="100" stroke={GOLD} strokeWidth="2.5" />
+              <text x="50" y="125" textAnchor="middle" fontSize="10" fontWeight="800" fill={GOLD}>RP FILTER GATE</text>
+            </g>
+
+            {/* Right side: DBA Convergence */}
+            <g transform="translate(460, 0)">
+              <rect x="0" y="10" width="200" height="160" rx="8" fill="rgba(47, 125, 85, 0.02)" stroke="rgba(47, 125, 85, 0.2)" strokeWidth="1.5" />
+              <text x="100" y="32" textAnchor="middle" fontSize="10.5" fontWeight="800" fill={EMERALD}>DBA PERIODS CONVERGENCE</text>
               
-              <div>
-                <span style={{ fontSize: "10px", color: INK_MUTED, textTransform: "uppercase", fontWeight: 700 }}>Confirmation Strength</span>
-                <div style={{
-                  fontSize: "14px",
-                  fontWeight: 900,
-                  color: confirmationResult.level === "high" ? EMERALD : confirmationResult.level === "moderate" ? ORANGE : CRIMSON,
-                  marginTop: "2px"
-                }}>
-                  {confirmationResult.level === "high" && "✓ HIGH (100%)"}
-                  {confirmationResult.level === "moderate" && "✓ MODERATE (50%)"}
-                  {confirmationResult.level === "none" && "✗ ABSENT (0%)"}
-                </div>
+              {/* Dasa */}
+              <g transform="translate(15, 55)">
+                <rect x="0" y="-12" width="170" height="24" rx="4" fill={activeRps.includes(dasaLord) ? "rgba(47,125,85,0.12)" : "rgba(0,0,0,0.02)"} stroke={activeRps.includes(dasaLord) ? EMERALD : "rgba(0,0,0,0.08)"} strokeWidth="1" />
+                <text x="10" y="4" fontSize="11" fontWeight={activeRps.includes(dasaLord) ? 800 : 500} fill={activeRps.includes(dasaLord) ? EMERALD : INK_SECONDARY}>D: {dasaLord}</text>
+                <text x="160" y="4" textAnchor="end" fontSize="10" fontWeight="800" fill={activeRps.includes(dasaLord) ? EMERALD : INK_MUTED}>
+                  {activeRps.includes(dasaLord) ? "PASS" : "BLOCK"}
+                </text>
+              </g>
+
+              {/* Bhukti */}
+              <g transform="translate(15, 90)">
+                <rect x="0" y="-12" width="170" height="24" rx="4" fill={activeRps.includes(bhuktiLord) ? "rgba(47,125,85,0.12)" : "rgba(0,0,0,0.02)"} stroke={activeRps.includes(bhuktiLord) ? EMERALD : "rgba(0,0,0,0.08)"} strokeWidth="1" />
+                <text x="10" y="4" fontSize="11" fontWeight={activeRps.includes(bhuktiLord) ? 800 : 500} fill={activeRps.includes(bhuktiLord) ? EMERALD : INK_SECONDARY}>B: {bhuktiLord}</text>
+                <text x="160" y="4" textAnchor="end" fontSize="10" fontWeight="800" fill={activeRps.includes(bhuktiLord) ? EMERALD : INK_MUTED}>
+                  {activeRps.includes(bhuktiLord) ? "PASS" : "BLOCK"}
+                </text>
+              </g>
+
+              {/* Antara */}
+              <g transform="translate(15, 125)">
+                <rect x="0" y="-12" width="170" height="24" rx="4" fill={activeRps.includes(antaraLord) ? "rgba(47,125,85,0.12)" : "rgba(0,0,0,0.02)"} stroke={activeRps.includes(antaraLord) ? EMERALD : "rgba(0,0,0,0.08)"} strokeWidth="1" />
+                <text x="10" y="4" fontSize="11" fontWeight={activeRps.includes(antaraLord) ? 800 : 500} fill={activeRps.includes(antaraLord) ? EMERALD : INK_SECONDARY}>A: {antaraLord}</text>
+                <text x="160" y="4" textAnchor="end" fontSize="10" fontWeight="800" fill={activeRps.includes(antaraLord) ? EMERALD : INK_MUTED}>
+                  {activeRps.includes(antaraLord) ? "PASS" : "BLOCK"}
+                </text>
+              </g>
+            </g>
+
+            {/* FLOW LINES connecting Left -> Gate -> Right */}
+            {/* RPs to Gate */}
+            <path 
+              d="M 170 90 Q 220 90 238 90" 
+              fill="none" 
+              stroke={activeRps.length > 0 ? GOLD : "rgba(0,0,0,0.08)"} 
+              strokeWidth="2" 
+              strokeDasharray={activeRps.length > 0 ? "none" : "3 3"} 
+            />
+            
+            {/* Gate to DBA */}
+            <path 
+              d="M 335 90 Q 400 90 458 90" 
+              fill="none" 
+              stroke={dbaMatches.count > 0 ? EMERALD : "rgba(0,0,0,0.08)"} 
+              strokeWidth="2" 
+              strokeDasharray={dbaMatches.count > 0 ? "none" : "3 3"} 
+            />
+          </svg>
+        </div>
+      </section>
+
+      {/* RESULTS DISPLAY GRID */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2rem", marginBottom: "2rem" }}>
+        
+        {/* Output Panel 1: Cusp Confirmation verdict */}
+        <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "20px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "14px" }}>
+              <ShieldCheck size={16} style={{ color: GOLD }} />
+              <h3 style={{ margin: "0", fontSize: "12.5px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                Cuspal Confirmation Verdict
+              </h3>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "12px" }}>
+              <div style={{
+                fontSize: "14px",
+                fontWeight: 900,
+                color: confirmationResult.level === "high" ? EMERALD : confirmationResult.level === "moderate" ? ORANGE : CRIMSON,
+                padding: "6px 12px",
+                background: confirmationResult.level === "high" ? `${EMERALD}15` : confirmationResult.level === "moderate" ? `${ORANGE}15` : `${CRIMSON}15`,
+                borderRadius: "6px",
+                border: `1px solid ${confirmationResult.level === "high" ? EMERALD : confirmationResult.level === "moderate" ? ORANGE : CRIMSON}33`
+              }}>
+                {confirmationResult.level === "high" && "HIGH CONFIRMATION"}
+                {confirmationResult.level === "moderate" && "MODERATE CONFIRMATION"}
+                {confirmationResult.level === "none" && "ABSENT CONFIRMATION"}
               </div>
             </div>
 
-            <div style={{ fontSize: "12px", color: INK_SECONDARY, marginBottom: "16px", lineHeight: "1.4" }}>
+            <p style={{ fontSize: "13px", color: INK_SECONDARY, margin: "0 0 16px 0", lineHeight: "1.5" }}>
               {confirmationResult.message}
-            </div>
+            </p>
           </div>
 
           <div style={{
-            fontSize: "10.5px",
+            fontSize: "11px",
             color: GOLD,
             background: `${GOLD}0A`,
             border: `1px solid ${GOLD}20`,
@@ -441,14 +536,17 @@ export function RulingPlanetsConfirmationWorkbench() {
           </div>
         </div>
 
-        {/* Output Panel 2: Nested Vimshottari DBA Convergence Cascade */}
+        {/* Output Panel 2: Timing Convergence Coefficients */}
         <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "20px" }}>
-          <h3 style={{ margin: "0 0 14px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            Event Timing Convergence Cascade
-          </h3>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "14px" }}>
+            <Zap size={16} style={{ color: GOLD }} />
+            <h3 style={{ margin: "0", fontSize: "12.5px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+              Event Timing Convergence
+            </h3>
+          </div>
           
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", borderBottom: `1px dashed ${HAIRLINE}`, paddingBottom: "8px" }}>
-            <span style={{ fontSize: "11px", fontWeight: 700, color: INK_SECONDARY }}>DBA RPs Match Coefficient:</span>
+            <span style={{ fontSize: "12px", fontWeight: 700, color: INK_SECONDARY }}>Timing Window Strength:</span>
             <strong style={{
               fontSize: "13px",
               color: dbaMatches.count === 3 ? EMERALD : dbaMatches.count === 2 ? ORANGE : dbaMatches.count === 1 ? GOLD : CRIMSON
@@ -457,69 +555,51 @@ export function RulingPlanetsConfirmationWorkbench() {
             </strong>
           </div>
 
-          {/* Indented cascade layout */}
           <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "12px" }}>
-            
-            {/* Dasa Level */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#FAF8F5", border: `1px solid ${HAIRLINE}`, borderRadius: "6px", padding: "8px 12px" }}>
               <div style={{ flex: 1 }}>
                 <span style={{ fontSize: "9px", color: INK_MUTED, textTransform: "uppercase", display: "block" }}>Daśā Level</span>
                 <strong>{dasaLord}</strong>
               </div>
-              <span style={{
-                fontSize: "10px",
-                fontWeight: 800,
-                color: dbaMatches.dMatch ? EMERALD : CRIMSON
-              }}>
+              <span style={{ fontSize: "10.5px", fontWeight: 800, color: dbaMatches.dMatch ? EMERALD : CRIMSON }}>
                 {dbaMatches.dMatch ? "RP Match ✓" : "No Match ✗"}
               </span>
             </div>
 
-            {/* Bhukti Level */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#FAF8F5", border: `1px solid ${HAIRLINE}`, borderRadius: "6px", padding: "8px 12px", marginLeft: "14px" }}>
               <div style={{ flex: 1 }}>
                 <span style={{ fontSize: "9px", color: INK_MUTED, textTransform: "uppercase", display: "block" }}>Bhukti Level</span>
                 <strong>{bhuktiLord}</strong>
               </div>
-              <span style={{
-                fontSize: "10px",
-                fontWeight: 800,
-                color: dbaMatches.bMatch ? EMERALD : CRIMSON
-              }}>
+              <span style={{ fontSize: "10.5px", fontWeight: 800, color: dbaMatches.bMatch ? EMERALD : CRIMSON }}>
                 {dbaMatches.bMatch ? "RP Match ✓" : "No Match ✗"}
               </span>
             </div>
 
-            {/* Antara Level */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#FAF8F5", border: `1px solid ${HAIRLINE}`, borderRadius: "6px", padding: "8px 12px", marginLeft: "28px" }}>
               <div style={{ flex: 1 }}>
                 <span style={{ fontSize: "9px", color: INK_MUTED, textTransform: "uppercase", display: "block" }}>Antarā Level</span>
                 <strong>{antaraLord}</strong>
               </div>
-              <span style={{
-                fontSize: "10px",
-                fontWeight: 800,
-                color: dbaMatches.aMatch ? EMERALD : CRIMSON
-              }}>
+              <span style={{ fontSize: "10.5px", fontWeight: 800, color: dbaMatches.aMatch ? EMERALD : CRIMSON }}>
                 {dbaMatches.aMatch ? "RP Match ✓" : "No Match ✗"}
               </span>
             </div>
-
           </div>
         </div>
 
       </div>
 
-      {/* Computational Parameters Table (Replacing VIX JSON Console) */}
+      {/* Computational Parameters Table */}
       <section style={{ borderTop: `1px solid ${HAIRLINE}`, paddingTop: "1.6rem" }}>
         <h3 style={{ margin: "0 0 10px 0", fontSize: "12px", color: INK_SECONDARY, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-          Astronomical & Query Parameters Table
+          Astronomical Engine Variables
         </h3>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "11.5px", color: INK_PRIMARY }}>
           <thead>
-            <tr style={{ borderBottom: `1.5px solid ${HAIRLINE}` }}>
+            <tr style={{ borderBottom: `1.5px solid ${HAIRLINE}`, color: GOLD }}>
               <th style={{ textAlign: "left", padding: "8px 12px", fontWeight: 800 }}>Computational Variable</th>
-              <th style={{ textAlign: "left", padding: "8px 12px", fontWeight: 800 }}>Numeric Value</th>
+              <th style={{ textAlign: "left", padding: "8px 12px", fontWeight: 800 }}>Value</th>
               <th style={{ textAlign: "left", padding: "8px 12px", fontWeight: 800 }}>Stellar Engine Context</th>
             </tr>
           </thead>
@@ -527,7 +607,7 @@ export function RulingPlanetsConfirmationWorkbench() {
             <tr style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
               <td style={{ padding: "8px 12px", fontWeight: 700 }}>Krishnamurti Ayanāṁśa</td>
               <td style={{ padding: "8px 12px", fontFamily: "monospace" }}>24°06′42″</td>
-              <td style={{ padding: "8px 12px", color: INK_MUTED }}>Precession subtraction alignment constant</td>
+              <td style={{ padding: "8px 12px", color: INK_MUTED }}>Precession subtraction constant</td>
             </tr>
             <tr style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
               <td style={{ padding: "8px 12px", fontWeight: 700 }}>Target Query Houses</td>
@@ -537,12 +617,12 @@ export function RulingPlanetsConfirmationWorkbench() {
             <tr style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
               <td style={{ padding: "8px 12px", fontWeight: 700 }}>Sub-Lord RP Agreement</td>
               <td style={{ padding: "8px 12px" }}>{confirmationResult.subLordInRps ? "1 (True)" : "0 (False)"}</td>
-              <td style={{ padding: "8px 12px", color: INK_MUTED }}>Indicates whether the cusp sub-lord is present in the RP set</td>
+              <td style={{ padding: "8px 12px", color: INK_MUTED }}>Presence of cusp sub-lord in the active RP set</td>
             </tr>
             <tr style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
               <td style={{ padding: "8px 12px", fontWeight: 700 }}>Star-Lord RP Agreement</td>
               <td style={{ padding: "8px 12px" }}>{confirmationResult.starLordInRps ? "1 (True)" : "0 (False)"}</td>
-              <td style={{ padding: "8px 12px", color: INK_MUTED }}>Indicates whether the sub-lord's star-lord is present in the RP set</td>
+              <td style={{ padding: "8px 12px", color: INK_MUTED }}>Presence of sub-lord's star-lord in the active RP set</td>
             </tr>
             <tr style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
               <td style={{ padding: "8px 12px", fontWeight: 700 }}>DBA RPs Match Count</td>

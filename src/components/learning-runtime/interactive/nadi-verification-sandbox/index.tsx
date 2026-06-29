@@ -201,25 +201,60 @@ export function NadiVerificationSandbox() {
         </div>
       </div>
 
+      {/* Scoped CSS Style Injection */}
+      <style>{`
+        .responsive-grid {
+          display: grid;
+          grid-template-columns: 1.25fr 1fr;
+          gap: 24px;
+        }
+        @media (max-width: 820px) {
+          .responsive-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+        .checkbox-card {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          font-size: 13px;
+          cursor: pointer;
+          padding: 12px 14px;
+          border-radius: 8px;
+          border: 1px solid rgba(156,122,47,0.12);
+          background: #fff;
+          transition: all 0.2s ease;
+        }
+        .checkbox-card:hover {
+          background: rgba(156,122,47,0.03);
+          border-color: rgba(156,122,47,0.3);
+          transform: translateY(-1px);
+        }
+        .checkbox-card:focus-within {
+          box-shadow: 0 0 0 2px rgba(156,122,47,0.18);
+          border-color: #9C7A2F;
+        }
+      `}</style>
+
       {activeTab === "sandbox" ? (
         /* Explanatory Sandbox Tab */
-        <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "24px" }}>
+        <div className="responsive-grid">
           
           {/* Left Panel: The Reading Case Study */}
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             
-            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "8px", padding: "16px" }}>
-              <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "12px", textTransform: "uppercase" }}>
+            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "10px", padding: "20px", boxShadow: "0 4px 16px rgba(156,122,47,0.04)" }}>
+              <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "12px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Documented Reading Case Study
               </span>
               
-              <div style={{ padding: "12px", borderRadius: "8px", background: "#FAF6EB", borderLeft: `4px solid ${GOLD}`, fontSize: "13px", lineHeight: "1.5", color: INK_PRIMARY }}>
+              <div style={{ padding: "14px", borderRadius: "8px", background: "#FAF6EB", borderLeft: `4px solid ${GOLD}`, fontSize: "13px", lineHeight: "1.5", color: INK_PRIMARY }}>
                 The reader matches a Tamil thumbprint bundle. During the session, the seeker hears:
                 <div style={{ margin: "10px 0 10px 12px", display: "flex", flexDirection: "column", gap: "8px" }}>
                   <div>
                     • <strong>Mother's name:</strong>{" "}
                     <span style={{ 
-                      padding: "2px 4px", 
+                      padding: "2px 6px", 
                       borderRadius: "4px", 
                       background: activeLens === "manuscript" ? "rgba(156,122,47,0.15)" : activeLens === "inference" ? "rgba(47,125,85,0.15)" : "transparent",
                       border: activeLens !== "manuscript" && activeLens !== "inference" ? "none" : `1px dashed ${activeLens === "manuscript" ? GOLD : GREEN}`,
@@ -233,7 +268,7 @@ export function NadiVerificationSandbox() {
                   <div>
                     • <strong>Bereavement:</strong>{" "}
                     <span style={{ 
-                      padding: "2px 4px", 
+                      padding: "2px 6px", 
                       borderRadius: "4px", 
                       background: activeLens === "manuscript" ? "rgba(156,122,47,0.15)" : activeLens === "inference" ? "rgba(47,125,85,0.15)" : activeLens === "warm" ? "rgba(162,58,30,0.15)" : "transparent",
                       border: activeLens === "drift" ? "none" : `1px dashed ${activeLens === "manuscript" ? GOLD : activeLens === "inference" ? GREEN : RED}`,
@@ -247,7 +282,7 @@ export function NadiVerificationSandbox() {
                   <div>
                     • <strong>Profession:</strong>{" "}
                     <span style={{ 
-                      padding: "2px 4px", 
+                      padding: "2px 6px", 
                       borderRadius: "4px", 
                       background: activeLens === "manuscript" ? "rgba(156,122,47,0.15)" : activeLens === "inference" ? "rgba(47,125,85,0.15)" : "transparent",
                       border: activeLens !== "manuscript" && activeLens !== "inference" ? "none" : `1px dashed ${activeLens === "manuscript" ? GOLD : GREEN}`,
@@ -263,14 +298,14 @@ export function NadiVerificationSandbox() {
 
             {/* Explanation Selector */}
             <div>
-              <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "8px", textTransform: "uppercase" }}>
+              <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Select Explanatory Lens
               </span>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
                 <button
                   onClick={() => setActiveLens("manuscript")}
                   style={{
-                    padding: "10px",
+                    padding: "12px",
                     borderRadius: "6px",
                     border: `1.5px solid ${activeLens === "manuscript" ? GOLD : "rgba(156,122,47,0.2)"}`,
                     background: activeLens === "manuscript" ? GOLD_LIGHT : "#fff",
@@ -287,7 +322,7 @@ export function NadiVerificationSandbox() {
                 <button
                   onClick={() => setActiveLens("inference")}
                   style={{
-                    padding: "10px",
+                    padding: "12px",
                     borderRadius: "6px",
                     border: `1.5px solid ${activeLens === "inference" ? GREEN : "rgba(156,122,47,0.2)"}`,
                     background: activeLens === "inference" ? "rgba(47,125,85,0.06)" : "#fff",
@@ -304,7 +339,7 @@ export function NadiVerificationSandbox() {
                 <button
                   onClick={() => setActiveLens("warm")}
                   style={{
-                    padding: "10px",
+                    padding: "12px",
                     borderRadius: "6px",
                     border: `1.5px solid ${activeLens === "warm" ? RED : "rgba(156,122,47,0.2)"}`,
                     background: activeLens === "warm" ? "rgba(162,58,30,0.06)" : "#fff",
@@ -321,7 +356,7 @@ export function NadiVerificationSandbox() {
                 <button
                   onClick={() => setActiveLens("drift")}
                   style={{
-                    padding: "10px",
+                    padding: "12px",
                     borderRadius: "6px",
                     border: `1.5px solid ${activeLens === "drift" ? GOLD_DEEP : "rgba(156,122,47,0.2)"}`,
                     background: activeLens === "drift" ? "rgba(122,94,30,0.06)" : "#fff",
@@ -339,11 +374,11 @@ export function NadiVerificationSandbox() {
             </div>
 
             {/* Explanatory Explanation Text */}
-            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "8px", padding: "16px", minHeight: "100px" }}>
+            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "10px", padding: "16px", minHeight: "100px", boxShadow: "0 4px 16px rgba(156,122,47,0.04)" }}>
               {activeLens === "manuscript" && (
                 <div>
                   <h5 style={{ margin: "0 0 6px 0", color: GOLD_DEEP, fontWeight: 700, fontSize: "14px" }}>Ancient Palm Leaf Explanation</h5>
-                  <p style={{ margin: 0, fontSize: "12.5px", color: INK_SECONDARY, lineHeight: "1.4" }}>
+                  <p style={{ margin: 0, fontSize: "12.5px", color: INK_SECONDARY, lineHeight: "1.45" }}>
                     The tradition claims the leaves were written by ancient sages (e.g. Agastya) who recorded the seeker's biographical data. The thumbprint acts as a key to retrieve the pre-recorded leaf from the vault bundles.
                   </p>
                 </div>
@@ -351,7 +386,7 @@ export function NadiVerificationSandbox() {
               {activeLens === "inference" && (
                 <div>
                   <h5 style={{ margin: "0 0 6px 0", color: GREEN, fontWeight: 700, fontSize: "14px" }}>Cold Reading & Biographical Inference</h5>
-                  <p style={{ margin: 0, fontSize: "12.5px", color: INK_SECONDARY, lineHeight: "1.4" }}>
+                  <p style={{ margin: 0, fontSize: "12.5px", color: INK_SECONDARY, lineHeight: "1.45" }}>
                     <strong>"Sumathi"</strong> is a high-probability mother's name for seekers from that region and generation. <strong>"Brother died in 2024"</strong> can be read from the client's mourning attire, micro-expressions, or posture. <strong>"Rare books"</strong> is inferred from dust allergies, ink-stained fingertips, or brief remarks made during registration.
                   </p>
                 </div>
@@ -359,7 +394,7 @@ export function NadiVerificationSandbox() {
               {activeLens === "warm" && (
                 <div>
                   <h5 style={{ margin: "0 0 6px 0", color: RED, fontWeight: 700, fontSize: "14px" }}>Warm Reading (Waiting Room Cues)</h5>
-                  <p style={{ margin: 0, fontSize: "12.5px", color: INK_SECONDARY, lineHeight: "1.4" }}>
+                  <p style={{ margin: 0, fontSize: "12.5px", color: INK_SECONDARY, lineHeight: "1.45" }}>
                     The reader's assistant takes down booking details in advance or overhears client conversations in the waiting lobby (e.g. speaking on the phone about a brother's passing in 2024). This information is quietly passed to the reader, creating an illusion of supernatural foresight.
                   </p>
                 </div>
@@ -367,7 +402,7 @@ export function NadiVerificationSandbox() {
               {activeLens === "drift" && (
                 <div>
                   <h5 style={{ margin: "0 0 6px 0", color: GOLD_DEEP, fontWeight: 700, fontSize: "14px" }}>Selection Bias & Memory Filter</h5>
-                  <p style={{ margin: 0, fontSize: "12.5px", color: INK_SECONDARY, lineHeight: "1.4" }}>
+                  <p style={{ margin: 0, fontSize: "12.5px", color: INK_SECONDARY, lineHeight: "1.45" }}>
                     The reader actually made 12 wrong guesses before landing on these 3 hits. Over time, the seeker's mind filters out the wrong guesses, remembering only the striking hits. Use the slider below to simulate memory drift.
                   </p>
                 </div>
@@ -380,11 +415,11 @@ export function NadiVerificationSandbox() {
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             
             {/* SVG Visualizer */}
-            <div style={{ background: "#fff", border: `1.5px solid ${GOLD}`, borderRadius: "10px", padding: "16px", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", minHeight: "220px", justifyContent: "center" }}>
+            <div style={{ background: "#fff", border: `1.5px solid ${GOLD}`, borderRadius: "10px", padding: "20px", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", minHeight: "220px", justifyContent: "center", boxShadow: "0 4px 16px rgba(156,122,47,0.06)" }}>
               {activeLens === "manuscript" && (
                 <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
-                  <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP }}>AGED PALM-LEAF RECORD</span>
-                  <svg viewBox="0 0 200 60" width="100%" height="60">
+                  <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, letterSpacing: "0.05em" }}>AGED PALM-LEAF RECORD</span>
+                  <svg viewBox="0 0 200 60" width="100%" height="60" aria-label="Vector palm-leaf manuscript drawing with archaic Tamil letters">
                     <rect x="5" y="5" width="190" height="50" rx="4" fill="#EADEC6" stroke={GOLD} strokeWidth="1.5" />
                     <circle cx="25" cy="30" r="4" fill="#FAF6EB" stroke={GOLD} />
                     <line x1="40" y1="20" x2="180" y2="20" stroke="#6D5A3D" strokeWidth="0.8" strokeDasharray="3,3" opacity="0.6" />
@@ -398,8 +433,8 @@ export function NadiVerificationSandbox() {
 
               {activeLens === "inference" && (
                 <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
-                  <span style={{ fontSize: "11px", fontWeight: 700, color: GREEN }}>CLIENT COLD-READING PROFILE</span>
-                  <svg viewBox="0 0 100 80" width="80" height="80">
+                  <span style={{ fontSize: "11px", fontWeight: 700, color: GREEN, letterSpacing: "0.05em" }}>CLIENT COLD-READING PROFILE</span>
+                  <svg viewBox="0 0 100 80" width="80" height="80" aria-label="Visual profile of visual cue tracking on a client outline">
                     <circle cx="50" cy="30" r="16" fill="none" stroke={GREEN} strokeWidth="2" />
                     <path d="M 30,75 C 30,55 70,55 70,75" fill="none" stroke={GREEN} strokeWidth="2" />
                     {/* Cues */}
@@ -414,8 +449,8 @@ export function NadiVerificationSandbox() {
 
               {activeLens === "warm" && (
                 <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
-                  <span style={{ fontSize: "11px", fontWeight: 700, color: RED }}>WAITING LOBBY OVERHEARING</span>
-                  <svg viewBox="0 0 160 80" width="100%" height="80">
+                  <span style={{ fontSize: "11px", fontWeight: 700, color: RED, letterSpacing: "0.05em" }}>WAITING LOBBY OVERHEARING</span>
+                  <svg viewBox="0 0 160 80" width="100%" height="80" aria-label="Visual schematic of waiting room leaks">
                     {/* Office desk */}
                     <rect x="20" y="45" width="50" height="30" fill="none" stroke={INK_MUTED} strokeWidth="1.5" />
                     {/* Seeker on phone */}
@@ -431,7 +466,7 @@ export function NadiVerificationSandbox() {
 
               {activeLens === "drift" && (
                 <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "8px" }}>
-                  <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, textAlign: "center" }}>THE MEMORY TIMELINE FILTER</span>
+                  <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, textAlign: "center", letterSpacing: "0.05em" }}>THE MEMORY TIMELINE FILTER</span>
                   
                   {/* Timeline */}
                   <div style={{ display: "flex", flexDirection: "column", gap: "6px", fontSize: "11.5px", padding: "10px", borderRadius: "6px", background: "#FAF6EB", border: "1px solid rgba(156,122,47,0.15)" }}>
@@ -470,9 +505,10 @@ export function NadiVerificationSandbox() {
                       step="5" 
                       value={timeYears} 
                       onChange={(e) => setTimeYears(Number(e.target.value))}
-                      style={{ width: "100%", accentColor: GOLD }}
+                      style={{ width: "100%", accentColor: GOLD, cursor: "pointer" }}
+                      aria-label="Time Elapsed Slider"
                     />
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "8px", color: INK_MUTED }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "8px", color: INK_MUTED, marginTop: "2px" }}>
                       <span>Immediate Session</span>
                       <span>5 Years Later</span>
                       <span>10 Years (Only Hits Remain)</span>
@@ -482,7 +518,7 @@ export function NadiVerificationSandbox() {
               )}
             </div>
 
-            <div style={{ padding: "12px", borderRadius: "8px", background: GOLD_LIGHT, border: `1px solid ${GOLD}`, fontSize: "12px", lineHeight: "1.4" }}>
+            <div style={{ padding: "12px 14px", borderRadius: "8px", background: GOLD_LIGHT, border: `1px solid ${GOLD}`, fontSize: "12px", lineHeight: "1.45" }}>
               <strong>Underdetermination:</strong> Notice how the same correct hits fit all lenses. A striking name or date hit <strong>does not verify the mechanism</strong>, because cold/warm reading and memory drift explain it just as well.
             </div>
 
@@ -491,65 +527,69 @@ export function NadiVerificationSandbox() {
         </div>
       ) : activeTab === "protocol" ? (
         /* Protocol Architect Tab */
-        <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "24px" }}>
+        <div className="responsive-grid">
           
           {/* Left Column: Architect Options */}
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "8px", padding: "16px" }}>
-              <span style={{ fontSize: "12px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "12px", textTransform: "uppercase" }}>
+            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "10px", padding: "20px", boxShadow: "0 4px 16px rgba(156,122,47,0.04)" }}>
+              <span style={{ fontSize: "11.5px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "14px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Add Experimental Controls
               </span>
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 
-                <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", cursor: "pointer" }}>
+                <label className="checkbox-card">
                   <input 
                     type="checkbox" 
                     checked={blindSeeker} 
                     onChange={(e) => setBlindSeeker(e.target.checked)} 
-                    style={{ marginTop: "3px", accentColor: GOLD }}
+                    style={{ marginTop: "3.5px", accentColor: GOLD, width: "16px", height: "16px", cursor: "pointer" }}
+                    aria-label="Double-Blind Seeker Control"
                   />
                   <div>
-                    <strong>Double-Blind Seeker</strong>
-                    <span style={{ display: "block", fontSize: "11px", color: INK_MUTED }}>Seeker is hidden behind a screen; answers via silent push-buttons. Prevents visual cold reading cues.</span>
+                    <strong style={{ display: "block", fontSize: "13px", color: INK_PRIMARY }}>Double-Blind Seeker</strong>
+                    <span style={{ display: "block", fontSize: "11px", color: INK_MUTED, marginTop: "2px", lineHeight: "1.3" }}>Seeker is hidden behind a screen; answers via silent push-buttons. Prevents visual cold reading cues.</span>
                   </div>
                 </label>
 
-                <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", cursor: "pointer" }}>
+                <label className="checkbox-card">
                   <input 
                     type="checkbox" 
                     checked={blindTranslator} 
                     onChange={(e) => setBlindTranslator(e.target.checked)} 
-                    style={{ marginTop: "3px", accentColor: GOLD }}
+                    style={{ marginTop: "3.5px", accentColor: GOLD, width: "16px", height: "16px", cursor: "pointer" }}
+                    aria-label="Independent Translators Control"
                   />
                   <div>
-                    <strong>Independent Translators</strong>
-                    <span style={{ display: "block", fontSize: "11px", color: INK_MUTED }}>Translators are scholars isolated in a separate booth, blind to the seeker. Blocks verbal collusion cues.</span>
+                    <strong style={{ display: "block", fontSize: "13px", color: INK_PRIMARY }}>Independent Translators</strong>
+                    <span style={{ display: "block", fontSize: "11px", color: INK_MUTED, marginTop: "2px", lineHeight: "1.3" }}>Translators are scholars isolated in a separate booth, blind to the seeker. Blocks verbal collusion cues.</span>
                   </div>
                 </label>
 
-                <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", cursor: "pointer" }}>
+                <label className="checkbox-card">
                   <input 
                     type="checkbox" 
                     checked={digitizedCheck} 
                     onChange={(e) => setDigitizedCheck(e.target.checked)} 
-                    style={{ marginTop: "3px", accentColor: GOLD }}
+                    style={{ marginTop: "3.5px", accentColor: GOLD, width: "16px", height: "16px", cursor: "pointer" }}
+                    aria-label="Digitized Leaf Scribing Control"
                   />
                   <div>
-                    <strong>Digitized Leaf Scribing</strong>
-                    <span style={{ display: "block", fontSize: "11px", color: INK_MUTED }}>Leaves are scanned beforehand, and matches are validated by computer algorithms. Prevents reader vault manipulation.</span>
+                    <strong style={{ display: "block", fontSize: "13px", color: INK_PRIMARY }}>Digitized Leaf Scribing</strong>
+                    <span style={{ display: "block", fontSize: "11px", color: INK_MUTED, marginTop: "2px", lineHeight: "1.3" }}>Leaves are scanned beforehand, and matches are validated by computer algorithms. Prevents reader vault manipulation.</span>
                   </div>
                 </label>
 
-                <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", cursor: "pointer" }}>
+                <label className="checkbox-card">
                   <input 
                     type="checkbox" 
                     checked={fakeThumbprints} 
                     onChange={(e) => setFakeThumbprints(e.target.checked)} 
-                    style={{ marginTop: "3px", accentColor: GOLD }}
+                    style={{ marginTop: "3.5px", accentColor: GOLD, width: "16px", height: "16px", cursor: "pointer" }}
+                    aria-label="Randomized Seeker Controls"
                   />
                   <div>
-                    <strong>Randomized Seeker Controls</strong>
-                    <span style={{ display: "block", fontSize: "11px", color: INK_MUTED }}>Fake prints and mock birth charts are mixed in the search pool. Measures database matches vs random guessing.</span>
+                    <strong style={{ display: "block", fontSize: "13px", color: INK_PRIMARY }}>Randomized Seeker Controls</strong>
+                    <span style={{ display: "block", fontSize: "11px", color: INK_MUTED, marginTop: "2px", lineHeight: "1.3" }}>Fake prints and mock birth charts are mixed in the search pool. Measures database matches vs random guessing.</span>
                   </div>
                 </label>
 
@@ -561,14 +601,14 @@ export function NadiVerificationSandbox() {
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             
             {/* Double Gauge visualizer */}
-            <div style={{ background: "#fff", border: `1.5px solid ${GOLD}`, borderRadius: "10px", padding: "16px", display: "flex", flexDirection: "column", gap: "16px" }}>
-              <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase" }}>
+            <div style={{ background: "#fff", border: `1.5px solid ${GOLD}`, borderRadius: "10px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px", boxShadow: "0 4px 16px rgba(156,122,47,0.06)" }}>
+              <span style={{ fontSize: "11.5px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Scientific Study Metrics
               </span>
 
               {/* Skeptical Rigour Gauge */}
               <div>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "4px", fontWeight: 600 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "6px", fontWeight: 600 }}>
                   <span style={{ color: GREEN }}>Skeptical Rigour:</span>
                   <span>{rigourScore}%</span>
                 </div>
@@ -579,7 +619,7 @@ export function NadiVerificationSandbox() {
 
               {/* Practitioner Participation Willingness Gauge */}
               <div>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "4px", fontWeight: 600 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "6px", fontWeight: 600 }}>
                   <span style={{ color: RED }}>Practitioner Willingness:</span>
                   <span>{willingnessScore}%</span>
                 </div>
@@ -589,20 +629,22 @@ export function NadiVerificationSandbox() {
               </div>
 
               {/* Warning/Explanation Text */}
-              <div style={{ padding: "10px", borderRadius: "6px", background: willingnessScore < 50 ? "rgba(162,58,30,0.06)" : "rgba(47,125,85,0.06)", border: `1px solid ${willingnessScore < 50 ? RED : GREEN}`, fontSize: "11.5px", lineHeight: "1.4" }}>
+              <div style={{ padding: "12px", borderRadius: "8px", background: willingnessScore < 50 ? "rgba(162,58,30,0.06)" : "rgba(47,125,85,0.06)", border: `1px solid ${willingnessScore < 50 ? RED : GREEN}`, fontSize: "12px", lineHeight: "1.45" }}>
                 {willingnessScore < 50 ? (
                   <div>
-                    <strong>Willingness Collapsed:</strong> Traditional reader-families refuse to participate when protocols treat their hereditary, sacred manuscript matching process with clinical suspicion. This is why a clean double-blind study remains unpublished.
+                    <strong style={{ color: RED, display: "block", marginBottom: "2px" }}>Willingness Collapsed</strong>
+                    Traditional reader-families refuse to participate when protocols treat their hereditary, sacred manuscript matching process with clinical suspicion. This is why a clean double-blind study remains unpublished.
                   </div>
                 ) : (
                   <div>
-                    <strong>Study Feasible:</strong> Readers may participate under basic observation, but low rigour score keeps the predictive mechanism scientifically unproven.
+                    <strong style={{ color: GREEN, display: "block", marginBottom: "2px" }}>Study Feasible</strong>
+                    Readers may participate under basic observation, but low rigour score keeps the predictive mechanism scientifically unproven.
                   </div>
                 )}
               </div>
             </div>
 
-            <div style={{ padding: "12px", borderRadius: "8px", background: GOLD_LIGHT, border: `1px solid ${GOLD}`, fontSize: "12px", lineHeight: "1.4" }}>
+            <div style={{ padding: "12px 14px", borderRadius: "8px", background: GOLD_LIGHT, border: `1px solid ${GOLD}`, fontSize: "12px", lineHeight: "1.45" }}>
               <strong>The Verification Obstacle:</strong> Rigorous study requires clinical controls that disrupt the matching setting, causing readers to decline. The verdict is left open, not settled.
             </div>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Info, RotateCcw, ShieldAlert, Sparkles, CheckCircle2, XCircle, Sliders } from "lucide-react";
+import { Info, RotateCcw, ShieldAlert, Sparkles, CheckCircle2, XCircle, Scale } from "lucide-react";
 
 const GOLD = "var(--gl-gold-accent, #9C7A2F)";
 const GOLD_DEEP = "var(--gl-gold-deep, #7A5E1E)";
@@ -105,17 +105,45 @@ export function MitigationVsCure() {
 
   const isDojoComplete = Object.keys(selectedAnswers).length === SCENARIOS.length;
 
+  // Determine Scale Tilt Angle
+  let tiltAngle = 0;
+  if (userChoice !== undefined) {
+    const isCorrect = userChoice === activeScenario.correctCategory;
+    if (userChoice === "Cure") {
+      // Over-promise cure heavy on the left
+      tiltAngle = isCorrect ? -15 : -8;
+    } else {
+      // Honest mitigation balances grounding on the right
+      tiltAngle = isCorrect ? 15 : 8;
+    }
+  }
+
+  // Left/Right Pan Colors based on audit outcomes
+  const leftPanColor = userChoice === "Cure" 
+    ? (userChoice === activeScenario.correctCategory ? "rgba(239, 68, 68, 0.15)" : "rgba(124, 109, 91, 0.15)")
+    : "rgba(255, 255, 255, 0.3)";
+  const leftPanBorder = userChoice === "Cure" 
+    ? (userChoice === activeScenario.correctCategory ? "#ef4444" : INK_MUTED)
+    : GOLD;
+
+  const rightPanColor = userChoice === "Mitigation"
+    ? (userChoice === activeScenario.correctCategory ? "rgba(22, 163, 74, 0.15)" : "rgba(124, 109, 91, 0.15)")
+    : "rgba(255, 255, 255, 0.3)";
+  const rightPanBorder = userChoice === "Mitigation"
+    ? (userChoice === activeScenario.correctCategory ? "#16a34a" : INK_MUTED)
+    : GOLD;
+
   return (
     <div style={{ padding: "16px", borderRadius: "16px", background: "rgba(255, 253, 248, 0.75)", backdropFilter: "blur(12px)", border: "1px solid rgba(156, 122, 47, 0.15)", fontFamily: "'Inter', sans-serif", color: INK_PRIMARY, maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "12px" }}>
       
       {/* HEADER */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px", borderBottom: "1px solid rgba(156,122,47,0.1)", paddingBottom: "10px" }}>
         <div>
-          <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 800, color: GOLD_DEEP }}>
-            Honesty Auditor: Mitigation vs Cure
+          <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 800, color: GOLD_DEEP, display: "flex", alignItems: "center", gap: "6px" }}>
+            <Scale size={18} /> Honesty Auditor: Mitigation vs Cure
           </h3>
           <p style={{ margin: "2px 0 0 0", fontSize: "11px", color: INK_SECONDARY }}>
-            Act as a senior astrologer to audit client statements. Categorize them and practice ethical reframing.
+            Audit client claims. Redesign terms from predatory fate cures to honest, balanced cosmic mitigation.
           </p>
         </div>
         
@@ -139,9 +167,9 @@ export function MitigationVsCure() {
           const isAudited = selectedAnswers[s.id] !== undefined;
           const isCorrect = isAudited && selectedAnswers[s.id] === s.correctCategory;
           
-          let bg = "rgba(0,0,0,0.1)";
+          let bg = "rgba(0,0,0,0.06)";
           let border = "1px solid transparent";
-          let color = "#ffffff";
+          let color = INK_SECONDARY;
           
           if (isCurrent) {
             bg = "#ffffff";
@@ -150,8 +178,6 @@ export function MitigationVsCure() {
           } else if (isAudited) {
             bg = isCorrect ? "#16a34a" : "#ef4444";
             color = "#ffffff";
-          } else {
-            color = INK_SECONDARY;
           }
 
           return (
@@ -183,8 +209,8 @@ export function MitigationVsCure() {
       {/* SPLIT VIEW */}
       <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
         
-        {/* Left Column: Active Audit Statement */}
-        <div style={{ flex: "1 1 340px", display: "flex", flexDirection: "column", gap: "10px", background: "#ffffff", padding: "14px", borderRadius: "12px", border: "1px solid rgba(156,122,47,0.1)", minWidth: 0 }}>
+        {/* Left Column: Active Audit Statement & Interactive Scale */}
+        <div style={{ flex: "1 1 340px", display: "flex", flexDirection: "column", gap: "12px", background: "#ffffff", padding: "14px", borderRadius: "12px", border: "1px solid rgba(156,122,47,0.1)", minWidth: 0 }}>
           
           <div>
             <span style={{ fontSize: "9.5px", fontWeight: 800, textTransform: "uppercase", color: INK_MUTED }}>
@@ -197,6 +223,47 @@ export function MitigationVsCure() {
             </div>
           </div>
 
+          {/* INTERACTIVE BALANCE SCALE SVG */}
+          <div style={{ display: "flex", justifyContent: "center", padding: "8px 0", background: "rgba(251, 248, 243, 0.4)", borderRadius: "8px", border: "1px solid rgba(156,122,47,0.06)" }}>
+            <svg width="240" height="140" viewBox="0 0 240 140" style={{ display: "block" }}>
+              {/* Stand */}
+              <line x1="120" y1="25" x2="120" y2="120" stroke={INK_MUTED} strokeWidth="4" />
+              <path d="M 90 120 L 150 120" stroke={INK_MUTED} strokeWidth="6" strokeLinecap="round" />
+              <circle cx="120" cy="25" r="5" fill={GOLD_DEEP} />
+
+              {/* Pivoting Scale Assembly */}
+              <g style={{ transformOrigin: "120px 35px", transform: `rotate(${tiltAngle}deg)`, transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)" }}>
+                {/* Crossbeam */}
+                <line x1="60" y1="35" x2="180" y2="35" stroke={GOLD} strokeWidth="3" />
+                <circle cx="120" cy="35" r="4" fill={GOLD_DEEP} />
+                
+                {/* Left Pan Assembly (Cure) */}
+                <g style={{ transformOrigin: "60px 35px", transform: `rotate(${-tiltAngle}deg)`, transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)" }}>
+                  <line x1="60" y1="35" x2="40" y2="85" stroke={INK_MUTED} strokeWidth="1" />
+                  <line x1="60" y1="35" x2="80" y2="85" stroke={INK_MUTED} strokeWidth="1" />
+                  <path d="M 32 85 L 88 85 C 88 95, 32 95, 32 85 Z" fill={leftPanColor} stroke={leftPanBorder} strokeWidth="1.5" />
+                  
+                  {/* Heavy Weight for Cure */}
+                  {userChoice === "Cure" && (
+                    <rect x="50" y="65" width="20" height="20" rx="3" fill="#ef4444" opacity="0.9" style={{ animation: "slideIn 0.3s ease" }} />
+                  )}
+                </g>
+
+                {/* Right Pan Assembly (Mitigation) */}
+                <g style={{ transformOrigin: "180px 35px", transform: `rotate(${-tiltAngle}deg)`, transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)" }}>
+                  <line x1="180" y1="35" x2="160" y2="85" stroke={INK_MUTED} strokeWidth="1" />
+                  <line x1="180" y1="35" x2="200" y2="85" stroke={INK_MUTED} strokeWidth="1" />
+                  <path d="M 152 85 L 208 85 C 208 95, 152 95, 152 85 Z" fill={rightPanColor} stroke={rightPanBorder} strokeWidth="1.5" />
+                  
+                  {/* Grounded Weight for Mitigation */}
+                  {userChoice === "Mitigation" && (
+                    <rect x="170" y="65" width="20" height="20" rx="3" fill="#16a34a" opacity="0.9" style={{ animation: "slideIn 0.3s ease" }} />
+                  )}
+                </g>
+              </g>
+            </svg>
+          </div>
+
           {/* Categorize Buttons */}
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
             <span style={{ fontSize: "9.5px", fontWeight: 800, textTransform: "uppercase", color: INK_MUTED }}>
@@ -206,22 +273,10 @@ export function MitigationVsCure() {
               <button
                 onClick={() => handleCategorize("Mitigation")}
                 disabled={userChoice !== undefined}
-                onMouseEnter={(e) => {
-                  if (userChoice === undefined) {
-                    e.currentTarget.style.borderColor = GOLD;
-                    e.currentTarget.style.background = "rgba(156, 122, 47, 0.05)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (userChoice === undefined) {
-                    e.currentTarget.style.borderColor = "rgba(0,0,0,0.1)";
-                    e.currentTarget.style.background = "#ffffff";
-                  }
-                }}
                 style={{
                   padding: "10px",
                   borderRadius: "8px",
-                  border: userChoice === "Mitigation" ? `1.5px solid ${GOLD}` : "1px solid rgba(0,0,0,0.1)",
+                  border: userChoice === "Mitigation" ? "1.5px solid #16a34a" : "1px solid rgba(0,0,0,0.1)",
                   background: userChoice === "Mitigation" ? "rgba(22, 163, 74, 0.08)" : "#ffffff",
                   color: userChoice === "Mitigation" ? "#16a34a" : INK_SECONDARY,
                   fontWeight: 800,
@@ -236,22 +291,10 @@ export function MitigationVsCure() {
               <button
                 onClick={() => handleCategorize("Cure")}
                 disabled={userChoice !== undefined}
-                onMouseEnter={(e) => {
-                  if (userChoice === undefined) {
-                    e.currentTarget.style.borderColor = GOLD;
-                    e.currentTarget.style.background = "rgba(156, 122, 47, 0.05)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (userChoice === undefined) {
-                    e.currentTarget.style.borderColor = "rgba(0,0,0,0.1)";
-                    e.currentTarget.style.background = "#ffffff";
-                  }
-                }}
                 style={{
                   padding: "10px",
                   borderRadius: "8px",
-                  border: userChoice === "Cure" ? `1.5px solid ${GOLD}` : "1px solid rgba(0,0,0,0.1)",
+                  border: userChoice === "Cure" ? "1.5px solid #ef4444" : "1px solid rgba(0,0,0,0.1)",
                   background: userChoice === "Cure" ? "rgba(239, 68, 68, 0.08)" : "#ffffff",
                   color: userChoice === "Cure" ? "#ef4444" : INK_SECONDARY,
                   fontWeight: 800,
@@ -317,18 +360,6 @@ export function MitigationVsCure() {
                       <div
                         key={oIdx}
                         onClick={() => !isAnswered && handleReframeSelect(oIdx)}
-                        onMouseEnter={(e) => {
-                          if (!isAnswered) {
-                            e.currentTarget.style.borderColor = GOLD;
-                            e.currentTarget.style.background = "rgba(156, 122, 47, 0.05)";
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isAnswered) {
-                            e.currentTarget.style.borderColor = "rgba(0,0,0,0.08)";
-                            e.currentTarget.style.background = "#ffffff";
-                          }
-                        }}
                         style={{
                           padding: "8px 12px",
                           borderRadius: "8px",
@@ -358,9 +389,9 @@ export function MitigationVsCure() {
 
             </div>
           ) : (
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "150px", border: "1.5px dashed rgba(156,122,47,0.15)", borderRadius: "12px", background: "rgba(0,0,0,0.01)" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyItems: "center", justifyContent: "center", height: "180px", border: "1.5px dashed rgba(156,122,47,0.15)", borderRadius: "12px", background: "rgba(0,0,0,0.01)" }}>
               <span style={{ fontSize: "11px", color: INK_MUTED, textAlign: "center", padding: "16px" }}>
-                Select an audit conclusion on the left to unlock expert astrological analysis and reframing options.
+                Select an audit conclusion on the left to see the Scale of Claims pivot, and unlock the ethical reframing options.
               </span>
             </div>
           )}

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { AlertOctagon, HelpCircle, CheckCircle, XCircle, Info, RefreshCw, Award, ArrowRight } from "lucide-react";
+import { AlertOctagon, CheckCircle, XCircle, Info, RefreshCw, Award } from "lucide-react";
 
 const GOLD = "var(--gl-gold-accent, #9C7A2F)";
 const GOLD_DEEP = "var(--gl-gold-deep, #7A5E1E)";
@@ -34,7 +34,7 @@ const SCENARIOS: Scenario[] = [
     id: 3,
     statement: "Tantra is a ritual-technical science that uses geometric diagrams (yantras), vocalized vibrations (mantras), and focused visualization (dhyāna) to align energy fields under lineage guidance.",
     correctCategory: "Accurate",
-    explanation: "Correct! Ddefining Tantra as a systematic loom/technique of energy control respects both classical sources (the Āgamas) and traditional lineages, avoiding emotional bias."
+    explanation: "Correct! Defining Tantra as a systematic loom/technique of energy control respects both classical sources (the Āgamas) and traditional lineages, avoiding emotional bias."
   }
 ];
 
@@ -42,6 +42,7 @@ export function TantraContextNote() {
   const [activeTab, setActiveTab] = useState<"compare" | "audit">("compare");
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
   const [showFeedback, setShowFeedback] = useState<Record<number, boolean>>({});
+  const [lensPosition, setLensPosition] = useState<"sensational" | "dismiss" | "accurate">("accurate");
 
   const handleSelectAnswer = (scenarioId: number, category: string) => {
     setSelectedAnswers(prev => ({ ...prev, [scenarioId]: category }));
@@ -64,20 +65,8 @@ export function TantraContextNote() {
   const allAnswered = Object.keys(selectedAnswers).length === SCENARIOS.length;
 
   return (
-    <div style={{
-      padding: "16px",
-      borderRadius: "16px",
-      background: "rgba(255, 253, 248, 0.75)",
-      backdropFilter: "blur(12px)",
-      border: "1px solid rgba(156, 122, 47, 0.15)",
-      fontFamily: "'Inter', sans-serif",
-      color: INK_PRIMARY,
-      maxWidth: "960px",
-      margin: "0 auto",
-      display: "flex",
-      flexDirection: "column",
-      gap: "14px"
-    }}>
+    <div style={{ padding: "16px", borderRadius: "16px", background: "rgba(255, 253, 248, 0.75)", backdropFilter: "blur(12px)", border: "1px solid rgba(156, 122, 47, 0.15)", fontFamily: "'Inter', sans-serif", color: INK_PRIMARY, maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "14px" }}>
+      
       <style>{`
         .tab-btn {
           border: 1px solid transparent;
@@ -99,18 +88,20 @@ export function TantraContextNote() {
           border-color: ${GOLD};
           background: rgba(251,248,243,0.7);
         }
+        .lens-nav-btn {
+          flex: 1;
+          padding: 6px;
+          border: 1px solid rgba(156,122,47,0.15);
+          border-radius: 6px;
+          font-size: 10px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
       `}</style>
 
       {/* HEADER */}
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        flexWrap: "wrap",
-        gap: "8px",
-        borderBottom: "1px solid rgba(156,122,47,0.1)",
-        paddingBottom: "10px"
-      }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px", borderBottom: "1px solid rgba(156,122,47,0.1)", paddingBottom: "10px" }}>
         <div>
           <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 800, color: GOLD_DEEP }}>
             Tantra Context & Cultural Care Note
@@ -122,20 +113,13 @@ export function TantraContextNote() {
       </div>
 
       {/* TABS CONTROLLER */}
-      <div style={{
-        display: "flex",
-        background: "rgba(0,0,0,0.04)",
-        borderRadius: "8px",
-        padding: "3px",
-        alignSelf: "flex-start",
-        gap: "4px"
-      }}>
+      <div style={{ display: "flex", background: "rgba(0,0,0,0.04)", borderRadius: "8px", padding: "3px", alignSelf: "flex-start", gap: "4px" }}>
         <button
           onClick={() => setActiveTab("compare")}
           className={`tab-btn ${activeTab === "compare" ? "active" : ""}`}
           style={{ padding: "6px 14px", borderRadius: "6px", fontSize: "11.5px", cursor: "pointer", color: INK_SECONDARY }}
         >
-          Caricature vs. Tradition
+          Academic Framing Lens
         </button>
         <button
           onClick={() => setActiveTab("audit")}
@@ -146,91 +130,99 @@ export function TantraContextNote() {
         </button>
       </div>
 
-      {/* TAB 1: COMPARE */}
+      {/* TAB 1: COMPARE (WITH INTERACTIVE ACADEMIC LENS) */}
       {activeTab === "compare" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           
-          {/* COMPARATIVE CARDS */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "12px",
-            flexWrap: "wrap"
-          }}>
-            {/* CARICATURE */}
-            <div style={{
-              background: "rgba(173, 75, 55, 0.04)",
-              border: "1px solid rgba(173, 75, 55, 0.2)",
-              borderRadius: "12px",
-              padding: "14px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "8px"
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <AlertOctagon size={16} style={{ color: "#ad4b37" }} />
-                <span style={{ fontSize: "12.5px", fontWeight: 850, color: "#ad4b37" }}>
-                  Common Caricatures & Distortions
-                </span>
-              </div>
-              <ul style={{
-                margin: 0,
-                paddingLeft: "16px",
-                fontSize: "11px",
-                lineHeight: "1.45",
-                color: INK_PRIMARY,
-                display: "flex",
-                flexDirection: "column",
-                gap: "6px"
-              }}>
-                <li>
-                  <strong>Western Sensationalism:</strong> Narrowing a profound ritual-philosophical corpus to a subset of sexual exercises and sensory pleasure.
-                </li>
-                <li>
-                  <strong>Reflexive Dismissal:</strong> Writing off all Tantric methods (including complex yantras and mantras) as crude black magic, superstition, or trickery.
-                </li>
-                <li>
-                  <strong>Casual Prescription:</strong> Buying yantras on internet sites or practicing intensive chanting from text snippets with no lineage safety guide.
-                </li>
-              </ul>
+          {/* LENS CONTROLLER SLIDER */}
+          <div style={{ background: "rgba(255,255,255,0.6)", border: "1px solid rgba(156, 122, 47, 0.12)", borderRadius: "12px", padding: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
+            <span style={{ fontSize: "10.5px", fontWeight: 800, textTransform: "uppercase", color: INK_MUTED }}>
+              Slide the Academic Framing Lens
+            </span>
+            
+            {/* Horizontal Pill Selectors */}
+            <div style={{ display: "flex", gap: "6px" }}>
+              <button 
+                onClick={() => setLensPosition("sensational")} 
+                className="lens-nav-btn"
+                style={{ 
+                  background: lensPosition === "sensational" ? "rgba(173, 75, 55, 0.15)" : "#ffffff", 
+                  borderColor: lensPosition === "sensational" ? "#ad4b37" : "rgba(156,122,47,0.15)",
+                  color: lensPosition === "sensational" ? "#ad4b37" : INK_SECONDARY
+                }}
+              >
+                Pop Sensationalism Lens
+              </button>
+              <button 
+                onClick={() => setLensPosition("dismiss")} 
+                className="lens-nav-btn"
+                style={{ 
+                  background: lensPosition === "dismiss" ? "rgba(124, 109, 91, 0.15)" : "#ffffff", 
+                  borderColor: lensPosition === "dismiss" ? INK_MUTED : "rgba(156,122,47,0.15)",
+                  color: lensPosition === "dismiss" ? INK_MUTED : INK_SECONDARY
+                }}
+              >
+                Reflexive Dismissal Lens
+              </button>
+              <button 
+                onClick={() => setLensPosition("accurate")} 
+                className="lens-nav-btn"
+                style={{ 
+                  background: lensPosition === "accurate" ? "rgba(78, 112, 55, 0.15)" : "#ffffff", 
+                  borderColor: lensPosition === "accurate" ? "#4e7037" : "rgba(156,122,47,0.15)",
+                  color: lensPosition === "accurate" ? "#4e7037" : INK_SECONDARY
+                }}
+              >
+                Āgamic Traditional Lens
+              </button>
             </div>
 
-            {/* TRADITION */}
-            <div style={{
-              background: "rgba(78, 112, 55, 0.04)",
-              border: "1px solid rgba(78, 112, 55, 0.2)",
-              borderRadius: "12px",
-              padding: "14px",
+            {/* LENS VIEWER DISPLAY CARD */}
+            <div style={{ 
+              background: "#ffffff", 
+              borderRadius: "10px", 
+              padding: "16px", 
+              border: `1.5px solid ${
+                lensPosition === "sensational" ? "#ad4b37" :
+                lensPosition === "dismiss" ? INK_MUTED :
+                "#4e7037"
+              }`,
+              minHeight: "100px",
               display: "flex",
               flexDirection: "column",
-              gap: "8px"
+              gap: "6px",
+              transition: "all 0.3s ease"
             }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <CheckCircle size={16} style={{ color: "#4e7037" }} />
-                <span style={{ fontSize: "12.5px", fontWeight: 850, color: "#4e7037" }}>
-                  Authentic Traditional System
-                </span>
-              </div>
-              <ul style={{
-                margin: 0,
-                paddingLeft: "16px",
-                fontSize: "11px",
-                lineHeight: "1.45",
-                color: INK_PRIMARY,
-                display: "flex",
-                flexDirection: "column",
-                gap: "6px"
+              <span style={{ 
+                fontSize: "9px", 
+                fontWeight: 900, 
+                textTransform: "uppercase", 
+                color: 
+                  lensPosition === "sensational" ? "#ad4b37" :
+                  lensPosition === "dismiss" ? INK_MUTED :
+                  "#4e7037"
               }}>
-                <li>
-                  <strong>Rigorous Ritual Science:</strong> A structured framework organizing vocal vibrations, geometric focus patterns, and physical purification steps.
-                </li>
-                <li>
-                  <strong>Systematic Mechanics:</strong> Utilizing sound and geometric boundaries as tools to balance cosmic light and psychological capacities.
-                </li>
-                <li>
-                  <strong>Initiation-Gated Practice:</strong> Requires direct transmission (dīkṣā) from a lineage teacher who holds and monitors the energetic thread.
-                </li>
-              </ul>
+                {lensPosition === "sensational" ? "Visual Filter: Western Pop Caricature" :
+                 lensPosition === "dismiss" ? "Visual Filter: Reactive Rationalist Dismissal" :
+                 "Visual Filter: Authentic Liturgical Science"}
+              </span>
+
+              {/* Text switches dynamically based on lens position */}
+              {lensPosition === "sensational" && (
+                <p style={{ margin: 0, fontSize: "12px", lineHeight: "1.45", color: "#762e21", fontStyle: "italic" }}>
+                  "Tantra is primarily an exotic method of sexual exercises, sensory indulgence, and physical ecstasy redesigned to help modern westerners achieve cosmic thrills..."
+                </p>
+              )}
+              {lensPosition === "dismiss" && (
+                <p style={{ margin: 0, fontSize: "12px", lineHeight: "1.45", color: INK_SECONDARY, fontStyle: "italic" }}>
+                  "Tantra is a collection of primitive black magic tricks, superstitious charms, and mystical nonsense used to exploit vulnerable minds, carrying no values for study..."
+                </p>
+              )}
+              {lensPosition === "accurate" && (
+                <p style={{ margin: 0, fontSize: "12px", lineHeight: "1.45", color: "#344e24", fontWeight: 700 }}>
+                  "Tantra is a structured ritual-technical science (literally: 'loom') utilizing yantras (geometry), mantras (sound vibrations), and dhyāna (visual meditation) under lineage guidance to calibrate internal fields."
+                </p>
+              )}
             </div>
           </div>
 
@@ -275,21 +267,6 @@ export function TantraContextNote() {
             </div>
           </div>
 
-          {/* ACCURATE FRAMING METHODOLOGY CARD */}
-          <div style={{
-            background: SURFACE_MANUSCRIPT,
-            border: `1.5px solid ${GOLD}`,
-            borderRadius: "12px",
-            padding: "14px"
-          }}>
-            <h4 style={{ margin: "0 0 6px 0", fontSize: "13px", fontWeight: 800, color: GOLD_DEEP }}>
-              Astrological Counseling Standards
-            </h4>
-            <p style={{ margin: 0, fontSize: "11.5px", lineHeight: "1.45", color: INK_SECONDARY }}>
-              In client consultation, never utilize sensationalized or dismissive language. Explain that <strong>Tantra is a ritual technology of energy calibration</strong>. Keep the study strictly conceptual: do not attempt to construct or prescribe complex yantras or gated bījas yourself without direct lineage authority.
-            </p>
-          </div>
-
         </div>
       )}
 
@@ -297,15 +274,7 @@ export function TantraContextNote() {
       {activeTab === "audit" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           
-          <div style={{
-            background: "rgba(156, 122, 47, 0.05)",
-            border: "1px dashed rgba(156,122,47,0.25)",
-            borderRadius: "10px",
-            padding: "10px",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px"
-          }}>
+          <div style={{ background: "rgba(156, 122, 47, 0.05)", border: "1px dashed rgba(156,122,47,0.25)", borderRadius: "10px", padding: "10px", display: "flex", alignItems: "center", gap: "8px" }}>
             <Info size={14} style={{ color: GOLD_DEEP, flexShrink: 0 }} />
             <span style={{ fontSize: "10.5px", color: INK_SECONDARY }}>
               Categorize each statement below correctly. Aim to identify biased extremes vs. academic framing.
@@ -331,7 +300,6 @@ export function TantraContextNote() {
                     gap: "10px"
                   }}
                 >
-                  {/* STATEMENT BODY */}
                   <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
                     <span style={{
                       background: "rgba(156,122,47,0.1)",

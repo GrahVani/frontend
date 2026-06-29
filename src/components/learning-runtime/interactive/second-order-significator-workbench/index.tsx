@@ -5,10 +5,14 @@ import { RASHIS } from "../rashi-data";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
+const INK_MUTED = "var(--gl-ink-on-cream-muted)";
 const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const GOLD = "#9C7A2F";
 const INDIGO = "#4F6FA8";
+const GREEN = "#2F7D55";
+const RED = "#A23A1E";
+const BLUE = "#356CAB";
 
 interface PlanetInfo {
   name: string;
@@ -83,7 +87,6 @@ export function SecondOrderSignificatorWorkbench() {
     Saturn: false
   });
 
-  // Highlight state for stellar network nodes
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
 
   // 1st-Order significators: occupants + lord
@@ -164,131 +167,142 @@ export function SecondOrderSignificatorWorkbench() {
     return list.sort((a, b) => a.strongestLvl - b.strongestLvl);
   }, [occupants, activeCuspLord, level3Significators, level4Significators]);
 
-  // Network Nodes Coordinates mapping for dynamic SVG layout (viewBox 0 0 460 340)
+  // Network Nodes Coordinates mapped in orbits around the center Cusp (viewBox 0 0 460 340)
   const networkNodes = useMemo(() => {
-    const nodes: { id: string; label: string; x: number; y: number; fill: string; border: string }[] = [];
+    const nodes: { id: string; label: string; x: number; y: number; fill: string; border: string; ring: number }[] = [];
+    const cx = 230;
+    const cy = 160;
 
-    // House Cusp Node (Center top)
-    nodes.push({ id: "Cusp", label: `House ${activeHouse}`, x: 230, y: 35, fill: "#9C7A2F15", border: GOLD });
+    // Center Cusp Node (Ring 0)
+    nodes.push({ id: "Cusp", label: `House ${activeHouse}`, x: cx, y: cy, fill: `${GOLD}18`, border: GOLD, ring: 0 });
 
-    // 1st-Order Lord Node (Left middle)
-    nodes.push({ id: activeCuspLord, label: `${activeCuspLord} (Lord)`, x: 100, y: 95, fill: "#FFF", border: GOLD });
-
-    // 1st-Order Occupant Nodes (Right middle)
-    occupants.forEach((occ, idx) => {
-      nodes.push({ id: occ, label: `${occ} (Occ)`, x: 360, y: 95 + idx * 55, fill: "#FFF", border: GOLD });
-    });
-
-    // 2nd-Order (Level 3) star-tenant nodes (Middle horizontal row)
-    const uniqueL3: typeof level3Significators = [];
-    level3Significators.forEach((item) => {
-      if (!nodes.some((n) => n.id === item.planet) && !uniqueL3.some((u) => u.planet === item.planet)) {
-        uniqueL3.push(item);
-      }
-    });
-
-    // Sort unique L3 nodes: Lord-connecting planets on the left, Occupant-connecting on the right
-    const getStarLordWeight = (lord: string) => lord === activeCuspLord ? 0 : 1;
-    uniqueL3.sort((a, b) => getStarLordWeight(a.starLord) - getStarLordWeight(b.starLord));
-
-    const nL3 = uniqueL3.length;
-    const startXL3 = 230 - ((nL3 - 1) * 35);
-    uniqueL3.forEach((item, idx) => {
+    // Ring 1 (Radius 50): 1st-Order significators (Lord and Occupants)
+    const ring1Items = [...firstOrderSet];
+    const n1 = ring1Items.length;
+    ring1Items.forEach((item, idx) => {
+      const angle = (idx * 360) / n1 - 90;
+      const rad = (angle * Math.PI) / 180;
       nodes.push({
-        id: item.planet,
-        label: `${item.planet} (L3)`,
-        x: nL3 > 1 ? startXL3 + idx * 70 : 230,
-        y: 185,
-        fill: `${INDIGO}15`,
-        border: INDIGO
+        id: item,
+        label: `${item} (1st-Order)`,
+        x: cx + 55 * Math.cos(rad),
+        y: cy + 55 * Math.sin(rad),
+        fill: SURFACE,
+        border: GOLD,
+        ring: 1
       });
     });
 
-    // Level 4 (A-significators) nodes (Bottom horizontal row)
-    const uniqueL4: typeof level4Significators = [];
-    level4Significators.forEach((item) => {
-      if (!nodes.some((n) => n.id === item.planet) && !uniqueL4.some((u) => u.planet === item.planet)) {
-        uniqueL4.push(item);
+    // Ring 2 (Radius 95): 2nd-Order star-tenants
+    const uniqueL3: string[] = [];
+    level3Significators.forEach((item) => {
+      if (!uniqueL3.includes(item.planet) && !ring1Items.includes(item.planet)) {
+        uniqueL3.push(item.planet);
       }
     });
-
-    const nL4 = uniqueL4.length;
-    const startXL4 = 230 - ((nL4 - 1) * 40);
-    uniqueL4.forEach((item, idx) => {
+    const n2 = uniqueL3.length;
+    uniqueL3.forEach((planet, idx) => {
+      const angle = (idx * 360) / (n2 || 1) - 45;
+      const rad = (angle * Math.PI) / 180;
       nodes.push({
-        id: item.planet,
-        label: `${item.planet} (L4)`,
-        x: nL4 > 1 ? startXL4 + idx * 80 : 230,
-        y: 270,
-        fill: "transparent",
-        border: "#A08060"
+        id: planet,
+        label: `${planet} (2nd-Order)`,
+        x: cx + 95 * Math.cos(rad),
+        y: cy + 95 * Math.sin(rad),
+        fill: `${INDIGO}15`,
+        border: INDIGO,
+        ring: 2
+      });
+    });
+
+    // Ring 3 (Radius 135): Level 4 (Aspects / Conjunctions)
+    const uniqueL4: string[] = [];
+    level4Significators.forEach((item) => {
+      if (!nodes.some(n => n.id === item.planet) && !uniqueL4.includes(item.planet)) {
+        uniqueL4.push(item.planet);
+      }
+    });
+    const n3 = uniqueL4.length;
+    uniqueL4.forEach((planet, idx) => {
+      const angle = (idx * 360) / (n3 || 1) + 15;
+      const rad = (angle * Math.PI) / 180;
+      nodes.push({
+        id: planet,
+        label: `${planet} (Level 4 Aspect/Conj)`,
+        x: cx + 135 * Math.cos(rad),
+        y: cy + 135 * Math.sin(rad),
+        fill: `${RED}10`,
+        border: RED,
+        ring: 3
       });
     });
 
     return nodes;
-  }, [activeHouse, activeCuspLord, occupants, level3Significators, level4Significators]);
+  }, [activeHouse, firstOrderSet, level3Significators, level4Significators]);
 
   // Network Edges (connecting lines)
   const networkEdges = useMemo(() => {
-    const edges: { fromX: number; fromY: number; toX: number; toY: number; type: "solid" | "dashed" }[] = [];
+    const edges: { fromX: number; fromY: number; toX: number; toY: number; type: "solid" | "dashed"; color: string }[] = [];
 
     const getCoords = (id: string) => {
       const n = networkNodes.find((node) => node.id === id);
-      return n ? { x: n.x, y: n.y } : null;
+      return n ? { x: n.x, y: n.y, border: n.border } : null;
     };
 
     const cusp = getCoords("Cusp");
     if (!cusp) return edges;
 
-    // Cusp to Lord
-    const lord = getCoords(activeCuspLord);
-    if (lord) edges.push({ fromX: cusp.x, fromY: cusp.y, toX: lord.x, toY: lord.y, type: "solid" });
-
-    // Cusp to Occupants
-    occupants.forEach((occ) => {
-      const occupant = getCoords(occ);
-      if (occupant) edges.push({ fromX: cusp.x, fromY: cusp.y, toX: occupant.x, toY: occupant.y, type: "solid" });
+    // Connect Center to Ring 1 Nodes (Solid Gold)
+    firstOrderSet.forEach((occ) => {
+      const target = getCoords(occ);
+      if (target) {
+        edges.push({ fromX: cusp.x, fromY: cusp.y, toX: target.x, toY: target.y, type: "solid", color: GOLD });
+      }
     });
 
-    // Level 3 (Star Tenants) to their star-lords
+    // Level 3 Nodes to their respective Star Lords (Solid Indigo)
     level3Significators.forEach((item) => {
       const tenant = getCoords(item.planet);
       const starRuler = getCoords(item.starLord);
       if (tenant && starRuler) {
-        edges.push({ fromX: tenant.x, fromY: tenant.y, toX: starRuler.x, toY: starRuler.y, type: "solid" });
+        edges.push({ fromX: tenant.x, fromY: tenant.y, toX: starRuler.x, toY: starRuler.y, type: "solid", color: INDIGO });
       }
     });
 
-    // Level 4 (Conjoined/Aspecting) to their targets
+    // Level 4 (Conjoined/Aspecting) to 1st-order targets (Dashed Red/Orange)
     level4Significators.forEach((item) => {
       const source = getCoords(item.planet);
       if (source) {
-        // Connect to Lord (left) if source node is on the left, else to Occupant (right)
-        const targetName = source.x < 230 ? activeCuspLord : (occupants[0] || activeCuspLord);
-        const target = getCoords(targetName);
+        // Find nearest 1st-order node as target or just use cusp lord
+        const target = getCoords(activeCuspLord);
         if (target) {
-          edges.push({ fromX: source.x, fromY: source.y, toX: target.x, toY: target.y, type: "dashed" });
+          edges.push({ fromX: source.x, fromY: source.y, toX: target.x, toY: target.y, type: "dashed", color: RED });
         }
       }
     });
 
     return edges;
-  }, [networkNodes, activeCuspLord, occupants, level3Significators, level4Significators]);
+  }, [networkNodes, firstOrderSet, level3Significators, level4Significators, activeCuspLord]);
 
   return (
-    <div className="gl-surface-twilight-glass" style={{ padding: "28px 24px", color: INK_PRIMARY, minHeight: "650px" }} data-interactive="second-order-significator-workbench">
+    <div style={{ color: INK_PRIMARY, fontFamily: "var(--font-sans), system-ui, sans-serif" }} data-interactive="second-order-significator-workbench">
       
-      {/* Header */}
-      <section style={{ borderBottom: `1px solid ${HAIRLINE}`, paddingBottom: "1.2rem", marginBottom: "1.8rem" }}>
-        <span style={{ color: GOLD, fontSize: "10px", textTransform: "uppercase", fontWeight: 900, letterSpacing: "0.1em" }}>Module 16 · Chapter 6 · Lesson 3</span>
-        <h1 style={{ margin: "0.3rem 0 0", color: GOLD, fontSize: "1.6rem", fontWeight: 700, letterSpacing: "-0.02em" }}>2nd-Order &amp; A-Significators Workbench</h1>
-        <p style={{ margin: "0.4rem 0 0", fontSize: "13.5px", color: INK_SECONDARY, lineHeight: "1.5" }}>
+      {/* Header Banner */}
+      <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 12, background: SURFACE, padding: "1.25rem", marginBottom: "1rem", boxShadow: "0 4px 20px -2px rgba(47, 125, 85, 0.05)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <span style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", color: GREEN, fontWeight: 900, background: `${GREEN}15`, padding: "2px 8px", borderRadius: "4px" }}>Proxy Gate Workbench</span>
+          <span style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", color: GOLD, fontWeight: 900, background: `${GOLD}15`, padding: "2px 8px", borderRadius: "4px" }}>Chapter 6, Lesson 3</span>
+        </div>
+        <h2 style={{ margin: "0.4rem 0 0.2rem", color: GOLD, fontSize: "1.45rem", fontFamily: "var(--font-cormorant), serif", fontWeight: 700 }}>
+          2nd-Order &amp; A-Significators Workbench
+        </h2>
+        <p style={{ margin: 0, color: INK_SECONDARY, fontSize: "13px", lineHeight: 1.55 }}>
           Analyze how the star-tenants of occupants and lords form Level 3 significators, and how conjunctions or aspects compile into Level 4 A-significators.
         </p>
       </section>
 
       {/* Preset Selectors */}
-      <section style={{ marginBottom: "1.8rem", display: "flex", gap: "0.8rem", flexWrap: "wrap", alignItems: "center" }}>
+      <section style={{ marginBottom: "1rem", display: "flex", gap: "0.8rem", flexWrap: "wrap", alignItems: "center" }}>
         <span style={{ fontSize: "11px", fontWeight: 800, color: INK_SECONDARY, textTransform: "uppercase" }}>Select Preset Chart Scenario:</span>
         {PRESETS.map((p, idx) => (
           <button
@@ -297,11 +311,11 @@ export function SecondOrderSignificatorWorkbench() {
             style={{
               padding: "0.4rem 0.8rem",
               borderRadius: "6px",
-              border: `1px solid ${HAIRLINE}`,
-              background: selectedPresetIdx === idx ? `${GOLD}20` : "transparent",
+              border: `1.5px solid ${selectedPresetIdx === idx ? GOLD : HAIRLINE}`,
+              background: selectedPresetIdx === idx ? `${GOLD}15` : "transparent",
               color: GOLD,
               fontSize: "12px",
-              fontWeight: 600,
+              fontWeight: 700,
               cursor: "pointer"
             }}
           >
@@ -310,37 +324,41 @@ export function SecondOrderSignificatorWorkbench() {
         ))}
       </section>
 
-      {/* Two-Column Layout utilizing space inside the component */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", gap: "1.5rem", marginBottom: "2.4rem" }}>
+      {/* Two-Column Workspace Layout */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.25rem", marginBottom: "1.25rem" }}>
         
         {/* Left Column: Planet Coordinate Nakshatra Matrix */}
-        <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "18px" }}>
-          <h3 style={{ margin: "0 0 14px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase" }}>
-            Planet Nakṣatra &amp; Star-Lords
+        <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "12px", padding: "1.25rem", boxShadow: "0 2px 10px rgba(0,0,0,0.01)" }}>
+          <h3 style={{ margin: "0 0 12px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+            Planet Nakṣatra &amp; Star-Lords Registry
           </h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
             {activePlanets.map((p) => {
               const isFirstOrder = firstOrderSet.includes(p.name);
+              const isHovered = hoveredNode === p.name;
               return (
                 <div
                   key={p.name}
+                  onMouseEnter={() => setHoveredNode(p.name)}
+                  onMouseLeave={() => setHoveredNode(null)}
                   style={{
                     padding: "8px 12px",
-                    borderRadius: "6px",
-                    border: `1px solid ${isFirstOrder ? GOLD : HAIRLINE}`,
-                    background: isFirstOrder ? `${GOLD}06` : "transparent",
+                    borderRadius: "8px",
+                    border: `1.5px solid ${isHovered ? GOLD : isFirstOrder ? `${GOLD}80` : HAIRLINE}`,
+                    background: isHovered ? `${GOLD}12` : isFirstOrder ? `${GOLD}05` : "transparent",
                     display: "flex",
                     justifyContent: "space-between",
-                    alignItems: "center"
+                    alignItems: "center",
+                    transition: "all 150ms ease"
                   }}
                 >
                   <div>
                     <span style={{ fontWeight: 800, color: INK_PRIMARY }}>{p.name}</span>
-                    <div style={{ fontSize: "10px", color: INK_SECONDARY }}>House {p.house} · {p.nak}</div>
+                    <div style={{ fontSize: "10.5px", color: INK_SECONDARY }}>House {p.house} · {p.sign} · {p.nak}</div>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    <span style={{ fontSize: "10px", color: INK_SECONDARY, display: "block" }}>Star Lord</span>
-                    <span style={{ fontWeight: 700, color: GOLD, fontSize: "12px" }}>{p.starLord}</span>
+                    <span style={{ fontSize: "10px", color: INK_MUTED, display: "block" }}>Star Lord</span>
+                    <span style={{ fontWeight: 800, color: GOLD, fontSize: "12px" }}>{p.starLord}</span>
                   </div>
                 </div>
               );
@@ -348,22 +366,21 @@ export function SecondOrderSignificatorWorkbench() {
           </div>
         </div>
 
-        {/* Right Column: Controls + Resolved Pool + SVG Network Map */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+        {/* Right Column: Dynamic SVG 2nd-Order Gate Board & Interactive Checkboxes */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           
-          {/* Row 1: Controls & De-duplicated Pool Side-by-Side */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.2rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr sm:1.2fr", gap: "1rem" }}>
             
-            {/* Association Controls Box */}
-            <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "18px" }}>
-              <h3 style={{ margin: "0 0 12px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase" }}>
-                Association Controls
+            {/* Association Controls */}
+            <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "12px", padding: "1.25rem", boxShadow: "0 2px 10px rgba(0,0,0,0.01)" }}>
+              <h3 style={{ margin: "0 0 12px 0", fontSize: "11px", color: GOLD, fontWeight: 800, textTransform: "uppercase" }}>
+                Association Modifier Gates
               </h3>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
                 <div>
-                  <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD, display: "block", marginBottom: "4px" }}>Conjoined</span>
+                  <span style={{ fontSize: "11px", fontWeight: 700, color: RED, display: "block", marginBottom: "4px" }}>Conjoined (Orbital Transfer)</span>
                   {Object.keys(conjoinedPlanets).map((pName) => (
-                    <label key={pName} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "11.5px", marginBottom: "3px", cursor: "pointer" }}>
+                    <label key={pName} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", marginBottom: "3px", cursor: "pointer", fontWeight: "600" }}>
                       <input
                         type="checkbox"
                         checked={conjoinedPlanets[pName]}
@@ -375,9 +392,9 @@ export function SecondOrderSignificatorWorkbench() {
                 </div>
 
                 <div style={{ borderTop: `1px solid ${HAIRLINE}33`, paddingTop: "6px" }}>
-                  <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD, display: "block", marginBottom: "4px" }}>Aspecting</span>
+                  <span style={{ fontSize: "11px", fontWeight: 700, color: BLUE, display: "block", marginBottom: "4px" }}>Aspecting (Drishthi Rays)</span>
                   {Object.keys(aspectingPlanets).map((pName) => (
-                    <label key={pName} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "11.5px", marginBottom: "3px", cursor: "pointer" }}>
+                    <label key={pName} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", marginBottom: "3px", cursor: "pointer", fontWeight: "600" }}>
                       <input
                         type="checkbox"
                         checked={aspectingPlanets[pName]}
@@ -390,16 +407,23 @@ export function SecondOrderSignificatorWorkbench() {
               </div>
             </div>
 
-            {/* Resolved De-duplicated Ranked Pool Box */}
-            <div style={{ background: SURFACE, border: `1.5px solid ${GOLD}`, borderRadius: "10px", padding: "18px" }}>
-              <h3 style={{ margin: "0 0 12px 0", fontSize: "12px", color: GOLD, fontWeight: 900, textTransform: "uppercase" }}>
-                Ranked Pool
+            {/* Resolved Pool list */}
+            <div style={{ background: SURFACE, border: `1.5px solid ${GOLD}`, borderRadius: "12px", padding: "1.25rem", boxShadow: "0 2px 10px rgba(0,0,0,0.01)" }}>
+              <h3 style={{ margin: "0 0 12px 0", fontSize: "11px", color: GOLD, fontWeight: 900, textTransform: "uppercase" }}>
+                Resolved Ranked Pool
               </h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
                 {deDuplicatedRanked.map((item, idx) => (
-                  <div key={item.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 10px", border: `1px solid ${HAIRLINE}`, borderRadius: "6px", background: `${GOLD}04` }}>
-                    <span style={{ fontWeight: 850, fontSize: "11.5px" }}>#{idx + 1} {item.name}</span>
-                    <span style={{ fontSize: "10px", color: GOLD, fontWeight: 700 }}>L{item.strongestLvl === 5 ? "A" : item.strongestLvl}</span>
+                  <div
+                    key={item.name}
+                    onMouseEnter={() => setHoveredNode(item.name)}
+                    onMouseLeave={() => setHoveredNode(null)}
+                    style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 10px", border: `1px solid ${HAIRLINE}`, borderRadius: "6px", background: hoveredNode === item.name ? `${GOLD}12` : `${GOLD}04`, transition: "all 150ms ease" }}
+                  >
+                    <span style={{ fontWeight: 800, fontSize: "11.5px" }}>#{idx + 1} {item.name}</span>
+                    <span style={{ fontSize: "10px", color: GOLD, fontWeight: 800, background: `${GOLD}15`, padding: "2px 6px", borderRadius: 4 }}>
+                      L{item.strongestLvl === 5 ? "A" : item.strongestLvl}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -407,15 +431,29 @@ export function SecondOrderSignificatorWorkbench() {
 
           </div>
 
-          {/* Row 2: Stellar Network Map Box (Utilizing the space below controls) */}
-          <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "18px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <h3 style={{ margin: "0 0 12px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase" }}>
-              Stellar Network Map
-            </h3>
+          {/* Draggable Redesigned experience: The 2nd-Order Significator Gate Board SVG */}
+          <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "12px", padding: "1rem", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ fontSize: "11px", fontWeight: 700, color: INK_MUTED, textTransform: "uppercase", marginBottom: "0.5rem" }}>
+              Stellar Orbital Gate Map
+            </span>
             
-            {/* SVG width and height adjusted for clear layout, nodes coordinated to prevent border overlap */}
-            <svg width="100%" height="340" viewBox="0 0 460 340" style={{ background: "#FFFBF2", borderRadius: "8px", border: `1px solid ${HAIRLINE}` }}>
-              {/* Draw Edges */}
+            <svg width="100%" height="320" viewBox="0 0 460 320" style={{ background: "#FFFBF2", borderRadius: "8px", border: `1px solid ${HAIRLINE}`, overflow: "visible" }}>
+              <defs>
+                <filter id="gateGlow">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Orbit Guide Rings */}
+              <circle cx="230" cy="160" r="55" fill="none" stroke={`${HAIRLINE}50`} strokeWidth="1" strokeDasharray="3 3" />
+              <circle cx="230" cy="160" r="95" fill="none" stroke={`${HAIRLINE}30`} strokeWidth="1" />
+              <circle cx="230" cy="160" r="135" fill="none" stroke={`${HAIRLINE}20`} strokeWidth="1" />
+
+              {/* Draw Edges / Transfer Rays */}
               {networkEdges.map((edge, idx) => (
                 <line
                   key={idx}
@@ -423,15 +461,22 @@ export function SecondOrderSignificatorWorkbench() {
                   y1={edge.fromY}
                   x2={edge.toX}
                   y2={edge.toY}
-                  stroke={GOLD}
-                  strokeWidth={edge.type === "solid" ? 2 : 1.5}
-                  strokeDasharray={edge.type === "dashed" ? "4,4" : "0"}
+                  stroke={edge.color}
+                  strokeWidth={edge.type === "solid" ? 2 : 2.5}
+                  strokeDasharray={edge.type === "dashed" ? "3,3" : "0"}
+                  filter={edge.type === "dashed" ? "url(#gateGlow)" : undefined}
                 />
               ))}
 
               {/* Draw Nodes */}
               {networkNodes.map((node) => {
                 const isHovered = hoveredNode === node.id;
+                
+                // Adjust size based on orbit tier
+                let radius = 13;
+                if (node.id === "Cusp") radius = 22;
+                else if (node.ring === 1) radius = 15;
+
                 return (
                   <g
                     key={node.id}
@@ -439,51 +484,68 @@ export function SecondOrderSignificatorWorkbench() {
                     onMouseLeave={() => setHoveredNode(null)}
                     style={{ cursor: "pointer" }}
                   >
+                    {/* Glowing aura if hovered */}
+                    {isHovered && (
+                      <circle
+                        cx={node.x}
+                        cy={node.y}
+                        r={radius + 4}
+                        fill="none"
+                        stroke={node.border}
+                        strokeWidth="1.5"
+                        filter="url(#gateGlow)"
+                      />
+                    )}
+                    
                     <circle
                       cx={node.x}
                       cy={node.y}
-                      r={node.id === "Cusp" ? 18 : 14}
-                      fill={node.fill === "transparent" ? "#FFF" : node.fill}
+                      r={radius}
+                      fill={node.fill === "transparent" ? SURFACE : node.fill}
                       stroke={node.border}
-                      strokeWidth={isHovered ? 3 : 1.5}
-                      style={{ transition: "all 0.2s ease" }}
+                      strokeWidth={isHovered ? 2.5 : 1.5}
+                      style={{ transition: "all 150ms ease" }}
                     />
+                    
                     <text
                       x={node.x}
-                      y={node.y + 4}
+                      y={node.y}
                       textAnchor="middle"
+                      dominantBaseline="middle"
                       fill={node.border}
-                      style={{ fontSize: "9px", fontWeight: 900 }}
+                      fontSize={node.id === "Cusp" ? "10" : "8"}
+                      fontWeight="900"
                     >
-                      {node.id === "Cusp" ? "H" : node.id.substring(0, 2)}
+                      {node.id === "Cusp" ? `H${activeHouse}` : node.id.substring(0, 3)}
                     </text>
                   </g>
                 );
               })}
             </svg>
 
-            {/* Details Panel */}
-            <div style={{ marginTop: "12px", width: "100%", padding: "10px", background: "#FFFBF2", border: `1px solid ${HAIRLINE}`, borderRadius: "6px", minHeight: "44px" }}>
+            {/* Live Hover Inspection Dashboard */}
+            <div style={{ marginTop: "0.75rem", width: "100%", padding: "8px 12px", background: "#FFFBF2", border: `1px solid ${HAIRLINE}`, borderRadius: "6px", minHeight: "44px" }}>
               {hoveredNode ? (
-                <span style={{ fontSize: "11.5px", fontWeight: 700, color: GOLD }}>
-                  {networkNodes.find((n) => n.id === hoveredNode)?.label} — Active node in stellar chain calculation.
+                <span style={{ fontSize: "12px", fontWeight: 700, color: GOLD }}>
+                  {networkNodes.find((n) => n.id === hoveredNode)?.label} — Hovering highlights coordinate connections.
                 </span>
               ) : (
                 <span style={{ fontSize: "11px", color: INK_SECONDARY, fontStyle: "italic" }}>
-                  Hover over network nodes to reveal active significator attributes.
+                  Hover over the gateway orbit nodes to trace aspects, conjunctions, and transfer pathways.
                 </span>
               )}
             </div>
+
           </div>
 
         </div>
 
       </div>
 
-      {/* Styled Parameters Table replacing developer VIX logs */}
-      <section style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "20px" }}>
-        <h3 style={{ margin: "0 0 12px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase" }}>Astronomical Parameters Table</h3>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12.5px" }}>
+      {/* Parametric Data Log Table */}
+      <section style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "12px", padding: "1.25rem", boxShadow: "0 2px 10px rgba(0,0,0,0.01)" }}>
+        <h3 style={{ margin: "0 0 10px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase" }}>Astronomical Parameters Table</h3>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px", color: INK_SECONDARY }}>
           <thead>
             <tr style={{ borderBottom: `1px solid ${HAIRLINE}`, textAlign: "left", color: GOLD }}>
               <th style={{ padding: "8px" }}>Parameter</th>
@@ -498,7 +560,7 @@ export function SecondOrderSignificatorWorkbench() {
               <td style={{ padding: "8px" }}>House under analysis (7th, 10th, etc.)</td>
             </tr>
             <tr style={{ borderBottom: `1px solid ${HAIRLINE}33` }}>
-              <td style={{ padding: "8px", fontWeight: 700 }}>1st-Order Base</td>
+              <td style={{ padding: "8px", fontWeight: 700 }}>1st-Order Base Set</td>
               <td style={{ padding: "8px" }}>{firstOrderSet.join(", ")}</td>
               <td style={{ padding: "8px" }}>Occupants and Lord combined</td>
             </tr>

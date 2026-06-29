@@ -6,10 +6,13 @@ import { RASHIS } from "../rashi-data";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
+const INK_MUTED = "var(--gl-ink-on-cream-muted)";
 const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const GOLD = "#9C7A2F";
 const INDIGO = "#4F6FA8";
+const GREEN = "#2F7D55";
+const RED = "#A23A1E";
 
 interface PlanetInfo {
   name: string;
@@ -174,8 +177,20 @@ export function SignificatorHierarchyExplorer() {
   };
 
   const selectedPlanetInfo = useMemo(() => {
-    return currentPlanets.find((p) => p.name === selectedDispositorPlanet);
-  }, [currentPlanets, selectedDispositorPlanet]);
+    return currentPlanets.find((p) => p.name === (practiceMode ? selectedPracticePlanet : selectedDispositorPlanet));
+  }, [currentPlanets, selectedDispositorPlanet, selectedPracticePlanet, practiceMode]);
+
+  // Check which tiers the selected planet qualifies for
+  const activeQualifications = useMemo(() => {
+    if (!selectedPlanetInfo) return [];
+    const name = selectedPlanetInfo.name;
+    const quals = [];
+    if (hierarchyLevels.lvl1.includes(name)) quals.push(1);
+    if (hierarchyLevels.lvl2.includes(name)) quals.push(2);
+    if (hierarchyLevels.lvl3.includes(name)) quals.push(3);
+    if (hierarchyLevels.lvl4.includes(name)) quals.push(4);
+    return quals;
+  }, [selectedPlanetInfo, hierarchyLevels]);
 
   // Compute text explanation for dispositor path
   const dispositorExplanation = useMemo(() => {
@@ -203,19 +218,24 @@ export function SignificatorHierarchyExplorer() {
   }, [selectedPlanetInfo, occupants, currentHouse, currentCuspLord, currentCuspSign]);
 
   return (
-    <div className="gl-surface-twilight-glass" style={{ padding: "28px 24px", color: INK_PRIMARY, minHeight: "650px" }} data-interactive="significator-hierarchy-explorer">
+    <div style={{ color: INK_PRIMARY, fontFamily: "var(--font-sans), system-ui, sans-serif" }} data-interactive="significator-hierarchy-explorer">
       
       {/* Header */}
-      <section style={{ borderBottom: `1px solid ${HAIRLINE}`, paddingBottom: "1.2rem", marginBottom: "1.8rem" }}>
-        <span style={{ color: GOLD, fontSize: "10px", textTransform: "uppercase", fontWeight: 900, letterSpacing: "0.1em" }}>Module 16 · Chapter 6 · Lesson 1</span>
-        <h1 style={{ margin: "0.3rem 0 0", color: GOLD, fontSize: "1.6rem", fontWeight: 700, letterSpacing: "-0.02em" }}>Significator Hierarchy Explorer</h1>
-        <p style={{ margin: "0.4rem 0 0", fontSize: "13.5px", color: INK_SECONDARY, lineHeight: "1.5" }}>
+      <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 12, background: SURFACE, padding: "1.25rem", marginBottom: "1rem", boxShadow: "0 4px 20px -2px rgba(47, 125, 85, 0.05)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <span style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", color: GREEN, fontWeight: 900, background: `${GREEN}15`, padding: "2px 8px", borderRadius: "4px" }}>Sorting Shelf Dojo</span>
+          <span style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", color: GOLD, fontWeight: 900, background: `${GOLD}15`, padding: "2px 8px", borderRadius: "4px" }}>Chapter 6, Lesson 1</span>
+        </div>
+        <h2 style={{ margin: "0.4rem 0 0.2rem", color: GOLD, fontSize: "1.45rem", fontFamily: "var(--font-cormorant), serif", fontWeight: 700 }}>
+          Significator Hierarchy Explorer
+        </h2>
+        <p style={{ margin: 0, color: INK_SECONDARY, fontSize: "13px", lineHeight: 1.55 }}>
           Analyze the strongest-to-weakest 4-level sorting shelf. Test how empty houses and de-duplication rules are resolved under star-lord primacy.
         </p>
       </section>
 
       {/* Preset & Custom Mode Controls */}
-      <section style={{ marginBottom: "1.8rem", display: "flex", gap: "1rem", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }}>
+      <section style={{ marginBottom: "1.25rem", display: "flex", gap: "1rem", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", gap: "0.8rem", flexWrap: "wrap", alignItems: "center" }}>
           <span style={{ fontSize: "11px", fontWeight: 800, color: INK_SECONDARY, textTransform: "uppercase" }}>Worked Presets:</span>
           {PRESETS.map((p, idx) => (
@@ -233,7 +253,7 @@ export function SignificatorHierarchyExplorer() {
                 background: !customMode && selectedPresetIdx === idx ? `${GOLD}20` : "transparent",
                 color: GOLD,
                 fontSize: "12px",
-                fontWeight: 600,
+                fontWeight: 700,
                 cursor: customMode ? "not-allowed" : "pointer"
               }}
             >
@@ -242,7 +262,7 @@ export function SignificatorHierarchyExplorer() {
           ))}
         </div>
 
-        <div style={{ display: "flex", gap: "0.8rem" }}>
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           <button
             onClick={() => {
               setCustomMode(!customMode);
@@ -251,7 +271,7 @@ export function SignificatorHierarchyExplorer() {
             style={{
               padding: "0.4rem 1rem",
               borderRadius: "6px",
-              border: `1px solid ${GOLD}`,
+              border: `1.5px solid ${GOLD}`,
               background: customMode ? GOLD : "transparent",
               color: customMode ? "#FFF" : GOLD,
               fontSize: "12px",
@@ -259,7 +279,7 @@ export function SignificatorHierarchyExplorer() {
               cursor: "pointer"
             }}
           >
-            {customMode ? "Use Presets Mode" : "Switch to Custom Simulation"}
+            {customMode ? "Presets Mode" : "Custom Simulation"}
           </button>
 
           <button
@@ -267,7 +287,7 @@ export function SignificatorHierarchyExplorer() {
             style={{
               padding: "0.4rem 1rem",
               borderRadius: "6px",
-              border: `1px solid ${INDIGO}`,
+              border: `1.5px solid ${INDIGO}`,
               background: practiceMode ? INDIGO : "transparent",
               color: practiceMode ? "#FFF" : INDIGO,
               fontSize: "12px",
@@ -275,14 +295,14 @@ export function SignificatorHierarchyExplorer() {
               cursor: "pointer"
             }}
           >
-            {practiceMode ? "Exit Practice Mode" : "Practice Mode Quiz"}
+            {practiceMode ? "Exit Quiz" : "Practice Quiz"}
           </button>
         </div>
       </section>
 
       {/* Custom Control Dashboard */}
       {customMode && (
-        <section style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "8px", padding: "16px 20px", marginBottom: "1.8rem" }}>
+        <section style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "12px", padding: "1.25rem", marginBottom: "1.25rem", boxShadow: "0 2px 10px rgba(0,0,0,0.01)" }}>
           <h3 style={{ margin: "0 0 12px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase" }}>Custom Simulation Settings</h3>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
             <label style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "11px", fontWeight: 700, color: INK_SECONDARY }}>
@@ -290,7 +310,7 @@ export function SignificatorHierarchyExplorer() {
               <select
                 value={houseOfInterest}
                 onChange={(e) => setHouseOfInterest(Number(e.target.value))}
-                style={{ padding: "6px", borderRadius: "6px", border: `1px solid ${HAIRLINE}`, background: "#FFFBF2" }}
+                style={{ padding: "6px", borderRadius: "6px", border: `1px solid ${HAIRLINE}`, background: SURFACE, color: INK_PRIMARY }}
               >
                 {Array.from({ length: 12 }, (_, i) => (
                   <option key={i + 1} value={i + 1}>House {i + 1}</option>
@@ -307,7 +327,7 @@ export function SignificatorHierarchyExplorer() {
                   const signIdx = RASHIS.findIndex((r) => r.nameIAST === e.target.value);
                   if (signIdx !== -1) setCuspLord(RASHIS[signIdx].lord);
                 }}
-                style={{ padding: "6px", borderRadius: "6px", border: `1px solid ${HAIRLINE}`, background: "#FFFBF2" }}
+                style={{ padding: "6px", borderRadius: "6px", border: `1px solid ${HAIRLINE}`, background: SURFACE, color: INK_PRIMARY }}
               >
                 {RASHIS.map((r, i) => (
                   <option key={i} value={r.nameIAST}>{r.nameIAST}</option>
@@ -325,28 +345,28 @@ export function SignificatorHierarchyExplorer() {
         </section>
       )}
 
-      {/* Main Grid Layout */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: "2rem", marginBottom: "2.4rem" }}>
+      {/* Main Layout Grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.25rem", marginBottom: "1.25rem" }}>
         
-        {/* Left Side: Unsorted Planet Pool or Custom Interactive Positioning */}
+        {/* Left Side: Planet Registry and Interactive Dispositor Path */}
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           
-          <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "20px" }}>
+          <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "12px", padding: "1.25rem", boxShadow: "0 2px 10px rgba(0,0,0,0.01)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-              <h3 style={{ margin: 0, fontSize: "13px", color: GOLD, fontWeight: 800, textTransform: "uppercase" }}>
-                {practiceMode ? "Practice Pool: Select & Assign" : "Planet Coordinate Registry"}
+              <h3 style={{ margin: 0, fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                {practiceMode ? "Practice Pool: Select & Shelf-Sort" : "Planet Coordinate Registry"}
               </h3>
               {practiceMode && (
                 <button
                   onClick={resetPractice}
                   style={{ fontSize: "10px", padding: "2px 6px", borderRadius: "4px", border: `1px solid ${HAIRLINE}`, cursor: "pointer", background: "transparent", color: INK_SECONDARY }}
                 >
-                  Reset Progress
+                  Reset Answers
                 </button>
               )}
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               {currentPlanets.map((p) => {
                 const isSelected = practiceMode ? selectedPracticePlanet === p.name : selectedDispositorPlanet === p.name;
                 const hasAnswered = userAnswers[p.name] !== undefined;
@@ -362,28 +382,29 @@ export function SignificatorHierarchyExplorer() {
                     style={{
                       padding: "10px 12px",
                       borderRadius: "8px",
-                      border: `1px solid ${isSelected ? GOLD : HAIRLINE}`,
+                      border: `1.5px solid ${isSelected ? GOLD : HAIRLINE}`,
                       background: isSelected ? `${GOLD}10` : "transparent",
                       cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      transition: "all 0.2s"
+                      transition: "all 150ms ease"
                     }}
                   >
                     <div>
                       <span style={{ fontWeight: 800, color: INK_PRIMARY, marginRight: "8px" }}>{p.name}</span>
                       <span style={{ fontSize: "11px", color: INK_SECONDARY }}>
-                        in House {p.house} · Star: {p.nak} ({p.starLord})
+                        in House {p.house} · Star-Lord: {p.starLord} ({p.nak})
                       </span>
                     </div>
 
                     {customMode && !practiceMode && (
                       <div style={{ display: "flex", gap: "0.4rem" }} onClick={(e) => e.stopPropagation()}>
                         <select
+                          aria-label={`${p.name} House Selection`}
                           value={p.house}
                           onChange={(e) => changePlanetHouse(p.name, Number(e.target.value))}
-                          style={{ fontSize: "10px", padding: "2px", borderRadius: "4px", background: "#FFF" }}
+                          style={{ fontSize: "10px", padding: "2px", borderRadius: "4px", background: SURFACE, color: INK_PRIMARY, border: `1px solid ${HAIRLINE}` }}
                         >
                           {Array.from({ length: 12 }, (_, i) => (
                             <option key={i + 1} value={i + 1}>H{i + 1}</option>
@@ -391,9 +412,10 @@ export function SignificatorHierarchyExplorer() {
                         </select>
 
                         <select
+                          aria-label={`${p.name} Star Lord Selection`}
                           value={p.starLord}
                           onChange={(e) => changePlanetStarLord(p.name, e.target.value)}
-                          style={{ fontSize: "10px", padding: "2px", borderRadius: "4px", background: "#FFF" }}
+                          style={{ fontSize: "10px", padding: "2px", borderRadius: "4px", background: SURFACE, color: INK_PRIMARY, border: `1px solid ${HAIRLINE}` }}
                         >
                           {["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"].map((l) => (
                             <option key={l} value={l}>{l}</option>
@@ -409,8 +431,8 @@ export function SignificatorHierarchyExplorer() {
                           borderRadius: "4px",
                           fontSize: "10px",
                           fontWeight: 800,
-                          background: isCorrect ? "#D4EDDA" : "#F8D7DA",
-                          color: isCorrect ? "#155724" : "#721C24"
+                          background: isCorrect ? `${GREEN}20` : `${RED}20`,
+                          color: isCorrect ? GREEN : RED
                         }}
                       >
                         {isCorrect ? `Correct (Lvl ${userAnswers[p.name]})` : `Incorrect (Lvl ${userAnswers[p.name]})`}
@@ -422,42 +444,13 @@ export function SignificatorHierarchyExplorer() {
             </div>
           </div>
 
-          {/* Premium Upgrade: Visual Stellar Dispositor Tree */}
-          {!practiceMode && selectedPlanetInfo && (
-            <div style={{ background: SURFACE, border: `1px solid ${GOLD}`, borderRadius: "10px", padding: "20px" }}>
-              <h3 style={{ margin: "0 0 12px 0", fontSize: "12px", color: GOLD, fontWeight: 900, textTransform: "uppercase" }}>
+          {/* Dynamic Stellar Dispositor explanation */}
+          {selectedPlanetInfo && (
+            <div style={{ background: SURFACE, border: `1.5px solid ${GOLD}`, borderRadius: "12px", padding: "1.25rem", boxShadow: "0 2px 10px rgba(0,0,0,0.01)" }}>
+              <h4 style={{ margin: "0 0 0.5rem 0", fontSize: "13px", color: GOLD, fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Stellar Dispositor Path: {selectedPlanetInfo.name}
-              </h3>
-              
-              {/* SVG Tree Diagram */}
-              <svg width="100%" height="70" viewBox="0 0 340 70" style={{ background: "#FFFBF2", borderRadius: "6px", border: `1px solid ${HAIRLINE}`, marginBottom: "12px" }}>
-                {/* Nodes */}
-                {/* Planet Node */}
-                <rect x="15" y="15" width="75" height="40" rx="4" fill={GOLD} />
-                <text x="52" y="38" textAnchor="middle" fill="#FFF" style={{ fontSize: "11px", fontWeight: 800 }}>{selectedPlanetInfo.name}</text>
-                
-                {/* Arrow 1 */}
-                <path d="M 90,35 L 115,35" stroke={GOLD} strokeWidth="2" fill="none" />
-                <polygon points="115,35 110,31 110,39" fill={GOLD} />
-                <text x="102" y="28" textAnchor="middle" fill={GOLD} style={{ fontSize: "8px", fontWeight: 800 }}>Star</text>
-
-                {/* Star Lord Node */}
-                <rect x="120" y="15" width="80" height="40" rx="4" fill="transparent" stroke={GOLD} strokeWidth="2" />
-                <text x="160" y="38" textAnchor="middle" fill={GOLD} style={{ fontSize: "11px", fontWeight: 800 }}>{selectedPlanetInfo.starLord}</text>
-
-                {/* Arrow 2 */}
-                <path d="M 200,35 L 225,35" stroke={GOLD} strokeWidth="2" fill="none" />
-                <polygon points="225,35 220,31 220,39" fill={GOLD} />
-                <text x="212" y="28" textAnchor="middle" fill={GOLD} style={{ fontSize: "8px", fontWeight: 800 }}>rules</text>
-
-                {/* Target Level Node */}
-                <rect x="230" y="15" width="95" height="40" rx="4" fill={INDIGO} />
-                <text x="277" y="38" textAnchor="middle" fill="#FFF" style={{ fontSize: "10px", fontWeight: 800 }}>
-                  {occupants.includes(selectedPlanetInfo.starLord) ? "Lvl 1 (Star-Occupant)" : selectedPlanetInfo.starLord === currentCuspLord ? "Lvl 3 (Star-Owner)" : "Indirect / Residual"}
-                </text>
-              </svg>
-
-              <p style={{ margin: 0, fontSize: "12px", color: INK_PRIMARY, lineHeight: "1.5", fontStyle: "italic" }}>
+              </h4>
+              <p style={{ margin: 0, fontSize: "12.5px", color: INK_PRIMARY, lineHeight: "1.5", fontStyle: "italic" }}>
                 {dispositorExplanation}
               </p>
             </div>
@@ -465,166 +458,203 @@ export function SignificatorHierarchyExplorer() {
 
         </div>
 
-        {/* Right Side: The 4-Level Sorting Shelf */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
+        {/* Right Side: Redesigned interactive experience: The Significator Cascade Waterfall */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           
-          <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "20px" }}>
-            <h3 style={{ margin: "0 0 16px 0", fontSize: "13px", color: GOLD, fontWeight: 800, textTransform: "uppercase" }}>
-              The 4-Level Significator Hierarchy
+          <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "12px", padding: "1.25rem", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <h3 style={{ margin: "0 0 10px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", width: "100%" }}>
+              Significator Cascade Waterfall
             </h3>
+            
+            {/* SVG Cascade Funnel */}
+            <svg width="100%" height="280" viewBox="0 0 320 280" style={{ overflow: "visible", borderRadius: 8, background: "rgba(0,0,0,0.01)", border: `1px solid ${HAIRLINE}40` }}>
+              <defs>
+                <filter id="funnelGlow">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
-              
-              {/* Level 1 Slot */}
-              <div style={{ border: `1px dashed ${GOLD}`, borderRadius: "8px", padding: "12px", background: "#FFFBF2" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-                  <span style={{ fontSize: "11px", fontWeight: 900, color: GOLD }}>Level 1 (Star of Occupants) - Strongest</span>
-                  {practiceMode && selectedPracticePlanet && (
-                    <button
-                      onClick={() => handlePracticeAssign(1)}
-                      style={{ fontSize: "10px", padding: "2px 8px", background: GOLD, color: "#FFF", border: "none", borderRadius: "4px", cursor: "pointer" }}
-                    >
-                      Place Here
-                    </button>
-                  )}
-                </div>
-                <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", minHeight: "28px", alignItems: "center" }}>
-                  {practiceMode ? (
-                    Object.entries(userAnswers).filter(([_, lvl]) => lvl === 1).map(([pName]) => (
-                      <span key={pName} style={{ padding: "4px 8px", background: `${GOLD}15`, borderRadius: "4px", fontSize: "11px", fontWeight: 700 }}>
-                        {pName}
-                      </span>
-                    ))
-                  ) : (
-                    hierarchyLevels.lvl1.length > 0 ? (
-                      hierarchyLevels.lvl1.map((p) => (
-                        <span key={p} style={{ padding: "4px 8px", background: `${GOLD}15`, borderRadius: "4px", fontSize: "11px", fontWeight: 700, color: INK_PRIMARY }}>
-                          {p}
-                        </span>
-                      ))
-                    ) : (
-                      <span style={{ fontSize: "11px", color: "#A08060", fontStyle: "italic" }}>Empty Slot</span>
-                    )
-                  )}
-                </div>
+              {/* Waterfalls/Pipes from top source to shelves */}
+              {selectedPlanetInfo && activeQualifications.map(tier => {
+                let xEnd = 160;
+                let yEnd = 0;
+                if (tier === 1) { xEnd = 160; yEnd = 45; }
+                else if (tier === 2) { xEnd = 160; yEnd = 105; }
+                else if (tier === 3) { xEnd = 160; yEnd = 165; }
+                else if (tier === 4) { xEnd = 160; yEnd = 225; }
+
+                return (
+                  <path
+                    key={tier}
+                    d={`M 160 5 C 160 20, ${xEnd} ${yEnd - 15}, ${xEnd} ${yEnd}`}
+                    fill="none"
+                    stroke={GOLD}
+                    strokeWidth="3.5"
+                    strokeDasharray="4 4"
+                    strokeDashoffset="12"
+                    filter="url(#funnelGlow)"
+                    style={{ animation: "dash 1.5s linear infinite" }}
+                  />
+                );
+              })}
+
+              {/* Top Source Node representing the active selected planet */}
+              <circle cx="160" cy="15" r="12" fill={selectedPlanetInfo ? GOLD : HAIRLINE} />
+              <text x="160" y="15" textAnchor="middle" dominantBaseline="middle" fill="#FFF" fontSize="8" fontWeight="900">
+                {selectedPlanetInfo ? selectedPlanetInfo.name.substring(0, 3) : "?"}
+              </text>
+
+              {/* TIER 1 Chamber (Star of Occupants) */}
+              <g transform="translate(20, 45)">
+                <rect
+                  x="0"
+                  y="0"
+                  width="280"
+                  height="45"
+                  rx="6"
+                  fill={activeQualifications.includes(1) ? `${GOLD}12` : SURFACE}
+                  stroke={activeQualifications.includes(1) ? GOLD : HAIRLINE}
+                  strokeWidth={activeQualifications.includes(1) ? 2 : 1}
+                  filter={activeQualifications.includes(1) ? "url(#funnelGlow)" : undefined}
+                />
+                <text x="10" y="16" fontSize="9" fontWeight="800" fill={GOLD}>TIER 1 (Star of Occupant) — Strongest</text>
+                <text x="10" y="32" fontSize="7.5" fill={INK_MUTED}>Proxy for occupants: {occupants.join(", ") || "None"}</text>
+                
+                {/* Render occupants/qualifying planets in Tier 1 */}
+                <g transform="translate(190, 8)">
+                  {hierarchyLevels.lvl1.map((p, i) => (
+                    <g key={p} transform={`translate(${i * 24}, 12)`}>
+                      <circle cx="0" cy="0" r="10" fill={GOLD} />
+                      <text x="0" y="0" textAnchor="middle" dominantBaseline="middle" fill="#FFF" fontSize="8" fontWeight="800">
+                        {p.substring(0, 3)}
+                      </text>
+                    </g>
+                  ))}
+                </g>
+              </g>
+
+              {/* TIER 2 Chamber (Occupants) */}
+              <g transform="translate(30, 105)">
+                <rect
+                  x="0"
+                  y="0"
+                  width="260"
+                  height="45"
+                  rx="6"
+                  fill={activeQualifications.includes(2) ? `${GOLD}12` : SURFACE}
+                  stroke={activeQualifications.includes(2) ? GOLD : HAIRLINE}
+                  strokeWidth={activeQualifications.includes(2) ? 2 : 1}
+                  filter={activeQualifications.includes(2) ? "url(#funnelGlow)" : undefined}
+                />
+                <text x="10" y="16" fontSize="9" fontWeight="800" fill={GOLD}>TIER 2 (Occupants themselves)</text>
+                <text x="10" y="32" fontSize="7.5" fill={INK_MUTED}>Physical occupants of H{currentHouse}</text>
+                
+                {/* Render occupants/qualifying planets in Tier 2 */}
+                <g transform="translate(170, 8)">
+                  {hierarchyLevels.lvl2.map((p, i) => (
+                    <g key={p} transform={`translate(${i * 24}, 12)`}>
+                      <circle cx="0" cy="0" r="10" fill={GOLD} />
+                      <text x="0" y="0" textAnchor="middle" dominantBaseline="middle" fill="#FFF" fontSize="8" fontWeight="800">
+                        {p.substring(0, 3)}
+                      </text>
+                    </g>
+                  ))}
+                </g>
+              </g>
+
+              {/* TIER 3 Chamber (Star of Owner) */}
+              <g transform="translate(40, 165)">
+                <rect
+                  x="0"
+                  y="0"
+                  width="240"
+                  height="45"
+                  rx="6"
+                  fill={activeQualifications.includes(3) ? `${GOLD}12` : SURFACE}
+                  stroke={activeQualifications.includes(3) ? GOLD : HAIRLINE}
+                  strokeWidth={activeQualifications.includes(3) ? 2 : 1}
+                  filter={activeQualifications.includes(3) ? "url(#funnelGlow)" : undefined}
+                />
+                <text x="10" y="16" fontSize="9" fontWeight="800" fill={GOLD}>TIER 3 (Star of Owner)</text>
+                <text x="10" y="32" fontSize="7.5" fill={INK_MUTED}>Proxy for Lord of Sign: {currentCuspLord}</text>
+                
+                {/* Render occupants/qualifying planets in Tier 3 */}
+                <g transform="translate(150, 8)">
+                  {hierarchyLevels.lvl3.map((p, i) => (
+                    <g key={p} transform={`translate(${i * 24}, 12)`}>
+                      <circle cx="0" cy="0" r="10" fill={GOLD} />
+                      <text x="0" y="0" textAnchor="middle" dominantBaseline="middle" fill="#FFF" fontSize="8" fontWeight="800">
+                        {p.substring(0, 3)}
+                      </text>
+                    </g>
+                  ))}
+                </g>
+              </g>
+
+              {/* TIER 4 Chamber (Owner) */}
+              <g transform="translate(50, 225)">
+                <rect
+                  x="0"
+                  y="0"
+                  width="220"
+                  height="45"
+                  rx="6"
+                  fill={activeQualifications.includes(4) ? `${GOLD}12` : SURFACE}
+                  stroke={activeQualifications.includes(4) ? GOLD : HAIRLINE}
+                  strokeWidth={activeQualifications.includes(4) ? 2 : 1}
+                  filter={activeQualifications.includes(4) ? "url(#funnelGlow)" : undefined}
+                />
+                <text x="10" y="16" fontSize="9" fontWeight="800" fill={GOLD}>TIER 4 (Owner itself) — Weakest</text>
+                <text x="10" y="32" fontSize="7.5" fill={INK_MUTED}>Sign Lord Venus owning {currentCuspSign}</text>
+                
+                {/* Render occupants/qualifying planets in Tier 4 */}
+                <g transform="translate(130, 8)">
+                  {hierarchyLevels.lvl4.map((p, i) => (
+                    <g key={p} transform={`translate(${i * 24}, 12)`}>
+                      <circle cx="0" cy="0" r="10" fill={GOLD} />
+                      <text x="0" y="0" textAnchor="middle" dominantBaseline="middle" fill="#FFF" fontSize="8" fontWeight="800">
+                        {p.substring(0, 3)}
+                      </text>
+                    </g>
+                  ))}
+                </g>
+              </g>
+            </svg>
+
+            {/* Placement controls for quiz mode */}
+            {practiceMode && selectedPracticePlanet && (
+              <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", justifyContent: "center", marginTop: "1rem" }}>
+                <span style={{ fontSize: "11px", fontWeight: "700", display: "block", width: "100%", textAlign: "center" }}>
+                  Sort <strong>{selectedPracticePlanet}</strong> to level:
+                </span>
+                {[1, 2, 3, 4].map(l => (
+                  <button
+                    key={l}
+                    onClick={() => handlePracticeAssign(l)}
+                    style={{ padding: "4px 10px", borderRadius: "4px", background: GOLD, border: "none", color: "#FFF", fontSize: "11px", fontWeight: 700, cursor: "pointer" }}
+                  >
+                    Level {l}
+                  </button>
+                ))}
               </div>
-
-              {/* Level 2 Slot */}
-              <div style={{ border: `1px dashed ${GOLD}`, borderRadius: "8px", padding: "12px", background: "#FFFBF2" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-                  <span style={{ fontSize: "11px", fontWeight: 900, color: GOLD }}>Level 2 (Occupants themselves)</span>
-                  {practiceMode && selectedPracticePlanet && (
-                    <button
-                      onClick={() => handlePracticeAssign(2)}
-                      style={{ fontSize: "10px", padding: "2px 8px", background: GOLD, color: "#FFF", border: "none", borderRadius: "4px", cursor: "pointer" }}
-                    >
-                      Place Here
-                    </button>
-                  )}
-                </div>
-                <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", minHeight: "28px", alignItems: "center" }}>
-                  {practiceMode ? (
-                    Object.entries(userAnswers).filter(([_, lvl]) => lvl === 2).map(([pName]) => (
-                      <span key={pName} style={{ padding: "4px 8px", background: `${GOLD}15`, borderRadius: "4px", fontSize: "11px", fontWeight: 700 }}>
-                        {pName}
-                      </span>
-                    ))
-                  ) : (
-                    hierarchyLevels.lvl2.length > 0 ? (
-                      hierarchyLevels.lvl2.map((p) => (
-                        <span key={p} style={{ padding: "4px 8px", background: `${GOLD}15`, borderRadius: "4px", fontSize: "11px", fontWeight: 700, color: INK_PRIMARY }}>
-                          {p}
-                        </span>
-                      ))
-                    ) : (
-                      <span style={{ fontSize: "11px", color: "#A08060", fontStyle: "italic" }}>Empty Slot</span>
-                    )
-                  )}
-                </div>
-              </div>
-
-              {/* Level 3 Slot */}
-              <div style={{ border: `1px dashed ${GOLD}`, borderRadius: "8px", padding: "12px", background: "#FFFBF2" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-                  <span style={{ fontSize: "11px", fontWeight: 900, color: GOLD }}>Level 3 (Star of Owner)</span>
-                  {practiceMode && selectedPracticePlanet && (
-                    <button
-                      onClick={() => handlePracticeAssign(3)}
-                      style={{ fontSize: "10px", padding: "2px 8px", background: GOLD, color: "#FFF", border: "none", borderRadius: "4px", cursor: "pointer" }}
-                    >
-                      Place Here
-                    </button>
-                  )}
-                </div>
-                <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", minHeight: "28px", alignItems: "center" }}>
-                  {practiceMode ? (
-                    Object.entries(userAnswers).filter(([_, lvl]) => lvl === 3).map(([pName]) => (
-                      <span key={pName} style={{ padding: "4px 8px", background: `${GOLD}15`, borderRadius: "4px", fontSize: "11px", fontWeight: 700 }}>
-                        {pName}
-                      </span>
-                    ))
-                  ) : (
-                    hierarchyLevels.lvl3.length > 0 ? (
-                      hierarchyLevels.lvl3.map((p) => (
-                        <span key={p} style={{ padding: "4px 8px", background: `${GOLD}15`, borderRadius: "4px", fontSize: "11px", fontWeight: 700, color: INK_PRIMARY }}>
-                          {p}
-                        </span>
-                      ))
-                    ) : (
-                      <span style={{ fontSize: "11px", color: "#A08060", fontStyle: "italic" }}>Empty Slot</span>
-                    )
-                  )}
-                </div>
-              </div>
-
-              {/* Level 4 Slot */}
-              <div style={{ border: `1px dashed ${GOLD}`, borderRadius: "8px", padding: "12px", background: "#FFFBF2" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-                  <span style={{ fontSize: "11px", fontWeight: 900, color: GOLD }}>Level 4 (Owner itself) - Weakest</span>
-                  {practiceMode && selectedPracticePlanet && (
-                    <button
-                      onClick={() => handlePracticeAssign(4)}
-                      style={{ fontSize: "10px", padding: "2px 8px", background: GOLD, color: "#FFF", border: "none", borderRadius: "4px", cursor: "pointer" }}
-                    >
-                      Place Here
-                    </button>
-                  )}
-                </div>
-                <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", minHeight: "28px", alignItems: "center" }}>
-                  {practiceMode ? (
-                    Object.entries(userAnswers).filter(([_, lvl]) => lvl === 4).map(([pName]) => (
-                      <span key={pName} style={{ padding: "4px 8px", background: `${GOLD}15`, borderRadius: "4px", fontSize: "11px", fontWeight: 700 }}>
-                        {pName}
-                      </span>
-                    ))
-                  ) : (
-                    hierarchyLevels.lvl4.length > 0 ? (
-                      hierarchyLevels.lvl4.map((p) => (
-                        <span key={p} style={{ padding: "4px 8px", background: `${GOLD}15`, borderRadius: "4px", fontSize: "11px", fontWeight: 700, color: INK_PRIMARY }}>
-                          {p}
-                        </span>
-                      ))
-                    ) : (
-                      <span style={{ fontSize: "11px", color: "#A08060", fontStyle: "italic" }}>Empty Slot</span>
-                    )
-                  )}
-                </div>
-              </div>
-
-            </div>
+            )}
           </div>
 
-          {/* De-duplicated Ranked Output Box */}
-          <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "20px" }}>
-            <h3 style={{ margin: "0 0 12px 0", fontSize: "13px", color: GOLD, fontWeight: 800, textTransform: "uppercase" }}>
+          {/* Resolved De-duplicated Ranked Chain */}
+          <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "12px", padding: "1.25rem", boxShadow: "0 2px 10px rgba(0,0,0,0.01)" }}>
+            <h3 style={{ margin: "0 0 10px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>
               Resolved, De-duplicated Ranked Chain
             </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               {deDuplicatedRanked.map((item, idx) => (
-                <div key={item.name} style={{ display: "flex", justifyContent: "space-between", padding: "8px 12px", border: `1px solid ${HAIRLINE}`, borderRadius: "6px", background: `${GOLD}04` }}>
+                <div key={item.name} style={{ display: "flex", justifyContent: "space-between", padding: "8px 12px", border: `1px solid ${HAIRLINE}`, borderRadius: "8px", background: `${GOLD}04` }}>
                   <div>
-                    <span style={{ fontWeight: 800, color: GOLD, marginRight: "8px" }}>#{idx + 1}</span>
-                    <span style={{ fontWeight: 700, color: INK_PRIMARY }}>{item.name}</span>
+                    <span style={{ fontWeight: 850, color: GOLD, marginRight: "8px" }}>#{idx + 1}</span>
+                    <span style={{ fontWeight: 750, color: INK_PRIMARY }}>{item.name}</span>
                   </div>
                   <div style={{ fontSize: "11px", color: INK_SECONDARY }}>
                     Ranked at Level {item.strongestLvl} (Qualifies: {item.allLvls.map((l) => `L${l}`).join(", ")})
@@ -641,10 +671,10 @@ export function SignificatorHierarchyExplorer() {
 
       </div>
 
-      {/* Styled Calculation parameters Table instead of VIX console */}
-      <section style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "20px" }}>
-        <h3 style={{ margin: "0 0 12px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>Astronomical Parameters Table</h3>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12.5px" }}>
+      {/* Styled Parametric Reference Table */}
+      <section style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "12px", padding: "1.25rem", boxShadow: "0 2px 10px rgba(0,0,0,0.01)" }}>
+        <h3 style={{ margin: "0 0 10px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>Astronomical Parameters Table</h3>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px", color: INK_SECONDARY }}>
           <thead>
             <tr style={{ borderBottom: `1px solid ${HAIRLINE}`, textAlign: "left", color: GOLD }}>
               <th style={{ padding: "8px" }}>Parameter</th>
@@ -681,6 +711,15 @@ export function SignificatorHierarchyExplorer() {
           </tbody>
         </table>
       </section>
+
+      {/* Add SVG stroke dashoffset animation styles */}
+      <style>{`
+        @keyframes dash {
+          to {
+            stroke-dashoffset: 0;
+          }
+        }
+      `}</style>
 
     </div>
   );

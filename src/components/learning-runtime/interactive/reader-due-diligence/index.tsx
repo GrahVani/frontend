@@ -257,34 +257,69 @@ export function ReaderDueDiligence() {
         </div>
       </div>
 
+      {/* Scoped CSS Style Injection */}
+      <style>{`
+        .responsive-grid {
+          display: grid;
+          grid-template-columns: 1.25fr 1fr;
+          gap: 24px;
+        }
+        @media (max-width: 820px) {
+          .responsive-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+        .checklist-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          font-size: 13px;
+          cursor: pointer;
+          padding: 12px 14px;
+          border-radius: 8px;
+          border: 1px solid rgba(156,122,47,0.12);
+          background: #fff;
+          transition: all 0.2s ease;
+        }
+        .checklist-item:hover {
+          background: rgba(156,122,47,0.03);
+          border-color: rgba(156,122,47,0.3);
+          transform: translateY(-1px);
+        }
+        .checklist-item:focus-within {
+          box-shadow: 0 0 0 2px rgba(156,122,47,0.18);
+          border-color: #9C7A2F;
+        }
+      `}</style>
+
       {activeTab === "calculator" ? (
         /* Calculator Tab */
-        <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "24px" }}>
+        <div className="responsive-grid">
           
           {/* Left Column: Interactive parameters */}
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             
             {/* Presets */}
             <div>
-              <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "8px", textTransform: "uppercase" }}>
+              <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Reader Presets (From Lesson §6)
               </span>
               <div style={{ display: "flex", gap: "8px" }}>
                 <button 
                   onClick={() => applyPreset("A")}
-                  style={{ flex: 1, padding: "8px 10px", fontSize: "12px", borderRadius: "6px", border: "1px solid rgba(156,122,47,0.3)", background: price === 35000 && !hasRecording ? GOLD_LIGHT : "#fff", fontWeight: 600, color: INK_PRIMARY, cursor: "pointer", transition: "all 0.2s" }}
+                  style={{ flex: 1, padding: "10px", fontSize: "12px", borderRadius: "6px", border: "1.5px solid rgba(156,122,47,0.25)", background: price === 35000 && !hasRecording ? GOLD_LIGHT : "#fff", fontWeight: 600, color: INK_PRIMARY, cursor: "pointer", transition: "all 0.2s" }}
                 >
                   Reader A (₹35k, Red Flags)
                 </button>
                 <button 
                   onClick={() => applyPreset("B")}
-                  style={{ flex: 1, padding: "8px 10px", fontSize: "12px", borderRadius: "6px", border: "1px solid rgba(156,122,47,0.3)", background: price === 8000 && hasRecording ? GOLD_LIGHT : "#fff", fontWeight: 600, color: INK_PRIMARY, cursor: "pointer", transition: "all 0.2s" }}
+                  style={{ flex: 1, padding: "10px", fontSize: "12px", borderRadius: "6px", border: "1.5px solid rgba(156,122,47,0.25)", background: price === 8000 && hasRecording ? GOLD_LIGHT : "#fff", fontWeight: 600, color: INK_PRIMARY, cursor: "pointer", transition: "all 0.2s" }}
                 >
                   Reader B (₹8k, Safe)
                 </button>
                 <button 
                   onClick={() => applyPreset("C")}
-                  style={{ flex: 1, padding: "8px 10px", fontSize: "12px", borderRadius: "6px", border: "1px solid rgba(156,122,47,0.3)", background: price === 500 && !hasNoUpsell ? GOLD_LIGHT : "#fff", fontWeight: 600, color: INK_PRIMARY, cursor: "pointer", transition: "all 0.2s" }}
+                  style={{ flex: 1, padding: "10px", fontSize: "12px", borderRadius: "6px", border: "1.5px solid rgba(156,122,47,0.25)", background: price === 500 && !hasNoUpsell ? GOLD_LIGHT : "#fff", fontWeight: 600, color: INK_PRIMARY, cursor: "pointer", transition: "all 0.2s" }}
                 >
                   Reader C (₹500, Scam Bait)
                 </button>
@@ -292,87 +327,93 @@ export function ReaderDueDiligence() {
             </div>
 
             {/* Checklist Items */}
-            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "8px", padding: "16px" }}>
-              <span style={{ fontSize: "11.5px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "12px", textTransform: "uppercase" }}>
+            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "10px", padding: "20px", boxShadow: "0 4px 16px rgba(156,122,47,0.04)" }}>
+              <span style={{ fontSize: "11.5px", fontWeight: 700, color: GOLD_DEEP, display: "block", marginBottom: "14px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 The Six-Point Checklist
               </span>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 
-                <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", cursor: "pointer" }}>
+                <label className="checklist-item">
                   <input 
                     type="checkbox" 
                     checked={hasReputation} 
                     onChange={(e) => setHasReputation(e.target.checked)} 
-                    style={{ marginTop: "3px", accentColor: GOLD }}
+                    style={{ marginTop: "3.5px", accentColor: GOLD, width: "16px", height: "16px", cursor: "pointer" }}
+                    aria-label="Reputation & Lineage Check"
                   />
                   <div>
-                    <strong style={{ color: INK_PRIMARY }}>1. Reputation & Lineage</strong>
-                    <span style={{ display: "block", fontSize: "11.5px", color: INK_MUTED }}>Established family line with verifiable community standing.</span>
+                    <strong style={{ color: INK_PRIMARY, display: "block", fontSize: "13px" }}>1. Reputation & Lineage</strong>
+                    <span style={{ display: "block", fontSize: "11.5px", color: INK_MUTED, marginTop: "2px", lineHeight: "1.3" }}>Established family line with verifiable community standing.</span>
                   </div>
                 </label>
 
-                <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", cursor: "pointer" }}>
+                <label className="checklist-item">
                   <input 
                     type="checkbox" 
                     checked={hasApprenticeship} 
                     onChange={(e) => setHasApprenticeship(e.target.checked)} 
-                    style={{ marginTop: "3px", accentColor: GOLD }}
+                    style={{ marginTop: "3.5px", accentColor: GOLD, width: "16px", height: "16px", cursor: "pointer" }}
+                    aria-label="Apprenticeship History Check"
                   />
                   <div>
-                    <strong style={{ color: INK_PRIMARY }}>2. Apprenticeship History</strong>
-                    <span style={{ display: "block", fontSize: "11.5px", color: INK_MUTED }}>Training under a named predecessor (not generic claims).</span>
+                    <strong style={{ color: INK_PRIMARY, display: "block", fontSize: "13px" }}>2. Apprenticeship History</strong>
+                    <span style={{ display: "block", fontSize: "11.5px", color: INK_MUTED, marginTop: "2px", lineHeight: "1.3" }}>Training under a named predecessor (not generic claims).</span>
                   </div>
                 </label>
 
-                <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", cursor: "pointer" }}>
+                <label className="checklist-item">
                   <input 
                     type="checkbox" 
                     checked={hasPricing} 
                     onChange={(e) => setHasPricing(e.target.checked)} 
-                    style={{ marginTop: "3px", accentColor: GOLD }}
+                    style={{ marginTop: "3.5px", accentColor: GOLD, width: "16px", height: "16px", cursor: "pointer" }}
+                    aria-label="Transparent Pricing Check"
                   />
                   <div>
-                    <strong style={{ color: INK_PRIMARY }}>3. Transparent Pricing</strong>
-                    <span style={{ display: "block", fontSize: "11.5px", color: INK_MUTED }}>Clear up-front pricing structure without hidden expenses.</span>
+                    <strong style={{ color: INK_PRIMARY, display: "block", fontSize: "13px" }}>3. Transparent Pricing</strong>
+                    <span style={{ display: "block", fontSize: "11.5px", color: INK_MUTED, marginTop: "2px", lineHeight: "1.3" }}>Clear up-front pricing structure without hidden expenses.</span>
                   </div>
                 </label>
 
-                <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", cursor: "pointer" }}>
+                <label className="checklist-item">
                   <input 
                     type="checkbox" 
                     checked={hasRecording} 
                     onChange={(e) => setHasRecording(e.target.checked)} 
-                    style={{ marginTop: "3px", accentColor: GOLD }}
+                    style={{ marginTop: "3.5px", accentColor: GOLD, width: "16px", height: "16px", cursor: "pointer" }}
+                    aria-label="Recording Policy Check"
                   />
                   <div>
-                    <strong style={{ color: INK_PRIMARY }}>4. Recording Policy</strong>
-                    <span style={{ display: "block", fontSize: "11.5px", color: INK_MUTED }}>Reader welcomes or allows you to make your own session recording.</span>
+                    <strong style={{ color: INK_PRIMARY, display: "block", fontSize: "13px" }}>4. Recording Policy</strong>
+                    <span style={{ display: "block", fontSize: "11.5px", color: INK_MUTED, marginTop: "2px", lineHeight: "1.3" }}>Reader welcomes or allows you to make your own session recording.</span>
                   </div>
                 </label>
 
-                <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", cursor: "pointer" }}>
+                <label className="checklist-item">
                   <input 
                     type="checkbox" 
                     checked={hasLineageClarity} 
                     onChange={(e) => setHasLineageClarity(e.target.checked)} 
-                    style={{ marginTop: "3px", accentColor: GOLD }}
+                    style={{ marginTop: "3.5px", accentColor: GOLD, width: "16px", height: "16px", cursor: "pointer" }}
+                    aria-label="Sub-lineage Clarity Check"
                   />
                   <div>
-                    <strong style={{ color: INK_PRIMARY }}>5. Sub-lineage Clarity</strong>
-                    <span style={{ display: "block", fontSize: "11.5px", color: INK_MUTED }}>Reader names sub-lineage honestly (Agastya, Bhṛgu) without inflation.</span>
+                    <strong style={{ color: INK_PRIMARY, display: "block", fontSize: "13px" }}>5. Sub-lineage Clarity</strong>
+                    <span style={{ display: "block", fontSize: "11.5px", color: INK_MUTED, marginTop: "2px", lineHeight: "1.3" }}>Reader names sub-lineage honestly (Agastya, Bhṛgu) without inflation.</span>
                   </div>
                 </label>
 
-                <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", cursor: "pointer" }}>
+                <label className="checklist-item">
                   <input 
                     type="checkbox" 
                     checked={hasNoUpsell} 
                     onChange={(e) => setHasNoUpsell(e.target.checked)} 
-                    style={{ marginTop: "3px", accentColor: GOLD }}
+                    style={{ marginTop: "3.5px", accentColor: GOLD, width: "16px", height: "16px", cursor: "pointer" }}
+                    aria-label="No Pressure-Upsell Check"
                   />
                   <div>
-                    <strong style={{ color: INK_PRIMARY }}>6. No Pressure-Upsell</strong>
-                    <span style={{ display: "block", fontSize: "11.5px", color: INK_MUTED }}>No immediate pressure for exorbitant Saturn/family remedies.</span>
+                    <strong style={{ color: INK_PRIMARY, display: "block", fontSize: "13px" }}>6. No Pressure-Upsell</strong>
+                    <span style={{ display: "block", fontSize: "11.5px", color: INK_MUTED, marginTop: "2px", lineHeight: "1.3" }}>No immediate pressure for exorbitant Saturn/family remedies.</span>
                   </div>
                 </label>
 
@@ -380,21 +421,21 @@ export function ReaderDueDiligence() {
             </div>
 
             {/* Slider and Location Toggles */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px", background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "8px", padding: "16px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "11.5px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "14px", background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "10px", padding: "20px", boxShadow: "0 4px 16px rgba(156,122,47,0.04)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "10px" }}>
+                <span style={{ fontSize: "11.5px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Session Location Medium
                 </span>
-                <div style={{ display: "flex", gap: "4px", background: "rgba(156,122,47,0.08)", padding: "2px", borderRadius: "6px" }}>
+                <div style={{ display: "flex", gap: "4px", background: "rgba(156,122,47,0.08)", padding: "3px", borderRadius: "6px", border: "1px solid rgba(156,122,47,0.12)" }}>
                   <button 
                     onClick={() => setLocationMode("in-person")}
-                    style={{ padding: "4px 8px", fontSize: "11px", border: "none", borderRadius: "4px", background: locationMode === "in-person" ? GOLD : "transparent", color: locationMode === "in-person" ? "#fff" : INK_SECONDARY, cursor: "pointer", fontWeight: 600 }}
+                    style={{ padding: "6px 12px", fontSize: "11px", border: "none", borderRadius: "4px", background: locationMode === "in-person" ? GOLD : "transparent", color: locationMode === "in-person" ? "#fff" : INK_SECONDARY, cursor: "pointer", fontWeight: 600, transition: "all 0.2s" }}
                   >
                     In-Person
                   </button>
                   <button 
                     onClick={() => setLocationMode("online")}
-                    style={{ padding: "4px 8px", fontSize: "11px", border: "none", borderRadius: "4px", background: locationMode === "online" ? GOLD : "transparent", color: locationMode === "online" ? "#fff" : INK_SECONDARY, cursor: "pointer", fontWeight: 600 }}
+                    style={{ padding: "6px 12px", fontSize: "11px", border: "none", borderRadius: "4px", background: locationMode === "online" ? GOLD : "transparent", color: locationMode === "online" ? "#fff" : INK_SECONDARY, cursor: "pointer", fontWeight: 600, transition: "all 0.2s" }}
                   >
                     Online/Remote
                   </button>
@@ -402,9 +443,9 @@ export function ReaderDueDiligence() {
               </div>
 
               <div>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "4px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "6px" }}>
                   <span style={{ fontWeight: 600, color: INK_SECONDARY }}>Stated Reading Fee:</span>
-                  <span style={{ color: GOLD_DEEP, fontWeight: 700 }}>₹{price.toLocaleString()}</span>
+                  <span style={{ color: GOLD_DEEP, fontWeight: 700, fontSize: "13.5px" }}>₹{price.toLocaleString()}</span>
                 </div>
                 <input 
                   type="range" 
@@ -413,10 +454,11 @@ export function ReaderDueDiligence() {
                   step="500" 
                   value={price} 
                   onChange={(e) => setPrice(Number(e.target.value))}
-                  style={{ width: "100%", accentColor: GOLD }}
+                  style={{ width: "100%", accentColor: GOLD, cursor: "pointer" }}
+                  aria-label="Reading Fee Slider"
                 />
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "9px", color: INK_MUTED }}>
-                  <span>₹500 (Scam loss-leader)</span>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "9px", color: INK_MUTED, marginTop: "2px" }}>
+                  <span>₹500 (Bait)</span>
                   <span>₹8,000 (Average)</span>
                   <span>₹100,000 (Oversold)</span>
                 </div>
@@ -429,14 +471,14 @@ export function ReaderDueDiligence() {
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             
             {/* 1. Score Gauge Certificate */}
-            <div style={{ background: "#fff", border: `1.5px solid ${GOLD}`, borderRadius: "10px", padding: "20px", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", position: "relative" }}>
-              <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, alignSelf: "flex-start", textTransform: "uppercase" }}>
+            <div style={{ background: "#fff", border: `1.5px solid ${GOLD}`, borderRadius: "10px", padding: "20px", display: "flex", flexDirection: "column", alignItems: "center", gap: "14px", position: "relative", boxShadow: "0 4px 16px rgba(156,122,47,0.06)" }}>
+              <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, alignSelf: "flex-start", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Due-Diligence Certificate
               </span>
 
               {/* Circular Gauge */}
               <div style={{ position: "relative", width: "100px", height: "100px" }}>
-                <svg width="100" height="100" viewBox="0 0 100 100">
+                <svg width="100" height="100" viewBox="0 0 100 100" aria-label={`Checklist score gauge: ${passedCount} out of 6 points passed`}>
                   <circle cx="50" cy="50" r="40" fill="none" stroke="#FAF6EB" strokeWidth="8" />
                   <circle 
                     cx="50" 
@@ -462,7 +504,7 @@ export function ReaderDueDiligence() {
               </div>
 
               {/* Status Banner */}
-              <div style={{ width: "100%", padding: "10px", borderRadius: "6px", background: redFlagsCount >= 3 ? "rgba(162,58,30,0.06)" : passedCount >= 5 ? "rgba(47,125,85,0.06)" : "rgba(156,122,47,0.06)", border: `1px solid ${redFlagsCount >= 3 ? RED : passedCount >= 5 ? GREEN : GOLD}`, textAlign: "center" }}>
+              <div style={{ width: "100%", padding: "12px", borderRadius: "8px", background: redFlagsCount >= 3 ? "rgba(162,58,30,0.06)" : passedCount >= 5 ? "rgba(47,125,85,0.06)" : "rgba(156,122,47,0.06)", border: `1px solid ${redFlagsCount >= 3 ? RED : passedCount >= 5 ? GREEN : GOLD}`, textAlign: "center" }}>
                 {redFlagsCount >= 3 ? (
                   <div style={{ display: "flex", alignSelf: "center", justifyContent: "center", gap: "6px", color: RED, fontWeight: 700, fontSize: "13px" }}>
                     <ShieldAlert size={16} style={{ marginTop: "1px" }} /> HIGH RISK CLUSTER
@@ -477,7 +519,7 @@ export function ReaderDueDiligence() {
                   </div>
                 )}
                 
-                <p style={{ margin: "4px 0 0 0", fontSize: "11px", color: INK_SECONDARY, lineHeight: "1.3" }}>
+                <p style={{ margin: "6px 0 0 0", fontSize: "11px", color: INK_SECONDARY, lineHeight: "1.4" }}>
                   {redFlagsCount >= 3 
                     ? `Warning: Reader shows ${redFlagsCount} red flags. Multiple caution signals outweigh prestige or cheapness.`
                     : passedCount >= 5 
@@ -489,14 +531,14 @@ export function ReaderDueDiligence() {
             </div>
 
             {/* 2. Interactive Myth-Buster Graph */}
-            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "8px", padding: "16px", display: "flex", flexDirection: "column", gap: "10px" }}>
-              <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase", display: "flex", alignItems: "center", gap: "4px" }}>
+            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "10px", padding: "20px", display: "flex", flexDirection: "column", gap: "12px", boxShadow: "0 4px 16px rgba(156,122,47,0.06)" }}>
+              <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase", display: "flex", alignItems: "center", gap: "4px", letterSpacing: "0.05em" }}>
                 <Sliders size={13} /> The Price Fallacy Visualizer
               </span>
 
               {/* Mini SVG Graph */}
-              <div style={{ background: "#FAF6EB", borderRadius: "6px", padding: "8px", border: "1px solid rgba(156,122,47,0.1)" }}>
-                <svg viewBox="0 0 200 80" width="100%" height="70" style={{ overflow: "visible" }}>
+              <div style={{ background: "#FAF6EB", borderRadius: "8px", padding: "10px", border: "1px solid rgba(156,122,47,0.1)" }}>
+                <svg viewBox="0 0 200 80" width="100%" height="70" style={{ overflow: "visible" }} aria-label="Price Fallacy Graph: Quality score stays horizontal regardless of reading fee.">
                   {/* Grid Lines */}
                   <line x1="25" y1="10" x2="25" y2="70" stroke="rgba(0,0,0,0.1)" strokeWidth="1" />
                   <line x1="25" y1="70" x2="190" y2="70" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" />
@@ -523,56 +565,56 @@ export function ReaderDueDiligence() {
                     );
                   })()}
 
-                  {/* Preset Anchors */}
-                  <circle cx="31" cy="70 - 0 * 8" r="3" fill="#666" opacity="0.5" />
+                  {/* Preset Anchors with correctly evaluated cy coordinates */}
+                  <circle cx="31" cy={70} r="3" fill="#666" opacity="0.5" />
                   <text x="31" y="65" textAnchor="middle" fontSize="5px" fill="#666">C</text>
 
-                  <circle cx="42" cy="70 - 6 * 8" r="3" fill="#666" opacity="0.5" />
+                  <circle cx="42" cy={22} r="3" fill="#666" opacity="0.5" />
                   <text x="42" y="17" textAnchor="middle" fontSize="5px" fill="#666">B</text>
 
-                  <circle cx="82" cy="70 - 4 * 8" r="3" fill="#666" opacity="0.5" />
+                  <circle cx="82" cy="38" r="3" fill="#666" opacity="0.5" />
                   <text x="82" y="33" textAnchor="middle" fontSize="5px" fill="#666">A</text>
                 </svg>
               </div>
 
-              <div style={{ fontSize: "11px", color: INK_MUTED, lineHeight: "1.3", background: "rgba(156,122,47,0.04)", padding: "6px 10px", borderRadius: "6px", borderLeft: `3px solid ${GOLD}` }}>
+              <div style={{ fontSize: "11px", color: INK_MUTED, lineHeight: "1.4", background: "rgba(156,122,47,0.04)", padding: "8px 12px", borderRadius: "6px", borderLeft: `3px solid ${GOLD}` }}>
                 <strong>Price Fallacy Active:</strong> Notice that shifting the Price slider does <strong>not</strong> change the horizontal Quality line. Cost is commercially arbitrary. Only character and transparency checks define safety.
               </div>
             </div>
 
             {/* 3. Online Trade-offs grid */}
-            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "8px", padding: "16px", display: "flex", flexDirection: "column", gap: "8px" }}>
-              <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase", display: "flex", alignItems: "center", gap: "4px" }}>
+            <div style={{ background: "#fff", border: "1px solid rgba(156,122,47,0.15)", borderRadius: "10px", padding: "20px", display: "flex", flexDirection: "column", gap: "10px", boxShadow: "0 4px 16px rgba(156,122,47,0.06)" }}>
+              <span style={{ fontSize: "11px", fontWeight: 700, color: GOLD_DEEP, textTransform: "uppercase", display: "flex", alignItems: "center", gap: "4px", letterSpacing: "0.05em" }}>
                 {locationMode === "online" ? <Laptop size={13} /> : <MapPin size={13} />}
                 Medium Analysis: {locationMode === "online" ? "Online/Remote" : "In-Person Visit"}
               </span>
 
               {locationMode === "online" ? (
                 <div style={{ fontSize: "12px", display: "flex", flexDirection: "column", gap: "6px" }}>
-                  <div style={{ display: "flex", gap: "6px", alignItems: "flex-start", color: GREEN }}>
+                  <div style={{ display: "flex", gap: "8px", alignItems: "flex-start", color: GREEN }}>
                     <Check size={14} style={{ flexShrink: 0, marginTop: "2px" }} />
                     <span><strong>Convenience:</strong> Highly cost-effective (no flight tickets, hotel stays, or time off work).</span>
                   </div>
-                  <div style={{ display: "flex", gap: "6px", alignItems: "flex-start", color: RED }}>
+                  <div style={{ display: "flex", gap: "8px", alignItems: "flex-start", color: RED }}>
                     <X size={14} style={{ flexShrink: 0, marginTop: "2px" }} />
                     <span><strong>Thinned Cycle:</strong> Highly reduced live confirmation interaction. Greater risk of cold-reading templates.</span>
                   </div>
-                  <div style={{ display: "flex", gap: "6px", alignItems: "flex-start", color: RED }}>
+                  <div style={{ display: "flex", gap: "8px", alignItems: "flex-start", color: RED }}>
                     <X size={14} style={{ flexShrink: 0, marginTop: "2px" }} />
                     <span><strong>No Oversight:</strong> Cannot physically inspect the matching thumbprint code selection or archive bundle.</span>
                   </div>
                 </div>
               ) : (
                 <div style={{ fontSize: "12px", display: "flex", flexDirection: "column", gap: "6px" }}>
-                  <div style={{ display: "flex", gap: "6px", alignItems: "flex-start", color: GREEN }}>
+                  <div style={{ display: "flex", gap: "8px", alignItems: "flex-start", color: GREEN }}>
                     <Check size={14} style={{ flexShrink: 0, marginTop: "2px" }} />
                     <span><strong>Full Feedback Loop:</strong> Maximum interaction during the yes/no leaf retrieval battery.</span>
                   </div>
-                  <div style={{ display: "flex", gap: "6px", alignItems: "flex-start", color: GREEN }}>
+                  <div style={{ display: "flex", gap: "8px", alignItems: "flex-start", color: GREEN }}>
                     <Check size={14} style={{ flexShrink: 0, marginTop: "2px" }} />
                     <span><strong>Direct Checks:</strong> You watch the print taken, witness the setting, and see the physical manuscript.</span>
                   </div>
-                  <div style={{ display: "flex", gap: "6px", alignItems: "flex-start", color: RED }}>
+                  <div style={{ display: "flex", gap: "8px", alignItems: "flex-start", color: RED }}>
                     <X size={14} style={{ flexShrink: 0, marginTop: "2px" }} />
                     <span><strong>High Expense:</strong> Adds substantial overhead costs (travel, lodging) that distort cost-benefit balance.</span>
                   </div>
@@ -580,7 +622,7 @@ export function ReaderDueDiligence() {
               )}
             </div>
 
-            <button onClick={handleResetSim} style={{ padding: "10px", borderRadius: "6px", background: GOLD, color: "#fff", border: "none", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", transition: "background 0.2s" }} onMouseOver={(e) => e.currentTarget.style.background = GOLD_DEEP} onMouseOut={(e) => e.currentTarget.style.background = GOLD}>
+            <button onClick={handleResetSim} style={{ padding: "12px", borderRadius: "6px", background: GOLD, color: "#fff", border: "none", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", transition: "all 0.2s" }} onMouseOver={(e) => e.currentTarget.style.background = GOLD_DEEP} onMouseOut={(e) => e.currentTarget.style.background = GOLD}>
               <RefreshCw size={14} /> Reset Calculator
             </button>
           </div>

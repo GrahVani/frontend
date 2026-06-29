@@ -409,58 +409,82 @@ export function AgastyaFlow() {
                   South Indian Chart Map (Click Houses)
                 </span>
 
-                {/* 4x4 Grid Representation of South Indian Chart */}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(4, 1fr)",
-                    gridTemplateRows: "repeat(4, 1fr)",
-                    gap: "4px",
-                    background: GOLD_LIGHT,
-                    border: `1.5px solid ${GOLD}`,
-                    borderRadius: "8px",
-                    padding: "6px",
-                    aspectRatio: "1/1"
-                  }}
-                >
-                  {/* Row 1 */}
-                  {/* Pisces / H12 */}
-                  {renderKandaBox(12)}
-                  {/* Aries / H1 */}
-                  {renderKandaBox(1)}
-                  {/* Taurus / H2 */}
-                  {renderKandaBox(2)}
-                  {/* Gemini / H3 */}
-                  {renderKandaBox(3)}
+                {/* High-fidelity native SVG South Indian Chart Map */}
+                <svg viewBox="0 0 320 320" className="w-full h-auto block" style={{ maxHeight: "320px", border: `1.5px solid ${GOLD}`, borderRadius: "8px", background: "#fff" }}>
+                  <defs>
+                    <radialGradient id="houseHover" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stopColor={GOLD} stopOpacity="0.15" />
+                      <stop offset="100%" stopColor={GOLD} stopOpacity="0" />
+                    </radialGradient>
+                  </defs>
 
-                  {/* Row 2 */}
-                  {/* Aquarius / H11 */}
-                  {renderKandaBox(11)}
-                  {/* Merged Center */}
-                  <div style={{ gridColumn: "span 2", gridRow: "span 2", background: "#FAF6EB", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", border: "1px dashed rgba(156,122,47,0.15)" }}>
-                    <span style={{ fontSize: "10px", fontWeight: 700, color: GOLD_DEEP, textAlign: "center", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                      Vaithees<br />warankoil
-                    </span>
-                  </div>
-                  {/* Cancer / H4 */}
-                  {renderKandaBox(4)}
+                  {/* Inner center square */}
+                  <rect x="80" y="80" width="160" height="160" fill="#FAF6EB" stroke={GOLD} strokeWidth="1.5" strokeDasharray="3 3" />
+                  <text x="160" y="150" textAnchor="middle" fontSize="13" fontWeight="900" fill={GOLD_DEEP}>AGASTYA</text>
+                  <text x="160" y="172" textAnchor="middle" fontSize="10" fontWeight="bold" fill={INK_SECONDARY}>Tamil Nāḍī</text>
+                  <text x="160" y="188" textAnchor="middle" fontSize="8.5" fill={INK_MUTED}>Vaitheeswarankoil</text>
 
-                  {/* Row 3 */}
-                  {/* Capricorn / H10 */}
-                  {renderKandaBox(10)}
-                  {/* Leo / H5 */}
-                  {renderKandaBox(5)}
+                  {/* Draw lines dividing columns/rows */}
+                  <line x1="80" y1="0" x2="80" y2="320" stroke={GOLD} strokeWidth="1.5" />
+                  <line x1="240" y1="0" x2="240" y2="320" stroke={GOLD} strokeWidth="1.5" />
+                  <line x1="0" y1="80" x2="320" y2="80" stroke={GOLD} strokeWidth="1.5" />
+                  <line x1="0" y1="240" x2="320" y2="240" stroke={GOLD} strokeWidth="1.5" />
 
-                  {/* Row 4 */}
-                  {/* Sagittarius / H9 */}
-                  {renderKandaBox(9)}
-                  {/* Scorpio / H8 */}
-                  {renderKandaBox(8)}
-                  {/* Libra / H7 */}
-                  {renderKandaBox(7)}
-                  {/* Virgo / H6 */}
-                  {renderKandaBox(6)}
-                </div>
+                  {/* Render Kanda cells */}
+                  {[
+                    { num: 12, x: 0, y: 0 },
+                    { num: 1, x: 80, y: 0 },
+                    { num: 2, x: 160, y: 0 },
+                    { num: 3, x: 240, y: 0 },
+                    { num: 4, x: 240, y: 80 },
+                    { num: 5, x: 240, y: 160 },
+                    { num: 6, x: 240, y: 240 },
+                    { num: 7, x: 160, y: 240 },
+                    { num: 8, x: 80, y: 240 },
+                    { num: 9, x: 0, y: 240 },
+                    { num: 10, x: 0, y: 160 },
+                    { num: 11, x: 0, y: 80 }
+                  ].map((pos) => {
+                    const kanda = KANDAS.find((k) => k.num === pos.num) || KANDAS[0];
+                    const isSelected = activeKanda?.num === pos.num;
+                    return (
+                      <g
+                        key={pos.num}
+                        className="cursor-pointer"
+                        onClick={() => setActiveKanda(kanda)}
+                      >
+                        <rect
+                          x={pos.x + 2}
+                          y={pos.y + 2}
+                          width="76"
+                          height="76"
+                          fill={isSelected ? GOLD : "transparent"}
+                          style={{ transition: "fill 0.2s" }}
+                        />
+                        <text
+                          x={pos.x + 40}
+                          y={pos.y + 32}
+                          textAnchor="middle"
+                          fontSize="11"
+                          fontWeight="bold"
+                          fill={isSelected ? "#fff" : GOLD_DEEP}
+                        >
+                          K{pos.num}
+                        </text>
+                        <text
+                          x={pos.x + 40}
+                          y={pos.y + 48}
+                          textAnchor="middle"
+                          fontSize="8"
+                          fill={isSelected ? "#FAF6EB" : INK_SECONDARY}
+                          fontWeight={isSelected ? "bold" : "normal"}
+                        >
+                          {kanda.name.split(" ")[0]}
+                        </text>
+                      </g>
+                    );
+                  })}
+                </svg>
 
                 {activeKanda && (
                   <div
@@ -606,33 +630,4 @@ export function AgastyaFlow() {
     </div>
   );
 
-  function renderKandaBox(num: number) {
-    const kanda = KANDAS.find((k) => k.num === num) || KANDAS[0];
-    const isSelected = activeKanda?.num === num;
-    return (
-      <button
-        onClick={() => setActiveKanda(kanda)}
-        style={{
-          border: `1.5px solid ${isSelected ? GOLD : "rgba(156,122,47,0.15)"}`,
-          background: isSelected ? GOLD : "#fff",
-          color: isSelected ? "#fff" : INK_PRIMARY,
-          borderRadius: "4px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-          padding: "2px",
-          transition: "all 0.2s"
-        }}
-      >
-        <span style={{ fontSize: "8px", fontWeight: "bold", color: isSelected ? "#FAF6EB" : GOLD_DEEP }}>
-          K{num}
-        </span>
-        <span style={{ fontSize: "9px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: "100%", textAlign: "center" }}>
-          {kanda.name.split(" ")[0]}
-        </span>
-      </button>
-    );
-  }
 }
