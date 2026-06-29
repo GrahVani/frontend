@@ -290,26 +290,26 @@ export function PostTier1ReadingList() {
                 Study Path Timeline
               </span>
               <div className="flex justify-center rounded-xl p-3 my-3 border bg-white" style={{ borderColor: HAIRLINE }}>
-                <svg width="180" height="70" viewBox="0 0 180 70">
-                  <path d="M 15 35 Q 45 5, 90 35 T 165 35" fill="none" stroke="rgba(168,130,30,0.15)" strokeWidth="3" />
+                <svg width="320" height="120" viewBox="0 0 320 120">
+                  <path d="M 40 60 Q 100 15, 180 60 T 280 60" fill="none" stroke="rgba(168,130,30,0.15)" strokeWidth="3" />
                   {pacing > 1 && totalSelected > 0 && (
                     <motion.path
-                      d="M 15 35 Q 45 5, 90 35 T 165 35"
+                      d="M 40 60 Q 100 15, 180 60 T 280 60"
                       fill="none"
                       stroke={status === "empowered" ? GREEN : GOLD}
                       strokeWidth="3"
-                      strokeDasharray="180"
-                      initial={{ strokeDashoffset: 180 }}
-                      animate={{ strokeDashoffset: 180 - (opFluency / 100) * 180 }}
+                      strokeDasharray="260"
+                      initial={{ strokeDashoffset: 260 }}
+                      animate={{ strokeDashoffset: 260 - (opFluency / 100) * 260 }}
                       transition={{ duration: 0.5 }}
                     />
                   )}
-                  <circle cx="15" cy="35" r="4" fill={GOLD} />
-                  <circle cx="90" cy="35" r="4" fill={totalSelected >= 3 ? GOLD : "rgba(168,130,30,0.2)"} />
-                  <circle cx="165" cy="35" r="4" fill={totalSelected >= 5 && opFluency > 50 ? GREEN : "rgba(168,130,30,0.2)"} />
-                  <text x="15" y="55" fill={INK_MUTED} fontSize="5" fontWeight="bold" textAnchor="middle">Foundations</text>
-                  <text x="90" y="55" fill={INK_MUTED} fontSize="5" fontWeight="bold" textAnchor="middle">Cross-Reference</text>
-                  <text x="165" y="55" fill={INK_MUTED} fontSize="5" fontWeight="bold" textAnchor="middle">Fluency</text>
+                  <circle cx="40" cy="60" r="6" fill={GOLD} />
+                  <circle cx="180" cy="60" r="6" fill={totalSelected >= 3 ? GOLD : "rgba(168,130,30,0.2)"} />
+                  <circle cx="280" cy="60" r="6" fill={totalSelected >= 5 && opFluency > 50 ? GREEN : "rgba(168,130,30,0.2)"} />
+                  <text x="40" y="90" fill={INK_SECONDARY} fontSize="9" fontWeight="bold" textAnchor="middle">Foundations</text>
+                  <text x="180" y="90" fill={INK_SECONDARY} fontSize="9" fontWeight="bold" textAnchor="middle">Cross-Reference</text>
+                  <text x="280" y="90" fill={INK_SECONDARY} fontSize="9" fontWeight="bold" textAnchor="middle">Fluency</text>
                 </svg>
               </div>
 

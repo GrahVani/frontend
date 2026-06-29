@@ -32,27 +32,27 @@ function readableColor(hex: string): string {
 function StateRoleDiagram({ activeStep, selectedPlanet }: { activeStep: ReadingStepKey; selectedPlanet: string }) {
   const step = getReadingStep(activeStep);
   const points = [
-    { id: "jupiter", x: 155, y: 132 },
-    { id: "venus", x: 270, y: 102 },
-    { id: "saturn", x: 385, y: 132 },
-    { id: "mercury", x: 500, y: 102 },
-    { id: "sun", x: 615, y: 132 },
+    { id: "jupiter", x: 155, y: 168 },
+    { id: "venus", x: 270, y: 138 },
+    { id: "saturn", x: 385, y: 168 },
+    { id: "mercury", x: 500, y: 138 },
+    { id: "sun", x: 615, y: 168 },
   ];
 
   return (
-    <section className="w-full min-w-0 overflow-x-auto rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 310" className="h-auto w-full min-w-[640px]" role="img" aria-label="Lal Kitab annual reading state to theme and upaya map">
-        <rect x="20" y="20" width="720" height="260" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
-        <text x="380" y="50" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+    <section className="w-full min-w-0 rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+      <svg viewBox="0 0 760 370" className="h-auto w-full min-w-0" role="img" aria-label="Lal Kitab annual reading state to theme and upaya map">
+        <rect x="20" y="30" width="720" height="310" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+        <text x="380" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           ANNUAL STATES DRIVE THEMES AND UPAYA
         </text>
-        <path d="M120 190 H640" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
-        <rect x="115" y="205" width="250" height="42" rx="16" fill={wash(GREEN, "10")} stroke={GREEN} />
-        <text x="240" y="233" textAnchor="middle" fill={GREEN} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <path d="M120 238 H640" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
+        <rect x="80" y="258" width="280" height="50" rx="16" fill={wash(GREEN, "10")} stroke={GREEN} />
+        <text x="220" y="290" textAnchor="middle" fill={GREEN} fontSize="16" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           active planets set year themes
         </text>
-        <rect x="395" y="205" width="250" height="42" rx="16" fill={wash(VERMILION, "10")} stroke={VERMILION} />
-        <text x="520" y="233" textAnchor="middle" fill={VERMILION} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="420" y="258" width="280" height="50" rx="16" fill={wash(VERMILION, "10")} stroke={VERMILION} />
+        <text x="560" y="290" textAnchor="middle" fill={VERMILION} fontSize="16" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           dysfunctional planets trigger upaya
         </text>
 
@@ -60,22 +60,25 @@ function StateRoleDiagram({ activeStep, selectedPlanet }: { activeStep: ReadingS
           const planet = READING_PLANETS.find((item) => item.id === point.id) ?? READING_PLANETS[0];
           const selected = selectedPlanet === planet.id;
           const dysfunctional = planet.state !== "active";
+          const targetX = dysfunctional
+            ? { saturn: 460, mercury: 560, sun: 660 }[planet.id] ?? 560
+            : { jupiter: 170, venus: 310 }[planet.id] ?? 240;
           return (
             <g key={planet.id}>
-              <line x1={point.x} y1={point.y + 26} x2={dysfunctional ? 520 : 240} y2="205" stroke={planet.color} strokeWidth={selected ? 2.4 : 1.2} opacity={selected ? 0.8 : 0.35} />
-              <circle cx={point.x} cy={point.y} r={selected ? 36 : 30} fill={selected ? wash(planet.color, "18") : SURFACE} stroke={selected ? planet.color : HAIRLINE} strokeWidth={selected ? 2.4 : 1.2} />
-              <text x={point.x} y={point.y - 4} textAnchor="middle" fill={readableColor(planet.color)} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <line x1={point.x} y1={point.y + 30} x2={targetX} y2="258" stroke={planet.color} strokeWidth={selected ? 2.6 : 1.4} opacity={selected ? 0.8 : 0.35} />
+              <circle cx={point.x} cy={point.y} r={selected ? 40 : 34} fill={selected ? wash(planet.color, "18") : SURFACE} stroke={selected ? planet.color : HAIRLINE} strokeWidth={selected ? 2.6 : 1.4} />
+              <text x={point.x} y={point.y - 4} textAnchor="middle" fill={readableColor(planet.color)} fontSize={15} fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {planet.label}
               </text>
-              <text x={point.x} y={point.y + 14} textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x={point.x} y={point.y + 16} textAnchor="middle" fill={INK_SECONDARY} fontSize={12} fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 H{planet.house} {planet.state}
               </text>
             </g>
           );
         })}
 
-        <rect x="262" y="66" width="236" height="36" rx="18" fill={wash(step.color, "10")} stroke={step.color} />
-        <text x="380" y="90" textAnchor="middle" fill={step.color} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="242" y="70" width="276" height="34" rx="17" fill={wash(step.color, "10")} stroke={step.color} />
+        <text x="380" y="93" textAnchor="middle" fill={step.color} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Current step: {step.label}
         </text>
       </svg>

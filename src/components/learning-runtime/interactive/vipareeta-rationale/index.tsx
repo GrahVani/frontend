@@ -344,7 +344,7 @@ export function VipareetaRationale() {
         <p className="text-xs" style={{ color: INK_SECONDARY }}>
           Vipareeta is <strong>not</strong> effortless luck. The benefit typically arrives <strong>through struggle, crisis, or reversal</strong>
           — victory <em>over</em> enemies, resilience <em>through</em> crisis, gain <em>after</em> loss. Like every yoga, delivery depends on
-          the <strong>lord's strength</strong> and the <strong>timing</strong> of its daśā. A weak Vipareeta underdelivers;
+          the <strong>lord&apos;s strength</strong> and the <strong>timing</strong> of its daśā. A weak Vipareeta underdelivers;
           a strong one in its period can be transformative — but the path runs through hardship.
         </p>
       </div>
@@ -356,12 +356,12 @@ export function VipareetaRationale() {
           <span className="text-xs font-bold" style={{ color: GOLD_ACCENT }}>Modern Observation — Framed Honestly</span>
         </div>
         <p className="text-xs" style={{ color: INK_SECONDARY }}>
-          Modern teachers (notably <strong>K. N. Rao</strong>) have observed that <strong>many high achievers' charts show Vipareeta configurations</strong>
-          — a suggestive pattern that fits the "rise through adversity" reading.
+          Modern teachers (notably <strong>K. N. Rao</strong>) have observed that <strong>many high achievers&apos; charts show Vipareeta configurations</strong>
+          — a suggestive pattern that fits the &ldquo;rise through adversity&rdquo; reading.
         </p>
         <p className="text-xs" style={{ color: INK_MUTED }}>
           Treat this as <strong>supportive modern commentary</strong>, not statistical proof. Cite it as observation,
-          and let each chart's strength and timing carry the actual judgement.
+          and let each chart&apos;s strength and timing carry the actual judgement.
         </p>
       </div>
 

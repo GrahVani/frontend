@@ -39,37 +39,46 @@ function MasteryArcSvg({ selectedChapterId, selectedStepId }: { selectedChapterI
   const selectedIndex = CHAPTER_ARC.findIndex((chapter) => chapter.id === selectedChapterId);
   const stepIndex = PIPELINE_STEPS.findIndex((step) => step.id === selectedStepId);
   const chapterPoints = [
-    { x: 122, y: 120 },
-    { x: 226, y: 82 },
-    { x: 350, y: 84 },
-    { x: 474, y: 82 },
-    { x: 578, y: 120 },
-    { x: 350, y: 258 },
+    { x: 122, y: 250 },
+    { x: 226, y: 170 },
+    { x: 350, y: 170 },
+    { x: 474, y: 170 },
+    { x: 578, y: 250 },
+    { x: 350, y: 450 },
   ];
+  const stepShortLabels: Record<PipelineStepId, string[]> = {
+    frame: ["Frame"],
+    build: ["Build", "Teva"],
+    state: ["Find", "state"],
+    meaning: ["Translate", "graha"],
+    year: ["Check", "year"],
+    integrate: ["Cross", "check"],
+    boundary: ["Stop", "line"],
+  };
 
   return (
-    <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 360" className="h-auto w-full min-w-0" role="img" aria-label="Module 18 mastery arc and Lal Kitab pipeline">
-        <rect x="20" y="20" width="720" height="320" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
-        <text x="380" y="38" textAnchor="middle" fill={GOLD} fontSize="14" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+    <section className="w-full min-w-0 overflow-hidden rounded-xl p-6" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+      <svg viewBox="0 0 760 660" className="h-auto w-full min-w-0" role="img" aria-label="Module 18 mastery arc and Lal Kitab pipeline">
+        <rect x="20" y="48" width="720" height="560" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+        <text x="380" y="82" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="700" letterSpacing="0.5" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           MODULE 18 CLOSURE
         </text>
-        <text x="380" y="55" textAnchor="middle" fill={GOLD} fontSize="12" fontWeight="900" letterSpacing="0.6" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="380" y="104" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600" letterSpacing="0.3" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           ONE STREAM · SIX CHAPTERS · ONE ETHICAL STOP LINE
         </text>
 
-        <path d="M122 120 C210 36 490 36 578 120" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
-        <path d="M122 120 C190 288 510 288 578 120" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
-        <path d="M226 82 L350 258 L474 82" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
+        <path d="M122 250 C210 120 490 120 578 250" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
+        <path d="M122 250 C190 420 510 420 578 250" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
+        <path d="M226 170 L350 450 L474 170" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
 
-        <circle cx="350" cy="152" r="52" fill={wash(stepChapter.color, "12")} stroke={stepChapter.color} strokeWidth="2.5" />
-        <text x="350" y="134" textAnchor="middle" fill={stepChapter.color} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <circle cx="350" cy="315" r="58" fill={wash(stepChapter.color, "12")} stroke={stepChapter.color} strokeWidth="2.5" />
+        <text x="350" y="292" textAnchor="middle" fill={stepChapter.color} fontSize="14" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           {selectedStep.label.toUpperCase()}
         </text>
-        <text x="350" y="160" textAnchor="middle" fill={INK_PRIMARY} fontSize="24" fontWeight="700" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+        <text x="350" y="320" textAnchor="middle" fill={INK_PRIMARY} fontSize="24" fontWeight="500" style={{ fontFamily: "var(--font-cormorant), serif" }}>
           Ch {stepChapter.chapter}
         </text>
-        <text x="350" y="180" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="350" y="343" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           {boundaryLabel(selectedStep.boundary)}
         </text>
 
@@ -78,11 +87,11 @@ function MasteryArcSvg({ selectedChapterId, selectedStepId }: { selectedChapterI
           const active = chapter.id === selectedChapterId || chapter.id === selectedStep.chapterId;
           return (
             <g key={chapter.id}>
-              <circle cx={point.x} cy={point.y} r={active ? 42 : 34} fill={active ? wash(chapter.color, "18") : SURFACE} stroke={active ? chapter.color : HAIRLINE} strokeWidth={active ? 2.5 : 1.2} />
-              <text x={point.x} y={point.y - 8} textAnchor="middle" fill={active ? chapter.color : INK_MUTED} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <circle cx={point.x} cy={point.y} r={active ? 46 : 42} fill={active ? wash(chapter.color, "18") : SURFACE} stroke={active ? chapter.color : HAIRLINE} strokeWidth={active ? 2.5 : 1.2} />
+              <text x={point.x} y={point.y - 12} textAnchor="middle" fill={active ? chapter.color : INK_MUTED} fontSize="13" fontWeight="600" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 Ch {chapter.chapter}
               </text>
-              <text x={point.x} y={point.y + 10} textAnchor="middle" fill={INK_PRIMARY} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x={point.x} y={point.y + 12} textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {chapter.shortTitle}
               </text>
             </g>
@@ -91,31 +100,33 @@ function MasteryArcSvg({ selectedChapterId, selectedStepId }: { selectedChapterI
 
         <g>
           {PIPELINE_STEPS.map((step, index) => {
-            const x = 118 + index * 92;
+            const x = 86 + index * 98;
             const active = step.id === selectedStepId;
             const color = boundaryColor(step.boundary);
+            const labelLines = stepShortLabels[step.id];
             return (
               <g key={step.id}>
-                <rect x={x - 42} y="310" width="84" height="28" rx="14" fill={active ? wash(color, "16") : SURFACE} stroke={active ? color : HAIRLINE} />
-                <text x={x} y="329" textAnchor="middle" fill={active ? color : INK_MUTED} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-                  {index + 1}. {step.label}
+                <rect x={x - 46} y="535" width="92" height="40" rx="16" fill={active ? wash(color, "16") : SURFACE} stroke={active ? color : HAIRLINE} />
+                <text x={x} y="550" textAnchor="middle" fill={active ? color : INK_MUTED} fontSize="11" fontWeight="600" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+                  <tspan x={x} dy="0">{index + 1}. {labelLines[0]}</tspan>
+                  {labelLines[1] ? <tspan x={x} dy="13">{labelLines[1]}</tspan> : null}
                 </text>
               </g>
             );
           })}
-          <text x="118" y="298" fill={GOLD} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <text x="86" y="523" fill={GOLD} fontSize="13" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             Pipeline trace
           </text>
-          <text x="646" y="298" textAnchor="end" fill={INK_MUTED} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <text x="684" y="523" textAnchor="end" fill={INK_MUTED} fontSize="12" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             selected step {stepIndex + 1} / {PIPELINE_STEPS.length}
           </text>
         </g>
 
-        <rect x="545" y="240" width="150" height="28" rx="14" fill={wash(GOLD, "10")} stroke={GOLD} />
-        <text x="620" y="259" textAnchor="middle" fill={GOLD} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="545" y="397" width="150" height="28" rx="14" fill={wash(GOLD, "10")} stroke={GOLD} />
+        <text x="620" y="416" textAnchor="middle" fill={GOLD} fontSize="12" fontWeight="600" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           18 of 24 Tier-1 modules
         </text>
-        <text x="95" y="90" fill={INK_MUTED} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="74" y="170" fill={INK_MUTED} fontSize="12" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           selected chapter {selectedIndex + 1} / 6
         </text>
       </svg>

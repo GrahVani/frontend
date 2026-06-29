@@ -271,12 +271,18 @@ export function YogaFiringTimeline() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[780px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["Window", "Ages", "Dasha/Bhukti", "Transit cue", "Verdict"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "Window", width: "w-[130px]" },
+                    { label: "Ages", width: "w-[100px]" },
+                    { label: "Dasha/Bhukti", width: "w-[140px]" },
+                    { label: "Transit cue", width: "w-[180px]" },
+                    { label: "Verdict", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -290,7 +296,7 @@ export function YogaFiringTimeline() {
                       <td className="px-4 py-3 font-bold" style={{ color }}>{window.label}</td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{window.startAge}-{window.endAge}</td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{grahaLabel(window.mdLord)} / {grahaLabel(window.bhuktiLord)}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{showTransits ? window.transit : "Transit overlay hidden"}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{showTransits ? window.transit : "Transit overlay hidden"}</td>
                       <td className="px-4 py-3 font-semibold" style={{ color }}>{window.convergence ? "Firing candidate" : "Dormant"}</td>
                     </tr>
                   );

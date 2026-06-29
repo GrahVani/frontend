@@ -254,12 +254,19 @@ export function PmpyArchetypeExplorer() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[820px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["", "Yoga", "Planet", "Own / exalt signs", "Archetype", "Aptitudes"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "", width: "w-12" },
+                    { label: "Yoga", width: "w-[120px]" },
+                    { label: "Planet", width: "w-[100px]" },
+                    { label: "Own / exalt signs", width: "w-[200px]" },
+                    { label: "Archetype", width: "w-[130px]" },
+                    { label: "Aptitudes", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -273,8 +280,8 @@ export function PmpyArchetypeExplorer() {
                       <td className="px-4 py-3 font-bold" style={{ color: item.color }}><IAST>{item.iast}</IAST></td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{item.planetLabel}</td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>Own: {item.ownSigns.join(", ")}; exalt: {item.exaltation}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{item.archetype}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{item.aptitudes.join(", ")}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{item.archetype}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{item.aptitudes.join(", ")}</td>
                     </tr>
                   );
                 })}

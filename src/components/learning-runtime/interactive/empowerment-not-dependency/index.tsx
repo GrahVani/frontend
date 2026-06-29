@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Compass, ShieldCheck, AlertTriangle, Coins, Sparkles, MessageSquare, ArrowRight } from "lucide-react";
+import { Compass, ShieldCheck, AlertTriangle, Coins } from "lucide-react";
 import { goldOnGlassHairline } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.22))";
@@ -279,33 +279,33 @@ export function EmpowermentNotDependency() {
             </div>
 
             {/* Visual SVG Authority Scale */}
-            <div className="flex justify-center rounded-xl p-3 mb-4 border bg-white" style={{ borderColor: HAIRLINE }}>
-              <svg width="200" height="90" viewBox="0 0 200 90">
+            <div className="flex justify-center rounded-xl p-4 mb-4 border bg-white" style={{ borderColor: HAIRLINE }}>
+              <svg viewBox="0 0 260 120" className="w-full max-w-[440px] h-auto block">
                 {/* Horizontal Scale Line */}
-                <line x1="30" y1="50" x2="170" y2="50" stroke="rgba(168,130,30,0.2)" strokeWidth="3" rx="1.5" />
-                <line x1="30" y1="50" x2="100" y2="50" stroke={option.status === "dependent" ? VERMILION : "rgba(168,130,30,0.1)"} strokeWidth={option.status === "dependent" ? 3 : 1} />
-                <line x1="100" y1="50" x2="170" y2="50" stroke={option.status === "empowered" ? GREEN : "rgba(168,130,30,0.1)"} strokeWidth={option.status === "empowered" ? 3 : 1} />
+                <line x1="38" y1="66" x2="222" y2="66" stroke="rgba(168,130,30,0.2)" strokeWidth="4" rx="2" />
+                <line x1="38" y1="66" x2="130" y2="66" stroke={option.status === "dependent" ? VERMILION : "rgba(168,130,30,0.1)"} strokeWidth={option.status === "dependent" ? 4 : 1.5} />
+                <line x1="130" y1="66" x2="222" y2="66" stroke={option.status === "empowered" ? GREEN : "rgba(168,130,30,0.1)"} strokeWidth={option.status === "empowered" ? 4 : 1.5} />
                 
                 {/* End Labels */}
-                <text x="30" y="32" fill={INK_MUTED} fontSize="7" fontWeight="bold" textAnchor="middle">Astrologer's Desk</text>
-                <text x="170" y="32" fill={INK_MUTED} fontSize="7" fontWeight="bold" textAnchor="middle">Client's Hands</text>
+                <text x="18" y="38" fill={INK_MUTED} fontSize="10" fontWeight="bold" textAnchor="start">Astrologer&apos;s Desk</text>
+                <text x="242" y="38" fill={INK_MUTED} fontSize="10" fontWeight="bold" textAnchor="end">Client&apos;s Hands</text>
 
                 {/* Center marker */}
-                <line x1="100" y1="43" x2="100" y2="57" stroke={GOLD} strokeWidth="1.5" />
+                <line x1="130" y1="56" x2="130" y2="76" stroke={GOLD} strokeWidth="2" />
 
                 {/* Animated pointer based on agency level */}
                 {(() => {
-                  const xCoord = 30 + (option.agency / 100) * 140;
+                  const xCoord = 38 + (option.agency / 100) * 184;
                   const color = option.status === "empowered" ? GREEN : option.status === "dependent" ? VERMILION : GOLD;
                   return (
-                    <g transform={`translate(${xCoord}, 50)`}>
-                      <circle cx="0" cy="0" r="8" fill={color} />
-                      <polygon points="-5,-4 0,-14 5,-4" fill={color} />
+                    <g transform={`translate(${xCoord}, 66)`}>
+                      <circle cx="0" cy="0" r="11" fill={color} />
+                      <polygon points="-7,-5 0,-19 7,-5" fill={color} />
                     </g>
                   );
                 })()}
 
-                <text x="100" y="78" fill={option.status === "empowered" ? GREEN : option.status === "dependent" ? VERMILION : GOLD} fontSize="8" fontWeight="bold" textAnchor="middle">
+                <text x="130" y="104" fill={option.status === "empowered" ? GREEN : option.status === "dependent" ? VERMILION : GOLD} fontSize="11" fontWeight="bold" textAnchor="middle">
                   {option.status === "empowered" ? "Empowered Agency Shift" : option.status === "dependent" ? "Dependency Lock" : "Unguided Agency"}
                 </text>
               </svg>

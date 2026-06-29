@@ -47,16 +47,16 @@ function DecisionFlowSvg({ activeSignals, decision }: { activeSignals: SignalKey
     <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
       <svg viewBox="0 0 800 320" className="h-auto w-full min-w-0" role="img" aria-label="Lal Kitab remedy decision matrix">
         <rect x="20" y="20" width="760" height="280" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
-        <text x="400" y="50" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="400" y="50" textAnchor="middle" fill={GOLD} fontSize="20" fontWeight="700" letterSpacing="0.5" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           DECIDE BY FIT, NOT BY DEFAULT
         </text>
 
         <rect x="58" y="78" width="275" height="170" rx="16" fill={wash(GREEN, "0F")} stroke={HAIRLINE} />
         <rect x="467" y="78" width="275" height="170" rx="16" fill={wash(VERMILION, "0F")} stroke={HAIRLINE} />
-        <text x="195" y="105" textAnchor="middle" fill={GREEN} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="195" y="105" textAnchor="middle" fill={GREEN} fontSize="16" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           POINTS TOWARD LAL KITAB
         </text>
-        <text x="605" y="105" textAnchor="middle" fill={VERMILION} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="605" y="105" textAnchor="middle" fill={VERMILION} fontSize="16" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           POINTS AWAY / DEFER
         </text>
 
@@ -65,8 +65,8 @@ function DecisionFlowSvg({ activeSignals, decision }: { activeSignals: SignalKey
           const y = 134 + index * 38;
           return (
             <g key={signal.key}>
-              <rect x="82" y={y - 18} width="226" height="28" rx="10" fill={active ? wash(signal.color, "18") : SURFACE} stroke={active ? signal.color : HAIRLINE} />
-              <text x="195" y={y + 1} textAnchor="middle" fill={active ? readableColor(signal.color) : INK_SECONDARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <rect x="70" y={y - 19} width="250" height="30" rx="10" fill={active ? wash(signal.color, "18") : SURFACE} stroke={active ? signal.color : HAIRLINE} />
+              <text x="195" y={y + 2} textAnchor="middle" fill={active ? readableColor(signal.color) : INK_SECONDARY} fontSize="15" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {signal.label}
               </text>
             </g>
@@ -78,8 +78,8 @@ function DecisionFlowSvg({ activeSignals, decision }: { activeSignals: SignalKey
           const y = 134 + index * 38;
           return (
             <g key={signal.key}>
-              <rect x="492" y={y - 18} width="226" height="28" rx="10" fill={active ? wash(signal.color, "18") : SURFACE} stroke={active ? signal.color : HAIRLINE} />
-              <text x="605" y={y + 1} textAnchor="middle" fill={active ? readableColor(signal.color) : INK_SECONDARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <rect x="480" y={y - 19} width="250" height="30" rx="10" fill={active ? wash(signal.color, "18") : SURFACE} stroke={active ? signal.color : HAIRLINE} />
+              <text x="605" y={y + 2} textAnchor="middle" fill={active ? readableColor(signal.color) : INK_SECONDARY} fontSize="15" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {signal.label}
               </text>
             </g>
@@ -87,16 +87,16 @@ function DecisionFlowSvg({ activeSignals, decision }: { activeSignals: SignalKey
         })}
 
         <path d="M333 164 H467" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
-        <circle cx="400" cy="164" r="44" fill={wash(profile.color, "12")} stroke={profile.color} strokeWidth="2.4" />
-        <text x="400" y="157" textAnchor="middle" fill={readableColor(profile.color)} fontSize="13" fontWeight="900" letterSpacing="0.6" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <circle cx="400" cy="164" r="50" fill={wash(profile.color, "12")} stroke={profile.color} strokeWidth="2.4" />
+        <text x="400" y="150" textAnchor="middle" fill={readableColor(profile.color)} fontSize="15" fontWeight="700" letterSpacing="0.3" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           VERDICT
         </text>
-        <text x="400" y="179" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="400" y="180" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           {profile.label}
         </text>
 
         <rect x="212" y="266" width="376" height="28" rx="14" fill={SURFACE} stroke={profile.color} />
-        <text x="400" y="285" textAnchor="middle" fill={readableColor(profile.color)} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="400" y="285" textAnchor="middle" fill={readableColor(profile.color)} fontSize="15" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Lal Kitab is chosen per context, never by reflex.
         </text>
       </svg>

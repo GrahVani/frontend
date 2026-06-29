@@ -185,12 +185,18 @@ export function CrossStreamYogaMap() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[820px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["Stream", "Combination language", "Mechanism", "Do not do", "Deep module"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "Stream", width: "w-[120px]" },
+                    { label: "Combination language", width: "w-[170px]" },
+                    { label: "Mechanism", width: "w-[170px]" },
+                    { label: "Do not do", width: "w-[150px]" },
+                    { label: "Deep module", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -199,10 +205,10 @@ export function CrossStreamYogaMap() {
                 {YOGA_STREAMS.map((stream) => (
                   <tr key={stream.slug} onClick={() => setSelectedSlug(stream.slug)} className="cursor-pointer align-top" style={{ background: stream.slug === selected.slug ? wash(stream.color, "10") : SURFACE, borderTop: `1px solid ${HAIRLINE}` }}>
                     <td className="px-4 py-3 font-bold" style={{ color: stream.color }}><IAST>{stream.iast}</IAST></td>
-                    <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{stream.combinationIdea}</td>
-                    <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{stream.mechanism}</td>
-                    <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{stream.notThis}</td>
-                    <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{stream.deepModule}</td>
+                    <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{stream.combinationIdea}</td>
+                    <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{stream.mechanism}</td>
+                    <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{stream.notThis}</td>
+                    <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{stream.deepModule}</td>
                   </tr>
                 ))}
               </tbody>

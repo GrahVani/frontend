@@ -7,20 +7,19 @@ import {
   ArrowRight,
   Sun,
   Moon,
-  Info,
   Calendar,
   Sparkles,
 } from "lucide-react";
-import { ink, goldOnGlassHairline } from "@/design-tokens/grahvani-learning/colors";
+import { goldOnGlassHairline } from "@/design-tokens/grahvani-learning/colors";
 
-const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.22))";
+const HAIRLINE = "rgba(156, 116, 48, 0.48)";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
-const INK_PRIMARY = "var(--gl-ink-primary, #3E2A1F)";
-const INK_SECONDARY = "var(--gl-ink-secondary, #5C3D26)";
-const GOLD = "#A8821E";
-const VERMILION = "#A23A1E";
-const GREEN = "#2E7D32";
+const INK_PRIMARY = "#2B2017";
+const INK_SECONDARY = "#4F3B2B";
+const GOLD = "#9A6F13";
+const VERMILION = "#9F3219";
+const GREEN = "#247A3D";
 
 interface YugaYear {
   name: string;
@@ -100,6 +99,18 @@ const NAKSHATRAS = [
   "P.-Āṣāḍhā", "U.-Āṣāḍhā", "Śravaṇa"
 ];
 
+const SPARSE_NAKSHATRA_LABELS: Record<number, { radius: number; dx?: number; dy?: number; anchor?: "start" | "middle" | "end"; fontSize?: number }> = {
+  0: { radius: 148, dy: -2, anchor: "middle", fontSize: 10.5 },
+  3: { radius: 150, dx: 3, dy: 2, anchor: "start" },
+  6: { radius: 150, dx: 2, dy: 4, anchor: "start" },
+  9: { radius: 150, dx: 6, dy: 7, anchor: "start" },
+  12: { radius: 150, dx: 2, dy: 10, anchor: "middle" },
+  15: { radius: 150, dy: 9, anchor: "middle" },
+  18: { radius: 150, dx: -7, dy: 7, anchor: "end" },
+  21: { radius: 150, dx: -7, dy: 4, anchor: "end" },
+  24: { radius: 150, dx: -4, dy: 2, anchor: "end" },
+};
+
 export function VedangaJyotishaYugaVisualizer() {
   const [activeYear, setActiveYear] = useState<number>(0);
   const [course, setCourse] = useState<"uttarayana" | "dakshinayana">("uttarayana");
@@ -148,7 +159,7 @@ export function VedangaJyotishaYugaVisualizer() {
             Vedāṅga Jyotiṣa Yuga Cycle Visualizer
           </h2>
           <p className="mt-1 m-0 text-xs text-stone-600" style={{ color: INK_SECONDARY }}>
-            Interact with Lagadha's five-year Yuga cycle calendar model. Track the Uttarāyaṇa/Dakṣiṇāyana solar courses and the intercalation rules.
+            Interact with Lagadha&apos;s five-year Yuga cycle calendar model. Track the Uttarāyaṇa/Dakṣiṇāyana solar courses and the intercalation rules.
           </p>
         </div>
 
@@ -232,10 +243,10 @@ export function VedangaJyotishaYugaVisualizer() {
 
             {/* SVG Visualizer (Daylight Parchment theme, matching platform card background) */}
             <div className="flex justify-center my-4 relative rounded-xl p-4 overflow-hidden border" style={{ background: SURFACE_2, borderColor: HAIRLINE }}>
-              <svg viewBox="0 0 320 320" className="w-full max-w-[280px] h-auto block">
+              <svg viewBox="0 0 320 320" className="w-full max-w-[420px] h-auto block">
                 {/* Outer Stars / Nakshatra circles */}
-                <circle cx="160" cy="160" r="140" fill="none" stroke="rgba(168, 130, 30, 0.18)" strokeWidth="1" />
-                <circle cx="160" cy="160" r="115" fill="none" stroke="rgba(168, 130, 30, 0.12)" strokeWidth="1" />
+                <circle cx="160" cy="160" r="140" fill="none" stroke="rgba(156, 116, 48, 0.5)" strokeWidth="1.8" />
+                <circle cx="160" cy="160" r="115" fill="none" stroke="rgba(156, 116, 48, 0.38)" strokeWidth="1.35" />
                 
                 {/* 27 Nakshatras Points */}
                 {NAKSHATRAS.map((name, i) => {
@@ -251,39 +262,44 @@ export function VedangaJyotishaYugaVisualizer() {
                         y1={ptOuter.y}
                         x2={ptInner.x}
                         y2={ptInner.y}
-                        stroke={isDhanistha ? VERMILION : "rgba(168, 130, 30, 0.4)"}
-                        strokeWidth={isDhanistha ? 2.5 : 1}
+                        stroke={isDhanistha ? VERMILION : "rgba(156, 116, 48, 0.72)"}
+                        strokeWidth={isDhanistha ? 3 : 1.4}
                       />
                       {/* Sparse Labels to prevent crowding */}
-                      {i % 3 === 0 && (
-                        <text
-                          x={getCoords(160, 160, 152, angle).x}
-                          y={getCoords(160, 160, 152, angle).y + 3}
-                          textAnchor="middle"
-                          fill={isDhanistha ? VERMILION : INK_SECONDARY}
-                          fontSize={isDhanistha ? 9 : 8}
-                          fontWeight={isDhanistha ? "bold" : "500"}
-                        >
-                          {name}
-                        </text>
-                      )}
+                      {SPARSE_NAKSHATRA_LABELS[i] && (() => {
+                        const label = SPARSE_NAKSHATRA_LABELS[i];
+                        const labelPt = getCoords(160, 160, label.radius, angle);
+
+                        return (
+                          <text
+                            x={labelPt.x + (label.dx ?? 0)}
+                            y={labelPt.y + (label.dy ?? 0)}
+                            textAnchor={label.anchor ?? "middle"}
+                            fill={isDhanistha ? VERMILION : INK_SECONDARY}
+                            fontSize={label.fontSize ?? 10}
+                            fontWeight={isDhanistha ? "bold" : "700"}
+                          >
+                            {name}
+                          </text>
+                        );
+                      })()}
                     </g>
                   );
                 })}
 
                 {/* Yuga Solstice Line of Alignment */}
-                <line x1="160" y1="20" x2="160" y2="300" stroke="rgba(168, 130, 30, 0.25)" strokeWidth="1.2" strokeDasharray="3 3" />
-                <text x="160" y="38" textAnchor="middle" fill={VERMILION} fontSize="8" fontWeight="bold">DHANIṢṬHĀ (Winter Solstice)</text>
-                <text x="160" y="286" textAnchor="middle" fill={GOLD} fontSize="8" fontWeight="bold">Aśleṣā (Summer Solstice)</text>
+                <line x1="160" y1="20" x2="160" y2="300" stroke="rgba(156, 116, 48, 0.62)" strokeWidth="1.8" strokeDasharray="4 4" />
+                <text x="160" y="40" textAnchor="middle" fill={VERMILION} fontSize="9.5" fontWeight="bold">DHANIṢṬHĀ (Winter Solstice)</text>
+                <text x="160" y="288" textAnchor="middle" fill={GOLD} fontSize="9.5" fontWeight="bold">Aśleṣā (Summer Solstice)</text>
 
                 {/* Central Earth */}
-                <circle cx="160" cy="160" r="16" fill={SURFACE} stroke={GOLD} strokeWidth="1.5" />
-                <text x="160" y="163" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight="bold">भू</text>
+                <circle cx="160" cy="160" r="18" fill={SURFACE} stroke={GOLD} strokeWidth="2" />
+                <text x="160" y="165" textAnchor="middle" fill={INK_PRIMARY} fontSize="16" fontWeight="bold">भू</text>
 
                 {/* Solar Orbit Line */}
-                <circle cx="160" cy="160" r="90" fill="none" stroke="rgba(168, 130, 30, 0.15)" strokeWidth="1" />
+                <circle cx="160" cy="160" r="90" fill="none" stroke="rgba(156, 116, 48, 0.36)" strokeWidth="1.4" />
                 {/* Lunar Orbit Line */}
-                <circle cx="160" cy="160" r="60" fill="none" stroke="rgba(168, 130, 30, 0.15)" strokeWidth="1" />
+                <circle cx="160" cy="160" r="60" fill="none" stroke="rgba(156, 116, 48, 0.36)" strokeWidth="1.4" />
 
                 {/* Draw Sun at Year Position */}
                 {(() => {
@@ -294,10 +310,19 @@ export function VedangaJyotishaYugaVisualizer() {
                   const sunPt = getCoords(160, 160, 90, sunAngle);
                   return (
                     <g>
-                      <line x1="160" y1="160" x2={sunPt.x} y2={sunPt.y} stroke="rgba(168, 130, 30, 0.22)" strokeWidth="1" />
-                      <circle cx={sunPt.x} cy={sunPt.y} r="9" fill="#FFFDE7" stroke={GOLD} strokeWidth="1.5" />
-                      <circle cx={sunPt.x} cy={sunPt.y} r="5" fill="#FFC107" />
-                      <text x={sunPt.x} y={sunPt.y - 12} textAnchor="middle" fill={INK_PRIMARY} fontSize="9" fontWeight="bold">Sun (सूर्य)</text>
+                      <line x1="160" y1="160" x2={sunPt.x} y2={sunPt.y} stroke="rgba(156, 116, 48, 0.62)" strokeWidth="1.5" />
+                      <circle cx={sunPt.x} cy={sunPt.y} r="10" fill="#FFFDE7" stroke={GOLD} strokeWidth="2" />
+                      <circle cx={sunPt.x} cy={sunPt.y} r="5.5" fill="#FFC107" />
+                      <text
+                        x={sunPt.x + (Math.abs(sunPt.x - 160) < 8 ? 22 : 0)}
+                        y={sunPt.y + (sunPt.y < 92 ? -18 : -14)}
+                        textAnchor={Math.abs(sunPt.x - 160) < 8 ? "start" : "middle"}
+                        fill={INK_PRIMARY}
+                        fontSize="10"
+                        fontWeight="bold"
+                      >
+                        Sun (सूर्य)
+                      </text>
                     </g>
                   );
                 })()}
@@ -311,9 +336,18 @@ export function VedangaJyotishaYugaVisualizer() {
                   const moonPt = getCoords(160, 160, 60, moonAngle);
                   return (
                     <g>
-                      <line x1="160" y1="160" x2={moonPt.x} y2={moonPt.y} stroke="rgba(168, 130, 30, 0.22)" strokeWidth="1" />
-                      <circle cx={moonPt.x} cy={moonPt.y} r="7" fill="#ECEFF1" stroke="#90A4AE" strokeWidth="1" />
-                      <text x={moonPt.x} y={moonPt.y + 15} textAnchor="middle" fill={INK_SECONDARY} fontSize="8" fontWeight="500">Moon (चन्द्र)</text>
+                      <line x1="160" y1="160" x2={moonPt.x} y2={moonPt.y} stroke="rgba(156, 116, 48, 0.58)" strokeWidth="1.4" />
+                      <circle cx={moonPt.x} cy={moonPt.y} r="8" fill="#ECEFF1" stroke="#5E7F91" strokeWidth="1.8" />
+                      <text
+                        x={moonPt.x + (Math.abs(moonPt.x - 160) < 8 ? 18 : 0)}
+                        y={moonPt.y + (moonPt.y < 112 ? 21 : 18)}
+                        textAnchor={Math.abs(moonPt.x - 160) < 8 ? "start" : "middle"}
+                        fill={INK_SECONDARY}
+                        fontSize="9.5"
+                        fontWeight="700"
+                      >
+                        Moon (चन्द्र)
+                      </text>
                     </g>
                   );
                 })()}
@@ -323,15 +357,15 @@ export function VedangaJyotishaYugaVisualizer() {
                   <>
                     {/* Node 1: Mid Year 3 (Dakshinayana start) */}
                     <g transform="translate(160, 160)">
-                      <line x1="0" y1="0" x2={Math.cos(Math.PI/6)*115} y2={Math.sin(Math.PI/6)*115} stroke={GREEN} strokeWidth="1.5" strokeDasharray="3 3" />
-                      <circle cx={Math.cos(Math.PI/6)*115} cy={Math.sin(Math.PI/6)*115} r="6" fill={GREEN} stroke="#FFF" strokeWidth="1" />
-                      <text x={Math.cos(Math.PI/6)*115 + 10} y={Math.sin(Math.PI/6)*115 + 3} fill={GREEN} fontSize="8" fontWeight="bold">Adhika 1</text>
+                      <line x1="0" y1="0" x2={Math.cos(Math.PI/6)*115} y2={Math.sin(Math.PI/6)*115} stroke={GREEN} strokeWidth="2.1" strokeDasharray="4 4" />
+                      <circle cx={Math.cos(Math.PI/6)*115} cy={Math.sin(Math.PI/6)*115} r="7" fill={GREEN} stroke="#FFF" strokeWidth="1.5" />
+                      <text x={Math.cos(Math.PI/6)*115 + 13} y={Math.sin(Math.PI/6)*115 - 10} fill={GREEN} fontSize="9.5" fontWeight="bold">Adhika 1</text>
                     </g>
                     {/* Node 2: End Year 5 (Dakshinayana end) */}
                     <g transform="translate(160, 160)">
-                      <line x1="0" y1="0" x2={-Math.cos(Math.PI/4)*115} y2={Math.sin(Math.PI/4)*115} stroke={GREEN} strokeWidth="1.5" strokeDasharray="3 3" />
-                      <circle cx={-Math.cos(Math.PI/4)*115} cy={Math.sin(Math.PI/4)*115} r="6" fill={GREEN} stroke="#FFF" strokeWidth="1" />
-                      <text x={-Math.cos(Math.PI/4)*115 - 38} y={Math.sin(Math.PI/4)*115 + 3} fill={GREEN} fontSize="8" fontWeight="bold">Adhika 2</text>
+                      <line x1="0" y1="0" x2={-Math.cos(Math.PI/4)*115} y2={Math.sin(Math.PI/4)*115} stroke={GREEN} strokeWidth="2.1" strokeDasharray="4 4" />
+                      <circle cx={-Math.cos(Math.PI/4)*115} cy={Math.sin(Math.PI/4)*115} r="7" fill={GREEN} stroke="#FFF" strokeWidth="1.5" />
+                      <text x={-Math.cos(Math.PI/4)*115 - 8} y={Math.sin(Math.PI/4)*115 + 22} textAnchor="end" fill={GREEN} fontSize="9.5" fontWeight="bold">Adhika 2</text>
                     </g>
                   </>
                 )}
@@ -340,7 +374,7 @@ export function VedangaJyotishaYugaVisualizer() {
 
             <div className="space-y-2 text-xs leading-relaxed" style={{ color: INK_SECONDARY }}>
               <p>
-                <strong>The Solstice Shift:</strong> Lagadha's calendar synchronizes the solar year (~366 days, standard Vedic length) with the lunar year of 12 lunations (~354 days). The 12-day difference accumulates year-over-year.
+                <strong>The Solstice Shift:</strong> Lagadha&apos;s calendar synchronizes the solar year (~366 days, standard Vedic length) with the lunar year of 12 lunations (~354 days). The 12-day difference accumulates year-over-year.
               </p>
               <p>
                 <strong>Intercalation placement:</strong> At Year 3 mid-point and Year 5 end-point, a 30-day lunar month is inserted. This maps precisely to the solstices, ensuring Vedic sacrifices occur at the correct astronomical seasons.
@@ -407,7 +441,7 @@ export function VedangaJyotishaYugaVisualizer() {
                 >
                   <div className="flex items-center gap-1.5 font-bold mb-1.5" style={{ color: GREEN }}>
                     <Sparkles size={13} />
-                    <span>Lagadha's Yuga Arithmetic</span>
+                    <span>Lagadha&apos;s Yuga Arithmetic</span>
                   </div>
                   <ul className="m-0 p-0 pl-4 space-y-1" style={{ listStyleType: "disc", color: INK_SECONDARY }}>
                     <li>5 Solar Years = 1,830 Solar Days.</li>

@@ -19,9 +19,13 @@ import {
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.18))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
-const INK_PRIMARY = "var(--gl-ink-primary)";
-const INK_SECONDARY = "var(--gl-ink-secondary)";
-const INK_MUTED = "var(--gl-ink-muted)";
+const INK_PRIMARY = "#3F2D1D";
+const INK_SECONDARY = "#5C4630";
+const INK_MUTED = "#745D40";
+const READABLE_GOLD = "#936817";
+const TABLE_LINE = "rgba(139, 118, 82, 0.28)";
+const SELECTED_ROW = "rgba(255, 248, 229, 0.98)";
+const ACTIVE_SURFACE = "rgba(245, 252, 240, 0.96)";
 
 function toggleCriteria(state: CriteriaState, key: CriteriaKey): CriteriaState {
   return { ...state, [key]: !state[key] };
@@ -42,19 +46,19 @@ function CriteriaButton({
     <div
       className="rounded-xl p-4"
       style={{
-        background: active ? criterion.tint : SURFACE,
+        background: active ? ACTIVE_SURFACE : SURFACE,
         border: `1.5px solid ${active ? criterion.color : HAIRLINE}`,
       }}
     >
       <div className="flex items-start justify-between gap-3">
         <button type="button" onClick={onInspect} className="min-w-0 flex-1 text-left">
-          <p className="m-0 text-xs font-bold uppercase" style={{ color: criterion.color, letterSpacing: "0.08em" }}>
+          <p className="m-0 text-sm font-bold uppercase" style={{ color: active ? "#2F7A4F" : READABLE_GOLD, letterSpacing: "0.08em" }}>
             {criterion.conditionType}
           </p>
           <h3 className="mt-1 text-lg font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
             {criterion.name}
           </h3>
-          <p className="mt-1 text-sm" style={{ color: INK_SECONDARY }}>
+          <p className="mt-1 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
             {criterion.conditionSummary}
           </p>
         </button>
@@ -84,7 +88,7 @@ function OperationalFlow({ activeCount }: { activeCount: number }) {
     <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
       <div className="mb-4 flex items-center gap-2">
         <GitCompare size={17} color={ink.goldAccent} />
-        <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+        <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
           Operational discipline
         </p>
       </div>
@@ -103,7 +107,7 @@ function OperationalFlow({ activeCount }: { activeCount: number }) {
               >
                 {index + 1}
               </div>
-              <p className="m-0 flex-1 rounded-xl px-3 py-2 text-sm font-semibold" style={{ background: SURFACE_2, color: INK_SECONDARY }}>
+              <p className="m-0 flex-1 rounded-xl px-3 py-2 text-base font-semibold" style={{ background: SURFACE_2, color: INK_SECONDARY }}>
                 {step.label}
               </p>
             </div>
@@ -134,13 +138,13 @@ export function ConditionalCriteriaChecker() {
     >
       <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+          <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
             Parashara selection routine
           </p>
           <h2 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
             Conditional <IAST>dasha</IAST> criteria checker
           </h2>
-          <p className="mt-1 max-w-3xl text-sm" style={{ color: INK_SECONDARY }}>
+          <p className="mt-1 max-w-3xl text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
             Mark which broad chart conditions are verified. Vimshottari stays active; every checked conditional becomes a supplementary cross-validation lens.
           </p>
         </div>
@@ -173,18 +177,18 @@ export function ConditionalCriteriaChecker() {
           <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                   Recommendation
                 </p>
                 <h3 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
                   {recommendationSummary(state)}
                 </h3>
-                <p className="mt-1 text-sm" style={{ color: INK_SECONDARY }}>
+                <p className="mt-1 text-base" style={{ color: INK_SECONDARY }}>
                   {twoYesMode(state)}
                 </p>
               </div>
               <div className="rounded-xl px-4 py-3 text-center" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, minWidth: 128 }}>
-                <p className="m-0 text-xs font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.08em" }}>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.08em" }}>
                   Matches
                 </p>
                 <p className="m-0 text-3xl font-bold" style={{ color: ink.goldAccent, fontFamily: "var(--font-cormorant), serif" }}>
@@ -211,16 +215,16 @@ export function ConditionalCriteriaChecker() {
         </div>
 
         <div className="min-w-0 space-y-4">
-          <section className="rounded-xl p-4" style={{ background: inspected.tint, border: `1.5px solid ${inspected.color}55` }}>
+          <section className="rounded-xl p-4" style={{ background: SELECTED_ROW, border: `1.5px solid ${inspected.color}55` }}>
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="m-0 text-xs font-bold uppercase" style={{ color: inspected.color, letterSpacing: "0.08em" }}>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                   Inspecting
                 </p>
                 <h3 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
                   {inspected.name}
                 </h3>
-                <p className="mt-1 text-sm font-semibold" style={{ color: INK_SECONDARY }}>
+                <p className="mt-1 text-base font-semibold" style={{ color: INK_SECONDARY }}>
                   {inspected.cycle} - {inspected.chapterCue}
                 </p>
               </div>
@@ -228,10 +232,10 @@ export function ConditionalCriteriaChecker() {
                 {inspected.devanagari}
               </Devanagari>
             </div>
-            <p className="mt-3 text-sm" style={{ color: INK_SECONDARY }}>
+            <p className="mt-3 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
               {inspected.conditionSummary}
             </p>
-            <p className="mt-2 text-sm font-semibold" style={{ color: inspected.color }}>
+            <p className="mt-2 text-base font-semibold" style={{ color: INK_PRIMARY }}>
               {inspected.caution}
             </p>
           </section>
@@ -241,11 +245,11 @@ export function ConditionalCriteriaChecker() {
           <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="flex items-center gap-2">
               <AlertTriangle size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Recension honesty
               </p>
             </div>
-            <p className="mt-3 text-sm" style={{ color: INK_SECONDARY }}>
+            <p className="mt-3 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
               These toggles teach the type of condition. The exact wording varies by text, so a real chart must be checked with the curriculum&apos;s chosen source before a conditional daśā is used.
             </p>
           </section>
@@ -255,11 +259,11 @@ export function ConditionalCriteriaChecker() {
           <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
               <Table2 size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Selection criteria table
               </p>
             </div>
-            <div className="flex items-center gap-2 text-xs font-semibold" style={{ color: INK_MUTED }}>
+            <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: INK_MUTED }}>
               <ShieldCheck size={15} color={ink.goldAccent} />
               Vimshottari baseline remains active
             </div>
@@ -270,8 +274,8 @@ export function ConditionalCriteriaChecker() {
               style={{
                 gridTemplateColumns: "58px 170px 132px 190px minmax(280px,1fr)",
                 background: SURFACE_2,
-                color: INK_MUTED,
-                fontSize: "0.72rem",
+                color: INK_SECONDARY,
+                fontSize: "0.82rem",
                 fontWeight: 900,
                 letterSpacing: "0.06em",
                 textTransform: "uppercase",
@@ -296,23 +300,23 @@ export function ConditionalCriteriaChecker() {
                   className="grid min-w-[940px] text-left"
                   style={{
                     gridTemplateColumns: "58px 170px 132px 190px minmax(280px,1fr)",
-                    background: checked ? criterion.tint : SURFACE,
-                    borderTop: `1px solid ${HAIRLINE}`,
+                    background: checked ? ACTIVE_SURFACE : SURFACE,
+                    borderTop: `1px solid ${TABLE_LINE}`,
                     color: INK_PRIMARY,
                   }}
                 >
                   <div className="px-3 py-3">{checked ? <CheckCircle2 size={18} color={criterion.color} /> : <CircleDot size={18} color={INK_MUTED} />}</div>
                   <div className="px-3 py-3">
-                    <p className="m-0 text-sm font-bold" style={{ color: criterion.color }}>
+                    <p className="m-0 text-base font-bold" style={{ color: INK_PRIMARY }}>
                       {criterion.name}
                     </p>
-                    <p className="m-0 text-xs" style={{ color: INK_MUTED }}>
+                    <p className="m-0 text-sm" style={{ color: INK_SECONDARY }}>
                       {criterion.devanagari}
                     </p>
                   </div>
-                  <div className="px-3 py-3 text-sm font-semibold">{criterion.cycle}</div>
-                  <div className="px-3 py-3 text-sm font-semibold">{criterion.conditionType}</div>
-                  <div className="px-3 py-3 text-sm" style={{ color: INK_SECONDARY }}>
+                  <div className="px-3 py-3 text-base font-semibold">{criterion.cycle}</div>
+                  <div className="px-3 py-3 text-base font-semibold">{criterion.conditionType}</div>
+                  <div className="px-3 py-3 text-base" style={{ color: INK_SECONDARY }}>
                     {criterion.conditionSummary}
                   </div>
                 </button>

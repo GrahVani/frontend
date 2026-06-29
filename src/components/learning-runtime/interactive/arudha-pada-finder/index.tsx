@@ -17,7 +17,6 @@ import {
   CheckCircle2,
   AlertTriangle,
   ArrowRight,
-  RotateCcw,
   MapPin,
   Info,
 } from "lucide-react";
@@ -34,41 +33,44 @@ const GREEN = "#2F7D55";
 const VERMILION = "#A23A1E";
 const AMBER = "#C8841E";
 const BLUE = "#3B82F6";
+const GRID_LINE = "rgba(138, 126, 94, 0.85)";
 
-/* --- SVG helpers --- */
 
-function houseXY(cx: number, cy: number, r: number, house: number) {
-  const angleDeg = (house - 1) * 30 - 90;
-  const angleRad = (angleDeg * Math.PI) / 180;
-  return { x: cx + r * Math.cos(angleRad), y: cy + r * Math.sin(angleRad) };
-}
-
-function sectorPath(cx: number, cy: number, rIn: number, rOut: number, house: number, widthDeg = 28) {
-  const mid = (house - 1) * 30 - 90;
-  const start = ((mid - widthDeg / 2) * Math.PI) / 180;
-  const end = ((mid + widthDeg / 2) * Math.PI) / 180;
-  const x1 = cx + rIn * Math.cos(start);
-  const y1 = cy + rIn * Math.sin(start);
-  const x2 = cx + rOut * Math.cos(start);
-  const y2 = cy + rOut * Math.sin(start);
-  const x3 = cx + rOut * Math.cos(end);
-  const y3 = cy + rOut * Math.sin(end);
-  const x4 = cx + rIn * Math.cos(end);
-  const y4 = cy + rIn * Math.sin(end);
-  return `M ${x1} ${y1} L ${x2} ${y2} A ${rOut} ${rOut} 0 0 1 ${x3} ${y3} L ${x4} ${y4} A ${rIn} ${rIn} 0 0 0 ${x1} ${y1} Z`;
-}
-
-/* --- Circular diagram --- */
 
 function ArudhaDiagram({ result }: { result: ArudhaResult }) {
-  const w = 420;
-  const h = 440;
-  const cx = w / 2;
-  const cy = h / 2 - 8;
-  const r = 140;
+  const HOUSE_POLYGONS: Record<number, string> = {
+    1: "200,10 105,105 200,200 295,105",
+    2: "10,10 200,10 105,105",
+    3: "10,10 105,105 10,200",
+    4: "10,200 105,105 200,200 105,295",
+    5: "10,200 105,295 10,390",
+    6: "10,390 105,295 200,390",
+    7: "200,390 105,295 200,200 295,295",
+    8: "200,390 295,295 390,390",
+    9: "390,200 295,295 390,390",
+    10: "390,200 295,105 200,200 295,295",
+    11: "390,10 295,105 390,200",
+    12: "200,10 390,10 295,105",
+  };
+
+  const HOUSE_CENTERS: Record<number, { x: number; y: number }> = {
+    1: { x: 200, y: 105 },
+    2: { x: 105, y: 45 },
+    3: { x: 45, y: 105 },
+    4: { x: 105, y: 200 },
+    5: { x: 45, y: 295 },
+    6: { x: 105, y: 355 },
+    7: { x: 200, y: 295 },
+    8: { x: 295, y: 355 },
+    9: { x: 355, y: 295 },
+    10: { x: 295, y: 200 },
+    11: { x: 355, y: 105 },
+    12: { x: 295, y: 45 },
+  };
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" style={{ maxHeight: 400 }}>
+    <svg viewBox="0 0 400 440" className="w-full h-auto" style={{ maxHeight: 320 }}>
+      {/* Houses */}
       {Array.from({ length: 12 }, (_, i) => {
         const hnum = i + 1;
         const isHouse = hnum === result.house;
@@ -83,63 +85,72 @@ function ArudhaDiagram({ result }: { result: ArudhaResult }) {
         else if (isPada) { fill = GREEN; opacity = 0.15; }
         else if (isFirstLanding) { fill = VERMILION; opacity = 0.08; }
 
-        return <path key={hnum} d={sectorPath(cx, cy, 48, r + 6, hnum, 26)} fill={fill} fillOpacity={opacity} stroke="none" />;
-      })}
-
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke={HAIRLINE} strokeWidth={1.5} />
-      <circle cx={cx} cy={cy} r={r - 46} fill="none" stroke={HAIRLINE} strokeWidth={0.8} strokeDasharray="3 3" />
-
-      {Array.from({ length: 12 }, (_, i) => {
-        const a = houseXY(cx, cy, r, i + 1);
-        const b = houseXY(cx, cy, r - 9, i + 1);
-        return <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={HAIRLINE} strokeWidth={1} />;
-      })}
-
-      {Array.from({ length: 12 }, (_, i) => {
-        const pos = houseXY(cx, cy, r + 24, i + 1);
-        const hnum = i + 1;
-        const isHouse = hnum === result.house;
-        const isLord = hnum === result.lord;
-        const isPada = hnum === result.finalPada;
-        let color = INK_MUTED;
-        if (isHouse) color = GOLD_ACCENT;
-        else if (isLord) color = BLUE;
-        else if (isPada) color = GREEN;
         return (
-          <text key={i} x={pos.x} y={pos.y + 1} textAnchor="middle" dominantBaseline="middle" fontSize={13} fontWeight={isHouse || isLord || isPada ? 700 : 600} fill={color}>
-            {hnum}
-          </text>
+          <g key={hnum}>
+            <polygon
+              points={HOUSE_POLYGONS[hnum]}
+              fill={fill}
+              fillOpacity={opacity > 0 ? opacity : undefined}
+              stroke="none"
+            />
+          </g>
         );
       })}
 
-      {/* Sign names inside */}
+      {/* Grid Lines */}
+      <g stroke={GRID_LINE} strokeWidth="1.5" fill="none">
+        <rect x="10" y="10" width="380" height="380" />
+        <line x1="10" y1="10" x2="390" y2="390" />
+        <line x1="390" y1="10" x2="10" y2="390" />
+        <line x1="200" y1="10" x2="10" y2="200" />
+        <line x1="10" y1="200" x2="200" y2="390" />
+        <line x1="200" y1="390" x2="390" y2="200" />
+        <line x1="390" y1="200" x2="200" y2="10" />
+      </g>
+
+      {/* Labels */}
       {Array.from({ length: 12 }, (_, i) => {
-        const pos = houseXY(cx, cy, r - 26, i + 1);
         const hnum = i + 1;
-        const isKey = hnum === result.house || hnum === result.lord || hnum === result.finalPada;
+        const center = HOUSE_CENTERS[hnum];
+        const isHouse = hnum === result.house;
+        const isLord = hnum === result.lord;
+        const isPada = hnum === result.finalPada;
+        const isFirstLanding = result.exceptionFired && hnum === result.shiftedFrom;
+        const isKey = isHouse || isLord || isPada || isFirstLanding;
+        
+        let color = INK_SECONDARY;
+        if (isHouse) color = GOLD_ACCENT;
+        else if (isLord) color = BLUE;
+        else if (isPada) color = GREEN;
+
         return (
-          <text key={`sig-${i}`} x={pos.x} y={pos.y + 1} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={isKey ? 700 : 400} fill={isKey ? INK_SECONDARY : INK_MUTED}>
-            {SIGNS[i].slice(0, 3)}
-          </text>
+          <g key={`lbl-${hnum}`} transform={`translate(${center.x}, ${center.y})`}>
+            <text y={-4} textAnchor="middle" dominantBaseline="middle" fontSize={14} fontWeight={isKey ? 800 : 600} fill={color}>
+              {hnum}
+            </text>
+            <text y={10} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={isKey ? 700 : 400} fill={INK_SECONDARY}>
+              {SIGNS[i].slice(0, 3)}
+            </text>
+          </g>
         );
       })}
 
       {/* Centre */}
-      <text x={cx} y={cy - 5} textAnchor="middle" dominantBaseline="middle" fontSize={12} fontWeight={700} fill={INK_MUTED}>Double-count</text>
-      <text x={cx} y={cy + 12} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={600} fill={INK_MUTED}>n = {result.n}</text>
+      <text x={200} y={190} textAnchor="middle" dominantBaseline="middle" fontSize={12} fontWeight={700} fill={INK_SECONDARY}>Double-count</text>
+      <text x={200} y={205} textAnchor="middle" dominantBaseline="middle" fontSize={11} fontWeight={600} fill={INK_SECONDARY}>n = {result.n}</text>
 
       {/* Legend */}
-      <g transform={`translate(20, ${h - 44})`}>
-        <rect x={0} y={0} width={12} height={12} rx={2} fill={GOLD_ACCENT} fillOpacity={0.15} stroke={GOLD_ACCENT} strokeWidth={1} />
-        <text x={18} y={11} fontSize={11} fill={INK_SECONDARY}>House</text>
-        <rect x={68} y={0} width={12} height={12} rx={2} fill={BLUE} fillOpacity={0.15} stroke={BLUE} strokeWidth={1} />
-        <text x={86} y={11} fontSize={11} fill={INK_SECONDARY}>Lord</text>
-        <rect x={130} y={0} width={12} height={12} rx={2} fill={GREEN} fillOpacity={0.15} stroke={GREEN} strokeWidth={1} />
-        <text x={148} y={11} fontSize={11} fill={INK_SECONDARY}>Pada</text>
+      <g transform="translate(16, 415)">
+        <rect x={0} y={0} width={10} height={10} rx={2} fill={GOLD_ACCENT} fillOpacity={0.15} stroke={GOLD_ACCENT} strokeWidth={1} />
+        <text x={15} y={9} fontSize={11} fill={INK_SECONDARY}>House</text>
+        <rect x={65} y={0} width={10} height={10} rx={2} fill={BLUE} fillOpacity={0.15} stroke={BLUE} strokeWidth={1} />
+        <text x={80} y={9} fontSize={11} fill={INK_SECONDARY}>Lord</text>
+        <rect x={125} y={0} width={10} height={10} rx={2} fill={GREEN} fillOpacity={0.15} stroke={GREEN} strokeWidth={1} />
+        <text x={140} y={9} fontSize={11} fill={INK_SECONDARY}>Pada</text>
         {result.exceptionFired && (
           <>
-            <rect x={192} y={0} width={12} height={12} rx={2} fill={VERMILION} fillOpacity={0.08} stroke={VERMILION} strokeWidth={1} strokeDasharray="2 1" />
-            <text x={210} y={11} fontSize={11} fill={INK_SECONDARY}>Prohibited</text>
+            <rect x={185} y={0} width={10} height={10} rx={2} fill={VERMILION} fillOpacity={0.08} stroke={VERMILION} strokeWidth={1} strokeDasharray="2 1" />
+            <text x={200} y={9} fontSize={11} fill={INK_SECONDARY}>Prohibited</text>
           </>
         )}
       </g>
@@ -226,7 +237,7 @@ export function ArudhaPadaFinder() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Target size={14} style={{ color: BLUE }} />
-              <span className="text-xs font-bold" style={{ color: INK_PRIMARY }}>Lord's position</span>
+              <span className="text-xs font-bold" style={{ color: INK_PRIMARY }}>Lord&apos;s position</span>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {Array.from({ length: 12 }, (_, i) => (

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, XCircle, PlayCircle, Compass, HelpCircle, ShieldAlert, Award, Calendar } from "lucide-react";
+import { CheckCircle2, XCircle, Compass, ShieldAlert, Award, Calendar } from "lucide-react";
 import { goldOnGlassHairline } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.22))";
@@ -251,13 +251,13 @@ export function SessionProtocols() {
       </div>
 
       {/* Interactive SVG Roadmap */}
-      <div className="flex justify-center p-4 rounded-xl mb-6 border bg-white" style={{ borderColor: HAIRLINE }}>
-        <svg width="100%" height="60" viewBox="0 0 600 60" className="max-w-xl">
+      <div className="flex justify-center p-5 rounded-xl mb-6 border bg-white" style={{ borderColor: HAIRLINE }}>
+        <svg viewBox="0 0 720 105" className="w-full max-w-[900px] h-auto block">
           {/* Connector Line */}
-          <line x1="50" y1="30" x2="550" y2="30" stroke="rgba(168,130,30,0.15)" strokeWidth="4" />
+          <line x1="60" y1="38" x2="660" y2="38" stroke="rgba(168,130,30,0.15)" strokeWidth="5" />
           
           {stepKeys.map((stepKey, idx) => {
-            const x = 50 + idx * 100;
+            const x = 60 + idx * 120;
             const isSelected = activeStep === stepKey;
             const choiceKey = selections[stepKey];
             const isCompliant = STEPS[stepKey].choices[choiceKey]?.isCompliant;
@@ -271,10 +271,10 @@ export function SessionProtocols() {
                 {/* Connector active line */}
                 {idx > 0 && (
                   <line
-                    x1={50 + (idx - 1) * 100}
-                    y1="30"
+                    x1={60 + (idx - 1) * 120}
+                    y1="38"
                     x2={x}
-                    y2="30"
+                    y2="38"
                     stroke={isCompliant ? GREEN : VERMILION}
                     strokeWidth="4"
                     opacity={isSelected ? 1 : 0.6}
@@ -284,8 +284,8 @@ export function SessionProtocols() {
                 {/* Node circle */}
                 <circle
                   cx={x}
-                  cy="30"
-                  r={isSelected ? "14" : "11"}
+                  cy="38"
+                  r={isSelected ? "17" : "14"}
                   fill={isCompliant ? GREEN : choiceKey === "rounded" ? GOLD : VERMILION}
                   stroke={isSelected ? INK_PRIMARY : "transparent"}
                   strokeWidth="2.5"
@@ -295,9 +295,9 @@ export function SessionProtocols() {
                 {/* Node number */}
                 <text
                   x={x}
-                  y="34"
+                  y="42"
                   fill="#FFF"
-                  fontSize="11"
+                  fontSize="13"
                   fontWeight="bold"
                   textAnchor="middle"
                 >
@@ -307,13 +307,16 @@ export function SessionProtocols() {
                 {/* Node label */}
                 <text
                   x={x}
-                  y="55"
+                  y="73"
                   fill={isSelected ? INK_PRIMARY : INK_MUTED}
-                  fontSize="7.5"
+                  fontSize="10"
                   fontWeight="bold"
                   textAnchor="middle"
                 >
-                  {STEPS[stepKey].title.split(" ").slice(1).join(" ")}
+                  {STEPS[stepKey].title.split(" ").slice(1, 3).join(" ")}
+                  <tspan x={x} dy="13">
+                    {STEPS[stepKey].title.split(" ").slice(3).join(" ")}
+                  </tspan>
                 </text>
               </g>
             );

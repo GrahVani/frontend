@@ -86,7 +86,7 @@ function AspectNetDiagram({
   const targetCol = grahaColor(targetSlug);
 
   return (
-    <svg viewBox="0 0 300 240" className="w-full h-auto" style={{ maxHeight: 260 }}>
+    <svg viewBox="0 0 300 285" className="w-full h-auto" style={{ maxHeight: 305 }}>
       {/* Orbit circle (subtle) */}
       <circle cx={cx} cy={cy} r={orbitR} fill="none" stroke={HAIRLINE} strokeWidth={1} strokeDasharray="4 4" opacity={0.5} />
 
@@ -137,7 +137,7 @@ function AspectNetDiagram({
       </text>
 
       {/* Legend */}
-      <g transform="translate(10, 220)">
+      <g transform="translate(10, 260)">
         <line x1={0} y1={5} x2={20} y2={5} stroke={GREEN} strokeWidth={2} opacity={0.7} />
         <text x={26} y={9} fontSize={9} fill={INK_MUTED}>Benefic (+)</text>
         <line x1={90} y1={5} x2={110} y2={5} stroke={VERMILION} strokeWidth={2} opacity={0.7} />

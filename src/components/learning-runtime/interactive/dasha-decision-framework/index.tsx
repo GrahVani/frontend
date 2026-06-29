@@ -19,9 +19,13 @@ import {
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.18))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
-const INK_PRIMARY = "var(--gl-ink-primary)";
-const INK_SECONDARY = "var(--gl-ink-secondary)";
-const INK_MUTED = "var(--gl-ink-muted)";
+const INK_PRIMARY = "#3F2D1D";
+const INK_SECONDARY = "#5C4630";
+const INK_MUTED = "#745D40";
+const READABLE_GOLD = "#936817";
+const TABLE_LINE = "rgba(139, 118, 82, 0.28)";
+const SELECTED_ROW = "rgba(255, 248, 229, 0.98)";
+const ACTIVE_SURFACE = "rgba(255, 250, 240, 0.98)";
 
 function StepRail({ state }: { state: FrameworkState }) {
   const active = activeStepIndexes(state);
@@ -30,7 +34,7 @@ function StepRail({ state }: { state: FrameworkState }) {
     <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
       <div className="mb-4 flex items-center gap-2">
         <GitBranch size={17} color={ink.goldAccent} />
-        <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+        <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
           Five-step routine
         </p>
       </div>
@@ -42,14 +46,15 @@ function StepRail({ state }: { state: FrameworkState }) {
               key={step.index}
               className="rounded-xl p-4"
               style={{
-                background: isActive ? step.tint : SURFACE_2,
+                background: isActive ? ACTIVE_SURFACE : SURFACE_2,
                 border: `1.5px solid ${isActive ? step.color : HAIRLINE}`,
+                boxShadow: isActive ? `0 8px 24px ${step.color}18` : "none",
               }}
             >
               <div className="mb-3 flex items-center justify-between gap-2">
                 <div
                   className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold"
-                  style={{ background: isActive ? step.color : SURFACE, color: isActive ? SURFACE : INK_MUTED }}
+                  style={{ background: isActive ? step.color : SURFACE, color: isActive ? "#FFF9F0" : INK_MUTED }}
                 >
                   {step.index}
                 </div>
@@ -58,7 +63,7 @@ function StepRail({ state }: { state: FrameworkState }) {
               <h3 className="m-0 text-base font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
                 {step.shortTitle}
               </h3>
-              <p className="mt-2 text-sm leading-snug" style={{ color: INK_SECONDARY }}>
+              <p className="mt-2 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
                 {step.rule}
               </p>
             </div>
@@ -121,13 +126,13 @@ export function DashaDecisionFramework() {
     >
       <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+          <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
             Dasha system selection
           </p>
           <h2 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
             One five-step <IAST>dasha</IAST> decision framework
           </h2>
-          <p className="mt-1 max-w-3xl text-sm" style={{ color: INK_SECONDARY }}>
+          <p className="mt-1 max-w-3xl text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
             Start with Vimshottari, add systems only by condition or training relevance, then apply two-yes convergence.
           </p>
         </div>
@@ -159,7 +164,7 @@ export function DashaDecisionFramework() {
           <section className="min-w-0 rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="mb-4 flex items-center gap-2">
               <SlidersHorizontal size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Chart / context switches
               </p>
             </div>
@@ -207,7 +212,7 @@ export function DashaDecisionFramework() {
           <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="flex items-center gap-2">
               <GitCompare size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Two-yes result
               </p>
             </div>
@@ -239,16 +244,16 @@ export function DashaDecisionFramework() {
           <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
               <Table2 size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Framework output
               </p>
             </div>
-            <div className="flex items-center gap-2 text-xs font-semibold" style={{ color: INK_MUTED }}>
+            <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: INK_MUTED }}>
               <ShieldCheck size={15} color={ink.goldAccent} />
               {systems.length} selected system{systems.length === 1 ? "" : "s"}
             </div>
           </div>
-          <p className="mb-4 rounded-xl p-3 text-sm font-semibold" style={{ background: SURFACE_2, color: INK_PRIMARY }}>
+          <p className="mb-4 rounded-xl p-3 text-base font-semibold leading-relaxed" style={{ background: SURFACE_2, color: INK_PRIMARY }}>
             {frameworkStatement(state)}
           </p>
           <div className="max-w-full overflow-x-auto overflow-y-hidden rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
@@ -257,8 +262,8 @@ export function DashaDecisionFramework() {
               style={{
                 gridTemplateColumns: "64px 180px 220px minmax(280px,1fr)",
                 background: SURFACE_2,
-                color: INK_MUTED,
-                fontSize: "0.72rem",
+                color: INK_SECONDARY,
+                fontSize: "0.82rem",
                 fontWeight: 900,
                 letterSpacing: "0.06em",
                 textTransform: "uppercase",
@@ -282,27 +287,26 @@ export function DashaDecisionFramework() {
                 ? [{ step: 4, system: `${state.conditionalMatches} BPHS conditionals`, why: "Selection condition(s) met", discipline: "Add each qualified conditional transparently." }]
                 : []),
             ].map((row) => {
-              const step = FRAMEWORK_STEPS[row.step - 1];
               return (
                 <div
                   key={`${row.step}-${row.system}`}
                   className="grid min-w-[760px]"
                   style={{
                     gridTemplateColumns: "64px 180px 220px minmax(280px,1fr)",
-                    background: step.tint,
-                    borderTop: `1px solid ${HAIRLINE}`,
+                    background: SELECTED_ROW,
+                    borderTop: `1px solid ${TABLE_LINE}`,
                   }}
                 >
-                  <div className="px-3 py-3 text-sm font-bold" style={{ color: step.color }}>
+                  <div className="px-3 py-3 text-base font-bold" style={{ color: READABLE_GOLD }}>
                     {row.step}
                   </div>
-                  <div className="px-3 py-3 text-sm font-bold" style={{ color: step.color }}>
+                  <div className="px-3 py-3 text-base font-bold" style={{ color: INK_PRIMARY }}>
                     {row.system}
                   </div>
-                  <div className="px-3 py-3 text-sm" style={{ color: INK_SECONDARY }}>
+                  <div className="px-3 py-3 text-base" style={{ color: INK_SECONDARY }}>
                     {row.why}
                   </div>
-                  <div className="px-3 py-3 text-sm" style={{ color: INK_SECONDARY }}>
+                  <div className="px-3 py-3 text-base" style={{ color: INK_SECONDARY }}>
                     {row.discipline}
                   </div>
                 </div>
@@ -312,7 +316,7 @@ export function DashaDecisionFramework() {
         </section>
 
         <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-          <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+          <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
             Recurring curriculum pattern
           </p>
           <div className="mt-3 grid gap-3 md:grid-cols-5">
@@ -322,10 +326,10 @@ export function DashaDecisionFramework() {
                 className="rounded-xl p-3"
                 style={{ background: index === 4 ? "rgba(232, 199, 114, 0.16)" : SURFACE_2, border: `1px solid ${index === 4 ? ink.goldAccent : HAIRLINE}` }}
               >
-                <p className="m-0 text-xs font-bold uppercase" style={{ color: index === 4 ? ink.goldAccent : INK_MUTED, letterSpacing: "0.06em" }}>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: index === 4 ? READABLE_GOLD : INK_MUTED, letterSpacing: "0.06em" }}>
                   Framework {index + 1}
                 </p>
-                <p className="mt-1 text-sm font-semibold" style={{ color: INK_SECONDARY }}>
+                <p className="mt-1 text-base font-semibold" style={{ color: INK_SECONDARY }}>
                   {name}
                 </p>
               </div>

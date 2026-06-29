@@ -364,10 +364,10 @@ function DaylightTimeline({
   activeTime: number;
 }) {
   const W = 720;
-  const H = 110;
+  const H = 140;
   const PAD = 24;
-  const BAR_Y = 34;
-  const BAR_H = 34;
+  const BAR_Y = 42;
+  const BAR_H = 44;
   const TOTAL_W = W - PAD * 2;
 
   const pattern = findPattern(weekday);
@@ -414,7 +414,7 @@ function DaylightTimeline({
             x1={timeToX(h)}
             y1={BAR_Y + BAR_H}
             x2={timeToX(h)}
-            y2={BAR_Y + BAR_H + 6}
+            y2={BAR_Y + BAR_H + 8}
             stroke={INK_MUTED}
             strokeWidth={0.5}
             opacity={0.4}
@@ -429,9 +429,9 @@ function DaylightTimeline({
             <g key={w.type}>
               <rect
                 x={sx}
-                y={BAR_Y - 2}
+                y={BAR_Y - 4}
                 width={Math.max(ex - sx, 1)}
-                height={BAR_H + 4}
+                height={BAR_H + 8}
                 rx={4}
                 fill={wash(WINDOW_COLORS[w.type], "22")}
                 stroke={WINDOW_COLORS[w.type]}
@@ -441,10 +441,10 @@ function DaylightTimeline({
               />
               <text
                 x={(sx + ex) / 2}
-                y={BAR_Y + BAR_H / 2 + 4}
+                y={BAR_Y + BAR_H / 2 + 5}
                 textAnchor="middle"
                 fill={WINDOW_COLORS[w.type]}
-                fontSize={10}
+                fontSize={15}
                 fontWeight={800}
                 style={{ pointerEvents: "none" }}
               >
@@ -472,17 +472,17 @@ function DaylightTimeline({
           y={BAR_Y - 12}
           textAnchor="middle"
           fill={GOLD_DEEP}
-          fontSize={9}
+          fontSize={13}
           fontWeight={800}
         >
           {formatTime(activeTime)}
         </text>
 
         {/* Sunrise / Sunset labels */}
-        <text x={PAD} y={BAR_Y + BAR_H + 20} textAnchor="start" fill={GOLD_DEEP} fontSize={9} fontWeight={700}>
+        <text x={PAD} y={BAR_Y + BAR_H + 28} textAnchor="start" fill={GOLD_DEEP} fontSize={13} fontWeight={800}>
           Sunrise 06:00
         </text>
-        <text x={W - PAD} y={BAR_Y + BAR_H + 20} textAnchor="end" fill={GOLD_DEEP} fontSize={9} fontWeight={700}>
+        <text x={W - PAD} y={BAR_Y + BAR_H + 28} textAnchor="end" fill={GOLD_DEEP} fontSize={13} fontWeight={800}>
           Sunset 18:00
         </text>
       </svg>

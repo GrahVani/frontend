@@ -282,12 +282,18 @@ export function RajaDhanaOverlapMap() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[720px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["Relationship", "Raja?", "Dhana?", "Classification", "Reason"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "Relationship", width: "w-[140px]" },
+                    { label: "Raja?", width: "w-[80px]" },
+                    { label: "Dhana?", width: "w-[80px]" },
+                    { label: "Classification", width: "w-[130px]" },
+                    { label: "Reason", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -302,7 +308,7 @@ export function RajaDhanaOverlapMap() {
                       <td className="px-4 py-3" style={{ color: itemClass === "raja-only" || itemClass === "both" ? RAJA : INK_MUTED }}>{itemClass === "raja-only" || itemClass === "both" ? "Yes" : "No"}</td>
                       <td className="px-4 py-3" style={{ color: itemClass === "dhana-only" || itemClass === "both" ? DHANA : INK_MUTED }}>{itemClass === "dhana-only" || itemClass === "both" ? "Yes" : "No"}</td>
                       <td className="px-4 py-3" style={{ color: itemMeta.color }}>{itemMeta.label}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{item.note}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{item.note}</td>
                     </tr>
                   );
                 })}

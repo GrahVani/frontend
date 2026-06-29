@@ -68,13 +68,13 @@ function SlopeSketch({ slopeKey, verdict }: { slopeKey: SlopeKey; verdict: Verdi
         <p className="m-0 text-xs font-bold uppercase" style={{ color: GOLD, letterSpacing: "0.08em" }}>Slope field</p>
         <p className="m-0 text-xs font-semibold" style={{ color: INK_SECONDARY }}>N at top, E at right</p>
       </div>
-      <svg viewBox="0 0 510 430" className="block h-auto w-full" role="img" aria-label="Symbolic Vastu slope direction diagram">
+      <svg viewBox="0 0 510 480" className="block h-auto w-full" role="img" aria-label="Symbolic Vastu slope direction diagram">
         <defs>
           <marker id="slope-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
             <path d="M0,0 L0,6 L9,3 z" fill={color} />
           </marker>
         </defs>
-        <rect x="35" y="35" width="440" height="360" rx="26" fill={SURFACE_2} stroke={HAIRLINE} />
+        <rect x="35" y="35" width="440" height="410" rx="26" fill={SURFACE_2} stroke={HAIRLINE} />
         <rect x="100" y="82" width="310" height="285" rx="18" fill="rgba(255,249,240,0.92)" stroke={GOLD} strokeWidth="3" />
         <text x="255" y="66" textAnchor="middle" fontSize="15" fontWeight="800" fill={GOLD}>N</text>
         <text x="442" y="230" textAnchor="middle" fontSize="15" fontWeight="800" fill={GOLD}>E</text>
@@ -92,8 +92,8 @@ function SlopeSketch({ slopeKey, verdict }: { slopeKey: SlopeKey; verdict: Verdi
         ) : (
           <line x1="150" y1="225" x2="360" y2="225" stroke={color} strokeWidth="5" strokeDasharray="10 8" strokeLinecap="round" />
         )}
-        <rect x="175" y="356" width="160" height="26" rx="13" fill={SURFACE} stroke={HAIRLINE} />
-        <text x="255" y="374" textAnchor="middle" fontSize="12" fontWeight="800" fill={color}>{arrow.label}</text>
+        <rect x="175" y="402" width="160" height="26" rx="13" fill={SURFACE} stroke={HAIRLINE} />
+        <text x="255" y="420" textAnchor="middle" fontSize="12" fontWeight="800" fill={color}>{arrow.label}</text>
       </svg>
     </section>
   );

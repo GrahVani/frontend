@@ -18,9 +18,12 @@ import {
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.18))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
-const INK_PRIMARY = "var(--gl-ink-primary)";
-const INK_SECONDARY = "var(--gl-ink-secondary)";
-const INK_MUTED = "var(--gl-ink-muted)";
+const INK_PRIMARY = "#3F2D1D";
+const INK_SECONDARY = "#5C4630";
+const INK_MUTED = "#745D40";
+const READABLE_GOLD = "#936817";
+const TABLE_LINE = "rgba(139, 118, 82, 0.28)";
+const SELECTED_ROW = "rgba(255, 248, 229, 0.98)";
 
 function LordPicker({
   label,
@@ -41,7 +44,7 @@ function LordPicker({
   return (
     <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
       <div className="mb-3 flex items-center justify-between gap-3">
-        <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+        <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
           {label}
         </p>
         {checked &&
@@ -62,15 +65,15 @@ function LordPicker({
               onClick={() => onSelect(lord)}
               className="rounded-lg p-2 text-left"
               style={{
-                background: active || reveal ? lord.colorTint : SURFACE_2,
+                background: active || reveal ? SELECTED_ROW : SURFACE_2,
                 border: `1.5px solid ${active ? lord.color : reveal ? grahas.budha.primary : HAIRLINE}`,
                 minHeight: 62,
               }}
             >
-              <span className="block text-sm font-bold" style={{ color: lord.color }}>
+              <span className="block text-base font-bold" style={{ color: INK_PRIMARY }}>
                 {lord.abbr}
               </span>
-              <span className="block text-xs" style={{ color: INK_SECONDARY }}>
+              <span className="block text-sm" style={{ color: INK_SECONDARY }}>
                 {lord.nameIAST}
               </span>
             </button>
@@ -99,17 +102,17 @@ function LookupTable({
 }) {
   return (
     <section className="min-w-0 rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <p className="mb-3 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+      <p className="mb-3 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
         {title}
       </p>
       <div className="max-w-full overflow-x-auto overflow-y-hidden rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
         <div
-          className="grid min-w-[520px]"
+          className="grid min-w-[620px]"
           style={{
-            gridTemplateColumns: "48px 130px 150px 100px",
+            gridTemplateColumns: "56px 170px 210px 120px",
             background: SURFACE_2,
-            color: INK_MUTED,
-            fontSize: "0.72rem",
+            color: INK_SECONDARY,
+            fontSize: "0.82rem",
             fontWeight: 900,
             letterSpacing: "0.06em",
             textTransform: "uppercase",
@@ -127,28 +130,28 @@ function LookupTable({
           return (
             <div
               key={`${title}-${row.sequenceNumber}-${row.lord.index}`}
-              className="grid min-w-[520px]"
+              className="grid min-w-[620px]"
               style={{
-                gridTemplateColumns: "48px 130px 150px 100px",
-                background: activeRow ? row.lord.colorTint : SURFACE,
-                borderTop: `1px solid ${HAIRLINE}`,
+                gridTemplateColumns: "56px 170px 210px 120px",
+                background: activeRow ? SELECTED_ROW : SURFACE,
+                borderTop: `1px solid ${TABLE_LINE}`,
               }}
             >
-              <div className="px-3 py-3 text-sm font-bold" style={{ color: row.lord.color }}>
+              <div className="px-3 py-3 text-base font-bold" style={{ color: READABLE_GOLD }}>
                 {row.sequenceNumber}
               </div>
               <div className="px-3 py-3">
-                <span className="block text-sm font-bold" style={{ color: row.lord.color }}>
+                <span className="block text-base font-bold" style={{ color: INK_PRIMARY }}>
                   {row.lord.nameIAST}
                 </span>
-                <span className="block text-xs" style={{ color: INK_MUTED }}>
+                <span className="block text-sm" style={{ color: INK_SECONDARY }}>
                   {row.lord.abbr}
                 </span>
               </div>
-              <div className="px-3 py-3 text-sm" style={{ color: INK_SECONDARY }}>
+              <div className="px-3 py-3 text-base" style={{ color: INK_SECONDARY }}>
                 {formatAgeSpan(row)}
               </div>
-              <div className="px-3 py-3 text-sm font-semibold" style={{ color: INK_PRIMARY }}>
+              <div className="px-3 py-3 text-base font-semibold" style={{ color: INK_PRIMARY }}>
                 {formatAge(row.years)}
               </div>
             </div>
@@ -204,20 +207,20 @@ export function DashaLookupDrill() {
     >
       <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+          <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
             Lookup fluency drill
           </p>
           <h2 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
             Reading a <IAST>dasha</IAST> table level by level
           </h2>
-          <p className="mt-1 max-w-3xl text-sm" style={{ color: INK_SECONDARY }}>
+          <p className="mt-1 max-w-3xl text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
             Convert age, find the covering mahadasha, zoom into its bhukti, then zoom again into the PD.
           </p>
         </div>
         <button
           type="button"
           onClick={() => applyScenario("worked-example")}
-          className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold"
+          className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold"
           style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}
         >
           <RotateCcw size={16} />
@@ -225,18 +228,18 @@ export function DashaLookupDrill() {
         </button>
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[360px_minmax(0,1fr)]">
-        <div className="min-w-0 space-y-4">
+      <div className="grid items-start gap-4 xl:grid-cols-[360px_minmax(0,1fr)]">
+        <div className="min-w-0 space-y-3">
           <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="mb-3 flex items-center gap-2">
               <Gauge size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Age from birth
               </p>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <label className="block">
-                <span className="text-xs font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
+                <span className="text-sm font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
                   Years
                 </span>
                 <input
@@ -248,12 +251,12 @@ export function DashaLookupDrill() {
                     setAgeYears(Math.max(0, Number(event.target.value)));
                     resetAnswers();
                   }}
-                  className="mt-1 w-full rounded-lg px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-lg px-4 py-3 text-base"
                   style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, color: INK_PRIMARY }}
                 />
               </label>
               <label className="block">
-                <span className="text-xs font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
+                <span className="text-sm font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
                   Months
                 </span>
                 <input
@@ -265,7 +268,7 @@ export function DashaLookupDrill() {
                     setAgeMonths(Math.max(0, Math.min(11, Number(event.target.value))));
                     resetAnswers();
                   }}
-                  className="mt-1 w-full rounded-lg px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-lg px-4 py-3 text-base"
                   style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, color: INK_PRIMARY }}
                 />
               </label>
@@ -274,7 +277,7 @@ export function DashaLookupDrill() {
               <p className="m-0 text-sm font-semibold" style={{ color: INK_PRIMARY }}>
                 {ageYears}y {ageMonths}m = {age.toFixed(2)} years
               </p>
-              <p className="mt-1 text-xs" style={{ color: INK_MUTED }}>
+              <p className="mt-1 text-sm" style={{ color: INK_MUTED }}>
                 Months divide by 12, not by 10.
               </p>
             </div>
@@ -283,7 +286,7 @@ export function DashaLookupDrill() {
           <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="mb-3 flex items-center gap-2">
               <Search size={17} color={grahas.budha.primary} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Practice scenarios
               </p>
             </div>
@@ -296,10 +299,10 @@ export function DashaLookupDrill() {
                   className="rounded-lg p-3 text-left"
                   style={{ background: ageYears === scenario.ageYears && ageMonths === scenario.ageMonths ? grahas.budha.secondaryTint : SURFACE_2, border: `1px solid ${HAIRLINE}` }}
                 >
-                  <span className="block text-sm font-bold" style={{ color: INK_PRIMARY }}>
+                  <span className="block text-base font-bold" style={{ color: INK_PRIMARY }}>
                     {scenario.label}
                   </span>
-                  <span className="mt-1 block text-xs" style={{ color: INK_MUTED }}>
+                  <span className="mt-1 block text-sm leading-relaxed" style={{ color: INK_SECONDARY }}>
                     {scenario.note}
                   </span>
                 </button>
@@ -340,11 +343,11 @@ export function DashaLookupDrill() {
           </section>
         </div>
 
-        <div className="min-w-0 space-y-4">
-          <section className="rounded-xl p-4" style={{ background: lookup.md.lord.colorTint, border: `1.5px solid ${lookup.md.lord.color}45` }}>
+        <div className="min-w-0 space-y-3">
+          <section className="rounded-xl p-4" style={{ background: SELECTED_ROW, border: `1.5px solid ${lookup.md.lord.color}45` }}>
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="m-0 text-xs font-bold uppercase" style={{ color: lookup.md.lord.color, letterSpacing: "0.08em" }}>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                   Engine confirmation
                 </p>
                 <h3 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
@@ -355,7 +358,7 @@ export function DashaLookupDrill() {
                 {lookup.md.lord.devanagari}
               </Devanagari>
             </div>
-            <p className="mt-3 text-sm" style={{ color: INK_SECONDARY }}>
+            <p className="mt-3 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
               The drill uses the lesson&apos;s Ketu balance of 3.5 years. The first MD is partial; all later MDs are full periods.
             </p>
           </section>
@@ -367,11 +370,11 @@ export function DashaLookupDrill() {
           <section className="rounded-xl p-4" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}` }}>
             <div className="mb-2 flex items-center gap-2">
               <ShieldCheck size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Lookup discipline
               </p>
             </div>
-            <p className="m-0 text-sm" style={{ color: INK_SECONDARY }}>
+            <p className="m-0 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
               Ask the same question at every level: which span covers the target age? Do not jump from MD to PD.
             </p>
           </section>

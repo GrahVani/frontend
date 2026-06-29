@@ -93,7 +93,7 @@ export function NameCorrectionCandidateCalculator() {
               background: activeTab === tab.key ? TEAL : "transparent",
               color: activeTab === tab.key ? "#fff" : INK_SECONDARY,
               padding: "0.52rem 0.85rem",
-              fontWeight: 850,
+              fontWeight: 400,
               cursor: "pointer",
               fontSize: "0.85rem",
             }}
@@ -160,12 +160,12 @@ function CalculatorTab() {
       <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.75rem" }}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", alignItems: "end" }}>
           <div style={{ display: "grid", gap: "0.35rem", flex: 1, minWidth: 200 }}>
-            <label style={{ fontSize: "0.78rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Current name</label>
+            <label style={{ fontSize: "0.78rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Current name</label>
             <input type="text" value={currentName} onChange={(e) => setCurrentName(e.target.value)} placeholder="e.g., Priya Devi" style={{ ...inputStyle, width: "100%" }} />
           </div>
 
           <div style={{ display: "grid", gap: "0.35rem" }}>
-            <span style={{ fontSize: "0.78rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>System</span>
+            <span style={{ fontSize: "0.78rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>System</span>
             <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
               {SYSTEMS.map((s) => (
                 <button key={s.key} type="button" onClick={() => setSystem(s.key)} style={{ ...buttonStyle(system === s.key, TEAL), fontSize: "0.82rem" }}>
@@ -176,7 +176,7 @@ function CalculatorTab() {
           </div>
 
           <div style={{ display: "grid", gap: "0.35rem" }}>
-            <span style={{ fontSize: "0.78rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Convention</span>
+            <span style={{ fontSize: "0.78rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Convention</span>
             <div style={{ display: "flex", gap: "0.35rem" }}>
               <button type="button" onClick={() => setConvention("strict")} style={{ ...buttonStyle(convention === "strict", PURPLE), fontSize: "0.82rem" }}>Strict</button>
               <button type="button" onClick={() => setConvention("flexible")} style={{ ...buttonStyle(convention === "flexible", BLUE), fontSize: "0.82rem" }}>Flexible</button>
@@ -186,21 +186,21 @@ function CalculatorTab() {
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", alignItems: "end" }}>
           <div style={{ display: "grid", gap: "0.35rem" }}>
-            <label style={{ fontSize: "0.78rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Birth day</label>
+            <label style={{ fontSize: "0.78rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Birth day</label>
             <input type="number" min={1} max={31} value={birthDay} onChange={(e) => setBirthDay(e.target.value)} style={inputStyle} />
           </div>
           <div style={{ display: "grid", gap: "0.35rem" }}>
-            <label style={{ fontSize: "0.78rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Birth month</label>
+            <label style={{ fontSize: "0.78rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Birth month</label>
             <input type="number" min={1} max={12} value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} style={inputStyle} />
           </div>
           <div style={{ display: "grid", gap: "0.35rem" }}>
-            <label style={{ fontSize: "0.78rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Birth year</label>
+            <label style={{ fontSize: "0.78rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Birth year</label>
             <input type="number" min={1000} max={9999} value={birthYear} onChange={(e) => setBirthYear(e.target.value)} style={{ ...inputStyle, width: 100 }} />
           </div>
         </div>
 
         {!birthDateValid && (
-          <div style={{ color: VERMILION, fontSize: "0.85rem", fontWeight: 850 }}>
+          <div style={{ color: VERMILION, fontSize: "0.85rem", fontWeight: 400 }}>
             Enter a valid birth-date to enable Mūlāṅka / Bhāgyāṅka compatibility comparison.
           </div>
         )}
@@ -208,28 +208,28 @@ function CalculatorTab() {
 
       {currentResult && (
         <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.5rem" }}>
-          <div style={{ fontSize: "0.85rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 1 — Current Name-Number</div>
+          <div style={{ fontSize: "0.85rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 1 — Current Name-Number</div>
           <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", alignItems: "center" }}>
-            <div style={{ fontSize: "1.2rem", fontWeight: 950, color: INK_PRIMARY }}>{currentName}</div>
+            <div style={{ fontSize: "1.2rem", fontWeight: 400, color: INK_PRIMARY }}>{currentName}</div>
             <div style={{ border: `1px solid ${BLUE}33`, borderRadius: 8, background: `${BLUE}0A`, padding: "0.5rem 0.7rem" }}>
-              <div style={{ fontSize: "0.68rem", color: BLUE, fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.06em" }}>Name-Number</div>
-              <div style={{ fontSize: "1.1rem", fontWeight: 950, color: BLUE }}>{currentResult.finalResult}</div>
+              <div style={{ fontSize: "0.68rem", color: BLUE, fontWeight: 400, textTransform: "uppercase", letterSpacing: "0.06em" }}>Name-Number</div>
+              <div style={{ fontSize: "1.1rem", fontWeight: 400, color: BLUE }}>{currentResult.finalResult}</div>
             </div>
             <div style={{ border: `1px solid ${GOLD}44`, borderRadius: 8, background: `${GOLD}0A`, padding: "0.5rem 0.7rem" }}>
-              <div style={{ fontSize: "0.68rem", color: GOLD, fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.06em" }}>Register</div>
-              <div style={{ fontSize: "1.1rem", fontWeight: 950, color: GOLD }}>{currentResult.registerName}</div>
+              <div style={{ fontSize: "0.68rem", color: GOLD, fontWeight: 400, textTransform: "uppercase", letterSpacing: "0.06em" }}>Register</div>
+              <div style={{ fontSize: "1.1rem", fontWeight: 400, color: GOLD }}>{currentResult.registerName}</div>
             </div>
           </div>
         </div>
       )}
 
       <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.75rem" }}>
-        <div style={{ fontSize: "0.85rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 3 — Spelling-variation candidates</div>
+        <div style={{ fontSize: "0.85rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 3 — Spelling-variation candidates</div>
 
         <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
           {candidates.map((c, i) => (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.35rem", border: `1px solid ${HAIRLINE}`, borderRadius: 8, padding: "0.35rem 0.6rem", background: SURFACE }}>
-              <span style={{ fontWeight: 850, color: INK_PRIMARY, fontSize: "0.9rem" }}>{c}</span>
+              <span style={{ fontWeight: 400, color: INK_PRIMARY, fontSize: "0.9rem" }}>{c}</span>
               <button type="button" onClick={() => removeCandidate(i)} style={{ ...iconButtonStyle, color: VERMILION }} aria-label={`Remove ${c}`}>
                 <Trash2 size={14} />
               </button>
@@ -257,7 +257,7 @@ function CalculatorTab() {
         <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.75rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
             <Table2 size={18} color={TEAL} />
-            <span style={{ fontWeight: 950, color: TEAL, fontSize: "1rem" }}>Step 4 — Candidate comparison table</span>
+            <span style={{ fontWeight: 400, color: TEAL, fontSize: "1rem" }}>Step 4 — Candidate comparison table</span>
           </div>
 
           <div style={{ display: "grid", gap: "0.45rem" }}>
@@ -278,23 +278,23 @@ function CalculatorTab() {
                   }}
                 >
                   <div>
-                    <div style={{ fontWeight: 950, color: INK_PRIMARY, fontSize: "0.95rem" }}>{item.name}</div>
+                    <div style={{ fontWeight: 400, color: INK_PRIMARY, fontSize: "0.95rem" }}>{item.name}</div>
                     <div style={{ fontSize: "0.78rem", color: INK_MUTED }}>Sum: {item.result.totalSum}</div>
                   </div>
                   <div style={{ textAlign: "center" }}>
-                    <div style={{ fontSize: "1.4rem", fontWeight: 950, color: BLUE }}>{item.result.finalResult}</div>
+                    <div style={{ fontSize: "1.4rem", fontWeight: 400, color: BLUE }}>{item.result.finalResult}</div>
                   </div>
                   <div>
-                    <div style={{ fontWeight: 850, color: GOLD, fontSize: "0.9rem" }}>{item.result.registerName}</div>
+                    <div style={{ fontWeight: 400, color: GOLD, fontSize: "0.9rem" }}>{item.result.registerName}</div>
                     <div style={{ fontSize: "0.75rem", color: INK_MUTED }}>{item.result.registerDetail}</div>
                   </div>
                   <div style={{ fontSize: "0.82rem", color: INK_SECONDARY, lineHeight: 1.4 }}>
                     {compat.withMulanka === "friend" && compat.withBhagyanka === "friend" ? (
-                      <span style={{ color: GREEN, fontWeight: 850 }}>MITRA with both</span>
+                      <span style={{ color: GREEN, fontWeight: 400 }}>MITRA with both</span>
                     ) : compat.withMulanka === "enemy" || compat.withBhagyanka === "enemy" ? (
-                      <span style={{ color: VERMILION, fontWeight: 850 }}>SHATRU with at least one</span>
+                      <span style={{ color: VERMILION, fontWeight: 400 }}>SHATRU with at least one</span>
                     ) : (
-                      <span style={{ color: GOLD, fontWeight: 850 }}>SAMA / mixed</span>
+                      <span style={{ color: GOLD, fontWeight: 400 }}>SAMA / mixed</span>
                     )}
                     <br />
                     {compatibilityLabel(compat)}
@@ -317,7 +317,7 @@ function CalculatorTab() {
         <div style={{ border: `1px solid ${GREEN}44`, borderRadius: 8, background: `${GREEN}0A`, padding: "1rem", display: "grid", gap: "0.6rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
             <CheckCircle2 size={18} color={GREEN} />
-            <span style={{ fontWeight: 950, color: GREEN, fontSize: "1rem" }}>Step 6 — Discipline-compliant presentation template</span>
+            <span style={{ fontWeight: 400, color: GREEN, fontSize: "1rem" }}>Step 6 — Discipline-compliant presentation template</span>
           </div>
           <p style={{ margin: 0, color: INK_PRIMARY, lineHeight: 1.6, fontSize: "0.9rem" }}>
             "Here are the candidate spellings and the Name-Number each produces under the {systemShortLabel(system)} system
@@ -339,7 +339,7 @@ function CalculatorTab() {
           <div style={{ border: `1px solid ${VERMILION}44`, borderRadius: 8, background: `${VERMILION}0A`, padding: "0.75rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <ShieldAlert size={16} color={VERMILION} />
-              <span style={{ fontWeight: 950, color: VERMILION, fontSize: "0.9rem" }}>Refuse deterministic framing</span>
+              <span style={{ fontWeight: 400, color: VERMILION, fontSize: "0.9rem" }}>Refuse deterministic framing</span>
             </div>
             <p style={{ margin: "0.25rem 0 0", color: INK_SECONDARY, fontSize: "0.85rem", lineHeight: 1.5 }}>
               Refuse *this Name-Number will improve your luck / career / marriage* framings. Name-Number is one input; life-outcomes are multifactorial.
@@ -364,10 +364,10 @@ function TablesTab() {
         <div style={{ display: "grid", gap: "0.35rem" }}>
           {GRAHA_FRIENDSHIP_TABLE.map((row) => (
             <div key={row.digit} style={{ display: "grid", gridTemplateColumns: "80px 1fr 1fr 1fr", gap: "0.5rem", padding: "0.5rem", border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, fontSize: "0.85rem" }}>
-              <div style={{ fontWeight: 950, color: INK_PRIMARY }}>{row.digit} — {row.graha}</div>
-              <div><strong style={{ color: GREEN }}>Friends:</strong> <span style={{ color: INK_SECONDARY }}>{row.friends}</span></div>
-              <div><strong style={{ color: VERMILION }}>Enemies:</strong> <span style={{ color: INK_SECONDARY }}>{row.enemies}</span></div>
-              <div><strong style={{ color: GOLD }}>Neutral:</strong> <span style={{ color: INK_SECONDARY }}>{row.neutral}</span></div>
+              <div style={{ fontWeight: 400, color: INK_PRIMARY }}>{row.digit} — {row.graha}</div>
+              <div><span style={{ color: GREEN }}>Friends:</span> <span style={{ color: INK_SECONDARY }}>{row.friends}</span></div>
+              <div><span style={{ color: VERMILION }}>Enemies:</span> <span style={{ color: INK_SECONDARY }}>{row.enemies}</span></div>
+              <div><span style={{ color: GOLD }}>Neutral:</span> <span style={{ color: INK_SECONDARY }}>{row.neutral}</span></div>
             </div>
           ))}
         </div>
@@ -379,7 +379,7 @@ function TablesTab() {
         <div style={{ display: "grid", gap: "0.35rem" }}>
           {COMMON_VARIATION_PATTERNS.map((p, i) => (
             <div key={i} style={{ padding: "0.5rem", border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE }}>
-              <div style={{ fontWeight: 850, color: INK_PRIMARY, fontSize: "0.9rem" }}>{p.pattern}</div>
+              <div style={{ fontWeight: 400, color: INK_PRIMARY, fontSize: "0.9rem" }}>{p.pattern}</div>
               <div style={{ fontSize: "0.82rem", color: INK_SECONDARY }}>{p.examples}</div>
             </div>
           ))}
@@ -397,7 +397,7 @@ function ExamplesTab() {
       <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
           <BookOpen size={18} color={TEAL} />
-          <span style={{ fontWeight: 950, color: TEAL, fontSize: "1rem" }}>Worked examples</span>
+          <span style={{ fontWeight: 400, color: TEAL, fontSize: "1rem" }}>Worked examples</span>
         </div>
         <p style={{ margin: "0.3rem 0 0", color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.88rem" }}>
           Pre-configured name-correction scenarios covering marriage choice, candidate generation, and cross-system difference.
@@ -406,19 +406,19 @@ function ExamplesTab() {
 
       {WORKED_EXAMPLES.map((ex) => (
         <article key={ex.id} style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.55rem" }}>
-          <div style={{ fontWeight: 950, color: INK_PRIMARY, fontSize: "1rem" }}>{ex.label}</div>
+          <div style={{ fontWeight: 400, color: INK_PRIMARY, fontSize: "1rem" }}>{ex.label}</div>
           <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             <div style={{ border: `1px solid ${BLUE}33`, borderRadius: 8, background: `${BLUE}0A`, padding: "0.5rem 0.7rem" }}>
-              <div style={{ fontSize: "0.68rem", color: BLUE, fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.06em" }}>Current</div>
-              <div style={{ fontSize: "0.95rem", fontWeight: 950, color: BLUE }}>{ex.currentName}</div>
+              <div style={{ fontSize: "0.68rem", color: BLUE, fontWeight: 400, textTransform: "uppercase", letterSpacing: "0.06em" }}>Current</div>
+              <div style={{ fontSize: "0.95rem", fontWeight: 400, color: BLUE }}>{ex.currentName}</div>
             </div>
             <div style={{ border: `1px solid ${TEAL}33`, borderRadius: 8, background: `${TEAL}0A`, padding: "0.5rem 0.7rem" }}>
-              <div style={{ fontSize: "0.68rem", color: TEAL, fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.06em" }}>System</div>
-              <div style={{ fontSize: "0.95rem", fontWeight: 950, color: TEAL }}>{systemShortLabel(ex.system)}</div>
+              <div style={{ fontSize: "0.68rem", color: TEAL, fontWeight: 400, textTransform: "uppercase", letterSpacing: "0.06em" }}>System</div>
+              <div style={{ fontSize: "0.95rem", fontWeight: 400, color: TEAL }}>{systemShortLabel(ex.system)}</div>
             </div>
             <div style={{ border: `1px solid ${PURPLE}33`, borderRadius: 8, background: `${PURPLE}0A`, padding: "0.5rem 0.7rem" }}>
-              <div style={{ fontSize: "0.68rem", color: PURPLE, fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.06em" }}>Convention</div>
-              <div style={{ fontSize: "0.95rem", fontWeight: 950, color: PURPLE, textTransform: "capitalize" }}>{ex.convention}</div>
+              <div style={{ fontSize: "0.68rem", color: PURPLE, fontWeight: 400, textTransform: "uppercase", letterSpacing: "0.06em" }}>Convention</div>
+              <div style={{ fontSize: "0.95rem", fontWeight: 400, color: PURPLE, textTransform: "capitalize" }}>{ex.convention}</div>
             </div>
           </div>
 
@@ -443,16 +443,16 @@ function WorkflowTab() {
     <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.75rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
         <ListChecks size={18} color={TEAL} />
-        <span style={{ fontWeight: 950, color: TEAL, fontSize: "1rem" }}>Six-step name-correction computation workflow</span>
+        <span style={{ fontWeight: 400, color: TEAL, fontSize: "1rem" }}>Six-step name-correction computation workflow</span>
       </div>
       <div style={{ display: "grid", gap: "0.5rem" }}>
         {WORKFLOW_STEPS.map((step, i) => (
           <div key={i} style={{ display: "flex", gap: "0.6rem", alignItems: "flex-start", border: `1px solid ${HAIRLINE}`, borderRadius: 8, padding: "0.75rem", background: SURFACE }}>
-            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 26, height: 26, borderRadius: "50%", background: TEAL, color: "#fff", fontWeight: 950, fontSize: "0.8rem", flexShrink: 0 }}>
+            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 26, height: 26, borderRadius: "50%", background: TEAL, color: "#fff", fontWeight: 400, fontSize: "0.8rem", flexShrink: 0 }}>
               {i === 0 ? "P" : i}
             </span>
             <div>
-              <div style={{ fontWeight: 950, color: INK_PRIMARY, fontSize: "0.95rem", marginBottom: "0.15rem" }}>{step.title}</div>
+              <div style={{ fontWeight: 400, color: INK_PRIMARY, fontSize: "0.95rem", marginBottom: "0.15rem" }}>{step.title}</div>
               <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.85rem" }}>{step.text}</p>
             </div>
           </div>
@@ -485,7 +485,7 @@ function buttonStyle(active: boolean, color: string): CSSProperties {
     background: active ? color : "transparent",
     color: active ? "#fff" : INK_SECONDARY,
     padding: "0.52rem 0.68rem",
-    fontWeight: 850,
+    fontWeight: 400,
     cursor: "pointer",
   };
 }
@@ -508,7 +508,7 @@ const inputStyle: CSSProperties = {
   background: SURFACE,
   color: INK_PRIMARY,
   fontSize: "1rem",
-  fontWeight: 850,
+  fontWeight: 400,
 };
 
 const eyebrowStyle: CSSProperties = {
@@ -517,5 +517,5 @@ const eyebrowStyle: CSSProperties = {
   letterSpacing: "0.08em",
   color: INK_MUTED,
   fontSize: "0.78rem",
-  fontWeight: 900,
+  fontWeight: 400,
 };

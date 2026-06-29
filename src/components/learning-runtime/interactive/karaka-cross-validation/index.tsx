@@ -43,49 +43,82 @@ function WitnessBridgeSvg({ scenario }: { scenario: KarakaValidationScenario }) 
   const caraColor = grahas[scenario.caraPlanet].primary;
   const same = scenario.status === "convergence";
 
+  const boxLabelStyles = {
+    layer: {
+      margin: 0,
+      color: "",
+      fontSize: "12px",
+      fontWeight: 900,
+      fontFamily: "var(--font-sans), sans-serif",
+      lineHeight: 1.2,
+    } as React.CSSProperties,
+    main: {
+      margin: 0,
+      color: INK_PRIMARY,
+      fontSize: "15px",
+      fontWeight: 900,
+      fontFamily: "var(--font-sans), sans-serif",
+      lineHeight: 1.2,
+      wordBreak: "break-word",
+      maxWidth: "100%",
+    } as React.CSSProperties,
+    note: {
+      margin: 0,
+      color: INK_SECONDARY,
+      fontSize: "10px",
+      fontWeight: 800,
+      fontFamily: "var(--font-sans), sans-serif",
+      lineHeight: 1.2,
+    } as React.CSSProperties,
+  };
+
   return (
     <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 900 300" className="h-auto w-full min-w-0" role="img" aria-label="Cara and naisargika karaka cross-validation bridge">
-        <rect x="24" y="24" width="852" height="238" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+      <svg viewBox="0 0 900 310" className="h-auto w-full min-w-0" role="img" aria-label="Cara and naisargika karaka cross-validation bridge">
+        <rect x="24" y="24" width="852" height="248" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
         <text x="450" y="56" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           TWO VALID WITNESSES FOR ONE LIFE-AREA
         </text>
 
-        <rect x="92" y="94" width="232" height="104" rx="18" fill={wash(caraColor, "10")} stroke={caraColor} strokeWidth="2" />
-        <text x="208" y="122" textAnchor="middle" fill={readableColor(caraColor)} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-          CARA LAYER
-        </text>
-        <text x="208" y="151" textAnchor="middle" fill={INK_PRIMARY} fontSize="18" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-          {scenario.caraLabel}
-        </text>
-        <text x="208" y="176" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-          chart-specific degree rank
-        </text>
+        <rect x="92" y="88" width="232" height="116" rx="18" fill={wash(caraColor, "10")} stroke={caraColor} strokeWidth="2" />
+        <foreignObject x="100" y="94" width="216" height="104">
+          <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", gap: "4px" }}>
+            <p style={{ ...boxLabelStyles.layer, color: readableColor(caraColor) }}>CARA LAYER</p>
+            <p style={boxLabelStyles.main}>{scenario.caraLabel}</p>
+            <p style={boxLabelStyles.note}>chart-specific degree rank</p>
+          </div>
+        </foreignObject>
 
-        <rect x="576" y="94" width="232" height="104" rx="18" fill={wash(naturalColor, "10")} stroke={naturalColor} strokeWidth="2" />
-        <text x="692" y="122" textAnchor="middle" fill={readableColor(naturalColor)} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-          NAISARGIKA LAYER
-        </text>
-        <text x="692" y="151" textAnchor="middle" fill={INK_PRIMARY} fontSize="18" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-          {scenario.naturalLabel}
-        </text>
-        <text x="692" y="176" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-          fixed natural significator
-        </text>
+        <rect x="576" y="88" width="232" height="116" rx="18" fill={wash(naturalColor, "10")} stroke={naturalColor} strokeWidth="2" />
+        <foreignObject x="584" y="94" width="216" height="104">
+          <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", gap: "4px" }}>
+            <p style={{ ...boxLabelStyles.layer, color: readableColor(naturalColor) }}>NAISARGIKA LAYER</p>
+            <p style={boxLabelStyles.main}>{scenario.naturalLabel}</p>
+            <p style={boxLabelStyles.note}>fixed natural significator</p>
+          </div>
+        </foreignObject>
 
         <line x1="324" y1="146" x2="576" y2="146" stroke={same ? color : HAIRLINE} strokeWidth={same ? 6 : 3} strokeLinecap="round" strokeDasharray={same ? "0" : "8 8"} />
         <circle cx="450" cy="146" r="52" fill={wash(color, "14")} stroke={color} strokeWidth="2.5" />
-        <text x="450" y="136" textAnchor="middle" fill={readableColor(color)} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-          {scenario.status === "convergence" ? "CONVERGE" : scenario.status === "divergence" ? "DIVERGE" : "CARA"}
-        </text>
-        <text x="450" y="160" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-          {scenario.confidence}
-        </text>
+        <foreignObject x="398" y="94" width="104" height="104">
+          <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", gap: "2px" }}>
+            <p style={{ margin: 0, color: readableColor(color), fontSize: "12px", fontWeight: 900, fontFamily: "var(--font-sans), sans-serif", lineHeight: 1.1 }}>
+              {scenario.status === "convergence" ? "CONVERGE" : scenario.status === "divergence" ? "DIVERGE" : "CARA"}
+            </p>
+            <p style={{ margin: 0, color: INK_PRIMARY, fontSize: "13px", fontWeight: 900, fontFamily: "var(--font-sans), sans-serif", lineHeight: 1.1, wordBreak: "break-word", maxWidth: "100%" }}>
+              {scenario.confidence}
+            </p>
+          </div>
+        </foreignObject>
 
-        <rect x="258" y="222" width="384" height="28" rx="12" fill="transparent" stroke={HAIRLINE} />
-        <text x="450" y="241" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-          both layers stay valid; agreement confirms, difference individualizes
-        </text>
+        <rect x="258" y="228" width="384" height="36" rx="12" fill="transparent" stroke={HAIRLINE} />
+        <foreignObject x="258" y="228" width="384" height="36">
+          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", padding: "4px 12px", boxSizing: "border-box" }}>
+            <p style={{ margin: 0, color: INK_SECONDARY, fontSize: "10px", fontWeight: 900, fontFamily: "var(--font-sans), sans-serif", lineHeight: 1.2, textAlign: "center" }}>
+              both layers stay valid; agreement confirms, difference individualizes
+            </p>
+          </div>
+        </foreignObject>
       </svg>
     </section>
   );

@@ -56,10 +56,10 @@ function ZodiacDistanceWheel({
   const deb = polar(cx, cy, 148, planet.debilitation.longitude);
   const exalt = polar(cx, cy, 148, planet.exaltation.longitude);
   const current = polar(cx, cy, 148, longitude);
-  const labels = RASHIS.map((rashi) => ({ ...rashi, point: polar(cx, cy, 184, rashi.start + 15) }));
+  const labels = RASHIS.map((rashi) => ({ ...rashi, point: polar(cx, cy, 172, rashi.start + 15) }));
 
   return (
-    <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+    <section className="min-w-0 rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
       <svg viewBox="0 0 440 470" className="h-auto w-full" role="img" aria-label="Uchchabala exaltation and debilitation distance wheel">
         <circle cx={cx} cy={cy} r="188" fill={SURFACE_2} stroke={HAIRLINE} />
         <circle cx={cx} cy={cy} r="148" fill={SURFACE} stroke={HAIRLINE} />
@@ -147,7 +147,7 @@ export function UchchabalaCalculator() {
 
   return (
     <div
-      className="w-full"
+      className="w-full max-w-full min-w-0 overflow-hidden"
       data-interactive="uchchabala-calculator"
       style={{
         background: "var(--gl-surface-card, var(--gl-card-surface, #FFF9F0))",
@@ -180,15 +180,15 @@ export function UchchabalaCalculator() {
         </button>
       </div>
 
-      <div className="grid gap-4">
-        <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+      <div className="grid min-w-0 gap-4">
+        <section className="min-w-0 rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
           <div className="mb-3 flex items-center gap-2">
             <CircleDot size={17} color={ink.goldAccent} />
             <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
               Select planet
             </p>
           </div>
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid min-w-0 gap-2 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             {UCHCHABALA_PLANETS.map((planet) => {
               const active = selected.slug === planet.slug;
               return (
@@ -196,30 +196,32 @@ export function UchchabalaCalculator() {
                   key={planet.slug}
                   type="button"
                   onClick={() => setSelectedSlug(planet.slug)}
-                  className="flex items-center justify-between gap-2 rounded-lg p-3 text-left"
+                  className="min-w-0 items-center justify-between gap-2 rounded-lg p-3 text-left sm:flex"
                   style={{
                     background: active ? wash(planet.color, "12") : SURFACE_2,
                     border: `1px solid ${active ? planet.color : HAIRLINE}`,
                     color: active ? planet.color : INK_SECONDARY,
                   }}
                 >
-                  <span>
-                    <span className="block text-sm font-bold">{planet.planet}</span>
+                  <span className="min-w-0">
+                    <span className="block truncate text-sm font-bold">{planet.planet}</span>
                     <span className="block text-xs" style={{ color: active ? planet.color : INK_MUTED }}>
                       {formatDegree(planet.exaltation.degree)} deg {planet.exaltation.short}
                     </span>
                   </span>
-                  {active ? <CheckCircle2 size={17} /> : <CircleDot size={17} />}
+                  <span className="mt-2 inline-flex shrink-0 sm:mt-0">
+                    {active ? <CheckCircle2 size={17} /> : <CircleDot size={17} />}
+                  </span>
                 </button>
               );
             })}
           </div>
         </section>
 
-        <div className="grid gap-4 xl:grid-cols-[minmax(320px,0.9fr)_minmax(300px,1fr)]">
+        <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)]">
           <ZodiacDistanceWheel planet={selected} longitude={longitude} distance={distance} virupas={virupas} />
 
-          <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+          <section className="min-w-0 rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="flex items-start justify-between gap-4 overflow-hidden">
               <div className="min-w-0">
                 <p className="m-0 text-xs font-bold uppercase" style={{ color: selected.color, letterSpacing: "0.08em" }}>
@@ -339,7 +341,7 @@ export function UchchabalaCalculator() {
           </section>
         </aside>
 
-        <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+        <section className="min-w-0 rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
           <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
               <Table2 size={17} color={ink.goldAccent} />

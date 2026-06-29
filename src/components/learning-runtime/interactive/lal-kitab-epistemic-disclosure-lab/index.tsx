@@ -30,20 +30,25 @@ function AuthorityGlyph({ authorityKey, size, color }: { authorityKey: Authority
 function EpistemicStatusSvg({ active }: { active: AuthorityKey }) {
   const activeProfile = getAuthority(active);
   const nodes = [
-    { key: "scripture" as const, x: 152, y: 170 },
-    { key: "science" as const, x: 380, y: 170 },
-    { key: "folk" as const, x: 608, y: 170 },
+    { key: "scripture" as const, x: 148, y: 188 },
+    { key: "science" as const, x: 380, y: 188 },
+    { key: "folk" as const, x: 612, y: 188 },
   ];
+  const nodeLabelLines: Record<AuthorityKey, string[]> = {
+    scripture: ["Scriptural", "pedigree"],
+    science: ["Controlled", "validation"],
+    folk: ["Empirical", "folk practice"],
+  };
 
   return (
     <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 310" className="h-auto w-full min-w-0" role="img" aria-label="Lal Kitab epistemic status map">
-        <rect x="20" y="20" width="720" height="260" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+      <svg viewBox="0 0 760 360" className="h-auto w-full min-w-0" role="img" aria-label="Lal Kitab epistemic status map">
+        <rect x="20" y="20" width="720" height="310" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
         <text x="380" y="50" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           NAME THE REAL AUTHORITY STATUS
         </text>
 
-        <path d="M152 170 H608" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
+        <path d="M148 188 H612" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
         <rect x="265" y="72" width="230" height="70" rx="16" fill={wash(activeProfile.color, "12")} stroke={activeProfile.color} />
         <text x="380" y="100" textAnchor="middle" fill={activeProfile.color} fontSize="14" fontWeight="900" letterSpacing="0.8" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           {activeProfile.label}
@@ -56,24 +61,26 @@ function EpistemicStatusSvg({ active }: { active: AuthorityKey }) {
           const profile = getAuthority(node.key);
           const selected = node.key === active;
           const marker = profile.status === "present-modest" ? "modest yes" : "no";
+          const labelLines = nodeLabelLines[node.key];
           return (
             <g key={node.key}>
-              <circle cx={node.x} cy={node.y} r={selected ? 46 : 38} fill={selected ? wash(profile.color, "18") : SURFACE} stroke={selected ? profile.color : HAIRLINE} strokeWidth={selected ? 2.4 : 1.2} />
-              <text x={node.x} y={node.y - 9} textAnchor="middle" fill={selected ? profile.color : INK_SECONDARY} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-                {profile.label}
+              <circle cx={node.x} cy={node.y} r={selected ? 58 : 50} fill={selected ? wash(profile.color, "18") : SURFACE} stroke={selected ? profile.color : HAIRLINE} strokeWidth={selected ? 2.4 : 1.2} />
+              <text x={node.x} y={node.y - 18} textAnchor="middle" fill={selected ? profile.color : INK_SECONDARY} fontSize="12" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+                <tspan x={node.x} dy="0">{labelLines[0]}</tspan>
+                <tspan x={node.x} dy="14">{labelLines[1]}</tspan>
               </text>
-              <text x={node.x} y={node.y + 12} textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x={node.x} y={node.y + 24} textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight="600" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {marker}
               </text>
-              <text x={node.x} y={node.y + 54} textAnchor="middle" fill={profile.color} fontSize="22" fontWeight="800" style={{ fontFamily: "var(--font-devanagari), serif" }}>
+              <text x={node.x} y={node.y + 74} textAnchor="middle" fill={profile.color} fontSize="22" fontWeight="800" style={{ fontFamily: "var(--font-devanagari), serif" }}>
                 {profile.devanagari}
               </text>
             </g>
           );
         })}
 
-        <rect x="196" y="250" width="368" height="28" rx="14" fill={SURFACE} stroke={GOLD} />
-        <text x="380" y="269" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="108" y="295" width="544" height="28" rx="14" fill={SURFACE} stroke={GOLD} />
+        <text x="380" y="314" textAnchor="middle" fill={GOLD} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Honest status: practitioner-reported folk practice, not proof.
         </text>
       </svg>

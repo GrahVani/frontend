@@ -14,9 +14,12 @@ import {
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.18))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
-const INK_PRIMARY = "var(--gl-ink-primary)";
-const INK_SECONDARY = "var(--gl-ink-secondary)";
-const INK_MUTED = "var(--gl-ink-muted)";
+const INK_PRIMARY = "#3F2D1D";
+const INK_SECONDARY = "#5C4630";
+const INK_MUTED = "#745D40";
+const READABLE_GOLD = "#936817";
+const TABLE_LINE = "rgba(139, 118, 82, 0.28)";
+const SELECTED_ROW = "rgba(255, 248, 229, 0.98)";
 
 function SevenDashaMap({
   selectedIndex,
@@ -73,7 +76,7 @@ function SevenDashaMap({
                 x={x}
                 y={y - 3}
                 textAnchor="middle"
-                fill={dasha.color}
+                fill={INK_PRIMARY}
                 fontSize="12"
                 fontWeight={900}
                 style={{ fontFamily: "var(--font-sans), sans-serif", pointerEvents: "none" }}
@@ -136,20 +139,20 @@ export function ConditionalDashaCatalog() {
     >
       <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+          <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
             BPHS 51-58 recognition map
           </p>
           <h2 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
             Seven conditional <IAST>dashas</IAST>
           </h2>
-          <p className="mt-1 max-w-3xl text-sm" style={{ color: INK_SECONDARY }}>
+          <p className="mt-1 max-w-3xl text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
             Browse the seven specialised systems, spot which names encode their cycles, and keep their shared rule clear: condition-gated supplements to Vimshottari.
           </p>
         </div>
         <button
           type="button"
           onClick={() => setSelectedIndex(6)}
-          className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold"
+          className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold"
           style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}
         >
           <RotateCcw size={16} />
@@ -161,16 +164,16 @@ export function ConditionalDashaCatalog() {
         <div className="min-w-0 space-y-4">
           <SevenDashaMap selectedIndex={selectedIndex} onSelect={setSelectedIndex} />
 
-          <section className="rounded-xl p-4" style={{ background: selected.tint, border: `1.5px solid ${selected.color}55` }}>
+          <section className="rounded-xl p-4" style={{ background: SELECTED_ROW, border: `1.5px solid ${selected.color}55` }}>
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="m-0 text-xs font-bold uppercase" style={{ color: selected.color, letterSpacing: "0.08em" }}>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                   Selected conditional
                 </p>
                 <h3 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
                   {selected.name} - {selected.cycle}
                 </h3>
-                <p className="mt-1 text-sm font-semibold" style={{ color: INK_SECONDARY }}>
+                <p className="mt-1 text-base font-semibold" style={{ color: INK_SECONDARY }}>
                   {selected.nameEncoding}
                 </p>
               </div>
@@ -178,10 +181,10 @@ export function ConditionalDashaCatalog() {
                 {selected.devanagari}
               </Devanagari>
             </div>
-            <p className="mt-3 text-sm" style={{ color: INK_SECONDARY }}>
+            <p className="mt-3 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
               {selected.note}
             </p>
-            <p className="mt-2 text-sm font-semibold" style={{ color: selected.color }}>
+            <p className="mt-2 text-base font-semibold" style={{ color: INK_PRIMARY }}>
               {selected.conditionFrame}
             </p>
           </section>
@@ -191,7 +194,7 @@ export function ConditionalDashaCatalog() {
           <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="flex items-center gap-2">
               <ShieldCheck size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Shared rule
               </p>
             </div>
@@ -199,7 +202,7 @@ export function ConditionalDashaCatalog() {
               {["Vimshottari remains the default.", "A conditional dasha activates only when its condition is met.", "At Tier 1, recognition matters more than hand-computation."].map((rule) => (
                 <div key={rule} className="flex gap-3 rounded-xl p-3" style={{ background: SURFACE_2 }}>
                   <CheckCircle2 size={18} color={ink.goldAccent} className="mt-0.5 shrink-0" />
-                  <p className="m-0 text-sm font-semibold" style={{ color: INK_SECONDARY }}>
+                  <p className="m-0 text-base font-semibold" style={{ color: INK_SECONDARY }}>
                     {rule}
                   </p>
                 </div>
@@ -210,7 +213,7 @@ export function ConditionalDashaCatalog() {
           <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="flex items-center gap-2">
               <Hash size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Name to number
               </p>
             </div>
@@ -226,16 +229,16 @@ export function ConditionalDashaCatalog() {
                     border: `1px solid ${selected.index === dasha.index ? dasha.color : HAIRLINE}`,
                   }}
                 >
-                  <p className="m-0 text-xl font-bold" style={{ color: dasha.color, fontFamily: "var(--font-cormorant), serif" }}>
+                  <p className="m-0 text-xl font-bold" style={{ color: READABLE_GOLD, fontFamily: "var(--font-cormorant), serif" }}>
                     {dasha.cycleYears}
                   </p>
-                  <p className="m-0 text-xs font-semibold" style={{ color: INK_SECONDARY }}>
+                  <p className="m-0 text-sm font-semibold" style={{ color: INK_SECONDARY }}>
                     {dasha.name}
                   </p>
                 </button>
               ))}
             </div>
-            <p className="mt-3 text-sm" style={{ color: INK_MUTED }}>
+            <p className="mt-3 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
               The other three have varying cycles in this Tier-1 catalog.
             </p>
           </section>
@@ -243,11 +246,11 @@ export function ConditionalDashaCatalog() {
           <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="flex items-center gap-2">
               <AlertTriangle size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Honest disclosure
               </p>
             </div>
-            <p className="mt-3 text-sm" style={{ color: INK_SECONDARY }}>
+            <p className="mt-3 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
               Exact selection conditions and internal allotments vary by text. This lesson catalogs the systems and cycles; the next lesson handles selection criteria.
             </p>
           </section>
@@ -257,11 +260,11 @@ export function ConditionalDashaCatalog() {
           <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
               <Table2 size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 The seven at a glance
               </p>
             </div>
-            <p className="m-0 text-xs font-semibold" style={{ color: INK_MUTED }}>
+            <p className="m-0 text-sm font-semibold" style={{ color: INK_MUTED }}>
               {fixed.length} fixed-cycle / {varying.length} varying-cycle
             </p>
           </div>
@@ -271,8 +274,8 @@ export function ConditionalDashaCatalog() {
               style={{
                 gridTemplateColumns: "52px 180px 124px 190px minmax(240px,1fr)",
                 background: SURFACE_2,
-                color: INK_MUTED,
-                fontSize: "0.72rem",
+                color: INK_SECONDARY,
+                fontSize: "0.82rem",
                 fontWeight: 900,
                 letterSpacing: "0.06em",
                 textTransform: "uppercase",
@@ -292,27 +295,27 @@ export function ConditionalDashaCatalog() {
                 className="grid min-w-[900px] text-left"
                 style={{
                   gridTemplateColumns: "52px 180px 124px 190px minmax(240px,1fr)",
-                  background: selected.index === dasha.index ? dasha.tint : SURFACE,
-                  borderTop: `1px solid ${HAIRLINE}`,
+                  background: selected.index === dasha.index ? SELECTED_ROW : SURFACE,
+                  borderTop: `1px solid ${TABLE_LINE}`,
                   color: INK_PRIMARY,
                 }}
               >
-                <div className="px-3 py-3 text-sm font-bold" style={{ color: dasha.color }}>
+                <div className="px-3 py-3 text-base font-bold" style={{ color: READABLE_GOLD }}>
                   {dasha.index}
                 </div>
                 <div className="px-3 py-3">
-                  <p className="m-0 text-sm font-bold" style={{ color: dasha.color }}>
+                  <p className="m-0 text-base font-bold" style={{ color: INK_PRIMARY }}>
                     {dasha.name}
                   </p>
-                  <p className="m-0 text-xs" style={{ color: INK_MUTED }}>
+                  <p className="m-0 text-sm" style={{ color: INK_SECONDARY }}>
                     {dasha.devanagari}
                   </p>
                 </div>
-                <div className="px-3 py-3 text-sm font-bold">{dasha.cycle}</div>
-                <div className="px-3 py-3 text-sm" style={{ color: INK_SECONDARY }}>
+                <div className="px-3 py-3 text-base font-bold">{dasha.cycle}</div>
+                <div className="px-3 py-3 text-base" style={{ color: INK_SECONDARY }}>
                   {dasha.nameEncoding}
                 </div>
-                <div className="px-3 py-3 text-sm" style={{ color: INK_SECONDARY }}>
+                <div className="px-3 py-3 text-base" style={{ color: INK_SECONDARY }}>
                   {dasha.note}
                 </div>
               </button>

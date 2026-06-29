@@ -30,13 +30,13 @@ function wash(color: string, alphaHex = "12") {
 function CorpusMap({ activeText, onSelect }: { activeText: VastuTextKey; onSelect: (key: VastuTextKey) => void }) {
   return (
     <section className="w-full min-w-0 overflow-x-auto rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <div className="rounded-2xl p-4" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, minWidth: "520px" }}>
+      <div className="rounded-2xl p-4" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, minWidth: "max-content" }}>
         <div className="mb-4 flex flex-col gap-1 text-center">
           <p className="m-0 text-xs font-black uppercase" style={{ color: GOLD, letterSpacing: "0.08em" }}>Recommended engagement sequence</p>
           <p className="m-0 text-sm" style={{ color: INK_SECONDARY }}>Compact map first, then regional depth and integrative breadth.</p>
         </div>
 
-        <div className="grid min-w-0 gap-3 grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+        <div className="flex min-w-0 gap-3">
           {VASTU_TEXTS.slice().sort((a, b) => a.priority - b.priority).map((text) => {
             const selected = text.key === activeText;
             return (
@@ -44,7 +44,7 @@ function CorpusMap({ activeText, onSelect }: { activeText: VastuTextKey; onSelec
                 key={text.key}
                 type="button"
                 onClick={() => onSelect(text.key)}
-                className="min-w-0 rounded-xl p-3 text-left"
+                className="min-w-[150px] flex-1 rounded-xl p-3 text-left"
                 style={{ background: selected ? wash(text.color, "14") : SURFACE, border: `1.5px solid ${selected ? text.color : HAIRLINE}` }}
               >
                 <span className="inline-flex h-8 w-8 items-center justify-center rounded-full text-sm font-black" style={{ background: selected ? text.color : wash(text.color, "12"), color: selected ? SURFACE : text.color, border: `1px solid ${text.color}` }}>

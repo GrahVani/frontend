@@ -57,7 +57,7 @@ function WaterfallStack({ values }: { values: ComponentValues }) {
   const barW = 70;
   const unitH = 0.65; // pixels per virupa
   const leftPad = 100;
-  const chartW = 320;
+  const chartW = 640;
 
   // Calculate cumulative positions
   let cumulative = 0;
@@ -80,7 +80,7 @@ function WaterfallStack({ values }: { values: ComponentValues }) {
 
   // Simpler approach: fixed scale
   const scale = 0.5;
-  const baseY = 180;
+  const baseY = 210;
   const topY = 30;
 
   let currentY = baseY;
@@ -95,10 +95,11 @@ function WaterfallStack({ values }: { values: ComponentValues }) {
   const finalY = currentY;
 
   return (
-    <svg viewBox="0 0 320 210" className="w-full h-auto" style={{ maxHeight: 240 }}>
+    <svg viewBox={`0 0 ${chartW} 300`} className="w-full h-auto" style={{ maxHeight: 320 }}>
+      <g transform="translate(0, 30)">
       {/* Zero baseline */}
-      <line x1={20} y1={baseY} x2={300} y2={baseY} stroke={HAIRLINE} strokeWidth={1} />
-      <text x={10} y={baseY + 4} textAnchor="end" fontSize={9} fill={INK_MUTED}>
+      <line x1={20} y1={baseY} x2={580} y2={baseY} stroke={HAIRLINE} strokeWidth={1} />
+      <text x={10} y={baseY + 4} textAnchor="end" fontSize={10} fill={INK_MUTED}>
         0
       </text>
 
@@ -124,17 +125,20 @@ function WaterfallStack({ values }: { values: ComponentValues }) {
             {/* Value label */}
             <text
               x={x + barW / 2}
-              y={s.val >= 0 ? s.y - 6 : s.y + s.h + 12}
+              y={s.val >= 0 ? s.y - 14 : s.y + s.h + 14}
               textAnchor="middle"
-              fontSize={9}
+              fontSize={12}
               fill={col}
               fontWeight={700}
+              stroke={SURFACE}
+              strokeWidth={3}
+              paintOrder="stroke"
             >
               {s.val > 0 ? "+" : ""}{s.val.toFixed(1)}
             </text>
 
             {/* Component label */}
-            <text x={x + barW / 2} y={baseY + 16} textAnchor="middle" fontSize={8} fill={INK_MUTED}>
+            <text x={x + barW / 2} y={baseY + 18} textAnchor="middle" fontSize={10} fill={INK_MUTED}>
               <IAST size="sm">{s.comp.nameIAST.split(" ")[0]}</IAST>
             </text>
           </g>
@@ -142,10 +146,11 @@ function WaterfallStack({ values }: { values: ComponentValues }) {
       })}
 
       {/* Total line */}
-      <line x1={20} y1={finalY} x2={300} y2={finalY} stroke={GOLD_ACCENT} strokeWidth={1.5} strokeDasharray="4 4" />
-      <text x={10} y={finalY + 4} textAnchor="end" fontSize={10} fill={GOLD_ACCENT} fontWeight={700}>
+      <line x1={20} y1={finalY} x2={580} y2={finalY} stroke={GOLD_ACCENT} strokeWidth={1.5} strokeDasharray="4 4" />
+      <text x={10} y={finalY + 4} textAnchor="end" fontSize={11} fill={GOLD_ACCENT} fontWeight={700} stroke={SURFACE} strokeWidth={3} paintOrder="stroke">
         {segData.reduce((s, d) => s + d.val, 0).toFixed(1)} v
       </text>
+      </g>
     </svg>
   );
 }

@@ -533,7 +533,7 @@ export function VipareetaDetector() {
         <p className="text-xs" style={{ color: INK_SECONDARY }}>
           The yoga is generally held <strong>stronger</strong> when the dusthana lord sits in a dusthana
           <em> other than its own</em> and does <strong>not</strong> associate with lords of good houses or benefics —
-          keeping the "malefic spoils malefic" logic clean. Exact emphasis varies by source.
+          keeping the &ldquo;malefic spoils malefic&rdquo; logic clean. Exact emphasis varies by source.
         </p>
       </div>
 

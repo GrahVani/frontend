@@ -53,7 +53,7 @@ function houseXY(cx: number, cy: number, r: number, house: number) {
 /** Kemadruma diagram: 12-house circle. Moon at its house. 2nd and 12th highlighted. */
 function KemadrumaDiagram({ moonHouse, h2Empty, h12Empty }: { moonHouse: number; h2Empty: boolean; h12Empty: boolean }) {
   const w = 280;
-  const h = 280;
+  const h = 315;
   const cx = w / 2;
   const cy = h / 2;
   const r = 95;
@@ -61,7 +61,7 @@ function KemadrumaDiagram({ moonHouse, h2Empty, h12Empty }: { moonHouse: number;
   const h12 = moonHouse === 1 ? 12 : moonHouse - 1;
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" style={{ maxHeight: 280 }}>
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" style={{ maxHeight: 315 }}>
       {/* Outer ring */}
       <circle cx={cx} cy={cy} r={r} fill="none" stroke={HAIRLINE} strokeWidth={1.5} />
       <circle cx={cx} cy={cy} r={r - 32} fill="none" stroke={HAIRLINE} strokeWidth={0.8} strokeDasharray="3 3" />
@@ -105,7 +105,7 @@ function KemadrumaDiagram({ moonHouse, h2Empty, h12Empty }: { moonHouse: number;
       })}
 
       {/* Legend */}
-      <g transform={`translate(10, ${h - 50})`}>
+      <g transform={`translate(35, ${h - 34})`}>
         <circle cx={6} cy={5} r={5} fill={`${AMBER}22`} stroke={AMBER} strokeWidth={1.5} />
         <text x={16} y={9} fontSize={8} fill={INK_SECONDARY}>Moon</text>
         <circle cx={65} cy={5} r={5} fill={`${VERMILION}18`} stroke={VERMILION} strokeWidth={1.5} />
@@ -120,7 +120,7 @@ function KemadrumaDiagram({ moonHouse, h2Empty, h12Empty }: { moonHouse: number;
 /** Sade Sati diagram: 12-house circle. Moon + Saturn. 12-1-2 band highlighted when active. */
 function SadeSatiDiagram({ moonHouse, saturnHouse }: { moonHouse: number; saturnHouse: number }) {
   const w = 280;
-  const h = 280;
+  const h = 315;
   const cx = w / 2;
   const cy = h / 2;
   const r = 95;
@@ -131,7 +131,7 @@ function SadeSatiDiagram({ moonHouse, saturnHouse }: { moonHouse: number; saturn
   const inBand = saturnHouse === h12 || saturnHouse === h1 || saturnHouse === h2;
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" style={{ maxHeight: 280 }}>
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" style={{ maxHeight: 315 }}>
       {/* Outer ring */}
       <circle cx={cx} cy={cy} r={r} fill="none" stroke={HAIRLINE} strokeWidth={1.5} />
       <circle cx={cx} cy={cy} r={r - 32} fill="none" stroke={HAIRLINE} strokeWidth={0.8} strokeDasharray="3 3" />
@@ -170,8 +170,8 @@ function SadeSatiDiagram({ moonHouse, saturnHouse }: { moonHouse: number; saturn
         const s = houseXY(cx, cy, r - 16, saturnHouse);
         return (
           <g>
-            <circle cx={s.x} cy={s.y} r={13} fill={`${INK_MUTED}18`} stroke={INK_MUTED} strokeWidth={2} />
-            <text x={s.x} y={s.y + 1} textAnchor="middle" dominantBaseline="middle" fontSize={9} fontWeight={800} fill={INK_MUTED}>Sa</text>
+            <circle cx={s.x} cy={s.y} r={13} fill={SURFACE} stroke={INK_MUTED} strokeWidth={2} />
+            <text x={s.x} y={s.y + 1} textAnchor="middle" dominantBaseline="middle" fontSize={9} fontWeight={800} fill={INK_SECONDARY}>Sa</text>
           </g>
         );
       })()}
@@ -185,10 +185,10 @@ function SadeSatiDiagram({ moonHouse, saturnHouse }: { moonHouse: number; saturn
       })}
 
       {/* Legend */}
-      <g transform={`translate(10, ${h - 50})`}>
+      <g transform={`translate(26, ${h - 34})`}>
         <circle cx={6} cy={5} r={5} fill={`${AMBER}22`} stroke={AMBER} strokeWidth={1.5} />
         <text x={16} y={9} fontSize={8} fill={INK_SECONDARY}>Moon</text>
-        <circle cx={65} cy={5} r={5} fill={`${INK_MUTED}18`} stroke={INK_MUTED} strokeWidth={1.5} />
+        <circle cx={65} cy={5} r={5} fill={SURFACE} stroke={INK_MUTED} strokeWidth={1.5} />
         <text x={75} y={9} fontSize={8} fill={INK_SECONDARY}>Saturn</text>
         <circle cx={125} cy={5} r={5} fill="none" stroke={PURPLE} strokeWidth={1.5} strokeDasharray="3 2" />
         <text x={135} y={9} fontSize={8} fill={INK_SECONDARY}>Sade Sati band</text>

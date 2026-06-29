@@ -40,55 +40,56 @@ function FamilyGlyph({ familyKey, size, color, className }: { familyKey: UpayaFa
 
 function UpayaActionDiagram({ active }: { active: UpayaFamilyKey }) {
   const points = [
-    { key: "throwing" as const, x: 122, y: 150 },
-    { key: "feeding" as const, x: 248, y: 116 },
-    { key: "wearing" as const, x: 374, y: 150 },
-    { key: "burial" as const, x: 500, y: 116 },
-    { key: "donation" as const, x: 626, y: 150 },
-    { key: "behavioral" as const, x: 374, y: 232 },
+    { key: "throwing" as const, x: 120, y: 220 },
+    { key: "feeding" as const, x: 245, y: 200 },
+    { key: "wearing" as const, x: 374, y: 220 },
+    { key: "burial" as const, x: 503, y: 200 },
+    { key: "donation" as const, x: 628, y: 220 },
+    { key: "behavioral" as const, x: 374, y: 300 },
   ];
   const selected = getFamily(active);
 
   return (
-    <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 330" className="h-auto w-full min-w-0" role="img" aria-label="Six Lal Kitab upaya family action map">
-        <rect x="20" y="20" width="720" height="280" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
-        <text x="380" y="50" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+    <section className="w-full min-w-0 overflow-x-auto rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+      <svg viewBox="0 0 760 430" className="h-auto w-full min-w-[520px]" role="img" aria-label="Six Lal Kitab upaya family action map">
+        <rect x="20" y="20" width="720" height="390" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+        <text x="380" y="50" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           CLASSIFY BY THE VERB, NOT BY MATERIAL
         </text>
-        <path d="M122 150 C235 72 513 72 626 150" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
-        <path d="M122 150 C224 250 524 250 626 150" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
-        <path d="M374 150 V232" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
+        <path d="M120 220 C235 120 513 120 628 220" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
+        <path d="M120 220 C224 300 524 300 628 220" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
+        <path d="M374 220 V300" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
 
-        <rect x="274" y="80" width="200" height="90" rx="18" fill={wash(selected.color, "12")} stroke={selected.color} strokeWidth="2" />
-        <text x="374" y="111" textAnchor="middle" fill={readableColor(selected.color)} fontSize="14" fontWeight="900" letterSpacing="0.8" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="230" y="58" width="300" height="72" rx="18" fill={wash(selected.color, "12")} stroke={selected.color} strokeWidth="2" />
+        <text x="380" y="84" textAnchor="middle" fill={readableColor(selected.color)} fontSize="16" fontWeight="900" letterSpacing="0.8" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           ACTIVE FAMILY
         </text>
-        <text x="374" y="137" textAnchor="middle" fill={INK_PRIMARY} fontSize="20" fontWeight="700" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+        <text x="380" y="108" textAnchor="middle" fill={INK_PRIMARY} fontSize="24" fontWeight="700" style={{ fontFamily: "var(--font-cormorant), serif" }}>
           {selected.verb}
         </text>
-        <text x="374" y="155" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="380" y="128" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           {selected.label}
         </text>
 
         {points.map((point) => {
           const family = getFamily(point.key);
           const isActive = point.key === active;
+          const subtitle = family.label.replace("Item-", "").replace("Object-", "");
           return (
             <g key={point.key}>
-              <circle cx={point.x} cy={point.y} r={isActive ? 36 : 30} fill={isActive ? wash(family.color, "18") : SURFACE} stroke={isActive ? family.color : HAIRLINE} strokeWidth={isActive ? 2.4 : 1.2} />
-              <text x={point.x} y={point.y - 4} textAnchor="middle" fill={isActive ? readableColor(family.color) : INK_SECONDARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <circle cx={point.x} cy={point.y} r={isActive ? 42 : 38} fill={isActive ? wash(family.color, "18") : SURFACE} stroke={isActive ? family.color : HAIRLINE} strokeWidth={isActive ? 2.4 : 1.2} />
+              <text x={point.x} y={point.y - 11} textAnchor="middle" fill={isActive ? readableColor(family.color) : INK_SECONDARY} fontSize="14" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {family.number}. {family.verb}
               </text>
-              <text x={point.x} y={point.y + 14} textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-                {family.label.replace("Item-", "").replace("Object-", "")}
+              <text x={point.x} y={point.y + 11} textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight="600" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+                {subtitle}
               </text>
             </g>
           );
         })}
 
-        <rect x="238" y="266" width="284" height="28" rx="14" fill={SURFACE} stroke={GOLD} />
-        <text x="380" y="285" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="188" y="348" width="384" height="30" rx="15" fill={SURFACE} stroke={GOLD} />
+        <text x="380" y="369" textAnchor="middle" fill={GOLD} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Silver can be worn, buried, or donated: the verb decides.
         </text>
       </svg>

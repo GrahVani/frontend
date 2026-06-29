@@ -67,11 +67,22 @@ function FlowSvg({ state, outcome }: { state: DecisionState; outcome: DecisionOu
         {steps.map((step, index) => {
           const color = step.id === "apply" && !step.value ? NEUTRAL : step.id === "refuse" && step.value ? VERMILION : step.id === "defer" && step.value ? BLUE : step.value ? GREEN : GOLD;
           const label = step.id === "refuse" || step.id === "defer" ? (step.value ? "YES" : "NO") : step.value ? "YES" : "NO";
+          const outcomeLabel = index === 3 ? outcomeCopy(outcome).label : null;
+          const outcomeWords = outcomeLabel ? outcomeLabel.split(" ") : [];
+          const wrappedOutcome = outcomeWords.length > 2 ? [outcomeWords.slice(0, 2).join(" "), outcomeWords.slice(2).join(" ")] : outcomeWords;
           return (
             <g key={step.id}>
-              <circle cx={step.x} cy="142" r="46" fill={wash(color, "12")} stroke={color} strokeWidth="3" />
-              <text x={step.x} y="130" textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>{step.label}</text>
-              <text x={step.x} y="158" textAnchor="middle" fill={color} fontSize="18" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>{index === 3 ? outcomeCopy(outcome).label : label}</text>
+              <circle cx={step.x} cy="142" r="60" fill={wash(color, "12")} stroke={color} strokeWidth="3" />
+              <text x={step.x} y="128" textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>{step.label}</text>
+              <text x={step.x} y={outcomeLabel ? 148 : 158} textAnchor="middle" fill={color} fontSize={outcomeLabel ? 15 : 16} fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+                {outcomeLabel
+                  ? wrappedOutcome.map((word, i) => (
+                      <tspan key={word} x={step.x} dy={i === 0 ? 0 : 18}>
+                        {word}
+                      </tspan>
+                    ))
+                  : label}
+              </text>
             </g>
           );
         })}

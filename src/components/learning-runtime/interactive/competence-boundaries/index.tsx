@@ -268,46 +268,46 @@ export function CompetenceBoundaries() {
 
             {/* Visual SVG Svadharma Referral Compass */}
             <div className="flex justify-center rounded-xl p-3 mb-4 border bg-white" style={{ borderColor: HAIRLINE }}>
-              <svg width="200" height="130" viewBox="0 0 200 130">
+              <svg width="260" height="220" viewBox="0 0 260 220">
                 {/* Concentric boundaries */}
-                <circle cx="100" cy="65" r="50" fill="none" stroke="rgba(168,130,30,0.12)" strokeWidth="1" />
-                <circle cx="100" cy="65" r="25" fill="none" stroke="rgba(168,130,30,0.25)" strokeWidth="1.5" />
-                <text x="100" y="68" fill={GOLD} fontSize="7" fontWeight="bold" textAnchor="middle">Svadharma</text>
-                <text x="100" y="24" fill={INK_MUTED} fontSize="7.5" fontWeight="bold" textAnchor="middle">Paradharma</text>
+                <circle cx="130" cy="120" r="60" fill="none" stroke={INK_SECONDARY} strokeWidth="1" />
+                <circle cx="130" cy="120" r="30" fill="none" stroke={INK_SECONDARY} strokeWidth="1.5" />
+                <text x="130" y="123" fill={GOLD} fontSize="9" fontWeight="bold" textAnchor="middle">Svadharma</text>
+                <text x="130" y="22" fill={INK_SECONDARY} fontSize="9" fontWeight="bold" textAnchor="middle">Paradharma</text>
 
                 {/* Avatar position based on option.status */}
                 {option.status === "balanced" && (
                   <>
                     {/* Bridge */}
-                    <line x1="100" y1="65" x2="100" y2="25" stroke={GREEN} strokeWidth="2.5" strokeDasharray="3,2" />
+                    <line x1="130" y1="120" x2="130" y2="72" stroke={GREEN} strokeWidth="2.5" strokeDasharray="3,2" />
                     {/* Active bridge path */}
-                    <g transform="translate(100, 25)">
+                    <g transform="translate(130, 72)">
                       <circle cx="0" cy="0" r="10" fill={GREEN} />
-                      <text x="0" y="3.5" textAnchor="middle" fill="#FFF" fontSize="8" fontWeight="bold">✓</text>
+                      <text x="0" y="3" textAnchor="middle" fill="#FFF" fontSize="7" fontWeight="bold">✓</text>
                     </g>
-                    <text x="100" y="12" fill={GREEN} fontSize="7" fontWeight="bold" textAnchor="middle">REFERRAL PATHWAY</text>
+                    <text x="130" y="40" fill={GREEN} fontSize="9" fontWeight="bold" textAnchor="middle">REFERRAL PATHWAY</text>
                   </>
                 )}
 
                 {option.status === "overreach" && (
                   <>
                     {/* Intruded deep inside Paradharma */}
-                    <g transform="translate(100, 25)">
+                    <g transform="translate(130, 72)">
                       <circle cx="0" cy="0" r="10" fill={VERMILION} />
-                      <text x="0" y="3.5" textAnchor="middle" fill="#FFF" fontSize="8" fontWeight="bold">⚠️</text>
+                      <text x="0" y="3" textAnchor="middle" fill="#FFF" fontSize="7" fontWeight="bold">⚠️</text>
                     </g>
-                    <text x="100" y="12" fill={VERMILION} fontSize="7.5" fontWeight="bold" textAnchor="middle">OVERREACH</text>
+                    <text x="130" y="40" fill={VERMILION} fontSize="9" fontWeight="bold" textAnchor="middle">OVERREACH</text>
                   </>
                 )}
 
                 {option.status === "neglect" && (
                   <>
                     {/* Dot is outside or minimized */}
-                    <g transform="translate(100, 65)">
+                    <g transform="translate(130, 190)">
                       <circle cx="0" cy="0" r="10" fill={GOLD} />
-                      <text x="0" y="3.5" textAnchor="middle" fill="#FFF" fontSize="8" fontWeight="bold">?</text>
+                      <text x="0" y="3" textAnchor="middle" fill="#FFF" fontSize="7" fontWeight="bold">?</text>
                     </g>
-                    <text x="100" y="12" fill={GOLD} fontSize="7.5" fontWeight="bold" textAnchor="middle">NEGLECT</text>
+                    <text x="130" y="40" fill={GOLD} fontSize="9" fontWeight="bold" textAnchor="middle">NEGLECT</text>
                   </>
                 )}
               </svg>

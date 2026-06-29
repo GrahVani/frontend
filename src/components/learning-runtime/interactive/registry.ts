@@ -77,6 +77,7 @@ import { SankrantiTracker } from "./sankranti-tracker";
 import { ComparativeAyanamshaExplorer } from "./comparative-ayanamsha-explorer";
 import { AyanamshaDecisionFrameworkFlowchart } from "./ayanamsha-decision-framework-flowchart";
 import { TithiAngleVisualizer } from "./tithi-angle-visualizer";
+import { TithiAs12DegreesExplorer } from "./tithi-as-12-degrees-explorer";
 import { TithiCalculatorDojo } from "./tithi-calculator-dojo";
 import { PancangaBuilder } from "./pancanga-builder";
 import { PanchangaFiveLimbFramework } from "./panchanga-five-limb-framework";
@@ -777,6 +778,7 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // orbit with 12Â° segment overlay + real-time tithi computation + paká¹£a
   // indicator + paÃ±cÄá¹…ga reading panel.
   "tithi-angle-visualizer": TithiAngleVisualizer,
+  "tithi-as-12-degrees-explorer": TithiAs12DegreesExplorer,
   // Lesson 3.1.1's Â§7 flagship: Tithi Calculator Dojo â€” step-by-step formula
   // breakdown with editable Sun/Moon longitudes + preset scenarios + elapsed
   // fraction visualisation.
@@ -957,6 +959,7 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "navamsha-reader": NavamshaReader,
   "rashi-navamsha-pair": RashiNavamshaPair,
   "chart-planet-positioner": ChartPlanetPositioner,
+  "graha-anatomy-explorer": ChartPlanetPositioner,
   "rashi-rising-classifier": RashiRisingClassifier,
   "rashi-stream-comparator": RashiStreamComparator,
   "rashi-profile-explorer": RashiProfileExplorer,
@@ -1677,5 +1680,3 @@ export function resolveInteractive(slug: string | undefined): InteractiveCompone
   if (!slug) return null;
   return INTERACTIVE_REGISTRY[slug] ?? null;
 }
-
-

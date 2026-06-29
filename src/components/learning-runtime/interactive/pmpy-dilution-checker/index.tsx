@@ -249,12 +249,17 @@ export function PmpyDilutionChecker() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[760px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["Factor", "Type", "Effect", "Reading cue"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "Factor", width: "w-[140px]" },
+                    { label: "Type", width: "w-[150px]" },
+                    { label: "Effect", width: "w-[160px]" },
+                    { label: "Reading cue", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -265,14 +270,14 @@ export function PmpyDilutionChecker() {
                     <td className="px-4 py-3 font-bold" style={{ color: factor.color }}><IAST>{factor.iast}</IAST></td>
                     <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{factor.label}</td>
                     <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>Dilutes PMPY delivery</td>
-                    <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{factor.cue}</td>
+                    <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{factor.cue}</td>
                   </tr>
                 ))}
                 <tr style={{ background: retrograde ? wash(RETROGRADE_BOOST.color, "10") : SURFACE, borderTop: `1px solid ${HAIRLINE}` }}>
                   <td className="px-4 py-3 font-bold" style={{ color: RETROGRADE_BOOST.color }}><IAST>{RETROGRADE_BOOST.iast}</IAST></td>
                   <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{RETROGRADE_BOOST.label}</td>
                   <td className="px-4 py-3" style={{ color: RETROGRADE_BOOST.color }}>Strengthens, not dilutes</td>
-                  <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{RETROGRADE_BOOST.description}</td>
+                  <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{RETROGRADE_BOOST.description}</td>
                 </tr>
               </tbody>
             </table>

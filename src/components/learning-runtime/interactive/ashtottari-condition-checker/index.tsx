@@ -22,9 +22,11 @@ import {
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.18))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
-const INK_PRIMARY = "var(--gl-ink-primary)";
-const INK_SECONDARY = "var(--gl-ink-secondary)";
-const INK_MUTED = "var(--gl-ink-muted)";
+const INK_PRIMARY = "#3F2D1D";
+const INK_SECONDARY = "#5C4630";
+const INK_MUTED = "#745D40";
+const READABLE_GOLD = "#936817";
+const SELECTED_ROW = "rgba(255, 248, 229, 0.98)";
 
 function toggleState(state: DecisionState, key: CriterionKey): DecisionState {
   return { ...state, [key]: !state[key] };
@@ -48,7 +50,7 @@ function DecisionBridge({ state }: { state: DecisionState }) {
     <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
       <div className="mb-4 flex items-center gap-2">
         <GitCompare size={17} color={ink.goldAccent} />
-        <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+        <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
           Alongside rule
         </p>
       </div>
@@ -81,7 +83,7 @@ function DecisionBridge({ state }: { state: DecisionState }) {
         </div>
       </div>
 
-      <p className="mt-4 text-sm" style={{ color: INK_MUTED }}>
+      <p className="mt-4 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
         The second bar never replaces the first. A qualifying Rahu relation only adds a supplementary timing lens.
       </p>
     </section>
@@ -114,7 +116,7 @@ function CriterionButton({
     >
       <span className="flex w-full items-start justify-between gap-3">
         <span>
-          <span className="block text-xs font-bold uppercase" style={{ color, letterSpacing: "0.08em" }}>
+          <span className="block text-sm font-bold uppercase" style={{ color: criterion.isGate ? ASHTOTTARI_DECISION_COLORS.rahu : READABLE_GOLD, letterSpacing: "0.08em" }}>
             {criterion.isGate ? "Classical gate" : "Practice cue"}
           </span>
           <span className="mt-1 block text-base font-semibold">{criterion.label}</span>
@@ -183,7 +185,7 @@ function DecisionDiagram({ state }: { state: DecisionState }) {
               x={node.x}
               y={node.y + 5}
               textAnchor="middle"
-              fill={node.active ? color : INK_MUTED}
+              fill={node.active ? INK_PRIMARY : INK_MUTED}
               fontSize={node.label === "Ashtottari" ? 12 : 14}
               fontWeight={800}
               style={{ fontFamily: "var(--font-sans), sans-serif" }}
@@ -196,7 +198,7 @@ function DecisionDiagram({ state }: { state: DecisionState }) {
           x="220"
           y="260"
           textAnchor="middle"
-          fill={INK_MUTED}
+          fill={INK_SECONDARY}
           fontSize="11"
           fontWeight={800}
           letterSpacing="1.2"
@@ -230,13 +232,13 @@ export function AshtottariConditionChecker() {
     >
       <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+          <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
             Conditional dasha decision tool
           </p>
           <h2 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
             When <IAST>Ashtottari</IAST> applies
           </h2>
-          <p className="mt-1 max-w-3xl text-sm" style={{ color: INK_SECONDARY }}>
+          <p className="mt-1 max-w-3xl text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
             Toggle the Rahu-related Lagna/Moon gate and the practical cross-check cues. The result always keeps Vimshottari as the default.
           </p>
         </div>
@@ -263,16 +265,16 @@ export function AshtottariConditionChecker() {
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
         <div className="min-w-0 space-y-4">
-          <section className="rounded-xl p-4" style={{ background: gate ? ASHTOTTARI_DECISION_COLORS.rahuTint : SURFACE, border: `1.5px solid ${color}` }}>
+          <section className="rounded-xl p-4" style={{ background: gate ? SELECTED_ROW : SURFACE, border: `1.5px solid ${color}` }}>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <p className="m-0 text-xs font-bold uppercase" style={{ color, letterSpacing: "0.08em" }}>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                   Recommendation
                 </p>
                 <h3 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
                   {recommendationLabel(state)}
                 </h3>
-                <p className="mt-2 max-w-2xl text-sm" style={{ color: INK_SECONDARY }}>
+                <p className="mt-2 max-w-2xl text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
                   {recommendationDetail(state)}
                 </p>
               </div>
@@ -280,13 +282,13 @@ export function AshtottariConditionChecker() {
                 className="rounded-xl px-4 py-3 text-center"
                 style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, minWidth: 132 }}
               >
-                <p className="m-0 text-xs font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.08em" }}>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.08em" }}>
                   Signal
                 </p>
                 <p className="m-0 text-3xl font-bold" style={{ color, fontFamily: "var(--font-cormorant), serif" }}>
                   {score}
                 </p>
-                <p className="m-0 text-xs font-semibold" style={{ color: INK_MUTED }}>
+                <p className="m-0 text-sm font-semibold" style={{ color: INK_MUTED }}>
                   {band === "study-only" ? "ungated" : "of 100"}
                 </p>
               </div>
@@ -311,11 +313,11 @@ export function AshtottariConditionChecker() {
           <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="flex items-center gap-2">
               {gate ? <ShieldCheck size={18} color={ASHTOTTARI_DECISION_COLORS.rahu} /> : <AlertTriangle size={18} color={ink.goldAccent} />}
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Recension honesty
               </p>
             </div>
-            <p className="mt-3 text-sm" style={{ color: INK_SECONDARY }}>
+            <p className="mt-3 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
               The lesson names the accepted trigger broadly: a Rahu-related Lagna/Moon condition. Because texts state the exact rule in more than one way, this tool teaches the gate and the workflow, not a single overclaimed wording.
             </p>
             <div

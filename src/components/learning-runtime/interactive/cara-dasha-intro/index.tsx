@@ -11,8 +11,7 @@
  */
 
 import { useState, useMemo } from "react";
-import { IAST, Devanagari } from "../../chrome/typography";
-import { ink } from "@/design-tokens/grahvani-learning/colors";
+import { IAST } from "../../chrome/typography";
 import {
   RASHIS,
   MODALITY_META,
@@ -23,13 +22,11 @@ import {
 } from "./data";
 import {
   ArrowRightLeft,
-  Clock,
   Globe,
   MoveRight,
   Orbit,
   RotateCcw,
   Star,
-  Sun,
 } from "lucide-react";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.18))";
@@ -272,7 +269,6 @@ export function CaraDashaIntro() {
   const [ascendantIndex, setAscendantIndex] = useState(0);
 
   const caraSequence = useMemo(() => buildCaraSequence(ascendantIndex), [ascendantIndex]);
-  const caraTotal = useMemo(() => caraSequence.reduce((s, item) => s + item.years, 0), [caraSequence]);
 
   return (
     <div

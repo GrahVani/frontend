@@ -189,11 +189,11 @@ Each planet has one canonical primary hue and one secondary tint (for background
 | # | Graha | Devanāgarī | Hue name | Primary | Secondary tint | Classical justification |
 |---|---|---|---|---|---|---|
 | 1 | Sūrya | सूर्य | Solar Gold | `#E8B845` | `#FFE9A8` | Royal gold, kāraka of self & soul (BPHS 3.30) |
-| 2 | Candra | चन्द्र | Pearl Silver | `#D8DBE8` | `#F2F4FA` | White pearl, kāraka of mind & mother |
+| 2 | Candra | चन्द्र | Pearl Silver | `#5A6B8A` | `#D8DCE8` | White pearl, kāraka of mind & mother; darkened for text readability on parchment |
 | 3 | Maṅgala | मङ्गल | Coral Red | `#C8412E` | `#F5BFAE` | Red, kāraka of energy & brothers; classical "blood-coloured" (`rakta-varṇa`) |
 | 4 | Budha | बुध | Verdant Green | `#3A8C5A` | `#B8DCC4` | Green, kāraka of intellect & speech (`harita-varṇa`) |
 | 5 | Guru | गुरु | Saffron Yellow | `#E89E2A` | `#F8D89E` | Yellow-orange, kāraka of wisdom & dharma (`pīta-varṇa`) |
-| 6 | Śukra | शुक्र | Diamond White-Blue | `#A8C8E8` | `#DCE8F4` | White like diamond/silver, kāraka of love & art |
+| 6 | Śukra | शुक्र | Diamond White-Blue | `#4A7AA8` | `#B8D0E8` | White like diamond/silver, kāraka of love & art; darkened for text readability on parchment |
 | 7 | Śani | शनि | Indigo Black | `#2C2C3E` (on light) / `#5A5A78` (on dark) | `#9494A8` | Black/indigo, kāraka of karma & limit (`nīla-varṇa`) |
 | 8 | Rāhu | राहु | Smoke Slate | `#5A5C68` | `#8E909C` | "Smoky" per classical (`dhūmra-varṇa`); kāraka of māyā |
 | 9 | Ketu | केतु | Ash Maroon | `#7A3E4A` | `#B88898` | Reddish-grey per classical; kāraka of mokṣa |

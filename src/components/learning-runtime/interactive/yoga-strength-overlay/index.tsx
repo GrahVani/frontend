@@ -236,12 +236,17 @@ export function YogaStrengthOverlay() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[760px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["Factor", "What it measures", "Strong signal", "Weak signal"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "Factor", width: "w-[100px]" },
+                    { label: "What it measures", width: "w-[180px]" },
+                    { label: "Strong signal", width: "w-[220px]" },
+                    { label: "Weak signal", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -255,9 +260,9 @@ export function YogaStrengthOverlay() {
                 ].map((row) => (
                   <tr key={row[0]} style={{ background: SURFACE, borderTop: `1px solid ${HAIRLINE}` }}>
                     <td className="px-4 py-3 font-bold" style={{ color: GOLD }}><IAST>{row[0]}</IAST></td>
-                    <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{row[1]}</td>
-                    <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{row[2]}</td>
-                    <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{row[3]}</td>
+                    <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{row[1]}</td>
+                    <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{row[2]}</td>
+                    <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{row[3]}</td>
                   </tr>
                 ))}
               </tbody>

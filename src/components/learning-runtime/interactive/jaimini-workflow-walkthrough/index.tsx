@@ -23,7 +23,6 @@ import {
   CheckCircle2,
   Lock,
   AlertTriangle,
-  RotateCcw,
   Target,
   Sparkles,
   Eye,

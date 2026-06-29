@@ -93,11 +93,11 @@ function WealthCircuit({
             </g>
           );
         })}
-        <circle cx="280" cy="184" r="56" fill={wash(DHANA, "16")} stroke={DHANA} strokeWidth="2.5" />
-        <text x="280" y="175" textAnchor="middle" fill={DHANA} fontSize="12" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <circle cx="268" cy="184" r="48" fill={wash(DHANA, "16")} stroke={DHANA} strokeWidth="2.5" />
+        <text x="268" y="176" textAnchor="middle" fill={DHANA} fontSize="12" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           DHANA
         </text>
-        <text x="280" y="202" textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="268" y="201" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           relationship
         </text>
         <text x="280" y="326" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
@@ -243,12 +243,18 @@ export function DhanaYogaDetector() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[780px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["", "First wealth lord", "Second wealth lord", "Mode", "Classification"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "", width: "w-12" },
+                    { label: "First wealth lord", width: "w-[180px]" },
+                    { label: "Second wealth lord", width: "w-[180px]" },
+                    { label: "Mode", width: "w-[110px]" },
+                    { label: "Classification", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -268,7 +274,7 @@ export function DhanaYogaDetector() {
                         <p className="m-0 text-xs" style={{ color: INK_MUTED }}>{rashis[pair.second.sign].iast}: {pair.second.wealthHouse.label}</p>
                       </td>
                       <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{DHANA_RELATION_MODES[mode].label}</td>
-                      <td className="px-4 py-3" style={{ color: pair.dualRaja ? RAJA_OVERLAP : INK_SECONDARY }}>{pair.dualRaja ? "Dhana + raja-grade" : "Dhana yoga candidate"}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: pair.dualRaja ? RAJA_OVERLAP : INK_SECONDARY }}>{pair.dualRaja ? "Dhana + raja-grade" : "Dhana yoga candidate"}</td>
                     </tr>
                   );
                 })}

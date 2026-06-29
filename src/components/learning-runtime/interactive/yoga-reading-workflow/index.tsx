@@ -240,12 +240,17 @@ export function YogaReadingWorkflow() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl" style={{ border: `1px solid ${HAIRLINE}` }}>
-            <table className="w-full min-w-[780px] border-collapse text-sm">
+            <table className="w-full min-w-0 table-fixed border-collapse text-sm">
               <thead style={{ background: SURFACE_2 }}>
                 <tr>
-                  {["#", "Step", "Engine layer", "Reader discipline"].map((heading) => (
-                    <th key={heading} className="px-4 py-3 text-left text-xs font-bold uppercase" style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
-                      {heading}
+                  {[
+                    { label: "#", width: "w-12" },
+                    { label: "Step", width: "w-[130px]" },
+                    { label: "Engine layer", width: "w-[160px]" },
+                    { label: "Reader discipline", width: "" },
+                  ].map((heading) => (
+                    <th key={heading.label} className={`px-4 py-3 text-left text-xs font-bold uppercase ${heading.width}`} style={{ color: INK_SECONDARY, letterSpacing: "0.06em" }}>
+                      {heading.label}
                     </th>
                   ))}
                 </tr>
@@ -257,8 +262,8 @@ export function YogaReadingWorkflow() {
                     <tr key={step.slug} onClick={() => setSelectedStepSlug(step.slug)} className="cursor-pointer align-top" style={{ background: active ? wash(step.color, "10") : SURFACE, borderTop: `1px solid ${HAIRLINE}` }}>
                       <td className="px-4 py-3 font-bold" style={{ color: step.color }}>{step.number}</td>
                       <td className="px-4 py-3 font-bold" style={{ color: active ? step.color : INK_PRIMARY }}>{step.label}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{step.engine}</td>
-                      <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>{step.action}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{step.engine}</td>
+                      <td className="px-4 py-3 break-words" style={{ color: INK_SECONDARY }}>{step.action}</td>
                     </tr>
                   );
                 })}

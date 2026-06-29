@@ -260,11 +260,11 @@ function DefaultMarginalia({
         />
         <p
           style={{
-            fontSize: "11px",
+            fontSize: "12px",
             textTransform: "uppercase",
-            letterSpacing: "0.14em",
+            letterSpacing: "0.12em",
             color: "#A23A1E",
-            fontWeight: 600,
+            fontWeight: 700,
             marginBottom: "8px",
           }}
         >
@@ -286,9 +286,10 @@ function DefaultMarginalia({
         <p
           style={{
             fontFamily: "var(--font-cormorant), serif",
-            fontSize: "14px",
-            color: "var(--gl-ink-secondary)",
-            lineHeight: 1.5,
+            fontSize: "15px",
+            color: "var(--gl-ink-primary)",
+            lineHeight: 1.55,
+            fontWeight: 500,
           }}
         >
           The eye of the Veda — the metaphor Pāṇinīya Śikṣā gives to Jyotiṣa. Every other Vedāṅga is a sense-organ; Jyotiṣa is the one that sees time.
@@ -306,11 +307,11 @@ function DefaultMarginalia({
       >
         <p
           style={{
-            fontSize: "11px",
+            fontSize: "12px",
             textTransform: "uppercase",
-            letterSpacing: "0.14em",
-            color: "var(--gl-ink-muted)",
-            fontWeight: 600,
+            letterSpacing: "0.12em",
+            color: "var(--gl-ink-secondary)",
+            fontWeight: 700,
             marginBottom: "6px",
           }}
         >
@@ -319,10 +320,11 @@ function DefaultMarginalia({
         <p
           style={{
             fontFamily: "var(--font-cormorant), serif",
-            fontSize: "14px",
+            fontSize: "15px",
             color: "var(--gl-ink-primary)",
             fontStyle: "italic",
-            lineHeight: 1.5,
+            lineHeight: 1.55,
+            fontWeight: 500,
           }}
         >
           {activeSectionNumber ? `Section ${activeSectionNumber} of this lesson.` : "Loading your position…"}
@@ -330,9 +332,10 @@ function DefaultMarginalia({
         <p
           style={{
             fontSize: "14px",
-            color: "var(--gl-ink-muted)",
+            color: "var(--gl-ink-secondary)",
             marginTop: "6px",
-            lineHeight: 1.5,
+            lineHeight: 1.55,
+            fontWeight: 500,
           }}
         >
           Marginalia for each section land in Reform-8: pull-quotes, term glossary, source attribution, key-takeaway stickers.

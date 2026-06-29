@@ -82,7 +82,7 @@ export function NameCorrectionRationaleEvaluator() {
               background: activeTab === tab.key ? TEAL : "transparent",
               color: activeTab === tab.key ? "#fff" : INK_SECONDARY,
               padding: "0.52rem 0.85rem",
-              fontWeight: 850,
+              fontWeight: 400,
               cursor: "pointer",
               fontSize: "0.85rem",
             }}
@@ -168,14 +168,14 @@ function EvaluatorTab() {
       <article style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.75rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
           <Scale size={18} color={TEAL} />
-          <span style={{ fontWeight: 950, color: TEAL, fontSize: "1rem" }}>Scenario {scenario.id}: {scenario.client}</span>
+          <span style={{ fontWeight: 400, color: TEAL, fontSize: "1rem" }}>Scenario {scenario.id}: {scenario.client}</span>
         </div>
         <blockquote style={{ margin: 0, padding: "0.75rem", borderLeft: `4px solid ${GOLD}`, background: `${GOLD}0A`, borderRadius: 8, fontStyle: "italic", color: INK_PRIMARY, lineHeight: 1.55 }}>
           "{scenario.quote}"
         </blockquote>
 
         <div style={{ display: "grid", gap: "0.5rem" }}>
-          <div style={{ fontSize: "0.85rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 1 — Categorise the rationale</div>
+          <div style={{ fontSize: "0.85rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 1 — Categorise the rationale</div>
           <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             {CATEGORIES.map((cat) => (
               <button
@@ -195,7 +195,7 @@ function EvaluatorTab() {
         </div>
 
         <div style={{ display: "grid", gap: "0.5rem" }}>
-          <div style={{ fontSize: "0.85rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 2 — Identify over-claim layers (if any)</div>
+          <div style={{ fontSize: "0.85rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 2 — Identify over-claim layers (if any)</div>
           <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             {OVERCLAIM_LAYERS.map((layer) => (
               <button
@@ -215,7 +215,7 @@ function EvaluatorTab() {
         </div>
 
         <div style={{ display: "grid", gap: "0.5rem" }}>
-          <div style={{ fontSize: "0.85rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 3 — Operational test: would they consider this WITHOUT numerology?</div>
+          <div style={{ fontSize: "0.85rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 3 — Operational test: would they consider this WITHOUT numerology?</div>
           <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             {(["yes", "no", "partial"] as const).map((val) => (
               <button
@@ -249,19 +249,19 @@ function EvaluatorTab() {
             <div style={{ border: `1px solid ${verdictColor(scenario.verdict)}44`, borderRadius: 8, background: `${verdictColor(scenario.verdict)}0A`, padding: "1rem", display: "grid", gap: "0.35rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 {scenario.verdict === "refuse" ? <ShieldAlert size={18} color={verdictColor(scenario.verdict)} /> : <CheckCircle2 size={18} color={verdictColor(scenario.verdict)} />}
-                <span style={{ fontWeight: 950, color: verdictColor(scenario.verdict), fontSize: "1rem" }}>{verdictLabel(scenario.verdict)}</span>
+                <span style={{ fontWeight: 400, color: verdictColor(scenario.verdict), fontSize: "1rem" }}>{verdictLabel(scenario.verdict)}</span>
               </div>
               <p style={{ margin: 0, color: INK_PRIMARY, lineHeight: 1.55, fontSize: "0.9rem" }}>{scenario.explanation}</p>
             </div>
 
             <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "0.75rem", display: "grid", gap: "0.35rem" }}>
-              <div style={{ fontSize: "0.78rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Your selections vs. model answer</div>
+              <div style={{ fontSize: "0.78rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Your selections vs. model answer</div>
               <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", fontSize: "0.85rem" }}>
-                <span style={{ color: categoryCorrect ? GREEN : VERMILION, fontWeight: 850 }}>Categories: {categoryCorrect ? "match" : "mismatch"}</span>
+                <span style={{ color: categoryCorrect ? GREEN : VERMILION, fontWeight: 400 }}>Categories: {categoryCorrect ? "match" : "mismatch"}</span>
                 <span style={{ color: INK_MUTED }}>·</span>
-                <span style={{ color: overclaimCorrect ? GREEN : VERMILION, fontWeight: 850 }}>Over-claim layers: {overclaimCorrect ? "match" : "mismatch"}</span>
+                <span style={{ color: overclaimCorrect ? GREEN : VERMILION, fontWeight: 400 }}>Over-claim layers: {overclaimCorrect ? "match" : "mismatch"}</span>
                 <span style={{ color: INK_MUTED }}>·</span>
-                <span style={{ color: testCorrect ? GREEN : VERMILION, fontWeight: 850 }}>Operational test: {testCorrect ? "match" : "mismatch"}</span>
+                <span style={{ color: testCorrect ? GREEN : VERMILION, fontWeight: 400 }}>Operational test: {testCorrect ? "match" : "mismatch"}</span>
               </div>
             </div>
           </div>
@@ -285,7 +285,7 @@ function CategoriesTab() {
       <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
           <BookOpen size={18} color={TEAL} />
-          <span style={{ fontWeight: 950, color: TEAL, fontSize: "1rem" }}>Six-rationale-category framework</span>
+          <span style={{ fontWeight: 400, color: TEAL, fontSize: "1rem" }}>Six-rationale-category framework</span>
         </div>
         <p style={{ margin: "0.3rem 0 0", color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.88rem" }}>
           Categories 1-5 are life-circumstance grounds. Category 6 is legitimate only when convergent with 1-5. Over-claim has no independent ground.
@@ -306,10 +306,10 @@ function CategoriesTab() {
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
-            <div style={{ fontWeight: 950, color: INK_PRIMARY, fontSize: "1rem" }}>
+            <div style={{ fontWeight: 400, color: INK_PRIMARY, fontSize: "1rem" }}>
               {cat.number > 0 ? `${cat.number}. ` : ""}{cat.label}
             </div>
-            <div style={{ fontSize: "0.72rem", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.06em", color: categoryColor(cat.compliant) }}>
+            <div style={{ fontSize: "0.72rem", fontWeight: 400, textTransform: "uppercase", letterSpacing: "0.06em", color: categoryColor(cat.compliant) }}>
               {cat.compliant === "legitimate" ? "Legitimate ground" : cat.compliant === "conditional" ? "Conditional / confirmatory" : "Over-claim"}
             </div>
           </div>
@@ -320,14 +320,14 @@ function CategoriesTab() {
       <div style={{ border: `1px solid ${VERMILION}44`, borderRadius: 8, background: `${VERMILION}0A`, padding: "0.85rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.35rem" }}>
           <AlertTriangle size={18} color={VERMILION} />
-          <span style={{ fontWeight: 950, color: VERMILION, fontSize: "0.95rem" }}>Over-claim layers to refuse</span>
+          <span style={{ fontWeight: 400, color: VERMILION, fontSize: "0.95rem" }}>Over-claim layers to refuse</span>
         </div>
         <div style={{ display: "grid", gap: "0.3rem" }}>
           {OVERCLAIM_LAYERS.map((layer) => (
             <div key={layer.key} style={{ display: "flex", gap: "0.4rem", alignItems: "flex-start" }}>
               <ChevronRight size={14} color={VERMILION} style={{ flexShrink: 0, marginTop: 3 }} />
               <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.45, fontSize: "0.84rem" }}>
-                <strong style={{ color: VERMILION }}>{layer.label}:</strong> {layer.description}
+                <span style={{ color: VERMILION }}>{layer.label}:</span> {layer.description}
               </p>
             </div>
           ))}
@@ -344,16 +344,16 @@ function WorkflowTab() {
     <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.75rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
         <ListChecks size={18} color={TEAL} />
-        <span style={{ fontWeight: 950, color: TEAL, fontSize: "1rem" }}>Rationale-evaluation workflow</span>
+        <span style={{ fontWeight: 400, color: TEAL, fontSize: "1rem" }}>Rationale-evaluation workflow</span>
       </div>
       <div style={{ display: "grid", gap: "0.5rem" }}>
         {WORKFLOW_STEPS.map((step, i) => (
           <div key={i} style={{ display: "flex", gap: "0.6rem", alignItems: "flex-start", border: `1px solid ${HAIRLINE}`, borderRadius: 8, padding: "0.75rem", background: SURFACE }}>
-            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 26, height: 26, borderRadius: "50%", background: TEAL, color: "#fff", fontWeight: 950, fontSize: "0.8rem", flexShrink: 0 }}>
+            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 26, height: 26, borderRadius: "50%", background: TEAL, color: "#fff", fontWeight: 400, fontSize: "0.8rem", flexShrink: 0 }}>
               {i + 1}
             </span>
             <div>
-              <div style={{ fontWeight: 950, color: INK_PRIMARY, fontSize: "0.95rem", marginBottom: "0.15rem" }}>{step.title}</div>
+              <div style={{ fontWeight: 400, color: INK_PRIMARY, fontSize: "0.95rem", marginBottom: "0.15rem" }}>{step.title}</div>
               <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.85rem" }}>{step.text}</p>
             </div>
           </div>
@@ -385,7 +385,7 @@ function buttonStyle(active: boolean, color: string): CSSProperties {
     background: active ? color : "transparent",
     color: active ? "#fff" : INK_SECONDARY,
     padding: "0.52rem 0.68rem",
-    fontWeight: 850,
+    fontWeight: 400,
     cursor: "pointer",
   };
 }
@@ -396,5 +396,5 @@ const eyebrowStyle: CSSProperties = {
   letterSpacing: "0.08em",
   color: INK_MUTED,
   fontSize: "0.78rem",
-  fontWeight: 900,
+  fontWeight: 400,
 };

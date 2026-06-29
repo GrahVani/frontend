@@ -58,10 +58,10 @@ import {
 } from "./data";
 
 /* ── Design Tokens ──────────────────────────────────────── */
-const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
-const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
-const INK_MUTED = "var(--gl-ink-on-cream-muted)";
-const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
+const INK_PRIMARY = "#2B2017";
+const INK_SECONDARY = "#4F3B2B";
+const INK_MUTED = "#6F5843";
+const HAIRLINE = "rgba(156, 116, 48, 0.5)";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
 const GOLD = "#B88421";
@@ -96,10 +96,11 @@ const cardBase: CSSProperties = {
 };
 const labelSm: CSSProperties = {
   fontFamily: fontFamilies.literarySerif,
-  fontSize: 12,
+  fontSize: 13,
   letterSpacing: "0.08em",
   textTransform: "uppercase" as const,
-  color: INK_MUTED,
+  color: INK_SECONDARY,
+  fontWeight: 700,
 };
 const headingMd: CSSProperties = {
   fontFamily: fontFamilies.literarySerif,
@@ -109,7 +110,7 @@ const headingMd: CSSProperties = {
 };
 const bodySm: CSSProperties = {
   fontFamily: fontFamilies.literarySerif,
-  fontSize: 15,
+  fontSize: 16,
   lineHeight: 1.55,
   color: INK_SECONDARY,
 };
@@ -182,45 +183,45 @@ function Tab1TaraBala() {
               <g key={t.position}>
                 <path
                   d={d}
-                  fill={isSelected ? wash(t.color, "35") : wash(t.color, "08")}
-                  stroke={isSelected ? t.color : `${t.color}50`}
-                  strokeWidth={isSelected ? 2.5 : 1}
+                  fill={isSelected ? wash(t.color, "42") : wash(t.color, "18")}
+                  stroke={isSelected ? t.color : `${t.color}B8`}
+                  strokeWidth={isSelected ? 3 : 1.45}
                   style={{ transition: "all 0.25s ease" }}
                 />
                 <text
                   x={lx} y={ly - 6}
                   textAnchor="middle" dominantBaseline="central"
                   fill={isSelected ? t.color : INK_PRIMARY}
-                  style={{ fontSize: 12, fontFamily: fontFamilies.literarySerif, fontWeight: isSelected ? 700 : 600 }}
+                  style={{ fontSize: 13.5, fontFamily: fontFamilies.literarySerif, fontWeight: isSelected ? 800 : 700 }}
                 >
                   {t.name}
                 </text>
                 <text
                   x={lx} y={ly + 7}
                   textAnchor="middle" dominantBaseline="central"
-                  fill={isSelected ? t.color : INK_SECONDARY}
-                  style={{ fontSize: 10, fontFamily: fontFamilies.display }}
+                  fill={isSelected ? t.color : INK_PRIMARY}
+                  style={{ fontSize: 11, fontFamily: fontFamilies.display, fontWeight: 600 }}
                 >
                   {t.nameDevanagari}
                 </text>
                 {isSelected && (
-                  <circle cx={lx} cy={ly - 16} r={3} fill={t.color} />
+                  <circle cx={lx} cy={ly - 16} r={3.5} fill={t.color} />
                 )}
               </g>
             );
           })}
           {/* Center Info Panel */}
-          <circle cx={cx} cy={cy} r={r - 4} fill={SURFACE} stroke={HAIRLINE} strokeWidth={1} />
+          <circle cx={cx} cy={cy} r={r - 4} fill={SURFACE} stroke="rgba(156, 116, 48, 0.72)" strokeWidth={1.8} />
           <text x={cx} y={cy - 16} textAnchor="middle" fill={GOLD}
-            style={{ fontSize: 11, fontFamily: fontFamilies.literarySerif, letterSpacing: "0.05em", fontWeight: 700 }}>
+            style={{ fontSize: 12, fontFamily: fontFamilies.literarySerif, letterSpacing: "0.05em", fontWeight: 800 }}>
             MUHŪRTA NAK.
           </text>
           <text x={cx} y={cy + 4} textAnchor="middle" fill={INK_PRIMARY}
-            style={{ fontSize: 16, fontFamily: fontFamilies.literarySerif, fontWeight: 700 }}>
+            style={{ fontSize: 17, fontFamily: fontFamilies.literarySerif, fontWeight: 800 }}>
             {mNakObj?.name}
           </text>
           <text x={cx} y={cy + 20} textAnchor="middle" fill={INK_SECONDARY}
-            style={{ fontSize: 11, fontFamily: fontFamilies.literarySerif, fontStyle: "italic" }}>
+            style={{ fontSize: 12, fontFamily: fontFamilies.literarySerif, fontStyle: "italic", fontWeight: 600 }}>
             Lord: {mNakObj?.ruler}
           </text>
         </svg>
@@ -250,12 +251,12 @@ function Tab1TaraBala() {
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {/* Muhurta Nakshatra */}
             <div>
-              <label style={{ ...labelSm, fontSize: 11 }}>Transiting Muhūrta Nakṣatra (Moon Position)</label>
+              <label style={{ ...labelSm, fontSize: 12 }}>Transiting Muhūrta Nakṣatra (Moon Position)</label>
               <select value={muhurtaNak} onChange={e => setMuhurtaNak(Number(e.target.value))}
                 style={{
-                  width: "100%", marginTop: 4, padding: "6px 8px", borderRadius: 8,
-                  border: `1px solid ${HAIRLINE}`, background: SURFACE,
-                  fontFamily: fontFamilies.literarySerif, fontSize: 14, color: INK_PRIMARY,
+                  width: "100%", marginTop: 4, padding: "8px 10px", borderRadius: 8,
+                  border: `1.25px solid ${HAIRLINE}`, background: SURFACE,
+                  fontFamily: fontFamilies.literarySerif, fontSize: 15, color: INK_PRIMARY,
                 }}>
                 {NAKSHATRAS.map(n => (
                   <option key={n.num} value={n.num}>{n.num}. {n.name} ({n.ruler})</option>
@@ -265,12 +266,12 @@ function Tab1TaraBala() {
 
             {/* Actor 1 */}
             <div>
-              <label style={{ ...labelSm, fontSize: 11 }}>{isMultiActor ? "Bride (Actor 1) Birth Nakṣatra" : "Actor Birth Nakṣatra"}</label>
+              <label style={{ ...labelSm, fontSize: 12 }}>{isMultiActor ? "Bride (Actor 1) Birth Nakṣatra" : "Actor Birth Nakṣatra"}</label>
               <select value={birthNak1} onChange={e => setBirthNak1(Number(e.target.value))}
                 style={{
-                  width: "100%", marginTop: 4, padding: "6px 8px", borderRadius: 8,
-                  border: `1px solid ${HAIRLINE}`, background: SURFACE,
-                  fontFamily: fontFamilies.literarySerif, fontSize: 14, color: INK_PRIMARY,
+                  width: "100%", marginTop: 4, padding: "8px 10px", borderRadius: 8,
+                  border: `1.25px solid ${HAIRLINE}`, background: SURFACE,
+                  fontFamily: fontFamilies.literarySerif, fontSize: 15, color: INK_PRIMARY,
                 }}>
                 {NAKSHATRAS.map(n => (
                   <option key={n.num} value={n.num}>{n.num}. {n.name} ({n.ruler})</option>
@@ -281,12 +282,12 @@ function Tab1TaraBala() {
             {/* Actor 2 */}
             {isMultiActor && (
               <div>
-                <label style={{ ...labelSm, fontSize: 11 }}>Groom (Actor 2) Birth Nakṣatra</label>
+                <label style={{ ...labelSm, fontSize: 12 }}>Groom (Actor 2) Birth Nakṣatra</label>
                 <select value={birthNak2} onChange={e => setBirthNak2(Number(e.target.value))}
                   style={{
-                    width: "100%", marginTop: 4, padding: "6px 8px", borderRadius: 8,
-                    border: `1px solid ${HAIRLINE}`, background: SURFACE,
-                    fontFamily: fontFamilies.literarySerif, fontSize: 14, color: INK_PRIMARY,
+                    width: "100%", marginTop: 4, padding: "8px 10px", borderRadius: 8,
+                    border: `1.25px solid ${HAIRLINE}`, background: SURFACE,
+                    fontFamily: fontFamilies.literarySerif, fontSize: 15, color: INK_PRIMARY,
                   }}>
                   {NAKSHATRAS.map(n => (
                     <option key={n.num} value={n.num}>{n.num}. {n.name} ({n.ruler})</option>
@@ -309,13 +310,13 @@ function Tab1TaraBala() {
           <div style={{
             ...cardBase,
             borderLeft: `4px solid ${tDetail1.color}`,
-            background: wash(tDetail1.color, "05"),
+            background: wash(tDetail1.color, "10"),
           }}>
             <p style={{ ...labelSm, color: tDetail1.color }}>
               {isMultiActor ? "Bride (Actor 1) Verdict" : "Actor Verdict"}
             </p>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
-              <h4 style={{ ...headingMd, color: tDetail1.color }}>{tPos1} mod 9 = {tDetail1.name} Tārā</h4>
+              <h4 style={{ ...headingMd, color: tDetail1.color, fontSize: 20, fontWeight: 700 }}>{tPos1} mod 9 = {tDetail1.name} Tārā</h4>
               <span style={{
                 ...labelSm, padding: "2px 8px", borderRadius: 10,
                 background: wash(tDetail1.color, "15"), color: tDetail1.color, fontWeight: 700,
@@ -323,7 +324,7 @@ function Tab1TaraBala() {
                 {tDetail1.quality.toUpperCase()}
               </span>
             </div>
-            <p style={{ ...bodySm, fontSize: 13, marginTop: 6 }}>{tDetail1.description}</p>
+            <p style={{ ...bodySm, fontSize: 15, marginTop: 6 }}>{tDetail1.description}</p>
             
             {tDetail1.quality === "challenging" && (
               <div style={{ marginTop: 10, padding: 10, borderRadius: 8, background: SURFACE_2 }}>
@@ -348,11 +349,11 @@ function Tab1TaraBala() {
             <div style={{
               ...cardBase,
               borderLeft: `4px solid ${tDetail2.color}`,
-              background: wash(tDetail2.color, "05"),
+              background: wash(tDetail2.color, "10"),
             }}>
               <p style={{ ...labelSm, color: tDetail2.color }}>Groom (Actor 2) Verdict</p>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
-                <h4 style={{ ...headingMd, color: tDetail2.color }}>{tPos2} mod 9 = {tDetail2.name} Tārā</h4>
+                <h4 style={{ ...headingMd, color: tDetail2.color, fontSize: 20, fontWeight: 700 }}>{tPos2} mod 9 = {tDetail2.name} Tārā</h4>
                 <span style={{
                   ...labelSm, padding: "2px 8px", borderRadius: 10,
                   background: wash(tDetail2.color, "15"), color: tDetail2.color, fontWeight: 700,
@@ -360,7 +361,7 @@ function Tab1TaraBala() {
                   {tDetail2.quality.toUpperCase()}
                 </span>
               </div>
-              <p style={{ ...bodySm, fontSize: 13, marginTop: 6 }}>{tDetail2.description}</p>
+              <p style={{ ...bodySm, fontSize: 15, marginTop: 6 }}>{tDetail2.description}</p>
 
               {tDetail2.quality === "challenging" && (
                 <div style={{ marginTop: 10, padding: 10, borderRadius: 8, background: SURFACE_2 }}>
@@ -451,9 +452,9 @@ function Tab2CandraHouse() {
             <label style={labelSm}>Muhūrta Lagna Sign</label>
             <select value={lagnaSign} onChange={e => setLagnaSign(Number(e.target.value))}
               style={{
-                width: "100%", marginTop: 4, padding: "5px 8px", borderRadius: 8,
-                border: `1px solid ${HAIRLINE}`, background: SURFACE,
-                fontFamily: fontFamilies.literarySerif, fontSize: 14, color: INK_PRIMARY,
+                width: "100%", marginTop: 4, padding: "8px 10px", borderRadius: 8,
+                border: `1.25px solid ${HAIRLINE}`, background: SURFACE,
+                fontFamily: fontFamilies.literarySerif, fontSize: 15, color: INK_PRIMARY,
               }}>
               {RASHI_DB.map(r => <option key={r.number} value={r.number}>{r.number}. {r.name} ({r.english})</option>)}
             </select>
@@ -462,9 +463,9 @@ function Tab2CandraHouse() {
             <label style={labelSm}>Muhūrta Moon Sign</label>
             <select value={moonSign} onChange={e => setMoonSign(Number(e.target.value))}
               style={{
-                width: "100%", marginTop: 4, padding: "5px 8px", borderRadius: 8,
-                border: `1px solid ${HAIRLINE}`, background: SURFACE,
-                fontFamily: fontFamilies.literarySerif, fontSize: 14, color: INK_PRIMARY,
+                width: "100%", marginTop: 4, padding: "8px 10px", borderRadius: 8,
+                border: `1.25px solid ${HAIRLINE}`, background: SURFACE,
+                fontFamily: fontFamilies.literarySerif, fontSize: 15, color: INK_PRIMARY,
               }}>
               {RASHI_DB.map(r => <option key={r.number} value={r.number}>{r.number}. {r.name}</option>)}
             </select>
@@ -477,9 +478,9 @@ function Tab2CandraHouse() {
             <label style={labelSm}>{isWedding ? "Bride Natal Moon" : "Actor Natal Moon"}</label>
             <select value={natalMoon1} onChange={e => setNatalMoon1(Number(e.target.value))}
               style={{
-                width: "100%", marginTop: 4, padding: "5px 8px", borderRadius: 8,
-                border: `1px solid ${HAIRLINE}`, background: SURFACE,
-                fontFamily: fontFamilies.literarySerif, fontSize: 14, color: INK_PRIMARY,
+                width: "100%", marginTop: 4, padding: "8px 10px", borderRadius: 8,
+                border: `1.25px solid ${HAIRLINE}`, background: SURFACE,
+                fontFamily: fontFamilies.literarySerif, fontSize: 15, color: INK_PRIMARY,
               }}>
               {RASHI_DB.map(r => <option key={r.number} value={r.number}>{r.name}</option>)}
             </select>
@@ -489,9 +490,9 @@ function Tab2CandraHouse() {
               <label style={labelSm}>Groom Natal Moon</label>
               <select value={natalMoon2} onChange={e => setNatalMoon2(Number(e.target.value))}
                 style={{
-                  width: "100%", marginTop: 4, padding: "5px 8px", borderRadius: 8,
-                  border: `1px solid ${HAIRLINE}`, background: SURFACE,
-                  fontFamily: fontFamilies.literarySerif, fontSize: 14, color: INK_PRIMARY,
+                  width: "100%", marginTop: 4, padding: "8px 10px", borderRadius: 8,
+                  border: `1.25px solid ${HAIRLINE}`, background: SURFACE,
+                  fontFamily: fontFamilies.literarySerif, fontSize: 15, color: INK_PRIMARY,
                 }}>
                 {RASHI_DB.map(r => <option key={r.number} value={r.number}>{r.name}</option>)}
               </select>
@@ -515,9 +516,9 @@ function Tab2CandraHouse() {
                 }
               }}
               style={{
-                width: "100%", marginTop: 4, padding: "5px 8px", borderRadius: 8,
-                border: `1px solid ${HAIRLINE}`, background: SURFACE,
-                fontFamily: fontFamilies.literarySerif, fontSize: 14, color: INK_PRIMARY,
+                width: "100%", marginTop: 4, padding: "8px 10px", borderRadius: 8,
+                border: `1.25px solid ${HAIRLINE}`, background: SURFACE,
+                fontFamily: fontFamilies.literarySerif, fontSize: 15, color: INK_PRIMARY,
               }}
             >
               <option value="wedding">Wedding (Multi-Actor)</option>
@@ -948,7 +949,7 @@ function Tab3Capstone() {
             {/* Arch */}
             <path
               d="M 20 100 A 80 80 0 0 1 180 100"
-              fill="none" stroke="#E8D8C4" strokeWidth={14} strokeLinecap="round"
+              fill="none" stroke="rgba(156, 116, 48, 0.35)" strokeWidth={14} strokeLinecap="round"
             />
             <path
               d="M 20 100 A 80 80 0 0 1 180 100"
@@ -976,7 +977,7 @@ function Tab3Capstone() {
               पञ्चाङ्ग-शुद्धि-चन्द्र-ताराबल-संयुतम् लग्न-शुद्धि-समायुक्तं...
             </Devanagari>
             <p style={{ ...bodySm, fontSize: 11, color: INK_MUTED, marginTop: 2 }}>
-              "Combined with pañcāṅga-purity, lunar strength, compatibility, and ascendant purity..."
+              &ldquo;Combined with pañcāṅga-purity, lunar strength, compatibility, and ascendant purity...&rdquo;
             </p>
           </div>
         </div>
@@ -1154,7 +1155,7 @@ function Tab4Dojo() {
                     borderLeft: `3px solid ${BLUE}`, marginBottom: 14
                   }}>
                     <p style={{ ...bodySm, fontSize: 13, color: BLUE, fontStyle: "italic" }}>
-                      💬 Client Quote: "{sc.clientQuote}"
+                      💬 Client Quote: &ldquo;{sc.clientQuote}&rdquo;
                     </p>
                   </div>
 
@@ -1297,9 +1298,9 @@ export function FourPillarIntegrator() {
                 display: "flex", alignItems: "center", gap: 6,
                 padding: "10px 18px", border: "none", borderRadius: "8px 8px 0 0",
                 background: active ? wash(GOLD, "15") : "transparent",
-                color: active ? GOLD : INK_MUTED,
+                color: active ? GOLD : INK_SECONDARY,
                 fontFamily: fontFamilies.literarySerif,
-                fontSize: 14, fontWeight: active ? 700 : 500,
+                fontSize: 15, fontWeight: active ? 800 : 700,
                 cursor: "pointer", transition: "all 0.2s",
                 borderBottom: active ? `3px solid ${GOLD}` : "3px solid transparent",
               }}

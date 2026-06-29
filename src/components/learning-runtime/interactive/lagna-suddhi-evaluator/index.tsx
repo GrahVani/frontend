@@ -65,10 +65,10 @@ import {
 } from "./data";
 
 /* ── Design Tokens ──────────────────────────────────────── */
-const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
-const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
-const INK_MUTED = "var(--gl-ink-on-cream-muted)";
-const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
+const INK_PRIMARY = "#2B2017";
+const INK_SECONDARY = "#4F3B2B";
+const INK_MUTED = "#6F5843";
+const HAIRLINE = "rgba(156, 116, 48, 0.5)";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
 const GOLD = "#B88421";
@@ -104,10 +104,11 @@ const cardBase: CSSProperties = {
 };
 const labelSm: CSSProperties = {
   fontFamily: fontFamilies.literarySerif,
-  fontSize: 12,
+  fontSize: 13,
   letterSpacing: "0.08em",
   textTransform: "uppercase" as const,
-  color: INK_MUTED,
+  color: INK_SECONDARY,
+  fontWeight: 700,
 };
 const headingMd: CSSProperties = {
   fontFamily: fontFamilies.literarySerif,
@@ -117,7 +118,7 @@ const headingMd: CSSProperties = {
 };
 const bodySm: CSSProperties = {
   fontFamily: fontFamilies.literarySerif,
-  fontSize: 15,
+  fontSize: 16,
   lineHeight: 1.55,
   color: INK_SECONDARY,
 };
@@ -180,16 +181,16 @@ function Tab1Wheel() {
               <g key={rashi.number} onClick={() => setSelectedSign(rashi.number)} style={{ cursor: "pointer" }}>
                 <path
                   d={d}
-                  fill={isSelected ? `${modColor}40` : isFavoured ? `${modColor}20` : `${modColor}08`}
-                  stroke={isSelected ? modColor : `${modColor}60`}
-                  strokeWidth={isSelected ? 2.5 : 1}
+                  fill={isSelected ? `${modColor}4D` : isFavoured ? `${modColor}2E` : `${modColor}14`}
+                  stroke={isSelected ? modColor : `${modColor}B8`}
+                  strokeWidth={isSelected ? 3 : 1.45}
                   style={{ transition: "all 0.25s ease" }}
                 />
                 <text
                   x={lx} y={ly - (showRulers ? 5 : 0)}
                   textAnchor="middle" dominantBaseline="central"
-                  fill={isFavoured ? modColor : INK_MUTED}
-                  style={{ fontSize: 13, fontFamily: fontFamilies.literarySerif, fontWeight: isSelected ? 700 : 600 }}
+                  fill={isFavoured ? modColor : INK_SECONDARY}
+                  style={{ fontSize: 14.5, fontFamily: fontFamilies.literarySerif, fontWeight: isSelected ? 800 : 700 }}
                 >
                   {rashi.english}
                 </text>
@@ -197,14 +198,14 @@ function Tab1Wheel() {
                   <text
                     x={lx} y={ly + 14}
                     textAnchor="middle" dominantBaseline="central"
-                    fill={INK_SECONDARY}
-                    style={{ fontSize: 11, fontFamily: fontFamilies.literarySerif, fontStyle: "italic" }}
+                    fill={INK_PRIMARY}
+                    style={{ fontSize: 12, fontFamily: fontFamilies.literarySerif, fontStyle: "italic", fontWeight: 600 }}
                   >
                     {rashi.ruler}
                   </text>
                 )}
                 {eventFilter && isFavoured && (
-                  <circle cx={lx} cy={ly + (showRulers ? 22 : 16)} r={3} fill={GREEN} opacity={0.8}>
+                  <circle cx={lx} cy={ly + (showRulers ? 22 : 16)} r={3.5} fill={GREEN} opacity={1}>
                     <animate attributeName="r" values="3;4.5;3" dur="1.8s" repeatCount="indefinite" />
                   </circle>
                 )}
@@ -212,7 +213,7 @@ function Tab1Wheel() {
             );
           })}
           {/* Center label */}
-          <circle cx={cx} cy={cy} r={r - 4} fill={SURFACE} stroke={HAIRLINE} strokeWidth={1} />
+          <circle cx={cx} cy={cy} r={r - 4} fill={SURFACE} stroke="rgba(156, 116, 48, 0.72)" strokeWidth={1.8} />
           {selected ? (
             <>
               <text x={cx} y={cy - 18} textAnchor="middle" fill={MODALITY_META[selected.modality].color}
@@ -223,19 +224,19 @@ function Tab1Wheel() {
                 style={{ fontSize: 15, fontFamily: fontFamilies.literarySerif, fontWeight: 700 }}>
                 {selected.name}
               </text>
-              <text x={cx} y={cy + 26} textAnchor="middle" fill={INK_MUTED}
-                style={{ fontSize: 12, fontFamily: fontFamilies.literarySerif }}>
+              <text x={cx} y={cy + 26} textAnchor="middle" fill={INK_SECONDARY}
+                style={{ fontSize: 12.5, fontFamily: fontFamilies.literarySerif, fontWeight: 600 }}>
                 {MODALITY_META[selected.modality].label}
               </text>
             </>
           ) : (
             <>
-              <text x={cx} y={cy - 6} textAnchor="middle" fill={INK_MUTED}
-                style={{ fontSize: 14, fontFamily: fontFamilies.literarySerif }}>
+              <text x={cx} y={cy - 6} textAnchor="middle" fill={INK_SECONDARY}
+                style={{ fontSize: 14, fontFamily: fontFamilies.literarySerif, fontWeight: 700 }}>
                 Select a sign
               </text>
-              <text x={cx} y={cy + 12} textAnchor="middle" fill={INK_MUTED}
-                style={{ fontSize: 12, fontFamily: fontFamilies.literarySerif }}>
+              <text x={cx} y={cy + 12} textAnchor="middle" fill={INK_SECONDARY}
+                style={{ fontSize: 12, fontFamily: fontFamilies.literarySerif, fontWeight: 600 }}>
                 to explore
               </text>
             </>
@@ -273,14 +274,15 @@ function Tab1Wheel() {
                     ...bodySm,
                     display: "flex", alignItems: "center", gap: 6,
                     padding: "6px 10px", borderRadius: 8,
-                    border: `1px solid ${active ? GOLD : HAIRLINE}`,
-                    background: active ? wash(GOLD, "18") : "transparent",
+                    border: `1.25px solid ${active ? GOLD : HAIRLINE}`,
+                    background: active ? wash(GOLD, "20") : "rgba(255, 249, 240, 0.68)",
                     cursor: "pointer", textAlign: "left" as const,
                     transition: "all 0.2s",
+                    color: INK_PRIMARY,
                   }}
                 >
                   {getEventIcon(evt.key, 14)}
-                  <span style={{ fontSize: 13 }}>{evt.label}</span>
+                  <span style={{ fontSize: 14, fontWeight: 700 }}>{evt.label}</span>
                 </button>
               );
             })}
@@ -445,7 +447,7 @@ function Tab2Evaluator() {
                   fontFamily: fontFamilies.literarySerif,
                   border: `1.5px solid ${active ? (upachaya ? GREEN : VERMILION) : HAIRLINE}`,
                   background: active ? wash(upachaya ? GREEN : VERMILION, "20") : "transparent",
-                  color: active ? (upachaya ? GREEN : VERMILION) : INK_MUTED,
+                  color: active ? (upachaya ? GREEN : VERMILION) : INK_SECONDARY,
                   cursor: "pointer", transition: "all 0.2s",
                   position: "relative" as const,
                 }}
@@ -501,7 +503,7 @@ function Tab2Evaluator() {
             {/* Background arc */}
             <path
               d="M 20 100 A 80 80 0 0 1 180 100"
-              fill="none" stroke="#E8D8C4" strokeWidth={14} strokeLinecap="round"
+              fill="none" stroke="rgba(156, 116, 48, 0.35)" strokeWidth={14} strokeLinecap="round"
             />
             {/* Filled arc */}
             <path
@@ -691,7 +693,7 @@ function Tab3Synergy() {
                     flexShrink: 0,
                   }}>{sc.id}</span>
                   <span style={{ ...headingMd, fontSize: 15, flex: 1 }}>{sc.title}</span>
-                  <ChevronRight size={16} style={{ transform: isOpen ? "rotate(90deg)" : "none", transition: "0.2s", color: INK_MUTED }} />
+                  <ChevronRight size={16} style={{ transform: isOpen ? "rotate(90deg)" : "none", transition: "0.2s", color: INK_SECONDARY }} />
                 </button>
                 {isOpen && (
                   <div style={{ padding: "0 16px 16px" }}>
@@ -706,7 +708,7 @@ function Tab3Synergy() {
                       marginBottom: 12,
                     }}>
                       <p style={{ ...bodySm, fontSize: 13, fontStyle: "italic", color: BLUE }}>
-                        💬 Client: "{sc.clientQuote}"
+                        💬 Client: &ldquo;{sc.clientQuote}&rdquo;
                       </p>
                     </div>
                     {/* User diagnosis */}
@@ -871,7 +873,7 @@ function Tab4Capstone() {
                 color: step.step <= 1 ? VERMILION : GOLD,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontFamily: fontFamilies.literarySerif, fontSize: 14, fontWeight: 700,
-                flexShrink: 0, border: `2px solid ${step.step <= 1 ? VERMILION : GOLD}30`,
+                flexShrink: 0, border: `2px solid ${step.step <= 1 ? VERMILION : GOLD}75`,
               }}>
                 {step.step}
               </div>
@@ -889,7 +891,7 @@ function Tab4Capstone() {
       <div style={{
         ...cardBase,
         background: "linear-gradient(135deg, #FFF9F0 0%, #F5EDD8 100%)",
-        border: `2px solid ${GOLD}30`,
+        border: `2px solid ${GOLD}75`,
         textAlign: "center" as const,
       }}>
         <p style={{ ...labelSm, color: GOLD, marginBottom: 12 }}>
@@ -907,9 +909,9 @@ function Tab4Capstone() {
           fontFamily: fontFamilies.literarySerif, fontSize: 16, lineHeight: 1.6,
           color: INK_PRIMARY, maxWidth: 520, margin: "0 auto",
         }}>
-          "The fitness (<em>yogyatā</em>) of the muhūrta-chart's lagna and bhāvas
-          in relation to the actor's natal lagna must be analysed in this practical-undertaking,
-          for the accomplishment of all success."
+          &ldquo;The fitness (<em>yogyatā</em>) of the muhūrta-chart&apos;s lagna and bhāvas
+          in relation to the actor&apos;s natal lagna must be analysed in this practical-undertaking,
+          for the accomplishment of all success.&rdquo;
         </p>
         <p style={{ ...labelSm, marginTop: 12, fontStyle: "italic" }}>
           Foundation for the lagna-śuddhi pillar of the MC Chapter 24-vicinity four-fold capstone
@@ -953,9 +955,9 @@ export function LagnaSuddhiEvaluator() {
                 display: "flex", alignItems: "center", gap: 6,
                 padding: "10px 18px", border: "none", borderRadius: "8px 8px 0 0",
                 background: active ? wash(GOLD, "18") : "transparent",
-                color: active ? GOLD : INK_MUTED,
+                color: active ? GOLD : INK_SECONDARY,
                 fontFamily: fontFamilies.literarySerif,
-                fontSize: 14, fontWeight: active ? 700 : 500,
+                fontSize: 15, fontWeight: active ? 800 : 700,
                 cursor: "pointer", transition: "all 0.2s",
                 borderBottom: active ? `3px solid ${GOLD}` : "3px solid transparent",
               }}

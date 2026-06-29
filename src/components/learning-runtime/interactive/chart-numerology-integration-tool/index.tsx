@@ -65,28 +65,32 @@ function vectorLabel(key: VectorKey) {
 function IntegrationSvg({ readings, alignment }: { readings: VectorReading[]; alignment: AlignmentReading }) {
   const centerColor = toneColor[alignment.tone];
   const points = [
-    { x: 168, y: 110, reading: readings[0] },
-    { x: 380, y: 355, reading: readings[1] },
-    { x: 592, y: 110, reading: readings[2] },
+    { x: 168, y: 100, reading: readings[0] },
+    { x: 380, y: 480, reading: readings[1] },
+    { x: 592, y: 100, reading: readings[2] },
   ];
 
   return (
     <section className="w-full min-w-0 overflow-x-auto rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 460" className="h-auto w-full min-w-[520px]" role="img" aria-label="Chart numerology integration triangle">
-        <rect x="18" y="18" width="724" height="424" rx="22" fill={SURFACE_2} stroke={HAIRLINE} />
+      <svg viewBox="0 0 760 600" className="h-auto w-full min-w-[520px]" role="img" aria-label="Chart numerology integration triangle">
+        <rect x="18" y="18" width="724" height="564" rx="22" fill={SURFACE_2} stroke={HAIRLINE} />
         <text x="380" y="44" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           THREE NUMBERS, THREE CHART CROSS-REFERENCES
         </text>
-        <path d="M168 110 L380 355 L592 110 Z" fill="none" stroke={HAIRLINE} strokeWidth="3" strokeDasharray="10 12" />
+        <path d="M168 100 L380 480 L592 100 Z" fill="none" stroke={HAIRLINE} strokeWidth="3" strokeDasharray="10 12" />
 
-        <circle cx="380" cy="235" r="55" fill={SURFACE} stroke={centerColor} strokeWidth="4" />
-        <text x="380" y="220" textAnchor="middle" fill={centerColor} fontSize="17" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
-          {alignment.label}
+        <circle cx="380" cy="290" r="120" fill={SURFACE} stroke={centerColor} strokeWidth="4" />
+        <text x="380" y="260" textAnchor="middle" fill={centerColor} fontSize="16" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          {alignment.label.split(" ").map((word, i) => (
+            <tspan key={word} x="380" dy={i === 0 ? 0 : 20}>
+              {word}
+            </tspan>
+          ))}
         </text>
-        <text x="380" y="244" textAnchor="middle" fill={INK_PRIMARY} fontSize="28" fontWeight="800" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+        <text x="380" y="300" textAnchor="middle" fill={INK_PRIMARY} fontSize="24" fontWeight="700" style={{ fontFamily: "var(--font-cormorant), serif" }}>
           register-fit
         </text>
-        <text x="380" y="262" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="380" y="326" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           chart context, not life outcome
         </text>
 
@@ -108,8 +112,8 @@ function IntegrationSvg({ readings, alignment }: { readings: VectorReading[]; al
           );
         })}
 
-        <rect x="140" y="415" width="480" height="34" rx="17" fill={SURFACE} stroke={centerColor} />
-        <text x="380" y="437" textAnchor="middle" fill={centerColor} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="110" y="538" width="540" height="44" rx="22" fill={SURFACE} stroke={centerColor} />
+        <text x="380" y="566" textAnchor="middle" fill={centerColor} fontSize="14" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Refuse: mismatch causes life-problems. Use: cross-reference information.
         </text>
       </svg>

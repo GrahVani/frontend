@@ -20,19 +20,19 @@ const GREEN = "#2F7D55";
 const RED = "#A44135";
 const GOLD = "#B88719";
 
-const HOUSES: Record<HouseKey, { label: string; domain: string; content: string; icon: LucideIcon }> = {
-  "4": { label: "4th house", domain: "Home, mother, inner security", content: "Non-attachment to comfort; building inner steadiness without depending on perfect circumstances.", icon: Home },
-  "5": { label: "5th house", domain: "Children, learning, creativity", content: "Patience with joy, study, students, and the fruits of intelligence.", icon: Sparkles },
-  "7": { label: "7th house", domain: "Marriage, partnership, contracts", content: "Humility, long commitment, honest boundaries, and mature reciprocity.", icon: HeartHandshake },
-  "8": { label: "8th house", domain: "Karma, transformation, hidden material", content: "Endurance through uncertainty; depth, research, occult seriousness, and resilience.", icon: ShieldCheck },
-  "10": { label: "10th house", domain: "Career, duty, public work", content: "Patient career-building, service, responsibility, and respect earned slowly.", icon: Briefcase },
+const HOUSES: Record<HouseKey, { label: string; domain: string; friction: string; content: string; icon: LucideIcon }> = {
+  "4": { label: "4th house", domain: "Home, mother, inner security", friction: "Disruption to domestic peace, feeling unrooted, heaviness around mother.", content: "Non-attachment to comfort; building inner steadiness without depending on perfect circumstances.", icon: Home },
+  "5": { label: "5th house", domain: "Children, learning, creativity", friction: "Delays in having children, heavy responsibilities, creative blockages.", content: "Patience with joy, study, students, and the fruits of intelligence.", icon: Sparkles },
+  "7": { label: "7th house", domain: "Marriage, partnership, contracts", friction: "Delays in marriage, coldness in partnerships, heavy contractual obligations.", content: "Humility, long commitment, honest boundaries, and mature reciprocity.", icon: HeartHandshake },
+  "8": { label: "8th house", domain: "Karma, transformation, hidden material", friction: "Sudden disruptions, chronic anxieties, feeling blocked by unseen forces.", content: "Endurance through uncertainty; depth, research, occult seriousness, and resilience.", icon: ShieldCheck },
+  "10": { label: "10th house", domain: "Career, duty, public work", friction: "Delays in career advancement, intense pressure at work, friction with authority.", content: "Patient career-building, service, responsibility, and respect earned slowly.", icon: Briefcase },
 };
 
-const CONDITIONS: Record<ConditionKey, { label: string; mode: string; color: string; tone: string }> = {
-  exalted: { label: "Exalted / own", mode: "Measured discipline", color: GREEN, tone: "The judge is firm but fair. Pressure becomes structure." },
-  friendly: { label: "Friendly", mode: "Manageable restriction", color: GOLD, tone: "The lesson is real, but the native can cooperate with it." },
-  afflicted: { label: "Afflicted", mode: "Heavy friction", color: RED, tone: "The difficulty is more visible. Counsel must name pain and instruction together." },
-  debilitated: { label: "Debilitated", mode: "Intense correction", color: "#6B7280", tone: "The lesson feels like blockage first. Patient rebuilding is the medicine." },
+const CONDITIONS: Record<ConditionKey, { label: string; mode: string; frictionModifier: string; color: string; tone: string }> = {
+  exalted: { label: "Exalted / own", mode: "Measured discipline", frictionModifier: "The restriction is steady and predictable.", color: GREEN, tone: "The judge is firm but fair. Pressure becomes structure." },
+  friendly: { label: "Friendly", mode: "Manageable restriction", frictionModifier: "The difficulty is manageable with effort.", color: GOLD, tone: "The lesson is real, but the native can cooperate with it." },
+  afflicted: { label: "Afflicted", mode: "Heavy friction", frictionModifier: "The obstacles are sudden and painful.", color: RED, tone: "The difficulty is more visible. Counsel must name pain and instruction together." },
+  debilitated: { label: "Debilitated", mode: "Intense correction", frictionModifier: "The blockages feel completely overwhelming.", color: "#6B7280", tone: "The lesson feels like blockage first. Patient rebuilding is the medicine." },
 };
 
 const REMEDIES: Record<RemedyKey, { label: string; action: string }> = {
@@ -140,37 +140,82 @@ export function SaturnLessonMapper() {
           </ControlGroup>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }} aria-label="Saturn four-step reading">
-          <StepCard step="1" title="Domain" color={SHANI} icon={<Icon size={20} aria-hidden="true" />} body={house.domain} />
-          <StepCard step="2" title="Mode" color={condition.color} icon={<Scale size={20} aria-hidden="true" />} body={`${condition.mode}. ${condition.tone}`} />
-          <StepCard step="3" title="Content" color={GOLD} icon={<Moon size={20} aria-hidden="true" />} body={house.content} />
-          <div style={{ border: `1px solid ${remedyApplied ? GREEN : HAIRLINE}`, borderRadius: 8, background: remedyApplied ? "rgba(47, 125, 85, 0.12)" : SURFACE, padding: "1rem" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "start", flexWrap: "wrap" }}>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: remedyApplied ? GREEN : SHANI_DEEP, fontWeight: 900 }}>
-                  <Users size={20} aria-hidden="true" />
-                  <span>4. Remedy: {remedy.label}</span>
-                </div>
-                <p style={{ margin: "0.45rem 0 0", color: INK_SECONDARY, lineHeight: 1.55 }}>{remedy.action}</p>
+        <section style={{ display: "grid", gap: "0.85rem", border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1.5rem" }} aria-label="Paradox Card">
+          
+          <h3 style={{ margin: "0 0 1rem", color: SHANI_DEEP, fontSize: "1.25rem", textAlign: "center" }}>
+            The Paradox Card: {house.label}
+          </h3>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            {/* Left Half: The Malefic (Friction) */}
+            <div style={{ background: SHANI_DEEP, color: "white", borderRadius: 8, padding: "1.25rem", position: "relative" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem", color: "rgba(255,255,255,0.8)" }}>
+                <ShieldCheck size={20} />
+                <h4 style={{ margin: 0, textTransform: "uppercase", fontSize: "0.85rem", letterSpacing: "0.05em" }}>The Malefic (Friction)</h4>
               </div>
-              <button
-                type="button"
-                aria-pressed={remedyApplied}
-                onClick={() => setRemedyApplied((value) => !value)}
-                style={{ border: `1px solid ${remedyApplied ? GREEN : HAIRLINE}`, borderRadius: 8, background: remedyApplied ? GREEN : "transparent", color: remedyApplied ? "#fff" : INK_SECONDARY, padding: "0.55rem 0.75rem", fontWeight: 850, cursor: "pointer" }}
-              >
-                {remedyApplied ? "Enduring gracefully" : "Apply remedy"}
-              </button>
+              <p style={{ margin: 0, fontSize: "0.95rem", lineHeight: 1.5 }}>
+                {house.friction} <br/><br/>
+                <span style={{ opacity: 0.8, fontStyle: "italic" }}>Mode: {condition.frictionModifier}</span>
+              </p>
+            </div>
+
+            {/* Right Half: The Teacher (Curriculum) */}
+            <div style={{ border: `1px solid ${GOLD}44`, background: "rgba(184, 135, 25, 0.05)", borderRadius: 8, padding: "1.25rem", position: "relative" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem", color: GOLD }}>
+                <Sparkles size={20} />
+                <h4 style={{ margin: 0, textTransform: "uppercase", fontSize: "0.85rem", letterSpacing: "0.05em" }}>The Teacher (Curriculum)</h4>
+              </div>
+              <p style={{ margin: 0, fontSize: "0.95rem", lineHeight: 1.5, color: INK_PRIMARY }}>
+                {house.content} <br/><br/>
+                <span style={{ color: INK_SECONDARY, fontStyle: "italic" }}>Mode: {condition.tone}</span>
+              </p>
             </div>
           </div>
 
-          <section style={{ borderLeft: `4px solid ${condition.color}`, background: "rgba(255, 251, 241, 0.78)", padding: "1rem" }}>
-            <p style={{ margin: 0, color: INK_MUTED, fontSize: "0.78rem", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-              Practitioner framing
-            </p>
-            <h3 style={{ margin: "0.4rem 0", color: SHANI_DEEP, fontSize: "1.25rem" }}>Real difficulty, real instruction</h3>
-            <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.65 }}>{counsel}</p>
-          </section>
+          {/* Remedy Interaction */}
+          <div style={{ 
+            marginTop: "1.5rem", 
+            borderTop: `1px solid ${HAIRLINE}`, 
+            paddingTop: "1.5rem",
+            display: "flex", 
+            flexDirection: "column", 
+            alignItems: "center",
+            gap: "1rem" 
+          }}>
+            <button
+              type="button"
+              aria-pressed={remedyApplied}
+              onClick={() => setRemedyApplied((value) => !value)}
+              style={{ 
+                border: `1px solid ${remedyApplied ? GOLD : HAIRLINE}`, 
+                borderRadius: 999, 
+                background: remedyApplied ? GOLD : "transparent", 
+                color: remedyApplied ? "#fff" : INK_SECONDARY, 
+                padding: "0.6rem 1.2rem", 
+                fontWeight: 850, 
+                cursor: "pointer",
+                transition: "all 0.3s ease"
+              }}
+            >
+              {remedyApplied ? "Grace Applied" : "Apply Remedy"}
+            </button>
+
+            {remedyApplied && (
+              <div style={{ 
+                background: "rgba(184, 135, 25, 0.1)", 
+                border: `1px dashed ${GOLD}`, 
+                borderRadius: 8, 
+                padding: "1rem", 
+                textAlign: "center",
+                animation: "fadeIn 0.5s ease" 
+              }}>
+                <p style={{ margin: 0, color: GOLD, fontWeight: 700, marginBottom: "0.5rem" }}>Remedy: {remedy.label}</p>
+                <p style={{ margin: 0, color: INK_PRIMARY, fontSize: "0.95rem", lineHeight: 1.5 }}>
+                  The friction remains, but your capacity to endure it gracefully expands. {remedy.action}
+                </p>
+              </div>
+            )}
+          </div>
         </section>
       </div>
     </div>

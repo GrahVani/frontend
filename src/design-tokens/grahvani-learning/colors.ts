@@ -45,11 +45,11 @@ export interface GrahaColor {
 
 export const grahas: Record<GrahaSlug, GrahaColor> = {
   surya:   { slug: "surya",   devanagari: "सूर्य",  iast: "Sūrya",   hueName: "Solar Gold",        primary: "#E8B845", secondaryTint: "#FFE9A8" },
-  candra:  { slug: "candra",  devanagari: "चन्द्र", iast: "Candra",  hueName: "Pearl Silver",      primary: "#D8DBE8", secondaryTint: "#F2F4FA" },
+  candra:  { slug: "candra",  devanagari: "चन्द्र", iast: "Candra",  hueName: "Pearl Silver",      primary: "#5A6B8A", secondaryTint: "#D8DCE8" },
   mangala: { slug: "mangala", devanagari: "मङ्गल",  iast: "Maṅgala", hueName: "Coral Red",         primary: "#C8412E", secondaryTint: "#F5BFAE" },
   budha:   { slug: "budha",   devanagari: "बुध",    iast: "Budha",   hueName: "Verdant Green",     primary: "#3A8C5A", secondaryTint: "#B8DCC4" },
   guru:    { slug: "guru",    devanagari: "गुरु",   iast: "Guru",    hueName: "Saffron Yellow",    primary: "#E89E2A", secondaryTint: "#F8D89E" },
-  shukra:  { slug: "shukra",  devanagari: "शुक्र",  iast: "Śukra",   hueName: "Diamond White-Blue", primary: "#A8C8E8", secondaryTint: "#DCE8F4" },
+  shukra:  { slug: "shukra",  devanagari: "शुक्र",  iast: "Śukra",   hueName: "Diamond White-Blue", primary: "#4A7AA8", secondaryTint: "#B8D0E8" },
   shani:   { slug: "shani",   devanagari: "शनि",    iast: "Śani",    hueName: "Indigo Black",      primary: "#2C2C3E", secondaryTint: "#9494A8" },
   rahu:    { slug: "rahu",    devanagari: "राहु",   iast: "Rāhu",    hueName: "Smoke Slate",       primary: "#5A5C68", secondaryTint: "#8E909C" },
   ketu:    { slug: "ketu",    devanagari: "केतु",   iast: "Ketu",    hueName: "Ash Maroon",        primary: "#7A3E4A", secondaryTint: "#B88898" },

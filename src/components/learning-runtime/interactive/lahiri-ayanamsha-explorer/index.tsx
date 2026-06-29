@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Clock, Star, Calculator, RotateCcw, ChevronRight } from "lucide-react";
+import { Star, Calculator, RotateCcw, ChevronRight } from "lucide-react";
 
 const GOLD = "#C28220";
 const INDIGO = "#4A6FA5";
 const VERMILION = "#A23A1E";
 const JADE = "#2F8C5A";
 const INK_PRIMARY = "var(--gl-ink-primary)";
-const INK_SECONDARY = "var(--gl-ink-secondary)";
 const INK_MUTED = "var(--gl-ink-muted)";
 
 function toDMS(decimalDeg: number): string {
@@ -47,10 +46,14 @@ const MILESTONES = [
 ];
 
 export function LahiriAyanamshaExplorer() {
-  const [tab, setTab] = useState<"timeline" | "spica" | "calculator">("timeline");
+  const [tab, setTab] = useState<"spica" | "calculator">("spica");
   const [calcYear, setCalcYear] = useState<string>("2026");
   const [calcSteps, setCalcSteps] = useState<{ year: number; elapsed: number; arcsec: number; decimal: number; dms: string } | null>(null);
   const [svgTip, setSvgTip] = useState<string | null>(null);
+
+  const toggleSvgTip = (tip: string) => {
+    setSvgTip((current) => (current === tip ? null : tip));
+  };
 
   const handleCalc = () => {
     const y = parseInt(calcYear, 10);
@@ -78,7 +81,6 @@ export function LahiriAyanamshaExplorer() {
       {/* Tab bar */}
       <div style={{ display: "flex", gap: "8px", marginBottom: "24px", flexWrap: "wrap" }}>
         {[
-          { key: "timeline" as const, label: "Life & Committee", icon: <Clock size={14} /> },
           { key: "spica" as const, label: "Spica Anchor", icon: <Star size={14} /> },
           { key: "calculator" as const, label: "Calculator", icon: <Calculator size={14} /> },
         ].map((t) => (
@@ -110,7 +112,7 @@ export function LahiriAyanamshaExplorer() {
       {/* ═══════════════════════════════════════════════════════════
           TAB 1 — Timeline: Lahiri's Life + 1955 Committee
          ═══════════════════════════════════════════════════════════ */}
-      {tab === "timeline" && (
+      {false && (
         <div>
           {/* Timeline */}
           <div
@@ -219,8 +221,23 @@ export function LahiriAyanamshaExplorer() {
                   </radialGradient>
                 </defs>
                 {/* Zodiac ring */}
-                <circle cx="230" cy="230" r="190" fill="none" stroke={`${GOLD}25`} strokeWidth="1.5" />
-                <circle cx="230" cy="230" r="150" fill="none" stroke={`${GOLD}18`} strokeWidth="1" strokeDasharray="4 3" />
+                <g
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Explore the zodiac reference ring"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => toggleSvgTip("zodiac")}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      toggleSvgTip("zodiac");
+                    }
+                  }}
+                >
+                  <circle cx="230" cy="230" r="206" fill="rgba(255, 250, 238, 0.01)" />
+                  <circle cx="230" cy="230" r="190" fill="none" stroke={`${GOLD}34`} strokeWidth="2.5" />
+                  <circle cx="230" cy="230" r="150" fill="none" stroke={`${GOLD}24`} strokeWidth="1.5" strokeDasharray="4 3" />
+                </g>
 
                 {/* Zodiac segments */}
                 {["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"].map((sign, i) => {
@@ -236,13 +253,13 @@ export function LahiriAyanamshaExplorer() {
                 })}
 
                 {/* 0° Aries marker */}
-                <g style={{ cursor: "pointer" }} onClick={() => setSvgTip(svgTip === "aries" ? null : "aries")}>
+                <g style={{ cursor: "pointer" }} onClick={(event) => { event.stopPropagation(); toggleSvgTip("aries"); }}>
                   <circle cx="230" cy="40" r="14" fill={`${GOLD}15`} stroke={GOLD} strokeWidth="2" />
                   <text x="230" y="22" textAnchor="middle" fontSize="11" fill={GOLD} fontWeight={800} fontFamily="var(--font-sans), sans-serif">♈ 0°</text>
                 </g>
 
                 {/* Spica at 180° Libra */}
-                <g style={{ cursor: "pointer" }} onClick={() => setSvgTip(svgTip === "spica" ? null : "spica")}>
+                <g style={{ cursor: "pointer" }} onClick={(event) => { event.stopPropagation(); toggleSvgTip("spica"); }}>
                   <circle cx="230" cy="420" r="18" fill="url(#spicaGlow)" stroke={INDIGO} strokeWidth="2.5" />
                   <text x="230" y="416" textAnchor="middle" fontSize="10" fill={INDIGO} fontWeight="800" fontFamily="var(--font-sans), sans-serif">★</text>
                   <text x="230" y="452" textAnchor="middle" fontSize="11" fill={INDIGO} fontWeight="700" fontFamily="var(--font-sans), sans-serif">Spica · 180°</text>
@@ -259,14 +276,16 @@ export function LahiriAyanamshaExplorer() {
                 {/* Inline tooltip */}
                 {svgTip && (
                   <g transform={`translate(${svgTip === "aries" ? 30 : svgTip === "spica" ? 30 : 150}, ${svgTip === "aries" ? 60 : svgTip === "spica" ? 310 : 200})`}>
-                    <rect x="0" y="0" width="260" height="52" rx="10" fill="rgba(255,253,245,0.98)" stroke={svgTip === "aries" ? GOLD : INDIGO} strokeWidth="1.5" />
-                    <text x="12" y="20" fontSize="12" fill={svgTip === "aries" ? GOLD : INDIGO} fontWeight={700} fontFamily="var(--font-sans), sans-serif">
-                      {svgTip === "aries" ? "Sidereal 0° Aries" : "Spica (Citrā) · 180° Libra"}
+                    <rect x="0" y="0" width="260" height="58" rx="10" fill="rgba(255,253,245,0.98)" stroke={svgTip === "aries" ? GOLD : svgTip === "spica" ? INDIGO : JADE} strokeWidth="1.5" />
+                    <text x="12" y="20" fontSize="12" fill={svgTip === "aries" ? GOLD : svgTip === "spica" ? INDIGO : JADE} fontWeight={700} fontFamily="var(--font-sans), sans-serif">
+                      {svgTip === "aries" ? "Sidereal 0° Aries" : svgTip === "spica" ? "Spica (Citrā) · 180° Libra" : "Zodiac reference ring"}
                     </text>
                     <text x="12" y="38" fontSize="10" fill="#5A4A32" fontFamily="var(--font-sans), sans-serif">
                       {svgTip === "aries"
-                        ? "Lahiri's alignment-epoch zero: 21 March 285 CE."
-                        : "Brightest star in Virgo. Citrā nakṣatra (14th of 27)."}
+                        ? "Lahiri’s alignment-epoch zero: 21 March 285 CE."
+                        : svgTip === "spica"
+                          ? "Brightest star in Virgo. Citrā nakṣatra (14th of 27)."
+                          : "The ring shows the 12-sign sidereal frame for the Lahiri anchor."}
                     </text>
                     <text x="248" y="18" textAnchor="end" fontSize="12" fill="#999" fontWeight={700} style={{ cursor: "pointer" }} onClick={() => setSvgTip(null)}>✕</text>
                   </g>
@@ -294,7 +313,7 @@ export function LahiriAyanamshaExplorer() {
               <div style={{ background: `${GOLD}06`, borderRadius: "14px", padding: "18px", border: `1px solid ${GOLD}18` }}>
                 <h5 style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "16px", fontWeight: 600, color: GOLD, marginBottom: "8px" }}>Alignment Epoch</h5>
                 <p style={{ fontSize: "12px", color: INK_PRIMARY, lineHeight: 1.6, margin: 0 }}>
-                  <strong>21 March 285 CE 12:00 UTC</strong> — the moment when the spring equinox coincided approximately with sidereal 0° Aries per Lahiri's specification. From this epoch, ayanāṁśa accumulates at ~50.2388 arc-sec per Julian year.
+                  <strong>21 March 285 CE 12:00 UTC</strong> — the moment when the spring equinox coincided approximately with sidereal 0° Aries per Lahiri&apos;s specification. From this epoch, ayanāṁśa accumulates at ~50.2388 arc-sec per Julian year.
                 </p>
               </div>
             </div>

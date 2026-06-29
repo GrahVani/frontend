@@ -29,7 +29,6 @@ const INK_MUTED = "var(--gl-ink-on-cream-muted)";
 const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const GOLD = "#B88421";
-const GOLD_DEEP = "#7A5E1E";
 const BLUE = "#356CAB";
 const GREEN = "#2F7D55";
 const VERMILION = "#A23A1E";
@@ -137,13 +136,13 @@ function TimelineTab() {
 
   return (
     <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1.25rem" }}>
-      <p style={eyebrowStyle}>Joshi's life and the five Farmāns</p>
+      <p style={eyebrowStyle}>Joshi&apos;s life and the five Farmāns</p>
       <h3 style={{ margin: "0.15rem 0 0.9rem", color: LAL_KITAB_COLOR, fontSize: "1.15rem" }}>
         1898 – 1982: a twentieth-century corpus
       </h3>
 
       {/* Timeline axis */}
-      <div style={{ position: "relative", height: 140, marginBottom: "1.25rem" }}>
+      <div style={{ position: "relative", height: 170, marginBottom: "1.25rem" }}>
         <div style={{ position: "absolute", top: AXIS_TOP, left: 0, right: 0, height: 2, background: HAIRLINE, borderRadius: 1 }} />
         {/* Year ticks */}
         {[1890, 1900, 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990].map((y) => (
@@ -174,7 +173,7 @@ function TimelineTab() {
                 flexDirection: isAbove ? "column-reverse" : "column",
                 alignItems: "center",
                 gap: 4,
-                width: 110,
+                width: 130,
                 zIndex: isOpen ? 5 : 1,
               }}
               aria-expanded={isOpen}
@@ -195,7 +194,7 @@ function TimelineTab() {
                     {ev.year}
                   </span>
                   <div style={{ width: 14, height: 14, borderRadius: "50%", background: color, border: `2px solid ${SURFACE}`, boxShadow: `0 0 0 1px ${color}44`, flexShrink: 0 }} />
-                  <span style={{ fontSize: 11, color: INK_SECONDARY, fontWeight: 700, textAlign: "center", lineHeight: 1.3, whiteSpace: "nowrap", fontFamily: "var(--font-sans), system-ui, sans-serif" }}>
+                  <span style={{ marginTop: 14, fontSize: 11, color: INK_SECONDARY, fontWeight: 700, textAlign: "center", lineHeight: 1.3, whiteSpace: "nowrap", fontFamily: "var(--font-sans), system-ui, sans-serif" }}>
                     {ev.shortLabel || ev.label}
                   </span>
                 </>
@@ -418,7 +417,7 @@ function EpistemicTab() {
       <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
         <p style={eyebrowStyle}>Honest epistemic status</p>
         <p style={{ margin: "0.35rem 0 0", color: INK_SECONDARY, lineHeight: 1.55, fontSize: "0.9rem" }}>
-          Lal Kitab's status is folk-empirical — neither ancient śāstra nor worthless superstition. Select the honest position.
+          Lal Kitab&apos;s status is folk-empirical — neither ancient śāstra nor worthless superstition. Select the honest position.
         </p>
       </div>
 

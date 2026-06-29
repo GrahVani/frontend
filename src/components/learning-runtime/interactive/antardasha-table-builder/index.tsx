@@ -19,9 +19,12 @@ import {
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.18))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
-const INK_PRIMARY = "var(--gl-ink-primary)";
-const INK_SECONDARY = "var(--gl-ink-secondary)";
-const INK_MUTED = "var(--gl-ink-muted)";
+const INK_PRIMARY = "#3F2D1D";
+const INK_SECONDARY = "#5C4630";
+const INK_MUTED = "#745D40";
+const READABLE_GOLD = "#936817";
+const TABLE_LINE = "rgba(139, 118, 82, 0.28)";
+const SELECTED_ROW = "rgba(255, 248, 229, 0.98)";
 
 export function AntardashaTableBuilder() {
   const [mdLordIndex, setMdLordIndex] = useState(3);
@@ -61,13 +64,13 @@ export function AntardashaTableBuilder() {
     >
       <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p style={{ margin: 0, color: ink.goldAccent, fontSize: "0.78rem", fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+          <p style={{ margin: 0, color: READABLE_GOLD, fontSize: "0.82rem", fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase" }}>
             Four-step table builder
           </p>
           <h2 className="mt-1 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
             Constructing an <IAST>Antardasha</IAST> ledger
           </h2>
-          <p className="mt-1 max-w-3xl text-sm" style={{ color: INK_SECONDARY }}>
+          <p className="mt-1 max-w-3xl text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
             Choose the mahadasha lord and start date, then stack the nine bhuktis in order. Each row&apos;s end
             becomes the next row&apos;s start.
           </p>
@@ -76,7 +79,7 @@ export function AntardashaTableBuilder() {
         <button
           type="button"
           onClick={() => applyPreset("sun-md")}
-          className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold"
+          className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold"
           style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}
         >
           <RotateCcw size={16} />
@@ -89,13 +92,13 @@ export function AntardashaTableBuilder() {
           <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="mb-3 flex items-center gap-2">
               <MapPinned size={17} color={ink.goldAccent} />
-              <p style={{ margin: 0, color: ink.goldAccent, fontSize: "0.78rem", fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+              <p style={{ margin: 0, color: READABLE_GOLD, fontSize: "0.82rem", fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase" }}>
                 Step 1 and 2
               </p>
             </div>
 
             <label className="block">
-              <span className="text-xs font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
+              <span className="text-sm font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
                 Locate MD lord
               </span>
               <select
@@ -104,7 +107,7 @@ export function AntardashaTableBuilder() {
                   setMdLordIndex(Number(event.target.value));
                   setSelectedRowNumber(1);
                 }}
-                className="mt-1 w-full rounded-lg px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-lg px-4 py-3 text-base"
                 style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, color: INK_PRIMARY }}
               >
                 {DASHA_LORDS.map((lord) => (
@@ -116,7 +119,7 @@ export function AntardashaTableBuilder() {
             </label>
 
             <label className="mt-3 block">
-              <span className="text-xs font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
+              <span className="text-sm font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
                 MD length
               </span>
               <input
@@ -126,20 +129,20 @@ export function AntardashaTableBuilder() {
                 step={0.001}
                 value={mdYears}
                 onChange={(event) => setMdYears(Math.max(0.01, Number(event.target.value)))}
-                className="mt-1 w-full rounded-lg px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-lg px-4 py-3 text-base"
                 style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, color: INK_PRIMARY }}
               />
             </label>
 
             <label className="mt-3 block">
-              <span className="text-xs font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
+              <span className="text-sm font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
                 MD start date
               </span>
               <input
                 type="date"
                 value={startDate}
                 onChange={(event) => setStartDate(event.target.value)}
-                className="mt-1 w-full rounded-lg px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-lg px-4 py-3 text-base"
                 style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, color: INK_PRIMARY }}
               />
             </label>
@@ -147,10 +150,10 @@ export function AntardashaTableBuilder() {
             <div className="mt-3 rounded-lg p-3" style={{ background: mdLord.colorTint, border: `1px solid ${mdLord.color}40` }}>
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="m-0 text-xs font-bold uppercase" style={{ color: mdLord.color, letterSpacing: "0.08em" }}>
+                  <p className="m-0 text-sm font-bold uppercase" style={{ color: mdLord.color, letterSpacing: "0.08em" }}>
                     Sequence starts here
                   </p>
-                  <p className="mt-1 text-lg font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
+                  <p className="mt-1 text-xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
                     {rows.map((row) => row.lord.abbr).join(" -> ")}
                   </p>
                 </div>
@@ -164,7 +167,7 @@ export function AntardashaTableBuilder() {
           <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
             <div className="mb-3 flex items-center gap-2">
               <ListOrdered size={17} color={grahas.budha.primary} />
-              <p style={{ margin: 0, color: ink.goldAccent, fontSize: "0.78rem", fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+              <p style={{ margin: 0, color: READABLE_GOLD, fontSize: "0.82rem", fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase" }}>
                 Worked presets
               </p>
             </div>
@@ -181,10 +184,10 @@ export function AntardashaTableBuilder() {
                     color: INK_SECONDARY,
                   }}
                 >
-                  <span className="block text-sm font-bold" style={{ color: getLordByIndex(preset.mdLordIndex).color }}>
+                  <span className="block text-base font-bold" style={{ color: INK_PRIMARY }}>
                     {preset.label}
                   </span>
-                  <span className="mt-1 block text-xs" style={{ color: INK_MUTED }}>
+                  <span className="mt-1 block text-sm leading-relaxed" style={{ color: INK_SECONDARY }}>
                     {preset.note}
                   </span>
                 </button>
@@ -192,18 +195,18 @@ export function AntardashaTableBuilder() {
             </div>
           </section>
 
-          <section className="rounded-xl p-4" style={{ background: selectedRow.lord.colorTint, border: `1.5px solid ${selectedRow.lord.color}45` }}>
-            <p className="m-0 text-xs font-bold uppercase" style={{ color: selectedRow.lord.color, letterSpacing: "0.08em" }}>
+          <section className="rounded-xl p-4" style={{ background: SELECTED_ROW, border: `1.5px solid ${selectedRow.lord.color}60` }}>
+            <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
               Selected bhukti
             </p>
             <h3 className="mt-1 text-xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
               {mdLord.nameIAST}-{selectedRow.lord.nameIAST}
             </h3>
-            <div className="mt-3 rounded-lg p-3" style={{ background: "rgba(255,255,255,0.56)", border: "1px solid rgba(255,255,255,0.62)" }}>
-              <p className="m-0 text-sm font-bold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-mono), monospace" }}>
+            <div className="mt-3 rounded-lg p-3" style={{ background: "rgba(255,255,255,0.82)", border: `1px solid ${TABLE_LINE}` }}>
+              <p className="m-0 text-base font-bold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-mono), monospace" }}>
                 {selectedRow.formula} = {formatShortNumber(selectedRow.years)} yr
               </p>
-              <p className="mt-2 text-sm" style={{ color: INK_SECONDARY }}>
+              <p className="mt-2 text-base" style={{ color: INK_SECONDARY }}>
                 Runs {formatDate(selectedRow.startDate)} to {formatDate(selectedRow.endDate)}.
               </p>
             </div>
@@ -215,11 +218,11 @@ export function AntardashaTableBuilder() {
             <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-2">
                 <Table2 size={17} color={ink.goldAccent} />
-                <p style={{ margin: 0, color: ink.goldAccent, fontSize: "0.78rem", fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                <p style={{ margin: 0, color: READABLE_GOLD, fontSize: "0.82rem", fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase" }}>
                   Step 3 and 4: compute and stack
                 </p>
               </div>
-              <p className="m-0 text-xs font-semibold" style={{ color: INK_MUTED, overflowWrap: "anywhere" }}>
+              <p className="m-0 text-sm font-semibold" style={{ color: INK_MUTED, overflowWrap: "anywhere" }}>
                 {SEQUENCE_MNEMONIC}, rotated to {mdLord.abbr}
               </p>
             </div>
@@ -233,8 +236,8 @@ export function AntardashaTableBuilder() {
                 style={{
                   gridTemplateColumns: "52px 132px 150px 110px 150px 150px 105px",
                   background: SURFACE_2,
-                  color: INK_MUTED,
-                  fontSize: "0.72rem",
+                  color: INK_SECONDARY,
+                  fontSize: "0.82rem",
                   fontWeight: 900,
                   letterSpacing: "0.06em",
                   textTransform: "uppercase",
@@ -257,35 +260,35 @@ export function AntardashaTableBuilder() {
                     className="grid min-w-[850px] text-left"
                     style={{
                       gridTemplateColumns: "52px 132px 150px 110px 150px 150px 105px",
-                      background: selected ? row.lord.colorTint : SURFACE,
+                      background: selected ? SELECTED_ROW : SURFACE,
                       borderTop: `1px solid ${HAIRLINE}`,
                       color: INK_PRIMARY,
                     }}
                   >
-                    <div className="px-3 py-3 text-sm font-bold" style={{ color: row.lord.color }}>
+                    <div className="px-3 py-3 text-base font-bold" style={{ color: READABLE_GOLD }}>
                       {row.sequenceNumber}
                     </div>
                     <div className="px-3 py-3">
-                      <span className="block text-sm font-bold" style={{ color: row.lord.color }}>
+                      <span className="block text-base font-bold" style={{ color: INK_PRIMARY }}>
                         {mdLord.abbr}-{row.lord.abbr}
                       </span>
-                      <span className="block text-xs" style={{ color: INK_MUTED }}>
+                      <span className="block text-sm" style={{ color: INK_SECONDARY }}>
                         {row.lord.nameIAST}
                       </span>
                     </div>
-                    <div className="px-3 py-3 text-sm font-semibold" style={{ color: INK_SECONDARY, fontFamily: "var(--font-mono), monospace" }}>
+                    <div className="px-3 py-3 text-base font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-mono), monospace" }}>
                       {row.formula}
                     </div>
-                    <div className="px-3 py-3 text-sm font-bold" style={{ color: INK_PRIMARY }}>
+                    <div className="px-3 py-3 text-base font-bold" style={{ color: INK_PRIMARY }}>
                       {formatYearsMonthsDays(row.years)}
                     </div>
-                    <div className="px-3 py-3 text-sm" style={{ color: INK_SECONDARY }}>
+                    <div className="px-3 py-3 text-base" style={{ color: INK_SECONDARY }}>
                       {formatDate(row.startDate)}
                     </div>
-                    <div className="px-3 py-3 text-sm" style={{ color: INK_SECONDARY }}>
+                    <div className="px-3 py-3 text-base" style={{ color: INK_SECONDARY }}>
                       {formatDate(row.endDate)}
                     </div>
-                    <div className="px-3 py-3 text-sm" style={{ color: INK_SECONDARY }}>
+                    <div className="px-3 py-3 text-base" style={{ color: INK_SECONDARY }}>
                       {formatShortNumber(row.endOffsetYears)} yr
                     </div>
                   </button>
@@ -305,10 +308,10 @@ export function AntardashaTableBuilder() {
               <div className="flex items-start gap-3">
                 <CheckCircle2 size={22} color={sumMatches && dateMatches ? grahas.budha.primary : ink.vermilionAccent} />
                 <div>
-                  <p className="m-0 text-xs font-bold uppercase" style={{ color: sumMatches && dateMatches ? grahas.budha.primary : ink.vermilionAccent, letterSpacing: "0.08em" }}>
+                  <p className="m-0 text-sm font-bold uppercase" style={{ color: sumMatches && dateMatches ? "#2F7A4F" : ink.vermilionAccent, letterSpacing: "0.08em" }}>
                     Table verification
                   </p>
-                  <p className="mt-1 text-sm" style={{ color: INK_SECONDARY }}>
+                  <p className="mt-1 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
                     Nine bhuktis sum to <strong>{formatShortNumber(total)} years</strong>. The final row ends on{" "}
                     <strong>{finalRow ? formatDate(finalRow.endDate) : "n/a"}</strong>; MD end is{" "}
                     <strong>{formatDate(mdEndDate)}</strong>.
@@ -316,10 +319,10 @@ export function AntardashaTableBuilder() {
                 </div>
               </div>
               <div className="rounded-lg px-4 py-3 text-center" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-                <p className="m-0 text-xs font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: INK_MUTED, letterSpacing: "0.06em" }}>
                   Difference
                 </p>
-                <p className="m-0 text-xl font-bold" style={{ color: sumMatches ? grahas.budha.primary : ink.vermilionAccent }}>
+                <p className="m-0 text-2xl font-bold" style={{ color: sumMatches ? "#2F7A4F" : ink.vermilionAccent }}>
                   {Math.abs(total - mdYears).toFixed(8)}
                 </p>
               </div>
@@ -329,11 +332,11 @@ export function AntardashaTableBuilder() {
           <section className="rounded-xl p-4" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}` }}>
             <div className="flex items-center gap-2">
               <CalendarDays size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Ledger rule
               </p>
             </div>
-            <p className="mt-3 text-sm" style={{ color: INK_SECONDARY }}>
+            <p className="mt-3 text-base leading-relaxed" style={{ color: INK_SECONDARY }}>
               The construction is a ledger: compute each duration, then chain it. If one date is wrong,
               every later bhukti inherits the error.
             </p>

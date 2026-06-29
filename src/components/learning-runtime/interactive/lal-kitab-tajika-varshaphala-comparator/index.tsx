@@ -28,45 +28,45 @@ function AnnualMethodMap({ activeToolId, activeSystem }: { activeToolId: string;
   const tajikaTools = TOOL_GATES.filter((tool) => tool.belongsTo === "tajika");
 
   return (
-    <section className="w-full min-w-0 overflow-x-auto rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 800 340" className="h-auto w-full min-w-[680px]" role="img" aria-label="Lal Kitab and Tajika annual method separation diagram">
-        <rect x="18" y="18" width="764" height="294" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
-        <text x="400" y="49" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+    <section className="w-full min-w-0 rounded-xl p-8" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+      <svg viewBox="0 0 800 620" className="h-auto w-full min-w-0" style={{ display: "block" }} role="img" aria-label="Lal Kitab and Tajika annual method separation diagram">
+        <rect x="18" y="55" width="764" height="500" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+        <text x="400" y="100" textAnchor="middle" fill={GOLD} fontSize="24" fontWeight="700" letterSpacing="0.6" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           SAME YEAR QUESTION, TWO INDEPENDENT TOOLKITS
         </text>
 
-        <rect x="58" y="75" width="300" height="200" rx="18" fill={activeSystem === "lalKitab" ? wash(lal.color, "10") : SURFACE} stroke={activeSystem === "lalKitab" ? lal.color : HAIRLINE} strokeWidth={activeSystem === "lalKitab" ? 2 : 1.2} />
-        <rect x="442" y="75" width="300" height="200" rx="18" fill={activeSystem === "tajika" ? wash(tajika.accent, "10") : SURFACE} stroke={activeSystem === "tajika" ? tajika.accent : HAIRLINE} strokeWidth={activeSystem === "tajika" ? 2 : 1.2} />
+        <rect x="58" y="155" width="300" height="300" rx="18" fill={activeSystem === "lalKitab" ? wash(lal.color, "10") : SURFACE} stroke={activeSystem === "lalKitab" ? lal.color : HAIRLINE} strokeWidth={activeSystem === "lalKitab" ? 2 : 1.2} />
+        <rect x="442" y="155" width="300" height="300" rx="18" fill={activeSystem === "tajika" ? wash(tajika.accent, "10") : SURFACE} stroke={activeSystem === "tajika" ? tajika.accent : HAIRLINE} strokeWidth={activeSystem === "tajika" ? 2 : 1.2} />
 
-        <text x="208" y="105" textAnchor="middle" fill={lal.color} fontSize="18" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="208" y="195" textAnchor="middle" fill={lal.color} fontSize="26" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           LAL KITAB
         </text>
-        <text x="592" y="105" textAnchor="middle" fill={tajika.accent} fontSize="18" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="592" y="195" textAnchor="middle" fill={tajika.accent} fontSize="26" fontWeight="700" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           TAJIKA
         </text>
-        <text x="208" y="128" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="208" y="225" textAnchor="middle" fill={INK_SECONDARY} fontSize="18" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           fixed Teva + states + upaya
         </text>
-        <text x="592" y="128" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="592" y="225" textAnchor="middle" fill={INK_SECONDARY} fontSize="18" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           lagna + muntha + sahams
         </text>
 
-        <path d="M358 175 H442" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
-        <circle cx="400" cy="175" r="36" fill={SURFACE} stroke={GOLD} strokeWidth="2" />
-        <text x="400" y="170" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="900" letterSpacing="0.8" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <path d="M358 310 H442" stroke={HAIRLINE} strokeWidth="2" strokeDasharray="8 8" />
+        <circle cx="400" cy="310" r="46" fill={SURFACE} stroke={GOLD} strokeWidth="2" />
+        <text x="400" y="303" textAnchor="middle" fill={GOLD} fontSize="17" fontWeight="700" letterSpacing="0.4" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           YEAR
         </text>
-        <text x="400" y="190" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="400" y="329" textAnchor="middle" fill={INK_PRIMARY} fontSize="17" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           read twice
         </text>
 
         {lalTools.map((tool, index) => {
-          const y = 154 + index * 38;
+          const y = 275 + index * 48;
           const selected = tool.id === activeToolId;
           return (
             <g key={tool.id}>
-              <rect x="96" y={y - 18} width="224" height="28" rx="10" fill={selected ? wash(lal.color, "18") : SURFACE_2} stroke={selected ? lal.color : HAIRLINE} />
-              <text x="208" y={y + 1} textAnchor="middle" fill={selected ? lal.color : INK_SECONDARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <rect x="78" y={y - 20} width="260" height="36" rx="10" fill={selected ? wash(lal.color, "18") : SURFACE_2} stroke={selected ? lal.color : HAIRLINE} />
+              <text x="208" y={y + 5} textAnchor="middle" fill={selected ? lal.color : INK_SECONDARY} fontSize="15" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {tool.label}
               </text>
             </g>
@@ -74,20 +74,20 @@ function AnnualMethodMap({ activeToolId, activeSystem }: { activeToolId: string;
         })}
 
         {tajikaTools.map((tool, index) => {
-          const y = 154 + index * 38;
+          const y = 275 + index * 48;
           const selected = tool.id === activeToolId;
           return (
             <g key={tool.id}>
-              <rect x="480" y={y - 18} width="224" height="28" rx="10" fill={selected ? wash(tajika.accent, "18") : SURFACE_2} stroke={selected ? tajika.accent : HAIRLINE} />
-              <text x="592" y={y + 1} textAnchor="middle" fill={selected ? tajika.accent : INK_SECONDARY} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <rect x="462" y={y - 20} width="260" height="36" rx="10" fill={selected ? wash(tajika.accent, "18") : SURFACE_2} stroke={selected ? tajika.accent : HAIRLINE} />
+              <text x="592" y={y + 5} textAnchor="middle" fill={selected ? tajika.accent : INK_SECONDARY} fontSize="15" fontWeight="500" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {tool.label}
               </text>
             </g>
           );
         })}
 
-        <rect x="210" y="286" width="380" height="28" rx="14" fill={wash(activeColor, "10")} stroke={activeColor} />
-        <text x="400" y="305" textAnchor="middle" fill={activeColor} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="180" y="494" width="440" height="42" rx="21" fill={wash(activeColor, "10")} stroke={activeColor} />
+        <text x="400" y="522" textAnchor="middle" fill={activeColor} fontSize="17" fontWeight="600" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Selected tool belongs to {activeTool.belongsTo === "lalKitab" ? "Lal Kitab only" : "Tajika only"}
         </text>
       </svg>

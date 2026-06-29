@@ -1,10 +1,10 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { IAST } from "../../chrome/typography";
-import { RASHIS, DIGNITIES, GRAHA_SYMBOLS, GRAHA_COLORS, MULA_TRIKONA_REDIRECTS } from "../rashi-data";
+import { RASHIS, DIGNITIES } from "../rashi-data";
 
 const GRAHAS = [
   { key: "sun", name: "Sun", devanagari: "सूर्य", symbol: "☉", color: "#C9A24D", significations: ["ego", "authority", "vitality", "father"] },
@@ -38,6 +38,13 @@ const BHAVAS = [
   { num: 11, name: "Lābha", topic: "Gains, elder siblings, aspirations" },
   { num: 12, name: "Vyaya", topic: "Loss, liberation, foreign lands" },
 ];
+
+const INK = "#3F2D1D";
+const INK_SOFT = "#5C4630";
+const INK_MUTED_STRONG = "#745D40";
+const GOLD_DEEP = "#8F6818";
+const BORDER = "rgba(143, 104, 24, 0.42)";
+const PANEL = "#FFF7E8";
 
 function getDignity(grahaKey: string, rashiNum: number, degree: number) {
   const rules = DIGNITIES[rashiNum]?.filter((r) => {
@@ -78,15 +85,14 @@ function findOppositeDignity(grahaKey: string, targetType: string) {
 function DegreeTimeline({ grahaKey, currentRashi, currentDegree }: { grahaKey: string; currentRashi: number; currentDegree: number }) {
   const graha = GRAHAS.find((g) => g.key === grahaKey)!;
   const totalWidth = 360;
-  const segments = 12;
 
   // Find exaltation/debilitation points for this graha
   const exalted = findOppositeDignity(grahaKey, "Exalted");
   const debilitated = findOppositeDignity(grahaKey, "Debilitated");
 
   return (
-    <div className="mt-3 p-3 rounded-lg" style={{ background: "var(--gl-surface-manuscript)", border: "1px solid var(--gl-gold-hairline)", boxShadow: "0 4px 16px rgba(0,0,0,0.04)" }}>
-      <div className="text-xs font-medium mb-2" style={{ color: "var(--gl-gold-accent)" }}>
+    <div className="mt-3 p-3 rounded-lg" style={{ background: PANEL, border: `1px solid ${BORDER}`, boxShadow: "0 8px 20px rgba(72,48,16,0.08)" }}>
+      <div className="text-sm font-bold mb-2" style={{ color: GOLD_DEEP }}>
         360° Ecliptic — Same-Degree Opposite-Strength Timeline for {graha.name}
       </div>
       <div className="relative" style={{ height: 48 }}>
@@ -97,7 +103,7 @@ function DegreeTimeline({ grahaKey, currentRashi, currentDegree }: { grahaKey: s
           ))}
           {/* Rāśi labels */}
           {RASHIS.map((r, i) => (
-            <text key={`l-${i}`} x={i * 30 + 15} y={12} textAnchor="middle" fontSize={5} fill="var(--gl-ink-muted)">{r.nameDevanagari}</text>
+            <text key={`l-${i}`} x={i * 30 + 15} y={12} textAnchor="middle" fontSize={6} fontWeight={800} fill={INK_MUTED_STRONG}>{r.nameDevanagari}</text>
           ))}
           {/* Current position marker */}
           <circle cx={(currentRashi - 1) * 30 + currentDegree} cy={28} r={5} fill={graha.color} stroke="#fff" strokeWidth={1}>
@@ -119,11 +125,11 @@ function DegreeTimeline({ grahaKey, currentRashi, currentDegree }: { grahaKey: s
           )}
         </svg>
       </div>
-      <div className="flex gap-3 mt-1 text-xs" style={{ color: "var(--gl-ink-muted)" }}>
+      <div className="flex gap-3 mt-1 text-sm font-semibold" style={{ color: INK_SOFT }}>
         {exalted && <span><span style={{ color: "#C9A24D" }}>▲</span> Exalted at {RASHIS[exalted.rashi - 1].nameDevanagari} {exalted.degree}°</span>}
         {debilitated && <span><span style={{ color: "#6B6B6B" }}>▼</span> Debilitated at {RASHIS[debilitated.rashi - 1].nameDevanagari} {debilitated.degree}°</span>}
       </div>
-      <div className="text-xs mt-1" style={{ color: "var(--gl-ink-secondary)" }}>
+      <div className="text-sm mt-1 font-medium leading-relaxed" style={{ color: INK_SOFT }}>
         Principle: A graha at the <em>same degree</em> in the opposite rāśi experiences the inverse dignity. Example: Sun at 10° Meṣa = exalted; Sun at 10° Tulā = debilitated.
       </div>
     </div>
@@ -182,7 +188,7 @@ export function ChartPlanetPositioner() {
     <div className="w-full space-y-4" style={{ fontFamily: "var(--font-sans)" }}>
       {/* Toolbar */}
       <div className="flex gap-2 flex-wrap items-center">
-        <span className="text-xs self-center" style={{ color: "var(--gl-ink-muted)" }}>Load example:</span>
+        <span className="text-sm self-center font-semibold" style={{ color: INK_SOFT }}>Load example:</span>
         {PRESETS.map((p) => (
           <motion.button
             whileHover={{ scale: 1.04 }}
@@ -190,7 +196,7 @@ export function ChartPlanetPositioner() {
             key={p.name}
             onClick={() => loadPreset(p)}
             className="px-2 py-1 rounded text-xs"
-            style={{ background: "var(--gl-surface-manuscript)", border: "1px solid var(--gl-gold-hairline)", boxShadow: "0 4px 16px rgba(0,0,0,0.04)", color: "var(--gl-ink-secondary)" }}
+            style={{ background: PANEL, border: `1px solid ${BORDER}`, boxShadow: "0 4px 14px rgba(72,48,16,0.06)", color: INK }}
           >
             {p.name}
           </motion.button>
@@ -205,7 +211,7 @@ export function ChartPlanetPositioner() {
           Reset
         </motion.button>
         <div className="ml-auto flex items-center gap-2">
-          <span className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>Graded mode</span>
+          <span className="text-sm font-semibold" style={{ color: INK_SOFT }}>Graded mode</span>
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
@@ -213,8 +219,8 @@ export function ChartPlanetPositioner() {
             className="px-2 py-1 rounded text-xs"
             style={{
               background: gradedMode ? "#C9A24D25" : "var(--gl-surface-manuscript)",
-              color: gradedMode ? "#C9A24D" : "var(--gl-ink-muted)",
-              border: "1px solid var(--gl-gold-hairline)",
+              color: gradedMode ? GOLD_DEEP : INK_MUTED_STRONG,
+              border: `1px solid ${BORDER}`,
             }}
           >
             {gradedMode ? "ON" : "OFF"}
@@ -244,9 +250,10 @@ export function ChartPlanetPositioner() {
                   onClick={() => setSelectedGraha(g.key)}
                   className="px-2 py-1.5 rounded-lg text-xs flex items-center gap-1 transition-all"
                   style={{
-                    background: isSelected ? `${g.color}30` : isPlaced ? `${g.color}15` : "var(--gl-surface-manuscript)",
-                    border: `1px solid ${isSelected ? g.color : isPlaced ? `${g.color}50` : "var(--gl-border-subtle)"}`,
-                    color: isSelected ? g.color : "var(--gl-ink-primary)",
+                    background: isSelected ? `${g.color}30` : isPlaced ? `${g.color}18` : PANEL,
+                    border: `1.5px solid ${isSelected ? g.color : isPlaced ? `${g.color}70` : BORDER}`,
+                    color: isSelected ? g.color : INK,
+                    fontWeight: 700,
                   }}
                 >
                   <span style={{ color: g.color }}>{g.symbol}</span>
@@ -270,16 +277,17 @@ export function ChartPlanetPositioner() {
                   whileTap={{ scale: 0.96 }}
                   key={r.number}
                   onClick={() => selectedGraha && placeGraha(selectedGraha, r.number)}
-                  className="p-2 rounded-lg text-center transition-all"
+                  className="p-3 rounded-lg text-center transition-all"
                   style={{
-                    background: isSelectedGrahaHere ? `${r.color}30` : `${r.color}10`,
-                    border: `1px solid ${isSelectedGrahaHere ? r.color : `${r.color}30`}`,
-                    opacity: selectedGraha ? 1 : 0.7,
+                    background: isSelectedGrahaHere ? `${r.color}30` : "rgba(255, 247, 232, 0.94)",
+                    border: `1.5px solid ${isSelectedGrahaHere ? r.color : BORDER}`,
+                    opacity: selectedGraha ? 1 : 0.88,
                     cursor: selectedGraha ? "pointer" : "default",
+                    boxShadow: isSelectedGrahaHere ? "0 8px 18px rgba(72,48,16,0.12)" : "none",
                   }}
                 >
-                  <div className="text-sm" style={{ fontFamily: "var(--font-devanagari)", color: r.color }}>{r.nameDevanagari}</div>
-                  <div className="text-xs" style={{ color: "var(--gl-ink-secondary)" }}>
+                  <div className="text-base font-bold" style={{ fontFamily: "var(--font-devanagari)", color: r.color }}>{r.nameDevanagari}</div>
+                  <div className="text-sm font-semibold" style={{ color: INK }}>
                     <IAST>{r.nameIAST}</IAST>
                   </div>
                   {grahaObj && (
@@ -296,11 +304,11 @@ export function ChartPlanetPositioner() {
         {/* Right: 5-step panel */}
         <div className="flex-1 min-w-0">
           {activeGraha && activeRashi && activePlacement ? (
-            <div className="p-4 rounded-xl space-y-3" style={{ background: "var(--gl-surface-twilight-glass)", border: "1px solid var(--gl-gold-hairline)", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
+            <div className="p-4 rounded-xl space-y-3" style={{ background: "rgba(255, 250, 240, 0.98)", border: `1px solid ${BORDER}`, boxShadow: "0 12px 28px rgba(72,48,16,0.10)" }}>
               {/* Header */}
               <div className="flex items-center gap-2">
                 <span style={{ color: activeGraha.color, fontSize: 20 }}>{activeGraha.symbol}</span>
-                <span className="font-semibold" style={{ color: "var(--gl-ink-primary)" }}>
+                <span className="font-bold text-lg" style={{ color: INK }}>
                   {activeGraha.name} in <IAST>{activeRashi.nameIAST}</IAST> at {activePlacement.degree}°
                 </span>
                 {dignity && (
@@ -312,7 +320,7 @@ export function ChartPlanetPositioner() {
 
               {/* Degree slider */}
               <div className="flex items-center gap-2">
-                <span className="text-xs" style={{ color: "var(--gl-ink-muted)" }}>Degree:</span>
+                <span className="text-sm font-semibold" style={{ color: INK_SOFT }}>Degree:</span>
                 <input
                   type="range"
                   min={0}
@@ -455,22 +463,22 @@ function GradedStep({ num, title, active, graded, completed, onComplete, childre
         className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
         style={{
           background: active ? "var(--gl-gold-accent)" : completed ? "#6B8E6B" : "var(--gl-surface-manuscript)",
-          color: active || completed ? "#1a1a2e" : "var(--gl-ink-muted)",
-          border: "1px solid var(--gl-gold-hairline)",
+          color: active || completed ? "#fff" : INK_MUTED_STRONG,
+          border: `1px solid ${BORDER}`,
         }}
       >
         {completed ? "✓" : num}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <div className="text-xs font-medium mb-0.5" style={{ color: active ? "var(--gl-gold-accent)" : completed ? "#6B8E6B" : "var(--gl-ink-muted)" }}>{title}</div>
+          <div className="text-sm font-bold mb-0.5" style={{ color: active ? GOLD_DEEP : completed ? "#3A704C" : INK_MUTED_STRONG }}>{title}</div>
           {graded && onComplete && !completed && (
-            <motion.button onClick={onComplete} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} className="px-1.5 py-0.5 rounded text-xs" style={{ background: "var(--gl-surface-manuscript)", border: "1px solid var(--gl-gold-hairline)", boxShadow: "0 4px 16px rgba(0,0,0,0.04)", color: "var(--gl-ink-muted)" }}>
+            <motion.button onClick={onComplete} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} className="px-1.5 py-0.5 rounded text-xs" style={{ background: PANEL, border: `1px solid ${BORDER}`, boxShadow: "0 4px 16px rgba(0,0,0,0.04)", color: INK }}>
               ✓ Done
             </motion.button>
           )}
         </div>
-        <div className="text-xs" style={{ color: locked ? "var(--gl-ink-muted)" : "var(--gl-ink-secondary)", opacity: locked ? 0.5 : 1 }}>{children}</div>
+        <div className="text-sm font-medium leading-relaxed" style={{ color: locked ? INK_MUTED_STRONG : INK_SOFT, opacity: locked ? 0.65 : 1 }}>{children}</div>
       </div>
     </div>
   );

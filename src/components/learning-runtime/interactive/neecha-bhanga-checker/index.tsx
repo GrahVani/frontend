@@ -632,7 +632,7 @@ export function NeechaBhangaChecker() {
         </p>
         <p className="text-xs" style={{ color: INK_MUTED }}>
           <strong>Practice:</strong> report neecha-bhaṅga as a <strong>redemption of the debility</strong>,
-          and reserve "extraordinary success" for cases where strength and timing genuinely support it.
+          and reserve &ldquo;extraordinary success&rdquo; for cases where strength and timing genuinely support it.
         </p>
       </div>
 

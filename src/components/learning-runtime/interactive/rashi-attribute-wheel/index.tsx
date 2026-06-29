@@ -27,6 +27,21 @@ const GENDER_COLORS: Record<string, string> = {
   Feminine: "#8B5FC0",
 };
 
+const WHEEL_INK = "#6A5844";
+const WHEEL_MUTED = "#806D55";
+const WHEEL_GOLD = "#A97818";
+const WHEEL_DIVIDER = "rgba(139, 118, 82, 0.28)";
+const WHEEL_SLICE = "#F6EFE0";
+const WHEEL_SLICE_ALT = "#EEE5D4";
+const WHEEL_SLICE_ACTIVE = "#FFF5D9";
+const WHEEL_HUB = "#FFF8EA";
+const ELEMENT_SWATCHES: Record<string, string> = {
+  Fire: "#C98A2E",
+  Earth: "#6F8F72",
+  Air: "#6F9DBE",
+  Water: "#5C8FA1",
+};
+
 /* ─── Lesson context for lesson-aware defaults ─── */
 export const LessonContext = createContext<{ slug: string }>({ slug: "" });
 
@@ -65,7 +80,6 @@ function RashiWheel({
   hovered,
   showAxis,
   colourByLord,
-  colourByGender,
   highlightGroup,
 }: {
   selected: number;
@@ -75,29 +89,47 @@ function RashiWheel({
   hovered: number | null;
   showAxis?: boolean;
   colourByLord?: boolean;
-  colourByGender?: boolean;
   highlightGroup?: number[];
 }) {
-  const cx = 150;
-  const cy = 150;
-  const r = 128;
+  const cx = 170;
+  const cy = 170;
+  const r = 146;
   const innerR = 72;
   const shouldReduceMotion = useReducedMotion();
   const [focusedSegment, setFocusedSegment] = useState<number | null>(null);
 
   return (
-    <svg viewBox="0 0 300 300" className="w-full" style={{ maxWidth: 300 }} role="img" aria-label="Interactive 12-segment Zodiac Wheel showing sign attributes">
+    <svg viewBox="0 0 340 340" className="w-full" style={{ maxWidth: 560 }} role="img" aria-label="Interactive 12-segment Zodiac Wheel showing sign attributes">
       <defs>
         {/* Inner hub gradient to match Module 4 Chapter 1 Lesson 1 */}
         <radialGradient id="hubGrad" cx={cx} cy={cy} r={innerR} gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFF9F0" />
-          <stop offset="60%" stopColor="#F2E6D0" />
-          <stop offset="100%" stopColor="#E7D6B8" />
+          <stop offset="0%" stopColor="#FFFDF7" />
+          <stop offset="68%" stopColor={WHEEL_HUB} />
+          <stop offset="100%" stopColor="#E8D7B2" />
         </radialGradient>
       </defs>
       {/* Background rings */}
-      <circle cx={cx} cy={cy} r={r} fill="var(--gl-surface-manuscript)" opacity={0.15} stroke="var(--gl-gold-accent)" strokeOpacity={0.25} strokeWidth={1} />
-      <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="var(--gl-gold-accent)" strokeOpacity={0.15} strokeWidth={1} />
+      <circle cx={cx} cy={cy} r={r} fill="#F9F3E7" stroke={WHEEL_GOLD} strokeOpacity={0.58} strokeWidth={1.5} />
+      <circle cx={cx} cy={cy} r={innerR} fill="none" stroke={WHEEL_DIVIDER} strokeWidth={1.25} />
+      {RASHIS.map((rashi) => {
+        const angle = (rashi.number - 1) * 30;
+        const pos = polarToCartesian(cx, cy, r + 11, angle);
+        return (
+          <text
+            key={`degree-${rashi.number}`}
+            x={pos.x}
+            y={pos.y}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fill={WHEEL_GOLD}
+            fontSize={12}
+            fontWeight={900}
+            style={{ pointerEvents: "none" }}
+          >
+            {angle}°
+          </text>
+        );
+      })}
 
       {/* Moon–Sun mirror axis (lesson §4.3) — the 120°↔300° diameter the rulerships mirror about */}
       {colourByLord && (() => {
@@ -142,17 +174,12 @@ function RashiWheel({
         const path = describeArc(cx, cy, r, startAngle, endAngle);
         const m = midAngle(startAngle, endAngle);
         const labelPos = polarToCartesian(cx, cy, (r + innerR) / 2, m);
-        const numPos = polarToCartesian(cx, cy, (r + innerR) / 2 + 16, m);
+        const numPos = polarToCartesian(cx, cy, (r + innerR) / 2 + 18, m);
 
-        const segColor = colourByGender
-          ? (GENDER_COLORS[rashi.gender] ?? rashi.color)
-          : colourByLord
-          ? (GRAHA_COLORS[rashi.lord] ?? rashi.color)
-          : rashi.color;
         const baseFill = isSelected || isCompare || isHovered || isHighlighted
-          ? `${segColor}35`
-          : `${segColor}12`;
-        const stroke = isSelected ? segColor : isHovered ? segColor : `${segColor}45`;
+          ? WHEEL_SLICE_ACTIVE
+          : i % 2 === 0 ? WHEEL_SLICE : WHEEL_SLICE_ALT;
+        const stroke = isSelected || isHovered ? WHEEL_GOLD : WHEEL_DIVIDER;
         const strokeW = isSelected ? 2.5 : isHovered ? 2 : 1;
 
         return (
@@ -194,10 +221,13 @@ function RashiWheel({
             )}
             {/* Inner cutout */}
             <path d={describeArc(cx, cy, innerR, startAngle, endAngle)} fill="url(#hubGrad)" opacity={1} style={{ pointerEvents: "none" }} />
-            <text x={labelPos.x} y={labelPos.y - 3} textAnchor="middle" dominantBaseline="middle" fill={isSelected ? "#fff" : "var(--gl-ink-primary)"} fontSize={10} fontFamily="var(--font-devanagari)" style={{ pointerEvents: "none", fontWeight: isSelected ? 700 : 400 }}>
+            <text x={labelPos.x} y={labelPos.y - 8} textAnchor="middle" dominantBaseline="middle" fill={WHEEL_INK} fontSize={17} fontFamily="var(--font-devanagari)" style={{ pointerEvents: "none", fontWeight: 600 }}>
               {rashi.nameDevanagari}
             </text>
-            <text x={numPos.x} y={numPos.y + 10} textAnchor="middle" dominantBaseline="middle" fill={isSelected ? "#fff" : "var(--gl-ink-muted)"} fontSize={8} style={{ pointerEvents: "none" }}>
+            <text x={labelPos.x} y={labelPos.y + 11} textAnchor="middle" dominantBaseline="middle" fill={WHEEL_MUTED} fontSize={11} fontWeight={550} style={{ pointerEvents: "none" }}>
+              {rashi.nameIAST}
+            </text>
+            <text x={numPos.x} y={numPos.y + 12} textAnchor="middle" dominantBaseline="middle" fill={WHEEL_MUTED} fontSize={10.5} fontWeight={600} style={{ pointerEvents: "none" }}>
               {rashi.number}
             </text>
           </g>
@@ -205,8 +235,8 @@ function RashiWheel({
       })}
 
       {/* Center label */}
-      <text x={cx} y={cy - 5} textAnchor="middle" dominantBaseline="middle" fill="var(--gl-gold-accent)" fontSize={12} fontFamily="var(--font-cormorant)" fontWeight={600}>12 Rāśis</text>
-      <text x={cx} y={cy + 9} textAnchor="middle" dominantBaseline="middle" fill="var(--gl-ink-muted)" fontSize={9}>360° sidereal</text>
+      <text x={cx} y={cy - 6} textAnchor="middle" dominantBaseline="middle" fill={WHEEL_GOLD} fontSize={14} fontFamily="var(--font-cormorant)" fontWeight={650}>12 Rāśis</text>
+      <text x={cx} y={cy + 12} textAnchor="middle" dominantBaseline="middle" fill={WHEEL_MUTED} fontSize={10.5} fontWeight={600}>360° sidereal</text>
     </svg>
   );
 }
@@ -221,7 +251,7 @@ export function RashiAttributeWheel() {
   const [showAxis, setShowAxis] = useState(false);
   const [colourByLord, setColourByLord] = useState(false);
   const [colourByGender, setColourByGender] = useState(false);
-  const [showRedirects, setShowRedirects] = useState(true);
+  const [showRedirects] = useState(true);
   const shouldReduceMotion = useReducedMotion();
 
   const rashi = useMemo(() => RASHIS.find((r) => r.number === selected)!, [selected]);
@@ -333,8 +363,8 @@ export function RashiAttributeWheel() {
 
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Wheel */}
-        <div className="flex-shrink-0 mx-auto lg:mx-0" style={{ maxWidth: 320 }}>
-          <RashiWheel selected={selected} compare={compare} onSelect={handleWheelClick} onHover={setHovered} hovered={hovered} showAxis={showAxis} colourByLord={colourByLord} colourByGender={colourByGender} />
+        <div className="flex-shrink-0 mx-auto lg:mx-0" style={{ maxWidth: 560 }}>
+          <RashiWheel selected={selected} compare={compare} onSelect={handleWheelClick} onHover={setHovered} hovered={hovered} showAxis={showAxis} colourByLord={colourByLord} />
           {/* Legend */}
           {colourByGender ? (
             <div className="mt-2">
@@ -369,11 +399,10 @@ export function RashiAttributeWheel() {
           ) : (
             <div className="flex gap-3 mt-2 flex-wrap justify-center">
               {["Fire", "Earth", "Air", "Water"].map((el) => {
-                const c = ELEMENT_COLORS[el];
                 return (
                   <div key={el} className="flex items-center gap-1">
-                    <div style={{ width: 10, height: 10, borderRadius: 2, background: c.text }} />
-                    <span className="text-xs" style={{ color: "var(--gl-ink-secondary)" }}>{el}</span>
+                    <div style={{ width: 10, height: 10, borderRadius: 2, background: ELEMENT_SWATCHES[el], border: "1px solid rgba(47, 40, 31, 0.18)" }} />
+                    <span className="text-xs font-medium" style={{ color: WHEEL_MUTED }}>{el}</span>
                   </div>
                 );
               })}

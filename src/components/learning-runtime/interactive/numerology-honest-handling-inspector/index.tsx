@@ -88,7 +88,7 @@ export function NumerologyHonestHandlingInspector() {
               background: activeTab === tab.key ? TEAL : "transparent",
               color: activeTab === tab.key ? "#fff" : INK_SECONDARY,
               padding: "0.52rem 0.85rem",
-              fontWeight: 850,
+              fontWeight: 400,
               cursor: "pointer",
               fontSize: "0.85rem",
             }}
@@ -179,17 +179,17 @@ function InspectorTab() {
       <article style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.75rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
           <Scale size={18} color={TEAL} />
-          <span style={{ fontWeight: 950, color: TEAL, fontSize: "1rem" }}>Scenario {scenario.id}: {scenario.client}</span>
+          <span style={{ fontWeight: 400, color: TEAL, fontSize: "1rem" }}>Scenario {scenario.id}: {scenario.client}</span>
         </div>
         <blockquote style={{ margin: 0, padding: "0.75rem", borderLeft: `4px solid ${GOLD}`, background: `${GOLD}0A`, borderRadius: 8, fontStyle: "italic", color: INK_PRIMARY, lineHeight: 1.55 }}>
           &ldquo;{scenario.quote}&rdquo;
         </blockquote>
         <p style={{ margin: 0, color: INK_SECONDARY, fontSize: "0.87rem", lineHeight: 1.55 }}>
-          <strong style={{ color: INK_PRIMARY }}>Context:</strong> {scenario.context}
+          <span style={{ color: INK_PRIMARY }}>Context:</span> {scenario.context}
         </p>
 
         <div style={{ display: "grid", gap: "0.5rem" }}>
-          <div style={{ fontSize: "0.85rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 1 — Is there a legitimate empirical-kernel present?</div>
+          <div style={{ fontSize: "0.85rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 1 — Is there a legitimate empirical-kernel present?</div>
           <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             <button type="button" onClick={() => setEmpiricalKernel(true)} style={buttonStyle(empiricalKernel === true, GREEN)}>
               Yes — preserve the symbolic-layer content
@@ -201,7 +201,7 @@ function InspectorTab() {
         </div>
 
         <div style={{ display: "grid", gap: "0.5rem" }}>
-          <div style={{ fontSize: "0.85rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 2 — Which over-claim framings are present? (select all that apply)</div>
+          <div style={{ fontSize: "0.85rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 2 — Which over-claim framings are present? (select all that apply)</div>
           <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             {OVERCLAIM_FRAMINGS.map((oc) => (
               <button
@@ -221,7 +221,7 @@ function InspectorTab() {
         </div>
 
         <div style={{ display: "grid", gap: "0.5rem" }}>
-          <div style={{ fontSize: "0.85rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 3 — Which do-no-harm forms are violated? (select all that apply)</div>
+          <div style={{ fontSize: "0.85rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 3 — Which do-no-harm forms are violated? (select all that apply)</div>
           <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             {DO_NO_HARM_FORMS.map((form) => (
               <button
@@ -241,7 +241,7 @@ function InspectorTab() {
         </div>
 
         <div style={{ display: "grid", gap: "0.5rem" }}>
-          <div style={{ fontSize: "0.85rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 4 — Choose discipline-compliant verdict</div>
+          <div style={{ fontSize: "0.85rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Step 4 — Choose discipline-compliant verdict</div>
           <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             {VERDICTS.map((v) => (
               <button
@@ -274,7 +274,7 @@ function InspectorTab() {
             <div style={{ border: `1px solid ${verdictColor(scenario.verdict)}44`, borderRadius: 8, background: `${verdictColor(scenario.verdict)}0A`, padding: "1rem", display: "grid", gap: "0.35rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 {scenario.verdict === "refuse" ? <ShieldAlert size={18} color={verdictColor(scenario.verdict)} /> : <CheckCircle2 size={18} color={verdictColor(scenario.verdict)} />}
-                <span style={{ fontWeight: 950, color: verdictColor(scenario.verdict), fontSize: "1rem" }}>{verdictLabel(scenario.verdict)}</span>
+                <span style={{ fontWeight: 400, color: verdictColor(scenario.verdict), fontSize: "1rem" }}>{verdictLabel(scenario.verdict)}</span>
               </div>
               <p style={{ margin: 0, color: INK_PRIMARY, lineHeight: 1.55, fontSize: "0.9rem" }}>{scenario.explanation}</p>
             </div>
@@ -282,7 +282,7 @@ function InspectorTab() {
             <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "0.85rem", display: "grid", gap: "0.5rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <AlertTriangle size={18} color={GOLD} />
-                <span style={{ fontWeight: 950, color: GOLD, fontSize: "0.95rem" }}>Model practitioner response</span>
+                <span style={{ fontWeight: 400, color: GOLD, fontSize: "0.95rem" }}>Model practitioner response</span>
               </div>
               <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.55, fontSize: "0.87rem", fontStyle: "italic" }}>
                 &ldquo;{scenario.practitionerResponse}&rdquo;
@@ -290,15 +290,15 @@ function InspectorTab() {
             </div>
 
             <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "0.75rem", display: "grid", gap: "0.35rem" }}>
-              <div style={{ fontSize: "0.78rem", fontWeight: 900, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Your selections vs. model answer</div>
+              <div style={{ fontSize: "0.78rem", fontWeight: 400, color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.06em" }}>Your selections vs. model answer</div>
               <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", fontSize: "0.85rem" }}>
-                <span style={{ color: empiricalCorrect ? GREEN : VERMILION, fontWeight: 850 }}>Empirical-kernel: {empiricalCorrect ? "match" : "mismatch"}</span>
+                <span style={{ color: empiricalCorrect ? GREEN : VERMILION, fontWeight: 400 }}>Empirical-kernel: {empiricalCorrect ? "match" : "mismatch"}</span>
                 <span style={{ color: INK_MUTED }}>·</span>
-                <span style={{ color: overclaimsCorrect ? GREEN : VERMILION, fontWeight: 850 }}>Over-claim framings: {overclaimsCorrect ? "match" : "mismatch"}</span>
+                <span style={{ color: overclaimsCorrect ? GREEN : VERMILION, fontWeight: 400 }}>Over-claim framings: {overclaimsCorrect ? "match" : "mismatch"}</span>
                 <span style={{ color: INK_MUTED }}>·</span>
-                <span style={{ color: formsCorrect ? GREEN : VERMILION, fontWeight: 850 }}>Do-no-harm forms: {formsCorrect ? "match" : "mismatch"}</span>
+                <span style={{ color: formsCorrect ? GREEN : VERMILION, fontWeight: 400 }}>Do-no-harm forms: {formsCorrect ? "match" : "mismatch"}</span>
                 <span style={{ color: INK_MUTED }}>·</span>
-                <span style={{ color: verdictCorrect ? GREEN : VERMILION, fontWeight: 850 }}>Verdict: {verdictCorrect ? "match" : "mismatch"}</span>
+                <span style={{ color: verdictCorrect ? GREEN : VERMILION, fontWeight: 400 }}>Verdict: {verdictCorrect ? "match" : "mismatch"}</span>
               </div>
             </div>
           </div>
@@ -316,7 +316,7 @@ function LayersTab() {
       <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
           <Layers size={18} color={TEAL} />
-          <span style={{ fontWeight: 950, color: TEAL, fontSize: "1rem" }}>Three-layer holding</span>
+          <span style={{ fontWeight: 400, color: TEAL, fontSize: "1rem" }}>Three-layer holding</span>
         </div>
         <p style={{ margin: "0.3rem 0 0", color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.88rem" }}>
           Honest numerology practice distinguishes the empirical-kernel and symbolic layer from the over-claim
@@ -338,13 +338,13 @@ function LayersTab() {
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
-            <div style={{ fontWeight: 950, color: INK_PRIMARY, fontSize: "1rem" }}>{layer.label}</div>
-            <div style={{ fontSize: "0.72rem", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.06em", color: layerColor(layer.key) }}>
+            <div style={{ fontWeight: 400, color: INK_PRIMARY, fontSize: "1rem" }}>{layer.label}</div>
+            <div style={{ fontSize: "0.72rem", fontWeight: 400, textTransform: "uppercase", letterSpacing: "0.06em", color: layerColor(layer.key) }}>
               {layer.key === "over-claim" ? "Refuse" : "Preserve / acknowledge"}
             </div>
           </div>
           <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.87rem" }}>{layer.description}</p>
-          <p style={{ margin: 0, color: layerColor(layer.key), lineHeight: 1.45, fontSize: "0.84rem", fontWeight: 850 }}>{layer.stance}</p>
+          <p style={{ margin: 0, color: layerColor(layer.key), lineHeight: 1.45, fontSize: "0.84rem", fontWeight: 400 }}>{layer.stance}</p>
         </article>
       ))}
     </section>
@@ -365,7 +365,7 @@ function FormsTab() {
       <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
           <AlertTriangle size={18} color={TEAL} />
-          <span style={{ fontWeight: 950, color: TEAL, fontSize: "1rem" }}>Five operational forms of do-no-harm</span>
+          <span style={{ fontWeight: 400, color: TEAL, fontSize: "1rem" }}>Five operational forms of do-no-harm</span>
         </div>
         <p style={{ margin: "0.3rem 0 0", color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.88rem" }}>
           The five rules are conjunctive protections against the eight over-claim framings. Skipping any one
@@ -386,7 +386,7 @@ function FormsTab() {
             gap: "0.35rem",
           }}
         >
-          <div style={{ fontWeight: 950, color: INK_PRIMARY, fontSize: "1rem" }}>
+          <div style={{ fontWeight: 400, color: INK_PRIMARY, fontSize: "1rem" }}>
             ({form.letter}) {form.label}
           </div>
           <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.87rem" }}>{form.description}</p>
@@ -403,21 +403,21 @@ function IntegrationTab() {
     <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.75rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
         <ListChecks size={18} color={TEAL} />
-        <span style={{ fontWeight: 950, color: TEAL, fontSize: "1rem" }}>Chapter 1-4 integration into one coherent practice</span>
+        <span style={{ fontWeight: 400, color: TEAL, fontSize: "1rem" }}>Chapter 1-4 integration into one coherent practice</span>
       </div>
       <div style={{ display: "grid", gap: "0.5rem" }}>
         {CHAPTER_INTEGRATION.map((row, i) => (
           <div key={i} style={{ display: "flex", gap: "0.6rem", alignItems: "flex-start", border: `1px solid ${HAIRLINE}`, borderRadius: 8, padding: "0.75rem", background: SURFACE }}>
-            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 26, height: 26, borderRadius: "50%", background: TEAL, color: "#fff", fontWeight: 950, fontSize: "0.8rem", flexShrink: 0 }}>
+            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 26, height: 26, borderRadius: "50%", background: TEAL, color: "#fff", fontWeight: 400, fontSize: "0.8rem", flexShrink: 0 }}>
               {i + 1}
             </span>
             <div>
-              <div style={{ fontWeight: 950, color: INK_PRIMARY, fontSize: "0.95rem", marginBottom: "0.15rem" }}>{row.chapter}</div>
+              <div style={{ fontWeight: 400, color: INK_PRIMARY, fontSize: "0.95rem", marginBottom: "0.15rem" }}>{row.chapter}</div>
               <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.84rem" }}>
-                <strong style={{ color: INK_PRIMARY }}>Refusals:</strong> {row.refusals}
+                <span style={{ color: INK_PRIMARY }}>Refusals:</span> {row.refusals}
               </p>
               <p style={{ margin: "0.15rem 0 0", color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.84rem" }}>
-                <strong style={{ color: INK_PRIMARY }}>Integration:</strong> {row.integration}
+                <span style={{ color: INK_PRIMARY }}>Integration:</span> {row.integration}
               </p>
             </div>
           </div>
@@ -425,12 +425,12 @@ function IntegrationTab() {
       </div>
 
       <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "0.75rem", display: "grid", gap: "0.5rem" }}>
-        <div style={{ fontWeight: 950, color: INK_PRIMARY, fontSize: "0.95rem" }}>Integrated workflow summary</div>
+        <div style={{ fontWeight: 400, color: INK_PRIMARY, fontSize: "0.95rem" }}>Integrated workflow summary</div>
         {WORKFLOW_SUMMARY.map((step, i) => (
           <div key={i} style={{ display: "flex", gap: "0.4rem", alignItems: "flex-start" }}>
             <ChevronRight size={14} color={TEAL} style={{ flexShrink: 0, marginTop: 3 }} />
             <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.45, fontSize: "0.84rem" }}>
-              <strong style={{ color: INK_PRIMARY }}>{step.title}:</strong> {step.text}
+              <span style={{ color: INK_PRIMARY }}>{step.title}:</span> {step.text}
             </p>
           </div>
         ))}
@@ -464,7 +464,7 @@ function buttonStyle(active: boolean, color: string): CSSProperties {
     background: active ? color : "transparent",
     color: active ? "#fff" : INK_SECONDARY,
     padding: "0.52rem 0.68rem",
-    fontWeight: 850,
+    fontWeight: 400,
     cursor: "pointer",
   };
 }
@@ -475,5 +475,5 @@ const eyebrowStyle: CSSProperties = {
   letterSpacing: "0.08em",
   color: INK_MUTED,
   fontSize: "0.78rem",
-  fontWeight: 900,
+  fontWeight: 400,
 };

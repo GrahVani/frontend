@@ -21,6 +21,12 @@ import {
 } from "./data";
 
 const LEVEL_KEYS = CASCADE_LEVELS.map((level) => level.key);
+const READABLE_INK = "#3F2D1D";
+const READABLE_SECONDARY = "#5C4630";
+const READABLE_MUTED = "#745D40";
+const READABLE_GOLD = "#936817";
+const TABLE_LINE = "rgba(139, 118, 82, 0.28)";
+const SELECTED_ROW = "rgba(255, 248, 229, 0.98)";
 
 type FineUnit = "days" | "hours" | "minutes";
 
@@ -82,26 +88,26 @@ function FineLevelTable({
     <section className="min-w-0 rounded-xl p-4" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
       <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+          <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
             {title}
           </p>
-          <p className="m-0 text-sm" style={{ color: "var(--gl-ink-muted)" }}>
+          <p className="m-0 text-base" style={{ color: READABLE_SECONDARY }}>
             Parent: {parentLabel} = {formatFineAmount(parentAmount, unit)}
           </p>
         </div>
-        <p className="m-0 text-xs font-semibold" style={{ color: "var(--gl-ink-muted)", overflowWrap: "anywhere" }}>
+        <p className="m-0 text-sm font-semibold" style={{ color: READABLE_MUTED, overflowWrap: "anywhere" }}>
           {rows.map((row) => row.lord.abbr).join(" -> ")}
         </p>
       </div>
 
       <div className="max-w-full overflow-x-auto overflow-y-hidden rounded-xl" style={{ border: "1px solid var(--gl-gold-hairline)" }}>
         <div
-          className="grid min-w-[680px]"
+          className="grid min-w-[780px]"
           style={{
-            gridTemplateColumns: "48px 128px 178px 112px 112px 112px",
+            gridTemplateColumns: "56px 160px 220px 120px 120px 120px",
             background: "var(--gl-surface-2, #F5EDD8)",
-            color: "var(--gl-ink-muted)",
-            fontSize: "0.72rem",
+            color: READABLE_SECONDARY,
+            fontSize: "0.82rem",
             fontWeight: 900,
             letterSpacing: "0.06em",
             textTransform: "uppercase",
@@ -121,34 +127,34 @@ function FineLevelTable({
               key={`${title}-${row.lord.index}`}
               type="button"
               onClick={() => onSelectLord(row.lord.index)}
-              className="grid min-w-[680px] text-left"
+              className="grid min-w-[780px] text-left"
               style={{
-                gridTemplateColumns: "48px 128px 178px 112px 112px 112px",
-                background: selected ? row.lord.colorTint : "var(--gl-card-surface-solid, #FFF9F0)",
-                borderTop: "1px solid var(--gl-gold-hairline)",
+                gridTemplateColumns: "56px 160px 220px 120px 120px 120px",
+                background: selected ? SELECTED_ROW : "var(--gl-card-surface-solid, #FFF9F0)",
+                borderTop: `1px solid ${TABLE_LINE}`,
               }}
             >
-              <div className="px-3 py-3 text-sm font-bold" style={{ color: row.lord.color }}>
+              <div className="px-3 py-3 text-base font-bold" style={{ color: READABLE_GOLD }}>
                 {row.sequenceNumber}
               </div>
               <div className="px-3 py-3">
-                <span className="block text-sm font-bold" style={{ color: row.lord.color }}>
+                <span className="block text-base font-bold" style={{ color: READABLE_INK }}>
                   {row.lord.nameIAST}
                 </span>
-                <span className="block text-xs" style={{ color: "var(--gl-ink-muted)" }}>
+                <span className="block text-sm" style={{ color: READABLE_SECONDARY }}>
                   {row.lord.years} of 120
                 </span>
               </div>
-              <div className="px-3 py-3 text-sm font-semibold" style={{ color: "var(--gl-ink-secondary)", fontFamily: "var(--font-mono), monospace" }}>
+              <div className="px-3 py-3 text-base font-semibold" style={{ color: READABLE_INK, fontFamily: "var(--font-mono), monospace" }}>
                 ({parentAmount.toFixed(2)} x {row.lord.years}) / 120
               </div>
-              <div className="px-3 py-3 text-sm font-bold" style={{ color: "var(--gl-ink-primary)" }}>
+              <div className="px-3 py-3 text-base font-bold" style={{ color: READABLE_INK }}>
                 {formatFineAmount(row.amount, unit)}
               </div>
-              <div className="px-3 py-3 text-sm" style={{ color: "var(--gl-ink-secondary)" }}>
+              <div className="px-3 py-3 text-base" style={{ color: READABLE_SECONDARY }}>
                 +{formatFineAmount(row.start, unit)}
               </div>
-              <div className="px-3 py-3 text-sm" style={{ color: "var(--gl-ink-secondary)" }}>
+              <div className="px-3 py-3 text-base" style={{ color: READABLE_SECONDARY }}>
                 +{formatFineAmount(row.end, unit)}
               </div>
             </button>
@@ -156,7 +162,7 @@ function FineLevelTable({
         })}
       </div>
 
-      <p className="mt-3 text-sm font-semibold" style={{ color: Math.abs(total - parentAmount) < 0.000001 ? grahas.budha.primary : ink.vermilionAccent }}>
+      <p className="mt-3 text-base font-semibold" style={{ color: Math.abs(total - parentAmount) < 0.000001 ? "#2F7A4F" : ink.vermilionAccent }}>
         Sum check: {formatFineAmount(total, unit)} returns to the parent.
       </p>
     </section>
@@ -188,10 +194,10 @@ function FineCascadeDrill() {
     >
       <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+          <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
             Lesson 10.3.4 fine-level drill
           </p>
-          <h3 className="mt-1 text-xl font-semibold" style={{ color: "var(--gl-ink-primary)", fontFamily: "var(--font-cormorant), serif" }}>
+          <h3 className="mt-1 text-2xl font-semibold" style={{ color: READABLE_INK, fontFamily: "var(--font-cormorant), serif" }}>
             From bhukti-days to <IAST>pratyantardasha</IAST> and <IAST>sukshma</IAST>
           </h3>
         </div>
@@ -204,25 +210,25 @@ function FineCascadeDrill() {
             setSelectedSdLordIndex(9);
             setBirthUncertaintyMinutes(10);
           }}
-          className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold"
-          style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)", color: "var(--gl-ink-secondary)" }}
+          className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold"
+          style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)", color: READABLE_SECONDARY }}
         >
           <RotateCcw size={16} />
           Saturn-Mercury example
         </button>
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[320px_minmax(0,1fr)]">
-        <div className="min-w-0 space-y-4">
+      <div className="space-y-4">
+        <div className="grid gap-4 lg:grid-cols-2">
           <div className="rounded-xl p-4" style={{ background: "var(--gl-card-surface-solid, #FFF9F0)", border: "1px solid var(--gl-gold-hairline)" }}>
             <div className="mb-3 flex items-center gap-2">
               <Timer size={17} color={ink.goldAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: ink.goldAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: READABLE_GOLD, letterSpacing: "0.08em" }}>
                 Parent bhukti
               </p>
             </div>
             <label className="block">
-              <span className="text-xs font-bold uppercase" style={{ color: "var(--gl-ink-muted)", letterSpacing: "0.06em" }}>
+              <span className="text-sm font-bold uppercase" style={{ color: READABLE_MUTED, letterSpacing: "0.06em" }}>
                 Bhukti lord
               </span>
               <select
@@ -232,8 +238,8 @@ function FineCascadeDrill() {
                   setBhuktiLordIndex(next);
                   setSelectedPdLordIndex(next);
                 }}
-                className="mt-1 w-full rounded-lg px-3 py-2 text-sm"
-                style={{ background: "var(--gl-surface-2, #F5EDD8)", border: "1px solid var(--gl-gold-hairline)", color: "var(--gl-ink-primary)" }}
+                className="mt-1 w-full rounded-lg px-4 py-3 text-base"
+                style={{ background: "var(--gl-surface-2, #F5EDD8)", border: "1px solid var(--gl-gold-hairline)", color: READABLE_INK }}
               >
                 {DASHA_LORDS.map((lord) => (
                   <option key={lord.index} value={lord.index}>
@@ -243,7 +249,7 @@ function FineCascadeDrill() {
               </select>
             </label>
             <label className="mt-3 block">
-              <span className="text-xs font-bold uppercase" style={{ color: "var(--gl-ink-muted)", letterSpacing: "0.06em" }}>
+              <span className="text-sm font-bold uppercase" style={{ color: READABLE_MUTED, letterSpacing: "0.06em" }}>
                 Bhukti length in days
               </span>
               <input
@@ -253,12 +259,12 @@ function FineCascadeDrill() {
                 step={1}
                 value={bhuktiDays}
                 onChange={(event) => setBhuktiDays(Math.max(1, Number(event.target.value)))}
-                className="mt-1 w-full rounded-lg px-3 py-2 text-sm"
-                style={{ background: "var(--gl-surface-2, #F5EDD8)", border: "1px solid var(--gl-gold-hairline)", color: "var(--gl-ink-primary)" }}
+                className="mt-1 w-full rounded-lg px-4 py-3 text-base"
+                style={{ background: "var(--gl-surface-2, #F5EDD8)", border: "1px solid var(--gl-gold-hairline)", color: READABLE_INK }}
               />
             </label>
             <div className="mt-3 rounded-lg p-3" style={{ background: bhuktiLord.colorTint, border: `1px solid ${bhuktiLord.color}40` }}>
-              <p className="m-0 text-sm font-semibold" style={{ color: "var(--gl-ink-primary)" }}>
+              <p className="m-0 text-base font-semibold" style={{ color: READABLE_INK }}>
                 PD sequence starts from {bhuktiLord.nameIAST}.
               </p>
             </div>
@@ -267,12 +273,12 @@ function FineCascadeDrill() {
           <div className="rounded-xl p-4" style={{ background: subDayReliable ? grahas.budha.secondaryTint : `${ink.vermilionAccent}10`, border: `1.5px solid ${subDayReliable ? grahas.budha.primary : ink.vermilionAccent}50` }}>
             <div className="mb-3 flex items-center gap-2">
               <AlertTriangle size={17} color={subDayReliable ? grahas.budha.primary : ink.vermilionAccent} />
-              <p className="m-0 text-xs font-bold uppercase" style={{ color: subDayReliable ? grahas.budha.primary : ink.vermilionAccent, letterSpacing: "0.08em" }}>
+              <p className="m-0 text-sm font-bold uppercase" style={{ color: subDayReliable ? "#2F7A4F" : ink.vermilionAccent, letterSpacing: "0.08em" }}>
                 Birth-time support
               </p>
             </div>
             <label className="block">
-              <span className="text-xs font-bold uppercase" style={{ color: "var(--gl-ink-muted)", letterSpacing: "0.06em" }}>
+              <span className="text-sm font-bold uppercase" style={{ color: READABLE_MUTED, letterSpacing: "0.06em" }}>
                 Uncertainty: +/- {birthUncertaintyMinutes} minutes
               </span>
               <input
@@ -285,12 +291,12 @@ function FineCascadeDrill() {
                 style={{ accentColor: subDayReliable ? grahas.budha.primary : ink.vermilionAccent }}
               />
             </label>
-            <p className="mt-3 text-sm" style={{ color: "var(--gl-ink-secondary)" }}>
+            <p className="mt-3 text-base leading-relaxed" style={{ color: READABLE_SECONDARY }}>
               {hourReliable
                 ? "SD-level hour windows are plausible, but use software for exact boundaries."
                 : "Stop at PD. Hour/minute layers would give false precision for this uncertainty."}
             </p>
-            <p className="mt-2 text-xs font-semibold" style={{ color: subDayReliable ? grahas.budha.primary : ink.vermilionAccent }}>
+            <p className="mt-2 text-sm font-semibold" style={{ color: subDayReliable ? "#2F7A4F" : ink.vermilionAccent }}>
               Prana preview: selected SD is about {formatFineAmount(sdMinutes, "minutes")}.
             </p>
           </div>

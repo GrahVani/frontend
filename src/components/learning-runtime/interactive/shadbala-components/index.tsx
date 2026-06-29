@@ -304,7 +304,7 @@ export function ShadbalaComponents() {
                         className="cursor-pointer"
                         style={{ background: active ? wash(component.color, "12") : SURFACE, borderTop: `1px solid ${HAIRLINE}` }}
                       >
-                        <td className="px-4 py-3 font-bold" style={{ color: component.color }}>
+                        <td className="px-4 py-3 font-bold" style={{ color: INK_PRIMARY }}>
                           {component.order}
                         </td>
                         <td className="px-4 py-3">
@@ -321,7 +321,7 @@ export function ShadbalaComponents() {
                         <td className="px-4 py-3 font-bold" style={{ color: INK_PRIMARY }}>
                           {values[component.key]}
                         </td>
-                        <td className="px-4 py-3 font-bold" style={{ color: component.color }}>
+                        <td className="px-4 py-3 font-bold" style={{ color: INK_PRIMARY }}>
                           {virupasToRupas(values[component.key]).toFixed(2)}
                         </td>
                         <td className="px-4 py-3" style={{ color: INK_SECONDARY }}>

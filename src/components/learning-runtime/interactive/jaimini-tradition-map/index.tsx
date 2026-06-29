@@ -42,8 +42,8 @@ function TraditionSvg({
 
   return (
     <section className="mx-auto w-full max-w-[600px] min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 540 300" className="mx-auto h-auto w-full max-w-[540px]" role="img" aria-label="Jaimini author tradition and method map">
-        <rect x="18" y="18" width="504" height="250" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+      <svg viewBox="0 0 540 340" className="mx-auto h-auto w-full max-w-[540px]" role="img" aria-label="Jaimini author tradition and method map">
+        <rect x="18" y="18" width="504" height="290" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
         <text x="270" y="48" textAnchor="middle" fill={GOLD} fontSize="12" fontWeight="900" letterSpacing="1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           AUTHOR, TEXT, PERIOD, STREAM, METHOD
         </text>
@@ -53,8 +53,8 @@ function TraditionSvg({
         <line x1="320" y1="94" x2="430" y2="142" stroke={HAIRLINE} strokeWidth="3" strokeLinecap="round" />
         <line x1="320" y1="94" x2="320" y2="206" stroke={HAIRLINE} strokeWidth="3" strokeLinecap="round" />
 
-        <rect x="54" y="226" width="432" height="30" rx="12" fill={wash(selected.color, "10")} stroke={selected.color} />
-        <text x="270" y="246" textAnchor="middle" fill={selected.color} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <rect x="54" y="258" width="432" height="30" rx="12" fill={wash(selected.color, "10")} stroke={selected.color} />
+        <text x="270" y="278" textAnchor="middle" fill={selected.color} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           {selected.label}: {selected.headline}
         </text>
 
@@ -83,7 +83,7 @@ function TraditionSvg({
           );
         })}
 
-        <text x="270" y="286" textAnchor="middle" fill={INK_MUTED} fontSize="9" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="270" y="326" textAnchor="middle" fill={INK_MUTED} fontSize="9" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           orientation only: techniques begin in the next lessons
         </text>
       </svg>

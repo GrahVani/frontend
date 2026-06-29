@@ -16,9 +16,6 @@ import {
   CheckCircle2,
   XCircle,
   AlertTriangle,
-  Minus,
-  Plus,
-  RotateCcw,
   ArrowRight,
   Scale,
 } from "lucide-react";

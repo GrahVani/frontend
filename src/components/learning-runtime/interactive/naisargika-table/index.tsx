@@ -10,6 +10,8 @@
  * scale, the fraction ladder, and how variable balas accumulate on top.
  */
 
+/* eslint-disable react/no-unescaped-entities */
+
 import { useState } from "react";
 import { IAST, Devanagari } from "../../chrome/typography";
 import { grahas, type GrahaSlug } from "@/design-tokens/grahvani-learning/colors";
@@ -351,29 +353,19 @@ function FractionWheel() {
         const col = grahaColor(entry.grahaSlug);
         const path = describeArc(cx, cy, r, startAngle, endAngle);
         const midAngle = startAngle + sectorAngle / 2;
-        const labelPos = polarToCartesian(cx, cy, innerR + 10, midAngle);
-        const valuePos = polarToCartesian(cx, cy, innerR - 5, midAngle);
+        const valuePos = polarToCartesian(cx, cy, innerR + 11, midAngle);
 
         return (
           <g key={entry.grahaSlug}>
             <path d={path} fill={col} opacity={0.35} stroke={`${col}60`} strokeWidth={1} />
-            <text
-              x={labelPos.x}
-              y={labelPos.y}
-              textAnchor="middle"
-              fontSize={9}
-              fill={INK_SECONDARY}
-              fontWeight={600}
-            >
-              <IAST size="sm">{entry.nameIAST}</IAST>
-            </text>
+            <circle cx={valuePos.x} cy={valuePos.y} r="18" fill={SURFACE} opacity="0.88" stroke={`${col}70`} strokeWidth="1" />
             <text
               x={valuePos.x}
-              y={valuePos.y + 10}
+              y={valuePos.y + 4}
               textAnchor="middle"
-              fontSize={9}
+              fontSize={11}
               fill={col}
-              fontWeight={700}
+              fontWeight={900}
             >
               {entry.virupasFormatted}
             </text>
@@ -382,11 +374,11 @@ function FractionWheel() {
       })}
 
       {/* Center label */}
-      <circle cx={cx} cy={cy} r={innerR - 15} fill={SURFACE} stroke={HAIRLINE} strokeWidth={1} />
-      <text x={cx} y={cy - 6} textAnchor="middle" fontSize={10} fill={INK_SECONDARY} fontWeight={600}>
+      <circle cx={cx} cy={cy} r={innerR - 12} fill={SURFACE} stroke={HAIRLINE} strokeWidth={1.2} />
+      <text x={cx} y={cy - 6} textAnchor="middle" fontSize={12} fill={INK_SECONDARY} fontWeight={800}>
         60 virūpas
       </text>
-      <text x={cx} y={cy + 8} textAnchor="middle" fontSize={9} fill={INK_MUTED}>
+      <text x={cx} y={cy + 11} textAnchor="middle" fontSize={10} fill={INK_MUTED} fontWeight={700}>
         = 7 × 60/7
       </text>
 

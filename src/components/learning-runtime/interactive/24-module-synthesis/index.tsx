@@ -199,10 +199,10 @@ export function Module24SynthesisDojo() {
         <div className="grid gap-6 md:grid-cols-[1fr_1.2fr]">
           {/* SVG Stack Diagram — enhanced with glow, animated arrows, module badges */}
           <div className="flex justify-center rounded-xl p-4 border bg-white" style={{ borderColor: HAIRLINE }}>
-            <svg width="240" height="290" viewBox="0 0 240 290">
+            <svg width="380" height="460" viewBox="0 0 380 460" className="w-full max-w-[420px] h-auto">
               <defs>
-                <marker id="arrowDown" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
-                  <path d="M0,0 L8,4 L0,8 Z" fill="rgba(168,130,30,0.5)" />
+                <marker id="arrowDown" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+                  <path d="M0,0 L10,5 L0,10 Z" fill={INK_SECONDARY} />
                 </marker>
                 {FIVE_LAYERS.map((layer) => (
                   <filter key={`glow-${layer.id}`} id={`glow-${layer.id}`}>
@@ -217,47 +217,47 @@ export function Module24SynthesisDojo() {
 
               {FIVE_LAYERS.map((layer, i) => {
                 const isExpanded = expandedLayer === layer.id;
-                const yPos = 12 + i * 54;
+                const yPos = 18 + i * 76;
                 return (
                   <g key={layer.id} className="cursor-pointer" onClick={() => setExpandedLayer(isExpanded ? null : layer.id)}>
                     {/* Dependency arrow with animation */}
                     {i > 0 && (
                       <line
-                        x1="120" y1={yPos - 16} x2="120" y2={yPos}
-                        stroke="rgba(168,130,30,0.35)" strokeWidth="1.5"
-                        strokeDasharray="4,3" markerEnd="url(#arrowDown)"
+                        x1="190" y1={yPos - 20} x2="190" y2={yPos}
+                        stroke={INK_SECONDARY} strokeWidth="2" opacity="0.5"
+                        strokeDasharray="5,4" markerEnd="url(#arrowDown)"
                       >
-                        <animate attributeName="stroke-dashoffset" from="14" to="0" dur="2s" repeatCount="indefinite" />
+                        <animate attributeName="stroke-dashoffset" from="18" to="0" dur="2s" repeatCount="indefinite" />
                       </line>
                     )}
                     {/* Layer block with glow on active */}
                     <rect
-                      x="12" y={yPos}
-                      width="216" height="42"
-                      rx="10"
+                      x="20" y={yPos}
+                      width="340" height="54"
+                      rx="12"
                       fill={isExpanded ? `${layer.color}18` : "rgba(255,249,240,0.85)"}
-                      stroke={isExpanded ? layer.color : "rgba(168,130,30,0.2)"}
-                      strokeWidth={isExpanded ? 2.5 : 1}
+                      stroke={isExpanded ? layer.color : "rgba(168,130,30,0.25)"}
+                      strokeWidth={isExpanded ? 3 : 1.5}
                       filter={isExpanded ? `url(#glow-${layer.id})` : undefined}
                     />
                     {/* Module badge */}
                     <rect
-                      x="18" y={yPos + 6}
-                      width="40" height="14"
-                      rx="4"
+                      x="32" y={yPos + 10}
+                      width="70" height="24"
+                      rx="6"
                       fill={`${layer.color}20`}
                     />
-                    <text x="38" y={yPos + 16} fill={layer.color} fontSize="8" fontWeight="700" textAnchor="middle">
+                    <text x="67" y={yPos + 26} fill={layer.color} fontSize="12" fontWeight="700" textAnchor="middle">
                       {layer.modules}
                     </text>
                     {/* Layer name */}
-                    <text x="66" y={yPos + 17} fill={INK_PRIMARY} fontSize="10" fontWeight="600" textAnchor="start" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                    <text x="116" y={yPos + 26} fill={INK_PRIMARY} fontSize="15" fontWeight="700" textAnchor="start" style={{ fontFamily: "var(--font-cormorant), serif" }}>
                       {layer.label}
                     </text>
                     {/* Active indicator dot */}
                     {isExpanded && (
-                      <circle cx="218" cy={yPos + 21} r="4" fill={layer.color}>
-                        <animate attributeName="r" values="3;5;3" dur="1.5s" repeatCount="indefinite" />
+                      <circle cx="338" cy={yPos + 27} r="5" fill={layer.color}>
+                        <animate attributeName="r" values="4;6;4" dur="1.5s" repeatCount="indefinite" />
                         <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite" />
                       </circle>
                     )}
@@ -266,7 +266,7 @@ export function Module24SynthesisDojo() {
               })}
 
               {/* Bottom dependency note */}
-              <text x="120" y="284" fill={INK_MUTED} fontSize="7" textAnchor="middle" fontStyle="italic">
+              <text x="190" y="440" fill={INK_SECONDARY} fontSize="15" textAnchor="middle" fontWeight="600">
                 Each layer is the vocabulary the next layer speaks in
               </text>
             </svg>

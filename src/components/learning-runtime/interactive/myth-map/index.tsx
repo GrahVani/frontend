@@ -38,7 +38,7 @@ const NODES: Record<
     color: SHUKRA_DEEP,
     icon: BookOpen,
     x: 150,
-    y: 132,
+    y: 124,
   },
   sanjivani: {
     label: "Sanjivani-vidya",
@@ -48,8 +48,8 @@ const NODES: Record<
       "Venus holds the art that restores the fallen. In chart language, her pleasure, fertility, beauty, and healing all branch from this power to renew life.",
     color: SHUKRA,
     icon: RefreshCw,
-    x: 330,
-    y: 132,
+    x: 410,
+    y: 214,
   },
   reproduction: {
     label: "Reproduction",
@@ -59,8 +59,8 @@ const NODES: Record<
       "Revival becomes literal continuity of life: reproductive fluid, fertility, sexuality, and the body systems that carry life forward.",
     color: "#B05B87",
     icon: HeartPulse,
-    x: 560,
-    y: 72,
+    x: 670,
+    y: 92,
   },
   healing: {
     label: "Healing",
@@ -70,8 +70,8 @@ const NODES: Record<
       "The same life-returning signature explains Venus in medicine, rejuvenation, comfort, recovery, and arts that bring vitality back to the person.",
     color: GREEN,
     icon: Leaf,
-    x: 620,
-    y: 174,
+    x: 710,
+    y: 214,
   },
   pleasure: {
     label: "Pleasure",
@@ -81,8 +81,8 @@ const NODES: Record<
       "Bhoga is not a fall by itself. Venus teaches kama as a valid aim: the felt delight of embodied life when it does not break dharma.",
     color: "#C0862E",
     icon: Sparkles,
-    x: 560,
-    y: 276,
+    x: 670,
+    y: 336,
   },
   beauty: {
     label: "Beauty",
@@ -92,8 +92,8 @@ const NODES: Record<
       "Saundarya is life made visible: proportion, charm, softness, taste, poetry, music, adornment, and the grace that makes vitality attractive.",
     color: "#336CA8",
     icon: Sparkles,
-    x: 400,
-    y: 306,
+    x: 410,
+    y: 346,
   },
   jupiter: {
     label: "Jupiter link",
@@ -104,7 +104,7 @@ const NODES: Record<
     color: RED,
     icon: Scale,
     x: 150,
-    y: 306,
+    y: 336,
   },
   sixth: {
     label: "6th exception",
@@ -114,8 +114,8 @@ const NODES: Record<
       "Do not auto-weaken Venus in the 6th. Her restorative, life-affirming quality can function well in a difficult house when dignity and company support it.",
     color: "#6B7280",
     icon: ShieldCheck,
-    x: 270,
-    y: 228,
+    x: 250,
+    y: 238,
   },
 };
 
@@ -207,7 +207,7 @@ export function MythMap() {
             </span>
           </div>
 
-          <svg viewBox="0 0 720 370" role="img" aria-labelledby="myth-map-title myth-map-desc" style={{ width: "100%", height: "auto", display: "block" }}>
+          <svg viewBox="0 0 860 430" role="img" aria-labelledby="myth-map-title myth-map-desc" style={{ width: "100%", height: "auto", display: "block" }}>
             <title id="myth-map-title">Shukra myth map</title>
             <desc id="myth-map-desc">A clickable concept map connecting Asuracharya, Sanjivani-vidya, revival meanings, Jupiter enmity, and the sixth house exception.</desc>
             <defs>
@@ -215,9 +215,12 @@ export function MythMap() {
                 <stop offset="0%" stopColor="rgba(139, 95, 168, 0.2)" />
                 <stop offset="100%" stopColor="rgba(139, 95, 168, 0)" />
               </radialGradient>
+              <filter id="myth-map-node-shadow" x="-20%" y="-30%" width="140%" height="160%">
+                <feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#5E3F7A" floodOpacity="0.16" />
+              </filter>
             </defs>
-            <rect x="10" y="12" width="700" height="338" rx="18" fill="rgba(255, 251, 241, 0.62)" />
-            <circle cx="330" cy="184" r="132" fill="url(#myth-map-glow)" />
+            <rect x="10" y="12" width="840" height="398" rx="18" fill="rgba(255, 251, 241, 0.62)" />
+            <circle cx={NODES.sanjivani.x} cy={NODES.sanjivani.y} r="156" fill="url(#myth-map-glow)" />
             <g stroke={HAIRLINE} strokeWidth="2">
               {LINKS.map(([from, to]) => {
                 const a = NODES[from];
@@ -237,16 +240,14 @@ export function MythMap() {
                 );
               })}
             </g>
-            <circle cx="330" cy="184" r="58" fill="rgba(139, 95, 168, 0.12)" stroke={SHUKRA} strokeWidth="2" />
-            <text x="330" y="176" textAnchor="middle" fill={SHUKRA_DEEP} fontSize="19" fontWeight="800">
-              Shukra
-            </text>
-            <text x="330" y="199" textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight="700">
-              kama + renewal
-            </text>
             {(Object.keys(NODES) as NodeKey[]).map((key) => {
               const node = NODES[key];
               const selected = key === activeKey;
+              const isHub = key === "sanjivani";
+              const width = isHub ? 160 : 134;
+              const height = isHub ? 78 : 62;
+              const x = node.x - width / 2;
+              const y = node.y - height / 2;
               return (
                 <g
                   key={key}
@@ -263,21 +264,36 @@ export function MythMap() {
                   }}
                   style={{ cursor: "pointer", outline: "none" }}
                 >
-                  <circle cx={node.x} cy={node.y} r={selected ? 34 : 29} fill={selected ? node.color : "rgba(255,255,255,0.92)"} stroke={node.color} strokeWidth={selected ? 4 : 3} />
-                  <text x={node.x} y={node.y + 4} textAnchor="middle" fill={selected ? "#fff" : node.color} fontSize="11" fontWeight="800" pointerEvents="none">
+                  <rect
+                    x={x}
+                    y={y}
+                    width={width}
+                    height={height}
+                    rx="14"
+                    fill={selected ? node.color : "rgba(255,255,255,0.96)"}
+                    stroke={node.color}
+                    strokeWidth={selected ? 4 : 2.5}
+                    filter={isHub ? "url(#myth-map-node-shadow)" : undefined}
+                  />
+                  <text x={node.x} y={node.y - (isHub ? 12 : 6)} textAnchor="middle" fill={selected ? "#fff" : node.color} fontSize={isHub ? "15" : "13"} fontWeight="900" pointerEvents="none">
                     {node.short}
                   </text>
                   <text
                     x={node.x}
-                    y={node.y + 48}
+                    y={node.y + (isHub ? 9 : 14)}
                     textAnchor="middle"
-                    fill={selected ? node.color : INK_SECONDARY}
-                    fontSize="12"
-                    fontWeight="700"
+                    fill={selected ? "#fff" : INK_SECONDARY}
+                    fontSize={isHub ? "13" : "11"}
+                    fontWeight="800"
                     pointerEvents="none"
                   >
                     {node.label}
                   </text>
+                  {isHub && (
+                    <text x={node.x} y={node.y + 29} textAnchor="middle" fill={selected ? "rgba(255,255,255,0.88)" : INK_MUTED} fontSize="11" fontWeight="700" pointerEvents="none">
+                      Shukra root myth
+                    </text>
+                  )}
                 </g>
               );
             })}

@@ -38,18 +38,18 @@ function SthanaSumDiagram({ values }: { values: Record<SthanaComponentKey, numbe
 
   return (
     <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-      <svg viewBox="0 0 760 390" className="h-auto w-full" role="img" aria-label="Five sthana bala components summed into virupas and rupas">
-        <rect x="20" y="24" width="720" height="330" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
-        <text x="48" y="58" fill={ink.goldAccent} fontSize="13" fontWeight="900" letterSpacing="1.1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+      <svg viewBox="0 0 760 520" className="h-auto w-full" role="img" aria-label="Five sthana bala components summed into virupas and rupas">
+        <rect x="20" y="24" width="720" height="460" rx="18" fill={SURFACE_2} stroke={HAIRLINE} />
+        <text x="48" y="62" fill={ink.goldAccent} fontSize="16" fontWeight="900" letterSpacing="1.1" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           FIVE POSITIONAL CHECKS, ONE STHANA-BALA TOTAL
         </text>
 
-        <line x1="72" y1="165" x2="580" y2="165" stroke="var(--gl-gold-hairline)" strokeWidth="20" strokeLinecap="round" />
+        <line x1="72" y1="194" x2="580" y2="194" stroke="var(--gl-gold-hairline)" strokeWidth="24" strokeLinecap="round" />
         {segments.map(({ component, x, width }) => {
           return (
             <g key={component.key}>
-              <rect x={x} y="155" width={width} height="20" fill={wash(component.color, "44")} stroke={component.color} strokeWidth="0.8" />
-              <text x={x + width / 2} y="145" textAnchor="middle" fill={component.color} fontSize="11" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <rect x={x} y="182" width={width} height="24" fill={wash(component.color, "44")} stroke={component.color} strokeWidth="0.8" />
+              <text x={x + width / 2} y="168" textAnchor="middle" fill={component.color} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {formatVirupas(values[component.key])}
               </text>
             </g>
@@ -60,15 +60,15 @@ function SthanaSumDiagram({ values }: { values: Record<SthanaComponentKey, numbe
           const x = 72 + index * 116;
           return (
             <g key={component.key}>
-              <circle cx={x} cy="244" r="28" fill={wash(component.color, "16")} stroke={component.color} />
-              <text x={x} y="239" textAnchor="middle" fill={component.color} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <circle cx={x} cy="304" r="34" fill={wash(component.color, "16")} stroke={component.color} strokeWidth="1.4" />
+              <text x={x} y="297" textAnchor="middle" fill={component.color} fontSize="15" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {component.order}
               </text>
-              <text x={x} y="257" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+              <text x={x} y="321" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                 {component.label.split("-")[0]}
               </text>
               {index < STHANA_BALA_COMPONENTS.length - 1 ? (
-                <text x={x + 58} y="250" textAnchor="middle" fill={ink.goldAccent} fontSize="20" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+                <text x={x + 58} y="312" textAnchor="middle" fill={ink.goldAccent} fontSize="26" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
                   +
                 </text>
               ) : null}
@@ -76,18 +76,18 @@ function SthanaSumDiagram({ values }: { values: Record<SthanaComponentKey, numbe
           );
         })}
 
-        <circle cx="644" cy="164" r="62" fill={SURFACE} stroke="var(--gl-gold-accent)" strokeWidth="2" />
-        <text x="644" y="154" textAnchor="middle" fill={ink.goldAccent} fontSize="38" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+        <circle cx="644" cy="194" r="68" fill={SURFACE} stroke="var(--gl-gold-accent)" strokeWidth="2.4" />
+        <text x="644" y="183" textAnchor="middle" fill={ink.goldAccent} fontSize="44" fontWeight="900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
           {formatVirupas(total)}
         </text>
-        <text x="644" y="178" textAnchor="middle" fill={INK_PRIMARY} fontSize="12" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="644" y="212" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           virupas
         </text>
-        <text x="644" y="201" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="644" y="238" textAnchor="middle" fill={INK_MUTED} fontSize="13" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           {formatRupasFromVirupas(total)} rupas
         </text>
 
-        <text x="380" y="322" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+        <text x="380" y="420" textAnchor="middle" fill={INK_SECONDARY} fontSize="16" fontWeight="900" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
           Sum in virupas first. Then divide by 60 to report rupas.
         </text>
       </svg>

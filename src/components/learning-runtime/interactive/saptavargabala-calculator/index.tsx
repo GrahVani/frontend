@@ -219,7 +219,7 @@ export function SaptavargabalaCalculator() {
           </div>
         </section>
 
-        <div className="grid gap-4 xl:grid-cols-[minmax(320px,0.95fr)_minmax(320px,1fr)]">
+        <div className="grid min-w-0 items-start gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)]">
           <VargaStackDiagram color={selected.color} pattern={pattern} total={total} />
 
           <section className="rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>

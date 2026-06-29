@@ -106,9 +106,9 @@ function ChartSVG({ jupiterDignity }: { jupiterDignity: Dignity }) {
   });
 
   return (
-    <svg viewBox="0 0 400 400" className="w-full h-auto" style={{ maxHeight: 400 }}>
+    <svg viewBox="0 0 400 445" className="w-full h-auto" style={{ maxHeight: 445 }}>
       {/* Background */}
-      <rect x={8} y={8} width={384} height={384} rx={10} fill={SURFACE} stroke={HAIRLINE} strokeWidth={1.5} />
+      <rect x={8} y={8} width={384} height={424} rx={10} fill={SURFACE} stroke={HAIRLINE} strokeWidth={1.5} />
 
       {/* Diagonals */}
       <g stroke={HAIRLINE} strokeWidth={1.2} fill="none">
@@ -199,7 +199,7 @@ function ChartSVG({ jupiterDignity }: { jupiterDignity: Dignity }) {
       </text>
 
       {/* Legend */}
-      <g transform="translate(16, 360)">
+      <g transform="translate(38, 410)">
         <rect x={0} y={0} width={12} height={12} rx={2} fill={GOLD_ACCENT} fillOpacity={0.12} stroke={GOLD_ACCENT} strokeWidth={1} />
         <text x={18} y={10} fontSize={10} fill={INK_SECONDARY}>Lagna</text>
         <rect x={65} y={0} width={12} height={12} rx={2} fill={GREEN} fillOpacity={0.1} stroke={GREEN} strokeWidth={1} />
@@ -447,12 +447,12 @@ export function SpecialYogaScan() {
                   Jupiter Dignity (break test)
                 </span>
               </div>
-              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+              <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(96px, 1fr))" }}>
                 {DIGNITIES.map((d) => (
                   <button
                     key={d.key}
                     onClick={() => setJupiterDignity(d.key)}
-                    className="px-2 py-1.5 rounded-md text-xs font-semibold"
+                    className="min-h-12 rounded-md px-2 py-1.5 text-xs font-semibold leading-tight whitespace-normal break-words"
                     style={{
                       background: jupiterDignity === d.key ? `${d.isDebilitated ? VERMILION : d.isStrong ? GREEN : GOLD_ACCENT}15` : "transparent",
                       border: `1px solid ${jupiterDignity === d.key ? (d.isDebilitated ? VERMILION : d.isStrong ? GREEN : GOLD_ACCENT) : HAIRLINE}`,

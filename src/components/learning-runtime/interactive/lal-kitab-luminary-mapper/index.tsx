@@ -72,9 +72,9 @@ function TevaLuminarySvg({
   return (
     <section className="w-full min-w-0 overflow-hidden rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
       <div style={{ width: "100%", maxWidth: 460, margin: "0 auto" }}>
-        <svg viewBox="0 0 400 400" className="h-auto w-full min-w-0" role="img" aria-label="Fixed North Indian Teva chart for Lal Kitab luminary placement">
+        <svg viewBox="0 0 400 420" className="h-auto w-full min-w-0" role="img" aria-label="Fixed North Indian Teva chart for Lal Kitab luminary placement">
           {/* Chart lines */}
-          <g stroke="rgba(184, 132, 33, 0.35)" strokeWidth="1.2" fill="none">
+          <g stroke="rgba(130, 90, 30, 0.65)" strokeWidth="1.8" fill="none">
             <rect x="10" y="10" width="380" height="380" />
             <line x1="10" y1="10" x2="390" y2="390" />
             <line x1="390" y1="10" x2="10" y2="390" />
@@ -123,9 +123,9 @@ function TevaLuminarySvg({
                 <g transform={`translate(${center.x}, ${center.y})`}>
                   {/* House number */}
                   <text
-                    y={-16}
+                    y={-18}
                     fill={active ? accentColor : INK_SECONDARY}
-                    fontSize={10}
+                    fontSize={13}
                     fontWeight="800"
                     textAnchor="middle"
                     dominantBaseline="central"
@@ -138,7 +138,7 @@ function TevaLuminarySvg({
                   <text
                     y={0}
                     fill={active ? accentColor : INK_PRIMARY}
-                    fontSize={13}
+                    fontSize={16}
                     fontWeight="950"
                     textAnchor="middle"
                     dominantBaseline="central"
@@ -149,9 +149,9 @@ function TevaLuminarySvg({
 
                   {/* Sign name */}
                   <text
-                    y={13}
+                    y={16}
                     fill={active ? accentColor : INK_MUTED}
-                    fontSize={8}
+                    fontSize={11}
                     fontWeight="600"
                     textAnchor="middle"
                     dominantBaseline="central"
@@ -164,18 +164,18 @@ function TevaLuminarySvg({
                   {active && (
                     <>
                       <rect
-                        x={-18}
-                        y={21}
-                        width={36}
-                        height={16}
+                        x={-20}
+                        y={25}
+                        width={40}
+                        height={18}
                         rx={4}
                         fill={accentColor}
                         opacity={0.15}
                       />
                       <text
-                        y={29}
+                        y={34}
                         fill={accentColor}
-                        fontSize={8}
+                        fontSize={10}
                         fontWeight="900"
                         textAnchor="middle"
                         dominantBaseline="central"
@@ -191,7 +191,7 @@ function TevaLuminarySvg({
           })}
 
           {/* Chart title */}
-          <text x="200" y="400" textAnchor="middle" fill={INK_MUTED} fontSize="8" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
+          <text x="200" y="412" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight="800" style={{ fontFamily: "var(--font-sans), sans-serif" }}>
             Click a house to read its Lal Kitab luminary tendency
           </text>
         </svg>

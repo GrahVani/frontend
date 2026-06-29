@@ -85,18 +85,18 @@ const HOUSE_CENTROIDS: Record<number, { x: number; y: number }> = {
 
 // Perfect corner/apex coordinates for house labels to avoid overlaps with centered planets
 const PERFECT_LABEL_POS: Record<number, { x: number; y: number }> = {
-  1: { x: 120, y: 32 },
-  2: { x: 42, y: 22 },
-  3: { x: 22, y: 42 },
-  4: { x: 32, y: 120 },
-  5: { x: 22, y: 198 },
-  6: { x: 42, y: 218 },
-  7: { x: 120, y: 208 },
-  8: { x: 198, y: 218 },
-  9: { x: 218, y: 198 },
-  10: { x: 208, y: 120 },
-  11: { x: 218, y: 42 },
-  12: { x: 198, y: 22 }
+  1: { x: 120, y: 22 },
+  2: { x: 35, y: 18 },
+  3: { x: 18, y: 35 },
+  4: { x: 22, y: 120 },
+  5: { x: 18, y: 192 },
+  6: { x: 35, y: 222 },
+  7: { x: 120, y: 218 },
+  8: { x: 205, y: 222 },
+  9: { x: 222, y: 192 },
+  10: { x: 218, y: 120 },
+  11: { x: 222, y: 35 },
+  12: { x: 205, y: 18 }
 };
 
 // Get house label position (permanently located at outer corners)
@@ -214,19 +214,19 @@ export function TajikaLoanwordTranslator() {
 
             {/* East Indian Square Chart (Daylight Parchment theme, matching the rest of the app) */}
             <div className="flex justify-center rounded-xl p-4 my-4 relative overflow-hidden border" style={{ background: SURFACE_2, borderColor: HAIRLINE }}>
-              <svg viewBox="0 0 240 240" className="w-full max-w-[220px] h-auto block">
+              <svg viewBox="0 0 240 240" className="w-full max-w-[360px] h-auto block">
                 {/* Main Outer Box */}
-                <rect x="10" y="10" width="220" height="220" fill="none" stroke="rgba(168, 130, 30, 0.35)" strokeWidth="1.5" />
+                <rect x="10" y="10" width="220" height="220" fill="none" stroke={INK_SECONDARY} strokeWidth="1.5" />
                 
                 {/* Diagonal lines crossing (standard Diamond chart) */}
-                <line x1="10" y1="10" x2="230" y2="230" stroke="rgba(168, 130, 30, 0.35)" strokeWidth="1.5" />
-                <line x1="230" y1="10" x2="10" y2="230" stroke="rgba(168, 130, 30, 0.35)" strokeWidth="1.5" />
+                <line x1="10" y1="10" x2="230" y2="230" stroke={INK_SECONDARY} strokeWidth="1.5" />
+                <line x1="230" y1="10" x2="10" y2="230" stroke={INK_SECONDARY} strokeWidth="1.5" />
                 
                 {/* Inner diamond box lines */}
-                <line x1="120" y1="10" x2="10" y2="120" stroke="rgba(168, 130, 30, 0.35)" strokeWidth="1.5" />
-                <line x1="10" y1="120" x2="120" y2="230" stroke="rgba(168, 130, 30, 0.35)" strokeWidth="1.5" />
-                <line x1="120" y1="230" x2="230" y2="120" stroke="rgba(168, 130, 30, 0.35)" strokeWidth="1.5" />
-                <line x1="230" y1="120" x2="120" y2="10" stroke="rgba(168, 130, 30, 0.35)" strokeWidth="1.5" />
+                <line x1="120" y1="10" x2="10" y2="120" stroke={INK_SECONDARY} strokeWidth="1.5" />
+                <line x1="10" y1="120" x2="120" y2="230" stroke={INK_SECONDARY} strokeWidth="1.5" />
+                <line x1="120" y1="230" x2="230" y2="120" stroke={INK_SECONDARY} strokeWidth="1.5" />
+                <line x1="230" y1="120" x2="120" y2="10" stroke={INK_SECONDARY} strokeWidth="1.5" />
 
                 {/* House numbering labels (rendered at exact centroids, or stacked if planet is present) */}
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((h) => {
@@ -238,7 +238,7 @@ export function TajikaLoanwordTranslator() {
                       x={pos.x}
                       y={pos.y + 3}
                       textAnchor="middle"
-                      fill="rgba(168, 130, 30, 0.4)"
+                      fill={INK_SECONDARY}
                       fontSize="8"
                       fontWeight="bold"
                     >
@@ -257,7 +257,7 @@ export function TajikaLoanwordTranslator() {
                         <g transform={`translate(${pos.x}, ${pos.y})`}>
                           <circle cx="0" cy="0" r="14" fill="#E3F2FD" stroke="#1565C0" strokeWidth="1.5" />
                           <text x="0" y="3" textAnchor="middle" fill="#0D47A1" fontSize="9" fontWeight="bold">Ch</text>
-                          <text x="0" y="-18" textAnchor="middle" fill={INK_SECONDARY} fontSize="8" fontWeight="bold">Moon {moonDeg}°</text>
+                          <text x="0" y="-26" textAnchor="middle" fill={INK_SECONDARY} fontSize="8" fontWeight="bold">Moon {moonDeg}°</text>
                         </g>
                       );
                     })()}
@@ -269,7 +269,7 @@ export function TajikaLoanwordTranslator() {
                         <g transform={`translate(${pos.x}, ${pos.y})`}>
                           <circle cx="0" cy="0" r="14" fill="#FFEBEE" stroke="#C8412E" strokeWidth="1.5" />
                           <text x="0" y="3" textAnchor="middle" fill="#B71C1C" fontSize="9" fontWeight="bold">Ma</text>
-                          <text x="0" y="22" textAnchor="middle" fill={INK_SECONDARY} fontSize="8" fontWeight="bold">Mars 12°</text>
+                          <text x="0" y="30" textAnchor="middle" fill={INK_SECONDARY} fontSize="8" fontWeight="bold">Mars 12°</text>
                         </g>
                       );
                     })()}
@@ -385,7 +385,7 @@ export function TajikaLoanwordTranslator() {
                         <g transform={`translate(${pos.x}, ${pos.y})`}>
                           <circle cx="0" cy="0" r="14" fill="#FFEBEE" stroke="#C8412E" strokeWidth="1.5" />
                           <text x="0" y="3" textAnchor="middle" fill="#B71C1C" fontSize="8" fontWeight="bold">Ma</text>
-                          <text x="0" y="24" textAnchor="middle" fill={INK_SECONDARY} fontSize="7" fontWeight="bold">In Leo (Sun)</text>
+                          <text x="0" y="32" textAnchor="middle" fill={INK_SECONDARY} fontSize="7" fontWeight="bold">In Leo (Sun)</text>
                         </g>
                       );
                     })()}
@@ -397,7 +397,7 @@ export function TajikaLoanwordTranslator() {
                         <g transform={`translate(${pos.x}, ${pos.y})`}>
                           <circle cx="0" cy="0" r="14" fill="#FFFDE7" stroke="#E65100" strokeWidth="1.5" />
                           <text x="0" y="3" textAnchor="middle" fill="#5D4037" fontSize="8" fontWeight="bold">Su</text>
-                          <text x="0" y="24" textAnchor="middle" fill={INK_SECONDARY} fontSize="7" fontWeight="bold">In Sco (Mars)</text>
+                          <text x="0" y="32" textAnchor="middle" fill={INK_SECONDARY} fontSize="7" fontWeight="bold">In Sco (Mars)</text>
                         </g>
                       );
                     })()}

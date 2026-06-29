@@ -125,61 +125,37 @@ function FourCellMatrix({
 
 function ConfidenceDial({ percent, color }: { percent: number; color: string }) {
   const cx = 100;
-  const cy = 62;
-  const r = 48;
-  const startAngle = 135;
-  const endAngle = 45;
-  const totalSweep = 270;
-
-  function polarToCartesian(cx: number, cy: number, r: number, angleDeg: number) {
-    const rad = ((angleDeg - 90) * Math.PI) / 180;
-    return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
-  }
-
-  function describeArc(cx: number, cy: number, r: number, startAngle: number, endAngle: number) {
-    const start = polarToCartesian(cx, cy, r, endAngle);
-    const end = polarToCartesian(cx, cy, r, startAngle);
-    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
-    return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`;
-  }
-
-  const needleAngle = startAngle - (percent / 100) * totalSweep;
-  const needleTip = polarToCartesian(cx, cy, r - 5, needleAngle);
+  const cy = 70;
+  const r = 46;
+  const circumference = 2 * Math.PI * r;
+  const dash = (percent / 100) * circumference;
 
   return (
-    <svg viewBox="0 0 200 118" className="w-full h-auto">
-      {/* Background arc */}
-      <path d={describeArc(cx, cy, r, startAngle, endAngle)} fill="none" stroke={HAIRLINE} strokeWidth={7} strokeLinecap="round" />
-
-      {/* Filled arc */}
-      <path
-        d={describeArc(cx, cy, r, startAngle, needleAngle)}
+    <svg viewBox="0 0 200 150" className="w-full h-auto">
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke={HAIRLINE} strokeWidth={7} />
+      <circle
+        cx={cx}
+        cy={cy}
+        r={r}
         fill="none"
         stroke={color}
         strokeWidth={7}
         strokeLinecap="round"
+        strokeDasharray={`${dash} ${circumference - dash}`}
+        transform={`rotate(-90 ${cx} ${cy})`}
         opacity={0.55}
       />
-
-      {/* Needle */}
-      <line x1={cx} y1={cy} x2={needleTip.x} y2={needleTip.y} stroke={color} strokeWidth={2} />
-      <circle cx={cx} cy={cy} r={3.5} fill={color} />
-
-      {/* Low / High labels */}
-      <text x={cx - r + 2} y={cy + 12} textAnchor="middle" fontSize={9} fill={INK_MUTED}>Low</text>
-      <text x={cx + r - 2} y={cy + 12} textAnchor="middle" fontSize={9} fill={INK_MUTED}>High</text>
-
-      {/* Percent label — placed below the arc, well inside viewBox */}
-      <text x={cx} y={cy + 42} textAnchor="middle" fontSize={22} fill={color} fontWeight={700}>
+      <text x={cx - r - 16} y={cy + 4} textAnchor="middle" fontSize={9} fill={INK_MUTED}>Low</text>
+      <text x={cx + r + 16} y={cy + 4} textAnchor="middle" fontSize={9} fill={INK_MUTED}>High</text>
+      <text x={cx} y={cy + 8} textAnchor="middle" fontSize={22} fill={color} fontWeight={700}>
         {percent}%
       </text>
-      <text x={cx} y={cy + 56} textAnchor="middle" fontSize={10} fill={INK_MUTED}>
+      <text x={cx} y={cy + 24} textAnchor="middle" fontSize={10} fill={INK_MUTED}>
         confidence
       </text>
     </svg>
   );
 }
-
 /* ─── Main component ─────────────────────────────────────────────────────── */
 
 export function ShadbalaBhavabalaSynthesis() {

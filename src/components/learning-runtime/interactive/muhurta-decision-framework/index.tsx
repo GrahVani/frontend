@@ -113,76 +113,80 @@ function DecisionTreeTab() {
       <div className="min-w-0 rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
         <div className="mb-3 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <GitBranch size={17} color={GOLD} />
-            <p className="m-0 text-xs font-bold uppercase" style={{ color: GOLD, letterSpacing: "0.08em" }}>Operational decision-tree</p>
+            <GitBranch size={18} color={GOLD} />
+            <p className="m-0 text-sm font-bold uppercase" style={{ color: GOLD, letterSpacing: "0.08em" }}>Operational decision-tree</p>
           </div>
           <button
             type="button"
             onClick={reset}
-            className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold"
+            className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-semibold"
             style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}
           >
-            <RotateCcw size={13} /> Restart
+            <RotateCcw size={14} /> Restart
           </button>
         </div>
 
         <div className="flex justify-center">
-          <svg viewBox="0 0 640 420" className="w-full" role="img" aria-label="Muhurta stakes decision tree">
+          <svg viewBox="0 0 640 460" className="w-full" role="img" aria-label="Muhurta stakes decision tree">
             <defs>
               <marker id="tree-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
                 <path d="M0,0 L8,4 L0,8 Z" fill={GOLD} />
               </marker>
             </defs>
 
-            {/* Nodes */}
-            <rect x="170" y="20" width="300" height="70" rx="14" fill="#FFFDF7" stroke={nodeId === "start" ? GOLD : HAIRLINE} strokeWidth={nodeId === "start" ? 2.5 : 1.5} />
-            <text x="320" y="48" textAnchor="middle" fill={INK_PRIMARY} fontSize={12} fontWeight={700}>Substantial event?</text>
-            <text x="320" y="68" textAnchor="middle" fill={INK_SECONDARY} fontSize={9}>Wedding / griha-praveśa apūrva / major business / surgery / contract</text>
-
-            <rect x="40" y="170" width="160" height="60" rx="12" fill={wash(VERMILION, "18")} stroke={VERMILION} strokeWidth={nodeId === "high-outcome" ? 2.5 : 1.5} />
-            <text x="120" y="200" textAnchor="middle" fill={VERMILION} fontSize={12} fontWeight={800}>HIGH-STAKES</text>
-            <text x="120" y="218" textAnchor="middle" fill={INK_SECONDARY} fontSize={8}>Full integrated method</text>
-
-            <rect x="240" y="170" width="160" height="60" rx="12" fill={wash(AMBER, "18")} stroke={AMBER} strokeWidth={nodeId === "medium-outcome" ? 2.5 : 1.5} />
-            <text x="320" y="200" textAnchor="middle" fill={AMBER} fontSize={12} fontWeight={800}>MEDIUM-STAKES</text>
-            <text x="320" y="218" textAnchor="middle" fill={INK_SECONDARY} fontSize={8}>Reduced-precision</text>
-
-            <rect x="440" y="170" width="160" height="60" rx="12" fill={wash(BLUE, "18")} stroke={BLUE} strokeWidth={nodeId === "routine-outcome" ? 2.5 : 1.5} />
-            <text x="520" y="200" textAnchor="middle" fill={BLUE} fontSize={12} fontWeight={800}>ROUTINE-STAKES</text>
-            <text x="520" y="218" textAnchor="middle" fill={INK_SECONDARY} fontSize={8}>Chowghadiya only</text>
-
-            <rect x="240" y="320" width="160" height="60" rx="12" fill={wash(SLATE, "18")} stroke={SLATE} strokeWidth={nodeId === "trivial-outcome" ? 2.5 : 1.5} />
-            <text x="320" y="350" textAnchor="middle" fill={SLATE} fontSize={12} fontWeight={800}>TRIVIAL</text>
-            <text x="320" y="368" textAnchor="middle" fill={INK_SECONDARY} fontSize={8}>Decline engagement</text>
+            {/* Start node */}
+            <rect x="170" y="20" width="300" height="80" rx="14" fill="#FFFDF7" stroke={nodeId === "start" ? GOLD : HAIRLINE} strokeWidth={nodeId === "start" ? 2.5 : 1.5} />
+            <text x="320" y="50" textAnchor="middle" fill={INK_PRIMARY} fontSize={16} fontWeight={700}>Substantial event?</text>
+            <text x="320" y="72" textAnchor="middle" fill={INK_SECONDARY} fontSize={11}>
+              <tspan x="320" dy="0">Wedding / griha-praveśa apūrva / major business</tspan>
+              <tspan x="320" dy="16">/ surgery / contract</tspan>
+            </text>
 
             {/* Decision diamonds */}
-            <polygon points="320,120 370,145 320,170 270,145" fill="#FFFFFF" stroke={GOLD} strokeWidth={1.5} />
-            <text x="320" y="149" textAnchor="middle" fill={INK_PRIMARY} fontSize={9} fontWeight={700}>Routine event?</text>
+            <polygon points="320,130 370,155 320,180 270,155" fill="#FFFFFF" stroke={GOLD} strokeWidth={1.5} />
+            <text x="320" y="158" textAnchor="middle" fill={INK_PRIMARY} fontSize={12} fontWeight={700}>Routine event?</text>
 
-            <polygon points="520,270 570,295 520,320 470,295" fill="#FFFFFF" stroke={GOLD} strokeWidth={1.5} />
-            <text x="520" y="299" textAnchor="middle" fill={INK_PRIMARY} fontSize={9} fontWeight={700}>Routine daily?</text>
+            <polygon points="520,290 570,315 520,340 470,315" fill="#FFFFFF" stroke={GOLD} strokeWidth={1.5} />
+            <text x="520" y="318" textAnchor="middle" fill={INK_PRIMARY} fontSize={12} fontWeight={700}>Routine daily?</text>
+
+            {/* Outcome nodes */}
+            <rect x="40" y="190" width="160" height="70" rx="12" fill={wash(VERMILION, "18")} stroke={VERMILION} strokeWidth={nodeId === "high-outcome" ? 2.5 : 1.5} />
+            <text x="120" y="220" textAnchor="middle" fill={VERMILION} fontSize={15} fontWeight={800}>HIGH-STAKES</text>
+            <text x="120" y="240" textAnchor="middle" fill={INK_SECONDARY} fontSize={11}>Full integrated method</text>
+
+            <rect x="240" y="190" width="160" height="70" rx="12" fill={wash(AMBER, "18")} stroke={AMBER} strokeWidth={nodeId === "medium-outcome" ? 2.5 : 1.5} />
+            <text x="320" y="220" textAnchor="middle" fill={AMBER} fontSize={15} fontWeight={800}>MEDIUM-STAKES</text>
+            <text x="320" y="240" textAnchor="middle" fill={INK_SECONDARY} fontSize={11}>Reduced-precision</text>
+
+            <rect x="440" y="190" width="160" height="70" rx="12" fill={wash(BLUE, "18")} stroke={BLUE} strokeWidth={nodeId === "routine-outcome" ? 2.5 : 1.5} />
+            <text x="520" y="220" textAnchor="middle" fill={BLUE} fontSize={15} fontWeight={800}>ROUTINE-STAKES</text>
+            <text x="520" y="240" textAnchor="middle" fill={INK_SECONDARY} fontSize={11}>Chowghadiya only</text>
+
+            <rect x="240" y="360" width="160" height="70" rx="12" fill={wash(SLATE, "18")} stroke={SLATE} strokeWidth={nodeId === "trivial-outcome" ? 2.5 : 1.5} />
+            <text x="320" y="390" textAnchor="middle" fill={SLATE} fontSize={15} fontWeight={800}>TRIVIAL</text>
+            <text x="320" y="410" textAnchor="middle" fill={INK_SECONDARY} fontSize={11}>Decline engagement</text>
 
             {/* Connectors */}
-            <line x1="260" y1="90" x2="140" y2="170" stroke={GOLD} strokeWidth={1.5} markerEnd="url(#tree-arrow)" />
-            <text x="170" y="125" fill={GOLD} fontSize={8} fontWeight={700}>Yes</text>
+            <line x1="260" y1="100" x2="120" y2="190" stroke={GOLD} strokeWidth={1.5} markerEnd="url(#tree-arrow)" />
+            <text x="170" y="140" fill={GOLD} fontSize={11} fontWeight={700}>Yes</text>
 
-            <line x1="320" y1="90" x2="320" y2="120" stroke={GOLD} strokeWidth={1.5} markerEnd="url(#tree-arrow)" />
-            <text x="330" y="108" fill={INK_SECONDARY} fontSize={8}>No</text>
+            <line x1="320" y1="100" x2="320" y2="130" stroke={GOLD} strokeWidth={1.5} markerEnd="url(#tree-arrow)" />
+            <text x="330" y="118" fill={INK_SECONDARY} fontSize={11}>No</text>
 
-            <line x1="345" y1="155" x2="320" y2="170" stroke={GOLD} strokeWidth={1.5} markerEnd="url(#tree-arrow)" />
-            <text x="342" y="168" fill={GOLD} fontSize={8} fontWeight={700}>Yes</text>
+            <line x1="320" y1="180" x2="320" y2="190" stroke={GOLD} strokeWidth={1.5} markerEnd="url(#tree-arrow)" />
+            <text x="330" y="188" fill={GOLD} fontSize={11} fontWeight={700}>Yes</text>
 
-            <line x1="370" y1="145" x2="520" y2="170" stroke={GOLD} strokeWidth={1.5} markerEnd="url(#tree-arrow)" />
-            <text x="470" y="155" fill={INK_SECONDARY} fontSize={8}>No</text>
+            <line x1="370" y1="155" x2="520" y2="190" stroke={GOLD} strokeWidth={1.5} markerEnd="url(#tree-arrow)" />
+            <text x="470" y="170" fill={INK_SECONDARY} fontSize={11}>No</text>
 
-            <line x1="520" y1="230" x2="520" y2="270" stroke={GOLD} strokeWidth={1.5} markerEnd="url(#tree-arrow)" />
-            <text x="530" y="250" fill={INK_SECONDARY} fontSize={8}>No</text>
+            <line x1="520" y1="260" x2="520" y2="290" stroke={GOLD} strokeWidth={1.5} markerEnd="url(#tree-arrow)" />
+            <text x="530" y="275" fill={INK_SECONDARY} fontSize={11}>No</text>
 
-            <line x1="495" y1="295" x2="400" y2="320" stroke={GOLD} strokeWidth={1.5} markerEnd="url(#tree-arrow)" />
-            <text x="425" y="315" fill={GOLD} fontSize={8} fontWeight={700}>Yes</text>
+            <line x1="470" y1="315" x2="400" y2="360" stroke={GOLD} strokeWidth={1.5} markerEnd="url(#tree-arrow)" />
+            <text x="420" y="345" fill={GOLD} fontSize={11} fontWeight={700}>Yes</text>
 
-            <line x1="320" y1="230" x2="320" y2="320" stroke={GOLD} strokeWidth={1.5} markerEnd="url(#tree-arrow)" />
-            <text x="330" y="280" fill={INK_SECONDARY} fontSize={8}>No</text>
+            <line x1="320" y1="260" x2="320" y2="360" stroke={GOLD} strokeWidth={1.5} markerEnd="url(#tree-arrow)" />
+            <text x="330" y="310" fill={INK_SECONDARY} fontSize={11}>No</text>
           </svg>
         </div>
       </div>
@@ -190,57 +194,57 @@ function DecisionTreeTab() {
       <div className="min-w-0">
         {!isOutcome ? (
           <div className="rounded-xl p-5" style={{ background: "#FFFFFF", border: `1.5px solid ${GOLD}` }}>
-            <p className="m-0 text-xs font-bold uppercase" style={{ color: GOLD, letterSpacing: "0.08em" }}>Current question</p>
-            <h3 className="m-0 mt-3 text-lg font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
+            <p className="m-0 text-sm font-bold uppercase" style={{ color: GOLD, letterSpacing: "0.08em" }}>Current question</p>
+            <h3 className="m-0 mt-3 text-2xl font-semibold" style={{ color: INK_PRIMARY, fontFamily: "var(--font-cormorant), serif" }}>
               {node.question}
             </h3>
             <div className="mt-4 flex flex-col gap-2">
               <button
                 type="button"
                 onClick={() => choose(node.yesTarget)}
-                className="flex items-center justify-between rounded-lg px-4 py-3 text-left text-sm font-semibold transition"
+                className="flex items-center justify-between rounded-lg px-4 py-3 text-left text-base font-semibold transition"
                 style={{ background: wash(GREEN, "12"), border: `1px solid ${GREEN}`, color: GREEN }}
               >
                 {node.yesLabel}
-                <ChevronRight size={16} />
+                <ChevronRight size={18} />
               </button>
               <button
                 type="button"
                 onClick={() => choose(node.noTarget)}
-                className="flex items-center justify-between rounded-lg px-4 py-3 text-left text-sm font-semibold transition"
+                className="flex items-center justify-between rounded-lg px-4 py-3 text-left text-base font-semibold transition"
                 style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, color: INK_PRIMARY }}
               >
                 {node.noLabel}
-                <ChevronRight size={16} />
+                <ChevronRight size={18} />
               </button>
             </div>
           </div>
         ) : node.outcome ? (
           <div className="rounded-xl p-5" style={{ background: wash(outcomeLevel?.color ?? GOLD, "10"), border: `1.5px solid ${outcomeLevel?.color ?? GOLD}` }}>
             <div className="flex items-center gap-2">
-              <BadgeCheck size={20} color={outcomeLevel?.color ?? GOLD} />
-              <p className="m-0 text-sm font-bold" style={{ color: outcomeLevel?.color ?? GOLD }}>{node.outcome.title}</p>
+              <BadgeCheck size={22} color={outcomeLevel?.color ?? GOLD} />
+              <p className="m-0 text-lg font-bold" style={{ color: outcomeLevel?.color ?? GOLD }}>{node.outcome.title}</p>
             </div>
-            <p className="m-0 mt-3 text-sm" style={{ color: INK_PRIMARY }}>{node.outcome.note}</p>
+            <p className="m-0 mt-3 text-lg" style={{ color: INK_PRIMARY }}>{node.outcome.note}</p>
             {outcomeLevel && (
               <div className="mt-4 rounded-lg p-3" style={{ background: "#FFFFFF", border: `1px solid ${wash(outcomeLevel.color, "25")}` }}>
-                <p className="m-0 text-xs font-bold uppercase" style={{ color: outcomeLevel.color, letterSpacing: "0.06em" }}>Method</p>
-                <p className="m-0 mt-1 text-sm" style={{ color: INK_PRIMARY }}>{findMethod(outcomeLevel.method).label}</p>
+                <p className="m-0 text-sm font-bold uppercase" style={{ color: outcomeLevel.color, letterSpacing: "0.06em" }}>Method</p>
+                <p className="m-0 mt-1 text-lg" style={{ color: INK_PRIMARY }}>{findMethod(outcomeLevel.method).label}</p>
               </div>
             )}
           </div>
         ) : null}
 
         <div className="mt-4 rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
-          <p className="m-0 text-xs font-bold uppercase" style={{ color: GOLD, letterSpacing: "0.08em" }}>Path taken</p>
+          <p className="m-0 text-sm font-bold uppercase" style={{ color: GOLD, letterSpacing: "0.08em" }}>Path taken</p>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {history.map((id, i) => {
               const n = DECISION_TREE.find((x) => x.id === id);
               const label = n?.outcome ? n.outcome.title : n?.id === "start" ? "Start" : i === 1 ? "Substantial?" : i === 2 ? "Routine?" : "Daily?";
               return (
-                <span key={id + i} className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-semibold" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}>
+                <span key={id + i} className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY }}>
                   {label}
-                  {i < history.length - 1 && <ChevronRight size={10} />}
+                  {i < history.length - 1 && <ChevronRight size={12} />}
                 </span>
               );
             })}

@@ -5,11 +5,9 @@ import type { CSSProperties, ReactNode } from "react";
 import {
   ArrowRight,
   BookOpen,
-  CheckCircle2,
   Grid3x3,
   MousePointerClick,
   RotateCcw,
-  XCircle,
 } from "lucide-react";
 import {
   SIGNS,
@@ -17,7 +15,6 @@ import {
   SIGN_ABBRS,
   GRAHAS,
   DEMO_PLACEMENTS,
-  QUIZ_ITEMS,
 } from "./data";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
@@ -32,13 +29,12 @@ const VERMILION = "#A23A1E";
 const LAL_KITAB_COLOR = "#A87830";
 const LAL_KITAB_DEEP = "#7A5212";
 
-type TabKey = "frame" | "demo" | "drop" | "quiz";
+type TabKey = "frame" | "demo" | "drop";
 
 const TABS: { key: TabKey; label: string; icon: ReactNode }[] = [
   { key: "frame", label: "Fixed frame", icon: <Grid3x3 size={16} /> },
   { key: "demo", label: "Lagna demo", icon: <BookOpen size={16} /> },
   { key: "drop", label: "Planet drop", icon: <MousePointerClick size={16} /> },
-  { key: "quiz", label: "Quiz", icon: <CheckCircle2 size={16} /> },
 ];
 
 export function LalKitabTevaDoctrineExplorer() {
@@ -104,7 +100,6 @@ export function LalKitabTevaDoctrineExplorer() {
         {activeTab === "frame" && <FrameTab />}
         {activeTab === "demo" && <DemoTab />}
         {activeTab === "drop" && <DropTab />}
-        {activeTab === "quiz" && <QuizTab />}
       </div>
     </div>
   );
@@ -294,103 +289,6 @@ function DropTab() {
       <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
         <NorthIndianSvgChart highlightHouse={houseNum} highlightGraha={graha.abbr} />
       </div>
-    </section>
-  );
-}
-
-/* ───────────────────────── Quiz Tab ───────────────────────── */
-
-function QuizTab() {
-  const [answers, setAnswers] = useState<Record<number, string>>({});
-  const [revealed, setRevealed] = useState<Record<number, boolean>>({});
-
-  const handleReveal = (id: number) => {
-    setRevealed((prev) => ({ ...prev, [id]: true }));
-  };
-
-  const correctCount = QUIZ_ITEMS.filter((q) => {
-    const ans = answers[q.id]?.trim().toLowerCase();
-    return ans && q.answer.toLowerCase().includes(ans);
-  }).length;
-
-  return (
-    <section style={{ display: "grid", gap: "0.85rem" }}>
-      <div style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
-          <div>
-            <p style={eyebrowStyle}>Quick quiz</p>
-            <p style={{ margin: "0.25rem 0 0", color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.88rem" }}>
-              Type your answer, then reveal the explanation.
-            </p>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: GOLD, fontWeight: 950, fontSize: "0.9rem" }}>
-            <CheckCircle2 size={18} />
-            {correctCount} / {QUIZ_ITEMS.length} matched
-          </div>
-        </div>
-      </div>
-
-      {QUIZ_ITEMS.map((item) => {
-        const show = revealed[item.id];
-        const userAns = answers[item.id] || "";
-        const isMatch = userAns.trim().length > 0 && item.answer.toLowerCase().includes(userAns.trim().toLowerCase());
-
-        return (
-          <article key={item.id} style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", display: "grid", gap: "0.6rem" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: INK_MUTED, fontWeight: 900, fontSize: "0.78rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-              <BookOpen size={14} />
-              Question {item.id}
-            </div>
-            <p style={{ margin: 0, color: INK_PRIMARY, fontSize: "0.93rem", lineHeight: 1.5 }}>{item.question}</p>
-            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-              <input
-                type="text"
-                value={userAns}
-                onChange={(e) => setAnswers((prev) => ({ ...prev, [item.id]: e.target.value }))}
-                placeholder="Type your answer..."
-                style={{
-                  flex: 1,
-                  minWidth: 200,
-                  border: `1px solid ${show ? (isMatch ? GREEN : VERMILION) : HAIRLINE}`,
-                  borderRadius: 8,
-                  background: "rgba(255,251,241,0.78)",
-                  color: INK_PRIMARY,
-                  padding: "0.55rem 0.65rem",
-                  fontWeight: 850,
-                }}
-              />
-              <button type="button" onClick={() => handleReveal(item.id)} style={buttonStyle(false, BLUE)}>
-                Reveal
-              </button>
-            </div>
-            {show && (
-              <div
-                style={{
-                  border: `1px solid ${isMatch ? GREEN : VERMILION}44`,
-                  borderRadius: 8,
-                  background: `${isMatch ? GREEN : VERMILION}0D`,
-                  padding: "0.65rem",
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "flex-start",
-                }}
-              >
-                {isMatch ? (
-                  <CheckCircle2 size={18} color={GREEN} style={{ flexShrink: 0, marginTop: 2 }} />
-                ) : (
-                  <XCircle size={18} color={VERMILION} style={{ flexShrink: 0, marginTop: 2 }} />
-                )}
-                <div>
-                  <div style={{ fontWeight: 950, color: isMatch ? GREEN : VERMILION, fontSize: "0.88rem" }}>
-                    {isMatch ? "Correct" : `Answer: ${item.answer}`}
-                  </div>
-                  <p style={{ margin: "0.2rem 0 0", color: INK_SECONDARY, lineHeight: 1.5, fontSize: "0.85rem" }}>{item.explanation}</p>
-                </div>
-              </div>
-            )}
-          </article>
-        );
-      })}
     </section>
   );
 }
