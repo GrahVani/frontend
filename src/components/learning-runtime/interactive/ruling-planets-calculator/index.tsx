@@ -1,585 +1,376 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
-import { NAKSHATRAS } from "../nakshatra-data";
-import { RASHIS } from "../rashi-data";
+import React, { useState, useEffect, useMemo } from "react";
+import { AlertTriangle, Compass, Info, Play, Pause, Check } from "lucide-react";
 
-const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
-const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
-const INK_MUTED = "var(--gl-ink-on-cream-muted)";
-const HAIRLINE = "var(--gl-gold-hairline)";
-const SURFACE = "var(--gl-card-surface-solid)";
-const GOLD = "#9C7A2F";
-const CRIMSON = "#C8412E";
-const EMERALD = "#10B981";
-const INDIGO = "#4F6FA8";
+const GOLD = "#9c7a2f";
+const INK_PRIMARY = "#2b2621";
+const INK_SECONDARY = "#5c534c";
+const HAIRLINE = "rgba(156, 122, 47, 0.25)";
+const BG_TINT = "rgba(247, 244, 237, 0.95)";
 
-const SIGNS = ["Meṣa", "Vṛṣabha", "Mithuna", "Karka", "Siṁha", "Kanyā", "Tulā", "Vṛścika", "Dhanus", "Makara", "Kumbha", "Mīna"];
-const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const WEEKDAY_LORDS = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"];
-
-const VIM: [string, number][] = [
-  ["Ketu", 7], ["Venus", 20], ["Sun", 6], ["Moon", 10], ["Mars", 7],
-  ["Rahu", 18], ["Jupiter", 16], ["Saturn", 19], ["Mercury", 17],
+// North Indian House Centers (100x100 SVG coords)
+const NORTH_HOUSE_COORDS = [
+  { house: 1, cx: 50, cy: 24 },
+  { house: 2, cx: 27, cy: 13 },
+  { house: 3, cx: 13, cy: 27 },
+  { house: 4, cx: 24, cy: 50 },
+  { house: 5, cx: 13, cy: 73 },
+  { house: 6, cx: 27, cy: 87 },
+  { house: 7, cx: 50, cy: 76 },
+  { house: 8, cx: 73, cy: 87 },
+  { house: 9, cx: 87, cy: 73 },
+  { house: 10, cx: 76, cy: 50 },
+  { house: 11, cx: 87, cy: 27 },
+  { house: 12, cx: 73, cy: 13 }
 ];
-const NAK_DEG = 13 + 20 / 60; // 13.3333°
+
+const SIGN_GRID_COORDS = [
+  { sign: "Pisces", x: 0, y: 0, label: "Meena" },
+  { sign: "Aries", x: 1, y: 0, label: "Meṣa" },
+  { sign: "Taurus", x: 2, y: 0, label: "Vṛṣabha" },
+  { sign: "Gemini", x: 3, y: 0, label: "Mithuna" },
+  { sign: "Cancer", x: 3, y: 1, label: "Karka" },
+  { sign: "Leo", x: 3, y: 2, label: "Siṁha" },
+  { sign: "Virgo", x: 3, y: 3, label: "Kanyā" },
+  { sign: "Libra", x: 2, y: 3, label: "Tulā" },
+  { sign: "Scorpio", x: 1, y: 3, label: "Vṛścika" },
+  { sign: "Sagittarius", x: 0, y: 3, label: "Dhanus" },
+  { sign: "Capricorn", x: 0, y: 2, label: "Makara" },
+  { sign: "Aquarius", x: 0, y: 1, label: "Kumbha" }
+];
+
+// Fixed Natal reference values for comparison
+const NATAL_RPS = {
+  lagnaSignLord: "Saturn", // Aquarius
+  lagnaStarLord: "Rahu",   // Shatabhisha
+  moonSignLord: "Jupiter", // Pisces
+  moonStarLord: "Saturn",  // Uttara Bhadrapada
+  dayLord: "Saturn"        // Saturday
+};
 
 export function RulingPlanetsCalculator() {
-  // Current simulated time (relative to midnight in minutes, 0 to 1439)
-  const [timeMin, setTimeMin] = useState(330); // default 5:30 AM (330 minutes)
-  const [sunriseMin, setSunriseMin] = useState(360); // default 6:00 AM (360 minutes)
+  const [timeOffsetMins, setTimeOffsetMins] = useState(0); 
   const [isPlaying, setIsPlaying] = useState(false);
-  const [activeDate, setActiveDate] = useState("2026-06-11"); // Thursday
+  const [chartStyle, setChartStyle] = useState<"north" | "south">("north");
+  const [dayOfWeek, setDayOfWeek] = useState<"Saturday" | "Sunday" | "Monday">("Saturday");
 
-  // Volatility boundary-cross flash triggers
-  const [flashSub, setFlashSub] = useState(false);
-  const [flashStar, setFlashStar] = useState(false);
-
-  // Keep refs of current values to check for boundary crosses
-  const prevSubLordRef = useRef("");
-  const prevStarLordRef = useRef("");
-
-  // Playback timer
+  // Time simulator engine
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let intervalId: any;
     if (isPlaying) {
-      timer = setInterval(() => {
-        setTimeMin((prev) => (prev + 1) % 1440);
-      }, 700);
+      intervalId = setInterval(() => {
+        setTimeOffsetMins((prev) => (prev + 1) % 1440);
+      }, 1000);
     }
-    return () => clearInterval(timer);
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, [isPlaying]);
 
-  // Compute Weekday of the selected date (0: Sunday, 1: Monday...)
-  const civilWeekdayIdx = useMemo(() => {
-    const d = new Date(activeDate);
-    return isNaN(d.getTime()) ? 4 : d.getDay(); // fallback Thursday (4)
-  }, [activeDate]);
+  const baseLagnaDeg = useMemo(() => {
+    const deg = 18.45 + timeOffsetMins * 0.25;
+    return ((deg % 30) + 30) % 30;
+  }, [timeOffsetMins]);
 
-  const civilWeekday = WEEKDAYS[civilWeekdayIdx];
-  const civilDayLord = WEEKDAY_LORDS[civilWeekdayIdx];
+  const activeLagnaSign = useMemo(() => {
+    const absDeg = 318.45 + timeOffsetMins * 0.25;
+    const signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+    return signs[(Math.floor((absDeg % 360) / 30) + 12) % 12];
+  }, [timeOffsetMins]);
 
-  // Sunrise day-lord transition calculation
-  const preSunrise = timeMin < sunriseMin;
-  const hinduWeekdayIdx = preSunrise ? (civilWeekdayIdx + 6) % 7 : civilWeekdayIdx;
-  const hinduWeekday = WEEKDAYS[hinduWeekdayIdx];
-  const dayLord = WEEKDAY_LORDS[hinduWeekdayIdx];
+  const lagnaSignIndex = useMemo(() => {
+    const signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+    return signs.indexOf(activeLagnaSign) + 1;
+  }, [activeLagnaSign]);
 
-  // Simulated Ascendant degree moves as a function of time (approximately 1 degree every 4 minutes)
-  const lagnaLon = useMemo(() => {
-    const startingOffset = 60; // Gemini 0°
-    const currentMovement = timeMin / 4; // 1 degree per 4 min
-    return (startingOffset + currentMovement) % 360;
-  }, [timeMin]);
-
-  // Simulated Moon degree moves very slowly
-  const moonLon = useMemo(() => {
-    const startingOffset = 210; // Scorpio 0°
-    const currentMovement = (timeMin / 1440) * 13.2; 
-    return (startingOffset + currentMovement) % 360;
-  }, [timeMin]);
-
-  // Sub-lord & Nakshatra divisions math for Lagna
-  const lagnaSubData = useMemo(() => {
-    const nakIdx = Math.min(Math.floor(lagnaLon / NAK_DEG), 26);
-    const nak = NAKSHATRAS[nakIdx];
-    const elapsed = lagnaLon - nakIdx * NAK_DEG;
-
-    const start = VIM.findIndex((v) => v[0] === nak.ruler);
-    const subs: { lord: string; from: number; to: number }[] = [];
-    let cursor = 0;
-    for (let j = 0; j < 9; j++) {
-      const [lord, years] = VIM[(start + j) % 9];
-      const width = (years / 120) * NAK_DEG;
-      subs.push({ lord, from: cursor, to: cursor + width });
-      cursor += width;
+  const lagnaStarLord = useMemo(() => {
+    if (activeLagnaSign === "Aquarius") {
+      if (baseLagnaDeg < 6.67) return "Mars";
+      if (baseLagnaDeg < 20.00) return "Rahu";
+      return "Jupiter";
     }
-    const activeSub = subs.find((s) => elapsed >= s.from && elapsed < s.to) ?? subs[subs.length - 1];
-
-    // Compute approximate time remaining in sub (sub-width in degrees * 4 minutes per degree)
-    const subRemainingDegrees = activeSub.to - elapsed;
-    const subRemainingMin = subRemainingDegrees * 4;
-
-    return {
-      signLord: RASHIS[Math.floor(lagnaLon / 30)].lord,
-      starLord: nak.ruler,
-      subLord: activeSub.lord,
-      subRemainingMin,
-      nakName: nak.name,
-      subIndex: subs.indexOf(activeSub) + 1,
-    };
-  }, [lagnaLon]);
-
-  // Sub-lord math for Moon
-  const moonSubData = useMemo(() => {
-    const nakIdx = Math.min(Math.floor(moonLon / NAK_DEG), 26);
-    const nak = NAKSHATRAS[nakIdx];
-    return {
-      signLord: RASHIS[Math.floor(moonLon / 30)].lord,
-      starLord: nak.ruler,
-      nakName: nak.name,
-    };
-  }, [moonLon]);
-
-  // Flash logic on boundary crosses
-  useEffect(() => {
-    if (prevSubLordRef.current && prevSubLordRef.current !== lagnaSubData.subLord) {
-      setFlashSub(true);
-      const timer = setTimeout(() => setFlashSub(false), 800);
-      return () => clearTimeout(timer);
+    if (activeLagnaSign === "Pisces") {
+      if (baseLagnaDeg < 3.33) return "Jupiter";
+      if (baseLagnaDeg < 16.67) return "Saturn";
+      return "Mercury";
     }
-    prevSubLordRef.current = lagnaSubData.subLord;
-  }, [lagnaSubData.subLord]);
+    return "Sun";
+  }, [activeLagnaSign, baseLagnaDeg]);
 
-  useEffect(() => {
-    if (prevStarLordRef.current && prevStarLordRef.current !== lagnaSubData.starLord) {
-      setFlashStar(true);
-      const timer = setTimeout(() => setFlashStar(false), 800);
-      return () => clearTimeout(timer);
-    }
-    prevStarLordRef.current = lagnaSubData.starLord;
-  }, [lagnaSubData.starLord]);
+  const lagnaSignLord = useMemo(() => {
+    if (activeLagnaSign === "Aquarius") return "Saturn";
+    if (activeLagnaSign === "Pisces") return "Jupiter";
+    if (activeLagnaSign === "Capricorn") return "Saturn";
+    return "Mars";
+  }, [activeLagnaSign]);
 
-  // Helper formatters
-  const fmtTime = (min: number) => {
-    const h = Math.floor(min / 60);
-    const m = min % 60;
-    const ampm = h >= 12 ? "PM" : "AM";
-    const displayH = h % 12 === 0 ? 12 : h % 12;
-    return `${displayH.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")} ${ampm}`;
-  };
+  const moonSignLord = "Jupiter";
+  const moonStarLord = "Saturn";
 
-  const lagnaDegStr = useMemo(() => {
-    const deg = lagnaLon % 30;
-    const d = Math.floor(deg);
-    const m = Math.floor((deg - d) * 60);
-    return `${d}°${m.toString().padStart(2, "0")}′`;
-  }, [lagnaLon]);
+  const dayLord = useMemo(() => {
+    if (dayOfWeek === "Saturday") return "Saturn";
+    if (dayOfWeek === "Sunday") return "Sun";
+    return "Moon";
+  }, [dayOfWeek]);
 
-  const moonDegStr = useMemo(() => {
-    const deg = moonLon % 30;
-    const d = Math.floor(deg);
-    const m = Math.floor((deg - d) * 60);
-    return `${d}°${m.toString().padStart(2, "0")}′`;
-  }, [moonLon]);
+  // Volatility boundary crossed alert
+  const isBoundaryCrossed = useMemo(() => {
+    return baseLagnaDeg < 0.5 || baseLagnaDeg > 29.5;
+  }, [baseLagnaDeg]);
 
-  // Clock Hand angles
-  const clockAngles = useMemo(() => {
-    const minHandAngle = ((timeMin % 60) / 60) * 360;
-    const hourHandAngle = ((timeMin / 720) * 360) % 360;
-    return { minHandAngle, hourHandAngle };
-  }, [timeMin]);
+  // Resonance calculations: returns which query lords match natal chart parameters
+  const resonanceMatches = useMemo(() => {
+    const matches: string[] = [];
+    const natalSet = new Set(Object.values(NATAL_RPS));
+
+    if (natalSet.has(lagnaSignLord)) matches.push(`Lagna Sign Lord (${lagnaSignLord})`);
+    if (natalSet.has(lagnaStarLord)) matches.push(`Lagna Star Lord (${lagnaStarLord})`);
+    if (natalSet.has(dayLord)) matches.push(`Day Lord (${dayLord})`);
+
+    return matches;
+  }, [lagnaSignLord, lagnaStarLord, dayLord]);
 
   return (
-    <div className="gl-surface-twilight-glass" style={{ padding: "28px 24px", color: INK_PRIMARY, minHeight: "600px" }} data-interactive="ruling-planets-calculator">
-      
-      {/* Header */}
-      <section style={{ borderBottom: `1px solid ${HAIRLINE}`, paddingBottom: "1.2rem", marginBottom: "1.8rem" }}>
-        <span style={{ color: GOLD, fontSize: "10px", textTransform: "uppercase", fontWeight: 900, letterSpacing: "0.1em" }}>Module 16 · Chapter 5 · Lesson 2</span>
-        <h1 style={{ margin: "0.3rem 0 0", color: GOLD, fontSize: "1.6rem", fontWeight: 700, letterSpacing: "-0.02em" }}>Ruling Planets Live Calculator</h1>
-        <p style={{ margin: "0.4rem 0 0", fontSize: "13.5px", color: INK_SECONDARY, lineHeight: "1.5" }}>
-          Observe real-time ascendant volatility and time-travel across the local sunrise day-lord boundary.
-        </p>
-      </section>
-
-      {/* Cockpit & Simulation Controls: 3-column dashboard */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2rem", marginBottom: "2.4rem" }}>
-        
-        {/* Column 1: Time simulation panel */}
-        <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "16px 20px" }}>
-          <h3 style={{ margin: "0 0 12px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em" }}>Time Simulation Cockpit</h3>
-          
-          <div style={{ display: "flex", gap: "0.8rem", marginBottom: "14px" }}>
+    <div
+      className="p-6 md:p-8 rounded-2xl border font-sans animate-fade-in"
+      style={{
+        backgroundColor: BG_TINT,
+        borderColor: HAIRLINE,
+        color: INK_PRIMARY,
+        boxShadow: "0 8px 32px rgba(156, 122, 47, 0.08)"
+      }}
+    >
+      <div className="pb-4 border-b mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-2" style={{ borderColor: HAIRLINE }}>
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight text-amber-900 animate-fade-in" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+            Ruling Planets Calculator
+          </h2>
+          <p className="text-xs italic text-gray-600">
+            Real-time volatility simulator: calculate sign/star lord changes at query moments.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="inline-flex rounded-lg border p-0.5 bg-amber-950/5" style={{ borderColor: HAIRLINE }}>
             <button
-              onClick={() => setIsPlaying(!isPlaying)}
-              style={{
-                flex: 1.5,
-                padding: "10px 14px",
-                borderRadius: "8px",
-                border: `1.5px solid ${isPlaying ? CRIMSON : EMERALD}`,
-                background: isPlaying ? `${CRIMSON}0A` : `${EMERALD}0A`,
-                color: isPlaying ? CRIMSON : EMERALD,
-                fontWeight: 800,
-                fontSize: "12px",
-                cursor: "pointer",
-                transition: "all 0.2s"
-              }}
+              onClick={() => setChartStyle("north")}
+              className={`px-2.5 py-1 text-[10px] font-bold rounded-md transition-all ${
+                chartStyle === "north" ? "bg-amber-800 text-white shadow-sm" : "text-gray-600 hover:text-amber-950"
+              }`}
             >
-              {isPlaying ? "Pause Simulation" : "Run Live Simulation"}
+              North India
             </button>
-            <input
-              type="date"
-              value={activeDate}
-              onChange={(e) => setActiveDate(e.target.value)}
-              style={{ flex: 1, padding: "6px", borderRadius: "8px", border: `1px solid ${HAIRLINE}`, background: "#FFFBF2", color: INK_PRIMARY, fontSize: "12px", textAlign: "center" }}
-            />
+            <button
+              onClick={() => setChartStyle("south")}
+              className={`px-2.5 py-1 text-[10px] font-bold rounded-md transition-all ${
+                chartStyle === "south" ? "bg-amber-800 text-white shadow-sm" : "text-gray-600 hover:text-amber-950"
+              }`}
+            >
+              South India
+            </button>
           </div>
-
-          <div style={{ fontSize: "13px", marginBottom: "12px", display: "flex", justifyContent: "space-between", borderBottom: `1px dashed ${HAIRLINE}`, paddingBottom: "6px" }}>
-            <span style={{ fontWeight: 800 }}>Simulated: {fmtTime(timeMin)}</span>
-            <span style={{ color: INK_SECONDARY, fontWeight: 600 }}>{civilWeekday}</span>
+          <div className="flex items-center gap-1.5 bg-amber-800/10 px-3 py-1 rounded-full text-[10px] font-bold text-amber-800 border border-amber-800/20">
+            <Compass size={11} className="animate-spin-slow" />
+            MODULE 2.2.2
           </div>
+        </div>
+      </div>
 
-          {/* Time Scrubber Slider */}
-          <input
-            type="range"
-            min="0"
-            max="1439"
-            value={timeMin}
-            onChange={(e) => setTimeMin(Number(e.target.value))}
-            style={{ width: "100%", accentColor: GOLD, marginBottom: "16px", cursor: "pointer" }}
-          />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Left Control Panel */}
+        <div className="lg:col-span-5 space-y-4">
+          <span className="text-[10px] uppercase tracking-wider block font-bold text-gray-400">
+            Time-Travel Cockpit
+          </span>
 
-          {/* Step Buttons Grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "6px" }}>
-            {[
-              { label: "-1m", val: -1 },
-              { label: "+1m", val: 1 },
-              { label: "-4m", val: -4 },
-              { label: "+4m", val: 4 },
-              { label: "-1h", val: -60 },
-              { label: "+1h", val: 60 },
-              { label: "-1d", val: -1440 },
-              { label: "+1d", val: 1440 }
-            ].map((btn, idx) => (
+          <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
+            <div className="flex justify-between items-center gap-3">
               <button
-                key={idx}
-                onClick={() => {
-                  if (Math.abs(btn.val) === 1440) {
-                    const activeTime = new Date(activeDate);
-                    activeTime.setDate(activeTime.getDate() + (btn.val > 0 ? 1 : -1));
-                    setActiveDate(activeTime.toISOString().split("T")[0]);
-                  } else {
-                    setTimeMin((prev) => (prev + btn.val + 1440) % 1440);
-                  }
-                }}
-                style={{
-                  padding: "6px 2px",
-                  borderRadius: "6px",
-                  border: `1px solid ${HAIRLINE}`,
-                  background: "transparent",
-                  color: INK_PRIMARY,
-                  fontSize: "11px",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  transition: "background 0.2s"
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = `${GOLD}10`}
-                onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-amber-800 rounded-lg hover:bg-amber-900 shadow-sm"
               >
-                {btn.label}
+                {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+                {isPlaying ? "Pause Sim" : "Play Tick (+1m)"}
               </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Column 2: Visual clock and Sunrise details */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "16px 20px" }}>
-          <h3 style={{ margin: "0 0 12px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", textAlign: "center" }}>
-            Time Visualizer
-          </h3>
-          
-          {/* Analog SVG Clock */}
-          <svg width="120" height="120" viewBox="0 0 100 100" style={{ marginBottom: "14px" }}>
-            <circle cx="50" cy="50" r="46" fill="#FFFBF2" stroke={HAIRLINE} strokeWidth="2.5" />
-            <circle cx="50" cy="50" r="2.5" fill={GOLD} />
-            
-            {/* Hour ticks */}
-            {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => (
-              <line
-                key={deg}
-                x1="50"
-                y1="8"
-                x2="50"
-                y2="13"
-                transform={`rotate(${deg} 50 50)`}
-                stroke={HAIRLINE}
-                strokeWidth="1.5"
-              />
-            ))}
-
-            {/* Hour hand */}
-            <line
-              x1="50"
-              y1="50"
-              x2="50"
-              y2="24"
-              transform={`rotate(${clockAngles.hourHandAngle} 50 50)`}
-              stroke={GOLD}
-              strokeWidth="3.5"
-              strokeLinecap="round"
-            />
-            {/* Minute hand */}
-            <line
-              x1="50"
-              y1="50"
-              x2="50"
-              y2="14"
-              transform={`rotate(${clockAngles.minHandAngle} 50 50)`}
-              stroke={INK_PRIMARY}
-              strokeWidth="2.5"
-              strokeLinecap="round"
-            />
-          </svg>
-          
-          <div style={{ fontSize: "11px", color: INK_SECONDARY, textAlign: "center", width: "100%" }}>
-            <span>Local Sunrise Setting:</span>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px", justifyContent: "center", marginTop: "4px" }}>
-              <input
-                type="range"
-                min="300"
-                max="420"
-                value={sunriseMin}
-                onChange={(e) => setSunriseMin(Number(e.target.value))}
-                style={{ accentColor: GOLD, cursor: "pointer", width: "90px" }}
-              />
-              <strong style={{ color: GOLD }}>{fmtTime(sunriseMin)}</strong>
-            </div>
-          </div>
-        </div>
-
-        {/* Column 3: Ascendant degree, star/sub boundaries, and volatility */}
-        <div style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "16px 20px" }}>
-          <h3 style={{ margin: "0 0 12px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em" }}>Lagna Boundary Tracking</h3>
-          
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "12px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: INK_SECONDARY }}>Lagna Coordinates:</span>
-              <strong style={{ fontFamily: "monospace" }}>{lagnaDegStr} {SIGNS[Math.floor(lagnaLon / 30)]}</strong>
+              <div className="flex gap-1.5">
+                <button
+                  onClick={() => setTimeOffsetMins((prev) => (prev - 10 + 1440) % 1440)}
+                  className="px-2 py-1.5 text-xs rounded border hover:bg-amber-50 bg-transparent text-gray-600"
+                  style={{ borderColor: HAIRLINE }}
+                >
+                  -10m
+                </button>
+                <button
+                  onClick={() => setTimeOffsetMins((prev) => (prev + 10) % 1440)}
+                  className="px-2 py-1.5 text-xs rounded border hover:bg-amber-50 bg-transparent text-gray-600"
+                  style={{ borderColor: HAIRLINE }}
+                >
+                  +10m
+                </button>
+              </div>
             </div>
 
-            <div style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: "4px 8px",
-              borderRadius: "6px",
-              background: flashStar ? `${GOLD}15` : "transparent",
-              border: `1px solid ${flashStar ? GOLD : "transparent"}`,
-              transition: "all 0.2s"
-            }}>
-              <span style={{ color: INK_SECONDARY }}>Lagna Star-Lord:</span>
-              <strong>{lagnaSubData.nakName} ({lagnaSubData.starLord})</strong>
-            </div>
-
-            <div style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: "4px 8px",
-              borderRadius: "6px",
-              background: flashSub ? `${GOLD}1A` : "transparent",
-              border: `1px solid ${flashSub ? GOLD : "transparent"}`,
-              transition: "all 0.2s"
-            }}>
-              <span style={{ color: INK_SECONDARY }}>Lagna Sub-Lord:</span>
-              <strong style={{ color: GOLD }}>{lagnaSubData.subLord} (Sub #{lagnaSubData.subIndex})</strong>
-            </div>
-
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: INK_SECONDARY }}>Time Remaining in Sub:</span>
-              <span style={{ fontWeight: 800, color: lagnaSubData.subRemainingMin < 1.5 ? CRIMSON : EMERALD }}>
-                ~{lagnaSubData.subRemainingMin.toFixed(1)} minutes
+            <div className="flex justify-between items-center text-xs font-semibold text-gray-700 pt-1.5 border-t" style={{ borderColor: HAIRLINE }}>
+              <span>Simulated Query Time:</span>
+              <span className="font-mono text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-100 font-bold">
+                12:{(timeOffsetMins % 60).toString().padStart(2, "0")} LMT
               </span>
             </div>
 
-            <div style={{ borderTop: `1px solid ${HAIRLINE}`, paddingTop: "8px" }}>
-              <span style={{ fontWeight: 700, fontSize: "10px", textTransform: "uppercase", color: GOLD, display: "block", marginBottom: "4px" }}>RP Volatility Spectrum</span>
-              <div style={{ display: "flex", gap: "5px", fontSize: "9.5px" }}>
-                <span style={{ flex: 1.2, textAlign: "center", background: `${CRIMSON}0D`, color: CRIMSON, padding: "3px", borderRadius: "4px", border: `1px solid ${CRIMSON}20` }}>Sub (Min)</span>
-                <span style={{ flex: 1.2, textAlign: "center", background: `${GOLD}0D`, color: GOLD, padding: "3px", borderRadius: "4px", border: `1px solid ${GOLD}20` }}>Star (Hour)</span>
-                <span style={{ flex: 1, textAlign: "center", background: `${EMERALD}0D`, color: EMERALD, padding: "3px", borderRadius: "4px", border: `1px solid ${EMERALD}20` }}>Day (Vāra)</span>
+            <div>
+              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Query Weekday:</label>
+              <select
+                value={dayOfWeek}
+                onChange={(e) => setDayOfWeek(e.target.value as any)}
+                className="w-full text-xs p-2 border rounded bg-transparent focus:ring-amber-800 font-sans"
+              >
+                <option value="Saturday">Saturday (Day Lord: Saturn)</option>
+                <option value="Sunday">Sunday (Day Lord: Sun)</option>
+                <option value="Monday">Monday (Day Lord: Moon)</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Resonance HUD */}
+          <div
+            className={`p-4 rounded-xl border transition-all shadow-sm ${
+              resonanceMatches.length > 1 ? "bg-green-50/50 border-green-300" : "bg-white"
+            }`}
+            style={{ borderColor: resonanceMatches.length > 1 ? "#16a34a" : HAIRLINE }}
+          >
+            <span className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Resonance Diagnostics</span>
+            {resonanceMatches.length > 0 ? (
+              <div className="space-y-1.5 text-xs">
+                <span className="text-green-700 font-bold block flex items-center gap-1">
+                  <Check size={14} /> Resonance Detected!
+                </span>
+                <span className="text-gray-600 block leading-relaxed">
+                  Query planets match the natal chart profile: <strong className="text-amber-800">{resonanceMatches.join(", ")}</strong>.
+                </span>
+              </div>
+            ) : (
+              <span className="text-xs text-gray-400 block">No immediate resonance locks detected. Proceed with normal caveats.</span>
+            )}
+          </div>
+        </div>
+
+        {/* Right Output Panel */}
+        <div className="lg:col-span-7 space-y-5">
+          <span className="text-[10px] uppercase tracking-wider block font-bold text-gray-400">
+            Interactive Diagnostics
+          </span>
+
+          <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 p-4 rounded-xl border bg-white shadow-sm" style={{ borderColor: HAIRLINE }}>
+            {/* SVG Chart */}
+            <div className="sm:col-span-5 flex justify-center">
+              <div className="w-40 h-40 bg-[#fbf9f4] border p-1 rounded-lg" style={{ borderColor: HAIRLINE }}>
+                {chartStyle === "north" ? (
+                  <svg viewBox="0 0 100 100" className="w-full h-full font-serif">
+                    <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={HAIRLINE} strokeWidth="0.8" />
+                    <line x1="2" y1="2" x2="98" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
+                    <line x1="98" y1="2" x2="2" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
+                    <line x1="50" y1="2" x2="2" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
+                    <line x1="2" y1="50" x2="50" y2="98" stroke={HAIRLINE} strokeWidth="0.8" />
+                    <line x1="50" y1="98" x2="98" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
+                    <line x1="98" y1="50" x2="50" y2="2" stroke={HAIRLINE} strokeWidth="0.8" />
+
+                    {NORTH_HOUSE_COORDS.map((cell) => {
+                      const isH1 = cell.house === 1;
+                      const signNo = ((lagnaSignIndex + cell.house - 2) % 12) + 1;
+
+                      return (
+                        <g key={cell.house}>
+                          <text x={cell.cx} y={cell.cy + 1.5} textAnchor="middle" fontSize="4.5" fill={INK_SECONDARY}>
+                            {signNo}
+                          </text>
+                          {isH1 && (
+                            <text x={cell.cx} y={cell.cy - 5} textAnchor="middle" fontSize="4.5" fontWeight="bold" fill="#dc2626">Lagnā</text>
+                          )}
+                        </g>
+                      );
+                    })}
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 160 160" className="w-full h-full font-serif">
+                    {Array.from({ length: 4 }).map((_, r) =>
+                      Array.from({ length: 4 }).map((_, c) => {
+                        if (r > 0 && r < 3 && c > 0 && c < 3) return null;
+                        return (
+                          <rect
+                            key={`${r}-${c}`}
+                            x={c * 40}
+                            y={r * 40}
+                            width="40"
+                            height="40"
+                            fill="transparent"
+                            stroke={HAIRLINE}
+                            strokeWidth="0.8"
+                          />
+                        );
+                      })
+                    )}
+                    {SIGN_GRID_COORDS.map((cell) => {
+                      const isLagnaSign = cell.sign === activeLagnaSign;
+                      return (
+                        <g key={cell.sign}>
+                          {isLagnaSign && (
+                            <rect x={cell.x * 40 + 1} y={cell.y * 40 + 1} width="38" height="38" fill="rgba(156, 122, 47, 0.1)" />
+                          )}
+                          <text x={cell.x * 40 + 20} y={cell.y * 40 + 24} textAnchor="middle" fontSize="7" fill={isLagnaSign ? GOLD : INK_SECONDARY}>{cell.label}</text>
+                        </g>
+                      );
+                    })}
+                  </svg>
+                )}
+              </div>
+            </div>
+
+            {/* Computed Ruling Planets */}
+            <div className="sm:col-span-7 space-y-3">
+              <span className="text-[10px] uppercase font-bold text-gray-500 block">Ruling Planets Output:</span>
+              
+              <div className="overflow-x-auto">
+                <table className="w-full text-[10px] font-sans border-collapse">
+                  <thead>
+                    <tr className="bg-amber-950/5 text-gray-600 border-b" style={{ borderColor: HAIRLINE }}>
+                      <th className="p-1.5 text-left">RP Level</th>
+                      <th className="p-1.5 text-left">Query moment</th>
+                      <th className="p-1.5 text-left">Natal Reference</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b" style={{ borderColor: HAIRLINE }}>
+                      <td className="p-1.5 font-bold text-gray-500">Lagna Sign</td>
+                      <td className="p-1.5 font-bold text-amber-800">{lagnaSignLord}</td>
+                      <td className="p-1.5 text-gray-400">{NATAL_RPS.lagnaSignLord}</td>
+                    </tr>
+                    <tr className="border-b" style={{ borderColor: HAIRLINE }}>
+                      <td className="p-1.5 font-bold text-gray-500">Lagna Star</td>
+                      <td className="p-1.5 font-bold text-amber-800">{lagnaStarLord}</td>
+                      <td className="p-1.5 text-gray-400">{NATAL_RPS.lagnaStarLord}</td>
+                    </tr>
+                    <tr className="border-b" style={{ borderColor: HAIRLINE }}>
+                      <td className="p-1.5 font-bold text-gray-500">Moon Sign</td>
+                      <td className="p-1.5 font-bold text-amber-800">{moonSignLord}</td>
+                      <td className="p-1.5 text-gray-400">{NATAL_RPS.moonSignLord}</td>
+                    </tr>
+                    <tr className="border-b" style={{ borderColor: HAIRLINE }}>
+                      <td className="p-1.5 font-bold text-gray-500">Moon Star</td>
+                      <td className="p-1.5 font-bold text-amber-800">{moonStarLord}</td>
+                      <td className="p-1.5 text-gray-400">{NATAL_RPS.moonStarLord}</td>
+                    </tr>
+                    <tr className="border-b" style={{ borderColor: HAIRLINE }}>
+                      <td className="p-1.5 font-bold text-gray-500">Day Lord</td>
+                      <td className="p-1.5 font-bold text-amber-800">{dayLord}</td>
+                      <td className="p-1.5 text-gray-400">{NATAL_RPS.dayLord}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
-
       </div>
-
-      {/* Sunrise Day-Lord Boundary Visualizer - 24h Colored Timeline bar */}
-      <section style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, borderRadius: "10px", padding: "16px 20px", marginBottom: "2.4rem" }}>
-        <h3 style={{ margin: "0 0 16px 0", fontSize: "12px", color: GOLD, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", textAlign: "center" }}>
-          Sunrise Day-Lord Boundary Analyzer
-        </h3>
-        
-        {/* Colored 24h Track bar */}
-        <div style={{ position: "relative", height: "14px", borderRadius: "7px", background: "#EEE", marginBottom: "20px", overflow: "visible" }}>
-          {/* Midnight to Sunrise (Crimson) */}
-          <div style={{
-            position: "absolute",
-            left: 0,
-            top: 0,
-            bottom: 0,
-            width: `${(sunriseMin / 1440) * 100}%`,
-            background: `${CRIMSON}25`,
-            borderTopLeftRadius: "7px",
-            borderBottomLeftRadius: "7px",
-            borderRight: `1px dashed ${CRIMSON}`
-          }} />
-          
-          {/* Sunrise to Sunset (Gold) */}
-          <div style={{
-            position: "absolute",
-            left: `${(sunriseMin / 1440) * 100}%`,
-            top: 0,
-            bottom: 0,
-            width: `${((1080 - sunriseMin) / 1440) * 100}%`,
-            background: `${GOLD}20`,
-            borderRight: `1px dashed ${GOLD}`
-          }} />
-
-          {/* Sunset to Midnight (Indigo) */}
-          <div style={{
-            position: "absolute",
-            left: `${(1080 / 1440) * 100}%`,
-            top: 0,
-            bottom: 0,
-            right: 0,
-            background: `${INDIGO}20`,
-            borderTopRightRadius: "7px",
-            borderBottomRightRadius: "7px"
-          }} />
-
-          {/* Sunrise label indicator */}
-          <div style={{ position: "absolute", left: `${(sunriseMin / 1440) * 100}%`, top: "-14px", transform: "translateX(-50%)", fontSize: "8.5px", color: CRIMSON, fontWeight: 900 }}>
-            SUNRISE
-          </div>
-
-          {/* Active pointer tick */}
-          <div style={{
-            position: "absolute",
-            left: `${(timeMin / 1440) * 100}%`,
-            top: "-6px",
-            width: "3px",
-            height: "26px",
-            background: GOLD,
-            boxShadow: `0 0 6px ${GOLD}`,
-            transform: "translateX(-50%)",
-            zIndex: 10
-          }} />
-        </div>
-
-        {/* Informative Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.5rem" }}>
-          
-          {/* Explainer card */}
-          <div style={{ display: "flex", flexDirection: "column", justifySelf: "center", alignSelf: "center" }}>
-            <div style={{
-              background: preSunrise ? `${CRIMSON}05` : `${EMERALD}05`,
-              border: `1.5px dashed ${preSunrise ? CRIMSON : EMERALD}`,
-              borderRadius: "8px",
-              padding: "12px 16px",
-              fontSize: "12px"
-            }}>
-              {preSunrise ? (
-                <div>
-                  <span style={{ color: CRIMSON, fontWeight: 800 }}>⚠️ Pre-Sunrise State Active:</span>
-                  <p style={{ margin: "6px 0 0 0", color: INK_SECONDARY, lineHeight: "1.4" }}>
-                    The current time is <strong>{fmtTime(timeMin)}</strong>, which falls BEFORE local sunrise at <strong>{fmtTime(sunriseMin)}</strong>. 
-                    Therefore, the day-lord remains the lord of the <strong>previous</strong> weekday (<strong>{hinduWeekday}</strong>) instead of the civil clock day ({civilWeekday}).
-                  </p>
-                </div>
-              ) : (
-                <div>
-                  <span style={{ color: EMERALD, fontWeight: 800 }}>✓ Post-Sunrise State Active:</span>
-                  <p style={{ margin: "6px 0 0 0", color: INK_SECONDARY, lineHeight: "1.4" }}>
-                    The current time is <strong>{fmtTime(timeMin)}</strong>, which is AFTER local sunrise at <strong>{fmtTime(sunriseMin)}</strong>. 
-                    The day-lord matches the civil weekday (<strong>{hinduWeekday}</strong>).
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Vāra Lord final badge */}
-          <div style={{ display: "flex", gap: "12px", justifyContent: "center", alignItems: "center" }}>
-            <div style={{ flex: 1, background: "#FAF8F5", border: `1px solid ${HAIRLINE}`, borderRadius: "8px", padding: "12px", textAlign: "center" }}>
-              <span style={{ fontSize: "9px", color: INK_MUTED, textTransform: "uppercase", letterSpacing: "0.05em" }}>Civil Clock Day</span>
-              <div style={{ fontSize: "16px", fontWeight: 700, margin: "4px 0", color: INK_PRIMARY }}>{civilDayLord}</div>
-              <span style={{ fontSize: "9px", color: INK_SECONDARY }}>({civilWeekday})</span>
-            </div>
-            <div style={{ flex: 1.2, background: `${GOLD}0F`, border: `2.5px solid ${GOLD}`, borderRadius: "8px", padding: "14px 10px", textAlign: "center" }}>
-              <span style={{ fontSize: "9px", color: GOLD, textTransform: "uppercase", fontWeight: 900, letterSpacing: "0.05em" }}>Vāra (Day) Lord</span>
-              <div style={{ fontSize: "20px", fontWeight: 900, color: GOLD, margin: "4px 0" }}>{dayLord}</div>
-              <span style={{ fontSize: "9.5px", color: INK_SECONDARY, fontWeight: 600 }}>({hinduWeekday})</span>
-            </div>
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* RPs Output Grid - Premium Card deck */}
-      <h2 style={{ fontSize: "13px", color: INK_SECONDARY, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.8rem" }}>
-        Computed Ruling Planets Set
-      </h2>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: "16px", marginBottom: "2.4rem" }}>
-        {[
-          { role: "Lagna Sign Lord", planet: lagnaSubData.signLord, desc: `Ruler of ascendant's sign` },
-          { role: "Lagna Star Lord", planet: lagnaSubData.starLord, desc: "Ruler of ascendant's star", flag: flashStar },
-          { role: "Moon Sign Lord", planet: moonSubData.signLord, desc: `Ruler of Moon's sign` },
-          { role: "Moon Star Lord", planet: moonSubData.starLord, desc: "Ruler of Moon's star" },
-          { role: "Day (Vāra) Lord", planet: dayLord, desc: `Weekday ruler (Sunrise-to-Sunrise)` },
-          { role: "Lagna Sub Lord (6th)", planet: lagnaSubData.subLord, desc: "Precision activation pointer", flag: flashSub },
-        ].map((r, idx) => (
-          <div
-            key={idx}
-            style={{
-              background: SURFACE,
-              border: `1.5px solid ${r.flag ? GOLD : HAIRLINE}`,
-              borderRadius: "10px",
-              padding: "14px 10px",
-              textAlign: "center",
-              transform: r.flag ? "scale(1.03)" : "none",
-              boxShadow: r.flag ? `0 4px 12px ${GOLD}20` : "none",
-              transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)"
-            }}
-          >
-            <span style={{ fontSize: "9.5px", color: GOLD, fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.05em", display: "block" }}>{r.role}</span>
-            <span style={{ fontSize: "17px", fontWeight: 800, margin: "4px 0", display: "block", color: INK_PRIMARY }}>{r.planet}</span>
-            <span style={{ fontSize: "10.5px", color: INK_MUTED, display: "block" }}>{r.desc}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* Computational parameters table (replacing VIX console) */}
-      <section style={{ borderTop: `1px solid ${HAIRLINE}`, paddingTop: "1.6rem" }}>
-        <h3 style={{ margin: "0 0 10px 0", fontSize: "12px", color: INK_SECONDARY, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-          Astronomical Calculations Table
-        </h3>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "11.5px", color: INK_PRIMARY }}>
-          <thead>
-            <tr style={{ borderBottom: `1.5px solid ${HAIRLINE}` }}>
-              <th style={{ textAlign: "left", padding: "8px 12px", fontWeight: 800 }}>Computational Variable</th>
-              <th style={{ textAlign: "left", padding: "8px 12px", fontWeight: 800 }}>Numeric Value</th>
-              <th style={{ textAlign: "left", padding: "8px 12px", fontWeight: 800 }}>Stellar Engine Context</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
-              <td style={{ padding: "8px 12px", fontWeight: 700 }}>Krishnamurti Ayanāṁśa</td>
-              <td style={{ padding: "8px 12px", fontFamily: "monospace" }}>24°06′42″</td>
-              <td style={{ padding: "8px 12px", color: INK_MUTED }}>Precession adjustment constant</td>
-            </tr>
-            <tr style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
-              <td style={{ padding: "8px 12px", fontWeight: 700 }}>Lagna Degree (Decimal)</td>
-              <td style={{ padding: "8px 12px", fontFamily: "monospace" }}>{lagnaLon.toFixed(4)}°</td>
-              <td style={{ padding: "8px 12px", color: INK_MUTED }}>Advances exactly 0.25° per minute (~1° per 4 minutes)</td>
-            </tr>
-            <tr style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
-              <td style={{ padding: "8px 12px", fontWeight: 700 }}>Moon Degree (Decimal)</td>
-              <td style={{ padding: "8px 12px", fontFamily: "monospace" }}>{moonLon.toFixed(4)}°</td>
-              <td style={{ padding: "8px 12px", color: INK_MUTED }}>Advances ~13.2° per 24 hours</td>
-            </tr>
-            <tr style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
-              <td style={{ padding: "8px 12px", fontWeight: 700 }}>Daybreak offset</td>
-              <td style={{ padding: "8px 12px" }}>{sunriseMin} minutes from midnight ({fmtTime(sunriseMin)})</td>
-              <td style={{ padding: "8px 12px", color: INK_MUTED }}>Defines the local horizon transition point for the Hindu weekday</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
     </div>
   );
 }

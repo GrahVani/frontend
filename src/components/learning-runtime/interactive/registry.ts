@@ -180,6 +180,66 @@ import { ChartNumerologyIntegrationTool } from "./chart-numerology-integration-t
 import { NumerologyDecisionFlow } from "./numerology-decision-flow";
 import { DisciplineStatementBuilder } from "./discipline-statement-builder";
 import { NadiDisciplineStatementBuilder } from "./nadi-discipline-statement-builder";
+import { ThreeStepProtocolOverview } from "./three-step-protocol-overview";
+import { LagnaAssessmentScorer } from "./lagna-assessment-scorer";
+import { DashaBhuktiTimingWindow } from "./dasha-bhukti-timing-window";
+import { GocharaTriggerConfirmation } from "./gochara-trigger-confirmation";
+import { WorkedExample3StepSynthesis } from "./worked-example-3-step-synthesis";
+import { ParasharaDefaultExplorer } from "./parashara-default-explorer";
+import { KpCuspalDecisionTree } from "./kp-cuspal-decision-tree";
+import { JaiminiCallingDecisionTree } from "./jaimini-calling-decision-tree";
+import { RemedyYearDecisionTree } from "./remedy-year-decision-tree";
+import { LayeredFrameworkDecisionSynthesis } from "./layered-framework-decision-synthesis";
+import { PredictionConfidenceDial } from "./prediction-confidence-dial";
+import { TwoYesIndicatorCounter } from "./two-yes-indicator-counter";
+import { KarmaAgencySimulator } from "./karma-agency-simulator";
+import { ConfidencePhrasingRewriter } from "./confidence-phrasing-rewriter";
+import { TajikaDhanaSahamOverlay } from "./tajika-dhana-saham-overlay";
+import { OverallWealthPromiseSynthesis } from "./overall-wealth-promise-synthesis";
+import { InvestmentDecisionSynthesis } from "./investment-decision-synthesis";
+import { EthicalScopeRoutingDashboard } from "./ethical-scope-routing-dashboard";
+import { WriteUpStructureScaffolder } from "./write-up-structure-scaffolder";
+import { MarriageSynthesisWorkbench } from "./marriage-synthesis-workbench";
+import { CareerSynthesisWorkbench } from "./career-synthesis-workbench";
+import { MultiDomainSynthesisWorkbench } from "./multi-domain-synthesis-workbench";
+import { PredictiveFailureModeQuiz } from "./predictive-failure-mode-quiz";
+import { BirthTimeAccuracyAssessment } from "./birth-time-accuracy-assessment";
+import { AyanamshaChoiceVerifier } from "./ayanamsha-choice-verifier";
+import { HouseSystemChoiceVerifier } from "./house-system-choice-verifier";
+import { DataPreparationPreflight } from "./data-preparation-preflight";
+import { TattvaShuddhiChecker } from "./tattva-shuddhi-checker";
+import { CrossCheckDecisionSynthesizer } from "./cross-check-decision-synthesizer";
+import { PreliminaryCrossCheckPreflight } from "./preliminary-cross-check-preflight";
+import { DignityStrengthAnalyzer } from "./dignity-strength-analyzer";
+import { YogaDoshaIdentifier } from "./yoga-dosha-identifier";
+import { DashaContextAnalyzer } from "./dasha-context-analyzer";
+import { TransitContextAnalyzer } from "./transit-context-analyzer";
+import { ReadingSynthesisWorkbench } from "./reading-synthesis-workbench";
+import { CrossStreamConceptBuilder } from "./cross-stream-concept-builder";
+import { ParashariKpVerifier } from "./parashari-kp-verifier";
+import { ParashariJaiminiVerifier } from "./parashari-jaimini-verifier";
+import { ConvergenceDivergenceWorkbench } from "./convergence-divergence-workbench";
+import { ReadingDocumentationTemplate } from "./reading-documentation-template";
+import { SecondHouseWealthEvaluator } from "./second-house-wealth-evaluator";
+import { EleventhHouseGainsEvaluator } from "./eleventh-house-gains-evaluator";
+import { SecondEleventhLordPermutations } from "./second-eleventh-lord-permutations";
+import { NaturalWealthKarakaAnalyzer } from "./natural-wealth-karaka-analyzer";
+import { D2SolarLunarBisection } from "./d2-solar-lunar-bisection";
+import { D2BisectionDoctrineReader } from "./d2-bisection-doctrine-reader";
+import { D2SolarLunarTendencies } from "./d2-solar-lunar-tendencies";
+import { D2RealChartWorkbench } from "./d2-real-chart-workbench";
+import { DhanaYogaPatternVerifier } from "./dhana-yoga-pattern-verifier";
+import { DhanaYogaVariantsEvaluator } from "./dhana-yoga-variants-evaluator";
+import { LakshmiYogaAnalyser } from "./lakshmi-yoga-analyser";
+import { DhanaYogaShadbalaOverlay } from "./dhana-yoga-shadbala-overlay";
+import { KpCuspalSubLordDoctrine } from "./kp-cuspal-sub-lord-doctrine";
+import { KpMoneySignificatorsEvaluator } from "./kp-money-significators-evaluator";
+import { KpInvestmentTimingExplorer } from "./kp-investment-timing-explorer";
+import { KpWealthQuestionWorkbench } from "./kp-wealth-question-workbench";
+import { LalKitabMoneyFormulaRevisited } from "./lal-kitab-money-formula-revisited";
+import { LalKitabMoneyPlanetsAnalyser } from "./lal-kitab-money-planets-analyser";
+import { LalKitabLossFormulasEvaluator } from "./lal-kitab-loss-formulas-evaluator";
+import { LalKitabWealthReadingWorkbench } from "./lal-kitab-wealth-reading-workbench";
 import { VastuOriginsExplorer } from "./vastu-origins-explorer";
 import { VastuPurushaMandalaExplorer } from "./vastu-purusha-mandala-explorer";
 import { VastuFiveElementMapper } from "./vastu-five-element-mapper";
@@ -1433,7 +1493,63 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // synthesis, do-no-harm floor, and five-field practitioner statement worksheet.
   "discipline-statement-builder": DisciplineStatementBuilder,
   "nadi-discipline-statement-builder": NadiDisciplineStatementBuilder,
-  // Lesson 22.1.1 interactive: Vastu Origins Explorer â€” historical stream,
+  "three-step-protocol-overview": ThreeStepProtocolOverview,
+  "lagna-assessment-scorer": LagnaAssessmentScorer,
+  "dasha-bhukti-timing-window": DashaBhuktiTimingWindow,
+  "gochara-trigger-confirmation": GocharaTriggerConfirmation,
+  "worked-example-3-step-synthesis": WorkedExample3StepSynthesis,
+  "parashara-default-explorer": ParasharaDefaultExplorer,
+  "kp-cuspal-decision-tree": KpCuspalDecisionTree,
+  "jaimini-calling-decision-tree": JaiminiCallingDecisionTree,
+  "remedy-year-decision-tree": RemedyYearDecisionTree,
+  "layered-framework-decision-synthesis": LayeredFrameworkDecisionSynthesis,
+  "prediction-confidence-dial": PredictionConfidenceDial,
+  "two-yes-indicator-counter": TwoYesIndicatorCounter,
+  "karma-agency-simulator": KarmaAgencySimulator,
+  "confidence-phrasing-rewriter": ConfidencePhrasingRewriter,
+  "write-up-structure-scaffolder": WriteUpStructureScaffolder,
+  "marriage-synthesis-workbench": MarriageSynthesisWorkbench,
+  "career-synthesis-workbench": CareerSynthesisWorkbench,
+  "multi-domain-synthesis-workbench": MultiDomainSynthesisWorkbench,
+  "predictive-failure-mode-quiz": PredictiveFailureModeQuiz,
+  "birth-time-accuracy-assessment": BirthTimeAccuracyAssessment,
+  "ayanamsha-choice-verifier": AyanamshaChoiceVerifier,
+  "house-system-choice-verifier": HouseSystemChoiceVerifier,
+  "data-preparation-preflight": DataPreparationPreflight,
+  "tattva-shuddhi-checker": TattvaShuddhiChecker,
+  "cross-check-decision-synthesizer": CrossCheckDecisionSynthesizer,
+  "preliminary-cross-check-preflight": PreliminaryCrossCheckPreflight,
+  "dignity-strength-analyzer": DignityStrengthAnalyzer,
+  "yoga-dosha-identifier": YogaDoshaIdentifier,
+  "dasha-context-analyzer": DashaContextAnalyzer,
+  "transit-context-analyzer": TransitContextAnalyzer,
+  "reading-synthesis-workbench": ReadingSynthesisWorkbench,
+  "cross-stream-concept-builder": CrossStreamConceptBuilder,
+  "parashari-kp-verifier": ParashariKpVerifier,
+  "parashari-jaimini-verifier": ParashariJaiminiVerifier,
+  "convergence-divergence-workbench": ConvergenceDivergenceWorkbench,
+  "reading-documentation-template": ReadingDocumentationTemplate,
+  "second-house-wealth-evaluator": SecondHouseWealthEvaluator,
+  "eleventh-house-gains-evaluator": EleventhHouseGainsEvaluator,
+  "second-eleventh-lord-permutations": SecondEleventhLordPermutations,
+  "natural-wealth-karaka-analyzer": NaturalWealthKarakaAnalyzer,
+  "d2-solar-lunar-bisection": D2SolarLunarBisection,
+  "d2-bisection-doctrine-reader": D2BisectionDoctrineReader,
+  "d2-solar-lunar-tendencies": D2SolarLunarTendencies,
+  "d2-real-chart-workbench": D2RealChartWorkbench,
+  "dhana-yoga-pattern-verifier": DhanaYogaPatternVerifier,
+  "dhana-yoga-variants-evaluator": DhanaYogaVariantsEvaluator,
+  "lakshmi-yoga-analyser": LakshmiYogaAnalyser,
+  "dhana-yoga-shadbala-overlay": DhanaYogaShadbalaOverlay,
+  "kp-cuspal-sub-lord-doctrine": KpCuspalSubLordDoctrine,
+  "kp-money-significators-evaluator": KpMoneySignificatorsEvaluator,
+  "kp-investment-timing-explorer": KpInvestmentTimingExplorer,
+  "kp-wealth-question-workbench": KpWealthQuestionWorkbench,
+  "lal-kitab-money-formula-revisited": LalKitabMoneyFormulaRevisited,
+  "lal-kitab-money-planets-analyser": LalKitabMoneyPlanetsAnalyser,
+  "lal-kitab-loss-formulas-evaluator": LalKitabLossFormulasEvaluator,
+  "lal-kitab-wealth-reading-workbench": LalKitabWealthReadingWorkbench,
+  // Lesson 22.1.1 interactive: Vastu Origins Explorer — historical stream,
   // five-domain spatial scope, classical corpus, and modern feasibility guards.
   "vastu-origins-explorer": VastuOriginsExplorer,
   // Lesson 22.1.2 interactive: Vastu Purusha Mandala Explorer â€” 9x9 / 8x8 /
@@ -1674,6 +1790,10 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "path-forward": PathForwardRoadmap,
   "lagna-suddhi-evaluator": LagnaSuddhiEvaluator,
   "four-pillar-integrator": FourPillarIntegrator,
+  "tajika-dhana-saham-overlay": TajikaDhanaSahamOverlay,
+  "overall-wealth-promise-synthesis": OverallWealthPromiseSynthesis,
+  "investment-decision-synthesis": InvestmentDecisionSynthesis,
+  "ethical-scope-routing-dashboard": EthicalScopeRoutingDashboard,
 };
 
 export function resolveInteractive(slug: string | undefined): InteractiveComponentType | null {

@@ -79,7 +79,7 @@ export function VedangaBodyMap() {
             }}
           />
 
-          {/* Six invisible hit regions overlaid on the baked-in glyphs */}
+          {/* Six visible marker hit regions overlaid on the metaphor positions */}
           {VEDANGAS.map((v, idx) => {
             const isActive = activeIdx === idx;
             const isJyotisha = v.slug === "jyotisha";
@@ -96,42 +96,64 @@ export function VedangaBodyMap() {
                   left: `${v.position.x}%`,
                   top: `${v.position.y}%`,
                   transform: "translate(-50%, -50%)",
-                  width: isJyotisha ? "13%" : "10.5%",
-                  aspectRatio: "1 / 1",
+                  width: isJyotisha ? "32px" : "26px",
+                  height: isJyotisha ? "32px" : "26px",
                   borderRadius: "50%",
-                  background: "transparent",
-                  border: "none",
-                  // Active = soft warm halo BEHIND the baked-in glyph, no hard ring.
+                  border: isActive 
+                    ? `2px solid ${isJyotisha ? "#E89E2A" : "#C9A24D"}` 
+                    : `1px solid ${isJyotisha ? "rgba(232, 158, 42, 0.6)" : "rgba(201, 162, 77, 0.55)"}`,
+                  background: isActive
+                    ? (isJyotisha ? "rgba(232, 158, 42, 0.35)" : "rgba(201, 162, 77, 0.25)")
+                    : "rgba(255, 252, 240, 0.65)",
                   boxShadow: isActive
-                    ? `0 0 50px 20px ${isJyotisha ? "rgba(244, 199, 123, 0.65)" : "rgba(244, 199, 123, 0.50)"}, 0 0 100px 40px rgba(232, 168, 92, 0.28)`
-                    : "none",
+                    ? `0 0 35px 12px ${isJyotisha ? "rgba(244, 199, 123, 0.80)" : "rgba(244, 199, 123, 0.65)"}`
+                    : "0 2px 6px rgba(0, 0, 0, 0.12)",
                   cursor: "pointer",
-                  transition: reducedMotion ? "none" : "box-shadow 320ms cubic-bezier(0.65, 0, 0.35, 1)",
-                  zIndex: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: reducedMotion ? "none" : "all 300ms cubic-bezier(0.32, 0.72, 0.24, 1)",
+                  zIndex: 10,
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive) {
                     e.currentTarget.style.boxShadow =
-                      "0 0 28px 10px rgba(244, 199, 123, 0.28)";
+                      "0 0 15px 5px rgba(244, 199, 123, 0.45)";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isActive) {
-                    e.currentTarget.style.boxShadow = "none";
+                    e.currentTarget.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.12)";
                   }
                 }}
                 onFocus={(e) => {
                   if (!isActive) {
                     e.currentTarget.style.boxShadow =
-                      "0 0 0 3px rgba(156, 122, 47, 0.30), 0 0 28px 10px rgba(244, 199, 123, 0.28)";
+                      "0 0 0 3px rgba(156, 122, 47, 0.30), 0 0 15px 5px rgba(244, 199, 123, 0.45)";
                   }
                 }}
                 onBlur={(e) => {
                   if (!isActive) {
-                    e.currentTarget.style.boxShadow = "none";
+                    e.currentTarget.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.12)";
                   }
                 }}
-              />
+              >
+                {isActive ? (
+                  <span style={{ fontSize: "12px", fontWeight: "black", color: isJyotisha ? "#E89E2A" : "#9C7A2F", lineHeight: 1 }}>
+                    ✓
+                  </span>
+                ) : (
+                  <span
+                    style={{
+                      width: "6px",
+                      height: "6px",
+                      borderRadius: "50%",
+                      background: isJyotisha ? "#E89E2A" : "#9C7A2F",
+                      animation: reducedMotion ? "none" : "gl-bodymap-pulse 2s infinite ease-in-out",
+                    }}
+                  />
+                )}
+              </button>
             );
           })}
 
@@ -161,6 +183,10 @@ export function VedangaBodyMap() {
           @keyframes gl-bodymap-breathe {
             0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(0.92); }
             50%      { opacity: 0.85; transform: translate(-50%, -50%) scale(1.08); }
+          }
+          @keyframes gl-bodymap-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50%      { transform: scale(1.5); opacity: 1; }
           }
         `}</style>
 
