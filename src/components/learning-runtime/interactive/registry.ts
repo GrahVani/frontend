@@ -35,8 +35,10 @@ import { SutraInterpretationLab } from "./sutra-interpretation-lab";
 import { JaiminiInterpreterComparator } from "./jaimini-interpreter-comparator";
 import { CaraKarakaRanker } from "./cara-karaka-ranker";
 import { CaraKarakaRoleAssigner } from "./cara-karaka-role-assigner";
+import { AmatyakarakaCareerWorkbench } from "./amatyakaraka-career-workbench";
 import { AtmakarakaKingLens } from "./atmakaraka-king-lens";
 import { KarakaCrossValidation } from "./karaka-cross-validation";
+import { AmkTenthLordComparisonWorkbench } from "./amk-tenth-lord-comparison-workbench";
 import { CaraDashaMechanism } from "./cara-dasha-mechanism";
 import { CaraPeriodCalculator } from "./cara-period-calculator";
 import { CaraSequenceBuilder } from "./cara-sequence-builder";
@@ -307,6 +309,32 @@ import { BhavaWheel } from "./bhava-wheel";
 import { HouseSystemComparator } from "./house-system-comparator";
 import { BhavaTemplateCard } from "./bhava-template-card";
 import { BhavaProfile } from "./bhava-profile";
+import { SantanaFifthHouseSignificationsCompass } from "./santana-fifth-house-significations-compass";
+import { SantanaFifthLordPermutationsWheel } from "./santana-fifth-lord-permutations-wheel";
+import { SantanaFifthDrishtiBalance } from "./santana-fifth-drishti-balance";
+import { SantanaObstructionHonestyWorkbench } from "./santana-obstruction-honesty-workbench";
+import { SaptamshaBuilderWheel } from "./saptamsha-builder-wheel";
+import { ChildrenD1D7ConvergenceBench } from "./children-d1-d7-convergence-bench";
+import { D7JupiterKarakaWorkbench } from "./d7-jupiter-karaka-workbench";
+import { D7SantanaProtocolRunner } from "./d7-santana-protocol-runner";
+import { JupiterThreeRegistersConvergence } from "./jupiter-three-registers-convergence";
+import { JupiterStrengthScorecard } from "./jupiter-strength-scorecard";
+import { JupiterDashaBhuktiTimeline } from "./jupiter-dasha-bhukti-timeline";
+import { PutraKarakaPkConvergenceBench } from "./putra-karaka-pk-convergence-bench";
+import { PkPlacementNavamshaWorkbench } from "./pk-placement-navamsha-workbench";
+import { KpChildrenCuspTool } from "./kp-children-cusp-tool";
+import { KpChildrenSignificatorTimingBench } from "./kp-children-significator-timing-bench";
+import { JaiminiKpChildrenSynthesisBench } from "./jaimini-kp-children-synthesis-bench";
+import { MultiDomainSynthesisWorkbench } from "./multi-domain-synthesis-workbench";
+import { WhenWillChildrenSynthesisBench } from "./when-will-children-synthesis-bench";
+import { FertilityStruggleRoutingTrainer } from "./fertility-struggle-routing-trainer";
+import { PcpndtRefusalTrainer } from "./pcpndt-refusal-trainer";
+import { GriefAwareResponseTrainer } from "./grief-aware-response-trainer";
+import { ChildrenScopeTrainer } from "./children-scope-trainer";
+import { PredictiveKarmaProfile } from "./predictive-karma-profile";
+import { TenthLordPermutationProfile } from "./tenth-lord-permutation-profile";
+import { TenthKarakaTriangulation } from "./tenth-karaka-triangulation";
+import { TenthAspectWorkbench } from "./tenth-aspect-workbench";
 import { PreliminaryReadingFlow } from "./preliminary-reading-flow";
 import { RahuAmplifier } from "./rahu-amplifier";
 import { JupiterEvaluator } from "./jupiter-evaluator";
@@ -372,6 +400,7 @@ import { DashaTimeline } from "./dasha-timeline";
 import { DashaSelector } from "./dasha-selector";
 import { BhuktiYogaMatrix } from "./bhukti-yoga-matrix";
 import { KarakaOverlayReader } from "./karaka-overlay-reader";
+import { AmkPlacementNavamshaWorkbench } from "./amk-placement-navamsha-workbench";
 import { TwoYesChecker } from "./two-yes-checker";
 import { EventReadingWorkbench } from "./event-reading-workbench";
 import { CaraDashaIntro } from "./cara-dasha-intro";
@@ -397,7 +426,19 @@ import { YogaStrengthOverlay } from "./yoga-strength-overlay";
 import { CrossStreamYogaMap } from "./cross-stream-yoga-map";
 import { YogaFiringTimeline } from "./yoga-firing-timeline";
 import { YogaReadingWorkflow } from "./yoga-reading-workflow";
+import { SarasvatiLearningArtsWorkbench } from "./sarasvati-learning-arts-workbench";
+import { PanchaMahapurushaCareerWorkbench } from "./pancha-mahapurusha-career-workbench";
 import { RajaYogaDetector } from "./raja-yoga-detector";
+import { RajaYogaTenthCareerWorkbench } from "./raja-yoga-tenth-career-workbench";
+import { YogiAvayogiCareerWorkbench } from "./yogi-avayogi-career-workbench";
+import { DashaCareerEventWindowWorkbench } from "./dasha-career-event-window-workbench";
+import { LalKitabCareerOverlayWorkbench } from "./lal-kitab-career-overlay-workbench";
+import { TajikaCareerYearRefinementWorkbench } from "./tajika-career-year-refinement-workbench";
+import { CareerTransitConfirmationWorkbench } from "./career-transit-confirmation-workbench";
+import { CareerSynthesisOverviewWorkbench } from "./career-synthesis-overview-workbench";
+import { JobOfferSynthesisWorkbench } from "./job-offer-synthesis-workbench";
+import { EntrepreneurshipEmploymentSynthesisWorkbench } from "./entrepreneurship-employment-synthesis-workbench";
+import { CareerScopeCompetenceRouter } from "./career-scope-competence-router";
 import { DharmaKarmadhipatiDetector } from "./dharma-karmadhipati-detector";
 import { RajaYogaVariantsMap } from "./raja-yoga-variants-map";
 import { KendraTrikonaRationale } from "./kendra-trikona-rationale";
@@ -455,6 +496,7 @@ import { AkDrishtiSynthesizer } from "./ak-drishti-synthesizer";
 import { KarakamshaLagnaLocator } from "./karakamsha-lagna-locator";
 import { KarakamshaReader } from "./karakamsha-reader";
 import { IshtaDevataFinder } from "./ishta-devata-finder";
+import { JaiminiAmkCareerCaseWorkbench } from "./jaimini-amk-career-case-workbench";
 import { JaiminiWorkflowWalkthrough } from "./jaimini-workflow-walkthrough";
 import { JaiminiModuleClosureMap } from "./jaimini-module-closure-map";
 import { GocharaIntro } from "./gochara-intro";
@@ -484,11 +526,33 @@ import { ChaturthamshaCalculator } from "./chaturthamsha-calculator";
 import { ChaturvimshamshaCalculator } from "./chaturvimshamsha-calculator";
 import { ChildrenVargaWorkflow } from "./children-varga-workflow";
 import { DashamshaCalculator } from "./dashamsha-calculator";
+import { DashamshaDevaAsuraLab } from "./dashamsha-deva-asura-lab";
+import { D10ParityConstructionWorkbench } from "./d10-parity-construction-workbench";
+import { D10ReadingAnchorWorkbench } from "./d10-reading-anchor-workbench";
+import { D1D10ConvergenceWorkbench } from "./d1-d10-convergence-workbench";
+import { D10CareerQuestionWorkbench } from "./d10-career-question-workbench";
 import { DvadashamshaCalculator } from "./dvadashamsha-calculator";
 import { GajaKesariDetector } from "./gaja-kesari-detector";
 import { GrahaDrishtiWheel } from "./graha-drishti-wheel";
 import { KhavedamshaAkshavedamshaCalculator } from "./khavedamsha-akshavedamsha-calculator";
 import { MarriageVargaWorkflow } from "./marriage-varga-workflow";
+import { SeventhHouseMarriageProfileWorkbench } from "./seventh-house-marriage-profile-workbench";
+import { SeventhLordPlacementReader } from "./seventh-lord-placement-reader";
+import { SeventhAspectNetWorkbench } from "./seventh-aspect-net-workbench";
+import { KarakaPollutionSeventhWorkbench } from "./karaka-pollution-seventh-workbench";
+import { D9MarriageRefinementWorkbench } from "./d9-marriage-refinement-workbench";
+import { D9LagnaSeventhReader } from "./d9-lagna-seventh-reader";
+import { D9VenusKarakaWorkbench } from "./d9-venus-karaka-workbench";
+import { VargottamaMarriageConfirmationWorkbench } from "./vargottama-marriage-confirmation-workbench";
+import { D9MarriageWorkedExampleLab } from "./d9-marriage-worked-example-lab";
+import { VenusMarriageKarakaPredictionWorkbench } from "./venus-marriage-karaka-prediction-workbench";
+import { VenusDignityStrengthMarriageConsole } from "./venus-dignity-strength-marriage-console";
+import { VenusCompanyQualityWorkbench } from "./venus-company-quality-workbench";
+import { VenusAnalysisMarriageCaseLab } from "./venus-analysis-marriage-case-lab";
+import { UpapadaMarriageArudhaWorkbench } from "./upapada-marriage-arudha-workbench";
+import { UlPlacementLordSustenanceWorkbench } from "./ul-placement-lord-sustenance-workbench";
+import { DarakarakaSpouseRegisterWorkbench } from "./darakaraka-spouse-register-workbench";
+import { JaiminiMarriageCaseSynthesisLab } from "./jaimini-marriage-case-synthesis-lab";
 import { SaptamshaCalculator } from "./saptamsha-calculator";
 import { SaptavimshamshaCalculator } from "./saptavimshamsha-calculator";
 import { ShodashamshaCalculator } from "./shodashamsha-calculator";
@@ -545,6 +609,10 @@ import { KPPrecisionResolutionComparator } from "./kp-precision-resolution-compa
 import { KpCuspCalculator } from "./kp-cusp-calculator";
 import { KpVsParashariCuspComparator } from "./kp-vs-parashari-cusp-comparator";
 import { KpCuspVerifier } from "./kp-cusp-verifier";
+import { KpTenthCuspalDoctrineWorkbench } from "./kp-tenth-cuspal-doctrine-workbench";
+import { KpSeventhCslMarriagePromiseWorkbench } from "./kp-seventh-csl-marriage-promise-workbench";
+import { KpSeventhSignificatorDeliveryWorkbench } from "./kp-seventh-significator-delivery-workbench";
+import { KpTenthSignificatorHierarchyWorkbench } from "./kp-tenth-significator-hierarchy-workbench";
 import { CuspalSubLordFinder } from "./cuspal-sub-lord-finder";
 import { CuspalSubLordVisualizer } from "./cuspal-sub-lord-visualizer";
 import { PlanetSubLordModulator } from "./planet-sub-lord-modulator";
@@ -552,6 +620,19 @@ import { DispositionRulesWorkbench } from "./disposition-rules-workbench";
 import { RulingPlanetsRoleExplorer } from "./ruling-planets-role-explorer";
 import { RulingPlanetsCalculator } from "./ruling-planets-calculator";
 import { RulingPlanetsConfirmationWorkbench } from "./ruling-planets-confirmation-workbench";
+import { KpCareerRulingPlanetsTimingWorkbench } from "./kp-career-ruling-planets-timing-workbench";
+import { KpMarriageSignificatorDashaWindow } from "./kp-marriage-significator-dasha-window";
+import { KpMarriageQuestionVerdictLab } from "./kp-marriage-question-verdict-lab";
+import { KpCareerQuestionVerdictWorkbench } from "./kp-career-question-verdict-workbench";
+import { AshtaKutaFrameworkWorkbench } from "./ashta-kuta-framework-workbench";
+import { AshtaKutaScoreInterpretationWorkbench } from "./ashta-kuta-score-interpretation-workbench";
+import { ManglikFullCancellationWorkbench } from "./manglik-full-cancellation-workbench";
+import { MarriageTajikaLalKitabOverlayWorkbench } from "./marriage-tajika-lal-kitab-overlay-workbench";
+import { MarriageDashaTimingFrameworkWorkbench } from "./marriage-dasha-timing-framework-workbench";
+import { MarriageSynthesisOverviewMap } from "./marriage-synthesis-overview-map";
+import { WhenWillIMarrySynthesisLab } from "./when-will-i-marry-synthesis-lab";
+import { ProposalEvaluationSynthesisLab } from "./proposal-evaluation-synthesis-lab";
+import { MarriageScopeCompetenceRouter } from "./marriage-scope-competence-router";
 import { SignificatorHierarchyExplorer } from "./significator-hierarchy-explorer";
 import { FirstOrderSignificatorVisualizer } from "./first-order-significator-visualizer";
 import { SecondOrderSignificatorWorkbench } from "./second-order-significator-workbench";
@@ -711,8 +792,10 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "jaimini-interpreter-comparator": JaiminiInterpreterComparator,
   "cara-karaka-ranker": CaraKarakaRanker,
   "cara-karaka-role-assigner": CaraKarakaRoleAssigner,
+  "amatyakaraka-career-workbench": AmatyakarakaCareerWorkbench,
   "atmakaraka-king-lens": AtmakarakaKingLens,
   "karaka-cross-validation": KarakaCrossValidation,
+  "amk-tenth-lord-comparison-workbench": AmkTenthLordComparisonWorkbench,
   "cara-dasha-mechanism": CaraDashaMechanism,
   "cara-period-calculator": CaraPeriodCalculator,
   "cara-sequence-builder": CaraSequenceBuilder,
@@ -1048,6 +1131,32 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "house-system-comparator": HouseSystemComparator,
   "bhava-template-card": BhavaTemplateCard,
   "bhava-profile": BhavaProfile,
+  "santana-fifth-house-significations-compass": SantanaFifthHouseSignificationsCompass,
+  "santana-fifth-lord-permutations-wheel": SantanaFifthLordPermutationsWheel,
+  "santana-fifth-drishti-balance": SantanaFifthDrishtiBalance,
+  "santana-obstruction-honesty-workbench": SantanaObstructionHonestyWorkbench,
+  "saptamsha-builder-wheel": SaptamshaBuilderWheel,
+  "children-d1-d7-convergence-bench": ChildrenD1D7ConvergenceBench,
+  "d7-jupiter-karaka-workbench": D7JupiterKarakaWorkbench,
+  "d7-santana-protocol-runner": D7SantanaProtocolRunner,
+  "jupiter-three-registers-convergence": JupiterThreeRegistersConvergence,
+  "jupiter-strength-scorecard": JupiterStrengthScorecard,
+  "jupiter-dasha-bhukti-timeline": JupiterDashaBhuktiTimeline,
+  "putra-karaka-pk-convergence-bench": PutraKarakaPkConvergenceBench,
+  "pk-placement-navamsha-workbench": PkPlacementNavamshaWorkbench,
+  "kp-children-cusp-tool": KpChildrenCuspTool,
+  "kp-children-significator-timing-bench": KpChildrenSignificatorTimingBench,
+  "jaimini-kp-children-synthesis-bench": JaiminiKpChildrenSynthesisBench,
+  "multi-domain-synthesis-workbench": MultiDomainSynthesisWorkbench,
+  "when-will-children-synthesis-bench": WhenWillChildrenSynthesisBench,
+  "fertility-struggle-routing-trainer": FertilityStruggleRoutingTrainer,
+  "pcpndt-refusal-trainer": PcpndtRefusalTrainer,
+  "grief-aware-response-trainer": GriefAwareResponseTrainer,
+  "children-scope-trainer": ChildrenScopeTrainer,
+  "predictive-karma-profile": PredictiveKarmaProfile,
+  "tenth-lord-permutation-profile": TenthLordPermutationProfile,
+  "tenth-karaka-triangulation": TenthKarakaTriangulation,
+  "tenth-aspect-workbench": TenthAspectWorkbench,
   "preliminary-reading-flow": PreliminaryReadingFlow,
   "rahu-amplifier": RahuAmplifier,
   "rahu-ketu-comparator": RahuKetuComparator,
@@ -1150,6 +1259,7 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // quality overlaid with AD-lord's domain-flavour significations.
   // Detects multi-kÄraka clusters and provides same-AD-different-MD comparison.
   "karaka-overlay-reader": KarakaOverlayReader,
+  "amk-placement-navamsha-workbench": AmkPlacementNavamshaWorkbench,
   // Lesson 10.4.3's Â§7 interactive: Two-Yes Checker â€” counts independent
   // indicator families for a predictive question and flags reliable only
   // when â‰¥2 genuinely different lines of evidence agree.
@@ -1196,7 +1306,19 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "cross-stream-yoga-map": CrossStreamYogaMap,
   "yoga-firing-timeline": YogaFiringTimeline,
   "yoga-reading-workflow": YogaReadingWorkflow,
+  "sarasvati-learning-arts-workbench": SarasvatiLearningArtsWorkbench,
+  "pancha-mahapurusha-career-workbench": PanchaMahapurushaCareerWorkbench,
   "raja-yoga-detector": RajaYogaDetector,
+  "raja-yoga-tenth-career-workbench": RajaYogaTenthCareerWorkbench,
+  "yogi-avayogi-career-workbench": YogiAvayogiCareerWorkbench,
+  "dasha-career-event-window-workbench": DashaCareerEventWindowWorkbench,
+  "lal-kitab-career-overlay-workbench": LalKitabCareerOverlayWorkbench,
+  "tajika-career-year-refinement-workbench": TajikaCareerYearRefinementWorkbench,
+  "career-transit-confirmation-workbench": CareerTransitConfirmationWorkbench,
+  "career-synthesis-overview-workbench": CareerSynthesisOverviewWorkbench,
+  "job-offer-synthesis-workbench": JobOfferSynthesisWorkbench,
+  "entrepreneurship-employment-synthesis-workbench": EntrepreneurshipEmploymentSynthesisWorkbench,
+  "career-scope-competence-router": CareerScopeCompetenceRouter,
   "dharma-karmadhipati-detector": DharmaKarmadhipatiDetector,
   "raja-yoga-variants-map": RajaYogaVariantsMap,
   "kendra-trikona-rationale": KendraTrikonaRationale,
@@ -1366,6 +1488,7 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // mapping, empty-house lord fallback, aspecting contributors, and ethical
   // framing (offer, respect, hold lightly).
   "ishta-devata-finder": IshtaDevataFinder,
+  "jaimini-amk-career-case-workbench": JaiminiAmkCareerCaseWorkbench,
   // Lesson 17.7.4 interactive: Jaimini Workflow Walkthrough -- six ordered steps
   // assembling every Jaimini tool into one end-to-end reading. Enforces workflow
   // discipline: static tools first (Steps 1-5), timing engine last (Step 6).
@@ -1644,11 +1767,36 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "chaturvimshamsha-calculator": ChaturvimshamshaCalculator,
   "children-varga-workflow": ChildrenVargaWorkflow,
   "dashamsha-calculator": DashamshaCalculator,
+  // Tier 2 Module 3 Chapter 2 Lesson 1: D10 Deva-Asura Construction Lab —
+  // clickable zodiac ring, ten-segment strip, destination arc, parity-error
+  // comparator, worked-example stepper, deity wheel and D10 Lagna builder.
+  "dashamsha-deva-asura-lab": DashamshaDevaAsuraLab,
+  "d10-parity-construction-workbench": D10ParityConstructionWorkbench,
+  "d10-reading-anchor-workbench": D10ReadingAnchorWorkbench,
+  "d1-d10-convergence-workbench": D1D10ConvergenceWorkbench,
+  "d10-career-question-workbench": D10CareerQuestionWorkbench,
   "dvadashamsha-calculator": DvadashamshaCalculator,
   "gaja-kesari-detector": GajaKesariDetector,
   "graha-drishti-wheel": GrahaDrishtiWheel,
   "khavedamsha-akshavedamsha-calculator": KhavedamshaAkshavedamshaCalculator,
   "marriage-varga-workflow": MarriageVargaWorkflow,
+  "seventh-house-marriage-profile-workbench": SeventhHouseMarriageProfileWorkbench,
+  "seventh-lord-placement-reader": SeventhLordPlacementReader,
+  "seventh-aspect-net-workbench": SeventhAspectNetWorkbench,
+  "karaka-pollution-seventh-workbench": KarakaPollutionSeventhWorkbench,
+  "d9-marriage-refinement-workbench": D9MarriageRefinementWorkbench,
+  "d9-lagna-seventh-reader": D9LagnaSeventhReader,
+  "d9-venus-karaka-workbench": D9VenusKarakaWorkbench,
+  "vargottama-marriage-confirmation-workbench": VargottamaMarriageConfirmationWorkbench,
+  "d9-marriage-worked-example-lab": D9MarriageWorkedExampleLab,
+  "venus-marriage-karaka-prediction-workbench": VenusMarriageKarakaPredictionWorkbench,
+  "venus-dignity-strength-marriage-console": VenusDignityStrengthMarriageConsole,
+  "venus-company-quality-workbench": VenusCompanyQualityWorkbench,
+  "venus-analysis-marriage-case-lab": VenusAnalysisMarriageCaseLab,
+  "upapada-marriage-arudha-workbench": UpapadaMarriageArudhaWorkbench,
+  "ul-placement-lord-sustenance-workbench": UlPlacementLordSustenanceWorkbench,
+  "darakaraka-spouse-register-workbench": DarakarakaSpouseRegisterWorkbench,
+  "jaimini-marriage-case-synthesis-lab": JaiminiMarriageCaseSynthesisLab,
   "saptamsha-calculator": SaptamshaCalculator,
   "saptavimshamsha-calculator": SaptavimshamshaCalculator,
   "shodashamsha-calculator": ShodashamshaCalculator,
@@ -1702,6 +1850,10 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "kp-cusp-calculator": KpCuspCalculator,
   "kp-vs-parashari-cusp-comparator": KpVsParashariCuspComparator,
   "kp-cusp-verifier": KpCuspVerifier,
+  "kp-tenth-cuspal-doctrine-workbench": KpTenthCuspalDoctrineWorkbench,
+  "kp-seventh-csl-marriage-promise-workbench": KpSeventhCslMarriagePromiseWorkbench,
+  "kp-seventh-significator-delivery-workbench": KpSeventhSignificatorDeliveryWorkbench,
+  "kp-tenth-significator-hierarchy-workbench": KpTenthSignificatorHierarchyWorkbench,
   "placidus-house-visualizer": PlacidusKpConvention,
   "249-sub-explorer": Kp249SubExplorer,
   "sub-sub-recursion-explorer": SubSubRecursionExplorer,
@@ -1713,6 +1865,19 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "ruling-planets-role-explorer": RulingPlanetsRoleExplorer,
   "ruling-planets-calculator": RulingPlanetsCalculator,
   "ruling-planets-confirmation-workbench": RulingPlanetsConfirmationWorkbench,
+  "kp-career-ruling-planets-timing-workbench": KpCareerRulingPlanetsTimingWorkbench,
+  "kp-marriage-significator-dasha-window": KpMarriageSignificatorDashaWindow,
+  "kp-marriage-question-verdict-lab": KpMarriageQuestionVerdictLab,
+  "kp-career-question-verdict-workbench": KpCareerQuestionVerdictWorkbench,
+  "ashta-kuta-framework-workbench": AshtaKutaFrameworkWorkbench,
+  "ashta-kuta-score-interpretation-workbench": AshtaKutaScoreInterpretationWorkbench,
+  "manglik-full-cancellation-workbench": ManglikFullCancellationWorkbench,
+  "marriage-tajika-lal-kitab-overlay-workbench": MarriageTajikaLalKitabOverlayWorkbench,
+  "marriage-dasha-timing-framework-workbench": MarriageDashaTimingFrameworkWorkbench,
+  "marriage-synthesis-overview-map": MarriageSynthesisOverviewMap,
+  "when-will-i-marry-synthesis-lab": WhenWillIMarrySynthesisLab,
+  "proposal-evaluation-synthesis-lab": ProposalEvaluationSynthesisLab,
+  "marriage-scope-competence-router": MarriageScopeCompetenceRouter,
   "significator-hierarchy-explorer": SignificatorHierarchyExplorer,
   "first-order-significator-visualizer": FirstOrderSignificatorVisualizer,
   "second-order-significator-workbench": SecondOrderSignificatorWorkbench,
