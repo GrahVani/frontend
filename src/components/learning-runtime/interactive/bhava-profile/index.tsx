@@ -710,6 +710,258 @@ const KARMA_OCCUPANTS = {
 type KarmaCareerKey = keyof typeof KARMA_CAREERS;
 type KarmaOccupantKey = keyof typeof KARMA_OCCUPANTS;
 
+const PREDICTIVE_KARMA_QUESTIONS = {
+  type: {
+    label: "Profession type",
+    clientQuestion: "What work suits me?",
+    color: GREEN,
+    short: "Field and style",
+    answer: "Read the sign on the 10th, planets in the 10th, the 10th lord, and later the navamsha/D10 refinement.",
+    features: ["10th sign", "Occupants", "10th lord", "Navamsha"],
+    trap: "Do not infer status only from the sign flavor.",
+  },
+  status: {
+    label: "Status / elevation",
+    clientQuestion: "Will I rise?",
+    color: GOLD,
+    short: "Standing level",
+    answer: "Read the strength, dignity, placement, and support of the 10th and its lord.",
+    features: ["10th lord", "Strength", "Dignity", "Support"],
+    trap: "Do not read rank from sign symbolism alone.",
+  },
+  independent: {
+    label: "Employed vs independent",
+    clientQuestion: "Should I stay employed or go independent?",
+    color: BLUE,
+    short: "Work orientation",
+    answer: "Read the 10th lord's orientation: service links such as the 6th versus business or public-dealing links such as the 7th.",
+    features: ["10th lord", "6th link", "7th link", "Self houses"],
+    trap: "Do not decide this from one occupant without the lord's direction.",
+  },
+  stability: {
+    label: "Stability vs change",
+    clientQuestion: "Will I ever settle?",
+    color: VERMILION,
+    short: "Change pressure",
+    answer: "Read the 10th lord's placement, dusthana links, affliction, and timing through dasha in later lessons.",
+    features: ["10th lord", "Dusthana links", "Affliction", "Dasha"],
+    trap: "Do not answer this with a profession-type reading.",
+  },
+} as const;
+
+const PREDICTIVE_KARMA_AXES = [
+  {
+    key: "sign",
+    label: "10th sign",
+    color: GREEN,
+    map: "Field and style",
+    note: "Element and nature hint at the kind of work: earth is practical, air is communicative, fire is directive, water is adaptive.",
+    questions: ["type"],
+  },
+  {
+    key: "occupants",
+    label: "Planets in 10th",
+    color: BLUE,
+    map: "Vocational signature",
+    note: "Occupants strongly flavor the work: Sun for authority, Mercury for commerce, Venus for arts, Saturn for duty and structure.",
+    questions: ["type"],
+  },
+  {
+    key: "lord",
+    label: "10th lord",
+    color: GOLD,
+    map: "Delivery and direction",
+    note: "Placement, dignity, and strength show how well the career promise delivers and where the career energy flows.",
+    questions: ["type", "status", "independent", "stability"],
+  },
+  {
+    key: "navamsha",
+    label: "Lord's navamsha",
+    color: PURPLE,
+    map: "Inner refinement",
+    note: "The navamsha of the 10th lord refines type and inner quality; the D10 comes later as a refinement, not a replacement.",
+    questions: ["type"],
+  },
+] as const;
+
+const PREDICTIVE_REFERENCES = {
+  lagna: {
+    label: "From Lagna",
+    color: GOLD,
+    focus: "Career proper",
+    note: "Start here: the D1 10th from Lagna is the foundation for the professional promise.",
+  },
+  moon: {
+    label: "From Moon",
+    color: BLUE,
+    focus: "Public and mental feel",
+    note: "Shows how work is experienced, how public life feels, and whether the mind can inhabit the role.",
+  },
+  sun: {
+    label: "From Sun",
+    color: VERMILION,
+    focus: "Authority and vocation",
+    note: "Shows authority, purpose in action, and the solar dimension of public role.",
+  },
+} as const;
+
+type PredictiveKarmaQuestionKey = keyof typeof PREDICTIVE_KARMA_QUESTIONS;
+type PredictiveReferenceKey = keyof typeof PREDICTIVE_REFERENCES;
+
+const TENTH_LORD_PLACEMENTS = [
+  {
+    house: 1,
+    name: "Tanu",
+    nature: "kendra-trikona",
+    color: GOLD,
+    direction: "Career becomes identity: self-made work, public personality, and personal effort carry the profession.",
+    strong: "High capacity makes the native visible, self-directed, and able to turn personality into professional authority.",
+    weak: "Low capacity can make career identity unstable: public effort is present, but confidence or consistency needs support.",
+  },
+  {
+    house: 2,
+    name: "Dhana",
+    nature: "artha",
+    color: GREEN,
+    direction: "Career enters wealth, family, food, speech, voice, finance, or accumulated resources.",
+    strong: "High capacity supports earning through profession, finance, speech, advising, family enterprise, or food-linked work.",
+    weak: "Low capacity can create uneven income, speech-resource pressure, or family obligations shaping career choices.",
+  },
+  {
+    house: 3,
+    name: "Sahaja",
+    nature: "upachaya",
+    color: BLUE,
+    direction: "Career runs through effort, communication, courage, hands, media, sales, writing, performance, and initiative.",
+    strong: "High capacity turns repeated effort into skill, enterprise, and communications-based professional momentum.",
+    weak: "Low capacity still pushes effort, but the person may scatter energy or struggle to sustain independent initiative.",
+  },
+  {
+    house: 4,
+    name: "Sukha",
+    nature: "kendra",
+    color: BLUE,
+    direction: "Career connects with home, land, vehicles, education, public base, homeland, comfort, or real estate.",
+    strong: "High capacity supports property, education, public-facing service, home-based work, or stable institutional roles.",
+    weak: "Low capacity can make private foundations affect the career: home, education, or property matters may interrupt delivery.",
+  },
+  {
+    house: 5,
+    name: "Putra",
+    nature: "trikona",
+    color: GOLD,
+    direction: "Career flows through intelligence, teaching, creativity, counsel, speculation, politics, or advisory work.",
+    strong: "High capacity gives creative authority, advisory skill, political intelligence, or education-linked professional rise.",
+    weak: "Low capacity can make talent visible but inconsistent, especially around speculation, students, or counsel roles.",
+  },
+  {
+    house: 6,
+    name: "Shatru",
+    nature: "dusthana-upachaya",
+    color: VERMILION,
+    direction: "Career enters service, employment, competition, medicine, law, litigation, conflict, and overcoming rivals.",
+    strong: "High capacity makes the 6th productive: service, medicine, law, operations, competition, and problem-solving can thrive.",
+    weak: "Low capacity emphasizes service pressure, rivalry, workplace conflict, or health-debt-obligation themes around work.",
+  },
+  {
+    house: 7,
+    name: "Yuvati",
+    nature: "kendra",
+    color: GREEN,
+    direction: "Career goes through partnership, clients, trade, diplomacy, public dealing, contracts, or foreign contact.",
+    strong: "High capacity supports business, client-facing work, negotiations, partnership-led success, and public visibility.",
+    weak: "Low capacity can bring dependency on partners, unstable contracts, or public dealings that drain the career.",
+  },
+  {
+    house: 8,
+    name: "Randhra",
+    nature: "dusthana",
+    color: PURPLE,
+    direction: "Career enters research, hidden matters, investigation, others resources, insurance, inheritance, occult, and transformation.",
+    strong: "High capacity channels the 8th into research, investigation, crisis work, depth professions, or confidential expertise.",
+    weak: "Low capacity can show breaks, instability, hidden obstructions, or professional volatility if the lord cannot carry the field.",
+  },
+  {
+    house: 9,
+    name: "Dharma",
+    nature: "trikona-yoga",
+    color: GOLD,
+    direction: "Career fuses with dharma, law, higher learning, religion, fortune, foreign travel, teaching, or advisory work.",
+    strong: "High capacity delivers dharma-karmadhipati strongly: distinguished, fortunate, and purpose-aligned professional rise.",
+    weak: "Low capacity leaves the yoga present but under-delivered: fortune is indicated, yet realization needs correction and timing.",
+  },
+  {
+    house: 10,
+    name: "Karma",
+    nature: "kendra-upachaya",
+    color: GOLD,
+    direction: "Career stays in its own field: leadership, authority, visibility, professional autonomy, and public action.",
+    strong: "High capacity gives a sharp career engine: recognition, authority, and self-driven professional accomplishment.",
+    weak: "Low capacity still makes career central, but public delivery may fluctuate until dignity, support, or timing improves.",
+  },
+  {
+    house: 11,
+    name: "Labha",
+    nature: "upachaya",
+    color: GREEN,
+    direction: "Career yields gains, networks, large organizations, income, ambitions, and fulfilled professional desires.",
+    strong: "High capacity converts profession into income, allies, scale, organizational reach, and material reward.",
+    weak: "Low capacity can bring uneven gains, unreliable networks, or ambition that outpaces delivery.",
+  },
+  {
+    house: 12,
+    name: "Vyaya",
+    nature: "dusthana-moksha",
+    color: VERMILION,
+    direction: "Career goes abroad, behind the scenes, into seclusion, institutions, hospitals, charities, ashrams, research, or expenditure.",
+    strong: "High capacity makes the 12th productive: foreign work, research, spiritual or institutional service, and focused hidden labor.",
+    weak: "Low capacity can show loss, obscurity, draining expenditure, isolation, or difficulty receiving recognition.",
+  },
+] as const;
+
+const TENTH_LORD_CAPACITY = {
+  strong: {
+    label: "Strong / dignified",
+    color: GREEN,
+    score: 88,
+    note: "The placement direction delivers cleanly. The house signature becomes usable professional strength.",
+  },
+  mixed: {
+    label: "Mixed / average",
+    color: GOLD,
+    score: 58,
+    note: "The direction is real but uneven. Read aspects, dignity, cancellation, and timing before final judgment.",
+  },
+  weak: {
+    label: "Weak / afflicted",
+    color: VERMILION,
+    score: 30,
+    note: "The same direction struggles to deliver. Do not erase the signature, but qualify its outcome carefully.",
+  },
+} as const;
+
+const TENTH_LORD_CONNECTIONS = {
+  direct: {
+    label: "10th lord in 9th",
+    activeHouse: 9,
+    note: "The most direct dharma-karmadhipati expression: karma flows into dharma, fortune, law, teaching, and higher meaning.",
+  },
+  reverse: {
+    label: "9th lord in 10th",
+    activeHouse: 10,
+    note: "Reverse connection: dharma flows into karma, supporting authority, public work, and fortune-backed action.",
+  },
+  exchange: {
+    label: "9th-10th exchange",
+    activeHouse: 9,
+    note: "Exchange or conjunction ties fortune and action mutually. Capacity decides whether the yoga is fully delivered.",
+  },
+} as const;
+
+type TenthLordPlacement = (typeof TENTH_LORD_PLACEMENTS)[number];
+type TenthLordCapacityKey = keyof typeof TENTH_LORD_CAPACITY;
+type TenthLordConnectionKey = keyof typeof TENTH_LORD_CONNECTIONS;
+
 const LABHA_ATTRIBUTES = [
   ["Name", "Labha / Aya"],
   ["Number", "11th house"],
@@ -832,6 +1084,8 @@ type OccupantKey = keyof typeof OCCUPANTS;
 
 export function BhavaProfile() {
   const slug = useLessonSlug();
+  if (slug === "the-10th-house-significations-revisited-for-prediction") return <PredictiveKarmaProfile />;
+  if (slug === "the-10th-lord-permutations-across-the-12-houses") return <TenthLordPermutationProfile />;
   if (slug === "2nd-bhava-dhana") return <DhanaProfile />;
   if (slug === "3rd-bhava-sahaja") return <SahajaProfile />;
   if (slug === "4th-bhava-sukha") return <SukhaProfile />;
@@ -2517,6 +2771,424 @@ function KarmaProfile() {
         </section>
       </div>
     </div>
+  );
+}
+
+function PredictiveKarmaProfile() {
+  const [question, setQuestion] = useState<PredictiveKarmaQuestionKey>("type");
+  const [reference, setReference] = useState<PredictiveReferenceKey>("lagna");
+  const [showD1, setShowD1] = useState(true);
+  const [showAgreement, setShowAgreement] = useState(true);
+  const questionState = PREDICTIVE_KARMA_QUESTIONS[question];
+  const referenceState = PREDICTIVE_REFERENCES[reference];
+  const activeAxes = PREDICTIVE_KARMA_AXES.filter((axis) => axis.questions.some((item) => item === question));
+
+  const synthesis = useMemo(() => {
+    const agreement = showAgreement
+      ? " Compare Lagna, Moon, and Sun: agreement makes the career signature consistent; divergence makes the picture mixed."
+      : "";
+    const anchor = showD1
+      ? " The D1 stays primary here; the D10 refines only after this foundation is read."
+      : " Turn the D1 anchor back on before moving to divisional refinement.";
+    return `${questionState.answer} ${questionState.trap}${agreement}${anchor}`;
+  }, [questionState.answer, questionState.trap, showAgreement, showD1]);
+
+  return (
+    <div data-interactive="bhava-profile" style={{ display: "grid", gap: "1rem", color: INK_PRIMARY }}>
+      <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: "1rem", flexWrap: "wrap" }}>
+          <div>
+            <p style={eyebrowStyle}>Tier 2 predictive 10th profile</p>
+            <h2 style={{ margin: "0.2rem 0 0", color: GOLD, fontSize: "1.35rem" }}>
+              Karma-bhava as a career question instrument
+            </h2>
+            <p style={{ margin: "0.45rem 0 0", color: INK_SECONDARY, lineHeight: 1.55, maxWidth: 850 }}>
+              Choose the client&apos;s career sub-question, then watch the relevant 10th-house axes, reference frame, and D1-first discipline come forward.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setQuestion("type");
+              setReference("lagna");
+              setShowD1(true);
+              setShowAgreement(true);
+            }}
+            style={buttonStyle(false)}
+          >
+            <RotateCcw size={15} aria-hidden="true" />
+            Reset
+          </button>
+        </div>
+      </section>
+
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(320px, 1.05fr) minmax(320px, 0.95fr)", gap: "1rem", alignItems: "start" }}>
+        <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", overflow: "hidden" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
+            <div>
+              <p style={eyebrowStyle}>Sub-question first</p>
+              <h3 style={{ margin: "0.15rem 0 0", color: questionState.color, fontSize: "1.2rem" }}>{questionState.label}</h3>
+            </div>
+            <strong style={{ color: referenceState.color }}>{referenceState.label}</strong>
+          </div>
+          <PredictiveKarmaSvg question={question} reference={reference} showD1={showD1} showAgreement={showAgreement} />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "0.65rem" }}>
+            <MiniFact icon={<BriefcaseBusiness size={16} />} title="Client asks" body={questionState.clientQuestion} color={questionState.color} />
+            <MiniFact icon={<Compass size={16} />} title="Reference" body={referenceState.focus} color={referenceState.color} />
+            <MiniFact icon={<ShieldCheck size={16} />} title="Discipline" body={showD1 ? "D1 before D10" : "D1 anchor hidden"} color={showD1 ? GREEN : VERMILION} />
+          </div>
+        </section>
+
+        <section style={{ display: "grid", gap: "0.85rem" }}>
+          <Panel title="Career sub-question" icon={<MessageCircle size={18} />} color={questionState.color}>
+            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.65rem" }}>
+              {(Object.keys(PREDICTIVE_KARMA_QUESTIONS) as PredictiveKarmaQuestionKey[]).map((key) => (
+                <button key={key} type="button" aria-pressed={question === key} onClick={() => setQuestion(key)} style={smallChipStyle(question === key, PREDICTIVE_KARMA_QUESTIONS[key].color)}>
+                  {PREDICTIVE_KARMA_QUESTIONS[key].label}
+                </button>
+              ))}
+            </div>
+            <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.5 }}>{questionState.answer}</p>
+          </Panel>
+
+          <Panel title="Reference frame" icon={<Compass size={18} />} color={referenceState.color}>
+            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.65rem" }}>
+              {(Object.keys(PREDICTIVE_REFERENCES) as PredictiveReferenceKey[]).map((key) => (
+                <button key={key} type="button" aria-pressed={reference === key} onClick={() => setReference(key)} style={smallChipStyle(reference === key, PREDICTIVE_REFERENCES[key].color)}>
+                  {PREDICTIVE_REFERENCES[key].label}
+                </button>
+              ))}
+            </div>
+            <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.5 }}>{referenceState.note}</p>
+          </Panel>
+        </section>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(320px, 1fr) minmax(320px, 0.95fr)", gap: "1rem", alignItems: "start" }}>
+        <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
+          <p style={eyebrowStyle}>Reading axes</p>
+          <h3 style={{ margin: "0.15rem 0 0.8rem", color: GOLD, fontSize: "1.18rem" }}>What gets weighted for this question</h3>
+          <div style={{ display: "grid", gap: "0.55rem" }}>
+            {PREDICTIVE_KARMA_AXES.map((axis) => {
+              const active = activeAxes.some((item) => item.key === axis.key);
+              return (
+                <div key={axis.key} style={{ display: "grid", gridTemplateColumns: "minmax(120px, 0.35fr) minmax(0, 1fr)", gap: "0.7rem", border: `1px solid ${active ? axis.color : HAIRLINE}`, borderRadius: 8, padding: "0.7rem", background: active ? `${axis.color}14` : "rgba(255,251,241,0.58)" }}>
+                  <div>
+                    <strong style={{ color: active ? axis.color : INK_MUTED }}>{axis.label}</strong>
+                    <p style={{ margin: "0.25rem 0 0", color: INK_MUTED, fontSize: "0.78rem", fontWeight: 850 }}>{axis.map}</p>
+                  </div>
+                  <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.45 }}>{axis.note}</p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <section style={{ display: "grid", gap: "0.85rem" }}>
+          <Panel title="D1-first guard" icon={<ShieldCheck size={18} />} color={showD1 ? GREEN : VERMILION}>
+            <button type="button" aria-pressed={showD1} onClick={() => setShowD1((value) => !value)} style={smallChipStyle(showD1, GREEN)}>
+              {showD1 ? "D1 anchor visible" : "Show D1 anchor"}
+            </button>
+            <p style={{ margin: "0.65rem 0 0", color: INK_SECONDARY, lineHeight: 1.5 }}>
+              Read the rashi chart&apos;s 10th, its lord, and occupants before any divisional layer. The D10 refines the promise; it does not replace it.
+            </p>
+          </Panel>
+
+          <Panel title="Reference agreement" icon={<UsersRound size={18} />} color={showAgreement ? BLUE : GOLD}>
+            <button type="button" aria-pressed={showAgreement} onClick={() => setShowAgreement((value) => !value)} style={smallChipStyle(showAgreement, BLUE)}>
+              {showAgreement ? "Agreement visible" : "Show agreement"}
+            </button>
+            <p style={{ margin: "0.65rem 0 0", color: INK_SECONDARY, lineHeight: 1.5 }}>
+              Lagna, Moon, and Sun agreeing gives a cleaner career signature. Differing references show mixed profession, feeling, or authority layers.
+            </p>
+          </Panel>
+
+          <section style={{ border: `1px solid ${questionState.color}66`, borderRadius: 8, background: `${questionState.color}14`, padding: "1rem" }}>
+            <strong style={{ color: questionState.color }}>Predictive synthesis</strong>
+            <p style={{ margin: "0.45rem 0 0", color: INK_SECONDARY, lineHeight: 1.55 }}>{synthesis}</p>
+          </section>
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function PredictiveKarmaSvg({ question, reference, showD1, showAgreement }: { question: PredictiveKarmaQuestionKey; reference: PredictiveReferenceKey; showD1: boolean; showAgreement: boolean }) {
+  const center = 170;
+  const radius = 116;
+  const questionState = PREDICTIVE_KARMA_QUESTIONS[question];
+  const referenceState = PREDICTIVE_REFERENCES[reference];
+  const points = Array.from({ length: 12 }, (_, index) => {
+    const angle = ((index - 3) / 12) * Math.PI * 2;
+    return {
+      house: index + 1,
+      x: center + Math.cos(angle) * radius,
+      y: center + Math.sin(angle) * radius,
+    };
+  });
+  const activeAxes = PREDICTIVE_KARMA_AXES.filter((axis) => axis.questions.some((item) => item === question));
+  const activeAxisLabels = activeAxes.map((axis) => axis.label).join(" + ");
+
+  return (
+    <svg viewBox="0 0 340 340" role="img" aria-label="Predictive tenth-house career sub-question diagram" style={{ width: "100%", maxHeight: 430, margin: "0.4rem auto 0.7rem", display: "block" }}>
+      <circle cx={center} cy={center} r={132} fill={`${GOLD}10`} stroke={HAIRLINE} strokeWidth="1.5" />
+      {showD1 ? <circle cx={center} cy={center} r={100} fill="none" stroke={`${GREEN}66`} strokeWidth="4" strokeDasharray="8 8" /> : null}
+      {showAgreement ? (
+        <g>
+          <line x1={points[9].x} y1={points[9].y} x2={points[0].x} y2={points[0].y} stroke={`${BLUE}77`} strokeWidth="3" strokeLinecap="round" />
+          <line x1={points[9].x} y1={points[9].y} x2={points[3].x} y2={points[3].y} stroke={`${BLUE}55`} strokeWidth="3" strokeLinecap="round" />
+        </g>
+      ) : null}
+      {points.map((point) => {
+        const active = point.house === 10;
+        const service = question === "independent" && point.house === 6;
+        const business = question === "independent" && point.house === 7;
+        const dusthana = question === "stability" && (point.house === 6 || point.house === 8 || point.house === 12);
+        const typeSupport = question === "type" && (point.house === 2 || point.house === 6);
+        const fill = active ? questionState.color : service ? BLUE : business ? GREEN : dusthana ? `${VERMILION}28` : typeSupport ? `${GOLD}24` : "#FFF9EA";
+        const stroke = active ? questionState.color : service ? BLUE : business ? GREEN : dusthana ? VERMILION : typeSupport ? GOLD : `${GOLD}44`;
+        return (
+          <g key={point.house}>
+            <line x1={center} y1={center} x2={point.x} y2={point.y} stroke={stroke} strokeWidth={active || service || business || dusthana ? 3 : 1.1} />
+            <circle cx={point.x} cy={point.y} r={active ? 20 : service || business || dusthana || typeSupport ? 17 : 14} fill={fill} stroke={active ? "#fff" : HAIRLINE} strokeWidth="2" />
+            <text x={point.x} y={point.y + 5} textAnchor="middle" fill={active ? "#fff" : INK_SECONDARY} fontSize="13" fontWeight="900">{point.house}</text>
+            {active ? <text x={point.x} y={point.y - 28} textAnchor="middle" fill={questionState.color} fontSize="11" fontWeight="900">10th</text> : null}
+            {service ? <text x={point.x} y={point.y + 34} textAnchor="middle" fill={BLUE} fontSize="10" fontWeight="900">service</text> : null}
+            {business ? <text x={point.x} y={point.y + 34} textAnchor="middle" fill={GREEN} fontSize="10" fontWeight="900">business</text> : null}
+          </g>
+        );
+      })}
+      <circle cx={center} cy={center} r={58} fill="#FFF9EA" stroke={referenceState.color} strokeWidth="3" />
+      <text x={center} y={center - 18} textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight="900">READ FROM</text>
+      <text x={center} y={center + 2} textAnchor="middle" fill={referenceState.color} fontSize="15" fontWeight="950">{referenceState.label.replace("From ", "")}</text>
+      <text x={center} y={center + 22} textAnchor="middle" fill={questionState.color} fontSize="11" fontWeight="900">{questionState.short}</text>
+      <text x={center} y={28} textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight="900" letterSpacing="1.2">{activeAxisLabels.toUpperCase()}</text>
+      {showD1 ? <text x={center} y={322} textAnchor="middle" fill={GREEN} fontSize="11" fontWeight="900">D1 foundation before D10 refinement</text> : null}
+    </svg>
+  );
+}
+
+function TenthLordPermutationProfile() {
+  const [placementHouse, setPlacementHouse] = useState(9);
+  const [capacity, setCapacity] = useState<TenthLordCapacityKey>("strong");
+  const [connection, setConnection] = useState<TenthLordConnectionKey>("direct");
+  const [showNature, setShowNature] = useState(true);
+  const [destinyGuard, setDestinyGuard] = useState(true);
+  const placement = TENTH_LORD_PLACEMENTS.find((item) => item.house === placementHouse) ?? TENTH_LORD_PLACEMENTS[8];
+  const capacityState = TENTH_LORD_CAPACITY[capacity];
+  const connectionState = TENTH_LORD_CONNECTIONS[connection];
+  const yogaFlag = placementHouse === 9 || (connection !== "direct" && connectionState.activeHouse === placementHouse);
+  const deliveryText = capacity === "weak" ? placement.weak : capacity === "strong" ? placement.strong : `${placement.strong} But keep the delivery qualified until dignity, aspects, and timing agree.`;
+
+  const synthesis = useMemo(() => {
+    const yoga = yogaFlag
+      ? ` Dharma-karmadhipati is flagged: ${connectionState.note}`
+      : " No 9th-10th lord connection is selected for this placement.";
+    const guard = destinyGuard
+      ? " Keep the two-step discipline: direction first, delivery second."
+      : " The guard is off: this is where placement-as-destiny mistakes creep in.";
+    return `${placement.direction} ${deliveryText} ${capacityState.note}${yoga} ${guard}`;
+  }, [capacityState.note, connectionState.note, deliveryText, destinyGuard, placement.direction, yogaFlag]);
+
+  return (
+    <div data-interactive="bhava-profile" style={{ display: "grid", gap: "1rem", color: INK_PRIMARY }}>
+      <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: "1rem", flexWrap: "wrap" }}>
+          <div>
+            <p style={eyebrowStyle}>10th lord permutation workbench</p>
+            <h2 style={{ margin: "0.2rem 0 0", color: GOLD, fontSize: "1.35rem" }}>
+              Direction from house, delivery from capacity
+            </h2>
+            <p style={{ margin: "0.45rem 0 0", color: INK_SECONDARY, lineHeight: 1.55, maxWidth: 850 }}>
+              Move the career-lord through all twelve houses, then change its capacity to see why a placement is a direction rather than a fixed verdict.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setPlacementHouse(9);
+              setCapacity("strong");
+              setConnection("direct");
+              setShowNature(true);
+              setDestinyGuard(true);
+            }}
+            style={buttonStyle(false)}
+          >
+            <RotateCcw size={15} aria-hidden="true" />
+            Reset
+          </button>
+        </div>
+      </section>
+
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(320px, 1.05fr) minmax(320px, 0.95fr)", gap: "1rem", alignItems: "start" }}>
+        <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem", overflow: "hidden" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
+            <div>
+              <p style={eyebrowStyle}>Twelve placements</p>
+              <h3 style={{ margin: "0.15rem 0 0", color: placement.color, fontSize: "1.2rem" }}>
+                10th lord in {placementHouse}: {placement.name}
+              </h3>
+            </div>
+            <strong style={{ color: capacityState.color }}>{capacityState.label}</strong>
+          </div>
+          <TenthLordPermutationSvg placement={placement} capacity={capacity} showNature={showNature} yogaFlag={yogaFlag} onSelectHouse={setPlacementHouse} />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "0.65rem" }}>
+            <MiniFact icon={<Compass size={16} />} title="Direction" body={`House ${placementHouse}: ${placement.name}`} color={placement.color} />
+            <MiniFact icon={<ShieldCheck size={16} />} title="Delivery" body={capacityState.label} color={capacityState.color} />
+            <MiniFact icon={<Landmark size={16} />} title="Nature" body={placement.nature} color={showNature ? BLUE : INK_MUTED} />
+          </div>
+        </section>
+
+        <section style={{ display: "grid", gap: "0.85rem" }}>
+          <Panel title="Place the 10th lord" icon={<BriefcaseBusiness size={18} />} color={placement.color}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: "0.45rem" }}>
+              {TENTH_LORD_PLACEMENTS.map((item) => (
+                <button
+                  key={item.house}
+                  type="button"
+                  aria-pressed={placementHouse === item.house}
+                  onClick={() => setPlacementHouse(item.house)}
+                  style={smallChipStyle(placementHouse === item.house, item.color)}
+                >
+                  H{item.house}
+                </button>
+              ))}
+            </div>
+            <p style={{ margin: "0.75rem 0 0", color: INK_SECONDARY, lineHeight: 1.5 }}>{placement.direction}</p>
+          </Panel>
+
+          <Panel title="Lord capacity" icon={<ShieldCheck size={18} />} color={capacityState.color}>
+            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.65rem" }}>
+              {(Object.keys(TENTH_LORD_CAPACITY) as TenthLordCapacityKey[]).map((key) => (
+                <button key={key} type="button" aria-pressed={capacity === key} onClick={() => setCapacity(key)} style={smallChipStyle(capacity === key, TENTH_LORD_CAPACITY[key].color)}>
+                  {TENTH_LORD_CAPACITY[key].label}
+                </button>
+              ))}
+            </div>
+            <div style={{ height: 12, borderRadius: 8, background: `${GOLD}22`, overflow: "hidden", border: `1px solid ${HAIRLINE}` }}>
+              <div style={{ width: `${capacityState.score}%`, height: "100%", background: capacityState.color, transition: "width 240ms ease" }} />
+            </div>
+            <p style={{ margin: "0.65rem 0 0", color: INK_SECONDARY, lineHeight: 1.5 }}>{deliveryText}</p>
+          </Panel>
+        </section>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(320px, 1fr) minmax(320px, 0.95fr)", gap: "1rem", alignItems: "start" }}>
+        <section style={{ border: `1px solid ${HAIRLINE}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
+          <p style={eyebrowStyle}>Placement table</p>
+          <h3 style={{ margin: "0.15rem 0 0.8rem", color: GOLD, fontSize: "1.18rem" }}>Tour the twelve directions</h3>
+          <div style={{ display: "grid", gap: "0.5rem" }}>
+            {TENTH_LORD_PLACEMENTS.map((item) => {
+              const active = item.house === placementHouse;
+              const dusthana = item.nature.includes("dusthana");
+              const yoga = item.house === 9;
+              return (
+                <button
+                  key={item.house}
+                  type="button"
+                  onClick={() => setPlacementHouse(item.house)}
+                  style={{ textAlign: "left", border: `1px solid ${active ? item.color : HAIRLINE}`, borderRadius: 8, background: active ? `${item.color}14` : "rgba(255,251,241,0.58)", padding: "0.7rem", cursor: "pointer" }}
+                >
+                  <span style={{ display: "flex", justifyContent: "space-between", gap: "0.8rem", alignItems: "center" }}>
+                    <strong style={{ color: active ? item.color : INK_SECONDARY }}>H{item.house} {item.name}</strong>
+                    <span style={{ color: yoga ? GOLD : dusthana ? VERMILION : INK_MUTED, fontSize: "0.75rem", fontWeight: 900 }}>{yoga ? "yoga" : item.nature}</span>
+                  </span>
+                  <span style={{ display: "block", marginTop: "0.35rem", color: INK_SECONDARY, lineHeight: 1.4 }}>{item.direction}</span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <section style={{ display: "grid", gap: "0.85rem" }}>
+          <Panel title="Dharma-karmadhipati check" icon={<Sparkles size={18} />} color={yogaFlag ? GOLD : INK_MUTED}>
+            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.65rem" }}>
+              {(Object.keys(TENTH_LORD_CONNECTIONS) as TenthLordConnectionKey[]).map((key) => (
+                <button key={key} type="button" aria-pressed={connection === key} onClick={() => setConnection(key)} style={smallChipStyle(connection === key, GOLD)}>
+                  {TENTH_LORD_CONNECTIONS[key].label}
+                </button>
+              ))}
+            </div>
+            <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.5 }}>{connectionState.note}</p>
+          </Panel>
+
+          <Panel title="House nature overlay" icon={<Landmark size={18} />} color={showNature ? BLUE : GOLD}>
+            <button type="button" aria-pressed={showNature} onClick={() => setShowNature((value) => !value)} style={smallChipStyle(showNature, BLUE)}>
+              {showNature ? "Nature visible" : "Show nature"}
+            </button>
+            <p style={{ margin: "0.65rem 0 0", color: INK_SECONDARY, lineHeight: 1.5 }}>
+              Kendra and trikona placements support visibility and flow; dusthana placements are not automatic failure, but they need capacity to become productive.
+            </p>
+          </Panel>
+
+          <Panel title="Placement-as-destiny guard" icon={<AlertTriangle size={18} />} color={destinyGuard ? GREEN : VERMILION}>
+            <button type="button" aria-pressed={destinyGuard} onClick={() => setDestinyGuard((value) => !value)} style={smallChipStyle(destinyGuard, GREEN)}>
+              {destinyGuard ? "Guard active" : "Reactivate guard"}
+            </button>
+            <p style={{ margin: "0.65rem 0 0", color: INK_SECONDARY, lineHeight: 1.5 }}>
+              Same placement, different outcomes: a strong 12th can give foreign or institutional success; a weak 12th can show loss and obscurity.
+            </p>
+          </Panel>
+
+          <section style={{ border: `1px solid ${placement.color}66`, borderRadius: 8, background: `${placement.color}14`, padding: "1rem" }}>
+            <strong style={{ color: placement.color }}>Direction + delivery synthesis</strong>
+            <p style={{ margin: "0.45rem 0 0", color: INK_SECONDARY, lineHeight: 1.55 }}>{synthesis}</p>
+          </section>
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function TenthLordPermutationSvg({ placement, capacity, showNature, yogaFlag, onSelectHouse }: { placement: TenthLordPlacement; capacity: TenthLordCapacityKey; showNature: boolean; yogaFlag: boolean; onSelectHouse: (house: number) => void }) {
+  const center = 170;
+  const radius = 116;
+  const capacityState = TENTH_LORD_CAPACITY[capacity];
+  const points = TENTH_LORD_PLACEMENTS.map((item, index) => {
+    const angle = ((index - 3) / 12) * Math.PI * 2;
+    return {
+      ...item,
+      x: center + Math.cos(angle) * radius,
+      y: center + Math.sin(angle) * radius,
+    };
+  });
+  const activePoint = points.find((item) => item.house === placement.house) ?? points[8];
+  const tenthPoint = points[9];
+
+  return (
+    <svg viewBox="0 0 340 340" role="img" aria-label="Tenth lord placement wheel with capacity and house nature overlay" style={{ width: "100%", maxHeight: 430, margin: "0.4rem auto 0.7rem", display: "block" }}>
+      <circle cx={center} cy={center} r={132} fill={`${GOLD}10`} stroke={HAIRLINE} strokeWidth="1.5" />
+      {showNature ? (
+        <g>
+          <circle cx={center} cy={center} r={128} fill="none" stroke={`${GREEN}30`} strokeWidth="8" strokeDasharray="18 14" />
+          <circle cx={center} cy={center} r={96} fill="none" stroke={`${VERMILION}22`} strokeWidth="8" strokeDasharray="10 22" />
+        </g>
+      ) : null}
+      <line x1={tenthPoint.x} y1={tenthPoint.y} x2={activePoint.x} y2={activePoint.y} stroke={placement.color} strokeWidth="4" strokeLinecap="round" />
+      <circle cx={center} cy={center} r={48} fill="#FFF9EA" stroke={capacityState.color} strokeWidth="3" />
+      <text x={center} y={center - 16} textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight="900">10TH LORD</text>
+      <text x={center} y={center + 4} textAnchor="middle" fill={placement.color} fontSize="17" fontWeight="950">H{placement.house}</text>
+      <text x={center} y={center + 23} textAnchor="middle" fill={capacityState.color} fontSize="10" fontWeight="900">{capacity === "strong" ? "full delivery" : capacity === "weak" ? "qualified" : "mixed"}</text>
+      {points.map((point) => {
+        const active = point.house === placement.house;
+        const source = point.house === 10;
+        const dusthana = point.nature.includes("dusthana");
+        const support = point.nature.includes("kendra") || point.nature.includes("trikona");
+        const fill = active ? placement.color : source ? GOLD : showNature && dusthana ? `${VERMILION}28` : showNature && support ? `${GREEN}24` : "#FFF9EA";
+        return (
+          <g key={point.house} role="button" tabIndex={0} onClick={() => onSelectHouse(point.house)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") onSelectHouse(point.house); }} style={{ cursor: "pointer" }}>
+            <line x1={center} y1={center} x2={point.x} y2={point.y} stroke={active ? placement.color : source ? `${GOLD}99` : `${GOLD}44`} strokeWidth={active || source ? 2.5 : 1.1} />
+            <circle cx={point.x} cy={point.y} r={active ? 20 : source ? 18 : 15} fill={fill} stroke={active || source ? "#fff" : HAIRLINE} strokeWidth="2" />
+            <text x={point.x} y={point.y + 5} textAnchor="middle" fill={active || source ? "#fff" : INK_SECONDARY} fontSize="13" fontWeight="900">{point.house}</text>
+            {active ? <text x={point.x} y={point.y + 34} textAnchor="middle" fill={placement.color} fontSize="10" fontWeight="900">lord sits</text> : null}
+            {yogaFlag && point.house === 9 ? <text x={point.x} y={point.y - 28} textAnchor="middle" fill={GOLD} fontSize="10" fontWeight="900">yoga</text> : null}
+          </g>
+        );
+      })}
+      <circle cx={activePoint.x} cy={activePoint.y - 19} r="8" fill={capacityState.color} stroke="#fff" strokeWidth="2" />
+      <text x={center} y={28} textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight="900" letterSpacing="1.2">CAREER-LORD CARRIES KARMA INTO HOUSE {placement.house}</text>
+      {yogaFlag ? <text x={center} y={322} textAnchor="middle" fill={GOLD} fontSize="11" fontWeight="900">9th-10th connection: dharma-karmadhipati flagged</text> : null}
+    </svg>
   );
 }
 
