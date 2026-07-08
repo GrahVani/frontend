@@ -132,11 +132,11 @@ function MarginCard({
         <span style={{ color: accentHex, display: "inline-flex" }}>{ornament}</span>
         <span
           style={{
-            fontSize: "11px",
+            fontSize: "13px",
             textTransform: "uppercase",
-            letterSpacing: "0.14em",
+            letterSpacing: "0.08em",
             color: accentHex,
-            fontWeight: 700,
+            fontWeight: 600,
             fontFamily: "var(--font-sans), system-ui, sans-serif",
           }}
         >
@@ -566,11 +566,10 @@ function InteractiveHintPanel({
     >
       <p
         style={{
-          fontFamily: "var(--font-cormorant), serif",
-          fontStyle: "italic",
+          fontFamily: "var(--font-sans), system-ui, sans-serif",
           fontSize: "16px",
           color: "var(--gl-ink-primary)",
-          lineHeight: 1.5,
+          lineHeight: 1.55,
           marginBottom: hint.bullets.length > 0 ? "10px" : "0",
         }}
       >

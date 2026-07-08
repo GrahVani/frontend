@@ -37,6 +37,7 @@ import { CaraKarakaRanker } from "./cara-karaka-ranker";
 import { CaraKarakaRoleAssigner } from "./cara-karaka-role-assigner";
 import { AmatyakarakaCareerWorkbench } from "./amatyakaraka-career-workbench";
 import { AtmakarakaKingLens } from "./atmakaraka-king-lens";
+import { AtmakarakaSaturnKingLensLab } from "./atmakaraka-saturn-king-lens-lab";
 import { KarakaCrossValidation } from "./karaka-cross-validation";
 import { AmkTenthLordComparisonWorkbench } from "./amk-tenth-lord-comparison-workbench";
 import { CaraDashaMechanism } from "./cara-dasha-mechanism";
@@ -204,6 +205,52 @@ import { WriteUpStructureScaffolder } from "./write-up-structure-scaffolder";
 import { MarriageSynthesisWorkbench } from "./marriage-synthesis-workbench";
 import { CareerSynthesisWorkbench } from "./career-synthesis-workbench";
 import { MultiDomainSynthesisWorkbench } from "./multi-domain-synthesis-workbench";
+import { KpLongevityChartH1Synthesis } from "./kp-longevity-chart-h1-synthesis";
+import { KalapurushaBodyMapExplorer } from "./kalapurusha-body-map-explorer";
+import { GrahaDiseaseCorrespondenceExplorer } from "./graha-disease-correspondence-explorer";
+import { ContextualisationDisciplineTrainer } from "./contextualisation-discipline-trainer";
+import { ContextualisationWorkedExampleTrainer } from "./contextualisation-worked-example-trainer";
+import { HealthSynthesisOverviewMap } from "./health-synthesis-overview-map";
+import { VitalityTrendSynthesisWorkbench } from "./vitality-trend-synthesis-workbench";
+import { KnownIllnessSupportConsultationTrainer } from "./known-illness-support-consultation-trainer";
+import { DeathPredictionProhibitionTrainer } from "./death-prediction-prohibition-trainer";
+import { MedicalRoutingDecisionTree } from "./medical-routing-decision-tree";
+import { ActiveMedicalDistressHandlingTrainer } from "./active-medical-distress-handling-trainer";
+import { MedicalDomainCompetenceClosingSynthesizer } from "./medical-domain-competence-closing-synthesizer";
+import { FourthHouseEducationWorkbench } from "./fourth-house-education-workbench";
+import { FifthHouseIntellectWorkbench } from "./fifth-house-intellect-workbench";
+import { NinthHouseHigherLearningWorkbench } from "./ninth-house-higher-learning-workbench";
+import { FourFiveNineEducationalArcSynthesizer } from "./four-five-nine-educational-arc-synthesizer";
+import { D24ConstructionWorkbench } from "./d24-construction-workbench";
+import { D24EducationReadingWorkbench } from "./d24-education-reading-workbench";
+import { D24MercuryJupiterKarakaWorkbench } from "./d24-mercury-jupiter-karaka-workbench";
+import { D24EducationSynthesisWorkbench } from "./d24-education-synthesis-workbench";
+import { MercuryBuddhiKarakaWorkbench } from "./mercury-buddhi-karaka-workbench";
+import { JupiterJnanaKarakaWorkbench } from "./jupiter-jnana-karaka-workbench";
+import { SarasvatiYogaChecklistWorkbench } from "./sarasvati-yoga-checklist-workbench";
+import { AptitudeTendencyMapper } from "./aptitude-tendency-mapper";
+import { FieldOfStudySynthesisWorkbench } from "./field-of-study-synthesis-workbench";
+import { ExamOutcomeConfidenceWorkbench } from "./exam-outcome-confidence-workbench";
+import { EducationScopeOfCompetenceWorkbench } from "./education-scope-of-competence-workbench";
+import { D4ConstructionWorkbench } from "./d4-construction-workbench";
+import { D4InternalLagnaFourthReadingLab } from "./d4-internal-lagna-fourth-reading-lab";
+import { D4PropertyQualityComparisonLab } from "./d4-property-quality-comparison-lab";
+import { D4CompletePropertyReadingAssemblyLab } from "./d4-complete-property-reading-assembly-lab";
+import { LalKitabPropertyTevaFormulaLab } from "./lal-kitab-property-teva-formula-lab";
+import { KpPropertyFourthCuspSubLordLab } from "./kp-property-fourth-cusp-sub-lord-lab";
+import { KpPropertySignificatorTimingLab } from "./kp-property-significator-timing-lab";
+import { CrossStreamPropertySynthesisLab } from "./cross-stream-property-synthesis-lab";
+import { PropertyDashaAcquisitionTimingLab } from "./property-dasha-acquisition-timing-lab";
+import { HomePurchaseConfidenceSynthesisLab } from "./home-purchase-confidence-synthesis-lab";
+import { VastuPropertyScopeDistinctionLab } from "./vastu-property-scope-distinction-lab";
+import { PropertyCompetenceRoutingLab } from "./property-competence-routing-lab";
+import { KpEducationCuspalSubLordLab } from "./kp-education-cuspal-sub-lord-lab";
+import { KpEducationSignificatorHierarchyLab } from "./kp-education-significator-hierarchy-lab";
+import { KpEducationExamTimingOverlayLab } from "./kp-education-exam-timing-overlay-lab";
+import { KpEducationWorkedExamSynthesisLab } from "./kp-education-worked-exam-synthesis-lab";
+import { EducationDashaTimingWindowLab } from "./education-dasha-timing-window-lab";
+import { EducationTransitTdvOverlayLab } from "./education-transit-tdv-overlay-lab";
+import { EducationSynthesisOverviewTableLab } from "./education-synthesis-overview-table-lab";
 import { PredictiveFailureModeQuiz } from "./predictive-failure-mode-quiz";
 import { BirthTimeAccuracyAssessment } from "./birth-time-accuracy-assessment";
 import { AyanamshaChoiceVerifier } from "./ayanamsha-choice-verifier";
@@ -272,6 +319,10 @@ import { TrimshamshaCalculator } from "./trimshamsha-calculator";
 import { EthicalRoutingChecklist } from "./ethical-routing-checklist";
 import { ShashtyamshaCalculator } from "./shashtyamsha-calculator";
 import { D1D60Comparator } from "./d1-d60-comparator";
+import { D60KarmicSubstrateIndexLab } from "./d60-karmic-substrate-index-lab";
+import { D60SpiritualPathArcLab } from "./d60-spiritual-path-arc-lab";
+import { D60HonestFramingEthicsLab } from "./d60-honest-framing-ethics-lab";
+import { D60WorkedReadingConfidenceLab } from "./d60-worked-reading-confidence-lab";
 import { BirthTimeQualityChecker } from "./birth-time-quality-checker";
 import { VimshopakaCalculator } from "./vimshopaka-calculator";
 import { VargottamaScanner } from "./vargottama-scanner";
@@ -325,12 +376,64 @@ import { PkPlacementNavamshaWorkbench } from "./pk-placement-navamsha-workbench"
 import { KpChildrenCuspTool } from "./kp-children-cusp-tool";
 import { KpChildrenSignificatorTimingBench } from "./kp-children-significator-timing-bench";
 import { JaiminiKpChildrenSynthesisBench } from "./jaimini-kp-children-synthesis-bench";
-import { MultiDomainSynthesisWorkbench } from "./multi-domain-synthesis-workbench";
 import { WhenWillChildrenSynthesisBench } from "./when-will-children-synthesis-bench";
 import { FertilityStruggleRoutingTrainer } from "./fertility-struggle-routing-trainer";
 import { PcpndtRefusalTrainer } from "./pcpndt-refusal-trainer";
 import { GriefAwareResponseTrainer } from "./grief-aware-response-trainer";
 import { ChildrenScopeTrainer } from "./children-scope-trainer";
+import { TwelfthHouseChartT1Explorer } from "./twelfth-house-chart-t1-explorer";
+import { NinthHouseChartT1Explorer } from "./ninth-house-chart-t1-explorer";
+import { TwelveNineThreeArcExplorer } from "./twelve-nine-three-arc-explorer";
+import { TwelveNineThreeAspectExplorer } from "./twelve-nine-three-aspect-explorer";
+import { RahuForeignBoundaryExplorer } from "./rahu-foreign-boundary-explorer";
+import { RahuPlacementPermutationsExplorer } from "./rahu-placement-permutations-explorer";
+import { RahuDashaTimingExplorer } from "./rahu-dasha-timing-explorer";
+import { RahuAspectDoctrineForkExplorer } from "./rahu-aspect-doctrine-fork-explorer";
+import { NriYogaCitationHonestyExplorer } from "./nri-yoga-citation-honesty-explorer";
+import { NriYogaPatternSpotter } from "./nri-yoga-pattern-spotter";
+import { KpForeignTravelCuspTool } from "./kp-foreign-travel-cusp-tool";
+import { VisaQuestionMultiCausalSynthesis } from "./visa-question-multi-causal-synthesis";
+import { DashaTimingForeignSettlementSweep } from "./dasha-timing-foreign-settlement-sweep";
+import { StudyAbroadThemeTimingSynthesis } from "./study-abroad-theme-timing-synthesis";
+import { PermanentSettlementSynthesis } from "./permanent-settlement-synthesis";
+import { ScopeOfCompetenceRouter } from "./scope-of-competence-router";
+import { SixthHouseLitigationProfile } from "./sixth-house-litigation-profile";
+import { SixthHouseDusthanaUpachayaParadox } from "./sixth-house-dusthana-upachaya-paradox";
+import { SixthLordPermutationsLitigation } from "./sixth-lord-permutations-litigation";
+import { MarsContestKarakaLitigation } from "./mars-contest-karaka-litigation";
+import { SaturnDelayStructurePersistenceLitigation } from "./saturn-delay-structure-persistence-litigation";
+import { MarsSaturnDynamicExplorer } from "./mars-saturn-dynamic-explorer";
+import { MarsSaturnRelationshipDistinguisher } from "./mars-saturn-relationship-distinguisher";
+import { MarsSaturnLitigationSynthesis } from "./mars-saturn-litigation-synthesis";
+import { KpLitigationCuspTool } from "./kp-litigation-cusp-tool";
+import { KpSharedSignificatorExplorer } from "./kp-shared-significator-explorer";
+import { KpCaseOutcomeHoraryIntro } from "./kp-case-outcome-horary-intro";
+import { KpLitigationSynthesisWorkbench } from "./kp-litigation-synthesis-workbench";
+import { DashaConflictTimingSweep } from "./dasha-conflict-timing-sweep";
+import { LitigationConfidenceSynthesis } from "./litigation-confidence-synthesis";
+import { LawyerSubstitutionRefusalRouter } from "./lawyer-substitution-refusal-router";
+import { LitigationScopeCompetenceCloser } from "./litigation-scope-competence-closer";
+import { MokshaTrikonaExplorer } from "./moksha-trikona-explorer";
+import { FourthHouseSpiritualFoundation } from "./fourth-house-spiritual-foundation";
+import { EighthHouseSpiritualTransformation } from "./eighth-house-spiritual-transformation";
+import { TwelfthHouseSpiritualRelease } from "./twelfth-house-spiritual-release";
+import { EighthTwelfthHealthRegisters } from "./eighth-twelfth-health-registers";
+import { HealthHouseSynthesisWorkbench } from "./health-house-synthesis-workbench";
+import { BalaristaDoctrineFrameExplorer } from "./balarista-doctrine-frame-explorer";
+import { BalaristaConfigurationSpotter } from "./balarista-configuration-spotter";
+import { BalaristaCancellationWalker } from "./balarista-cancellation-walker";
+import { BalaristaEthicsFramingTrainer } from "./balarista-ethics-framing-trainer";
+import { LongevityMethodSelector } from "./longevity-method-selector";
+import { AyurCalculator } from "./ayur-calculator";
+import { NaisargikaAyurCrossCheckWorkbench } from "./naisargika-ayur-cross-check-workbench";
+import { LongevityEthicsResponseTrainer } from "./longevity-ethics-response-trainer";
+import { MarakaDoctrineExplorer } from "./maraka-doctrine-explorer";
+import { MarakaIdentificationWorkbench } from "./maraka-identification-workbench";
+import { MarakaCautionWindowTrainer } from "./maraka-caution-window-trainer";
+import { MarakaSynthesisWorkbench } from "./maraka-synthesis-workbench";
+import { JaiminiRudraMaheshvaraExplorer } from "./jaimini-rudra-maheshvara-explorer";
+import { RudraMaheshvaraWorkbench } from "./rudra-maheshvara-workbench";
+import { KpLongevityDoctrineExplorer } from "./kp-longevity-doctrine-explorer";
 import { PredictiveKarmaProfile } from "./predictive-karma-profile";
 import { TenthLordPermutationProfile } from "./tenth-lord-permutation-profile";
 import { TenthKarakaTriangulation } from "./tenth-karaka-triangulation";
@@ -495,6 +598,10 @@ import { RashiDrishtiMapper } from "./rashi-drishti-mapper";
 import { AkDrishtiSynthesizer } from "./ak-drishti-synthesizer";
 import { KarakamshaLagnaLocator } from "./karakamsha-lagna-locator";
 import { KarakamshaReader } from "./karakamsha-reader";
+import { KarakamshaVirgoSoulMapLab } from "./karakamsha-virgo-soul-map-lab";
+import { IshtaDevataKetuDerivationLab } from "./ishta-devata-ketu-derivation-lab";
+import { IshtaDevataRespectFramingLab } from "./ishta-devata-respect-framing-lab";
+import { KarakamshaIshtaSynthesisWalkthrough } from "./karakamsha-ishta-synthesis-walkthrough";
 import { IshtaDevataFinder } from "./ishta-devata-finder";
 import { JaiminiAmkCareerCaseWorkbench } from "./jaimini-amk-career-case-workbench";
 import { JaiminiWorkflowWalkthrough } from "./jaimini-workflow-walkthrough";
@@ -563,6 +670,10 @@ import { SubSubRecursionExplorer } from "./sub-sub-recursion-explorer";
 import { SubLordFluencyTrainer } from "./sub-lord-fluency-trainer";
 import { SubstrateEthicsChecklist } from "./substrate-ethics-checklist";
 import { VimshamshaCalculator } from "./vimshamsha-calculator";
+import { D20VimshamshaConstructionLab } from "./d20-vimshamsha-construction-lab";
+import { D20LagnaSpiritualHousesLab } from "./d20-lagna-spiritual-houses-lab";
+import { D20SpiritualKarakasOverlayLab } from "./d20-spiritual-karakas-overlay-lab";
+import { D20SpiritualReadingSynthesisLab } from "./d20-spiritual-reading-synthesis-lab";
 import { AshtakavargaIntro } from "./ashtakavarga-intro";
 import { AshtakavargaContributors } from "./ashtakavarga-contributors";
 import { ContributionTableDemo } from "./contribution-table-demo";
@@ -633,6 +744,12 @@ import { MarriageSynthesisOverviewMap } from "./marriage-synthesis-overview-map"
 import { WhenWillIMarrySynthesisLab } from "./when-will-i-marry-synthesis-lab";
 import { ProposalEvaluationSynthesisLab } from "./proposal-evaluation-synthesis-lab";
 import { MarriageScopeCompetenceRouter } from "./marriage-scope-competence-router";
+import { FirstHouseVitalityPhysiqueWorkbench } from "./first-house-vitality-physique-workbench";
+import { SixthHouseDiseaseRecoveryWorkbench } from "./sixth-house-disease-recovery-workbench";
+import { FourthHousePropertyWorkbench } from "./fourth-house-property-workbench";
+import { FourthLordPropertyPermutationLab } from "./fourth-lord-property-permutation-lab";
+import { MarsPropertyKarakaDepthLab } from "./mars-property-karaka-depth-lab";
+import { SecondaryPropertyIndicatorsSynthesisLab } from "./secondary-property-indicators-synthesis-lab";
 import { SignificatorHierarchyExplorer } from "./significator-hierarchy-explorer";
 import { FirstOrderSignificatorVisualizer } from "./first-order-significator-visualizer";
 import { SecondOrderSignificatorWorkbench } from "./second-order-significator-workbench";
@@ -794,6 +911,7 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "cara-karaka-role-assigner": CaraKarakaRoleAssigner,
   "amatyakaraka-career-workbench": AmatyakarakaCareerWorkbench,
   "atmakaraka-king-lens": AtmakarakaKingLens,
+  "atmakaraka-saturn-king-lens-lab": AtmakarakaSaturnKingLensLab,
   "karaka-cross-validation": KarakaCrossValidation,
   "amk-tenth-lord-comparison-workbench": AmkTenthLordComparisonWorkbench,
   "cara-dasha-mechanism": CaraDashaMechanism,
@@ -1091,6 +1209,10 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "ethical-routing-checklist": EthicalRoutingChecklist,
   "shashtyamsha-calculator": ShashtyamshaCalculator,
   "d1-d60-comparator": D1D60Comparator,
+  "d60-karmic-substrate-index-lab": D60KarmicSubstrateIndexLab,
+  "d60-spiritual-path-arc-lab": D60SpiritualPathArcLab,
+  "d60-honest-framing-ethics-lab": D60HonestFramingEthicsLab,
+  "d60-worked-reading-confidence-lab": D60WorkedReadingConfidenceLab,
   "birth-time-quality-checker": BirthTimeQualityChecker,
   "vimshopaka-calculator": VimshopakaCalculator,
   "vargottama-scanner": VargottamaScanner,
@@ -1147,12 +1269,107 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "kp-children-cusp-tool": KpChildrenCuspTool,
   "kp-children-significator-timing-bench": KpChildrenSignificatorTimingBench,
   "jaimini-kp-children-synthesis-bench": JaiminiKpChildrenSynthesisBench,
-  "multi-domain-synthesis-workbench": MultiDomainSynthesisWorkbench,
   "when-will-children-synthesis-bench": WhenWillChildrenSynthesisBench,
   "fertility-struggle-routing-trainer": FertilityStruggleRoutingTrainer,
   "pcpndt-refusal-trainer": PcpndtRefusalTrainer,
   "grief-aware-response-trainer": GriefAwareResponseTrainer,
   "children-scope-trainer": ChildrenScopeTrainer,
+  "twelfth-house-chart-t1-explorer": TwelfthHouseChartT1Explorer,
+  "ninth-house-chart-t1-explorer": NinthHouseChartT1Explorer,
+  "twelve-nine-three-arc-explorer": TwelveNineThreeArcExplorer,
+  "twelve-nine-three-aspect-explorer": TwelveNineThreeAspectExplorer,
+  "rahu-foreign-boundary-explorer": RahuForeignBoundaryExplorer,
+  "rahu-placement-permutations-explorer": RahuPlacementPermutationsExplorer,
+  "rahu-dasha-timing-explorer": RahuDashaTimingExplorer,
+  "rahu-aspect-doctrine-fork-explorer": RahuAspectDoctrineForkExplorer,
+  "nri-yoga-citation-honesty-explorer": NriYogaCitationHonestyExplorer,
+  "nri-yoga-pattern-spotter": NriYogaPatternSpotter,
+  "kp-foreign-travel-cusp-tool": KpForeignTravelCuspTool,
+  "visa-question-multi-causal-synthesis": VisaQuestionMultiCausalSynthesis,
+  "dasha-timing-foreign-settlement-sweep": DashaTimingForeignSettlementSweep,
+  "study-abroad-theme-timing-synthesis": StudyAbroadThemeTimingSynthesis,
+  "permanent-settlement-synthesis": PermanentSettlementSynthesis,
+  "scope-of-competence-router": ScopeOfCompetenceRouter,
+  "sixth-house-litigation-profile": SixthHouseLitigationProfile,
+  // Lesson 11.1.2 interactive: Sixth-House Dusthāna–Upachaya Paradox —
+  // dual-classification wheel, Mars vs Saturn worked-example comparison,
+  // early-loss scenario, and discipline checks on house-specific limits.
+  "sixth-house-dusthana-upachaya-paradox": SixthHouseDusthanaUpachayaParadox,
+  // Lesson 11.1.3 interactive: Sixth-Lord Permutations for Litigation —
+  // clickable 12-house wheel placing the 6th lord, five-family classification,
+  // Chart L1 own-house anchor, and contrasting dusthāna/upachaya placements.
+  "sixth-lord-permutations-litigation": SixthLordPermutationsLitigation,
+  // Lesson 11.1.4 interactive: Mars as Contest Kāraka Applied to Litigation —
+  // Mars placement wheel, dignity selector, Chart L1 vs exalted-1st contrast,
+  // forward-pointer to Chapter 2, and discipline checks.
+  "mars-contest-karaka-litigation": MarsContestKarakaLitigation,
+  // Lesson 11.2.1 interactive: Saturn as Delay, Structure, Persistence —
+  // signification mapper, dignity quality selector, process gauge, and
+  // Chart L1 own-sign vs debilitated contrast.
+  "saturn-delay-structure-persistence-litigation": SaturnDelayStructurePersistenceLitigation,
+  // Lesson 11.2.2 interactive: Mars-Saturn Dynamic Explorer —
+  // aspect-geometry vs natural-friendship layer toggle, asymmetric grid,
+  // spot-the-error scenario, and discipline checks.
+  "mars-saturn-dynamic-explorer": MarsSaturnDynamicExplorer,
+  // Lesson 11.2.3 interactive: Mars-Saturn Relationship Distinguisher —
+  // conjunction / mutual aspect / mutual reception mode toggle, SVG diagrams,
+  // Chart L1 verification by elimination, and contrasting conjunction case.
+  "mars-saturn-relationship-distinguisher": MarsSaturnRelationshipDistinguisher,
+  // Lesson 11.2.4 interactive: Mars-Saturn Litigation Synthesis —
+  // six-finding assembly, aspect-web SVG, client-facing template builder,
+  // scope-limit trainer, and discipline checks.
+  "mars-saturn-litigation-synthesis": MarsSaturnLitigationSynthesis,
+  // Lesson 11.3.1 interactive: KP Litigation Cusp Tool —
+  // Chart L1 6th-cusp data, disposition-rule step-through, sub-lord
+  // substitution, and classical-vs-KP divergence display.
+  "kp-litigation-cusp-tool": KpLitigationCuspTool,
+  "kp-shared-significator-explorer": KpSharedSignificatorExplorer,
+  "kp-case-outcome-horary-intro": KpCaseOutcomeHoraryIntro,
+  "kp-litigation-synthesis-workbench": KpLitigationSynthesisWorkbench,
+  "dasha-conflict-timing-sweep": DashaConflictTimingSweep,
+  "litigation-confidence-synthesis": LitigationConfidenceSynthesis,
+  "lawyer-substitution-refusal-router": LawyerSubstitutionRefusalRouter,
+  "litigation-scope-competence-closer": LitigationScopeCompetenceCloser,
+  // Lesson 12.1.1 interactive: Moksa Trikona Explorer — isolates the 4-8-12 trine,
+  // compares all four purusartha trines, adds kendra/dusthana overlay, and includes
+  // an uneven-trine builder with disposition-not-destiny discipline.
+  "moksha-trikona-explorer": MokshaTrikonaExplorer,
+  // Lesson 12.1.2 interactive: Fourth House Spiritual Foundation — 4th house as
+  // moksa foundation stage, Moon karaka picker, independent house/lord and Moon
+  // strength builder, Chart S1 / Example 2 presets, and common-mistake discipline.
+  "fourth-house-spiritual-foundation": FourthHouseSpiritualFoundation,
+  "eighth-house-spiritual-transformation": EighthHouseSpiritualTransformation,
+  "twelfth-house-spiritual-release": TwelfthHouseSpiritualRelease,
+  "eighth-twelfth-health-registers": EighthTwelfthHealthRegisters,
+  "health-house-synthesis-workbench": HealthHouseSynthesisWorkbench,
+  "balarista-doctrine-frame-explorer": BalaristaDoctrineFrameExplorer,
+  "balarista-configuration-spotter": BalaristaConfigurationSpotter,
+  "balarista-cancellation-walker": BalaristaCancellationWalker,
+  "balarista-ethics-framing-trainer": BalaristaEthicsFramingTrainer,
+  "longevity-method-selector": LongevityMethodSelector,
+  "ayur-calculator": AyurCalculator,
+  "naisargika-ayur-cross-check-workbench": NaisargikaAyurCrossCheckWorkbench,
+  "longevity-ethics-response-trainer": LongevityEthicsResponseTrainer,
+  "maraka-doctrine-explorer": MarakaDoctrineExplorer,
+  "maraka-identification-workbench": MarakaIdentificationWorkbench,
+  "maraka-caution-window-trainer": MarakaCautionWindowTrainer,
+  // Lesson 7.4.4's §7 flagship: Maraka Synthesis Workbench — synthesise
+  // Bālāriṣṭa, longevity, and maraka findings for one chart and practise
+  // the universal, undated, proactive client-facing register.
+  "maraka-synthesis-workbench": MarakaSynthesisWorkbench,
+  // Lesson 7.5.1's §7 explorer: Jaimini Rudra-Maheśvara Explorer — contrast
+  // Parāśarī house-lordship with Jaimini kāraka-based identification, train
+  // AK selection, inspect Rudra and Maheśvara rules, and present documented
+  // source variance honestly.
+  "jaimini-rudra-maheshvara-explorer": JaiminiRudraMaheshvaraExplorer,
+  // Lesson 7.5.2's §7 workbench: Rudra-Maheśvara Workbench — apply the rules
+  // to Chart H1, compare both Maheśvara procedures, and practise honest
+  // confidence calibration plus the Jaimini-Parāśarī convergence.
+  "rudra-maheshvara-workbench": RudraMaheshvaraWorkbench,
+  // Lesson 7.5.3's §7 explorer: KP Longevity Doctrine Explorer — interactively
+  // teach sub-lord as final arbiter, four-level significator hierarchy, KP's
+  // 2nd/7th/12th maraka list, Bhādhaka-by-lagna-type, and honest data-scope.
+  "kp-longevity-doctrine-explorer": KpLongevityDoctrineExplorer,
   "predictive-karma-profile": PredictiveKarmaProfile,
   "tenth-lord-permutation-profile": TenthLordPermutationProfile,
   "tenth-karaka-triangulation": TenthKarakaTriangulation,
@@ -1483,6 +1700,10 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   // occupant + rÄÅ›i-dá¹›á¹£á¹­i aspect reading, and key houses from KL with
   // automated synthesis. Presets for Leo and Scorpio KÄrakÄá¹Å›a examples.
   "karakamsha-reader": KarakamshaReader,
+  "karakamsha-virgo-soul-map-lab": KarakamshaVirgoSoulMapLab,
+  "ishta-devata-ketu-derivation-lab": IshtaDevataKetuDerivationLab,
+  "ishta-devata-respect-framing-lab": IshtaDevataRespectFramingLab,
+  "karakamsha-ishta-synthesis-walkthrough": KarakamshaIshtaSynthesisWalkthrough,
   // Lesson 17.7.3 interactive: Iá¹£á¹­a-DevatÄ Finder -- select the KÄrakÄá¹Å›a,
   // place planets, and see the 12th-from-KL auto-computed with planet-to-deity
   // mapping, empty-house lord fallback, aspecting contributors, and ethical
@@ -1634,6 +1855,73 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "marriage-synthesis-workbench": MarriageSynthesisWorkbench,
   "career-synthesis-workbench": CareerSynthesisWorkbench,
   "multi-domain-synthesis-workbench": MultiDomainSynthesisWorkbench,
+  // Lesson 7.5.4's §7 explorer: KP Longevity Chart H1 Synthesis — apply KP
+  // doctrine to Chart H1 (Bhādhaka + verified Saturn sub-lord), then practise
+  // the three-stream synthesis and ethical-framing trainer.
+  "kp-longevity-chart-h1-synthesis": KpLongevityChartH1Synthesis,
+  // Lesson 7.6.1's §7 explorer: Kālapuruṣa Body-Map Explorer — interactive
+  // body-part-to-house mapping with zodiac vs chart toggle and scope gate.
+  "kalapurusha-body-map-explorer": KalapurushaBodyMapExplorer,
+  // Lesson 7.6.2's §7 explorer: Graha-Disease Correspondence Explorer —
+  // seven-graha correspondences, two-layer reinforcement, tridoṣa bridge, scope gate.
+  "graha-disease-correspondence-explorer": GrahaDiseaseCorrespondenceExplorer,
+  // Lesson 7.6.3's §7 trainer: Contextualisation Discipline Trainer —
+  // direction-of-inference, harm pathways, question classifier, response builder.
+  "contextualisation-discipline-trainer": ContextualisationDisciplineTrainer,
+  // Lesson 7.6.4's §7 trainer: Contextualisation Worked-Example Trainer —
+  // diagnosis-first gate, contextualisation chain, no-match honesty, statement practice.
+  "contextualisation-worked-example-trainer": ContextualisationWorkedExampleTrainer,
+  // Lesson 7.7.1's §7 explorer: Health Synthesis Overview Map —
+  // seven-lesson roadmap, Chart H1 findings recap, question router, capability-to-restraint sequence.
+  "health-synthesis-overview-map": HealthSynthesisOverviewMap,
+  // Lesson 7.7.2's §7 workbench: Vitality-Trend Synthesis Workbench —
+  // seven-layer synthesis, convergence/divergence diagram, response translator, mistake check.
+  "vitality-trend-synthesis-workbench": VitalityTrendSynthesisWorkbench,
+  // Lesson 7.7.3's §7 trainer: Known-Illness Support Consultation Trainer —
+  // scenario compass, response builder, silent confidence toggle, mistake check.
+  "known-illness-support-consultation-trainer": KnownIllnessSupportConsultationTrainer,
+  // Lesson 7.7.4's §7 trainer: Death-Prediction Prohibition Trainer —
+  // absolute rule barrier, five category scripts, wrong-vs-right comparisons, restraint verse.
+  "death-prediction-prohibition-trainer": DeathPredictionProhibitionTrainer,
+  // Lesson 7.7.5's §7 tool: Medical-Routing Decision Tree —
+  // interactive four-tier tree, tier reference, scenario classifier, sequence rule.
+  "medical-routing-decision-tree": MedicalRoutingDecisionTree,
+  "active-medical-distress-handling-trainer": ActiveMedicalDistressHandlingTrainer,
+  "medical-domain-competence-closing-synthesizer": MedicalDomainCompetenceClosingSynthesizer,
+  "fourth-house-education-workbench": FourthHouseEducationWorkbench,
+  "fifth-house-intellect-workbench": FifthHouseIntellectWorkbench,
+  "ninth-house-higher-learning-workbench": NinthHouseHigherLearningWorkbench,
+  "four-five-nine-educational-arc-synthesizer": FourFiveNineEducationalArcSynthesizer,
+  "d24-construction-workbench": D24ConstructionWorkbench,
+  "d24-education-reading-workbench": D24EducationReadingWorkbench,
+  "d24-mercury-jupiter-karaka-workbench": D24MercuryJupiterKarakaWorkbench,
+  "d24-education-synthesis-workbench": D24EducationSynthesisWorkbench,
+  "mercury-buddhi-karaka-workbench": MercuryBuddhiKarakaWorkbench,
+  "jupiter-jnana-karaka-workbench": JupiterJnanaKarakaWorkbench,
+  "sarasvati-yoga-checklist-workbench": SarasvatiYogaChecklistWorkbench,
+  "aptitude-tendency-mapper": AptitudeTendencyMapper,
+  "field-of-study-synthesis-workbench": FieldOfStudySynthesisWorkbench,
+  "exam-outcome-confidence-workbench": ExamOutcomeConfidenceWorkbench,
+  "education-scope-of-competence-workbench": EducationScopeOfCompetenceWorkbench,
+  "d4-construction-workbench": D4ConstructionWorkbench,
+  "d4-internal-lagna-fourth-reading-lab": D4InternalLagnaFourthReadingLab,
+  "d4-property-quality-comparison-lab": D4PropertyQualityComparisonLab,
+  "d4-complete-property-reading-assembly-lab": D4CompletePropertyReadingAssemblyLab,
+  "lal-kitab-property-teva-formula-lab": LalKitabPropertyTevaFormulaLab,
+  "kp-property-fourth-cusp-sub-lord-lab": KpPropertyFourthCuspSubLordLab,
+  "kp-property-significator-timing-lab": KpPropertySignificatorTimingLab,
+  "cross-stream-property-synthesis-lab": CrossStreamPropertySynthesisLab,
+  "property-dasha-acquisition-timing-lab": PropertyDashaAcquisitionTimingLab,
+  "home-purchase-confidence-synthesis-lab": HomePurchaseConfidenceSynthesisLab,
+  "vastu-property-scope-distinction-lab": VastuPropertyScopeDistinctionLab,
+  "property-competence-routing-lab": PropertyCompetenceRoutingLab,
+  "kp-education-cuspal-sub-lord-lab": KpEducationCuspalSubLordLab,
+  "kp-education-significator-hierarchy-lab": KpEducationSignificatorHierarchyLab,
+  "kp-education-exam-timing-overlay-lab": KpEducationExamTimingOverlayLab,
+  "kp-education-worked-exam-synthesis-lab": KpEducationWorkedExamSynthesisLab,
+  "education-dasha-timing-window-lab": EducationDashaTimingWindowLab,
+  "education-transit-tdv-overlay-lab": EducationTransitTdvOverlayLab,
+  "education-synthesis-overview-table-lab": EducationSynthesisOverviewTableLab,
   "predictive-failure-mode-quiz": PredictiveFailureModeQuiz,
   "birth-time-accuracy-assessment": BirthTimeAccuracyAssessment,
   "ayanamsha-choice-verifier": AyanamshaChoiceVerifier,
@@ -1804,6 +2092,10 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "sub-lord-calculator": SubLordCalculator,
   "substrate-ethics-checklist": SubstrateEthicsChecklist,
   "vimshamsha-calculator": VimshamshaCalculator,
+  "d20-vimshamsha-construction-lab": D20VimshamshaConstructionLab,
+  "d20-lagna-spiritual-houses-lab": D20LagnaSpiritualHousesLab,
+  "d20-spiritual-karakas-overlay-lab": D20SpiritualKarakasOverlayLab,
+  "d20-spiritual-reading-synthesis-lab": D20SpiritualReadingSynthesisLab,
   "ashtakavarga-intro": AshtakavargaIntro,
   "ashtakavarga-contributors": AshtakavargaContributors,
   "contribution-table-demo": ContributionTableDemo,
@@ -1878,6 +2170,12 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveComponentType> = {
   "when-will-i-marry-synthesis-lab": WhenWillIMarrySynthesisLab,
   "proposal-evaluation-synthesis-lab": ProposalEvaluationSynthesisLab,
   "marriage-scope-competence-router": MarriageScopeCompetenceRouter,
+  "first-house-vitality-physique-workbench": FirstHouseVitalityPhysiqueWorkbench,
+  "sixth-house-disease-recovery-workbench": SixthHouseDiseaseRecoveryWorkbench,
+  "fourth-house-property-workbench": FourthHousePropertyWorkbench,
+  "fourth-lord-property-permutation-lab": FourthLordPropertyPermutationLab,
+  "mars-property-karaka-depth-lab": MarsPropertyKarakaDepthLab,
+  "secondary-property-indicators-synthesis-lab": SecondaryPropertyIndicatorsSynthesisLab,
   "significator-hierarchy-explorer": SignificatorHierarchyExplorer,
   "first-order-significator-visualizer": FirstOrderSignificatorVisualizer,
   "second-order-significator-workbench": SecondOrderSignificatorWorkbench,

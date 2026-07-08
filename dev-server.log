@@ -1,0 +1,21 @@
+
+> grahvani-frontend@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.1 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.31.224.1:3000
+- Environments: .env.local, .env
+- Experiments (use with caution):
+  · optimizePackageImports
+
+✓ Starting...
+Creating turbopack project { dir: 'D:\\Grahvani\\frontend-grahvani-software', testMode: true }
+✓ Ready in 2.7s
+○ Compiling /login ...
+ GET /login 200 in 10.2s (compile: 9.8s, render: 380ms)
+○ Compiling /learn/[tier]/[module]/[chapter]/[lesson] ...
+ GET /learn/tier-1/module-1/chapter-1/lesson-3 200 in 70s (compile: 53s, render: 17.2s)
+✓ Finished writing to filesystem cache in 100s
+✓ Finished filesystem cache database compaction in 15.3s
+✓ Finished writing to filesystem cache in 13.3s

@@ -213,33 +213,36 @@ export function AshtaKutaFrameworkWorkbench() {
 }
 
 function AshtaKutaSvg({ selected }: { selected: KutaId | "distribution" }) {
-  const totalWidth = 600;
   return (
-    <svg viewBox="0 0 780 390" role="img" aria-label="Ashta-kuta 36 point distribution diagram" style={{ width: "100%", minHeight: 300, margin: "0.7rem 0" }}>
-      <rect x="18" y="18" width="744" height="354" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="390" y="55" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="700">EIGHT KUTAS SUM TO 36, BUT THE SHAPE MATTERS</text>
+    <svg viewBox="0 0 980 560" role="img" aria-label="Ashta-kuta 36 point distribution diagram" style={{ width: "100%", minHeight: 430, margin: "0.7rem 0" }}>
+      <rect x="18" y="18" width="944" height="524" rx="8" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="490" y="64" textAnchor="middle" fill={GOLD} fontSize="22" fontWeight="700">EIGHT KUTAS SUM TO 36, BUT THE SHAPE MATTERS</text>
       {KUTAS.map((kuta, index) => {
-        const width = (kuta.points / 36) * totalWidth;
+        const cardWidth = 104;
+        const currentX = 58 + index * 112;
         const active = selected === kuta.id || selected === "distribution";
-        const currentX = 86 + (KUTAS.slice(0, index).reduce((sum, item) => sum + item.points, 0) / 36) * totalWidth;
+        const labelLines = kuta.name === "Graha-Maitri" ? ["Graha", "Maitri"] : [kuta.name];
         return (
           <g key={kuta.id}>
-            <rect x={currentX} y="100" width={width - 3} height="54" rx="8" fill={active ? OPAQUE_LIGHT_FILL[kuta.color] : "transparent"} stroke={selected === kuta.id ? kuta.color : HAIRLINE} strokeWidth={selected === kuta.id ? 3 : 1.2} />
-            <rect x={currentX} y="166" width={Math.max(2, ((kuta.score || 0) / kuta.points) * (width - 3))} height="16" rx="8" fill={kuta.color} opacity={kuta.score === 0 ? 0.25 : 1} />
-            <text x={currentX + width / 2} y="124" textAnchor="middle" fill={kuta.color} fontSize="10.5" fontWeight="700">{kuta.name}</text>
-            <text x={currentX + width / 2} y="145" textAnchor="middle" fill={INK_MUTED} fontSize="9.5">{kuta.points} pts</text>
-            <text x={currentX + width / 2} y="205" textAnchor="middle" fill={INK_SECONDARY} fontSize="10">{kuta.score}/{kuta.points}</text>
+            <rect x={currentX} y="100" width={cardWidth} height="98" rx="8" fill={active ? OPAQUE_LIGHT_FILL[kuta.color] : "transparent"} stroke={selected === kuta.id ? kuta.color : HAIRLINE} strokeWidth={selected === kuta.id ? 3.5 : 1.6} />
+            {labelLines.map((line, lineIndex) => (
+              <text key={line} x={currentX + cardWidth / 2} y={labelLines.length === 1 ? 132 : 123 + lineIndex * 19} textAnchor="middle" fill={kuta.color} fontSize="16" fontWeight="700">{line}</text>
+            ))}
+            <text x={currentX + cardWidth / 2} y="171" textAnchor="middle" fill={INK_SECONDARY} fontSize="15" fontWeight="600">{kuta.points} pts</text>
+            <rect x={currentX + 10} y="220" width={cardWidth - 20} height="22" rx="8" fill={HAIRLINE} opacity="0.6" />
+            <rect x={currentX + 10} y="220" width={Math.max(4, ((kuta.score || 0) / kuta.points) * (cardWidth - 20))} height="22" rx="8" fill={kuta.color} opacity={kuta.score === 0 ? 0.25 : 1} />
+            <text x={currentX + cardWidth / 2} y="270" textAnchor="middle" fill={INK_PRIMARY} fontSize="16" fontWeight="700">{kuta.score}/{kuta.points}</text>
           </g>
         );
       })}
-      <path d="M 294 284 C 360 242, 420 242, 486 284" fill="none" stroke={GOLD} strokeWidth="3" strokeDasharray="7 6" />
-      <circle cx="250" cy="284" r="44" fill={OPAQUE_LIGHT_FILL[VERMILION]} stroke={VERMILION} strokeWidth="3" />
-      <text x="250" y="278" textAnchor="middle" fill={VERMILION} fontSize="13" fontWeight="700">Bhakuta</text>
-      <text x="250" y="299" textAnchor="middle" fill={INK_MUTED} fontSize="10">heavy gap</text>
-      <circle cx="530" cy="284" r="44" fill={OPAQUE_LIGHT_FILL[PURPLE]} stroke={PURPLE} strokeWidth="3" />
-      <text x="530" y="278" textAnchor="middle" fill={PURPLE} fontSize="13" fontWeight="700">Nadi</text>
-      <text x="530" y="299" textAnchor="middle" fill={INK_MUTED} fontSize="10">heaviest</text>
-      <text x="390" y="250" textAnchor="middle" fill={GOLD} fontSize="11.5" fontWeight="700">always check cancellations</text>
+      <path d="M 372 410 C 438 350, 542 350, 608 410" fill="none" stroke={GOLD} strokeWidth="5" strokeDasharray="10 8" />
+      <circle cx="300" cy="410" r="70" fill={OPAQUE_LIGHT_FILL[VERMILION]} stroke={VERMILION} strokeWidth="4.5" />
+      <text x="300" y="400" textAnchor="middle" fill={VERMILION} fontSize="21" fontWeight="700">Bhakuta</text>
+      <text x="300" y="434" textAnchor="middle" fill={INK_SECONDARY} fontSize="16" fontWeight="600">heavy gap</text>
+      <circle cx="680" cy="410" r="70" fill={OPAQUE_LIGHT_FILL[PURPLE]} stroke={PURPLE} strokeWidth="4.5" />
+      <text x="680" y="400" textAnchor="middle" fill={PURPLE} fontSize="21" fontWeight="700">Nadi</text>
+      <text x="680" y="434" textAnchor="middle" fill={INK_SECONDARY} fontSize="16" fontWeight="600">heaviest</text>
+      <text x="490" y="335" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">always check cancellations</text>
     </svg>
   );
 }

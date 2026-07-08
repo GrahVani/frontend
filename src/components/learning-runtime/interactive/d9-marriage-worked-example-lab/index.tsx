@@ -243,27 +243,27 @@ function D9WorkedExampleSvg({ scenario, d9Lagna, d9Seventh, venusConfirmed, tier
       <rect x="18" y="18" width="744" height="394" rx="8" fill={SURFACE} stroke={HAIRLINE} />
       <path d="M 226 108 L 276 108 M 426 108 L 476 108 M 551 146 C 551 190 526 190 526 193 M 351 146 C 351 190 252 190 252 193 M 307 248 L 471 248" fill="none" stroke={scenario === "supportive" ? GREEN : GOLD} strokeWidth="4" strokeDasharray={scenario === "supportive" ? "0" : "8 8"} />
       <rect x="76" y="70" width="150" height="76" rx="8" fill={OPAQUE_LIGHT_FILL[BLUE]} stroke={BLUE} strokeWidth="3" />
-      <text x="151" y="101" textAnchor="middle" fill={BLUE} fontSize="13" fontWeight="700">Construct</text>
-      <text x="151" y="124" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">Venus to Taurus</text>
+      <text x="151" y="100" textAnchor="middle" fill={BLUE} fontSize="18" fontWeight="700">Construct</text>
+      <text x="151" y="126" textAnchor="middle" fill={INK_MUTED} fontSize="14">Venus to Taurus</text>
 
       <rect x="276" y="70" width="150" height="76" rx="8" fill={OPAQUE_LIGHT_FILL[strengthColor(d9Lagna)]} stroke={strengthColor(d9Lagna)} strokeWidth="3" />
-      <text x="351" y="101" textAnchor="middle" fill={strengthColor(d9Lagna)} fontSize="13" fontWeight="700">D9 Lagna</text>
-      <text x="351" y="124" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{d9Lagna}</text>
+      <text x="351" y="100" textAnchor="middle" fill={strengthColor(d9Lagna)} fontSize="18" fontWeight="700">D9 Lagna</text>
+      <text x="351" y="126" textAnchor="middle" fill={INK_MUTED} fontSize="14">{d9Lagna}</text>
 
       <rect x="476" y="70" width="150" height="76" rx="8" fill={OPAQUE_LIGHT_FILL[strengthColor(d9Seventh)]} stroke={strengthColor(d9Seventh)} strokeWidth="3" />
-      <text x="551" y="101" textAnchor="middle" fill={strengthColor(d9Seventh)} fontSize="13" fontWeight="700">D9 7th</text>
-      <text x="551" y="124" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{d9Seventh}</text>
+      <text x="551" y="100" textAnchor="middle" fill={strengthColor(d9Seventh)} fontSize="18" fontWeight="700">D9 7th</text>
+      <text x="551" y="126" textAnchor="middle" fill={INK_MUTED} fontSize="14">{d9Seventh}</text>
 
       <circle cx="252" cy="248" r="55" fill={OPAQUE_LIGHT_FILL[venusConfirmed ? GREEN : VERMILION]} stroke={venusConfirmed ? GREEN : VERMILION} strokeWidth="3" />
-      <text x="252" y="235" textAnchor="middle" fill={venusConfirmed ? GREEN : VERMILION} fontSize="13" fontWeight="700">Venus</text>
-      <text x="252" y="257" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{venusConfirmed ? "own + vargottama" : "afflicted"}</text>
+      <text x="252" y="236" textAnchor="middle" fill={venusConfirmed ? GREEN : VERMILION} fontSize="17" fontWeight="700">Venus</text>
+      <text x="252" y="260" textAnchor="middle" fill={INK_MUTED} fontSize="13">{venusConfirmed ? "own + vargottama" : "afflicted"}</text>
 
       <circle cx="526" cy="248" r="55" fill={OPAQUE_LIGHT_FILL[converges ? GREEN : GOLD]} stroke={converges ? GREEN : GOLD} strokeWidth="3" />
-      <text x="526" y="235" textAnchor="middle" fill={converges ? GREEN : GOLD} fontSize="13" fontWeight="700">D1 + D9</text>
-      <text x="526" y="257" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{converges ? "converge" : "qualify"}</text>
+      <text x="526" y="236" textAnchor="middle" fill={converges ? GREEN : GOLD} fontSize="17" fontWeight="700">D1 + D9</text>
+      <text x="526" y="260" textAnchor="middle" fill={INK_MUTED} fontSize="13">{converges ? "converge" : "qualify"}</text>
 
       <rect x="218" y="350" width="344" height="38" rx="8" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} />
-      <text x="390" y="374" textAnchor="middle" fill={finalColor} fontSize="13" fontWeight="700">{tier.toUpperCase()}</text>
+      <text x="390" y="375" textAnchor="middle" fill={finalColor} fontSize="16" fontWeight="700">{tier.toUpperCase()}</text>
     </svg>
   );
 }

@@ -231,24 +231,24 @@ export function SeventhAspectNetWorkbench() {
 function AspectNetSvg({ houseTarget, lordTarget, beneficCount, maleficCount, jupiterProtects, methodOk }: { houseTarget: boolean; lordTarget: boolean; beneficCount: number; maleficCount: number; jupiterProtects: boolean; methodOk: boolean }) {
   const finalColor = !methodOk ? VERMILION : beneficCount >= maleficCount ? GREEN : GOLD;
   return (
-    <svg viewBox="0 0 760 410" role="img" aria-label="Net aspects on the 7th house and 7th lord" style={{ width: "100%", minHeight: 320, margin: "0.7rem 0" }}>
+    <svg viewBox="0 0 760 430" role="img" aria-label="Net aspects on the 7th house and 7th lord" style={diagramSvgStyle}>
       <rect x="18" y="18" width="724" height="374" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <path d="M 126 88 C 180 48, 210 68, 240 83" stroke={GREEN} strokeWidth={beneficCount > 0 ? 5 : 1.5} fill="none" strokeDasharray={beneficCount > 0 ? "0" : "6 8"} />
-      <text x="152" y="76" fill={GREEN} fontSize="15" fontWeight="600">benefic {beneficCount}</text>
-      <path d="M 632 88 C 580 48, 550 68, 520 83" stroke={VERMILION} strokeWidth={maleficCount > 0 ? 5 : 1.5} fill="none" strokeDasharray={maleficCount > 0 ? "0" : "6 8"} />
-      <text x="560" y="76" fill={VERMILION} fontSize="15" fontWeight="600">malefic {maleficCount}</text>
-      <path d="M 285 190 L 330 232 M 475 190 L 430 232" stroke={HAIRLINE} strokeWidth="3" strokeDasharray="6 8" />
-      <circle cx="240" cy="145" r="62" fill={houseTarget ? OPAQUE_LIGHT_FILL[BLUE] : "transparent"} stroke={houseTarget ? BLUE : HAIRLINE} strokeWidth={houseTarget ? 3 : 1.5} />
-      <text x="240" y="139" textAnchor="middle" fill={houseTarget ? BLUE : INK_MUTED} fontSize="17" fontWeight="600">7th house</text>
+      <path d="M 112 86 C 156 44, 206 45, 250 86" stroke={GREEN} strokeWidth={beneficCount > 0 ? 5 : 1.5} fill="none" strokeDasharray={beneficCount > 0 ? "0" : "6 8"} />
+      <text x="181" y="48" textAnchor="middle" fill={GREEN} fontSize="15" fontWeight="600">benefic {beneficCount}</text>
+      <path d="M 648 86 C 604 44, 554 45, 510 86" stroke={VERMILION} strokeWidth={maleficCount > 0 ? 5 : 1.5} fill="none" strokeDasharray={maleficCount > 0 ? "0" : "6 8"} />
+      <text x="579" y="48" textAnchor="middle" fill={VERMILION} fontSize="15" fontWeight="600">malefic {maleficCount}</text>
+      <path d="M 288 190 L 336 230 M 472 190 L 424 230" stroke={HAIRLINE} strokeWidth="3" strokeDasharray="6 8" />
+      <circle cx="240" cy="145" r="60" fill={houseTarget ? OPAQUE_LIGHT_FILL[BLUE] : "transparent"} stroke={houseTarget ? BLUE : HAIRLINE} strokeWidth={houseTarget ? 3 : 1.5} />
+      <text x="240" y="140" textAnchor="middle" fill={houseTarget ? BLUE : INK_MUTED} fontSize="17" fontWeight="600">7th house</text>
       <text x="240" y="164" textAnchor="middle" fill={INK_MUTED} fontSize="13">{houseTarget ? "target counted" : "missing"}</text>
-      <circle cx="520" cy="145" r="62" fill={lordTarget ? OPAQUE_LIGHT_FILL[PURPLE] : "transparent"} stroke={lordTarget ? PURPLE : HAIRLINE} strokeWidth={lordTarget ? 3 : 1.5} />
-      <text x="520" y="139" textAnchor="middle" fill={lordTarget ? PURPLE : INK_MUTED} fontSize="17" fontWeight="600">7th lord</text>
+      <circle cx="520" cy="145" r="60" fill={lordTarget ? OPAQUE_LIGHT_FILL[PURPLE] : "transparent"} stroke={lordTarget ? PURPLE : HAIRLINE} strokeWidth={lordTarget ? 3 : 1.5} />
+      <text x="520" y="140" textAnchor="middle" fill={lordTarget ? PURPLE : INK_MUTED} fontSize="17" fontWeight="600">7th lord</text>
       <text x="520" y="164" textAnchor="middle" fill={INK_MUTED} fontSize="13">{lordTarget ? "target counted" : "missing"}</text>
-      <circle cx="380" cy="280" r="70" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} strokeWidth="3" />
-      <text x="380" y="273" textAnchor="middle" fill={finalColor} fontSize="19" fontWeight="600">{methodOk ? "NET" : "CHECK"}</text>
-      <text x="380" y="298" textAnchor="middle" fill={INK_MUTED} fontSize="14">{jupiterProtects ? "Jupiter protects" : "no Jupiter selected"}</text>
-      <rect x="90" y="360" width="580" height="36" rx="8" fill={OPAQUE_LIGHT_FILL[GOLD]} stroke={HAIRLINE} />
-      <text x="380" y="384" textAnchor="middle" fill={INK_MUTED} fontSize="14">Tally both sides on both targets. Report the net.</text>
+      <circle cx="380" cy="286" r="52" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} strokeWidth="3" />
+      <text x="380" y="280" textAnchor="middle" fill={finalColor} fontSize="18" fontWeight="600">{methodOk ? "NET" : "CHECK"}</text>
+      <text x="380" y="303" textAnchor="middle" fill={INK_MUTED} fontSize="13">{jupiterProtects ? "Jupiter protects" : "no Jupiter selected"}</text>
+      <rect x="90" y="374" width="580" height="34" rx="8" fill={OPAQUE_LIGHT_FILL[GOLD]} stroke={HAIRLINE} />
+      <text x="380" y="396" textAnchor="middle" fill={INK_MUTED} fontSize="14">Tally both sides on both targets. Report the net.</text>
     </svg>
   );
 }
@@ -312,8 +312,15 @@ const cardStyle: CSSProperties = {
 
 const responsiveTwoColumnStyle: CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "minmax(360px, 1.25fr) minmax(320px, 1fr)",
+  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
   gap: "1rem",
+};
+
+const diagramSvgStyle: CSSProperties = {
+  display: "block",
+  width: "100%",
+  height: "auto",
+  margin: "0.7rem 0",
 };
 
 const eyebrowStyle: CSSProperties = {

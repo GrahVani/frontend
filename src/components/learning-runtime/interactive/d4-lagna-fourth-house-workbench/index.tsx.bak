@@ -1,0 +1,535 @@
+"use client";
+
+import { useState } from "react";
+import type { ReactNode } from "react";
+import {
+  BookOpen,
+  CheckCircle2,
+  Eye,
+  Home,
+  MapPinned,
+  RotateCcw,
+  Scale,
+  ShieldAlert,
+} from "lucide-react";
+import { grahas, ink } from "@/design-tokens/grahvani-learning/colors";
+import { fontFamilies } from "@/design-tokens/grahvani-learning/typography";
+
+const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.22))";
+const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
+const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
+const INK_PRIMARY = "var(--gl-ink-on-cream-primary, #1A1408)";
+const INK_SECONDARY = "var(--gl-ink-on-cream-secondary, #5A4E2E)";
+const INK_MUTED = "var(--gl-ink-on-cream-muted, #8A7E5E)";
+const GOLD = ink.goldAccent;
+const GREEN = grahas.budha.primary;
+const CORAL = grahas.mangala.primary;
+const BLUE = grahas.shukra.primary;
+const SAFFRON = grahas.guru.primary;
+
+type TabKey = "lagna" | "fourth" | "compare" | "synthesis";
+
+const TABS: { key: TabKey; label: string }[] = [
+  { key: "lagna", label: "D4 Lagna" },
+  { key: "fourth", label: "D4 4th house" },
+  { key: "compare", label: "D1 vs D4" },
+  { key: "synthesis", label: "Synthesis" },
+];
+
+const D4_HOUSES = [
+  { n: 1, sign: "Aries" }, { n: 2, sign: "Taurus" }, { n: 3, sign: "Gemini" }, { n: 4, sign: "Cancer" },
+  { n: 5, sign: "Leo" }, { n: 6, sign: "Virgo" }, { n: 7, sign: "Libra" }, { n: 8, sign: "Scorpio" },
+  { n: 9, sign: "Sagittarius" }, { n: 10, sign: "Capricorn" }, { n: 11, sign: "Aquarius" }, { n: 12, sign: "Pisces" },
+];
+
+const D4_PLACEMENTS: Record<string, string> = {
+  Lagna: "Aries",
+  Sun: "Scorpio",
+  Moon: "Libra",
+  Mars: "Cancer",
+  Mercury: "Pisces",
+  Jupiter: "Capricorn",
+  Venus: "Cancer",
+  Saturn: "Leo",
+  Rāhu: "Sagittarius",
+  Ketu: "Gemini",
+};
+
+const D1_PLACEMENTS: Record<string, string> = {
+  Lagna: "Libra",
+  Sun: "Leo",
+  Moon: "Cancer",
+  Mars: "Capricorn",
+  Mercury: "Virgo",
+  Jupiter: "Cancer",
+  Venus: "Libra",
+  Saturn: "Taurus",
+  Rāhu: "Gemini",
+  Ketu: "Sagittarius",
+};
+
+function wash(color: string, alphaHex = "14") {
+  return color.startsWith("#") ? `${color}${alphaHex}` : color;
+}
+
+export function D4LagnaFourthHouseWorkbench() {
+  const [tab, setTab] = useState<TabKey>("lagna");
+
+  function reset() {
+    setTab("lagna");
+  }
+
+  return (
+    <div
+      data-interactive="d4-lagna-fourth-house-workbench"
+      className="w-full min-w-0"
+      style={{
+        background: SURFACE,
+        border: `1px solid ${HAIRLINE}`,
+        borderRadius: 16,
+        padding: 20,
+        color: INK_PRIMARY,
+        boxSizing: "border-box",
+        overflow: "hidden",
+        fontFamily: fontFamilies.body,
+      }}
+    >
+      <header className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <p className="m-0 text-xs uppercase" style={{ color: GOLD, letterSpacing: "0.08em", fontWeight: 600 }}>
+            D4 internal reading
+          </p>
+          <h2
+            className="mt-1 text-xl sm:text-2xl"
+            style={{ color: INK_PRIMARY, fontFamily: fontFamilies.literarySerif, fontWeight: 600 }}
+          >
+            D4 Lagna and 4th house
+          </h2>
+          <p className="mt-1 max-w-3xl text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.55 }}>
+            Read the D4 on its own terms first: its Lagna, its 4th house, and the D4-internal dignity of every planet. Then
+            compare the same planet across D1 and D4.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={reset}
+          className="inline-flex items-center gap-2 self-start rounded-lg px-3 py-2 text-sm"
+          style={{ background: SURFACE, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY, fontWeight: 500 }}
+        >
+          <RotateCcw size={15} aria-hidden="true" />
+          Restart
+        </button>
+      </header>
+
+      <nav className="mb-5 flex flex-wrap gap-2" aria-label="D4 Lagna and 4th house sections">
+        {TABS.map((t) => (
+          <TabButton key={t.key} active={tab === t.key} onClick={() => setTab(t.key)}>
+            {t.label}
+          </TabButton>
+        ))}
+      </nav>
+
+      {tab === "lagna" && <LagnaTab />}
+      {tab === "fourth" && <FourthTab />}
+      {tab === "compare" && <CompareTab />}
+      {tab === "synthesis" && <SynthesisTab />}
+    </div>
+  );
+}
+
+function TabButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className="rounded-lg px-3 py-2 text-sm"
+      style={{
+        border: `1px solid ${active ? GOLD : HAIRLINE}`,
+        background: active ? GOLD : "transparent",
+        color: active ? "#1A1408" : INK_SECONDARY,
+        fontWeight: 500,
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+type LagnaMode = "d1" | "d4";
+
+function LagnaTab() {
+  const [mode, setMode] = useState<LagnaMode>("d4");
+
+  return (
+    <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)]">
+      <section className="min-w-0 rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+        <p className="m-0 text-xs uppercase" style={{ color: INK_MUTED, fontWeight: 600 }}>§4.2</p>
+        <h3
+          className="mt-1 text-lg"
+          style={{ color: INK_PRIMARY, fontFamily: fontFamilies.literarySerif, fontWeight: 600 }}
+        >
+          D4-Lagna: Aries
+        </h3>
+        <p className="m-0 mt-2 text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.6 }}>
+          The D4-Lagna is the property chart&apos;s own container. Its sign and lord describe how property matters are
+          anchored in the finer structure. The lord must be assessed by his <em>D4</em> placement, not his D1 dignity.
+        </p>
+
+        <div className="mt-4 rounded-lg p-3" style={{ background: wash(CORAL, "10"), border: `1px solid ${wash(CORAL, "55")}` }}>
+          <div className="flex items-center gap-2">
+            <Home size={18} style={{ color: CORAL }} aria-hidden="true" />
+            <p className="m-0 text-sm" style={{ color: CORAL, fontWeight: 600 }}>D4-Lagna lord: Mars</p>
+          </div>
+          <p className="m-0 mt-2 text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.55 }}>
+            Mars in the D4 sits in <strong style={{ color: INK_PRIMARY, fontWeight: 600 }}>Cancer</strong>, its sign of
+            debilitation. This is a separate fact from Mars&apos;s D1 exaltation.
+          </p>
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setMode("d4")}
+            className="rounded-lg px-3 py-2 text-sm"
+            style={{
+              background: mode === "d4" ? CORAL : SURFACE,
+              border: `1px solid ${mode === "d4" ? CORAL : HAIRLINE}`,
+              color: mode === "d4" ? "#fff" : INK_SECONDARY,
+              fontWeight: 500,
+            }}
+          >
+            Read Mars by D4 placement
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode("d1")}
+            className="rounded-lg px-3 py-2 text-sm"
+            style={{
+              background: mode === "d1" ? GREEN : SURFACE,
+              border: `1px solid ${mode === "d1" ? GREEN : HAIRLINE}`,
+              color: mode === "d1" ? "#fff" : INK_SECONDARY,
+              fontWeight: 500,
+            }}
+          >
+            Read Mars by D1 placement
+          </button>
+        </div>
+
+        <div className="mt-3 rounded-lg p-3" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}` }}>
+          <p className="m-0 text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.55 }}>
+            {mode === "d4"
+              ? "D4 reading: Mars is debilitated in Cancer. As D4-Lagna lord this is weak; property matters need support from elsewhere."
+              : "D1 reading: Mars is exalted in Capricorn and occupies the D1 4th house — a strong property signal, but it does not describe the D4-Lagna lord's condition."}
+          </p>
+        </div>
+      </section>
+
+      <aside className="min-w-0 rounded-xl p-4" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}` }}>
+        <div className="flex items-center gap-2">
+          <MapPinned size={18} style={{ color: GOLD }} aria-hidden="true" />
+          <p className="m-0 text-sm" style={{ color: GOLD, fontWeight: 600 }}>D4 house map</p>
+        </div>
+        <HouseGridSvg highlight={[1]} />
+        <p className="m-0 mt-2 text-xs" style={{ color: INK_MUTED, lineHeight: 1.5 }}>
+          House 1 (Aries) is the D4-Lagna. Its lord Mars falls in house 4 (Cancer).
+        </p>
+      </aside>
+    </div>
+  );
+}
+
+function FourthTab() {
+  const [showMoon, setShowMoon] = useState(true);
+  const [showMars, setShowMars] = useState(true);
+  const [showVenus, setShowVenus] = useState(true);
+
+  return (
+    <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)]">
+      <section className="min-w-0 rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+        <p className="m-0 text-xs uppercase" style={{ color: INK_MUTED, fontWeight: 600 }}>§4.3</p>
+        <h3
+          className="mt-1 text-lg"
+          style={{ color: INK_PRIMARY, fontFamily: fontFamilies.literarySerif, fontWeight: 600 }}
+        >
+          D4 4th house: Cancer
+        </h3>
+        <p className="m-0 mt-2 text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.6 }}>
+          Read the house lord first, then occupants, using placements <em>inside the D4</em>. D4 4th lord is the Moon.
+        </p>
+
+        <div className="mt-4 space-y-3">
+          <div className="rounded-lg p-3" style={{ background: wash(SAFFRON, "10"), border: `1px solid ${wash(SAFFRON, "55")` }}>
+            <label className="flex cursor-pointer items-center gap-2 text-sm" style={{ color: INK_SECONDARY }}>
+              <input type="checkbox" checked={showMoon} onChange={(e) => setShowMoon(e.target.checked)} className="h-4 w-4 rounded border" style={{ accentColor: SAFFRON }} />
+              <span style={{ color: SAFFRON, fontWeight: 600 }}>Lord: Moon in Libra</span>
+            </label>
+            {showMoon && (
+              <p className="m-0 mt-2 text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.55 }}>
+                The Moon sits in D4 house 7 (Libra), a kendra. Libra is neither own, exalted, nor debilitated for the
+                Moon; dignity is neutral. So: angularly strong, dignity neutral.
+              </p>
+            )}
+          </div>
+
+          <div className="rounded-lg p-3" style={{ background: wash(CORAL, "10"), border: `1px solid ${wash(CORAL, "55")` }}>
+            <label className="flex cursor-pointer items-center gap-2 text-sm" style={{ color: INK_SECONDARY }}>
+              <input type="checkbox" checked={showMars} onChange={(e) => setShowMars(e.target.checked)} className="h-4 w-4 rounded border" style={{ accentColor: CORAL }} />
+              <span style={{ color: CORAL, fontWeight: 600 }}>Occupant: Mars in Cancer</span>
+            </label>
+            {showMars && (
+              <p className="m-0 mt-2 text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.55 }}>
+                Mars is in its sign of debilitation in Cancer — the weakest possible dignity. This is the same Mars that
+                is exalted in D1.
+              </p>
+            )}
+          </div>
+
+          <div className="rounded-lg p-3" style={{ background: wash(BLUE, "10"), border: `1px solid ${wash(BLUE, "55")` }}>
+            <label className="flex cursor-pointer items-center gap-2 text-sm" style={{ color: INK_SECONDARY }}>
+              <input type="checkbox" checked={showVenus} onChange={(e) => setShowVenus(e.target.checked)} className="h-4 w-4 rounded border" style={{ accentColor: BLUE }} />
+              <span style={{ color: BLUE, fontWeight: 600 }}>Occupant: Venus in Cancer</span>
+            </label>
+            {showVenus && (
+              <p className="m-0 mt-2 text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.55 }}>
+                Venus sits in Cancer, the Moon&apos;s sign. Per the naisargika friendship grid, Venus treats the Moon as
+                an enemy, so Cancer is an enemy&apos;s sign for Venus — weak dignity.
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <aside className="min-w-0 rounded-xl p-4" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}` }}>
+        <div className="flex items-center gap-2">
+          <Eye size={18} style={{ color: GOLD }} aria-hidden="true" />
+          <p className="m-0 text-sm" style={{ color: GOLD, fontWeight: 600 }}>D4 house map</p>
+        </div>
+        <HouseGridSvg highlight={[4]} />
+        <p className="m-0 mt-2 text-xs" style={{ color: INK_MUTED, lineHeight: 1.5 }}>
+          House 4 (Cancer) contains Mars and Venus. Its lord, the Moon, is in house 7 (Libra).
+        </p>
+      </aside>
+    </div>
+  );
+}
+
+type ComparePlanet = "Mars" | "Venus" | "Moon";
+
+function CompareTab() {
+  const [planet, setPlanet] = useState<ComparePlanet>("Mars");
+
+  const data = {
+    Mars: {
+      d1: { sign: "Capricorn", dignity: "exalted", note: "Strong D1 property signal" },
+      d4: { sign: "Cancer", dignity: "debilitated", note: "Weak D4-Lagna lord and 4th-house occupant" },
+      color: CORAL,
+    },
+    Venus: {
+      d1: { sign: "Libra", dignity: "own sign", note: "Strong in D1; structural link in education module" },
+      d4: { sign: "Cancer", dignity: "enemy's sign", note: "Weak as 4th-house occupant" },
+      color: BLUE,
+    },
+    Moon: {
+      d1: { sign: "Cancer", dignity: "own sign", note: "Strong in D1" },
+      d4: { sign: "Libra", dignity: "neutral (kendra)", note: "D4 4th lord, angularly placed" },
+      color: SAFFRON,
+    },
+  };
+
+  const d = data[planet];
+
+  return (
+    <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)]">
+      <section className="min-w-0 rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+        <p className="m-0 text-xs uppercase" style={{ color: INK_MUTED, fontWeight: 600 }}>§6 Example 2</p>
+        <h3
+          className="mt-1 text-lg"
+          style={{ color: INK_PRIMARY, fontFamily: fontFamilies.literarySerif, fontWeight: 600 }}
+        >
+          Same planet, different chart layer
+        </h3>
+        <p className="m-0 mt-2 text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.6 }}>
+          Toggle between Mars, Venus, and the Moon to see why a planet&apos;s dignity must be read within the chart layer
+          being interpreted. Borrowing D1 dignity for a D4 reading is the commonest error.
+        </p>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          {(["Mars", "Venus", "Moon"] as const).map((p) => (
+            <button
+              key={p}
+              type="button"
+              onClick={() => setPlanet(p)}
+              className="rounded-lg px-3 py-2 text-sm"
+              style={{
+                background: planet === p ? data[p].color : SURFACE,
+                border: `1px solid ${planet === p ? data[p].color : HAIRLINE}`,
+                color: planet === p ? "#fff" : INK_SECONDARY,
+                fontWeight: 500,
+              }}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-lg p-3" style={{ background: wash(GREEN, "10"), border: `1px solid ${wash(GREEN, "55")}` }}>
+            <p className="m-0 text-sm" style={{ color: GREEN, fontWeight: 600 }}>D1 position</p>
+            <p className="m-0 mt-1 text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.55 }}>
+              {d.d1.sign} — <strong style={{ color: INK_PRIMARY, fontWeight: 600 }}>{d.d1.dignity}</strong>
+            </p>
+            <p className="m-0 mt-1 text-xs" style={{ color: INK_MUTED }}>{d.d1.note}</p>
+          </div>
+          <div className="rounded-lg p-3" style={{ background: wash(d.color, "10"), border: `1px solid ${wash(d.color, "55")}` }}>
+            <p className="m-0 text-sm" style={{ color: d.color, fontWeight: 600 }}>D4 position</p>
+            <p className="m-0 mt-1 text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.55 }}>
+              {d.d4.sign} — <strong style={{ color: INK_PRIMARY, fontWeight: 600 }}>{d.d4.dignity}</strong>
+            </p>
+            <p className="m-0 mt-1 text-xs" style={{ color: INK_MUTED }}>{d.d4.note}</p>
+          </div>
+        </div>
+
+        <div className="mt-3 rounded-lg p-3" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}` }}>
+          <p className="m-0 text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.55 }}>
+            {planet === "Mars" && "The contrast is sharpest for Mars: exalted in D1, debilitated in D4. Each layer must be read on its own terms first."}
+            {planet === "Venus" && "Venus is own-signed in D1 but in an enemy's sign in D4. The D4 reading weakens the 4th-house picture."}
+            {planet === "Moon" && "The Moon is strong in D1 and neutrally placed in a D4 kendra. Here the two layers are closer, but still distinct."}
+          </p>
+        </div>
+      </section>
+
+      <aside className="min-w-0 rounded-xl p-4" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}` }}>
+        <ComparisonSvg planet={planet} d={d} />
+      </aside>
+    </div>
+  );
+}
+
+function SynthesisTab() {
+  return (
+    <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)]">
+      <section className="min-w-0 rounded-xl p-4" style={{ background: SURFACE, border: `1px solid ${HAIRLINE}` }}>
+        <p className="m-0 text-xs uppercase" style={{ color: INK_MUTED, fontWeight: 600 }}>§4.4</p>
+        <h3
+          className="mt-1 text-lg"
+          style={{ color: INK_PRIMARY, fontFamily: fontFamilies.literarySerif, fontWeight: 600 }}
+        >
+          D4-only synthesis
+        </h3>
+        <p className="m-0 mt-2 text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.6 }}>
+          State the D4 finding plainly before reaching for D1. Integration is the next lesson&apos;s work.
+        </p>
+
+        <div className="mt-4 rounded-lg p-4" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}` }}>
+          <p className="m-0 text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.7 }}>
+            “Taken purely on its own terms, the D4 4th house is a genuinely mixed-to-weak picture: its lord, the Moon,
+            sits in a kendra but with no particular dignity, and both of its occupants — Mars and Venus — are in
+            difficult dignity there, one debilitated, one in an enemy&apos;s sign. If I only had the D4 to go on, I would
+            flag this as a house that needs real support from elsewhere in the chart to produce a good outcome.”
+          </p>
+        </div>
+
+        <div className="mt-4 rounded-lg p-3" style={{ background: wash(GREEN, "10"), border: `1px solid ${wash(GREEN, "55")` }}>
+          <div className="flex items-start gap-2">
+            <CheckCircle2 size={18} style={{ color: GREEN, flexShrink: 0 }} aria-hidden="true" />
+            <p className="m-0 text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.55 }}>
+              Per T1-09: a strong D1 4th but weak D4 4th means property is <em>promised but harder to secure</em>, not
+              unpromised.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <aside className="min-w-0 rounded-xl p-4" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}` }}>
+        <div className="flex items-center gap-2">
+          <BookOpen size={18} style={{ color: GOLD }} aria-hidden="true" />
+          <p className="m-0 text-sm" style={{ color: GOLD, fontWeight: 600 }}>Checklist</p>
+        </div>
+        <ul className="m-0 mt-2 list-disc space-y-1 pl-5 text-sm" style={{ color: INK_SECONDARY }}>
+          <li>Read the D4-Lagna and its lord by D4 placement.</li>
+          <li>Read the D4 4th lord by D4 placement.</li>
+          <li>Read occupants by D4 dignity.</li>
+          <li>State the D4-only finding plainly.</li>
+          <li>Hold D1 and D4 together; do not let one erase the other.</li>
+        </ul>
+
+        <div className="mt-4 rounded-lg p-3" style={{ background: wash(CORAL, "10"), border: `1px solid ${wash(CORAL, "55")` }}>
+          <div className="flex items-start gap-2">
+            <ShieldAlert size={18} style={{ color: CORAL, flexShrink: 0 }} aria-hidden="true" />
+            <p className="m-0 text-sm" style={{ color: INK_SECONDARY, lineHeight: 1.55 }}>
+              Do not borrow a planet&apos;s D1 dignity to soften the D4 reading. Cross-layer comparison is Lesson 9.2.3.
+            </p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  );
+}
+
+function HouseGridSvg({ highlight }: { highlight: number[] }) {
+  return (
+    <svg viewBox="0 0 320 240" role="img" aria-label="D4 whole-sign house grid with Aries Lagna" style={{ width: "100%", maxHeight: 260, margin: "0 auto", display: "block" }}>
+      <rect x="20" y="20" width="280" height="200" rx="8" fill={`${GOLD}0F`} stroke={HAIRLINE} />
+
+      {D4_HOUSES.map((h, idx) => {
+        const col = idx % 4;
+        const row = Math.floor(idx / 4);
+        const x = 35 + col * 66;
+        const y = 35 + row * 60;
+        const isHighlight = highlight.includes(h.n);
+        const occupants = Object.entries(D4_PLACEMENTS)
+          .filter(([, sign]) => sign === h.sign)
+          .map(([p]) => p)
+          .filter((p) => p !== "Lagna" || h.n === 1);
+
+        return (
+          <g key={h.n}>
+            <rect
+              x={x}
+              y={y}
+              width="58"
+              height="48"
+              rx="5"
+              fill={isHighlight ? wash(h.n === 1 ? CORAL : SAFFRON, "18") : SURFACE}
+              stroke={isHighlight ? (h.n === 1 ? CORAL : SAFFRON) : HAIRLINE}
+              strokeWidth={isHighlight ? 2 : 1}
+            />
+            <text x={x + 6} y={y + 14} fill={isHighlight ? (h.n === 1 ? CORAL : SAFFRON) : INK_MUTED} fontSize="9" fontWeight={600}>
+              {h.n}. {h.sign}
+            </text>
+            <text x={x + 6} y={y + 28} fill={INK_PRIMARY} fontSize="9" fontWeight={600}>
+              {occupants.slice(0, 2).join(", ")}
+            </text>
+            {occupants.length > 2 && (
+              <text x={x + 6} y={y + 40} fill={INK_MUTED} fontSize="8" fontWeight={600}>
+                +{occupants.length - 2} more
+              </text>
+            )}
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+function ComparisonSvg({ planet, d }: { planet: string; d: { d1: { sign: string; dignity: string }; d4: { sign: string; dignity: string }; color: string } }) {
+  return (
+    <svg viewBox="0 0 320 150" role={`img`} aria-label={`${planet} comparison between D1 and D4`} style={{ width: "100%", maxHeight: 170, margin: "0 auto", display: "block" }}>
+      <rect x="20" y="20" width="280" height="110" rx="8" fill={`${GOLD}0F`} stroke={HAIRLINE} />
+
+      <rect x="45" y="45" width="90" height="50" rx="6" fill={wash(GREEN, "18")} stroke={GREEN} strokeWidth="1.5" />
+      <text x="90" y="62" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight={600}>D1</text>
+      <text x="90" y="78" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight={600}>{d.d1.sign}</text>
+      <text x="90" y="90" textAnchor="middle" fill={INK_MUTED} fontSize="8" fontWeight={600}>{d.d1.dignity}</text>
+
+      <path d="M 145 70 L 175 70" stroke={GOLD} strokeWidth="2" />
+      <text x="160" y="64" textAnchor="middle" fill={GOLD} fontSize="9" fontWeight={600}>{planet}</text>
+
+      <rect x="185" y="45" width="90" height="50" rx="6" fill={wash(d.color, "18")} stroke={d.color} strokeWidth="1.5" />
+      <text x="230" y="62" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight={600}>D4</text>
+      <text x="230" y="78" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight={600}>{d.d4.sign}</text>
+      <text x="230" y="90" textAnchor="middle" fill={INK_MUTED} fontSize="8" fontWeight={600}>{d.d4.dignity}</text>
+    </svg>
+  );
+}

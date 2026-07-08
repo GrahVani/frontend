@@ -228,24 +228,24 @@ function CslMarriageSvg({ selectedHouses, verdict }: { selectedHouses: HouseNumb
       <path d="M 442 148 C 500 92, 540 92, 573 86" fill="none" stroke={color} strokeWidth="5" strokeLinecap="round" />
       <path d="M 442 148 C 500 206, 540 206, 573 196" fill="none" stroke={color} strokeWidth="5" strokeLinecap="round" />
       <circle cx="132" cy="148" r="54" fill={OPAQUE_LIGHT_FILL[PURPLE]} stroke={PURPLE} strokeWidth="4" />
-      <text x="132" y="140" textAnchor="middle" fill={PURPLE} fontSize="13" fontWeight="700">7th cusp</text>
-      <text x="132" y="162" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">marriage</text>
+      <text x="132" y="138" textAnchor="middle" fill={PURPLE} fontSize="17" fontWeight="700">7th cusp</text>
+      <text x="132" y="164" textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight="600">marriage</text>
       <circle cx="382" cy="148" r="60" fill={OPAQUE_LIGHT_FILL[color]} stroke={color} strokeWidth="5" />
-      <text x="382" y="140" textAnchor="middle" fill={color} fontSize="14" fontWeight="700">CSL</text>
-      <text x="382" y="162" textAnchor="middle" fill={INK_PRIMARY} fontSize="11" fontWeight="700">promise-test</text>
+      <text x="382" y="138" textAnchor="middle" fill={color} fontSize="18" fontWeight="700">CSL</text>
+      <text x="382" y="165" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="700">promise-test</text>
       {houses.slice(0, 7).map((house, index) => {
         const meta = HOUSE_META[house];
         const x = 595 + (index % 2) * 58;
         const y = 86 + Math.floor(index / 2) * 55;
         return (
           <g key={`${house}-${index}`}>
-            <circle cx={x} cy={y} r="22" fill={OPAQUE_LIGHT_FILL[meta.color]} stroke={meta.color} strokeWidth="3" />
-            <text x={x} y={y + 5} textAnchor="middle" fill={meta.color} fontSize="13" fontWeight="700">{house}</text>
+            <circle cx={x} cy={y} r="24" fill={OPAQUE_LIGHT_FILL[meta.color]} stroke={meta.color} strokeWidth="3" />
+            <text x={x} y={y + 6} textAnchor="middle" fill={meta.color} fontSize="16" fontWeight="700">{house}</text>
           </g>
         );
       })}
       <rect x="214" y="300" width="352" height="38" rx="8" fill={OPAQUE_LIGHT_FILL[color]} stroke={color} />
-      <text x="390" y="325" textAnchor="middle" fill={color} fontSize="13" fontWeight="700">{verdict.toUpperCase()}</text>
+      <text x="390" y="326" textAnchor="middle" fill={color} fontSize="16" fontWeight="700">{verdict.toUpperCase()}</text>
     </svg>
   );
 }

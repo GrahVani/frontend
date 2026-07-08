@@ -228,22 +228,22 @@ function UpapadaSvg({ distance, offset, ulCondition, parashariReading, tier, met
       <path d="M 222 120 L 314 120 M 464 120 L 556 120" stroke={methodOk ? BLUE : VERMILION} strokeWidth="4" strokeDasharray={methodOk ? "0" : "8 8"} />
       <path d="M 334 252 L 446 252" stroke={finalColor} strokeWidth="4" strokeDasharray={ulCondition === parashariReading ? "0" : "8 8"} />
       <rect x="72" y="82" width="150" height="76" rx="8" fill={OPAQUE_LIGHT_FILL[BLUE]} stroke={BLUE} strokeWidth="3" />
-      <text x="147" y="112" textAnchor="middle" fill={BLUE} fontSize="13" fontWeight="700">12th House</text>
-      <text x="147" y="135" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">source</text>
+      <text x="147" y="110" textAnchor="middle" fill={BLUE} fontSize="17" fontWeight="700">12th House</text>
+      <text x="147" y="137" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">source</text>
       <rect x="314" y="82" width="150" height="76" rx="8" fill={OPAQUE_LIGHT_FILL[PURPLE]} stroke={PURPLE} strokeWidth="3" />
-      <text x="389" y="112" textAnchor="middle" fill={PURPLE} fontSize="13" fontWeight="700">12th Lord</text>
-      <text x="389" y="135" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">distance {distance}</text>
+      <text x="389" y="110" textAnchor="middle" fill={PURPLE} fontSize="17" fontWeight="700">12th Lord</text>
+      <text x="389" y="137" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">distance {distance}</text>
       <rect x="556" y="82" width="150" height="76" rx="8" fill={OPAQUE_LIGHT_FILL[supportColor(ulCondition)]} stroke={supportColor(ulCondition)} strokeWidth="3" />
-      <text x="631" y="112" textAnchor="middle" fill={supportColor(ulCondition)} fontSize="13" fontWeight="700">UL</text>
-      <text x="631" y="135" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">offset {offset}: {ulCondition}</text>
+      <text x="631" y="110" textAnchor="middle" fill={supportColor(ulCondition)} fontSize="17" fontWeight="700">UL</text>
+      <text x="631" y="137" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">offset {offset}: {ulCondition}</text>
       <circle cx="280" cy="252" r="54" fill={OPAQUE_LIGHT_FILL[supportColor(parashariReading)]} stroke={supportColor(parashariReading)} strokeWidth="3" />
-      <text x="280" y="240" textAnchor="middle" fill={supportColor(parashariReading)} fontSize="13" fontWeight="700">7th/D9</text>
-      <text x="280" y="263" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{parashariReading}</text>
+      <text x="280" y="239" textAnchor="middle" fill={supportColor(parashariReading)} fontSize="16" fontWeight="700">7th/D9</text>
+      <text x="280" y="265" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">{parashariReading}</text>
       <circle cx="500" cy="252" r="54" fill={OPAQUE_LIGHT_FILL[supportColor(ulCondition)]} stroke={supportColor(ulCondition)} strokeWidth="3" />
-      <text x="500" y="240" textAnchor="middle" fill={supportColor(ulCondition)} fontSize="13" fontWeight="700">UL Stream</text>
-      <text x="500" y="263" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{ulCondition}</text>
+      <text x="500" y="239" textAnchor="middle" fill={supportColor(ulCondition)} fontSize="16" fontWeight="700">UL Stream</text>
+      <text x="500" y="265" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">{ulCondition}</text>
       <rect x="222" y="348" width="336" height="36" rx="8" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} />
-      <text x="390" y="371" textAnchor="middle" fill={finalColor} fontSize="13" fontWeight="700">{tier.toUpperCase()}</text>
+      <text x="390" y="372" textAnchor="middle" fill={finalColor} fontSize="16" fontWeight="700">{tier.toUpperCase()}</text>
     </svg>
   );
 }

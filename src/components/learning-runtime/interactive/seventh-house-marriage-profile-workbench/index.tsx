@@ -262,25 +262,25 @@ function SeventhHouseSvg({ lagnaRef, moonRef, venusRef, d1Anchored, stressPresen
   ];
 
   return (
-    <svg viewBox="0 0 760 410" role="img" aria-label="Three reference points for 7th-house marriage reading" style={{ width: "100%", minHeight: 320, margin: "0.7rem 0" }}>
+    <svg viewBox="0 0 760 430" role="img" aria-label="Three reference points for 7th-house marriage reading" style={diagramSvgStyle}>
       <rect x="18" y="18" width="724" height="378" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <circle cx="380" cy="194" r="68" fill={OPAQUE_LIGHT_FILL[GOLD]} stroke={d1Anchored ? GOLD : VERMILION} strokeWidth="3" />
-      <text x="380" y="188" textAnchor="middle" fill={d1Anchored ? GOLD : VERMILION} fontSize="19" fontWeight="600">D1 7th</text>
-      <text x="380" y="212" textAnchor="middle" fill={INK_MUTED} fontSize="14">{d1Anchored ? "anchor first" : "anchor missing"}</text>
+      <circle cx="380" cy="204" r="56" fill={OPAQUE_LIGHT_FILL[GOLD]} stroke={d1Anchored ? GOLD : VERMILION} strokeWidth="3" />
+      <text x="380" y="198" textAnchor="middle" fill={d1Anchored ? GOLD : VERMILION} fontSize="18" fontWeight="600">D1 7th</text>
+      <text x="380" y="221" textAnchor="middle" fill={INK_MUTED} fontSize="13">{d1Anchored ? "anchor first" : "anchor missing"}</text>
       {refs.map((ref) => (
         <g key={ref.label}>
-          <path d={edgeLine(ref.x, 105, 50, 380, 194, 68)} stroke={ref.active ? ref.color : HAIRLINE} strokeWidth={ref.active ? 3 : 1.5} strokeDasharray={ref.active ? "0" : "6 8"} />
-          <circle cx={ref.x} cy="105" r="50" fill={ref.active ? OPAQUE_LIGHT_FILL[ref.color] : "transparent"} stroke={ref.active ? ref.color : HAIRLINE} strokeWidth={ref.active ? 3 : 1.5} />
-          <text x={ref.x} y="101" textAnchor="middle" fill={ref.active ? ref.color : INK_MUTED} fontSize="16" fontWeight="600">{ref.label}</text>
-          <text x={ref.x} y="122" textAnchor="middle" fill={INK_MUTED} fontSize="13">7th from</text>
+          <path d={edgeLine(ref.x, 102, 42, 380, 204, 56)} stroke={ref.active ? ref.color : HAIRLINE} strokeWidth={ref.active ? 3 : 1.5} strokeDasharray={ref.active ? "0" : "6 8"} />
+          <circle cx={ref.x} cy="102" r="42" fill={ref.active ? OPAQUE_LIGHT_FILL[ref.color] : "transparent"} stroke={ref.active ? ref.color : HAIRLINE} strokeWidth={ref.active ? 3 : 1.5} />
+          <text x={ref.x} y="99" textAnchor="middle" fill={ref.active ? ref.color : INK_MUTED} fontSize="14" fontWeight="600">{ref.label}</text>
+          <text x={ref.x} y="117" textAnchor="middle" fill={INK_MUTED} fontSize="11">7th from</text>
         </g>
       ))}
-      <path d="M 380 262 L 380 258" stroke={HAIRLINE} strokeWidth="3" />
-      <circle cx="380" cy="310" r="52" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} strokeWidth="3" />
-      <text x="380" y="305" textAnchor="middle" fill={finalColor} fontSize="17" fontWeight="600">{ethicalOk ? "FRAME" : "WARNING"}</text>
-      <text x="380" y="326" textAnchor="middle" fill={INK_MUTED} fontSize="13">{stressPresent ? "care, not doom" : "likelihood, not decree"}</text>
-      <rect x="90" y="360" width="580" height="36" rx="8" fill={OPAQUE_LIGHT_FILL[GOLD]} stroke={HAIRLINE} />
-      <text x="380" y="383" textAnchor="middle" fill={INK_MUTED} fontSize="14" fontWeight="600">Promise, nature, and quality use different factors.</text>
+      <path d="M 380 260 L 380 268" stroke={HAIRLINE} strokeWidth="3" />
+      <circle cx="380" cy="310" r="42" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} strokeWidth="3" />
+      <text x="380" y="305" textAnchor="middle" fill={finalColor} fontSize="15" fontWeight="600">{ethicalOk ? "FRAME" : "WARNING"}</text>
+      <text x="380" y="323" textAnchor="middle" fill={INK_MUTED} fontSize="10">{stressPresent ? "care, not doom" : "not decree"}</text>
+      <rect x="90" y="374" width="580" height="34" rx="8" fill={OPAQUE_LIGHT_FILL[GOLD]} stroke={HAIRLINE} />
+      <text x="380" y="396" textAnchor="middle" fill={INK_MUTED} fontSize="14" fontWeight="600">Promise, nature, and quality use different factors.</text>
     </svg>
   );
 }
@@ -343,8 +343,15 @@ const cardStyle: CSSProperties = {
 
 const responsiveTwoColumnStyle: CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "minmax(360px, 1.25fr) minmax(320px, 1fr)",
+  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
   gap: "1rem",
+};
+
+const diagramSvgStyle: CSSProperties = {
+  display: "block",
+  width: "100%",
+  height: "auto",
+  margin: "0.7rem 0",
 };
 
 const eyebrowStyle: CSSProperties = {

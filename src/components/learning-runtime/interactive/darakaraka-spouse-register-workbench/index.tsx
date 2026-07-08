@@ -235,10 +235,10 @@ function DkRankingSvg({ ranked, scheme }: { ranked: ReturnType<typeof rankPlanet
   return (
     <svg viewBox="0 0 780 380" role="img" aria-label="Cara-karaka degree ranking from AK highest to DK lowest" style={{ width: "100%", minHeight: 290, margin: "0.7rem 0" }}>
       <rect x="18" y="18" width="744" height="344" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="390" y="55" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="700">{schemeLabel(scheme).toUpperCase()} DEGREE RANKING</text>
+      <text x="390" y="56" textAnchor="middle" fill={GOLD} fontSize="20" fontWeight="700">{schemeLabel(scheme).toUpperCase()} DEGREE RANKING</text>
       <line x1="90" y1="130" x2="690" y2="130" stroke={HAIRLINE} strokeWidth="10" strokeLinecap="round" />
-      <text x="90" y="101" textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight="700">highest degree</text>
-      <text x="690" y="101" textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight="700">lowest degree</text>
+      <text x="90" y="101" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="700">highest degree</text>
+      <text x="690" y="101" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="700">lowest degree</text>
       {ranked.map((planet, index) => {
         const x = 90 + (index * 600) / Math.max(1, ranked.length - 1);
         const active = planet.role === "DK";
@@ -246,14 +246,14 @@ function DkRankingSvg({ ranked, scheme }: { ranked: ReturnType<typeof rankPlanet
           <g key={planet.key}>
             <circle cx={x} cy="130" r={active ? 16 : 11} fill={active ? OPAQUE_LIGHT_FILL[planet.color] : SURFACE} stroke={active ? planet.color : HAIRLINE} strokeWidth={active ? 3 : 1.5} />
             <rect x={x - 43} y="168" width="86" height="78" rx="8" fill={active ? OPAQUE_LIGHT_FILL[planet.color] : "transparent"} stroke={active ? planet.color : HAIRLINE} strokeWidth={active ? 2.5 : 1.2} />
-            <text x={x} y="193" textAnchor="middle" fill={active ? planet.color : INK_SECONDARY} fontSize="13" fontWeight="700">{planet.role}</text>
-            <text x={x} y="215" textAnchor="middle" fill={planet.color} fontSize="11.5" fontWeight="700">{planet.short}</text>
-            <text x={x} y="234" textAnchor="middle" fill={INK_MUTED} fontSize="9.5" fontWeight="600">{planet.rankingDegree.toFixed(2)} deg</text>
+            <text x={x} y="191" textAnchor="middle" fill={active ? planet.color : INK_SECONDARY} fontSize="18" fontWeight="700">{planet.role}</text>
+            <text x={x} y="216" textAnchor="middle" fill={planet.color} fontSize="15" fontWeight="700">{planet.short}</text>
+            <text x={x} y="238" textAnchor="middle" fill={INK_SECONDARY} fontSize="13.5" fontWeight="600">{planet.rankingDegree.toFixed(2)} deg</text>
           </g>
         );
       })}
-      <rect x="208" y="292" width="364" height="40" rx="8" fill={OPAQUE_LIGHT_FILL[dk.color]} stroke={dk.color} />
-      <text x="390" y="318" textAnchor="middle" fill={dk.color} fontSize="13" fontWeight="700">DK = {dk.label}, the lowest-degree spouse significator</text>
+      <rect x="148" y="288" width="484" height="46" rx="8" fill={OPAQUE_LIGHT_FILL[dk.color]} stroke={dk.color} />
+      <text x="390" y="317" textAnchor="middle" fill={dk.color} fontSize="18" fontWeight="700">DK = {dk.label}, the lowest-degree spouse significator</text>
     </svg>
   );
 }
