@@ -235,19 +235,19 @@ function VenusCaseSvg({ scenario, tier, methodOk, d9Venus, jupiterConjunction, s
       <rect x="18" y="18" width="744" height="394" rx="8" fill={SURFACE} stroke={HAIRLINE} />
       <path d="M 202 116 L 282 116 M 382 116 L 462 116 M 512 166 C 512 215 450 215 438 226 M 332 166 C 332 215 350 215 358 226" fill="none" stroke={methodOk ? BLUE : VERMILION} strokeWidth="4" strokeDasharray={methodOk ? "0" : "8 8"} />
       <circle cx="152" cy="116" r="50" fill={OPAQUE_LIGHT_FILL[scenario === "main" ? GREEN : GOLD]} stroke={scenario === "main" ? GREEN : GOLD} strokeWidth="3" />
-      <text x="152" y="108" textAnchor="middle" fill={scenario === "main" ? GREEN : GOLD} fontSize="12" fontWeight="700">D1 Venus</text>
-      <text x="152" y="130" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{scenario === "main" ? "own + direct" : "weak surface"}</text>
+      <text x="152" y="106" textAnchor="middle" fill={scenario === "main" ? GREEN : GOLD} fontSize="15" fontWeight="700">D1 Venus</text>
+      <text x="152" y="132" textAnchor="middle" fill={INK_MUTED} fontSize="12.5">{scenario === "main" ? "own + direct" : "weak surface"}</text>
       <circle cx="332" cy="116" r="50" fill={OPAQUE_LIGHT_FILL[jupiterConjunction ? GREEN : GOLD]} stroke={jupiterConjunction ? GREEN : GOLD} strokeWidth="3" />
-      <text x="332" y="108" textAnchor="middle" fill={jupiterConjunction ? GREEN : GOLD} fontSize="12" fontWeight="700">Company</text>
-      <text x="332" y="130" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{jupiterConjunction ? "Jupiter + Saturn note" : "net needed"}</text>
+      <text x="332" y="106" textAnchor="middle" fill={jupiterConjunction ? GREEN : GOLD} fontSize="15" fontWeight="700">Company</text>
+      <text x="332" y="132" textAnchor="middle" fill={INK_MUTED} fontSize="12">{jupiterConjunction ? "Jupiter + Saturn" : "net needed"}</text>
       <circle cx="512" cy="116" r="50" fill={OPAQUE_LIGHT_FILL[supportColor(d9Venus)]} stroke={supportColor(d9Venus)} strokeWidth="3" />
-      <text x="512" y="108" textAnchor="middle" fill={supportColor(d9Venus)} fontSize="12" fontWeight="700">D9 Venus</text>
-      <text x="512" y="130" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{d9Venus}</text>
+      <text x="512" y="106" textAnchor="middle" fill={supportColor(d9Venus)} fontSize="15" fontWeight="700">D9 Venus</text>
+      <text x="512" y="132" textAnchor="middle" fill={INK_MUTED} fontSize="12.5">{d9Venus}</text>
       <circle cx="390" cy="262" r="60" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} strokeWidth="3" />
-      <text x="390" y="247" textAnchor="middle" fill={finalColor} fontSize="13" fontWeight="700">{methodOk ? "QUALITY" : "WARNING"}</text>
-      <text x="390" y="271" textAnchor="middle" fill={INK_MUTED} fontSize="11">{saturnAspectAsNote ? "mature tenor" : "method issue"}</text>
+      <text x="390" y="246" textAnchor="middle" fill={finalColor} fontSize="16" fontWeight="700">{methodOk ? "QUALITY" : "WARNING"}</text>
+      <text x="390" y="273" textAnchor="middle" fill={INK_MUTED} fontSize="13">{saturnAspectAsNote ? "mature tenor" : "method issue"}</text>
       <rect x="210" y="360" width="360" height="32" rx="8" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} />
-      <text x="390" y="381" textAnchor="middle" fill={finalColor} fontSize="13" fontWeight="700">{tier.toUpperCase()}</text>
+      <text x="390" y="382" textAnchor="middle" fill={finalColor} fontSize="16" fontWeight="700">{tier.toUpperCase()}</text>
     </svg>
   );
 }

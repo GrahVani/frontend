@@ -256,22 +256,22 @@ function MarriageKpPipelineSvg({ activeStep, cslPromise, agentsBuilt, dashaWindo
     { id: "writeup" as StepId, x: 682, label: "Write-up", body: "window", color: GOLD, active: true },
   ];
   return (
-    <svg viewBox="0 0 780 360" role="img" aria-label="Full KP marriage promise delivery timing and write-up pipeline" style={{ width: "100%", minHeight: 285, margin: "0.7rem 0" }}>
-      <rect x="18" y="18" width="744" height="324" rx="8" fill={SURFACE} stroke={HAIRLINE} />
+    <svg viewBox="0 0 780 460" role="img" aria-label="Full KP marriage promise delivery timing and write-up pipeline" style={{ width: "100%", minHeight: 360, margin: "0.7rem 0" }}>
+      <rect x="18" y="18" width="744" height="424" rx="8" fill={SURFACE} stroke={HAIRLINE} />
       {nodes.slice(0, -1).map((node, index) => (
-        <path key={`${node.id}-line`} d={`M ${node.x + 56} 140 L ${nodes[index + 1].x - 56} 140`} stroke={node.active ? node.color : HAIRLINE} strokeWidth="3" strokeDasharray={node.active ? "0" : "7 7"} />
+        <path key={`${node.id}-line`} d={`M ${node.x + 64} 165 L ${nodes[index + 1].x - 64} 165`} stroke={node.active ? node.color : HAIRLINE} strokeWidth="4" strokeDasharray={node.active ? "0" : "8 8"} />
       ))}
       {nodes.map((node) => (
         <g key={node.id}>
-          <rect x={node.x - 58} y="92" width="116" height="96" rx="8" fill={activeStep === node.id ? OPAQUE_LIGHT_FILL[node.color] : "transparent"} stroke={activeStep === node.id ? node.color : HAIRLINE} strokeWidth={activeStep === node.id ? 3 : 1} />
-          <circle cx={node.x} cy="119" r="15" fill={node.active ? node.color : "transparent"} stroke={node.color} strokeWidth="2" />
-          <text x={node.x} y="124" textAnchor="middle" fill={node.active ? "#fff" : node.color} fontSize="12" fontWeight="700">{node.active ? "Y" : "-"}</text>
-          <text x={node.x} y="150" textAnchor="middle" fill={INK_PRIMARY} fontSize="12" fontWeight="700">{node.label}</text>
-          <text x={node.x} y="169" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{node.body}</text>
+          <rect x={node.x - 66} y="105" width="132" height="120" rx="8" fill={activeStep === node.id ? OPAQUE_LIGHT_FILL[node.color] : "transparent"} stroke={activeStep === node.id ? node.color : HAIRLINE} strokeWidth={activeStep === node.id ? 3 : 1.2} />
+          <circle cx={node.x} cy="138" r="19" fill={node.active ? node.color : "transparent"} stroke={node.color} strokeWidth="2.5" />
+          <text x={node.x} y="145" textAnchor="middle" fill={node.active ? "#fff" : node.color} fontSize="15" fontWeight="700">{node.active ? "Y" : "-"}</text>
+          <text x={node.x} y="177" textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="700">{node.label}</text>
+          <text x={node.x} y="201" textAnchor="middle" fill={INK_SECONDARY} fontSize="12.5" fontWeight="600">{node.body}</text>
         </g>
       ))}
-      <rect x="206" y="254" width="368" height="36" rx="8" fill={OPAQUE_LIGHT_FILL[GOLD]} stroke={GOLD} />
-      <text x="390" y="277" textAnchor="middle" fill={GOLD} fontSize="12.5" fontWeight="700">Promise to delivery to timing to stream comparison to write-up</text>
+      <rect x="114" y="315" width="552" height="44" rx="8" fill={OPAQUE_LIGHT_FILL[GOLD]} stroke={GOLD} strokeWidth="2" />
+      <text x="390" y="343" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="700">Promise to delivery to timing to stream comparison to write-up</text>
     </svg>
   );
 }

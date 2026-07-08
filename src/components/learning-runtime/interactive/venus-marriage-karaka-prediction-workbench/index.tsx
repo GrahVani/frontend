@@ -222,22 +222,22 @@ function VenusKarakaSvg({ venusStrength, seventhStrength, d9Strength, methodOk, 
       <rect x="18" y="18" width="744" height="384" rx="8" fill={SURFACE} stroke={HAIRLINE} />
       <path d="M 222 138 L 332 138 M 448 138 L 558 138" stroke={methodOk ? GREEN : VERMILION} strokeWidth="4" strokeDasharray={methodOk ? "0" : "8 8"} />
       <circle cx="164" cy="138" r="58" fill={OPAQUE_LIGHT_FILL[strengthColor(seventhStrength)]} stroke={strengthColor(seventhStrength)} strokeWidth="3" />
-      <text x="164" y="126" textAnchor="middle" fill={strengthColor(seventhStrength)} fontSize="13" fontWeight="700">7th House</text>
-      <text x="164" y="150" textAnchor="middle" fill={INK_MUTED} fontSize="11">promise: {seventhStrength}</text>
+      <text x="164" y="124" textAnchor="middle" fill={strengthColor(seventhStrength)} fontSize="17" fontWeight="700">7th House</text>
+      <text x="164" y="151" textAnchor="middle" fill={INK_MUTED} fontSize="13">promise: {seventhStrength}</text>
 
       <circle cx="390" cy="138" r="58" fill={OPAQUE_LIGHT_FILL[strengthColor(d9Strength)]} stroke={strengthColor(d9Strength)} strokeWidth="3" />
-      <text x="390" y="126" textAnchor="middle" fill={strengthColor(d9Strength)} fontSize="13" fontWeight="700">D9</text>
-      <text x="390" y="150" textAnchor="middle" fill={INK_MUTED} fontSize="11">depth: {d9Strength}</text>
+      <text x="390" y="124" textAnchor="middle" fill={strengthColor(d9Strength)} fontSize="17" fontWeight="700">D9</text>
+      <text x="390" y="151" textAnchor="middle" fill={INK_MUTED} fontSize="13">depth: {d9Strength}</text>
 
       <circle cx="616" cy="138" r="58" fill={OPAQUE_LIGHT_FILL[strengthColor(venusStrength)]} stroke={strengthColor(venusStrength)} strokeWidth="3" />
-      <text x="616" y="126" textAnchor="middle" fill={strengthColor(venusStrength)} fontSize="13" fontWeight="700">Venus</text>
-      <text x="616" y="150" textAnchor="middle" fill={INK_MUTED} fontSize="11">quality: {venusStrength}</text>
+      <text x="616" y="124" textAnchor="middle" fill={strengthColor(venusStrength)} fontSize="17" fontWeight="700">Venus</text>
+      <text x="616" y="151" textAnchor="middle" fill={INK_MUTED} fontSize="13">quality: {venusStrength}</text>
 
       <circle cx="390" cy="278" r="58" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} strokeWidth="3" />
-      <text x="390" y="265" textAnchor="middle" fill={finalColor} fontSize="13" fontWeight="700">{methodOk ? "COMBINE" : "WARNING"}</text>
-      <text x="390" y="288" textAnchor="middle" fill={INK_MUTED} fontSize="11">promise + depth + quality</text>
-      <rect x="166" y="352" width="448" height="26" rx="8" fill={OPAQUE_LIGHT_FILL[PURPLE]} stroke={HAIRLINE} />
-      <text x="390" y="370" textAnchor="middle" fill={INK_MUTED} fontSize="11">Venus qualifies love and harmony; it does not replace the 7th or D9.</text>
+      <text x="390" y="263" textAnchor="middle" fill={finalColor} fontSize="16" fontWeight="700">{methodOk ? "COMBINE" : "WARNING"}</text>
+      <text x="390" y="289" textAnchor="middle" fill={INK_MUTED} fontSize="13">promise + depth + quality</text>
+      <rect x="126" y="350" width="528" height="30" rx="8" fill={OPAQUE_LIGHT_FILL[PURPLE]} stroke={HAIRLINE} />
+      <text x="390" y="370" textAnchor="middle" fill={INK_MUTED} fontSize="13">Venus qualifies love and harmony; it does not replace the 7th or D9.</text>
     </svg>
   );
 }

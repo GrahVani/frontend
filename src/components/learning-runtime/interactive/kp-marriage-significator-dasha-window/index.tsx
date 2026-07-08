@@ -249,18 +249,18 @@ export function KpMarriageSignificatorDashaWindow() {
 function MarriageTimingSvg({ promised, dashaWindow, rpConfirmation, transitTrigger, twoYes }: { promised: boolean; dashaWindow: boolean; rpConfirmation: boolean; transitTrigger: boolean; twoYes: boolean }) {
   const finalColor = twoYes ? GREEN : promised ? GOLD : VERMILION;
   return (
-    <svg viewBox="0 0 780 410" role="img" aria-label="KP marriage timing DBA ruling planets and transit two yes diagram" style={{ width: "100%", minHeight: 310, margin: "0.7rem 0" }}>
-      <rect x="18" y="18" width="744" height="374" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <path d="M 194 120 L 248 120 M 376 120 L 430 120 M 558 120 L 612 120" stroke={finalColor} strokeWidth="4" strokeDasharray={twoYes ? "0" : "7 7"} />
-      <path d="M 292 167 C 304 220, 335 245, 357 253" fill="none" stroke={dashaWindow ? GREEN : HAIRLINE} strokeWidth="3" />
-      <path d="M 474 167 C 461 220, 435 245, 414 253" fill="none" stroke={rpConfirmation ? GREEN : HAIRLINE} strokeWidth="3" />
-      <Stage x={110} y={120} title="CSL promise" body={promised ? "2-7-11 supports" : "obstructed"} color={promised ? GREEN : GOLD} active={promised} />
-      <Stage x={292} y={120} title="DBA window" body={dashaWindow ? "2-7-11 lords" : "unrelated lords"} color={dashaWindow ? GREEN : VERMILION} active={dashaWindow} />
-      <Stage x={474} y={120} title="Ruling planets" body={rpConfirmation ? "repeat agents" : "no repeat"} color={rpConfirmation ? GREEN : GOLD} active={rpConfirmation} />
-      <Stage x={656} y={120} title="Transit" body={transitTrigger ? "activates" : "waiting"} color={transitTrigger ? GREEN : GOLD} active={transitTrigger} />
-      <circle cx="390" cy="285" r="56" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} strokeWidth="4" />
-      <text x="390" y="277" textAnchor="middle" fill={finalColor} fontSize="15" fontWeight="700">{twoYes ? "LIKELY WINDOW" : "QUALIFY"}</text>
-      <text x="390" y="300" textAnchor="middle" fill={INK_MUTED} fontSize="11">window, not exact date</text>
+    <svg viewBox="0 0 780 500" role="img" aria-label="KP marriage timing DBA ruling planets and transit two yes diagram" style={{ width: "100%", minHeight: 390, margin: "0.7rem 0" }}>
+      <rect x="18" y="18" width="744" height="464" rx="8" fill={SURFACE} stroke={HAIRLINE} />
+      <path d="M 206 140 L 238 140 M 388 140 L 420 140 M 570 140 L 602 140" stroke={finalColor} strokeWidth="5" strokeDasharray={twoYes ? "0" : "8 8"} />
+      <path d="M 292 194 C 306 260, 338 292, 358 302" fill="none" stroke={dashaWindow ? GREEN : HAIRLINE} strokeWidth="4" />
+      <path d="M 474 194 C 460 260, 436 292, 414 302" fill="none" stroke={rpConfirmation ? GREEN : HAIRLINE} strokeWidth="4" />
+      <Stage x={110} y={140} title="CSL promise" body={promised ? "2-7-11 supports" : "obstructed"} color={promised ? GREEN : GOLD} active={promised} />
+      <Stage x={292} y={140} title="DBA window" body={dashaWindow ? "2-7-11 lords" : "unrelated lords"} color={dashaWindow ? GREEN : VERMILION} active={dashaWindow} />
+      <Stage x={474} y={140} title="Ruling planets" body={rpConfirmation ? "repeat agents" : "no repeat"} color={rpConfirmation ? GREEN : GOLD} active={rpConfirmation} />
+      <Stage x={656} y={140} title="Transit" body={transitTrigger ? "activates" : "waiting"} color={transitTrigger ? GREEN : GOLD} active={transitTrigger} />
+      <circle cx="390" cy="340" r="72" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} strokeWidth="4" />
+      <text x="390" y="330" textAnchor="middle" fill={finalColor} fontSize="18" fontWeight="700">{twoYes ? "LIKELY WINDOW" : "QUALIFY"}</text>
+      <text x="390" y="362" textAnchor="middle" fill={INK_SECONDARY} fontSize="15" fontWeight="600">window, not exact date</text>
     </svg>
   );
 }
@@ -268,11 +268,11 @@ function MarriageTimingSvg({ promised, dashaWindow, rpConfirmation, transitTrigg
 function Stage({ x, y, title, body, color, active }: { x: number; y: number; title: string; body: string; color: string; active: boolean }) {
   return (
     <g>
-      <rect x={x - 72} y={y - 43} width="144" height="86" rx="8" fill={active ? OPAQUE_LIGHT_FILL[color] : "transparent"} stroke={active ? color : HAIRLINE} strokeWidth={active ? 2 : 1} />
-      <circle cx={x} cy={y - 16} r="14" fill={active ? color : "transparent"} stroke={color} strokeWidth="2" />
-      <text x={x} y={y - 11} textAnchor="middle" fill={active ? "#fff" : color} fontSize="12" fontWeight="700">{active ? "Y" : "-"}</text>
-      <text x={x} y={y + 11} textAnchor="middle" fill={INK_PRIMARY} fontSize="12.5" fontWeight="700">{title}</text>
-      <text x={x} y={y + 30} textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{body}</text>
+      <rect x={x - 78} y={y - 54} width="156" height="108" rx="8" fill={active ? OPAQUE_LIGHT_FILL[color] : "transparent"} stroke={active ? color : HAIRLINE} strokeWidth={active ? 2.5 : 1.2} />
+      <circle cx={x} cy={y - 24} r="18" fill={active ? color : "transparent"} stroke={color} strokeWidth="2.5" />
+      <text x={x} y={y - 17} textAnchor="middle" fill={active ? "#fff" : color} fontSize="15" fontWeight="700">{active ? "Y" : "-"}</text>
+      <text x={x} y={y + 13} textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="700">{title}</text>
+      <text x={x} y={y + 39} textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">{body}</text>
     </g>
   );
 }

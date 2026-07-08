@@ -229,18 +229,18 @@ function VenusCompanySvg({ beneficScore, maleficScore, tier, methodOk, jupiterCo
       <rect x="18" y="18" width="744" height="384" rx="8" fill={SURFACE} stroke={HAIRLINE} />
       <path d="M 264 120 C 308 120 326 154 328 154 M 516 120 C 472 120 454 154 452 154" fill="none" stroke={methodOk ? BLUE : VERMILION} strokeWidth="4" strokeDasharray={methodOk ? "0" : "8 8"} />
       <circle cx="390" cy="154" r="62" fill={OPAQUE_LIGHT_FILL[PURPLE]} stroke={PURPLE} strokeWidth="4" />
-      <text x="390" y="147" textAnchor="middle" fill={PURPLE} fontSize="15" fontWeight="700">Venus</text>
-      <text x="390" y="171" textAnchor="middle" fill={INK_MUTED} fontSize="11">affective quality</text>
+      <text x="390" y="145" textAnchor="middle" fill={PURPLE} fontSize="18" fontWeight="700">Venus</text>
+      <text x="390" y="173" textAnchor="middle" fill={INK_MUTED} fontSize="13">affective quality</text>
       <rect x="74" y="84" width="190" height="72" rx="8" fill={OPAQUE_LIGHT_FILL[GREEN]} stroke={GREEN} strokeWidth="3" />
-      <text x="169" y="113" textAnchor="middle" fill={GREEN} fontSize="13" fontWeight="700">Benefic company</text>
-      <text x="169" y="136" textAnchor="middle" fill={INK_MUTED} fontSize="11">{jupiterConj ? "Jupiter conjunction" : beneficScore > 0 ? "support present" : "quiet"}</text>
+      <text x="169" y="111" textAnchor="middle" fill={GREEN} fontSize="16" fontWeight="700">Benefic company</text>
+      <text x="169" y="138" textAnchor="middle" fill={INK_MUTED} fontSize="13">{jupiterConj ? "Jupiter conjunction" : beneficScore > 0 ? "support present" : "quiet"}</text>
       <rect x="516" y="84" width="190" height="72" rx="8" fill={OPAQUE_LIGHT_FILL[GOLD]} stroke={GOLD} strokeWidth="3" />
-      <text x="611" y="113" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="700">Malefic company</text>
-      <text x="611" y="136" textAnchor="middle" fill={INK_MUTED} fontSize="11">{saturnConj ? "Saturn conjunction" : marsAspect ? "Mars aspect" : maleficScore > 0 ? "theme present" : "quiet"}</text>
+      <text x="611" y="111" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="700">Malefic company</text>
+      <text x="611" y="138" textAnchor="middle" fill={INK_MUTED} fontSize="13">{saturnConj ? "Saturn conjunction" : marsAspect ? "Mars aspect" : maleficScore > 0 ? "theme present" : "quiet"}</text>
       <rect x="222" y="290" width="336" height="44" rx="8" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} />
-      <text x="390" y="317" textAnchor="middle" fill={finalColor} fontSize="13" fontWeight="700">{methodOk ? tier.toUpperCase() : "METHOD WARNING"}</text>
-      <rect x="150" y="356" width="480" height="26" rx="8" fill={OPAQUE_LIGHT_FILL[BLUE]} stroke={HAIRLINE} />
-      <text x="390" y="374" textAnchor="middle" fill={INK_MUTED} fontSize="11">Net company colours quality; 7th and D9 carry the promise.</text>
+      <text x="390" y="318" textAnchor="middle" fill={finalColor} fontSize="16" fontWeight="700">{methodOk ? tier.toUpperCase() : "METHOD WARNING"}</text>
+      <rect x="110" y="354" width="560" height="30" rx="8" fill={OPAQUE_LIGHT_FILL[BLUE]} stroke={HAIRLINE} />
+      <text x="390" y="374" textAnchor="middle" fill={INK_MUTED} fontSize="13">Net company colours quality; 7th and D9 carry the promise.</text>
     </svg>
   );
 }

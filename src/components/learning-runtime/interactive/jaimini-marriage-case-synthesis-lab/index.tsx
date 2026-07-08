@@ -231,25 +231,25 @@ function CaseFlowSvg({ caseMode, tier }: { caseMode: CaseMode; tier: string }) {
       <path d="M 193 107 L 242 107 M 377 107 L 426 107 M 561 107 L 610 107" stroke={jaiminiColor} strokeWidth="4" strokeDasharray="7 7" />
       <path d="M 313 266 L 467 266" stroke={caseMode === "convergent" ? GREEN : GOLD} strokeWidth="5" strokeDasharray={caseMode === "convergent" ? "0" : "9 8"} />
       <rect x="58" y="72" width="135" height="70" rx="8" fill={OPAQUE_LIGHT_FILL[BLUE]} stroke={BLUE} strokeWidth="3" />
-      <text x="125" y="101" textAnchor="middle" fill={BLUE} fontSize="12" fontWeight="700">12th Pisces</text>
-      <text x="125" y="123" textAnchor="middle" fill={INK_MUTED} fontSize="10">lord in Leo</text>
+      <text x="125" y="99" textAnchor="middle" fill={BLUE} fontSize="15" fontWeight="700">12th Pisces</text>
+      <text x="125" y="125" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">lord in Leo</text>
       <rect x="242" y="72" width="135" height="70" rx="8" fill={OPAQUE_LIGHT_FILL[PURPLE]} stroke={PURPLE} strokeWidth="3" />
-      <text x="309" y="101" textAnchor="middle" fill={PURPLE} fontSize="12" fontWeight="700">UL Capricorn</text>
-      <text x="309" y="123" textAnchor="middle" fill={INK_MUTED} fontSize="10">six onward</text>
+      <text x="309" y="99" textAnchor="middle" fill={PURPLE} fontSize="15" fontWeight="700">UL Capricorn</text>
+      <text x="309" y="125" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">six onward</text>
       <rect x="426" y="72" width="135" height="70" rx="8" fill={OPAQUE_LIGHT_FILL[jaiminiColor]} stroke={jaiminiColor} strokeWidth="3" />
-      <text x="493" y="101" textAnchor="middle" fill={jaiminiColor} fontSize="12" fontWeight="700">UL Register</text>
-      <text x="493" y="123" textAnchor="middle" fill={INK_MUTED} fontSize="10">{caseMode === "convergent" ? "supported" : "stressed"}</text>
+      <text x="493" y="99" textAnchor="middle" fill={jaiminiColor} fontSize="15" fontWeight="700">UL Register</text>
+      <text x="493" y="125" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">{caseMode === "convergent" ? "supported" : "stressed"}</text>
       <rect x="610" y="72" width="110" height="70" rx="8" fill={OPAQUE_LIGHT_FILL[jaiminiColor]} stroke={jaiminiColor} strokeWidth="3" />
-      <text x="665" y="101" textAnchor="middle" fill={jaiminiColor} fontSize="12" fontWeight="700">DK Jupiter</text>
-      <text x="665" y="123" textAnchor="middle" fill={INK_MUTED} fontSize="10">{caseMode === "convergent" ? "dignified" : "afflicted"}</text>
+      <text x="665" y="99" textAnchor="middle" fill={jaiminiColor} fontSize="14" fontWeight="700">DK Jupiter</text>
+      <text x="665" y="125" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">{caseMode === "convergent" ? "dignified" : "afflicted"}</text>
       <circle cx="255" cy="266" r="58" fill={OPAQUE_LIGHT_FILL[BLUE]} stroke={BLUE} strokeWidth="3" />
-      <text x="255" y="255" textAnchor="middle" fill={BLUE} fontSize="13" fontWeight="700">7th/D9</text>
-      <text x="255" y="278" textAnchor="middle" fill={INK_MUTED} fontSize="10">Venus sound</text>
+      <text x="255" y="254" textAnchor="middle" fill={BLUE} fontSize="16" fontWeight="700">7th/D9</text>
+      <text x="255" y="280" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">Venus sound</text>
       <circle cx="525" cy="266" r="58" fill={OPAQUE_LIGHT_FILL[jaiminiColor]} stroke={jaiminiColor} strokeWidth="3" />
-      <text x="525" y="255" textAnchor="middle" fill={jaiminiColor} fontSize="13" fontWeight="700">Jaimini</text>
-      <text x="525" y="278" textAnchor="middle" fill={INK_MUTED} fontSize="10">{caseMode === "convergent" ? "converges" : "diverges"}</text>
+      <text x="525" y="254" textAnchor="middle" fill={jaiminiColor} fontSize="16" fontWeight="700">Jaimini</text>
+      <text x="525" y="280" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">{caseMode === "convergent" ? "converges" : "diverges"}</text>
       <rect x="220" y="356" width="340" height="38" rx="8" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} />
-      <text x="390" y="381" textAnchor="middle" fill={finalColor} fontSize="13" fontWeight="700">{tier.toUpperCase()}</text>
+      <text x="390" y="382" textAnchor="middle" fill={finalColor} fontSize="16" fontWeight="700">{tier.toUpperCase()}</text>
     </svg>
   );
 }

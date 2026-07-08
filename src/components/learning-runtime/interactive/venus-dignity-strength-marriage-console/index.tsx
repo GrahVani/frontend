@@ -240,22 +240,22 @@ function VenusStrengthSvg({ dignity, combust, retrograde, cancellationActive, d9
       <rect x="18" y="18" width="744" height="384" rx="8" fill={SURFACE} stroke={HAIRLINE} />
       <path d="M 390 180 C 390 210 156 210 156 232 M 390 180 C 390 210 320 210 320 232 M 390 180 C 390 210 484 210 484 232 M 390 180 C 390 210 636 210 636 232" fill="none" stroke={HAIRLINE} strokeWidth="3" />
       <circle cx="390" cy="118" r="62" fill={OPAQUE_LIGHT_FILL[dignityColor(dignity)]} stroke={dignityColor(dignity)} strokeWidth="4" />
-      <text x="390" y="104" textAnchor="middle" fill={dignityColor(dignity)} fontSize="14" fontWeight="700">Venus</text>
-      <text x="390" y="128" textAnchor="middle" fill={INK_MUTED} fontSize="11">{dignityLabel(dignity)}</text>
+      <text x="390" y="102" textAnchor="middle" fill={dignityColor(dignity)} fontSize="18" fontWeight="700">Venus</text>
+      <text x="390" y="130" textAnchor="middle" fill={INK_MUTED} fontSize="14">{dignityLabel(dignity)}</text>
       <rect x="86" y="232" width="140" height="62" rx="8" fill={OPAQUE_LIGHT_FILL[combust ? GOLD : GREEN]} stroke={combust ? GOLD : GREEN} />
-      <text x="156" y="258" textAnchor="middle" fill={combust ? GOLD : GREEN} fontSize="12" fontWeight="700">Combustion</text>
-      <text x="156" y="278" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{combust ? "quality theme" : "not selected"}</text>
+      <text x="156" y="256" textAnchor="middle" fill={combust ? GOLD : GREEN} fontSize="15" fontWeight="700">Combustion</text>
+      <text x="156" y="280" textAnchor="middle" fill={INK_MUTED} fontSize="13">{combust ? "quality theme" : "not selected"}</text>
       <rect x="250" y="232" width="140" height="62" rx="8" fill={OPAQUE_LIGHT_FILL[retrograde ? BLUE : GREEN]} stroke={retrograde ? BLUE : GREEN} />
-      <text x="320" y="258" textAnchor="middle" fill={retrograde ? BLUE : GREEN} fontSize="12" fontWeight="700">Retrograde</text>
-      <text x="320" y="278" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{retrograde ? "internalised" : "not selected"}</text>
+      <text x="320" y="256" textAnchor="middle" fill={retrograde ? BLUE : GREEN} fontSize="15" fontWeight="700">Retrograde</text>
+      <text x="320" y="280" textAnchor="middle" fill={INK_MUTED} fontSize="13">{retrograde ? "internalised" : "not selected"}</text>
       <rect x="414" y="232" width="140" height="62" rx="8" fill={OPAQUE_LIGHT_FILL[cancellationActive ? GREEN : GOLD]} stroke={cancellationActive ? GREEN : GOLD} />
-      <text x="484" y="258" textAnchor="middle" fill={cancellationActive ? GREEN : GOLD} fontSize="12" fontWeight="700">Bhanga</text>
-      <text x="484" y="278" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{cancellationActive ? "cancels" : "not active"}</text>
+      <text x="484" y="256" textAnchor="middle" fill={cancellationActive ? GREEN : GOLD} fontSize="15" fontWeight="700">Bhanga</text>
+      <text x="484" y="280" textAnchor="middle" fill={INK_MUTED} fontSize="13">{cancellationActive ? "cancels" : "not active"}</text>
       <rect x="578" y="232" width="116" height="62" rx="8" fill={OPAQUE_LIGHT_FILL[supportColor(d9Venus)]} stroke={supportColor(d9Venus)} />
-      <text x="636" y="258" textAnchor="middle" fill={supportColor(d9Venus)} fontSize="12" fontWeight="700">D9 Venus</text>
-      <text x="636" y="278" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{d9Venus}</text>
+      <text x="636" y="256" textAnchor="middle" fill={supportColor(d9Venus)} fontSize="15" fontWeight="700">D9 Venus</text>
+      <text x="636" y="280" textAnchor="middle" fill={INK_MUTED} fontSize="13">{d9Venus}</text>
       <rect x="230" y="348" width="320" height="36" rx="8" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} />
-      <text x="390" y="371" textAnchor="middle" fill={finalColor} fontSize="13" fontWeight="700">{methodOk ? tier.toUpperCase() : "METHOD WARNING"}</text>
+      <text x="390" y="372" textAnchor="middle" fill={finalColor} fontSize="16" fontWeight="700">{methodOk ? tier.toUpperCase() : "METHOD WARNING"}</text>
     </svg>
   );
 }

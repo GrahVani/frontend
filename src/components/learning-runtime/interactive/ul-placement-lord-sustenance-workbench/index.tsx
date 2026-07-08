@@ -231,22 +231,22 @@ function UlSustenanceSvg({ ulCondition, secondFromUl, ulLord, parashariVenus, ti
       <path d="M 222 119 L 315 119 M 465 119 L 558 119" stroke={finalColor} strokeWidth="4" strokeDasharray="8 8" />
       <path d="M 296 260 L 484 260" stroke={converges ? GREEN : GOLD} strokeWidth="4" strokeDasharray={converges ? "0" : "8 8"} />
       <rect x="72" y="80" width="150" height="78" rx="8" fill={OPAQUE_LIGHT_FILL[supportColor(ulCondition)]} stroke={supportColor(ulCondition)} strokeWidth="3" />
-      <text x="147" y="111" textAnchor="middle" fill={supportColor(ulCondition)} fontSize="13" fontWeight="700">UL</text>
-      <text x="147" y="135" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{ulCondition}</text>
+      <text x="147" y="109" textAnchor="middle" fill={supportColor(ulCondition)} fontSize="17" fontWeight="700">UL</text>
+      <text x="147" y="137" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">{ulCondition}</text>
       <rect x="315" y="80" width="150" height="78" rx="8" fill={OPAQUE_LIGHT_FILL[supportColor(secondFromUl)]} stroke={supportColor(secondFromUl)} strokeWidth="3" />
-      <text x="390" y="111" textAnchor="middle" fill={supportColor(secondFromUl)} fontSize="13" fontWeight="700">2nd from UL</text>
-      <text x="390" y="135" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">sustenance: {secondFromUl}</text>
+      <text x="390" y="109" textAnchor="middle" fill={supportColor(secondFromUl)} fontSize="16" fontWeight="700">2nd from UL</text>
+      <text x="390" y="137" textAnchor="middle" fill={INK_SECONDARY} fontSize="12.5">sustenance: {secondFromUl}</text>
       <rect x="558" y="80" width="150" height="78" rx="8" fill={OPAQUE_LIGHT_FILL[supportColor(ulLord)]} stroke={supportColor(ulLord)} strokeWidth="3" />
-      <text x="633" y="111" textAnchor="middle" fill={supportColor(ulLord)} fontSize="13" fontWeight="700">UL Lord</text>
-      <text x="633" y="135" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{ulLord}</text>
+      <text x="633" y="109" textAnchor="middle" fill={supportColor(ulLord)} fontSize="17" fontWeight="700">UL Lord</text>
+      <text x="633" y="137" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">{ulLord}</text>
       <circle cx="238" cy="260" r="58" fill={OPAQUE_LIGHT_FILL[supportColor(parashariVenus)]} stroke={supportColor(parashariVenus)} strokeWidth="3" />
-      <text x="238" y="249" textAnchor="middle" fill={supportColor(parashariVenus)} fontSize="13" fontWeight="700">7th/D9</text>
-      <text x="238" y="272" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">Venus: {parashariVenus}</text>
+      <text x="238" y="248" textAnchor="middle" fill={supportColor(parashariVenus)} fontSize="16" fontWeight="700">7th/D9</text>
+      <text x="238" y="274" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">Venus: {parashariVenus}</text>
       <circle cx="542" cy="260" r="58" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} strokeWidth="3" />
-      <text x="542" y="249" textAnchor="middle" fill={finalColor} fontSize="13" fontWeight="700">Synthesis</text>
-      <text x="542" y="272" textAnchor="middle" fill={INK_MUTED} fontSize="10.5">{converges ? "converges" : "diverges"}</text>
+      <text x="542" y="248" textAnchor="middle" fill={finalColor} fontSize="16" fontWeight="700">Synthesis</text>
+      <text x="542" y="274" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">{converges ? "converges" : "diverges"}</text>
       <rect x="220" y="356" width="340" height="38" rx="8" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} />
-      <text x="390" y="381" textAnchor="middle" fill={finalColor} fontSize="13" fontWeight="700">{tier.toUpperCase()}</text>
+      <text x="390" y="382" textAnchor="middle" fill={finalColor} fontSize="16" fontWeight="700">{tier.toUpperCase()}</text>
     </svg>
   );
 }

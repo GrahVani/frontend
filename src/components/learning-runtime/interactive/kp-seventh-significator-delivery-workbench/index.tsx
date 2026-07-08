@@ -293,51 +293,51 @@ export function KpSeventhSignificatorDeliveryWorkbench() {
 
 function SeventhSignificatorSvg({ selectedLevel, includeNodes, showSecondary }: { selectedLevel: LevelId; includeNodes: boolean; showSecondary: boolean }) {
   return (
-    <svg viewBox="0 0 780 420" role="img" aria-label="KP 7th house four-fold significator hierarchy and marriage delivery filter" style={{ width: "100%", minHeight: 315, margin: "0.7rem 0" }}>
-      <rect x="18" y="18" width="744" height="384" rx="8" fill={SURFACE} stroke={HAIRLINE} />
+    <svg viewBox="0 0 780 500" role="img" aria-label="KP 7th house four-fold significator hierarchy and marriage delivery filter" style={{ width: "100%", minHeight: 390, margin: "0.7rem 0" }}>
+      <rect x="18" y="18" width="744" height="464" rx="8" fill={SURFACE} stroke={HAIRLINE} />
       {LEVELS.map((level, index) => {
-        const y = 70 + index * 72;
+        const y = 90 + index * 78;
         const active = selectedLevel === level.id;
-        return <path key={`${level.id}-path`} d={`M 268 ${y} C 310 ${y}, 310 190, 328 190`} fill="none" stroke={active ? level.color : HAIRLINE} strokeWidth={active ? 3 : 1.5} />;
+        return <path key={`${level.id}-path`} d={`M 292 ${y} C 332 ${y}, 332 220, 318 220`} fill="none" stroke={active ? level.color : HAIRLINE} strokeWidth={active ? 3.5 : 1.8} />;
       })}
-      <path d="M 452 170 C 494 124, 500 110, 520 100" fill="none" stroke={GREEN} strokeWidth="4" />
-      {includeNodes ? <path d="M 566 204 C 510 204, 485 195, 452 190" fill="none" stroke={PURPLE} strokeWidth={selectedLevel === "node" ? 4 : 2.5} strokeDasharray="7 5" /> : null}
-      {showSecondary ? <path d="M 514 308 C 486 275, 462 240, 432 224" fill="none" stroke={BLUE} strokeWidth="2.5" strokeDasharray="5 4" /> : null}
-      <circle cx="390" cy="190" r="62" fill={OPAQUE_LIGHT_FILL[PURPLE]} stroke={PURPLE} strokeWidth="3" />
-      <text x="390" y="183" textAnchor="middle" fill={PURPLE} fontSize="16" fontWeight="700">7th House</text>
-      <text x="390" y="207" textAnchor="middle" fill={INK_MUTED} fontSize="11">spouse field</text>
+      <path d="M 462 198 C 508 148, 520 132, 548 122" fill="none" stroke={GREEN} strokeWidth="5" />
+      {includeNodes ? <path d="M 580 236 C 520 236, 494 226, 462 220" fill="none" stroke={PURPLE} strokeWidth={selectedLevel === "node" ? 4.5 : 3} strokeDasharray="8 6" /> : null}
+      {showSecondary ? <path d="M 530 360 C 500 316, 472 270, 444 252" fill="none" stroke={BLUE} strokeWidth="3.2" strokeDasharray="6 5" /> : null}
+      <circle cx="390" cy="220" r="72" fill={OPAQUE_LIGHT_FILL[PURPLE]} stroke={PURPLE} strokeWidth="4" />
+      <text x="390" y="211" textAnchor="middle" fill={PURPLE} fontSize="22" fontWeight="700">7th House</text>
+      <text x="390" y="242" textAnchor="middle" fill={INK_SECONDARY} fontSize="16" fontWeight="600">spouse field</text>
       {LEVELS.map((level, index) => {
-        const y = 70 + index * 72;
+        const y = 90 + index * 78;
         const active = selectedLevel === level.id;
         return (
           <g key={level.id}>
-            <rect x="58" y={y - 24} width="210" height="48" rx="8" fill={active ? OPAQUE_LIGHT_FILL[level.color] : "transparent"} stroke={active ? level.color : HAIRLINE} strokeWidth={active ? 2.5 : 1.2} />
-            <circle cx="83" cy={y} r="14" fill={active ? level.color : "transparent"} stroke={level.color} strokeWidth="2" />
-            <text x="83" y={y + 5} textAnchor="middle" fill={active ? "#fff" : level.color} fontSize="12" fontWeight="700">{level.rank}</text>
-            <text x="108" y={y - 3} fill={INK_PRIMARY} fontSize="13" fontWeight="700">{level.planet}</text>
-            <text x="108" y={y + 15} fill={INK_MUTED} fontSize="10.5">{level.title}</text>
+            <rect x="54" y={y - 30} width="238" height="60" rx="8" fill={active ? OPAQUE_LIGHT_FILL[level.color] : "transparent"} stroke={active ? level.color : HAIRLINE} strokeWidth={active ? 3 : 1.4} />
+            <circle cx="84" cy={y} r="18" fill={active ? level.color : "transparent"} stroke={level.color} strokeWidth="2.5" />
+            <text x="84" y={y + 7} textAnchor="middle" fill={active ? "#fff" : level.color} fontSize="17" fontWeight="700">{level.rank}</text>
+            <text x="118" y={y - 7} fill={INK_PRIMARY} fontSize="17" fontWeight="700">{level.planet}</text>
+            <text x="118" y={y + 18} fill={INK_SECONDARY} fontSize="14.5" fontWeight="600">{level.title}</text>
           </g>
         );
       })}
-      <rect x="520" y="74" width="160" height="52" rx="8" fill={OPAQUE_LIGHT_FILL[GREEN]} stroke={GREEN} />
-      <text x="600" y="97" textAnchor="middle" fill={GREEN} fontSize="13" fontWeight="700">2 / 7 / 11</text>
-      <text x="600" y="116" textAnchor="middle" fill={INK_MUTED} fontSize="10">marriage filter</text>
+      <rect x="548" y="92" width="190" height="64" rx="8" fill={OPAQUE_LIGHT_FILL[GREEN]} stroke={GREEN} strokeWidth="2.5" />
+      <text x="643" y="120" textAnchor="middle" fill={GREEN} fontSize="18" fontWeight="700">2 / 7 / 11</text>
+      <text x="643" y="145" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">marriage filter</text>
       {includeNodes ? (
         <g>
-          <circle cx="600" cy="204" r="34" fill={OPAQUE_LIGHT_FILL[PURPLE]} stroke={PURPLE} strokeWidth={selectedLevel === "node" ? 3 : 2} />
-          <text x="600" y="201" textAnchor="middle" fill={PURPLE} fontSize="14" fontWeight="700">Rahu</text>
-          <text x="600" y="219" textAnchor="middle" fill={INK_MUTED} fontSize="10">agent</text>
+          <circle cx="606" cy="236" r="40" fill={OPAQUE_LIGHT_FILL[PURPLE]} stroke={PURPLE} strokeWidth={selectedLevel === "node" ? 3.5 : 2.5} />
+          <text x="606" y="232" textAnchor="middle" fill={PURPLE} fontSize="18" fontWeight="700">Rahu</text>
+          <text x="606" y="256" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">agent</text>
         </g>
       ) : null}
       {showSecondary ? (
         <g>
-          <rect x="514" y="286" width="176" height="44" rx="8" fill={OPAQUE_LIGHT_FILL[BLUE]} stroke={BLUE} strokeDasharray="5 4" />
-          <text x="602" y="305" textAnchor="middle" fill={BLUE} fontSize="12" fontWeight="700">Conj/aspect</text>
-          <text x="602" y="322" textAnchor="middle" fill={INK_MUTED} fontSize="10">secondary contributors</text>
+          <rect x="530" y="340" width="204" height="54" rx="8" fill={OPAQUE_LIGHT_FILL[BLUE]} stroke={BLUE} strokeWidth="2" strokeDasharray="6 5" />
+          <text x="632" y="363" textAnchor="middle" fill={BLUE} fontSize="16" fontWeight="700">Conj/aspect</text>
+          <text x="632" y="386" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">secondary contributors</text>
         </g>
       ) : null}
-      <rect x="230" y="352" width="320" height="34" rx="8" fill={OPAQUE_LIGHT_FILL[GOLD]} stroke={GOLD} />
-      <text x="390" y="374" textAnchor="middle" fill={GOLD} fontSize="12.5" fontWeight="700">CSL promises, significators deliver, dasha times</text>
+      <rect x="140" y="425" width="500" height="42" rx="8" fill={OPAQUE_LIGHT_FILL[GOLD]} stroke={GOLD} strokeWidth="2" />
+      <text x="390" y="452" textAnchor="middle" fill={GOLD} fontSize="17" fontWeight="700">CSL promises, significators deliver, dasha times</text>
     </svg>
   );
 }
