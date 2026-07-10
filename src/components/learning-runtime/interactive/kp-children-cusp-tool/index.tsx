@@ -12,6 +12,7 @@ import {
   Sparkles,
   Star,
 } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
@@ -146,8 +147,8 @@ export function KpChildrenCuspTool() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>CSL decision flow</p>
@@ -167,7 +168,7 @@ export function KpChildrenCuspTool() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="5th cusp" icon={<MapPin size={18} />} color={fruitInfo.color}>
             <label style={{ display: "grid", gap: "0.35rem", color: INK_SECONDARY }}>
               <span>Cusp sign</span>
@@ -253,7 +254,7 @@ export function KpChildrenCuspTool() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Scope discipline</p>
           <div style={{ display: "grid", gap: "0.7rem", marginTop: "0.75rem" }}>
@@ -448,7 +449,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))",
   gap: "1rem",

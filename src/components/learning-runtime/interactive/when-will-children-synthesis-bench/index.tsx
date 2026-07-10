@@ -14,6 +14,7 @@ import {
   Sparkles,
   XCircle,
 } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
@@ -468,8 +469,8 @@ export function WhenWillChildrenSynthesisBench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div
             style={{
               display: "flex",
@@ -539,7 +540,7 @@ export function WhenWillChildrenSynthesisBench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <section style={cardStyle}>
             <p style={eyebrowStyle}>Findings grid</p>
             <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.5rem" }}>
@@ -724,7 +725,7 @@ export function WhenWillChildrenSynthesisBench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <div
             style={{
@@ -963,7 +964,7 @@ export function WhenWillChildrenSynthesisBench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Ethical closing</p>
           <div style={{ display: "grid", gap: "0.55rem", marginTop: "0.75rem" }}>
@@ -1477,7 +1478,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))",
   gap: "1rem",

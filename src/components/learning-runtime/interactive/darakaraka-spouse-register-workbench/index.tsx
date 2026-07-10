@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { ArrowDownWideNarrow, BadgeCheck, GitCompare, HeartHandshake, RotateCcw, Scale, ShieldCheck, SlidersHorizontal, Sparkles, TriangleAlert, UserRound } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type Scheme = "seven" | "eight";
 type PlanetKey = "sun" | "moon" | "mars" | "mercury" | "jupiter" | "venus" | "saturn" | "rahu";
@@ -127,8 +128,8 @@ export function DarakarakaSpouseRegisterWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Current DK</p>
@@ -144,7 +145,7 @@ export function DarakarakaSpouseRegisterWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Karaka scheme" icon={<SlidersHorizontal size={18} />} color={scheme === "seven" ? BLUE : PURPLE}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               <button type="button" aria-pressed={scheme === "seven"} onClick={() => setScheme("seven")} style={buttonStyle(scheme === "seven", BLUE)}>
@@ -189,7 +190,7 @@ export function DarakarakaSpouseRegisterWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Discipline gates</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -317,11 +318,6 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-};
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

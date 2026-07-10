@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, ClipboardCheck, Flame, GitCompare, HeartHandshake, Orbit, RotateCcw, Scale, ShieldCheck, Sparkles, Venus } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type Step = "dignity" | "company" | "d9" | "verdict";
 type Scenario = "main" | "weakQualified";
@@ -155,8 +156,8 @@ export function VenusAnalysisMarriageCaseLab() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Quality verdict</p>
@@ -172,7 +173,7 @@ export function VenusAnalysisMarriageCaseLab() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Scenario mode" icon={<Scale size={18} />} color={scenario === "main" ? GREEN : GOLD}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.45rem" }}>
               <button type="button" aria-pressed={scenario === "main"} onClick={() => setScenario("main")} style={buttonStyle(scenario === "main", GREEN)}>Main strong case</button>
@@ -193,7 +194,7 @@ export function VenusAnalysisMarriageCaseLab() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Cross-check and promise</p>
           <div style={{ marginTop: "0.75rem" }}>
@@ -311,11 +312,6 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-};
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

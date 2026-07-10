@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { Baby, Clock, Heart, HeartPulse, RefreshCcw, Scale, ShieldCheck, Sparkles, TriangleAlert } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
@@ -105,8 +106,8 @@ export function ChildrenD1D7ConvergenceBench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Reading diagram</p>
@@ -124,7 +125,7 @@ export function ChildrenD1D7ConvergenceBench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="D1 saṁtāna picture" icon={<Scale size={18} />} color={BLUE}>
             <div style={{ display: "grid", gap: "0.55rem" }}>
               <Toggle active={d1.fifthSupportive} color={d1.fifthSupportive ? GREEN : VERMILION} icon={<ShieldCheck size={18} />} title="D1 5th house supportive" body={d1.fifthSupportive ? "Clean or benefic-occupied" : "Afflicted or stressed"} onClick={() => setD1((prev) => ({ ...prev, fifthSupportive: !prev.fifthSupportive }))} />
@@ -156,7 +157,7 @@ export function ChildrenD1D7ConvergenceBench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Confidence guide</p>
           <div style={{ marginTop: "0.75rem", display: "grid", gap: "0.55rem" }}>
@@ -284,7 +285,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
   gap: "1rem",

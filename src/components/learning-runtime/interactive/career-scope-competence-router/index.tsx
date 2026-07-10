@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { AlertTriangle, BadgeCheck, BriefcaseBusiness, FileText, HeartPulse, Landmark, RotateCcw, Scale, ShieldCheck, Stethoscope, UserRoundCheck, WalletCards } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type ScenarioKey = "salary" | "contract" | "illness" | "distress" | "skills" | "birth";
 type ViewMode = "map" | "discipline" | "distress" | "refusal";
@@ -186,8 +187,8 @@ export function CareerScopeCompetenceRouter() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Selected scenario</p>
@@ -203,7 +204,7 @@ export function CareerScopeCompetenceRouter() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Scenario chooser" icon={<Landmark size={18} />} color={scenario.color}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 150px), 1fr))", gap: "0.55rem" }}>
               {(Object.keys(SCENARIOS) as ScenarioKey[]).map((key) => (
@@ -223,7 +224,7 @@ export function CareerScopeCompetenceRouter() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Boundary moves</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -341,7 +342,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "minmax(360px, 1.25fr) minmax(320px, 1fr)",
   gap: "1rem",

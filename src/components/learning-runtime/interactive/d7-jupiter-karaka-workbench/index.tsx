@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { Baby, Eye, Heart, HeartPulse, RefreshCcw, Scale, ShieldCheck, Sparkles, TriangleAlert } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
@@ -119,8 +120,8 @@ export function D7JupiterKarakaWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Kāraka diagram</p>
@@ -136,7 +137,7 @@ export function D7JupiterKarakaWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="D7 Jupiter dignity" icon={<Sparkles size={18} />} color={dignityState.color}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.45rem" }}>
               {(Object.keys(DIGNITIES) as DignityKey[]).map((key) => (
@@ -168,7 +169,7 @@ export function D7JupiterKarakaWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Layer across charts</p>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.55rem", marginTop: "0.75rem" }}>
@@ -351,7 +352,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
   gap: "1rem",

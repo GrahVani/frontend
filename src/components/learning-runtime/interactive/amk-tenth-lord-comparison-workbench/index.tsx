@@ -12,6 +12,7 @@ import {
   SlidersHorizontal,
   Target,
 } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type PlanetKey = "mercury" | "moon" | "saturn" | "sun" | "jupiter";
 type FieldKey = "commerce" | "care" | "authority" | "teaching" | "structure";
@@ -140,8 +141,8 @@ export function AmkTenthLordComparisonWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Two career voices</p>
@@ -167,7 +168,7 @@ export function AmkTenthLordComparisonWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Pattern presets" icon={<SlidersHorizontal size={18} />} color={patternColor}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               <PresetButton color={GREEN} onClick={() => { setAmkPlanet("mercury"); setTenthPlanet("mercury"); setAmkField("commerce"); setTenthField("commerce"); setAmkStrength("strong"); setTenthStrength("strong"); setRelation("same"); setReportMode("layer"); }}>
@@ -202,7 +203,7 @@ export function AmkTenthLordComparisonWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <VoiceControl
           title="Jaimini voice: AmK"
           icon={<Map size={18} />}
@@ -227,7 +228,7 @@ export function AmkTenthLordComparisonWorkbench() {
         />
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Relation and data signal</p>
           <ControlGroup label="AmK relation to the 10th voice">
@@ -446,7 +447,7 @@ const cardStyle: CSSProperties = {
   padding: "1rem",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))",
   gap: "1rem",

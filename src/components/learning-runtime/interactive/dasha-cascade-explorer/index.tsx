@@ -5,7 +5,7 @@ import type { CSSProperties } from "react";
 import { AlertTriangle, ChevronRight, GitBranch, Layers3, RotateCcw, ShieldCheck, Timer, ZoomIn } from "lucide-react";
 import { grahas, ink } from "@/design-tokens/grahvani-learning/colors";
 import { IAST, Devanagari } from "../../chrome/typography";
-import { useLessonSlug } from "../rashi-attribute-wheel";
+import { useLessonSlug } from "@/components/learning-runtime/interactive/tier-1/module-4/rashi-attribute-wheel";
 import { DASHA_LORDS, SEQUENCE_MNEMONIC, YEARS_MNEMONIC, rotatedSequence } from "../dasha-timeline/data";
 import {
   CASCADE_LEVELS,

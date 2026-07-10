@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, Baby, BookOpenCheck, BriefcaseBusiness, Car, GitCompare, GraduationCap, HeartPulse, Home, Landmark, RotateCcw, ShieldCheck, UsersRound } from "lucide-react";
-import { useLessonSlug } from "../rashi-attribute-wheel";
+import { useLessonSlug } from "@/components/learning-runtime/interactive/tier-1/module-4/rashi-attribute-wheel";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";

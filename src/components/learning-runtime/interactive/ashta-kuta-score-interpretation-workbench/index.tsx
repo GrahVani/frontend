@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, GitCompare, HeartHandshake, RotateCcw, Scale, ShieldCheck, SlidersHorizontal, TriangleAlert, Users } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type ScenarioId = "lowRawGood" | "familyThreshold" | "highScoreGap";
 type FocusId = "score" | "distribution" | "cancellations" | "natal" | "family";
@@ -220,8 +221,8 @@ export function AshtaKutaScoreInterpretationWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Raw score to honest guidance</p>
@@ -237,7 +238,7 @@ export function AshtaKutaScoreInterpretationWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Scenario reading notes" icon={<GitCompare size={18} />} color={scenario.color}>
             <NoteRow title="Distribution" body={scenario.distribution} color={BLUE} />
             <NoteRow title="Cancellation" body={scenario.cancellation} color={GREEN} />
@@ -247,7 +248,7 @@ export function AshtaKutaScoreInterpretationWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Interpretation guards</p>
           <div style={{ display: "grid", gap: "0.7rem", marginTop: "0.75rem" }}>
@@ -289,27 +290,27 @@ function ScoreInterpretationSvg({ scenario, focus, methodOk }: { scenario: (type
   return (
     <svg viewBox="0 0 780 390" role="img" aria-label="Ashta-kuta raw score interpretation flow" style={{ width: "100%", minHeight: 300, margin: "0.7rem 0" }}>
       <rect x="18" y="18" width="744" height="354" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="390" y="52" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="700">A NUMBER BECOMES A JUDGMENT ONLY AFTER MODIFIERS</text>
+      <text x="390" y="52" textAnchor="middle" fill={GOLD} fontSize="15" fontWeight="700">A NUMBER BECOMES A JUDGMENT ONLY AFTER MODIFIERS</text>
       <line x1="92" y1="150" x2="692" y2="150" stroke={HAIRLINE} strokeWidth="4" />
       {steps.map((step, index) => {
         const active = focus === step.id;
         return (
           <g key={step.id}>
-            {index < steps.length - 1 ? <path d={`M ${step.x + 42} 150 L ${steps[index + 1].x - 48} 150`} stroke={step.color} strokeWidth={active ? 5 : 3} opacity={active ? 1 : 0.45} /> : null}
-            <circle cx={step.x} cy="150" r={active ? 43 : 36} fill={OPAQUE_LIGHT_FILL[step.color]} stroke={step.color} strokeWidth={active ? 4 : 2.5} />
-            <text x={step.x} y="146" textAnchor="middle" fill={step.color} fontSize="11" fontWeight="700">{step.label}</text>
-            <text x={step.x} y="166" textAnchor="middle" fill={INK_MUTED} fontSize="10">{index + 1}</text>
+            {index < steps.length - 1 ? <path d={`M ${step.x + 46} 150 L ${steps[index + 1].x - 52} 150`} stroke={step.color} strokeWidth={active ? 5 : 3} opacity={active ? 1 : 0.45} /> : null}
+            <circle cx={step.x} cy="150" r={active ? 47 : 41} fill={OPAQUE_LIGHT_FILL[step.color]} stroke={step.color} strokeWidth={active ? 4 : 2.5} />
+            <text x={step.x} y="145" textAnchor="middle" fill={step.color} fontSize="14" fontWeight="700">{step.label}</text>
+            <text x={step.x} y="166" textAnchor="middle" fill={INK_MUTED} fontSize="13">{index + 1}</text>
           </g>
         );
       })}
-      <path d="M 354 264 C 405 224, 468 224, 520 264" fill="none" stroke={methodOk ? GREEN : VERMILION} strokeWidth="4" strokeDasharray="8 7" />
-      <rect x="95" y="240" width="250" height="48" rx="8" fill={OPAQUE_LIGHT_FILL[scenario.color]} stroke={scenario.color} />
-      <text x="220" y="260" textAnchor="middle" fill={scenario.color} fontSize="12" fontWeight="700">raw total: {scenario.raw}/36</text>
-      <text x="220" y="278" textAnchor="middle" fill={INK_MUTED} fontSize="10">diagnostic summary</text>
-      <rect x="535" y="240" width="250" height="48" rx="8" fill={OPAQUE_LIGHT_FILL[methodOk ? GREEN : VERMILION]} stroke={methodOk ? GREEN : VERMILION} />
-      <text x="660" y="260" textAnchor="middle" fill={methodOk ? GREEN : VERMILION} fontSize="12" fontWeight="700">effective view: {scenario.effective}/36</text>
-      <text x="660" y="278" textAnchor="middle" fill={INK_MUTED} fontSize="10">{methodOk ? "guidance, not decree" : "method repair needed"}</text>
-      <text x="390" y="330" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Distribution + cancellations + natal promise + agency protect the reading from threshold harm.</text>
+      <path d="M 354 268 C 405 222, 468 222, 520 268" fill="none" stroke={methodOk ? GREEN : VERMILION} strokeWidth="4" strokeDasharray="8 7" />
+      <rect x="95" y="240" width="250" height="54" rx="8" fill={OPAQUE_LIGHT_FILL[scenario.color]} stroke={scenario.color} />
+      <text x="220" y="262" textAnchor="middle" fill={scenario.color} fontSize="15" fontWeight="700">raw total: {scenario.raw}/36</text>
+      <text x="220" y="282" textAnchor="middle" fill={INK_MUTED} fontSize="13">diagnostic summary</text>
+      <rect x="535" y="240" width="250" height="54" rx="8" fill={OPAQUE_LIGHT_FILL[methodOk ? GREEN : VERMILION]} stroke={methodOk ? GREEN : VERMILION} />
+      <text x="660" y="262" textAnchor="middle" fill={methodOk ? GREEN : VERMILION} fontSize="15" fontWeight="700">effective view: {scenario.effective}/36</text>
+      <text x="660" y="282" textAnchor="middle" fill={INK_MUTED} fontSize="13">{methodOk ? "guidance, not decree" : "method repair needed"}</text>
+      <text x="390" y="332" textAnchor="middle" fill={INK_SECONDARY} fontSize="14">Distribution + cancellations + natal promise + agency protect the reading from threshold harm.</text>
     </svg>
   );
 }
@@ -329,10 +330,10 @@ function Panel({ title, icon, color, children }: { title: string; icon: ReactNod
 function Toggle({ active, color, icon, title, body, onClick }: { active: boolean; color: string; icon: ReactNode; title: string; body: string; onClick: () => void }) {
   return (
     <button type="button" aria-pressed={active} onClick={onClick} style={toggleStyle(active, color)}>
-      <span style={{ color }}>{icon}</span>
+      <span style={{ color, flexShrink: 0 }}>{icon}</span>
       <span>
-        <strong style={{ fontWeight: 700 }}>{title}</strong>
-        <span>{body}</span>
+        <strong style={{ display: "block", fontWeight: 700, marginBottom: "0.15rem" }}>{title}</strong>
+        <span style={{ color: INK_SECONDARY, lineHeight: 1.45 }}>{body}</span>
       </span>
     </button>
   );
@@ -365,12 +366,6 @@ const cardStyle: CSSProperties = {
   background: SURFACE,
   padding: "1rem",
   boxShadow: "var(--gl-shadow-soft)",
-};
-
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
 };
 
 const eyebrowStyle: CSSProperties = {

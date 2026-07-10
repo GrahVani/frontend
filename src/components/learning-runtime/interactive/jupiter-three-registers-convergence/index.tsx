@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { RefreshCcw, Scale, ShieldCheck, Sparkles } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
@@ -84,8 +85,8 @@ export function JupiterThreeRegistersConvergence() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Three registers</p>
@@ -107,7 +108,7 @@ export function JupiterThreeRegistersConvergence() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Jupiter (kāraka)" icon={<Sparkles size={18} />} color={GOLD}>
             <div style={{ display: "grid", gap: "0.55rem" }}>
               <Toggle active={jupiterStrong} color={jupiterStrong ? GREEN : VERMILION} icon={<Sparkles size={18} />} title="Jupiter strong" body={jupiterStrong ? "Dignified, well-aspected, or own/exalted." : "Debilitated, combust, or afflicted."} onClick={() => setJupiterStrong((value) => !value)} />
@@ -259,12 +260,6 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-  alignItems: "start",
-};
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

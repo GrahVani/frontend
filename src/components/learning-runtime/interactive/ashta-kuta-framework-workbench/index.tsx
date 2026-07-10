@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, CircleDot, GitCompare, HeartHandshake, Moon, RotateCcw, Scale, ShieldCheck, Sparkles, TriangleAlert } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type KutaId = "varna" | "vashya" | "tara" | "yoni" | "graha" | "gana" | "bhakuta" | "nadi";
 type BasisMode = "moon" | "lagna";
@@ -139,8 +140,8 @@ export function AshtaKutaFrameworkWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Compatibility distribution</p>
@@ -156,7 +157,7 @@ export function AshtaKutaFrameworkWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Computation basis" icon={<Moon size={18} />} color={basisMode === "moon" ? GREEN : VERMILION}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               <button type="button" aria-pressed={basisMode === "moon"} onClick={() => setBasisMode("moon")} style={buttonStyle(basisMode === "moon", GREEN)}>
@@ -192,7 +193,7 @@ export function AshtaKutaFrameworkWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Interpretation guards</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -262,10 +263,10 @@ function Panel({ title, icon, color, children }: { title: string; icon: ReactNod
 function Toggle({ active, color, icon, title, body, onClick }: { active: boolean; color: string; icon: ReactNode; title: string; body: string; onClick: () => void }) {
   return (
     <button type="button" aria-pressed={active} onClick={onClick} style={toggleStyle(active, color)}>
-      <span style={{ color }}>{icon}</span>
+      <span style={{ color, flexShrink: 0 }}>{icon}</span>
       <span>
-        <strong style={{ fontWeight: 700 }}>{title}</strong>
-        <span>{body}</span>
+        <strong style={{ display: "block", fontWeight: 700, marginBottom: "0.15rem" }}>{title}</strong>
+        <span style={{ color: INK_SECONDARY, lineHeight: 1.45 }}>{body}</span>
       </span>
     </button>
   );
@@ -291,11 +292,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-};
+
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

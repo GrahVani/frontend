@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { CalendarClock, Clock3, HeartHandshake, Layers3, RotateCcw, SatelliteDish, Scale, ShieldCheck, Timer, TriangleAlert } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type ScenarioId = "convergent" | "dashaOnly" | "weakPromise" | "exactDate";
 type FocusId = "promise" | "significators" | "twoYes" | "annual" | "ethics";
@@ -229,8 +230,8 @@ export function MarriageDashaTimingFrameworkWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Timing convergence</p>
@@ -246,7 +247,7 @@ export function MarriageDashaTimingFrameworkWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Core timing gates" icon={<Layers3 size={18} />} color={verdict.color}>
             <Toggle active={promiseStrong} color={promiseStrong ? GREEN : GOLD} icon={<ShieldCheck size={18} />} title="Marriage promise is supported" body={promiseStrong ? "Timing has something clean to activate." : "Promise is weak, delayed, or obstructed."} onClick={() => setPromiseStrong((value) => !value)} />
             <Toggle active={significatorDasha} color={significatorDasha ? GREEN : VERMILION} icon={<Timer size={18} />} title="Dasha belongs to marriage significators" body={significatorDasha ? "Venus, 7th-lord, UL/DK, KP, or D9 agent." : "Period lords are unrelated to marriage."} onClick={() => setSignificatorDasha((value) => !value)} />
@@ -256,7 +257,7 @@ export function MarriageDashaTimingFrameworkWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Cross-stream support</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 140px), 1fr))", gap: "0.5rem", marginTop: "0.75rem" }}>
@@ -314,28 +315,28 @@ function TimingFrameworkSvg({
   return (
     <svg viewBox="0 0 780 390" role="img" aria-label="Marriage dasha timing framework diagram" style={{ width: "100%", minHeight: 300, margin: "0.7rem 0" }}>
       <rect x="18" y="18" width="744" height="354" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="390" y="52" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="700">PROMISE PLUS DASHA PLUS TRANSIT BECOMES A WINDOW</text>
+      <text x="390" y="52" textAnchor="middle" fill={GOLD} fontSize="15" fontWeight="700">PROMISE PLUS DASHA PLUS TRANSIT BECOMES A WINDOW</text>
       <line x1="94" y1="145" x2="694" y2="145" stroke={HAIRLINE} strokeWidth="4" />
       {steps.map((step, index) => {
         const selected = focus === step.id;
         const stroke = step.active ? step.color : VERMILION;
         return (
           <g key={step.id}>
-            {index < steps.length - 1 ? <path d={`M ${step.x + 42} 145 L ${steps[index + 1].x - 48} 145`} stroke={stroke} strokeWidth={selected ? 5 : 3} opacity={selected ? 1 : 0.45} /> : null}
-            <circle cx={step.x} cy="145" r={selected ? 43 : 36} fill={OPAQUE_LIGHT_FILL[stroke]} stroke={stroke} strokeWidth={selected ? 4 : 2.5} />
-            <text x={step.x} y="142" textAnchor="middle" fill={stroke} fontSize="11" fontWeight="700">{step.label}</text>
-            <text x={step.x} y="162" textAnchor="middle" fill={INK_MUTED} fontSize="10">{step.active ? "yes" : "no"}</text>
+            {index < steps.length - 1 ? <path d={`M ${step.x + 46} 145 L ${steps[index + 1].x - 52} 145`} stroke={stroke} strokeWidth={selected ? 5 : 3} opacity={selected ? 1 : 0.45} /> : null}
+            <circle cx={step.x} cy="145" r={selected ? 47 : 41} fill={OPAQUE_LIGHT_FILL[stroke]} stroke={stroke} strokeWidth={selected ? 4 : 2.5} />
+            <text x={step.x} y="140" textAnchor="middle" fill={stroke} fontSize="14" fontWeight="700">{step.label}</text>
+            <text x={step.x} y="162" textAnchor="middle" fill={INK_MUTED} fontSize="13">{step.active ? "yes" : "no"}</text>
           </g>
         );
       })}
-      <path d="M 352 266 C 410 224, 468 224, 526 266" fill="none" stroke={transitConfirm ? GREEN : GOLD} strokeWidth="4" strokeDasharray="8 7" />
-      <rect x="90" y="238" width="250" height="56" rx="8" fill={OPAQUE_LIGHT_FILL[significatorDasha ? GREEN : VERMILION]} stroke={significatorDasha ? GREEN : VERMILION} />
-      <text x="215" y="262" textAnchor="middle" fill={significatorDasha ? GREEN : VERMILION} fontSize="12" fontWeight="700">Marriage-significator period</text>
-      <text x="215" y="282" textAnchor="middle" fill={INK_MUTED} fontSize="11">Venus, 7th lord, UL, DK, KP 2-7-11</text>
-      <rect x="540" y="238" width="160" height="56" rx="8" fill={OPAQUE_LIGHT_FILL[exactDate ? VERMILION : GREEN]} stroke={exactDate ? VERMILION : GREEN} />
-      <text x="620" y="262" textAnchor="middle" fill={exactDate ? VERMILION : GREEN} fontSize="12" fontWeight="700">{exactDate ? "date decree" : "window"}</text>
-      <text x="620" y="282" textAnchor="middle" fill={INK_MUTED} fontSize="11">{annualRefine ? "year refined" : "span open"}</text>
-      <text x="390" y="330" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">The dasha activates the promise; transit confirms; annual chart narrows; ethics protects agency.</text>
+      <path d="M 352 270 C 410 224, 468 224, 526 270" fill="none" stroke={transitConfirm ? GREEN : GOLD} strokeWidth="4" strokeDasharray="8 7" />
+      <rect x="90" y="238" width="250" height="60" rx="8" fill={OPAQUE_LIGHT_FILL[significatorDasha ? GREEN : VERMILION]} stroke={significatorDasha ? GREEN : VERMILION} />
+      <text x="215" y="262" textAnchor="middle" fill={significatorDasha ? GREEN : VERMILION} fontSize="15" fontWeight="700">Marriage-significator period</text>
+      <text x="215" y="284" textAnchor="middle" fill={INK_MUTED} fontSize="13">Venus, 7th lord, UL, DK, KP 2-7-11</text>
+      <rect x="540" y="238" width="160" height="60" rx="8" fill={OPAQUE_LIGHT_FILL[exactDate ? VERMILION : GREEN]} stroke={exactDate ? VERMILION : GREEN} />
+      <text x="620" y="262" textAnchor="middle" fill={exactDate ? VERMILION : GREEN} fontSize="15" fontWeight="700">{exactDate ? "date decree" : "window"}</text>
+      <text x="620" y="284" textAnchor="middle" fill={INK_MUTED} fontSize="13">{annualRefine ? "year refined" : "span open"}</text>
+      <text x="390" y="332" textAnchor="middle" fill={INK_SECONDARY} fontSize="14">The dasha activates the promise; transit confirms; annual chart narrows; ethics protects agency.</text>
     </svg>
   );
 }
@@ -355,10 +356,10 @@ function Panel({ title, icon, color, children }: { title: string; icon: ReactNod
 function Toggle({ active, color, icon, title, body, onClick }: { active: boolean; color: string; icon: ReactNode; title: string; body: string; onClick: () => void }) {
   return (
     <button type="button" aria-pressed={active} onClick={onClick} style={toggleStyle(active, color)}>
-      <span style={{ color }}>{icon}</span>
+      <span style={{ color, flexShrink: 0 }}>{icon}</span>
       <span>
-        <span style={{ display: "block", fontWeight: 700 }}>{title}</span>
-        <span>{body}</span>
+        <strong style={{ display: "block", fontWeight: 700, marginBottom: "0.15rem" }}>{title}</strong>
+        <span style={{ color: INK_SECONDARY, lineHeight: 1.45 }}>{body}</span>
       </span>
     </button>
   );
@@ -382,12 +383,6 @@ const cardStyle: CSSProperties = {
   background: SURFACE,
   padding: "1rem",
   boxShadow: "var(--gl-shadow-soft)",
-};
-
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
 };
 
 const eyebrowStyle: CSSProperties = {

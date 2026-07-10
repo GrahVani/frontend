@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { AlertTriangle, BadgeCheck, BriefcaseBusiness, Clock3, GitMerge, Layers3, RotateCcw, Scale, ShieldCheck } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type StreamId = "parashari" | "jaimini" | "kp" | "yogas";
 type Verdict = "yes" | "mixed" | "no";
@@ -161,8 +162,8 @@ export function CareerSynthesisOverviewWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Synthesis pipeline</p>
@@ -178,7 +179,7 @@ export function CareerSynthesisOverviewWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Stream verdicts" icon={<BriefcaseBusiness size={18} />} color={BLUE}>
             <div style={{ display: "grid", gap: "0.65rem" }}>
               {(Object.keys(STREAMS) as StreamId[]).map((stream) => {
@@ -209,7 +210,7 @@ export function CareerSynthesisOverviewWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Synthesis discipline</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -305,7 +306,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "minmax(360px, 1.25fr) minmax(320px, 1fr)",
   gap: "1rem",

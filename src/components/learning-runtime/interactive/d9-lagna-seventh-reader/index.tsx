@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, CircleDot, FileText, GitCompare, HeartHandshake, Orbit, RotateCcw, Scale, ShieldCheck, Sparkles, TriangleAlert } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type ViewMode = "foundation" | "spouse" | "net" | "crosscheck";
 type Strength = "strong" | "mixed" | "weak";
@@ -142,8 +143,8 @@ export function D9LagnaSeventhReader() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Depth reading</p>
@@ -159,7 +160,7 @@ export function D9LagnaSeventhReader() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Set the reading layers" icon={<Scale size={18} />} color={d9Converges ? GREEN : GOLD}>
             <Segmented label="D9 Lagna foundation" value={d9Lagna} options={[["strong", "Strong"], ["mixed", "Mixed"], ["weak", "Weak"]]} colors={{ strong: GREEN, mixed: GOLD, weak: VERMILION }} onChange={(value) => setD9Lagna(value as Strength)} />
             <Segmented label="D9 7th spouse at depth" value={d9Seventh} options={[["strong", "Strong"], ["mixed", "Mixed"], ["weak", "Weak"]]} colors={{ strong: GREEN, mixed: GOLD, weak: VERMILION }} onChange={(value) => setD9Seventh(value as Strength)} />
@@ -173,7 +174,7 @@ export function D9LagnaSeventhReader() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Reading order</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -288,7 +289,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "minmax(360px, 1.25fr) minmax(320px, 1fr)",
   gap: "1rem",

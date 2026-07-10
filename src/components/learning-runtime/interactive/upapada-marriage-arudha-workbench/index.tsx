@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, GitCompare, HeartHandshake, MapPinned, Orbit, RotateCcw, Route, Scale, ShieldCheck, TriangleAlert } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type Focus = "compute" | "meaning" | "compare" | "frame";
 type Support = "strong" | "mixed" | "stressed";
@@ -153,8 +154,8 @@ export function UpapadaMarriageArudhaWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Corroboration grade</p>
@@ -170,7 +171,7 @@ export function UpapadaMarriageArudhaWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Compute the UL" icon={<Route size={18} />} color={BLUE}>
             <label style={{ display: "grid", gap: "0.45rem", color: INK_SECONDARY, fontWeight: 600 }}>
               12th lord distance: {twelfthLordDistance} sign{twelfthLordDistance === 1 ? "" : "s"}
@@ -188,7 +189,7 @@ export function UpapadaMarriageArudhaWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Stream discipline</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -307,11 +308,6 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-};
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, CircleDot, GitCompare, HeartHandshake, Orbit, RotateCcw, Scale, ShieldCheck, Sparkles, TriangleAlert, Venus } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type Dignity = "exalted" | "own" | "neutral" | "debilitated";
 type Support = "strong" | "mixed" | "weak";
@@ -155,8 +156,8 @@ export function D9VenusKarakaWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Confidence grade</p>
@@ -172,7 +173,7 @@ export function D9VenusKarakaWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="D9 Venus condition" icon={<Venus size={18} />} color={dignityColor(dignity)}>
             <Segmented
               label="Dignity in D9"
@@ -197,7 +198,7 @@ export function D9VenusKarakaWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Combine context</p>
           <div style={{ marginTop: "0.75rem" }}>
@@ -342,7 +343,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "minmax(360px, 1.25fr) minmax(320px, 1fr)",
   gap: "1rem",

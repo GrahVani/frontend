@@ -16,6 +16,7 @@ import {
   Sparkles,
   Target,
 } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type StepKey = "identify" | "read" | "crossCheck" | "tier";
 type ScenarioKey = "convergence" | "divergence";
@@ -139,8 +140,8 @@ export function JaiminiAmkCareerCaseWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Case vector</p>
@@ -156,7 +157,7 @@ export function JaiminiAmkCareerCaseWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Scenario" icon={<Layers size={18} />} color={current.color}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               {(Object.keys(SCENARIOS) as ScenarioKey[]).map((key) => (
@@ -182,7 +183,7 @@ export function JaiminiAmkCareerCaseWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Step evidence</p>
           <h3 style={{ margin: "0.15rem 0 0.8rem", color: STEPS[stepIndex].color, fontSize: "1.18rem" }}>{STEPS[stepIndex].label}</h3>
@@ -381,7 +382,7 @@ const cardStyle: CSSProperties = {
   padding: "1rem",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))",
   gap: "1rem",

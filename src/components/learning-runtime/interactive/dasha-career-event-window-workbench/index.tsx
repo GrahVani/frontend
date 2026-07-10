@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { AlertTriangle, BadgeCheck, BriefcaseBusiness, Clock3, Gauge, GitBranch, RotateCcw, SatelliteDish, ShieldCheck, Sparkles, Timer } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type Significator = "tenth" | "amk" | "kp" | "yoga" | "sixth" | "seventh" | "disruptive" | "unrelated";
 type ViewMode = "significators" | "window" | "eventType" | "twoYes";
@@ -141,8 +142,8 @@ export function DashaCareerEventWindowWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Timing pipeline</p>
@@ -160,7 +161,7 @@ export function DashaCareerEventWindowWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Select the period lord" icon={<Timer size={18} />} color={current.color}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 135px), 1fr))", gap: "0.5rem" }}>
               {(Object.keys(SIGNIFICATORS) as Significator[]).map((key) => {
@@ -178,7 +179,7 @@ export function DashaCareerEventWindowWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Window controls</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -292,7 +293,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "minmax(360px, 1.25fr) minmax(320px, 1fr)",
   gap: "1rem",

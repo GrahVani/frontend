@@ -33,6 +33,7 @@ export interface SourceRef {
 export interface InteractiveDescriptor {
   enabled: boolean;
   componentType?: string;
+  component?: string;
   specFile?: string;
   astroEngineEndpoints?: string[];
   fallbackIfOffline?: string;

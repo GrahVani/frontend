@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, CircleDot, GitCompare, HeartHandshake, Link2, Orbit, RotateCcw, Scale, ShieldCheck, Sparkles, TriangleAlert, Venus } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type Factor = "venus" | "seventhLord" | "lagna";
 type Condition = "sound" | "mixed" | "afflicted";
@@ -175,8 +176,8 @@ export function VargottamaMarriageConfirmationWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Confirmation grade</p>
@@ -192,7 +193,7 @@ export function VargottamaMarriageConfirmationWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Choose marriage factor" icon={<HeartHandshake size={18} />} color={FACTOR_COPY[factor].color}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.45rem" }}>
               {(Object.keys(FACTOR_COPY) as Factor[]).map((item) => (
@@ -220,7 +221,7 @@ export function VargottamaMarriageConfirmationWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Method guards</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -358,7 +359,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "minmax(360px, 1.25fr) minmax(320px, 1fr)",
   gap: "1rem",

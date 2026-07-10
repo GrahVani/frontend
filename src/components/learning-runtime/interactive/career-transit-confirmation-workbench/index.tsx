@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { AlertTriangle, BriefcaseBusiness, Clock3, Compass, GitBranch, Orbit, RotateCcw, SatelliteDish, Scale, ShieldCheck, Sparkles, Target, Timer } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type ViewMode = "trigger" | "window" | "convergence" | "ethics";
 type TransitPlanet = "jupiter" | "saturn" | "rahu" | "ketu" | "dasha-lord";
@@ -230,8 +231,8 @@ export function CareerTransitConfirmationWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Timing convergence</p>
@@ -249,7 +250,7 @@ export function CareerTransitConfirmationWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Worked presets" icon={<Compass size={18} />} color={preset === "promotion" ? GREEN : GOLD}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               <button type="button" aria-pressed={preset === "promotion"} onClick={() => loadPreset("promotion")} style={buttonStyle(preset === "promotion", GREEN)}>
@@ -277,7 +278,7 @@ export function CareerTransitConfirmationWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Transit trigger</p>
           <div style={{ display: "grid", gap: "0.85rem", marginTop: "0.75rem" }}>
@@ -534,7 +535,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "minmax(360px, 1.25fr) minmax(320px, 1fr)",
   gap: "1rem",

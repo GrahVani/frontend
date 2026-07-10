@@ -1,0 +1,1462 @@
+/**
+ * Dynamic interactive registry — auto-generated.
+ *
+ * Each entry is a next/dynamic() call with a STATIC import path.
+ * Turbopack treats each as an independent chunk boundary and only
+ * compiles the single component the learner actually opens.
+ *
+ * DO NOT EDIT — regenerate with:  node generate-dynamic-registry.mjs
+ */
+
+import dynamic from "next/dynamic";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const DYNAMIC_REGISTRY: Record<string, any> = {
+  "vedanga-body-map": dynamic(() => import("./vedanga-body-map").then(m => ({ default: m.VedangaBodyMap })), { ssr: false }),
+  // The relationship diagram is the FULL version Lesson 2 declares it needs:
+  // cluster overlay + Jyotiá¹£a interlocks + sÄá¹…ga closing panel. Lesson 1 still
+  // uses the body-map (sage figure with six luminous body parts) â€” its lesson
+  // page route renders <VedangaBodyMap/> directly via the `scenes` prop and
+  // ignores the registry mapping. Future lessons in this chapter family pick
+  // up the relationship diagram via this registry entry.
+  "vedanga-relationship-diagram": dynamic(() => import("./vedanga-relationship-diagram").then(m => ({ default: m.VedangaRelationshipDiagram })), { ssr: false }),
+  "vedanga-vs-vedanta-comparator": dynamic(() => import("./vedanga-vs-vedanta-comparator").then(m => ({ default: m.VedangaVsVedantaComparator })), { ssr: false }),
+  "vedic-ecosystem-orbital": dynamic(() => import("./vedic-ecosystem-orbital").then(m => ({ default: m.VedicEcosystemOrbital })), { ssr: false }),
+  "sloka-recitation-frame": dynamic(() => import("./sloka-recitation-frame").then(m => ({ default: m.SlokaRecitationFrame })), { ssr: false }),
+  // Lesson 2's Â§7 flagship: Jyotiá¹£a-SÄá¹…ga Synthesis Hub (hub-and-spoke
+  // interlock viz + sÄá¹…ga scenario explorer in a two-tab composition).
+  "jyotisha-sanga-hub": dynamic(() => import("./jyotisha-sanga-hub").then(m => ({ default: m.JyotishaSangaHub })), { ssr: false }),
+  // Lesson 3's Â§4 explorer: Jyotiá¹£a vs Western tropical vs sun-sign pop
+  // comparator â€” six discriminating dimensions Ã— three tradition-categories.
+  "jyotisha-vs-western-vs-pop-comparator": dynamic(() => import("./jyotisha-vs-western-vs-pop-comparator").then(m => ({ default: m.JyotishaVsWesternVsPopComparator })), { ssr: false }),
+  // Lesson 3's Â§7 flagship: Disambiguation Dojo (Indo-Hellenistic lineage
+  // timeline + ayanÄá¹Å›a drift slider + 5-scenario disambiguation drill in
+  // a two-tab composition).
+  "disambiguation-dojo": dynamic(() => import("./disambiguation-dojo").then(m => ({ default: m.DisambiguationDojo })), { ssr: false }),
+  // Lesson 4's Â§4 explorer: Karma Typology Explorer â€” 4-fold karma cycle
+  // SVG diagram with visibly-clickable karma-type nodes + side-panel
+  // active-detail (definition, etymology, properties, jyotiá¹£a-sees,
+  // agent-control).
+  "karma-typology-explorer": dynamic(() => import("./karma-typology-explorer").then(m => ({ default: m.KarmaTypologyExplorer })), { ssr: false }),
+  // Lesson 4's Â§7 flagship: Karma-Prediction Dojo (two-tab â€” Cycle in
+  // Motion with overlay toggles + Indication Translator skill drill with
+  // 5 deterministic-to-indication translation scenarios).
+  "karma-prediction-dojo": dynamic(() => import("./karma-prediction-dojo").then(m => ({ default: m.KarmaPredictionDojo })), { ssr: false }),
+  // Lesson 2.1's Â§4 explorer: Historical Timeline â€” horizontal SVG with 12
+  // major Jyotiá¹£a authors/texts staggered on the academic-Indology
+  // chronological axis. Traditional-dating overlay shows divergences.
+  "historical-timeline": dynamic(() => import("./historical-timeline").then(m => ({ default: m.HistoricalTimeline })), { ssr: false }),
+  // Lesson 2.1's Â§7 flagship: Jyotiá¹£a Citation Dojo (two-tab â€” Dating
+  // Divergence Atlas + Citation Discipline Drill with 5 scenarios).
+  "jyotisha-citation-dojo": dynamic(() => import("./jyotisha-citation-dojo").then(m => ({ default: m.JyotishaCitationDojo })), { ssr: false }),
+  // Lesson 2.2's Â§4 explorer: BPHS Recension Comparator â€” ParÄÅ›ara duality
+  // diptych + 10 prakaraá¹‡a-plates with Santhanam adhyÄya ranges and
+  // cross-recension notes.
+  "bphs-recension-comparator": dynamic(() => import("./bphs-recension-comparator").then(m => ({ default: m.BphsRecensionComparator })), { ssr: false }),
+  // Lesson 2.2's Â§7 flagship: BPHS Citation Dojo â€” VimÅ›ottarÄ« verse cross-
+  // reference + 5-scenario BPHS citation discipline drill.
+  "bphs-citation-dojo": dynamic(() => import("./bphs-citation-dojo").then(m => ({ default: m.BphsCitationDojo })), { ssr: false }),
+  // Lesson 2.3's Â§4 explorer: VarÄhamihira Skandha Coverage Explorer â€”
+  // date-anchor hero + 3 skandha plates (horÄ/saá¹hitÄ/gaá¹‡ita) + dating
+  // methodology + both-anchors framework comparison diptych.
+  "varahamihira-skandha-coverage-explorer": dynamic(() => import("./varahamihira-skandha-coverage-explorer").then(m => ({ default: m.VarahamihiraSkandhaCoverageExplorer })), { ssr: false }),
+  // Lesson 2.3's Â§7 flagship: VarÄhamihira Synthesis Dojo â€” author cross-
+  // dating (5 authors relative to VarÄhamihira anchor) + 5-scenario drill.
+  "varahamihira-synthesis-dojo": dynamic(() => import("./varahamihira-synthesis-dojo").then(m => ({ default: m.VarahamihiraSynthesisDojo })), { ssr: false }),
+  // Lesson 2.4's Â§4 explorer: Medieval Codifier Relative-Dating Explorer â€”
+  // 3-layer ParÄÅ›ari-tradition lineage + 4 codifier plates + compounding
+  // uncertainty visualization.
+  "medieval-codifier-relative-dating-explorer": dynamic(() => import("./medieval-codifier-relative-dating-explorer").then(m => ({ default: m.MedievalCodifierRelativeDatingExplorer })), { ssr: false }),
+  // Lesson 2.4's Â§7 flagship: Medieval Synthesis Dojo â€” 5-scenario drill
+  // on medieval-codifier dating + citation discipline.
+  "medieval-synthesis-dojo": dynamic(() => import("./medieval-synthesis-dojo").then(m => ({ default: m.MedievalSynthesisDojo })), { ssr: false }),
+  // Lesson 2.5's Â§4 explorer: ParÄÅ›ari â‡„ JaiminÄ« Parallel-Tradition Explorer
+  // â€” diptych hero + 4-layer side-by-side comparison + sÅ«tra-vs-verse genre
+  // + 5 distinctive JaiminÄ« doctrines + same-JaiminÄ« identity question.
+  "parashari-jaimini-parallel-tradition-explorer": dynamic(() => import("./parashari-jaimini-parallel-tradition-explorer").then(m => ({ default: m.ParashariJaiminiParallelTraditionExplorer })), { ssr: false }),
+  // Lesson 2.5's Â§7 flagship: JaiminÄ« Second-Tradition Dojo â€” two-tab
+  // (Doctrinal-Pair Atlas across 6 pairs + 5-scenario tradition-attribution
+  // drill).
+  "jaimini-second-tradition-dojo": dynamic(() => import("./jaimini-second-tradition-dojo").then(m => ({ default: m.JaiminiSecondTraditionDojo })), { ssr: false }),
+  "jaimini-tradition-map": dynamic(() => import("./jaimini-tradition-map").then(m => ({ default: m.JaiminiTraditionMap })), { ssr: false }),
+  "sutra-interpretation-lab": dynamic(() => import("./sutra-interpretation-lab").then(m => ({ default: m.SutraInterpretationLab })), { ssr: false }),
+  "jaimini-interpreter-comparator": dynamic(() => import("./jaimini-interpreter-comparator").then(m => ({ default: m.JaiminiInterpreterComparator })), { ssr: false }),
+  "cara-karaka-ranker": dynamic(() => import("./cara-karaka-ranker").then(m => ({ default: m.CaraKarakaRanker })), { ssr: false }),
+  "cara-karaka-role-assigner": dynamic(() => import("./cara-karaka-role-assigner").then(m => ({ default: m.CaraKarakaRoleAssigner })), { ssr: false }),
+  "amatyakaraka-career-workbench": dynamic(() => import("./amatyakaraka-career-workbench").then(m => ({ default: m.AmatyakarakaCareerWorkbench })), { ssr: false }),
+  "atmakaraka-king-lens": dynamic(() => import("./atmakaraka-king-lens").then(m => ({ default: m.AtmakarakaKingLens })), { ssr: false }),
+  "atmakaraka-saturn-king-lens-lab": dynamic(() => import("./atmakaraka-saturn-king-lens-lab").then(m => ({ default: m.AtmakarakaSaturnKingLensLab })), { ssr: false }),
+  "karaka-cross-validation": dynamic(() => import("./karaka-cross-validation").then(m => ({ default: m.KarakaCrossValidation })), { ssr: false }),
+  "amk-tenth-lord-comparison-workbench": dynamic(() => import("./amk-tenth-lord-comparison-workbench").then(m => ({ default: m.AmkTenthLordComparisonWorkbench })), { ssr: false }),
+  "cara-dasha-mechanism": dynamic(() => import("./cara-dasha-mechanism").then(m => ({ default: m.CaraDashaMechanism })), { ssr: false }),
+  "cara-period-calculator": dynamic(() => import("./cara-period-calculator").then(m => ({ default: m.CaraPeriodCalculator })), { ssr: false }),
+  "cara-sequence-builder": dynamic(() => import("./cara-sequence-builder").then(m => ({ default: m.CaraSequenceBuilder })), { ssr: false }),
+  "cara-dasha-timeline": dynamic(() => import("./cara-dasha-timeline").then(m => ({ default: m.CaraDashaTimeline })), { ssr: false }),
+  "dual-dasha-timeline": dynamic(() => import("./dual-dasha-timeline").then(m => ({ default: m.DualDashaTimeline })), { ssr: false }),
+  // Lesson 2.6's Â§4 explorer: Four-Stream Landscape Explorer â€” hero diptych
+  // (4 streams equal-weight) + modern-primary-vs-revival distinction +
+  // KP founder plate + 5 KP contributions + Lal Kitab founder plate + 6 LK
+  // contributions + 3 modern-primary status criteria.
+  "four-stream-landscape-explorer": dynamic(() => import("./four-stream-landscape-explorer").then(m => ({ default: m.FourStreamLandscapeExplorer })), { ssr: false }),
+  // Lesson 2.6's Â§7 flagship: Four-Stream Synthesis Dojo â€” two-tab
+  // (Stream Landscape Matrix with classification-filter + cross-stream topic
+  // deep-dive across 4 streams + 5-scenario Evaluative Reasoning Drill).
+  // This is the Chapter-2 capstone Bloom-Evaluate practice surface.
+  "four-stream-synthesis-dojo": dynamic(() => import("./four-stream-synthesis-dojo").then(m => ({ default: m.FourStreamSynthesisDojo })), { ssr: false }),
+  // Lesson 3.1's Â§4 explorer: Three Skandha Curriculum Map â€” L2 pattern
+  // (triangle painting LEFT + clickable skandha rows RIGHT).
+  "three-skandha-curriculum-map": dynamic(() => import("./three-skandha-curriculum-map").then(m => ({ default: m.ThreeSkandhaCurriculumMap })), { ssr: false }),
+  // Lesson 3.1's Â§7 flagship: Three Skandha Synthesis Dojo â€” two-tab
+  // (Stream Ã— Skandha Matrix + 5-scenario Evaluative Drill).
+  "three-skandha-synthesis-dojo": dynamic(() => import("./three-skandha-synthesis-dojo").then(m => ({ default: m.ThreeSkandhaSynthesisDojo })), { ssr: false }),
+  // Lesson 3.2's Â§4 explorer: Seven Sub-Branches Explorer â€” L2 pattern
+  // (manuscript diagram LEFT + clickable sub-branch rows RIGHT).
+  "seven-sub-branches-explorer": dynamic(() => import("./seven-sub-branches-explorer").then(m => ({ default: m.SevenSubBranchesExplorer })), { ssr: false }),
+  // Lesson 3.2's Â§7 flagship: Seven Sub-Branches Synthesis Dojo â€” two-tab
+  // (Stream Ã— Sub-Branch Matrix + 5-scenario Evaluative Drill).
+  "seven-sub-branches-synthesis-dojo": dynamic(() => import("./seven-sub-branches-synthesis-dojo").then(m => ({ default: m.SevenSubBranchesSynthesisDojo })), { ssr: false }),
+  // Lesson 3.3's Â§4 explorer: Grahvani Coverage Matrix Explorer â€” L2 pattern
+  // (navigational map LEFT + stream-filtered coverage cards RIGHT).
+  "grahvani-coverage-matrix-explorer": dynamic(() => import("./grahvani-coverage-matrix-explorer").then(m => ({ default: m.GrahvaniCoverageMatrixExplorer })), { ssr: false }),
+  // Lesson 3.3's Â§7 flagship: Grahvani Coverage Synthesis Dojo â€” two-tab
+  // (Full 4Ã—7 Coverage Matrix + 5-scenario Evaluative Drill).
+  "grahvani-coverage-synthesis-dojo": dynamic(() => import("./grahvani-coverage-synthesis-dojo").then(m => ({ default: m.GrahvaniCoverageSynthesisDojo })), { ssr: false }),
+  // Lesson 4.1's Â§4 explorer: Regional Schools Explorer â€” L2 pattern
+  // (map image LEFT + tabbed school explorer RIGHT with stream concentrations).
+  "regional-schools-explorer": dynamic(() => import("./regional-schools-explorer").then(m => ({ default: m.RegionalSchoolsExplorer })), { ssr: false }),
+  // Lesson 4.1's Â§7 flagship: Regional Schools Synthesis Dojo â€” two-tab
+  // (6Ã—4 Regional Schools Matrix + teacher lookup + 5-scenario Evaluative Drill).
+  "regional-schools-synthesis-dojo": dynamic(() => import("./regional-schools-synthesis-dojo").then(m => ({ default: m.RegionalSchoolsSynthesisDojo })), { ssr: false }),
+  // Lesson 4.2's Â§4 explorer: Lineage Threads Network Explorer â€” L2 pattern
+  // (network diagram LEFT + tabbed lineage explorer RIGHT with sub-lineages).
+  "lineage-threads-network-explorer": dynamic(() => import("./lineage-threads-network-explorer").then(m => ({ default: m.LineageThreadsNetworkExplorer })), { ssr: false }),
+  // Lesson 4.2's Â§7 flagship: Lineage Threads Synthesis Dojo â€” two-tab
+  // (Lineage Comparison Matrix + 5-scenario Evaluative Drill).
+  "lineage-threads-synthesis-dojo": dynamic(() => import("./lineage-threads-synthesis-dojo").then(m => ({ default: m.LineageThreadsSynthesisDojo })), { ssr: false }),
+  // Lesson 4.3's Â§4 explorer: Three-Lineage Comparison Chart Analyzer â€” L2 pattern
+  // (chart diagram LEFT + tabbed three-lineage analyzer RIGHT + convergence/divergence toggle).
+  "three-lineage-comparison-chart-analyzer": dynamic(() => import("./three-lineage-comparison-chart-analyzer").then(m => ({ default: m.ThreeLineageComparisonChartAnalyzer })), { ssr: false }),
+  // Lesson 4.3's Â§7 flagship: Lineage Matters Synthesis Dojo â€” two-tab
+  // (Integrated Synthesis View + 5-scenario Evaluative Drill).
+  "lineage-matters-synthesis-dojo": dynamic(() => import("./lineage-matters-synthesis-dojo").then(m => ({ default: m.LineageMattersSynthesisDojo })), { ssr: false }),
+  // Lesson 2.1.1's Â§7 interactive: Zodiac Reference Frame Explorer â€”
+  // Earth-centered diagram showing sidereal vs tropical zodiacs with
+  // clickable hotspots (sidereal zero, tropical zero, vernal equinox,
+  // summer solstice, ayanÄá¹Å›a gap, Spica, Earth's axis, ecliptic,
+  // celestial equator).
+  "zodiac-reference-frame-explorer": dynamic(() => import("./zodiac-reference-frame-explorer").then(m => ({ default: m.ZodiacReferenceFrameExplorer })), { ssr: false }),
+  // Lesson 2.1.2's Â§7 interactive: Precession Visualizer â€” clickable SVG
+  // diagram with epoch slider, by-hand calculator, and classical-vs-modern
+  // comparison tabs.
+  "precession-visualizer": dynamic(() => import("./precession-visualizer").then(m => ({ default: m.PrecessionVisualizer })), { ssr: false }),
+  // Lesson 2.1.3's Â§7 interactive: Zodiac Tradition Reasoning Comparator â€”
+  // side-by-side comparison of Vedic-sidereal vs Western-tropical reasoning
+  // across four dimensions (doctrinal, observational, historical, comparative).
+  "zodiac-tradition-reasoning-comparator": dynamic(() => import("./zodiac-tradition-reasoning-comparator").then(m => ({ default: m.ZodiacTraditionReasoningComparator })), { ssr: false }),
+  "zodiac-tradition-comparator": dynamic(() => import("./zodiac-tradition-comparator"), { ssr: false }),
+  // Lesson 2.1.4's Â§7 interactive: Tropical-Sidereal Conversion Calculator â€”
+  // birth-date Sun-sign calculator + longitude converter showing graha-in-rÄÅ›i
+  // shifts, daÅ›Ä consequences, and naká¹£atra alignment effects.
+  "tropical-sidereal-conversion-calculator": dynamic(() => import("./tropical-sidereal-conversion-calculator").then(m => ({ default: m.TropicalSiderealConversionCalculator })), { ssr: false }),
+  // Lesson 2.2.1's Â§7 interactive: AyanÄá¹Å›a Definition Explorer â€”
+  // 4-tab interactive: Definition (visual gap diagram + conversion calculator),
+  // Etymology (Sanskrit compound breakdown), 7 Conventions (comparison table),
+  // Stream Matcher (stream â†’ ayanÄá¹Å›a mapping).
+  "ayanamsha-definition-explorer": dynamic(() => import("./ayanamsha-definition-explorer").then(m => ({ default: m.AyanamshaDefinitionExplorer })), { ssr: false }),
+  "lahiri-ayanamsha-explorer": dynamic(() => import("./lahiri-ayanamsha-explorer").then(m => ({ default: m.LahiriAyanamshaExplorer })), { ssr: false }),
+  "lahiri-by-hand-step-by-step-calculator": dynamic(() => import("./lahiri-by-hand-step-by-step-calculator").then(m => ({ default: m.LahiriByHandStepByStepCalculator })), { ssr: false }),
+  "krishnamurti-ayanamsha-explorer": dynamic(() => import("./krishnamurti-ayanamsha-explorer").then(m => ({ default: m.KrishnamurtiAyanamshaExplorer })), { ssr: false }),
+  "ayanamsha-comparator": dynamic(() => import("./krishnamurti-ayanamsha-explorer").then(m => ({ default: m.KrishnamurtiAyanamshaExplorer })), { ssr: false }),
+  // Lesson 2.2.5's Â§7 interactive: Comparative AyanÄá¹Å›a Explorer â€” side-by-side
+  // comparison of all 7 conventions, convention detail profiles, alignment-epoch
+  // timeline, practitioner-community mapping, and multi-ayanÄá¹Å›a honesty discipline.
+  "comparative-ayanamsha-explorer": dynamic(() => import("./comparative-ayanamsha-explorer").then(m => ({ default: m.ComparativeAyanamshaExplorer })), { ssr: false }),
+  // Lesson 2.2.6's Â§7 interactive: AyanÄá¹Å›a Decision Framework Flowchart â€”
+  // scenario â†’ decision mapping, per-context rules table, multi-lineage synthesis,
+  // do-not-mix visualiser, software verification, and Chapter 2 capstone panel.
+  "ayanamsha-decision-framework-flowchart": dynamic(() => import("./ayanamsha-decision-framework-flowchart").then(m => ({ default: m.AyanamshaDecisionFrameworkFlowchart })), { ssr: false }),
+  // Lesson 2.3.1's Â§9 interactive: Yuga Proportion Visualiser â€” three-mode
+  // proportional bar visualiser (proportion / absolute-duration / saá¹dhyÄ)
+  // with hover/click detail panels and embedded formative checkpoints.
+  "yuga-proportion-visualiser": dynamic(() => import("./yuga-proportion-visualiser").then(m => ({ default: m.YugaProportionVisualiser })), { ssr: false }),
+  // Lesson 2.3.2's Â§10 interactive: Yuga Cycle Explorer â€” three-zoom-level
+  // visual scrubber (MahÄ-Yuga / Manvantara / Kalpa) with human/divya toggle,
+  // present-epoch marker, and modern cosmology benchmarks.
+  "yuga-cycle-explorer": dynamic(() => import("./yuga-cycle-explorer").then(m => ({ default: m.YugaCycleExplorer })), { ssr: false }),
+  // Lesson 2.3.3's Â§9 interactive: Traditional vs Academic Dating Comparator â€”
+  // three-position side-by-side (Traditional Vedic / Yukteshwar / Academic-Indology)
+  // with synthesis honesty dial.
+  "traditional-vs-academic-dating-comparator": dynamic(() => import("./traditional-vs-academic-dating-comparator").then(m => ({ default: m.TraditionalVsAcademicDatingComparator })), { ssr: false }),
+  // Lesson 2.3.4's Â§10 interactive: Yuga Dependence Classifier â€” scenario-based
+  // yuga-dependent vs yuga-independent classification drill with three difficulty levels.
+  "yuga-dependence-classifier": dynamic(() => import("./yuga-dependence-classifier").then(m => ({ default: m.YugaDependenceClassifier })), { ssr: false }),
+  // Lesson 2.4.1's Â§9 interactive: Day-Type Comparator â€” side-by-side comparison
+  // of four day-types (sÄvana / sidereal / lunar / solar) with operational-scope quiz.
+  "day-type-comparator": dynamic(() => import("./day-type-comparator").then(m => ({ default: m.DayTypeComparator })), { ssr: false }),
+  // Lesson 2.4.2's Â§10 interactive: Sunrise at Any Latitude â€” 7-step sunrise
+  // computation calculator with edge-case detection (polar day/night) and
+  // worked-example library (Mumbai, Delhi, Singapore).
+  "sunrise-at-any-latitude": dynamic(() => import("./sunrise-at-any-latitude").then(m => ({ default: m.SunriseAtAnyLatitude })), { ssr: false }),
+  // Lesson 2.4.3's Â§8 interactive: Sidereal Day Explorer â€” top-down Earth view
+  // with time-scrubber, differential visualisation (~3m 56s), annual accumulation,
+  // and operational-context picker.
+  "sidereal-day-explorer": dynamic(() => import("./sidereal-day-explorer").then(m => ({ default: m.SiderealDayExplorer })), { ssr: false }),
+  // Lesson 2.4.4's Â§10 interactive: Tithi from Sun-Moon â€” longitude scrubbers,
+  // circular elongation arc visualisation, tithi computation, variable-duration
+  // mode, and edge-case detection (ká¹£aya/vá¹›ddhi tithi).
+  "tithi-from-sun-moon": dynamic(() => import("./tithi-from-sun-moon").then(m => ({ default: m.TithiFromSunMoon })), { ssr: false }),
+  // Lesson 2.4.5's Â§10 interactive: Saá¹…krÄnti Tracker â€” Sun's annual journey
+  // through 12 rÄÅ›is with UttarÄyaá¹‡a/Daká¹£iá¹‡Äyana distinction, sidereal-vs-tropical
+  // toggle, multi-century drift visualisation, and festival overlay.
+  "sankranti-tracker": dynamic(() => import("./sankranti-tracker").then(m => ({ default: m.SankrantiTracker })), { ssr: false }),
+  // Lesson 3.1.1's Â§4 explorer: Tithi Angle Visualizer â€” circular Sun-Moon
+  // orbit with 12Â° segment overlay + real-time tithi computation + paká¹£a
+  // indicator + paÃ±cÄá¹…ga reading panel.
+  "tithi-angle-visualizer": dynamic(() => import("./tithi-angle-visualizer").then(m => ({ default: m.TithiAngleVisualizer })), { ssr: false }),
+  "tithi-as-12-degrees-explorer": dynamic(() => import("./tithi-as-12-degrees-explorer").then(m => ({ default: m.TithiAs12DegreesExplorer })), { ssr: false }),
+  // Lesson 3.1.1's Â§7 flagship: Tithi Calculator Dojo â€” step-by-step formula
+  // breakdown with editable Sun/Moon longitudes + preset scenarios + elapsed
+  // fraction visualisation.
+  "tithi-calculator-dojo": dynamic(() => import("./tithi-calculator-dojo").then(m => ({ default: m.TithiCalculatorDojo })), { ssr: false }),
+  // Lesson 3.1.2's Â§7 flagship: Tithi-Deity Wheel â€” circular 30-tithi visual
+  // explorer with click-for-attributes, quality-filter highlight, and
+  // festival-major badge system.
+  "tithi-deity-wheel": dynamic(() => import("./tithi-deity-wheel").then(m => ({ default: m.TithiDeityWheel })), { ssr: false }),
+  // Lesson 3.1.1's Â§4 sub-component: Tithi Context Matcher â€” scenario-based
+  // discrimination drill for paÃ±cÄá¹…ga-tithi vs astronomical-instantaneous-tithi.
+  "tithi-context-matcher": dynamic(() => import("./tithi-context-matcher").then(m => ({ default: m.TithiContextMatcher })), { ssr: false }),
+  // Lesson 3.1.2's Â§4 explorer: Åšukla Tithi Strip â€” horizontal scrollable
+  // enumeration of the 15 Å›ukla paká¹£a tithis with deity, quality, and
+  // festival cards.
+  "shukla-tithi-strip": dynamic(() => import("./shukla-tithi-strip").then(m => ({ default: m.ShuklaTithiStrip })), { ssr: false }),
+  // Lesson 3.1.3's Â§7 flagship: Ká¹›á¹£á¹‡a Festival Timeline â€” vertical timeline
+  // of the 15 ká¹›á¹£á¹‡a paká¹£a tithis with festival-major highlights, Pitá¹› Paká¹£a
+  // band, and click-to-reveal detail panel.
+  "krishna-festival-timeline": dynamic(() => import("./krishna-festival-timeline").then(m => ({ default: m.KrishnaFestivalTimeline })), { ssr: false }),
+  // M3-C1-L1's Â§7 flagship: PaÃ±cÄá¹…ga Builder â€” computes all 5 limbs
+  // (tithi + vÄra + naká¹£atra + yoga + karaá¹‡a) for any date with visual diagram.
+  "pancanga-builder": dynamic(() => import("./pancanga-builder").then(m => ({ default: m.PancangaBuilder })), { ssr: false }),
+  // Lesson 23.1.2 interactive: Panchanga Five-Limb Framework -- limb
+  // definitions, derivation hierarchy, and trade-off aggregation.
+  "panchanga-five-limb-framework": dynamic(() => import("./panchanga-five-limb-framework").then(m => ({ default: m.PanchangaFiveLimbFramework })), { ssr: false }),
+  // Lesson 23.1.3 interactive: Muhurta Text Corpus Navigator -- classical
+  // source layers, attribution discipline, and reading sequence.
+  "muhurta-text-corpus-navigator": dynamic(() => import("./muhurta-text-corpus-navigator").then(m => ({ default: m.MuhurtaTextCorpusNavigator })), { ssr: false }),
+  // Lesson 23.1.4 interactive: Muhurta Comparative Position Explorer --
+  // stream-variant inspector, shared-principles reference, sva-dharma framework.
+  "muhurta-comparative-position-explorer": dynamic(() => import("./muhurta-comparative-position-explorer").then(m => ({ default: m.MuhurtaComparativePositionExplorer })), { ssr: false }),
+  // Lesson 23.2.1 interactive: Tithi Classification Explorer --
+  // five-fold matcher, 30-tithi wheel, scenario screener, integration workflow.
+  "tithi-classification-explorer": dynamic(() => import("./tithi-classification-explorer").then(m => ({ default: m.TithiClassificationExplorer })), { ssr: false }),
+  // Lesson 23.2.2 interactive: Vara Lord Effects Explorer --
+  // weekday-event matcher, lord reference cards, scenario screener, integration workflow.
+  "vara-lord-effects-explorer": dynamic(() => import("./vara-lord-effects-explorer").then(m => ({ default: m.VaraLordEffectsExplorer })), { ssr: false }),
+  // Lesson 23.2.3 interactive: Nakshatras Categorized Explorer --
+  // category-event matcher, category reference cards, 27-nakshatra map, scenario screener, integration workflow.
+  "nakshatras-categorized-explorer": dynamic(() => import("./nakshatras-categorized-explorer").then(m => ({ default: m.NakshatrasCategorizedExplorer })), { ssr: false }),
+  // Lesson 3.1.4's Â§7 flagship: NandÄ-BhadrÄ-JayÄ-RiktÄ-PÅ«rá¹‡Ä Classifier â€”
+  // quality-event matcher with contextual-quality discipline override visualization.
+  "nanda-bhadra-jaya-rikta-purna-classifier": dynamic(() => import("./nanda-bhadra-classifier").then(m => ({ default: m.NandaBhadraClassifier })), { ssr: false }),
+  // Lesson 3.1.5's Â§7 flagship: AmÄnta-PÅ«rá¹‡imÄnta Converter â€” paká¹£a-month converter,
+  // festival cross-reference cards, and regional identifier.
+  "amanta-purnimanta-converter": dynamic(() => import("./amanta-purnimanta-converter").then(m => ({ default: m.AmantaPurnimantaConverter })), { ssr: false }),
+  // Lesson 23.1.1 interactive: Muhurta Concept Scope -- 48-minute
+  // time-unit grid and discipline-scope classifier.
+  "muhurta-concept-scope": dynamic(() => import("./muhurta-concept-scope").then(m => ({ default: m.MuhurtaConceptScope })), { ssr: false }),
+  // Lesson 23.6.3 interactive: M23 Closure -- cumulative module synthesis
+  // with chapter wheel, hook timeline, self-assessment, and ongoing-development.
+  "m23-closure": dynamic(() => import("./m23-closure").then(m => ({ default: m.M23Closure })), { ssr: false }),
+  // Lesson 23.6.2 interactive: Muhurta Decision Framework -- stakes-calibrated
+  // engagement with decision-tree, stakes gauge, case files, and method matrix.
+  "muhurta-decision-framework": dynamic(() => import("./muhurta-decision-framework").then(m => ({ default: m.MuhurtaDecisionFramework })), { ssr: false }),
+  // Lesson 23.6.1 interactive: Muhurta Honest Handling -- cumulative
+  // honest-handling synthesis across M23: rarity dial, case files,
+  // daivajna wheel, instance map, and common-mistake gallery.
+  "muhurta-honest-handling": dynamic(() => import("./muhurta-honest-handling").then(m => ({ default: m.MuhurtaHonestHandling })), { ssr: false }),
+  // Lesson 23.5.1 interactive: Panchaka Cancellation -- 27-nakshatra wheel,
+  // pañca-niṣiddha-karma case files, distinction drill, and mitigation panel.
+  "panchaka-cancellation": dynamic(() => import("./panchaka-cancellation").then(m => ({ default: m.PanchakaCancellation })), { ssr: false }),
+  // Lesson 23.5.2 interactive: Rāhu-Kāla + Yamagaṇḍa + Gulika-Kāla explorer —
+  // 8-portion daylight wheel, 24h timeline, case-file verdict drill, 7-day
+  // mnemonic pattern table, and seasonal-duration variance explorer.
+  "rahu-kala-yamaganda-explorer": dynamic(() => import("./rahu-kala-yamaganda-explorer").then(m => ({ default: m.RahuKalaYamagandaExplorer })), { ssr: false }),
+  // Lesson 3.1.6's Â§7 flagship: Tithi-MuhÅ«rta Introductory Judgment â€” scenario-based
+  // muhÅ«rta quality trainer with multi-element synthesis preview.
+  "tithi-muhurta-introductory-judgment": dynamic(() => import("./tithi-muhurta-introductory-judgment").then(m => ({ default: m.TithiMuhurtaIntroductoryJudgment })), { ssr: false }),
+  // Lesson 3.2.1's Â§4 explorer: VÄra-Graha Wheel â€” circular 7-segment visual
+  // explorer with click-for-attributes, element-filter highlight, and
+  // planetary-type filter system.
+  "vara-graha-wheel": dynamic(() => import("./vara-graha-wheel").then(m => ({ default: m.VaraGrahaWheel })), { ssr: false }),
+  // Lesson 3.2.2's Â§7 flagship: Chaldean Planetary HorÄ Explorer â€” two-panel
+  // composition (Chaldean order strip + horÄ sequence generator) with
+  // 24 mod 7 = 3 principle explanation.
+  "chaldean-planetary-hora-explorer": dynamic(() => import("./chaldean-planetary-hora-explorer").then(m => ({ default: m.ChaldeanPlanetaryHoraExplorer })), { ssr: false }),
+  "chaldean-letter-table-explorer": dynamic(() => import("./chaldean-letter-table-explorer").then(m => ({ default: m.ChaldeanLetterTableExplorer })), { ssr: false }),
+  "pythagorean-letter-table-explorer": dynamic(() => import("./pythagorean-letter-table-explorer").then(m => ({ default: m.PythagoreanLetterTableExplorer })), { ssr: false }),
+  "vedic-anka-letter-table-explorer": dynamic(() => import("./vedic-anka-letter-table-explorer").then(m => ({ default: m.VedicAnkaLetterTableExplorer })), { ssr: false }),
+  "numerology-system-selection": dynamic(() => import("./numerology-system-selection").then(m => ({ default: m.NumerologySystemSelection })), { ssr: false }),
+  "digit-meaning-explorer": dynamic(() => import("./digit-meaning-explorer").then(m => ({ default: m.DigitMeaningExplorer })), { ssr: false }),
+  "master-number-explorer": dynamic(() => import("./master-number-explorer").then(m => ({ default: m.MasterNumberExplorer })), { ssr: false }),
+  // Lesson 3.2.3's Â§7 flagship: ChoghadiyÄ &amp; RÄhu KÄlam Calculator â€”
+  // sunrise/sunset input, 16-segment quality tables, visual timeline,
+  // and inauspicious-window highlight.
+  "choghadiya-rahukalam-calculator": dynamic(() => import("./choghadiya-rahukalam-calculator").then(m => ({ default: m.ChoghadiyaRahuKalamCalculator })), { ssr: false }),
+  // Lesson 3.2.4's Â§7 flagship: VÄra-Event Pairing Explorer â€” event-category
+  // cards, recommended-vÄra panels, vÄra reference grid, and planetary
+  // friendship/enmity visualization.
+  "vara-event-pairing-explorer": dynamic(() => import("./vara-event-pairing-explorer").then(m => ({ default: m.VaraEventPairingExplorer })), { ssr: false }),
+  // Lesson 3.3.1's Â§7 flagship: Moon-Naká¹£atra Calculator â€” step-by-step formula
+  // breakdown with editable Moon longitude + optional Sun context + preset
+  // scenarios + 27-segment circular visualisation.
+  "moon-nakshatra-calculator": dynamic(() => import("./moon-nakshatra-calculator").then(m => ({ default: m.MoonNakshatraCalculator })), { ssr: false }),
+  // Lesson 3.3.2's Â§4 explorer: Naká¹£atra Strip â€” horizontal scrollable
+  // enumeration of all 27 naká¹£atras with ruler-colour coding, filter pills,
+  // search, and click-to-reveal detail panel (pÄda, yoni, gana, tara).
+  "nakshatra-strip": dynamic(() => import("./nakshatra-strip").then(m => ({ default: m.NakshatraStrip })), { ssr: false }),
+  // Lesson 3.3.3's Â§7 flagship: Naká¹£atra Deity & Ruler Wheel â€” circular 27-segment
+  // SVG explorer with inner-name / outer-planet rings, filter pills, centre
+  // mandala, and paká¹£a-suitability overlay toggle.
+  "nakshatra-deity-ruler-wheel": dynamic(() => import("./nakshatra-deity-ruler-wheel").then(m => ({ default: m.NakshatraDeityRulerWheel })), { ssr: false }),
+  // Lesson 3.3.4's Â§7 flagship: Daily Naká¹£atra PaÃ±cÄá¹…ga Reader â€” simulated
+  // today's paÃ±cÄá¹…ga with time-slider, transition tracking, activity-suitability
+  // grid, and classical reasoning panel.
+  "daily-nakshatra-pancanga-reader": dynamic(() => import("./daily-nakshatra-pancanga-reader").then(m => ({ default: m.DailyNakshatraPancangaReader })), { ssr: false }),
+  // Lesson 3.4.1's Â§7 flagship: Yoga vs Chart-Yoga Comparison â€” two-column
+  // comparison table + 8-statement discrimination drill + visual icons.
+  "yoga-vs-chart-yoga-comparison": dynamic(() => import("./yoga-vs-chart-yoga-comparison").then(m => ({ default: m.YogaVsChartYogaComparison })), { ssr: false }),
+  // Lesson 3.4.2's Â§7 flagship: Time-Yoga Calculator â€” Sun+Moon longitude sum
+  // with step-by-step formula breakdown, 27-segment circular visualisation,
+  // and preset scenarios.
+  "time-yoga-calculator": dynamic(() => import("./time-yoga-calculator").then(m => ({ default: m.TimeYogaCalculator })), { ssr: false }),
+  // Lesson 3.4.3's Â§7 flagship: Yoga Wheel 27 â€” circular 27-segment explorer
+  // with nature colour-coding, filter pills, table view toggle, and search.
+  "yoga-wheel-27": dynamic(() => import("./yoga-wheel-27").then(m => ({ default: m.YogaWheel27 })), { ssr: false }),
+  // Lesson 3.4.4's Â§7 flagship: Inauspicious Yoga Avoidance Calculator â€”
+  // focus on 6 inauspicious yogas with severity ranking, mitigation guide,
+  // and month-view timeline.
+  "inauspicious-yoga-avoidance-calculator": dynamic(() => import("./inauspicious-yoga-avoidance-calculator").then(m => ({ default: m.InauspiciousYogaAvoidanceCalculator })), { ssr: false }),
+  // Lesson 3.4.5's Â§7 flagship: Yoga MuhÅ«rta Screening Integrator â€” multi-element
+  // muhÅ«rta screening tool with 5-element dashboard and yoga-specific filter.
+  "yoga-muhurta-screening-integrator": dynamic(() => import("./yoga-muhurta-screening-integrator").then(m => ({ default: m.YogaMuhurtaScreeningIntegrator })), { ssr: false }),
+  // Lesson 3.5.1's Â§7 flagship: Karaá¹‡a Calculator â€” half-tithi computation
+  // with step-by-step breakdown, tithi-bar visual, and preset scenarios.
+  "karana-calculator": dynamic(() => import("./karana-calculator").then(m => ({ default: m.KaranaCalculator })), { ssr: false }),
+  // Lesson 3.5.2's Â§7 flagship: Karaá¹‡a Cycle Diagram â€” circular 11-karaá¹‡a
+  // explorer with Cara/Sthira colour-coding, filter pills, and table view.
+  "karana-cycle-diagram": dynamic(() => import("./karana-cycle-diagram").then(m => ({ default: m.KaranaCycleDiagram })), { ssr: false }),
+  // Lesson 3.5.3's Â§7 flagship: Bhadra Avoidance Integrator â€” Bhadra (Viá¹£á¹­i)
+  // calculator with day-of-week selector, activity-avoidance cards, classical
+  // source panel, and comparison with other inauspicious periods.
+  "bhadra-avoidance-integrator": dynamic(() => import("./bhadra-avoidance-integrator").then(m => ({ default: m.BhadraAvoidanceIntegrator })), { ssr: false }),
+  // Lesson 2.5.1's Â§7 interactive: Samvat Converter â€” Vikrama â†” Åšaka â†” CE
+  // interactive year-conversion calculator with boundary detection + convention toggles.
+  "samvat-converter-vikrama-shaka": dynamic(() => import("./samvat-converter-vikrama-shaka").then(m => ({ default: m.SamvatConverterVikramaShaka })), { ssr: false }),
+  // Lesson 2.5.2's Â§7 interactive: Regional Calendar Explorer â€” side-by-side
+  // rendering of Tamil + Kerala + Bengali + Assamese + Odia regional calendars.
+  "regional-calendar-explorer": dynamic(() => import("./regional-calendar-explorer").then(m => ({ default: m.RegionalCalendarExplorer })), { ssr: false }),
+  // Lesson 2.5.3's Â§7 interactive: Calendar Converter â€” comprehensive cross-system
+  // date-conversion across Vikrama / Åšaka / Kollam / Gregorian + JDN cross-validation.
+  "calendar-converter": dynamic(() => import("./calendar-converter").then(m => ({ default: m.CalendarConverter })), { ssr: false }),
+  // â”€â”€â”€ Module 04: RÄÅ›i System interactives â”€â”€â”€
+  "rashi-boundary-wheel": dynamic(() => import("./rashi-boundary-wheel").then(m => ({ default: m.RashiBoundaryWheel })), { ssr: false }),
+  "boundary-crossing-demonstrator": dynamic(() => import("./boundary-crossing-demonstrator").then(m => ({ default: m.BoundaryCrossingDemonstrator })), { ssr: false }),
+  "rashi-attribute-wheel": dynamic(() => import("./rashi-attribute-wheel").then(m => ({ default: m.RashiAttributeWheel })), { ssr: false }),
+  "rashi-modality-classifier": dynamic(() => import("./rashi-modality-classifier").then(m => ({ default: m.RashiModalityClassifier })), { ssr: false }),
+  "kendra-trikona-grouping-visualizer": dynamic(() => import("./kendra-trikona-grouping-visualizer").then(m => ({ default: m.KendraTrikonaGroupingVisualizer })), { ssr: false }),
+  "angular-house-classifier": dynamic(() => import("./angular-house-classifier").then(m => ({ default: m.AngularHouseClassifier })), { ssr: false }),
+  "quality-house-classifier": dynamic(() => import("./quality-house-classifier").then(m => ({ default: m.QualityHouseClassifier })), { ssr: false }),
+  "purushartha-trine-explorer": dynamic(() => import("./purushartha-trine-explorer").then(m => ({ default: m.PurusharthaTrineExplorer })), { ssr: false }),
+  "karaka-table": dynamic(() => import("./karaka-table").then(m => ({ default: m.KarakaTable })), { ssr: false }),
+  "karaka-tenancy-lab": dynamic(() => import("./karaka-tenancy-lab").then(m => ({ default: m.KarakaTenancyLab })), { ssr: false }),
+  "bhavat-bhavam-drill": dynamic(() => import("./bhavat-bhavam-drill").then(m => ({ default: m.BhavatBhavamDrill })), { ssr: false }),
+  "bhava-chalita-refinement": dynamic(() => import("./bhava-chalita-refinement").then(m => ({ default: m.BhavaChalitaRefinement })), { ssr: false }),
+  "placidus-kp-convention": dynamic(() => import("./placidus-kp-convention").then(m => ({ default: m.PlacidusKpConvention })), { ssr: false }),
+  "bhava-madhya-sandhi": dynamic(() => import("./bhava-madhya-sandhi").then(m => ({ default: m.BhavaMadhyaSandhi })), { ssr: false }),
+  "house-system-decision-framework": dynamic(() => import("./house-system-decision-framework").then(m => ({ default: m.HouseSystemDecisionFramework })), { ssr: false }),
+  "lal-kitab-fixed-aries-lagna": dynamic(() => import("./lal-kitab-fixed-aries-lagna").then(m => ({ default: m.LalKitabFixedAriesLagna })), { ssr: false }),
+  "varga-explainer": dynamic(() => import("./varga-explainer").then(m => ({ default: m.VargaExplainer })), { ssr: false }),
+  "varga-reference-table": dynamic(() => import("./varga-reference-table").then(m => ({ default: m.VargaReferenceTable })), { ssr: false }),
+  "varga-template-card": dynamic(() => import("./varga-template-card").then(m => ({ default: m.VargaTemplateCard })), { ssr: false }),
+  "varga-calculator": dynamic(() => import("./varga-calculator").then(m => ({ default: m.VargaCalculator })), { ssr: false }),
+  "multi-varga-comparator": dynamic(() => import("./multi-varga-comparator").then(m => ({ default: m.MultiVargaComparator })), { ssr: false }),
+  "trimshamsha-calculator": dynamic(() => import("./trimshamsha-calculator").then(m => ({ default: m.TrimshamshaCalculator })), { ssr: false }),
+  "ethical-routing-checklist": dynamic(() => import("./ethical-routing-checklist").then(m => ({ default: m.EthicalRoutingChecklist })), { ssr: false }),
+  "shashtyamsha-calculator": dynamic(() => import("./shashtyamsha-calculator").then(m => ({ default: m.ShashtyamshaCalculator })), { ssr: false }),
+  "d1-d60-comparator": dynamic(() => import("./d1-d60-comparator").then(m => ({ default: m.D1D60Comparator })), { ssr: false }),
+  "d60-karmic-substrate-index-lab": dynamic(() => import("./d60-karmic-substrate-index-lab").then(m => ({ default: m.D60KarmicSubstrateIndexLab })), { ssr: false }),
+  "d60-spiritual-path-arc-lab": dynamic(() => import("./d60-spiritual-path-arc-lab").then(m => ({ default: m.D60SpiritualPathArcLab })), { ssr: false }),
+  "d60-honest-framing-ethics-lab": dynamic(() => import("./d60-honest-framing-ethics-lab").then(m => ({ default: m.D60HonestFramingEthicsLab })), { ssr: false }),
+  "d60-worked-reading-confidence-lab": dynamic(() => import("./d60-worked-reading-confidence-lab").then(m => ({ default: m.D60WorkedReadingConfidenceLab })), { ssr: false }),
+  "birth-time-quality-checker": dynamic(() => import("./birth-time-quality-checker").then(m => ({ default: m.BirthTimeQualityChecker })), { ssr: false }),
+  "vimshopaka-calculator": dynamic(() => import("./vimshopaka-calculator").then(m => ({ default: m.VimshopakaCalculator })), { ssr: false }),
+  "vargottama-scanner": dynamic(() => import("./vargottama-scanner").then(m => ({ default: m.VargottamaScanner })), { ssr: false }),
+  "d1-d9-divergence-reader": dynamic(() => import("./d1-d9-divergence-reader").then(m => ({ default: m.D1D9DivergenceReader })), { ssr: false }),
+  "hora-calculator": dynamic(() => import("./hora-calculator").then(m => ({ default: m.HoraCalculator })), { ssr: false }),
+  "drekkana-calculator": dynamic(() => import("./drekkana-calculator").then(m => ({ default: m.DrekkanaCalculator })), { ssr: false }),
+  "drekkana-system-comparator": dynamic(() => import("./drekkana-system-comparator").then(m => ({ default: m.DrekkanaSystemComparator })), { ssr: false }),
+  "navamsha-calculator": dynamic(() => import("./navamsha-calculator").then(m => ({ default: m.NavamshaCalculator })), { ssr: false }),
+  "navamsha-reader": dynamic(() => import("./navamsha-reader").then(m => ({ default: m.NavamshaReader })), { ssr: false }),
+  "rashi-navamsha-pair": dynamic(() => import("./rashi-navamsha-pair").then(m => ({ default: m.RashiNavamshaPair })), { ssr: false }),
+  "chart-planet-positioner": dynamic(() => import("./chart-planet-positioner").then(m => ({ default: m.ChartPlanetPositioner })), { ssr: false }),
+  "graha-anatomy-explorer": dynamic(() => import("./chart-planet-positioner").then(m => ({ default: m.ChartPlanetPositioner })), { ssr: false }),
+  "rashi-rising-classifier": dynamic(() => import("./rashi-rising-classifier").then(m => ({ default: m.RashiRisingClassifier })), { ssr: false }),
+  "rashi-stream-comparator": dynamic(() => import("./rashi-stream-comparator").then(m => ({ default: m.RashiStreamComparator })), { ssr: false }),
+  "rashi-profile-explorer": dynamic(() => import("./rashi-profile-explorer").then(m => ({ default: m.RashiProfileExplorer })), { ssr: false }),
+  "quadrant-triad-visualizer": dynamic(() => import("./quadrant-triad-visualizer").then(m => ({ default: m.QuadrantTriadVisualizer })), { ssr: false }),
+  "trikona-pair-explorer": dynamic(() => import("./trikona-pair-explorer").then(m => ({ default: m.TrikonaPairExplorer })), { ssr: false }),
+  // Lesson 5.1.2's Â§7 interactive: Dignity Wheel â€” clickable 12-rashi
+  // dignity map with degree cues, friendship overlay, and Sun-Moon comparison.
+  "dignity-wheel": dynamic(() => import("./dignity-wheel").then(m => ({ default: m.DignityWheel })), { ssr: false }),
+  "budha-dignity-wheel": dynamic(() => import("./budha-dignity-wheel").then(m => ({ default: m.BudhaDignityWheel })), { ssr: false }),
+  "guru-dignity-wheel": dynamic(() => import("./guru-dignity-wheel").then(m => ({ default: m.GuruDignityWheel })), { ssr: false }),
+  "shukra-dignity-wheel": dynamic(() => import("./shukra-dignity-wheel").then(m => ({ default: m.ShukraDignityWheel })), { ssr: false }),
+  "shani-dignity-wheel": dynamic(() => import("./shani-dignity-wheel").then(m => ({ default: m.ShaniDignityWheel })), { ssr: false }),
+  "saturn-lesson-mapper": dynamic(() => import("./saturn-lesson-mapper").then(m => ({ default: m.SaturnLessonMapper })), { ssr: false }),
+  "shani-aspect-dignity-grid": dynamic(() => import("./shani-aspect-dignity-grid").then(m => ({ default: m.ShaniAspectDignityGrid })), { ssr: false }),
+  "node-geometry": dynamic(() => import("./node-geometry").then(m => ({ default: m.NodeGeometry })), { ssr: false }),
+  "node-axis-reader": dynamic(() => import("./node-axis-reader").then(m => ({ default: m.NodeAxisReader })), { ssr: false }),
+  "node-dignity-positions": dynamic(() => import("./node-dignity-positions").then(m => ({ default: m.NodeDignityPositions })), { ssr: false }),
+  "upagraha-list": dynamic(() => import("./upagraha-list").then(m => ({ default: m.UpagrahaList })), { ssr: false }),
+  "gulika-calculator": dynamic(() => import("./gulika-calculator").then(m => ({ default: m.GulikaCalculator })), { ssr: false }),
+  "tamkalika-wheel": dynamic(() => import("./tamkalika-wheel").then(m => ({ default: m.TamkalikaWheel })), { ssr: false }),
+  "panchadha-combiner": dynamic(() => import("./panchadha-combiner").then(m => ({ default: m.PanchadhaCombiner })), { ssr: false }),
+  "avastha-panel": dynamic(() => import("./avastha-panel").then(m => ({ default: m.AvasthaPanel })), { ssr: false }),
+  "stream-comparator": dynamic(() => import("./stream-comparator").then(m => ({ default: m.StreamComparator })), { ssr: false }),
+  "stream-comparison-table": dynamic(() => import("./stream-comparison-table").then(m => ({ default: m.StreamComparisonTable })), { ssr: false }),
+  "bhava-wheel": dynamic(() => import("./bhava-wheel").then(m => ({ default: m.BhavaWheel })), { ssr: false }),
+  "house-system-comparator": dynamic(() => import("./house-system-comparator").then(m => ({ default: m.HouseSystemComparator })), { ssr: false }),
+  "bhava-template-card": dynamic(() => import("./bhava-template-card").then(m => ({ default: m.BhavaTemplateCard })), { ssr: false }),
+  "bhava-profile": dynamic(() => import("./bhava-profile").then(m => ({ default: m.BhavaProfile })), { ssr: false }),
+  "santana-fifth-house-significations-compass": dynamic(() => import("./santana-fifth-house-significations-compass").then(m => ({ default: m.SantanaFifthHouseSignificationsCompass })), { ssr: false }),
+  "santana-fifth-lord-permutations-wheel": dynamic(() => import("./santana-fifth-lord-permutations-wheel").then(m => ({ default: m.SantanaFifthLordPermutationsWheel })), { ssr: false }),
+  "santana-fifth-drishti-balance": dynamic(() => import("./santana-fifth-drishti-balance").then(m => ({ default: m.SantanaFifthDrishtiBalance })), { ssr: false }),
+  "santana-obstruction-honesty-workbench": dynamic(() => import("./santana-obstruction-honesty-workbench").then(m => ({ default: m.SantanaObstructionHonestyWorkbench })), { ssr: false }),
+  "saptamsha-builder-wheel": dynamic(() => import("./saptamsha-builder-wheel").then(m => ({ default: m.SaptamshaBuilderWheel })), { ssr: false }),
+  "children-d1-d7-convergence-bench": dynamic(() => import("./children-d1-d7-convergence-bench").then(m => ({ default: m.ChildrenD1D7ConvergenceBench })), { ssr: false }),
+  "d7-jupiter-karaka-workbench": dynamic(() => import("./d7-jupiter-karaka-workbench").then(m => ({ default: m.D7JupiterKarakaWorkbench })), { ssr: false }),
+  "d7-santana-protocol-runner": dynamic(() => import("./d7-santana-protocol-runner").then(m => ({ default: m.D7SantanaProtocolRunner })), { ssr: false }),
+  "jupiter-three-registers-convergence": dynamic(() => import("./jupiter-three-registers-convergence").then(m => ({ default: m.JupiterThreeRegistersConvergence })), { ssr: false }),
+  "jupiter-strength-scorecard": dynamic(() => import("./jupiter-strength-scorecard").then(m => ({ default: m.JupiterStrengthScorecard })), { ssr: false }),
+  "jupiter-dasha-bhukti-timeline": dynamic(() => import("./jupiter-dasha-bhukti-timeline").then(m => ({ default: m.JupiterDashaBhuktiTimeline })), { ssr: false }),
+  "putra-karaka-pk-convergence-bench": dynamic(() => import("./putra-karaka-pk-convergence-bench").then(m => ({ default: m.PutraKarakaPkConvergenceBench })), { ssr: false }),
+  "pk-placement-navamsha-workbench": dynamic(() => import("./pk-placement-navamsha-workbench").then(m => ({ default: m.PkPlacementNavamshaWorkbench })), { ssr: false }),
+  "kp-children-cusp-tool": dynamic(() => import("./kp-children-cusp-tool").then(m => ({ default: m.KpChildrenCuspTool })), { ssr: false }),
+  "kp-children-significator-timing-bench": dynamic(() => import("./kp-children-significator-timing-bench").then(m => ({ default: m.KpChildrenSignificatorTimingBench })), { ssr: false }),
+  "jaimini-kp-children-synthesis-bench": dynamic(() => import("./jaimini-kp-children-synthesis-bench").then(m => ({ default: m.JaiminiKpChildrenSynthesisBench })), { ssr: false }),
+  "when-will-children-synthesis-bench": dynamic(() => import("./when-will-children-synthesis-bench").then(m => ({ default: m.WhenWillChildrenSynthesisBench })), { ssr: false }),
+  "fertility-struggle-routing-trainer": dynamic(() => import("./fertility-struggle-routing-trainer").then(m => ({ default: m.FertilityStruggleRoutingTrainer })), { ssr: false }),
+  "pcpndt-refusal-trainer": dynamic(() => import("./pcpndt-refusal-trainer").then(m => ({ default: m.PcpndtRefusalTrainer })), { ssr: false }),
+  "grief-aware-response-trainer": dynamic(() => import("./grief-aware-response-trainer").then(m => ({ default: m.GriefAwareResponseTrainer })), { ssr: false }),
+  "children-scope-trainer": dynamic(() => import("./children-scope-trainer").then(m => ({ default: m.ChildrenScopeTrainer })), { ssr: false }),
+  "twelfth-house-chart-t1-explorer": dynamic(() => import("./twelfth-house-chart-t1-explorer").then(m => ({ default: m.TwelfthHouseChartT1Explorer })), { ssr: false }),
+  "ninth-house-chart-t1-explorer": dynamic(() => import("./ninth-house-chart-t1-explorer").then(m => ({ default: m.NinthHouseChartT1Explorer })), { ssr: false }),
+  "twelve-nine-three-arc-explorer": dynamic(() => import("./twelve-nine-three-arc-explorer").then(m => ({ default: m.TwelveNineThreeArcExplorer })), { ssr: false }),
+  "twelve-nine-three-aspect-explorer": dynamic(() => import("./twelve-nine-three-aspect-explorer").then(m => ({ default: m.TwelveNineThreeAspectExplorer })), { ssr: false }),
+  "rahu-foreign-boundary-explorer": dynamic(() => import("./rahu-foreign-boundary-explorer").then(m => ({ default: m.RahuForeignBoundaryExplorer })), { ssr: false }),
+  "rahu-placement-permutations-explorer": dynamic(() => import("./rahu-placement-permutations-explorer").then(m => ({ default: m.RahuPlacementPermutationsExplorer })), { ssr: false }),
+  "rahu-dasha-timing-explorer": dynamic(() => import("./rahu-dasha-timing-explorer").then(m => ({ default: m.RahuDashaTimingExplorer })), { ssr: false }),
+  "rahu-aspect-doctrine-fork-explorer": dynamic(() => import("./rahu-aspect-doctrine-fork-explorer").then(m => ({ default: m.RahuAspectDoctrineForkExplorer })), { ssr: false }),
+  "nri-yoga-citation-honesty-explorer": dynamic(() => import("./nri-yoga-citation-honesty-explorer").then(m => ({ default: m.NriYogaCitationHonestyExplorer })), { ssr: false }),
+  "nri-yoga-pattern-spotter": dynamic(() => import("./nri-yoga-pattern-spotter").then(m => ({ default: m.NriYogaPatternSpotter })), { ssr: false }),
+  "kp-foreign-travel-cusp-tool": dynamic(() => import("./kp-foreign-travel-cusp-tool").then(m => ({ default: m.KpForeignTravelCuspTool })), { ssr: false }),
+  "visa-question-multi-causal-synthesis": dynamic(() => import("./visa-question-multi-causal-synthesis").then(m => ({ default: m.VisaQuestionMultiCausalSynthesis })), { ssr: false }),
+  "dasha-timing-foreign-settlement-sweep": dynamic(() => import("./dasha-timing-foreign-settlement-sweep").then(m => ({ default: m.DashaTimingForeignSettlementSweep })), { ssr: false }),
+  "study-abroad-theme-timing-synthesis": dynamic(() => import("./study-abroad-theme-timing-synthesis").then(m => ({ default: m.StudyAbroadThemeTimingSynthesis })), { ssr: false }),
+  "permanent-settlement-synthesis": dynamic(() => import("./permanent-settlement-synthesis").then(m => ({ default: m.PermanentSettlementSynthesis })), { ssr: false }),
+  "scope-of-competence-router": dynamic(() => import("./scope-of-competence-router").then(m => ({ default: m.ScopeOfCompetenceRouter })), { ssr: false }),
+  "sixth-house-litigation-profile": dynamic(() => import("./sixth-house-litigation-profile").then(m => ({ default: m.SixthHouseLitigationProfile })), { ssr: false }),
+  // Lesson 11.1.2 interactive: Sixth-House Dusthāna–Upachaya Paradox —
+  // dual-classification wheel, Mars vs Saturn worked-example comparison,
+  // early-loss scenario, and discipline checks on house-specific limits.
+  "sixth-house-dusthana-upachaya-paradox": dynamic(() => import("./sixth-house-dusthana-upachaya-paradox").then(m => ({ default: m.SixthHouseDusthanaUpachayaParadox })), { ssr: false }),
+  // Lesson 11.1.3 interactive: Sixth-Lord Permutations for Litigation —
+  // clickable 12-house wheel placing the 6th lord, five-family classification,
+  // Chart L1 own-house anchor, and contrasting dusthāna/upachaya placements.
+  "sixth-lord-permutations-litigation": dynamic(() => import("./sixth-lord-permutations-litigation").then(m => ({ default: m.SixthLordPermutationsLitigation })), { ssr: false }),
+  // Lesson 11.1.4 interactive: Mars as Contest Kāraka Applied to Litigation —
+  // Mars placement wheel, dignity selector, Chart L1 vs exalted-1st contrast,
+  // forward-pointer to Chapter 2, and discipline checks.
+  "mars-contest-karaka-litigation": dynamic(() => import("./mars-contest-karaka-litigation").then(m => ({ default: m.MarsContestKarakaLitigation })), { ssr: false }),
+  // Lesson 11.2.1 interactive: Saturn as Delay, Structure, Persistence —
+  // signification mapper, dignity quality selector, process gauge, and
+  // Chart L1 own-sign vs debilitated contrast.
+  "saturn-delay-structure-persistence-litigation": dynamic(() => import("./saturn-delay-structure-persistence-litigation").then(m => ({ default: m.SaturnDelayStructurePersistenceLitigation })), { ssr: false }),
+  // Lesson 11.2.2 interactive: Mars-Saturn Dynamic Explorer —
+  // aspect-geometry vs natural-friendship layer toggle, asymmetric grid,
+  // spot-the-error scenario, and discipline checks.
+  "mars-saturn-dynamic-explorer": dynamic(() => import("./mars-saturn-dynamic-explorer").then(m => ({ default: m.MarsSaturnDynamicExplorer })), { ssr: false }),
+  // Lesson 11.2.3 interactive: Mars-Saturn Relationship Distinguisher —
+  // conjunction / mutual aspect / mutual reception mode toggle, SVG diagrams,
+  // Chart L1 verification by elimination, and contrasting conjunction case.
+  "mars-saturn-relationship-distinguisher": dynamic(() => import("./mars-saturn-relationship-distinguisher").then(m => ({ default: m.MarsSaturnRelationshipDistinguisher })), { ssr: false }),
+  // Lesson 11.2.4 interactive: Mars-Saturn Litigation Synthesis —
+  // six-finding assembly, aspect-web SVG, client-facing template builder,
+  // scope-limit trainer, and discipline checks.
+  "mars-saturn-litigation-synthesis": dynamic(() => import("./mars-saturn-litigation-synthesis").then(m => ({ default: m.MarsSaturnLitigationSynthesis })), { ssr: false }),
+  // Lesson 11.3.1 interactive: KP Litigation Cusp Tool —
+  // Chart L1 6th-cusp data, disposition-rule step-through, sub-lord
+  // substitution, and classical-vs-KP divergence display.
+  "kp-litigation-cusp-tool": dynamic(() => import("./kp-litigation-cusp-tool").then(m => ({ default: m.KpLitigationCuspTool })), { ssr: false }),
+  "kp-shared-significator-explorer": dynamic(() => import("./kp-shared-significator-explorer").then(m => ({ default: m.KpSharedSignificatorExplorer })), { ssr: false }),
+  "kp-case-outcome-horary-intro": dynamic(() => import("./kp-case-outcome-horary-intro").then(m => ({ default: m.KpCaseOutcomeHoraryIntro })), { ssr: false }),
+  "kp-litigation-synthesis-workbench": dynamic(() => import("./kp-litigation-synthesis-workbench").then(m => ({ default: m.KpLitigationSynthesisWorkbench })), { ssr: false }),
+  "dasha-conflict-timing-sweep": dynamic(() => import("./dasha-conflict-timing-sweep").then(m => ({ default: m.DashaConflictTimingSweep })), { ssr: false }),
+  "litigation-confidence-synthesis": dynamic(() => import("./litigation-confidence-synthesis").then(m => ({ default: m.LitigationConfidenceSynthesis })), { ssr: false }),
+  "lawyer-substitution-refusal-router": dynamic(() => import("./lawyer-substitution-refusal-router").then(m => ({ default: m.LawyerSubstitutionRefusalRouter })), { ssr: false }),
+  "litigation-scope-competence-closer": dynamic(() => import("./litigation-scope-competence-closer").then(m => ({ default: m.LitigationScopeCompetenceCloser })), { ssr: false }),
+  // Lesson 12.1.1 interactive: Moksa Trikona Explorer — isolates the 4-8-12 trine,
+  // compares all four purusartha trines, adds kendra/dusthana overlay, and includes
+  // an uneven-trine builder with disposition-not-destiny discipline.
+  "moksha-trikona-explorer": dynamic(() => import("./moksha-trikona-explorer").then(m => ({ default: m.MokshaTrikonaExplorer })), { ssr: false }),
+  // Lesson 12.1.2 interactive: Fourth House Spiritual Foundation — 4th house as
+  // moksa foundation stage, Moon karaka picker, independent house/lord and Moon
+  // strength builder, Chart S1 / Example 2 presets, and common-mistake discipline.
+  "fourth-house-spiritual-foundation": dynamic(() => import("./fourth-house-spiritual-foundation").then(m => ({ default: m.FourthHouseSpiritualFoundation })), { ssr: false }),
+  "eighth-house-spiritual-transformation": dynamic(() => import("./eighth-house-spiritual-transformation").then(m => ({ default: m.EighthHouseSpiritualTransformation })), { ssr: false }),
+  "twelfth-house-spiritual-release": dynamic(() => import("./twelfth-house-spiritual-release").then(m => ({ default: m.TwelfthHouseSpiritualRelease })), { ssr: false }),
+  "eighth-twelfth-health-registers": dynamic(() => import("./eighth-twelfth-health-registers").then(m => ({ default: m.EighthTwelfthHealthRegisters })), { ssr: false }),
+  "health-house-synthesis-workbench": dynamic(() => import("./health-house-synthesis-workbench").then(m => ({ default: m.HealthHouseSynthesisWorkbench })), { ssr: false }),
+  "balarista-doctrine-frame-explorer": dynamic(() => import("./balarista-doctrine-frame-explorer").then(m => ({ default: m.BalaristaDoctrineFrameExplorer })), { ssr: false }),
+  "balarista-configuration-spotter": dynamic(() => import("./balarista-configuration-spotter").then(m => ({ default: m.BalaristaConfigurationSpotter })), { ssr: false }),
+  "balarista-cancellation-walker": dynamic(() => import("./balarista-cancellation-walker").then(m => ({ default: m.BalaristaCancellationWalker })), { ssr: false }),
+  "balarista-ethics-framing-trainer": dynamic(() => import("./balarista-ethics-framing-trainer").then(m => ({ default: m.BalaristaEthicsFramingTrainer })), { ssr: false }),
+  "longevity-method-selector": dynamic(() => import("./longevity-method-selector").then(m => ({ default: m.LongevityMethodSelector })), { ssr: false }),
+  "ayur-calculator": dynamic(() => import("./ayur-calculator").then(m => ({ default: m.AyurCalculator })), { ssr: false }),
+  "naisargika-ayur-cross-check-workbench": dynamic(() => import("./naisargika-ayur-cross-check-workbench").then(m => ({ default: m.NaisargikaAyurCrossCheckWorkbench })), { ssr: false }),
+  "longevity-ethics-response-trainer": dynamic(() => import("./longevity-ethics-response-trainer").then(m => ({ default: m.LongevityEthicsResponseTrainer })), { ssr: false }),
+  "maraka-doctrine-explorer": dynamic(() => import("./maraka-doctrine-explorer").then(m => ({ default: m.MarakaDoctrineExplorer })), { ssr: false }),
+  "maraka-identification-workbench": dynamic(() => import("./maraka-identification-workbench").then(m => ({ default: m.MarakaIdentificationWorkbench })), { ssr: false }),
+  "maraka-caution-window-trainer": dynamic(() => import("./maraka-caution-window-trainer").then(m => ({ default: m.MarakaCautionWindowTrainer })), { ssr: false }),
+  // Lesson 7.4.4's §7 flagship: Maraka Synthesis Workbench — synthesise
+  // Bālāriṣṭa, longevity, and maraka findings for one chart and practise
+  // the universal, undated, proactive client-facing register.
+  "maraka-synthesis-workbench": dynamic(() => import("./maraka-synthesis-workbench").then(m => ({ default: m.MarakaSynthesisWorkbench })), { ssr: false }),
+  // Lesson 7.5.1's §7 explorer: Jaimini Rudra-Maheśvara Explorer — contrast
+  // Parāśarī house-lordship with Jaimini kāraka-based identification, train
+  // AK selection, inspect Rudra and Maheśvara rules, and present documented
+  // source variance honestly.
+  "jaimini-rudra-maheshvara-explorer": dynamic(() => import("./jaimini-rudra-maheshvara-explorer").then(m => ({ default: m.JaiminiRudraMaheshvaraExplorer })), { ssr: false }),
+  // Lesson 7.5.2's §7 workbench: Rudra-Maheśvara Workbench — apply the rules
+  // to Chart H1, compare both Maheśvara procedures, and practise honest
+  // confidence calibration plus the Jaimini-Parāśarī convergence.
+  "rudra-maheshvara-workbench": dynamic(() => import("./rudra-maheshvara-workbench").then(m => ({ default: m.RudraMaheshvaraWorkbench })), { ssr: false }),
+  // Lesson 7.5.3's §7 explorer: KP Longevity Doctrine Explorer — interactively
+  // teach sub-lord as final arbiter, four-level significator hierarchy, KP's
+  // 2nd/7th/12th maraka list, Bhādhaka-by-lagna-type, and honest data-scope.
+  "kp-longevity-doctrine-explorer": dynamic(() => import("./kp-longevity-doctrine-explorer").then(m => ({ default: m.KpLongevityDoctrineExplorer })), { ssr: false }),
+  "predictive-karma-profile": dynamic(() => import("./predictive-karma-profile").then(m => ({ default: m.PredictiveKarmaProfile })), { ssr: false }),
+  "tenth-lord-permutation-profile": dynamic(() => import("./tenth-lord-permutation-profile").then(m => ({ default: m.TenthLordPermutationProfile })), { ssr: false }),
+  "tenth-karaka-triangulation": dynamic(() => import("./tenth-karaka-triangulation").then(m => ({ default: m.TenthKarakaTriangulation })), { ssr: false }),
+  "tenth-aspect-workbench": dynamic(() => import("./tenth-aspect-workbench").then(m => ({ default: m.TenthAspectWorkbench })), { ssr: false }),
+  "preliminary-reading-flow": dynamic(() => import("./preliminary-reading-flow").then(m => ({ default: m.PreliminaryReadingFlow })), { ssr: false }),
+  "rahu-amplifier": dynamic(() => import("./rahu-amplifier").then(m => ({ default: m.RahuAmplifier })), { ssr: false }),
+  "rahu-ketu-comparator": dynamic(() => import("./rahu-ketu-comparator").then(m => ({ default: m.RahuKetuComparator })), { ssr: false }),
+  "jupiter-evaluator": dynamic(() => import("./jupiter-evaluator").then(m => ({ default: m.JupiterEvaluator })), { ssr: false }),
+  "aspect-caster": dynamic(() => import("./aspect-caster").then(m => ({ default: m.AspectCaster })), { ssr: false }),
+  "myth-map": dynamic(() => import("./myth-map").then(m => ({ default: m.MythMap })), { ssr: false }),
+  "shukra-friendship-dignity-grid": dynamic(() => import("./shukra-friendship-dignity-grid").then(m => ({ default: m.ShukraFriendshipDignityGrid })), { ssr: false }),
+  "association-classifier": dynamic(() => import("./association-classifier").then(m => ({ default: m.AssociationClassifier })), { ssr: false }),
+  "combustion-calculator": dynamic(() => import("./combustion-calculator").then(m => ({ default: m.CombustionCalculator })), { ssr: false }),
+  // Lesson 5.1.4's Â§7 interactive: Friendship Matrix â€” directed graha
+  // relationship grid with mirror-cell comparison and Sun-Moon polarity axes.
+  "friendship-matrix": dynamic(() => import("./friendship-matrix").then(m => ({ default: m.FriendshipMatrix })), { ssr: false }),
+  // Lesson 5.1.5's Â§7 interactive: Pakshabala Slider â€” tithi scrubber with
+  // inverse Sun/Moon virupa bars and a dignity-combination preview.
+  "pakshabala-slider": dynamic(() => import("./pakshabala-slider").then(m => ({ default: m.PakshabalaSlider })), { ssr: false }),
+  "shadbala-intro": dynamic(() => import("./shadbala-intro").then(m => ({ default: m.ShadbalaIntro })), { ssr: false }),
+  "shadbala-components": dynamic(() => import("./shadbala-components").then(m => ({ default: m.ShadbalaComponents })), { ssr: false }),
+  "shadbala-grader": dynamic(() => import("./shadbala-grader").then(m => ({ default: m.ShadbalaGrader })), { ssr: false }),
+  "uchchabala-calculator": dynamic(() => import("./uchchabala-calculator").then(m => ({ default: m.UchchabalaCalculator })), { ssr: false }),
+  "saptavargabala-calculator": dynamic(() => import("./saptavargabala-calculator").then(m => ({ default: m.SaptavargabalaCalculator })), { ssr: false }),
+  "oja-yugma-calculator": dynamic(() => import("./oja-yugma-calculator").then(m => ({ default: m.OjaYugmaCalculator })), { ssr: false }),
+  "kendra-drekkana-calculator": dynamic(() => import("./kendra-drekkana-calculator").then(m => ({ default: m.KendraDrekkanaCalculator })), { ssr: false }),
+  "sthana-bala-summer": dynamic(() => import("./sthana-bala-summer").then(m => ({ default: m.SthanaBalaSummer })), { ssr: false }),
+  "dik-bala-calculator": dynamic(() => import("./dik-bala-calculator").then(m => ({ default: m.DikBalaCalculator })), { ssr: false }),
+  "kala-bala-overview": dynamic(() => import("./kala-bala-overview").then(m => ({ default: m.KalaBalaOverview })), { ssr: false }),
+  // Lesson 5.2.2's Â§7 interactive: Karaka Router â€” question-driven Mars
+  // register selector with house-side confirmation and tie-breaker feedback.
+  "karaka-router": dynamic(() => import("./karaka-router").then(m => ({ default: m.KarakaRouter })), { ssr: false }),
+  // Lesson 5.2.3's Â§7 interactive: Friendship Dignity Grid â€” Mars across
+  // the 12 signs with sign-lord relation, degree control, and dignity override.
+  "friendship-dignity-grid": dynamic(() => import("./friendship-dignity-grid").then(m => ({ default: m.FriendshipDignityGrid })), { ssr: false }),
+  "mula-root-mandala": dynamic(() => import("./mula-root-mandala").then(m => ({ default: m.MulaRootMandala })), { ssr: false }),
+  "purva-ashadha-relationship-map": dynamic(() => import("./purva-ashadha-relationship-map").then(m => ({ default: m.PurvaAshadhaRelationshipMap })), { ssr: false }),
+  "uttara-ashadha-attribute-universe": dynamic(() => import("./uttara-ashadha-attribute-universe").then(m => ({ default: m.UttaraAshadhaAttributeUniverse })), { ssr: false }),
+  "shravana-dhanishtha-concept-constellation": dynamic(() => import("./shravana-dhanishtha-concept-constellation").then(m => ({ default: m.ShravanaDhanishthaConceptConstellation })), { ssr: false }),
+  "shatabhishaj-bhadrapada-knowledge-galaxy": dynamic(() => import("./shatabhishaj-bhadrapada-knowledge-galaxy").then(m => ({ default: m.ShatabhishajBhadrapadaKnowledgeGalaxy })), { ssr: false }),
+  "revati-constellation-diagram": dynamic(() => import("./revati-constellation-diagram").then(m => ({ default: m.RevatiConstellationDiagram })), { ssr: false }),
+  "anuradha-devotion-network": dynamic(() => import("./anuradha-devotion-network").then(m => ({ default: m.AnuradhaDevotionNetwork })), { ssr: false }),
+  "ashlesha-honest-handling-dojo": dynamic(() => import("./ashlesha-honest-handling-dojo").then(m => ({ default: m.AshleshaHonestHandlingDojo })), { ssr: false }),
+  "chitra-celestial-gem-lab": dynamic(() => import("./chitra-celestial-gem-lab").then(m => ({ default: m.ChitraCelestialGemLab })), { ssr: false }),
+  "gandanta-water-fire-junction": dynamic(() => import("./gandanta-water-fire-junction").then(m => ({ default: m.GandantaWaterFireJunction })), { ssr: false }),
+  "jyeshtha-supremacy-talisman": dynamic(() => import("./jyeshtha-supremacy-talisman").then(m => ({ default: m.JyeshthaSupremacyTalisman })), { ssr: false }),
+  "magha-ancestral-gateway-lab": dynamic(() => import("./magha-ancestral-gateway-lab").then(m => ({ default: m.MaghaAncestralGatewayLab })), { ssr: false }),
+  "nakshatra-profile": dynamic(() => import("./nakshatra-profile").then(m => ({ default: m.NakshatraProfile })), { ssr: false }),
+  "nakshatra-template-lab": dynamic(() => import("./nakshatra-template-lab").then(m => ({ default: m.NakshatraTemplateLab })), { ssr: false }),
+  "purva-uttara-doctrine-explorer": dynamic(() => import("./purva-uttara-doctrine-explorer").then(m => ({ default: m.PurvaUttaraDoctrineExplorer })), { ssr: false }),
+  "pushya-auspiciousness-lab": dynamic(() => import("./pushya-auspiciousness-lab").then(m => ({ default: m.PushyaAuspiciousnessLab })), { ssr: false }),
+  "swati-breeze-navigator": dynamic(() => import("./swati-breeze-navigator").then(m => ({ default: m.SwatiBreezeNavigator })), { ssr: false }),
+  "vishakha-forked-path-explorer": dynamic(() => import("./vishakha-forked-path-explorer").then(m => ({ default: m.VishakhaForkedPathExplorer })), { ssr: false }),
+  "pada-calculator": dynamic(() => import("./pada-calculator").then(m => ({ default: m.PadaCalculator })), { ssr: false }),
+  "vivaha-muhurta-evaluator": dynamic(() => import("./vivaha-muhurta-evaluator").then(m => ({ default: m.VivahaMuhurtaEvaluator })), { ssr: false }),
+  "vyapara-arambh-muhurta-evaluator": dynamic(() => import("./vyapara-arambh-muhurta-evaluator").then(m => ({ default: m.VyaparaArambhMuhurtaEvaluator })), { ssr: false }),
+  "griha-pravesha-muhurta-evaluator": dynamic(() => import("./griha-pravesha-muhurta-evaluator").then(m => ({ default: m.GrihaPraveshaMuhurtaEvaluator })), { ssr: false }),
+  "yatra-muhurta-evaluator": dynamic(() => import("./yatra-muhurta-evaluator").then(m => ({ default: m.YatraMuhurtaEvaluator })), { ssr: false }),
+  "pada-navamsha-mapper": dynamic(() => import("./pada-navamsha-mapper").then(m => ({ default: m.PadaNavamshaMapper })), { ssr: false }),
+  "kp-sub-calculator": dynamic(() => import("./kp-sub-calculator").then(m => ({ default: m.KpSubCalculator })), { ssr: false }),
+  "tara-bala-wheel": dynamic(() => import("./tara-bala-wheel").then(m => ({ default: m.TaraBalAWheel })), { ssr: false }),
+  // Module 10 Chapter 1 â€” VimÅ›ottarÄ« DaÅ›Ä Cycle
+  // Lesson 10.1.1's Â§7 interactive: DaÅ›Ä Timeline â€” 120-year proportional wheel
+  // with 9 clickable lord segments, starting-lord rotation, lifespan overlay,
+  // and linear timeline bar.
+  "dasha-timeline": dynamic(() => import("./dasha-timeline").then(m => ({ default: m.DashaTimeline })), { ssr: false }),
+  "dasha-start-finder": dynamic(() => import("./dasha-start-finder").then(m => ({ default: m.DashaStartFinder })), { ssr: false }),
+  // Lesson 10.1.3's Â§7 interactive: DaÅ›Ä Selector â€” Universal Default vs Conditional Simulator
+  "dasha-selector": dynamic(() => import("./dasha-selector").then(m => ({ default: m.DashaSelector })), { ssr: false }),
+  // Lesson 10.2.1's Â§7 interactive: DaÅ›Ä Balance Calculator â€” four-step
+  // pedagogical calculator with Moon longitude input, naká¹£atra identification,
+  // fraction-traversed computation, and balance result with boundary warnings
+  // and subsequent mahÄdaÅ›Ä preview.
+  "dasha-balance-calculator": dynamic(() => import("./dasha-balance-calculator").then(m => ({ default: m.DashaBalanceCalculator })), { ssr: false }),
+  "dasha-cascade-explorer": dynamic(() => import("./dasha-cascade-explorer").then(m => ({ default: m.DashaCascadeExplorer })), { ssr: false }),
+  "vimshottari-ratio-calculator": dynamic(() => import("./vimshottari-ratio-calculator").then(m => ({ default: m.VimshottariRatioCalculator })), { ssr: false }),
+  "antardasha-table-builder": dynamic(() => import("./antardasha-table-builder").then(m => ({ default: m.AntardashaTableBuilder })), { ssr: false }),
+  "dasha-lookup-drill": dynamic(() => import("./dasha-lookup-drill").then(m => ({ default: m.DashaLookupDrill })), { ssr: false }),
+  "ashtottari-explorer": dynamic(() => import("./ashtottari-explorer").then(m => ({ default: m.AshtottariExplorer })), { ssr: false }),
+  "ashtottari-condition-checker": dynamic(() => import("./ashtottari-condition-checker").then(m => ({ default: m.AshtottariConditionChecker })), { ssr: false }),
+  "yogini-explorer": dynamic(() => import("./yogini-explorer").then(m => ({ default: m.YoginiExplorer })), { ssr: false }),
+  "dasha-class-comparator": dynamic(() => import("./dasha-class-comparator").then(m => ({ default: m.DashaClassComparator })), { ssr: false }),
+  "conditional-dasha-catalog": dynamic(() => import("./conditional-dasha-catalog").then(m => ({ default: m.ConditionalDashaCatalog })), { ssr: false }),
+  "conditional-criteria-checker": dynamic(() => import("./conditional-criteria-checker").then(m => ({ default: m.ConditionalCriteriaChecker })), { ssr: false }),
+  "dasha-decision-framework": dynamic(() => import("./dasha-decision-framework").then(m => ({ default: m.DashaDecisionFramework })), { ssr: false }),
+  "kp-vimshottari-intro": dynamic(() => import("./kp-vimshottari-intro").then(m => ({ default: m.KpVimshottariIntro })), { ssr: false }),
+  // Lesson 10.2.2's Â§7 interactive: DaÅ›Ä Balance Mistake Explorer â€”
+  // toggle switches for all 6 common mistakes with side-by-side correct/corrupted
+  // comparison and Â±1-day tolerance indicator.
+  "dasha-balance-mistake-explorer": dynamic(() => import("./dasha-balance-mistake-explorer").then(m => ({ default: m.DashaBalanceMistakeExplorer })), { ssr: false }),
+  // Lesson 10.2.3's Â§7 interactive: DaÅ›Ä Balance Cross-Check â€” hand-computed
+  // balance input vs engine output with Â±1-day confirmation band and
+  // severity-based diagnosis hints (match/minor/major/critical).
+  "dasha-balance-cross-check": dynamic(() => import("./dasha-balance-cross-check").then(m => ({ default: m.DashaBalanceCrossCheck })), { ssr: false }),
+  // Lesson 10.2.4's Â§7 interactive: DaÅ›Ä Table Builder â€” constructs the full
+  // birth-to-120 mahÄdaÅ›Ä table from a balance, with expandable bhukti
+  // subdivisions using the proportion formula (MD Ã— lord) Ã· 120.
+  "dasha-table-builder": dynamic(() => import("./dasha-table-builder").then(m => ({ default: m.DashaTableBuilder })), { ssr: false }),
+  // Lesson 10.4.1's Â§7 interactive: Bhukti-Yoga Matrix â€” MD-lord â†” AD-lord
+  // naisargika friendship sets the baseline quality of a sub-period.
+  // Includes dignity modulator demonstrating "modulator, not override."
+  "bhukti-yoga-matrix": dynamic(() => import("./bhukti-yoga-matrix").then(m => ({ default: m.BhuktiYogaMatrix })), { ssr: false }),
+  // Lesson 10.4.2's Â§7 interactive: KÄraka Overlay Reader â€” MD-lord's life-phase
+  // quality overlaid with AD-lord's domain-flavour significations.
+  // Detects multi-kÄraka clusters and provides same-AD-different-MD comparison.
+  "karaka-overlay-reader": dynamic(() => import("./karaka-overlay-reader").then(m => ({ default: m.KarakaOverlayReader })), { ssr: false }),
+  "amk-placement-navamsha-workbench": dynamic(() => import("./amk-placement-navamsha-workbench").then(m => ({ default: m.AmkPlacementNavamshaWorkbench })), { ssr: false }),
+  // Lesson 10.4.3's Â§7 interactive: Two-Yes Checker â€” counts independent
+  // indicator families for a predictive question and flags reliable only
+  // when â‰¥2 genuinely different lines of evidence agree.
+  "two-yes-checker": dynamic(() => import("./two-yes-checker").then(m => ({ default: m.TwoYesChecker })), { ssr: false }),
+  // Lesson 10.4.4's Â§7 interactive: Event Reading Workbench â€” runs the six-step
+  // workflow end-to-end with functional lordship, bhukti-yoga, kÄraka overlay,
+  // and the two-yes gate for any domain + ascendant + MD-AD pair.
+  "event-reading-workbench": dynamic(() => import("./event-reading-workbench").then(m => ({ default: m.EventReadingWorkbench })), { ssr: false }),
+  // Lesson 10.6.1's Â§7 interactive: Cara DaÅ›Ä Intro â€” side-by-side contrast of
+  // VimÅ›ottarÄ« (planet-based, fixed) vs Cara (sign-based, variable) with
+  // modality legend and cross-validation panel.
+  "cara-dasha-intro": dynamic(() => import("./cara-dasha-intro").then(m => ({ default: m.CaraDashaIntro })), { ssr: false }),
+  // Lesson 10.6.2's Â§7 interactive: Sthira DaÅ›Ä Intro â€” awareness-level
+  // reference table contrasting Cara and Sthira (both rÄÅ›i-based Jaimini,
+  // different rules) with deferral note to Jaimini module (T1-17).
+  "sthira-dasha-intro": dynamic(() => import("./sthira-dasha-intro").then(m => ({ default: m.SthiraDashaIntro })), { ssr: false }),
+  // Lesson 10.6.3's Â§7 interactive: KÄlacakra Overview â€” awareness-level
+  // pÄda-derived sign daÅ›Ä explorer with savya/apasavya direction rules,
+  // 108-point naká¹£atra-pÄda grid, and complexity breakdown.
+  "kalachakra-overview": dynamic(() => import("./kalachakra-overview").then(m => ({ default: m.KalachakraOverview })), { ssr: false }),
+  // Lesson 10.6.4's Â§7 interactive: ParÄÅ›arÄ«-Jaimini Chooser â€” decision-tool
+  // recommending daÅ›Ä(s) for any situation with VimÅ›ottarÄ« always anchored.
+  // Includes cross-validation scenarios (convergence / divergence).
+  "parashari-jaimini-chooser": dynamic(() => import("./parashari-jaimini-chooser").then(m => ({ default: m.ParashariJaiminiChooser })), { ssr: false }),
+  // Lesson 10.7.5's Â§7 interactive: DaÅ›Ä Landscape Map â€” survey of ~14 systems
+  // grouped by class, five-point discipline overlay, and honest-framing practice.
+  // Closes Module 10.
+  "dasha-landscape-map": dynamic(() => import("./dasha-landscape-map").then(m => ({ default: m.DashaLandscapeMap })), { ssr: false }),
+  "drishti-strength-meter": dynamic(() => import("./drishti-strength-meter").then(m => ({ default: m.DrishtiStrengthMeter })), { ssr: false }),
+  "rashi-drishti-grid": dynamic(() => import("./rashi-drishti-grid").then(m => ({ default: m.RashiDrishtiGrid })), { ssr: false }),
+  "aspect-doctrine-comparator": dynamic(() => import("./aspect-doctrine-comparator").then(m => ({ default: m.AspectDoctrineComparator })), { ssr: false }),
+  "tajika-orb-calculator": dynamic(() => import("./tajika-orb-calculator").then(m => ({ default: m.TajikaOrbCalculator })), { ssr: false }),
+  "tajika-applying-separating": dynamic(() => import("./tajika-applying-separating").then(m => ({ default: m.TajikaApplyingSeparating })), { ssr: false }),
+  "tajika-yoga-glossary": dynamic(() => import("./tajika-yoga-glossary").then(m => ({ default: m.TajikaYogaGlossary })), { ssr: false }),
+  "varshaphala-overview": dynamic(() => import("./varshaphala-overview").then(m => ({ default: m.VarshaphalaOverview })), { ssr: false }),
+  "doctrine-selector": dynamic(() => import("./doctrine-selector").then(m => ({ default: m.DoctrineSelector })), { ssr: false }),
+  "multi-stream-chart-comparator": dynamic(() => import("./multi-stream-chart-comparator").then(m => ({ default: m.MultiStreamChartComparator })), { ssr: false }),
+  "saturn-aspect-disambiguator": dynamic(() => import("./saturn-aspect-disambiguator").then(m => ({ default: m.SaturnAspectDisambiguator })), { ssr: false }),
+  "pmpy-detector": dynamic(() => import("./pmpy-detector").then(m => ({ default: m.PmpyDetector })), { ssr: false }),
+  "pmpy-archetype-explorer": dynamic(() => import("./pmpy-archetype-explorer").then(m => ({ default: m.PmpyArchetypeExplorer })), { ssr: false }),
+  "pmpy-dilution-checker": dynamic(() => import("./pmpy-dilution-checker").then(m => ({ default: m.PmpyDilutionChecker })), { ssr: false }),
+  "pmpy-grade-scenario": dynamic(() => import("./pmpy-grade-scenario").then(m => ({ default: m.PmpyGradeScenario })), { ssr: false }),
+  "yoga-strength-overlay": dynamic(() => import("./yoga-strength-overlay").then(m => ({ default: m.YogaStrengthOverlay })), { ssr: false }),
+  "cross-stream-yoga-map": dynamic(() => import("./cross-stream-yoga-map").then(m => ({ default: m.CrossStreamYogaMap })), { ssr: false }),
+  "yoga-firing-timeline": dynamic(() => import("./yoga-firing-timeline").then(m => ({ default: m.YogaFiringTimeline })), { ssr: false }),
+  "yoga-reading-workflow": dynamic(() => import("./yoga-reading-workflow").then(m => ({ default: m.YogaReadingWorkflow })), { ssr: false }),
+  "sarasvati-learning-arts-workbench": dynamic(() => import("./sarasvati-learning-arts-workbench").then(m => ({ default: m.SarasvatiLearningArtsWorkbench })), { ssr: false }),
+  "pancha-mahapurusha-career-workbench": dynamic(() => import("./pancha-mahapurusha-career-workbench").then(m => ({ default: m.PanchaMahapurushaCareerWorkbench })), { ssr: false }),
+  "raja-yoga-detector": dynamic(() => import("./raja-yoga-detector").then(m => ({ default: m.RajaYogaDetector })), { ssr: false }),
+  "raja-yoga-tenth-career-workbench": dynamic(() => import("./raja-yoga-tenth-career-workbench").then(m => ({ default: m.RajaYogaTenthCareerWorkbench })), { ssr: false }),
+  "yogi-avayogi-career-workbench": dynamic(() => import("./yogi-avayogi-career-workbench").then(m => ({ default: m.YogiAvayogiCareerWorkbench })), { ssr: false }),
+  "dasha-career-event-window-workbench": dynamic(() => import("./dasha-career-event-window-workbench").then(m => ({ default: m.DashaCareerEventWindowWorkbench })), { ssr: false }),
+  "lal-kitab-career-overlay-workbench": dynamic(() => import("./lal-kitab-career-overlay-workbench").then(m => ({ default: m.LalKitabCareerOverlayWorkbench })), { ssr: false }),
+  "tajika-career-year-refinement-workbench": dynamic(() => import("./tajika-career-year-refinement-workbench").then(m => ({ default: m.TajikaCareerYearRefinementWorkbench })), { ssr: false }),
+  "career-transit-confirmation-workbench": dynamic(() => import("./career-transit-confirmation-workbench").then(m => ({ default: m.CareerTransitConfirmationWorkbench })), { ssr: false }),
+  "career-synthesis-overview-workbench": dynamic(() => import("./career-synthesis-overview-workbench").then(m => ({ default: m.CareerSynthesisOverviewWorkbench })), { ssr: false }),
+  "job-offer-synthesis-workbench": dynamic(() => import("./job-offer-synthesis-workbench").then(m => ({ default: m.JobOfferSynthesisWorkbench })), { ssr: false }),
+  "entrepreneurship-employment-synthesis-workbench": dynamic(() => import("./entrepreneurship-employment-synthesis-workbench").then(m => ({ default: m.EntrepreneurshipEmploymentSynthesisWorkbench })), { ssr: false }),
+  "career-scope-competence-router": dynamic(() => import("./career-scope-competence-router").then(m => ({ default: m.CareerScopeCompetenceRouter })), { ssr: false }),
+  "dharma-karmadhipati-detector": dynamic(() => import("./dharma-karmadhipati-detector").then(m => ({ default: m.DharmaKarmadhipatiDetector })), { ssr: false }),
+  "raja-yoga-variants-map": dynamic(() => import("./raja-yoga-variants-map").then(m => ({ default: m.RajaYogaVariantsMap })), { ssr: false }),
+  "kendra-trikona-rationale": dynamic(() => import("./kendra-trikona-rationale").then(m => ({ default: m.KendraTrikonaRationale })), { ssr: false }),
+  "raja-yoga-worked-example": dynamic(() => import("./raja-yoga-worked-example").then(m => ({ default: m.RajaYogaWorkedExample })), { ssr: false }),
+  "dhana-yoga-detector": dynamic(() => import("./dhana-yoga-detector").then(m => ({ default: m.DhanaYogaDetector })), { ssr: false }),
+  "dhana-yoga-variants-map": dynamic(() => import("./dhana-yoga-variants-map").then(m => ({ default: m.DhanaYogaVariantsMap })), { ssr: false }),
+  "raja-dhana-overlap-map": dynamic(() => import("./raja-dhana-overlap-map").then(m => ({ default: m.RajaDhanaOverlapMap })), { ssr: false }),
+  "dhana-yoga-worked-example": dynamic(() => import("./dhana-yoga-worked-example").then(m => ({ default: m.DhanaYogaWorkedExample })), { ssr: false }),
+  "ruchaka-valour-simulator": dynamic(() => import("./ruchaka-valour-simulator").then(m => ({ default: m.RuchakaValourSimulator })), { ssr: false }),
+  "bhadra-intellect-explorer": dynamic(() => import("./bhadra-intellect-explorer").then(m => ({ default: m.BhadraIntellectExplorer })), { ssr: false }),
+  "hamsa-malavya-synthesis": dynamic(() => import("./hamsa-malavya-synthesis").then(m => ({ default: m.HamsaMalavyaSynthesis })), { ssr: false }),
+  "shasha-authority-analyzer": dynamic(() => import("./shasha-authority-analyzer").then(m => ({ default: m.ShashaAuthorityAnalyzer })), { ssr: false }),
+  "lunar-yoga-detector": dynamic(() => import("./lunar-yoga-detector").then(m => ({ default: m.LunarYogaDetector })), { ssr: false }),
+  "kemadruma-checker": dynamic(() => import("./kemadruma-checker").then(m => ({ default: m.KemadrumaChecker })), { ssr: false }),
+  "gajakesari-simulator": dynamic(() => import("./gajakesari-simulator").then(m => ({ default: m.GajakesariSimulator })), { ssr: false }),
+  "budhaditya-checker": dynamic(() => import("./budhaditya-checker").then(m => ({ default: m.BudhadityaChecker })), { ssr: false }),
+  // Lesson 13.4.1's Â§7 interactive: Cheá¹£á¹­Ä Bala Calculator â€” motional strength
+  // explorer with eight cheá¹£á¹­Ä avasthÄs, epicycle diagram, Sun/Moon convention
+  // panels, and virÅ«pa spectrum. Rich SVG diagrams illustrate retrograde mechanics.
+  "cheshta-bala-calculator": dynamic(() => import("./cheshta-bala-calculator").then(m => ({ default: m.CheshthaBalaCalculator })), { ssr: false }),
+  // Lesson 13.4.2's Â§7 interactive: Naisargika Bala Table â€” the seven fixed
+  // natural-strength values with descending bar chart, fraction ladder, wheel
+  // diagram, and baseline-stack visual. No engine needed (classical constants).
+  "naisargika-table": dynamic(() => import("./naisargika-table").then(m => ({ default: m.NaisargikaTable })), { ssr: false }),
+  // Lesson 13.4.3's Â§7 interactive: Naisargika Rationale â€” hierarchy ladder,
+  // luminosity overlay, Venus-vs-Jupiter comparison, and baseline reminder.
+  // Explains why the fixed order is not arbitrary.
+  "naisargika-rationale": dynamic(() => import("./naisargika-rationale").then(m => ({ default: m.NaisargikaRationale })), { ssr: false }),
+  // Lesson 13.5.1's Â§7 interactive: Dá¹›k Bala Calculator â€” aspect net diagram,
+  // signed number line, add/remove aspects, six-component overview. Teaches
+  // the signed-net concept and that dá¹›k bala can be negative.
+  "drk-bala-calculator": dynamic(() => import("./drk-bala-calculator").then(m => ({ default: m.DrkBalaCalculator })), { ssr: false }),
+  // Lesson 13.5.2's Â§7 interactive: á¹¢aá¸bala Summation â€” waterfall stack,
+  // threshold gauge, all-planets reference, and pass/fail comparison.
+  // Teaches summing, converting to rÅ«pas, and comparing to minima.
+  "shadbala-summation": dynamic(() => import("./shadbala-summation").then(m => ({ default: m.ShadbalaSummation })), { ssr: false }),
+  // Lesson 13.5.3's Â§7 interactive: á¹¢aá¸bala Scorecard â€” per-planet ratio + band
+  // table, band spectrum, workflow diagram, and confidence-vs-virtue visual.
+  // Closes Module 13 by turning totals into interpretive judgement.
+  "shadbala-scorecard": dynamic(() => import("./shadbala-scorecard").then(m => ({ default: m.ShadbalaScorecard })), { ssr: false }),
+  // Lesson 13.6.1's Â§7 interactive: BhÄva Bala Calculator â€” house selector,
+  // three-component inputs, house diagram, and á¹£aá¸bala parallel comparison.
+  "bhava-bala-calculator": dynamic(() => import("./bhava-bala-calculator").then(m => ({ default: m.BhavaBalaCalculator })), { ssr: false }),
+  // Lesson 13.6.2's Â§7 interactive: á¹¢aá¸balaâ€“BhÄva Bala Synthesis â€” domain
+  // selector, strength toggles, four-cell matrix, and confidence dial.
+  // Teaches integrative reading of planet + house strength.
+  "shadbala-bhavabala-synthesis": dynamic(() => import("./shadbala-bhavabala-synthesis").then(m => ({ default: m.ShadbalaBhavabalaSynthesis })), { ssr: false }),
+  // Lesson 13.6.3's Â§7 interactive: Cross-Stream Strength Map â€” four stream
+  // conceptions, parallel tracks, convergence/divergence, and paÃ±cavargÄ«ya
+  // breakdown. Maps how each sampradÄya measures strength.
+  "cross-stream-strength-map": dynamic(() => import("./cross-stream-strength-map").then(m => ({ default: m.CrossStreamStrengthMap })), { ssr: false }),
+  // Lesson 13.6.4's Â§7 interactive: Strength-Quality Matrix â€” Module 13 capstone.
+  // 2Ã—2 judgement matrix fusing á¹£aá¸bala (quantity) with dignity/aspect/yoga (quality).
+  // Clickable SVG matrix + preset scenarios + amplifier diagram + discipline rules.
+  "strength-quality-matrix": dynamic(() => import("./strength-quality-matrix").then(m => ({ default: m.StrengthQualityMatrix })), { ssr: false }),
+  // Lesson 13.3.3's Â§7 interactive: Paká¹£a-Yuddha Calculator â€” paká¹£abala (lunar-phase
+  // strength split) + graha-yuddha (planetary war detection). Fortnight toggle,
+  // planet status grid, proximity checker with SVG diagrams, and worked scenarios.
+  "paksha-yuddha-calculator": dynamic(() => import("./paksha-yuddha-calculator").then(m => ({ default: m.PakshaYuddhaCalculator })), { ssr: false }),
+  // Lesson 13.3.4's Â§7 interactive: Dik-KÄla Summer â€” Chapter 3 capstone.
+  // Dik bala slider + nine kÄla sub-component sliders + SVG sum diagram +
+  // virÅ«paâ†’rÅ«pa conversion + worked presets (Sun 10th, Moon night, war penalty).
+  "dik-kala-summer": dynamic(() => import("./dik-kala-summer").then(m => ({ default: m.DikKalaSummer })), { ssr: false }),
+  // Lesson 14.4.1's Â§7 interactive: Laká¹£mÄ«-SarasvatÄ« Detector â€” checks both
+  // deity-named special yogas. North Indian chart SVG + house/dignity selectors +
+  // condition checker with preset scenarios (Laká¹£mÄ« full, SarasvatÄ« full, broken).
+  "lakshmi-saraswati-detector": dynamic(() => import("./lakshmi-saraswati-detector").then(m => ({ default: m.LakshmiSaraswatiDetector })), { ssr: false }),
+  // Lesson 14.4.2's Â§7 interactive: Akhanda SÄmrÄjya Checker â€” tests the
+  // "unbroken sovereignty" yoga against selectable source definitions (standard
+  // vs PhaladÄ«pikÄ). Sovereignty-stack SVG + mini-chart + source-variation discipline.
+  "akhanda-samrajya-checker": dynamic(() => import("./akhanda-samrajya-checker").then(m => ({ default: m.AkhandaSamrajyaChecker })), { ssr: false }),
+  // Lesson 14.4.3's Â§7 interactive: BuddhÄditya-Gaja-Kesari Detector â€” revisits
+  // both common yogas with depth. Combustion orb slider + kendra-from-Moon
+  // circular diagram + strength grading + trikoá¹‡a misread warning.
+  "buddhaditya-gajakesari-detector": dynamic(() => import("./buddhaditya-gajakesari-detector").then(m => ({ default: m.BuddhadityaGajakesariDetector })), { ssr: false }),
+  // Lesson 14.4.4's Â§7 interactive: Special-Yoga Scan â€” Chapter 4 capstone.
+  // Systematic 5-yoga checklist on a fixed Cancer-lagna worked chart.
+  // Jupiter-dignity toggle demonstrates broken-condition cascade.
+  "special-yoga-scan": dynamic(() => import("./special-yoga-scan").then(m => ({ default: m.SpecialYogaScan })), { ssr: false }),
+  // Lesson 14.5.1's Â§7 interactive: Neecha-Bhaá¹…ga Checker â€” cancellation of debilitation.
+  // Planet selector + 5-condition checklist + rescue-chain SVG + honest debate.
+  "neecha-bhanga-checker": dynamic(() => import("./neecha-bhanga-checker").then(m => ({ default: m.NeechaBhangaChecker })), { ssr: false }),
+  // Lesson 14.5.2's Â§7 interactive: Vipareeta Detector â€” three Vipareeta RÄja Yogas.
+  // Lagna selector + dusthana-lord placements + dusthana-triangle SVG + refinements.
+  "vipareeta-detector": dynamic(() => import("./vipareeta-detector").then(m => ({ default: m.VipareetaDetector })), { ssr: false }),
+  // Lesson 14.5.3's Â§7 interactive: Vipareeta Rationale â€” spoiler-of-spoiler doctrine.
+  // Scenario explorer + strength/timing controls + spoiler-mechanism SVG + honest limits.
+  "vipareeta-rationale": dynamic(() => import("./vipareeta-rationale").then(m => ({ default: m.VipareetaRationale })), { ssr: false }),
+  // Lesson 14.5.4's Â§7 interactive: Vipareeta-Neecha Scan â€” Chapter 5 capstone.
+  // Fixed Aries chart + neecha-bhaá¹…ga check + Hará¹£a check + combined honest reading.
+  "vipareeta-neecha-scan": dynamic(() => import("./vipareeta-neecha-scan").then(m => ({ default: m.VipareetaNeechaScan })), { ssr: false }),
+  // Lesson 14.6.1's Â§7 interactive: Manglik Detector â€” Kuja-Doá¹£a from lagna/Moon/Venus.
+  // House-set variation (6-house vs 5-house) + severity grading + defearmongering.
+  "manglik-detector": dynamic(() => import("./manglik-detector").then(m => ({ default: m.ManglikDetector })), { ssr: false }),
+  // Lesson 14.6.2's Â§7 interactive: Manglik Cancellation Checker â€” 15+ grouped conditions.
+  // Mars sign/house + toggle checklist + cancellation gauge + weighted result.
+  "manglik-cancellation-checker": dynamic(() => import("./manglik-cancellation-checker").then(m => ({ default: m.ManglikCancellationChecker })), { ssr: false }),
+  // Lesson 14.6.3's Â§7 interactive: KÄla Sarpa Detector â€” nodal-axis configuration check.
+  // RÄhu + 7 planet controls + circular diagram + doctrinal debate + honest handling.
+  "kala-sarpa-detector": dynamic(() => import("./kala-sarpa-detector").then(m => ({ default: m.KalaSarpaDetector })), { ssr: false }),
+  // Lesson 14.6.4's Â§7 interactive: Pitá¹›-Doá¹£a Indicator â€” chart signatures + remedial framework.
+  // Sun/Rahu/Saturn/9th-lord controls + signature gauge + remedy cards + honest limits.
+  "pitr-dosha-indicator": dynamic(() => import("./pitr-dosha-indicator").then(m => ({ default: m.PitrDoshaIndicator })), { ssr: false }),
+  // Lesson 14.6.5's Â§7 interactive: Kemadruma + Sade Sati Recap â€” two doá¹£as in one surface.
+  // Kemadruma (Moon + 2nd/12th + cancellations) + Sade Sati (Moon + Saturn transit + phases).
+  "kemadruma-sadesati-recap": dynamic(() => import("./kemadruma-sadesati-recap").then(m => ({ default: m.KemadrumaSadesatiRecap })), { ssr: false }),
+  // Lesson 14.6.6's Â§7 interactive: De-Fearmongering Protocol -- 8-step discipline walker.
+  // Doá¹£a selector + step cards + reframe exercise + ethics connection. Closes Chapter 6.
+  "defearmongering-protocol": dynamic(() => import("./defearmongering-protocol").then(m => ({ default: m.DefearmongeringProtocol })), { ssr: false }),
+  // Module 17 Chapter 3 argala explorer: reference-house selector + planet placement +
+  // circular diagram with argala/virodha highlights + pair-by-pair net computation +
+  // five-step workflow. Serves all four lessons in the argala chapter.
+  "argala-explorer": dynamic(() => import("./argala-explorer").then(m => ({ default: m.ArgalaExplorer })), { ssr: false }),
+  // Lesson 17.3.1 interactive: Argala Concept Explorer -- bolt metaphor SVG,
+  // reference-house explorer, mechanism discriminator (argala vs graha-dá¹›á¹£á¹­i vs rÄÅ›i-dá¹›á¹£á¹­i),
+  // and what-argala-does/does-not-do checklist.
+  "argala-concept-explorer": dynamic(() => import("./argala-concept-explorer").then(m => ({ default: m.ArgalaConceptExplorer })), { ssr: false }),
+  // Lesson 17.3.2 interactive: Positive Argala 2/4/11 -- counting drill with circular diagram,
+  // self-check challenges, strength visualiser, and common-trap spotter.
+  "positive-argala-2-4-11": dynamic(() => import("./positive-argala-2-4-11").then(m => ({ default: m.PositiveArgala2411 })), { ssr: false }),
+  // Lesson 17.3.3 interactive: VirodhÄrgala Counter-Intervention -- obstruction pair explorer,
+  // net-effect calculator with +/- count controls, and scenario presets.
+  "virodhargala-counter-intervention": dynamic(() => import("./virodhargala-counter-intervention").then(m => ({ default: m.VirodhargalaCounterIntervention })), { ssr: false }),
+  // Lesson 17.4.1 interactive: Ä€rÅ«á¸ha PÄda Finder -- double-count computation,
+  // 1st/7th exception detection, reality-vs-perception comparison, step-by-step walker.
+  "arudha-pada-finder": dynamic(() => import("./arudha-pada-finder").then(m => ({ default: m.ArudhaPadaFinder })), { ssr: false }),
+  // Lesson 17.4.2 interactive: The Twelve Ä€rÅ«á¸ha PÄdas -- complete image-pÄda grid,
+  // AL/UL map, Lagna-AL gap interpretation, and common mistakes panel.
+  "twelve-arudha-padas": dynamic(() => import("./twelve-arudha-padas").then(m => ({ default: m.TwelveArudhaPadas })), { ssr: false }),
+  // Lesson 17.4.3 interactive: Ä€rÅ«á¸ha PÄda Calculator (Upapada mode) --
+  // computes UL from the 12th, shows double-count steps, 2nd-from-UL, planet
+  // placements, and triangulation reminders.
+  "arudha-pada-calculator": dynamic(() => import("./arudha-pada-calculator").then(m => ({ default: m.ArudhaPadaCalculator })), { ssr: false }),
+  // Lesson 17.4.4 interactive: Ä€rÅ«á¸ha PÄda Explorer -- computes all twelve
+  // padas, inspects occupants per pada, compares image vs reality, and builds
+  // focused readings (AL, AL+UL, AL+A2, AL+A10, AL+A11).
+  "arudha-pada-explorer": dynamic(() => import("./arudha-pada-explorer").then(m => ({ default: m.ArudhaPadaExplorer })), { ssr: false }),
+  // Lesson 17.4.5 interactive: Ä€rÅ«á¸ha Caveat Lab -- exception detector,
+  // dual-lordship convention switcher for Scorpio/Aquarius, and tradition
+  // disclosure statement generator.
+  "arudha-caveat-lab": dynamic(() => import("./arudha-caveat-lab").then(m => ({ default: m.ArudhaCaveatLab })), { ssr: false }),
+  // Lesson 17.5.1 interactive: RÄÅ›i-Dá¹›á¹£á¹­i Visualizer -- click any sign to
+  // see the three signs it aspects, with explore mode, drill mode, and
+  // rÄÅ›i-dá¹›á¹£á¹­i vs graha-dá¹›á¹£á¹­i comparison.
+  "rashi-drishti-visualizer": dynamic(() => import("./rashi-drishti-visualizer").then(m => ({ default: m.RashiDrishtiVisualizer })), { ssr: false }),
+  // Lesson 17.5.2 interactive: RÄÅ›i-Dá¹›á¹£á¹­i Mapper -- place planets on a chart,
+  // select a target, see which signs aspect it, and carry occupants + lords
+  // across to read influence and multi-sign convergence.
+  "rashi-drishti-mapper": dynamic(() => import("./rashi-drishti-mapper").then(m => ({ default: m.RashiDrishtiMapper })), { ssr: false }),
+  // Lesson 17.5.3 interactive: AK-Drishti Synthesizer -- integrates cara-kÄrakas
+  // with rÄÅ›i-dá¹›á¹£á¹­i. Select a kÄraka, place it in a sign, populate the chart,
+  // and read the incoming sign-aspects with benefic/malefic classification
+  // and automated synthesis reading. Includes the four static-reading framework.
+  "ak-drishti-synthesizer": dynamic(() => import("./ak-drishti-synthesizer").then(m => ({ default: m.AkDrishtiSynthesizer })), { ssr: false }),
+  // Lesson 17.7.1 interactive: KÄrakÄá¹Å›a Lagna Locator -- identify the
+  // Ä€tmakÄraka from within-sign degrees, select its navÄá¹Å›a (D9) sign, and
+  // see that sign projected onto the rÄÅ›i (D1) wheel as a special lagna with
+  // houses counted from the KÄrakÄá¹Å›a. Includes source-vs-target diagram.
+  "karakamsha-lagna-locator": dynamic(() => import("./karakamsha-lagna-locator").then(m => ({ default: m.KarakamshaLagnaLocator })), { ssr: false }),
+  // Lesson 17.7.2 interactive: KÄrakÄá¹Å›a Reader -- the five-step soul-purpose
+  // read. Walks through AK identification, D9 sign selection, KL placement,
+  // occupant + rÄÅ›i-dá¹›á¹£á¹­i aspect reading, and key houses from KL with
+  // automated synthesis. Presets for Leo and Scorpio KÄrakÄá¹Å›a examples.
+  "karakamsha-reader": dynamic(() => import("./karakamsha-reader").then(m => ({ default: m.KarakamshaReader })), { ssr: false }),
+  "karakamsha-virgo-soul-map-lab": dynamic(() => import("./karakamsha-virgo-soul-map-lab").then(m => ({ default: m.KarakamshaVirgoSoulMapLab })), { ssr: false }),
+  "ishta-devata-ketu-derivation-lab": dynamic(() => import("./ishta-devata-ketu-derivation-lab").then(m => ({ default: m.IshtaDevataKetuDerivationLab })), { ssr: false }),
+  "ishta-devata-respect-framing-lab": dynamic(() => import("./ishta-devata-respect-framing-lab").then(m => ({ default: m.IshtaDevataRespectFramingLab })), { ssr: false }),
+  "karakamsha-ishta-synthesis-walkthrough": dynamic(() => import("./karakamsha-ishta-synthesis-walkthrough").then(m => ({ default: m.KarakamshaIshtaSynthesisWalkthrough })), { ssr: false }),
+  // Lesson 17.7.3 interactive: Iá¹£á¹­a-DevatÄ Finder -- select the KÄrakÄá¹Å›a,
+  // place planets, and see the 12th-from-KL auto-computed with planet-to-deity
+  // mapping, empty-house lord fallback, aspecting contributors, and ethical
+  // framing (offer, respect, hold lightly).
+  "ishta-devata-finder": dynamic(() => import("./ishta-devata-finder").then(m => ({ default: m.IshtaDevataFinder })), { ssr: false }),
+  "jaimini-amk-career-case-workbench": dynamic(() => import("./jaimini-amk-career-case-workbench").then(m => ({ default: m.JaiminiAmkCareerCaseWorkbench })), { ssr: false }),
+  // Lesson 17.7.4 interactive: Jaimini Workflow Walkthrough -- six ordered steps
+  // assembling every Jaimini tool into one end-to-end reading. Enforces workflow
+  // discipline: static tools first (Steps 1-5), timing engine last (Step 6).
+  // Includes question presets, running synthesis, timing-first failure demo,
+  // and cara-daÅ›Ä / VimÅ›ottarÄ« cross-validation.
+  "jaimini-workflow-walkthrough": dynamic(() => import("./jaimini-workflow-walkthrough").then(m => ({ default: m.JaiminiWorkflowWalkthrough })), { ssr: false }),
+  // Lesson 17.7.5 interactive: Jaimini Module Closure Map -- seven-chapter arc
+  // visualiser, pipeline tracer for four question types, Tier-1-vs-Tier-2
+  // comparison, and three discipline cards. Click any chapter to expand its
+  // consumes/produces detail; select a question to highlight which chapters
+  // the pipeline uses.
+  "jaimini-module-closure-map": dynamic(() => import("./jaimini-module-closure-map").then(m => ({ default: m.JaiminiModuleClosureMap })), { ssr: false }),
+  // --- Module 18: Lal Kitab ---
+  "lal-kitab-tradition-explorer": dynamic(() => import("./lal-kitab-tradition-explorer").then(m => ({ default: m.LalKitabTraditionExplorer })), { ssr: false }),
+  "lal-kitab-farman-timeline": dynamic(() => import("./lal-kitab-farman-timeline").then(m => ({ default: m.LalKitabFarmanTimeline })), { ssr: false }),
+  "lal-kitab-classical-comparator": dynamic(() => import("./lal-kitab-classical-comparator").then(m => ({ default: m.LalKitabClassicalComparator })), { ssr: false }),
+  "lal-kitab-status-and-ethics-explorer": dynamic(() => import("./lal-kitab-status-and-ethics-explorer").then(m => ({ default: m.LalKitabStatusAndEthicsExplorer })), { ssr: false }),
+  "lal-kitab-teva-doctrine-explorer": dynamic(() => import("./lal-kitab-teva-doctrine-explorer").then(m => ({ default: m.LalKitabTevaDoctrineExplorer })), { ssr: false }),
+  "teva-builder": dynamic(() => import("./teva-builder").then(m => ({ default: m.TevaBuilder })), { ssr: false }),
+  "teva-house-reader": dynamic(() => import("./teva-house-reader").then(m => ({ default: m.TevaHouseReader })), { ssr: false }),
+  "lal-kitab-luminary-mapper": dynamic(() => import("./lal-kitab-luminary-mapper").then(m => ({ default: m.LalKitabLuminaryMapper })), { ssr: false }),
+  "lal-kitab-mars-mercury-mapper": dynamic(() => import("./lal-kitab-mars-mercury-mapper").then(m => ({ default: m.LalKitabMarsMercuryMapper })), { ssr: false }),
+  "lal-kitab-benefic-sorter": dynamic(() => import("./lal-kitab-benefic-sorter").then(m => ({ default: m.LalKitabBeneficSorter })), { ssr: false }),
+  "lal-kitab-shadow-triad": dynamic(() => import("./lal-kitab-shadow-triad").then(m => ({ default: m.LalKitabShadowTriad })), { ssr: false }),
+  "lal-kitab-varshphala-concept": dynamic(() => import("./lal-kitab-varshphala-concept").then(m => ({ default: m.LalKitabVarshphalaConcept })), { ssr: false }),
+  "lal-kitab-varshphala-computation": dynamic(() => import("./lal-kitab-varshphala-computation").then(m => ({ default: m.LalKitabVarshphalaComputation })), { ssr: false }),
+  "lal-kitab-varshphala-reading": dynamic(() => import("./lal-kitab-varshphala-reading").then(m => ({ default: m.LalKitabVarshphalaReading })), { ssr: false }),
+  "lal-kitab-tajika-varshaphala-comparator": dynamic(() => import("./lal-kitab-tajika-varshaphala-comparator").then(m => ({ default: m.LalKitabTajikaVarshaphalaComparator })), { ssr: false }),
+  "lal-kitab-upaya-family-sorter": dynamic(() => import("./lal-kitab-upaya-family-sorter").then(m => ({ default: m.LalKitabUpayaFamilySorter })), { ssr: false }),
+  "lal-kitab-epistemic-disclosure-lab": dynamic(() => import("./lal-kitab-epistemic-disclosure-lab").then(m => ({ default: m.LalKitabEpistemicDisclosureLab })), { ssr: false }),
+  "lal-kitab-remedy-decision-framework": dynamic(() => import("./lal-kitab-remedy-decision-framework").then(m => ({ default: m.LalKitabRemedyDecisionFramework })), { ssr: false }),
+  "cross-stream-remedy-planner": dynamic(() => import("./cross-stream-remedy-planner").then(m => ({ default: m.CrossStreamRemedyPlanner })), { ssr: false }),
+  "lal-kitab-recognition-lab": dynamic(() => import("./lal-kitab-recognition-lab").then(m => ({ default: m.LalKitabRecognitionLab })), { ssr: false }),
+  "lal-kitab-stream-mastery-map": dynamic(() => import("./lal-kitab-stream-mastery-map").then(m => ({ default: m.LalKitabStreamMasteryMap })), { ssr: false }),
+  // Lesson 18.2.4 interactive: Teva vs Lagna Cross-Validator â€” side-by-side dual
+  // charts (Teva fixed Aries + ParÄÅ›arÄ« lagna) with planet tracer and discipline
+  // check scenarios testing no-conflation. Reinforces frame separation.
+  "teva-lagna-cross-validator": dynamic(() => import("./teva-lagna-cross-validator").then(m => ({ default: m.TevaLagnaCrossValidator })), { ssr: false }),
+  // Lesson 18.3.1 interactive: Blind Planet Explorer â€” concept tab with andhÄ
+  // metaphor and characteristics, blind-vs-combust comparison table + scenario
+  // classifier, and 6-scenario recognition drill with cause-based reasoning.
+  "blind-planet-explorer": dynamic(() => import("./blind-planet-explorer").then(m => ({ default: m.BlindPlanetExplorer })), { ssr: false }),
+  // Lesson 18.3.2 interactive: Sleeping Planet Explorer â€” concept tab with sutela
+  // metaphor and three characteristics, three awakening-mechanism cards, blind/
+  // sleeping/awake comparison table, and 6-scenario four-state recognition drill.
+  "sleeping-planet-explorer": dynamic(() => import("./sleeping-planet-explorer").then(m => ({ default: m.SleepingPlanetExplorer })), { ssr: false }),
+  // Lesson 18.3.3 interactive: Burning Planet Explorer â€” concept tab with jalit
+  // metaphor and three characteristics, two cause cards, four-state comparison
+  // table with remedy logic, and 6-scenario recognition drill.
+  "burning-planet-explorer": dynamic(() => import("./burning-planet-explorer").then(m => ({ default: m.BurningPlanetExplorer })), { ssr: false }),
+  // Lesson 18.3.4 interactive: Planetary State Synthesizer â€” Chapter 3 capstone.
+  // Awake-state concept with lamp metaphor, interactive four-state framework table
+  // with remedy-goal mapping, elimination checklist, and 6-scenario capstone drill
+  // with yes/no check previews.
+  "planetary-state-synthesizer": dynamic(() => import("./planetary-state-synthesizer").then(m => ({ default: m.PlanetaryStateSynthesizer })), { ssr: false }),
+  // Lesson 21.3.1 interactive: MÅ«lÄá¹…ka Calculator â€” birth-day-of-month (1-31)
+  // input with strict-preservation vs flexibility convention toggle, step-by-step
+  // computation, graha-aá¹…ka register + caveat display, 31-day reference table,
+  // five-step discipline workflow, and four worked examples.
+  "mulanka-calculator": dynamic(() => import("./mulanka-calculator").then(m => ({ default: m.MulankaCalculator })), { ssr: false }),
+  // Lesson 21.3.2 interactive: BhÄgyÄá¹…ka Calculator â€” full birth-date input
+  // (day/month/year) with strict-preservation vs flexibility convention toggle,
+  // step-by-step digit-sum computation, graha-aá¹…ka register + caveat display,
+  // combined MÅ«lÄá¹…ka-to-BhÄgyÄá¹…ka lifetime-arc reading, worked examples, and
+  // five-step discipline workflow including destiny-determinism refusal layer.
+  "bhagyanka-calculator": dynamic(() => import("./bhagyanka-calculator").then(m => ({ default: m.BhagyankaCalculator })), { ssr: false }),
+  // Lesson 21.3.3 interactive: Name-Number (NÄmÄá¹…ka) Calculator â€” three-system
+  // name computation (Chaldean / Pythagorean / Vedic-Chaldean hybrid) with
+  // strict-preservation vs flexibility convention toggle, letter-by-letter
+  // breakdown, graha-aá¹…ka register + caveat display, Pythagorean four-number
+  // framework panel, letter-table reference, worked examples, and six-step
+  // discipline workflow including name-change refusal layer.
+  "mulanka-bhagyanka-namanka-calculator": dynamic(() => import("./mulanka-bhagyanka-namanka-calculator").then(m => ({ default: m.MulankaBhagyankaNamankaCalculator })), { ssr: false }),
+  // Lesson 21.3.4 interactive: Personal Year Number Calculator â€” birth-date +
+  // target-calendar-year computation with strict-preservation vs flexibility
+  // convention toggle, step-by-step digit-sum breakdown, graha-aá¹…ka register +
+  // caveat display, 9-year cycle visualisation, worked examples, and six-step
+  // discipline workflow including year-as-determinant refusal layer.
+  "personal-year-calculator": dynamic(() => import("./personal-year-calculator").then(m => ({ default: m.PersonalYearCalculator })), { ssr: false }),
+  // Lesson 21.4.1 interactive: Name-Correction Rationale Evaluator â€” scenario-
+  // based drill for categorising name-change rationales, identifying over-claim
+  // layers, applying the convergent-independent-grounds operational test, and
+  // reaching approve / partial / refuse verdicts. Includes six-category reference
+  // and five-step rationale-evaluation workflow.
+  "name-correction-rationale-evaluator": dynamic(() => import("./name-correction-rationale-evaluator").then(m => ({ default: m.NameCorrectionRationaleEvaluator })), { ssr: false }),
+  // Lesson 21.4.2 interactive: Name-Correction Candidate Calculator â€” six-step
+  // workflow tool that computes current + candidate Name-Numbers under the chosen
+  // system and convention, evaluates graha-compatibility (MITRA/SHATRU/SAMA) with
+  // MÅ«lÄá¹…ka / BhÄgyÄá¹…ka, tabulates candidates, and generates a discipline-compliant
+  // confirmatory-not-deterministic presentation template.
+  "name-correction-candidate-calculator": dynamic(() => import("./name-correction-candidate-calculator").then(m => ({ default: m.NameCorrectionCandidateCalculator })), { ssr: false }),
+  // Lesson 21.4.3 interactive: Name-Correction Caution Screener â€” scenario-based
+  // drill that applies the four-test screen, identifies the six commercial-numerology
+  // failure modes, surfaces the three real-cost categories, and practises reaching
+  // proceed / preview / revise / refuse verdicts. Includes reference tabs for costs,
+  // failure-mode catalogue, and the Chapter 4 integrated refusal-discipline workflow.
+  "name-correction-caution-screener": dynamic(() => import("./name-correction-caution-screener").then(m => ({ default: m.NameCorrectionCautionScreener })), { ssr: false }),
+  // Lesson 21.4.4 interactive: Numerology Honest-Handling Inspector â€” scenario-based
+  // drill that distinguishes the empirical-kernel from the over-claim layer, identifies
+  // the eight over-claim framings, applies the five operational forms of do-no-harm,
+  // and reaches proceed / revise / refuse / mixed verdicts. Includes reference tabs
+  // for the three-layer holding, the five do-no-harm forms, and the Chapter 1-4
+  // integration table.
+  "numerology-honest-handling-inspector": dynamic(() => import("./numerology-honest-handling-inspector").then(m => ({ default: m.NumerologyHonestHandlingInspector })), { ssr: false }),
+  // Lesson 21.5.1 interactive: Numerology Compatibility Calculator â€” two-person
+  // Mulanka / Bhagyanka / Name-number comparison using MITRA / SHATRU / SAMA
+  // graha-friendship vectors with relationship-outcome over-claim refusal.
+  "numerology-compatibility-calculator": dynamic(() => import("./numerology-compatibility-calculator").then(m => ({ default: m.NumerologyCompatibilityCalculator })), { ssr: false }),
+  // Lesson 21.5.2 interactive: Business Name Numerology Calculator â€” business-name
+  // candidate computation with founder compatibility, industry-register preference,
+  // and pre-launch versus post-launch rebrand discipline.
+  "business-name-numerology-calculator": dynamic(() => import("./business-name-numerology-calculator").then(m => ({ default: m.BusinessNameNumerologyCalculator })), { ssr: false }),
+  // Lesson 21.5.3 interactive: Object Numerology Calculator â€” house / phone /
+  // vehicle digit reduction, personal compatibility, limited-choice recognition,
+  // and explicit 4/8 fear-induction refusal.
+  "object-numerology-calculator": dynamic(() => import("./object-numerology-calculator").then(m => ({ default: m.ObjectNumerologyCalculator })), { ssr: false }),
+  // Lesson 21.6.1 interactive: Chart Numerology Integration Tool â€” three-number
+  // to natal-graha cross-reference, four alignment configurations, and explicit
+  // chart-numerology causation over-claim refusal.
+  "chart-numerology-integration-tool": dynamic(() => import("./chart-numerology-integration-tool").then(m => ({ default: m.ChartNumerologyIntegrationTool })), { ssr: false }),
+  // Lesson 21.6.2 interactive: Numerology Decision Flow â€” apply / refuse /
+  // defer gates, authorised consultation modes, and absent-grounds discipline.
+  "numerology-decision-flow": dynamic(() => import("./numerology-decision-flow").then(m => ({ default: m.NumerologyDecisionFlow })), { ssr: false }),
+  // Lesson 21.6.3 interactive: Discipline Statement Builder â€” six-chapter M21
+  // synthesis, do-no-harm floor, and five-field practitioner statement worksheet.
+  "discipline-statement-builder": dynamic(() => import("./discipline-statement-builder").then(m => ({ default: m.DisciplineStatementBuilder })), { ssr: false }),
+  "nadi-discipline-statement-builder": dynamic(() => import("./nadi-discipline-statement-builder").then(m => ({ default: m.NadiDisciplineStatementBuilder })), { ssr: false }),
+  "three-step-protocol-overview": dynamic(() => import("./three-step-protocol-overview").then(m => ({ default: m.ThreeStepProtocolOverview })), { ssr: false }),
+  "lagna-assessment-scorer": dynamic(() => import("./lagna-assessment-scorer").then(m => ({ default: m.LagnaAssessmentScorer })), { ssr: false }),
+  "dasha-bhukti-timing-window": dynamic(() => import("./dasha-bhukti-timing-window").then(m => ({ default: m.DashaBhuktiTimingWindow })), { ssr: false }),
+  "gochara-trigger-confirmation": dynamic(() => import("./gochara-trigger-confirmation").then(m => ({ default: m.GocharaTriggerConfirmation })), { ssr: false }),
+  "worked-example-3-step-synthesis": dynamic(() => import("./worked-example-3-step-synthesis").then(m => ({ default: m.WorkedExample3StepSynthesis })), { ssr: false }),
+  "parashara-default-explorer": dynamic(() => import("./parashara-default-explorer").then(m => ({ default: m.ParasharaDefaultExplorer })), { ssr: false }),
+  "kp-cuspal-decision-tree": dynamic(() => import("./kp-cuspal-decision-tree").then(m => ({ default: m.KpCuspalDecisionTree })), { ssr: false }),
+  "jaimini-calling-decision-tree": dynamic(() => import("./jaimini-calling-decision-tree").then(m => ({ default: m.JaiminiCallingDecisionTree })), { ssr: false }),
+  "remedy-year-decision-tree": dynamic(() => import("./remedy-year-decision-tree").then(m => ({ default: m.RemedyYearDecisionTree })), { ssr: false }),
+  "layered-framework-decision-synthesis": dynamic(() => import("./layered-framework-decision-synthesis").then(m => ({ default: m.LayeredFrameworkDecisionSynthesis })), { ssr: false }),
+  "prediction-confidence-dial": dynamic(() => import("./prediction-confidence-dial").then(m => ({ default: m.PredictionConfidenceDial })), { ssr: false }),
+  "two-yes-indicator-counter": dynamic(() => import("./two-yes-indicator-counter").then(m => ({ default: m.TwoYesIndicatorCounter })), { ssr: false }),
+  "karma-agency-simulator": dynamic(() => import("./karma-agency-simulator").then(m => ({ default: m.KarmaAgencySimulator })), { ssr: false }),
+  "confidence-phrasing-rewriter": dynamic(() => import("./confidence-phrasing-rewriter").then(m => ({ default: m.ConfidencePhrasingRewriter })), { ssr: false }),
+  "write-up-structure-scaffolder": dynamic(() => import("./write-up-structure-scaffolder").then(m => ({ default: m.WriteUpStructureScaffolder })), { ssr: false }),
+  "marriage-synthesis-workbench": dynamic(() => import("./marriage-synthesis-workbench").then(m => ({ default: m.MarriageSynthesisWorkbench })), { ssr: false }),
+  "career-synthesis-workbench": dynamic(() => import("./career-synthesis-workbench").then(m => ({ default: m.CareerSynthesisWorkbench })), { ssr: false }),
+  "multi-domain-synthesis-workbench": dynamic(() => import("./multi-domain-synthesis-workbench").then(m => ({ default: m.MultiDomainSynthesisWorkbench })), { ssr: false }),
+  "five-stream-synthesis-discipline-lab": dynamic(() => import("./five-stream-synthesis-discipline-lab").then(m => ({ default: m.FiveStreamSynthesisDisciplineLab })), { ssr: false }),
+  "five-stream-matrix-shape-lab": dynamic(() => import("./five-stream-matrix-shape-lab").then(m => ({ default: m.FiveStreamMatrixShapeLab })), { ssr: false }),
+  "convergence-divergence-matrix-builder": dynamic(() => import("./convergence-divergence-matrix-builder").then(m => ({ default: m.ConvergenceDivergenceMatrixBuilder })), { ssr: false }),
+  "confidence-tier-overlay-builder": dynamic(() => import("./confidence-tier-overlay-builder").then(m => ({ default: m.ConfidenceTierOverlayBuilder })), { ssr: false }),
+  "divergence-pattern-ranker": dynamic(() => import("./divergence-pattern-ranker").then(m => ({ default: m.DivergencePatternRanker })), { ssr: false }),
+  "dual-matrix-domain-comparison": dynamic(() => import("./dual-matrix-domain-comparison").then(m => ({ default: m.DualMatrixDomainComparison })), { ssr: false }),
+  "conflict-resolution-sequence-walkthrough": dynamic(() => import("./conflict-resolution-sequence-walkthrough").then(m => ({ default: m.ConflictResolutionSequenceWalkthrough })), { ssr: false }),
+  "synthesis-statement-composition-discipline": dynamic(() => import("./synthesis-statement-composition-discipline").then(m => ({ default: m.SynthesisStatementCompositionDiscipline })), { ssr: false }),
+  "five-stream-layered-evidence-lab": dynamic(() => import("./five-stream-layered-evidence-lab").then(m => ({ default: m.FiveStreamLayeredEvidenceLab })), { ssr: false }),
+  "stream-orientation-leak-audit-lab": dynamic(() => import("./stream-orientation-leak-audit-lab").then(m => ({ default: m.StreamOrientationLeakAuditLab })), { ssr: false }),
+  "parashara-anchor-md1-lab": dynamic(() => import("./parashara-anchor-md1-lab").then(m => ({ default: m.ParasharaAnchorMd1Lab })), { ssr: false }),
+  "parashara-only-statement-template-lab": dynamic(() => import("./parashara-only-statement-template-lab").then(m => ({ default: m.ParasharaOnlyStatementTemplateLab })), { ssr: false }),
+  "parashara-worked-reading-md1-lab": dynamic(() => import("./parashara-worked-reading-md1-lab").then(m => ({ default: m.ParasharaWorkedReadingMd1Lab })), { ssr: false }),
+  "parashara-anchor-not-verdict-lab": dynamic(() => import("./parashara-anchor-not-verdict-lab").then(m => ({ default: m.ParasharaAnchorNotVerdictLab })), { ssr: false }),
+  "kp-cuspal-yes-no-augmentation-lab": dynamic(() => import("./kp-cuspal-yes-no-augmentation-lab").then(m => ({ default: m.KpCuspalYesNoAugmentationLab })), { ssr: false }),
+  "kp-purpose-built-routing-lab": dynamic(() => import("./kp-purpose-built-routing-lab").then(m => ({ default: m.KpPurposeBuiltRoutingLab })), { ssr: false }),
+  "kp-layer-boundary-worked-example-lab": dynamic(() => import("./kp-layer-boundary-worked-example-lab").then(m => ({ default: m.KpLayerBoundaryWorkedExampleLab })), { ssr: false }),
+  "parashara-kp-two-stream-statement-lab": dynamic(() => import("./parashara-kp-two-stream-statement-lab").then(m => ({ default: m.ParasharaKpTwoStreamStatementLab })), { ssr: false }),
+  "jaimini-dharma-path-augmentation-lab": dynamic(() => import("./jaimini-dharma-path-augmentation-lab").then(m => ({ default: m.JaiminiDharmaPathAugmentationLab })), { ssr: false }),
+  "jaimini-native-domain-routing-lab": dynamic(() => import("./jaimini-native-domain-routing-lab").then(m => ({ default: m.JaiminiNativeDomainRoutingLab })), { ssr: false }),
+  "jaimini-ranking-robustness-lab": dynamic(() => import("./jaimini-ranking-robustness-lab").then(m => ({ default: m.JaiminiRankingRobustnessLab })), { ssr: false }),
+  "parashara-kp-jaimini-three-stream-lab": dynamic(() => import("./parashara-kp-jaimini-three-stream-lab").then(m => ({ default: m.ParasharaKpJaiminiThreeStreamLab })), { ssr: false }),
+  "lal-kitab-remedy-augmentation-lab": dynamic(() => import("./lal-kitab-remedy-augmentation-lab").then(m => ({ default: m.LalKitabRemedyAugmentationLab })), { ssr: false }),
+  "tajika-year-specific-augmentation-lab": dynamic(() => import("./tajika-year-specific-augmentation-lab").then(m => ({ default: m.TajikaYearSpecificAugmentationLab })), { ssr: false }),
+  "nadi-access-limits-decision-lab": dynamic(() => import("./nadi-access-limits-decision-lab").then(m => ({ default: m.NadiAccessLimitsDecisionLab })), { ssr: false }),
+  "five-stream-target-chart-synthesis-lab": dynamic(() => import("./five-stream-target-chart-synthesis-lab").then(m => ({ default: m.FiveStreamTargetChartSynthesisLab })), { ssr: false }),
+  "five-stream-statement-template-lab": dynamic(() => import("./five-stream-statement-template-lab").then(m => ({ default: m.FiveStreamStatementTemplateLab })), { ssr: false }),
+  // Lesson 7.5.4's §7 explorer: KP Longevity Chart H1 Synthesis — apply KP
+  // doctrine to Chart H1 (Bhādhaka + verified Saturn sub-lord), then practise
+  // the three-stream synthesis and ethical-framing trainer.
+  "kp-longevity-chart-h1-synthesis": dynamic(() => import("./kp-longevity-chart-h1-synthesis").then(m => ({ default: m.KpLongevityChartH1Synthesis })), { ssr: false }),
+  // Lesson 7.6.1's §7 explorer: Kālapuruṣa Body-Map Explorer — interactive
+  // body-part-to-house mapping with zodiac vs chart toggle and scope gate.
+  "kalapurusha-body-map-explorer": dynamic(() => import("./kalapurusha-body-map-explorer").then(m => ({ default: m.KalapurushaBodyMapExplorer })), { ssr: false }),
+  // Lesson 7.6.2's §7 explorer: Graha-Disease Correspondence Explorer —
+  // seven-graha correspondences, two-layer reinforcement, tridoṣa bridge, scope gate.
+  "graha-disease-correspondence-explorer": dynamic(() => import("./graha-disease-correspondence-explorer").then(m => ({ default: m.GrahaDiseaseCorrespondenceExplorer })), { ssr: false }),
+  // Lesson 7.6.3's §7 trainer: Contextualisation Discipline Trainer —
+  // direction-of-inference, harm pathways, question classifier, response builder.
+  "contextualisation-discipline-trainer": dynamic(() => import("./contextualisation-discipline-trainer").then(m => ({ default: m.ContextualisationDisciplineTrainer })), { ssr: false }),
+  // Lesson 7.6.4's §7 trainer: Contextualisation Worked-Example Trainer —
+  // diagnosis-first gate, contextualisation chain, no-match honesty, statement practice.
+  "contextualisation-worked-example-trainer": dynamic(() => import("./contextualisation-worked-example-trainer").then(m => ({ default: m.ContextualisationWorkedExampleTrainer })), { ssr: false }),
+  // Lesson 7.7.1's §7 explorer: Health Synthesis Overview Map —
+  // seven-lesson roadmap, Chart H1 findings recap, question router, capability-to-restraint sequence.
+  "health-synthesis-overview-map": dynamic(() => import("./health-synthesis-overview-map").then(m => ({ default: m.HealthSynthesisOverviewMap })), { ssr: false }),
+  // Lesson 7.7.2's §7 workbench: Vitality-Trend Synthesis Workbench —
+  // seven-layer synthesis, convergence/divergence diagram, response translator, mistake check.
+  "vitality-trend-synthesis-workbench": dynamic(() => import("./vitality-trend-synthesis-workbench").then(m => ({ default: m.VitalityTrendSynthesisWorkbench })), { ssr: false }),
+  // Lesson 7.7.3's §7 trainer: Known-Illness Support Consultation Trainer —
+  // scenario compass, response builder, silent confidence toggle, mistake check.
+  "known-illness-support-consultation-trainer": dynamic(() => import("./known-illness-support-consultation-trainer").then(m => ({ default: m.KnownIllnessSupportConsultationTrainer })), { ssr: false }),
+  // Lesson 7.7.4's §7 trainer: Death-Prediction Prohibition Trainer —
+  // absolute rule barrier, five category scripts, wrong-vs-right comparisons, restraint verse.
+  "death-prediction-prohibition-trainer": dynamic(() => import("./death-prediction-prohibition-trainer").then(m => ({ default: m.DeathPredictionProhibitionTrainer })), { ssr: false }),
+  // Lesson 7.7.5's §7 tool: Medical-Routing Decision Tree —
+  // interactive four-tier tree, tier reference, scenario classifier, sequence rule.
+  "medical-routing-decision-tree": dynamic(() => import("./medical-routing-decision-tree").then(m => ({ default: m.MedicalRoutingDecisionTree })), { ssr: false }),
+  "active-medical-distress-handling-trainer": dynamic(() => import("./active-medical-distress-handling-trainer").then(m => ({ default: m.ActiveMedicalDistressHandlingTrainer })), { ssr: false }),
+  "medical-domain-competence-closing-synthesizer": dynamic(() => import("./medical-domain-competence-closing-synthesizer").then(m => ({ default: m.MedicalDomainCompetenceClosingSynthesizer })), { ssr: false }),
+  "fourth-house-education-workbench": dynamic(() => import("./fourth-house-education-workbench").then(m => ({ default: m.FourthHouseEducationWorkbench })), { ssr: false }),
+  "fifth-house-intellect-workbench": dynamic(() => import("./fifth-house-intellect-workbench").then(m => ({ default: m.FifthHouseIntellectWorkbench })), { ssr: false }),
+  "ninth-house-higher-learning-workbench": dynamic(() => import("./ninth-house-higher-learning-workbench").then(m => ({ default: m.NinthHouseHigherLearningWorkbench })), { ssr: false }),
+  "four-five-nine-educational-arc-synthesizer": dynamic(() => import("./four-five-nine-educational-arc-synthesizer").then(m => ({ default: m.FourFiveNineEducationalArcSynthesizer })), { ssr: false }),
+  "d24-construction-workbench": dynamic(() => import("./d24-construction-workbench").then(m => ({ default: m.D24ConstructionWorkbench })), { ssr: false }),
+  "d24-education-reading-workbench": dynamic(() => import("./d24-education-reading-workbench").then(m => ({ default: m.D24EducationReadingWorkbench })), { ssr: false }),
+  "d24-mercury-jupiter-karaka-workbench": dynamic(() => import("./d24-mercury-jupiter-karaka-workbench").then(m => ({ default: m.D24MercuryJupiterKarakaWorkbench })), { ssr: false }),
+  "d24-education-synthesis-workbench": dynamic(() => import("./d24-education-synthesis-workbench").then(m => ({ default: m.D24EducationSynthesisWorkbench })), { ssr: false }),
+  "mercury-buddhi-karaka-workbench": dynamic(() => import("./mercury-buddhi-karaka-workbench").then(m => ({ default: m.MercuryBuddhiKarakaWorkbench })), { ssr: false }),
+  "jupiter-jnana-karaka-workbench": dynamic(() => import("./jupiter-jnana-karaka-workbench").then(m => ({ default: m.JupiterJnanaKarakaWorkbench })), { ssr: false }),
+  "sarasvati-yoga-checklist-workbench": dynamic(() => import("./sarasvati-yoga-checklist-workbench").then(m => ({ default: m.SarasvatiYogaChecklistWorkbench })), { ssr: false }),
+  "aptitude-tendency-mapper": dynamic(() => import("./aptitude-tendency-mapper").then(m => ({ default: m.AptitudeTendencyMapper })), { ssr: false }),
+  "field-of-study-synthesis-workbench": dynamic(() => import("./field-of-study-synthesis-workbench").then(m => ({ default: m.FieldOfStudySynthesisWorkbench })), { ssr: false }),
+  "exam-outcome-confidence-workbench": dynamic(() => import("./exam-outcome-confidence-workbench").then(m => ({ default: m.ExamOutcomeConfidenceWorkbench })), { ssr: false }),
+  "education-scope-of-competence-workbench": dynamic(() => import("./education-scope-of-competence-workbench").then(m => ({ default: m.EducationScopeOfCompetenceWorkbench })), { ssr: false }),
+  "d4-construction-workbench": dynamic(() => import("./d4-construction-workbench").then(m => ({ default: m.D4ConstructionWorkbench })), { ssr: false }),
+  "d4-internal-lagna-fourth-reading-lab": dynamic(() => import("./d4-internal-lagna-fourth-reading-lab").then(m => ({ default: m.D4InternalLagnaFourthReadingLab })), { ssr: false }),
+  "d4-property-quality-comparison-lab": dynamic(() => import("./d4-property-quality-comparison-lab").then(m => ({ default: m.D4PropertyQualityComparisonLab })), { ssr: false }),
+  "d4-complete-property-reading-assembly-lab": dynamic(() => import("./d4-complete-property-reading-assembly-lab").then(m => ({ default: m.D4CompletePropertyReadingAssemblyLab })), { ssr: false }),
+  "lal-kitab-property-teva-formula-lab": dynamic(() => import("./lal-kitab-property-teva-formula-lab").then(m => ({ default: m.LalKitabPropertyTevaFormulaLab })), { ssr: false }),
+  "kp-property-fourth-cusp-sub-lord-lab": dynamic(() => import("./kp-property-fourth-cusp-sub-lord-lab").then(m => ({ default: m.KpPropertyFourthCuspSubLordLab })), { ssr: false }),
+  "kp-property-significator-timing-lab": dynamic(() => import("./kp-property-significator-timing-lab").then(m => ({ default: m.KpPropertySignificatorTimingLab })), { ssr: false }),
+  "cross-stream-property-synthesis-lab": dynamic(() => import("./cross-stream-property-synthesis-lab").then(m => ({ default: m.CrossStreamPropertySynthesisLab })), { ssr: false }),
+  "property-dasha-acquisition-timing-lab": dynamic(() => import("./property-dasha-acquisition-timing-lab").then(m => ({ default: m.PropertyDashaAcquisitionTimingLab })), { ssr: false }),
+  "home-purchase-confidence-synthesis-lab": dynamic(() => import("./home-purchase-confidence-synthesis-lab").then(m => ({ default: m.HomePurchaseConfidenceSynthesisLab })), { ssr: false }),
+  "vastu-property-scope-distinction-lab": dynamic(() => import("./vastu-property-scope-distinction-lab").then(m => ({ default: m.VastuPropertyScopeDistinctionLab })), { ssr: false }),
+  "property-competence-routing-lab": dynamic(() => import("./property-competence-routing-lab").then(m => ({ default: m.PropertyCompetenceRoutingLab })), { ssr: false }),
+  "kp-education-cuspal-sub-lord-lab": dynamic(() => import("./kp-education-cuspal-sub-lord-lab").then(m => ({ default: m.KpEducationCuspalSubLordLab })), { ssr: false }),
+  "kp-education-significator-hierarchy-lab": dynamic(() => import("./kp-education-significator-hierarchy-lab").then(m => ({ default: m.KpEducationSignificatorHierarchyLab })), { ssr: false }),
+  "kp-education-exam-timing-overlay-lab": dynamic(() => import("./kp-education-exam-timing-overlay-lab").then(m => ({ default: m.KpEducationExamTimingOverlayLab })), { ssr: false }),
+  "kp-education-worked-exam-synthesis-lab": dynamic(() => import("./kp-education-worked-exam-synthesis-lab").then(m => ({ default: m.KpEducationWorkedExamSynthesisLab })), { ssr: false }),
+  "education-dasha-timing-window-lab": dynamic(() => import("./education-dasha-timing-window-lab").then(m => ({ default: m.EducationDashaTimingWindowLab })), { ssr: false }),
+  "education-transit-tdv-overlay-lab": dynamic(() => import("./education-transit-tdv-overlay-lab").then(m => ({ default: m.EducationTransitTdvOverlayLab })), { ssr: false }),
+  "education-synthesis-overview-table-lab": dynamic(() => import("./education-synthesis-overview-table-lab").then(m => ({ default: m.EducationSynthesisOverviewTableLab })), { ssr: false }),
+  "predictive-failure-mode-quiz": dynamic(() => import("./predictive-failure-mode-quiz").then(m => ({ default: m.PredictiveFailureModeQuiz })), { ssr: false }),
+  "birth-time-accuracy-assessment": dynamic(() => import("./birth-time-accuracy-assessment").then(m => ({ default: m.BirthTimeAccuracyAssessment })), { ssr: false }),
+  "ayanamsha-choice-verifier": dynamic(() => import("./ayanamsha-choice-verifier").then(m => ({ default: m.AyanamshaChoiceVerifier })), { ssr: false }),
+  "house-system-choice-verifier": dynamic(() => import("./house-system-choice-verifier").then(m => ({ default: m.HouseSystemChoiceVerifier })), { ssr: false }),
+  "data-preparation-preflight": dynamic(() => import("./data-preparation-preflight").then(m => ({ default: m.DataPreparationPreflight })), { ssr: false }),
+  "tattva-shuddhi-checker": dynamic(() => import("./tattva-shuddhi-checker").then(m => ({ default: m.TattvaShuddhiChecker })), { ssr: false }),
+  "cross-check-decision-synthesizer": dynamic(() => import("./cross-check-decision-synthesizer").then(m => ({ default: m.CrossCheckDecisionSynthesizer })), { ssr: false }),
+  "preliminary-cross-check-preflight": dynamic(() => import("./preliminary-cross-check-preflight").then(m => ({ default: m.PreliminaryCrossCheckPreflight })), { ssr: false }),
+  "dignity-strength-analyzer": dynamic(() => import("./dignity-strength-analyzer").then(m => ({ default: m.DignityStrengthAnalyzer })), { ssr: false }),
+  "yoga-dosha-identifier": dynamic(() => import("./yoga-dosha-identifier").then(m => ({ default: m.YogaDoshaIdentifier })), { ssr: false }),
+  "dasha-context-analyzer": dynamic(() => import("./dasha-context-analyzer").then(m => ({ default: m.DashaContextAnalyzer })), { ssr: false }),
+  "transit-context-analyzer": dynamic(() => import("./transit-context-analyzer").then(m => ({ default: m.TransitContextAnalyzer })), { ssr: false }),
+  "reading-synthesis-workbench": dynamic(() => import("./reading-synthesis-workbench").then(m => ({ default: m.ReadingSynthesisWorkbench })), { ssr: false }),
+  "cross-stream-concept-builder": dynamic(() => import("./cross-stream-concept-builder").then(m => ({ default: m.CrossStreamConceptBuilder })), { ssr: false }),
+  "parashari-kp-verifier": dynamic(() => import("./parashari-kp-verifier").then(m => ({ default: m.ParashariKpVerifier })), { ssr: false }),
+  "parashari-jaimini-verifier": dynamic(() => import("./parashari-jaimini-verifier").then(m => ({ default: m.ParashariJaiminiVerifier })), { ssr: false }),
+  "convergence-divergence-workbench": dynamic(() => import("./convergence-divergence-workbench").then(m => ({ default: m.ConvergenceDivergenceWorkbench })), { ssr: false }),
+  "reading-documentation-template": dynamic(() => import("./reading-documentation-template").then(m => ({ default: m.ReadingDocumentationTemplate })), { ssr: false }),
+  "second-house-wealth-evaluator": dynamic(() => import("./second-house-wealth-evaluator").then(m => ({ default: m.SecondHouseWealthEvaluator })), { ssr: false }),
+  "eleventh-house-gains-evaluator": dynamic(() => import("./eleventh-house-gains-evaluator").then(m => ({ default: m.EleventhHouseGainsEvaluator })), { ssr: false }),
+  "second-eleventh-lord-permutations": dynamic(() => import("./second-eleventh-lord-permutations").then(m => ({ default: m.SecondEleventhLordPermutations })), { ssr: false }),
+  "natural-wealth-karaka-analyzer": dynamic(() => import("./natural-wealth-karaka-analyzer").then(m => ({ default: m.NaturalWealthKarakaAnalyzer })), { ssr: false }),
+  "d2-solar-lunar-bisection": dynamic(() => import("./d2-solar-lunar-bisection").then(m => ({ default: m.D2SolarLunarBisection })), { ssr: false }),
+  "d2-bisection-doctrine-reader": dynamic(() => import("./d2-bisection-doctrine-reader").then(m => ({ default: m.D2BisectionDoctrineReader })), { ssr: false }),
+  "d2-solar-lunar-tendencies": dynamic(() => import("./d2-solar-lunar-tendencies").then(m => ({ default: m.D2SolarLunarTendencies })), { ssr: false }),
+  "d2-real-chart-workbench": dynamic(() => import("./d2-real-chart-workbench").then(m => ({ default: m.D2RealChartWorkbench })), { ssr: false }),
+  "dhana-yoga-pattern-verifier": dynamic(() => import("./dhana-yoga-pattern-verifier").then(m => ({ default: m.DhanaYogaPatternVerifier })), { ssr: false }),
+  "dhana-yoga-variants-evaluator": dynamic(() => import("./dhana-yoga-variants-evaluator").then(m => ({ default: m.DhanaYogaVariantsEvaluator })), { ssr: false }),
+  "lakshmi-yoga-analyser": dynamic(() => import("./lakshmi-yoga-analyser").then(m => ({ default: m.LakshmiYogaAnalyser })), { ssr: false }),
+  "dhana-yoga-shadbala-overlay": dynamic(() => import("./dhana-yoga-shadbala-overlay").then(m => ({ default: m.DhanaYogaShadbalaOverlay })), { ssr: false }),
+  "kp-cuspal-sub-lord-doctrine": dynamic(() => import("./kp-cuspal-sub-lord-doctrine").then(m => ({ default: m.KpCuspalSubLordDoctrine })), { ssr: false }),
+  "kp-money-significators-evaluator": dynamic(() => import("./kp-money-significators-evaluator").then(m => ({ default: m.KpMoneySignificatorsEvaluator })), { ssr: false }),
+  "kp-investment-timing-explorer": dynamic(() => import("./kp-investment-timing-explorer").then(m => ({ default: m.KpInvestmentTimingExplorer })), { ssr: false }),
+  "kp-wealth-question-workbench": dynamic(() => import("./kp-wealth-question-workbench").then(m => ({ default: m.KpWealthQuestionWorkbench })), { ssr: false }),
+  "lal-kitab-money-formula-revisited": dynamic(() => import("./lal-kitab-money-formula-revisited").then(m => ({ default: m.LalKitabMoneyFormulaRevisited })), { ssr: false }),
+  "lal-kitab-money-planets-analyser": dynamic(() => import("./lal-kitab-money-planets-analyser").then(m => ({ default: m.LalKitabMoneyPlanetsAnalyser })), { ssr: false }),
+  "lal-kitab-loss-formulas-evaluator": dynamic(() => import("./lal-kitab-loss-formulas-evaluator").then(m => ({ default: m.LalKitabLossFormulasEvaluator })), { ssr: false }),
+  "lal-kitab-wealth-reading-workbench": dynamic(() => import("./lal-kitab-wealth-reading-workbench").then(m => ({ default: m.LalKitabWealthReadingWorkbench })), { ssr: false }),
+  // Lesson 22.1.1 interactive: Vastu Origins Explorer — historical stream,
+  // five-domain spatial scope, classical corpus, and modern feasibility guards.
+  "vastu-origins-explorer": dynamic(() => import("./vastu-origins-explorer").then(m => ({ default: m.VastuOriginsExplorer })), { ssr: false }),
+  // Lesson 22.1.2 interactive: Vastu Purusha Mandala Explorer â€” 9x9 / 8x8 /
+  // 7x7 grid variants, Brahma-sthana, deity-zone rings, and apartment guards.
+  "vastu-purusha-mandala-explorer": dynamic(() => import("./vastu-purusha-mandala-explorer").then(m => ({ default: m.VastuPurushaMandalaExplorer })), { ssr: false }),
+  // Lesson 22.1.3 interactive: Vastu Five Element Mapper â€” pancha-bhuta
+  // direction zones, activity matching, conflicts, and cross-discipline guardrails.
+  "vastu-five-element-mapper": dynamic(() => import("./vastu-five-element-mapper").then(m => ({ default: m.VastuFiveElementMapper })), { ssr: false }),
+  // Lesson 22.1.4 interactive: Vastu Text Corpus Navigator â€” source layers,
+  // five-text corpus, reading sequence, and regional attribution discipline.
+  "vastu-text-corpus-navigator": dynamic(() => import("./vastu-text-corpus-navigator").then(m => ({ default: m.VastuTextCorpusNavigator })), { ssr: false }),
+  // Lesson 22.2.1 interactive: Vastu Cardinal Direction Lords â€” Indra, Yama,
+  // Varuna, Kubera, deity-quality judgments, and activity matching.
+  "vastu-cardinal-direction-lords": dynamic(() => import("./vastu-cardinal-direction-lords").then(m => ({ default: m.VastuCardinalDirectionLords })), { ssr: false }),
+  // Lesson 22.2.2 interactive: Vastu Intercardinal Double Quality â€” Ishana,
+  // Agni, Nirriti, Vayu, convergent deity-element matching, and fear guardrails.
+  "vastu-intercardinal-double-quality": dynamic(() => import("./vastu-intercardinal-double-quality").then(m => ({ default: m.VastuIntercardinalDoubleQuality })), { ssr: false }),
+  // Lesson 22.2.3 interactive: Vastu Room Direction Synthesizer â€” room-by-room
+  // primary, secondary, mitigation, and prohibited placement workflow.
+  "vastu-room-direction-synthesizer": dynamic(() => import("./vastu-room-direction-synthesizer").then(m => ({ default: m.VastuRoomDirectionSynthesizer })), { ssr: false }),
+  // Lesson 22.3.1 interactive: Vastu Earth Water Axis -- NE/SW polar axis,
+  // water and weight placement, elevation discipline, and mitigation cues.
+  "vastu-earth-water-axis": dynamic(() => import("./vastu-earth-water-axis").then(m => ({ default: m.VastuEarthWaterAxis })), { ssr: false }),
+  // Lesson 22.3.2 interactive: Vastu Fire Air Axis -- SE/NW compatible-flow
+  // axis, kitchen discipline, ventilation path, and proportional mitigation.
+  "vastu-fire-air-axis": dynamic(() => import("./vastu-fire-air-axis").then(m => ({ default: m.VastuFireAirAxis })), { ssr: false }),
+  // Lesson 22.3.3 interactive: Vastu Brahmasthana Center -- central 3x3
+  // Akasha discipline, centre-violation severity, and apartment mitigation.
+  "vastu-brahmasthana-center": dynamic(() => import("./vastu-brahmasthana-center").then(m => ({ default: m.VastuBrahmasthanaCenter })), { ssr: false }),
+  // Lesson 22.4.1 interactive: Vastu Plot Selection Evaluator -- bhu-pariksha
+  // shape, extension/cut, road-facing, topography, and proportional verdict.
+  "vastu-plot-selection-evaluator": dynamic(() => import("./vastu-plot-selection-evaluator").then(m => ({ default: m.VastuPlotSelectionEvaluator })), { ssr: false }),
+  // Lesson 22.4.2 interactive: Vastu Ground Slope Evaluator -- slope,
+  // drainage, construction phase, vertical massing, and grading feasibility.
+  "vastu-ground-slope-evaluator": dynamic(() => import("./vastu-ground-slope-evaluator").then(m => ({ default: m.VastuGroundSlopeEvaluator })), { ssr: false }),
+  // Lesson 22.4.3 interactive: Vastu House Shape Evaluator -- building form,
+  // corner integrity, axis rotation, and modern-context mitigation.
+  "vastu-house-shape-evaluator": dynamic(() => import("./vastu-house-shape-evaluator").then(m => ({ default: m.VastuHouseShapeEvaluator })), { ssr: false }),
+  // Lesson 22.4.4 interactive: Vastu Extensions Cuts Evaluator -- extension
+  // versus cut asymmetry, directional severity, size, and context handling.
+  "vastu-extensions-cuts-evaluator": dynamic(() => import("./vastu-extensions-cuts-evaluator").then(m => ({ default: m.VastuExtensionsCutsEvaluator })), { ssr: false }),
+  // Lesson 22.5.1 interactive: Vastu Remedy Framework -- severity-calibrated
+  // architectural, symbolic, yantra/pyramid, and ritual remediation tiers.
+  "vastu-remedy-framework": dynamic(() => import("./vastu-remedy-framework").then(m => ({ default: m.VastuRemedyFramework })), { ssr: false }),
+  // Lesson 22.5.2 interactive: Vastu Apartment Office Planner -- unit-level
+  // mandala placement for apartments, offices, retail, and commercial spaces.
+  "vastu-apartment-office-planner": dynamic(() => import("./vastu-apartment-office-planner").then(m => ({ default: m.VastuApartmentOfficePlanner })), { ssr: false }),
+  // Lesson 22.5.3 interactive: Vastu Mirror Remedy Planner -- wall direction,
+  // room context, sensitive reflection targets, and honest modern attribution.
+  "vastu-mirror-remedy-planner": dynamic(() => import("./vastu-mirror-remedy-planner").then(m => ({ default: m.VastuMirrorRemedyPlanner })), { ssr: false }),
+  // Lesson 22.6.1 interactive: Vastu Honest Handling Audit -- four-test screen
+  // for empirical kernel, demolition prohibition, cost-benefit, and overclaim.
+  "vastu-honest-handling-audit": dynamic(() => import("./vastu-honest-handling-audit").then(m => ({ default: m.VastuHonestHandlingAudit })), { ssr: false }),
+  // Lesson 22.6.2 interactive: Vastu Decision Framework -- when to flag,
+  // defer, refuse, and sequence the four-tier remediation cascade.
+  "vastu-decision-framework": dynamic(() => import("./vastu-decision-framework").then(m => ({ default: m.VastuDecisionFramework })), { ssr: false }),
+  // Lesson 22.6.3 interactive: Vastu Chart Integration -- 4H,
+  // residential karakas, property houses, and dik-pala-graha context.
+  "vastu-chart-integration": dynamic(() => import("./vastu-chart-integration").then(m => ({ default: m.VastuChartIntegration })), { ssr: false }),
+  // Lesson 22.6.4 interactive: Vastu Module Closure -- six-chapter
+  // synthesis, do-no-harm commitments, and practitioner statement builder.
+  "vastu-module-closure": dynamic(() => import("./vastu-module-closure").then(m => ({ default: m.VastuModuleClosure })), { ssr: false }),
+  // Lesson 18.4.4 interactive: Lal Kitab Graha Clusters â€” Chapter 4 capstone.
+  // Accordion clusters for Saturn / RÄhu / Ketu, 6-item quiz, and all-nine-graha
+  // summary table with unifying concrete-object pattern.
+  "lal-kitab-graha-clusters": dynamic(() => import("./lal-kitab-graha-clusters").then(m => ({ default: m.LalKitabGrahaClusters })), { ssr: false }),
+  "gochara-intro": dynamic(() => import("./gochara-intro").then(m => ({ default: m.GocharaIntro })), { ssr: false }),
+  "natal-relative-counter": dynamic(() => import("./natal-relative-counter").then(m => ({ default: m.NatalRelativeCounter })), { ssr: false }),
+  "transit-computer": dynamic(() => import("./transit-computer").then(m => ({ default: m.TransitComputer })), { ssr: false }),
+  "three-reference-reader": dynamic(() => import("./three-reference-reader").then(m => ({ default: m.ThreeReferenceReader })), { ssr: false }),
+  "sade-sati-tracker": dynamic(() => import("./sade-sati-tracker").then(m => ({ default: m.SadeSatiTracker })), { ssr: false }),
+  "sade-sati-phases": dynamic(() => import("./sade-sati-phases").then(m => ({ default: m.SadeSatiPhases })), { ssr: false }),
+  "sade-sati-favourability": dynamic(() => import("./sade-sati-favourability").then(m => ({ default: m.SadeSatiFavourability })), { ssr: false }),
+  "sade-sati-cancellation-checker": dynamic(() => import("./sade-sati-cancellation-checker").then(m => ({ default: m.SadeSatiCancellationChecker })), { ssr: false }),
+  "sade-sati-communication-guide": dynamic(() => import("./sade-sati-communication-guide").then(m => ({ default: m.SadeSatiCommunicationGuide })), { ssr: false }),
+  "kantaka-shani-reader": dynamic(() => import("./kantaka-shani-reader").then(m => ({ default: m.KantakaShaniReader })), { ssr: false }),
+  "saturn-transit-map": dynamic(() => import("./saturn-transit-map").then(m => ({ default: m.SaturnTransitMap })), { ssr: false }),
+  "guru-transit-reader": dynamic(() => import("./guru-transit-reader").then(m => ({ default: m.GuruTransitReader })), { ssr: false }),
+  "guru-saturn-conjunction-reader": dynamic(() => import("./guru-saturn-conjunction-reader").then(m => ({ default: m.GuruSaturnConjunctionReader })), { ssr: false }),
+  "nodal-transit-tracker": dynamic(() => import("./nodal-transit-tracker").then(m => ({ default: m.NodalTransitTracker })), { ssr: false }),
+  "nodal-axis-house-reader": dynamic(() => import("./nodal-axis-house-reader").then(m => ({ default: m.NodalAxisHouseReader })), { ssr: false }),
+  "eclipse-significance-checker": dynamic(() => import("./eclipse-significance-checker").then(m => ({ default: m.EclipseSignificanceChecker })), { ssr: false }),
+  "eclipse-calendar": dynamic(() => import("./eclipse-calendar").then(m => ({ default: m.EclipseCalendar })), { ssr: false }),
+  "vedha-intro": dynamic(() => import("./vedha-intro").then(m => ({ default: m.VedhaIntro })), { ssr: false }),
+  "vedha-table-lookup": dynamic(() => import("./vedha-table-lookup").then(m => ({ default: m.VedhaTableLookup })), { ssr: false }),
+  "vedha-applicator": dynamic(() => import("./vedha-applicator").then(m => ({ default: m.VedhaApplicator })), { ssr: false }),
+  "cross-stream-transit-intro": dynamic(() => import("./cross-stream-transit-intro").then(m => ({ default: m.CrossStreamTransitIntro })), { ssr: false }),
+  "transit-workflow-workbench": dynamic(() => import("./transit-workflow-workbench").then(m => ({ default: m.TransitWorkflowWorkbench })), { ssr: false }),
+  // --- merged: components built in the local reconciliation session (not on remote) ---
+  "career-varga-workflow": dynamic(() => import("./career-varga-workflow").then(m => ({ default: m.CareerVargaWorkflow })), { ssr: false }),
+  "chaturthamsha-calculator": dynamic(() => import("./chaturthamsha-calculator").then(m => ({ default: m.ChaturthamshaCalculator })), { ssr: false }),
+  "chaturvimshamsha-calculator": dynamic(() => import("./chaturvimshamsha-calculator").then(m => ({ default: m.ChaturvimshamshaCalculator })), { ssr: false }),
+  "children-varga-workflow": dynamic(() => import("./children-varga-workflow").then(m => ({ default: m.ChildrenVargaWorkflow })), { ssr: false }),
+  "dashamsha-calculator": dynamic(() => import("./dashamsha-calculator").then(m => ({ default: m.DashamshaCalculator })), { ssr: false }),
+  // Tier 2 Module 3 Chapter 2 Lesson 1: D10 Deva-Asura Construction Lab —
+  // clickable zodiac ring, ten-segment strip, destination arc, parity-error
+  // comparator, worked-example stepper, deity wheel and D10 Lagna builder.
+  "dashamsha-deva-asura-lab": dynamic(() => import("./dashamsha-deva-asura-lab").then(m => ({ default: m.DashamshaDevaAsuraLab })), { ssr: false }),
+  "d10-parity-construction-workbench": dynamic(() => import("./d10-parity-construction-workbench").then(m => ({ default: m.D10ParityConstructionWorkbench })), { ssr: false }),
+  "d10-reading-anchor-workbench": dynamic(() => import("./d10-reading-anchor-workbench").then(m => ({ default: m.D10ReadingAnchorWorkbench })), { ssr: false }),
+  "d1-d10-convergence-workbench": dynamic(() => import("./d1-d10-convergence-workbench").then(m => ({ default: m.D1D10ConvergenceWorkbench })), { ssr: false }),
+  "d10-career-question-workbench": dynamic(() => import("./d10-career-question-workbench").then(m => ({ default: m.D10CareerQuestionWorkbench })), { ssr: false }),
+  "dvadashamsha-calculator": dynamic(() => import("./dvadashamsha-calculator").then(m => ({ default: m.DvadashamshaCalculator })), { ssr: false }),
+  "gaja-kesari-detector": dynamic(() => import("./gaja-kesari-detector").then(m => ({ default: m.GajaKesariDetector })), { ssr: false }),
+  "graha-drishti-wheel": dynamic(() => import("./graha-drishti-wheel").then(m => ({ default: m.GrahaDrishtiWheel })), { ssr: false }),
+  "khavedamsha-akshavedamsha-calculator": dynamic(() => import("./khavedamsha-akshavedamsha-calculator").then(m => ({ default: m.KhavedamshaAkshavedamshaCalculator })), { ssr: false }),
+  "marriage-varga-workflow": dynamic(() => import("./marriage-varga-workflow").then(m => ({ default: m.MarriageVargaWorkflow })), { ssr: false }),
+  "seventh-house-marriage-profile-workbench": dynamic(() => import("./seventh-house-marriage-profile-workbench").then(m => ({ default: m.SeventhHouseMarriageProfileWorkbench })), { ssr: false }),
+  "seventh-lord-placement-reader": dynamic(() => import("./seventh-lord-placement-reader").then(m => ({ default: m.SeventhLordPlacementReader })), { ssr: false }),
+  "seventh-aspect-net-workbench": dynamic(() => import("./seventh-aspect-net-workbench").then(m => ({ default: m.SeventhAspectNetWorkbench })), { ssr: false }),
+  "karaka-pollution-seventh-workbench": dynamic(() => import("./karaka-pollution-seventh-workbench").then(m => ({ default: m.KarakaPollutionSeventhWorkbench })), { ssr: false }),
+  "d9-marriage-refinement-workbench": dynamic(() => import("./d9-marriage-refinement-workbench").then(m => ({ default: m.D9MarriageRefinementWorkbench })), { ssr: false }),
+  "d9-lagna-seventh-reader": dynamic(() => import("./d9-lagna-seventh-reader").then(m => ({ default: m.D9LagnaSeventhReader })), { ssr: false }),
+  "d9-venus-karaka-workbench": dynamic(() => import("./d9-venus-karaka-workbench").then(m => ({ default: m.D9VenusKarakaWorkbench })), { ssr: false }),
+  "vargottama-marriage-confirmation-workbench": dynamic(() => import("./vargottama-marriage-confirmation-workbench").then(m => ({ default: m.VargottamaMarriageConfirmationWorkbench })), { ssr: false }),
+  "d9-marriage-worked-example-lab": dynamic(() => import("./d9-marriage-worked-example-lab").then(m => ({ default: m.D9MarriageWorkedExampleLab })), { ssr: false }),
+  "venus-marriage-karaka-prediction-workbench": dynamic(() => import("./venus-marriage-karaka-prediction-workbench").then(m => ({ default: m.VenusMarriageKarakaPredictionWorkbench })), { ssr: false }),
+  "venus-dignity-strength-marriage-console": dynamic(() => import("./venus-dignity-strength-marriage-console").then(m => ({ default: m.VenusDignityStrengthMarriageConsole })), { ssr: false }),
+  "venus-company-quality-workbench": dynamic(() => import("./venus-company-quality-workbench").then(m => ({ default: m.VenusCompanyQualityWorkbench })), { ssr: false }),
+  "venus-analysis-marriage-case-lab": dynamic(() => import("./venus-analysis-marriage-case-lab").then(m => ({ default: m.VenusAnalysisMarriageCaseLab })), { ssr: false }),
+  "upapada-marriage-arudha-workbench": dynamic(() => import("./upapada-marriage-arudha-workbench").then(m => ({ default: m.UpapadaMarriageArudhaWorkbench })), { ssr: false }),
+  "ul-placement-lord-sustenance-workbench": dynamic(() => import("./ul-placement-lord-sustenance-workbench").then(m => ({ default: m.UlPlacementLordSustenanceWorkbench })), { ssr: false }),
+  "darakaraka-spouse-register-workbench": dynamic(() => import("./darakaraka-spouse-register-workbench").then(m => ({ default: m.DarakarakaSpouseRegisterWorkbench })), { ssr: false }),
+  "jaimini-marriage-case-synthesis-lab": dynamic(() => import("./jaimini-marriage-case-synthesis-lab").then(m => ({ default: m.JaiminiMarriageCaseSynthesisLab })), { ssr: false }),
+  "saptamsha-calculator": dynamic(() => import("./saptamsha-calculator").then(m => ({ default: m.SaptamshaCalculator })), { ssr: false }),
+  "saptavimshamsha-calculator": dynamic(() => import("./saptavimshamsha-calculator").then(m => ({ default: m.SaptavimshamshaCalculator })), { ssr: false }),
+  "shodashamsha-calculator": dynamic(() => import("./shodashamsha-calculator").then(m => ({ default: m.ShodashamshaCalculator })), { ssr: false }),
+  "spiritual-trio-comparator": dynamic(() => import("./spiritual-trio-comparator").then(m => ({ default: m.SpiritualTrioComparator })), { ssr: false }),
+  "sub-lord-calculator": dynamic(() => import("./sub-lord-calculator").then(m => ({ default: m.SubLordCalculator })), { ssr: false }),
+  "substrate-ethics-checklist": dynamic(() => import("./substrate-ethics-checklist").then(m => ({ default: m.SubstrateEthicsChecklist })), { ssr: false }),
+  "vimshamsha-calculator": dynamic(() => import("./vimshamsha-calculator").then(m => ({ default: m.VimshamshaCalculator })), { ssr: false }),
+  "d20-vimshamsha-construction-lab": dynamic(() => import("./d20-vimshamsha-construction-lab").then(m => ({ default: m.D20VimshamshaConstructionLab })), { ssr: false }),
+  "d20-lagna-spiritual-houses-lab": dynamic(() => import("./d20-lagna-spiritual-houses-lab").then(m => ({ default: m.D20LagnaSpiritualHousesLab })), { ssr: false }),
+  "d20-spiritual-karakas-overlay-lab": dynamic(() => import("./d20-spiritual-karakas-overlay-lab").then(m => ({ default: m.D20SpiritualKarakasOverlayLab })), { ssr: false }),
+  "d20-spiritual-reading-synthesis-lab": dynamic(() => import("./d20-spiritual-reading-synthesis-lab").then(m => ({ default: m.D20SpiritualReadingSynthesisLab })), { ssr: false }),
+  "ashtakavarga-intro": dynamic(() => import("./ashtakavarga-intro").then(m => ({ default: m.AshtakavargaIntro })), { ssr: false }),
+  "ashtakavarga-contributors": dynamic(() => import("./ashtakavarga-contributors").then(m => ({ default: m.AshtakavargaContributors })), { ssr: false }),
+  "contribution-table-demo": dynamic(() => import("./contribution-table-demo").then(m => ({ default: m.ContributionTableDemo })), { ssr: false }),
+  "lagna-contributor-note": dynamic(() => import("./lagna-contributor-note").then(m => ({ default: m.LagnaContributorNote })), { ssr: false }),
+  "bhinna-builder": dynamic(() => import("./bhinna-builder").then(m => ({ default: m.BhinnaBuilder })), { ssr: false }),
+  "bhinna-total-checker": dynamic(() => import("./bhinna-total-checker").then(m => ({ default: m.BhinnaTotalChecker })), { ssr: false }),
+  "bhinna-interpreter": dynamic(() => import("./bhinna-interpreter").then(m => ({ default: m.BhinnaInterpreter })), { ssr: false }),
+  "mars-bhinna-walkthrough": dynamic(() => import("./mars-bhinna-walkthrough").then(m => ({ default: m.MarsBhinnaWalkthrough })), { ssr: false }),
+  "sav-builder": dynamic(() => import("./sav-builder").then(m => ({ default: m.SavBuilder })), { ssr: false }),
+  "sav-checksum": dynamic(() => import("./sav-checksum").then(m => ({ default: m.SavChecksum })), { ssr: false }),
+  "sav-interpreter": dynamic(() => import("./sav-interpreter").then(m => ({ default: m.SavInterpreter })), { ssr: false }),
+  "trikona-reducer": dynamic(() => import("./trikona-reducer").then(m => ({ default: m.TrikonaReducer })), { ssr: false }),
+  "ekadhipatya-reducer": dynamic(() => import("./ekadhipatya-reducer").then(m => ({ default: m.EkadhipatyaReducer })), { ssr: false }),
+  "reduction-order-demo": dynamic(() => import("./reduction-order-demo").then(m => ({ default: m.ReductionOrderDemo })), { ssr: false }),
+  "full-reduction-walkthrough": dynamic(() => import("./full-reduction-walkthrough").then(m => ({ default: m.FullReductionWalkthrough })), { ssr: false }),
+  "yoga-sav-auditor": dynamic(() => import("./yoga-sav-auditor").then(m => ({ default: m.YogaSavAuditor })), { ssr: false }),
+  "transit-bav-modulator": dynamic(() => import("./transit-bav-modulator").then(m => ({ default: m.TransitBavModulator })), { ssr: false }),
+  "ashtakavarga-stream-map": dynamic(() => import("./ashtakavarga-stream-map").then(m => ({ default: m.AshtakavargaStreamMap })), { ssr: false }),
+  "karma-framework-map": dynamic(() => import("./karma-framework-map").then(m => ({ default: m.KarmaFrameworkMap })), { ssr: false }),
+  "prarabdha-illustration": dynamic(() => import("./prarabdha-illustration").then(m => ({ default: m.PrarabdhaIllustration })), { ssr: false }),
+  "mitigation-vs-cure": dynamic(() => import("./mitigation-vs-cure").then(m => ({ default: m.MitigationVsCure })), { ssr: false }),
+  "remedy-authority-map": dynamic(() => import("./remedy-authority-map").then(m => ({ default: m.RemedyAuthorityMap })), { ssr: false }),
+  "mantra-theory-explainer": dynamic(() => import("./mantra-theory-explainer").then(m => ({ default: m.MantraTheoryExplainer })), { ssr: false }),
+  "mantra-traditions-map": dynamic(() => import("./mantra-traditions-map").then(m => ({ default: m.MantraTraditionsMap })), { ssr: false }),
+  "foundational-mantra-player": dynamic(() => import("./foundational-mantra-player").then(m => ({ default: m.FoundationalMantraPlayer })), { ssr: false }),
+  "mantra-safety-checklist": dynamic(() => import("./mantra-safety-checklist").then(m => ({ default: m.MantraSafetyChecklist })), { ssr: false }),
+  "graha-yantra-gallery": dynamic(() => import("./graha-yantra-gallery").then(m => ({ default: m.GrahaYantraGallery })), { ssr: false }),
+  "tantra-context-note": dynamic(() => import("./tantra-context-note").then(m => ({ default: m.TantraContextNote })), { ssr: false }),
+  "yantra-anatomy": dynamic(() => import("./yantra-anatomy").then(m => ({ default: m.YantraAnatomy })), { ssr: false }),
+  "navaratna-table": dynamic(() => import("./navaratna-table").then(m => ({ default: m.NavaratnaTable })), { ssr: false }),
+  "uparatna-table": dynamic(() => import("./uparatna-table").then(m => ({ default: m.UparatnaTable })), { ssr: false }),
+  "gemstone-safety-checklist": dynamic(() => import("./gemstone-safety-checklist").then(m => ({ default: m.GemstoneSafetyChecklist })), { ssr: false }),
+  "protective-discipline-checklist": dynamic(() => import("./protective-discipline-checklist").then(m => ({ default: m.ProtectiveDisciplineChecklist })), { ssr: false }),
+  "graha-dana-table": dynamic(() => import("./graha-dana-table").then(m => ({ default: m.GrahaDanaTable })), { ssr: false }),
+  "upavasa-guide": dynamic(() => import("./upavasa-guide").then(m => ({ default: m.UpavasaGuide })), { ssr: false }),
+  "puja-vrata-guide": dynamic(() => import("./puja-vrata-guide").then(m => ({ default: m.PujaVrataGuide })), { ssr: false }),
+  "cross-cultural-care-guide": dynamic(() => import("./cross-cultural-care-guide").then(m => ({ default: m.CrossCulturalCareGuide })), { ssr: false }),
+  "remedy-matching-explorer": dynamic(() => import("./remedy-matching-explorer").then(m => ({ default: m.RemedyMatchingExplorer })), { ssr: false }),
+  "lal-kitab-upaya-intro": dynamic(() => import("./lal-kitab-upaya-intro").then(m => ({ default: m.LalKitabUpayaIntro })), { ssr: false }),
+  "restraint-doctrine-card": dynamic(() => import("./restraint-doctrine-card").then(m => ({ default: m.RestraintDoctrineCard })), { ssr: false }),
+  "kp-lineage-timeline": dynamic(() => import("./kp-lineage-timeline").then(m => ({ default: m.KPLineageTimeline })), { ssr: false }),
+  "kp-reader-series-explorer": dynamic(() => import("./kp-reader-series-explorer").then(m => ({ default: m.KPReaderSeriesExplorer })), { ssr: false }),
+  "kp-precision-resolution-comparator": dynamic(() => import("./kp-precision-resolution-comparator").then(m => ({ default: m.KPPrecisionResolutionComparator })), { ssr: false }),
+  "kp-cusp-calculator": dynamic(() => import("./kp-cusp-calculator").then(m => ({ default: m.KpCuspCalculator })), { ssr: false }),
+  "kp-vs-parashari-cusp-comparator": dynamic(() => import("./kp-vs-parashari-cusp-comparator").then(m => ({ default: m.KpVsParashariCuspComparator })), { ssr: false }),
+  "kp-cusp-verifier": dynamic(() => import("./kp-cusp-verifier").then(m => ({ default: m.KpCuspVerifier })), { ssr: false }),
+  "kp-tenth-cuspal-doctrine-workbench": dynamic(() => import("./kp-tenth-cuspal-doctrine-workbench").then(m => ({ default: m.KpTenthCuspalDoctrineWorkbench })), { ssr: false }),
+  "kp-seventh-csl-marriage-promise-workbench": dynamic(() => import("./kp-seventh-csl-marriage-promise-workbench").then(m => ({ default: m.KpSeventhCslMarriagePromiseWorkbench })), { ssr: false }),
+  "kp-seventh-significator-delivery-workbench": dynamic(() => import("./kp-seventh-significator-delivery-workbench").then(m => ({ default: m.KpSeventhSignificatorDeliveryWorkbench })), { ssr: false }),
+  "kp-tenth-significator-hierarchy-workbench": dynamic(() => import("./kp-tenth-significator-hierarchy-workbench").then(m => ({ default: m.KpTenthSignificatorHierarchyWorkbench })), { ssr: false }),
+  "placidus-house-visualizer": dynamic(() => import("./placidus-kp-convention").then(m => ({ default: m.PlacidusKpConvention })), { ssr: false }),
+  "249-sub-explorer": dynamic(() => import("./249-sub-explorer").then(m => ({ default: m.Kp249SubExplorer })), { ssr: false }),
+  "sub-sub-recursion-explorer": dynamic(() => import("./sub-sub-recursion-explorer").then(m => ({ default: m.SubSubRecursionExplorer })), { ssr: false }),
+  "sub-lord-fluency-trainer": dynamic(() => import("./sub-lord-fluency-trainer").then(m => ({ default: m.SubLordFluencyTrainer })), { ssr: false }),
+  "cuspal-sub-lord-finder": dynamic(() => import("./cuspal-sub-lord-finder").then(m => ({ default: m.CuspalSubLordFinder })), { ssr: false }),
+  "cuspal-sub-lord-visualizer": dynamic(() => import("./cuspal-sub-lord-visualizer").then(m => ({ default: m.CuspalSubLordVisualizer })), { ssr: false }),
+  "planet-sub-lord-modulator": dynamic(() => import("./planet-sub-lord-modulator").then(m => ({ default: m.PlanetSubLordModulator })), { ssr: false }),
+  "disposition-rules-workbench": dynamic(() => import("./disposition-rules-workbench").then(m => ({ default: m.DispositionRulesWorkbench })), { ssr: false }),
+  "ruling-planets-role-explorer": dynamic(() => import("./ruling-planets-role-explorer").then(m => ({ default: m.RulingPlanetsRoleExplorer })), { ssr: false }),
+  "ruling-planets-calculator": dynamic(() => import("./ruling-planets-calculator").then(m => ({ default: m.RulingPlanetsCalculator })), { ssr: false }),
+  "ruling-planets-confirmation-workbench": dynamic(() => import("./ruling-planets-confirmation-workbench").then(m => ({ default: m.RulingPlanetsConfirmationWorkbench })), { ssr: false }),
+  "kp-career-ruling-planets-timing-workbench": dynamic(() => import("./kp-career-ruling-planets-timing-workbench").then(m => ({ default: m.KpCareerRulingPlanetsTimingWorkbench })), { ssr: false }),
+  "kp-marriage-significator-dasha-window": dynamic(() => import("./kp-marriage-significator-dasha-window").then(m => ({ default: m.KpMarriageSignificatorDashaWindow })), { ssr: false }),
+  "kp-marriage-question-verdict-lab": dynamic(() => import("./kp-marriage-question-verdict-lab").then(m => ({ default: m.KpMarriageQuestionVerdictLab })), { ssr: false }),
+  "kp-career-question-verdict-workbench": dynamic(() => import("./kp-career-question-verdict-workbench").then(m => ({ default: m.KpCareerQuestionVerdictWorkbench })), { ssr: false }),
+  "ashta-kuta-framework-workbench": dynamic(() => import("./ashta-kuta-framework-workbench").then(m => ({ default: m.AshtaKutaFrameworkWorkbench })), { ssr: false }),
+  "ashta-kuta-score-interpretation-workbench": dynamic(() => import("./ashta-kuta-score-interpretation-workbench").then(m => ({ default: m.AshtaKutaScoreInterpretationWorkbench })), { ssr: false }),
+  "manglik-full-cancellation-workbench": dynamic(() => import("./manglik-full-cancellation-workbench").then(m => ({ default: m.ManglikFullCancellationWorkbench })), { ssr: false }),
+  "marriage-tajika-lal-kitab-overlay-workbench": dynamic(() => import("./marriage-tajika-lal-kitab-overlay-workbench").then(m => ({ default: m.MarriageTajikaLalKitabOverlayWorkbench })), { ssr: false }),
+  "marriage-dasha-timing-framework-workbench": dynamic(() => import("./marriage-dasha-timing-framework-workbench").then(m => ({ default: m.MarriageDashaTimingFrameworkWorkbench })), { ssr: false }),
+  "marriage-synthesis-overview-map": dynamic(() => import("./marriage-synthesis-overview-map").then(m => ({ default: m.MarriageSynthesisOverviewMap })), { ssr: false }),
+  "when-will-i-marry-synthesis-lab": dynamic(() => import("./when-will-i-marry-synthesis-lab").then(m => ({ default: m.WhenWillIMarrySynthesisLab })), { ssr: false }),
+  "proposal-evaluation-synthesis-lab": dynamic(() => import("./proposal-evaluation-synthesis-lab").then(m => ({ default: m.ProposalEvaluationSynthesisLab })), { ssr: false }),
+  "marriage-scope-competence-router": dynamic(() => import("./marriage-scope-competence-router").then(m => ({ default: m.MarriageScopeCompetenceRouter })), { ssr: false }),
+  "first-house-vitality-physique-workbench": dynamic(() => import("./first-house-vitality-physique-workbench").then(m => ({ default: m.FirstHouseVitalityPhysiqueWorkbench })), { ssr: false }),
+  "sixth-house-disease-recovery-workbench": dynamic(() => import("./sixth-house-disease-recovery-workbench").then(m => ({ default: m.SixthHouseDiseaseRecoveryWorkbench })), { ssr: false }),
+  "fourth-house-property-workbench": dynamic(() => import("./fourth-house-property-workbench").then(m => ({ default: m.FourthHousePropertyWorkbench })), { ssr: false }),
+  "fourth-lord-property-permutation-lab": dynamic(() => import("./fourth-lord-property-permutation-lab").then(m => ({ default: m.FourthLordPropertyPermutationLab })), { ssr: false }),
+  "mars-property-karaka-depth-lab": dynamic(() => import("./mars-property-karaka-depth-lab").then(m => ({ default: m.MarsPropertyKarakaDepthLab })), { ssr: false }),
+  "secondary-property-indicators-synthesis-lab": dynamic(() => import("./secondary-property-indicators-synthesis-lab").then(m => ({ default: m.SecondaryPropertyIndicatorsSynthesisLab })), { ssr: false }),
+  "significator-hierarchy-explorer": dynamic(() => import("./significator-hierarchy-explorer").then(m => ({ default: m.SignificatorHierarchyExplorer })), { ssr: false }),
+  "first-order-significator-visualizer": dynamic(() => import("./first-order-significator-visualizer").then(m => ({ default: m.FirstOrderSignificatorVisualizer })), { ssr: false }),
+  "second-order-significator-workbench": dynamic(() => import("./second-order-significator-workbench").then(m => ({ default: m.SecondOrderSignificatorWorkbench })), { ssr: false }),
+  "significator-chain-builder": dynamic(() => import("./significator-chain-builder").then(m => ({ default: m.SignificatorChainBuilder })), { ssr: false }),
+  "kp-horary-number-selector": dynamic(() => import("./kp-horary-number-selector").then(m => ({ default: m.KpHoraryNumberSelector })), { ssr: false }),
+  "kp-horary-chart-caster": dynamic(() => import("./kp-horary-chart-caster").then(m => ({ default: m.KpHoraryChartCaster })), { ssr: false }),
+  "kp-horary-cuspal-verdict": dynamic(() => import("./kp-horary-cuspal-verdict").then(m => ({ default: m.KpHoraryCuspalVerdict })), { ssr: false }),
+  "kp-horary-marriage-workbench": dynamic(() => import("./kp-horary-marriage-workbench").then(m => ({ default: m.KpHoraryMarriageWorkbench })), { ssr: false }),
+  "kp-horary-job-workbench": dynamic(() => import("./kp-horary-job-workbench").then(m => ({ default: m.KpHoraryJobWorkbench })), { ssr: false }),
+  "kp-horary-stream-comparator": dynamic(() => import("./kp-horary-stream-comparator").then(m => ({ default: m.KpHoraryStreamComparator })), { ssr: false }),
+  "kp-parashari-side-by-side": dynamic(() => import("./kp-parashari-side-by-side").then(m => ({ default: m.KpParashariSideBySide })), { ssr: false }),
+  "kp-parashari-convergences": dynamic(() => import("./kp-parashari-convergences").then(m => ({ default: m.KpParashariConvergences })), { ssr: false }),
+  "kp-parashari-divergences": dynamic(() => import("./kp-parashari-divergences").then(m => ({ default: m.KpParashariDivergences })), { ssr: false }),
+  "kp-cross-stream-router": dynamic(() => import("./kp-cross-stream-router").then(m => ({ default: m.KpCrossStreamRouter })), { ssr: false }),
+  "kp-modified-vimshottari-explorer": dynamic(() => import("./kp-modified-vimshottari-explorer").then(m => ({ default: m.KpModifiedVimshottariExplorer })), { ssr: false }),
+  "kp-synthesis-capstone": dynamic(() => import("./kp-synthesis-capstone").then(m => ({ default: m.KpSynthesisCapstone })), { ssr: false }),
+  "tajika-origins-timeline": dynamic(() => import("./tajika-origins-timeline").then(m => ({ default: m.TajikaOriginsTimeline })), { ssr: false }),
+  "tajika-neelakanthi-structure": dynamic(() => import("./tajika-neelakanthi-structure").then(m => ({ default: m.TajikaNeelakanthiStructure })), { ssr: false }),
+  "tajika-texts-catalogue": dynamic(() => import("./tajika-texts-catalogue").then(m => ({ default: m.TajikaTextsCatalogue })), { ssr: false }),
+  "tajika-comparative-matrix": dynamic(() => import("./tajika-comparative-matrix").then(m => ({ default: m.TajikaComparativeMatrix })), { ssr: false }),
+  "tajika-ithasala-explorer": dynamic(() => import("./tajika-ithasala-explorer").then(m => ({ default: m.TajikaIthasalaExplorer })), { ssr: false }),
+  "tajika-three-yoga-comparator": dynamic(() => import("./tajika-three-yoga-comparator").then(m => ({ default: m.TajikaThreeYogaComparator })), { ssr: false }),
+  "tajika-twelve-yogas-surveyor": dynamic(() => import("./tajika-twelve-yogas-surveyor").then(m => ({ default: m.TajikaTwelveYogasSurveyor })), { ssr: false }),
+  "tajika-yogas-application-wizard": dynamic(() => import("./tajika-yogas-application-wizard").then(m => ({ default: m.TajikaYogasApplicationWizard })), { ssr: false }),
+  "tajika-saham-concept-explorer": dynamic(() => import("./tajika-saham-concept-explorer").then(m => ({ default: m.TajikaSahamConceptExplorer })), { ssr: false }),
+  "tajika-auspicious-sahams-comparator": dynamic(() => import("./tajika-auspicious-sahams-comparator").then(m => ({ default: m.TajikaAuspiciousSahamsComparator })), { ssr: false }),
+  "tajika-life-event-sahams-surveyor": dynamic(() => import("./tajika-life-event-sahams-surveyor").then(m => ({ default: m.TajikaLifeEventSahamsSurveyor })), { ssr: false }),
+  "tajika-sahams-application-wizard": dynamic(() => import("./tajika-sahams-application-wizard").then(m => ({ default: m.TajikaSahamsApplicationWizard })), { ssr: false }),
+  "tajika-muntha-concept-explorer": dynamic(() => import("./tajika-muntha-concept-explorer").then(m => ({ default: m.TajikaMunthaConceptExplorer })), { ssr: false }),
+  "tajika-varshesha-selector": dynamic(() => import("./tajika-varshesha-selector").then(m => ({ default: m.TajikaVarsheshaSelector })), { ssr: false }),
+  "tajika-varshaphala-caster": dynamic(() => import("./tajika-varshaphala-caster").then(m => ({ default: m.TajikaVarshaphalaCaster })), { ssr: false }),
+  "tajika-varshaphala-synthesizer": dynamic(() => import("./tajika-varshaphala-synthesizer").then(m => ({ default: m.TajikaVarshaphalaSynthesizer })), { ssr: false }),
+  "tajika-prashna-concept-explorer": dynamic(() => import("./tajika-prashna-concept-explorer").then(m => ({ default: m.TajikaPrashnaConceptExplorer })), { ssr: false }),
+  "tajika-prashna-judgment-methodology": dynamic(() => import("./tajika-prashna-judgment-methodology").then(m => ({ default: m.TajikaPrashnaJudgmentMethodology })), { ssr: false }),
+  "tajika-vs-kp-horary-comparator": dynamic(() => import("./tajika-vs-kp-horary-comparator").then(m => ({ default: m.TajikaVsKpHoraryComparator })), { ssr: false }),
+  "tajika-cross-stream-synthesis": dynamic(() => import("./tajika-cross-stream-synthesis").then(m => ({ default: m.TajikaCrossStreamSynthesis })), { ssr: false }),
+  "tajika-honest-handling": dynamic(() => import("./tajika-honest-handling").then(m => ({ default: m.TajikaHonestHandling })), { ssr: false }),
+  "m19-closure": dynamic(() => import("./m19-closure").then(m => ({ default: m.M19Closure })), { ssr: false }),
+  "evidentiary-layers": dynamic(() => import("./evidentiary-layers").then(m => ({ default: m.EvidentiaryLayers })), { ssr: false }),
+  "manuscript-material-map": dynamic(() => import("./manuscript-material-map").then(m => ({ default: m.ManuscriptMaterialMap })), { ssr: false }),
+  "school-comparator": dynamic(() => import("./school-comparator").then(m => ({ default: m.SchoolComparator })), { ssr: false }),
+  "stream-position-map": dynamic(() => import("./stream-position-map").then(m => ({ default: m.StreamPositionMap })), { ssr: false }),
+  "bhrigu-flow": dynamic(() => import("./bhrigu-flow").then(m => ({ default: m.BhriguFlow })), { ssr: false }),
+  "agastya-flow": dynamic(() => import("./agastya-flow").then(m => ({ default: m.AgastyaFlow })), { ssr: false }),
+  "sublineage-map": dynamic(() => import("./sublineage-map").then(m => ({ default: m.SublineageMap })), { ssr: false }),
+  "grantha-accessibility-map": dynamic(() => import("./grantha-accessibility-map").then(m => ({ default: m.GranthaAccessibilityMap })), { ssr: false }),
+  "matching-protocol-flow": dynamic(() => import("./matching-protocol-flow").then(m => ({ default: m.MatchingProtocolFlow })), { ssr: false }),
+  "session-flow": dynamic(() => import("./session-flow").then(m => ({ default: m.SessionFlow })), { ssr: false }),
+  "kanda-map": dynamic(() => import("./kanda-map").then(m => ({ default: m.KandaMap })), { ssr: false }),
+  "shloka-decoder": dynamic(() => import("./shloka-decoder").then(m => ({ default: m.ShlokaDecoder })), { ssr: false }),
+  "reader-due-diligence": dynamic(() => import("./reader-due-diligence").then(m => ({ default: m.ReaderDueDiligence })), { ssr: false }),
+  "nadi-verification-sandbox": dynamic(() => import("./nadi-verification-sandbox").then(m => ({ default: m.NadiVerificationSandbox })), { ssr: false }),
+  "nadi-commercial-explorer": dynamic(() => import("./nadi-commercial-explorer").then(m => ({ default: m.NadiCommercialExplorer })), { ssr: false }),
+  "nadi-decision-framework": dynamic(() => import("./nadi-decision-framework").then(m => ({ default: m.NadiDecisionFramework })), { ssr: false }),
+  "nadi-honest-handling-instance": dynamic(() => import("./nadi-honest-handling-instance").then(m => ({ default: m.NadiHonestHandlingInstance })), { ssr: false }),
+  "vedanga-jyotisha-yuga-visualizer": dynamic(() => import("./vedanga-jyotisha-yuga-visualizer").then(m => ({ default: m.VedangaJyotishaYugaVisualizer })), { ssr: false }),
+  "classical-canon-stratigraphy": dynamic(() => import("./classical-canon-stratigraphy").then(m => ({ default: m.ClassicalCanonStratigraphy })), { ssr: false }),
+  "tajika-loanword-translator": dynamic(() => import("./tajika-loanword-translator").then(m => ({ default: m.TajikaLoanwordTranslator })), { ssr: false }),
+  "modern-stream-architects": dynamic(() => import("./modern-stream-architects").then(m => ({ default: m.ModernStreamArchitects })), { ssr: false }),
+  "do-no-harm-ahimsa": dynamic(() => import("./do-no-harm-ahimsa").then(m => ({ default: m.DoNoHarmAhimsa })), { ssr: false }),
+  "truth-with-compassion": dynamic(() => import("./truth-with-compassion").then(m => ({ default: m.TruthWithCompassion })), { ssr: false }),
+  "confidentiality": dynamic(() => import("./confidentiality").then(m => ({ default: m.ConfidentialityAuditor })), { ssr: false }),
+  "competence-boundaries": dynamic(() => import("./competence-boundaries").then(m => ({ default: m.CompetenceBoundaries })), { ssr: false }),
+  "empowerment-not-dependency": dynamic(() => import("./empowerment-not-dependency").then(m => ({ default: m.EmpowermentNotDependency })), { ssr: false }),
+  "reasonable-fees": dynamic(() => import("./reasonable-fees").then(m => ({ default: m.ReasonableFees })), { ssr: false }),
+  "session-protocols": dynamic(() => import("./session-protocols").then(m => ({ default: m.SessionProtocols })), { ssr: false }),
+  "follow-up-boundaries": dynamic(() => import("./follow-up-boundaries").then(m => ({ default: m.FollowUpBoundaries })), { ssr: false }),
+  "post-tier-1-reading-list": dynamic(() => import("./post-tier-1-reading-list").then(m => ({ default: m.PostTier1ReadingList })), { ssr: false }),
+  "community-participation": dynamic(() => import("./community-participation").then(m => ({ default: m.CommunityParticipation })), { ssr: false }),
+  "self-chart-tracking": dynamic(() => import("./self-chart-tracking").then(m => ({ default: m.SelfChartTracking })), { ssr: false }),
+  "tier-2-preview": dynamic(() => import("./tier-2-preview").then(m => ({ default: m.Tier2Preview })), { ssr: false }),
+  "24-module-synthesis": dynamic(() => import("./24-module-synthesis").then(m => ({ default: m.Module24SynthesisDojo })), { ssr: false }),
+  "practitioner-pledge": dynamic(() => import("./practitioner-pledge").then(m => ({ default: m.PractitionerPledgeSimulator })), { ssr: false }),
+  "curriculum-completion": dynamic(() => import("./curriculum-completion").then(m => ({ default: m.CurriculumCompletionLedger })), { ssr: false }),
+  "path-forward": dynamic(() => import("./path-forward").then(m => ({ default: m.PathForwardRoadmap })), { ssr: false }),
+  "lagna-suddhi-evaluator": dynamic(() => import("./lagna-suddhi-evaluator").then(m => ({ default: m.LagnaSuddhiEvaluator })), { ssr: false }),
+  "four-pillar-integrator": dynamic(() => import("./four-pillar-integrator").then(m => ({ default: m.FourPillarIntegrator })), { ssr: false }),
+  "tajika-dhana-saham-overlay": dynamic(() => import("./tajika-dhana-saham-overlay").then(m => ({ default: m.TajikaDhanaSahamOverlay })), { ssr: false }),
+  "overall-wealth-promise-synthesis": dynamic(() => import("./overall-wealth-promise-synthesis").then(m => ({ default: m.OverallWealthPromiseSynthesis })), { ssr: false }),
+  "investment-decision-synthesis": dynamic(() => import("./investment-decision-synthesis").then(m => ({ default: m.InvestmentDecisionSynthesis })), { ssr: false }),
+  "ethical-scope-routing-dashboard": dynamic(() => import("./ethical-scope-routing-dashboard").then(m => ({ default: m.EthicalScopeRoutingDashboard })), { ssr: false }),
+};
+

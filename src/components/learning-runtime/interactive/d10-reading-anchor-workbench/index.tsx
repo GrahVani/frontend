@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 import { NI_HOUSE_POLYGONS, NI_HOUSE_CENTERS } from "@/lib/north-indian-chart-geometry";
 
 type DignityKey = "strong" | "mixed" | "weak";
@@ -160,8 +161,8 @@ export function D10ReadingAnchorWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Career chart map</p>
@@ -179,7 +180,7 @@ export function D10ReadingAnchorWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Choose reading anchor" icon={<Eye size={18} />} color={activeAnchor === "lagna" ? BLUE : activeAnchor === "tenth" ? GREEN : GOLD}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               <button type="button" aria-pressed={activeAnchor === "lagna"} onClick={() => setActiveAnchor("lagna")} style={smallChipStyle(activeAnchor === "lagna", BLUE)}>
@@ -267,7 +268,7 @@ export function D10ReadingAnchorWorkbench() {
         </Panel>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Refinement checks</p>
           <h3 style={{ margin: "0.15rem 0 0.8rem", color: GOLD, fontSize: "1.18rem" }}>
@@ -649,7 +650,7 @@ const cardStyle: CSSProperties = {
   padding: "1rem",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))",
   gap: "1rem",

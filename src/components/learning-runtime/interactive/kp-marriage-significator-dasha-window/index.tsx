@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, CalendarClock, Clock3, HeartHandshake, RotateCcw, SatelliteDish, Scale, ShieldCheck, Sparkles, TriangleAlert } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type ViewMode = "dba" | "twoYes" | "promise" | "window";
 type PromiseMode = "promised" | "obstructed";
@@ -165,8 +166,8 @@ export function KpMarriageSignificatorDashaWindow() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Timing verdict</p>
@@ -182,7 +183,7 @@ export function KpMarriageSignificatorDashaWindow() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Promise condition" icon={<ShieldCheck size={18} />} color={promised ? GREEN : GOLD}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               <button type="button" aria-pressed={promiseMode === "promised"} onClick={() => setPromiseMode("promised")} style={buttonStyle(promiseMode === "promised", GREEN)}>
@@ -211,7 +212,7 @@ export function KpMarriageSignificatorDashaWindow() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Two-yes switches</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -336,11 +337,6 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-};
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

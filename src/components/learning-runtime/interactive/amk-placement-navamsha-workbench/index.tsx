@@ -15,6 +15,7 @@ import {
   Sparkles,
   Target,
 } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type HouseKey = "ninth" | "sixth" | "seventh" | "twelfth";
 type DignityKey = "strong" | "mixed" | "weak";
@@ -163,8 +164,8 @@ export function AmkPlacementNavamshaWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Reading diagram</p>
@@ -182,7 +183,7 @@ export function AmkPlacementNavamshaWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="View layer" icon={<Eye size={18} />} color={view === "placement" ? BLUE : view === "navamsha" ? GOLD : PURPLE}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               <button type="button" aria-pressed={view === "placement"} onClick={() => setView("placement")} style={smallChipStyle(view === "placement", BLUE)}>
@@ -246,7 +247,7 @@ export function AmkPlacementNavamshaWorkbench() {
         </Panel>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Reading discipline</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -391,7 +392,7 @@ const cardStyle: CSSProperties = {
   padding: "1rem",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))",
   gap: "1rem",

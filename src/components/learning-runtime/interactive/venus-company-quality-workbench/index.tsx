@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, Flame, GitCompare, HeartHandshake, Moon, Orbit, RotateCcw, Scale, ShieldCheck, Sparkles, TriangleAlert, Zap } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type Focus = "benefic" | "malefic" | "net" | "combine";
 type Support = "strong" | "mixed" | "weak";
@@ -156,8 +157,8 @@ export function VenusCompanyQualityWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Affective-quality net</p>
@@ -173,7 +174,7 @@ export function VenusCompanyQualityWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Benefic company" icon={<Sparkles size={18} />} color={GREEN}>
             <Toggle active={jupiterConj} color={jupiterConj ? GREEN : GOLD} icon={<BadgeCheck size={18} />} title="Jupiter conjunct Venus" body={jupiterConj ? "Grace and devotion are strong because this is conjunction." : "No Jupiter conjunction selected."} onClick={() => setJupiterConj((value) => !value)} />
             <Toggle active={mercuryMoonSupport} color={mercuryMoonSupport ? GREEN : GOLD} icon={<Moon size={18} />} title="Mercury or waxing Moon support" body={mercuryMoonSupport ? "Rapport, refinement, or tenderness is included." : "No Mercury/Moon support selected."} onClick={() => setMercuryMoonSupport((value) => !value)} />
@@ -188,7 +189,7 @@ export function VenusCompanyQualityWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Context</p>
           <div style={{ marginTop: "0.75rem" }}>
@@ -304,11 +305,6 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-};
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

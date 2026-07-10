@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, CircleDot, HeartHandshake, Orbit, RotateCcw, Scale, ShieldCheck, Sparkles, Sun, TriangleAlert } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type ViewMode = "targets" | "benefics" | "malefics" | "net";
 type AspectKey = "jupiter" | "venus" | "mercury" | "moon" | "mars" | "saturn" | "nodes" | "sun";
@@ -155,8 +156,8 @@ export function SeventhAspectNetWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Net indication</p>
@@ -172,7 +173,7 @@ export function SeventhAspectNetWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Aspect targets" icon={<Orbit size={18} />} color={checkedTargets === 2 ? GREEN : VERMILION}>
             <Toggle active={houseTarget} color={houseTarget ? GREEN : VERMILION} icon={<CircleDot size={18} />} title="7th house checked" body={houseTarget ? "Aspects on the marriage house are counted." : "The house target is missing."} onClick={() => setHouseTarget((value) => !value)} />
             <Toggle active={lordTarget} color={lordTarget ? GREEN : VERMILION} icon={<HeartHandshake size={18} />} title="7th lord checked" body={lordTarget ? "Aspects on the lord wherever it sits are counted." : "The lord target is missing."} onClick={() => setLordTarget((value) => !value)} />
@@ -187,7 +188,7 @@ export function SeventhAspectNetWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Malefic aspects as care themes</p>
           <div style={{ display: "grid", gap: "0.65rem", marginTop: "0.75rem" }}>
@@ -310,7 +311,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
   gap: "1rem",

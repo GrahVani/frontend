@@ -12,6 +12,7 @@ import {
   SlidersHorizontal,
   Users,
 } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type HouseNumber = 2 | 5 | 6 | 7 | 8 | 10 | 11 | 12;
 type ReadingMode = "csl" | "houseLord";
@@ -148,8 +149,8 @@ export function KpTenthCuspalDoctrineWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>CSL verdict vector</p>
@@ -167,7 +168,7 @@ export function KpTenthCuspalDoctrineWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Worked presets" icon={<SlidersHorizontal size={18} />} color={verdictColor(mode)}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               {(Object.keys(PRESETS) as Array<keyof typeof PRESETS>).map((key) => (
@@ -224,7 +225,7 @@ export function KpTenthCuspalDoctrineWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>KP discipline</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -393,7 +394,7 @@ const cardStyle: CSSProperties = {
   padding: "1rem",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))",
   gap: "1rem",

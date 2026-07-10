@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { AlertTriangle, ArrowDown, ArrowUp, BadgeCheck, BriefcaseBusiness, Clock3, Info, RotateCcw, Scale, ShieldCheck, SunMoon } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type ViewMode = "derive" | "career" | "dasha" | "honesty";
 type CoreReading = "strong" | "weak";
@@ -129,8 +130,8 @@ export function YogiAvayogiCareerWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Lift-drag balance</p>
@@ -148,7 +149,7 @@ export function YogiAvayogiCareerWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Core reading first" icon={<Scale size={18} />} color={coreReading === "strong" ? GREEN : GOLD}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               <button type="button" aria-pressed={coreReading === "strong"} onClick={() => setCoreReading("strong")} style={buttonStyle(coreReading === "strong", GREEN)}>
@@ -201,7 +202,7 @@ export function YogiAvayogiCareerWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>10th connection</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -314,7 +315,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "minmax(360px, 1.25fr) minmax(320px, 1fr)",
   gap: "1rem",
