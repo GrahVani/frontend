@@ -12,12 +12,7 @@ export const REGISTRY = {
   "fifth-house-intellect-workbench": dynamic(() => import("../fifth-house-intellect-workbench").then(m => ({ default: m.FifthHouseIntellectWorkbench }))),
   "four-five-nine-educational-arc-synthesizer": dynamic(() => import("../four-five-nine-educational-arc-synthesizer").then(m => ({ default: m.FourFiveNineEducationalArcSynthesizer }))),
   "field-of-study-synthesis-workbench": dynamic(() => import("../field-of-study-synthesis-workbench").then(m => ({ default: m.FieldOfStudySynthesisWorkbench }))),
-  "full-reduction-walkthrough": dynamic(() => import("../full-reduction-walkthrough").then(m => ({ default: m.FullReductionWalkthrough }))),
-  "foundational-mantra-player": dynamic(() => import("../foundational-mantra-player").then(m => ({ default: m.FoundationalMantraPlayer }))),
   "first-house-vitality-physique-workbench": dynamic(() => import("../first-house-vitality-physique-workbench").then(m => ({ default: m.FirstHouseVitalityPhysiqueWorkbench }))),
   "fourth-house-property-workbench": dynamic(() => import("../fourth-house-property-workbench").then(m => ({ default: m.FourthHousePropertyWorkbench }))),
   "fourth-lord-property-permutation-lab": dynamic(() => import("../fourth-lord-property-permutation-lab").then(m => ({ default: m.FourthLordPropertyPermutationLab }))),
-  "first-order-significator-visualizer": dynamic(() => import("../first-order-significator-visualizer").then(m => ({ default: m.FirstOrderSignificatorVisualizer }))),
-  "follow-up-boundaries": dynamic(() => import("../follow-up-boundaries").then(m => ({ default: m.FollowUpBoundaries }))),
-  "four-pillar-integrator": dynamic(() => import("../four-pillar-integrator").then(m => ({ default: m.FourPillarIntegrator }))),
 };
