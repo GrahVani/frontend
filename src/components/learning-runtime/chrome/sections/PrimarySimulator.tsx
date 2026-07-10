@@ -772,6 +772,116 @@ export async function PrimarySimulator({ section, frontMatter: fm }: PrimarySimu
     }
   }
 
+  // Direct folder routing for Tier 2 Module 4
+  if (fm.tier === 2 && fm.module === 4 && interactiveKey) {
+    try {
+      const mod = await import(`../../interactive/tier-2/module-04/${interactiveKey}/index`);
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 2 Module 4: ${interactiveKey}`, err);
+    }
+  }
+
+  // Direct folder routing for Tier 2 Module 5
+  if (fm.tier === 2 && fm.module === 5 && interactiveKey) {
+    try {
+      const mod = await import(`../../interactive/tier-2/module-05/${interactiveKey}/index`);
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 2 Module 5: ${interactiveKey}`, err);
+    }
+  }
+
+  // Direct folder routing for Tier 2 Module 6
+  if (fm.tier === 2 && fm.module === 6 && interactiveKey) {
+    try {
+      const mod = await import(`../../interactive/tier-2/module-06/${interactiveKey}/index`);
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 2 Module 6: ${interactiveKey}`, err);
+    }
+  }
+
+  // Direct folder routing for Tier 2 Module 7
+  if (fm.tier === 2 && fm.module === 7 && interactiveKey) {
+    try {
+      const mod = await import(`../../interactive/tier-2/module-07/${interactiveKey}/index`);
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 2 Module 7: ${interactiveKey}`, err);
+    }
+  }
+
+  // Direct folder routing for Tier 2 Module 8
+  if (fm.tier === 2 && fm.module === 8 && interactiveKey) {
+    try {
+      const mod = await import(`../../interactive/tier-2/module-08/${interactiveKey}/index`);
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 2 Module 8: ${interactiveKey}`, err);
+    }
+  }
+
+  // Direct folder routing for Tier 2 Module 9
+  if (fm.tier === 2 && fm.module === 9 && interactiveKey) {
+    try {
+      const mod = await import(`../../interactive/tier-2/module-09/${interactiveKey}/index`);
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 2 Module 9: ${interactiveKey}`, err);
+    }
+  }
+
+  // Direct folder routing for Tier 2 Module 10
+  if (fm.tier === 2 && fm.module === 10 && interactiveKey) {
+    try {
+      const mod = await import(`../../interactive/tier-2/module-10/${interactiveKey}/index`);
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 2 Module 10: ${interactiveKey}`, err);
+    }
+  }
+
+  // Direct folder routing for Tier 2 Module 11
+  if (fm.tier === 2 && fm.module === 11 && interactiveKey) {
+    try {
+      const mod = await import(`../../interactive/tier-2/module-11/${interactiveKey}/index`);
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 2 Module 11: ${interactiveKey}`, err);
+    }
+  }
+
+  // Direct folder routing for Tier 2 Module 12
+  if (fm.tier === 2 && fm.module === 12 && interactiveKey) {
+    try {
+      const mod = await import(`../../interactive/tier-2/module-12/${interactiveKey}/index`);
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 2 Module 12: ${interactiveKey}`, err);
+    }
+  }
+
+  // Direct folder routing for Tier 2 Module 13
+  if (fm.tier === 2 && fm.module === 13 && interactiveKey) {
+    try {
+      const mod = await import(`../../interactive/tier-2/module-13/${interactiveKey}/index`);
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 2 Module 13: ${interactiveKey}`, err);
+    }
+  }
+
   // Fallback to alphabetical bucket loader
   if (!InteractiveComponent && interactiveKey) {
     InteractiveComponent = await loadInteractive(interactiveKey);

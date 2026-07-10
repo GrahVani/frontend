@@ -64,7 +64,6 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveEntry> = {
   // Lesson 2.5's Â§7 flagship: JaiminÄ« Second-Tradition Dojo â€” two-tab
   // (Doctrinal-Pair Atlas across 6 pairs + 5-scenario tradition-attribution
   // drill).
-  "atmakaraka-saturn-king-lens-lab": { path: "atmakaraka-saturn-king-lens-lab", exportName: "AtmakarakaSaturnKingLensLab" },
   // Lesson 2.6's Â§4 explorer: Four-Stream Landscape Explorer â€” hero diptych
   // (4 streams equal-weight) + modern-primary-vs-revival distinction +
   // KP founder plate + 5 KP contributions + Lal Kitab founder plate + 6 LK
@@ -256,10 +255,6 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveEntry> = {
   "kendra-trikona-grouping-visualizer": { path: "kendra-trikona-grouping-visualizer", exportName: "KendraTrikonaGroupingVisualizer" },
   "varga-reference-table": { path: "varga-reference-table", exportName: "VargaReferenceTable" },
   "varga-calculator": { path: "varga-calculator", exportName: "VargaCalculator" },
-  "d60-karmic-substrate-index-lab": { path: "d60-karmic-substrate-index-lab", exportName: "D60KarmicSubstrateIndexLab" },
-  "d60-spiritual-path-arc-lab": { path: "d60-spiritual-path-arc-lab", exportName: "D60SpiritualPathArcLab" },
-  "d60-honest-framing-ethics-lab": { path: "d60-honest-framing-ethics-lab", exportName: "D60HonestFramingEthicsLab" },
-  "d60-worked-reading-confidence-lab": { path: "d60-worked-reading-confidence-lab", exportName: "D60WorkedReadingConfidenceLab" },
   "birth-time-quality-checker": { path: "birth-time-quality-checker", exportName: "BirthTimeQualityChecker" },
   "vargottama-scanner": { path: "vargottama-scanner", exportName: "VargottamaScanner" },
   "d1-d9-divergence-reader": { path: "d1-d9-divergence-reader", exportName: "D1D9DivergenceReader" },
@@ -268,123 +263,49 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveEntry> = {
 
   // Lesson 5.1.2's Â§7 interactive: Dignity Wheel â€” clickable 12-rashi
   // dignity map with degree cues, friendship overlay, and Sun-Moon comparison.
-  "santana-fifth-house-significations-compass": { path: "santana-fifth-house-significations-compass", exportName: "SantanaFifthHouseSignificationsCompass" },
-  "santana-fifth-lord-permutations-wheel": { path: "santana-fifth-lord-permutations-wheel", exportName: "SantanaFifthLordPermutationsWheel" },
-  "santana-fifth-drishti-balance": { path: "santana-fifth-drishti-balance", exportName: "SantanaFifthDrishtiBalance" },
-  "santana-obstruction-honesty-workbench": { path: "santana-obstruction-honesty-workbench", exportName: "SantanaObstructionHonestyWorkbench" },
-  "saptamsha-builder-wheel": { path: "saptamsha-builder-wheel", exportName: "SaptamshaBuilderWheel" },
-  "children-d1-d7-convergence-bench": { path: "children-d1-d7-convergence-bench", exportName: "ChildrenD1D7ConvergenceBench" },
-  "d7-jupiter-karaka-workbench": { path: "d7-jupiter-karaka-workbench", exportName: "D7JupiterKarakaWorkbench" },
-  "d7-santana-protocol-runner": { path: "d7-santana-protocol-runner", exportName: "D7SantanaProtocolRunner" },
-  "jupiter-three-registers-convergence": { path: "jupiter-three-registers-convergence", exportName: "JupiterThreeRegistersConvergence" },
-  "jupiter-strength-scorecard": { path: "jupiter-strength-scorecard", exportName: "JupiterStrengthScorecard" },
-  "jupiter-dasha-bhukti-timeline": { path: "jupiter-dasha-bhukti-timeline", exportName: "JupiterDashaBhuktiTimeline" },
-  "putra-karaka-pk-convergence-bench": { path: "putra-karaka-pk-convergence-bench", exportName: "PutraKarakaPkConvergenceBench" },
-  "pk-placement-navamsha-workbench": { path: "pk-placement-navamsha-workbench", exportName: "PkPlacementNavamshaWorkbench" },
-  "kp-children-cusp-tool": { path: "kp-children-cusp-tool", exportName: "KpChildrenCuspTool" },
-  "kp-children-significator-timing-bench": { path: "kp-children-significator-timing-bench", exportName: "KpChildrenSignificatorTimingBench" },
-  "jaimini-kp-children-synthesis-bench": { path: "jaimini-kp-children-synthesis-bench", exportName: "JaiminiKpChildrenSynthesisBench" },
-  "when-will-children-synthesis-bench": { path: "when-will-children-synthesis-bench", exportName: "WhenWillChildrenSynthesisBench" },
-  "fertility-struggle-routing-trainer": { path: "fertility-struggle-routing-trainer", exportName: "FertilityStruggleRoutingTrainer" },
-  "pcpndt-refusal-trainer": { path: "pcpndt-refusal-trainer", exportName: "PcpndtRefusalTrainer" },
-  "grief-aware-response-trainer": { path: "grief-aware-response-trainer", exportName: "GriefAwareResponseTrainer" },
-  "children-scope-trainer": { path: "children-scope-trainer", exportName: "ChildrenScopeTrainer" },
-  "twelfth-house-chart-t1-explorer": { path: "twelfth-house-chart-t1-explorer", exportName: "TwelfthHouseChartT1Explorer" },
-  "ninth-house-chart-t1-explorer": { path: "ninth-house-chart-t1-explorer", exportName: "NinthHouseChartT1Explorer" },
-  "twelve-nine-three-arc-explorer": { path: "twelve-nine-three-arc-explorer", exportName: "TwelveNineThreeArcExplorer" },
-  "twelve-nine-three-aspect-explorer": { path: "twelve-nine-three-aspect-explorer", exportName: "TwelveNineThreeAspectExplorer" },
-  "rahu-foreign-boundary-explorer": { path: "rahu-foreign-boundary-explorer", exportName: "RahuForeignBoundaryExplorer" },
-  "rahu-placement-permutations-explorer": { path: "rahu-placement-permutations-explorer", exportName: "RahuPlacementPermutationsExplorer" },
-  "rahu-dasha-timing-explorer": { path: "rahu-dasha-timing-explorer", exportName: "RahuDashaTimingExplorer" },
-  "rahu-aspect-doctrine-fork-explorer": { path: "rahu-aspect-doctrine-fork-explorer", exportName: "RahuAspectDoctrineForkExplorer" },
-  "nri-yoga-citation-honesty-explorer": { path: "nri-yoga-citation-honesty-explorer", exportName: "NriYogaCitationHonestyExplorer" },
-  "nri-yoga-pattern-spotter": { path: "nri-yoga-pattern-spotter", exportName: "NriYogaPatternSpotter" },
-  "kp-foreign-travel-cusp-tool": { path: "kp-foreign-travel-cusp-tool", exportName: "KpForeignTravelCuspTool" },
-  "visa-question-multi-causal-synthesis": { path: "visa-question-multi-causal-synthesis", exportName: "VisaQuestionMultiCausalSynthesis" },
-  "dasha-timing-foreign-settlement-sweep": { path: "dasha-timing-foreign-settlement-sweep", exportName: "DashaTimingForeignSettlementSweep" },
-  "study-abroad-theme-timing-synthesis": { path: "study-abroad-theme-timing-synthesis", exportName: "StudyAbroadThemeTimingSynthesis" },
-  "permanent-settlement-synthesis": { path: "permanent-settlement-synthesis", exportName: "PermanentSettlementSynthesis" },
-  "scope-of-competence-router": { path: "scope-of-competence-router", exportName: "ScopeOfCompetenceRouter" },
-  "sixth-house-litigation-profile": { path: "sixth-house-litigation-profile", exportName: "SixthHouseLitigationProfile" },
   // Lesson 11.1.2 interactive: Sixth-House Dusthāna–Upachaya Paradox —
   // dual-classification wheel, Mars vs Saturn worked-example comparison,
   // early-loss scenario, and discipline checks on house-specific limits.
-  "sixth-house-dusthana-upachaya-paradox": { path: "sixth-house-dusthana-upachaya-paradox", exportName: "SixthHouseDusthanaUpachayaParadox" },
   // Lesson 11.1.3 interactive: Sixth-Lord Permutations for Litigation —
   // clickable 12-house wheel placing the 6th lord, five-family classification,
   // Chart L1 own-house anchor, and contrasting dusthāna/upachaya placements.
-  "sixth-lord-permutations-litigation": { path: "sixth-lord-permutations-litigation", exportName: "SixthLordPermutationsLitigation" },
   // Lesson 11.1.4 interactive: Mars as Contest Kāraka Applied to Litigation —
   // Mars placement wheel, dignity selector, Chart L1 vs exalted-1st contrast,
   // forward-pointer to Chapter 2, and discipline checks.
-  "mars-contest-karaka-litigation": { path: "mars-contest-karaka-litigation", exportName: "MarsContestKarakaLitigation" },
   // Lesson 11.2.1 interactive: Saturn as Delay, Structure, Persistence —
   // signification mapper, dignity quality selector, process gauge, and
   // Chart L1 own-sign vs debilitated contrast.
-  "saturn-delay-structure-persistence-litigation": { path: "saturn-delay-structure-persistence-litigation", exportName: "SaturnDelayStructurePersistenceLitigation" },
   // Lesson 11.2.2 interactive: Mars-Saturn Dynamic Explorer —
   // aspect-geometry vs natural-friendship layer toggle, asymmetric grid,
   // spot-the-error scenario, and discipline checks.
-  "mars-saturn-dynamic-explorer": { path: "mars-saturn-dynamic-explorer", exportName: "MarsSaturnDynamicExplorer" },
   // Lesson 11.2.3 interactive: Mars-Saturn Relationship Distinguisher —
   // conjunction / mutual aspect / mutual reception mode toggle, SVG diagrams,
   // Chart L1 verification by elimination, and contrasting conjunction case.
-  "mars-saturn-relationship-distinguisher": { path: "mars-saturn-relationship-distinguisher", exportName: "MarsSaturnRelationshipDistinguisher" },
   // Lesson 11.2.4 interactive: Mars-Saturn Litigation Synthesis —
   // six-finding assembly, aspect-web SVG, client-facing template builder,
   // scope-limit trainer, and discipline checks.
-  "mars-saturn-litigation-synthesis": { path: "mars-saturn-litigation-synthesis", exportName: "MarsSaturnLitigationSynthesis" },
   // Lesson 11.3.1 interactive: KP Litigation Cusp Tool —
   // Chart L1 6th-cusp data, disposition-rule step-through, sub-lord
   // substitution, and classical-vs-KP divergence display.
-  "kp-litigation-cusp-tool": { path: "kp-litigation-cusp-tool", exportName: "KpLitigationCuspTool" },
-  "kp-shared-significator-explorer": { path: "kp-shared-significator-explorer", exportName: "KpSharedSignificatorExplorer" },
-  "kp-case-outcome-horary-intro": { path: "kp-case-outcome-horary-intro", exportName: "KpCaseOutcomeHoraryIntro" },
-  "kp-litigation-synthesis-workbench": { path: "kp-litigation-synthesis-workbench", exportName: "KpLitigationSynthesisWorkbench" },
-  "dasha-conflict-timing-sweep": { path: "dasha-conflict-timing-sweep", exportName: "DashaConflictTimingSweep" },
-  "litigation-confidence-synthesis": { path: "litigation-confidence-synthesis", exportName: "LitigationConfidenceSynthesis" },
-  "lawyer-substitution-refusal-router": { path: "lawyer-substitution-refusal-router", exportName: "LawyerSubstitutionRefusalRouter" },
-  "litigation-scope-competence-closer": { path: "litigation-scope-competence-closer", exportName: "LitigationScopeCompetenceCloser" },
   // Lesson 12.1.1 interactive: Moksa Trikona Explorer — isolates the 4-8-12 trine,
   // compares all four purusartha trines, adds kendra/dusthana overlay, and includes
   // an uneven-trine builder with disposition-not-destiny discipline.
-  "moksha-trikona-explorer": { path: "moksha-trikona-explorer", exportName: "MokshaTrikonaExplorer" },
   // Lesson 12.1.2 interactive: Fourth House Spiritual Foundation — 4th house as
   // moksa foundation stage, Moon karaka picker, independent house/lord and Moon
   // strength builder, Chart S1 / Example 2 presets, and common-mistake discipline.
-  "fourth-house-spiritual-foundation": { path: "fourth-house-spiritual-foundation", exportName: "FourthHouseSpiritualFoundation" },
-  "eighth-house-spiritual-transformation": { path: "eighth-house-spiritual-transformation", exportName: "EighthHouseSpiritualTransformation" },
-  "twelfth-house-spiritual-release": { path: "twelfth-house-spiritual-release", exportName: "TwelfthHouseSpiritualRelease" },
-  "eighth-twelfth-health-registers": { path: "eighth-twelfth-health-registers", exportName: "EighthTwelfthHealthRegisters" },
-  "health-house-synthesis-workbench": { path: "health-house-synthesis-workbench", exportName: "HealthHouseSynthesisWorkbench" },
-  "balarista-doctrine-frame-explorer": { path: "balarista-doctrine-frame-explorer", exportName: "BalaristaDoctrineFrameExplorer" },
-  "balarista-configuration-spotter": { path: "balarista-configuration-spotter", exportName: "BalaristaConfigurationSpotter" },
-  "balarista-cancellation-walker": { path: "balarista-cancellation-walker", exportName: "BalaristaCancellationWalker" },
-  "balarista-ethics-framing-trainer": { path: "balarista-ethics-framing-trainer", exportName: "BalaristaEthicsFramingTrainer" },
-  "longevity-method-selector": { path: "longevity-method-selector", exportName: "LongevityMethodSelector" },
-  "ayur-calculator": { path: "ayur-calculator", exportName: "AyurCalculator" },
-  "naisargika-ayur-cross-check-workbench": { path: "naisargika-ayur-cross-check-workbench", exportName: "NaisargikaAyurCrossCheckWorkbench" },
-  "longevity-ethics-response-trainer": { path: "longevity-ethics-response-trainer", exportName: "LongevityEthicsResponseTrainer" },
-  "maraka-doctrine-explorer": { path: "maraka-doctrine-explorer", exportName: "MarakaDoctrineExplorer" },
-  "maraka-identification-workbench": { path: "maraka-identification-workbench", exportName: "MarakaIdentificationWorkbench" },
-  "maraka-caution-window-trainer": { path: "maraka-caution-window-trainer", exportName: "MarakaCautionWindowTrainer" },
   // Lesson 7.4.4's §7 flagship: Maraka Synthesis Workbench — synthesise
   // Bālāriṣṭa, longevity, and maraka findings for one chart and practise
   // the universal, undated, proactive client-facing register.
-  "maraka-synthesis-workbench": { path: "maraka-synthesis-workbench", exportName: "MarakaSynthesisWorkbench" },
   // Lesson 7.5.1's §7 explorer: Jaimini Rudra-Maheśvara Explorer — contrast
   // Parāśarī house-lordship with Jaimini kāraka-based identification, train
   // AK selection, inspect Rudra and Maheśvara rules, and present documented
   // source variance honestly.
-  "jaimini-rudra-maheshvara-explorer": { path: "jaimini-rudra-maheshvara-explorer", exportName: "JaiminiRudraMaheshvaraExplorer" },
   // Lesson 7.5.2's §7 workbench: Rudra-Maheśvara Workbench — apply the rules
   // to Chart H1, compare both Maheśvara procedures, and practise honest
   // confidence calibration plus the Jaimini-Parāśarī convergence.
-  "rudra-maheshvara-workbench": { path: "rudra-maheshvara-workbench", exportName: "RudraMaheshvaraWorkbench" },
   // Lesson 7.5.3's §7 explorer: KP Longevity Doctrine Explorer — interactively
   // teach sub-lord as final arbiter, four-level significator hierarchy, KP's
   // 2nd/7th/12th maraka list, Bhādhaka-by-lagna-type, and honest data-scope.
-  "kp-longevity-doctrine-explorer": { path: "kp-longevity-doctrine-explorer", exportName: "KpLongevityDoctrineExplorer" },
   // Lesson 5.1.4's Â§7 interactive: Friendship Matrix â€” directed graha
   // relationship grid with mirror-cell comparison and Sun-Moon polarity axes.
   // Lesson 5.1.5's Â§7 interactive: Pakshabala Slider â€” tithi scrubber with
@@ -440,7 +361,6 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveEntry> = {
   // Lesson 10.7.5's Â§7 interactive: DaÅ›Ä Landscape Map â€” survey of ~14 systems
   // grouped by class, five-point discipline overlay, and honest-framing practice.
   // Closes Module 10.
-  "multi-stream-chart-comparator": { path: "multi-stream-chart-comparator", exportName: "MultiStreamChartComparator" },
   "gajakesari-simulator": { path: "gajakesari-simulator", exportName: "GajakesariSimulator" },
   // Lesson 13.4.1's Â§7 interactive: Cheá¹£á¹­Ä Bala Calculator â€” motional strength
   // explorer with eight cheá¹£á¹­Ä avasthÄs, epicycle diagram, Sun/Moon convention
@@ -550,10 +470,6 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveEntry> = {
   // read. Walks through AK identification, D9 sign selection, KL placement,
   // occupant + rÄÅ›i-dá¹›á¹£á¹­i aspect reading, and key houses from KL with
   // automated synthesis. Presets for Leo and Scorpio KÄrakÄá¹Å›a examples.
-  "karakamsha-virgo-soul-map-lab": { path: "karakamsha-virgo-soul-map-lab", exportName: "KarakamshaVirgoSoulMapLab" },
-  "ishta-devata-ketu-derivation-lab": { path: "ishta-devata-ketu-derivation-lab", exportName: "IshtaDevataKetuDerivationLab" },
-  "ishta-devata-respect-framing-lab": { path: "ishta-devata-respect-framing-lab", exportName: "IshtaDevataRespectFramingLab" },
-  "karakamsha-ishta-synthesis-walkthrough": { path: "karakamsha-ishta-synthesis-walkthrough", exportName: "KarakamshaIshtaSynthesisWalkthrough" },
   // Lesson 17.7.3 interactive: Iá¹£á¹­a-DevatÄ Finder -- select the KÄrakÄá¹Å›a,
   // place planets, and see the 12th-from-KL auto-computed with planet-to-deity
   // mapping, empty-house lord fallback, aspecting contributors, and ethical
@@ -643,120 +559,32 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveEntry> = {
   // defer gates, authorised consultation modes, and absent-grounds discipline.
   // Lesson 21.6.3 interactive: Discipline Statement Builder â€” six-chapter M21
   // synthesis, do-no-harm floor, and five-field practitioner statement worksheet.
-  "five-stream-synthesis-discipline-lab": { path: "five-stream-synthesis-discipline-lab", exportName: "FiveStreamSynthesisDisciplineLab" },
-  "five-stream-matrix-shape-lab": { path: "five-stream-matrix-shape-lab", exportName: "FiveStreamMatrixShapeLab" },
-  "convergence-divergence-matrix-builder": { path: "convergence-divergence-matrix-builder", exportName: "ConvergenceDivergenceMatrixBuilder" },
   "confidence-tier-overlay-builder": { path: "confidence-tier-overlay-builder", exportName: "ConfidenceTierOverlayBuilder" },
   "divergence-pattern-ranker": { path: "divergence-pattern-ranker", exportName: "DivergencePatternRanker" },
   "dual-matrix-domain-comparison": { path: "dual-matrix-domain-comparison", exportName: "DualMatrixDomainComparison" },
   "conflict-resolution-sequence-walkthrough": { path: "conflict-resolution-sequence-walkthrough", exportName: "ConflictResolutionSequenceWalkthrough" },
   "synthesis-statement-composition-discipline": { path: "synthesis-statement-composition-discipline", exportName: "SynthesisStatementCompositionDiscipline" },
-  "five-stream-layered-evidence-lab": { path: "five-stream-layered-evidence-lab", exportName: "FiveStreamLayeredEvidenceLab" },
-  "stream-orientation-leak-audit-lab": { path: "stream-orientation-leak-audit-lab", exportName: "StreamOrientationLeakAuditLab" },
-  "parashara-anchor-md1-lab": { path: "parashara-anchor-md1-lab", exportName: "ParasharaAnchorMd1Lab" },
-  "parashara-only-statement-template-lab": { path: "parashara-only-statement-template-lab", exportName: "ParasharaOnlyStatementTemplateLab" },
-  "parashara-worked-reading-md1-lab": { path: "parashara-worked-reading-md1-lab", exportName: "ParasharaWorkedReadingMd1Lab" },
-  "parashara-anchor-not-verdict-lab": { path: "parashara-anchor-not-verdict-lab", exportName: "ParasharaAnchorNotVerdictLab" },
-  "kp-cuspal-yes-no-augmentation-lab": { path: "kp-cuspal-yes-no-augmentation-lab", exportName: "KpCuspalYesNoAugmentationLab" },
-  "kp-purpose-built-routing-lab": { path: "kp-purpose-built-routing-lab", exportName: "KpPurposeBuiltRoutingLab" },
-  "kp-layer-boundary-worked-example-lab": { path: "kp-layer-boundary-worked-example-lab", exportName: "KpLayerBoundaryWorkedExampleLab" },
-  "parashara-kp-two-stream-statement-lab": { path: "parashara-kp-two-stream-statement-lab", exportName: "ParasharaKpTwoStreamStatementLab" },
-  "jaimini-dharma-path-augmentation-lab": { path: "jaimini-dharma-path-augmentation-lab", exportName: "JaiminiDharmaPathAugmentationLab" },
-  "jaimini-native-domain-routing-lab": { path: "jaimini-native-domain-routing-lab", exportName: "JaiminiNativeDomainRoutingLab" },
-  "jaimini-ranking-robustness-lab": { path: "jaimini-ranking-robustness-lab", exportName: "JaiminiRankingRobustnessLab" },
-  "parashara-kp-jaimini-three-stream-lab": { path: "parashara-kp-jaimini-three-stream-lab", exportName: "ParasharaKpJaiminiThreeStreamLab" },
-  "lal-kitab-remedy-augmentation-lab": { path: "lal-kitab-remedy-augmentation-lab", exportName: "LalKitabRemedyAugmentationLab" },
-  "tajika-year-specific-augmentation-lab": { path: "tajika-year-specific-augmentation-lab", exportName: "TajikaYearSpecificAugmentationLab" },
-  "nadi-access-limits-decision-lab": { path: "nadi-access-limits-decision-lab", exportName: "NadiAccessLimitsDecisionLab" },
-  "five-stream-target-chart-synthesis-lab": { path: "five-stream-target-chart-synthesis-lab", exportName: "FiveStreamTargetChartSynthesisLab" },
-  "five-stream-statement-template-lab": { path: "five-stream-statement-template-lab", exportName: "FiveStreamStatementTemplateLab" },
   // Lesson 7.5.4's §7 explorer: KP Longevity Chart H1 Synthesis — apply KP
   // doctrine to Chart H1 (Bhādhaka + verified Saturn sub-lord), then practise
   // the three-stream synthesis and ethical-framing trainer.
-  "kp-longevity-chart-h1-synthesis": { path: "kp-longevity-chart-h1-synthesis", exportName: "KpLongevityChartH1Synthesis" },
   // Lesson 7.6.1's §7 explorer: Kālapuruṣa Body-Map Explorer — interactive
   // body-part-to-house mapping with zodiac vs chart toggle and scope gate.
-  "kalapurusha-body-map-explorer": { path: "kalapurusha-body-map-explorer", exportName: "KalapurushaBodyMapExplorer" },
   // Lesson 7.6.2's §7 explorer: Graha-Disease Correspondence Explorer —
   // seven-graha correspondences, two-layer reinforcement, tridoṣa bridge, scope gate.
-  "graha-disease-correspondence-explorer": { path: "graha-disease-correspondence-explorer", exportName: "GrahaDiseaseCorrespondenceExplorer" },
   // Lesson 7.6.3's §7 trainer: Contextualisation Discipline Trainer —
   // direction-of-inference, harm pathways, question classifier, response builder.
-  "contextualisation-discipline-trainer": { path: "contextualisation-discipline-trainer", exportName: "ContextualisationDisciplineTrainer" },
   // Lesson 7.6.4's §7 trainer: Contextualisation Worked-Example Trainer —
   // diagnosis-first gate, contextualisation chain, no-match honesty, statement practice.
-  "contextualisation-worked-example-trainer": { path: "contextualisation-worked-example-trainer", exportName: "ContextualisationWorkedExampleTrainer" },
   // Lesson 7.7.1's §7 explorer: Health Synthesis Overview Map —
   // seven-lesson roadmap, Chart H1 findings recap, question router, capability-to-restraint sequence.
-  "health-synthesis-overview-map": { path: "health-synthesis-overview-map", exportName: "HealthSynthesisOverviewMap" },
   // Lesson 7.7.2's §7 workbench: Vitality-Trend Synthesis Workbench —
   // seven-layer synthesis, convergence/divergence diagram, response translator, mistake check.
-  "vitality-trend-synthesis-workbench": { path: "vitality-trend-synthesis-workbench", exportName: "VitalityTrendSynthesisWorkbench" },
   // Lesson 7.7.3's §7 trainer: Known-Illness Support Consultation Trainer —
   // scenario compass, response builder, silent confidence toggle, mistake check.
-  "known-illness-support-consultation-trainer": { path: "known-illness-support-consultation-trainer", exportName: "KnownIllnessSupportConsultationTrainer" },
   // Lesson 7.7.4's §7 trainer: Death-Prediction Prohibition Trainer —
   // absolute rule barrier, five category scripts, wrong-vs-right comparisons, restraint verse.
-  "death-prediction-prohibition-trainer": { path: "death-prediction-prohibition-trainer", exportName: "DeathPredictionProhibitionTrainer" },
   // Lesson 7.7.5's §7 tool: Medical-Routing Decision Tree —
   // interactive four-tier tree, tier reference, scenario classifier, sequence rule.
-  "medical-routing-decision-tree": { path: "medical-routing-decision-tree", exportName: "MedicalRoutingDecisionTree" },
-  "active-medical-distress-handling-trainer": { path: "active-medical-distress-handling-trainer", exportName: "ActiveMedicalDistressHandlingTrainer" },
-  "medical-domain-competence-closing-synthesizer": { path: "medical-domain-competence-closing-synthesizer", exportName: "MedicalDomainCompetenceClosingSynthesizer" },
-  "fourth-house-education-workbench": { path: "fourth-house-education-workbench", exportName: "FourthHouseEducationWorkbench" },
-  "fifth-house-intellect-workbench": { path: "fifth-house-intellect-workbench", exportName: "FifthHouseIntellectWorkbench" },
-  "ninth-house-higher-learning-workbench": { path: "ninth-house-higher-learning-workbench", exportName: "NinthHouseHigherLearningWorkbench" },
-  "four-five-nine-educational-arc-synthesizer": { path: "four-five-nine-educational-arc-synthesizer", exportName: "FourFiveNineEducationalArcSynthesizer" },
-  "d24-construction-workbench": { path: "d24-construction-workbench", exportName: "D24ConstructionWorkbench" },
-  "d24-education-reading-workbench": { path: "d24-education-reading-workbench", exportName: "D24EducationReadingWorkbench" },
-  "d24-mercury-jupiter-karaka-workbench": { path: "d24-mercury-jupiter-karaka-workbench", exportName: "D24MercuryJupiterKarakaWorkbench" },
-  "d24-education-synthesis-workbench": { path: "d24-education-synthesis-workbench", exportName: "D24EducationSynthesisWorkbench" },
-  "mercury-buddhi-karaka-workbench": { path: "mercury-buddhi-karaka-workbench", exportName: "MercuryBuddhiKarakaWorkbench" },
-  "jupiter-jnana-karaka-workbench": { path: "jupiter-jnana-karaka-workbench", exportName: "JupiterJnanaKarakaWorkbench" },
-  "sarasvati-yoga-checklist-workbench": { path: "sarasvati-yoga-checklist-workbench", exportName: "SarasvatiYogaChecklistWorkbench" },
-  "aptitude-tendency-mapper": { path: "aptitude-tendency-mapper", exportName: "AptitudeTendencyMapper" },
-  "field-of-study-synthesis-workbench": { path: "field-of-study-synthesis-workbench", exportName: "FieldOfStudySynthesisWorkbench" },
-  "exam-outcome-confidence-workbench": { path: "exam-outcome-confidence-workbench", exportName: "ExamOutcomeConfidenceWorkbench" },
-  "education-scope-of-competence-workbench": { path: "education-scope-of-competence-workbench", exportName: "EducationScopeOfCompetenceWorkbench" },
-  "d4-construction-workbench": { path: "d4-construction-workbench", exportName: "D4ConstructionWorkbench" },
-  "d4-internal-lagna-fourth-reading-lab": { path: "d4-internal-lagna-fourth-reading-lab", exportName: "D4InternalLagnaFourthReadingLab" },
-  "d4-property-quality-comparison-lab": { path: "d4-property-quality-comparison-lab", exportName: "D4PropertyQualityComparisonLab" },
-  "d4-complete-property-reading-assembly-lab": { path: "d4-complete-property-reading-assembly-lab", exportName: "D4CompletePropertyReadingAssemblyLab" },
-  "lal-kitab-property-teva-formula-lab": { path: "lal-kitab-property-teva-formula-lab", exportName: "LalKitabPropertyTevaFormulaLab" },
-  "kp-property-fourth-cusp-sub-lord-lab": { path: "kp-property-fourth-cusp-sub-lord-lab", exportName: "KpPropertyFourthCuspSubLordLab" },
-  "kp-property-significator-timing-lab": { path: "kp-property-significator-timing-lab", exportName: "KpPropertySignificatorTimingLab" },
-  "cross-stream-property-synthesis-lab": { path: "cross-stream-property-synthesis-lab", exportName: "CrossStreamPropertySynthesisLab" },
-  "property-dasha-acquisition-timing-lab": { path: "property-dasha-acquisition-timing-lab", exportName: "PropertyDashaAcquisitionTimingLab" },
-  "home-purchase-confidence-synthesis-lab": { path: "home-purchase-confidence-synthesis-lab", exportName: "HomePurchaseConfidenceSynthesisLab" },
-  "vastu-property-scope-distinction-lab": { path: "vastu-property-scope-distinction-lab", exportName: "VastuPropertyScopeDistinctionLab" },
-  "property-competence-routing-lab": { path: "property-competence-routing-lab", exportName: "PropertyCompetenceRoutingLab" },
-  "kp-education-cuspal-sub-lord-lab": { path: "kp-education-cuspal-sub-lord-lab", exportName: "KpEducationCuspalSubLordLab" },
-  "kp-education-significator-hierarchy-lab": { path: "kp-education-significator-hierarchy-lab", exportName: "KpEducationSignificatorHierarchyLab" },
-  "kp-education-exam-timing-overlay-lab": { path: "kp-education-exam-timing-overlay-lab", exportName: "KpEducationExamTimingOverlayLab" },
-  "kp-education-worked-exam-synthesis-lab": { path: "kp-education-worked-exam-synthesis-lab", exportName: "KpEducationWorkedExamSynthesisLab" },
-  "education-dasha-timing-window-lab": { path: "education-dasha-timing-window-lab", exportName: "EducationDashaTimingWindowLab" },
-  "education-transit-tdv-overlay-lab": { path: "education-transit-tdv-overlay-lab", exportName: "EducationTransitTdvOverlayLab" },
-  "education-synthesis-overview-table-lab": { path: "education-synthesis-overview-table-lab", exportName: "EducationSynthesisOverviewTableLab" },
-  "second-house-wealth-evaluator": { path: "second-house-wealth-evaluator", exportName: "SecondHouseWealthEvaluator" },
-  "eleventh-house-gains-evaluator": { path: "eleventh-house-gains-evaluator", exportName: "EleventhHouseGainsEvaluator" },
-  "second-eleventh-lord-permutations": { path: "second-eleventh-lord-permutations", exportName: "SecondEleventhLordPermutations" },
-  "natural-wealth-karaka-analyzer": { path: "natural-wealth-karaka-analyzer", exportName: "NaturalWealthKarakaAnalyzer" },
-  "d2-solar-lunar-bisection": { path: "d2-solar-lunar-bisection", exportName: "D2SolarLunarBisection" },
-  "d2-bisection-doctrine-reader": { path: "d2-bisection-doctrine-reader", exportName: "D2BisectionDoctrineReader" },
-  "d2-solar-lunar-tendencies": { path: "d2-solar-lunar-tendencies", exportName: "D2SolarLunarTendencies" },
-  "d2-real-chart-workbench": { path: "d2-real-chart-workbench", exportName: "D2RealChartWorkbench" },
-  "dhana-yoga-pattern-verifier": { path: "dhana-yoga-pattern-verifier", exportName: "DhanaYogaPatternVerifier" },
-  "dhana-yoga-variants-evaluator": { path: "dhana-yoga-variants-evaluator", exportName: "DhanaYogaVariantsEvaluator" },
-  "lakshmi-yoga-analyser": { path: "lakshmi-yoga-analyser", exportName: "LakshmiYogaAnalyser" },
-  "dhana-yoga-shadbala-overlay": { path: "dhana-yoga-shadbala-overlay", exportName: "DhanaYogaShadbalaOverlay" },
-  "kp-cuspal-sub-lord-doctrine": { path: "kp-cuspal-sub-lord-doctrine", exportName: "KpCuspalSubLordDoctrine" },
-  "kp-money-significators-evaluator": { path: "kp-money-significators-evaluator", exportName: "KpMoneySignificatorsEvaluator" },
-  "kp-investment-timing-explorer": { path: "kp-investment-timing-explorer", exportName: "KpInvestmentTimingExplorer" },
-  "kp-wealth-question-workbench": { path: "kp-wealth-question-workbench", exportName: "KpWealthQuestionWorkbench" },
-  "lal-kitab-money-formula-revisited": { path: "lal-kitab-money-formula-revisited", exportName: "LalKitabMoneyFormulaRevisited" },
-  "lal-kitab-money-planets-analyser": { path: "lal-kitab-money-planets-analyser", exportName: "LalKitabMoneyPlanetsAnalyser" },
-  "lal-kitab-loss-formulas-evaluator": { path: "lal-kitab-loss-formulas-evaluator", exportName: "LalKitabLossFormulasEvaluator" },
-  "lal-kitab-wealth-reading-workbench": { path: "lal-kitab-wealth-reading-workbench", exportName: "LalKitabWealthReadingWorkbench" },
   // Lesson 22.1.1 interactive: Vastu Origins Explorer — historical stream,
   // five-domain spatial scope, classical corpus, and modern feasibility guards.
   // Lesson 22.1.2 interactive: Vastu Purusha Mandala Explorer â€” 9x9 / 8x8 /
@@ -807,50 +635,9 @@ export const INTERACTIVE_REGISTRY: Record<string, InteractiveEntry> = {
   // clickable zodiac ring, ten-segment strip, destination arc, parity-error
   // comparator, worked-example stepper, deity wheel and D10 Lagna builder.
   "dashamsha-deva-asura-lab": { path: "dashamsha-deva-asura-lab", exportName: "DashamshaDevaAsuraLab" },
-  "seventh-house-marriage-profile-workbench": { path: "seventh-house-marriage-profile-workbench", exportName: "SeventhHouseMarriageProfileWorkbench" },
-  "seventh-lord-placement-reader": { path: "seventh-lord-placement-reader", exportName: "SeventhLordPlacementReader" },
-  "seventh-aspect-net-workbench": { path: "seventh-aspect-net-workbench", exportName: "SeventhAspectNetWorkbench" },
-  "karaka-pollution-seventh-workbench": { path: "karaka-pollution-seventh-workbench", exportName: "KarakaPollutionSeventhWorkbench" },
-  "d9-marriage-refinement-workbench": { path: "d9-marriage-refinement-workbench", exportName: "D9MarriageRefinementWorkbench" },
-  "d9-lagna-seventh-reader": { path: "d9-lagna-seventh-reader", exportName: "D9LagnaSeventhReader" },
-  "d9-venus-karaka-workbench": { path: "d9-venus-karaka-workbench", exportName: "D9VenusKarakaWorkbench" },
-  "vargottama-marriage-confirmation-workbench": { path: "vargottama-marriage-confirmation-workbench", exportName: "VargottamaMarriageConfirmationWorkbench" },
-  "d9-marriage-worked-example-lab": { path: "d9-marriage-worked-example-lab", exportName: "D9MarriageWorkedExampleLab" },
-  "venus-marriage-karaka-prediction-workbench": { path: "venus-marriage-karaka-prediction-workbench", exportName: "VenusMarriageKarakaPredictionWorkbench" },
-  "venus-dignity-strength-marriage-console": { path: "venus-dignity-strength-marriage-console", exportName: "VenusDignityStrengthMarriageConsole" },
-  "venus-company-quality-workbench": { path: "venus-company-quality-workbench", exportName: "VenusCompanyQualityWorkbench" },
-  "venus-analysis-marriage-case-lab": { path: "venus-analysis-marriage-case-lab", exportName: "VenusAnalysisMarriageCaseLab" },
-  "upapada-marriage-arudha-workbench": { path: "upapada-marriage-arudha-workbench", exportName: "UpapadaMarriageArudhaWorkbench" },
-  "ul-placement-lord-sustenance-workbench": { path: "ul-placement-lord-sustenance-workbench", exportName: "UlPlacementLordSustenanceWorkbench" },
-  "darakaraka-spouse-register-workbench": { path: "darakaraka-spouse-register-workbench", exportName: "DarakarakaSpouseRegisterWorkbench" },
-  "jaimini-marriage-case-synthesis-lab": { path: "jaimini-marriage-case-synthesis-lab", exportName: "JaiminiMarriageCaseSynthesisLab" },
-  "d20-vimshamsha-construction-lab": { path: "d20-vimshamsha-construction-lab", exportName: "D20VimshamshaConstructionLab" },
-  "d20-lagna-spiritual-houses-lab": { path: "d20-lagna-spiritual-houses-lab", exportName: "D20LagnaSpiritualHousesLab" },
-  "d20-spiritual-karakas-overlay-lab": { path: "d20-spiritual-karakas-overlay-lab", exportName: "D20SpiritualKarakasOverlayLab" },
-  "d20-spiritual-reading-synthesis-lab": { path: "d20-spiritual-reading-synthesis-lab", exportName: "D20SpiritualReadingSynthesisLab" },
-  "kp-seventh-csl-marriage-promise-workbench": { path: "kp-seventh-csl-marriage-promise-workbench", exportName: "KpSeventhCslMarriagePromiseWorkbench" },
-  "kp-seventh-significator-delivery-workbench": { path: "kp-seventh-significator-delivery-workbench", exportName: "KpSeventhSignificatorDeliveryWorkbench" },
 
-  "kp-marriage-significator-dasha-window": { path: "kp-marriage-significator-dasha-window", exportName: "KpMarriageSignificatorDashaWindow" },
-  "kp-marriage-question-verdict-lab": { path: "kp-marriage-question-verdict-lab", exportName: "KpMarriageQuestionVerdictLab" },
-  "ashta-kuta-framework-workbench": { path: "ashta-kuta-framework-workbench", exportName: "AshtaKutaFrameworkWorkbench" },
-  "ashta-kuta-score-interpretation-workbench": { path: "ashta-kuta-score-interpretation-workbench", exportName: "AshtaKutaScoreInterpretationWorkbench" },
-  "manglik-full-cancellation-workbench": { path: "manglik-full-cancellation-workbench", exportName: "ManglikFullCancellationWorkbench" },
-  "marriage-tajika-lal-kitab-overlay-workbench": { path: "marriage-tajika-lal-kitab-overlay-workbench", exportName: "MarriageTajikaLalKitabOverlayWorkbench" },
-  "marriage-dasha-timing-framework-workbench": { path: "marriage-dasha-timing-framework-workbench", exportName: "MarriageDashaTimingFrameworkWorkbench" },
-  "marriage-synthesis-overview-map": { path: "marriage-synthesis-overview-map", exportName: "MarriageSynthesisOverviewMap" },
   "when-will-i-marry-synthesis-lab": { path: "when-will-i-marry-synthesis-lab", exportName: "WhenWillIMarrySynthesisLab" },
   "proposal-evaluation-synthesis-lab": { path: "proposal-evaluation-synthesis-lab", exportName: "ProposalEvaluationSynthesisLab" },
   "marriage-scope-competence-router": { path: "marriage-scope-competence-router", exportName: "MarriageScopeCompetenceRouter" },
-  "first-house-vitality-physique-workbench": { path: "first-house-vitality-physique-workbench", exportName: "FirstHouseVitalityPhysiqueWorkbench" },
-  "sixth-house-disease-recovery-workbench": { path: "sixth-house-disease-recovery-workbench", exportName: "SixthHouseDiseaseRecoveryWorkbench" },
-  "fourth-house-property-workbench": { path: "fourth-house-property-workbench", exportName: "FourthHousePropertyWorkbench" },
-  "fourth-lord-property-permutation-lab": { path: "fourth-lord-property-permutation-lab", exportName: "FourthLordPropertyPermutationLab" },
-  "mars-property-karaka-depth-lab": { path: "mars-property-karaka-depth-lab", exportName: "MarsPropertyKarakaDepthLab" },
-  "secondary-property-indicators-synthesis-lab": { path: "secondary-property-indicators-synthesis-lab", exportName: "SecondaryPropertyIndicatorsSynthesisLab" },
-  "tajika-dhana-saham-overlay": { path: "tajika-dhana-saham-overlay", exportName: "TajikaDhanaSahamOverlay" },
-  "overall-wealth-promise-synthesis": { path: "overall-wealth-promise-synthesis", exportName: "OverallWealthPromiseSynthesis" },
-  "investment-decision-synthesis": { path: "investment-decision-synthesis", exportName: "InvestmentDecisionSynthesis" },
-  "ethical-scope-routing-dashboard": { path: "ethical-scope-routing-dashboard", exportName: "EthicalScopeRoutingDashboard" },
 };
 
